@@ -14,6 +14,19 @@ if ($] < 5.006001){
   $prereq_pm = { 'Test::More' => 0 };
 }
 
+# import PAUSE public key to user's keychain
+require Config;
+for my $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
+    my $abs = File::Spec->catfile($dir, 'gpg');
+    if (my $cmd = MM->maybe_command($abs)) {
+	print "Importing PAUSE public key into your GnuPG keychain... ";
+	system($cmd, '--quiet', '--import', <PAUSE*.pub>);
+	print "done!\n";
+	print "(You may wish to trust it locally with 'gpg --lsign-key 450F89EC')\n";
+	last;
+    }
+}
+
 WriteMakefile(
     'INSTALLDIRS' => 'perl',  # as it is coming with perl
     'NAME'	=> 'CPAN',
