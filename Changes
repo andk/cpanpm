@@ -24,6 +24,10 @@ Parsing of the PREREQ_PM in the Makefile fails if the module names
 contain colons. As my patch to MakeMaker is being questioned, I also
 back out the code for the future MakeMaker.
 
+1.44_54 adds prerequisites_policy options and fixes a bug spottet by
+Michael G. Schwern. Moreover, I abandoned the Safe compartement within
+needs_prereqs and replaced it by a regular expression.
+
 =head2 December 1998 after 1.43
 
 Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()

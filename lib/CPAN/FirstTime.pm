@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.32 $, 10;
+$VERSION = substr q$Revision: 1.33 $, 10;
 
 =head1 NAME
 
@@ -156,7 +156,7 @@ with all the intermediate files?
     print qq{
 
 By default, each time the CPAN module is started, cache scanning
-is performed to keep the cache size in sync. To prevent from this, 
+is performed to keep the cache size in sync. To prevent from this,
 disable the cache scanning with 'never'.
 
 };
@@ -166,6 +166,26 @@ disable the cache scanning with 'never'.
         $ans = prompt("Perform cache scanning (atstart or never)?", $default);
     } while ($ans ne 'atstart' && $ans ne 'never');
     $CPAN::Config->{scan_cache} = $ans;
+
+    #
+    # prerequisites_policy
+    # Do we follow PREREQ_PM?
+    #
+    print qq{
+
+The CPAN module can detect when a module that which you are trying to
+build depends on prerequisites. If this happens, it can build the
+prerequisites for you automatically ('follow'), ask you for
+confirmation ('ask'), or just ignore them ('ignore'). Please set your
+policy to one of the three values.
+
+};
+
+    $default = $CPAN::Config->{prerequisites_policy} || 'follow';
+    do {
+        $ans = prompt("Perform cache scanning (follow, ask or ignore)?", $default);
+    } while ($ans ne 'follow' && $ans ne 'ask' && $ans ne 'ignore');
+    $CPAN::Config->{prerequisites_policy} = $ans;
 
     #
     # External programs

@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.44_53';
+$VERSION = '1.44_54';
 
-# $Id: CPAN.pm,v 1.249 1999/01/13 17:46:21 k Exp $
+# $Id: CPAN.pm,v 1.250 1999/01/14 12:26:13 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.249 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.250 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -997,7 +997,7 @@ sub not_loaded {
 	    cpan_home keep_source_where build_dir build_cache scan_cache
 	    index_expire gzip tar unzip make pager makepl_arg make_arg
 	    make_install_arg urllist inhibit_startup_message
-	    ftp_proxy http_proxy no_proxy
+	    ftp_proxy http_proxy no_proxy prerequisites_policy
 	   )) {
 	push @miss, $_ unless defined $CPAN::Config->{$_};
     }
@@ -3241,12 +3241,25 @@ or
       my $id = $self->id;
       $CPAN::Frontend->myprint("---- Dependencies detected ".
 			       "during [$id] -----\n");
-      for (@prereq) {
-	$CPAN::Frontend->myprint("    $_\n");
+
+      for my $p (@prereq) {
+	$CPAN::Frontend->myprint("    $p\n");
       }
       sleep 2;
-      CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
-      return;
+      my $follow = 0;
+      if ($CPAN::Config->{prerequisites_policy} eq "follow") {
+	$follow = 1;
+      } elsif ($CPAN::Config->{prerequisites_policy} eq "ask") {
+	require ExtUtils::MakeMaker;
+	my $answer = ExtUtils::MakeMaker::prompt(
+"Shall I follow them and prepend them to the queue
+of modules we are processing right now?", "yes");
+	$follow = $answer =~ /^\s*y/i;
+      }
+      if ($follow) {
+	CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
+	return;
+      }
     }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
     if (system($system) == 0) {
@@ -3281,16 +3294,9 @@ sub needs_prereq {
       next unless $p;
       # warn "Found prereq expr[$p]";
 
-      # Now quote the left side of =>, it may not be autoquoted
-      # because of colons
-      $p =~ s/(\s)([\w\:]+)(=>q\[.*?\],)/$1\"$2\"$3/g;
-
-      require Safe;
-      my($comp) = Safe->new("CPAN::Safe2");
-      my $ret = $comp->reval($p);
-      # warn "evaled it and got[$ret]";
-      Carp::confess($@) if $@;
-      @p = keys %$ret;
+      while ( $p =~ m/(?:\s)([\w\:]+)=>q\[.*?\],?/g ){
+        push @p, $1;
+      }
       last;
     }
   } else { # MakeMaker after a patch I suggested. Let's wait and see
