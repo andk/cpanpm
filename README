@@ -976,6 +976,10 @@ BUGS
 AUTHOR
     Andreas Koenig <andreas.koenig@anima.de>
 
+TRANSLATIONS
+    Kawai,Takanori provides a Japanese translation of this manpage at
+    http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
+
 SEE ALSO
     perl(1), CPAN::Nox(3)
 

@@ -1,7 +1,65 @@
+2000-12-26  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::LWP::UserAgent: new class to customize proxy
+	authentication. Thanks to David C Worenklein for a working
+	implementation that I could use as a basis.
+
+2000-12-19  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* manpage: Added a pointer to the Japanese translation.
+
+2000-12-13  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* FAQ: While working on the FAQ mirroring item, I discovered that
+	we need a mirror command because "get" unwraps the tarfiles as a
+	side effect, which is not nice. Mirror() will do nothing if source
+	is a "file:" URL. It will probably understand force to override
+	that. It will copy to ~/.cpan/sources but leave the file unopened
+	and untouched. Backed out the FAQ item until we have that fixed.
+
+2000-12-11  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Distribution::normalize: Did not work correctly for
+	authors that have subdirectories in their CPAN directory. Was
+	counting slashes, am now also checking against a regexp.
+
+	* cpl: make completion work with "get".
+
+	* CPAN::Shell::ls: Reject arguments not matching [A-Z\-] to
+	prevent /.../ expansion which neither worked nor is considered
+	useful.
+
+	* CPAN::Shell::h: include ls command
+
+	* variable naming: rename $date_of_03 and $last_time to uppercase
+	counterparts. Globals must stand out visually.
+
+	* FAQ: Adding "How do I set up a local CPAN mirror that does not
+	contain things I'm not interested in?". Thanks to Paul Moore for
+	asking the question (but see above, the article was removed for
+	further consideration on 2000-12-13)
+
+	* CPAN::Author::id: add a sanity check, first letter must be A-Z
+
+2000-12-10  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Distribution::look: Protect against empty $dir and use
+	safe_chdir instead of chdir.
+
 2000-12-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
+	* get: finished the treatment of the NFS racing condition that
+	motivated many of the recent changes in get(). Thanks for
+	reporting and heavy testing to Steffen Beyer.
+
+	* Releasing as 1.59_51.
+
 	* normalize: protect against the case when normalize is called
-	without argument. Releasing as 1.59_51.
+	without argument.
+
+	* Thanks to Jeremy Wadsack who read the first sketch of the
+	documentation of the programmer's interface and provided helpful
+	comments and additions.
 
         * Declaring 1.58_93 as 1.59 and releasing as such to have a stable
         baseline again. 1.58_93 had been integrated into the development

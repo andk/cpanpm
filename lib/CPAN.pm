@@ -1,11 +1,11 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.59_51';
-# $Id: CPAN.pm,v 1.381 2000/12/01 08:13:05 k Exp $
+$VERSION = '1.59_52';
+# $Id: CPAN.pm,v 1.383 2000/12/26 13:34:22 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.381 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.383 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -229,6 +229,10 @@ package CPAN::FTP;
 use vars qw($Ua $Thesite $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
+package CPAN::LWP::UserAgent;
+use vars qw(@ISA $USER $PASSWD $SETUPDONE);
+# we delay requiring LWP::UserAgent and setting up inheritence until we need it
+
 package CPAN::Complete;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
 @CPAN::Complete::COMMANDS = sort qw(
@@ -238,10 +242,10 @@ package CPAN::Complete;
 ) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
-use vars qw($last_time $date_of_03);
+use vars qw($LAST_TIME $DATE_OF_03);
 @CPAN::Index::ISA = qw(CPAN::Debug);
-$last_time ||= 0;
-$date_of_03 ||= 0;
+$LAST_TIME ||= 0;
+$DATE_OF_03 ||= 0;
 # use constant PROTOCOL => "2.0"; # outcommented to avoid warning on upgrade from 1.57
 sub PROTOCOL { 2.0 }
 
@@ -1249,19 +1253,17 @@ sub h {
     } else {
 	$CPAN::Frontend->myprint(q{
 Display Information
- a                                    authors
- b         string           display   bundles
- d         or               info      distributions
- m         /regex/          about     modules
- i         or                         anything of above
- r         none             reinstall recommendations
- u                          uninstalled distributions
+ command  argument          description
+ a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
+ i        WORD or /REGEXP/  about anything of above
+ r        NONE              reinstall recommendations
+ ls       AUTHOR            about files in the author's directory
 
 Download, Test, Make, Install...
  get                        download
  make                       make (implies get)
- test      modules,         make test (implies make)
- install   dists, bundles   make install (implies test)
+ test      MODULES,         make test (implies make)
+ install   DISTS, BUNDLES   make install (implies test)
  clean                      make clean
  look                       open subshell in these dists' directories
  readme                     display these dists' README files
@@ -1289,10 +1291,15 @@ sub a {
 #-> sub CPAN::Shell::ls ;
 sub ls      {
     my($self,@arg) = @_;
+    my @accept;
     for (@arg) {
-        $_ = uc $_;
+        unless (/^[A-Z\-]+$/i) {
+            $CPAN::Frontend->mywarn("ls command rejects argument $_: not an author");
+            next;
+        }
+        push @accept, uc $_;
     }
-    for my $a (@arg){
+    for my $a (@accept){
         my $author = $self->expand('Author',$a) or die "No author found for $a";
         $author->ls;
     }
@@ -1963,7 +1970,7 @@ sub rematein {
 	}
 	if (ref $obj) {
             $obj->color_cmd_tmps(0,1);
-            CPAN::Queue->new($s);
+            CPAN::Queue->new($obj->id);
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
@@ -2053,6 +2060,60 @@ sub clean   { shift->rematein('clean',@_); }
 sub look   { shift->rematein('look',@_); }
 #-> sub CPAN::Shell::cvs_import ;
 sub cvs_import   { shift->rematein('cvs_import',@_); }
+
+package CPAN::LWP::UserAgent;
+
+sub config {
+    return if $SETUPDONE;
+    if ($CPAN::META->has_usable('LWP::UserAgent')) {
+        require LWP::UserAgent;
+        @ISA = qw(Exporter LWP::UserAgent);
+        $SETUPDONE++;
+    } else {
+        $CPAN::Frontent->mywarn("LWP::UserAgent not available\n");
+    }
+}
+
+sub get_basic_credentials {
+    my($self, $realm, $uri, $proxy) = @_;
+    return unless $proxy;
+    if ($USER && $PASSWD) {
+    } elsif (defined $CPAN::Config->{proxy_user} &&
+        defined $CPAN::Config->{proxy_pass}) {
+        $USER = $CPAN::Config->{proxy_user};
+        $PASSWD = $CPAN::Config->{proxy_pass};
+    } else {
+        require ExtUtils::MakeMaker;
+        ExtUtils::MakeMaker->import(qw(prompt));
+        $USER = prompt("Proxy authentication needed!
+ (Note: to permanently configure username and password run
+   o conf proxy_user your_username
+   o conf proxy_pass your_password
+ )\nUsername:");
+        if ($CPAN::META->has_inst("Term::ReadKey")) {
+            Term::ReadKey::ReadMode("noecho");
+        } else {
+            $CPAN::Frontend->mywarn("Warning: Term::ReadKey seems not to be available, your password will be echoed to the terminal!\n");
+        }
+        $PASSWD = prompt("Password:");
+        if ($CPAN::META->has_inst("Term::ReadKey")) {
+            Term::ReadKey::ReadMode("restore");
+        }
+        $CPAN::Frontend->myprint("\n\n");
+    }
+    return($USER,$PASSWD);
+}
+
+sub mirror {
+    my($self,$url,$aslocal) = @_;
+    my $result = $self->SUPER::mirror($url,$aslocal);
+    if ($result->code == 407) {
+        undef $USER;
+        undef $PASSWD;
+        $result = $self->SUPER::mirror($url,$aslocal);
+    }
+    $result;
+}
 
 package CPAN::FTP;
 
@@ -2163,9 +2224,10 @@ sub localize {
     # Inheritance is not easier to manage than a few if/else branches
     if ($CPAN::META->has_usable('LWP::UserAgent')) {
  	unless ($Ua) {
-	    eval {$Ua = LWP::UserAgent->new;}; # Why is has_usable still not fit enough?
+            CPAN::LWP::UserAgent->config;
+	    eval {$Ua = CPAN::LWP::UserAgent->new;}; # Why is has_usable still not fit enough?
             if ($@) {
-                $CPAN::Frontent->mywarn("LWP::UserAgent->new dies with $@")
+                $CPAN::Frontent->mywarn("CPAN::LWP::UserAgent->new dies with $@")
                     if $CPAN::DEBUG;
             } else {
                 my($var);
@@ -2173,6 +2235,20 @@ sub localize {
                     if $var = $CPAN::Config->{ftp_proxy} || $ENV{ftp_proxy};
                 $Ua->proxy('http', $var)
                     if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
+
+
+# >>>>> On Wed, 13 Dec 2000 09:21:34 -0500, "Robison, Jonathon (J.M.)" <jrobiso2@visteon.com> said:
+# 
+#  > I note that although CPAN.pm can use proxies, it doesn't seem equipped to
+#  > use ones that require basic autorization.
+#  
+#  > Example of when I use it manually in my own stuff:
+#  
+#  > $ua->proxy(['http','ftp'], http://my.proxy.server:83');
+#  > $req->proxy_authorization_basic("username","password");
+#  > $res = $ua->request($req);
+# 
+
                 $Ua->no_proxy($var)
                     if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
             }
@@ -2295,8 +2371,11 @@ sub hosteasy {
   $url
 ");
 	  unless ($Ua) {
-	    require LWP::UserAgent;
-	    $Ua = LWP::UserAgent->new;
+              CPAN::LWP::UserAgent->config;
+              eval { $Ua = CPAN::LWP::UserAgent->new; };
+              if ($@) {
+                  $CPAN::Frontent->mywarn("CPAN::LWP::UserAgent->new dies with $@");
+              }
 	  }
 	  my $res = $Ua->mirror($url, $aslocal);
 	  if ($res->is_success) {
@@ -2318,12 +2397,17 @@ sub hosteasy {
 	      return $aslocal;
 	    }
 	  } else {
+              $CPAN::Frontend->myprint(sprintf(
+                                               "LWP failed with code[%s] message[%s]\n",
+                                               $res->code,
+                                               $res->message,
+                                              ));
 	    # Alan Burlison informed me that in firewall environments
 	    # Net::FTP can still succeed where LWP fails. So we do not
 	    # skip Net::FTP anymore when LWP is available.
 	  }
 	} else {
-	  $self->debug("LWP not installed") if $CPAN::DEBUG;
+            $CPAN::Frontend->myprint("LWP not available\n");
 	}
         return if $CPAN::Signal;
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
@@ -2763,7 +2847,7 @@ sub cpl {
     my @return;
     if ($pos == 0) {
 	@return = grep /^$word/, @CPAN::Complete::COMMANDS;
-    } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
+    } elsif ( $line !~ /^[\!abcdghimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^(a|ls)\s/) {
 	@return = cplx('CPAN::Author',uc($word));
@@ -2773,7 +2857,7 @@ sub cpl {
     } elsif ($line =~ /^d\s/) {
 	@return = cplx('CPAN::Distribution',$word);
     } elsif ($line =~ m/^(
-                          [mru]|make|clean|dump|test|install|readme|look|cvs_import
+                          [mru]|make|clean|dump|get|test|install|readme|look|cvs_import
                          )\s/x ) {
         if ($word =~ /^Bundle::/) {
             CPAN::Shell->local_bundles;
@@ -2850,7 +2934,7 @@ package CPAN::Index;
 #-> sub CPAN::Index::force_reload ;
 sub force_reload {
     my($class) = @_;
-    $CPAN::Index::last_time = 0;
+    $CPAN::Index::LAST_TIME = 0;
     $class->reload(1);
 }
 
@@ -2875,9 +2959,9 @@ sub reload {
     }
     if ( $CPAN::META->{PROTOCOL} < PROTOCOL  ) {
         # warn "Setting last_time to 0";
-        $last_time = 0; # No warning necessary
+        $LAST_TIME = 0; # No warning necessary
     }
-    return if $last_time + $CPAN::Config->{index_expire}*86400 > $time
+    return if $LAST_TIME + $CPAN::Config->{index_expire}*86400 > $time
 	and ! $force;
     if (0) {
         # IFF we are developing, it helps to wipe out the memory
@@ -2887,7 +2971,7 @@ sub reload {
     }
     {
         my($debug,$t2);
-        local $last_time = $time;
+        local $LAST_TIME = $time;
         local $CPAN::META->{PROTOCOL} = PROTOCOL;
 
         my $needshort = $^O eq "dos";
@@ -2927,7 +3011,7 @@ sub reload {
         $time = $t2;
         CPAN->debug($debug) if $CPAN::DEBUG;
     }
-    $last_time = $time;
+    $LAST_TIME = $time;
     $CPAN::META->{PROTOCOL} = PROTOCOL;
 }
 
@@ -3145,8 +3229,8 @@ sub rd_modlist {
     while (@eval) {
 	my $shift = shift(@eval);
 	if ($shift =~ /^Date:\s+(.*)/){
-	    return if $date_of_03 eq $1;
-	    ($date_of_03) = $1;
+	    return if $DATE_OF_03 eq $1;
+	    ($DATE_OF_03) = $1;
 	}
 	last if $shift =~ /^\s*$/;
     }
@@ -3177,7 +3261,7 @@ sub write_metadata_cache {
 	$cache->{$k} = $CPAN::META->{readonly}{$k}; # unsafe meta access, ok
     }
     my $metadata_file = MM->catfile($CPAN::Config->{cpan_home},"Metadata");
-    $cache->{last_time} = $last_time;
+    $cache->{last_time} = $LAST_TIME;
     $cache->{PROTOCOL} = PROTOCOL;
     $CPAN::Frontend->myprint("Going to write $metadata_file\n");
     eval { Storable::nstore($cache, $metadata_file) };
@@ -3196,7 +3280,7 @@ sub read_metadata_cache {
     eval { $cache = Storable::retrieve($metadata_file) };
     $CPAN::Frontend->mywarn($@) if $@;
     if (!$cache || ref $cache ne 'HASH'){
-        $last_time = 0;
+        $LAST_TIME = 0;
         return;
     }
     if (exists $cache->{PROTOCOL}) {
@@ -3237,14 +3321,14 @@ sub read_metadata_cache {
     $CPAN::META->{PROTOCOL} ||=
         $cache->{PROTOCOL}; # reading does not up or downgrade, but it
                             # does initialize to some protocol
-    $last_time = $cache->{last_time};
+    $LAST_TIME = $cache->{last_time};
 }
 
 package CPAN::InfoObj;
 
 # Accessors
 sub cpan_userid { shift->{RO}{CPAN_USERID} }
-sub id { shift->{ID} }
+sub id { shift->{ID}; }
 
 #-> sub CPAN::InfoObj::new ;
 sub new {
@@ -3352,6 +3436,14 @@ sub dump {
 
 package CPAN::Author;
 
+#-> sub CPAN::Author::id
+sub id {
+    my $self = shift;
+    my $id = $self->{ID};
+    $CPAN::Frontend->mydie("Illegal author id[$id]") unless $id =~ /^[A-Z]/;
+    $id;
+}
+
 #-> sub CPAN::Author::as_glimpse ;
 sub as_glimpse {
     my($self) = @_;
@@ -3377,31 +3469,49 @@ sub ls {
     my $id = $self->id;
 
     # adapted from CPAN::Distribution::verifyMD5 ;
-    my(@chksumfile);
-    @chksumfile = $self->id =~ /(.)(.)(.*)/;
-    $chksumfile[1] = join "", @chksumfile[0,1];
-    $chksumfile[2] = join "", @chksumfile[1,2];
-    push @chksumfile, "CHECKSUMS";
-    print join "", map {
+    my(@csf); # chksumfile
+    @csf = $self->id =~ /(.)(.)(.*)/;
+    $csf[1] = join "", @csf[0,1];
+    $csf[2] = join "", @csf[1,2];
+    my(@dl);
+    @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0);
+    unless (grep {$_->[2] eq $csf[1]} @dl) {
+        $CPAN::Frontend->myprint("No files in the directory of $id\n");
+        return;
+    }
+    @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0);
+    unless (grep {$_->[2] eq $csf[2]} @dl) {
+        $CPAN::Frontend->myprint("No files in the directory of $id\n");
+        return;
+    }
+    @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1);
+    $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
-    } sort { $a->[2] cmp $b->[2] } $self->dir_listing(\@chksumfile);
+    } sort { $a->[2] cmp $b->[2] } @dl);
 }
 
+# returns an array of arrays, the latter contain (size,mtime,filename)
 #-> sub CPAN::Author::dir_listing ;
 sub dir_listing {
     my $self = shift;
     my $chksumfile = shift;
+    my $recursive = shift;
     my $lc_want =
 	MM->catfile($CPAN::Config->{keep_source_where},
                     "authors", "id", @$chksumfile);
     local($") = "/";
+    # connect "force" argument with "index_expire".
+    my $force = 0;
+    if (my @stat = stat $lc_want) {
+        $force = $stat[9] + $CPAN::Config->{index_expire}*86400 <= time;
+    }
     my $lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
-                                      $lc_want,1);
+                                      $lc_want,$force);
     unless ($lc_file) {
         $CPAN::Frontend->myprint("Trying $lc_want.gz\n");
 	$chksumfile->[-1] .= ".gz";
 	$lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
-				       "$lc_want.gz",1);
+                                       "$lc_want.gz",1);
 	if ($lc_file) {
 	    $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
 	    CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
@@ -3430,12 +3540,16 @@ sub dir_listing {
     my(@result,$f);
     for $f (sort keys %$cksum) {
         if (exists $cksum->{$f}{isdir}) {
-            my(@dir) = @$chksumfile;
-            pop @dir;
-            push @dir, $f, "CHECKSUMS";
-            push @result, map {
-                [$_->[0], $_->[1], "$f/$_->[2]"]
-            } $self->dir_listing(\@dir);
+            if ($recursive) {
+                my(@dir) = @$chksumfile;
+                pop @dir;
+                push @dir, $f, "CHECKSUMS";
+                push @result, map {
+                    [$_->[0], $_->[1], "$f/$_->[2]"]
+                } $self->dir_listing(\@dir,1);
+            } else {
+                push @result, [ 0, "-", $f ];
+            }
         } else {
             push @result, [
                            ($cksum->{$f}{"size"}||0),
@@ -3461,7 +3575,11 @@ sub undelay {
 sub normalize {
     my($self,$s) = @_;
     $s = $self->id unless defined $s;
-    if ($s =~ tr|/|| == 1) {
+    if (
+        $s =~ tr|/|| == 1
+        or
+        $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-]{2,}/|
+       ) {
         return $s if $s =~ m|^N/A|;
         $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4| or
             $CPAN::Frontend->mywarn("Strange distribution name [$s]");
@@ -3540,7 +3658,7 @@ sub called_for {
     return $self->{CALLED_FOR};
 }
 
-#-> sub CPAN::Distribution::my_chdir ;
+#-> sub CPAN::Distribution::safe_chdir ;
 sub safe_chdir {
     my($self,$todir) = @_;
     # we die if we cannot chdir and we are debuggable
@@ -3684,12 +3802,14 @@ sub get {
     my($mpl) = MM->catfile($packagedir,"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
-        # Steffen's stupid NFS has problems to see an existing
-        # Makefile.PL such a short time after the directory was
-        # renamed. Maybe this trick helps
-        $dh = DirHandle->new($packagedir)
+        # NFS has been reported to have racing problems after the
+        # renaming of a directory in some environments.
+        # This trick helps.
+        sleep 1;
+        my $mpldh = DirHandle->new($packagedir)
             or Carp::croak("Couldn't opendir $packagedir: $!");
-        $mpl_exists = grep /^Makefile\.PL$/, $dh->read;
+        $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
+        $mpldh->close;
     }
     unless ($mpl_exists) {
         $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
@@ -3808,14 +3928,22 @@ Please define it with "o conf shell <your shell>"
 	return;
     }
     my $dist = $self->id;
-    my $dir  = $self->dir or $self->get;
-    $dir = $self->dir;
+    my $dir;
+    unless ($dir = $self->dir) {
+        $self->get;
+    }
+    unless ($dir ||= $self->dir) {
+	$CPAN::Frontend->mywarn(qq{
+Could not determine which directory to use for looking at $dist.
+});
+	return;
+    }
     my $pwd  = CPAN::anycwd();
-    chdir($dir) or $CPAN::Frontend->mydie(qq{Could not chdir to "$dir": $!});
+    $self->safe_chdir($dir);
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
     system($CPAN::Config->{'shell'}) == 0
 	or $CPAN::Frontend->mydie("Subprocess shell error");
-    chdir($pwd) or $CPAN::Frontend->mydie(qq{Could not chdir to "$pwd": $!});
+    $self->safe_chdir($pwd);
 }
 
 # CPAN::Distribution::cvs_import ;
@@ -5017,8 +5145,11 @@ sub as_string {
             # warn "dist[$dist]";
             # mff=manifest file; mfh=manifest handle
             my($mff,$mfh);
-            if ($dist->{build_dir} and
-                -f ($mff = MM->catfile($dist->{build_dir}, "MANIFEST")) and
+            if (
+                $dist->{build_dir}
+                and
+                (-f  ($mff = MM->catfile($dist->{build_dir}, "MANIFEST")))
+                and
                 $mfh = FileHandle->new($mff)
                ) {
                 CPAN->debug("mff[$mff]") if $CPAN::DEBUG;
@@ -6750,7 +6881,7 @@ becomes stable with regard to charset issues.
 
 We should give coverage for B<all> of the CPAN and not just the PAUSE
 part, right? In this discussion CPAN and PAUSE have become equal --
-but they are not. PAUSE is authors/, modules/ and scripts/. CPAN is 
+but they are not. PAUSE is authors/, modules/ and scripts/. CPAN is
 PAUSE plus the clpa/, doc/, misc/, ports/, and src/.
 
 Future development should be directed towards a better integration of
@@ -6764,6 +6895,11 @@ traditional method of building a Perl module package from a shell.
 =head1 AUTHOR
 
 Andreas Koenig E<lt>andreas.koenig@anima.deE<gt>
+
+=head1 TRANSLATIONS
+
+Kawai,Takanori provides a Japanese translation of this manpage at
+http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 
 =head1 SEE ALSO
 
