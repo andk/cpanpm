@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_62';
+$VERSION = '1.57_65';
 
-# $Id: CPAN.pm,v 1.345 2000/09/08 02:12:00 k Exp $
+# $Id: CPAN.pm,v 1.351 2000/09/10 08:02:42 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.345 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.351 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -707,9 +707,7 @@ sub instance {
     $id ||= "";
     # unsafe meta access, ok?
     return $META->{readwrite}{$class}{$id} if exists $META->{readwrite}{$class}{$id};
-    my $ro;
-    $ro = $META->{readonly}{$class}{$id} || {};
-    $META->{readwrite}{$class}{$id} ||= $class->new(ID => $id, RO => $ro);
+    $META->{readwrite}{$class}{$id} ||= $class->new(ID => $id);
 }
 
 #-> sub CPAN::new ;
@@ -1505,7 +1503,10 @@ sub _u_r_common {
     my $sprintf = "%-25s %9s %9s  %s\n";
     my @expand = $self->expand('Module',@args);
     my $expand = scalar @expand;
-    $CPAN::Frontend->myprint(sprintf "%d matches in the database\n", $expand);
+    if (0) { # Looks like noise to me, was very useful for debugging
+             # for metadata cache
+        $CPAN::Frontend->myprint(sprintf "%d matches in the database\n", $expand);
+    }
     for $module (@expand) {
 	my $file  = $module->cpan_file;
 	next unless defined $file; # ??
@@ -2795,52 +2796,63 @@ sub reload {
     for ($CPAN::Config->{index_expire}) {
 	$_ = 0.001 unless $_ && $_ > 0.001;
     }
+    $CPAN::META->{PROTOCOL} ||= "1.0";
+    if ( $CPAN::META->{PROTOCOL} < PROTOCOL  ) {
+        # warn "Setting last_time to 0";
+        $last_time = 0; # No warning necessary
+    }
     return if $last_time + $CPAN::Config->{index_expire}*86400 > $time
 	and ! $force;
-    ## IFF we are developing, it helps to wipe out the memory between
-    ## reloads, otherwise it is not what a user expects.
+    if (0) {
+        # IFF we are developing, it helps to wipe out the memory
+        # between reloads, otherwise it is not what a user expects.
+        undef $CPAN::META; # Neue Gruendlichkeit since v1.52(r1.274)
+        $CPAN::META = CPAN->new;
+    }
+    {
+        my($debug,$t2);
+        local $last_time = $time;
+        local $CPAN::META->{PROTOCOL} = PROTOCOL;
 
-    ## undef $CPAN::META; # Neue Gruendlichkeit since v1.52(r1.274)
-    ## $CPAN::META = CPAN->new;
-    my($debug,$t2);
+        my $needshort = $^O eq "dos";
+
+        $cl->rd_authindex($cl
+                          ->reload_x(
+                                     "authors/01mailrc.txt.gz",
+                                     $needshort ?
+                                     File::Spec->catfile('authors', '01mailrc.gz') :
+                                     File::Spec->catfile('authors', '01mailrc.txt.gz'),
+                                     $force));
+        $t2 = time;
+        $debug = "timing reading 01[".($t2 - $time)."]";
+        $time = $t2;
+        return if $CPAN::Signal; # this is sometimes lengthy
+        $cl->rd_modpacks($cl
+                         ->reload_x(
+                                    "modules/02packages.details.txt.gz",
+                                    $needshort ?
+                                    File::Spec->catfile('modules', '02packag.gz') :
+                                    File::Spec->catfile('modules', '02packages.details.txt.gz'),
+                                    $force));
+        $t2 = time;
+        $debug .= "02[".($t2 - $time)."]";
+        $time = $t2;
+        return if $CPAN::Signal; # this is sometimes lengthy
+        $cl->rd_modlist($cl
+                        ->reload_x(
+                                   "modules/03modlist.data.gz",
+                                   $needshort ?
+                                   File::Spec->catfile('modules', '03mlist.gz') :
+                                   File::Spec->catfile('modules', '03modlist.data.gz'),
+                                   $force));
+        $cl->write_metadata_cache;
+        $t2 = time;
+        $debug .= "03[".($t2 - $time)."]";
+        $time = $t2;
+        CPAN->debug($debug) if $CPAN::DEBUG;
+    }
     $last_time = $time;
-
-    my $needshort = $^O eq "dos";
-
-    $cl->rd_authindex($cl
-		      ->reload_x(
-				 "authors/01mailrc.txt.gz",
-				 $needshort ?
-				 File::Spec->catfile('authors', '01mailrc.gz') :
-				 File::Spec->catfile('authors', '01mailrc.txt.gz'),
-				 $force));
-    $t2 = time;
-    $debug = "timing reading 01[".($t2 - $time)."]";
-    $time = $t2;
-    return if $CPAN::Signal; # this is sometimes lengthy
-    $cl->rd_modpacks($cl
-		     ->reload_x(
-				"modules/02packages.details.txt.gz",
-				$needshort ?
-				File::Spec->catfile('modules', '02packag.gz') :
-				File::Spec->catfile('modules', '02packages.details.txt.gz'),
-				$force));
-    $t2 = time;
-    $debug .= "02[".($t2 - $time)."]";
-    $time = $t2;
-    return if $CPAN::Signal; # this is sometimes lengthy
-    $cl->rd_modlist($cl
-		    ->reload_x(
-			       "modules/03modlist.data.gz",
-			       $needshort ?
-			       File::Spec->catfile('modules', '03mlist.gz') :
-			       File::Spec->catfile('modules', '03modlist.data.gz'),
-			       $force));
-    $cl->write_metadata_cache;
-    $t2 = time;
-    $debug .= "03[".($t2 - $time)."]";
-    $time = $t2;
-    CPAN->debug($debug) if $CPAN::DEBUG;
+    $CPAN::META->{PROTOCOL} = PROTOCOL;
 }
 
 #-> sub CPAN::Index::reload_x ;
@@ -2980,8 +2992,12 @@ $index_target, $line_count, scalar(@lines);
 	if ($bundle){
 	    $id =  $CPAN::META->instance('CPAN::Bundle',$mod);
 	    # Let's make it a module too, because bundles have so much
-	    # in common with modules
-	    $CPAN::META->instance('CPAN::Module',$mod);
+	    # in common with modules.
+
+            # Changed in 1.57_63: seems like memory bloat now without
+            # any value, so commented out
+
+	    # $CPAN::META->instance('CPAN::Module',$mod);
 
 	} else {
 
@@ -3088,11 +3104,11 @@ sub write_metadata_cache {
 	$cache->{$k} = $CPAN::META->{readonly}{$k}; # unsafe meta access, ok
     }
     my $metadata_file = MM->catfile($CPAN::Config->{cpan_home},"Metadata");
-    $CPAN::Frontend->myprint("Going to write $metadata_file\n");
     $cache->{last_time} = $last_time;
     $cache->{PROTOCOL} = PROTOCOL;
+    $CPAN::Frontend->myprint("Going to write $metadata_file\n");
     eval { Storable::nstore($cache, $metadata_file) };
-    $CPAN::Frontent->mywarn($@) if $@;
+    $CPAN::Frontend->mywarn($@) if $@;
 }
 
 #-> sub CPAN::Index::read_metadata_cache ;
@@ -3145,6 +3161,9 @@ sub read_metadata_cache {
                                  "in $metadata_file\n");
         return;
     }
+    $CPAN::META->{PROTOCOL} ||=
+        $cache->{PROTOCOL}; # reading does not up or downgrade, but it
+                            # does initialize to some protocol
     $last_time = $cache->{last_time};
 }
 
@@ -3155,18 +3174,34 @@ sub cpan_userid { shift->{RO}{CPAN_USERID} }
 sub id { shift->{ID} }
 
 #-> sub CPAN::InfoObj::new ;
-sub new { my $this = bless {}, shift; %$this = @_; $this }
+sub new {
+    my $this = bless {}, shift;
+    %$this = @_;
+    $this
+}
 
-#### my(%SEEN) = ();
+# The set method may only be used by code that reads index data or
+# otherwise "objective" data from the outside world. All session
+# related material may do anything else with instance variables but
+# must not touch the hash under the RO attribute. The reason is that
+# the RO hash gets written to Metadata file and is thus persistent.
+
 #-> sub CPAN::InfoObj::set ;
 sub set {
     my($self,%att) = @_;
-    #my(%oldatt) = %$self;
-    #%$self = (%oldatt, %att);
     my $class = ref $self;
+
+    # This must be ||=, not ||, because only if we write an empty
+    # reference, only then the set method will write into the readonly
+    # area. But for Distributions that spring into existence, maybe
+    # because of a typo, we do not like it that they are written into
+    # the readonly area and made permanent (at least for a while) and
+    # that is why we do not "allow" other places to call ->set.
+    my $ro = $self->{RO} =
+        $CPAN::META->{readonly}{$class}{$self->id} ||= {};
+
     while (my($k,$v) = each %att) {
-        #### warn "$class,$k" unless $SEEN{"$class,$k"}++;
-        $self->{RO}{$k} = $v;
+        $ro->{$k} = $v;
     }
 }
 
@@ -3280,10 +3315,12 @@ sub color_cmd_tmps {
                                    $self->id
                                   )) if $depth>=100;
     ##### warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
-
-    for my $pre (keys %{$self->prereq_pm}) {
-        my $premo = CPAN::Shell->expand("Module",$pre);
-        $premo->color_cmd_tmps($depth+1,$color);
+    my $prereq_pm = $self->prereq_pm;
+    if (defined $prereq_pm) {
+        for my $pre (keys %$prereq_pm) {
+            my $premo = CPAN::Shell->expand("Module",$pre);
+            $premo->color_cmd_tmps($depth+1,$color);
+        }
     }
     if ($color==0) {
         delete $self->{sponsored_mods};
@@ -3957,37 +3994,8 @@ or
       delete $self->{force_update};
       return;
     }
-    if (my @prereq = $self->unsat_prereq_pm){
-      my $id = $self->id;
-      $CPAN::Frontend->myprint("---- Dependencies detected ".
-			       "during [$id] -----\n");
-
-      for my $p (@prereq) {
-	$CPAN::Frontend->myprint("    $p\n");
-      }
-      my $follow = 0;
-      if ($CPAN::Config->{prerequisites_policy} eq "follow") {
-	$follow = 1;
-      } elsif ($CPAN::Config->{prerequisites_policy} eq "ask") {
-	require ExtUtils::MakeMaker;
-	my $answer = ExtUtils::MakeMaker::prompt(
-"Shall I follow them and prepend them to the queue
-of modules we are processing right now?", "yes");
-	$follow = $answer =~ /^\s*y/i;
-      } else {
-	local($") = ", ";
-	$CPAN::Frontend->
-            myprint("  Ignoring dependencies on modules @prereq\n");
-      }
-      if ($follow) {
-          # color them as dirty
-          for my $p (@prereq) {
-              CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
-          }
-          CPAN::Queue->jumpqueue(@prereq,$id); # queue them and requeue yourself
-          $self->{later} = "Delayed until after prerequisites";
-          return 1; # signal success to the queuerunner
-      }
+    if (my @prereq = $self->unsat_prereq){
+      return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
     if (system($system) == 0) {
@@ -4000,15 +4008,57 @@ of modules we are processing right now?", "yes");
     }
 }
 
-#-> sub CPAN::Distribution::unsat_prereq_pm ;
-sub unsat_prereq_pm {
+sub follow_prereqs {
+    my($self) = shift;
+    my(@prereq) = @_;
+    my $id = $self->id;
+    $CPAN::Frontend->myprint("---- Unsatisfied dependencies detected ".
+                             "during [$id] -----\n");
+
+    for my $p (@prereq) {
+	$CPAN::Frontend->myprint("    $p\n");
+    }
+    my $follow = 0;
+    if ($CPAN::Config->{prerequisites_policy} eq "follow") {
+	$follow = 1;
+    } elsif ($CPAN::Config->{prerequisites_policy} eq "ask") {
+	require ExtUtils::MakeMaker;
+	my $answer = ExtUtils::MakeMaker::prompt(
+"Shall I follow them and prepend them to the queue
+of modules we are processing right now?", "yes");
+	$follow = $answer =~ /^\s*y/i;
+    } else {
+	local($") = ", ";
+	$CPAN::Frontend->
+            myprint("  Ignoring dependencies on modules @prereq\n");
+    }
+    if ($follow) {
+        # color them as dirty
+        for my $p (@prereq) {
+            CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
+        }
+        CPAN::Queue->jumpqueue(@prereq,$id); # queue them and requeue yourself
+        $self->{later} = "Delayed until after prerequisites";
+        return 1; # signal success to the queuerunner
+    }
+}
+
+#-> sub CPAN::Distribution::unsat_prereq ;
+sub unsat_prereq {
     my($self) = @_;
-    my $prereq_pm = $self->prereq_pm;
+    my $prereq_pm = $self->prereq_pm or return;
     my(@need);
   NEED: while (my($need_module, $need_version) = each %$prereq_pm) {
         my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
         # we were too demanding:
-        # next if $nmo->uptodate;
+        next if $nmo->uptodate;
+
+        # if they have not specified a version, we accept any installed one
+        if (not defined $need_version or
+           $need_version == 0 or
+           $need_version eq "undef") {
+            next if defined $nmo->inst_file;
+        }
 
         # We only want to install prereqs if either they're not installed
         # or if the installed version is too old. We cannot omit this
@@ -4043,9 +4093,10 @@ sub unsat_prereq_pm {
 #-> sub CPAN::Distribution::prereq_pm ;
 sub prereq_pm {
   my($self) = @_;
-  # return $self->{prereq_pm} if exists $self->{prereq_pm};
-  return {} unless $self->{writemakefile}; # no need to have succeeded
-                                           # but we must have run it
+  return $self->{prereq_pm} if
+      exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
+  return unless $self->{writemakefile}; # no need to have succeeded
+                                        # but we must have run it
   my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
   my $makefile = File::Spec->catfile($build_dir,"Makefile");
   my(%p) = ();
@@ -4077,6 +4128,7 @@ sub prereq_pm {
           last;
       }
   }
+  $self->{prereq_pm_detected}++;
   return $self->{prereq_pm} = \%p;
 }
 
@@ -4089,6 +4141,9 @@ sub test {
       return;
     }
     $CPAN::Frontend->myprint("Running make test\n");
+    if (my @prereq = $self->unsat_prereq){
+      return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+    }
   EXCUSE: {
 	my @e;
 	exists $self->{make} or exists $self->{later} or push @e,
@@ -4405,23 +4460,20 @@ sub find_bundle_file {
     Carp::croak("Couldn't find a Bundle file in $where");
 }
 
+# needs to work slightly different from Module::inst_file because of
+# cpan_home/Bundle/ directory.
+
 #-> sub CPAN::Bundle::inst_file ;
 sub inst_file {
     my($self) = @_;
+    return $self->{INST_FILE} if
+        exists $self->{INST_FILE} && $self->{INST_FILE};
     my($inst_file);
-    if (1) { # code seems better, for some reason it was commented
-             # out. AK, 2000-09-05
-        my(@me);
-        @me = split /::/, $self->id;
-        $me[-1] .= ".pm";
-        $inst_file = MM->catfile($CPAN::Config->{'cpan_home'}, @me);
-    } else { # old code, allows only for one level names
-        my($me);
-        ($me = $self->id) =~ s/.*://;
-        $inst_file = MM->catfile($CPAN::Config->{'cpan_home'},
-                                 "Bundle", "$me.pm");
-    }
-    return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
+    my(@me);
+    @me = split /::/, $self->id;
+    $me[-1] .= ".pm";
+    $inst_file = MM->catfile($CPAN::Config->{'cpan_home'}, @me);
+    return $self->{INST_FILE} = $inst_file if -f $inst_file;
     $self->SUPER::inst_file;
 }
 

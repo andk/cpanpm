@@ -1,3 +1,39 @@
+2000-09-10  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Tarball 1.57_65 (63 and 64 were not uploaded because I found
+	errors during testing)
+
+	* Bundle::inst_file: cleanup
+
+	* unsat_prereq: decision to accept any installed version if
+	PREREQ_PM says 0 or "undef" or undef.
+
+	* follow_prereqs: broke this new method out of make because I want
+	to repeat it in test. Repeating the check in test has the
+	advantage that the user is reminded in time that still some prereq
+	is missing.
+
+2000-09-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Tarball 1.57_63.
+
+	* rd_modpacks: do not let bundles be both bundles and modules
+	anymore. Seems like memory bloat without any value.
+
+	* reload: $last_time was set too early to a new value. It seems to
+	have never manifested itself as a bug, but we now do the more
+	correct localizing of the newer timestamp until we have read all
+	three index files and then set the timestamp globally.
+
+	* reload and read_metadata_cache: extend the index protocol to
+	memory so that whenever a new protocol is introduced, the index
+	gets loaded into memory asap.
+
+	* instance vs set: moved the code that creates the RO pointer from
+	instance to set and commenting the set method to have this side
+	effect. This was the cause for a very difficult to diagnose bug.
+	Thanks to Jost Krieger for discovering wrong content in Metadata.
+
 2000-09-08  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* read_metadata_cache: More sanity checks.
