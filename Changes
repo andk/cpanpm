@@ -4,6 +4,21 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
 
+=head2 August 11, 1997
+
+Tidied up the inheritance of CPAN -> MM. In a future version this
+inheritance will go away and MM will be just used statically.
+
+Now delaying the require CPAN::WAIT until somebody really runs a w*
+command.
+
+CPAN::Module::cpan_version now also returns the string "undef"
+whenever we can't determine which version is out there.
+
+Now trying to get files as gzipped files earlier immediately after we
+fail to get a file and that file has no .gz suffix. Earlier versions
+delayed this try until we had visited all hosts in the urllist.
+
 =head2 August 2 1997
 
 Retrofit for 5.003 again (thanks to Vladimir Alexiev

@@ -1,12 +1,13 @@
 package CPAN;
-use vars qw{$Try_autoload 
+use vars qw{$Try_autoload $Revision
 	    $META $Signal $Cwd $End $Suppress_readline %Dontload};
 
-$VERSION = '1.28';
+$VERSION = '1.29';
 
-# $Id: CPAN.pm,v 1.173 1997/08/04 06:03:35 k Exp $
+# $Id: CPAN.pm,v 1.177 1997/08/11 23:15:10 k Exp $
 
-# my $version = substr q$Revision: 1.173 $, 10; # only used during development
+# only used during development:
+$Revision = ""; # "[".substr(q$Revision: 1.177 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -48,9 +49,11 @@ package CPAN;
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $term);
 use strict qw(vars);
 
-@CPAN::ISA = qw(CPAN::Debug Exporter MM); # the MM class from
-                                          # MakeMaker, gives us
-                                          # catfile and catdir
+@CPAN::ISA = qw(CPAN::Debug Exporter MM); # MM will go away
+                                          # soonish. Already version
+                                          # 1.29 doesn't rely on
+                                          # catfile and catdir being
+                                          # available via inheritance.
 
 @EXPORT = qw(
 	     autobundle bundle expand force get
@@ -104,7 +107,7 @@ sub shell {
 	    "available (try ``install Bundle::CPAN'')";
 
     print qq{
-cpan shell -- CPAN exploration and modules installation (v$CPAN::VERSION)
+cpan shell -- CPAN exploration and modules installation (v$CPAN::VERSION$CPAN::Revision)
 ReadLine support $rl_avail
 
 } unless $CPAN::Config->{'inhibit_startup_message'} ;
@@ -200,10 +203,11 @@ use vars qw($AUTOLOAD $redef @ISA);
 #-> sub CPAN::Shell::AUTOLOAD ;
 sub AUTOLOAD {
     my($autoload) = $AUTOLOAD;
+    my $class = shift(@_);
     $autoload =~ s/.*:://;
     if ($autoload =~ /^w/) {
 	if ($CPAN::META->has_inst('CPAN::WAIT')) {
-	    CPAN::WAIT->wh;
+	    CPAN::WAIT->$autoload(@_);
 	} else {
 	    print STDERR qq{
 Commands starting with "w" require CPAN::WAIT to be installed.
@@ -274,12 +278,6 @@ sub try_dot_al {
     return $ok;
 }
 
-# This should be left to a runtime evaluation
-eval {require CPAN::WAIT;};
-unless ($@) {
-    unshift @ISA, "CPAN::WAIT";
-}
-
 #### autoloader is experimental
 #### to try it we have to set $Try_autoload and uncomment
 #### the use statement and uncomment the __END__ below
@@ -341,7 +339,7 @@ sub all {
 #-> sub CPAN::checklock ;
 sub checklock {
     my($self) = @_;
-    my $lockfile = CPAN->catfile($CPAN::Config->{cpan_home},".lock");
+    my $lockfile = MM->catfile($CPAN::Config->{cpan_home},".lock");
     if (-f $lockfile && -M _ > 0) {
 	my $fh = FileHandle->new($lockfile);
 	my $other = <$fh>;
@@ -572,9 +570,9 @@ sub entries {
     for ($dh->read) {
 	next if $_ eq "." || $_ eq "..";
 	if (-f $_) {
-	    push @entries, $CPAN::META->catfile($dir,$_);
+	    push @entries, MM->catfile($dir,$_);
 	} elsif (-d _) {
-	    push @entries, $CPAN::META->catdir($dir,$_);
+	    push @entries, MM->catdir($dir,$_);
 	} else {
 	    print STDERR "Warning: weird direntry in $dir: $_\n";
 	}
@@ -801,7 +799,7 @@ sub load {
     my($self) = shift;
     my(@miss);
     eval {require CPAN::Config;};       # We eval, because of some MakeMaker problems
-    unshift @INC, $CPAN::META->catdir($ENV{HOME},".cpan") unless $dot_cpan++;
+    unshift @INC, MM->catdir($ENV{HOME},".cpan") unless $dot_cpan++;
     eval {require CPAN::MyConfig;};     # where you can override system wide settings
     return unless @miss = $self->not_loaded;
     require CPAN::FirstTime;
@@ -974,11 +972,11 @@ sub b {
     CPAN->debug("which[@which]") if $CPAN::DEBUG;
     my($incdir,$bdir,$dh);
     foreach $incdir ($CPAN::Config->{'cpan_home'},@INC) {
-	$bdir = $CPAN::META->catdir($incdir,"Bundle");
+	$bdir = MM->catdir($incdir,"Bundle");
 	if ($dh = DirHandle->new($bdir)) { # may fail
 	    my($entry);
 	    for $entry ($dh->read) {
-		next if -d $CPAN::META->catdir($bdir,$entry);
+		next if -d MM->catdir($bdir,$entry);
 		next unless $entry =~ s/\.pm$//;
 		$CPAN::META->instance('CPAN::Bundle',"Bundle::$entry");
 	    }
@@ -1271,7 +1269,7 @@ sub u {
 sub autobundle {
     my($self) = shift;
     my(@bundle) = $self->_u_r_common("a",@_);
-    my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
+    my($todir) = MM->catdir($CPAN::Config->{'cpan_home'},"Bundle");
     File::Path::mkpath($todir);
     unless (-d $todir) {
 	print "Couldn't mkdir $todir for some reason\n";
@@ -1282,10 +1280,10 @@ sub autobundle {
     $m++;
     my($c) = 0;
     my($me) = sprintf "Snapshot_%04d_%02d_%02d_%02d", $y, $m, $d, $c;
-    my($to) = $CPAN::META->catfile($todir,"$me.pm");
+    my($to) = MM->catfile($todir,"$me.pm");
     while (-f $to) {
 	$me = sprintf "Snapshot_%04d_%02d_%02d_%02d", $y, $m, $d, ++$c;
-	$to = $CPAN::META->catfile($todir,"$me.pm");
+	$to = MM->catfile($todir,"$me.pm");
     }
     my($fh) = FileHandle->new(">$to") or Carp::croak "Can't open >$to: $!";
     $fh->print(
@@ -1547,6 +1545,16 @@ sub localize {
 	    my $res = $Ua->mirror($url, $aslocal);
 	    if ($res->is_success) {
 		return $aslocal;
+	    } elsif ($url !~ /\.gz$/) {
+		my $gzurl = "$url.gz";
+		print "Trying to fetch $gzurl with LWP\n";
+		$res = $Ua->mirror($gzurl, "$aslocal.gz");
+		if ($res->is_success) {
+		    system("$CPAN::Config->{gzip} -d $aslocal.gz")==0 &&
+			return $aslocal;
+		} else {
+		    next HOSTEASY ;
+		}
 	    } else {
 		next HOSTEASY ;
 	    }
@@ -1556,12 +1564,23 @@ sub localize {
 	    my($host,$dir,$getfile) = ($1,$2,$3);
 	    if ($CPAN::META->has_inst('Net::FTP')) {
 		$dir =~ s|/+|/|g;
+		print "Trying to fetch $aslocal with Net::FTP\n";
 		$self->debug("Going to fetch file [$getfile]
   from dir [$dir]
   on host  [$host]
   as local [$aslocal]") if $CPAN::DEBUG;
 		CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal) &&
 		    return $aslocal;
+		if ($aslocal !~ /\.gz$/) {
+		    my $gz = "$aslocal.gz";
+		    print "Trying to fetch $gz with Net::FTP\n";
+		    CPAN::FTP->ftp_get($host,
+				       $dir,
+				       "$getfile.gz",
+				       $gz) &&
+			system("$CPAN::Config->{gzip} -d $gz")==0 &&
+			    return $aslocal;
+		}
 		next HOSTEASY;
 	    }
 	}
@@ -1610,19 +1629,35 @@ Trying with $funkyftp to get
 			system($system);
 		    }
 		    return $aslocal;
-
-# else branch doesn't make sense, does it?
-
-#		} else {
-#		    $system = "$CPAN::Config->{'gzip'} -dt $aslocal";
-#		    if (system($system) == 0) {
-#			$system = "$CPAN::Config->{'gzip'} -d $aslocal";
-#			system($system);
-#		    } else {
-#			# should be fine, eh?
-#		    }
-#		    return $aslocal;
-
+		}
+	    } elsif ($url !~ /\.gz$/) {
+		my $gz = "$aslocal.gz";
+		my $gzurl = "$url.gz";
+		print(
+		      qq{
+Trying with $funkyftp to get
+    $url.gz
+});
+		my($system) = "$funkyftp $source_switch '$url.gz' > ".
+		    "$aslocal_uncompressed.gz";
+		$self->debug("system[$system]") if $CPAN::DEBUG;
+		my($wstatus);
+		if (($wstatus = system($system)) == 0
+		    &&
+		    -s "$aslocal_uncompressed.gz"
+		   ) {
+		    # test gzip integrity
+		    $system =
+			"$CPAN::Config->{'gzip'} -dt $aslocal_uncompressed.gz";
+		    warn "system[$system]";
+		    if (system($system) == 0) {
+			$system = "$CPAN::Config->{'gzip'} -dc $aslocal_uncompressed.gz > $aslocal";
+			warn "system[$system]";
+			system($system);
+		    } else {
+			rename $aslocal_uncompressed, $aslocal;
+		    }
+		    return $aslocal;
 		}
 	    } else {
 		my $estatus = $wstatus >> 8;
@@ -2024,7 +2059,7 @@ sub reload_x {
     $force ||= 0;
     CPAN::Config->load; # we should guarantee loading wherever we rely
                         # on Config XXX
-    my $abs_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},
+    my $abs_wanted = MM->catfile($CPAN::Config->{'keep_source_where'},
 				   $localname);
     if (
 	-f $abs_wanted &&
@@ -2267,7 +2302,7 @@ sub get {
     }
     my($local_file);
     my($local_wanted) =
-	 CPAN->catfile(
+	 MM->catfile(
 			$CPAN::Config->{keep_source_where},
 			"authors",
 			"id",
@@ -2317,7 +2352,7 @@ sub get {
 	my ($distdir,$packagedir);
 	if (@readdir == 1 && -d $readdir[0]) {
 	    $distdir = $readdir[0];
-	    $packagedir = $CPAN::META->catdir($builddir,$distdir);
+	    $packagedir = MM->catdir($builddir,$distdir);
 	    -d $packagedir and print "Removing previously used $packagedir\n";
 	    File::Path::rmtree($packagedir);
 	    rename($distdir,$packagedir) or Carp::confess("Couldn't rename $distdir to $packagedir: $!");
@@ -2325,11 +2360,11 @@ sub get {
 	    my $pragmatic_dir = $self->{'CPAN_USERID'} . '000';
 	    $pragmatic_dir =~ s/\W_//g;
 	    $pragmatic_dir++ while -d "../$pragmatic_dir";
-	    $packagedir = $CPAN::META->catdir($builddir,$pragmatic_dir);
+	    $packagedir = MM->catdir($builddir,$pragmatic_dir);
 	    File::Path::mkpath($packagedir);
 	    my($f);
 	    for $f (@readdir) { # is already without "." and ".."
-		my $to = $CPAN::META->catdir($packagedir,$f);
+		my $to = MM->catdir($packagedir,$f);
 		rename($f,$to) or Carp::confess("Couldn't rename $f to $to: $!");
 	    }
 	}
@@ -2343,9 +2378,9 @@ sub get {
 	    print "Going to unlink $local_file\n";
 	    unlink $local_file or Carp::carp "Couldn't unlink $local_file";
 	}
-	my($makefilepl) = $CPAN::META->catfile($packagedir,"Makefile.PL");
+	my($makefilepl) = MM->catfile($packagedir,"Makefile.PL");
 	unless (-f $makefilepl) {
-	    my($configure) = $CPAN::META->catfile($packagedir,"Configure");
+	    my($configure) = MM->catfile($packagedir,"Configure");
 	    if (-f $configure) {
 		# do we have anything to do?
 		$self->{'configure'} = $configure;
@@ -2451,7 +2486,7 @@ sub readme {
     $self->debug("sans[$sans] suffix[$suffix]\n") if $CPAN::DEBUG;
     my($local_file);
     my($local_wanted) =
-	 CPAN->catfile(
+	 MM->catfile(
 			$CPAN::Config->{keep_source_where},
 			"authors",
 			"id",
@@ -2467,7 +2502,7 @@ sub readme {
     $fh_readme->open($local_file) or die "Could not open $local_file: $!";
     $fh_pager->print(<$fh_readme>);
 }
-
+#line 2489
 #-> sub CPAN::Distribution::verifyMD5 ;
 sub verifyMD5 {
     my($self) = @_;
@@ -2482,11 +2517,11 @@ sub verifyMD5 {
     pop @local;
     push @local, "CHECKSUMS";
     $lc_want =
-	CPAN->catfile($CPAN::Config->{keep_source_where},
+	MM->catfile($CPAN::Config->{keep_source_where},
 		      "authors", "id", @local);
     local($") = "/";
     if (
-	-f $lc_want
+	-s $lc_want
 	&&
 	$self->MD5_check_file($lc_want)
        ) {
@@ -2513,11 +2548,11 @@ sub verifyMD5 {
 sub MD5_check_file {
     my($self,$chk_file) = @_;
     my($cksum,$file,$basename);
-    $file =  $self->{localfile};
+    $file = $self->{localfile};
     $basename = File::Basename::basename($file);
     my $fh = FileHandle->new;
-    local($/);
     if (open $fh, $chk_file){
+	local($/);
 	my $eval = <$fh>;
 	close $fh;
 	my($comp) = Safe->new();
@@ -2605,7 +2640,7 @@ sub perl {
     my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
     my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
     my $pwd  = CPAN->$getcwd();
-    my $candidate = $CPAN::META->catfile($pwd,$^X);
+    my $candidate = MM->catfile($pwd,$^X);
     $perl ||= $candidate if MM->maybe_command($candidate);
     unless ($perl) {
 	my ($component,$perl_name);
@@ -2848,13 +2883,13 @@ sub contains {
 					 $self->{CPAN_FILE});
 	$dist->get;
 	$self->debug($dist->as_string) if $CPAN::DEBUG;
-	my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},
+	my($todir) = MM->catdir($CPAN::Config->{'cpan_home'},
 					 "Bundle");
 	File::Path::mkpath($todir);
 	my($me,$from,$to);
 	($me = $self->id) =~ s/.*://;
 	$from = $self->find_bundle_file($dist->{'build_dir'},"$me.pm");
-	$to = $CPAN::META->catfile($todir,"$me.pm");
+	$to = MM->catfile($todir,"$me.pm");
 	File::Copy::copy($from, $to)
 	    or Carp::confess("Couldn't copy $from to $to: $!");
 	$parsefile = $to;
@@ -2884,9 +2919,9 @@ sub contains {
 #-> sub CPAN::Bundle::find_bundle_file
 sub find_bundle_file {
     my($self,$where,$what) = @_;
-    my $bu = $CPAN::META->catfile($where,$what);
+    my $bu = MM->catfile($where,$what);
     return $bu if -f $bu;
-    my $manifest = $CPAN::META->catfile($where,"MANIFEST");
+    my $manifest = MM->catfile($where,"MANIFEST");
     unless (-f $manifest) {
 	require ExtUtils::Manifest;
 	my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
@@ -2903,7 +2938,7 @@ sub find_bundle_file {
 	my($file) = /(\S+)/;
 	if ($file =~ m|Bundle/$what$|) {
 	    $bu = $file;
-	    return $CPAN::META->catfile($where,$bu);
+	    return MM->catfile($where,$bu);
 	}
     }
     Carp::croak("Could't find a Bundle file in $where");
@@ -2914,7 +2949,7 @@ sub inst_file {
     my($self) = @_;
     my($me,$inst_file);
     ($me = $self->id) =~ s/.*://;
-    $inst_file = $CPAN::META->catfile($CPAN::Config->{'cpan_home'},
+    $inst_file = MM->catfile($CPAN::Config->{'cpan_home'},
 				      "Bundle", "$me.pm");
     return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
 #    $inst_file =
@@ -3090,7 +3125,20 @@ sub cpan_file    {
 *name = \&cpan_file;
 
 #-> sub CPAN::Module::cpan_version ;
-sub cpan_version { shift->{'CPAN_VERSION'} }
+sub cpan_version {
+    my $self = shift;
+    $self->{'CPAN_VERSION'} = 'undef' 
+	unless defined $self->{'CPAN_VERSION'}; # I believe this is
+                                                # always a bug in the
+                                                # index and should be
+                                                # reported as such,
+                                                # but usually I find
+                                                # out such an error
+                                                # and do not want to
+                                                # provoke too many
+                                                # bugreports
+    $self->{'CPAN_VERSION'};
+}
 
 #-> sub CPAN::Module::force ;
 sub force {
@@ -3159,7 +3207,7 @@ sub inst_file {
     @packpath = split /::/, $self->{ID};
     $packpath[-1] .= ".pm";
     foreach $dir (@INC) {
-	my $pmfile = CPAN->catfile($dir,@packpath);
+	my $pmfile = MM->catfile($dir,@packpath);
 	if (-f $pmfile){
 	    return $pmfile;
 	}
@@ -3175,7 +3223,7 @@ sub xs_file {
     push @packpath, $packpath[-1];
     $packpath[-1] .= "." . $Config::Config{'dlext'};
     foreach $dir (@INC) {
-	my $xsfile = CPAN->catfile($dir,'auto',@packpath);
+	my $xsfile = MM->catfile($dir,'auto',@packpath);
 	if (-f $xsfile){
 	    return $xsfile;
 	}
