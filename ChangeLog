@@ -1,5 +1,10 @@
 2003-07-29  Andreas J Koenig  <andreas.koenig@anima.de>
 
+	* Applying patches 20294, 20295, and 20306 in the perforce
+	repository with the subject lines: There is no skip() since we are
+	not using Test*. unlink pre-PGP-signed CHECKSUM. Too many my
+	$fh:s.
+
 	* Added missing 'use File::Spec' directive to the Makefile.PL
 	(Thanks to Tom Metro)
 
