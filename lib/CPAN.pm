@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_56';
+$VERSION = '1.58_57';
 
-# $Id: CPAN.pm,v 1.368 2000/11/04 09:24:49 k Exp $
+# $Id: CPAN.pm,v 1.370 2000/11/06 18:53:54 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.368 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.370 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -139,20 +139,21 @@ ReadLine support %s
                             )
         unless $CPAN::Config->{'inhibit_startup_message'} ;
     my($continuation) = "";
-    while () {
+  SHELLCOMMAND: while () {
 	if ($Suppress_readline) {
 	    print $prompt;
-	    last unless defined ($_ = <> );
+	    last SHELLCOMMAND unless defined ($_ = <> );
 	    chomp;
 	} else {
-	    last unless defined ($_ = $term->readline($prompt, $commandline));
+	    last SHELLCOMMAND unless
+                defined ($_ = $term->readline($prompt, $commandline));
 	}
 	$_ = "$continuation$_" if $continuation;
 	s/^\s+//;
-	next if /^$/;
+	next SHELLCOMMAND if /^$/;
 	$_ = 'h' if /^\s*\?/;
 	if (/^(?:q(?:uit)?|bye|exit)$/i) {
-	    last;
+	    last SHELLCOMMAND;
 	} elsif (s/\\$//s) {
 	    chomp;
 	    $continuation = $_;
@@ -174,7 +175,9 @@ ReadLine support %s
 		@line = split;
 	    } else {
 		eval { @line = Text::ParseWords::shellwords($_) };
-		warn($@), next if $@;
+		warn($@), next SHELLCOMMAND if $@;
+                warn("Text::Parsewords could not parse the line [$_]"),
+                    next SHELLCOMMAND unless @line;
 	    }
 	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
@@ -231,7 +234,8 @@ package CPAN::Complete;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
 @CPAN::Complete::COMMANDS = sort qw(
 		       ! a b d h i m o q r u autobundle clean dump
-		       make test install force readme reload look cvs_import
+		       make test install force readme reload look
+                       cvs_import ls
 ) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
@@ -1706,6 +1710,7 @@ sub expandany {
     my($self,$s) = @_;
     CPAN->debug("s[$s]") if $CPAN::DEBUG;
     if ($s =~ m|/|) { # looks like a file
+        $s = CPAN::Distribution->normalize($s);
         return $CPAN::META->instance('CPAN::Distribution',$s);
         # Distributions spring into existence, not expand
     } elsif ($s =~ m|^Bundle::|) {
@@ -1785,7 +1790,9 @@ sub expand {
 	    my($xarg) = $arg;
 	    if ( $type eq 'Bundle' ) {
 		$xarg =~ s/^(Bundle::)?(.*)/Bundle::$2/;
-	    }
+	    } elsif ($type eq "Distribution") {
+                $xarg = CPAN::Distribution->normalize($arg);
+            }
 	    if ($CPAN::META->exists($class,$xarg)) {
 		$obj = $CPAN::META->instance($class,$xarg);
 	    } elsif ($CPAN::META->exists($class,$arg)) {
@@ -2721,7 +2728,7 @@ sub cpl {
 	@return = grep /^$word/, @CPAN::Complete::COMMANDS;
     } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
 	@return = ();
-    } elsif ($line =~ /^a\s/) {
+    } elsif ($line =~ /^(a|ls)\s/) {
 	@return = cplx('CPAN::Author',$word);
     } elsif ($line =~ /^b\s/) {
 	@return = cplx('CPAN::Bundle',$word);
@@ -3332,21 +3339,29 @@ sub ls {
     my $id = $self->id;
 
     # adapted from CPAN::Distribution::verifyMD5 ;
-    my($lc_want,$lc_file,@local);
-    @local = $self->id =~ /(.)(.)(.*)/;
-    $local[1] = join "", @local[0,1];
-    $local[2] = join "", @local[1,2];
-    push @local, "CHECKSUMS";
-    $lc_want =
+    my(@chksumfile);
+    @chksumfile = $self->id =~ /(.)(.)(.*)/;
+    $chksumfile[1] = join "", @chksumfile[0,1];
+    $chksumfile[2] = join "", @chksumfile[1,2];
+    push @chksumfile, "CHECKSUMS";
+    print join "", map {
+        sprintf("%8d %10s %s\n", @$_)
+    } sort { $a->[2] cmp $b->[2] } $self->dir_listing(\@chksumfile);
+}
+
+sub dir_listing {
+    my $self = shift;
+    my $chksumfile = shift;
+    my $lc_want =
 	MM->catfile($CPAN::Config->{keep_source_where},
-		      "authors", "id", @local);
+                    "authors", "id", @$chksumfile);
     local($") = "/";
-    $lc_file = CPAN::FTP->localize("authors/id/@local",
-				   $lc_want,1);
+    my $lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
+                                      $lc_want,1);
     unless ($lc_file) {
         $CPAN::Frontend->myprint("Trying $lc_want.gz\n");
-	$local[-1] .= ".gz";
-	$lc_file = CPAN::FTP->localize("authors/id/@local",
+	$chksumfile->[-1] .= ".gz";
+	$lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
 				       "$lc_want.gz",1);
 	if ($lc_file) {
 	    $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
@@ -3373,9 +3388,24 @@ sub ls {
     } else {
 	Carp::carp "Could not open $lc_file for reading";
     }
-    for my $f (sort keys %$cksum) {
-        printf "%8d %s\n", $cksum->{$f}{size}, $f;
+    my(@result,$f);
+    for $f (sort keys %$cksum) {
+        if (exists $cksum->{$f}{isdir}) {
+            my(@dir) = @$chksumfile;
+            pop @dir;
+            push @dir, $f, "CHECKSUMS";
+            push @result, map {
+                [$_->[0], $_->[1], "$f/$_->[2]"]
+            } $self->dir_listing(\@dir);
+        } else {
+            push @result, [
+                           ($cksum->{$f}{"size"}||0),
+                           $cksum->{$f}{"mtime"}||"---",
+                           $f
+                          ];
+        }
     }
+    @result;
 }
 
 package CPAN::Distribution;
@@ -3386,6 +3416,16 @@ sub cpan_comment { shift->{RO}{CPAN_COMMENT} }
 sub undelay {
     my $self = shift;
     delete $self->{later};
+}
+
+sub normalize {
+    my($self,$s) = @_;
+    if ($s =~ tr|/|| == 1) {
+        $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4| or
+            $CPAN::Frontend->mywarn("Strange distribution name [$s]");
+        CPAN->debug("s[$s]") if $CPAN::DEBUG;
+    }
+    $s;
 }
 
 #-> sub CPAN::Distribution::color_cmd_tmps ;
@@ -4851,17 +4891,21 @@ sub as_string {
                 -f ($mff = MM->catfile($dist->{build_dir}, "MANIFEST")) and
                 $mfh = FileHandle->new($mff)
                ) {
-                # warn "mff[$mff]";
+                CPAN->debug("mff[$mff]") if $CPAN::DEBUG;
                 my $lfre = $self->id; # local file RE
                 $lfre =~ s/::/./g;
                 $lfre .= "\\.pm\$";
                 my($lfl); # local file file
                 local $/ = "\n";
                 my(@mflines) = <$mfh>;
+                for (@mflines) {
+                    s/^\s+//;
+                    s/\s.*//s;
+                }
                 while (length($lfre)>5 and !$lfl) {
                     ($lfl) = grep /$lfre/, @mflines;
+                    CPAN->debug("lfl[$lfl]lfre[$lfre]") if $CPAN::DEBUG;
                     $lfre =~ s/.+?\.//;
-                    # warn "lfl[$lfl]lfre[$lfre]";
                 }
                 $lfl =~ s/\s.*//; # remove comments
                 $lfl =~ s/\s+//g; # chomp would maybe be too system-specific
@@ -5437,9 +5481,8 @@ sub float2vv {
     my($self,$n) = @_;
     my($rev) = int($n);
     $rev ||= 0;
-    my($mantissa) = $n =~ /\.(\d{1,12})/; # limit to 12 digits so that
-                                          # architecture cannot
-                                          # influnce
+    my($mantissa) = $n =~ /\.(\d{1,12})/; # limit to 12 digits to limit
+                                          # architecture influence
     $mantissa ||= 0;
     $mantissa .= "0" while length($mantissa)%3;
     my $ret = "v" . $rev;

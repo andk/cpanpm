@@ -3,7 +3,7 @@ use base CPAN;
 use strict;
 use vars qw(@EXPORT $VERSION);
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.5 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -117,7 +117,7 @@ sub CPAN::Shell::register {
   my $emodid = URI::Escape::uri_escape($id, '\W');
   my $ech = $reco_ch;
   $ech =~ s/ /+/g;
-  my $description = $m->{MANPAGE};
+  my $description = $m->{MANPAGE} || "";
   $description =~ s/[A-Z]<//; # POD markup (and maybe more)
   $description =~ s/^\s+//; # leading spaces
   $description =~ s/>//; # POD

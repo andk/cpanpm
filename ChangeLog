@@ -1,3 +1,22 @@
+2000-11-06  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Shell::ls: I believe, ls is now fully functional, but it
+	still needs some work on PAUSE to be perceived as bugfree. Thu
+	left undocumented (but it's already useful as it is, even
+	completion works; if you're interested: give it only authors as
+	arguments).
+
+	* CPAN::shell: Detect parse errors when Text::ParseWords fails
+	without die()ing, like in C<d Documentum's>.
+
+	* CPAN::Distribution::normalize: Try A/AC/ACALPINI/foo when the
+	user says ACALPINI/foo. I have only tested for the C<rematein>
+	family and the C<d> command so far. Need to find all places where
+	the normalization is needed.
+
+	* CPAN::Module::as_string: improved manpage parsing on files with
+	CRLF in them.
+
 2000-11-04  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing as 1.58_56.
