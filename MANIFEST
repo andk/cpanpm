@@ -1,6 +1,5 @@
 BUNDLE/Test/Builder.pm
 BUNDLE/Test/More.pm
-CPAN/MakeMaker.pm
 ChangeLog
 Changes.old
 MANIFEST

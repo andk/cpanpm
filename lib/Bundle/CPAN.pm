@@ -30,8 +30,6 @@ Term::ReadKey
 
 Term::ReadLine::Perl # sorry, I'm discriminating the ::Gnu module
 
-CPAN::WAIT
-
 CPAN
 
 =head1 DESCRIPTION

@@ -23,9 +23,9 @@ STATUS
 
 DESCRIPTION
     The CPAN module is designed to automate the make and install of perl
-    modules and extensions. It includes some searching capabilities and
-    knows how to use Net::FTP or LWP (or lynx or an external ftp client) to
-    fetch the raw data from the net.
+    modules and extensions. It includes some primitive searching
+    capabilities and knows how to use Net::FTP or LWP (or lynx or an
+    external ftp client) to fetch the raw data from the net.
 
     Modules are fetched from one or more of the mirrored CPAN (Comprehensive
     Perl Archive Network) sites and unpacked in a dedicated directory.
@@ -648,12 +648,18 @@ DESCRIPTION
     with this floppy. See also below the paragraph about CD-ROM support.
 
 CONFIGURATION
-    When the CPAN module is installed, a site wide configuration file is
-    created as CPAN/Config.pm. The default values defined there can be
-    overridden in another configuration file: CPAN/MyConfig.pm. You can
-    store this file in $HOME/.cpan/CPAN/MyConfig.pm if you want, because
-    $HOME/.cpan is added to the search path of the CPAN module before the
-    use() or require() statements.
+    When the CPAN module is used for the first time, a configuration dialog
+    tries to determine a couple of site specific options. The result of the
+    dialog is stored in a hash reference $CPAN::Config in a file
+    CPAN/Config.pm.
+
+    The default values defined in the CPAN/Config.pm file can be overridden
+    in a user specific file: CPAN/MyConfig.pm. Such a file is best placed in
+    $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is added to the search
+    path of the CPAN module before the use() or require() statements.
+
+    The configuration dialog can be started any time later again by issueing
+    the command " o conf init " in the CPAN shell.
 
     Currently the following keys in the hash reference $CPAN::Config are
     defined:

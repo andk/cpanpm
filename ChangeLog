@@ -1,3 +1,48 @@
+2003-04-05  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::FTP: Try maybe_command on $CPAN::Config->{ftp} plus minor
+	cleanup.
+
+2003-04-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN.pm: Better error message when encountering a recursive
+	dependency: it was just 'panic' and shows now the dependency
+	graph.
+
+2003-03-29  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Nox.pm: add a '1;' at the end. Thanks to Dan Kogai for finding
+	the buglet.
+
+	* CPAN.pm: document 'o conf init' in the manpage. Thanks to Slaven
+	Rezic for noticing the missing docs.
+
+2003-03-19  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Makefile.PL: dependency on File::Spec 0.8 due to
+	CPAN::MakeMaker's use of splitdir
+
+2003-03-13  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Change error message "Subprocess error" by "Subprocess exit code
+	$code". Suggestion by Slaven Rezic.
+
+	* Introduce support flag "abandoned" for DSLIP. Warn if users want
+	to install an abandoned module
+
+	* When determining the "CPAN_USERID" in Module->as_string, try
+	first userid from 03modlist, then CPAN_USERID from 02modules. They
+	need not be identical: WPS has uploaded his distro, then KSTAR
+	took the module over, but has not yet uploaded.
+	
+2003-03-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* add "abandoned" flag to the Support item in the DSLIP status
+
+	* CPAN::FirstTime: Remove WAIT configuration
+
+	* Bundle::CPAN: remove CPAN::WAIT from the bundle
+
 2003-02-28  Brian Ingerson <ingy@cpan.org>
 
 	* CPAN's use of CPAN::MakeMaker caused an ironic but serious bug.
