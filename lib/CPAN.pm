@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.29a';
+$VERSION = '0.30a';
 
-# $Id: CPAN.pm,v 1.48 1996/09/17 17:12:31 k Exp $
-my $version = substr q$Revision: 1.48 $, 10;
+# $Id: CPAN.pm,v 1.49 1996/09/17 21:43:39 k Exp $
+my $version = substr q$Revision: 1.49 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -330,7 +330,7 @@ sub o {
     $o_type ||= "";
     if ($o_type eq 'conf') {
 	print q[To set configuration options use the ! escape. E.g.:].qq[\n];
-	print q[    !push @{$CPAN::Config->{'urllist'}}, "ftp://another/try"].qq[\n\n];
+	print q[    !push @{$CPAN::Config->{'urllist'}}, "ftp://another/try/"].qq[\n\n];
 	my($k,$v);
 	print "CPAN::Config options:\n";
 	while (($k,$v) = each %$CPAN::Config) {
@@ -1385,7 +1385,7 @@ sub cachesize {
 sub clean_cache {
     my $self = shift;
     my $dir;
-    while ($self->{DU} > $CPAN::Config->{build_cache} and $dir = shift @{$self->{FIFO}}) {
+    while ($self->{DU} > $self->{'MAX'} and $dir = shift @{$self->{FIFO}}) {
 	$self->force_clean_cache($dir);
     }
     $self->debug("leaving clean_cache with $self->{DU}") if $CPAN::DEBUG;
@@ -1395,12 +1395,25 @@ sub dir {
     shift->{ID};
 }
 
-sub dirs {
+sub entries {
     my($self,$dir) = @_;
     $dir ||= $self->{ID};
-    my $dh = DirHandle->new($dir) or Carp::croak("Couldn't opendir $dir: $!");
-    my(@dirs) = grep -d $_, map {$CPAN::META->catdir($dir,$_)} grep {$_ ne "." && $_ ne ".."} $dh->read;
-    sort {-M $b <=> -M $a} @dirs;
+    my($cwd) = Cwd::cwd();
+    chdir $dir or Carp::croak("Can't chdir to $dir: $!");
+    my $dh = DirHandle->new(".") or Carp::croak("Couldn't opendir $dir: $!");
+    my(@entries);
+    for ($dh->read) {
+	next if $_ eq "." || $_ eq "..";
+	if (-f $_) {
+	    push @entries, $CPAN::META->catfile($dir,$_);
+	} elsif (-d _) {
+	    push @entries, $CPAN::META->catdir($dir,$_);
+	} else {
+	    print STDERR "Warning: weird direntry in $dir: $_\n";
+	}
+    }
+    chdir $cwd or Carp::croak("Can't chdir to $cwd: $!");
+    sort {-M $b <=> -M $a} @entries;
 }
 
 sub disk_usage {
@@ -1416,12 +1429,12 @@ sub disk_usage {
     push @{$self->{FIFO}}, $dir;
     $self->debug("measured $dir is $Du") if $CPAN::DEBUG;
     $self->{DU} += $Du/1024/1024;
-    if ($self->{DU} > $CPAN::Config->{build_cache}) {
+    if ($self->{DU} > $self->{'MAX'} ) {
 	printf "...Hold on a sec... CPAN's cleaning the cache: %.2f MB > %.2f MB\n",
-		$self->{DU}, $CPAN::Config->{build_cache};
+		$self->{DU}, $self->{'MAX'};
 	$self->clean_cache;
     } else {
-	$self->debug("NOT have to clean the cache: $self->{DU} <= $CPAN::Config->{build_cache}") if $CPAN::DEBUG;
+	$self->debug("NOT have to clean the cache: $self->{DU} <= $self->{'MAX'}") if $CPAN::DEBUG;
 	$self->debug($self->as_string) if $CPAN::DEBUG;
     }
     $self->{DU};
@@ -1437,16 +1450,16 @@ sub force_clean_cache {
 
 sub new {
     my $class = shift;
-    my $self = { ID => $CPAN::Config->{'build_dir'}, DU => 0 };
+    my $self = { ID => $CPAN::Config->{'build_dir'}, MAX => $CPAN::Config->{'build_cache'}, DU => 0 };
     File::Path::mkpath($self->{ID});
     my $dh = DirHandle->new($self->{ID});
     bless $self, $class;
     $self->debug("dir [$self->{ID}]") if $CPAN::DEBUG;
-    my $dir;
-    for $dir ($self->dirs) {
-	next if $dir eq ".." || $dir eq ".";
-	$self->debug("Have to check size $dir") if $CPAN::DEBUG;
-	$self->disk_usage($dir);
+    my $e;
+    for $e ($self->entries) {
+	next if $e eq ".." || $e eq ".";
+	$self->debug("Have to check size $e") if $CPAN::DEBUG;
+	$self->disk_usage($e);
     }
     $self;
 }
@@ -1495,9 +1508,15 @@ The CPAN module also supports the concept of named and versioned
 'bundles' of modules. Bundles simplify the handling of sets of
 related modules. See BUNDLES below.
 
-=head1 INTERACTIVE MODE
+The package contains a session manager and a cache manager. There is
+no status retained between sessions. The session manager keeps track
+of what has been fetched, built and installed in the current session
+and will nor redo a 'make' or a 'install'. 'test' can be run
+repeatedly.
 
-The interactive more is entered by running
+=head2 Interactive Mode
+
+The interactive mode is entered by running
 
     perl -MCPAN -e shell
 
@@ -1508,7 +1527,22 @@ both history and completion.
 Once you're on the command line, type 'h' and the rest should be
 self-explanatory.
 
-=head1 PREREQUISITES
+=head2 Cache Manager
+
+Currently the cache manager only keeps track of the build directory
+($CPAN::Config->{build_dir}). It is a simple FIFO mechanism that
+deletes complete directories below build_dir as soon as the size of
+all directories there gets bigger than $CPAN::Config->{build_cache}
+(in MB).
+
+There is another directory ($CPAN::Config->{keep_source_where}) where
+the original distribution files are kept. This directory is not
+covered by the cache manager and must be controlled by the user. If
+you choose to have the same directory as build_dir and as
+keep_source_where directory, then your sources will be deleted with
+the same fifo mechanism.
+
+=head2 Prerequisites
 
 If you have a local mirror of CPAN and can access all files with
 "file:" URLs, then you only need perl5.003 to run this
@@ -1540,7 +1574,7 @@ come as compressed or gzipped tarfiles or as zip files,
 
 =back
 
-=head1 BUNDLES
+=head2 Bundles
 
 A bundle is just a perl module in the namespace Bundle:: that does not
 define any functions or methods. It usually only contains documentation.
@@ -1611,6 +1645,14 @@ should be warned now.
 
 All functions in package CPAN are exported. The reason for this is
 that the primary use is intended for the cpan-shell or for one-liners.
+
+=head1 Debugging
+
+In interactive mode you can try "o debug" which will list options for
+debugging the various parts of the package. The output may not be very
+useful for you as it's just a byproduct of my own testing, but if you
+have an idea which part of the package may have a bug, it's certainly
+worth to give it a try and send me more specific output.
 
 =head1 BUGS
 
