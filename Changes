@@ -1,5 +1,43 @@
 Revision history for Perl extension CPAN.
 
+=head2 July 1998 after perl5.005 is out which contains 1.3901
+
+Improved documentation of Bundle::CPAN, upped version number to
+prevent accident where CPAN.pm overwrites Bundle/CPAN.pm.
+
+Added a warning when CPAN::Bundle->contains() returns zero entries.
+
+Disabled a shortcut in find_bundle_file() that was responsible for the
+C<CPAN.pm overwrites Bundle/CPAN.pm> bug.
+
+Added C<h> to DSLI statuses C<L> and C<I>.
+
+Added some blurb for CPAN::WAIT in the manpage.
+
+Changed the shell loop to check for question marks with a regex
+instead of eq().
+
+=head2 July 1998 after 1.3901
+
+Added support for ncftpget and don't use ncftp anymore if ncftpget is
+available.
+
+In the routine hosthard, add an optional C< < /dev/null >, so that
+ncftp doesn't hang. I fear this would introduce incompatibilities with
+other OSes, so it must be turned on explicitly. [Left undocumented]
+
+Larry Virden reports that nonsense files can result from bad user
+input. Fix: Delete files after localize() if we didn't succeed.
+
+=head2 July 1998 after 1.39
+
+Insert a few C<local($/)="\n"> to work around a bug in threaded perl.
+Sarathy puts this version into 5.004_72 as 1.3901
+
+=head2 July 1998 after 1.38
+
+Folded in Ilya's changes to the CPAN::FirstTime that comes with perl.
+
 =head2 June 1998 after 1.37
 
 Applied a patch by Lupe Christoph <lupe@alanya.m.isar.de> that fixed a

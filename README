@@ -13,28 +13,26 @@ SYNOPSIS
       autobundle, clean, install, make, recompile, test
 
 DESCRIPTION
-    The CPAN module is designed to automate the make and install of
-    perl modules and extensions. It includes some searching
-    capabilities and knows how to use Net::FTP or LWP (or lynx or an
-    external ftp client) to fetch the raw data from the net.
+    The CPAN module is designed to automate the make and install of perl
+    modules and extensions. It includes some searching capabilities and
+    knows how to use Net::FTP or LWP (or lynx or an external ftp client) to
+    fetch the raw data from the net.
 
-    Modules are fetched from one or more of the mirrored CPAN
-    (Comprehensive Perl Archive Network) sites and unpacked in a
-    dedicated directory.
+    Modules are fetched from one or more of the mirrored CPAN (Comprehensive
+    Perl Archive Network) sites and unpacked in a dedicated directory.
 
     The CPAN module also supports the concept of named and versioned
-    'bundles' of modules. Bundles simplify the handling of sets of
-    related modules. See BUNDLES below.
+    'bundles' of modules. Bundles simplify the handling of sets of related
+    modules. See BUNDLES below.
 
-    The package contains a session manager and a cache manager.
-    There is no status retained between sessions. The session
-    manager keeps track of what has been fetched, built and
-    installed in the current session. The cache manager keeps track
-    of the disk space occupied by the make processes and deletes
-    excess space according to a simple FIFO mechanism.
+    The package contains a session manager and a cache manager. There is no
+    status retained between sessions. The session manager keeps track of
+    what has been fetched, built and installed in the current session. The
+    cache manager keeps track of the disk space occupied by the make
+    processes and deletes excess space according to a simple FIFO mechanism.
 
-    All methods provided are accessible in a programmer style and in
-    an interactive shell style.
+    All methods provided are accessible in a programmer style and in an
+    interactive shell style.
 
   Interactive Mode
 
@@ -42,33 +40,31 @@ DESCRIPTION
 
         perl -MCPAN -e shell
 
-    which puts you into a readline interface. You will have the most
-    fun if you install Term::ReadKey and Term::ReadLine to enjoy
-    both history and command completion.
+    which puts you into a readline interface. You will have the most fun if
+    you install Term::ReadKey and Term::ReadLine to enjoy both history and
+    command completion.
 
-    Once you are on the command line, type 'h' and the rest should
-    be self-explanatory.
+    Once you are on the command line, type 'h' and the rest should be self-
+    explanatory.
 
     The most common uses of the interactive modes are
 
     Searching for authors, bundles, distribution files and modules
-      There are corresponding one-letter commands `a', `b', `d', and
-      `m' for each of the four categories and another, `i' for any
-      of the mentioned four. Each of the four entities is
-      implemented as a class with slightly differing methods for
-      displaying an object.
+      There are corresponding one-letter commands `a', `b', `d', and `m' for
+      each of the four categories and another, `i' for any of the mentioned
+      four. Each of the four entities is implemented as a class with
+      slightly differing methods for displaying an object.
 
-      Arguments you pass to these commands are either strings
-      exactly matching the identification string of an object or
-      regular expressions that are then matched case-insensitively
-      against various attributes of the objects. The parser
-      recognizes a regular expression only if you enclose it between
-      two slashes.
+      Arguments you pass to these commands are either strings exactly
+      matching the identification string of an object or regular expressions
+      that are then matched case-insensitively against various attributes of
+      the objects. The parser recognizes a regular expression only if you
+      enclose it between two slashes.
 
-      The principle is that the number of found objects influences
-      how an item is displayed. If the search finds one item, the
-      result is displayed as object->as_string, but if we find more
-      than one, we display each as object->as_glimpse. E.g.
+      The principle is that the number of found objects influences how an
+      item is displayed. If the search finds one item, the result is
+      displayed as object->as_string, but if we find more than one, we
+      display each as object->as_glimpse. E.g.
 
           cpan> a ANDK
           Author id = ANDK
@@ -85,11 +81,11 @@ DESCRIPTION
           Author          MERLYN (Randal L. Schwartz)
 
     make, test, install, clean  modules or distributions
-      These commands take any number of arguments and investigate
-      what is necessary to perform the action. If the argument is a
-      distribution file name (recognized by embedded slashes), it is
-      processed. If it is a module, CPAN determines the distribution
-      file in which this module is included and processes that.
+      These commands take any number of arguments and investigate what is
+      necessary to perform the action. If the argument is a distribution
+      file name (recognized by embedded slashes), it is processed. If it is
+      a module, CPAN determines the distribution file in which this module
+      is included and processes that.
 
       Any `make' or `test' are run unconditionally. An
 
@@ -99,15 +95,15 @@ DESCRIPTION
 
         install <module>
 
-      CPAN checks if an install is actually needed for it and prints
-      *module up to date* in the case that the distribution file
-      containing the module doesn't need to be updated.
+      CPAN checks if an install is actually needed for it and prints *module
+      up to date* in the case that the distribution file containing the
+      module doesn't need to be updated.
 
-      CPAN also keeps track of what it has done within the current
-      session and doesn't try to build a package a second time
-      regardless if it succeeded or not. The `force' command takes
-      as a first argument the method to invoke (currently: `make',
-      `test', or `install') and executes the command from scratch.
+      CPAN also keeps track of what it has done within the current session
+      and doesn't try to build a package a second time regardless if it
+      succeeded or not. The `force' command takes as a first argument the
+      method to invoke (currently: `make', `test', or `install') and
+      executes the command from scratch.
 
       Example:
 
@@ -123,79 +119,71 @@ DESCRIPTION
 
         make clean
 
-      being executed within the distribution file's working
-      directory.
+      being executed within the distribution file's working directory.
 
     readme, look module or distribution
       These two commands take only one argument, be it a module or a
-      distribution file. `readme' unconditionally runs, displaying
-      the README of the associated distribution file. `Look' gets
-      and untars (if not yet done) the distribution file, changes to
-      the appropriate directory and opens a subshell process in that
-      directory.
+      distribution file. `readme' unconditionally runs, displaying the
+      README of the associated distribution file. `Look' gets and untars (if
+      not yet done) the distribution file, changes to the appropriate
+      directory and opens a subshell process in that directory.
 
     Signals
-      CPAN.pm installs signal handlers for SIGINT and SIGTERM. While
-      you are in the cpan-shell it is intended that you can press
-      `^C' anytime and return to the cpan-shell prompt. A SIGTERM
-      will cause the cpan-shell to clean up and leave the shell
-      loop. You can emulate the effect of a SIGTERM by sending two
-      consecutive SIGINTs, which usually means by pressing `^C'
-      twice.
+      CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
+      in the cpan-shell it is intended that you can press `^C' anytime and
+      return to the cpan-shell prompt. A SIGTERM will cause the cpan-shell
+      to clean up and leave the shell loop. You can emulate the effect of a
+      SIGTERM by sending two consecutive SIGINTs, which usually means by
+      pressing `^C' twice.
 
-      CPAN.pm ignores a SIGPIPE. If the user sets
-      inactivity_timeout, a SIGALRM is used during the run of the
-      `perl Makefile.PL' subprocess.
+      CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
+      SIGALRM is used during the run of the `perl Makefile.PL' subprocess.
 
   CPAN::Shell
 
-    The commands that are available in the shell interface are
-    methods in the package CPAN::Shell. If you enter the shell
-    command, all your input is split by the
-    Text::ParseWords::shellwords() routine which acts like most
-    shells do. The first word is being interpreted as the method to
-    be called and the rest of the words are treated as arguments to
-    this method. Continuation lines are supported if a line ends
-    with a literal backslash.
+    The commands that are available in the shell interface are methods in
+    the package CPAN::Shell. If you enter the shell command, all your input
+    is split by the Text::ParseWords::shellwords() routine which acts like
+    most shells do. The first word is being interpreted as the method to be
+    called and the rest of the words are treated as arguments to this
+    method. Continuation lines are supported if a line ends with a literal
+    backslash.
 
   autobundle
 
     `autobundle' writes a bundle file into the `$CPAN::Config-
-    >{cpan_home}/Bundle' directory. The file contains a list of all
-    modules that are both available from CPAN and currently
-    installed within @INC. The name of the bundle file is based on
-    the current date and a counter.
+    >{cpan_home}/Bundle' directory. The file contains a list of all modules
+    that are both available from CPAN and currently installed within @INC.
+    The name of the bundle file is based on the current date and a counter.
 
   recompile
 
-    recompile() is a very special command in that it takes no
-    argument and runs the make/test/install cycle with brute force
-    over all installed dynamically loadable extensions (aka XS
-    modules) with 'force' in effect. The primary purpose of this
-    command is to finish a network installation. Imagine, you have a
-    common source tree for two different architectures. You decide
-    to do a completely independent fresh installation. You start on
-    one architecture with the help of a Bundle file produced
-    earlier. CPAN installs the whole Bundle for you, but when you
-    try to repeat the job on the second architecture, CPAN responds
-    with a `"Foo up to date"' message for all modules. So you invoke
-    CPAN's recompile on the second architecture and you're done.
+    recompile() is a very special command in that it takes no argument and
+    runs the make/test/install cycle with brute force over all installed
+    dynamically loadable extensions (aka XS modules) with 'force' in effect.
+    The primary purpose of this command is to finish a network installation.
+    Imagine, you have a common source tree for two different architectures.
+    You decide to do a completely independent fresh installation. You start
+    on one architecture with the help of a Bundle file produced earlier.
+    CPAN installs the whole Bundle for you, but when you try to repeat the
+    job on the second architecture, CPAN responds with a `"Foo up to date"'
+    message for all modules. So you invoke CPAN's recompile on the second
+    architecture and you're done.
 
-    Another popular use for `recompile' is to act as a rescue in
-    case your perl breaks binary compatibility. If one of the
-    modules that CPAN uses is in turn depending on binary
-    compatibility (so you cannot run CPAN commands), then you should
-    try the CPAN::Nox module for recovery.
+    Another popular use for `recompile' is to act as a rescue in case your
+    perl breaks binary compatibility. If one of the modules that CPAN uses
+    is in turn depending on binary compatibility (so you cannot run CPAN
+    commands), then you should try the CPAN::Nox module for recovery.
 
   The four `CPAN::*' Classes: Author, Bundle, Module, Distribution
 
-    Although it may be considered internal, the class hierarchy does
-    matter for both users and programmer. CPAN.pm deals with above
-    mentioned four classes, and all those classes share a set of
-    methods. A classical single polymorphism is in effect. A
-    metaclass object registers all objects of all kinds and indexes
-    them with a string. The strings referencing objects have a
-    separated namespace (well, not completely separated):
+    Although it may be considered internal, the class hierarchy does matter
+    for both users and programmer. CPAN.pm deals with above mentioned four
+    classes, and all those classes share a set of methods. A classical
+    single polymorphism is in effect. A metaclass object registers all
+    objects of all kinds and indexes them with a string. The strings
+    referencing objects have a separated namespace (well, not completely
+    separated):
 
              Namespace                         Class
 
@@ -203,49 +191,45 @@ DESCRIPTION
         words starting with Bundle::          Bundle
               everything else            Module or Author
 
-    Modules know their associated Distribution objects. They always
-    refer to the most recent official release. Developers may mark
-    their releases as unstable development versions (by inserting an
-    underbar into the visible version number), so the really hottest
-    and newest distribution file is not always the default. If a
-    module Foo circulates on CPAN in both version 1.23 and 1.23_90,
-    CPAN.pm offers a convenient way to install version 1.23 by
-    saying
+    Modules know their associated Distribution objects. They always refer to
+    the most recent official release. Developers may mark their releases as
+    unstable development versions (by inserting an underbar into the visible
+    version number), so the really hottest and newest distribution file is
+    not always the default. If a module Foo circulates on CPAN in both
+    version 1.23 and 1.23_90, CPAN.pm offers a convenient way to install
+    version 1.23 by saying
 
         install Foo
 
     This would install the complete distribution file (say BAR/Foo-
-    1.23.tar.gz) with all accompanying material. But if you would
-    like to install version 1.23_90, you need to know where the
-    distribution file resides on CPAN relative to the authors/id/
-    directory. If the author is BAR, this might be BAR/Foo-
-    1.23_90.tar.gz; so you would have to say
+    1.23.tar.gz) with all accompanying material. But if you would like to
+    install version 1.23_90, you need to know where the distribution file
+    resides on CPAN relative to the authors/id/ directory. If the author is
+    BAR, this might be BAR/Foo-1.23_90.tar.gz; so you would have to say
 
         install BAR/Foo-1.23_90.tar.gz
 
-    The first example will be driven by an object of the class
-    CPAN::Module, the second by an object of class
-    CPAN::Distribution.
+    The first example will be driven by an object of the class CPAN::Module,
+    the second by an object of class CPAN::Distribution.
 
   Programmer's interface
 
-    If you do not enter the shell, the available shell commands are
-    both available as methods (`CPAN::Shell->install(...)') and as
-    functions in the calling package (`install(...)').
+    If you do not enter the shell, the available shell commands are both
+    available as methods (`CPAN::Shell->install(...)') and as functions in
+    the calling package (`install(...)').
 
     There's currently only one class that has a stable interface -
-    CPAN::Shell. All commands that are available in the CPAN shell
-    are methods of the class CPAN::Shell. Each of the commands that
-    produce listings of modules (`r', `autobundle', `u') returns a
-    list of the IDs of all modules within the list.
+    CPAN::Shell. All commands that are available in the CPAN shell are
+    methods of the class CPAN::Shell. Each of the commands that produce
+    listings of modules (`r', `autobundle', `u') returns a list of the IDs
+    of all modules within the list.
 
     expand($type,@things)
-      The IDs of all objects available within a program are strings
-      that can be expanded to the corresponding real objects with
-      the `CPAN::Shell->expand("Module",@things)' method. Expand
-      returns a list of CPAN::Module objects according to the
-      `@things' arguments given. In scalar context it only returns
-      the first element of the list.
+      The IDs of all objects available within a program are strings that can
+      be expanded to the corresponding real objects with the `CPAN::Shell-
+      >expand("Module",@things)' method. Expand returns a list of
+      CPAN::Module objects according to the `@things' arguments given. In
+      scalar context it only returns the first element of the list.
 
     Programming Examples
       This enables the programmer to do operations that combine
@@ -272,33 +256,31 @@ DESCRIPTION
 
   Cache Manager
 
-    Currently the cache manager only keeps track of the build
-    directory ($CPAN::Config->{build_dir}). It is a simple FIFO
-    mechanism that deletes complete directories below `build_dir' as
-    soon as the size of all directories there gets bigger than
-    $CPAN::Config->{build_cache} (in MB). The contents of this cache
-    may be used for later re-installations that you intend to do
-    manually, but will never be trusted by CPAN itself. This is due
-    to the fact that the user might use these directories for
+    Currently the cache manager only keeps track of the build directory
+    ($CPAN::Config->{build_dir}). It is a simple FIFO mechanism that deletes
+    complete directories below `build_dir' as soon as the size of all
+    directories there gets bigger than $CPAN::Config->{build_cache} (in MB).
+    The contents of this cache may be used for later re-installations that
+    you intend to do manually, but will never be trusted by CPAN itself.
+    This is due to the fact that the user might use these directories for
     building modules on different architectures.
 
-    There is another directory ($CPAN::Config->{keep_source_where})
-    where the original distribution files are kept. This directory
-    is not covered by the cache manager and must be controlled by
-    the user. If you choose to have the same directory as build_dir
-    and as keep_source_where directory, then your sources will be
-    deleted with the same fifo mechanism.
+    There is another directory ($CPAN::Config->{keep_source_where}) where
+    the original distribution files are kept. This directory is not covered
+    by the cache manager and must be controlled by the user. If you choose
+    to have the same directory as build_dir and as keep_source_where
+    directory, then your sources will be deleted with the same fifo
+    mechanism.
 
   Bundles
 
-    A bundle is just a perl module in the namespace Bundle:: that
-    does not define any functions or methods. It usually only
-    contains documentation.
+    A bundle is just a perl module in the namespace Bundle:: that does not
+    define any functions or methods. It usually only contains documentation.
 
-    It starts like a perl module with a package declaration and a
-    $VERSION variable. After that the pod section looks like any
-    other pod with the only difference being that *one special pod
-    section* exists starting with (verbatim):
+    It starts like a perl module with a package declaration and a $VERSION
+    variable. After that the pod section looks like any other pod with the
+    only difference being that *one special pod section* exists starting
+    with (verbatim):
 
             =head1 CONTENTS
 
@@ -306,93 +288,88 @@ DESCRIPTION
 
             Module_Name [Version_String] [- optional text]
 
-    The only required part is the first field, the name of a module
-    (e.g. Foo::Bar, ie. *not* the name of the distribution file).
-    The rest of the line is optional. The comment part is delimited
-    by a dash just as in the man page header.
+    The only required part is the first field, the name of a module (e.g.
+    Foo::Bar, ie. *not* the name of the distribution file). The rest of the
+    line is optional. The comment part is delimited by a dash just as in the
+    man page header.
 
-    The distribution of a bundle should follow the same convention
-    as other distributions.
+    The distribution of a bundle should follow the same convention as other
+    distributions.
 
-    Bundles are treated specially in the CPAN package. If you say
-    'install Bundle::Tkkit' (assuming such a bundle exists), CPAN
-    will install all the modules in the CONTENTS section of the pod.
-    You can install your own Bundles locally by placing a conformant
-    Bundle file somewhere into your @INC path. The autobundle()
-    command which is available in the shell interface does that for
-    you by including all currently installed modules in a snapshot
-    bundle file.
+    Bundles are treated specially in the CPAN package. If you say 'install
+    Bundle::Tkkit' (assuming such a bundle exists), CPAN will install all
+    the modules in the CONTENTS section of the pod. You can install your own
+    Bundles locally by placing a conformant Bundle file somewhere into your
+    @INC path. The autobundle() command which is available in the shell
+    interface does that for you by including all currently installed modules
+    in a snapshot bundle file.
 
   Prerequisites
 
-    If you have a local mirror of CPAN and can access all files with
-    "file:" URLs, then you only need a perl better than perl5.003 to
-    run this module. Otherwise Net::FTP is strongly recommended. LWP
-    may be required for non-UNIX systems or if your nearest CPAN
-    site is associated with an URL that is not `ftp:'.
+    If you have a local mirror of CPAN and can access all files with "file:"
+    URLs, then you only need a perl better than perl5.003 to run this
+    module. Otherwise Net::FTP is strongly recommended. LWP may be required
+    for non-UNIX systems or if your nearest CPAN site is associated with an
+    URL that is not `ftp:'.
 
-    If you have neither Net::FTP nor LWP, there is a fallback
-    mechanism implemented for an external ftp command or for an
-    external lynx command.
+    If you have neither Net::FTP nor LWP, there is a fallback mechanism
+    implemented for an external ftp command or for an external lynx command.
 
   Finding packages and VERSION
 
     This module presumes that all packages on CPAN
 
     * declare their $VERSION variable in an easy to parse manner. This
-      prerequisite can hardly be relaxed because it consumes far too
-      much memory to load all packages into the running program just
-      to determine the $VERSION variable. Currently all programs
-      that are dealing with version use something like this
+      prerequisite can hardly be relaxed because it consumes far too much
+      memory to load all packages into the running program just to determine
+      the $VERSION variable. Currently all programs that are dealing with
+      version use something like this
 
           perl -MExtUtils::MakeMaker -le \
               'print MM->parse_version($ARGV[0])' filename
 
-      If you are author of a package and wonder if your $VERSION can
-      be parsed, please try the above method.
+      If you are author of a package and wonder if your $VERSION can be
+      parsed, please try the above method.
 
-    * come as compressed or gzipped tarfiles or as zip files and contain
-      a Makefile.PL (well, we try to handle a bit more, but without
-      much enthusiasm).
+    * come as compressed or gzipped tarfiles or as zip files and contain a
+      Makefile.PL (well, we try to handle a bit more, but without much
+      enthusiasm).
 
   Debugging
 
-    The debugging of this module is pretty difficult, because we
-    have interferences of the software producing the indices on
-    CPAN, of the mirroring process on CPAN, of packaging, of
-    configuration, of synchronicity, and of bugs within CPAN.pm.
+    The debugging of this module is pretty difficult, because we have
+    interferences of the software producing the indices on CPAN, of the
+    mirroring process on CPAN, of packaging, of configuration, of
+    synchronicity, and of bugs within CPAN.pm.
 
-    In interactive mode you can try "o debug" which will list
-    options for debugging the various parts of the package. The
-    output may not be very useful for you as it's just a by-product
-    of my own testing, but if you have an idea which part of the
-    package may have a bug, it's sometimes worth to give it a try
-    and send me more specific output. You should know that "o debug"
-    has built-in completion support.
+    In interactive mode you can try "o debug" which will list options for
+    debugging the various parts of the package. The output may not be very
+    useful for you as it's just a by-product of my own testing, but if you
+    have an idea which part of the package may have a bug, it's sometimes
+    worth to give it a try and send me more specific output. You should know
+    that "o debug" has built-in completion support.
 
   Floppy, Zip, and all that Jazz
 
-    CPAN.pm works nicely without network too. If you maintain
-    machines that are not networked at all, you should consider
-    working with file: URLs. Of course, you have to collect your
-    modules somewhere first. So you might use CPAN.pm to put
-    together all you need on a networked machine. Then copy the
-    $CPAN::Config->{keep_source_where} (but not $CPAN::Config-
-    >{build_dir}) directory on a floppy. This floppy is kind of a
-    personal CPAN. CPAN.pm on the non-networked machines works
-    nicely with this floppy.
+    CPAN.pm works nicely without network too. If you maintain machines that
+    are not networked at all, you should consider working with file: URLs.
+    Of course, you have to collect your modules somewhere first. So you
+    might use CPAN.pm to put together all you need on a networked machine.
+    Then copy the $CPAN::Config->{keep_source_where} (but not $CPAN::Config-
+    >{build_dir}) directory on a floppy. This floppy is kind of a personal
+    CPAN. CPAN.pm on the non-networked machines works nicely with this
+    floppy.
 
 CONFIGURATION
-    When the CPAN module is installed, a site wide configuration
-    file is created as CPAN/Config.pm. The default values defined
-    there can be overridden in another configuration file:
-    CPAN/MyConfig.pm. You can store this file in
-    $HOME/.cpan/CPAN/MyConfig.pm if you want, because $HOME/.cpan is
-    added to the search path of the CPAN module before the use() or
-    require() statements.
+    When the CPAN module is installed, a site wide configuration file is
+    created as CPAN/Config.pm. The default values defined there can be
+    overridden in another configuration file: CPAN/MyConfig.pm. You can
+    store this file in $HOME/.cpan/CPAN/MyConfig.pm if you want, because
+    $HOME/.cpan is added to the search path of the CPAN module before the
+    use() or require() statements.
 
-    Currently the following keys in the hash reference $CPAN::Config
-    are defined:
+    Currently the following keys in the hash reference $CPAN::Config are
+    defined:
 
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
@@ -415,9 +392,8 @@ CONFIGURATION
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
 
-    You can set and query each of these options interactively in the
-    cpan shell with the command set defined within the `o conf'
-    command:
+    You can set and query each of these options interactively in the cpan
+    shell with the command set defined within the `o conf' command:
 
     o conf <scalar option>
       prints the current value of the *scalar option*
@@ -426,8 +402,8 @@ CONFIGURATION
       Sets the value of the *scalar option* to *value*
 
     o conf <list option>
-      prints the current value of the *list option* in MakeMaker's
-      neatvalue format.
+      prints the current value of the *list option* in MakeMaker's neatvalue
+      format.
 
     o conf <list option> [shift|pop]
       shifts or pops the array in the *list option* variable
@@ -437,49 +413,45 @@ CONFIGURATION
 
   CD-ROM support
 
-    The `urllist' parameter of the configuration table contains a
-    list of URLs that are to be used for downloading. If the list
-    contains any `file' URLs, CPAN always tries to get files from
-    there first. This feature is disabled for index files. So the
-    recommendation for the owner of a CD-ROM with CPAN contents is:
-    include your local, possibly outdated CD-ROM as a `file' URL at
-    the end of urllist, e.g.
+    The `urllist' parameter of the configuration table contains a list of
+    URLs that are to be used for downloading. If the list contains any
+    `file' URLs, CPAN always tries to get files from there first. This
+    feature is disabled for index files. So the recommendation for the owner
+    of a CD-ROM with CPAN contents is: include your local, possibly outdated
+    CD-ROM as a `file' URL at the end of urllist, e.g.
 
       o conf urllist push file://localhost/CDROM/CPAN
 
-    CPAN.pm will then fetch the index files from one of the CPAN
-    sites that come at the beginning of urllist. It will later check
-    for each module if there is a local copy of the most recent
-    version.
+    CPAN.pm will then fetch the index files from one of the CPAN sites that
+    come at the beginning of urllist. It will later check for each module if
+    there is a local copy of the most recent version.
 
 SECURITY
-    There's no strong security layer in CPAN.pm. CPAN.pm helps you
-    to install foreign, unmasked, unsigned code on your machine. We
-    compare to a checksum that comes from the net just as the
-    distribution file itself. If somebody has managed to tamper with
-    the distribution file, they may have as well tampered with the
-    CHECKSUMS file. Future development will go towards strong
-    authentification.
+    There's no strong security layer in CPAN.pm. CPAN.pm helps you to
+    install foreign, unmasked, unsigned code on your machine. We compare to
+    a checksum that comes from the net just as the distribution file itself.
+    If somebody has managed to tamper with the distribution file, they may
+    have as well tampered with the CHECKSUMS file. Future development will
+    go towards strong authentification.
 
 EXPORT
-    Most functions in package CPAN are exported per default. The
-    reason for this is that the primary use is intended for the cpan
-    shell or for oneliners.
+    Most functions in package CPAN are exported per default. The reason for
+    this is that the primary use is intended for the cpan shell or for
+    oneliners.
 
 BUGS
-    We should give coverage for _all_ of the CPAN and not just the
-    PAUSE part, right? In this discussion CPAN and PAUSE have become
-    equal -- but they are not. PAUSE is authors/ and modules/. CPAN
-    is PAUSE plus the clpa/, doc/, misc/, ports/, src/, scripts/.
+    We should give coverage for _all_ of the CPAN and not just the PAUSE
+    part, right? In this discussion CPAN and PAUSE have become equal -- but
+    they are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus the
+    clpa/, doc/, misc/, ports/, src/, scripts/.
 
-    Future development should be directed towards a better
-    integration of the other parts.
+    Future development should be directed towards a better integration of
+    the other parts.
 
-    If a Makefile.PL requires special customization of libraries,
-    prompts the user for special input, etc. then you may find CPAN
-    is not able to build the distribution. In that case, you should
-    attempt the traditional method of building a Perl module package
-    from a shell.
+    If a Makefile.PL requires special customization of libraries, prompts
+    the user for special input, etc. then you may find CPAN is not able to
+    build the distribution. In that case, you should attempt the traditional
+    method of building a Perl module package from a shell.
 
 AUTHOR
     Andreas König <a.koenig@mind.de>
