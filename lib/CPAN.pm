@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_58';
+$VERSION = '1.57_59';
 
-# $Id: CPAN.pm,v 1.328 2000/09/03 22:17:18 k Exp $
+# $Id: CPAN.pm,v 1.341 2000/09/05 09:41:11 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.328 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.341 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -44,6 +44,7 @@ END { $End++; &cleanup; }
 		  Config         4096
 		  Tarzip         8192
 		  Version       16384
+		  Queue         32768
 ];
 
 $CPAN::DEBUG ||= 0;
@@ -195,8 +196,8 @@ ReadLine support %s
 	    $CPAN::META->has_inst("Term::ReadLine::Perl")
 	   ) {
 	    delete $INC{"Term/ReadLine.pm"};
-	    my $redef;
-	    local($SIG{__WARN__}) = CPAN::Shell::dotdot_onreload(\$redef);
+	    my $redef = 0;
+	    local($SIG{__WARN__}) = CPAN::Shell::paintdots_onreload(\$redef);
 	    require Term::ReadLine;
 	    $CPAN::Frontend->myprint("\n$redef subroutines in ".
 				     "Term::ReadLine redefined\n");
@@ -249,7 +250,7 @@ package CPAN::Module;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Shell;
-use vars qw($AUTOLOAD $redef @ISA);
+use vars qw($AUTOLOAD @ISA);
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 
 #-> sub CPAN::Shell::AUTOLOAD ;
@@ -329,70 +330,73 @@ package CPAN::Queue;
 
 use vars qw{ @All };
 
+# CPAN::Queue::new ;
 sub new {
-  my($class,$mod) = @_;
-  my $self = bless {mod => $mod}, $class;
+  my($class,$s) = @_;
+  my $self = bless { qmod => $s }, $class;
   push @All, $self;
-  # my @all = map { $_->{mod} } @All;
-  # warn "Adding Queue object for mod[$mod] all[@all]";
   return $self;
 }
 
+# CPAN::Queue::first ;
 sub first {
   my $obj = $All[0];
-  $obj->{mod};
+  $obj->{qmod};
 }
 
+# CPAN::Queue::delete_first ;
 sub delete_first {
   my($class,$what) = @_;
   my $i;
   for my $i (0..$#All) {
-    if (  $All[$i]->{mod} eq $what ) {
+    if (  $All[$i]->{qmod} eq $what ) {
       splice @All, $i, 1;
       return;
     }
   }
 }
 
+# CPAN::Queue::jumpqueue ;
 sub jumpqueue {
-  my $class = shift;
-  my @what = @_;
-  my $obj;
+    my $class = shift;
+    my @what = @_;
   WHAT: for my $what (reverse @what) {
-    my $jumped = 0;
-    for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
-      if ($All[$i]->{mod} eq $what){
-	$jumped++;
-	if ($jumped > 100) { # one's OK if e.g. just processing now;
-                             # more are OK if user typed it several
-                             # times
-	  $CPAN::Frontend->mywarn(
+        my $jumped = 0;
+        for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
+            CPAN->debug("i[$All[$i]]what[$what]") if $CPAN::DEBUG;
+            if ($All[$i]->{qmod} eq $what){
+                $jumped++;
+                if ($jumped > 100) { # one's OK if e.g. just
+                                     # processing now; more are OK if
+                                     # user typed it several times
+                    $CPAN::Frontend->mywarn(
 qq{Object [$what] queued more than 100 times, ignoring}
 				 );
-	  next WHAT;
-	}
-      }
+                    next WHAT;
+                }
+            }
+        }
+        my $obj = bless { qmod => $what }, $class;
+        unshift @All, $obj;
     }
-    my $obj = bless { mod => $what }, $class;
-    unshift @All, $obj;
-  }
 }
 
+# CPAN::Queue::exists ;
 sub exists {
   my($self,$what) = @_;
-  my @all = map { $_->{mod} } @All;
-  my $exists = grep { $_->{mod} eq $what } @All;
-  # warn "in exists mod[$what] all[@all] exists[$exists]";
+  my @all = map { $_->{qmod} } @All;
+  my $exists = grep { $_->{qmod} eq $what } @All;
+  # warn "in exists what[$what] all[@all] exists[$exists]";
   $exists;
 }
 
+# CPAN::Queue::delete ;
 sub delete {
   my($self,$mod) = @_;
-  @All = grep { $_->{mod} ne $mod } @All;
-  # my @all = map { $_->{mod} } @All;
-  # warn "Deleting Queue object for mod[$mod] all[@all]";
+  @All = grep { $_->{qmod} ne $mod } @All;
 }
 
+# CPAN::Queue::nullify_queue ;
 sub nullify_queue {
   @All = ();
 }
@@ -403,26 +407,8 @@ package CPAN;
 
 $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 
-1;
-
-# __END__ # uncomment this and AutoSplit version 1.01 will split it
-
-#-> sub CPAN::autobundle ;
-sub autobundle;
-#-> sub CPAN::bundle ;
-sub bundle;
-#-> sub CPAN::expand ;
-sub expand;
-#-> sub CPAN::force ;
-sub force;
-#-> sub CPAN::install ;
-sub install;
-#-> sub CPAN::make ;
-sub make;
-#-> sub CPAN::clean ;
-sub clean;
-#-> sub CPAN::test ;
-sub test;
+# from here on only subs.
+################################################################################
 
 #-> sub CPAN::all_objects ;
 sub all_objects {
@@ -541,11 +527,11 @@ or
     $fh->print($$, "\n");
     $self->{LOCK} = $lockfile;
     $fh->close;
-    $SIG{'TERM'} = sub {
+    $SIG{TERM} = sub {
       &cleanup;
       $CPAN::Frontend->mydie("Got SIGTERM, leaving");
     };
-    $SIG{'INT'} = sub {
+    $SIG{INT} = sub {
       # no blocks!!!
       &cleanup if $Signal;
       $CPAN::Frontend->mydie("Got another SIGINT") if $Signal;
@@ -573,7 +559,8 @@ or
 #
 #       Larry
 
-    $SIG{'__DIE__'} = \&cleanup;
+    # global backstop to cleanup if we should really die
+    $SIG{__DIE__} = \&cleanup;
     $self->debug("Signal handler set.") if $CPAN::DEBUG;
 }
 
@@ -612,25 +599,24 @@ sub has_usable {
     return 1 if $HAS_USABLE->{$mod};
     my $has_inst = $self->has_inst($mod,$message);
     return unless $has_inst;
-    my $capabilities;
-    $capabilities = {
-                     LWP => [ # we frequently had "Can't locate object
-                              # method "new" via package
-                              # "LWP::UserAgent" at (eval 69) line
-                              # 2006
-                             sub {require LWP},
-                             sub {require LWP::UserAgent},
-                             sub {require HTTP::Request},
-                             sub {require URI::URL},
-                            ],
-                     Net::FTP => [
-                                  sub {require Net::FTP},
-                                  sub {require Net::Config},
-                                 ]
-                    };
-    if ($capabilities->{$mod}) {
-      for my $c (0..$#{$capabilities->{$mod}}) {
-        my $code = $capabilities->{$mod}[$c];
+    my $usable;
+    $usable = {
+               LWP => [ # we frequently had "Can't locate object
+                        # method "new" via package "LWP::UserAgent" at
+                        # (eval 69) line 2006
+                       sub {require LWP},
+                       sub {require LWP::UserAgent},
+                       sub {require HTTP::Request},
+                       sub {require URI::URL},
+                      ],
+               Net::FTP => [
+                            sub {require Net::FTP},
+                            sub {require Net::Config},
+                           ]
+              };
+    if ($usable->{$mod}) {
+      for my $c (0..$#{$usable->{$mod}}) {
+        my $code = $usable->{$mod}[$c];
         my $ret = eval { &$code() };
         if ($@) {
           warn "DEBUG: c[$c]\$\@[$@]ret[$ret]";
@@ -1268,6 +1254,7 @@ sub a {
   }
   $CPAN::Frontend->myprint($self->format_result('Author',@arg));
 }
+
 #-> sub CPAN::Shell::b ;
 sub b {
     my($self,@which) = @_;
@@ -1286,8 +1273,10 @@ sub b {
     }
     $CPAN::Frontend->myprint($self->format_result('Bundle',@which));
 }
+
 #-> sub CPAN::Shell::d ;
 sub d { $CPAN::Frontend->myprint(shift->format_result('Distribution',@_));}
+
 #-> sub CPAN::Shell::m ;
 sub m { # emacs confused here }; sub mimimimimi { # emacs in sync here
     $CPAN::Frontend->myprint(shift->format_result('Module',@_));
@@ -1313,8 +1302,8 @@ sub i {
 
 #-> sub CPAN::Shell::o ;
 
-# CPAN::Shell::o and CPAN::Config::edit are closely related. I suspect
-# some code duplication
+# CPAN::Shell::o and CPAN::Config::edit are closely related. 'o conf'
+# should have been called set and 'o debug' maybe 'set debug'
 sub o {
     my($self,$o_type,@o_what) = @_;
     $o_type ||= "";
@@ -1400,7 +1389,7 @@ Known options:
     }
 }
 
-sub dotdot_onreload {
+sub paintdots_onreload {
     my($ref) = shift;
     sub {
 	if ( $_[0] =~ /[Ss]ubroutine (\w+) redefined/ ) {
@@ -1424,8 +1413,8 @@ sub reload {
 	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
 	my $fh = FileHandle->new($INC{'CPAN.pm'});
 	local($/);
-	$redef = 0;
-	local($SIG{__WARN__}) = dotdot_onreload(\$redef);
+	my $redef = 0;
+	local($SIG{__WARN__}) = paintdots_onreload(\$redef);
 	eval <$fh>;
 	warn $@ if $@;
 	$CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
@@ -1634,47 +1623,74 @@ sub autobundle {
     $to\n\n");
 }
 
+#-> sub CPAN::Shell::expandany ;
+sub expandany {
+    my($self,$s) = @_;
+    if ($s =~ m|/|) { # looks like a file
+        return $self->expand('Distribution',$s);
+    } elsif ($s =~ m|^Bundle::|) {
+        return $self->expand('Bundle',$s);
+    } else {
+        return $self->expand('Module',$s)
+            if $CPAN::META->exists('CPAN::Module',$s);
+    }
+    return;
+}
+
 #-> sub CPAN::Shell::expand ;
 sub expand {
     shift;
     my($type,@args) = @_;
     my($arg,@m);
     for $arg (@args) {
-	my $regex;
+	my($regex,$command);
 	if ($arg =~ m|^/(.*)/$|) {
 	    $regex = $1;
-	}
+	} elsif ($arg =~ m/^=/) {
+            $command = substr($arg,1);
+        }
 	my $class = "CPAN::$type";
 	my $obj;
 	if (defined $regex) {
-	  for $obj (
-		    sort
-		    {$a->id cmp $b->id}
-		    $CPAN::META->all_objects($class)
-		   ) {
-	    unless ($obj->id){
-	      # BUG, we got an empty object somewhere
-	      CPAN->debug(sprintf(
-				  "Empty id on obj[%s]%%[%s]",
-				  $obj,
-				  join(":", %$obj)
-				 )) if $CPAN::DEBUG;
-	      next;
-	    }
-	    push @m, $obj
-		if $obj->id =~ /$regex/i
-		    or
-			(
-			 (
-			  $] < 5.00303 ### provide sort of
-                                       ### compatibility with 5.003
-			  ||
-			  $obj->can('name')
-			 )
-			 &&
-			 $obj->name  =~ /$regex/i
-			);
-	  }
+            for $obj (
+                      sort
+                      {$a->id cmp $b->id}
+                      $CPAN::META->all_objects($class)
+                     ) {
+                unless ($obj->id){
+                    # BUG, we got an empty object somewhere
+                    CPAN->debug(sprintf(
+                                        "Empty id on obj[%s]%%[%s]",
+                                        $obj,
+                                        join(":", %$obj)
+                                       )) if $CPAN::DEBUG;
+                    next;
+                }
+                push @m, $obj
+                    if $obj->id =~ /$regex/i
+                        or
+                            (
+                             (
+                              $] < 5.00303 ### provide sort of
+                              ### compatibility with 5.003
+                              ||
+                              $obj->can('name')
+                             )
+                             &&
+                             $obj->name  =~ /$regex/i
+                            );
+            }
+        } elsif ($command) {
+            die "leading equal sign in command disabled, ".
+                "please edit CPAN.pm to enable eval() or ".
+                    "do not use = on argument list";
+            for my $self (
+                          sort
+                          {$a->id cmp $b->id}
+                          $CPAN::META->all_objects($class)
+                         ) {
+                push @m, $self if eval $command;
+            }
 	} else {
 	    my($xarg) = $arg;
 	    if ( $type eq 'Bundle' ) {
@@ -1789,49 +1805,39 @@ sub rematein {
     }
     setup_output();
     CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
-    my($s,@s);
+
+    # Here is the place to set "test_count" on all involved parties to
+    # 0. We then can pass this counter on to the involved
+    # distributions and those can refuse to test if test_count > X. In
+    # the first stab at it we could use a 1 for "X".
+
+    # But when do I reset the distributions to start with 0 again?
+    # Jost suggested to have a random or cycling interaction ID that
+    # we pass through. But the ID is something that is just left lying
+    # around in addition to the counter, so I'd prefer to set the
+    # counter to 0 now, and repeat at the end of the loop. But what
+    # about dependencies? They appear later and are not reset, they
+    # enter the queue but not its copy. How do they get a sensible
+    # test_count?
+
+    # construct the queue
+    my($s,@s,@qcopy);
     foreach $s (@some) {
-      CPAN::Queue->new($s);
-    }
-    while ($s = CPAN::Queue->first) {
 	my $obj;
 	if (ref $s) {
 	    $obj = $s;
 	} elsif ($s =~ m|^/|) { # looks like a regexp
-          $CPAN::Frontend->mydie("Sorry, $meth with a regular expression is ".
-                                 "not supported");
-	} elsif ($s =~ m|/|) { # looks like a file
-	    $obj = $CPAN::META->instance('CPAN::Distribution',$s);
-	} elsif ($s =~ m|^Bundle::|) {
-	    $obj = $CPAN::META->instance('CPAN::Bundle',$s);
+            $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
+                                    "not supported\n");
+            sleep 2;
+            next;
 	} else {
-	    $obj = $CPAN::META->instance('CPAN::Module',$s)
-		if $CPAN::META->exists('CPAN::Module',$s);
+	    $obj = CPAN::Shell->expandany($s);
 	}
 	if (ref $obj) {
-            if ($pragma
-                &&
-                ($] < 5.00303 || $obj->can($pragma))){
-              ### compatibility with 5.003
-              $obj->$pragma($meth); # the pragma "force" in
-                                    # "CPAN::Distribution" must know
-                                    # what we are intending
-            }
-	    if ($]>=5.00303 && $obj->can('called_for')) {
-	      $obj->called_for($s);
-	    }
-	    CPAN->debug(
-			qq{pragma[$pragma]meth[$meth]obj[$obj]as_string\[}.
-			$obj->as_string.
-			qq{\]}
-		       ) if $CPAN::DEBUG;
-            # if it is more than once in the queue
-            if ($obj->$meth()){
-                CPAN::Queue->delete($s);
-            } else {
-                CPAN->debug("failed");
-            }
-
+            $obj->color_cmd_tmps(0,1);
+            CPAN::Queue->new($s);
+            push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
 	    $CPAN::Frontend->myprint(
@@ -1840,6 +1846,7 @@ sub rematein {
 				     $obj->fullname,
 				     " ;-)\n"
 				    );
+            sleep 2;
 	} else {
 	    $CPAN::Frontend
 		->myprint(qq{Warning: Cannot $meth $s, }.
@@ -1848,10 +1855,49 @@ Try the command
 
     i /$s/
 
-to find objects with similar identifiers.
+to find objects with matching identifiers.
 });
+            sleep 2;
 	}
+    }
+
+    # run the queue (please be warned: when I tarted to change the
+    # queue to hold objects instead of names, I made one or two
+    # mistakes and never found which. I reverted back instead)
+    while ($s = CPAN::Queue->first) {
+        my $obj;
+	if (ref $s) {
+	    $obj = $s;
+	} else {
+	    $obj = CPAN::Shell->expandany($s);
+	}
+        if ($pragma
+            &&
+            ($] < 5.00303 || $obj->can($pragma))){
+            ### compatibility with 5.003
+            $obj->$pragma($meth); # the pragma "force" in
+                                  # "CPAN::Distribution" must know
+                                  # what we are intending
+        }
+        if ($]>=5.00303 && $obj->can('called_for')) {
+            $obj->called_for($s);
+        }
+        CPAN->debug(
+                    qq{pragma[$pragma]meth[$meth]obj[$obj]as_string\[}.
+                    $obj->as_string.
+                    qq{\]}
+                   ) if $CPAN::DEBUG;
+        # if it is more than once in the queue
+        if ($obj->$meth()){
+            CPAN::Queue->delete($s);
+        } else {
+            CPAN->debug("failed");
+        }
+
 	CPAN::Queue->delete_first($s);
+    }
+    for my $obj (@qcopy) {
+        $obj->color_cmd_tmps(0,0);
     }
 }
 
@@ -2617,8 +2663,8 @@ sub cpl {
 	@return = grep(
 		       /^$word/,
 		       sort qw(
-			       ! a b d h i m o q r u autobundle clean
-			       make test install force reload look cvs_import
+			       ! a b d h i m o q r u autobundle clean dump
+			       make test install force readme reload look cvs_import
 			      )
 		      );
     } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
@@ -2630,7 +2676,7 @@ sub cpl {
     } elsif ($line =~ /^d\s/) {
 	@return = cplx('CPAN::Distribution',$word);
     } elsif ($line =~ m/^(
-                          [mru]|make|clean|test|install|readme|look|cvs_import
+                          [mru]|make|clean|dump|test|install|readme|look|cvs_import
                          )\s/x ) {
 	@return = (cplx('CPAN::Module',$word),cplx('CPAN::Bundle',$word));
     } elsif ($line =~ /^i\s/) {
@@ -3056,6 +3102,7 @@ package CPAN::InfoObj;
 
 # Accessors
 sub cpan_userid { shift->{RO}{CPAN_USERID} }
+sub id { shift->{ID} }
 
 #-> sub CPAN::InfoObj::new ;
 sub new { my $this = bless {}, shift; %$this = @_; $this }
@@ -3072,9 +3119,6 @@ sub set {
         $self->{RO}{$k} = $v;
     }
 }
-
-#-> sub CPAN::InfoObj::id ;
-sub id { shift->{'ID'} }
 
 #-> sub CPAN::InfoObj::as_glimpse ;
 sub as_glimpse {
@@ -3165,6 +3209,34 @@ package CPAN::Distribution;
 # Accessors
 sub cpan_comment { shift->{RO}{CPAN_COMMENT} }
 
+#-> sub CPAN::Distribution::color_cmd_tmps ;
+sub color_cmd_tmps {
+    my($self) = shift;
+    my($depth) = shift || 0;
+    my($color) = shift || 0;
+    # a distribution needs to recurse into its prereq_pms
+
+    return if exists $self->{incommandcolor}
+        && $self->{incommandcolor}==$color;
+    $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: deep recursion in ".
+                                   "color_cmd_tmps depth[%s] self[%s] id[%s]",
+                                   $depth,
+                                   $self,
+                                   $self->id
+                                  )) if $depth>=100;
+    ##### warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
+
+    for my $pre (keys %{$self->prereq_pm}) {
+        my $premo = CPAN::Shell->expand("Module",$pre);
+        $premo->color_cmd_tmps($depth+1,$color);
+    }
+    if ($color==0) {
+        delete $self->{sponsored_mods};
+        delete $self->{badtestcnt};
+    }
+    $self->{incommandcolor} = $color;
+}
+
 #-> sub CPAN::Distribution::as_string ;
 sub as_string {
   my $self = shift;
@@ -3189,8 +3261,8 @@ sub containsmods {
 #-> sub CPAN::Distribution::called_for ;
 sub called_for {
     my($self,$id) = @_;
-    $self->{'CALLED_FOR'} = $id if defined $id;
-    return $self->{'CALLED_FOR'};
+    $self->{CALLED_FOR} = $id if defined $id;
+    return $self->{CALLED_FOR};
 }
 
 #-> sub CPAN::Distribution::get ;
@@ -3827,7 +3899,7 @@ or
       delete $self->{force_update};
       return;
     }
-    if (my @prereq = $self->needs_prereq){
+    if (my @prereq = $self->unsat_prereq_pm){
       my $id = $self->id;
       $CPAN::Frontend->myprint("---- Dependencies detected ".
 			       "during [$id] -----\n");
@@ -3850,8 +3922,12 @@ of modules we are processing right now?", "yes");
             myprint("  Ignoring dependencies on modules @prereq\n");
       }
       if ($follow) {
-	CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
-	return;
+          # color them as dirty
+          for my $p (@prereq) {
+              CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
+          }
+          CPAN::Queue->jumpqueue(@prereq,$id); # queue them and requeue yourself
+          return;
       }
     }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
@@ -3865,68 +3941,84 @@ of modules we are processing right now?", "yes");
     }
 }
 
-#-> sub CPAN::Distribution::needs_prereq ;
-sub needs_prereq {
-  my($self) = @_;
-  return unless -f "Makefile"; # we cannot say much
-  my $fh = FileHandle->new("<Makefile") or
-      $CPAN::Frontend->mydie("Couldn't open Makefile: $!");
-  local($/) = "\n";
+#-> sub CPAN::Distribution::unsat_prereq_pm ;
+sub unsat_prereq_pm {
+    my($self) = @_;
+    my $prereq_pm = $self->prereq_pm;
+    my(@need);
+  NEED: while (my($need_module, $need_version) = each %$prereq_pm) {
+        my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
+        # we were too demanding:
+        # next if $nmo->uptodate;
 
-  #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
-  #
-  my(%p,@need);
-  while (<$fh>) {
-    last if /MakeMaker post_initialize section/;
-    my($p) = m{^[\#]
+        # We only want to install prereqs if either they're not installed
+        # or if the installed version is too old. We cannot omit this
+        # check, because if 'force' is in effect, nobody else will check.
+        {
+            local($^W) = 0;
+            if (
+                defined $nmo->inst_file &&
+                ! CPAN::Version->vgt($need_version, $nmo->inst_version)
+               ){
+                CPAN->debug(sprintf "id[%s]inst_file[%s]inst_version[%s]need_version[%s]",
+                            $nmo->id,
+                            $nmo->inst_file,
+                            $nmo->inst_version,
+                            CPAN::Version->readable($need_version)
+                           );
+                next NEED;
+            }
+        }
+
+        if ($self->{sponsored_mods}{$need_module}++){
+            # We have already sponsored it and for some reason it's still
+            # not available. So we do nothing. Or what should we do?
+            # if we push it again, we have a potential infinite loop
+            next;
+        }
+        push @need, $need_module;
+    }
+    @need;
+}
+
+#-> sub CPAN::Distribution::prereq_pm ;
+sub prereq_pm {
+  my($self) = @_;
+  # return $self->{prereq_pm} if exists $self->{prereq_pm};
+  return {} unless $self->{writemakefile}; # no need to have succeeded
+                                           # but we must have run it
+  my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
+  my $makefile = File::Spec->catfile($build_dir,"Makefile");
+  my(%p) = ();
+  my $fh;
+  if (-f $makefile
+      and
+      $fh = FileHandle->new("<$makefile\0")) {
+
+      local($/) = "\n";
+
+      #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
+      while (<$fh>) {
+          last if /MakeMaker post_initialize section/;
+          my($p) = m{^[\#]
 		 \s+PREREQ_PM\s+=>\s+(.+)
 		 }x;
-    next unless $p;
-    # warn "Found prereq expr[$p]";
+          next unless $p;
+          # warn "Found prereq expr[$p]";
 
-    #  Regexp modified by A.Speer to remember actual version of file
-    #  PREREQ_PM hash key wants, then add to
-    while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
-      # In case a prereq is mentioned twice, complain.
-      if ( defined $p{$1} ) {
-        warn "Warning: PREREQ_PM mentions $1 more than once, last mention wins";
+          #  Regexp modified by A.Speer to remember actual version of file
+          #  PREREQ_PM hash key wants, then add to
+          while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
+              # In case a prereq is mentioned twice, complain.
+              if ( defined $p{$1} ) {
+                  warn "Warning: PREREQ_PM mentions $1 more than once, last mention wins";
+              }
+              $p{$1} = $2;
+          }
+          last;
       }
-      $p{$1} = $2;
-    }
-    last;
   }
- NEED: while (my($module, $need_version) = each %p) {
-    my $mo = $CPAN::META->instance("CPAN::Module",$module);
-    # we were too demanding:
-    # next if $mo->uptodate;
-
-    # We only want to install prereqs if either they're not installed
-    # or if the installed version is too old. We cannot omit this
-    # check, because if 'force' is in effect, nobody else will check.
-    {
-      local($^W) = 0;
-      if (
-          defined $mo->inst_file &&
-          ! CPAN::Version->vgt($need_version, $mo->inst_version)
-         ){
-        CPAN->debug(sprintf "inst_file[%s]inst_version[%s]need_version[%s]",
-                    $mo->inst_file,
-                    $mo->inst_version,
-                    CPAN::Version->readable($need_version)
-                   );
-        next NEED;
-      }
-    }
-
-    if ($self->{have_sponsored}{$module}++){
-      # We have already sponsored it and for some reason it's still
-      # not available. So we do nothing. Or what should we do?
-      # if we push it again, we have a potential infinite loop
-      next;
-    }
-    push @need, $module;
-  }
-  return @need;
+  return $self->{prereq_pm} = \%p;
 }
 
 #-> sub CPAN::Distribution::test ;
@@ -3948,6 +4040,9 @@ sub test {
 		push @e, "Can't test without successful make";
 
 	exists $self->{'build_dir'} or push @e, "Has no own directory";
+        $self->{badtestcnt} ||= 0;
+        $self->{badtestcnt} > 0 and
+            push @e, "Won't repeat unsuccessful test during this command";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
@@ -3963,9 +4058,10 @@ sub test {
     my $system = join " ", $CPAN::Config->{'make'}, "test";
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
-	 $self->{'make_test'} = "YES";
+	 $self->{make_test} = "YES";
     } else {
-	 $self->{'make_test'} = "NO";
+	 $self->{make_test} = "NO";
+         $self->{badtestcnt}++;
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
 }
@@ -4093,6 +4189,35 @@ sub dir {
 
 package CPAN::Bundle;
 
+#-> sub CPAN::Bundle::color_cmd_tmps ;
+sub color_cmd_tmps {
+    my($self) = shift;
+    my($depth) = shift || 0;
+    my($color) = shift || 0;
+    # a module needs to recurse to its cpan_file, a distribution needs
+    # to recurse into its prereq_pms, a bundle needs to recurse into its modules
+
+    return if exists $self->{incommandcolor}
+        && $self->{incommandcolor}==$color;
+    $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: deep recursion in ".
+                                   "color_cmd_tmps depth[%s] self[%s] id[%s]",
+                                   $depth,
+                                   $self,
+                                   $self->id
+                                  )) if $depth>=100;
+    ##### warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
+
+    for my $c ( $self->contains ) {
+        my $obj = CPAN::Shell->expandany($c) or next;
+        CPAN->debug("c[$c]obj[$obj]") if $CPAN::DEBUG;
+        $obj->color_cmd_tmps($depth+1,$color);
+    }
+    if ($color==0) {
+        delete $self->{badtestcnt};
+    }
+    $self->{incommandcolor} = $color;
+}
+
 #-> sub CPAN::Bundle::as_string ;
 sub as_string {
     my($self) = @_;
@@ -4146,7 +4271,7 @@ sub contains {
   }
   close $fh;
   delete $self->{STATUS};
-  $self->{CONTAINS} = join ", ", @result;
+  $self->{CONTAINS} = \@result;
   $self->debug("CONTAINS[@result]") if $CPAN::DEBUG;
   unless (@result) {
     $CPAN::Frontend->mywarn(qq{
@@ -4318,7 +4443,11 @@ sub get     { shift->rematein('get',@_); }
 #-> sub CPAN::Bundle::make ;
 sub make    { shift->rematein('make',@_); }
 #-> sub CPAN::Bundle::test ;
-sub test    { shift->rematein('test',@_); }
+sub test    {
+    my $self = shift;
+    $self->{badtestcnt} ||= 0;
+    $self->rematein('test',@_);
+}
 #-> sub CPAN::Bundle::install ;
 sub install {
   my $self = shift;
@@ -4346,6 +4475,32 @@ sub userid {
     $self->{RO}{userid};
 }
 sub description { shift->{RO}{description} }
+
+#-> sub CPAN::Module::color_cmd_tmps ;
+sub color_cmd_tmps {
+    my($self) = shift;
+    my($depth) = shift || 0;
+    my($color) = shift || 0;
+    # a module needs to recurse to its cpan_file
+
+    return if exists $self->{incommandcolor}
+        && $self->{incommandcolor}==$color;
+    $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: deep recursion in ".
+                                   "color_cmd_tmps depth[%s] self[%s] id[%s]",
+                                   $depth,
+                                   $self,
+                                   $self->id
+                                  )) if $depth>=100;
+    ##### warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
+
+    if ( my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file) ) {
+        $dist->color_cmd_tmps($depth+1,$color);
+    }
+    if ($color==0) {
+        delete $self->{badtestcnt};
+    }
+    $self->{incommandcolor} = $color;
+}
 
 #-> sub CPAN::Module::as_glimpse ;
 sub as_glimpse {
@@ -4470,9 +4625,9 @@ sub cpan_file    {
     if (exists $self->{RO}{CPAN_FILE} && defined $self->{RO}{CPAN_FILE}){
 	return $self->{RO}{CPAN_FILE};
     } elsif ( defined $self->userid ) {
-	my $fullname = $CPAN::META->instance(CPAN::Author,
+	my $fullname = $CPAN::META->instance("CPAN::Author",
                                              $self->userid)->fullname;
-	my $email = $CPAN::META->instance(CPAN::Author,
+	my $email = $CPAN::META->instance("CPAN::Author",
                                           $self->userid)->email;
 	unless (defined $fullname && defined $email) {
             my $userid = $self->userid;
@@ -4511,7 +4666,9 @@ sub force {
 #-> sub CPAN::Module::rematein ;
 sub rematein {
     my($self,$meth) = @_;
-    $self->debug($self->id) if $CPAN::DEBUG;
+    $CPAN::Frontend->myprint(sprintf("Running %s for module %s\n",
+                                     $meth,
+                                     $self->id));
     my $cpan_file = $self->cpan_file;
     if ($cpan_file eq "N/A" || $cpan_file =~ /^Contact Author/){
       $CPAN::Frontend->mywarn(sprintf qq{
@@ -4543,9 +4700,16 @@ sub cvs_import { shift->rematein('cvs_import') }
 #-> sub CPAN::Module::get ;
 sub get    { shift->rematein('get',@_); }
 #-> sub CPAN::Module::make ;
-sub make   { shift->rematein('make') }
+sub make   {
+    my $self = shift;
+    $self->rematein('make');
+}
 #-> sub CPAN::Module::test ;
-sub test   { shift->rematein('test') }
+sub test   {
+    my $self = shift;
+    $self->{badtestcnt} ||= 0;
+    $self->rematein('test',@_);
+}
 #-> sub CPAN::Module::uptodate ;
 sub uptodate {
     my($self) = @_;
@@ -4561,7 +4725,9 @@ sub uptodate {
 	&&
 	! CPAN::Version->vgt($latest, $have)
        ) {
-      return 1;
+        CPAN->debug("returning uptodate. inst_file[$inst_file] ".
+                    "latest[$latest] have[$have]") if $CPAN::DEBUG;
+        return 1;
     }
     return;
 }
@@ -4789,25 +4955,6 @@ sub DESTROY {
 sub untar {
   my($class,$file) = @_;
   if (0) { # makes changing order easier
-  } elsif ($CPAN::META->has_inst("Archive::Tar")
-      &&
-      $CPAN::META->has_inst("Compress::Zlib") ) {
-    my $tar = Archive::Tar->new($file,1);
-    my $af; # archive file
-    for $af ($tar->list_files) {
-        if ($af =~ m!^(/|\.\./)!) {
-            $CPAN::Frontend->mydie("ALERT: Archive contains ".
-                                   "illegal member [$af]");
-        }
-        $CPAN::Frontend->myprint("$af\n");
-        $tar->extract($af);
-        return if $CPAN::Signal;
-    }
-
-    ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
-        if ($^O eq 'MacOS');
-
-    return 1;
   } elsif (MM->maybe_command($CPAN::Config->{'gzip'})
       &&
       MM->maybe_command($CPAN::Config->{'tar'})) {
@@ -4836,6 +4983,25 @@ sub untar {
     } else {
       return 1;
     }
+  } elsif ($CPAN::META->has_inst("Archive::Tar")
+      &&
+      $CPAN::META->has_inst("Compress::Zlib") ) {
+    my $tar = Archive::Tar->new($file,1);
+    my $af; # archive file
+    for $af ($tar->list_files) {
+        if ($af =~ m!^(/|\.\./)!) {
+            $CPAN::Frontend->mydie("ALERT: Archive contains ".
+                                   "illegal member [$af]");
+        }
+        $CPAN::Frontend->myprint("$af\n");
+        $tar->extract($af);
+        return if $CPAN::Signal;
+    }
+
+    ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
+        if ($^O eq 'MacOS');
+
+    return 1;
   } else {
     $CPAN::Frontend->mydie(qq{
 CPAN.pm needs either both external programs tar and gzip installed or
@@ -5368,17 +5534,18 @@ enthusiasm).
 
 =head2 Debugging
 
-The debugging of this module is pretty difficult, because we have
+The debugging of this module is a bit complex, because we have
 interferences of the software producing the indices on CPAN, of the
 mirroring process on CPAN, of packaging, of configuration, of
 synchronicity, and of bugs within CPAN.pm.
 
-In interactive mode you can try "o debug" which will list options for
-debugging the various parts of the package. The output may not be very
-useful for you as it's just a by-product of my own testing, but if you
-have an idea which part of the package may have a bug, it's sometimes
-worth to give it a try and send me more specific output. You should
-know that "o debug" has built-in completion support.
+For code debugging in interactive mode you can try "o debug" which
+will list options for debugging the various parts of the code. You
+should know that "o debug" has built-in completion support.
+
+For data debugging there is the C<dump> command which takes the same
+arguments as make/test/install and outputs the object's Data::Dumper
+dump.
 
 =head2 Floppy, Zip, Offline Mode
 

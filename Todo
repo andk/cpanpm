@@ -8,6 +8,8 @@ time-consuming failing tests should not be repeated within the
 same "interaction" or let's say "command from the commandline". This
 is a cute idea, but must be postponed after data separating.
 
+Rename 'o conf' to 'set' and 'o debug' to 'set debug'.
+
 Profiling?
 
 Provide something, so that the next "o conf commit" will not overwrite

@@ -373,17 +373,18 @@ DESCRIPTION
 
   Debugging
 
-    The debugging of this module is pretty difficult, because we have
+    The debugging of this module is a bit complex, because we have
     interferences of the software producing the indices on CPAN, of the
     mirroring process on CPAN, of packaging, of configuration, of
     synchronicity, and of bugs within CPAN.pm.
 
-    In interactive mode you can try "o debug" which will list options for
-    debugging the various parts of the package. The output may not be very
-    useful for you as it's just a by-product of my own testing, but if you
-    have an idea which part of the package may have a bug, it's sometimes
-    worth to give it a try and send me more specific output. You should know
-    that "o debug" has built-in completion support.
+    For code debugging in interactive mode you can try "o debug" which will
+    list options for debugging the various parts of the code. You should
+    know that "o debug" has built-in completion support.
+
+    For data debugging there is the `dump' command which takes the same
+    arguments as make/test/install and outputs the object's Data::Dumper
+    dump.
 
   Floppy, Zip, Offline Mode
 

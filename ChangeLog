@@ -1,6 +1,76 @@
+2000-09-05  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* color_cmd_tmps: protection against deep recursion with a panic
+	message.
+
+	* expand: temporary introduced the "=" hack to eval code on the
+	command line repeatedly. Now disabled again to prevent surprise.
+	But as a reminder, I did run this command successfully before
+	disabling:
+
+	cpan> m '=length($self->id)==16 && substr($self->id,12,2) eq "::"'
+	Module          Bundle::HTML::EP (N/A)
+	Module	        Games::Cards::Tk (A/AK/AKARGER/Games-Cards-1.45.tar.gz)
+	Module          Games::Worms::PS (S/SB/SBURKE/Games-Worms-0.61.tar.gz)
+	Module          Games::Worms::Tk (S/SB/SBURKE/Games-Worms-0.61.tar.gz)
+	Module          Lingua::Stem::En (S/SN/SNOWHARE/Lingua-Stem-0.40.tar.gz)
+
+	* color_cmd_tmps: we're now coloring all objects when they enter
+	the queue and we uncolor them when a command is finished. We just
+	need a hook now to check if we really uncolored them all. What
+	should the hook be? i ="$self->{incommandcolor}>0"
+
 2000-09-04  Andreas J. Koenig  <andreas.koenig@anima.de>
 
-	* lib/CPAN.pm (dump): made dumo more userfriendly by adding a
+	* color_cmd_tmps: rename the method reset_badtestcnt to
+	color_cmd_tmps because it turns out to be the right place to reset
+	sponsored_mods and maybe install_failed too, and if we mark them
+	as dirty when used and as clean when reset, we might even succeed
+	to have a tidy kitchen.
+
+	* untar: backed out the preference towards Archive::Tar. It seems
+	from reports I get and one hiccups I witnessed myself that
+	Archive::Tar is not stable (sorry, no bugreport available). With
+	the current state of CPAN.pm we cannot afford the additional risk
+	from an external source.
+
+	* Queue: backed out the change from string based queue to object
+	based queue. I made some mistakes during transition and everything
+	stopped working. This seemed the easiest way out.
+
+	* reset_testcnt: introduced attribute badtestcnt for Modules,
+	Bundles, and Distributions and method reset_badtestcnt to get rid
+	of that counter before and after a command. During the command we
+	inc the counter on unsuccessful make test commands. But we do not
+	reset unknown dependencies. During 'make test' we up this counter
+	if test fails and consequently do not repeat the testing. This
+	should now safe much time if, say LWP tests fail and we have all
+	of WWW::RobotRules, File::Listing, LWP, HTTP::Negotiate,
+	HTML::Form, and LWP::Simple in a Bundle or reach the stuff via a
+	dependency. Former versions would have repeated the testing ad
+	nauseam. We now refuse on the second occasion and the user may be
+	required to run something to finish building.
+
+	* prereq_pm: split of method needs_prereq into unsat_prereq_pm and
+	prereq_pm and letting the prereq_pm be stored in the object
+
+	* cpl: added readme and dump to the list of supported keywords for
+	completion
+
+	* POD: documented the dump command in the debugging section of the
+	manpage. Simplified the debugging section.
+
+	* changed queue to work with objects instead of object IDs
+	making it more natural to deal with them. Having the string
+	representation there bit me several times in the past. At the same
+	time shuffled some code from the queue-running loop to the
+	queue-constructing loop thus catching errors before starting to
+	work on the queue.
+
+	* renamed dotdot_onreload to paintdots_onreload. Changed $redef
+	from global to lexical.
+
+	* lib/CPAN.pm (dump): made dump more userfriendly by adding a
 	print statement, it is now a regular command to type C<dump
 	Net::FTP>. But still left undocumented to augment comments from
 	those who read the ChangeLog (That's you:)
