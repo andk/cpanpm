@@ -1,10 +1,9 @@
 package CPAN::Admin;
 use base CPAN;
 use strict;
-use URI::Escape ();
 use vars qw(@EXPORT $VERSION);
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.5 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -17,6 +16,12 @@ sub CPAN::Shell::register {
   my($self,$mod,@rest) = @_;
   unless ($mod){
     print "register called without argument\n";
+    return;
+  }
+  if ($CPAN::META->has_inst("URI::Escape")) {
+    require URI::Escape;
+  } else {
+    print "register requires URI::Escape installed, otherwise it cannot work\n";
     return;
   }
   print "Got request for mod[$mod]\n";

@@ -1,3 +1,34 @@
+2000-11-04  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.58_56.
+
+	* CPAN::Shell::local_bundles: Did not discover local bundle files
+	if they were nested. Thanks to Ask B. Hansen for the report.
+
+	* CPAN::Shell::ls: Started work on an ls command. Left
+	undocumented because not yet finished. Needs mtime in CHECKSUMS
+	file.
+
+	* localize: Improved messaging when we try to download a
+	compressed file instead of an uncompressed.
+
+	* o conf: Made C<o conf -Module> to mean remove Module debugging
+	from the current debugging settings. Handy when you turn on "all"
+	and discover that Module is too noisy.
+
+2000-10-29  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* FAQ about readline: Thanks to Joseph Kewish
+	<jkewish@thedrag.com> who knew the correct answer.
+
+2000-10-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* untar: again change preference to tag+gzip to hunt down a bug in
+	Archive::Tar.
+
+	* Admin's register: Forgive when URI::Escape isn't installed yet
+	and let it be installed while we're running.
+
 2000-10-27  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing snapshot as 1.58_55.
