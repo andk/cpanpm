@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.07';
+$VERSION = '1.08';
 
-# $Id: CPAN.pm,v 1.87 1996/12/23 03:58:42 k Exp $
+# $Id: CPAN.pm,v 1.92 1996/12/23 13:13:05 k Exp $
 
-# my $version = substr q$Revision: 1.87 $, 10; # only used during development
+# my $version = substr q$Revision: 1.92 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -314,7 +314,7 @@ Readline support $rl_avail
 	    my(@line);
 	    eval { @line = Text::ParseWords::shellwords($_) };
 	    warn($@), next if $@;
-	    $CPAN::META->debug("line[".join(":",@line)."]");
+	    $CPAN::META->debug("line[".join(":",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
@@ -845,17 +845,70 @@ sub localize {
 		return $aslocal;
 	    }
 	}
-	if ($CPAN::META->hasFTP && $url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
+	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	    my($host,$dir,$getfile) = ($1,$2,$3);
-	    $dir =~ s|/+|/|g;
-	    $self->debug("Going to fetch file [$getfile]
+	    if ($CPAN::META->hasFTP) {
+		$dir =~ s|/+|/|g;
+		$self->debug("Going to fetch file [$getfile]
   from dir [$dir]
   on host  [$host]
   as local [$aslocal]") if $CPAN::DEBUG;
-	    CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal) && return $aslocal;
+		CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal) && return $aslocal;
+	    } elsif (-x $CPAN::Config->{'ftp'}) {
+		my($netrc) = CPAN::FTP::netrc->new;
+		if ($netrc->contains($host)) {
+		    print(
+			  qq{
+  Trying with external ftp to get $url
+  As this requires some features that are not thoroughly tested, we\'re
+  not sure, that we get it right. Please, install Net::FTP as soon
+  as possible. Just type "install Net::FTP". Thank you.
+
+}
+			 );
+		    local(*WTR);
+		    my($cwd) = Cwd::cwd();
+		    chdir $aslocal_dir;
+		    my($targetfile) = File::Basename::basename($aslocal);
+		    my(@dialog);
+		    push @dialog, map {"cd $_\n"} split "/", $dir;
+		    push @dialog, "get $getfile $targetfile\n";
+		    push @dialog, "quit\n";
+		    open(WTR, "|$CPAN::Config->{'ftp'} $host") or die "Couldn't open ftp: $!";
+		    # pilot blind
+		    for (@dialog) {
+#			print "To WTR>>$_<<\n";
+			print WTR $_;
+		    }
+#		    close WTR;
+		    chdir($cwd);
+		    return $aslocal;
+		} else {
+		    my($netrcfile) = $netrc->{netrc};
+		    if ($netrcfile) {
+			print qq{  Your $netrcfile does not contain host $host.\n}
+		    } else {
+			print qq{  I could not find or open your $netrcfile.\n}
+		    }
+		    print qq{  If you want to use external ftp,
+  please enter host $host into your .netrc file and retry.
+
+  The format of a proper entry in your .netrc file would be:
+
+machine $host
+login ftp
+password $Config::Config{cf_email}
+
+Please make also sure, your .netrc will not be readable by others.
+You don\'t have to leave and restart CPAN.pm, I\'ll look again next
+time I come around here.
+\n};
+		}
+	    }
 	}
 	if (-x $CPAN::Config->{'lynx'}) {
 ##	    $self->debug("Trying with lynx for [$url]") if $CPAN::DEBUG;
+	    my($want_compressed);
 	    print(
 		  qq{
   Trying with lynx to get $url
@@ -865,22 +918,64 @@ sub localize {
 
 }
 		 );
-	    $aslocal =~ s/\.gz//;
+	    $want_compressed = $aslocal =~ s/\.gz//;
 	    my($system) = "$CPAN::Config->{'lynx'} -source '$url' > $aslocal";
 	    if (system($system)==0) {
-		$system = "$CPAN::Config->{'gzip'} $aslocal";
-		system($system)==0 or die;
-		return "$aslocal.gz";
+		if ($want_compressed) {
+		    $system = "$CPAN::Config->{'gzip'} -dt $aslocal";
+		    if (system($system)==0) {
+			rename $aslocal, "$aslocal.gz";
+		    } else {
+			$system = "$CPAN::Config->{'gzip'} $aslocal";
+			system($system);
+		    }
+		    return "$aslocal.gz";
+		} else {
+		    $system = "$CPAN::Config->{'gzip'} -dt $aslocal";
+		    if (system($system)==0) {
+			$system = "$CPAN::Config->{'gzip'} -d $aslocal";
+			system($system);
+		    } else {
+			# should be fine, eh?
+		    }
+		    return $aslocal;
+		}
 	    }
-	}
-	if (-x $CPAN::Config->{'ftp'}) {
-	    print qq{The external ftp is not yet supported, sorry\n};
 	}
 	warn "Can't access URL $url.
   Either get LWP or Net::FTP
   or an external lynx or ftp";
     }
     Carp::croak("Cannot fetch $file from anywhere");
+}
+
+package CPAN::FTP::external;
+
+package CPAN::FTP::netrc;
+
+sub new {
+    my($class) = @_;
+    my $file = MY->catfile($ENV{HOME},".netrc");
+    my($fh,@machines);
+    if($fh = IO::File->new($file,"r")){
+	local($/) = "";
+	while (<$fh>) {
+	    next if /\bmacdef\b/;
+	    my($machine) = /\bmachine\s+(\S+)/s;
+	    push @machines, $machine;
+	}
+    } else {
+	$file = "";
+    }
+    bless {
+	   mach => [@machines],
+	   netrc => $file,
+	  }, $class;
+}
+
+sub contains {
+    my($self,$mach) = @_;
+    scalar grep {$_ eq $mach} @{$self->{mach}};
 }
 
 package CPAN::Complete;

@@ -1,5 +1,13 @@
 Revision history for Perl extension CPAN.
 
+=head2 Dec 23, 1996
+
+Implemented the external-ftp fallback. We're deep in UNIX land here
+again, sorry for that. We'll see how it goes on UNIX, then we can find
+OS dependent fallbacks.
+
+Released that as 1.08.
+
 =head2 Dec 22, 1996
 
 An afternoon of intense email exchange with Mark D. Baushke helped to

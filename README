@@ -11,13 +11,14 @@ SYNOPSIS
 
       use CPAN;
 
-      autobundle, bundle, clean, expand, install, make, recompile, test
+      autobundle, clean, install, make, recompile, test
 
 
 DESCRIPTION
-    The CPAN module is designed to automate the building and
-    installing of perl modules and extensions including the
-    searching and fetching from the net.
+    The CPAN module is designed to automate the make and install of
+    perl modules and extensions. It includes some searching
+    capabilities as well knows a how to use Net::FTP or LWP to fetch
+    the raw data from the net.
 
     Modules are fetched from one or more of the mirrored CPAN
     (Comprehensive Perl Archive Network) sites and unpacked in a
@@ -34,6 +35,9 @@ DESCRIPTION
     of the disk space occupied by the make processes and deletes
     excess space in a simple FIFO style.
 
+    All methods provided are accessible in a programmer style and in
+    an interactive shell style.
+
   Interactive Mode
 
     The interactive mode is entered by running
@@ -48,18 +52,90 @@ DESCRIPTION
     Once you are on the command line, type 'h' and the rest should
     be self-explanatory.
 
+    The most common uses of the interactive modes are
+
+    Searching for authors, bundles, distribution files and modules
+      There are corresponding one-letter commands `a', `b', `d', and
+      `m' for each of the four categories and another, `i' for any
+      of the other four. Each of the four entities is implemented as
+      a class with slightly differing methods for displaying an
+      object.
+
+      Arguments you pass to these commands are either strings
+      matching exact the identification string of an object or
+      regular expressions that are then matched case-insensitively
+      against various attributes of the objects. The parser
+      recognizes a regualar expression only if you enclose it
+      between two slashes.
+
+      The principle is that the number of found objects influences
+      how an item is displayed. If the search finds one item, we
+      display the result of object->as_string, but if we find more
+      than one, we display each as object->as_glimpse. E.g.
+
+          cpan> a ANDK     
+          Author id = ANDK
+              EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+              FULLNAME     Andreas König
+
+          cpan> a /andk/   
+          Author id = ANDK
+              EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+              FULLNAME     Andreas König
+
+          cpan> a /and.*rt/
+          Author          ANDYD (Andy Dougherty)
+          Author          MERLYN (Randal L. Schwartz)
+
+
+    make, test, install, clean modules or distributions
+      The four commands do indeed exist just as written above. Each
+      of them takes as many arguments as provided and investigates
+      for each what it might be. Is it a distribution file
+      (recognized by embedded slashes), this file is being
+      processed. Is it a module, CPAN determines the distribution
+      file where this module is included and processes that.
+
+      Any `make' and `test' are run unconditionally. An `install
+      <distribution_file>' also is run unconditionally. But for
+      `install <module<gt'> CPAN checks if an install is actually
+      needed for it and prints *"Foo up to date"* in case the module
+      doesn't need to be updated.
+
+      CPAN also keeps track of what it has done within the current
+      session and doesn't try to build a package a second time
+      regardless if it succeeded or not. The `force ' command takes
+      as first argument the method to invoke (currently: make, test,
+      or install) and executes the command from scratch.
+
+      Example:
+
+          cpan> install OpenGL
+          OpenGL is up to date.
+          cpan> force install OpenGL
+          Running make
+          OpenGL-0.4/
+          OpenGL-0.4/COPYRIGHT
+          [...]
+
+
   CPAN::Shell
 
     The commands that are available in the shell interface are
     methods in the package CPAN::Shell. If you enter the shell
-    command, all your input is split on whitespace, the first word
-    is being interpreted as the method to be called and the rest of
-    the words are treated as arguments to this method.
+    command, all your input is split by the
+    Text::ParseWords::shellwords() routine which acts like most
+    shells do. The first word is being interpreted as the method to
+    be called and the rest of the words are treated as arguments to
+    this method.
 
-    If you do not enter the shell, most of the available shell
-    commands are both available as methods (`CPAN::Shell-
-    >install(...)') and as functions in the calling package
-    (`install(...)').
+  Programmer's interface
+
+    If you do not enter the shell, the available shell commands are
+    both available as methods (`CPAN::Shell->install(...)') and as
+    functions in the calling package (`install(...)'). The
+    programmer's interface has beta status. Do not heavily rely on
+    it, changes may still happen.
 
   Cache Manager
 
@@ -69,7 +145,9 @@ DESCRIPTION
     soon as the size of all directories there gets bigger than
     $CPAN::Config->{build_cache} (in MB). The contents of this cache
     may be used for later re-installations that you intend to do
-    manually, but will never be trusted by CPAN itself.
+    manually, but will never be trusted by CPAN itself. This is due
+    to the fact that the user might use these directories for
+    building modules on different architectures.
 
     There is another directory ($CPAN::Config->{keep_source_where})
     where the original distribution files are kept. This directory
@@ -86,8 +164,8 @@ DESCRIPTION
 
     It starts like a perl module with a package declaration and a
     $VERSION variable. After that the pod section looks like any
-    other pod with the only difference, that one pod section exists
-    starting with (verbatim):
+    other pod with the only difference, that *one special pod
+    section* exists starting with (verbatim):
 
             =head1 CONTENTS
 
@@ -116,32 +194,17 @@ DESCRIPTION
     you by including all currently installed modules in a snapshot
     bundle file.
 
+    There is a meaningless Bundle::Demo available on CPAN. Try to
+    install it, it usually does no harm, just demonstrates what the
+    Bundle interface looks like.
+
   autobundle
 
-    autobundle() writes a bundle file into the directory
-    $CPAN::Config->{cpan_home}/Bundle directory. The file contains a
-    list of all modules that are both available from CPAN and
-    currently installed within @INC. The name of the bundle file is
-    based on the current date and a counter.
-
-  Pragma: force
-
-    Normally CPAN keeps track of what it has done within the current
-    session and doesn't try to build a package a second time
-    regardless if it succeeded or not. The force command takes as
-    first argument the method to invoke (currently: make, test, or
-    install) and executes the command from scratch.
-
-    Example:
-
-        cpan> install OpenGL
-        OpenGL is up to date.
-        cpan> force install OpenGL
-        Running make
-        OpenGL-0.4/
-        OpenGL-0.4/COPYRIGHT
-        [...]
-
+    `autobundle' writes a bundle file into the `$CPAN::Config-
+    '{cpan_home}/Bundle> directory. The file contains a list of all
+    modules that are both available from CPAN and currently
+    installed within @INC. The name of the bundle file is based on
+    the current date and a counter.
 
   recompile
 
@@ -154,6 +217,16 @@ DESCRIPTION
     depending on binary compatibility (so you cannot run CPAN
     commands), then you should try the CPAN::Nox module for
     recovery.
+
+    A very popular use for recompile is to finish a network
+    installation. Imagine, you have a common source tree for two
+    different architectures. You decide to do a completely
+    independent fresh installation. You start on one architecture
+    with the help of a Bundle file produced earlier. CPAN installs
+    the whole Bundle for you, but when you try to repeat the job on
+    the second architecture, CPAN responds with a `"Foo up to date"'
+    message for all modules. So you will be glad to run recompile in
+    the second architecture and you're done.
 
 CONFIGURATION
     When the CPAN module is installed a site wide configuration file
