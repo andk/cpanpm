@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.09_01';
+$VERSION = '1.10';
 
-# $Id: CPAN.pm,v 1.97 1997/01/17 02:10:19 k Exp $
+# $Id: CPAN.pm,v 1.99 1997/01/21 00:58:02 k Exp $
 
-# my $version = substr q$Revision: 1.97 $, 10; # only used during development
+# my $version = substr q$Revision: 1.99 $, 10; # only used during development
 
 use 5.00315;
 
@@ -60,7 +60,7 @@ CPAN::Config->load;
 
 @EXPORT = qw( 
 	     autobundle bundle expand force get
-	     install make recompile shell test clean
+	     install make readme recompile shell test clean
 	    );
 
 
@@ -172,7 +172,11 @@ or
     $self->{LOCK} = $lockfile;
     $fh->close;
     $SIG{'TERM'} = sub { &cleanup; die "Got SIGTERM, leaving"; };
-    $SIG{'INT'} = sub { &cleanup, die "Got a second SIGINT" if $Signal; $Signal = 1; };
+    $SIG{'INT'} = sub {
+	my $s = $Signal == 2 ? "a second" : "another";
+	&cleanup, die "Got $s SIGINT" if $Signal;
+	$Signal = 1;
+    };
     $SIG{'__DIE__'} = \&cleanup;
     print STDERR "Signal handler set.\n" unless $CPAN::Config->{'inhibit_startup_message'};
 }
@@ -224,7 +228,8 @@ sub hasMD5 {
     } elsif (not defined $self->{'hasMD5'}) {
 	eval {require MD5;};
 	if ($@) {
-	    print "MD5 security checks disabled because MD5 not installed. Please consider installing MD5\n";
+	    print "MD5 security checks disabled because MD5 not installed.
+  Please consider installing MD5\n";
 	    $self->{'hasMD5'} = 0;
 	} else {
 	    $self->{'hasMD5'}++;
@@ -357,12 +362,13 @@ i         none                    anything of above
 
 r          as             reinstall recommendations
 u          above          uninstalled distributions
-See manpage for autobundle, recompile, force, etc.
+See manpage for autobundle, recompile, force, look, etc.
 
-make      modules,        make
-test      dists, bundles, make test (implies make)
-install   "r" or "u"      make install (implies test)
-clean                     make clean
+make                      make
+test      modules,        make test (implies make)
+install   dists, bundles, make install (implies test)
+clean     "r" or "u"      make clean
+readme                    display the README file
 
 reload    index|cpan    load most recent indices/CPAN.pm
 h or ?                  display this menu
@@ -462,7 +468,7 @@ sub o {
 			next unless lc($_) eq lc($what);
 			$CPAN::DEBUG |= $CPAN::DEBUG{$_};
 		    }
-		    print "unknown argument $what\n";
+		    print "unknown argument [$what]\n";
 		}
 	    }
 	} else {
@@ -497,10 +503,18 @@ sub reload {
 	undef $/;
 	$redef = 0;
 	local($SIG{__WARN__})
-	    = sub { $_[0] =~ /Subroutine \w+ redefined/ and ++$redef and return; warn @_; };
+	    = sub {
+		if ( $_[0] =~ /Subroutine \w+ redefined/ ) {
+		    ++$redef;
+		    local($|) = 1;
+		    print ".";
+		    return;
+		}
+		warn @_;
+	    };
 	eval <$fh>;
 	warn $@ if $@;
-	print "$redef subroutines redefined\n";
+	print "\n$redef subroutines redefined\n";
     } elsif ($_[1] =~ /index/) {
 	CPAN::Index->force_reload;
     }
@@ -516,10 +530,12 @@ sub _binary_extensions {
 	next if $file =~ /^Contact Author/;
 	next if $file =~ /perl5[._-]\d{3}(?:[\d_]+)?\.tar[._-]gz$/;
 	next unless $module->xs_file;
+	local($|) = 1;
+	print ".";
 	push @result, $module;
     }
 #    print join " | ", @result;
-#    print "\n";
+    print "\n";
     return @result;
 }
 
@@ -823,11 +839,11 @@ sub localize {
  	unless ($Ua) {
 	    $Ua = new LWP::UserAgent;
 	    my($var);
-	    $Ua->proxy('ftp',  $ENV{'ftp_proxy'})
+	    $Ua->proxy('ftp',  $var)
 		if $var = $CPAN::Config->{'ftp_proxy'} || $ENV{'ftp_proxy'};
-	    $Ua->proxy('http', $ENV{'http_proxy'})
+	    $Ua->proxy('http', $var)
 		if $var = $CPAN::Config->{'http_proxy'} || $ENV{'http_proxy'};
-	    $Ua->no_proxy($ENV{'no_proxy'})
+	    $Ua->no_proxy($var)
 		if $var = $CPAN::Config->{'no_proxy'} || $ENV{'no_proxy'};
 	}
     }
@@ -940,11 +956,11 @@ sub localize {
  get $getfile $targetfile
  bye
 ";
-		local *CMD;
-		open(CMD, "|$CPAN::Config->{'ftp'} -n") ||
-		die "Cannot fork: $!\n";
-		print CMD $template;
-		close CMD;
+		my $cmd = IO::File->new;
+		$cmd->open("|$CPAN::Config->{'ftp'} -n") or
+		    die "Cannot fork: $!\n";
+		$cmd->print($template);
+		$cmd->close;
 		$st = stat($aslocal);
 		if (defined $st && $st->mtime > $timestamp) {
 			print "GOT $aslocal\n";
@@ -1056,10 +1072,19 @@ sub complete {
     $pos ||= 0;
     CPAN->debug("word [$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
     $line =~ s/^\s*//;
+    if ($line =~ s/^(force\s*)//) {
+	$pos -= length($1);
+    }
     my @return;
     if ($pos == 0) {
-	@return = grep(/^$word/, sort qw(! a b d h i m o q r u autobundle clean make test install reload));
-    } elsif ( $line !~ /^[\!abdhimorut]/ ) {
+	@return = grep(
+		       /^$word/,
+		       sort qw(
+			       ! a b d h i m o q r u autobundle clean
+			       make test install force reload look
+			      )
+		      );
+    } elsif ( $line !~ /^[\!abdhimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^a\s/) {
 	@return = completex('CPAN::Author',$word);
@@ -1067,7 +1092,7 @@ sub complete {
 	@return = completex('CPAN::Bundle',$word);
     } elsif ($line =~ /^d\s/) {
 	@return = completex('CPAN::Distribution',$word);
-    } elsif ($line =~ /^([mru]\s|(make|clean|test|install)\s)/ ) {
+    } elsif ($line =~ /^([mru]|make|clean|test|install|readme|look)\s/ ) {
 	@return = (completex('CPAN::Module',$word),completex('CPAN::Bundle',$word));
     } elsif ($line =~ /^i\s/) {
 	@return = complete_any($word);
@@ -1660,7 +1685,7 @@ sub make {
 	  defined $self->{'make'} and push @e, "Has already been processed within this session";
 	  print join "", map {"  $_\n"} @e and return if @e;
      }
-    print "\n  CPAN: Going to build ".$self->id."\n\n";
+    print "\n  CPAN.pm: Going to build ".$self->id."\n\n";
     my $builddir = $self->dir;
     chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
@@ -2555,15 +2580,15 @@ each as object-E<gt>as_glimpse. E.g.
     Author          ANDYD (Andy Dougherty)
     Author          MERLYN (Randal L. Schwartz)
 
-=item make, test, install, clean modules or distributions
+=item make, test, install, clean  modules or distributions
 
-The four commands do indeed exist just as written above. Each of them
-takes as many arguments as provided and investigates for each what it
-might be. Is it a distribution file (recognized by embedded slashes),
-this file is being processed. Is it a module, CPAN determines the
+These commands do indeed exist just as written above. Each of them
+takes any number of arguments and investigates for each what it might
+be. Is it a distribution file (recognized by embedded slashes), this
+file is being processed. Is it a module, CPAN determines the
 distribution file where this module is included and processes that.
 
-Any C<make> and C<test> are run unconditionally. A 
+Any C<make>, C<test>, and C<readme> are run unconditionally. A 
 
   C<install E<lt>distribution_fileE<gt>>
 
@@ -2590,6 +2615,14 @@ Example:
     OpenGL-0.4/COPYRIGHT
     [...]
 
+=item readme, look module or distribution
+
+These two commands take only one argument, be it a module or a
+distribution file. C<readme> displays the README of the associated
+distribution file. C<Look> gets and untars (if not yet done) the
+distribution file, changes to the appropriate directory and opens a
+subshell process in that directory.
+
 =back
 
 =head2 CPAN::Shell
@@ -2614,12 +2647,7 @@ current date and a counter.
 recompile() is a very special command in that it takes no argument and
 runs the make/test/install cycle with brute force over all installed
 dynamically loadable extensions (aka XS modules) with 'force' in
-effect. Primary purpose of this command is to act as a rescue in case
-your perl breaks binary compatibility. If one of the modules that CPAN
-uses is in turn depending on binary compatibility (so you cannot run
-CPAN commands), then you should try the CPAN::Nox module for recovery.
-
-Another popular use for recompile is to finish a network
+effect. Primary purpose of this command is to finish a network
 installation. Imagine, you have a common source tree for two different
 architectures. You decide to do a completely independent fresh
 installation. You start on one architecture with the help of a Bundle
@@ -2628,6 +2656,11 @@ when you try to repeat the job on the second architecture, CPAN
 responds with a C<"Foo up to date"> message for all modules. So you
 will be glad to run recompile in the second architecture and
 youE<39>re done.
+
+Another popular use for C<recompile> is to act as a rescue in case your
+perl breaks binary compatibility. If one of the modules that CPAN uses
+is in turn depending on binary compatibility (so you cannot run CPAN
+commands), then you should try the CPAN::Nox module for recovery.
 
 =head2 ProgrammerE<39>s interface
 

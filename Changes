@@ -1,5 +1,20 @@
 Revision history for Perl extension CPAN.
 
+=head2 Jan 20, 1997
+
+Made the proxy environment variables configurable in the Config hash
+(once again ;-)
+
+Added documentation for readme and look.
+
+Added completion for readme and look and fixed it for force.
+
+reload cpan now just counts the redefined subroutines instead of
+writing all the warnings to the screen. Made waiting less painful by
+printing single dots (".") for very slow phases of the game.
+
+Released as 1.10.
+
 =head2 Jan 17, 1997
 
 Raphael Manfredi considerably improved the logic of the external ftp

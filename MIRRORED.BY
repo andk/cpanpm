@@ -113,11 +113,11 @@ ftp.wownet.net:
   dst_location     = "Taipei, Taiwan, Asia (25N 121.5E)"
   dst_organization = "WOWNET Network Service Corporation"
   dst_timezone     = "GMT+8"
-  dst_contact      = "ftpadmin@wownet.net"
+  dst_contact      = "root@wownet.net"
   dst_src          = "dongpo.math.ncu.edu.tw:/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.wownet.net/pub2/PERL/"
-# dst_contact      = "mailto:ftpadmin@wownet.net"
+# dst_contact      = "mailto:root@wownet.net"
 # dst_src          = "ftp://dongpo.math.ncu.edu.tw/perl/CPAN/"
 
 # Australasia
@@ -567,11 +567,11 @@ enterprise.ic.gc.ca:
   dst_location     = "Ottawa, Ontario, Canada, North America (45.25N 75.42W)"
   dst_organisation = "Industry Canada, Government of Canada (Industrie Canada, Gouvernement du Canada)"
   dst_timezone     = "GMT-5"
-  dst_contact      = "ftp-admin@enterprise.ic.gc.ca"
+  dst_contact      = "wmaton@enterprise.ic.gc.ca"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://enterprise.ic.gc.ca/pub/perl/CPAN/"
-# dst_contact      = "mailto:ftp-admin@enterprise.ic.gc.ca"
+# dst_contact      = "mailto:wmaton@enterprise.ic.gc.ca"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 theory.uwinnipeg.ca:
