@@ -1,5 +1,12 @@
 Revision history for Perl extension CPAN.
 
+=head2 Dec 21, 1996
+
+Improved bundle mechanism.
+
+Eliminated the star "*" that should save us some memory but introduced
+complications far beyond what its worth.
+
 =head2 Dec 1, 1996
 
 Added security, evals of CHECKSUMS and 03modlist.data.gz now take

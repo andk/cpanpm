@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.02';
+$VERSION = '1.03';
 
-# $Id: CPAN.pm,v 1.77 1996/12/11 01:26:43 k Exp $
+# $Id: CPAN.pm,v 1.79 1996/12/21 03:04:53 k Exp $
 
-# my $version = substr q$Revision: 1.77 $, 10; # only used during development
+# my $version = substr q$Revision: 1.79 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -255,7 +255,7 @@ sub shell {
     # How should we determine if we have more than stub ReadLine enabled?
     my $rl_avail = $Suppress_readline ? "suppressed" :
 	defined &Term::ReadLine::Perl::readline ? "enabled" :
-	    "available (get Term::ReadKey and Term::ReadLine::Perl)";
+	    "available (get Term::ReadKey and Term::ReadLine)";
 
     print qq{
 cpan shell -- CPAN exploration and modules installation (v$CPAN::VERSION)
@@ -342,13 +342,17 @@ q                       quit the shell subroutine
 sub a { print shift->format_result('Author',@_);}
 sub b {
     my($self,@which) = @_;
-    my($bdir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
-    my($dh) = DirHandle->new($bdir); # may fail!
-    my($entry);
-    for $entry ($dh->read) {
-	next if -d $CPAN::META->catdir($bdir,$entry);
-	next unless $entry =~ s/\.pm$//;
-	$CPAN::META->instance('CPAN::Bundle',"Bundle::$entry");
+    my($incdir,$bdir,$dh); 
+    foreach $incdir ($CPAN::Config->{'cpan_home'},@INC) {
+	$bdir = $CPAN::META->catdir($incdir,"Bundle");
+	if ($dh = DirHandle->new($bdir)) { # may fail
+	    my($entry);
+	    for $entry ($dh->read) {
+		next if -d $CPAN::META->catdir($bdir,$entry);
+		next unless $entry =~ s/\.pm$//;
+		$CPAN::META->instance('CPAN::Bundle',"Bundle::$entry");
+	    }
+	}
     }
     print $self->format_result('Bundle',@which);
 }
@@ -740,7 +744,7 @@ sub ftp_get {
 	return;
     }
     $ftp->binary;
-    print qq[Going to ->get("$file","$target")\n] if $CPAN::DEBUG;
+    $class->debug(qq[Going to ->get("$file","$target")\n]) if $CPAN::DEBUG;
     unless ( $ftp->get($file,$target) ){
 	warn "Couldn't fetch $file from $host";
 	return;
@@ -965,8 +969,10 @@ sub read_modpacks {
 	$version =~ s/^\+//;
 
 	# if it as a bundle, instatiate a bundle object
-	my($bundle) = $mod =~ /^Bundle::(.*)/;
-	$version = "n/a" if $mod =~ s/(.+::.+::).+/$1*/; # replace the third level with a star
+	my($bundle);
+	if ($mod =~ /^Bundle::(.*)/) {
+	    $bundle = $1;
+	}
 
 	if ($mod eq 'CPAN') {
 	    local($^W)=0;

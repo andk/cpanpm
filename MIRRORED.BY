@@ -85,14 +85,14 @@ ftp.nuri.net:
   frequency        = "daily"
   dst_directory    = "ftp.nuri.net:/pub/CPAN/"
   dst_location     = "Seoul, South Korea, Asia (37.52N 127.10E)"
-  dst_organization = "I*Net Technologies, Inc."
+  dst_organization = "Inet, Inc."
   dst_timezone     = "GMT+9"
   dst_contact      = "ftpadm@ftp.nuri.net"
-  dst_src          = "uiarchive.cso.uiuc.edu:/pub/lang/perl/CPAN/"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.nuri,net/pub/CPAN/"
 # dst_contact      = "mailto:ftpadm@ftp.nuri.net"
-# dst_src          = "ftp://uiarchive.cso.uiuc.edu/pub/lang/perl/CPAN/"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 dongpo.math.ncu.edu.tw:
   frequency        = "weekly"
@@ -107,16 +107,14 @@ dongpo.math.ncu.edu.tw:
 # dst_contact      = "mailto:root@dongpo.math.ncu.edu.tw"
 # dst_src          = "ftp://ftp.iguide.com/pub/mirrors/packages/perl/CPAN/"
 
-# commented out 199611102000 because almost three weeks stale
-# (maybe because dongpo seems to be down?) // cpan-adm@ftp.funet.fi
-# ftp.wownet.net:
-#   frequency        = "daily"
-#   dst_directory    = "ftp.wownet.net:/pub2/PERL/"
-#   dst_location     = "Taipei, Taiwan, Asia (25N 121.5E)"
-#   dst_organization = "WOWNET Network Service Corporation"
-#   dst_timezone     = "GMT+8"
-#   dst_contact      = "ftpadmin@wownet.net"
-#   dst_src          = "dongpo.math.ncu.edu.tw:/perl/CPAN/"
+ftp.wownet.net:
+  frequency        = "weekly"
+  dst_directory    = "ftp.wownet.net:/pub2/PERL/"
+  dst_location     = "Taipei, Taiwan, Asia (25N 121.5E)"
+  dst_organization = "WOWNET Network Service Corporation"
+  dst_timezone     = "GMT+8"
+  dst_contact      = "ftpadmin@wownet.net"
+  dst_src          = "dongpo.math.ncu.edu.tw:/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.wownet.net/pub2/PERL/"
 # dst_contact      = "mailto:ftpadmin@wownet.net"
@@ -576,6 +574,19 @@ enterprise.ic.gc.ca:
 # dst_contact      = "mailto:ftp-admin@enterprise.ic.gc.ca"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
+theory.uwinnipeg.ca:
+  frequency        = "daily"
+  dst_directory    = "theory.uwinnipeg.ca:/pub/CPAN/"
+  dst_location     = "Winnipeg, Manitoba, Canada, North America (49.9N 97.15W)"
+  dst_organisation = "Physics Department, University of Winnipeg"
+  dst_timezone     = "GMT-6"
+  dst_contact      = "ftp-admin@theory.uwinnipeg.ca"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://theory.uwinnipeg.ca/pub/CPAN/", "http://theory.uwinnipeg.ca/pub/CPAN/"
+# dst_contact      = "mailto:ftp-admin@theory.uwinnipeg.ca"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
 ftp.digital.com:
   frequency        = "daily"
   dst_directory    = "ftp.digital.com:/pub/plan/perl/CPAN/"
@@ -591,14 +602,14 @@ ftp.digital.com:
 
 ftp.cdrom.com:
   frequency        = "daily"
-  dst_directory    = "ftp.cdrom.com:/pub/perl/CPAN/"
+  dst_directory    = "ftp.cdrom.com:/pub/perl/"
   dst_location     = "San Francisco, California, USA, North America (37.47N 122.30W)"
   dst_organisation = "Walnut Creek CDROM"
   dst_timezone     = "GMT-8 (PST8PDT)"
   dst_contact      = "ftp-bugs@ftp.cdrom.com"
   dst_src          = "ftp.metronet.com:/pub/perl/"
 
-# dst_dst          = "ftp://ftp.cdrom.com/pub/perl/CPAN/"
+# dst_dst          = "ftp://ftp.cdrom.com/pub/perl/"
 # dst_contact      = "mailto:ftp-bugs@ftp.cdrom.com"
 # dst_src          = "ftp://ftp.metronet.com/pub/perl/"
 
