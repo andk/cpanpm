@@ -1,10 +1,9 @@
+Prepare for the first module that comes with 1.2.3 version numerbering
+style.
+
 I have a patch by Jochen Wiedmann that implements a per-distribution
 permanent configuration directory. The new containsmods() method in
 1.52 should help to fit the patch with the rest of CPAN.pm.
-
-I have a patch by Andrew Speer that implements dependencies less
-demandingly than current implementation. Want to include it in the
-next release.
 
 Option to skip testing (Ask Bjoern Hansen).
 
@@ -36,7 +35,7 @@ Start documenting the class model
 
 Make configurable that multiple additional index files can be
 integrated (for Intra-CPANs). I believe CPAN::Site did it right
-anyway, so we might sjip this.
+anyway, so we might skip this.
 
 Make the 'make' command itself configurable as suggested by Rujith de
 Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
@@ -48,6 +47,3 @@ style. Thanks to Mike Heins for providing me with insights how users
 feel when they haven't heard of CPAN ever before. Offering
 autodetermination of a CPAN site might help. Offering something like a
 Configure -des might help. Still thinking.
-
-Don't whine that you will use the old MIRRORED.BY file if it's only 0
-byte long.

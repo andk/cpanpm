@@ -1,3 +1,52 @@
+2000-03-22  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Both Andrew Speer <andrew.speer@isolutions.com.au> and Michael
+	G. Schwern <schwern@pobox.com> sent me a patch to the effect that
+	version numbers in PREREQ_PM are honoured. Till now we installed
+	the newest version for all PREREQ_PMs. I applied a mishmash of the
+	two patches.
+
+2000-03-20  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Found bug in the changes made on 03-14, the return value of
+	&CPAN::Config::edit must be true.
+
+2000-03-17  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm: no lib "."; since we do a lot of chdirs *and* do a
+	lot of demand-loading, we need to prune the current directory. I
+	wonder how everything could work so smoothely with the default
+	INC path.
+
+2000-03-14  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Editing the $CPAN::Config hashref had always tried to keep the
+	type of hash values but that was errorprone. Switched to matching
+	/list\z/ in the key instead.
+
+	* Changing the urllist now triggers resetting of Thesite and
+	Themethod. Maybe this needs a more general solution that resets
+	any cache of any variable, but for testing the effect, I start
+	with these two.
+
+2000-03-11  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Added an FAQ section to the manpage. First 2 Fs deal with
+	UNINST=1.
+
+2000-03-10  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Updated the isa_perl checks to match 5.6.0 style.
+
+	* The 02modules... file is now verified against its Line-Count
+	header. The other index files need new headers to verify them.
+
+	* Without any net access we did not make it through the
+	configuration dialog. Fixed now.
+
+	* Apply patches 4416, 4419, 5406 and 5409 from perl-5.6.0
+	candidate.
+
 2000-01-08  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing 1.52 which is a pure bugfix release. New functionality
@@ -30,7 +79,7 @@
 	Stray <pederst@ifi.uio.no> for spotting)
 
 	* ncftpget made to work again by changing directory before
-	downloading (spotted aeons agon by Jarkko Hietaniemi)
+	downloading (spotted aeons ago by Jarkko Hietaniemi)
 
 1999-12-31  Andreas J. Koenig  <andreas.koenig@anima.de>
 

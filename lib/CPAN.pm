@@ -6,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.52';
+$VERSION = '1.53';
 
-# $Id: CPAN.pm,v 1.276 2000/01/08 15:29:46 k Exp $
+# $Id: CPAN.pm,v 1.280 2000/03/23 23:23:17 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.276 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.280 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -29,6 +29,8 @@ use Safe ();
 use Text::ParseWords ();
 use Text::Wrap;
 use File::Spec;
+no lib "."; # we need to run chdir all over and we would get at wrong
+            # libraries there
 
 END { $End++; &cleanup; }
 
@@ -293,7 +295,7 @@ sub try_dot_al {
 	$pkg =~ s|::|/|g;
 	if (defined($name=$INC{"$pkg.pm"}))
 	    {
-		$name =~ s|^(.*)$pkg\.pm$|$1auto/$pkg/$func.al|;
+		$name =~ s|^(.*)$pkg\.pm\z|$1auto/$pkg/$func.al|s;
 		$name = undef unless (-r $name);
 	    }
 	unless (defined $name)
@@ -309,7 +311,7 @@ sub try_dot_al {
 	    *$autoload = sub {};
 	    $ok = 1;
 	} else {
-	    if ($name =~ s{(\w{12,})\.al$}{substr($1,0,11).".al"}e){
+	    if ($name =~ s{(\w{12,})\.al\z}{substr($1,0,11).".al"}e){
 		eval {local $SIG{__DIE__};require $name};
 	    }
 	    if ($@){
@@ -942,6 +944,7 @@ sub debug {
 package CPAN::Config;
 
 #-> sub CPAN::Config::edit ;
+# returns true on successful action
 sub edit {
     my($class,@args) = @_;
     return unless @args;
@@ -952,22 +955,31 @@ sub edit {
 	$class->$o(@args);
 	return 1;
     } else {
-	if (ref($CPAN::Config->{$o}) eq ARRAY) {
+        CPAN->debug("o[$o]");
+	if ($o =~ /list\z/) {
 	    $func = shift @args;
 	    $func ||= "";
+            CPAN->debug("func[$func]");
+            my $changed;
 	    # Let's avoid eval, it's easier to comprehend without.
 	    if ($func eq "push") {
 		push @{$CPAN::Config->{$o}}, @args;
+                $changed = 1;
 	    } elsif ($func eq "pop") {
 		pop @{$CPAN::Config->{$o}};
+                $changed = 1;
 	    } elsif ($func eq "shift") {
 		shift @{$CPAN::Config->{$o}};
+                $changed = 1;
 	    } elsif ($func eq "unshift") {
 		unshift @{$CPAN::Config->{$o}}, @args;
+                $changed = 1;
 	    } elsif ($func eq "splice") {
 		splice @{$CPAN::Config->{$o}}, @args;
+                $changed = 1;
 	    } elsif (@args) {
 		$CPAN::Config->{$o} = [@args];
+                $changed = 1;
 	    } else {
 		$CPAN::Frontend->myprint(
 					 join "",
@@ -976,6 +988,12 @@ sub edit {
 					 "\n"
 		     );
 	    }
+            if ($o eq "urllist" && $changed) {
+                # reset the cached values
+                undef $CPAN::FTP::Thesite;
+                undef $CPAN::FTP::Themethod;
+            }
+            return $changed;
 	} else {
 	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
 	    $CPAN::Frontend->myprint("    $o    " .
@@ -1253,7 +1271,7 @@ sub b {
 	    my($entry);
 	    for $entry ($dh->read) {
 		next if -d MM->catdir($bdir,$entry);
-		next unless $entry =~ s/\.pm$//;
+		next unless $entry =~ s/\.pm\z//;
 		$CPAN::META->instance('CPAN::Bundle',"Bundle::$entry");
 	    }
 	}
@@ -1424,12 +1442,21 @@ index    re-reads the index files\n});
 sub _binary_extensions {
     my($self) = shift @_;
     my(@result,$module,%seen,%need,$headerdone);
-    my $isaperl = q{perl5[._-]\\d{3}(_[0-4][0-9])?\\.tar[._-]gz$};
+    my $isaperl = q{ perl
+                     -?
+                     5[._-]
+                     (
+                      \\d{3}(_[0-4][0-9])?
+                      |
+                      \\d*[24680]\\.\\d+
+                     )
+                     \\.tar[._-]gz\z
+                    };
     for $module ($self->expand('Module','/./')) {
 	my $file  = $module->cpan_file;
 	next if $file eq "N/A";
 	next if $file =~ /^Contact Author/;
-	next if $file =~ / $isaperl /xo;
+	next if $file =~ / $isaperl /x;
 	next unless $module->xs_file;
 	local($|) = 1;
 	$CPAN::Frontend->myprint(".");
@@ -2079,7 +2106,7 @@ sub hosteasy {
 		$l =~ s|^file:||;                   # assume they
                                                     # meant
                                                     # file://localhost
-		$l =~ s|^/|| unless -f $l;          # e.g. /P:
+		$l =~ s|^/||s unless -f $l;         # e.g. /P:
 	    }
 	    if ( -f $l && -r _) {
 		$Thesite = $i;
@@ -2110,7 +2137,7 @@ sub hosteasy {
 	    utime $now, $now, $aslocal; # download time is more
                                         # important than upload time
 	    return $aslocal;
-	  } elsif ($url !~ /\.gz$/) {
+	  } elsif ($url !~ /\.gz\z/) {
 	    my $gzurl = "$url.gz";
 	    $CPAN::Frontend->myprint("Fetching with LWP:
   $gzurl
@@ -2147,7 +2174,7 @@ sub hosteasy {
 		    $Thesite = $i;
 		    return $aslocal;
 		}
-		if ($aslocal !~ /\.gz$/) {
+		if ($aslocal !~ /\.gz\z/) {
 		    my $gz = "$aslocal.gz";
 		    $CPAN::Frontend->myprint("Fetching with Net::FTP
   $url.gz
@@ -2254,7 +2281,7 @@ Trying with "$funkyftp$source_switch" to get
 	    }
 	    $Thesite = $i;
 	    return $aslocal;
-	  } elsif ($url !~ /\.gz$/) {
+	  } elsif ($url !~ /\.gz\z/) {
 	    unlink $aslocal_uncompressed if
 		-f $aslocal_uncompressed && -s _ == 0;
 	    my $gz = "$aslocal.gz";
@@ -2785,9 +2812,28 @@ sub rd_modpacks {
 	unshift @ls, "\n" x length($1) if /^(\n+)/;
 	push @lines, @ls;
     }
+    # read header
+    my $line_count;
     while (@lines) {
 	my $shift = shift(@lines);
+	$shift =~ /^Line-Count:\s+(\d+)/;
+	$line_count = $1 if $1;
 	last if $shift =~ /^\s*$/;
+    }
+    if (not defined $line_count) {
+	warn qq{Warning: Your $index_target does not contain a Line-Count header.
+Please check the validity of the index file by comparing it to more than one CPAN
+mirror. I'll continue but problems seem likely to happen.\a
+};
+	sleep 5;
+    } elsif ($line_count != scalar @lines) {
+
+	warn sprintf qq{Warning: Your %s
+contains a Line-Count header of %d but I see %d lines there. Please
+check the validity of the index file by comparing it to more than one
+CPAN mirror. I'll continue but problems seem likely to happen.\a\n},
+$index_target, $line_count, scalar(@lines);
+
     }
     foreach (@lines) {
 	chomp;
@@ -3078,11 +3124,11 @@ sub get {
     $self->debug("Changed directory to tmp") if $CPAN::DEBUG;
     if (! $local_file) {
 	Carp::croak "bad download, can't do anything :-(\n";
-    } elsif ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)$/i){
+    } elsif ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)\z/i){
 	$self->untar_me($local_file);
-    } elsif ( $local_file =~ /\.zip$/i ) {
+    } elsif ( $local_file =~ /\.zip\z/i ) {
 	$self->unzip_me($local_file);
-    } elsif ( $local_file =~ /\.pm\.(gz|Z)$/) {
+    } elsif ( $local_file =~ /\.pm\.(gz|Z)\z/) {
 	$self->pm2dir_me($local_file);
     } else {
 	$self->{archived} = "NO";
@@ -3093,7 +3139,7 @@ sub get {
 	# Let's check if the package has its own directory.
 	my $dh = DirHandle->new(File::Spec->curdir)
 	    or Carp::croak("Couldn't opendir .: $!");
-	my @readdir = grep $_ !~ /^\.\.?$/, $dh->read; ### MAC??
+	my @readdir = grep $_ !~ /^\.\.?\z/s, $dh->read; ### MAC??
 	$dh->close;
 	my ($distdir,$packagedir);
 	if (@readdir == 1 && -d $readdir[0]) {
@@ -3183,7 +3229,7 @@ sub pm2dir_me {
     my($self,$local_file) = @_;
     $self->{archived} = "pm";
     my $to = File::Basename::basename($local_file);
-    $to =~ s/\.(gz|Z)$//;
+    $to =~ s/\.(gz|Z)\z//;
     if (CPAN::Tarzip->gunzip($local_file,$to)) {
 	$self->{unwrapped} = "YES";
     } else {
@@ -3246,7 +3292,7 @@ sub cvs_import {
     my $userid = $self->{CPAN_USERID};
 
     my $cvs_dir = (split '/', $dir)[-1];
-    $cvs_dir =~ s/-\d+[^-]+$//;
+    $cvs_dir =~ s/-\d+[^-]+\z//;
     my $cvs_root = 
       $CPAN::Config->{cvsroot} || $ENV{CVSROOT};
     my $cvs_site_perl = 
@@ -3267,7 +3313,7 @@ sub cvs_import {
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
 
     $CPAN::Frontend->myprint(qq{@cmd\n});
-    system(@cmd) == 0 or 
+    system(@cmd) == 0 or
 	$CPAN::Frontend->mydie("cvs import failed");
     chdir($pwd);
 }
@@ -3343,7 +3389,7 @@ sub verifyMD5 {
 	$lc_file = CPAN::FTP->localize("authors/id/@local",
 				       "$lc_want.gz",1);
 	if ($lc_file) {
-	    $lc_file =~ s/\.gz$//;
+	    $lc_file =~ s/\.gz\z//;
 	    CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
 	} else {
 	    return;
@@ -3460,16 +3506,22 @@ sub force {
   }
 }
 
+#-> sub CPAN::Distribution::isa_perl ;
 sub isa_perl {
   my($self) = @_;
   my $file = File::Basename::basename($self->id);
   return unless $file =~ m{ ^ perl
+                            -?
 			    (5)
 			    ([._-])
-			    (\d{3}(_[0-4][0-9])?)
+			    (
+                             \d{3}(_[0-4][0-9])?
+                             |
+                             \d*[24680]\.\d+
+                            )
 			    \.tar[._-]gz
-			    $
-			  }x;
+			    \z
+			  }xs;
   "$1.$3";
 }
 
@@ -3635,7 +3687,8 @@ of modules we are processing right now?", "yes");
 	$follow = $answer =~ /^\s*y/i;
       } else {
 	local($") = ", ";
-	$CPAN::Frontend->myprint("  Ignoring dependencies on modules @prereq\n");
+	$CPAN::Frontend->
+            myprint("  Ignoring dependencies on modules @prereq\n");
       }
       if ($follow) {
 	CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
@@ -3661,7 +3714,9 @@ sub needs_prereq {
       $CPAN::Frontend->mydie("Couldn't open Makefile: $!");
   local($/) = "\n";
 
-  my(@p,@need);
+  #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
+  #
+  my(%p,@need);
   while (<$fh>) {
     last if /MakeMaker post_initialize section/;
     my($p) = m{^[\#]
@@ -3670,23 +3725,43 @@ sub needs_prereq {
     next unless $p;
     # warn "Found prereq expr[$p]";
 
-    while ( $p =~ m/(?:\s)([\w\:]+)=>q\[.*?\],?/g ){
-      push @p, $1;
+    #  Regexp modified by A.Speer to remember actual version of file
+    #  PREREQ_PM hash key wants, then add to
+    while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
+      # In case a prereq is mentioned twice, complain.
+      if ( defined $p{$1} ) {
+        warn "Warning: PREREQ_PM mentions $1 more than once, last mention wins";
+      }
+      $p{$1} = $2;
     }
     last;
   }
-  for my $p (@p) {
-    my $mo = $CPAN::META->instance("CPAN::Module",$p);
-    next if $mo->uptodate;
-    # it's not needed, so don't push it. We cannot omit this step, because
-    # if 'force' is in effect, nobody else will check.
-    if ($self->{have_sponsored}{$p}++){
+ NEED: while (my($module, $need_version) = each %p) {
+    my $mo = $CPAN::META->instance("CPAN::Module",$module);
+    # we were too demanding:
+    # next if $mo->uptodate;
+
+    # We only want to install prereqs if either they're not installed
+    # or if the installed version is too old. We cannot omit this
+    # check, because if 'force' is in effect, nobody else will check.
+    {
+      local($^W) = 0;
+      if (defined $mo->inst_file &&
+          $mo->inst_version >= $need_version){
+        CPAN->debug(sprintf "inst_file[%s]inst_version[%s]need_version[%s]",
+                    $mo->inst_file, $mo->inst_version, $need_version
+                   );
+        next NEED;
+      }
+    }
+
+    if ($self->{have_sponsored}{$module}++){
       # We have already sponsored it and for some reason it's still
       # not available. So we do nothing. Or what should we do?
       # if we push it again, we have a potential infinite loop
       next;
     }
-    push @need, $p;
+    push @need, $module;
   }
   return @need;
 }
@@ -3979,6 +4054,7 @@ explicitly a file $s.
 	$success ||= $obj->{'install'} && $obj->{'install'} eq "YES";
 	$fail{$s} = 1 unless $success;
     }
+
     # recap with less noise
     if ( $meth eq "install") {
 	if (%fail) {
@@ -4124,7 +4200,7 @@ sub as_string {
 sub manpage_headline {
   my($self,$local_file) = @_;
   my(@local_file) = $local_file;
-  $local_file =~ s/\.pm$/.pod/;
+  $local_file =~ s/\.pm\z/.pod/;
   push @local_file, $local_file;
   my(@result,$locf);
   for $locf (@local_file) {
@@ -4441,7 +4517,7 @@ sub untar {
 			       qq{Couldn\'t uncompress $file\n}
 			      );
       }
-      $file =~ s/\.gz$//;
+      $file =~ s/\.gz\z//;
       $system = "$CPAN::Config->{tar} xvf $file";
       $CPAN::Frontend->myprint(qq{Using Tar:$system:\n});
       if (system($system)==0) {
@@ -4749,8 +4825,11 @@ functionalities that are available in the shell.
 	print "No VERSION in ", $mod->id, "\n";
     }
 
+    # find out which distribution on CPAN contains a module:
+    print CPAN::Shell->expand("Module","Apache::Constants")->cpan_file
+
 Or if you want to write a cronjob to watch The CPAN, you could list
-all modules that need updating:
+all modules that need updating. First a quick and dirty way:
 
     perl -e 'use CPAN; CPAN::Shell->r;'
 
@@ -5102,6 +5181,41 @@ hide a complete network behind one IP address. With this firewall no
 special compiling is need as you can access hosts directly.
 
 =back
+
+=back
+
+=head1 FAQ
+
+=over
+
+=item I installed a new version of module X but CPAN keeps saying, I
+      have the old version installed
+
+Most probably you B<do> have the old version installed. This can
+happen if a module installs itself into a different directory in the
+@INC path than it was previously installed. This is not really a
+CPAN.pm problem, you would have the same problem when installing the
+module manually. The easiest way to prevent this behaviour is to add
+the argument C<UNINST=1> to the C<make install> call, and that is why
+many people add this argument permanently by configuring
+
+  o conf make_install_arg UNINST=1
+
+=item So why is UNINST=1 not the default?
+
+Because there are people who have their precise expectations about who
+may install where in the @INC path and who uses which @INC array. In
+fine tuned environments C<UNINST=1> can cause damage.
+
+=item When I install bundles or multiple modules with one command
+      there is too much output to keep track of
+
+You may want to configure something like
+
+  o conf make_arg "| tee -ai /root/.cpan/logs/make.out"
+  o conf make_install_arg "| tee -ai /root/.cpan/logs/make_install.out"
+
+so that STDOUT is captured in a file for later inspection.
 
 =back
 

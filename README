@@ -250,8 +250,11 @@ DESCRIPTION
               print "No VERSION in ", $mod->id, "\n";
           }
 
+          # find out which distribution on CPAN contains a module:
+          print CPAN::Shell->expand("Module","Apache::Constants")->cpan_file
+
       Or if you want to write a cronjob to watch The CPAN, you could list
-      all modules that need updating:
+      all modules that need updating. First a quick and dirty way:
 
           perl -e 'use CPAN; CPAN::Shell->r;'
 
@@ -569,6 +572,33 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
             you to hide a complete network behind one IP address. With this
             firewall no special compiling is need as you can access hosts
             directly.
+
+FAQ
+    I installed a new version of module X but CPAN keeps saying, I have the
+    old version installed
+        Most probably you do have the old version installed. This can happen
+        if a module installs itself into a different directory in the @INC
+        path than it was previously installed. This is not really a CPAN.pm
+        problem, you would have the same problem when installing the module
+        manually. The easiest way to prevent this behaviour is to add the
+        argument `UNINST=1' to the `make install' call, and that is why many
+        people add this argument permanently by configuring
+
+          o conf make_install_arg UNINST=1
+
+    So why is UNINST=1 not the default?
+        Because there are people who have their precise expectations about
+        who may install where in the @INC path and who uses which @INC
+        array. In fine tuned environments `UNINST=1' can cause damage.
+
+    When I install bundles or multiple modules with one command there is too
+    much output to keep track of
+        You may want to configure something like
+
+          o conf make_arg "| tee -ai /root/.cpan/logs/make.out"
+          o conf make_install_arg "| tee -ai /root/.cpan/logs/make_install.out"
+
+        so that STDOUT is captured in a file for later inspection.
 
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,

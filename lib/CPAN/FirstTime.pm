@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.38 $, 10;
+$VERSION = substr q$Revision: 1.39 $, 10;
 
 =head1 NAME
 
@@ -78,7 +78,8 @@ dialog anytime later by typing 'o conf init' at the cpan prompt.)
       } else {
 	$fastread = 1;
 	$CPAN::Config->{urllist} ||= [];
-	*prompt = sub {
+	# prototype should match that of &MakeMaker::prompt
+	*prompt = sub ($;$) {
 	  my($q,$a) = @_;
 	  my($ret) = defined $a ? $a : "";
 	  printf qq{%s [%s]\n\n}, $q, $ret;
@@ -360,7 +361,8 @@ sub conf_sites {
     File::Copy::copy($m,$mby) or die "Could not update $mby: $!";
   }
   my $loopcount = 0;
-  while () {
+  local $^T = time;
+  while ($mby) {
     if ( ! -f $mby ){
       print qq{You have no $mby
   I\'m trying to fetch one
@@ -382,6 +384,7 @@ sub conf_sites {
     }
   }
   read_mirrored_by($mby);
+  bring_your_own();
 }
 
 sub find_exe {
@@ -423,7 +426,7 @@ sub picklist {
 }
 
 sub read_mirrored_by {
-    my($local) = @_;
+    my $local = shift or return;
     my(%all,$url,$expected_size,$default,$ans,$host,$dst,$country,$continent,@location);
     my $fh = FileHandle->new;
     $fh->open($local) or die "Couldn't open $local: $!";
@@ -511,25 +514,33 @@ http: -- that host a CPAN mirror.
 
     @urls = picklist (\@urls, $prompt, $default);
     foreach (@urls) { s/ \(.*\)//; }
-    %seen = map (($_ => 1), @urls);
+    push @{$CPAN::Config->{urllist}}, @urls;
+}
 
+sub bring_your_own {
+    my %seen = map (($_ => 1), @{$CPAN::Config->{urllist}});
+    my($ans,@urls);
     do {
-        $ans = prompt ("Enter another URL or RETURN to quit:", "");
+	my $prompt = "Enter another URL or RETURN to quit:";
+	unless (%seen) {
+	    $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
+
+Please enter your CPAN site:};
+	}
+        $ans = prompt ($prompt, "");
 
         if ($ans) {
-            $ans =~ s|/?$|/|; # has to end with one slash
+            $ans =~ s|/?\z|/|; # has to end with one slash
             $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
             if ($ans =~ /^\w+:\/./) {
-               push @urls, $ans 
-                  unless $seen{$ans};
-            }
-            else {
+               push @urls, $ans unless $seen{$ans}++;
+            } else {
                 print qq{"$ans" doesn\'t look like an URL at first sight.
 I\'ll ignore it for now.  You can add it to $INC{'CPAN/MyConfig.pm'}
 later if you\'re sure it\'s right.\n};
             }
         }
-    } while $ans;
+    } while $ans || !%seen;
 
     push @{$CPAN::Config->{urllist}}, @urls;
     # xxx delete or comment these out when you're happy that it works

@@ -1,7 +1,6 @@
 ChangeLog
 MANIFEST
 Makefile.PL
-README
 Todo
 cpan
 lib/CPAN.pm
