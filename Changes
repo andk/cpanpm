@@ -1,5 +1,12 @@
 Revision history for Perl extension CPAN.
 
+=head2 Jan 24, 1997
+
+Larry Virden discovered his hundredth bug. When the .netrc file
+contains an autologin routine with "cd" for a given host, we did not
+cd to the right directory. Fixed and improved debugging for the
+external ftp invocation.
+
 =head2 Jan 22, 1997
 
 Found more incompatibilities: ParseWords had a bug that needs a

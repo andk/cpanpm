@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.12';
+$VERSION = '1.14';
 
-# $Id: CPAN.pm,v 1.103 1997/01/23 00:02:37 k Exp $
+# $Id: CPAN.pm,v 1.104 1997/01/24 01:01:03 k Exp $
 
-# my $version = substr q$Revision: 1.103 $, 10; # only used during development
+# my $version = substr q$Revision: 1.104 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -835,7 +835,8 @@ sub ftp_get {
 	warn "Couldn't fetch $file from $host";
 	return;
     }
-    $ftp->quit;
+    $ftp->quit; # it's ok if this fails
+    return 1;
 }
 
 #-> sub CPAN::FTP::localize ;
@@ -900,6 +901,7 @@ sub localize {
 	    }
 	}
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
+	    # that's the nice and easy way thanks to Graham
 	    my($host,$dir,$getfile) = ($1,$2,$3);
 	    if ($CPAN::META->hasFTP) {
 		$dir =~ s|/+|/|g;
@@ -908,111 +910,104 @@ sub localize {
   on host  [$host]
   as local [$aslocal]") if $CPAN::DEBUG;
 		CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal) && return $aslocal;
-	    } 
-	    # Came back if Net::FTP couldn't establish connection...
-	    # Maybe they are behind a firewall, but they gave us
-	    # a socksified ftp program...
-	    if (-x $CPAN::Config->{'ftp'}) {
-		my($netrc) = CPAN::FTP::netrc->new;
-#*#		use File::stat;
-		my $timestamp = 0;
-#*#		my $st = stat($aslocal);
-		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-		 $atime,$mtime,$ctime,$blksize,$blocks)
-		    = stat($aslocal); #*# stat
-#*#		$timestamp = $st->mtime if defined $st;
-		$timestamp = $mtime if defined $mtime; #*# stat
-		if (
-		    ($netrc->hasdefault() || $netrc->contains($host)) &&
-		    $netrc->protected
-		) {
-		    print(
-			  qq{
-  Trying with external ftp to get $url
-  As this requires some features that are not thoroughly tested, we\'re
-  not sure, that we get it right. Please, install Net::FTP as soon
-  as possible. Just type "install Net::FTP". Thank you.
+		warn "Net::FTP failed for some reason\n";
+	    } else {
+		warn qq{
+  Please, install Net::FTP as soon as possible. Just type
+    install Net::FTP
+  Thank you.
 
 }
-			 );
-		    my($fh) = FileHandle->new;
-		    my($targetfile) = File::Basename::basename($aslocal);
-		    my(@dialog);
-		    push @dialog, "lcd $aslocal_dir";
-		    push @dialog, map {"cd $_"} split "/", $dir; # RFC 1738
-		    push @dialog, "get $getfile $targetfile";
-		    push @dialog, "quit";
-		    open($fh, "|$CPAN::Config->{'ftp'} $host") or die "Couldn't open ftp: $!";
-		    # pilot is blind now
-		    foreach (@dialog) {
-			$fh->print("$_\n");
-		    }
-		    close $fh;		# Wait for process to complete
-#*#		    $st = stat($aslocal);
-		    my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-		       $atime,$mtime,$ctime,$blksize,$blocks)
-			= stat($aslocal); #*# stat
-#*#		    if (defined $st && $st->mtime > $timestamp) {
-		    if ($mtime > $timestamp) { #*#
-			print "GOT $aslocal\n";
-			return $aslocal;
+	    }
+
+	    # Came back if Net::FTP couldn't establish connection (or failed otherwise)
+	    # Maybe they are behind a firewall, but they gave us
+	    # a socksified (or other) ftp program...
+	    my($netrcfile,$fh);
+	    if (-x $CPAN::Config->{'ftp'}) {
+		my $timestamp = 0;
+		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
+		   $ctime,$blksize,$blocks) = stat($aslocal);
+		$timestamp = $mtime if defined $mtime;
+
+		my($netrc) = CPAN::FTP::netrc->new;
+
+		my $targetfile = File::Basename::basename($aslocal);
+		my(@dialog);
+		push(
+		     @dialog,
+		     "lcd $aslocal_dir",
+		     "cd /",
+		     map("cd $_", split "/", $dir), # RFC 1738
+		     "bin",
+		     "get $getfile $targetfile",
+		     "quit"
+		    );
+		if (! $netrc->netrc) {
+		    warn "No ~/.netrc file found";
+		} elsif ($netrc->hasdefault || $netrc->contains($host)) {
+		    CPAN->debug(sprintf "hasdef[%d]cont($host)[%d]",$netrc->hasdefault,$netrc->contains($host)) if $CPAN::DEBUG;
+		    if ($netrc->protected) {
+			print(
+			      qq{
+  Trying with external ftp to get
+    $url
+  As this requires some features that are not thoroughly tested, we\'re
+  not sure, that we get it right....
+
+}
+			     );
+			my $fh = FileHandle->new;
+			$fh->open("|$CPAN::Config->{'ftp'} $host")
+			    or die "Couldn't open ftp: $!";
+			# pilot is blind now
+			CPAN->debug("dialog [".(join "|",@dialog)."]") if $CPAN::DEBUG;
+			foreach (@dialog) { $fh->print("$_\n") }
+			$fh->close;		# Wait for process to complete
+			($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+			 $atime,$mtime,$ctime,$blksize,$blocks) = stat($aslocal);
+			if ($mtime > $timestamp) {
+			    print "GOT $aslocal\n";
+			    return $aslocal;
+			} else {
+			    print "Hmm... Still failed!\n";
+			}
 		    } else {
-			print "Hmm... Still failed!\n";
+			warn "Your $netrcfile is not correctly protected.\n";
 		    }
 		} else {
-		    my($netrcfile) = $netrc->netrc();
-		    if ($netrcfile){
-			print "Your $netrcfile does not contain host $host.\n"
-			    if $netrc->protected;
-			print "Your $netrcfile is not correctly protected.\n"
-			    unless $netrc->protected;
- 		    } else {
-			print qq{  I could not find or open your .netrc file.\n}
-		    }
+		    warn "Your ~/.netrc neither contains $host
+  nor does it have a default entry\n";
 		}
+
 		# OK, they don't have a valid ~/.netrc. Use 'ftp -n' then and
 		# login manually to host, using e-mail as password.
-		print "Issuing ftp the hard way...\n";
-		my $targetfile = File::Basename::basename($aslocal);
-		my $cd_to_dir = map {"cd $_\n"} split "/", $dir; # RFC 1738
-		my $template =
-"open $host
- user anonymous $Config::Config{'cf_email'}
- bin
- lcd $aslocal_dir
- $cd_to_dir
- get $getfile $targetfile
- bye
-";
-		my $cmd = FileHandle->new;
-		$cmd->open("|$CPAN::Config->{'ftp'} -n") or
+		print qq{Issuing "ftp -n"\n};
+		unshift @dialog, "open $host", "user anonymous $Config::Config{'cf_email'}";
+		CPAN->debug("dialog [".(join "|",@dialog)."]") if $CPAN::DEBUG;
+		$fh = FileHandle->new;
+		$fh->open("|$CPAN::Config->{'ftp'} -n") or
 		    die "Cannot fork: $!\n";
-		$cmd->print($template);
-		$cmd->close;
-#*#		$st = stat($aslocal);
+		foreach (@dialog) { $fh->print("$_\n") }
+		$fh->close;
 		($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-		   $atime,$mtime,$ctime,$blksize,$blocks)
-		    = stat($aslocal); #*# stat
-#*#		if (defined $st && $st->mtime > $timestamp) {
-		if ($mtime > $timestamp) { #*# stat
-			print "GOT $aslocal\n";
-			return $aslocal;
+		   $atime,$mtime,$ctime,$blksize,$blocks) = stat($aslocal);
+		if ($mtime > $timestamp) {
+		    print "GOT $aslocal\n";
+		    return $aslocal;
 		} else {
-			print "Bad luck... Still failed!\n";
+		    print "Bad luck... Still failed!\n";
 		}
 	    }
 	    sleep 2;
 	}
+
+	# what, still not succeeded?
 	if (-x $CPAN::Config->{'lynx'}) {
-##	    $self->debug("Trying with lynx for [$url]") if $CPAN::DEBUG;
 	    my($want_compressed);
 	    print(
 		  qq{
   Trying with lynx to get $url
-  As lynx has so many options and versions, we\'re not sure, that we
-  get it right. It is recommended that you install Net::FTP as soon
-  as possible. Just type "install Net::FTP". Thank you.
-
 }
 		 );
 	    $want_compressed = $aslocal =~ s/\.gz//;
@@ -1053,17 +1048,28 @@ package CPAN::FTP::netrc;
 sub new {
     my($class) = @_;
     my $file = MY->catfile($ENV{HOME},".netrc");
+
+    my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+       $atime,$mtime,$ctime,$blksize,$blocks)
+	= stat($file);
+    my $protected = 0;
+
     my($fh,@machines,$hasdefault);
     $hasdefault = 0;
-    if($fh = FileHandle->new($file,"r")){
+    $fh = FileHandle->new or die "Could not create a filehandle";
+
+    if($fh->open($file)){
+	$protected = ($mode & 077) == 0;
 	local($/) = "";
       NETRC: while (<$fh>) {
-	    my(@tokens) = split ' ', $_;
+	    my(@tokens) = split " ", $_;
 	  TOKEN: while (@tokens) {
 		my($t) = shift @tokens;
-		$hasdefault++, last NETRC if $t eq "default"; # we will most
-                                                        # probably be
-                                                        # able to anonftp
+		if ($t eq "default"){
+		    $hasdefault++;
+		    warn "saw a default entry before tokens[@tokens]";
+		    last NETRC;
+		}
 		last TOKEN if $t eq "macdef";
 		if ($t eq "machine") {
 		    push @machines, shift @tokens;
@@ -1071,16 +1077,9 @@ sub new {
 	    }
 	}
     } else {
-	$file = "";
+	$file = $hasdefault = $protected = "";
     }
-#*#    use File::stat;
-#*#    my $st = stat($file);
-    my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
-       $atime,$mtime,$ctime,$blksize,$blocks)
-	= stat($file); #*# stat
-    my $protected = 0;
-#*#    $protected = ($st->mode & 077) == 0 if defined $st;
-    $protected = ($mode & 077) == 0; #*#
+
     bless {
 	   'mach' => [@machines],
 	   'netrc' => $file,
@@ -1090,11 +1089,14 @@ sub new {
 }
 
 sub hasdefault { shift->{'hasdefault'} }
-sub netrc { shift->{'netrc'} }
-sub protected { shift->{'protected'} }
+sub netrc      { shift->{'netrc'}      }
+sub protected  { shift->{'protected'}  }
 sub contains {
     my($self,$mach) = @_;
-    scalar grep {$_ eq $mach} @{$self->{'mach'}};
+    for ( @{$self->{'mach'}} ) {
+	return 1 if $_ eq $mach;
+    }
+    return 0;
 }
 
 package CPAN::Complete;
