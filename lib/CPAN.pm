@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_53';
+$VERSION = '1.58_54';
 
-# $Id: CPAN.pm,v 1.362 2000/10/26 08:01:07 k Exp $
+# $Id: CPAN.pm,v 1.365 2000/10/26 15:31:40 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.362 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.365 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -232,7 +232,7 @@ package CPAN::Complete;
 @CPAN::Complete::COMMANDS = sort qw(
 		       ! a b d h i m o q r u autobundle clean dump
 		       make test install force readme reload look cvs_import
-);
+) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
 use vars qw($last_time $date_of_03);
@@ -3225,17 +3225,20 @@ sub as_string {
 	# next if m/^(ID|RO)$/;
 	my $extra = "";
 	if ($_ eq "CPAN_USERID") {
-	  $extra .= " (".$self->author;
-	  my $email; # old perls!
-	  if ($email = $CPAN::META->instance("CPAN::Author",
-                                             $self->cpan_userid
-                                            )->email) {
-	    $extra .= " <$email>";
-	  } else {
-	    $extra .= " <no email>";
-	  }
-	  $extra .= ")";
-	}
+            $extra .= " (".$self->author;
+            my $email; # old perls!
+            if ($email = $CPAN::META->instance("CPAN::Author",
+                                               $self->cpan_userid
+                                              )->email) {
+                $extra .= " <$email>";
+            } else {
+                $extra .= " <no email>";
+            }
+            $extra .= ")";
+        } elsif ($_ eq "FULLNAME") { # potential UTF-8 conversion
+            push @m, sprintf "    %-12s %s\n", $_, $self->fullname;
+            next;
+        }
         next unless defined $self->{RO}{$_};
         push @m, sprintf "    %-12s %s%s\n", $_, $self->{RO}{$_}, $extra;
     }
@@ -3282,7 +3285,13 @@ sub as_glimpse {
 }
 
 #-> sub CPAN::Author::fullname ;
-sub fullname { shift->{RO}{FULLNAME} }
+sub fullname {
+    my $fullname = shift->{RO}{FULLNAME};
+    return $fullname unless $CPAN::Config->{term_is_latin};
+    # courtesy jhi:
+    $fullname =~ s/([\xC0-\xDF])([\x80-\xBF])/chr(ord($1)<<6&0xC0|ord($2)&0x3F)/eg;
+    $fullname;
+}
 *name = \&fullname;
 
 #-> sub CPAN::Author::email ;

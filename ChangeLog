@@ -1,5 +1,8 @@
 2000-10-26  Andreas J. Koenig  <andreas.koenig@anima.de>
 
+	* CPAN::Author::fullname: convert to latin1 if
+	$CPAN::Config->{term_is_latin} is set to true.
+
 	* CPAN::Module::as_glimpse and CPAN::Shell::_u_r_common: enabled
 	coloring of module names that are alredy registered in the module
 	list. This feature bloat will have to go away in a future version,

@@ -4,8 +4,8 @@ use strict;
 use URI::Escape ();
 use vars qw(@EXPORT $VERSION);
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.2 $ =~ /(\d+)\.(\d+)/;
-push @CPAN::Complete::COMMANDS, qw(register);
+$VERSION = sprintf "%d.%03d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/;
+push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
 }
@@ -56,7 +56,7 @@ sub CPAN::Shell::register {
   }
 
   # make a good suggestion for the chapter
-  my(@simile) = CPAN::Shell->expand("Module","/^$id(:|\$)/");
+  my(@simile) = CPAN::Shell->expand("Module","/^$rootns(:|\$)/");
   print "Found within this namespace ", join(", ", map { $_->id } @simile), "\n";
   my(%seench);
   for my $ch (map { exists $_->{RO} ? $_->{RO}{chapterid} : ""} @simile) {
@@ -139,6 +139,26 @@ sub CPAN::Shell::register {
   system("netscape","-remote","openURL($url)");
 }
 
+sub CPAN::Shell::modsearch {
+  my($self,@line) = @_;
+  unless (@line){
+    print "modsearch called without argument\n";
+    return;
+  }
+  my $request = join " ", @line;
+  print "Got request[$request]\n";
+  my $erequest = URI::Escape::uri_escape($request, '^\w ');
+  $erequest =~ s/ /+/g;
+  my $url =
+      sprintf("http://www.xray.mpe.mpg.de/cgi-bin/w3glimpse/modules?query=%s".
+              "&errors=0&case=on&maxfiles=100&maxlines=30",
+              $erequest,
+             );
+  print "$url\n\n";
+  print ">>>>Trying to open a netscape window<<<<\n";
+  system("netscape","-remote","openURL($url)");
+}
+
 1;
 
 __END__
@@ -153,12 +173,14 @@ perl -MCPAN::Admin -e shell
 
 =head1 DESCRIPTION
 
-CPAN::Admin is a subclass of CPAN that adds the command C<register> to
-the CPAN shell. Register calls C<get> on the named module, assembles a
-couple of informations (description, language), and calls Netscape
-with the -remote argument so that a form is filled with all the
-assembled informations and the registration can be performed with a
-single click.
+CPAN::Admin is a subclass of CPAN that adds the commands C<register>
+and C<modsearch> to the CPAN shell.
+
+C<register> calls C<get> on the named module, assembles a couple of
+informations (description, language), and calls Netscape with the
+-remote argument so that a form is filled with all the assembled
+informations and the registration can be performed with a single
+click.
 
 If a module is not yet uploaded, the rest of the command line
 arguments are interpreted as DSLI status, description, and userid and
@@ -173,10 +195,16 @@ An experimental feature has also been added to color already
 registered modules in listings. If you have Term::ANSIColor installed,
 the u, r, and m commands will show registered modules in green.
 
+C<modsearch> simply passes the arguments to the search engine for the
+modules@perl.org mailing list at http://www.xray.mpe.mpg.de where all
+registration requests are stored. It does so in the same way as
+register, namely with the C<netscape -remote> command.
+
 =head1 PREREQISITES
 
 URI::Escape, netscape browser available in the path, netscape must
 understand the -remote switch (as far as I know, this is only
-available on UNIX)
+available on UNIX); coloring of registered modules is inly available
+if Term::ANSIColor is installed.
 
 =cut
