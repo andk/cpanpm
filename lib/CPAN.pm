@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.43';
+$VERSION = '1.44';
 
-# $Id: CPAN.pm,v 1.244 1998/12/01 22:11:44 k Exp $
+# $Id: CPAN.pm,v 1.245 1999/01/09 17:53:32 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.244 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.245 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -908,11 +908,11 @@ sub load {
 	}
     }
     local($") = ", ";
-    $CPAN::Frontend->myprint(qq{
+    $CPAN::Frontend->myprint(<<END) if $redo && ! $theycalled;
 We have to reconfigure CPAN.pm due to following uninitialized parameters:
 
 @miss
-}) if $redo && ! $theycalled;
+END
     $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
@@ -1045,7 +1045,9 @@ sub b {
 #-> sub CPAN::Shell::d ;
 sub d { $CPAN::Frontend->myprint(shift->format_result('Distribution',@_));}
 #-> sub CPAN::Shell::m ;
-sub m { $CPAN::Frontend->myprint(shift->format_result('Module',@_));}
+sub m { # emacs confused here }; sub mimimimimi { # emacs in sync here
+    $CPAN::Frontend->myprint(shift->format_result('Module',@_));
+}
 
 #-> sub CPAN::Shell::i ;
 sub i {
@@ -1950,9 +1952,9 @@ Trying with "$funkyftp$source_switch" to get
 		    CPAN::Tarzip->gzip($aslocal_uncompressed,
 				     "$aslocal_uncompressed.gz");
 		  }
-		  $Thesite = $i;
-		  return $aslocal;
 		}
+		$Thesite = $i;
+		return $aslocal;
 	    } elsif ($url !~ /\.gz$/) {
 	      unlink $aslocal_uncompressed if
 		  -f $aslocal_uncompressed && -s _ == 0;
@@ -2415,7 +2417,7 @@ sub rd_authindex {
     while (<FH>) {
 	chomp;
 	my($userid,$fullname,$email) =
-	    /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
+	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
 	next unless $userid && $fullname && $email;
 
 	# instantiate an author object
@@ -3875,9 +3877,28 @@ sub untar {
   if (MM->maybe_command($CPAN::Config->{'gzip'})
       &&
       MM->maybe_command($CPAN::Config->{'tar'})) {
-    my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
-	"$file | $CPAN::Config->{tar} xvf -";
-    return system($system) == 0;
+    if ($^O =~ /win/i) { # irgggh
+	# people find the most curious tar binaries that cannot handle
+	# pipes
+	my $system = "$CPAN::Config->{'gzip'} --decompress $file";
+	if (system($system)==0) {
+	    $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
+	} else {
+	    $CPAN::Frontend->mydie(qq{Couldn't uncompress $file\n});
+	}
+	$file =~ s/\.gz$//;
+	$system = "$CPAN::Config->{tar} xvf $file";
+	if (system($system)==0) {
+	    $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
+	} else {
+	    $CPAN::Frontend->mydie(qq{Couldn't untar $file\n});
+	}
+	return 1;
+    } else {
+	my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
+	    "< $file | $CPAN::Config->{tar} xvf -";
+	return system($system) == 0;
+    }
   } elsif ($CPAN::META->has_inst("Archive::Tar")
       &&
       $CPAN::META->has_inst("Compress::Zlib") ) {

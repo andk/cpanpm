@@ -3,6 +3,7 @@ MANIFEST
 Makefile.PL
 README
 Todo
+cpan
 lib/CPAN.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm

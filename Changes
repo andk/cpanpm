@@ -1,5 +1,35 @@
 Revision history for Perl extension CPAN.
 
+=head2 December 1998 after 1.43
+
+Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()
+user-friendly. Selection of sites is now done in three layers for
+continents, countries and sites separately.
+
+Bharat Mediratta <bmedirat@calicotech.com> sent in a patch that
+inserts a '<' file redirector in CPAN::Tarzip::untar which helped him
+to work with a strangely broken gzip program on his Windows machine.
+Later Eric Von Zee <evonzee@tritechnet.com> sent me a note that there
+is a version of tar for Windows that doesn't work with pipes at all.
+Changed that again, so that on windows we uncompress the file and then
+untar it in another system() call.
+
+Made a few formatting changes to help cperl-mode.
+
+=head2 December 1998 after 1.42
+
+1.42 had a debugging line in the middle of the code, so a very quick
+1.43 had to go out.
+
+Added a simple cpan script that calls the shell. Thanks to Jochen
+Wiedmann <joe@ispsoft.de> for giving me the kick.
+
+Applied patch by "Douglas L. Schrag" <doug@walker.schrag.mi.us> posted
+to P5P as with Message-Id
+<Pine.LNX.3.96.981205005516.1957A-100000@walker.schrag.mi.us>
+that fixes a problem with using lynx as ftp back end.
+
+
 =head2 December 1998 after 1.41
 
 Win32 could not process 2>&1. Fixed now. Thanks to Randy Kobes

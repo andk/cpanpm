@@ -7,7 +7,7 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.31 1998/01/10 16:59:57 k Exp $
+# $Id: Makefile.PL,v 1.32 1999/01/09 17:53:32 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -26,6 +26,7 @@ WriteMakefile(
     'INSTALLDIRS' => 'perl',  # as it is coming with perl
     'NAME'	=> 'CPAN',
     'VERSION_FROM' => 'lib/CPAN.pm',
+    'EXE_FILES' => [qw(cpan)],
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'dist' => { 
 	       PREOP => 'co -l README && pod2text lib/CPAN.pm > README && ci -u README',
