@@ -1,3 +1,31 @@
+2001-02-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.59_54.
+
+	* CPAN::Tarzip::TIEHANDLE: Applied a patch by Robin Barker
+	<rmb1@cise.npl.co.uk> about a wrong error message ("Could pipe"
+	instead of "Could not pipe")
+
+2001-02-06  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Index::rd_modpacks: Add a stalenes warning if the index
+	file is older than 30 days. Thanks to "tanbin"
+	<tiger40490@yahoo.com> for the report.
+
+	* To improve the protection against stale mirrors, add a global
+	for $CPAN::Index::DATE_OF_02 to keep track of the currently used
+	index. This is also stored in the cache. It will be printed as a
+	reminder whenever a fetch fails and whenever the metadata are
+	retrieved from the index file or via Storable.
+
+2001-01-02  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Author::as_glimpse): added email address
+
+	* CPAN::Shell::a: uppercasing any argument broke experimental
+	advanced query. Made conditional on the existence of an equal sign
+	now.
+
 2000-12-31  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* POD: add a description of the ls command.

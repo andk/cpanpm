@@ -1,11 +1,11 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.59_53';
-# $Id: CPAN.pm,v 1.384 2001/01/02 16:24:00 k Exp $
+$VERSION = '1.59_54';
+# $Id: CPAN.pm,v 1.385 2001/02/09 21:37:57 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.384 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.385 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -242,7 +242,7 @@ package CPAN::Complete;
 ) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
-use vars qw($LAST_TIME $DATE_OF_03);
+use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03);
 @CPAN::Index::ISA = qw(CPAN::Debug);
 $LAST_TIME ||= 0;
 $DATE_OF_03 ||= 0;
@@ -2351,6 +2351,7 @@ sub hosteasy {
                                                     # meant
                                                     # file://localhost
 		$l =~ s|^/||s unless -f $l;         # e.g. /P:
+		$self->debug("without URI::URL we try local file $l") if $CPAN::DEBUG;
 	    }
 	    if ( -f $l && -r _) {
 		$Thesite = $i;
@@ -3083,12 +3084,12 @@ sub rd_modpacks {
 	push @lines, @ls;
     }
     # read header
-    my $line_count;
+    my($line_count,$last_updated);
     while (@lines) {
 	my $shift = shift(@lines);
-	$shift =~ /^Line-Count:\s+(\d+)/;
-	$line_count = $1 if $1;
 	last if $shift =~ /^\s*$/;
+	$shift =~ /^Line-Count:\s+(\d+)/ and $line_count = $1;
+        $shift =~ /^Last-Updated:\s+(.+)/ and $last_updated = $1;
     }
     if (not defined $line_count) {
 
@@ -3108,6 +3109,41 @@ CPAN mirror. I'll continue but problems seem likely to happen.\a\n},
 $index_target, $line_count, scalar(@lines);
 
     }
+    if (not defined $last_updated) {
+
+	warn qq{Warning: Your $index_target does not contain a Last-Updated header.
+Please check the validity of the index file by comparing it to more
+than one CPAN mirror. I'll continue but problems seem likely to
+happen.\a
+};
+
+	sleep 5;
+    } else {
+
+	$CPAN::Frontend
+            ->myprint(sprintf qq{  Database was generated on %s\n},
+                      $last_updated);
+        $DATE_OF_02 = $last_updated;
+
+        if ($CPAN::META->has_inst(HTTP::Date)) {
+            require HTTP::Date;
+            my($age) = (time - HTTP::Date::str2time($last_updated))/3600/24;
+            if ($age > 30) {
+
+                $CPAN::Frontend
+                    ->mywarn(sprintf
+                             qq{Warning: This index file is %d days old.
+  Please check the host you chose as your CPAN mirror for staleness.
+  I'll continue but problems seem likely to happen.\a\n},
+                             $age);
+
+            }
+        } else {
+            $CPAN::Frontend->myprint("  HTTP::Date not available\n");
+        }
+    }
+
+
     # A necessity since we have metadata_cache: delete what isn't
     # there anymore
     my $secondtime = $CPAN::META->exists("CPAN::Module","CPAN");
@@ -3262,6 +3298,7 @@ sub write_metadata_cache {
     }
     my $metadata_file = MM->catfile($CPAN::Config->{cpan_home},"Metadata");
     $cache->{last_time} = $LAST_TIME;
+    $cache->{DATE_OF_02} = $DATE_OF_02;
     $cache->{PROTOCOL} = PROTOCOL;
     $CPAN::Frontend->myprint("Going to write $metadata_file\n");
     eval { Storable::nstore($cache, $metadata_file) };
@@ -3322,6 +3359,9 @@ sub read_metadata_cache {
         $cache->{PROTOCOL}; # reading does not up or downgrade, but it
                             # does initialize to some protocol
     $LAST_TIME = $cache->{last_time};
+    $DATE_OF_02 = $cache->{DATE_OF_02};
+    $CPAN::Frontend->myprint("  Database was generated on $DATE_OF_02\n");
+    return;
 }
 
 package CPAN::InfoObj;
@@ -3703,9 +3743,16 @@ sub get {
                    );
 
     $self->debug("Doing localize") if $CPAN::DEBUG;
-    $local_file =
-	CPAN::FTP->localize("authors/id/$self->{ID}", $local_wanted)
-              or $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n");
+    unless ($local_file =
+            CPAN::FTP->localize("authors/id/$self->{ID}",
+                                $local_wanted)) {
+        my $note = "";
+        if ($CPAN::Index::DATE_OF_02) {
+            $note = "Note: Current database in memory was generated ".
+                "on $CPAN::Index::DATE_OF_02\n";
+        }
+        $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n$note");
+    }
     $self->debug("local_file[$local_file]") if $CPAN::DEBUG;
     $self->{localfile} = $local_file;
     return if $CPAN::Signal;
@@ -5530,7 +5577,7 @@ sub TIEHANDLE {
     $ret = bless {GZ => $gz}, $class;
   } else {
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $file |";
-    my $fh = FileHandle->new($pipe) or die "Could pipe[$pipe]: $!";
+    my $fh = FileHandle->new($pipe) or die "Could not pipe[$pipe]: $!";
     binmode $fh;
     $ret = bless {FH => $fh}, $class;
   }
@@ -6417,8 +6464,6 @@ Returns 1 if the module is installed and up-to-date.
 =item CPAN::Module::userid()
 
 Returns the author's ID of the module.
-
-=item
 
 =back
 

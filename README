@@ -543,7 +543,6 @@ DESCRIPTION
     CPAN::Module::userid()
         Returns the author's ID of the module.
 
-
   Cache Manager
 
     Currently the cache manager only keeps track of the build directory
