@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.37';
+$VERSION = '1.38';
 
-# $Id: CPAN.pm,v 1.224 1998/06/12 06:40:33 k Exp $
+# $Id: CPAN.pm,v 1.225 1998/06/14 19:18:06 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.224 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.225 $, 10)."]";
 
 use Carp ();
 use Config ();

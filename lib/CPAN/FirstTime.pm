@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.27 $, 10;
+$VERSION = substr q$Revision: 1.28 $, 10;
 
 =head1 NAME
 
@@ -164,9 +164,12 @@ those.
 };
 
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
-    my $prog;
-    for $prog (qw/gzip tar unzip make lynx ncftp ftp/){
-	my $path = $CPAN::Config->{$prog} || "";
+    my $progname;
+    for $progname (qw/gzip tar unzip make lynx ncftp ftp/){
+      my $progcall = $progname;
+	my $path = $CPAN::Config->{$progname} 
+	        || $Config::Config{$progname}
+		|| "";
 	if (MM->file_name_is_absolute($path)) {
 	  # testing existence is not good enough, some have these exe
 	  # extensions
@@ -178,14 +181,14 @@ those.
 	}
 	unless ($path) {
 	  # e.g. make -> nmake
-	  $prog = $Config::Config{$prog} if exists $Config::Config{$prog};
+	  $progcall = $Config::Config{$progname} if $Config::Config{$progname};
 	}
 
-	$path ||= find_exe($prog,[@path]);
-	warn "Warning: $prog not found in PATH\n" unless
+	$path ||= find_exe($progcall,[@path]);
+	warn "Warning: $progcall not found in PATH\n" unless
 	    $path; # not -e $path, because find_exe already checked that
-	$ans = prompt("Where is your $prog program?",$path) || $path;
-	$CPAN::Config->{$prog} = $ans;
+	$ans = prompt("Where is your $progname program?",$path) || $path;
+	$CPAN::Config->{$progname} = $ans;
     }
     my $path = $CPAN::Config->{'pager'} || 
 	$ENV{PAGER} || find_exe("less",[@path]) || 

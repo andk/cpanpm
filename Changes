@@ -1,5 +1,14 @@
 Revision history for Perl extension CPAN.
 
+=head2 June 1998 after 1.37
+
+Applied a patch by Lupe Christoph <lupe@alanya.m.isar.de> that fixed a
+newly introduced bug in FirstTime due to the recent %Config "fix". The
+recent fix introduced a check of %Config for external programs tar,
+gzip, etc. This fix revealed that Config.pm does not check for many of
+these externals but nonetheless defines them as "". Lupe introduced
+more checks to guard against such Configs.
+
 =head2 June 1998
 
 Made help an alias for h (Thanks to Stig HackVan <stig@hackvan.com>
