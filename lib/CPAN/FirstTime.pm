@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.34 $, 10;
+$VERSION = substr q$Revision: 1.35 $, 10;
 
 =head1 NAME
 
@@ -183,7 +183,9 @@ policy to one of the three values.
 
     $default = $CPAN::Config->{prerequisites_policy} || 'follow';
     do {
-        $ans = prompt("Perform cache scanning (follow, ask or ignore)?", $default);
+      $ans =
+	  prompt("Policy on building prerequisites (follow, ask or ignore)?",
+		 $default);
     } while ($ans ne 'follow' && $ans ne 'ask' && $ans ne 'ignore');
     $CPAN::Config->{prerequisites_policy} = $ans;
 

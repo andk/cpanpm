@@ -1,5 +1,10 @@
 Revision history for Perl extension CPAN.
 
+=head2 January 1999 after 1.46
+
+Robin Barker <rmb1@cise.npl.co.uk> sent me a patch to Firsttime.pm
+where it had asked the wrong question (Cache instead of Policy).
+
 =head2 January 1999 after 1.45
 
 Chris Nandor sent me patches over 1.45 to make us MacOS compatible!
