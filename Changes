@@ -1,5 +1,34 @@
 Revision history for Perl extension CPAN.
 
+=head2 Feb 2, 1997
+
+Now fetching MIRRORED.BY whenever we get the first URL in the init
+dialogue. Offering a loop to correct the URL. Reading MIRRORED.BY if
+it is younger than 30 days.
+
+Simplified the inheritance tree considerably: Replaced MY with MM,
+left CPAN::Debug only in the leaves.
+
+Globalized the $term variable to have at least a chance to debug why
+we're losing connection to ReadLine when we run 'o conf init'.
+
+We have no API yet, but we have a Plugin :-) Thanks to Ulrich Pfeifer
+for WAIT. Try 'wh' to see what gives.
+
+=head2 Jan 29, 1997
+
+More feedback for non-cooperative users.
+
+Several potentially undefined variables now initialized.
+
+Added support for ncftp. It is said to have superb features for sites
+behind firewalls. We're now trying to use lynx or ncftp _before_
+ordinary ftp.
+
+Added option 'o conf init' to set all Configuration options
+interactively whenever needed. Cannot document yet, because it breaks
+ReadLine. Somehow ReadLine loses the connection to STDIN.
+
 =head2 Jan 24, 1997
 
 New Makefile.PL asks only questions to the very first user (when there

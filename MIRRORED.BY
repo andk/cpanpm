@@ -15,7 +15,8 @@
 # - The "area" in dst_location is optional.
 #   It is the state (United States), county, prefecture, district.
 # - The "lon,lat" in dst_location are optional but preferable.
-#   They are the longitude, latitude, in degrees.minutes_in_decimal.
+#   They are the longitude, latitude, in degrees.minutes_IN_DECIMAL
+#   (45 minutes = 0.75).
 # - The dst_organization tries to be correct but in some cases it
 #   cannot be because the format is so simple:
 #   - Greek/Cyrillic/Kanji/Hanzi/... cannot be rendered in ISO Latin 1
@@ -230,15 +231,14 @@ ftp.funet.fi:
 # dst_dst          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 # dst_contact      = "mailto:cpan-adm@ftp.funet.fi"
 
-# ftp disk temporarily unavailable //cpan-adm@ftp.funet.fi 19961115
-# ftp.ibp.fr:
-#   frequency        = "daily"
-#   dst_directory    = "ftp.ibp.fr:/pub/perl/CPAN/"
-#   dst_location     = "Paris, France, Europe (48.50N 2.20E)"
-#   dst_organization = "l'Institut Blaise Pascal; Blaise Pascal Institute"
-#   dst_timezone     = "GMT+1"
-#   dst_contact      = "ftpmaint@ibp.fr"
-#   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+ftp.ibp.fr:
+  frequency        = "daily"
+  dst_directory    = "ftp.ibp.fr:/pub/perl/CPAN/"
+  dst_location     = "Paris, France, Europe (48.50N 2.20E)"
+  dst_organization = "l'Institut Blaise Pascal; Blaise Pascal Institute"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "ftpmaint@ibp.fr"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.ibp.fr/pub/perl/CPAN/"
 # dst_contact      = "mailto:ftpmaint@ibp.fr"
@@ -781,6 +781,19 @@ ftp.metronet.com:
 
 # dst_dst          = "ftp://ftp.sterling.com/CPAN/"
 # dst_contact      = "mailto:archive@sterling.com"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.spu.edu:
+  frequency        = "daily"
+  dst_directory    = "ftp.spu.edu:/pub/CPAN/"
+  dst_location     = "Seattle, Washington, USA, North America (47.39N 122.21W)"
+  dst_organization = "Seattle Pacific University"
+  dst_timezone     = "GMT-8 (PST8PDT)"
+  dst_contact      = "gmajor@spu.edu"
+  dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.spu.edu/CPAN/"
+# dst_contact      = "mailto:gmajot@spu.edu"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 # South America
