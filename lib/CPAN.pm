@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.44_51';
+$VERSION = '1.44_52';
 
-# $Id: CPAN.pm,v 1.247 1999/01/10 16:53:15 k Exp $
+# $Id: CPAN.pm,v 1.248 1999/01/13 12:09:45 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.247 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.248 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -333,7 +333,8 @@ sub new {
   push @All, $self;
   # my @all = map { $_->{mod} } @All;
   # warn "Adding Queue object for mod[$mod] all[@all]";
-  $self;
+  return $self;
+
 }
 
 sub first {
@@ -354,20 +355,26 @@ sub delete_first {
 
 sub jumpqueue {
   my $class = shift;
-  my $what = shift;
+  my @what = @_;
   my $obj;
-  for my $i (0..$#All) {
-    if ($All[$i]->{mod} eq $what) {
-	# put this object to thetop of the queue, record that in it, and return
-	$obj = splice @All, $i, 1;
-	unshift @All, $obj;
-	$obj->{jumped}++;
-	die "Deep dependencies" if $obj->{jumped} > 100;
-	return;
+  WHAT: for my $what (reverse @what) {
+    my $jumped = 0;
+    for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
+      if ($All[$i]->{mod} eq $what){
+	$jumped++;
+	if ($jumped > 100) { # one's OK if e.g. just processing now;
+                             # more are OK if user typed it several
+                             # times
+	  $CPAN::Frontend->mywarn(
+qq{Object [$what] queued more than 100 times, ignoring}
+				 );
+	  next WHAT;
+	}
       }
+    }
+    my $obj = bless { mod => $what }, $class;
+    unshift @All, $obj;
   }
-  $obj = bless { mod => $what }, $class;
-  unshift @All, $obj;
 }
 
 sub exists {
@@ -1891,6 +1898,10 @@ sub hosteasy {
 	  $CPAN::Frontend->myprint("Fetching with LWP:
   $url
 ");
+	  unless ($Ua) {
+	    require LWP::UserAgent;
+	    $Ua = LWP::UserAgent->new;
+	  }
 	  my $res = $Ua->mirror($url, $aslocal);
 	  if ($res->is_success) {
 	    $Thesite = $i;
@@ -3226,12 +3237,15 @@ or
 	$self->{writemakefile} = "YES";
     }
     return if $CPAN::Signal;
-    if ($self->needs_prereq){
+    if (my @prereq = $self->needs_prereq){
       my $id = $self->id;
       $CPAN::Frontend->myprint("---- Dependencies detected ".
-			       "during [$id] -----");
+			       "during [$id] -----\n");
+      for (@prereq) {
+	$CPAN::Frontend->myprint("    $_\n");
+      }
       sleep 2;
-      CPAN::Queue->new($id); # requeue yourself
+      CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
       return;
     }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
@@ -3252,16 +3266,16 @@ sub needs_prereq {
   my $fh = FileHandle->new("<Makefile") or
       $CPAN::Frontend->mydie("Couldn't open Makefile: $!");
   local($/) = "\n";
-  my $v;
+  my($v);
   while (<$fh>) {
     last if ($v) = m| ^ \# \s+ ( \d+\.\d+ ) .* Revision: |x;
   }
 
-  my($ret,@p);
+  my(@p,@need);
   if ($v < 5.4303) {
     while (<$fh>) {
       last if /MakeMaker post_initialize section/;
-      my($p) = m{^#\s+PREREQ_PM\s+=>\s+(.+)}; # } CPERL
+      my($p) = m{^#\s+PREREQ_PM\s+=>\s+(.+)}; # } # CPERL
       next unless $p;
       # warn "Found prereq expr[$p]";
       require Safe;
@@ -3287,12 +3301,13 @@ sub needs_prereq {
 	# not available. So we do nothing. Or what should we do?
       } else {
 	# warn "----- Protegere $p -----";
-	CPAN::Queue->jumpqueue($p);
-	$ret++;
+	push @need, $p;
+	# CPAN::Queue->jumpqueue($p);
+	# $ret++;
       }
     }
   }
-  $ret;
+  return @need;
 }
 
 #-> sub CPAN::Distribution::test ;
@@ -3383,7 +3398,7 @@ sub install {
 	if $CPAN::DEBUG;
     my $system = join(" ", $CPAN::Config->{'make'},
 		      "install", $CPAN::Config->{make_install_arg});
-    my($stderr) = $^O eq "Win32" ? "" : " 2>&1 ";
+    my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){

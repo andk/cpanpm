@@ -9,6 +9,16 @@ go to the head of the queue before they try to make themselves. Seems
 to work so far. I release a version 1.44_51 to let the community test
 before I try to up the version number.
 
+1.44_52 is a cleanup. The needs_prereq code now only returns the
+prereqs u to the caller and doesn't contact the queue directly. That
+way the caller can decide to queue them all and requeue himself what
+he does. jump_queue now accepts an array of items. Code seems
+compacter and easier to debug.
+
+Checking $^O for C</win/i> and not for C<eq "Win32"> because
+apparently some say Win32, others say MSWin32. Needs to be bugreported
+to p5p.
+
 =head2 December 1998 after 1.43
 
 Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()
