@@ -163,7 +163,7 @@ with all the intermediate files\?
 
 };
 
-    $default = $CPAN::Config->{build_cache} || 10;
+    $default = $CPAN::Config->{build_cache} || 100;
     $ans = prompt("Cache size for build directory (in MB)?", $default);
     $CPAN::Config->{build_cache} = $ans;
 
