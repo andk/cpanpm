@@ -1,3 +1,17 @@
+1999-12-29  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Increased 30 to 60 in FirstTime where we "protect" against old
+	MIRRORED.BY files and protect against endless loop if MIRRORED.BY
+	remains older.
+	
+	* Applied patch from Doug MacEachern that implements cvs_import
+	without documentation.
+
+1999-10-26  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Joe Schell <jschell@peakss.com> sent me a fix that disabled
+	processing of bundles on NT.
+
 1999-10-15  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Fixed a typo reported by Stas Bekman <sbekman@iil.intel.com>

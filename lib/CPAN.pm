@@ -7,13 +7,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.50_01';
+$VERSION = '1.51';
 
-# $Id: CPAN.pm,v 1.269 1999/10/23 03:03:43 k Exp $
+# $Id: CPAN.pm,v 1.272 1999/12/29 22:18:54 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.269 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.272 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -62,7 +62,7 @@ use strict qw(vars);
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
 @EXPORT = qw(
-	     autobundle bundle expand force get
+	     autobundle bundle expand force get cvs_import
 	     install make readme recompile shell test clean
 	    );
 
@@ -91,7 +91,7 @@ sub AUTOLOAD {
 #-> sub CPAN::shell ;
 sub shell {
     my($self) = @_;
-    $Suppress_readline ||= ! -t STDIN;
+    $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
     CPAN::Config->load unless $CPAN::Config_loaded++;
 
     my $prompt = "cpan> ";
@@ -1829,6 +1829,8 @@ sub install { shift->rematein('install',@_); }
 sub clean   { shift->rematein('clean',@_); }
 #-> sub CPAN::Shell::look ;
 sub look   { shift->rematein('look',@_); }
+#-> sub CPAN::Shell::cvs_import ;
+sub cvs_import   { shift->rematein('cvs_import',@_); }
 
 package CPAN::FTP;
 
@@ -2005,6 +2007,9 @@ sub localize {
 	my $ret = $self->$method(\@host_seq,$file,$aslocal);
 	if ($ret) {
 	  $Themethod = $level;
+	  my $now = time;
+	  # utime $now, $now, $aslocal; # too bad, if we do that, we
+                                      # might alter a local mirror
 	  $self->debug("level[$level]") if $CPAN::DEBUG;
 	  return $ret;
 	} else {
@@ -2536,10 +2541,10 @@ sub cpl {
 		       /^$word/,
 		       sort qw(
 			       ! a b d h i m o q r u autobundle clean
-			       make test install force reload look
+			       make test install force reload look cvs_import
 			      )
 		      );
-    } elsif ( $line !~ /^[\!abdhimorutl]/ ) {
+    } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^a\s/) {
 	@return = cplx('CPAN::Author',$word);
@@ -2547,7 +2552,7 @@ sub cpl {
 	@return = cplx('CPAN::Bundle',$word);
     } elsif ($line =~ /^d\s/) {
 	@return = cplx('CPAN::Distribution',$word);
-    } elsif ($line =~ /^([mru]|make|clean|test|install|readme|look)\s/ ) {
+    } elsif ($line =~ /^([mru]|make|clean|test|install|readme|look|cvs_import)\s/ ) {
 	@return = (cplx('CPAN::Module',$word),cplx('CPAN::Bundle',$word));
     } elsif ($line =~ /^i\s/) {
 	@return = cpl_any($word);
@@ -3152,6 +3157,44 @@ Please define it with "o conf shell <your shell>"
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
     system($CPAN::Config->{'shell'}) == 0
 	or $CPAN::Frontend->mydie("Subprocess shell error");
+    chdir($pwd);
+}
+
+sub cvs_import {
+    my($self) = @_;
+    $self->get;
+    my $dir = $self->dir;
+
+    my $package = $self->called_for;
+    my $module = $CPAN::META->instance('CPAN::Module', $package);
+    my $version = $module->cpan_version;
+
+    my $userid = $self->{CPAN_USERID};
+
+    my $cvs_dir = (split '/', $dir)[-1];
+    $cvs_dir =~ s/-\d+[^-]+$//;
+    my $cvs_root = 
+      $CPAN::Config->{cvsroot} || $ENV{CVSROOT};
+    my $cvs_site_perl = 
+      $CPAN::Config->{cvs_site_perl} || $ENV{CVS_SITE_PERL};
+    if ($cvs_site_perl) {
+	$cvs_dir = "$cvs_site_perl/$cvs_dir";
+    }
+    my $cvs_log = qq{"imported $package $version sources"};
+    $version =~ s/\./_/g;
+    my @cmd = ('cvs', '-d', $cvs_root, 'import', '-m', $cvs_log,
+	       "$cvs_dir", $userid, "v$version");
+
+    my $getcwd;
+    $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
+    my $pwd  = CPAN->$getcwd();
+    chdir($dir);
+
+    $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
+
+    $CPAN::Frontend->myprint(qq{@cmd\n});
+    system(@cmd) == 0 or 
+	$CPAN::Frontend->mydie("cvs import failed");
     chdir($pwd);
 }
 
@@ -3798,7 +3841,7 @@ sub find_bundle_file {
       $what2 =~ s/:Bundle://;
       $what2 =~ tr|:|/|;
     } else {
-	$what2 =~ s|Bundle/||;
+	$what2 =~ s|Bundle[/\\]||;
     }
     my $bu;
     while (<$fh>) {
@@ -4100,6 +4143,8 @@ sub rematein {
 sub readme { shift->rematein('readme') }
 #-> sub CPAN::Module::look ;
 sub look { shift->rematein('look') }
+#-> sub CPAN::Module::cvs_import ;
+sub cvs_import { shift->rematein('cvs_import') }
 #-> sub CPAN::Module::get ;
 sub get    { shift->rematein('get',@_); }
 #-> sub CPAN::Module::make ;
@@ -4942,10 +4987,10 @@ ftp) you will need to use LWP.
 
 =item ftp firewall
 
-This where the firewall machine runs a ftp server. This kind of firewall will
-only let you access ftp serves outside the firewall. This is usually done by
-connecting to the firewall with ftp, then entering a username like
-"user@outside.host.com"
+This where the firewall machine runs a ftp server. This kind of
+firewall will only let you access ftp servers outside the firewall.
+This is usually done by connecting to the firewall with ftp, then
+entering a username like "user@outside.host.com"
 
 To access servers outside these type of firewalls with perl you
 will need to use Net::FTP.
