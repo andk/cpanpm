@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.13 1996/09/20 10:26:45 k Exp $
+# $Id: Makefile.PL,v 1.14 1996/09/27 12:48:56 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -19,6 +19,7 @@ WriteMakefile(
 );
 
 sub init {
+
     use Config;
     require CPAN;
     eval {require CPAN::Config;};
@@ -43,12 +44,13 @@ Shall we use it as the general CPAN build and cache directory?
 
 };
     } else {
-	print <<END;
+	print qq{
 
 First of all, I\'d like to create this directory. Where?
 
-END
-}
+};
+    }
+
     $default = $cpan_home;
     $ans = prompt("CPAN build and cache directory?",$default);
     mkpath($ans); # dies if it can't
@@ -70,12 +72,12 @@ next question.
     $CPAN::Config->{keep_source_where} = MM->catdir($CPAN::Config->{cpan_home},"sources");
     $CPAN::Config->{build_dir} = MM->catdir($CPAN::Config->{cpan_home},"build");
 
-    print <<END;
+    print qq{
 
 How big should the disk cache be for keeping the build directories
 with all the intermediate files?
 
-END
+};
 
     $default = $CPAN::Config->{build_cache} || 10;
     $ans = prompt("Cache size for build directory (in MB)?", $default);
@@ -84,12 +86,12 @@ END
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{cache_expire} = 1;
 
-    print <<END;
+    print qq{
 
 The CPAN module will need a few external programs to work
 properly. Please correct me, if I guess the wrong path for a program.
 
-END
+};
 
     my(@path) = split($Config{path_sep},$ENV{PATH});
     my $prog;
@@ -105,15 +107,14 @@ END
 	$ans = prompt("Where is your $prog program?",$path) || $path;
 	$CPAN::Config->{$prog} = $ans;
     }
-
-print <<END;
+    print qq{
 
 Every Makefile.PL is run by perl in a seperate process. Likewise we
-run 'make' and 'make install' in processes. If you have any parameters
-(e.g. PREFIX, INSTALLPRIVLIB, UNINST or the like) you want to pass to
+run \'make\' and \'make install\' in processes. If you have any parameters
+\(e.g. PREFIX, INSTALLPRIVLIB, UNINST or the like\) you want to pass to
 the calls, please specify them here.
 
-END
+};
 
     $default = $CPAN::Config->{makepl_arg} || "";
     $CPAN::Config->{makepl_arg} =
@@ -157,7 +158,7 @@ END
 	    }
 	}
     }
-#    my $start_from_old = $local+1;
+    #    my $start_from_old = $local+1;
     my $official_list_end = $local;
     if (@{$CPAN::Config->{urllist} || []}) {
 	push @valid, "    from your old Config file:\n";
@@ -184,6 +185,7 @@ file:, ftp: or http: URL, or "q" to finish selecting.
     $ans = prompt("Press RETURN to continue");
     my $other;
     $ans = $other = "";
+    my %seen;
     while (1) {
 	my $pipe = -t *STDIN ? "| $CPAN::Config->{more}" : ">/dev/null";
 	open FH, $pipe;
@@ -201,7 +203,7 @@ file:, ftp: or http: URL, or "q" to finish selecting.
 	    $sel =~ s/^.+?\(\s*\d+\)\s+//;
 	    $sel =~ s/\s+$//;
 	    $sel =~ s|/?$|/|; # has to end with one slash
-	    push @{$CPAN::Config->{urllist}}, $sel;
+	    push @{$CPAN::Config->{urllist}}, $sel unless $seen{$sel}++;
 	    splice(@valid,$pos[$ans],1);
 	    for ($ans..$#pos) {
 		$pos[$_]--;
@@ -211,7 +213,7 @@ file:, ftp: or http: URL, or "q" to finish selecting.
 	} else {
 	    $ans =~ s|/?$|/|; # has to end with one slash
 	    $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
-	    push @{$CPAN::Config->{urllist}}, $ans;
+	    push @{$CPAN::Config->{urllist}}, $ans unless $seen{$ans}++;
 	}
 	$other ||= "other";
     }
@@ -225,6 +227,13 @@ file:, ftp: or http: URL, or "q" to finish selecting.
     $configpm = MM->catfile( qw/lib CPAN Config.pm/ ); 
 
     open FH, ">$configpm" or die "Couldn't open >$configpm: $!";
+    print FH qq{
+
+# This is CPAN.pm's systemwide configuration file.  This file provides
+# defaults for users, and the values can be changed in a per-user configuration
+# file. The user-config file is being looked for as ~/.cpan/CPAN/MyConfig.pm.
+
+};
     print FH qq[\$CPAN::Config = \{\n];
     foreach (sort keys %$CPAN::Config) {
 	print FH "  '$_' => ", neatvalue($CPAN::Config->{$_}), ",\n";

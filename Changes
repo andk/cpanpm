@@ -1,5 +1,24 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 26, 1996
+
+Write Bundle/ (even if no previous call to "b" happened) whenever
+needed.
+
+Check for a "configure" script before writing your own
+Makefile.PL. Run ./configure if you find it.
+
+Don't check for %Term::ReadLine::Perl, bacause that may be defined
+without a good reason. Better check for
+Term::ReadLine::Perl::readline. That's still silly, but I don't
+pretend it's clever. We need a way to determine if a readline
+interface is governing us.
+
+Checking if STDIN is a terminal and not running Term::ReadKey and
+ReadLine if not. Saves time _and_ allows batchmode to forgive
+keystrokes during program execution.
+
+
 =head2 Sep 22, 1996
 
 More friendly setting of debugging options.
