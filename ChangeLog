@@ -1,3 +1,9 @@
+2003-07-31  Andreas J Koenig  <andreas.koenig@anima.de>
+
+	* The pumpkin has asked for a longer testing period of the PKI
+	stuff. So 1.76 removes the stuff from Makefile.PL and CPAN.pm. We
+	expect to have several 1.76_XX releases for testing.
+
 2003-07-29  Andreas J Koenig  <andreas.koenig@anima.de>
 
 	* Applying patches 20294, 20295, and 20306 in the perforce

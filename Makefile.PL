@@ -6,23 +6,12 @@ use File::Path;
 use File::Spec;
 use strict;
 
-# $Id: Makefile.PL,v 1.52 2003/07/28 22:07:23 k Exp $
+# $Id: Makefile.PL,v 1.53 2003/07/31 14:47:45 k Exp $
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){
   # 5.6.0 / 1.52 downloads 5.8.0 due to File::Spec
   $prereq_pm = { 'Test::More' => 0 };
-}
-
-# import PAUSE public key to user's keychain
-require Config;
-for my $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
-    my $abs = File::Spec->catfile($dir, 'gpg');
-    if (my $cmd = MM->maybe_command($abs)) {
-	print "Importing PAUSE public key into your GnuPG keychain...\n";
-	system($cmd, '--import', <PAUSE*.pub>);
-	last;
-    }
 }
 
 WriteMakefile(
