@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.04';
+$VERSION = '1.05';
 
-# $Id: CPAN.pm,v 1.81 1996/12/21 19:47:36 k Exp $
+# $Id: CPAN.pm,v 1.82 1996/12/22 12:45:35 k Exp $
 
-# my $version = substr q$Revision: 1.81 $, 10; # only used during development
+# my $version = substr q$Revision: 1.82 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -17,6 +17,7 @@ use DirHandle;
 use Exporter ();
 use ExtUtils::MakeMaker ();
 use File::Basename ();
+use File::Copy ();
 use File::Find;
 use File::Path ();
 use IO::File ();
