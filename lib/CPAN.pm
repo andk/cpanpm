@@ -4739,7 +4739,10 @@ sub test {
         return;
     }
 
-    local $ENV{PERL5LIB} = $ENV{PERL5LIB} || "";
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+
     $CPAN::META->set_perl5lib;
     my $system = join " ", $CPAN::Config->{'make'}, "test";
     if (system($system) == 0) {
