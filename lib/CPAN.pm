@@ -1,3 +1,4 @@
+
 package CPAN;
 use vars qw{$Try_autoload
             $Revision
@@ -6,13 +7,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.50';
+$VERSION = '1.50_01';
 
-# $Id: CPAN.pm,v 1.264 1999/05/23 14:26:49 k Exp $
+# $Id: CPAN.pm,v 1.269 1999/10/23 03:03:43 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.264 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.269 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -113,6 +114,12 @@ sub shell {
 	    $readline::rl_completion_function =
 		$readline::rl_completion_function = 'CPAN::Complete::cpl';
 	}
+	# $term->OUT is autoflushed anyway
+	my $odef = select STDERR;
+	$| = 1;
+	select STDOUT;
+	$| = 1;
+	select $odef;
     }
 
     no strict;
@@ -120,7 +127,8 @@ sub shell {
     my $getcwd;
     $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
     my $cwd = CPAN->$getcwd();
-    my $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub";
+    my $try_detect_readline;
+    $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
 	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
 	    "available (try ``install Bundle::CPAN'')";
@@ -613,6 +621,27 @@ or
       print "Caught SIGINT\n";
       $Signal++;
     };
+
+#       From: Larry Wall <larry@wall.org>
+#       Subject: Re: deprecating SIGDIE
+#       To: perl5-porters@perl.org
+#       Date: Thu, 30 Sep 1999 14:58:40 -0700 (PDT)
+#
+#       The original intent of __DIE__ was only to allow you to substitute one
+#       kind of death for another on an application-wide basis without respect
+#       to whether you were in an eval or not.  As a global backstop, it should
+#       not be used any more lightly (or any more heavily :-) than class
+#       UNIVERSAL.  Any attempt to build a general exception model on it should
+#       be politely squashed.  Any bug that causes every eval {} to have to be
+#       modified should be not so politely squashed.
+#
+#       Those are my current opinions.  It is also my optinion that polite
+#       arguments degenerate to personal arguments far too frequently, and that
+#       when they do, it's because both people wanted it to, or at least didn't
+#       sufficiently want it not to.
+#
+#       Larry
+
     $SIG{'__DIE__'} = \&cleanup;
     $self->debug("Signal handler set.") if $CPAN::DEBUG;
 }
@@ -1136,7 +1165,8 @@ Known options:
   commit    commit session changes to disk
   init      go through a dialog to set all parameters
 
-You may edit key values in the follow fashion:
+You may edit key values in the follow fashion (the "o" is a literal
+letter o):
 
   o conf build_cache 15
 
@@ -1703,6 +1733,15 @@ sub mydie {
     die "\n";
 }
 
+sub setup_output {
+    return if -t STDOUT;
+    my $odef = select STDERR;
+    $| = 1;
+    select STDOUT;
+    $| = 1;
+    select $odef;
+}
+
 #-> sub CPAN::Shell::rematein ;
 # RE-adme||MA-ke||TE-st||IN-stall
 sub rematein {
@@ -1713,6 +1752,7 @@ sub rematein {
 	$pragma = $meth;
 	$meth = shift @some;
     }
+    setup_output();
     CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
     my($s,@s);
     foreach $s (@some) {
@@ -2241,12 +2281,12 @@ sub hosthardest {
 	    next;
 	}
 	my($host,$dir,$getfile) = ($1,$2,$3);
-	my($netrcfile,$fh);
 	my $timestamp = 0;
 	my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,
 	   $ctime,$blksize,$blocks) = stat($aslocal);
 	$timestamp = $mtime ||= 0;
 	my($netrc) = CPAN::FTP::netrc->new;
+	my($netrcfile) = $netrc->netrc;
 	my($verbose) = $CPAN::DEBUG{'FTP'} & $CPAN::DEBUG ? " -v" : "";
 	my $targetfile = File::Basename::basename($aslocal);
 	my(@dialog);
@@ -2259,7 +2299,7 @@ sub hosthardest {
 	     "get $getfile $targetfile",
 	     "quit"
 	    );
-	if (! $netrc->netrc) {
+	if (! $netrcfile) {
 	    CPAN->debug("No ~/.netrc file found") if $CPAN::DEBUG;
 	} elsif ($netrc->hasdefault || $netrc->contains($host)) {
 	    CPAN->debug(sprintf("hasdef[%d]cont($host)[%d]",
@@ -2721,6 +2761,7 @@ sub rd_modpacks {
 	    if ($version > $CPAN::VERSION){
 		$CPAN::Frontend->myprint(qq{
   There\'s a new CPAN.pm version (v$version) available!
+  [Current version is v$CPAN::VERSION]
   You might want to try
     install Bundle::CPAN
     reload cpan
@@ -4139,7 +4180,7 @@ sub inst_version {
     local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     # warn "HERE";
     my $have = MM->parse_version($parsefile) || "undef";
-    $have =~ s/\s+//g;
+    $have =~ s/\s*//g; # stringify to float around floating point issues
     $have;
 }
 
@@ -4261,29 +4302,30 @@ sub untar {
   if (MM->maybe_command($CPAN::Config->{'gzip'})
       &&
       MM->maybe_command($CPAN::Config->{'tar'})) {
-    if ($^O =~ /win/i) { # irgggh
-	# people find the most curious tar binaries that cannot handle
-	# pipes
-	my $system = "$CPAN::Config->{'gzip'} --decompress $file";
-	if (system($system)==0) {
-	    $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
-	} else {
-	    $CPAN::Frontend->mydie(
-				   qq{Couldn\'t uncompress $file\n}
-				  );
-	}
-	$file =~ s/\.gz$//;
-	$system = "$CPAN::Config->{tar} xvf $file";
-	if (system($system)==0) {
-	    $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
-	} else {
-	    $CPAN::Frontend->mydie(qq{Couldn\'t untar $file\n});
-	}
-	return 1;
+    my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
+      "< $file | $CPAN::Config->{tar} xvf -";
+    if (system($system) != 0) {
+      # people find the most curious tar binaries that cannot handle
+      # pipes
+      my $system = "$CPAN::Config->{'gzip'} --decompress $file";
+      if (system($system)==0) {
+	$CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
+      } else {
+	$CPAN::Frontend->mydie(
+			       qq{Couldn\'t uncompress $file\n}
+			      );
+      }
+      $file =~ s/\.gz$//;
+      $system = "$CPAN::Config->{tar} xvf $file";
+      $CPAN::Frontend->myprint(qq{Using Tar:$system:\n});
+      if (system($system)==0) {
+	$CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
+      } else {
+	$CPAN::Frontend->mydie(qq{Couldn\'t untar $file\n});
+      }
+      return 1;
     } else {
-	my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
-	    "< $file | $CPAN::Config->{tar} xvf -";
-	return system($system) == 0;
+      return 1;
     }
   } elsif ($CPAN::META->has_inst("Archive::Tar")
       &&
@@ -4340,7 +4382,7 @@ directory.
 
 The CPAN module also supports the concept of named and versioned
 'bundles' of modules. Bundles simplify the handling of sets of
-related modules. See BUNDLES below.
+related modules. See Bundles below.
 
 The package contains a session manager and a cache manager. There is
 no status retained between sessions. The session manager keeps track
@@ -4391,25 +4433,10 @@ objects. The parser recognizes a regular expression only if you
 enclose it between two slashes.
 
 The principle is that the number of found objects influences how an
-item is displayed. If the search finds one item, the result is displayed
-as object-E<gt>as_string, but if we find more than one, we display
-each as object-E<gt>as_glimpse. E.g.
-
-    cpan> a ANDK
-    Author id = ANDK
-	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
-	FULLNAME     Andreas König
-
-
-    cpan> a /andk/
-    Author id = ANDK
-	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
-	FULLNAME     Andreas König
-
-
-    cpan> a /and.*rt/
-    Author          ANDYD (Andy Dougherty)
-    Author          MERLYN (Randal L. Schwartz)
+item is displayed. If the search finds one item, the result is
+displayed with the rather verbose method C<as_string>, but if we find
+more than one, we display each object with the terse method
+<as_glimpse>.
 
 =item make, test, install, clean  modules or distributions
 
@@ -4795,24 +4822,24 @@ shell with the command set defined within the C<o conf> command:
 
 =over 2
 
-=item o conf E<lt>scalar optionE<gt>
+=item C<o conf E<lt>scalar optionE<gt>>
 
 prints the current value of the I<scalar option>
 
-=item o conf E<lt>scalar optionE<gt> E<lt>valueE<gt>
+=item C<o conf E<lt>scalar optionE<gt> E<lt>valueE<gt>>
 
 Sets the value of the I<scalar option> to I<value>
 
-=item o conf E<lt>list optionE<gt>
+=item C<o conf E<lt>list optionE<gt>>
 
 prints the current value of the I<list option> in MakeMaker's
 neatvalue format.
 
-=item o conf E<lt>list optionE<gt> [shift|pop]
+=item C<o conf E<lt>list optionE<gt> [shift|pop]>
 
 shifts or pops the array in the I<list option> variable
 
-=item o conf E<lt>list optionE<gt> [unshift|push|splice] E<lt>listE<gt>
+=item C<o conf E<lt>list optionE<gt> [unshift|push|splice] E<lt>listE<gt>>
 
 works like the corresponding perl commands.
 
@@ -4970,7 +4997,7 @@ traditional method of building a Perl module package from a shell.
 
 =head1 AUTHOR
 
-Andreas König E<lt>a.koenig@kulturbox.deE<gt>
+Andreas Koenig E<lt>andreas.koenig@anima.deE<gt>
 
 =head1 SEE ALSO
 

@@ -1,3 +1,38 @@
+1999-10-15  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Fixed a typo reported by Stas Bekman <sbekman@iil.intel.com>
+
+1999-10-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Added a posting by Larry as a comment to rethink use of
+	$SIG{__DIE__}
+
+1999-08-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Applied a patch by 1999-06-13 Adrian Aichner
+	<aichner@ecf.teradyne.com>
+        (hosthardest): Initialize $netrcfile with $netrc->netrc.
+        (untar): Attempt piping gzip output to tar irregardless of
+	$OSNAME. Run commands separately in case of error.
+
+	* Applied a patch from Ilya Zakharevich <ilya@math.ohio-state.edu>
+	for unbuffering STDOUT and STDERR to get sane behavior in pipes.
+
+1999-07-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Fixed a floating point issue that came up with DBD::ADO. See
+	stringify comment in CPAN::Module::inst_version. Thanks to Lupe
+	Christoph <lupe@lupe-christoph.de> and Michael G. Schwern
+	<schwern@pobox.com> for the reports and Tim Bunce
+	<Tim.Bunce@ig.co.uk> for the suggestion how to fix.
+
+	* Fixed my email address in the manpage
+
+1999-07-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Nox was broken, probably since 5.005's new AUTOLOAD
+	behavior. Thanks to Marc Lehmann <pcg@goof.com> for the report.
+
 1999-05-23  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* The force pragma no longer removes its record of prerequisites
