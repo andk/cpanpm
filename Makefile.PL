@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.11 1996/09/09 23:12:19 k Exp $
+# $Id: Makefile.PL,v 1.11 1996/09/09 23:12:19 k Exp k $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -80,7 +80,7 @@ END
     $default = $CPAN::Config->{build_cache} || 10;
     $ans = prompt("Cache size for build directory (in MB)?", $default) || $default;
     $CPAN::Config->{build_cache} = $ans;
-    
+
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{cache_expire} = 1;
 

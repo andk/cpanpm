@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.17-alpha';
+$VERSION = '0.20-alpha';
 
-# $Id: CPAN.pm,v 1.43 1996/09/10 17:11:46 k Exp $
-my $version = substr q$Revision: 1.43 $, 10;
+# $Id: CPAN.pm,v 1.46 1996/09/10 20:41:06 k Exp k $
+my $version = substr q$Revision: 1.46 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -134,6 +134,14 @@ sub DESTROY {
 }
 
 END { $End++; &cleanup; }
+
+sub exists {
+    my($mgr,$class,$id) = @_;
+    CPAN::Index->reload;
+    Carp::croak "exists called without class argument" unless $class;
+    $id ||= "";
+    exists $META->{$class}{$id};
+}
 
 sub ftp_get {
     my($self,$host,$dir,$file,$target) = @_;
@@ -442,11 +450,14 @@ sub expand {
 	    if ( $type eq 'Bundle' ) {
 		$xarg =~ s/^(Bundle::)?(.*)/Bundle::$2/;
 	    }
-	    (
-	     $obj = $CPAN::META->instance($class,$xarg)
-	     or
-	     $obj = $CPAN::META->instance($class,$arg)
-	    ) and push @m, $obj;
+	    if ($CPAN::META->exists($class,$xarg)) {
+		$obj = $CPAN::META->instance($class,$xarg);
+	    } elsif ($obj = $CPAN::META->exists($class,$arg)) {
+		$obj = $CPAN::META->instance($class,$arg);
+	    } else {
+		next;
+	    }
+	    push @m, $obj;
 	}
     }
     return @m;
@@ -580,48 +591,41 @@ sub reload {
     return if $last_time + $CPAN::Config->{cache_expire}*86400 > $time;
     $last_time = $time; # currently we get loops back here
 
-    reload_mod();
-    reload_auth();
+    read_authindex(reload_x("authors/01mailrc.txt.gz","01mailrc.gz"));
+    read_modpacks(reload_x("modules/02packages.details.txt.gz","02packag.gz"));
+    read_modlist(reload_x("modules/03modlist.data.gz","03mlist.gz"));
 }
 
-sub reload_mod {
-    my $index_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},"02packag.gz");
-    my $index_target = CPAN->localize("modules/02packages.details.txt.gz",$index_wanted);
-    read_modindex($index_target);
-    $index_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},"03mlist.gz");
-    $index_target = CPAN->localize("modules/03modlist.data.gz",$index_wanted);
-    read_modlist($index_target);
+sub reload_x {
+    my($wanted,$localname) = @_;
+    my $abs_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},$localname);
+    if (-f $abs_wanted && -M $abs_wanted < $CPAN::Config->{'cache_expire'}) {
+	print "$abs_wanted younger than $CPAN::Config->{'cache_expire'} days. I'll use that.";
+	return $abs_wanted;
+    }
+    return CPAN->localize($wanted,$abs_wanted);
 }
 
-sub reload_auth {
-    my $index_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},"01mailrc.gz");
-    my $index_target = CPAN->localize("authors/01mailrc.txt.gz",$index_wanted);
-    read_authindex($index_target);
-}
-
-sub read_modlist {
+sub read_authindex {
     my($index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
     my $fh = IO::File->new("$pipe|");
-    my $eval = "";
     while (<$fh>) {
-	next if 1../^\s*$/;
-	$eval .= $_;
+	chomp;
+	my($userid,$fullname,$email) = /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
+	next unless $userid && $fullname && $email;
+
+	# instantiate an author object
+ 	my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
+	$userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
 	return if $CPAN::Signal;
     }
-    eval $eval;
-    Carp::confess($@) if $@;
-    return if $CPAN::Signal;
-    my $result = CPAN::Modulelist->data;
-    for (keys %$result) {
-	my $obj = $CPAN::META->instance(CPAN::Module,$_);
-	$obj->set(%{$result->{$_}});
-	return if $CPAN::Signal;
-    }
+    $fh->close;
+    $? and Carp::croak "FAILED $pipe: exit status [$?]";
 }
 
-sub read_modindex {
+sub read_modpacks {
     my($index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
@@ -657,23 +661,26 @@ sub read_modindex {
     $? and Carp::croak "FAILED $pipe: exit status [$?]";
 }
 
-sub read_authindex {
+sub read_modlist {
     my($index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
     my $fh = IO::File->new("$pipe|");
+    my $eval = "";
     while (<$fh>) {
-	chomp;
-	my($userid,$fullname,$email) = /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
-	next unless $userid && $fullname && $email;
-
-	# instantiate an author object
- 	my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
-	$userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
+	next if 1../^\s*$/;
+	$eval .= $_;
 	return if $CPAN::Signal;
     }
-    $fh->close;
-    $? and Carp::croak "FAILED $pipe: exit status [$?]";
+    eval $eval;
+    Carp::confess($@) if $@;
+    return if $CPAN::Signal;
+    my $result = CPAN::Modulelist->data;
+    for (keys %$result) {
+	my $obj = $CPAN::META->instance(CPAN::Module,$_);
+	$obj->set(%{$result->{$_}});
+	return if $CPAN::Signal;
+    }
 }
 
 package CPAN::InfoObj;
