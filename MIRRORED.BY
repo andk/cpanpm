@@ -96,12 +96,12 @@ ftp.lab.kdd.co.jp:
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.nus.edu.sg:
-  frequency        = "daily"
+  frequency        = "weekly"
   dst_directory    = "ftp.nus.edu.sg:/pub/unix/perl/CPAN/"
   dst_location     = "Singapore, Singapore, Asia (1.28N 103.85E)"
   dst_organisation = "National University of Singapore"
   dst_timezone     = "GMT+8"
-  dst_contact      = "cceccs@nus.sg@nus.edu.sg"
+  dst_contact      = "cceccs@nus.edu.sg"
   dst_src          = "ftp.cis.ufl.edu:/pub/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.nus.edu.sg/pub/unix/perl/CPAN/","http://ftp.nus.edu.sg/unix/perl/CPAN/"
@@ -379,7 +379,7 @@ ftp.gmd.de:
   frequency        = "daily"
   dst_directory    = "ftp.gmd.de:/packages/CPAN/"
   dst_location     = "Sankt Augustin, Germany, Europe"
-  dst_organization = "GMD - Forschungszentrum Informationstechnik GmbH"
+  dst_organization = "GMD - Forschungszentrum Informationstechnik GmbH (50.72N 7.10E)"
   dst_timezone     = "GMT+1"
   dst_contact      = "ftpmaster@gmd.de"
   dst_src          = "ftp.rz.ruhr-uni-bochum.de:/pub/CPAN/"
@@ -831,9 +831,8 @@ www.perl.org:
   dst_contact      = "webmaster@perl.org"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
   dst_http         = "http://www.perl.com/CPAN/"
-  dst_note         = "the ftp service is not actually there, use http."
 
-# dst_dst          = "http://www.perl.org/CPAN/"
+# dst_dst          = "ftp://ftp.perl.org/CPAN/","http://www.perl.org/CPAN/"
 # dst_contact      = "mailto:webmaster@perl.org"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
@@ -1029,11 +1028,12 @@ cpan.if.usp.br:
   dst_location     = "Sao Paulo, Brazil, South America (23.30S 45.00W)"
   dst_organisation = "Instituto de Fisica da Universidade de Sao Paulo; Insitute of Physics of the University of Sao Paulo"
   dst_timezone     = "GMT-3"
-  dst_contact      = "ftpmaster@linux.if.usp.br"
+  dst_contact      = "afmoraes@fma.if.usp.br"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+  dst_notes        = "also delyra@fma.if.usp.br and mauricio@fma.if.usp.br can help about this site"
 
 # dst_dst          = "ftp://cpan.if.usp.br/pub/mirror/CPAN/"
-# dst_contact      = "mailto:ftpmaster@linux.if.usp.br"
+# dst_contact      = "mailto:afmoraes@fma.if.usp.br"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.ing.puc.cl:

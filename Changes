@@ -4,6 +4,38 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
 
+=head2 September, 1997
+
+Fixed Bundle::Foo::Bar. More than one level deep nesting could not be
+read. Thanks to Jarkko Hietaniemi for the hint.
+
+STDOUT/STDERR abstraction layer introduced to allow a Tk frontend to
+do its own output. Current output producing methods are myprint,
+mywarn, mydie, myconfess. I don't know how many of these will
+evolve. I'm coordinating this development with Nathan Patwardhan from
+O'Reilly who is likely to produce something along Tk or so. There's a
+routine print_ornamented where colorprinting may be turned on manually
+to allow easy debugging. Please see the code. Please speak up if you
+have an opinion on that matter.
+
+Introduced the use of Net::Ping to check for reachability, because the
+timeouts seem too long for Net::FTP or LWP::Protocol::ftp.
+
+Allowing continuation lines in the shell.
+
+Improved method readme for packages without a README, but still it
+hurts to use ncftp and lynx. But still we can't be sure that we don't
+need ncftp or lynx, e.g. for firewalls.
+
+CPAN::FTP::localize broken into 4 routines that should be accessible
+in any order. If we encounter the first successful download we
+remember both method and host and try to stick with it. I'm not in
+favor of making this accessible publicly as I regard it as heavily
+session-dependent. (Thanks to Martijn Koster for the suggestion)
+
+Fixed unnecessary recursion in has_inst(). An eval {require...} should
+do in any case.
+
 =head2 August 28, 1997
 
 Jarkko's suggestion for a better message when they type an unknown

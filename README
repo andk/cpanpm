@@ -128,7 +128,8 @@ DESCRIPTION
     is split by the Text::ParseWords::shellwords() routine which acts like
     most shells do. The first word is being interpreted as the method to be
     called and the rest of the words are treated as arguments to this
-    method.
+    method. Continuation lines are supported if a line ends with a literal
+    backslash.
 
   autobundle
 
@@ -186,13 +187,13 @@ DESCRIPTION
     1.23.tar.gz) with all accompanying material in there. But if you would
     like to install version 1.23_90, you need to know where the distribution
     file resides on CPAN relative to the authors/id/ directory. If the
-    author is BAR, this might be BAR/Foo-1.23_90.tar.gz, so he would have to
-    say
+    author is BAR, this might be BAR/Foo-1.23_90.tar.gz, so you would have
+    to say
 
         install BAR/Foo-1.23_90.tar.gz
 
     The first example will be driven by an object of the class CPAN::Module,
-    the second by an object of class Distribution.
+    the second by an object of class CPAN::Distribution.
 
   Programmer's interface
 
