@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.11';
+$VERSION = '1.12';
 
-# $Id: CPAN.pm,v 1.101 1997/01/22 18:43:40 k Exp $
+# $Id: CPAN.pm,v 1.103 1997/01/23 00:02:37 k Exp $
 
-# my $version = substr q$Revision: 1.101 $, 10; # only used during development
+# my $version = substr q$Revision: 1.103 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -318,9 +318,13 @@ Readline support $rl_avail
 	    last;
 	} elsif (/./) {
 	    my(@line);
-	    eval { @line = Text::ParseWords::shellwords($_) };
-	    warn($@), next if $@;
-	    $CPAN::META->debug("line[".join(":",@line)."]") if $CPAN::DEBUG;
+	    if ($] < 5.00322) { # parsewords had a bug at until recently
+		@line = split;
+	    } else {
+		eval { @line = Text::ParseWords::shellwords($_) };
+		warn($@), next if $@;
+	    }
+	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
@@ -383,6 +387,7 @@ sub a { print shift->format_result('Author',@_);}
 #-> sub CPAN::Shell::b ;
 sub b {
     my($self,@which) = @_;
+    CPAN->debug("which[@which]") if $CPAN::DEBUG;
     my($incdir,$bdir,$dh); 
     foreach $incdir ($CPAN::Config->{'cpan_home'},@INC) {
 	$bdir = $CPAN::META->catdir($incdir,"Bundle");
@@ -498,7 +503,7 @@ sub reload {
     if ($_[1] =~ /cpan/i) {
 	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
 	my $fh = FileHandle->new($INC{'CPAN.pm'});
-	local $/;
+	local($/);
 	undef $/;
 	$redef = 0;
 	local($SIG{__WARN__})
@@ -1378,7 +1383,7 @@ sub as_string {
 	next if $_ eq 'ID';
 	my $extra = "";
 	$_ eq "CPAN_USERID" and $extra = " (".$self->author.")";
-	if (ref $self->{$_}) { # Should we setup a language interface? XXX
+	if (ref($self->{$_}) eq "ARRAY") { # Should we setup a language interface? XXX
 	    push @m, sprintf "    %-12s %s%s\n", $_, "@{$self->{$_}}", $extra;
 	} else {
 	    push @m, sprintf "    %-12s %s%s\n", $_, $self->{$_}, $extra;
@@ -1826,43 +1831,20 @@ sub install {
     $self->test;
     return if $CPAN::Signal;
     print "Running make install\n";
-    EXCUSE: {
-	  my @e;
-	  exists $self->{'build_dir'} or push @e, "Has no own directory";
-	  exists $self->{'make'} or push @e, "Make had some problems, maybe interrupted? Won't install";
-	  exists $self->{'make'} and $self->{'make'} eq 'NO' and push @e, "Oops, make had returned bad status";
-	  exists $self->{'install'} and push @e, $self->{'install'} eq "YES" ? "Already done" : "Already tried without success";
-	  print join "", map {"  $_\n"} @e and return if @e;
-     }
+  EXCUSE: {
+	my @e;
+	exists $self->{'build_dir'} or push @e, "Has no own directory";
+	exists $self->{'make'} or push @e, "Make had some problems, maybe interrupted? Won't install";
+	exists $self->{'make'} and $self->{'make'} eq 'NO' and push @e, "Oops, make had returned bad status";
+	exists $self->{'install'} and push @e, $self->{'install'} eq "YES" ? "Already done" : "Already tried without success";
+	print join "", map {"  $_\n"} @e and return if @e;
+    }
     chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
     my $system = join " ", $CPAN::Config->{'make'}, "install", $CPAN::Config->{make_install_arg};
     my($pipe) = FileHandle->new("$system 2>&1 |");
     my($makeout) = "";
-
- # #If I were to try this, I'd do something like:
- # #
- # #  $SIG{ALRM} = sub { die "alarm\n" };
- # #
- # #  open(PROC,"make somesuch|");
- # #  eval {
- # #	alarm 30;
- # #	while(<PROC>) {
- # #	  alarm 30;
- # #	}
- # #  }
- # #  close(PROC);
- # #  alarm 0;
- # #
- # #I'm really not sure how reliable this would is, though.
- # #
- # #--
- # #Kenneth Albanowski (kjahds@kjahds.com, CIS: 70705,126)
- # #
- # #
- # #
- # #
-	while (<$pipe>){
+    while (<$pipe>){
 	print;
 	$makeout .= $_;
     }
@@ -2162,7 +2144,7 @@ sub xs_file {
 sub inst_version {
     my($self) = @_;
     my $parsefile = $self->inst_file or return 0;
-    local($^W) = 0 if $] < 5.00303;
+    local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     my $have = MY->parse_version($parsefile);
     $have ||= 0;
     $have =~ s/\s+//g;
@@ -2355,7 +2337,7 @@ sub edit {
 		$CPAN::Config->{$o} = [@args];
 	    }
 	} else {
-	    $CPAN::Config->{$o} = $args[0];
+	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
 	    print "    $o    ";
 	    print defined $CPAN::Config->{$o} ? $CPAN::Config->{$o} : "UNDEFINED";
 	}

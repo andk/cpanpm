@@ -2,8 +2,22 @@ Revision history for Perl extension CPAN.
 
 =head2 Jan 22, 1997
 
+Found more incompatibilities: ParseWords had a bug that needs a
+workaround. ref() worked slightly different too.
+
+Fixed a bug in CPAN::Config::edit which set any value to undefined
+when we just wanted to query it.
+
+Fixed CPAN::FirstTime to have a locally set $/.
+
+Gave FirstTime an automatically increasing version number.
+
+=head2 Jan 22, 1997
+
 Made it compatible with 5.003 for testing purposes. Thanks for
 precious hints go to Mark D. Baushke again!
+
+Released 1.11
 
 =head2 Jan 20, 1997
 

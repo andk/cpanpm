@@ -14,7 +14,7 @@ use strict;
 use ExtUtils::MakeMaker qw(prompt);
 require File::Path;
 use vars qw($VERSION);
-$VERSION = "1.00";
+$VERSION = substr q$Revision: 1.11 $, 10;
 
 =head1 NAME
 
@@ -38,7 +38,8 @@ sub init {
     require CPAN::Nox;
     eval {require CPAN::Config;};
     $CPAN::Config ||= {};
-    
+    local($/) = "\n";
+
     my($ans,$default,$local,$cont,$url,$expected_size);
     
     #
