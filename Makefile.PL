@@ -22,7 +22,7 @@ WriteMakefile(
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'PREREQ_PM' => $prereq_pm,
     'dist' => {
-	       DIST_DEFAULT => 'README all checkout_meta metafile sign tardist checkin_meta',
+	       DIST_DEFAULT => 'README all metafile sign tardist',
 	       COMPRESS => 'gzip -9f'
 	      },
 );
