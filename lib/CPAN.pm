@@ -1,11 +1,11 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.62';
-# $Id: CPAN.pm,v 1.391 2002/07/28 10:46:47 k Exp $
+$VERSION = '1.63';
+# $Id: CPAN.pm,v 1.392 2002/08/30 08:55:15 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.391 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.392 $, 10)."]";
 
 use Carp ();
 use Config ();

@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# $Id: cpan,v 1.2 2002/07/28 10:46:47 k Exp $
+# $Id: cpan,v 1.3 2002/08/30 08:55:15 k Exp $
 use strict;
 
 =head1 NAME
@@ -8,17 +8,17 @@ cpan - easily interact with CPAN from the command line
 
 =head1 SYNOPSIS
 
-# with arguments, installs specified modules
-cpan module_name [ module_name ... ]
-
-#
-cpan [-cimt] module_name [ module_name ... ]
-
-# without arguments, starts CPAN shell
-cpan
-
-# without arguments, but some switches
-cpan [-ahrv]
+	# with arguments, installs specified modules
+	cpan module_name [ module_name ... ]
+	
+	# with switches, installs modules with extra behavior
+	cpan [-cimt] module_name [ module_name ... ]
+	
+	# without arguments, starts CPAN shell
+	cpan
+	
+	# without arguments, but some switches
+	cpan [-ahrv]
 
 =head1 DESCRIPTION
 
@@ -114,11 +114,10 @@ brian d foy <bdfoy@cpan.org>
 =cut
 
 use CPAN ();
-use CPAN::Config;
 use Getopt::Std;
 
 my $VERSION = 
-	sprintf "%d.%02d", q$Revision: 1.2 $ =~ m/ (\d+) \. (\d+) /xg;
+	sprintf "%d.%02d", q$Revision: 1.3 $ =~ m/ (\d+) \. (\d+) /xg;
 
 my $Default = 'default';
 
@@ -151,6 +150,7 @@ if( $options{h} )
 elsif( $options{v} )
 	{
 	print STDERR "Printing version message -- ignoring other arguments\n"
+	
 		if $arg_count > 1;
 
 	my $CPAN_VERSION = CPAN->VERSION;
@@ -160,7 +160,8 @@ elsif( $options{v} )
 	}
 elsif( $options{a} )
 	{
-	print "Creating autobundle in ", $CPAN::Config->{cpan_home}, "/Bundle\n";
+	print "Creating autobundle in ", $CPAN::Config->{cpan_home}, 
+		"/Bundle\n";
 	print STDERR "Creating autobundle -- ignoring other arguments\n"
 		if $arg_count > 1;
 
@@ -186,8 +187,9 @@ else
 		}
 	
 	   if( not $switch and     @ARGV ) { $switch = $Default;     }
-	elsif( not $switch and not @ARGV ) { CPAN->shell(); exit 0;  }	
-	elsif(     $switch and not @ARGV ) { die "Nothing to $CPAN_METHODS{$switch}!\n"; }
+	elsif( not $switch and not @ARGV ) { CPAN::shell(); exit 0;  }	
+	elsif(     $switch and not @ARGV ) 
+		{ die "Nothing to $CPAN_METHODS{$switch}!\n"; }
 
 	my $method = $CPAN_METHODS{$switch};
 	die "CPAN.pm cannot $method!\n" unless CPAN::Shell->can( $method );
@@ -199,4 +201,3 @@ else
 	}
 	
 1;
-

@@ -1,4 +1,10 @@
+2002-08-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* New version of the cpan script by brian d foy.
+
 2002-07-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.62.
 
 	* cpan: beefed-up cpan script courtesy brian d foy.
 
