@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN.
 
+=head2 January 1999 after 1.45
+
+Chris Nandor sent me patches over 1.45 to make us MacOS compatible!
+
 =head2 January 1999 after 1.44
 
 Took a stab at dependencies. A separate package CPAN::Queue queues the

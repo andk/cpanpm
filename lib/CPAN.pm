@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.45';
+$VERSION = '1.46';
 
-# $Id: CPAN.pm,v 1.253 1999/01/23 14:30:15 k Exp $
+# $Id: CPAN.pm,v 1.255 1999/01/25 01:40:02 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.253 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.255 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -27,6 +27,7 @@ use FileHandle ();
 use Safe ();
 use Text::ParseWords ();
 use Text::Wrap;
+use File::Spec;
 
 END { $End++; &cleanup; }
 
@@ -717,7 +718,8 @@ sub entries {
     $getcwd  = $CPAN::Config->{'getcwd'} || 'cwd';
     my($cwd) = CPAN->$getcwd();
     chdir $dir or Carp::croak("Can't chdir to $dir: $!");
-    my $dh = DirHandle->new(".") or Carp::croak("Couldn't opendir $dir: $!");
+    my $dh = DirHandle->new(File::Spec->curdir)
+        or Carp::croak("Couldn't opendir $dir: $!");
     my(@entries);
     for ($dh->read) {
 	next if $_ eq "." || $_ eq "..";
@@ -741,9 +743,15 @@ sub disk_usage {
     my($Du) = 0;
     find(
 	 sub {
-	     $File::Find::prune++ if $CPAN::Signal;
-	     return if -l $_;
-	     $Du += (-s _); # parens to help cperl-mode
+	   $File::Find::prune++ if $CPAN::Signal;
+	   return if -l $_;
+	   if ($^O eq 'MacOS') {
+	     require Mac::Files;
+	     my $cat  = Mac::Files::FSpGetCatInfo($_);
+	     $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen();
+	   } else {
+	     $Du += (-s _);
+	   }
 	 },
 	 $dir
 	);
@@ -1804,6 +1812,20 @@ sub localize {
     $self->debug("file[$file] aslocal[$aslocal] force[$force]")
 	if $CPAN::DEBUG;
 
+    if ($^O eq 'MacOS') {
+        my($name, $path) = File::Basename::fileparse($aslocal, '');
+        if (length($name) > 31) {
+            $name =~ s/(\.(readme(\.(gz|Z))?|(tar\.)?(gz|Z)|tgz|zip|pm\.(gz|Z)))$//;
+            my $suf = $1;
+            my $size = 31 - length($suf);
+            while (length($name) > $size) {
+                chop $name;
+            }
+            $name .= $suf;
+            $aslocal = File::Spec->catfile($path, $name);
+        }
+    }
+
     return $aslocal if -f $aslocal && -r _ && !($force & 1);
     my($restore) = 0;
     if (-f $aslocal){
@@ -1860,6 +1882,7 @@ sub localize {
     } else {
 	@levels = qw/easy hard hardest/;
     }
+    @levels = qw/easy/ if $^O eq 'MacOS';
     for $level (@levels) {
 	my $method = "host$level";
 	my @host_seq = $level eq "easy" ?
@@ -2473,26 +2496,35 @@ sub reload {
 
     my $needshort = $^O eq "dos";
 
-    $cl->rd_authindex($cl->reload_x(
-				    "authors/01mailrc.txt.gz",
-				    $needshort ? "01mailrc.gz" : "",
-				    $force));
+    $cl->rd_authindex($cl
+		      ->reload_x(
+				 "authors/01mailrc.txt.gz",
+				 $needshort ?
+				 File::Spec->catfile('authors', '01mailrc.gz') :
+				 File::Spec->catfile('authors', '01mailrc.txt.gz'),
+				 $force));
     $t2 = time;
     $debug = "timing reading 01[".($t2 - $time)."]";
     $time = $t2;
     return if $CPAN::Signal; # this is sometimes lengthy
-    $cl->rd_modpacks($cl->reload_x(
-				   "modules/02packages.details.txt.gz",
-				   $needshort ? "02packag.gz" : "",
-				   $force));
+    $cl->rd_modpacks($cl
+		     ->reload_x(
+				"modules/02packages.details.txt.gz",
+				$needshort ?
+				File::Spec->catfile('modules', '02packag.gz') :
+				File::Spec->catfile('modules', '02packages.details.txt.gz'),
+				$force));
     $t2 = time;
     $debug .= "02[".($t2 - $time)."]";
     $time = $t2;
     return if $CPAN::Signal; # this is sometimes lengthy
-    $cl->rd_modlist($cl->reload_x(
-				  "modules/03modlist.data.gz",
-				  $needshort ? "03mlist.gz" : "",
-				  $force));
+    $cl->rd_modlist($cl
+		    ->reload_x(
+			       "modules/03modlist.data.gz",
+			       $needshort ?
+			       File::Spec->catfile('modules', '03mlist.gz') :
+			       File::Spec->catfile('modules', '03modlist.data.gz'),
+			       $force));
     $t2 = time;
     $debug .= "03[".($t2 - $time)."]";
     $time = $t2;
@@ -2525,7 +2557,8 @@ sub reload_x {
 
 #-> sub CPAN::Index::rd_authindex ;
 sub rd_authindex {
-    my($cl,$index_target) = @_;
+    my($cl, $index_target) = @_;
+    my @lines;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
 #    my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
@@ -2534,8 +2567,8 @@ sub rd_authindex {
     local(*FH);
     tie *FH, CPAN::Tarzip, $index_target;
     local($/) = "\n";
-    while (<FH>) {
-	chomp;
+    push @lines, split /\012/ while <FH>;
+    foreach (@lines) {
 	my($userid,$fullname,$email) =
 	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
 	next unless $userid && $fullname && $email;
@@ -2556,15 +2589,23 @@ sub userid {
 
 #-> sub CPAN::Index::rd_modpacks ;
 sub rd_modpacks {
-    my($cl,$index_target) = @_;
+    my($cl, $index_target) = @_;
+    my @lines;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local($/) = "\n";
     while ($_ = $fh->READLINE) {
-	last if /^\s*$/;
+	s/\012/\n/g;
+	my @ls = map {"$_\n"} split /\n/, $_;
+	unshift @ls, "\n" x length($1) if /^(\n+)/;
+	push @lines, @ls;
     }
-    while ($_ = $fh->READLINE) {
+    while (@lines) {
+	my $shift = shift(@lines);
+	last if $shift =~ /^\s*$/;
+    }
+    foreach (@lines) {
 	chomp;
 	my($mod,$version,$dist) = split;
 ###	$version =~ s/^\+//;
@@ -2647,13 +2688,19 @@ sub rd_modlist {
     my @eval;
     local($/) = "\n";
     while ($_ = $fh->READLINE) {
-	if (/^Date:\s+(.*)/){
+	s/\012/\n/g;
+	my @ls = map {"$_\n"} split /\n/, $_;
+	unshift @ls, "\n" x length($1) if /^(\n+)/;
+	push @eval, @ls;
+    }
+    while (@eval) {
+	my $shift = shift(@eval);
+	if ($shift =~ /^Date:\s+(.*)/){
 	    return if $date_of_03 eq $1;
 	    ($date_of_03) = $1;
 	}
-	last if /^\s*$/;
+	last if $shift =~ /^\s*$/;
     }
-    push @eval, $_ while $_ = $fh->READLINE;
     undef $fh;
     push @eval, q{CPAN::Modulelist->data;};
     local($^W) = 0;
@@ -2815,11 +2862,12 @@ sub get {
     } else {
 	$self->{archived} = "NO";
     }
-    chdir "..";
+    chdir File::Spec->updir;
     if ($self->{archived} ne 'NO') {
-	chdir "tmp";
+	chdir File::Spec->catdir(File::Spec->curdir, "tmp");
 	# Let's check if the package has its own directory.
-	my $dh = DirHandle->new(".") or Carp::croak("Couldn't opendir .: $!");
+	my $dh = DirHandle->new(File::Spec->curdir)
+	    or Carp::croak("Couldn't opendir .: $!");
 	my @readdir = grep $_ !~ /^\.\.?$/, $dh->read; ### MAC??
 	$dh->close;
 	my ($distdir,$packagedir);
@@ -2842,7 +2890,7 @@ sub get {
 	    }
 	}
 	$self->{'build_dir'} = $packagedir;
-	chdir "..";
+	chdir File::Spec->updir;
 
 	$self->debug("Changed directory to .. (self is $self [".$self->as_string."])")
 	    if $CPAN::DEBUG;
@@ -2973,6 +3021,12 @@ sub readme {
     $local_file = CPAN::FTP->localize("authors/id/$sans.readme",
 				      $local_wanted)
 	or $CPAN::Frontend->mydie(qq{No $sans.readme found});;
+
+    if ($^O eq 'MacOS') {
+        ExtUtils::MM_MacOS::launch_file($local_file);
+        return;
+    }
+
     my $fh_pager = FileHandle->new;
     local($SIG{PIPE}) = "IGNORE";
     $fh_pager->open("|$CPAN::Config->{'pager'}")
@@ -3039,6 +3093,7 @@ sub MD5_check_file {
     if (open $fh, $chk_file){
 	local($/);
 	my $eval = <$fh>;
+	$eval =~ s/\015?\012/\n/g;
 	close $fh;
 	my($comp) = Safe->new();
 	$cksum = $comp->reval($eval);
@@ -3224,6 +3279,11 @@ or
     chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
+    if ($^O eq 'MacOS') {
+        ExtUtils::MM_MacOS::make($self);
+        return;
+    }
+
     my $system;
     if ($self->{'configure'}) {
       $system = $self->{'configure'};
@@ -3375,6 +3435,12 @@ sub test {
 	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}")
 	if $CPAN::DEBUG;
+
+    if ($^O eq 'MacOS') {
+        ExtUtils::MM_MacOS::make_test($self);
+        return;
+    }
+
     my $system = join " ", $CPAN::Config->{'make'}, "test";
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -3397,6 +3463,12 @@ sub clean {
     chdir $self->{'build_dir'} or
 	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
+
+    if ($^O eq 'MacOS') {
+        ExtUtils::MM_MacOS::make_clean($self);
+        return;
+    }
+
     my $system = join " ", $CPAN::Config->{'make'}, "clean";
     if (system($system) == 0) {
 	$CPAN::Frontend->myprint("  $system -- OK\n");
@@ -3439,6 +3511,12 @@ sub install {
 	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}")
 	if $CPAN::DEBUG;
+
+    if ($^O eq 'MacOS') {
+        ExtUtils::MM_MacOS::make_install($self);
+        return;
+    }
+
     my $system = join(" ", $CPAN::Config->{'make'},
 		      "install", $CPAN::Config->{make_install_arg});
     my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
@@ -3553,7 +3631,14 @@ sub find_bundle_file {
 	or Carp::croak("Couldn't open $manifest: $!");
     local($/) = "\n";
     my $what2 = $what;
-    $what2 =~ s|Bundle/||;
+    if ($^O eq 'MacOS') {
+      $what =~ s/^://;
+      $what2 =~ tr|:|/|;
+      $what2 =~ s/:Bundle://;
+      $what2 =~ tr|:|/|;
+    } else {
+	$what2 =~ s|Bundle/||;
+    }
     my $bu;
     while (<$fh>) {
 	next if /^\s*\#/;
@@ -3567,6 +3652,7 @@ sub find_bundle_file {
 	# have no Bundle directory
 	$bu = $file if $file =~ m|\Q$what2\E$|;
     }
+    $bu =~ tr|/|:| if $^O eq 'MacOS';
     return MM->catfile($where, $bu) if $bu;
     Carp::croak("Couldn't find a Bundle file in $where");
 }
@@ -4085,6 +4171,10 @@ sub untar {
     my $tar = Archive::Tar->new($file,1);
     $tar->extract($tar->list_files); # I'm pretty sure we have nothing
                                      # that isn't compressed
+
+    ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
+        if ($^O eq 'MacOS');
+
     return 1;
   } else {
     $CPAN::Frontend->mydie(qq{
