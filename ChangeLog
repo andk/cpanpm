@@ -1,8 +1,48 @@
+2000-01-08  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing 1.52 which is a pure bugfix release. New functionality
+	is there but not used or not documented. Should be very stable.
+
+2000-01-03  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Added a CPAN::Distribution::containsmods method that lists all
+	modules within a distribution.
+
+	* reload index now removes the whole old index. No, wait a minute,
+	that's stupid. We want to keep session info. This is just a
+	temporary measure to improve debugging. What we need is "wipe
+	index" or some such and we need it for debugging only. [Backed out]
+
+	* Text::Wrapping output of "o debug".
+
+	* Fixed an uninitialized warning in CPAN::Shell::expand()
+
+	* Protected call to close() in DESTROY with "if defined".
+
+	* Allow "#" comments in a bundle definition section.
+
+	* Text::Wrapping bundle install summary.
+
+2000-01-02  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Overhauled the help page that gets output on "h", documented
+	"get", undocumented "install r", it never worked (Thanks to Peder
+	Stray <pederst@ifi.uio.no> for spotting)
+
+	* ncftpget made to work again by changing directory before
+	downloading (spotted aeons agon by Jarkko Hietaniemi)
+
+1999-12-31  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Applied a patch by Paul Schinder <schinder@pobox.com> which
+	corrects the computation of disk usage on the Mac.
+
 1999-12-29  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Increased 30 to 60 in FirstTime where we "protect" against old
 	MIRRORED.BY files and protect against endless loop if MIRRORED.BY
-	remains older.
+	remains older. Thanks for spotting the bug to James P. Goltz
+	<goltz@nfr.net>.
 	
 	* Applied patch from Doug MacEachern that implements cvs_import
 	without documentation.

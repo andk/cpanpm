@@ -1,4 +1,3 @@
-
 package CPAN;
 use vars qw{$Try_autoload
             $Revision
@@ -7,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.51';
+$VERSION = '1.52';
 
-# $Id: CPAN.pm,v 1.272 1999/12/29 22:18:54 k Exp $
+# $Id: CPAN.pm,v 1.276 2000/01/08 15:29:46 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.272 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.276 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -198,7 +197,8 @@ ReadLine support $rl_avail
 	    my $redef;
 	    local($SIG{__WARN__}) = CPAN::Shell::dotdot_onreload(\$redef);
 	    require Term::ReadLine;
-	    $CPAN::Frontend->myprint("\n$redef subroutines in Term::ReadLine redefined\n");
+	    $CPAN::Frontend->myprint("\n$redef subroutines in ".
+				     "Term::ReadLine redefined\n");
 	    goto &shell;
 	}
       }
@@ -846,7 +846,7 @@ sub disk_usage {
 	   if ($^O eq 'MacOS') {
 	     require Mac::Files;
 	     my $cat  = Mac::Files::FSpGetCatInfo($_);
-	     $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen();
+	     $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen() if $cat;
 	   } else {
 	     $Du += (-s _);
 	   }
@@ -1212,29 +1212,29 @@ sub h {
 	$CPAN::Frontend->myprint("Detailed help not yet implemented\n");
     } else {
 	$CPAN::Frontend->myprint(q{
-command   arguments       description
-a         string                  authors
-b         or              display bundles
-d         /regex/         info    distributions
-m         or              about   modules
-i         none                    anything of above
+Display Information
+ a                                    authors
+ b         string           display   bundles
+ d         or               info      distributions
+ m         /regex/          about     modules
+ i         or                         anything of above
+ r         none             reinstall recommendations
+ u                          uninstalled distributions
 
-r          as             reinstall recommendations
-u          above          uninstalled distributions
-See manpage for autobundle, recompile, force, look, etc.
+Download, Test, Make, Install...
+ get                        download
+ make                       make (implies get)
+ test      modules,         make test (implies make)
+ install   dists, bundles   make install (implies test)
+ clean                      make clean
+ look                       open subshell in these dists' directories
+ readme                     display these dists' README files
 
-make                      make
-test      modules,        make test (implies make)
-install   dists, bundles, make install (implies test)
-clean     "r" or "u"      make clean
-readme                    display the README file
-
-reload    index|cpan    load most recent indices/CPAN.pm
-h or ?                  display this menu
-o         various       set and query options
-!         perl-code     eval a perl command
-q                       quit the shell subroutine
-});
+Other
+ h,?           display this menu       ! perl-code   eval a perl command
+ o conf [opt]  set and query options   q             quit the cpan shell
+ reload cpan   load CPAN.pm again      reload index  load newer indices
+ autobundle    Snapshot                force cmd     unconditionally do cmd});
     }
 }
 
@@ -1356,10 +1356,13 @@ sub o {
 		}
 	    }
 	} else {
-	    $CPAN::Frontend->myprint("Valid options for debug are ".
-				     join(", ",sort(keys %CPAN::DEBUG), 'all').
-		    qq{ or a number. Completion works on the options. }.
-			qq{Case is ignored.\n\n});
+	  my $raw = "Valid options for debug are ".
+	      join(", ",sort(keys %CPAN::DEBUG), 'all').
+		  qq{ or a number. Completion works on the options. }.
+		      qq{Case is ignored.};
+	  require Text::Wrap;
+	  $CPAN::Frontend->myprint(Text::Wrap::fill("","",$raw));
+	  $CPAN::Frontend->myprint("\n\n");
 	}
 	if ($CPAN::DEBUG) {
 	    $CPAN::Frontend->myprint("Options set for debugging:\n");
@@ -1625,21 +1628,34 @@ sub expand {
 	my $class = "CPAN::$type";
 	my $obj;
 	if (defined $regex) {
-	    for $obj ( sort {$a->id cmp $b->id} $CPAN::META->all_objects($class)) {
-		push @m, $obj
-		    if
-			$obj->id =~ /$regex/i
-			    or
+	  for $obj (
+		    sort
+		    {$a->id cmp $b->id}
+		    $CPAN::META->all_objects($class)
+		   ) {
+	    unless ($obj->id){
+	      # BUG, we got an empty object somewhere
+	      CPAN->debug(sprintf(
+				  "Empty id on obj[%s]%%[%s]",
+				  $obj,
+				  join(":", %$obj)
+				 )) if $CPAN::DEBUG;
+	      next;
+	    }
+	    push @m, $obj
+		if $obj->id =~ /$regex/i
+		    or
 			(
 			 (
-			  $] < 5.00303 ### provide sort of compatibility with 5.003
+			  $] < 5.00303 ### provide sort of
+                                       ### compatibility with 5.003
 			  ||
 			  $obj->can('name')
 			 )
 			 &&
 			 $obj->name  =~ /$regex/i
 			);
-	    }
+	  }
 	} else {
 	    my($xarg) = $arg;
 	    if ( $type eq 'Bundle' ) {
@@ -2090,6 +2106,9 @@ sub hosteasy {
 	  my $res = $Ua->mirror($url, $aslocal);
 	  if ($res->is_success) {
 	    $Thesite = $i;
+	    my $now = time;
+	    utime $now, $now, $aslocal; # download time is more
+                                        # important than upload time
 	    return $aslocal;
 	  } elsif ($url !~ /\.gz$/) {
 	    my $gzurl = "$url.gz";
@@ -2164,8 +2183,8 @@ sub hosthard {
   HOSTHARD: for $i (@$host_seq) {
 	my $url = $CPAN::Config->{urllist}[$i] || $CPAN::Defaultsite;
 	unless ($self->is_reachable($url)) {
-	    $CPAN::Frontend->myprint("Skipping $url (not reachable)\n");
-	    next;
+	  $CPAN::Frontend->myprint("Skipping $url (not reachable)\n");
+	  next;
 	}
 	$url .= "/" unless substr($url,-1) eq "/";
 	$url .= $file;
@@ -2175,90 +2194,107 @@ sub hosthard {
 	# if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	# to
 	if ($url =~ m|^([^:]+)://(.*?)/(.*)/(.*)|) {
-	    # proto not yet used
-	    ($proto,$host,$dir,$getfile) = ($1,$2,$3,$4);
+	  # proto not yet used
+	  ($proto,$host,$dir,$getfile) = ($1,$2,$3,$4);
 	} else {
-	    next HOSTHARD; # who said, we could ftp anything except ftp?
+	  next HOSTHARD; # who said, we could ftp anything except ftp?
 	}
+
 	$self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
 	my($f,$funkyftp);
 	for $f ('lynx','ncftpget','ncftp') {
-	    next unless exists $CPAN::Config->{$f};
-	    $funkyftp = $CPAN::Config->{$f};
-	    next unless defined $funkyftp;
-	    next if $funkyftp =~ /^\s*$/;
-	    my($want_compressed);
-	    my $aslocal_uncompressed;
-	    ($aslocal_uncompressed = $aslocal) =~ s/\.gz//;
-	    my($source_switch) = "";
-	    $source_switch = " -source" if $funkyftp =~ /\blynx$/;
-	    $source_switch = " -c" if $funkyftp =~ /\bncftp$/;
-	    $CPAN::Frontend->myprint(
-		  qq[
+	  next unless exists $CPAN::Config->{$f};
+	  $funkyftp = $CPAN::Config->{$f};
+	  next unless defined $funkyftp;
+	  next if $funkyftp =~ /^\s*$/;
+	  my($want_compressed);
+	  my $aslocal_uncompressed;
+	  ($aslocal_uncompressed = $aslocal) =~ s/\.gz//;
+	  my($source_switch) = "";
+	  if ($f eq "lynx"){
+	    $source_switch = " -source";
+	  } elsif ($f eq "ncftp"){
+	    $source_switch = " -c";
+	  }
+	  my($chdir) = "";
+	  my($stdout_redir) = " > $aslocal_uncompressed";
+	  if ($f eq "ncftpget"){
+	    $chdir = "cd $aslocal_dir && ";
+	    $stdout_redir = "";
+	  }
+	  $CPAN::Frontend->myprint(
+				   qq[
 Trying with "$funkyftp$source_switch" to get
     $url
 ]);
-	    my($system) = "$funkyftp$source_switch '$url' $devnull > ".
-		"$aslocal_uncompressed";
+	  my($system) =
+	      "$chdir$funkyftp$source_switch '$url' $devnull$stdout_redir";
+	  $self->debug("system[$system]") if $CPAN::DEBUG;
+	  my($wstatus);
+	  if (($wstatus = system($system)) == 0
+	      &&
+	      ($f eq "lynx" ?
+	       -s $aslocal_uncompressed   # lynx returns 0 on my
+                                          # system even if it fails
+	       : 1
+	      )
+	     ) {
+	    if (-s $aslocal) {
+	      # Looks good
+	    } elsif ($aslocal_uncompressed ne $aslocal) {
+	      # test gzip integrity
+	      if (
+		  CPAN::Tarzip->gtest($aslocal_uncompressed)
+		 ) {
+		rename $aslocal_uncompressed, $aslocal;
+	      } else {
+		CPAN::Tarzip->gzip($aslocal_uncompressed,
+				   "$aslocal_uncompressed.gz");
+	      }
+	    }
+	    $Thesite = $i;
+	    return $aslocal;
+	  } elsif ($url !~ /\.gz$/) {
+	    unlink $aslocal_uncompressed if
+		-f $aslocal_uncompressed && -s _ == 0;
+	    my $gz = "$aslocal.gz";
+	    my $gzurl = "$url.gz";
+	    $CPAN::Frontend->myprint(
+				     qq[
+Trying with "$funkyftp$source_switch" to get
+  $url.gz
+]);
+	    my($system) = "$funkyftp$source_switch '$url.gz' $devnull > ".
+		"$aslocal_uncompressed.gz";
 	    $self->debug("system[$system]") if $CPAN::DEBUG;
 	    my($wstatus);
 	    if (($wstatus = system($system)) == 0
 		&&
-		-s $aslocal_uncompressed   # lynx returns 0 on my
-                                           # system even if it fails
+		-s "$aslocal_uncompressed.gz"
 	       ) {
-		if ($aslocal_uncompressed ne $aslocal) {
-		  # test gzip integrity
-		  if (
-		      CPAN::Tarzip->gtest($aslocal_uncompressed)
-		     ) {
-		    rename $aslocal_uncompressed, $aslocal;
-		  } else {
-		    CPAN::Tarzip->gzip($aslocal_uncompressed,
-				     "$aslocal_uncompressed.gz");
-		  }
-		}
-		$Thesite = $i;
-		return $aslocal;
-	    } elsif ($url !~ /\.gz$/) {
-	      unlink $aslocal_uncompressed if
-		  -f $aslocal_uncompressed && -s _ == 0;
-	      my $gz = "$aslocal.gz";
-	      my $gzurl = "$url.gz";
-	      $CPAN::Frontend->myprint(
-		      qq[
-Trying with "$funkyftp$source_switch" to get
-  $url.gz
-]);
-	      my($system) = "$funkyftp$source_switch '$url.gz' $devnull > ".
-		  "$aslocal_uncompressed.gz";
-	      $self->debug("system[$system]") if $CPAN::DEBUG;
-	      my($wstatus);
-	      if (($wstatus = system($system)) == 0
-		  &&
-		  -s "$aslocal_uncompressed.gz"
-		 ) {
-		# test gzip integrity
-		if (CPAN::Tarzip->gtest("$aslocal_uncompressed.gz")) {
-		  CPAN::Tarzip->gunzip("$aslocal_uncompressed.gz",
-				       $aslocal);
-		} else {
-		  rename $aslocal_uncompressed, $aslocal;
-		}
-		$Thesite = $i;
-		return $aslocal;
+	      # test gzip integrity
+	      if (CPAN::Tarzip->gtest("$aslocal_uncompressed.gz")) {
+		CPAN::Tarzip->gunzip("$aslocal_uncompressed.gz",
+				     $aslocal);
 	      } else {
-		unlink "$aslocal_uncompressed.gz" if
-		    -f "$aslocal_uncompressed.gz";
+		rename $aslocal_uncompressed, $aslocal;
 	      }
+	      $Thesite = $i;
+	      return $aslocal;
 	    } else {
-		my $estatus = $wstatus >> 8;
-		my $size = -f $aslocal ? ", left\n$aslocal with size ".-s _ : "";
-		$CPAN::Frontend->myprint(qq{
+	      unlink "$aslocal_uncompressed.gz" if
+		  -f "$aslocal_uncompressed.gz";
+	    }
+	  } else {
+	    my $estatus = $wstatus >> 8;
+	    my $size = -f $aslocal ?
+		", left\n$aslocal with size ".-s _ :
+		    "\nWarning: expected file [$aslocal] doesn't exist";
+	    $CPAN::Frontend->myprint(qq{
 System call "$system"
 returned status $estatus (wstat $wstatus)$size
 });
-	    }
+	  }
 	}
     }
 }
@@ -2634,6 +2670,11 @@ sub reload {
     }
     return if $last_time + $CPAN::Config->{index_expire}*86400 > $time
 	and ! $force;
+    ## IFF we are developing, it helps to wipe out the memory between
+    ## reloads, otherwise it is not what a user expects.
+
+    ## undef $CPAN::META; # Neue Gruendlichkeit since v1.52(r1.274)
+    ## $CPAN::META = CPAN->new;
     my($debug,$t2);
     $last_time = $time;
 
@@ -2753,7 +2794,7 @@ sub rd_modpacks {
 	my($mod,$version,$dist) = split;
 ###	$version =~ s/^\+//;
 
-	# if it is a bundle, instatiate a bundle object
+	# if it is a bundle, instantiate a bundle object
 	my($bundle,$id,$userid);
 
 	if ($mod eq 'CPAN' &&
@@ -2810,12 +2851,20 @@ sub rd_modpacks {
 	}
 
 	# instantiate a distribution object
-	unless ($CPAN::META->exists('CPAN::Distribution',$dist)) {
-	    $CPAN::META->instance(
-				  'CPAN::Distribution' => $dist
-				 )->set(
-					'CPAN_USERID' => $userid
-				       );
+	if ($CPAN::META->exists('CPAN::Distribution',$dist)) {
+	  # we do not need CONTAINSMODS unless we do something with
+	  # this dist, so we better produce it on demand.
+
+	  ## my $obj = $CPAN::META->instance(
+	  ## 				  'CPAN::Distribution' => $dist
+	  ## 				 );
+	  ## $obj->{CONTAINSMODS}{$mod} = undef; # experimental
+	} else {
+	  $CPAN::META->instance(
+				'CPAN::Distribution' => $dist
+			       )->set(
+				      'CPAN_USERID' => $userid
+				     );
 	}
 
 	return if $CPAN::Signal;
@@ -2908,9 +2957,15 @@ sub as_string {
 	  $extra .= ")";
 	}
 	if (ref($self->{$_}) eq "ARRAY") { # language interface? XXX
-	    push @m, sprintf "    %-12s %s%s\n", $_, "@{$self->{$_}}", $extra;
+	  push @m, sprintf "    %-12s %s%s\n", $_, "@{$self->{$_}}", $extra;
+	} elsif (ref($self->{$_}) eq "HASH") {
+	  push @m, sprintf(
+			   "    %-12s %s%s\n",
+			   $_,
+			   join(" ",keys %{$self->{$_}}),
+			   $extra);
 	} else {
-	    push @m, sprintf "    %-12s %s%s\n", $_, $self->{$_}, $extra;
+	  push @m, sprintf "    %-12s %s%s\n", $_, $self->{$_}, $extra;
 	}
     }
     join "", @m, "\n";
@@ -2954,6 +3009,25 @@ sub fullname { shift->{'FULLNAME'} }
 sub email    { shift->{'EMAIL'} }
 
 package CPAN::Distribution;
+
+#-> sub CPAN::Distribution::as_string ;
+sub as_string {
+  my $self = shift;
+  $self->containsmods;
+  $self->SUPER::as_string(@_);
+}
+
+#-> sub CPAN::Distribution::containsmods ;
+sub containsmods {
+  my $self = shift;
+  return if exists $self->{CONTAINSMODS};
+  for my $mod ($CPAN::META->all_objects("CPAN::Module")) {
+    my $mod_file = $mod->{CPAN_FILE} or next;
+    my $dist_id = $self->{ID} or next;
+    my $mod_id = $mod->{ID} or next;
+    $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
+  }
+}
 
 #-> sub CPAN::Distribution::called_for ;
 sub called_for {
@@ -3789,13 +3863,14 @@ sub contains {
   my $fh = FileHandle->new;
   local $/ = "\n";
   open($fh,$parsefile) or die "Could not open '$parsefile': $!";
-  my $inpod = 0;
+  my $in_cont = 0;
   $self->debug("parsefile[$parsefile]") if $CPAN::DEBUG;
   while (<$fh>) {
-    $inpod = m/^=(?!head1\s+CONTENTS)/ ? 0 :
-	m/^=head1\s+CONTENTS/ ? 1 : $inpod;
-    next unless $inpod;
+    $in_cont = m/^=(?!head1\s+CONTENTS)/ ? 0 :
+	m/^=head1\s+CONTENTS/ ? 1 : $in_cont;
+    next unless $in_cont;
     next if /^=/;
+    s/\#.*//;
     next if /^\s+$/;
     chomp;
     push @result, (split " ", $_, 2)[0];
@@ -3907,13 +3982,19 @@ explicitly a file $s.
     # recap with less noise
     if ( $meth eq "install") {
 	if (%fail) {
-	    $CPAN::Frontend->myprint(qq{\nBundle summary: }.
-				     qq{The following items seem to }.
-				     qq{have had installation problems:\n});
+	    require Text::Wrap;
+	    my $raw = sprintf(qq{Bundle summary:
+The following items in bundle %s had installation problems:},
+			      $self->id
+			     );
+	    $CPAN::Frontend->myprint(Text::Wrap::fill("","",$raw));
+	    $CPAN::Frontend->myprint("\n");
+	    my $paragraph = "";
 	    for $s ($self->contains) {
-		$CPAN::Frontend->myprint( "$s " ) if $fail{$s};
+		$paragraph .= "$s " if $fail{$s};
 	    }
-	    $CPAN::Frontend->myprint(qq{\n});
+	    $CPAN::Frontend->myprint(Text::Wrap::fill("  ","  ",$paragraph));
+	    $CPAN::Frontend->myprint("\n");
 	} else {
 	    $self->{'install'} = 'YES';
 	}
@@ -4336,7 +4417,7 @@ sub DESTROY {
     $gz->gzclose();
   } else {
     my $fh = $self->{FH};
-    $fh->close;
+    $fh->close if defined $fh;
   }
   undef $self;
 }
@@ -4426,7 +4507,7 @@ Modules are fetched from one or more of the mirrored CPAN
 directory.
 
 The CPAN module also supports the concept of named and versioned
-'bundles' of modules. Bundles simplify the handling of sets of
+I<bundles> of modules. Bundles simplify the handling of sets of
 related modules. See Bundles below.
 
 The package contains a session manager and a cache manager. There is
@@ -4485,7 +4566,7 @@ more than one, we display each object with the terse method
 
 =item make, test, install, clean  modules or distributions
 
-These commands take any number of arguments and investigates what is
+These commands take any number of arguments and investigate what is
 necessary to perform the action. If the argument is a distribution
 file name (recognized by embedded slashes), it is processed. If it is
 a module, CPAN determines the distribution file in which this module
@@ -4527,12 +4608,11 @@ A C<clean> command results in a
 
 being executed within the distribution file's working directory.
 
-=item readme, look module or distribution
+=item get, readme, look module or distribution
 
-These two commands take only one argument, be it a module or a
-distribution file. C<readme> unconditionally runs, displaying the
-README of the associated distribution file. C<Look> gets and
-untars (if not yet done) the distribution file, changes to the
+C<get> downloads a distribution file without further action. C<readme>
+displays the README file of the associated distribution. C<Look> gets
+and untars (if not yet done) the distribution file, changes to the
 appropriate directory and opens a subshell process in that directory.
 
 =item Signals
