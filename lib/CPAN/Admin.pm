@@ -3,11 +3,10 @@ use base CPAN;
 use CPAN; # old base.pm did not load CPAN on previous line
 use strict;
 use vars qw(@EXPORT $VERSION);
-use constant PAUSE => "pause.kbx.de";
-# use constant PAUSE => "pause.perl.org";
+use constant PAUSE_IP => "pause.perl.org";
 
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.11 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.12 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -37,7 +36,7 @@ sub CPAN::Shell::register {
     my $url =
         sprintf("https://%s/pause/authenquery?pause99_add_mod_modid=".
                 "%s;SUBMIT_pause99_add_mod_hint=hint",
-                PAUSE,
+                PAUSE_IP,
                 $emodline,
                );
     print "url[$url]\n\n";
@@ -138,7 +137,7 @@ sub CPAN::Shell::register {
               "pause99_add_mod_stats=%s;pause99_add_mod_statl=%s;".
               "pause99_add_mod_stati=%s;pause99_add_mod_description=%s;".
               "pause99_add_mod_userid=%s;SUBMIT_pause99_add_mod_preview=preview",
-              PAUSE,
+              PAUSE_IP,
               $emodid,
               $ech,
               "R",

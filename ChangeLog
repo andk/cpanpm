@@ -1,3 +1,34 @@
+2002-04-19  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Change the quoting in system command for Windows systems. Thanks
+	to Alessandro Forghieri <alf at orion dot it> for the report.
+
+	* merge with bleadperl 
+
+2001-06-16  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Typo Frontent->Frontend in three places. Thanks to Rich Williams
+	for spotting.
+
+2001-05-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* manpage_headline: fixed the NAME parsing regular expression to
+	ignore headlines that just start with NAME. Thanks to Jost Krieger
+	for spotting.
+
+2001-05-22  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Bundle::look: disable the look command on bundles. Till
+	now it meant to recursively look into all members. This could be
+	time-consuming and even hard to interrupt. As I know nothing else
+	one could expect from look(Bundle), I decided to disable it
+	completely.
+
+2001-04-xx  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Do not remember exact date: Applied a patch by Gisle Aas to
+	replace MD5 by Digest::MD5.
+
 2001-02-09  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing as 1.59_54.
