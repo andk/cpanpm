@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.16 1996/11/17 07:30:52 k Exp $
+# $Id: Makefile.PL,v 1.16 1996/11/17 07:30:52 k Exp k $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -15,6 +15,7 @@ WriteMakefile(
     'CONFIGURE' => \&init,
     'NAME'	=> 'CPAN',
     'VERSION_FROM' => 'lib/CPAN.pm',
+    'clean' => { FILES => "lib/CPAN/Config.pm" },
     'dist' => { 
 	       PREOP => 'co -l README && pod2text lib/CPAN.pm > README && ci -u README',
 	       DIST_DEFAULT => 'private all tardist',
@@ -165,6 +166,7 @@ the calls, please specify them here.
     if (@{$CPAN::Config->{urllist} || []}) {
 	push @valid, "    from your old Config file:\n";
 	for $url (@{$CPAN::Config->{urllist}}) {
+	    next unless $url =~ /^\w+:\/./; # sanity check, scheme+colon, not "q" there
 	    $local++;
 	    push @valid, sprintf "      %-18s (%2d) %s\n", "found URL", $local, $url;
 	    $pos[$local] = $#valid;
@@ -215,13 +217,20 @@ file:, ftp: or http: URL, or "q" to finish selecting.
 	} else {
 	    $ans =~ s|/?$|/|; # has to end with one slash
 	    $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
-	    push @{$CPAN::Config->{urllist}}, $ans unless $seen{$ans}++;
+	    if ($ans =~ /^\w+:\/./) {
+		push @{$CPAN::Config->{urllist}}, $ans unless $seen{$ans}++;
+	    } else {
+		print qq{"$ans" doesn't look like an URL at first sight.
+I'll ignore it for now. You can add it to lib/CPAN/Config.pm
+later and report a bug in my Makefile.PL to me (andreas koenig).
+Thanks.\n};
+	    }
 	}
 	$other ||= "other";
     }
 
     # We don't ask that now, it will be noticed in time....
-    $CPAN::Config->{'inhibit-startup-message'} = 0;
+    $CPAN::Config->{'inhibit_startup_message'} = 0;
 
     print "\n\n";
     $configpmdir = MM->catdir(qw/lib CPAN/);

@@ -1,7 +1,7 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.42a';
+$VERSION = '0.43a';
 
 # $Id: CPAN.pm,v 1.68 1996/11/17 07:30:52 k Exp k $
 

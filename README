@@ -116,8 +116,9 @@ DESCRIPTION
     will install all the modules in the CONTENTS section of the pod.
     You can install your own Bundles locally by placing a conformant
     Bundle file somewhere into your @INC path. The autobundle()
-    command does that for you by including all currently installed
-    in a snapshot bundle file.
+    command which is available in the shell interface does that for
+    you by including all currently installed modules in a snapshot
+    bundle file.
 
   autobundle
 
@@ -137,9 +138,9 @@ DESCRIPTION
 
     Example:
 
-        cpan> install OpenGL 
-        OpenGL up-to-date.
-        cpan> force install OpenGL 
+        cpan> install OpenGL
+        OpenGL is up to date.
+        cpan> force install OpenGL
         Running make
         OpenGL-0.4/
         OpenGL-0.4/COPYRIGHT
@@ -160,10 +161,10 @@ CONFIGURATION
 
       build_cache       size of cache for directories to build modules
       build_dir         locally accessible directory to build modules
-      cache_expire      after how many days refetch index files
+      index_expire      after how many days refetch index files
       cpan_home         local directory reserved for this package
       gzip              location of external program gzip
-      inhibit-startup-message
+      inhibit_startup_message
                         if true, does not print the startup message
       keep_source       keep the source in a local directory?
       keep_source_where where keep the source (if we do)
@@ -171,10 +172,32 @@ CONFIGURATION
       make_arg          arguments that should always be passed to 'make'
       make_install_arg  same as make_arg for 'make install'
       makepl_arg        arguments passed to 'perl Makefile.PL'
-      more              location of external program more (or any pager)
+      pager             location of external program more (or any pager)
       tar               location of external program tar
       unzip             location of external program unzip
       urllist           arrayref to nearby CPAN sites (or equivalent locations)
+
+
+    You can set and query each of these options interactively in the
+    cpan shell with the command set defined within the `o conf'
+    command:
+
+    o conf <scalar option>
+      prints the current value of the *scalar option*
+
+    o conf <scalar option> <value>
+      Sets the value of the *scalar option* to *value*
+
+    o conf <list option>
+      prints the current value of the *list option* in MakeMaker's
+      neatvalue format.
+
+    o conf <list option> [shift|pop]
+      shifts or pops the array in the *list option* variable
+
+    o conf <list option> [unshift|push|splice] <list>
+      works like the corresponding perl commands. Whitespace is used
+      to determine the arguments.
 
 
 SECURITY
@@ -185,14 +208,14 @@ SECURITY
 
 EXPORT
     Most functions in package CPAN are exported per default. The
-    reason for this is that the primary use is intended for the
-    cpan-shell or for one-liners.
+    reason for this is that the primary use is intended for the cpan
+    shell or for oneliners.
 
 Debugging
-    The debugging of this module is a pretty difficult task, because
-    we have interferences of the software producing the indices on
-    CPAN, of the mirroring process, of improper packaging, of
-    improper configuration and of bugs within CPAN.pm.
+    The debugging of this module is pretty difficult, because we
+    have interferences of the software producing the indices on
+    CPAN, of the mirroring process on CPAN, of packaging, of
+    configuration, and of bugs within CPAN.pm.
 
     In interactive mode you can try "o debug" which will list
     options for debugging the various parts of the package. The
@@ -213,7 +236,7 @@ Debugging
 
     * declare their $VERSION variable in an easy to parse manner. This
       prerequisite can hardly be relaxed because it consumes by far
-      too much memory to load all packages into a single program
+      too much memory to load all packages into the running program
       just to determine the $VERSION variable . Currently all
       programs that are dealing with VERSION use something like this
       (requires MakeMaker-5.38, but don't bother if you don't have
