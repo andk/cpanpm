@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_54';
+$VERSION = '1.58_55';
 
-# $Id: CPAN.pm,v 1.365 2000/10/26 15:31:40 k Exp $
+# $Id: CPAN.pm,v 1.366 2000/10/27 07:45:49 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.365 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.366 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -5432,6 +5432,10 @@ command completion.
 Once you are on the command line, type 'h' and the rest should be
 self-explanatory.
 
+The function call C<shell> takes two optional arguments, one is the
+prompt, the second is the default initial command line (the latter
+only works if a real ReadLine interface module is installed).
+
 The most common uses of the interactive modes are
 
 =over 2
@@ -5648,10 +5652,10 @@ all modules that need updating. First a quick and dirty way:
 
     perl -e 'use CPAN; CPAN::Shell->r;'
 
-If you don't want to get any output if all modules are up to date, you
-can parse the output of above command for the regular expression
-//modules are up to date// and decide to mail the output only if it
-doesn't match. Ick?
+If you don't want to get any output in the case that all modules are
+up to date, you can parse the output of above command for the regular
+expression //modules are up to date// and decide to mail the output
+only if it doesn't match. Ick?
 
 If you prefer to do it more in a programmer style in one single
 process, maybe something like this suites you better:
@@ -5833,6 +5837,8 @@ defined:
                      ('follow' automatically, 'ask' me, or 'ignore')
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   tar                location of external program tar
+  term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
+                     (and nonsense for characters outside latin range)
   unzip              location of external program unzip
   urllist	     arrayref to nearby CPAN sites (or equivalent locations)
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)

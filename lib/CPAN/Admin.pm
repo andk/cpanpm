@@ -4,7 +4,7 @@ use strict;
 use URI::Escape ();
 use vars qw(@EXPORT $VERSION);
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.3 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.4 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -20,11 +20,9 @@ sub CPAN::Shell::register {
     return;
   }
   print "Got request for mod[$mod]\n";
-  my $m = CPAN::Shell->expand("Module",$mod);
-  unless (ref $m) {
-    print "Could not determine the object for $mod\n";
-    print "Connecting to PAUSE without further informations\n";
+  if (@rest) {
     my $modline = join " ", $mod, @rest;
+    print "Sending to PAUSE [$modline]\n";
     my $emodline = URI::Escape::uri_escape($modline, '^\w ');
     $emodline =~ s/ /+/g;
     my $url =
@@ -36,6 +34,11 @@ sub CPAN::Shell::register {
     print ">>>>Trying to open a netscape window<<<<\n";
     sleep 1;
     system("netscape","-remote","openURL($url)");
+    return;
+  }
+  my $m = CPAN::Shell->expand("Module",$mod);
+  unless (ref $m) {
+    print "Could not determine the object for $mod\n";
     return;
   }
   my $id = $m->id;
@@ -180,31 +183,29 @@ C<register> calls C<get> on the named module, assembles a couple of
 informations (description, language), and calls Netscape with the
 -remote argument so that a form is filled with all the assembled
 informations and the registration can be performed with a single
-click.
-
-If a module is not yet uploaded, the rest of the command line
-arguments are interpreted as DSLI status, description, and userid and
-are sent to netscape such that the form is again mostly filled and can
-be confirmed with a single click.
-
-CPAN::Admin never performs the submission click for you, it is only
-intended to fill in the form on PAUSE and leave the confirmation to
-you.
-
-An experimental feature has also been added to color already
-registered modules in listings. If you have Term::ANSIColor installed,
-the u, r, and m commands will show registered modules in green.
+click. If the command line has more than one argument, register does
+not run a C<get>, instead it interprets the rest of the line as DSLI
+status, description, and userid and sends them to netscape such that
+the form is again mostly filled and can be edited or confirmed with a
+single click. CPAN::Admin never performs the submission click for you,
+it is only intended to fill in the form on PAUSE and leave the
+confirmation to you.
 
 C<modsearch> simply passes the arguments to the search engine for the
 modules@perl.org mailing list at http://www.xray.mpe.mpg.de where all
 registration requests are stored. It does so in the same way as
 register, namely with the C<netscape -remote> command.
 
+An experimental feature has also been added, namely to color already
+registered modules in listings. If you have Term::ANSIColor installed,
+the u, r, and m commands will show already registered modules in
+green.
+
 =head1 PREREQISITES
 
 URI::Escape, netscape browser available in the path, netscape must
 understand the -remote switch (as far as I know, this is only
-available on UNIX); coloring of registered modules is inly available
+available on UNIX); coloring of registered modules is only available
 if Term::ANSIColor is installed.
 
 =cut

@@ -1,4 +1,13 @@
+2000-10-27  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing snapshot as 1.58_55.
+
+	* CPAN::Admin::register: do not run a get if the command line
+	already contains more than one arguments.
+
 2000-10-26  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Added documentation for CPAN::shell and term_is_latin.
 
 	* CPAN::Author::fullname: convert to latin1 if
 	$CPAN::Config->{term_is_latin} is set to true.
