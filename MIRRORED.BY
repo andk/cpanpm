@@ -14,7 +14,7 @@
 # Notes:
 # - The "area" in dst_location is optional.
 #   It is the state (United States), county, prefecture, district.
-# - The "lon,lat" in dst_location are optional but preferable.
+# - The "lon,lat" in dst_location are required.
 #   They are the longitude, latitude, in degrees.minutes_IN_DECIMAL
 #   (45 minutes = 0.75).
 # - The dst_organization tries to be correct but in some cases it
@@ -54,7 +54,7 @@ ftp.hkstar.com:
 
 # dst_dst          = "ftp://ftp.hkstar.com/pub/CPAN/"
 # dst_contact      = "mailto:ftpadmin@hkstar.com"
-# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.dti.ad.jp:
   frequency        = "daily"
@@ -94,6 +94,19 @@ ftp.lab.kdd.co.jp:
 # dst_dst          = "ftp://ftp.lab.kdd.co.jp/lang/perl/CPAN/"
 # dst_contact      = "mailto:ftpadmin@lab.kdd.co.jp"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.nus.edu.sg:
+  frequency        = "daily"
+  dst_directory    = "ftp.nus.edu.sg:/pub/unix/perl/CPAN/"
+  dst_location     = "Singapore, Singapore, Asia (1.28N 103.85E)"
+  dst_organisation = "National University of Singapore"
+  dst_timezone     = "GMT+8"
+  dst_contact      = "cceccs@nus.sg@nus.edu.sg"
+  dst_src          = "ftp.cis.ufl.edu:/pub/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.nus.edu.sg/pub/unix/perl/CPAN/","http://ftp.nus.edu.sg/unix/perl/CPAN/"
+# dst_contact      = "mailto:cceccs@nus.sg@nus.edu.sg"
+# dst_src          = "ftp://ftp.cis.ufl.edu/pub/perl/CPAN/"
 
 ftp.bora.net:
   frequency        = "daily"
@@ -161,6 +174,19 @@ ftp.riubon.ac.th:
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 # Australasia
+
+ftp.motd.com:
+  frequency        = "daily"
+  dst_directory    = "ftp.motd.com:/pub/CPAN/"
+  dst_location     = "Gold Coast, Australia, Australasia (28.25S 153.75E)"
+  dst_organisation = "MOTD"
+  dst_timezone     = "GMT+10"
+  dst_contact      = "ftpmaster@motd.com"
+  dst_src          = "ftp.netinfo.com.au:/pub/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.motd.com/pub/CPAN/"
+# dst_contact      = "mailto:ftpmaster@motd.com"
+# dst_src          = "ftp://ftp.netinfo.com.au/pub/perl/CPAN/"
 
 ftp.netinfo.com.au:
   frequency        = "daily"
@@ -334,6 +360,19 @@ ftp.pasteur.fr:
 
 # dst_dst          = "ftp://ftp.pasteur.fr/pub/computing/unix/perl/CPAN/"
 # dst_contact      = "mailto:netmaster@pasteur.fr"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.Germany.EU.net:
+  frequency        = "daily"
+  dst_directory    = "ftp.Germany.EU.net:/pub/programming/perl/CPAN"
+  dst_location     = "Dortmund, Germany, Europe (51.3N 7.5E)"
+  dst_organization = "EUnet Deutschland GmbH"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "archive-admin@ftp.Germany.EU.net"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.Germany.EU.net/pub/programming/perl/CPAN/"
+# dst_contact      = "mailto:archive-admi@ftp.Germany.EU.net"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.gmd.de:
@@ -571,6 +610,19 @@ ftp.dntis.ro:
 
 # dst_dst          = "ftp://ftp.dntis.ro/pub/mirrors/perl-cpan/"
 # dst_contact      = "mailto:ftpadmin@dntis.ro"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.dnttm.ro:
+  frequency        = "daily"
+  dst_directory    = "ftp.dnttm.ro:/pub/CPAN"
+  dst_location     = "Timisoara, Romania, Europe (45.75N 21.22E)"
+  dst_organization = "Dynamic Network Technologies Romania"
+  dst_timezone     = "GMT+2"
+  dst_contact      = "ftp@dnttm.ro"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.dnttm.ro/pub/CPAN/"
+# dst_contact      = "mailto:ftp@dnttm.ro"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.sai.msu.su:
@@ -977,11 +1029,11 @@ cpan.if.usp.br:
   dst_location     = "Sao Paulo, Brazil, South America (23.30S 45.00W)"
   dst_organisation = "Instituto de Fisica da Universidade de Sao Paulo; Insitute of Physics of the University of Sao Paulo"
   dst_timezone     = "GMT-3"
-  dst_contact      = "ftpmaster@fma.if.usp.br"
+  dst_contact      = "ftpmaster@linux.if.usp.br"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://cpan.if.usp.br/pub/mirror/CPAN/"
-# dst_contact      = "mailto:ftpmaster@fma.if.usp.br"
+# dst_contact      = "mailto:ftpmaster@linux.if.usp.br"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.ing.puc.cl:

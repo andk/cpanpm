@@ -4,6 +4,16 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
 
+=head2 August 28, 1997
+
+Jarkko's suggestion for a better message when they type an unknown
+command: Unknown command "..." Type ? for help.
+
+=head2 August 21, 1997
+
+Always try file: URLs first (except for index files) to avoid traffic
+when we have the file already on a CDROM somewhere.
+
 =head2 August 11, 1997
 
 Tidied up the inheritance of CPAN -> MM. In a future version this

@@ -1,13 +1,14 @@
 package CPAN;
 use vars qw{$Try_autoload $Revision
-	    $META $Signal $Cwd $End $Suppress_readline %Dontload};
+	    $META $Signal $Cwd $End
+	    $Suppress_readline %Dontload};
 
-$VERSION = '1.29';
+$VERSION = '1.30';
 
-# $Id: CPAN.pm,v 1.177 1997/08/11 23:15:10 k Exp $
+# $Id: CPAN.pm,v 1.178 1997/08/28 11:49:29 k Exp k $
 
 # only used during development:
-$Revision = ""; # "[".substr(q$Revision: 1.177 $, 10)."]";
+$Revision = ""; # "[".substr(q$Revision: 1.178 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -53,7 +54,9 @@ use strict qw(vars);
                                           # soonish. Already version
                                           # 1.29 doesn't rely on
                                           # catfile and catdir being
-                                          # available via inheritance.
+                                          # available via
+                                          # inheritance. Anything else
+                                          # in danger?
 
 @EXPORT = qw(
 	     autobundle bundle expand force get
@@ -75,9 +78,8 @@ sub AUTOLOAD {
 	} else {
 	    warn "not OK: $@";
 	}
-	warn "CPAN doesn't know how to autoload $AUTOLOAD :-(
-Nothing Done.
-";
+	warn qq{Unknown command "$AUTOLOAD". Type ? for help.
+};
 	sleep 1;
 	CPAN::Shell->h;
     }
@@ -223,9 +225,8 @@ For this you just need to type
 	} else {
 	    warn "not OK: $@";
 	}
-	warn "CPAN::Shell doesn't know how to autoload $autoload :-(
-Nothing Done.
-";
+	warn qq{Unknown command '$autoload'. Type ? for help.
+};
 	sleep 1;
 	CPAN::Shell->h;
     }
@@ -471,7 +472,8 @@ sub has_inst {
 	}
     } elsif (eval { require $file }) {
 	# we can still have luck, if the program is fed with a bogus
-	# database or what
+	# database or what. Or what: if we haven't yet read the database!
+	print "CPAN: $mod loaded ok\n";
 	return 1;
     } elsif ($mod eq "Net::FTP") {
 	warn qq{
@@ -1480,7 +1482,7 @@ sub localize {
     $self->debug("file[$file] aslocal[$aslocal] force[$force]")
 	if $CPAN::DEBUG;
 
-    return $aslocal if -f $aslocal && -r _ && ! $force;
+    return $aslocal if -f $aslocal && -r _ && !($force & 1);
     my($restore) = 0;
     if (-f $aslocal){
 	rename $aslocal, "$aslocal.bak";
@@ -1511,8 +1513,19 @@ sub localize {
 
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
+    my(@reordered,$last);
+    $last = $#{$CPAN::Config->{urllist}};
+    if ($force & 2) { # local cpans probably out of date
+	@reordered = (0..$last);
+    } else {
+	@reordered =
+	    ((grep { substr($CPAN::Config->{urllist}[$_],0,4)
+			 eq "file" } 0..$last),
+	     (grep { substr($CPAN::Config->{urllist}[$_],0,4)
+			 ne "file" } 0..$last));
+    }
     my($i);
-  HOSTEASY: for $i (0..$#{$CPAN::Config->{urllist}}) {
+  HOSTEASY: for $i (@reordered) { # reordered has CDROM up front
 	my $url = $CPAN::Config->{urllist}[$i];
 	$url .= "/" unless substr($url,-1) eq "/";
 	$url .= $file;
@@ -1589,7 +1602,7 @@ sub localize {
     # failed otherwise) Maybe they are behind a firewall, but they
     # gave us a socksified (or other) ftp program...
 
-  HOSTHARD: for $i (0..$#{$CPAN::Config->{urllist}}) {
+  HOSTHARD: for $i (0..$last) {
 	my $url = $CPAN::Config->{urllist}[$i];
 	$url .= "/" unless substr($url,-1) eq "/";
 	$url .= $file;
@@ -1671,7 +1684,7 @@ $aslocal with size $size
 	}
     }
 
-  HOSTHARDEST: for $i (0..$#{$CPAN::Config->{urllist}}) {
+  HOSTHARDEST: for $i (0..$last) {
 	unless (length $CPAN::Config->{'ftp'}) {
 	    print "No external ftp command available\n\n";
 	    last HOSTHARDEST;
@@ -2022,7 +2035,8 @@ sub reload {
     for ($CPAN::Config->{index_expire}) {
 	$_ = 0.001 unless $_ > 0.001;
     }
-    return if $last_time + $CPAN::Config->{index_expire}*86400 > $time;
+    return if $last_time + $CPAN::Config->{index_expire}*86400 > $time
+	and ! $force;
     my($debug,$t2);
     $last_time = $time;
 
@@ -2052,11 +2066,10 @@ sub reload {
     CPAN->debug($debug) if $CPAN::DEBUG;
 }
 
-#line 1996
 #-> sub CPAN::Index::reload_x ;
 sub reload_x {
     my($cl,$wanted,$localname,$force) = @_;
-    $force ||= 0;
+    $force |= 2; # means we're dealing with an index here
     CPAN::Config->load; # we should guarantee loading wherever we rely
                         # on Config XXX
     my $abs_wanted = MM->catfile($CPAN::Config->{'keep_source_where'},
@@ -2064,7 +2077,7 @@ sub reload_x {
     if (
 	-f $abs_wanted &&
 	-M $abs_wanted < $CPAN::Config->{'index_expire'} &&
-	!$force
+	!($force & 1)
        ) {
 	my $s = $CPAN::Config->{'index_expire'} == 1 ? "" : "s";
 #	use Devel::Symdump;
@@ -2073,12 +2086,11 @@ sub reload_x {
 		   qq{day$s. I\'ll use that.});
 	return $abs_wanted;
     } else {
-	$force ||= 1;
+	$force |= 1; # means we're quite serious about it.
     }
     return CPAN::FTP->localize($wanted,$abs_wanted,$force);
 }
 
-#line 2022
 #-> sub CPAN::Index::rd_authindex ;
 sub rd_authindex {
     my($cl,$index_target) = @_;
@@ -2088,7 +2100,8 @@ sub rd_authindex {
     my $fh = FileHandle->new("$pipe|");
     while (<$fh>) {
 	chomp;
-	my($userid,$fullname,$email) = /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
+	my($userid,$fullname,$email) =
+	    /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
 	next unless $userid && $fullname && $email;
 
 	# instantiate an author object
@@ -2502,7 +2515,7 @@ sub readme {
     $fh_readme->open($local_file) or die "Could not open $local_file: $!";
     $fh_pager->print(<$fh_readme>);
 }
-#line 2489
+
 #-> sub CPAN::Distribution::verifyMD5 ;
 sub verifyMD5 {
     my($self) = @_;
@@ -2528,11 +2541,11 @@ sub verifyMD5 {
 	return $self->{MD5_STATUS} = "OK";
     }
     $lc_file = CPAN::FTP->localize("authors/id/@local",
-				   $lc_want,'force>:-{');
+				   $lc_want,1);
     unless ($lc_file) {
 	$local[-1] .= ".gz";
 	$lc_file = CPAN::FTP->localize("authors/id/@local",
-				       "$lc_want.gz",'force>:-{');
+				       "$lc_want.gz",1);
 	if ($lc_file) {
 	    my @system = ($CPAN::Config->{gzip}, '--decompress', $lc_file);
 	    system(@system) == 0 or die "Could not uncompress $lc_file";
@@ -3111,12 +3124,16 @@ sub cpan_file    {
     unless (defined $self->{'CPAN_FILE'}) {
 	CPAN::Index->reload;
     }
-    if (defined $self->{'CPAN_FILE'}){
+    if (exists $self->{'CPAN_FILE'} && defined $self->{'CPAN_FILE'}){
 	return $self->{'CPAN_FILE'};
-    } elsif (defined $self->{'userid'}) {
-	return "Contact Author ".$self->{'userid'}.
-	    "=".$CPAN::META->instance(CPAN::Author,
+    } elsif (exists $self->{'userid'} && defined $self->{'userid'}) {
+	my $fullname = $CPAN::META->instance(CPAN::Author,
 				      $self->{'userid'})->fullname;
+	unless (defined $fullname) {
+	    warn "Full name of author $self->{userid} not known";
+	    return "Contact Author $self->{userid}";
+	}
+	return "Contact Author $self->{userid} ($fullname)"
     } else {
 	return "N/A";
     }
@@ -3234,7 +3251,6 @@ sub xs_file {
 #-> sub CPAN::Module::inst_version ;
 sub inst_version {
     my($self) = @_;
-#line 3181
     my $parsefile = $self->inst_file or return;
     local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     # warn "Checking $parsefile";
@@ -3423,7 +3439,7 @@ perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
 
-=head2 The 4 C<CPAN::*> Classes: Author, Bundle, Module, Distribution
+=head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
 Although it may be considered internal, the class hierarchie does
 matter for both users and programmer. CPAN.pm deals with above
@@ -3560,10 +3576,6 @@ your @INC path. The autobundle() command which is available in the
 shell interface does that for you by including all currently installed
 modules in a snapshot bundle file.
 
-There is a meaningless Bundle::Demo available on CPAN. Try to install
-it, it usually does no harm, just demonstrates what the Bundle
-interface looks like.
-
 =head2 Prerequisites
 
 If you have a local mirror of CPAN and can access all files with
@@ -3687,6 +3699,21 @@ works like the corresponding perl commands.
 
 =back
 
+=head2 CD-ROM support
+
+The C<urllist> parameter of the configuration table contains a list of
+URLs that are to be used for downloading. If the list contains any
+C<file> URLs, CPAN always tries to get files from there first. This
+feature is disabled for index files. So the recommendation for the
+owner of a CD-ROM with CPAN contents is: include your local, possibly
+outdated CD-ROM as a C<file> URL at the end of urllist, e.g.
+
+  o conf urllist push file://localhost/CDROM/CPAN
+
+CPAN.pm will then fetch the index files from one of the CPAN sites
+that come at the beginning of urllist. It will later check for each
+module if there is a local copy of the most recent version.
+
 =head1 SECURITY
 
 There's no strong security layer in CPAN.pm. CPAN.pm helps you to
@@ -3705,11 +3732,11 @@ oneliners.
 =head1 BUGS
 
 we should give coverage for _all_ of the CPAN and not just the
-__PAUSE__ part, right? In this discussion CPAN and PAUSE have become
+PAUSE part, right? In this discussion CPAN and PAUSE have become
 equal -- but they are not. PAUSE is authors/ and modules/. CPAN is
 PAUSE plus the clpa/, doc/, misc/, ports/, src/, scripts/.
 
-Future development should be directed towards a better intergration of
+Future development should be directed towards a better integration of
 the other parts.
 
 =head1 AUTHOR

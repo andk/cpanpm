@@ -156,7 +156,7 @@ DESCRIPTION
     is in turn depending on binary compatibility (so you cannot run CPAN
     commands), then you should try the CPAN::Nox module for recovery.
 
-  The 4 `CPAN::*' Classes: Author, Bundle, Module, Distribution
+  The four `CPAN::*' Classes: Author, Bundle, Module, Distribution
 
     Although it may be considered internal, the class hierarchie does matter
     for both users and programmer. CPAN.pm deals with above mentioned four
@@ -286,10 +286,6 @@ DESCRIPTION
     interface does that for you by including all currently installed modules
     in a snapshot bundle file.
 
-    There is a meaningless Bundle::Demo available on CPAN. Try to install
-    it, it usually does no harm, just demonstrates what the Bundle interface
-    looks like.
-
   Prerequisites
 
     If you have a local mirror of CPAN and can access all files with "file:"
@@ -394,6 +390,21 @@ CONFIGURATION
     o conf <list option> [unshift|push|splice] <list>
       works like the corresponding perl commands.
 
+  CD-ROM support
+
+    The `urllist' parameter of the configuration table contains a list of
+    URLs that are to be used for downloading. If the list contains any
+    `file' URLs, CPAN always tries to get files from there first. This
+    feature is disabled for index files. So the recommendation for the owner
+    of a CD-ROM with CPAN contents is: include your local, possibly outdated
+    CD-ROM as a `file' URL at the end of urllist, e.g.
+
+      o conf urllist push file://localhost/CDROM/CPAN
+
+    CPAN.pm will then fetch the index files from one of the CPAN sites that
+    come at the beginning of urllist. It will later check for each module if
+    there is a local copy of the most recent version.
+
 SECURITY
     There's no strong security layer in CPAN.pm. CPAN.pm helps you to
     install foreign, unmasked, unsigned code on your machine. We compare to
@@ -408,12 +419,12 @@ EXPORT
     oneliners.
 
 BUGS
-    we should give coverage for _all_ of the CPAN and not just the __PAUSE__
+    we should give coverage for _all_ of the CPAN and not just the PAUSE
     part, right? In this discussion CPAN and PAUSE have become equal -- but
     they are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus the
     clpa/, doc/, misc/, ports/, src/, scripts/.
 
-    Future development should be directed towards a better intergration of
+    Future development should be directed towards a better integration of
     the other parts.
 
 AUTHOR
