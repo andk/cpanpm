@@ -1,4 +1,28 @@
+2000-11-08  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* releasing as 1.58_90
+
+	* CPAN::Module::name: was an alias for &cpan_file. That made the m
+	command slow without any visible advantage. C<m /html-tree/> used
+	to find the modules in the distribution HTML-Tree-XXX and now
+	doesn't anymore. But this is misfeature as we have both <d
+	/html-tree/> and <i /html-tree/> for that.
+
+	* cpan_file: Fixed a bug that could instantiate an empty Author
+	object.
+
+2000-11-07  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* format_result: Add a summary line at the end how many items in
+	the set.
+
+	* print_ornamented: Moved the special-case for fullname to
+	print-ornamented to be prepared for other UTF-8 fields besides
+	fullname (Try with C<m Sub::Curry>)
+
 2000-11-06  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Released as 1.58_57
 
 	* CPAN::Shell::ls: I believe, ls is now fully functional, but it
 	still needs some work on PAUSE to be perceived as bugfree. Thu

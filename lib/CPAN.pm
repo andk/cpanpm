@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_57';
+$VERSION = '1.58_90';
 
-# $Id: CPAN.pm,v 1.370 2000/11/06 18:53:54 k Exp $
+# $Id: CPAN.pm,v 1.373 2000/11/08 08:07:22 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.370 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.373 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -1349,10 +1349,14 @@ sub i {
     for $type (@type) {
 	push @result, $self->expand($type,@args);
     }
-    my $result =  @result == 1 ?
+    my $result = @result == 1 ?
 	$result[0]->as_string :
-	    join "", map {$_->as_glimpse} @result;
-    $result ||= "No objects found of any type for argument @args\n";
+            @result == 0 ?
+                "No objects found of any type for argument @args\n" :
+                    join("",
+                         (map {$_->as_glimpse} @result),
+                         scalar @result, " items found\n",
+                        );
     $CPAN::Frontend->myprint($result);
 }
 
@@ -1754,10 +1758,11 @@ sub expand {
                      ) {
                 unless ($obj->id){
                     # BUG, we got an empty object somewhere
+                    require Data::Dumper;
                     CPAN->debug(sprintf(
-                                        "Empty id on obj[%s]%%[%s]",
+                                        "Bug in CPAN: Empty id on obj[%s][%s]",
                                         $obj,
-                                        join(":", %$obj)
+                                        Data::Dumper::Dumper($obj)
                                        )) if $CPAN::DEBUG;
                     next;
                 }
@@ -1812,10 +1817,14 @@ sub format_result {
     my($type,@args) = @_;
     @args = '/./' unless @args;
     my(@result) = $self->expand($type,@args);
-    my $result =  @result == 1 ?
+    my $result = @result == 1 ?
 	$result[0]->as_string :
-	    join "", map {$_->as_glimpse} @result;
-    $result ||= "No objects of type $type found for argument @args\n";
+            @result == 0 ?
+                "No objects of type $type found for argument @args\n" :
+                    join("",
+                         (map {$_->as_glimpse} @result),
+                         scalar @result, " items found\n",
+                        );
     $result;
 }
 
@@ -1827,6 +1836,11 @@ sub print_ornamented {
     my $longest = 0;
     my $ornamenting = 0; # turn the colors on
 
+    if ($CPAN::Config->{term_is_latin}){
+        # courtesy jhi:
+        $what
+            =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
+    }
     if ($ornamenting) {
 	unless (defined &color) {
 	    if ($CPAN::META->has_inst("Term::ANSIColor")) {
@@ -1855,6 +1869,7 @@ sub print_ornamented {
 
 sub myprint {
     my($self,$what) = @_;
+
     $self->print_ornamented($what, 'bold blue on_yellow');
 }
 
@@ -2920,9 +2935,6 @@ sub rd_authindex {
     my @lines;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
-#    my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
-#    while ($_ = $fh->READLINE) {
-    # no strict 'refs';
     local(*FH);
     tie *FH, CPAN::Tarzip, $index_target;
     local($/) = "\n";
@@ -3232,6 +3244,10 @@ sub set {
     # because of a typo, we do not like it that they are written into
     # the readonly area and made permanent (at least for a while) and
     # that is why we do not "allow" other places to call ->set.
+    unless ($self->id) {
+        CPAN->debug("Bug? Empty ID, rejecting");
+        return;
+    }
     my $ro = $self->{RO} =
         $CPAN::META->{readonly}{$class}{$self->id} ||= {};
 
@@ -3322,12 +3338,7 @@ sub as_glimpse {
 
 #-> sub CPAN::Author::fullname ;
 sub fullname {
-    my $fullname = shift->{RO}{FULLNAME};
-    return $fullname unless $CPAN::Config->{term_is_latin};
-    # courtesy jhi:
-    $fullname
-        =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
-    $fullname;
+    shift->{RO}{FULLNAME};
 }
 *name = \&fullname;
 
@@ -4969,25 +4980,28 @@ sub cpan_file    {
     }
     if (exists $self->{RO}{CPAN_FILE} && defined $self->{RO}{CPAN_FILE}){
 	return $self->{RO}{CPAN_FILE};
-    } elsif ( defined $self->userid ) {
-	my $fullname = $CPAN::META->instance("CPAN::Author",
-                                             $self->userid)->fullname;
-	my $email = $CPAN::META->instance("CPAN::Author",
-                                          $self->userid)->email;
-	unless (defined $fullname && defined $email) {
-            my $userid = $self->userid;
-	    return sprintf("Contact Author %s (Try 'a %s')",
-                           $userid,
-                           $userid,
-                          );
-	}
-	return "Contact Author $fullname <$email>";
     } else {
-	return "N/A";
+        my $userid = $self->userid;
+        if ( $userid ) {
+            if ($CPAN::META->exists("CPAN::Author",$userid)) {
+                my $author = $CPAN::META->instance("CPAN::Author",
+                                                   $userid);
+                my $fullname = $author->fullname;
+                my $email = $author->email;
+                unless (defined $fullname && defined $email) {
+                    return sprintf("Contact Author %s",
+                                   $userid,
+                                  );
+                }
+                return "Contact Author $fullname <$email>";
+            } else {
+                return "UserID $userid";
+            }
+        } else {
+            return "N/A";
+        }
     }
 }
-
-*name = \&cpan_file;
 
 #-> sub CPAN::Module::cpan_version ;
 sub cpan_version {
