@@ -6,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.49';
+$VERSION = '1.50';
 
-# $Id: CPAN.pm,v 1.261 1999/05/22 16:37:17 k Exp $
+# $Id: CPAN.pm,v 1.264 1999/05/23 14:26:49 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.261 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.264 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -2876,6 +2876,12 @@ sub author {
     $CPAN::META->instance(CPAN::Author,$self->{CPAN_USERID})->fullname;
 }
 
+sub dump {
+  my($self) = @_;
+  require Data::Dumper;
+  Data::Dumper::Dumper($self);
+}
+
 package CPAN::Author;
 
 #-> sub CPAN::Author::as_glimpse ;
@@ -3290,7 +3296,7 @@ sub force {
   $self->{'force_update'}++;
   for my $att (qw(
   MD5_STATUS archived build_dir localfile make install unwrapped
-  writemakefile have_sponsored
+  writemakefile
  )) {
     delete $self->{$att};
   }
@@ -3371,8 +3377,8 @@ or
 	"had problems unarchiving. Please build manually";
 
 	exists $self->{writemakefile} &&
-	    $self->{writemakefile} eq "NO" and push @e,
-	    "Had some problem writing Makefile";
+	    $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
+		$1 || "Had some problem writing Makefile";
 
 	defined $self->{'make'} and push @e,
 	"Has already been processed within this session";
@@ -3429,18 +3435,27 @@ or
 		kill 9, $pid;
 		waitpid $pid, 0;
 		$CPAN::Frontend->myprint($@);
-		$self->{writemakefile} = "NO - $@";
+		$self->{writemakefile} = "NO $@";
 		$@ = "";
 		return;
 	    }
 	} else {
 	  $ret = system($system);
 	  if ($ret != 0) {
-	    $self->{writemakefile} = "NO";
+	    $self->{writemakefile} = "NO Makefile.PL returned status $ret";
 	    return;
 	  }
 	}
-	$self->{writemakefile} = "YES";
+	if (-f "Makefile") {
+	  $self->{writemakefile} = "YES";
+	} else {
+	  $self->{writemakefile} =
+	      qq{NO Makefile.PL refused to write a Makefile.};
+	  # It's probably worth to record the reason, so let's retry
+	  # local $/;
+	  # my $fh = IO::File->new("$system |"); # STDERR? STDIN?
+	  # $self->{writemakefile} .= <$fh>;
+	}
     }
     return if $CPAN::Signal;
     if (my @prereq = $self->needs_prereq){
@@ -3474,7 +3489,7 @@ of modules we are processing right now?", "yes");
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $self->{'make'} = "YES";
     } else {
-	 $self->{writemakefile} = "YES";
+	 $self->{writemakefile} ||= "YES";
 	 $self->{'make'} = "NO";
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
@@ -3507,7 +3522,7 @@ sub needs_prereq {
     next if $mo->uptodate;
     # it's not needed, so don't push it. We cannot omit this step, because
     # if 'force' is in effect, nobody else will check.
-    if ($self->{'have_sponsored'}{$p}++){
+    if ($self->{have_sponsored}{$p}++){
       # We have already sponsored it and for some reason it's still
       # not available. So we do nothing. Or what should we do?
       # if we push it again, we have a potential infinite loop
@@ -4207,7 +4222,7 @@ sub READLINE {
     my $gz = $self->{GZ};
     my($line,$bytesread);
     $bytesread = $gz->gzreadline($line);
-    return undef if $bytesread == 0;
+    return undef if $bytesread <= 0;
     return $line;
   } else {
     my $fh = $self->{FH};

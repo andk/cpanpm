@@ -1,4 +1,21 @@
+1999-05-23  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* The force pragma no longer removes its record of prerequisites
+	that it has already dealt with. This removes a potential for
+	infinite loops when force is in effect.
+
+	* Added a CPAN::InfoObj::dump method that can be used like so:
+	! print expand("Distribution","JWIED/DBD-CSV-0.1021.tar.gz")->dump
+	or
+	! print expand("Module","DBD::CSV")->dump
+	Not particularly userfriendly, thus left undocumented.
+
+	* Added a check if Makefile.PL really wrote a Makefile.
+
 1999-05-22  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Applied another patch by Ilya for return value of gzreadline
+	with regard to -1: <19990522144647.A15778@monk.mps.ohio-state.edu>
 
 	* Applied Ilya's patch for MD5_check_file for READ returning -1.
 

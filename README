@@ -246,8 +246,8 @@ DESCRIPTION
     There's currently only one class that has a stable interface -
     CPAN::Shell. All commands that are available in the CPAN shell
     are methods of the class CPAN::Shell. Each of the commands that
-    produce listings of modules (`r', `autobundle', `u') returns a
-    list of the IDs of all modules within the list.
+    produce listings of modules (`r', `autobundle', `u') also return
+    a list of the IDs of all modules within the list.
 
     expand($type,@things)
       The IDs of all objects available within a program are strings
@@ -277,6 +277,41 @@ DESCRIPTION
               next unless $mod->inst_version eq "undef";
               print "No VERSION in ", $mod->id, "\n";
           }
+
+      Or if you want to write a cronjob to watch The CPAN, you could
+      list all modules that need updating:
+
+          perl -e 'use CPAN; CPAN::Shell->r;'
+
+      If you don't want to get any output if all modules are up to
+      date, you can parse the output of above command for the
+      regular expression //modules are up to date// and decide to
+      mail the output only if it doesn't match. Ick?
+
+      If you prefer to do it more in a programmer style in one
+      single process, maybe something like this suites you better:
+
+        # list all modules on my disk that have newer versions on CPAN
+        for $mod (CPAN::Shell->expand("Module","/./")){
+          next unless $mod->inst_file;
+          next if $mod->uptodate;
+          printf "Module %s is installed as %s, could be updated to %s from CPAN\n",
+              $mod->id, $mod->inst_version, $mod->cpan_version;
+        }
+
+      If that gives you too much output every day, you maybe only
+      want to watch for three modules. You can write
+
+        for $mod (CPAN::Shell->expand("Module","/Apache|LWP|CGI/")){
+
+      as the first line instead. Or you can combine some of the
+      above tricks:
+
+        # watch only for a new mod_perl module
+        $mod = CPAN::Shell->expand("Module","mod_perl");
+        exit if $mod->uptodate;
+        # new mod_perl arrived, let me know all update recommendations
+        CPAN::Shell->r;
 
   Methods in the four Classes
 
@@ -390,7 +425,8 @@ DESCRIPTION
     $CPAN::Config->{keep_source_where} (but not $CPAN::Config-
     >{build_dir}) directory on a floppy. This floppy is kind of a
     personal CPAN. CPAN.pm on the non-networked machines works
-    nicely with this floppy.
+    nicely with this floppy. See also below the paragraph about CD-
+    ROM support.
 
 CONFIGURATION
     When the CPAN module is installed, a site wide configuration
@@ -413,7 +449,6 @@ CONFIGURATION
                          many seconds inactivity. Set to 0 to never break.
       inhibit_startup_message
                          if true, does not print the startup message
-      keep_source        keep the source in a local directory?
       keep_source_where  directory in which to keep the source (if we do)
       make               location of external make program
       make_arg           arguments that should always be passed to 'make'
@@ -451,6 +486,18 @@ CONFIGURATION
 
     o conf <list option> [unshift|push|splice] <list>
       works like the corresponding perl commands.
+
+  Note on urllist parameter's format
+
+    urllist parameters are URLs according to RFC 1738. We do a
+    little guessing if your URL is not compliant, but if you have
+    problems with file URLs, please try the correct format. Either:
+
+        file://localhost/whatever/ftp/pub/CPAN/
+
+    or
+
+        file:///home/ftp/pub/CPAN/
 
   urllist parameter has CD-ROM support
 
@@ -497,7 +544,7 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
     To get a useful blueprint of a bundle definition file, the
     command autobundle can be used on the CPAN shell command line.
     This command writes a bundle definition file for all modules
-    that re installed for the currently running perl interpreter.
+    that are installed for the currently running perl interpreter.
     It's recommended to run this command only once and from then on
     maintain the file manually under a private name, say
     Bundle/my_bundle.pm. With a clever bundle file you can then
@@ -505,22 +552,23 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
         cpan> install Bundle::my_bundle
 
-    then answer a few questions and then go out.
+    then answer a few questions and then go out for a coffee.
 
     Maintaining a bundle definition file means to keep track of two
-    things: dependencies and interactivity. CPAN.pm (currently) does
-    not take into account dependencies between distributions, so a
-    bundle definition file should specify distributions that depend
-    on others after the others. On the other hand, it's a bit
-    annoying that many distributions need some interactive
-    configuring. So what I try to accomplish in my private bundle
-    file is to have the packages that need to be configured early in
-    the file and the gentle ones later, so I can go out after a few
-    minutes and leave CPAN.pm unattained.
+    things: dependencies and interactivity. CPAN.pm sometimes fails
+    on calculating dependencies because not all modules define all
+    MakeMaker attributes correctly, so a bundle definition file
+    should specify prerequisites as early as possible. On the other
+    hand, it's a bit annoying that many distributions need some
+    interactive configuring. So what I try to accomplish in my
+    private bundle file is to have the packages that need to be
+    configured early in the file and the gentle ones later, so I can
+    go out after a few minutes and leave CPAN.pm unattained.
 
 WORKING WITH CPAN.pm BEHIND FIREWALLS
-    Thanks to Graham Barr for contributing the firewall following
-    howto.
+    Thanks to Graham Barr for contributing the following paragraphs
+    about the interaction between perl, and various firewall
+    configurations.
 
     Firewalls can be categorized into three basic types.
 
@@ -570,7 +618,7 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
             as you can access hosts directly.
 
 BUGS
-    We should give coverage for _all_ of the CPAN and not just the
+    We should give coverage for all of the CPAN and not just the
     PAUSE part, right? In this discussion CPAN and PAUSE have become
     equal -- but they are not. PAUSE is authors/ and modules/. CPAN
     is PAUSE plus the clpa/, doc/, misc/, ports/, src/, scripts/.
