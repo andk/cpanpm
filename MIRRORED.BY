@@ -123,17 +123,18 @@ ftp.wownet.net:
 
 # Australasia
 
-coombs.anu.edu.au:
-  frequency        = "daily"
-  dst_directory    = "coombs.anu.edu.au:/pub/perl/CPAN/"
-  dst_location     = "Canberra, Australia, Australasia (35.15S 149.8E)"
-  dst_organisation = "Coombs Australian National University"
-  dst_timezone     = "GMT+10"
-  dst_contact      = "doug@coombs.anu.edu.au"
-  dst_src          = "ftp.cis.ufl.edu:/pub/perl/CPAN/"
+# disabled 1997-02-09 21:10 UTC because of being almost two weeks stale
+# coombs.anu.edu.au:
+#   frequency        = "daily"
+#  dst_directory    = "coombs.anu.edu.au:/pub/perl/CPAN/"
+#  dst_location     = "Canberra, Australia, Australasia (35.15S 149.8E)"
+#  dst_organisation = "Coombs Australian National University"
+#  dst_timezone     = "GMT+10"
+#  dst_contact      = "doug@coombs.anu.edu.au"
+#  dst_src          = "ftp.cis.ufl.edu:/pub/perl/CPAN/"
 
 # dst_dst          = "ftp://coombs.anu.edu.au/pub/perl/CPAN/"
-# dst_contact      = "mailto:bryan@coombs.anu.edu.au"
+# dst_contact      = "mailto:doug@coombs.anu.edu.au"
 # dst_src          = "ftp://ftp.cis.ufl.edu/pub/perl/CPAN/"
 
 ftp.mame.mu.oz.au:
@@ -256,6 +257,21 @@ ftp.pasteur.fr:
 # dst_dst          = "ftp://ftp.pasteur.fr/pub/computing/unix/perl/CPAN/"
 # dst_contact      = "mailto:netmaster@pasteur.fr"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.gmd.de:
+  frequency        = "daily"
+  dst_directory    = "ftp.gmd.de:/packages/CPAN/"
+  dst_location     = "Sankt Augustin, Germany, Europe"
+  dst_organization = "GMD - Forschungszentrum Informationstechnik GmbH"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "ftpmaster@gmd.de"
+  dst_src          = "ftp.rz.ruhr-uni-bochum.de:/pub/CPAN/"
+  dst_notes        = "Clients with valid DNS entry only"
+
+# dst_dst          = "ftp://ftp.fmd.de/packages/CPAN/"
+# dst_contact      = "mailto:ftpmaster@gmd.de"
+# dst_src          = "ftp://ftp.rz.ruhr-uni-bochum.de/pub/CPAN/"
+
 
 ftp.leo.org:
   frequency        = "daily"
@@ -626,14 +642,15 @@ ftp.cdrom.com:
 # dst_contact      = "mailto:ftp-bugs@ftp.cdrom.com"
 # dst_src          = "ftp://ftp.metronet.com/pub/perl/"
 
-ftp.cs.colorado.edu:
-  frequency        = "daily"
-  dst_directory    = "ftp.cs.colorado.edu:/pub/perl/CPAN/"
-  dst_location     = "Boulder, Colorado, USA, North America (40.3N 105.10W)"
-  dst_organisation = "Computer Science, Colorado University"
-  dst_timezone     = "GMT-7 (MST7MDT)"
-  dst_contact      = "trouble@cs.colorado.edu"
-  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+# disabled 1997-02-09 21:10 UTC because of being almost one week stale
+#ftp.cs.colorado.edu:
+#  frequency        = "daily"
+#  dst_directory    = "ftp.cs.colorado.edu:/pub/perl/CPAN/"
+#  dst_location     = "Boulder, Colorado, USA, North America (40.3N 105.10W)"
+#  dst_organisation = "Computer Science, Colorado University"
+#  dst_timezone     = "GMT-7 (MST7MDT)"
+#  dst_contact      = "trouble@cs.colorado.edu"
+#  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.cs.colorado.edu/pub/perl/CPAN/"
 # dst_contact      = "mailto:trouble@cs.colorado.edu"

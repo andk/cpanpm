@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.20';
+$VERSION = '1.21';
 
-# $Id: CPAN.pm,v 1.122 1997/02/05 09:32:20 k Exp $
+# $Id: CPAN.pm,v 1.127 1997/02/11 06:23:10 k Exp $
 
-# my $version = substr q$Revision: 1.122 $, 10; # only used during development
+# my $version = substr q$Revision: 1.127 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -232,7 +232,7 @@ sub hasMD5 {
 	eval {require MD5;};
 	if ($@) {
 	    print "MD5 security checks disabled because MD5 not installed.
-  Please consider installing MD5\n";
+  Please consider installing the MD5 module\n";
 	    $self->{'hasMD5'} = 0;
 	} else {
 	    $self->{'hasMD5'}++;
@@ -295,7 +295,7 @@ sub shell {
     local($^W) = 1;
     unless ($Suppress_readline) {
 	require Term::ReadLine;
-	import Term::ReadLine;
+#	import Term::ReadLine;
 	$term = new Term::ReadLine 'CPAN Monitor';
 	$readline::rl_completion_function =
 	    $readline::rl_completion_function = 'CPAN::Complete::complete';
@@ -320,7 +320,7 @@ Readline support $rl_avail
 	    last unless defined ($_ = <>);
 	    chomp;
 	} else {
-#	     if ($CPAN::DEBUG) {
+#	     if (defined($CPAN::ANDK) && $CPAN::DEBUG) { # !$CPAN::ANDK++;$CPAN::DEBUG=1024
 #		 my($report,$item);
 #		 $report = "";
 #		 for $item (qw/ReadLine IN OUT MinLine findConsole Features/) {
@@ -328,8 +328,9 @@ Readline support $rl_avail
 #		     $report .= $term->$item() || "";
 #		     $report .= "\n";
 #		 }
-#		 CPAN->debug($report);
-#	     }
+#		 print $report;
+#		CPAN->debug($report);
+#	    }
 	    last unless defined ($_ = $term->readline($prompt));
 	}
 	s/^\s//;
@@ -915,11 +916,13 @@ sub o {
 		    }
 		    $CPAN::DEBUG = $max;
 		} else {
+		    my($known) = 0;
 		    for (keys %CPAN::DEBUG) {
 			next unless lc($_) eq lc($what);
 			$CPAN::DEBUG |= $CPAN::DEBUG{$_};
+			$known = 1;
 		    }
-		    print "unknown argument [$what]\n";
+		    print "unknown argument [$what]\n" unless $known;
 		}
 	    }
 	} else {
@@ -949,7 +952,10 @@ Known options:
 
 #-> sub CPAN::Shell::reload ;
 sub reload {
-    if ($_[1] =~ /cpan/i) {
+    my($self,$command,@arg) = @_;
+    $command ||= "";
+    $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
+    if ($command =~ /cpan/i) {
 	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
 	my $fh = FileHandle->new($INC{'CPAN.pm'});
 	local($/);
@@ -968,8 +974,11 @@ sub reload {
 	eval <$fh>;
 	warn $@ if $@;
 	print "\n$redef subroutines redefined\n";
-    } elsif ($_[1] =~ /index/) {
+    } elsif ($command =~ /index/) {
 	CPAN::Index->force_reload;
+    } else {
+	print qq{cpan     re-evals the CPAN.pm file\n};
+	print qq{index    re-reads the index files\n};
     }
 }
 
@@ -1868,13 +1877,13 @@ sub read_modlist {
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     print "Going to read $index_target\n";
     my $fh = FileHandle->new("$pipe|");
-    my $eval = "";
+    my $eval;
     while (<$fh>) {
-	next if 1../^\s*$/;
-	next if /use vars/; # will go away in 03...
-	$eval .= $_;
-	return if $CPAN::Signal;
+	last if /^\s*$/;
     }
+    local($/) = undef;
+    $eval = <$fh>;
+    $fh->close;
     $eval .= q{CPAN::Modulelist->data;};
     local($^W) = 0;
     my($comp) = Safe->new("CPAN::Safe1");
@@ -2451,6 +2460,11 @@ sub install {
 	    $self->{'make'} eq 'NO' and
 		push @e, "Oops, make had returned bad status";
 
+	push @e, "make test had returned bad status, won't install without force"
+	    if exists $self->{'make_test'} and
+	    $self->{'make_test'} eq 'NO' and
+	    ! $self->{'force_update'};
+
 	exists $self->{'install'} and push @e,
 	$self->{'install'} eq "YES" ?
 	    "Already done" : "Already tried without success";
@@ -2520,6 +2534,7 @@ sub contains {
     local $/ = "\n";
     open($fh,$parsefile) or die "Could not open '$parsefile': $!";
     my $inpod = 0;
+    $self->debug("parsefile[$parsefile]") if $CPAN::DEBUG;
     while (<$fh>) {
 	$inpod = /^=(?!head1\s+CONTENTS)/ ? 0 : /^=head1\s+CONTENTS/ ? 1 : $inpod;
 	next unless $inpod;
@@ -2530,7 +2545,8 @@ sub contains {
     }
     close $fh;
     delete $self->{STATUS};
-    $self->{CONTAINS} = [@result];
+    $self->{CONTAINS} = join ", ", @result;
+    $self->debug("CONTAINS[@result]") if $CPAN::DEBUG;
     @result;
 }
 
@@ -2541,9 +2557,10 @@ sub inst_file {
     ($me = $self->id) =~ s/.*://;
     $inst_file = $CPAN::META->catfile($CPAN::Config->{'cpan_home'},"Bundle", "$me.pm");
     return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
-    $inst_file = $self->SUPER::inst_file;
-    return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
-    return $self->{'INST_FILE'}; # even if undefined?
+#    $inst_file = 
+    $self->SUPER::inst_file;
+#    return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
+#    return $self->{'INST_FILE'}; # even if undefined?
 }
 
 #-> sub CPAN::Bundle::rematein ;
@@ -2661,7 +2678,10 @@ sub as_string {
 	close $fh;
 	$self->{MANPAGE} = join " ", @result;
     }
-    push @m, sprintf $sprintf, 'MANPAGE', $self->{MANPAGE} if $self->{MANPAGE};
+    my($item);
+    for $item (qw/MANPAGE CONTAINS/) {
+	push @m, sprintf $sprintf, $item, $self->{$item} if exists $self->{$item};
+    }
     push @m, sprintf $sprintf, 'INST_FILE', $local_file || "(not installed)";
     push @m, sprintf $sprintf, 'INST_VERSION', $self->inst_version if $local_file;
     join "", @m, "\n";

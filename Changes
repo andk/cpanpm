@@ -1,5 +1,23 @@
 Revision history for Perl extension CPAN.
 
+=head2 Feb 11, 1997
+
+Wrong "Unknown argument" message when argument was lowercase fixed.
+
+Better help for "reload".
+
+Fixed the mysterious "loss of ReadLine" bug which was really a hidden
+call to $Suppress_readline++ :-(.
+
+Fixed Config->{wait_list} becoming larger and larger.
+
+Reading 03modlist.data.txt with $/=undef now (Thanks to Dominic Dunlop
+for the hint).
+
+Added the somehow lost display of "CONTAINS" for bundles.
+
+Released 1.21
+
 =head2 Feb 5, 1997
 
 Changed warn to print for the "Reading..." messages.
