@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_60';
+$VERSION = '1.57_61';
 
-# $Id: CPAN.pm,v 1.343 2000/09/05 18:55:32 k Exp $
+# $Id: CPAN.pm,v 1.344 2000/09/06 10:34:04 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.343 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.344 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -232,7 +232,8 @@ use vars qw($last_time $date_of_03);
 @CPAN::Index::ISA = qw(CPAN::Debug);
 $last_time ||= 0;
 $date_of_03 ||= 0;
-use constant PROTOCOL => "2.0";
+# use constant PROTOCOL => "2.0"; # outcommented to avoid warning on upgrade from 1.57
+sub PROTOCOL { 2.0 }
 
 package CPAN::InfoObj;
 @CPAN::InfoObj::ISA = qw(CPAN::Debug);
@@ -589,7 +590,8 @@ sub exists {
     CPAN::Index->reload;
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
-    exists $META->{readonly}{$class}{$id}; # unsafe meta access, ok
+    exists $META->{readonly}{$class}{$id} or
+        exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
 }
 
 #-> sub CPAN::delete ;
@@ -700,9 +702,9 @@ sub instance {
     $id ||= "";
     # unsafe meta access, ok?
     return $META->{readwrite}{$class}{$id} if exists $META->{readwrite}{$class}{$id};
-    my $ro = $META->{readonly}{$class}{$id} ||= {};
-    $META->{readwrite}{$class}{$id} ||=
-        $class->new(ID => $id, RO => $ro);
+    my $ro;
+    $ro = $META->{readonly}{$class}{$id} || {};
+    $META->{readwrite}{$class}{$id} ||= $class->new(ID => $id, RO => $ro);
 }
 
 #-> sub CPAN::new ;
@@ -1643,7 +1645,8 @@ sub expandany {
     my($self,$s) = @_;
     CPAN->debug("s[$s]") if $CPAN::DEBUG;
     if ($s =~ m|/|) { # looks like a file
-        return $self->expand('Distribution',$s);
+        return $CPAN::META->instance('CPAN::Distribution',$s);
+        # Distributions spring into existence, not expand
     } elsif ($s =~ m|^Bundle::|) {
         $self->local_bundles; # scanning so late for bundles seems
                               # both attractive and crumpy: always

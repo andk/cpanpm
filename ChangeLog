@@ -1,3 +1,14 @@
+2000-09-06  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm (expandany): Distributions always had the habit to
+	spring into existence, that means, people could say
+
+	    test A/AN/ANDK/CPAN-1.57_60.tar.gz
+
+	and got that thing downloaded if it existed on CPAN. Jost
+	discovered this was broken. Fixed by replacing an expand() by
+	instance() for distributions in expandany.
+
 2000-09-05  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* undelay: After a jumpqueue we must not continue because success
