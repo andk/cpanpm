@@ -202,7 +202,7 @@ sunsite.mff.cuni.cz:
   dst_contact      = "ftpadm@sunsite.mff.cuni.cz"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://sunsite.mff.cuni.cz:/Languages/Perl/CPAN/"
+# dst_dst          = "ftp://sunsite.mff.cuni.cz/Languages/Perl/CPAN/"
 # dst_contact      = "mailto:ftpadm@sunsite.mff.cuni.cz"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
@@ -342,7 +342,7 @@ ftp.cs.ruu.nl:
   frequency        = "bidaily"
   dst_directory    = "ftp.cs.ruu.nl:/pub/PERL/CPAN/"
   dst_http         = "http://www.cs.ruu.nl/pub/PERL/CPAN/"
-  dst_location     = "Utrecht, the Netherlands, Europe (52.N 5.8E)"
+  dst_location     = "Utrecht, the Netherlands, Europe (52.0N 5.8E)"
   dst_organization = "de Universiteit Utrecht; Utrecht University"
   dst_timezone     = "GMT+1"
   dst_contact      = "archivist@cs.ruu.nl"
@@ -350,6 +350,19 @@ ftp.cs.ruu.nl:
 
 # dst_dst          = "ftp://ftp.cs.ruu.nl/pub/PERL/CPAN/", "http://www.cs.ruu.nl/pub/PERL/CPAN/"
 # dst_contact      = "mailto:archivist@cs.ruu.nl"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.EU.net:
+  frequency        = "daily"
+  dst_directory    = "ftp.EU.net:/packages/cpan/"
+  dst_location     = "Amsterdam, the Netherlands, Europe (52.21N 4.54E)"
+  dst_organization = "EUnet"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "postmaster@EU.net"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.EU.net/packages/cpan/" 
+# dst_contact      = "mailto:postmaster@EU.net"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.uit.no:

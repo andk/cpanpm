@@ -1,23 +1,24 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.43a';
+$VERSION = '0.44a';
 
-# $Id: CPAN.pm,v 1.68 1996/11/17 07:30:52 k Exp k $
+# $Id: CPAN.pm,v 1.70 1996/11/30 16:59:36 k Exp $
 
-# my $version = substr q$Revision: 1.68 $, 10; # only used during development
+# my $version = substr q$Revision: 1.70 $, 10; # only used during development
 
 require 5.003;
 require UNIVERSAL if $] == 5.003;
-use File::Find;
+
+use Carp ();
+use Config ();
+use Cwd ();
 use DirHandle;
 use Exporter ();
-use File::Path ();
 use ExtUtils::MakeMaker ();
+use File::Find;
+use File::Path ();
 use IO::File ();
-use Config ();
-use Carp ();
-use Cwd ();
 
 $Cwd = Cwd::cwd();
 
@@ -51,7 +52,7 @@ $META ||= new CPAN;                 # In case we reeval ourselves we need a ||
 
 CPAN::Config->load;
 
-@EXPORT = qw(autobundle bundle bundles expand force install make shell test);
+@EXPORT = qw(autobundle bundle bundles expand force install make shell test clean);
 
 sub autobundle;
 sub bundle;
@@ -61,6 +62,7 @@ sub force;
 sub install;
 sub make;
 sub shell;
+sub clean;
 sub test;
 
 sub AUTOLOAD {
@@ -111,8 +113,8 @@ sub checklock {
 		Carp::croak(
 			    qq{Lockfile $lockfile not writeable by you. Cannot proceed.\n}.
 			    qq{    On UNIX try:\n}.
-			    qq{    kill $other\n}.
-			    qq{    rm $lockfile\n}
+			    qq{    rm $lockfile\n}.
+			    qq{  and then rerun us.\n}
 			   );
 	    }
 	}
@@ -319,11 +321,12 @@ i         none                    anything of above
 
 r          as             reinstall recommendations
 u          above          uninstalled distributions
-autobundle                create a snapshot file
+See manpage for autobundle() and recompile()
 
 make      modules,        make
 test      dists, bundles, make test (implies make)
 install   "r" or "u"      make install (implies test)
+clean                     make clean
 
 reload    index|cpan    load most recent indices/CPAN.pm
 h or ?                  display this menu
@@ -374,6 +377,11 @@ sub o {
 	if (!@o_what) {
 	    my($k,$v);
 	    print "CPAN::Config options:\n";
+	    for $k (sort keys %CPAN::Config::can) {
+		$v = $CPAN::Config::can{$k};
+		printf "    %-18s %s\n", $k, $v;
+	    }
+	    print "\n";
 	    for $k (sort keys %$CPAN::Config) {
 		$v = $CPAN::Config->{$k};
 		if (ref $v) {
@@ -447,6 +455,42 @@ sub reload {
     }
 }
 
+sub _binary_extensions {
+    my($self) = shift @_;
+    my(@result,$module,%seen,%need,$headerdone);
+    for $module ($self->expand('Module','/./')) {
+	my $file  = $module->cpan_file;
+	next if $file eq "N/A";
+	next if $file =~ /^Contact Author/;
+	next if $file =~ /perl5[._-]\d{3}(?:[\d_]+)?\.tar[._-]gz$/;
+	next unless $module->xs_file;
+	push @result, $module;
+    }
+#    print join " | ", @result;
+#    print "\n";
+    return @result;
+}
+
+sub recompile {
+    my($self) = shift @_;
+    my($module,@module,$cpan_file,%dist);
+    @module = $self->_binary_extensions();
+    for $module (@module){  # we force now and compile later, so we don't do it twice
+	$cpan_file = $module->cpan_file;
+	my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
+	$pack->force;
+	$dist{$cpan_file}++;
+    }
+    for $cpan_file (sort keys %dist) {
+	print "  CPAN: Recompiling $cpan_file\n\n";
+	my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
+	$pack->install;
+	$CPAN::Signal = 0; # it's tempting to reset Signal, so we can
+                           # stop a package from recompiling,
+                           # e.g. IO-1.12 when we have perl5.003_10
+    }
+}
+
 sub _u_r_common {
     my($self) = shift @_;
     my($what) = shift @_;
@@ -491,6 +535,7 @@ sub _u_r_common {
 	} elsif ($what eq "u") {
 	    push @result, $module->id;
 	    next if $seen{$file}++;
+	    next if $file =~ /^Contact/;
 	}
 	unless ($headerdone++){
 	    print "\n";
@@ -660,6 +705,7 @@ sub rematein {
 sub force   { shift->rematein('force',@_); }
 sub readme  { shift->rematein('readme',@_); }
 sub make    { shift->rematein('make',@_); }
+sub clean   { shift->rematein('clean',@_); }
 sub test    { shift->rematein('test',@_); }
 sub install { shift->rematein('install',@_); }
 
@@ -675,8 +721,8 @@ sub ftp_get {
 		      ) if $CPAN::DEBUG;
     my $ftp = Net::FTP->new($host);
     $ftp->debug(1) if $CPAN::DEBUG{'FTP'} & $CPAN::DEBUG;
-    $class->debug(qq[Going to ->login("anonymous","$Config::Config{cf_email}")\n]);
-    unless ( $ftp->login("anonymous",$Config::Config{cf_email}) ){
+    $class->debug(qq[Going to ->login("anonymous","$Config::Config{'cf_email'}")\n]);
+    unless ( $ftp->login("anonymous",$Config::Config{'cf_email'}) ){
 	warn "Couldn't login on $host";
 	return;
     }
@@ -774,7 +820,7 @@ sub complete {
     $line =~ s/^\s*//;
     my @return;
     if ($pos == 0) {
-	@return = grep(/^$word/, sort qw(! a b d h i m o q r u autobundle make test install reload));
+	@return = grep(/^$word/, sort qw(! a b d h i m o q r u autobundle clean make test install reload));
     } elsif ( $line !~ /^[\!abdhimorut]/ ) {
 	@return = ();
     } elsif ($line =~ /^a\s/) {
@@ -783,7 +829,7 @@ sub complete {
 	@return = completex('CPAN::Bundle',$word);
     } elsif ($line =~ /^d\s/) {
 	@return = completex('CPAN::Distribution',$word);
-    } elsif ($line =~ /^([mru]\s|(make|test|install)\s)/ ) {
+    } elsif ($line =~ /^([mru]\s|(make|clean|test|install)\s)/ ) {
 	@return = (completex('CPAN::Module',$word),completex('CPAN::Bundle',$word));
     } elsif ($line =~ /^i\s/) {
 	@return = complete_any($word);
@@ -827,7 +873,7 @@ sub complete_option {
     $word ||= "";
     my(@words) = split " ", $line;
     CPAN->debug("word[$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
-    my(@ok) = qw(conf debug update);
+    my(@ok) = qw(conf debug);
     return @ok if @words==1;
     return grep /^\Q$word\E/, @ok if @words==2 && $word;
     if (0) {
@@ -906,9 +952,6 @@ sub read_modpacks {
     my $fh = IO::File->new("$pipe|");
     while (<$fh>) {
 	next if 1../^\s*$/;
-	next unless /\s\+/; # we ignore package names that have no
-                            # corresponding file (i.e. which have no
-                            # '+' sign in column 2)
 	chomp;
 	my($mod,$version,$dist) = split;
 	$version =~ s/^\+//;
@@ -917,12 +960,30 @@ sub read_modpacks {
 	my($bundle) = $mod =~ /^Bundle::(.*)/;
 	$version = "n/a" if $mod =~ s/(.+::.+::).+/$1*/; # replace the third level with a star
 
+	if ($mod eq 'CPAN') {
+	    local($^W)=0;
+	    if ($version > $CPAN::VERSION){
+		print qq{\cG
+  Hey, you know what? There\'s a new CPAN.pm version (v$version)
+  available! I\'d suggest--provided you have time--you try
+    install CPAN
+    reload cpan
+  without quitting the current session. It should be a seemless upgrade
+  while we are running...
+};
+		sleep 1;
+		print qq{\cG\n};
+	    }
+	}
+
 	my($id);
 	if ($bundle){
 	    $id =  $CPAN::META->instance('CPAN::Bundle',$mod);
 	    $id->set('CPAN_VERSION' => $version, 'CPAN_FILE' => $dist);
-	} elsif ($CPAN::META->exists('CPAN::Module',$mod)) {
-	    next;
+# This "next" makes us faster but if the job is running long, we ignore
+# rereads which is bad. So we have to be a bit slower again.
+#	} elsif ($CPAN::META->exists('CPAN::Module',$mod)) {
+#	    next;
 	} else {
 	    # instantiate a module object
 	    $id = $CPAN::META->instance('CPAN::Module',$mod);
@@ -1237,10 +1298,11 @@ sub MD5_check_file {
 	    }
 	    close $fh if fileno($fh);
 	} else {
-	    Carp::carp "Could not find the checksum in $lfile";
+	    print "No md5 checksum for $basename in local $lfile\n";
+	    return;
 	}
     } else {
-	Carp::carp "Could not read the CHECKSUMS in $lfile";
+	Carp::carp "Could not open $lfile for reading";
     }
 }
 
@@ -1334,6 +1396,25 @@ sub test {
     }
 }
 
+sub clean {
+    my($self) = @_;
+    print "Running make clean\n";
+    EXCUSE: {
+	  my @e;
+	  exists $self->{'build_dir'} or push @e, "Has no own directory";
+	  print join "", map {"  $_\n"} @e and return if @e;
+     }
+    chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
+    $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
+    my $system = join " ", $CPAN::Config->{'make'}, "clean";
+    if (system($system)==0) {
+	print "  $system -- OK\n";
+	$self->force;
+    } else {
+	# Hmmm, what to do if make clean failed?
+    }
+}
+
 sub install {
     my($self) = @_;
     $self->test;
@@ -1350,7 +1431,7 @@ sub install {
     chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
     my $system = join " ", $CPAN::Config->{'make'}, "install", $CPAN::Config->{make_install_arg};
-    my($pipe) = IO::File->new("$system|");
+    my($pipe) = IO::File->new("$system 2>&1 |");
     my($makeout) = "";
     while (<$pipe>){
 	print;
@@ -1364,7 +1445,7 @@ sub install {
 	 $self->{'install'} = "NO";
 	 print "  $system -- NOT OK\n";
 	 if ($makeout =~ /permission/s && $> > 0) {
-	     print "You may have to su to root to install the package\n";
+	     print "    You may have to su to root to install the package\n";
 	 }
     }
 }
@@ -1442,6 +1523,7 @@ sub rematein {
 }
 
 sub install { shift->rematein('install',@_); }
+sub clean   { shift->rematein('clean',@_); }
 sub test    { shift->rematein('test',@_); }
 sub make    { shift->rematein('make',@_); }
 
@@ -1563,6 +1645,7 @@ sub rematein {
     $self->debug($self->id) if $CPAN::DEBUG;
     my $cpan_file = $self->cpan_file;
     return if $cpan_file eq "N/A";
+    return if $cpan_file =~ /^Contact Author/;
     my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
     $pack->force if exists $self->{'force_update'};
@@ -1571,8 +1654,9 @@ sub rematein {
 }
 
 sub readme { shift->rematein('readme') }
-sub make { shift->rematein('make') }
-sub test { shift->rematein('test') }
+sub make   { shift->rematein('make') }
+sub clean  { shift->rematein('clean') }
+sub test   { shift->rematein('test') }
 sub install {
     my($self) = @_;
     my($doit) = 0;
@@ -1600,6 +1684,20 @@ sub inst_file {
 	my $pmfile = CPAN->catfile($dir,@packpath);
 	if (-f $pmfile){
 	    return $pmfile;
+	}
+    }
+}
+
+sub xs_file {
+    my($self) = @_;
+    my($dir,@packpath);
+    @packpath = split /::/, $self->{ID};
+    push @packpath, $packpath[-1];
+    $packpath[-1] .= "." . $Config::Config{'dlext'};
+    foreach $dir (@INC) {
+	my $xsfile = CPAN->catfile($dir,'auto',@packpath);
+	if (-f $xsfile){
+	    return $xsfile;
 	}
     }
 }
@@ -1749,6 +1847,12 @@ sub debug {
 
 package CPAN::Config;
 import ExtUtils::MakeMaker 'neatvalue';
+use vars qw(%can);
+
+%can = (
+  'commit' => "Commit changes to disk",
+  'defaults' => "Reload defaults from disk",
+);
 
 sub edit {
     my($class,@args) = @_;
@@ -1756,6 +1860,10 @@ sub edit {
     CPAN->debug("class[$class]args[@args]");
     my($o,$str,$func,$args,$key_exists);
     $o = shift @args;
+    if($can{$o}) {
+	$class->$o(@args);
+	return 1;
+    }
     return unless exists $CPAN::Config->{$o};
 
     if (ref($CPAN::Config->{$o}) eq ARRAY) {
@@ -1876,7 +1984,7 @@ sub complete {
     my($word,$line,$pos) = @_;
     $word ||= "";
     my(@words) = split " ", $line;
-    my(@o_conf) = (qw(commit), sort keys %$CPAN::Config);
+    my(@o_conf) = (sort keys %CPAN::Config::can, sort keys %$CPAN::Config);
     return (@o_conf) unless @words>2;
     if($words[2] =~ /->(.*)/) {
 	my $meth = $1;
@@ -1888,7 +1996,6 @@ sub complete {
 }
 
 1;
-__END__
 
 =head1 NAME
 
@@ -1904,7 +2011,7 @@ Batch mode:
 
   use CPAN;
 
-  autobundle, bundle, bundles, expand, install, make, test
+  autobundle, bundle, clean, expand, install, make, recompile, test
 
 =head1 ALPHA ALERT
 
@@ -2032,6 +2139,16 @@ Example:
     OpenGL-0.4/COPYRIGHT
     [...]
 
+=head2 recompile
+
+recompile() is a very special command in that it takes no argument and
+runs the make/test/install cycle with brute force over all installed
+dynamically loadable extensions (aka XS modules) with 'force' in
+effect. Primary purpose of this command is to act as a rescue in case
+your perl breaks binary compatibility. If one of the modules that CPAN
+uses is in turn depending on binary compatibility (so you cannot run
+CPAN commands), then you should try the CPAN::Nox module for recovery.
+
 =head1 CONFIGURATION
 
 When the CPAN module is installed a site wide configuration file is
@@ -2157,7 +2274,7 @@ Andreas König E<lt>a.koenig@mind.deE<gt>
 
 =head1 SEE ALSO
 
-perl(1)
+perl(1), CPAN::Nox(3)
 
 =cut
 

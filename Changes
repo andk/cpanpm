@@ -1,5 +1,33 @@
 Revision history for Perl extension CPAN.
 
+=head2 Nov 30, 1996
+
+New module CPAN::Nox is a wrapper with same functionality as CPAN.pm,
+but it will not load XS modules. Useful in a situation where you get
+caught by binary incomapatibility (Where nights are longest) of a new
+perl installation and (say) MD5 kills your CPAN session. Makefile.PL
+now uses CPAN::Nox.
+
+New method recompile() recompiles all installed dynamically loadable
+extensions in one go.
+
+=head2 Nov 21, 1996
+
+Introduced a few sanity checks on data in urllist in the Makefile.PL
+to prevent bogus URLs being consulted over and over.
+
+Doug sent me another patch because commit didn't work. Thank you, Doug!
+
+Small fixes in read_modpacks: read all entries, even those without a +
+sign; read all entries, even if we know them already, pay special
+attention to the CPAN.pm entry :-)
+
+The output of C<u> seemed a bit boring with all those C<Contact
+author..> entries. I'm skipping those for now and display only those
+that have a distribution file associated.
+
+Introduced 'clean'. Works just like test and install.
+
 =head2 Nov 17, 1996
 
 Doug MacEachern contributed a powerful suite of interactive
