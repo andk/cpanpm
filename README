@@ -127,6 +127,12 @@ DESCRIPTION
       and untars (if not yet done) the distribution file, changes to the
       appropriate directory and opens a subshell process in that directory.
 
+    ls author
+      "ls" lists all distribution files in and below an author's CPAN
+      directory. Only those files that contain modules are listed and if
+      there is more than one for any given module, only the most recent one
+      is listed.
+
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
       in the cpan-shell it is intended that you can press "^C" anytime and
@@ -677,6 +683,8 @@ CONFIGURATION
       prerequisites_policy
                          what to do if you are missing module prerequisites
                          ('follow' automatically, 'ask' me, or 'ignore')
+      proxy_user         username for accessing an authenticating proxy
+      proxy_pass         password for accessing an authenticating proxy
       scan_cache         controls scanning of cache ('atstart' or 'never')
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1

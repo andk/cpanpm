@@ -1,3 +1,17 @@
+2000-12-31  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* POD: add a description of the ls command.
+
+	* Improve documentation of support for authenticated proxies.
+
+	* CPAN::Bundle::contains: Bail out if there is no inst_file and
+	cpan_file eq "N/A". Old code would have tried to download N/A.
+
+2000-12-27  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* normalize: Fix bug with "Strange distribution name" if it is
+	"Contact Author..."
+
 2000-12-26  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* CPAN::LWP::UserAgent: new class to customize proxy

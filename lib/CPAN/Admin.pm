@@ -3,10 +3,11 @@ use base CPAN;
 use CPAN; # old base.pm did not load CPAN on previous line
 use strict;
 use vars qw(@EXPORT $VERSION);
-# use constant PAUSE => "pause.kbx.de";
-use constant PAUSE => "pause.perl.org";
+use constant PAUSE => "pause.kbx.de";
+# use constant PAUSE => "pause.perl.org";
+
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.10 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.11 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -39,10 +40,10 @@ sub CPAN::Shell::register {
                 PAUSE,
                 $emodline,
                );
-    print "$url\n\n";
+    print "url[$url]\n\n";
     print ">>>>Trying to open a netscape window<<<<\n";
     sleep 1;
-    system("netscape","-remote","openURL('$url')");
+    system("netscape","-remote","openURL($url)");
     return;
   }
   my $m = CPAN::Shell->expand("Module",$mod);
@@ -112,7 +113,7 @@ sub CPAN::Shell::register {
     my($mani,@mani);
     local $/ = "\n";
     open $mani, "$d->{build_dir}/MANIFEST" and @mani = <$mani>;
-    my @xs = grep /xs/, @mani;
+    my @xs = grep /\.xs\b/, @mani;
     if (@xs) {
       print "Found XS files: @xs";
       $has_xs=1;
@@ -149,7 +150,7 @@ sub CPAN::Shell::register {
              );
   print "$url\n\n";
   print ">>>>Trying to open a netscape window<<<<\n";
-  system("netscape","-remote","openURL('$url')");
+  system("netscape","-remote","openURL($url)");
 }
 
 sub CPAN::Shell::modsearch {

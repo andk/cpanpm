@@ -1,11 +1,11 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.59_52';
-# $Id: CPAN.pm,v 1.383 2000/12/26 13:34:22 k Exp $
+$VERSION = '1.59_53';
+# $Id: CPAN.pm,v 1.384 2001/01/02 16:24:00 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.383 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.384 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -1283,7 +1283,7 @@ sub a {
   my($self,@arg) = @_;
   # authors are always UPPERCASE
   for (@arg) {
-    $_ = uc $_;
+    $_ = uc $_ unless /=/;
   }
   $CPAN::Frontend->myprint($self->format_result('Author',@arg));
 }
@@ -1317,7 +1317,7 @@ sub local_bundles {
             if ($dh = DirHandle->new($bdir)) { # may fail
                 my($entry);
                 for $entry ($dh->read) {
-                    next if $entry =~ /^\./; # 
+                    next if $entry =~ /^\./;
                     if (-d MM->catdir($bdir,$entry)){
                         push @bbase, "$bbase\::$entry";
                     } else {
@@ -3450,7 +3450,11 @@ sub as_glimpse {
     my(@m);
     my $class = ref($self);
     $class =~ s/^CPAN:://;
-    push @m, sprintf "%-15s %s (%s)\n", $class, $self->{ID}, $self->fullname;
+    push @m, sprintf(qq{%-15s %s ("%s" <%s>)\n},
+                     $class,
+                     $self->{ID},
+                     $self->fullname,
+                     $self->email);
     join "", @m;
 }
 
@@ -3580,7 +3584,7 @@ sub normalize {
         or
         $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-]{2,}/|
        ) {
-        return $s if $s =~ m|^N/A|;
+        return $s if $s =~ m:^N/A|^Contact Author: ;
         $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4| or
             $CPAN::Frontend->mywarn("Strange distribution name [$s]");
         CPAN->debug("s[$s]") if $CPAN::DEBUG;
@@ -4741,59 +4745,65 @@ sub as_string {
 
 #-> sub CPAN::Bundle::contains ;
 sub contains {
-  my($self) = @_;
-  my($parsefile) = $self->inst_file || "";
-  my($id) = $self->id;
-  $self->debug("parsefile[$parsefile]id[$id]") if $CPAN::DEBUG;
-  unless ($parsefile) {
-    # Try to get at it in the cpan directory
-    $self->debug("no parsefile") if $CPAN::DEBUG;
-    Carp::confess "I don't know a $id" unless $self->cpan_file;
-    my $dist = $CPAN::META->instance('CPAN::Distribution',
-				     $self->cpan_file);
-    $dist->get;
-    $self->debug($dist->as_string) if $CPAN::DEBUG;
-    my($todir) = $CPAN::Config->{'cpan_home'};
-    my(@me,$from,$to,$me);
-    @me = split /::/, $self->id;
-    $me[-1] .= ".pm";
-    $me = MM->catfile(@me);
-    $from = $self->find_bundle_file($dist->{'build_dir'},$me);
-    $to = MM->catfile($todir,$me);
-    File::Path::mkpath(File::Basename::dirname($to));
-    File::Copy::copy($from, $to)
-	or Carp::confess("Couldn't copy $from to $to: $!");
-    $parsefile = $to;
-  }
-  my @result;
-  my $fh = FileHandle->new;
-  local $/ = "\n";
-  open($fh,$parsefile) or die "Could not open '$parsefile': $!";
-  my $in_cont = 0;
-  $self->debug("parsefile[$parsefile]") if $CPAN::DEBUG;
-  while (<$fh>) {
-    $in_cont = m/^=(?!head1\s+CONTENTS)/ ? 0 :
-	m/^=head1\s+CONTENTS/ ? 1 : $in_cont;
-    next unless $in_cont;
-    next if /^=/;
-    s/\#.*//;
-    next if /^\s+$/;
-    chomp;
-    push @result, (split " ", $_, 2)[0];
-  }
-  close $fh;
-  delete $self->{STATUS};
-  $self->{CONTAINS} = \@result;
-  $self->debug("CONTAINS[@result]") if $CPAN::DEBUG;
-  unless (@result) {
-    $CPAN::Frontend->mywarn(qq{
-The bundle file "$parsefile" may be a broken
+    my($self) = @_;
+    my($inst_file) = $self->inst_file || "";
+    my($id) = $self->id;
+    $self->debug("inst_file[$inst_file]id[$id]") if $CPAN::DEBUG;
+    unless ($inst_file) {
+        # Try to get at it in the cpan directory
+        $self->debug("no inst_file") if $CPAN::DEBUG;
+        my $cpan_file;
+        $CPAN::Frontend->mydie("I don't know a bundle with ID $id\n") unless
+              $cpan_file = $self->cpan_file;
+        if ($cpan_file eq "N/A") {
+            $CPAN::Frontend->mydie("Bundle $id not found on disk and not on CPAN.
+  Maybe stale symlink? Maybe removed during session? Giving up.\n");
+        }
+        my $dist = $CPAN::META->instance('CPAN::Distribution',
+                                         $self->cpan_file);
+        $dist->get;
+        $self->debug($dist->as_string) if $CPAN::DEBUG;
+        my($todir) = $CPAN::Config->{'cpan_home'};
+        my(@me,$from,$to,$me);
+        @me = split /::/, $self->id;
+        $me[-1] .= ".pm";
+        $me = MM->catfile(@me);
+        $from = $self->find_bundle_file($dist->{'build_dir'},$me);
+        $to = MM->catfile($todir,$me);
+        File::Path::mkpath(File::Basename::dirname($to));
+        File::Copy::copy($from, $to)
+              or Carp::confess("Couldn't copy $from to $to: $!");
+        $inst_file = $to;
+    }
+    my @result;
+    my $fh = FileHandle->new;
+    local $/ = "\n";
+    open($fh,$inst_file) or die "Could not open '$inst_file': $!";
+    my $in_cont = 0;
+    $self->debug("inst_file[$inst_file]") if $CPAN::DEBUG;
+    while (<$fh>) {
+        $in_cont = m/^=(?!head1\s+CONTENTS)/ ? 0 :
+            m/^=head1\s+CONTENTS/ ? 1 : $in_cont;
+        next unless $in_cont;
+        next if /^=/;
+        s/\#.*//;
+        next if /^\s+$/;
+        chomp;
+        push @result, (split " ", $_, 2)[0];
+    }
+    close $fh;
+    delete $self->{STATUS};
+    $self->{CONTAINS} = \@result;
+    $self->debug("CONTAINS[@result]") if $CPAN::DEBUG;
+    unless (@result) {
+        $CPAN::Frontend->mywarn(qq{
+The bundle file "$inst_file" may be a broken
 bundlefile. It seems not to contain any bundle definition.
 Please check the file and if it is bogus, please delete it.
 Sorry for the inconvenience.
 });
-  }
-  @result;
+    }
+    @result;
 }
 
 #-> sub CPAN::Bundle::find_bundle_file
@@ -5222,7 +5232,8 @@ sub manpage_headline {
 }
 
 #-> sub CPAN::Module::cpan_file ;
-sub cpan_file    {
+# Note: also inherited by CPAN::Bundle
+sub cpan_file {
     my $self = shift;
     CPAN->debug(sprintf "id[%s]", $self->id) if $CPAN::DEBUG;
     unless (defined $self->{RO}{CPAN_FILE}) {
@@ -5928,6 +5939,13 @@ displays the README file of the associated distribution. C<Look> gets
 and untars (if not yet done) the distribution file, changes to the
 appropriate directory and opens a subshell process in that directory.
 
+=item ls author
+
+C<ls> lists all distribution files in and below an author's CPAN
+directory. Only those files that contain modules are listed and if
+there is more than one for any given module, only the most recent one
+is listed.
+
 =item Signals
 
 CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
@@ -6553,6 +6571,8 @@ defined:
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
+  proxy_user         username for accessing an authenticating proxy
+  proxy_pass         password for accessing an authenticating proxy
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   tar                location of external program tar
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1

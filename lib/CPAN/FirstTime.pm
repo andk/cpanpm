@@ -17,7 +17,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.52 $, 10;
+$VERSION = substr q$Revision: 1.53 $, 10;
 
 =head1 NAME
 
@@ -385,20 +385,41 @@ the \$CPAN::Config takes precedence.
     }
 
     if ($CPAN::Config->{ftp_proxy} ||
-        $CPAN::Config->{http_proxy} ||
-        $CPAN::Config->{no_proxy}) {
+        $CPAN::Config->{http_proxy}) {
         $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER;
-        $CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default);
-        if ($CPAN::META->has_inst("Term::ReadKey")) {
-            Term::ReadKey::ReadMode("noecho");
-        } else {
-            $CPAN::Frontend->mywarn("Warning: Term::ReadKey seems not to be available, your password will be echoed to the terminal!\n");
+        print qq{
+
+If your proxy is an authenticating proxy, you can store your username
+permanently. If you do not want that, just press RETURN. You will then
+be asked for your username in every future session.
+
+};
+        if ($CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default)) {
+            print qq{
+
+Your password for the authenticating proxy can also be stored
+permanently on disk. If this violates your security policy, just press
+RETURN. You will then be asked for the password in every future
+session.
+
+};
+
+            if ($CPAN::META->has_inst("Term::ReadKey")) {
+                Term::ReadKey::ReadMode("noecho");
+            } else {
+                print qq{
+
+Warning: Term::ReadKey seems not to be available, your password will
+be echoed to the terminal!
+
+};
+            }
+            $CPAN::Config->{proxy_pass} = prompt("Your proxy password?");
+            if ($CPAN::META->has_inst("Term::ReadKey")) {
+                Term::ReadKey::ReadMode("restore");
+            }
+            $CPAN::Frontend->myprint("\n\n");
         }
-        $CPAN::Config->{proxy_pass} = prompt("Your proxy password?");
-        if ($CPAN::META->has_inst("Term::ReadKey")) {
-            Term::ReadKey::ReadMode("restore");
-        }
-        $CPAN::Frontend->myprint("\n\n");
     }
 
     #
