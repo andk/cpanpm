@@ -11,4 +11,5 @@ lib/CPAN/Nox.pm
 lib/Bundle/CPAN.pm
 t/Nox.t
 t/loadme.t
+t/mirroredby.t
 t/vcmp.t

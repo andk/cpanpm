@@ -7,10 +7,16 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.37 2002/04/19 08:54:01 k Exp $
+# $Id: Makefile.PL,v 1.38 2002/07/28 10:46:47 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
+
+my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
+if ($] < 5.006001){
+  # 5.6.0 / 1.52 downloads 5.8.0 due to File::Spec
+  $prereq_pm = { 'Test::More' => 0 };
+}
 
 WriteMakefile(
     'INSTALLDIRS' => 'perl',  # as it is coming with perl
@@ -18,7 +24,7 @@ WriteMakefile(
     'VERSION_FROM' => 'lib/CPAN.pm',
     'EXE_FILES' => [qw(cpan)],
     'clean' => { FILES => "lib/CPAN/Config.pm" },
-    'PREREQ_PM' => { 'File::Spec' => 0, 'Test::More' => 0 },
+    'PREREQ_PM' => $prereq_pm,
     'dist' => {
 	       PREOP => 'pod2text lib/CPAN.pm > $(DISTVNAME)/README',
 	       DIST_DEFAULT => 'all tardist',

@@ -1,3 +1,11 @@
+2002-07-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* cpan: beefed-up cpan script courtesy brian d foy.
+
+	* Makefile.PL: deactivate PREREQ_PM for File::Spec in case we are
+	running under 5.6.0, otherwise 5.6.0's CPAN.pm would download
+	5.8.0 just for File::Spec.
+
 2002-05-07  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing as 1.61.
