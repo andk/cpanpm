@@ -1,5 +1,22 @@
 2000-09-05  Andreas J. Koenig  <andreas.koenig@anima.de>
 
+	* undelay: After a jumpqueue we must not continue because success
+	is unlikely. We set $self->{later} and the queuerunner calls
+	undelay.
+
+	* Bundle::inst_file: reviewed the code after Jost pointed out that
+	it was suspectly formatted. Re-enabled the newer, better code that
+	allows for multi-level Bundle package names.
+
+	* Distribution::install: improved wording for the case where make
+	failed (Thanks To Jost Krieger for spotting)
+
+	* Bundle::as_string: CONTAINS was rendered as ARRAY(...)
+
+	* expandany: added a scan for bundles as one could not install
+	bundles immediately after program start but only after a "b"
+	command (Thanks to Jost Krieger for the bugreport)
+
 	* color_cmd_tmps: protection against deep recursion with a panic
 	message.
 

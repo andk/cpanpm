@@ -663,7 +663,7 @@ FAQ
         item and thus your second try is able to resolve everything. Please
         note, CPAN.pm does not know the dependency tree in advance and
         cannot sort the queue of things to install in a topologically
-        correct sequence. For bundles which you need to install often, it is
+        correct order. For bundles which you need to install often, it is
         recommended to do the sorting manually. It is planned to improve the
         metadata situation for dependencies on CPAN in general, but this
         will still take some time.

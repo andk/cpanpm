@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_59';
+$VERSION = '1.57_60';
 
-# $Id: CPAN.pm,v 1.341 2000/09/05 09:41:11 k Exp $
+# $Id: CPAN.pm,v 1.343 2000/09/05 18:55:32 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.341 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.343 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -360,6 +360,10 @@ sub delete_first {
 sub jumpqueue {
     my $class = shift;
     my @what = @_;
+    CPAN->debug(sprintf("before jumpqueue All[%s] what[%s]",
+                        join(",",map {$_->{qmod}} @All),
+                        join(",",@what)
+                       )) if $CPAN::DEBUG;
   WHAT: for my $what (reverse @what) {
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
@@ -379,6 +383,10 @@ qq{Object [$what] queued more than 100 times, ignoring}
         my $obj = bless { qmod => $what }, $class;
         unshift @All, $obj;
     }
+    CPAN->debug(sprintf("after jumpqueue All[%s] what[%s]",
+                        join(",",map {$_->{qmod}} @All),
+                        join(",",@what)
+                       )) if $CPAN::DEBUG;
 }
 
 # CPAN::Queue::exists ;
@@ -1255,10 +1263,10 @@ sub a {
   $CPAN::Frontend->myprint($self->format_result('Author',@arg));
 }
 
-#-> sub CPAN::Shell::b ;
-sub b {
+#-> sub CPAN::Shell::local_bundles ;
+
+sub local_bundles {
     my($self,@which) = @_;
-    CPAN->debug("which[@which]") if $CPAN::DEBUG;
     my($incdir,$bdir,$dh);
     foreach $incdir ($CPAN::Config->{'cpan_home'},@INC) {
 	$bdir = MM->catdir($incdir,"Bundle");
@@ -1271,6 +1279,13 @@ sub b {
 	    }
 	}
     }
+}
+
+#-> sub CPAN::Shell::b ;
+sub b {
+    my($self,@which) = @_;
+    CPAN->debug("which[@which]") if $CPAN::DEBUG;
+    $self->local_bundles;
     $CPAN::Frontend->myprint($self->format_result('Bundle',@which));
 }
 
@@ -1626,9 +1641,14 @@ sub autobundle {
 #-> sub CPAN::Shell::expandany ;
 sub expandany {
     my($self,$s) = @_;
+    CPAN->debug("s[$s]") if $CPAN::DEBUG;
     if ($s =~ m|/|) { # looks like a file
         return $self->expand('Distribution',$s);
     } elsif ($s =~ m|^Bundle::|) {
+        $self->local_bundles; # scanning so late for bundles seems
+                              # both attractive and crumpy: always
+                              # current state but easy to forget
+                              # somewhere
         return $self->expand('Bundle',$s);
     } else {
         return $self->expand('Module',$s)
@@ -1825,6 +1845,7 @@ sub rematein {
     foreach $s (@some) {
 	my $obj;
 	if (ref $s) {
+            CPAN->debug("s is an object[$s]") if $CPAN::DEBUG;
 	    $obj = $s;
 	} elsif ($s =~ m|^/|) { # looks like a regexp
             $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
@@ -1832,6 +1853,7 @@ sub rematein {
             sleep 2;
             next;
 	} else {
+            CPAN->debug("calling expandany [$s]") if $CPAN::DEBUG;
 	    $obj = CPAN::Shell->expandany($s);
 	}
 	if (ref $obj) {
@@ -1861,13 +1883,13 @@ to find objects with matching identifiers.
 	}
     }
 
-    # run the queue (please be warned: when I tarted to change the
+    # queuerunner (please be warned: when I started to change the
     # queue to hold objects instead of names, I made one or two
     # mistakes and never found which. I reverted back instead)
     while ($s = CPAN::Queue->first) {
         my $obj;
 	if (ref $s) {
-	    $obj = $s;
+	    $obj = $s; # I do not believe, we would survive if this happened
 	} else {
 	    $obj = CPAN::Shell->expandany($s);
 	}
@@ -1887,13 +1909,14 @@ to find objects with matching identifiers.
                     $obj->as_string.
                     qq{\]}
                    ) if $CPAN::DEBUG;
-        # if it is more than once in the queue
+
         if ($obj->$meth()){
             CPAN::Queue->delete($s);
         } else {
             CPAN->debug("failed");
         }
 
+        $obj->undelay;
 	CPAN::Queue->delete_first($s);
     }
     for my $obj (@qcopy) {
@@ -3209,6 +3232,11 @@ package CPAN::Distribution;
 # Accessors
 sub cpan_comment { shift->{RO}{CPAN_COMMENT} }
 
+sub undelay {
+    my $self = shift;
+    delete $self->{later};
+}
+
 #-> sub CPAN::Distribution::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
@@ -3818,7 +3846,10 @@ or
 		$1 || "Had some problem writing Makefile";
 
 	defined $self->{'make'} and push @e,
-	"Has already been processed within this session";
+            "Has already been processed within this session";
+
+        exists $self->{later} and length($self->{later}) and
+            push @e, $self->{later};
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
@@ -3927,7 +3958,8 @@ of modules we are processing right now?", "yes");
               CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
           }
           CPAN::Queue->jumpqueue(@prereq,$id); # queue them and requeue yourself
-          return;
+          $self->{later} = "Delayed until after prerequisites";
+          return 1; # signal success to the queuerunner
       }
     }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
@@ -4032,17 +4064,21 @@ sub test {
     $CPAN::Frontend->myprint("Running make test\n");
   EXCUSE: {
 	my @e;
-	exists $self->{'make'} or push @e,
+	exists $self->{make} or exists $self->{later} or push @e,
 	"Make had some problems, maybe interrupted? Won't test";
 
 	exists $self->{'make'} and
 	    $self->{'make'} eq 'NO' and
 		push @e, "Can't test without successful make";
 
-	exists $self->{'build_dir'} or push @e, "Has no own directory";
+	exists $self->{build_dir} or push @e, "Has no own directory";
         $self->{badtestcnt} ||= 0;
         $self->{badtestcnt} > 0 and
             push @e, "Won't repeat unsuccessful test during this command";
+
+        exists $self->{later} and length($self->{later}) and
+            push @e, $self->{later};
+
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
@@ -4127,14 +4163,14 @@ sub install {
     $CPAN::Frontend->myprint("Running make install\n");
   EXCUSE: {
 	my @e;
-	exists $self->{'build_dir'} or push @e, "Has no own directory";
+	exists $self->{build_dir} or push @e, "Has no own directory";
 
-	exists $self->{'make'} or push @e,
+	exists $self->{make} or exists $self->{later} or push @e,
 	"Make had some problems, maybe interrupted? Won't install";
 
 	exists $self->{'make'} and
 	    $self->{'make'} eq 'NO' and
-		push @e, "make had returned bad status, won't install without force";
+		push @e, "make had returned bad status, install seems impossible";
 
 	push @e, "make test had returned bad status, ".
 	    "won't install without force"
@@ -4145,6 +4181,9 @@ sub install {
 	exists $self->{'install'} and push @e,
 	$self->{'install'} eq "YES" ?
 	    "Already done" : "Already tried without success";
+
+        exists $self->{later} and length($self->{later}) and
+            push @e, $self->{later};
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
@@ -4188,6 +4227,15 @@ sub dir {
 }
 
 package CPAN::Bundle;
+
+sub undelay {
+    my $self = shift;
+    delete $self->{later};
+    for my $c ( $self->contains ) {
+        my $obj = CPAN::Shell->expandany($c) or next;
+        $obj->undelay;
+    }
+}
 
 #-> sub CPAN::Bundle::color_cmd_tmps ;
 sub color_cmd_tmps {
@@ -4333,19 +4381,21 @@ sub find_bundle_file {
 #-> sub CPAN::Bundle::inst_file ;
 sub inst_file {
     my($self) = @_;
-    my($me,$inst_file);
-    ($me = $self->id) =~ s/.*://;
-##    my(@me,$inst_file);
-##    @me = split /::/, $self->id;
-##    $me[-1] .= ".pm";
-    $inst_file = MM->catfile($CPAN::Config->{'cpan_home'},
-				      "Bundle", "$me.pm");
-##				      "Bundle", @me);
+    my($inst_file);
+    if (1) { # code seems better, for some reason it was commented
+             # out. AK, 2000-09-05
+        my(@me);
+        @me = split /::/, $self->id;
+        $me[-1] .= ".pm";
+        $inst_file = MM->catfile($CPAN::Config->{'cpan_home'}, @me);
+    } else { # old code, allows only for one level names
+        my($me);
+        ($me = $self->id) =~ s/.*://;
+        $inst_file = MM->catfile($CPAN::Config->{'cpan_home'},
+                                 "Bundle", "$me.pm");
+    }
     return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
-#    $inst_file =
     $self->SUPER::inst_file;
-#    return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
-#    return $self->{'INST_FILE'}; # even if undefined?
 }
 
 #-> sub CPAN::Bundle::rematein ;
@@ -4476,6 +4526,14 @@ sub userid {
 }
 sub description { shift->{RO}{description} }
 
+sub undelay {
+    my $self = shift;
+    delete $self->{later};
+    if ( my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file) ) {
+        $dist->undelay;
+    }
+}
+
 #-> sub CPAN::Module::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
@@ -4577,9 +4635,13 @@ sub as_string {
       $self->{MANPAGE} ||= $self->manpage_headline($local_file);
     }
     my($item);
-    for $item (qw/MANPAGE CONTAINS/) {
+    for $item (qw/MANPAGE/) {
 	push @m, sprintf($sprintf, $item, $self->{$item})
 	    if exists $self->{$item};
+    }
+    for $item (qw/CONTAINS/) {
+	push @m, sprintf($sprintf, $item, join(" ",@{$self->{$item}}))
+	    if exists $self->{$item} && @{$self->{$item}};
     }
     push @m, sprintf($sprintf, 'INST_FILE',
 		     $local_file || "(not installed)");
@@ -5860,7 +5922,7 @@ undetected missing piece breaks the process. But it may well be that
 your Bundle installs some prerequisite later than some depending item
 and thus your second try is able to resolve everything. Please note,
 CPAN.pm does not know the dependency tree in advance and cannot sort
-the queue of things to install in a topologically correct sequence.
+the queue of things to install in a topologically correct order.
 For bundles which you need to install often, it is recommended to do
 the sorting manually. It is planned to improve the metadata situation
 for dependencies on CPAN in general, but this will still take some

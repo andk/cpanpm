@@ -1,12 +1,8 @@
-ChangeLog says: missing_config_data and FirstTime: that I want the
-official external data from CPAN and the generated internal data from
-the current session clearly separated and this will take another
-working session that I cannot provide before 5.7.0.
+Implement topological sorting for those items in a queue that we know
+already prerequisites of. This is possible on any second try.
 
-Jost Krieger wrote that he would like to have logic extended so that
-time-consuming failing tests should not be repeated within the
-same "interaction" or let's say "command from the commandline". This
-is a cute idea, but must be postponed after data separating.
+Cache manager should read youngest directories first and start
+deleting without measuring as soon as the cache limit is reached.
 
 Rename 'o conf' to 'set' and 'o debug' to 'set debug'.
 
