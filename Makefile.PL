@@ -7,7 +7,7 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.34 2000/03/23 23:27:20 k Exp $
+# $Id: Makefile.PL,v 1.35 2000/07/29 17:48:05 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -30,7 +30,7 @@ WriteMakefile(
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'PREREQ_PM' => { 'File::Spec' => 0 },
     'dist' => {
-	       PREOP => 'pod2text lib/CPAN.pm > ${DISTVNAME}/README',
+	       PREOP => 'pod2text lib/CPAN.pm > $(DISTVNAME)/README',
 	       DIST_DEFAULT => 'all tardist',
 	       COMPRESS => 'gzip -9f'
 	      },

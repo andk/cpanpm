@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.39 $, 10;
+$VERSION = substr q$Revision: 1.40 $, 10;
 
 =head1 NAME
 
@@ -149,7 +149,7 @@ next question.
     print qq{
 
 How big should the disk cache be for keeping the build directories
-with all the intermediate files?
+with all the intermediate files\?
 
 };
 
@@ -188,7 +188,7 @@ policy to one of the three values.
 
 };
 
-    $default = $CPAN::Config->{prerequisites_policy} || 'follow';
+    $default = $CPAN::Config->{prerequisites_policy} || 'ask';
     do {
       $ans =
 	  prompt("Policy on building prerequisites (follow, ask or ignore)?",

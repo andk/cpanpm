@@ -411,6 +411,8 @@ CONFIGURATION
       build_dir          locally accessible directory to build modules
       index_expire       after this many days refetch index files
       cpan_home          local directory reserved for this package
+      dontload_hash      anonymous hash: modules in the keys will not be
+                         loaded by the CPAN::has_inst() routine
       gzip               location of external program gzip
       inactivity_timeout breaks interactive Makefile.PLs after this
                          many seconds inactivity. Set to 0 to never break.
@@ -526,7 +528,13 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
 WORKING WITH CPAN.pm BEHIND FIREWALLS
     Thanks to Graham Barr for contributing the following paragraphs about
-    the interaction between perl, and various firewall configurations.
+    the interaction between perl, and various firewall configurations. For
+    further informations on firewalls, it is recommended to consult the
+    documentation that comes with the ncftp program. If you are unable to go
+    through the firewall with a simple Perl setup, it is very likely that
+    you can configure ncftp so that it works for your firewall.
+
+  Three basic types of firewalls
 
     Firewalls can be categorized into three basic types.
 
@@ -572,6 +580,24 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
             you to hide a complete network behind one IP address. With this
             firewall no special compiling is need as you can access hosts
             directly.
+
+  Configuring lynx or ncftp for going throught the firewall
+
+    If you can go through your firewall with e.g. lynx, presumably with a
+    command such as
+
+        /usr/local/bin/lynx -pscott:tiger
+
+    then you would configure CPAN.pm with the command
+
+        o conf lynx "/usr/local/bin/lynx -pscott:tiger"
+
+    That's all. Similarly for ncftp or ftp, you would configure something
+    like
+
+        o conf ncftp "/usr/bin/ncftp -f /home/scott/ncftplogin.cfg"
+
+    Your milage may vary...
 
 FAQ
     I installed a new version of module X but CPAN keeps saying, I have the

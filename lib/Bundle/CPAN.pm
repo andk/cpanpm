@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 
-$VERSION = '1.48';
+$VERSION = '1.55';
 
 1;
 
