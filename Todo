@@ -1,5 +1,10 @@
+cpan script should accept arguments as suggested by Matt Sergeant:
+   cpan install My::Foo
+
 Implement topological sorting for those items in a queue that we know
-already prerequisites of. This is possible on any second try.
+already prerequisites of. This is possible on any second try. Note,
+that we already treat them in topologically correct sequence and this
+change would just be a cosmetical improvement.
 
 Cache manager should read youngest directories first and start
 deleting without measuring as soon as the cache limit is reached.

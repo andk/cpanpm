@@ -1,3 +1,50 @@
+2000-09-12  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* 1.57_66 for the sole purpose of testing the error provoked by
+	the old lynx version. Next version will disable lynx for file:
+	URLs and thus will doubly guard against the bug.
+
+	* untar and gtest: enabled gtest with Compress::Zlib again, now
+	with a test if the file size and buffer size are equal. In that
+	case gtest returns false. untar now also uses gtest ahead of
+	decompression to catch the error condition provoked by
+
+          DB<5> x system "echo -n | /bin/tar xvf -"
+        0  0
+
+	The fact that tar returns TRUE on zero byte input could lead us to
+	believe that we were doing a successful untar while in reality we
+	had an uncompressed file that was completely bogus.
+
+	Once again a big thank you to Jost Krieger who discovered this bug
+	by feeding an inexistent distribution name to install() while he
+	had an old version of lynx installed that did not discover the
+	mistake and created the file as textfile containing an error
+	message.
+
+2000-09-11  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* gtest: disabled Compress::Zlib because it seems to offer no
+	method to test if a file is compressed or not. If a file was not
+	compressed, it happily treats it "as expected" setting no error. I
+	was so sure that I tested this when it was introduced. We really
+	need a test harness.
+
+	* get: New instance variable had_no_makefile_pl
+
+	* get: New instance variable was_uncompressed to later use it for
+	heuristics if we're on the wrong track.
+
+	* If we write a Makefile.PL on our own, we now choose the NAME
+	parameter more carefully.
+
+	* Ask user if he wants to proceed if the CHECKSUM file does not
+	contain data about a downloded file.
+
+	* hosthard: Skip "file" URLs
+
+	* hosthardest: eliminated unused code for is_reachable
+
 2000-09-10  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Tarball 1.57_65 (63 and 64 were not uploaded because I found
