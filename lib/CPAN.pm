@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_61';
+$VERSION = '1.57_62';
 
-# $Id: CPAN.pm,v 1.344 2000/09/06 10:34:04 k Exp $
+# $Id: CPAN.pm,v 1.345 2000/09/08 02:12:00 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.344 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.345 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -439,7 +439,8 @@ sub checklock {
     my($self) = @_;
     my $lockfile = MM->catfile($CPAN::Config->{cpan_home},".lock");
     if (-f $lockfile && -M _ > 0) {
-	my $fh = FileHandle->new($lockfile);
+	my $fh = FileHandle->new($lockfile) or
+            $CPAN::Frontend->mydie("Could not open $lockfile: $!");
 	my $other = <$fh>;
 	$fh->close;
 	if (defined $other && $other) {
@@ -471,7 +472,11 @@ You may want to kill it and delete the lockfile, maybe. On UNIX try:
 			    qq{  and then rerun us.\n}
 			   );
 	    }
-	}
+	} else {
+            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile $lockfile ".
+                                           "reports other process with ID ".
+                                           "$other. Cannot proceed.\n"));
+        }
     }
     my $dotcpan = $CPAN::Config->{cpan_home};
     eval { File::Path::mkpath($dotcpan);};
@@ -1498,7 +1503,10 @@ sub _u_r_common {
        $version_undefs,$version_zeroes);
     $version_undefs = $version_zeroes = 0;
     my $sprintf = "%-25s %9s %9s  %s\n";
-    for $module ($self->expand('Module',@args)) {
+    my @expand = $self->expand('Module',@args);
+    my $expand = scalar @expand;
+    $CPAN::Frontend->myprint(sprintf "%d matches in the database\n", $expand);
+    for $module (@expand) {
 	my $file  = $module->cpan_file;
 	next unless defined $file; # ??
 	my($latest) = $module->cpan_version;
@@ -3098,7 +3106,10 @@ sub read_metadata_cache {
     my $cache;
     eval { $cache = Storable::retrieve($metadata_file) };
     $CPAN::Frontend->mywarn($@) if $@;
-    return if (!$cache || ref $cache ne 'HASH');
+    if (!$cache || ref $cache ne 'HASH'){
+        $last_time = 0;
+        return;
+    }
     if (exists $cache->{PROTOCOL}) {
         if (PROTOCOL > $cache->{PROTOCOL}) {
             $CPAN::Frontend->mywarn(sprintf("Ignoring Metadata cache written ".
@@ -3113,13 +3124,26 @@ sub read_metadata_cache {
                                 "with protocol v1.0");
         return;
     }
+    my $clcnt = 0;
+    my $idcnt = 0;
     while(my($class,$v) = each %$cache) {
 	next unless $class =~ /^CPAN::/;
 	$CPAN::META->{readonly}{$class} = $v; # unsafe meta access, ok
         while (my($id,$ro) = each %$v) {
             $CPAN::META->{readwrite}{$class}{$id} ||=
                 $class->new(ID=>$id, RO=>$ro);
+            $idcnt++;
         }
+        $clcnt++;
+    }
+    unless ($clcnt) { # sanity check
+        $CPAN::Frontend->myprint("Warning: Found no data in $metadata_file\n");
+        return;
+    }
+    if ($idcnt < 1000) {
+        $CPAN::Frontend->myprint("Warning: Found only $idcnt objects ".
+                                 "in $metadata_file\n");
+        return;
     }
     $last_time = $cache->{last_time};
 }
