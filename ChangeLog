@@ -1,3 +1,12 @@
+2003-07-29  Andreas J Koenig  <andreas.koenig@anima.de>
+
+	* Added missing 'use File::Spec' directive to the Makefile.PL
+	(Thanks to Tom Metro)
+
+	* Reworked the 'make dist' sequence to make sure that I won't
+	again sign before META.yml is written (1.73 has a broken SIGNATURE
+	because of this mistake)
+
 2003-07-27  Andreas J Koenig  <andreas.koenig@anima.de>
 
 	* Signed the distribution myself with my GnuPG key

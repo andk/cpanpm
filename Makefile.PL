@@ -6,7 +6,7 @@ use File::Path;
 use File::Spec;
 use strict;
 
-# $Id: Makefile.PL,v 1.51 2003/07/28 08:17:51 k Exp $
+# $Id: Makefile.PL,v 1.52 2003/07/28 22:07:23 k Exp $
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){
@@ -33,16 +33,34 @@ WriteMakefile(
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'PREREQ_PM' => $prereq_pm,
     'dist' => {
-	       DIST_DEFAULT => 'README all tardist',
+	       DIST_DEFAULT => 'README all checkout_meta metafile sign tardist checkin_meta',
 	       COMPRESS => 'gzip -9f'
 	      },
 );
+
+# if we make sign first and make dist then, then any change to
+# META.yml will ruin the signature
+
+# if we make dist first and make sign then, then the correct signature
+# will not be part of the tarball
+
+# So we must alter make dist to first write META.yml, then let us
+# sign, then do the tarball.
 
 sub MY::postamble {
   q{
 README: lib/CPAN.pm Makefile
 	chmod +w $@
 	pod2text lib/CPAN.pm > $@
+
+checkout_meta ::
+	co -l META.yml
+
+checkin_meta ::
+	ci -u META.yml
+
+sign ::
+	cpansign -s
 
 }
 }
