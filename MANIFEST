@@ -7,3 +7,4 @@ lib/CPAN.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm
 lib/Bundle/CPAN.pm
+t/loadme.t

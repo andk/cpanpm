@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.36';
+$VERSION = '1.37';
 
-# $Id: CPAN.pm,v 1.222 1998/02/08 01:11:20 k Exp $
+# $Id: CPAN.pm,v 1.224 1998/06/12 06:40:33 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.222 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.224 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -132,7 +132,7 @@ ReadLine support $rl_avail
 	s/^\s+//;
 	next if /^$/;
 	$_ = 'h' if $_ eq '?';
-	if (/^q(?:uit)?$/i) {
+	if (/^(?:q(?:uit)?|bye|exit)$/i) {
 	    last;
 	} elsif (s/\\$//s) {
 	    chomp;
@@ -317,6 +317,15 @@ package CPAN::Tarzip;
 use vars qw($AUTOLOAD @ISA);
 @CPAN::Tarzip::ISA = qw(CPAN::Debug);
 
+package CPAN::Queue;
+# currently only used to determine if we should or shouldn't announce
+# the availability of a new CPAN module
+sub new {
+  my($class,$mod) = @_;
+  # warn "Queue object for mod[$mod]";
+  bless {mod => $mod}, $class;
+}
+
 package CPAN;
 
 $META ||= CPAN->new;                 # In case we reeval ourselves we
@@ -457,6 +466,12 @@ sub exists {
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
     exists $META->{$class}{$id};
+}
+
+#-> sub CPAN::delete ;
+sub delete {
+  my($mgr,$class,$id) = @_;
+  delete $META->{$class}{$id};
 }
 
 #-> sub CPAN::has_inst
@@ -984,6 +999,8 @@ q                       quit the shell subroutine
     }
 }
 
+*help = \&h;
+
 #-> sub CPAN::Shell::a ;
 sub a { $CPAN::Frontend->myprint(shift->format_result('Author',@_));}
 #-> sub CPAN::Shell::b ;
@@ -1471,6 +1488,7 @@ sub mydie {
 }
 
 #-> sub CPAN::Shell::rematein ;
+# RE-adme||MA-ke||TE-st||IN-stall
 sub rematein {
     shift;
     my($meth,@some) = @_;
@@ -1488,8 +1506,10 @@ sub rematein {
 	} elsif ($s =~ m|/|) { # looks like a file
 	    $obj = $CPAN::META->instance('CPAN::Distribution',$s);
 	} elsif ($s =~ m|^Bundle::|) {
+	    $CPAN::META->{'CPAN::Queue'}{$s} ||= CPAN::Queue->new($s);
 	    $obj = $CPAN::META->instance('CPAN::Bundle',$s);
 	} else {
+	    $CPAN::META->{'CPAN::Queue'}{$s} ||= CPAN::Queue->new($s);
 	    $obj = $CPAN::META->instance('CPAN::Module',$s)
 		if $CPAN::META->exists('CPAN::Module',$s);
 	}
@@ -1861,9 +1881,14 @@ sub hosthard {
 	}
 	$url .= "/" unless substr($url,-1) eq "/";
 	$url .= $file;
-	my($host,$dir,$getfile);
-	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
-	    ($host,$dir,$getfile) = ($1,$2,$3);
+	my($proto,$host,$dir,$getfile);
+
+	# Courtesy Mark Conty mark_conty@cargill.com change from
+	# if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
+	# to
+	if ($url =~ m|^([^:]+)://(.*?)/(.*)/(.*)|) {
+	    # proto not yet used
+	    ($proto,$host,$dir,$getfile) = ($1,$2,$3,$4);
 	} else {
 	    next HOSTHARD; # who said, we could ftp anything except ftp?
 	}
@@ -2375,6 +2400,13 @@ sub rd_authindex {
     }
 }
 
+sub userid {
+  my($self,$dist) = @_;
+  $dist = $self->{'id'} unless defined $dist;
+  my($ret) = $dist =~ m|(?:\w/\w\w/)?([^/]+)/|;
+  $ret;
+}
+
 #-> sub CPAN::Index::rd_modpacks ;
 sub rd_modpacks {
     my($cl,$index_target) = @_;
@@ -2389,10 +2421,15 @@ sub rd_modpacks {
 	my($mod,$version,$dist) = split;
 ###	$version =~ s/^\+//;
 
-	# if it as a bundle, instatiate a bundle object
+	# if it is a bundle, instatiate a bundle object
 	my($bundle,$id,$userid);
 	
-	if ($mod eq 'CPAN') {
+	if ($mod eq 'CPAN' &&
+	    ! (
+	       $CPAN::META->exists('CPAN::Queue','Bundle::CPAN') ||
+	       $CPAN::META->exists('CPAN::Queue','CPAN')
+	      )
+	   ) {
 	    local($^W)= 0;
 	    if ($version > $CPAN::VERSION){
 		$CPAN::Frontend->myprint(qq{
@@ -2429,8 +2466,7 @@ sub rd_modpacks {
 	}
 
 	if ($id->cpan_file ne $dist){
-	    # determine the author
-	    ($userid) = $dist =~ /([^\/]+)/;
+	    $userid = $cl->userid($dist);
 	    $id->set(
 		     'CPAN_USERID' => $userid,
 		     'CPAN_VERSION' => $version,
@@ -2517,8 +2553,19 @@ sub as_string {
     for (sort keys %$self) {
 	next if $_ eq 'ID';
 	my $extra = "";
-	$_ eq "CPAN_USERID" and $extra = " (".$self->author.")";
-	if (ref($self->{$_}) eq "ARRAY") { # Should we setup a language interface? XXX
+	if ($_ eq "CPAN_USERID") {
+	  $extra .= " (".$self->author;
+	  my $email; # old perls!
+	  if ($email = $CPAN::META->instance(CPAN::Author,
+						$self->{$_}
+					       )->email) {
+	    $extra .= " <$email>";
+	  } else {
+	    $extra .= " <no email>";
+	  }
+	  $extra .= ")";
+	}
+	if (ref($self->{$_}) eq "ARRAY") { # language interface? XXX
 	    push @m, sprintf "    %-12s %s%s\n", $_, "@{$self->{$_}}", $extra;
 	} else {
 	    push @m, sprintf "    %-12s %s%s\n", $_, $self->{$_}, $extra;
@@ -3376,7 +3423,11 @@ sub make    { shift->rematein('make',@_); }
 #-> sub CPAN::Bundle::test ;
 sub test    { shift->rematein('test',@_); }
 #-> sub CPAN::Bundle::install ;
-sub install { shift->rematein('install',@_); }
+sub install {
+  my $self = shift;
+  $self->rematein('install',@_);
+  $CPAN::META->delete('CPAN::Queue',$self->id);
+}
 #-> sub CPAN::Bundle::clean ;
 sub clean   { shift->rematein('clean',@_); }
 
@@ -3419,12 +3470,17 @@ sub as_string {
     if ($userid = $self->{'CPAN_USERID'} || $self->{'userid'}){
 	my $author;
 	if ($author = CPAN::Shell->expand('Author',$userid)) {
-	    push @m, sprintf(
-			     $sprintf2,
-			     'CPAN_USERID',
-			     $userid,
-			     $author->fullname
-			    );
+	  my $email = "";
+	  my $m; # old perls
+	  if ($m = $author->email) {
+            $email = " <$m>";
+          }
+	  push @m, sprintf(
+			   $sprintf2,
+			   'CPAN_USERID',
+			   $userid,
+			   $author->fullname . $email
+			  );
 	}
     }
     push @m, sprintf($sprintf, 'CPAN_VERSION', $self->{CPAN_VERSION})
@@ -3511,12 +3567,12 @@ sub cpan_file    {
     } elsif (exists $self->{'userid'} && defined $self->{'userid'}) {
 	my $fullname = $CPAN::META->instance(CPAN::Author,
 				      $self->{'userid'})->fullname;
-	unless (defined $fullname) {
-	    $CPAN::Frontend->mywarn(qq{Full name of author }.
-				    qq{$self->{userid} not known});
-	    return "Contact Author $self->{userid}";
+	my $email = $CPAN::META->instance(CPAN::Author,
+				      $self->{'userid'})->email;
+	unless (defined $fullname && defined $email) {
+	    return "Contact Author $self->{userid} (Try ``a $self->{userid}'')";
 	}
-	return "Contact Author $self->{userid} ($fullname)"
+	return "Contact Author $fullname <$email>";
     } else {
 	return "N/A";
     }
@@ -3607,6 +3663,7 @@ sub install {
 	}
     }
     $self->rematein('install') if $doit;
+    $CPAN::META->delete('CPAN::Queue',$self->id);
 }
 #-> sub CPAN::Module::clean ;
 sub clean  { shift->rematein('clean') }
@@ -3683,7 +3740,7 @@ sub gunzip {
     $fhw->print($buffer)
 	while $gz->gzread($buffer) > 0 ;
     $CPAN::Frontend->mydie("Error reading from $read: $!\n")
-	if $gz->gzerror != &Compress::Zlib::Z_STREAM_END;
+	if $gz->gzerror != Compress::Zlib::Z_STREAM_END();
     $gz->gzclose() ;
     $fhw->close;
     return 1;
@@ -3700,7 +3757,7 @@ sub gtest {
 	or $CPAN::Frontend->mydie("Cannot open $read: $!\n");
     1 while $gz->gzread($buffer) > 0 ;
     $CPAN::Frontend->mydie("Error reading from $read: $!\n")
-	if $gz->gzerror != &Compress::Zlib::Z_STREAM_END;
+	if $gz->gzerror != Compress::Zlib::Z_STREAM_END();
     $gz->gzclose() ;
     return 1;
   } else {
@@ -3767,7 +3824,13 @@ sub DESTROY {
 sub untar {
   my($class,$file) = @_;
   # had to disable, because version 0.07 seems to be buggy
-  if ($CPAN::META->has_inst("Archive::Tar")
+  if (MM->maybe_command($CPAN::Config->{'gzip'})
+      &&
+      MM->maybe_command($CPAN::Config->{'tar'})) {
+    my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
+	"$file | $CPAN::Config->{tar} xvf -";
+    return system($system) == 0;
+  } elsif ($CPAN::META->has_inst("Archive::Tar")
       &&
       $CPAN::META->has_inst("Compress::Zlib") ) {
     my $tar = Archive::Tar->new($file,1);
@@ -3775,9 +3838,11 @@ sub untar {
                                      # that isn't compressed
     return 1;
   } else {
-    my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
-	"$file | $CPAN::Config->{tar} xvf -";
-    return system($system) == 0;
+    $CPAN::Frontend->mydie(qq{
+CPAN.pm needs either both external programs tar and gzip installed or
+both the modules Archive::Tar and Compress::Zlib. Neither prerequisite
+is available. Can\'t continue.
+});
   }
 }
 

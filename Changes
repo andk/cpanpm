@@ -1,14 +1,54 @@
 Revision history for Perl extension CPAN.
 
+=head2 June 1998
+
+Made help an alias for h (Thanks to Stig HackVan <stig@hackvan.com>
+for the hint)
+
+Constant functions in Compress::Zlib now called with FOO() instead of
+&FOO.
+
+"Preston L. Bannister" <preston@home.com> reported two Win32 problems
+in CPAN::FirstTime: don't test for existance of exe files and try to
+determine make from %Config. Fixed.
+
+Following a suggestion by Tkil <tkil@scrye.com>, I made bye and exit
+aliases for quit.
+
+Thanks to a bug report by Andrew Johnson
+<ajohnson@gpu.srv.ualberta.ca> tracked the buggy translation from
+distribution names to authors' names after the authors' directories
+restructuring.
+
+Thanks to a suggestion by Jarkko Hietaniemi, added output of the
+author's email address in several places, so the users can pester them
+more easily.
+
+=head2 May 1998
+
+Courtesy Mark Conty <mark_conty@cargill.com> patch to let the funkyftp
+programs deal with any protocol, not only ftp. We'll see how well this
+works out.
+
+=head2 April 1998
+
+Disables Compress::Zlib with CPAN::Nox.
+
+Added email address to ``Contact Author'' message, so they are
+encouraged to write them immediately.
+
+Suppressing ``There's a new CPAN.pm available'' when they are already
+trying to install exactly that.
+
 =head2 February 1998
 
 Fixed the logic when to use Archive::Tar and when to use a system
-call. Priority takes the system call because Archive::Tar is slow. tar
-or gzip isn't there, we use the modules. Besides, this fixes a
+call. Priority takes the system call because Archive::Tar is slow. If
+tar or gzip isn't there, we use the modules. Besides, this fixes a
 horrible bug in 1.35 that breaks havoc if Archive::Tar is there but
 Compress::Zlib is missing. That's the reason why I make this release
-so quickly. Thanks to D Roland Walker <walker@sky.nlm.nih.gov> for
-the analysis.
+so quickly. Thanks to D Roland Walker <walker@sky.nlm.nih.gov> for the
+analysis.
 
 =head2 January 1998
 

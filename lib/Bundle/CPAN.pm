@@ -49,6 +49,11 @@ Compress::Zlib needs as a prerequisite the zlib library. Currently
 (January 1998) this library is not shipped with the Compress::Zlib
 distribution.
 
+Note that all modules in this Bundle are not strict prerequisites to
+get a working CPAN.pm. CPAN.pm can work alone without any of the other
+modules just fine. The other modules are just goodies that make a
+smooth operation of CPAN.pm more likely.
+
 =head1 AUTHOR
 
 Andreas König

@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.26 $, 10;
+$VERSION = substr q$Revision: 1.27 $, 10;
 
 =head1 NAME
 
@@ -168,13 +168,22 @@ those.
     for $prog (qw/gzip tar unzip make lynx ncftp ftp/){
 	my $path = $CPAN::Config->{$prog} || "";
 	if (MM->file_name_is_absolute($path)) {
-	    warn "Warning: configured $path does not exist\n" unless -e $path;
-	    $path = "";
+	  # testing existence is not good enough, some have these exe
+	  # extensions
+
+	  # warn "Warning: configured $path does not exist\n" unless -e $path;
+	  # $path = "";
 	} else {
 	    $path = '';
 	}
+	unless ($path) {
+	  # e.g. make -> nmake
+	  $prog = $Config::Config{$prog} if exists $Config::Config{$prog};
+	}
+
 	$path ||= find_exe($prog,[@path]);
-	warn "Warning: $prog not found in PATH\n" unless -e $path;
+	warn "Warning: $prog not found in PATH\n" unless
+	    $path; # not -e $path, because find_exe already checked that
 	$ans = prompt("Where is your $prog program?",$path) || $path;
 	$CPAN::Config->{$prog} = $ans;
     }
