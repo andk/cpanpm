@@ -40,13 +40,11 @@ react accordingly (my favorite feature request by Randal). This might
 become a (too?) big endeavour if we extend that to third party
 software.
 
-I should study RPM. Too bad it doesn't work *at all* on my Linux box.
-RPM gurus are welcome to help me. I just don't enjoy software that
-doesn't work out of the box on my own box :-(
-
 Make the FirstTime dialog more Absolutely-First-Time-Without-Any-Clue
 style. Thanks to Mike Heins for providing me with insights how users
 feel when they haven't heard of CPAN ever before. Offering
 autodetermination of a CPAN site might help. Offering something like a
 Configure -des might help. Still thinking.
 
+Don't whine that you will use the old MIRRORED.BY file if it's only 0
+byte long.

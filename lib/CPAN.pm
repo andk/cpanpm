@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.41';
+$VERSION = '1.42';
 
-# $Id: CPAN.pm,v 1.242 1998/12/01 02:00:23 k Exp $
+# $Id: CPAN.pm,v 1.243 1998/12/01 07:57:12 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.242 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.243 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -843,6 +843,8 @@ sub init {
 sub load {
     my($self) = shift;
     my(@miss);
+    use Carp;
+    print Carp::confess;
     eval {require CPAN::Config;};       # We eval because of some
                                         # MakeMaker problems
     unless ($dot_cpan++){
@@ -3255,7 +3257,8 @@ sub install {
 	if $CPAN::DEBUG;
     my $system = join(" ", $CPAN::Config->{'make'},
 		      "install", $CPAN::Config->{make_install_arg});
-    my($pipe) = FileHandle->new("$system 2>&1 |");
+    my($stderr) = $^O eq "Win32" ? "" : " 2>&1 ";
+    my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){
 	$CPAN::Frontend->myprint($_);

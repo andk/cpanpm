@@ -1,5 +1,13 @@
 Revision history for Perl extension CPAN.
 
+=head2 December 1998 after 1.41
+
+Win32 could not process 2>&1. Fixed now. Thanks to Randy Kobes
+<randy@theory.uwinnipeg.ca> for the report.
+
+'make test' seemed to hang because configuration was not yet done.
+Changed the test to run without configuration.
+
 =head2 July-November 1998 after 1.40
 
 Added documentation by Graham Barr about perl on firewalls. Thanks,
