@@ -93,7 +93,7 @@ DESCRIPTION
     other pod with the only difference, that one pod section exists
     starting with (verbatim):
 
-    	=head1 CONTENTS
+            =head1 CONTENTS
 
 
     In this pod section each line obeys the format
@@ -162,19 +162,19 @@ CONFIGURATION
       build_dir         locally accessible directory to build modules
       cache_expire      after how many days refetch index files
       cpan_home         local directory reserved for this package
-      gzip		    location of external program gzip
+      gzip              location of external program gzip
       inhibit-startup-message
                         if true, does not print the startup message
       keep_source       keep the source in a local directory?
       keep_source_where where keep the source (if we do)
       make              location of external program make
-      make_arg	    arguments that should always be passed to 'make'
+      make_arg          arguments that should always be passed to 'make'
       make_install_arg  same as make_arg for 'make install'
-      makepl_arg	    arguments passed to 'perl Makefile.PL'
+      makepl_arg        arguments passed to 'perl Makefile.PL'
       more              location of external program more (or any pager)
       tar               location of external program tar
       unzip             location of external program unzip
-      urllist	    arrayref to nearby CPAN sites (or equivalent locations)
+      urllist           arrayref to nearby CPAN sites (or equivalent locations)
 
 
 SECURITY
@@ -211,7 +211,7 @@ Debugging
 
     This module presumes that all packages on CPAN
 
-    * Declare their $VERSION variable in an easy to parse manner. This
+    * declare their $VERSION variable in an easy to parse manner. This
       prerequisite can hardly be relaxed because it consumes by far
       too much memory to load all packages into a single program
       just to determine the $VERSION variable . Currently all
@@ -226,7 +226,7 @@ Debugging
       If you are author of a package and wonder if your VERSION can
       be parsed, please try the above method.
 
-    * Come as compressed or gzipped tarfiles or as zip files (well we
+    * come as compressed or gzipped tarfiles or as zip files (well we
       try to handle a bit more, but without much enthusiasm).
 
 

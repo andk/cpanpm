@@ -53,7 +53,20 @@ ftp.hkstar.com:
 
 # dst_dst          = "ftp://ftp.hkstar.com/pub/CPAN/"
 # dst_contact      = "mailto:ftpadmin@hkstar.com"
-# dst_src    = "ftp://ftp.funet.fi/pub/languages/perl/CPAN"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN"
+
+ftp.jaist.ac.jp:
+  frequency        = "daily"
+  dst_directory    = "ftp.jaist.ac.jp:/pub/lang/perl/CPAN/"
+  dst_location     = "Tatsunokuchi, Ishikawa, Japan, Asia (36.26N 136.36E)"
+  dst_organisation = "Japan Advanced Institute of Science and Technology"
+  dst_timezone     = "GMT+9"
+  dst_contact      = "ftp-admin@jaist.ac.jp"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.jaist.ac.jp/pub/lang/perl/CPAN/"
+# dst_contact      = "mailto:ftp-admin@jaist.ac.jp"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN"
 
 ftp.lab.kdd.co.jp:
   frequency        = "daily"
@@ -93,6 +106,21 @@ dongpo.math.ncu.edu.tw:
 # dst_dst          = "ftp://dongpo.math.ncu.edu.tw/perl/CPAN/"
 # dst_contact      = "mailto:root@dongpo.math.ncu.edu.tw"
 # dst_src          = "ftp://ftp.iguide.com/pub/mirrors/packages/perl/CPAN/"
+
+# commented out 199611102000 because almost three weeks stale
+# (maybe because dongpo seems to be down?) // cpan-adm@ftp.funet.fi
+# ftp.wownet.net:
+#   frequency        = "daily"
+#   dst_directory    = "ftp.wownet.net:/pub2/PERL/"
+#   dst_location     = "Taipei, Taiwan, Asia (25N 121.5E)"
+#   dst_organization = "WOWNET Network Service Corporation"
+#   dst_timezone     = "GMT+8"
+#   dst_contact      = "ftpadmin@wownet.net"
+#   dst_src          = "dongpo.math.ncu.edu.tw:/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.wownet.net/pub2/PERL/"
+# dst_contact      = "mailto:ftpadmin@wownet.net"
+# dst_src          = "ftp://dongpo.math.ncu.edu.tw/perl/CPAN/"
 
 # Australasia
 
@@ -159,11 +187,11 @@ ftp.kulnet.kuleuven.ac.be:
   dst_organisation = "Katholieke Universiteit Leuven"
   dst_timezone     = "GMT+1"
   dst_contact      = "operations@kulnet.kuleuven.ac.be"
-  dst_src          = "ftp.ibp.fr:/pub/perl/CPAN/"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.kulnet.kuleuven.ac.be/pub/mirror/CPAN/"
 # dst_contact      = "mailto:operations@kulnet.kuleuven.ac.be"
-# dst_src          = "ftp://ftp.ibp.fr/pub/perl/CPAN/"
+# dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 sunsite.mff.cuni.cz:
   frequency        = "daily"
@@ -202,16 +230,17 @@ ftp.funet.fi:
   dst_notes        = "not really mirroring itself"
 
 # dst_dst          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
-# dst_contact      = "mailto:cpan-adm@funet.fi"
+# dst_contact      = "mailto:cpan-adm@ftp.funet.fi"
 
-ftp.ibp.fr:
-  frequency        = "daily"
-  dst_directory    = "ftp.ibp.fr:/pub/perl/CPAN/"
-  dst_location     = "Paris, France, Europe (48.50N 2.20E)"
-  dst_organization = "l'Institut Blaise Pascal; Blaise Pascal Institute"
-  dst_timezone     = "GMT+1"
-  dst_contact      = "ftpmaint@ibp.fr"
-  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+# ftp disk temporarily unavailable //cpan-adm@ftp.funet.fi 19961115
+# ftp.ibp.fr:
+#   frequency        = "daily"
+#   dst_directory    = "ftp.ibp.fr:/pub/perl/CPAN/"
+#   dst_location     = "Paris, France, Europe (48.50N 2.20E)"
+#   dst_organization = "l'Institut Blaise Pascal; Blaise Pascal Institute"
+#   dst_timezone     = "GMT+1"
+#   dst_contact      = "ftpmaint@ibp.fr"
+#   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.ibp.fr/pub/perl/CPAN/"
 # dst_contact      = "mailto:ftpmaint@ibp.fr"
@@ -310,7 +339,7 @@ cis.utovrm.it:
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.cs.ruu.nl:
-  frequency        = "daily"
+  frequency        = "bidaily"
   dst_directory    = "ftp.cs.ruu.nl:/pub/PERL/CPAN/"
   dst_http         = "http://www.cs.ruu.nl/pub/PERL/CPAN/"
   dst_location     = "Utrecht, the Netherlands, Europe (52.N 5.8E)"
@@ -508,10 +537,24 @@ unix.hensa.ac.uk:
 
 # North America
 
+ftp.utilis.com:
+  frequency        = "weekly"
+  dst_directory    = "ftp.utilis.com:/public/CPAN/"
+  dst_location     = "Toronto, Ontario, Canada, North America (43.65N 79.33W)"
+  dst_organization = "Utilis Technology Ltd."
+  dst_timezone     = "GMT-5"
+  dst_contact      = "langevin@utilis.com"
+  dst_src          = "enterprise.ic.gc.ca:/pub/CPAN/"
+  dst_notes        = "maximum 50 FTP users at a time; anonymous FTP allowed"
+
+# dst_dst          = "ftp://ftp.utilis.com/public/CPAN/"
+# dst_contact      = "mailto:langevin@utilis.com"
+# dst_src          = "ftp://enterprise.ic.gc.ca/pub/CPAN/"
+
 enterprise.ic.gc.ca:
   frequency        = "daily"
   dst_directory    = "enterprise.ic.gc.ca:/pub/perl/CPAN/"
-  dst_location     = "Ottawa, Canada, North America (45.25N 75.42W)"
+  dst_location     = "Ottawa, Ontario, Canada, North America (45.25N 75.42W)"
   dst_organisation = "Industry Canada, Government of Canada (Industrie Canada, Gouvernement du Canada)"
   dst_timezone     = "GMT-5"
   dst_contact      = "ftp-admin@enterprise.ic.gc.ca"
@@ -677,14 +720,15 @@ ftp.metronet.com:
 # dst_contact      = "mailto:wjm@metronet.com"
 # dst_src          = "ftp://ftp.ou.edu/mirrors/CPAN/"
 
-ftp.sterling.com:
-  frequency        = "daily"
-  dst_directory    = "ftp.sterling.com:/CPAN/"
-  dst_location     = "Dallas, Texas, USA, North America (32.50N 96.50W)"
-  dst_organisation = "Sterling Software"
-  dst_timezone     = "GMT-6"
-  dst_contact      = "archive@sterling.com"
-  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+# disabled because too often stale 1996-10-02 cpan-adm@ftp.funet.fi
+# ftp.sterling.com:
+#   frequency        = "daily"
+#  dst_directory    = "ftp.sterling.com:/CPAN/"
+#  dst_location     = "Dallas, Texas, USA, North America (32.50N 96.50W)"
+#  dst_organisation = "Sterling Software"
+#  dst_timezone     = "GMT-6"
+#  dst_contact      = "archive@sterling.com"
+#  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.sterling.com/CPAN/"
 # dst_contact      = "mailto:archive@sterling.com"

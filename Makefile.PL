@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.15 1996/10/01 21:04:08 k Exp k $
+# $Id: Makefile.PL,v 1.16 1996/11/17 07:30:52 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -88,7 +88,7 @@ with all the intermediate files?
     $CPAN::Config->{build_cache} = $ans;
 
     # XXX This the time when we refetch the index files (in days)
-    $CPAN::Config->{cache_expire} = 1;
+    $CPAN::Config->{'index_expire'} = 1;
 
     print qq{
 
@@ -104,13 +104,11 @@ properly. Please correct me, if I guess the wrong path for a program.
 	$ans = prompt("Where is your $prog program?",$path) || $path;
 	$CPAN::Config->{$prog} = $ans;
     }
-    for $prog (qw/more/){
-	my $path = $CPAN::Config->{$prog} || 
-	    $ENV{PAGER} || find_exe("less",[@path]) || 
-		find_exe($prog,[@path]) || $prog;
-	$ans = prompt("Where is your $prog program?",$path) || $path;
-	$CPAN::Config->{$prog} = $ans;
-    }
+    my $path = $CPAN::Config->{'pager'} || 
+	$ENV{PAGER} || find_exe("less",[@path]) || 
+	    find_exe("more",[@path]) || "more";
+    $ans = prompt("What is your favorite pager program?",$path) || $path;
+    $CPAN::Config->{'pager'} = $ans;
     print qq{
 
 Every Makefile.PL is run by perl in a seperate process. Likewise we
@@ -191,7 +189,7 @@ file:, ftp: or http: URL, or "q" to finish selecting.
     $ans = $other = "";
     my %seen;
     while (1) {
-	my $pipe = -t *STDIN ? "| $CPAN::Config->{more}" : ">/dev/null";
+	my $pipe = -t *STDIN ? "| $CPAN::Config->{'pager'}" : ">/dev/null";
 	open FH, $pipe;
 	print FH @valid;
 	close FH;

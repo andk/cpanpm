@@ -1,5 +1,33 @@
 Revision history for Perl extension CPAN.
 
+=head2 Nov 17, 1996
+
+Doug MacEachern contributed a powerful suite of interactive
+manipulation of $CPAN::Config variables. Try 'o conf urllist' to get
+an impreesion of the feature. The interactive changes can even be
+committed back into the Config file. Wow. Thanks, Doug!
+
+CHECKSUMS files were never reused. Now CPAN checks if an existing
+CHECKSUMS file contains the checksum we're looking for.
+
+C<install> quite a few times too often answered with "Foo::Bar is up
+to date". Should be fixed now.
+
+index files were never refetched. Fixed now.
+
+Renamed misleading configuration option C<cache_expire> to
+C<index_expire>, C<more> to C<pager>, and C<inhibit-startup-message>
+to C<inhibit_startup_message>.
+
+If make install does not succeed we now check for permission problems
+and suggest to become superuser. The feature was suggested by Jon
+Orwant. This will need a bit more work: check for uid, let them become
+superuser without leaving the program and such.
+
+Improved help in several places.
+
+Released 0.42a.
+
 =head2 Oct 1, 1996
 
 Implemented "force". Usage is simply:
