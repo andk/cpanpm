@@ -4,6 +4,15 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
 
+=head2 still September, 1997
+
+is_reachable had to go again, firewalls may not allow us to ping
+
+sorting of hosts did lead to some use of undefined value warnings ->
+fixed
+
+Released as 1.3101
+
 =head2 September, 1997
 
 Fixed Bundle::Foo::Bar. More than one level deep nesting could not be

@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend
 	   };
 
-$VERSION = '1.31';
+$VERSION = '1.3101';
 
-# $Id: CPAN.pm,v 1.201 1997/09/21 08:47:12 k Exp $
+# $Id: CPAN.pm,v 1.202 1997/09/23 18:30:36 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.201 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.202 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -471,8 +471,11 @@ sub has_inst {
     if ($INC{$file}) {
 #	warn "$file in %INC"; #debug
 	return 1;
-    } elsif (eval { require $file } && !$@) {
-	# eval is good if we haven't yet read the database
+    } elsif (eval { require $file }) {
+	# eval is good: if we haven't yet read the database it's
+	# perfect and if we have installed the module in the meantime,
+	# it tries again. The second require is only a NOOP returning
+	# 1 if we had success, otherwise it's retrying
 	$CPAN::Frontend->myprint("CPAN: $mod loaded ok\n");
 	if ($mod eq "CPAN::WAIT") {
 	    push @CPAN::Shell::ISA, CPAN::WAIT;
@@ -808,12 +811,13 @@ sub init {
 sub load {
     my($self) = shift;
     my(@miss);
-    eval {require CPAN::Config;};       # We eval, because of some
+    eval {require CPAN::Config;};       # We eval because of some
                                         # MakeMaker problems
     unshift @INC, MM->catdir($ENV{HOME},".cpan") unless $dot_cpan++;
     eval {require CPAN::MyConfig;};     # where you can override
                                         # system wide settings
     return unless @miss = $self->not_loaded;
+    # XXX better check for arrayrefs too
     require CPAN::FirstTime;
     my($configpm,$fh,$redo,$theycalled);
     $redo ||= "";
@@ -1558,6 +1562,7 @@ sub ftp_get {
 
 sub is_reachable {
     my($self,$url) = @_;
+    return 1; # we can't simply roll our own, firewalls may break ping
     return 0 unless $url;
     return 1 if substr($url,0,4) eq "file";
     return 1 unless $url =~ m|://([^/]+)|;
@@ -1614,6 +1619,7 @@ sub localize {
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
     my(@reordered,$last);
+#line 1621
     $last = $#{$CPAN::Config->{urllist}};
     if ($force & 2) { # local cpans probably out of date, don't reorder
 	@reordered = (0..$last);
@@ -1624,6 +1630,8 @@ sub localize {
 		    <=> 
 		(substr($CPAN::Config->{urllist}[$a],0,4) eq "file")
 		    or
+		defined($Thesite)
+		    and
 		($b == $Thesite)
 		    <=>
 		($a == $Thesite)
