@@ -1,5 +1,16 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 12, 1996
+
+Release of 0.26a.
+
+Local source cache was ignored, now working.
+
+'perl Makefile.PL < /dev/null'  now possible.
+
+After release of 26a: Limit depth of modules to two levels to save
+memory. Release of 0.27a.
+
 =head2 Sep 11, 1996
 
 Isolated both the FTP and the Shell subroutines into their own packages.
@@ -11,10 +22,6 @@ Added command o for setting options.
 Added a newline here or there.
 
 Added Ulrich's support for proxies.
-
-Local source cache was ignored, now working.
-
-'perl Makefile.PL < /dev/null'  now possible.
 
 =head2 Sep 10, 1996
 

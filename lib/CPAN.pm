@@ -3,7 +3,7 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.26a';
+$VERSION = '0.27a';
 
 # $Id: CPAN.pm,v 1.46 1996/09/10 20:41:06 k Exp k $
 my $version = substr q$Revision: 1.46 $, 10;
@@ -688,34 +688,34 @@ sub force_reload {
 }
 
 sub reload {
-    my($class,$force) = @_;
+    my($cl,$force) = @_;
     my $time = time;
 
     # XXX check if a newer one is available. (We currently read it from time to time)
     return if $last_time + $CPAN::Config->{cache_expire}*86400 > $time;
     $last_time = $time;
 
-    read_authindex(reload_x("authors/01mailrc.txt.gz","01mailrc.gz",$force));
+    $cl->read_authindex($cl->reload_x("authors/01mailrc.txt.gz","01mailrc.gz",$force));
     return if $CPAN::Signal; # this is sometimes lengthy
-    read_modpacks(reload_x("modules/02packages.details.txt.gz","02packag.gz",$force));
+    $cl->read_modpacks($cl->reload_x("modules/02packages.details.txt.gz","02packag.gz",$force));
     return if $CPAN::Signal; # this is sometimes lengthy
-    read_modlist(reload_x("modules/03modlist.data.gz","03mlist.gz",$force));
+    $cl->read_modlist($cl->reload_x("modules/03modlist.data.gz","03mlist.gz",$force));
 }
 
 sub reload_x {
-    my($wanted,$localname,$force) = @_;
+    my($cl,$wanted,$localname,$force) = @_;
     $force ||= 0;
     my $abs_wanted = CPAN->catfile($CPAN::Config->{'keep_source_where'},$localname);
     if (-f $abs_wanted && -M $abs_wanted < $CPAN::Config->{'cache_expire'} && !$force) {
 	my($s) = $CPAN::Config->{'cache_expire'} != 1;
-	print qq{$abs_wanted younger than $CPAN::Config->{'cache_expire'} day$s. I\'ll use that.\n};
+	$cl->debug(qq{$abs_wanted younger than $CPAN::Config->{'cache_expire'} day$s. I\'ll use that.\n});
 	return $abs_wanted;
     }
     return CPAN::FTP->localize($wanted,$abs_wanted,$force);
 }
 
 sub read_authindex {
-    my($index_target) = @_;
+    my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
     my $fh = IO::File->new("$pipe|");
@@ -734,35 +734,49 @@ sub read_authindex {
 }
 
 sub read_modpacks {
-    my($index_target) = @_;
+    my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
     my $fh = IO::File->new("$pipe|");
     while (<$fh>) {
 	next if 1../^\s*$/;
+	next unless /\s\+/; # we ignore package names that have no
+                            # corresponding file (i.e. which have no
+                            # '+' sign in column 2)
 	chomp;
 	my($mod,$version,$dist) = split;
-	next unless $version =~ s/^\+//; # we ignore package names that have no corresponding file
-
-	# instantiate a module object
-	my $modid = $CPAN::META->instance('CPAN::Module',$mod);
-	$modid->set('CPAN_VERSION' => $version, 'CPAN_FILE' => $dist);
-
-	# determine the author
-	my($userid) = $dist =~ /([^\/]+)/;
-	$modid->set('CPAN_USERID' => $userid) if $userid =~ /\w/;
-
-	# instantiate a distribution object
-	my $distid = $CPAN::META->instance('CPAN::Distribution',$dist);
-	$distid->set('CPAN_USERID'=>$userid) if $userid =~ /\w/;
+	$version =~ s/^\+//;
 
 	# if it as a bundle, instatiate a bundle object
 	my($bundle) = $mod =~ /^Bundle::(.*)/;
-#	my $bundleid =  $CPAN::META->instance('CPAN::Bundle',$bundle);
+	$version = "n/a" if $mod =~ s/(.+::.+::).+/$1*/; # replace the third level with a star
+	
+	my($id);
 	if ($bundle){
-	    my $bundleid =  $CPAN::META->instance('CPAN::Bundle',$mod);
-	    $bundleid->set('CPAN_VERSION' => $version, 'CPAN_FILE' => $dist);
+	    $id =  $CPAN::META->instance('CPAN::Bundle',$mod);
+	    $id->set('CPAN_VERSION' => $version, 'CPAN_FILE' => $dist);
+	} elsif ($CPAN::META->exists('CPAN::Module',$mod)) {
+	    next;
+	} else {
+	    # instantiate a module object
+	    $id = $CPAN::META->instance('CPAN::Module',$mod);
+	    $id->set('CPAN_VERSION' => $version, 'CPAN_FILE' => $dist);
 	}
+
+	# determine the author
+	my($userid) = $dist =~ /([^\/]+)/;
+	$id->set('CPAN_USERID' => $userid) if $userid =~ /\w/;
+
+	# instantiate a distribution object
+	unless ($CPAN::META->exists('CPAN::Distribution',$dist)) {
+	    $CPAN::META->instance(
+				  'CPAN::Distribution' => $dist
+				 )->set(
+					'CPAN_USERID' => $userid
+				       )
+				     if $userid =~ /\w/;
+	}
+
 	return if $CPAN::Signal;
     }
     $fh->close;
@@ -770,7 +784,7 @@ sub read_modpacks {
 }
 
 sub read_modlist {
-    my($index_target) = @_;
+    my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
     my $fh = IO::File->new("$pipe|");
@@ -1228,15 +1242,17 @@ sub as_string {
     my $sprintf = "    %-12s %s\n";
     push @m, sprintf $sprintf, 'DESCRIPTION', $self->{description} if $self->{description};
     my $sprintf2 = "    %-12s %s (%s)\n";
-    my $userid = $self->{'CPAN_USERID'} || $self->{'userid'};
-    push @m, sprintf(
-		     $sprintf2,
-		     'CPAN_USERID',
-		     $userid,
-		     $CPAN::META->instance(CPAN::Author,$userid)->fullname
-		    );
-    push @m, sprintf $sprintf, 'CPAN_VERSION', $self->{CPAN_VERSION};
-    push @m, sprintf $sprintf, 'CPAN_FILE', $self->{CPAN_FILE};
+    my($userid);
+    if ($userid = $self->{'CPAN_USERID'} || $self->{'userid'}){
+	push @m, sprintf(
+			 $sprintf2,
+			 'CPAN_USERID',
+			 $userid,
+			 $CPAN::META->instance(CPAN::Author,$userid)->fullname
+			)
+    }
+    push @m, sprintf $sprintf, 'CPAN_VERSION', $self->{CPAN_VERSION} if $self->{CPAN_VERSION};
+    push @m, sprintf $sprintf, 'CPAN_FILE', $self->{CPAN_FILE} if $self->{CPAN_FILE};
     my $sprintf3 = "    %-12s %1s%1s%1s%1s (%s,%s,%s,%s)\n";
     my(%statd,%stats,%statl,%stati);
     @statd{qw,? i c a b R M S,} = qw,unknown idea pre-alpha alpha beta released mature standard,;
