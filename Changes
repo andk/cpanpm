@@ -19,6 +19,11 @@ Checking $^O for C</win/i> and not for C<eq "Win32"> because
 apparently some say Win32, others say MSWin32. Needs to be bugreported
 to p5p.
 
+1.44_53 fixes a bug found by Michael G. Schwern <schwern@pobox.com>:
+Parsing of the PREREQ_PM in the Makefile fails if the module names
+contain colons. As my patch to MakeMaker is being questioned, I also
+back out the code for the future MakeMaker.
+
 =head2 December 1998 after 1.43
 
 Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()

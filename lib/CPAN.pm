@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.44_52';
+$VERSION = '1.44_53';
 
-# $Id: CPAN.pm,v 1.248 1999/01/13 12:09:45 k Exp $
+# $Id: CPAN.pm,v 1.249 1999/01/13 17:46:21 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.248 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.249 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -3272,12 +3272,19 @@ sub needs_prereq {
   }
 
   my(@p,@need);
-  if ($v < 5.4303) {
+  if (1) { # probably all versions of MakeMaker ever so far
     while (<$fh>) {
       last if /MakeMaker post_initialize section/;
-      my($p) = m{^#\s+PREREQ_PM\s+=>\s+(.+)}; # } # CPERL
+      my($p) = m{^[\#]
+		 \s+PREREQ_PM\s+=>\s+(.+)
+		 }x;
       next unless $p;
       # warn "Found prereq expr[$p]";
+
+      # Now quote the left side of =>, it may not be autoquoted
+      # because of colons
+      $p =~ s/(\s)([\w\:]+)(=>q\[.*?\],)/$1\"$2\"$3/g;
+
       require Safe;
       my($comp) = Safe->new("CPAN::Safe2");
       my $ret = $comp->reval($p);
@@ -3286,7 +3293,7 @@ sub needs_prereq {
       @p = keys %$ret;
       last;
     }
-  } else {
+  } else { # MakeMaker after a patch I suggested. Let's wait and see
     while (<$fh>) {
       last if /MakeMaker post_initialize section/;
       my($p) = m|\# prerequisite (\S+).+not found|;
