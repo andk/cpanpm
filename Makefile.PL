@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.12 1996/09/17 17:12:31 k Exp $
+# $Id: Makefile.PL,v 1.13 1996/09/20 10:26:45 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -216,6 +216,9 @@ file:, ftp: or http: URL, or "q" to finish selecting.
 	$other ||= "other";
     }
 
+    # We don't ask that now, it will be noticed in time....
+    $CPAN::Config->{'inhibit-startup-message'} = 0;
+
     print "\n\n";
     $configpmdir = MM->catdir(qw/lib CPAN/);
     mkpath $configpmdir;
@@ -247,9 +250,9 @@ remove the old one right now.
 sub MY::postamble {
     my($self) = shift;
     my @m;
-    my $cpandir = $CPAN::Config->{cpan_home};
-    my $configpm_from = $self->catfile("lib","CPAN","Config.pm");
-    my $configpm_to = $self->catfile($cpandir,"Config.pm");
+#    my $cpandir = $CPAN::Config->{cpan_home};
+#    my $configpm_from = $self->catfile("lib","CPAN","Config.pm");
+#    my $configpm_to = $self->catfile($cpandir,"Config.pm");
     push @m, qq{
 # This is only for me (Andreas Koenig) for the distribution
 private: MIRRORED.BY
