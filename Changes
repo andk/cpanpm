@@ -1,5 +1,21 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 22, 1996
+
+More friendly setting of debugging options.
+
+More checking of write permissions.
+
+Rename of bundles/ directory to Bundle/ (allows perldoc read the pods).
+
+Simplified the code shared between "r" und "u" command, added
+autobundle.
+
+Deprecated "o index" because it isn't really an option but an action
+and renamed it to "reload index". Added "reload cpan". Added "o update".
+
+Released 0.35a.
+
 =head2 Sep 17, 1996
 
 Support for CHECKSUMS files that have been gzipped by your CPAN site

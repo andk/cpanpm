@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.31a';
+$VERSION = '0.35a';
 
-# $Id: CPAN.pm,v 1.51 1996/09/20 10:33:30 k Exp $
-my $version = substr q$Revision: 1.51 $, 10;
+# $Id: CPAN.pm,v 1.55 1996/09/22 19:18:45 k Exp $
+my $version = substr q$Revision: 1.55 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -57,8 +57,9 @@ END { $End++; &cleanup; }
 		  FTP             512
 		  Shell          1024
 		 );
-
-$CPAN::DEBUG = 0;
+#???		  all            2047
+# @CPAN::DEBUG{map {lc $_} keys %CPAN::DEBUG} = values CPAN::DEBUG;
+$CPAN::DEBUG ||= 0;
 
 @ISA = qw(CPAN::Debug Exporter MY); # the strange MY class from MakeMaker, gives us catfile and catdir
 $META ||= new CPAN;                 # Incase we reeval ourselves we need a ||
@@ -86,6 +87,7 @@ Nothing Done.
 
 sub all {
     my($mgr,$class) = @_;
+    CPAN->debug("mgr[$mgr] class[$class]") if $CPAN::DEBUG;
     CPAN::Index->reload;
     values %{ $META->{$class} };
 }
@@ -286,20 +288,10 @@ use vars qw(@ISA $AUTOLOAD);
 
 # private function ro re-eval this module (handy during development)
 sub AUTOLOAD {
-    warn "CPAN doesn't know how to autoload $AUTOLOAD :-(
+    warn "CPAN::Shell doesn't know how to autoload $AUTOLOAD :-(
 
 Nothing Done.
 ";
-}
-
-sub re {
-    shift;
-    CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
-    my $fh = IO::File->new($INC{'CPAN.pm'});
-    local $/;
-    undef $/;
-    eval <$fh>;
-    warn $@ if $@;
 }
 
 sub h {
@@ -332,7 +324,18 @@ A regular expression has to be between two slashes.
 }
 
 sub a { print shift->format_result('Author',@_);}
-sub b { print shift->format_result('Bundle',@_);}
+sub b {
+    my($self,@which) = @_;
+    my($bdir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
+    my($dh) = DirHandle->new($bdir); # may fail!
+    my($entry);
+    for $entry ($dh->read) {
+	next if -d $CPAN::META->catdir($bdir,$entry);
+	next unless $entry =~ s/\.pm$//;
+	$CPAN::META->instance('CPAN::Bundle',"Bundle::$entry");
+    }
+    print $self->format_result('Bundle',@which);
+}
 sub d { print shift->format_result('Distribution',@_);}
 sub m { print shift->format_result('Module',@_);}
 
@@ -360,98 +363,138 @@ sub o {
 	my($k,$v);
 	print "CPAN::Config options:\n";
 	while (($k,$v) = each %$CPAN::Config) {
-	    printf "    %-18s %s\n", $k, $v;
+	    if (ref $v) {
+		print map {"\t$_\n"} @{$v};
+	    } else {
+		printf "    %-18s %s\n", $k, $v;
+	    }
 	}
 	print "\n";
     } elsif ($o_type eq 'debug') {
 	my(%valid);
+	@o_what = () if $o_what[0] =~ /help/i;
 	if (@o_what) {
-	    if ( exists $CPAN::DEBUG{$o_what[0]} ) {
-		$CPAN::DEBUG |= $CPAN::DEBUG{$o_what[0]};
-	    } elsif ($o_what[0] =~ /^\d/) {
-		$CPAN::DEBUG = $o_what[0];
-	    } else {
-		print "unknown argument $o_what[0]\n";
+	    while (@o_what) {
+		my($what) = shift @o_what;
+		if ( exists $CPAN::DEBUG{$what} ) {
+		    $CPAN::DEBUG |= $CPAN::DEBUG{$what};
+		} elsif ($what =~ /^\d/) {
+		    $CPAN::DEBUG = $what;
+		} elsif (lc $what eq 'all') {
+		    my($max) = 0;
+		    for (values %CPAN::DEBUG) {
+			$max += $_;
+		    }
+		    $CPAN::DEBUG = $max;
+		} else {
+		    for (keys %CPAN::DEBUG) {
+			next unless lc($_) eq lc($what);
+			$CPAN::DEBUG |= $CPAN::DEBUG{$_};
+		    }
+		    print "unknown argument $what\n";
+		}
 	    }
 	} else {
-	    print "Valid options for debug are ".join(" ",sort keys %CPAN::DEBUG).
-		" or a number\n\n";
+	    print "Valid options for debug are ".join(", ",sort(keys %CPAN::DEBUG), 'all').
+		" or a number. Completion works on the options. Case is ignored.\n\n";
 	}
 	if ($CPAN::DEBUG) {
 	    print "Options set for debugging:\n";
 	    my($k,$v);
-	    while (($k,$v) = each %CPAN::DEBUG) {
-		printf "    %-12s(%s)\n", $k, $v if $v & $CPAN::DEBUG;
+	    for $k (sort {$CPAN::DEBUG{$a} <=> $CPAN::DEBUG{$b}} keys %CPAN::DEBUG) {
+		$v = $CPAN::DEBUG{$k};
+		printf "    %-14s(%s)\n", $k, $v if $v & $CPAN::DEBUG;
 	    }
 	} else {
 	    print "Debugging turned off completely.\n";
 	}
-    } elsif ($o_type eq 'index') {
-	CPAN::Index->force_reload;
+    } elsif ($o_type eq 'update') {
+	if (@o_what) {
+	    if ( $o_what[0] eq 'force' ) {
+		$self->{'update_policy'} = 'force';
+	    } elsif ($o_what[0] eq 'noforce') {
+		$self->{'update_policy'} = 'noforce';
+	    } else {
+		$o_what[0] = 'help';
+	    }
+	} else {
+	    $o_what[0] = 'help';
+	}
+	if ($o_what[0] =~ /^h/) {
+	    print "Valid options for update are 'force' and 'noforce'.
+    Setting to 'force' will reinstall modules even if the installed version
+    is up-to-date.\n";
+	}
+	$CPAN::META->{'update_policy'} ||= 'noforce';
+	print "Update policy set to '$CPAN::META->{'update_policy'}'\n";
     } else {
 	print qq{
 Known options:
   conf    show configuration variables
   debug   set and get debugging options
-  index   force reload of indices
+  update  set and get update options
 };
     }
 }
 
-# u and r are too similar, we should factor out something XXX
-sub r {
-    my($self) = shift;
-    my(@args) = @_;
-    @args = '/./' unless @args;
-    my($module,%seen,%need,$headerdone);
-    my $sprintf = "%-25s %9s %9s  %s\n";
-    for $module ($self->expand('Module',@args)) {
-	my $file  = $module->cpan_file;
-	next unless defined $file; # ??
-	my($latest) = $module->cpan_version;
-	my($inst_file) = $module->inst_file;
-	my($have);
-	if ($inst_file){
-	    $have = $module->inst_version;
-	    $have ||= 0;
-	    local($^W) = 0;
-	    next if $have >= $latest;
-	} else {
-	    next;
-	    # $have = "-";
-	}
-	$seen{$file} ||= 0;
-	next if $seen{$file}++;
-	unless ($headerdone++){
-	    print "\n";
-	    printf $sprintf, "Package namespace", "installed", "latest", "in CPAN file";
-	}
-	$latest = substr($latest,0,8) if length($latest) > 8;
-	$have = substr($have,0,8) if length($have) > 8;
-	printf $sprintf, $module->id, $have, $latest, $file;
-	$need{$module->id}++;
-	return if $CPAN::Signal; # this is sometimes lengthy
-    }
-    unless (%need) {
-	print "All modules are up to date for @args\n";
+sub reload {
+    if ($_[1] =~ /cpan/i) {
+	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
+	my $fh = IO::File->new($INC{'CPAN.pm'});
+	local $/;
+	undef $/;
+	eval <$fh>;
+	warn $@ if $@;
+    } elsif ($_[1] =~ /index/) {
+	CPAN::Index->force_reload;
     }
 }
-
-sub u {
-    my($self) = shift;
+# u and r are too similar, we should factor out something XXX
+sub _u_r_common {
+    my($self) = shift @_;
+    my($what) = shift @_;
+    CPAN->debug("self[$self] what[$what] args[@_]") if $CPAN::DEBUG;
+    Carp::croak "Usage: \$obj->_u_r_common($what)" unless defined $what;
+    Carp::croak "Usage: \$obj->_u_r_common(a|r|u)" unless $what =~ /^[aru]$/;
     my(@args) = @_;
     @args = '/./' unless @args;
-    my($module,%seen,%need,$headerdone);
+    my(@result,$module,%seen,%need,$headerdone);
     my $sprintf = "%-25s %9s %9s  %s\n";
     for $module ($self->expand('Module',@args)) {
 	my $file  = $module->cpan_file;
 	next unless defined $file; # ??
 	my($latest) = $module->cpan_version || "";
 	my($inst_file) = $module->inst_file;
-	next if $inst_file;
-	my($have) = "-";
+	my($have);
+	if ($inst_file){
+	    if ($what eq "a") {
+		$have = $module->inst_version;
+		$have ||= 0;
+	    } elsif ($what eq "r") {
+		$have = $module->inst_version;
+		$have ||= 0;
+		local($^W) = 0;
+		next if $have >= $latest;
+	    } elsif ($what eq "u") {
+		next;
+	    }
+	} else {
+	    if ($what eq "a") {
+		next;
+	    } elsif ($what eq "r") {
+		next;
+	    } elsif ($what eq "u") {
+		$have = "-";
+	    }
+	}    
 	$seen{$file} ||= 0;
-	next if $seen{$file}++;
+	if ($what eq "a") {
+	    push @result, sprintf "%s %s\n", $module->id, $have;
+	} elsif ($what eq "r") {
+	    next if $seen{$file}++;
+	} elsif ($what eq "u") {
+	    next if $seen{$file}++;
+	}
 	unless ($headerdone++){
 	    print "\n";
 	    printf $sprintf, "Package namespace", "installed", "latest", "in CPAN file";
@@ -463,8 +506,60 @@ sub u {
 	return if $CPAN::Signal; # this is sometimes lengthy
     }
     unless (%need) {
-	print "No modules found for @args\n";
+	if ($what eq "u") {
+	    print "No modules found for @args\n";
+	} elsif ($what eq "r") {
+	    print "All modules are up to date for @args\n";
+	}
     }
+    @result;
+}
+
+sub r {
+    shift->_u_r_common("r",@_);
+}
+
+sub u {
+    shift->_u_r_common("u",@_);
+}
+
+sub autobundle {
+    my($self) = shift;
+    my(@bundle) = $self->_u_r_common("a",@_);
+    my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
+    my($y,$m,$d) =  (localtime)[5,4,3];
+    $y+=1900;
+    $m++;
+    my($c) = 0;
+    my($me) = sprintf "Snapshot_%04d_%02d_%02d_%02d", $y, $m, $d, $c;
+    my($to) = $CPAN::META->catfile($todir,"$me.pm");
+    while (-f $to) {
+	$me = sprintf "Snapshot_%04d_%02d_%02d_%02d", $y, $m, $d, ++$c;
+	$to = $CPAN::META->catfile($todir,"$me.pm");
+    }
+    my($fh) = IO::File->new(">$to") or Carp::croak "Can't open >$to: $!";
+    $fh->print(
+	       "package Bundle::$me;\n\n",
+	       "\$VERSION = '0.01';\n\n",
+	       "1;\n\n",
+	       "__END__\n\n",
+	       "=head1 NAME\n\n",
+	       "Bundle::$me - Snapshot of installation on ",
+	       $Config::Config{'myhostname'},
+	       " on ",
+	       scalar(localtime),
+	       "\n\n=head1 SYNOPSIS\n\n",
+	       "perl -MCPAN -e 'install Bundle::$me'\n\n",
+	       "=head1 CONTENTS\n\n",
+	       join("\n", @bundle),
+	       "\n\n=head1 CONFIGURATION\n\n",
+	       Config->myconfig,
+	       "\n\n=head1 AUTHOR\n\n",
+	       "This Bundle has been generated automatically by the autobundle routine in CPAN.pm.\n",
+	      );
+    $fh->close;
+    print "\nWrote bundle file
+    $to\n\n";
 }
 
 sub bundle {
@@ -481,8 +576,9 @@ sub bundle {
 }
 
 sub bundles {
-    shift;
-    sort grep $_->id() =~ /^Bundle::/, $CPAN::META->all('CPAN::Module');
+    my($self) = @_;
+    CPAN->debug("self[$self]") if $CPAN::DEBUG;
+    sort grep $_->id() =~ /^Bundle::/, $CPAN::META->all('CPAN::Bundle');
 }
 
 sub expand {
@@ -596,10 +692,13 @@ sub localize {
     Carp::croak "Usage: ->localize(cpan_file,as_local_file[,$force])" unless defined $aslocal;
     $self->debug("file [$file] aslocal [$aslocal]") if $CPAN::DEBUG;
 
-    return $aslocal if -f $aslocal && ! $force;
+    return $aslocal if -f $aslocal && -r _ && ! $force;
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
+    print STDERR qq{Warning: You are not allowed to write into directory "$aslocal_dir".
+    I\'ll continue, but if you face any problems, they may be due
+    to insufficient permissions.\n} unless -w $aslocal_dir;
 
     # Inheritance is not easier to manage than a few if/else branches
     if ($CPAN::META->hasLWP) {
@@ -664,13 +763,15 @@ sub complete {
     CPAN->debug("word [$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
     $line =~ s/^\s*//;
     return
-	$pos == 0 ? grep /^$word/, qw(! a b d h i m o q r u make test install) :
+	$pos == 0 ? grep /^$word/, sort qw(! a b d h i m o q r u autobundle make test install reload) :
 	    $line !~ /^[\!abdhimorut]/ ? () :
 	    $line =~ /^a\s/ ? completex('CPAN::Author',$word) :
 	    $line =~ /^b\s/ ? completex('CPAN::Bundle',$word) :
 	    $line =~ /^d\s/ ? completex('CPAN::Distribution',$word) :
-	    $line =~ /^([mru]\s|(make|test|install)\s)/ ? completex('CPAN::Module',$word) :
+	    $line =~ /^([mru]\s|(make|test|install)\s)/ ?
+		(completex('CPAN::Module',$word),completex('CPAN::Bundle',$word)) :
 	    $line =~ /^i\s/ ? complete_any($word) :
+	    $line =~ /^reload\s/ ? complete_reload($word,$line,$pos) :
 	    $line =~ /^o\s/ ? complete_option($word,$line,$pos) : ();
 }
 
@@ -689,17 +790,33 @@ sub complete_any {
 	   );
 }
 
+sub complete_reload {
+    my($word,$line,$pos) = @_;
+    $word ||= "";
+    my(@words) = split " ", $line;
+    CPAN->debug("word[$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
+    my(@ok) = qw(cpan index);
+    return @ok if @words==1;
+    return grep /^\Q$word\E/, @ok if @words==2 && $word;
+}
+
 sub complete_option {
     my($word,$line,$pos) = @_;
     $word ||= "";
     my(@words) = split " ", $line;
     CPAN->debug("word[$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
-    return qw(conf debug index) if @words==1;
-    return grep /^\Q$word\E/, qw(conf debug index) if @words==2 && $word;
-    if ($words[1] eq 'index' || $words[1] eq 'conf') {
+    my(@ok) = qw(conf debug update);
+    return @ok if @words==1;
+    return grep /^\Q$word\E/, @ok if @words==2 && $word;
+    if (0) {
+    } elsif ($words[1] eq 'index') {
+	return ();
+    } elsif ($words[1] eq 'conf') {
 	return ();
     } elsif ($words[1] eq 'debug') {
-	return grep /^\Q$word\E/, keys %CPAN::DEBUG;
+	return sort grep /^\Q$word\E/, sort keys %CPAN::DEBUG, 'all';
+    } elsif ($words[1] eq 'update') {
+	return sort grep /^\Q$word\E/, 'force', 'noforce';
     }
     
 }
@@ -1100,7 +1217,7 @@ sub make {
 	  my @e;
 	  $self->{archived} eq "NO" and push @e, "Is neither a tar nor a zip archive.";
 	  $self->{unwrapped} eq "NO"   and push @e, "had problems unarchiving. Please build manually";
-	  $self->{writemakefile}    and push @e, "Had some problem writing Makefile";
+	  $self->{writemakefile} && $self->{writemakefile} eq "NO" and push @e, "Had some problem writing Makefile";
 	  defined $self->{'make'}     and push @e, "Has already been processed within this session";
 	  print join "", map {"  $_\n"} @e and return if @e;
      }
@@ -1133,7 +1250,7 @@ sub test {
     print "Running make test\n";
     EXCUSE: {
 	  my @e;
-	  exists $self->{'tested'} and push @e, "Already done";
+	  exists $self->{'make'} && $self->{'make'} eq 'NO' and push @e, "Make returned bad status";
 	  exists $self->{'build_dir'} or push @e, "Has no own directory";
 	  print join "", map {"  $_\n"} @e and return if @e;
      }
@@ -1157,6 +1274,7 @@ sub install {
     EXCUSE: {
 	  my @e;
 	  exists $self->{'install'} and push @e, "Already done";
+	  exists $self->{'make'} && $self->{'make'} eq 'NO' and push @e, "Make returned bad status";
 	  exists $self->{'build_dir'} or push @e, "Has no own directory";
 	  print join "", map {"  $_\n"} @e and return if @e;
      }
@@ -1196,7 +1314,7 @@ sub contains {
 	$self->debug($dist->as_string) if $CPAN::DEBUG;
 	$dist->get;
 	$self->debug($dist->as_string) if $CPAN::DEBUG;
-	my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"bundles");
+	my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
 	File::Path::mkpath($todir);
 	my($me,$from,$to);
 	($me = $self->id) =~ s/.*://;
@@ -1228,7 +1346,7 @@ sub inst_file {
     my($self) = @_;
     my($me,$inst_file);
     ($me = $self->id) =~ s/.*://;
-    $inst_file = $CPAN::META->catfile($CPAN::Config->{'cpan_home'},"bundles", "$me.pm");
+    $inst_file = $CPAN::META->catfile($CPAN::Config->{'cpan_home'},"Bundle", "$me.pm");
     return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
     $inst_file = $self->SUPER::inst_file;
     return $self->{'INST_FILE'} = $inst_file if -f $inst_file;
@@ -1359,7 +1477,29 @@ sub rematein {
 sub readme { shift->rematein('readme') }
 sub make { shift->rematein('make') }
 sub test { shift->rematein('test') }
-sub install { shift->rematein('install') }
+sub install { 
+    my($self) = @_;
+    my($doit) = 0;
+    $CPAN::META->{'update_policy'} ||= 'noforce';
+    if ($CPAN::META->{'update_policy'} eq 'force') {
+	$doit = 1;
+    } else {
+	my($latest) = $self->cpan_version;
+	$latest ||= 0;
+	my($inst_file) = $self->inst_file;
+	my($have) = 0;
+	if (defined $inst_file) {
+	    $have = $self->inst_version;
+	    $have ||= 0;
+	}
+	if ($have >= $latest) {
+	    print $self->id, " up-to-date.\n";
+	} else {
+	    $doit = 1;
+	}
+    }
+    $self->rematein('install') if $doit;
+}
 
 sub inst_file {
     my($self) = @_;
@@ -1492,7 +1632,7 @@ sub new {
 
 package CPAN::Debug;
 
-# VERRY PRIMITIVE
+# VERRY PRIMITIVE, sorry XXX
 
 sub debug {
     my($self,$arg) = @_;
@@ -1519,7 +1659,7 @@ Batch mode:
 
   use CPAN;
 
-  bundle, bundles, expand, install, make, test
+  autobundle, bundle, bundles, expand, install, make, test
 
 =head1 DESCRIPTION
 
@@ -1627,10 +1767,18 @@ that are listed in the described CONTENTS section.
 
 Bundles are treated specially in the CPAN package. If you say 'install
 Bundle::Tkkit' (assuming such a bundle exists), CPAN will install all
-the modules in the CONTENTS section of the pod. See the
-Bundle::PleaseIgnore on CPAN. I wrote it as a blueprint for other
-bundles. You can install your own Bundles locally by placing a placing
-a conformant Bundle file somewhere into your @INC path.
+the modules in the CONTENTS section of the pod.  You can install your
+own Bundles locally by placing a conformant Bundle file somewhere into
+your @INC path. The autobundle() command does that for you by
+including all currently installed in a snapshot bundle file.
+
+=head2 autobundle
+
+autobundle() writes a bundle file into the directory
+$CPAN::Config->{cpan_home}/Bundle directory. The file contains a list
+of all modules that are both available from CPAN and currently
+installed within @INC. The name of the bundle file is based on the
+current date and a counter.
 
 =head1 CONFIGURATION
 
@@ -1649,6 +1797,8 @@ defined:
   cache_expire      after how many days refetch index files
   cpan_home         local directory reserved for this package
   gzip		    location of external program gzip
+  inhibit-startup-message
+                    if true, does not print the startup message
   keep_source       keep the source in a local directory?
   keep_source_where where keep the source (if we do)
   make              location of external program make
@@ -1674,22 +1824,16 @@ that the primary use is intended for the cpan-shell or for one-liners.
 
 =head1 Debugging
 
+The debugging of this module is a pretty difficult task, because we
+have interferences of the software producing the indices on CPAN, of
+the mirroring process, of improper packaging, of improper
+configuration and of bugs within CPAN.pm. 
+
 In interactive mode you can try "o debug" which will list options for
 debugging the various parts of the package. The output may not be very
 useful for you as it's just a byproduct of my own testing, but if you
 have an idea which part of the package may have a bug, it's certainly
 worth to give it a try and send me more specific output.
-
-=head1 BUGS
-
-Memory consumption is too high.
-
-Not really a bug, but worth to mention: CPAN doesn't check if a module
-that is available in the path can really be require()d
-cleanly. Instead the module is parsed and the $VERSION variable is
-evaluated. Once that is done, the parsing stops and no further actions
-are taken. The reason for this is, that big bundles would cause a huge
-memory consumption just to check for the version.
 
 =head1 AUTHOR
 
