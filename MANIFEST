@@ -7,12 +7,12 @@ MANIFEST
 Makefile.PL
 README
 Todo
-cpan
 lib/Bundle/CPAN.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm
+scripts/cpan
 t/Nox.t
 t/loadme.t
 t/mirroredby.t

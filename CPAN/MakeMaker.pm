@@ -159,8 +159,6 @@ sub append_to_makefile {
     print MAKEFILE <<MAKEFILE;
 # Well, not quite. CPAN::MakeMaker is adding this:
 
-.PHONY = cpurge chelp
-
 # The cpurge target can be used by the author of this module to remove
 # files added by CPAN::MakeMaker. The files will not be removed from
 # the MANIFEST. You'll need to do that yourself.

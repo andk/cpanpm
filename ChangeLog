@@ -1,3 +1,10 @@
+2003-02-08  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Fixes for Win32, irrelevant for all other platforms. No code
+	changes in CPAN.pm. Moved "cpan" to "scripts/cpan" to avoid name
+	clash with the CPAN directory. Removed the second ".PHONY" line in
+	CPAN::MakeMaker.
+
 2003-02-05  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* lib/CPAN.pm (savehist, CPAN::shell): new config variables
