@@ -1,3 +1,10 @@
+2003-07-27  Andreas J Koenig  <andreas.koenig@anima.de>
+
+	* Signed the distribution myself with my GnuPG key
+
+	* Integrated patch from Autrijus Tang to support digital
+	signatures.
+
 2003-07-04  Andreas J Koenig  <andreas.koenig@anima.de>
 
 	* This is 1.71

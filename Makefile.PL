@@ -5,12 +5,23 @@ use ExtUtils::MakeMaker qw(:DEFAULT);
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.49 2003/04/12 03:37:02 k Exp $
+# $Id: Makefile.PL,v 1.50 2003/07/27 13:16:56 k Exp $
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){
   # 5.6.0 / 1.52 downloads 5.8.0 due to File::Spec
   $prereq_pm = { 'Test::More' => 0 };
+}
+
+# import PAUSE public key to user's keychain
+require Config;
+for my $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
+    my $abs = File::Spec->catfile($dir, 'gpg');
+    if (my $cmd = MM->maybe_command($abs)) {
+	print "Importing PAUSE public key into your GnuPG keychain...\n";
+	system($cmd, '--import', <PAUSE*.pub>);
+	last;
+    }
 }
 
 WriteMakefile(

@@ -3,8 +3,12 @@ BUNDLE/Test/More.pm
 ChangeLog
 Changes.old
 MANIFEST
+MANIFEST.SKIP
+META.yml
 Makefile.PL
+PAUSE2003.pub
 README
+SIGNATURE
 Todo
 lib/Bundle/CPAN.pm
 lib/CPAN.pm
@@ -15,4 +19,5 @@ scripts/cpan
 t/Nox.t
 t/loadme.t
 t/mirroredby.t
+t/signature.t
 t/vcmp.t
