@@ -1,15 +1,7 @@
+Bugfix: reset "force_update" by localizing
+
 Provide something, so that the next "o conf commit" will not overwrite
 the config file. maybe "myconfig_readonly"?
-
-Prepare for the first module that comes with 1.2.3 version numbering
-style (like diagnostic.pm). This includes: print with the help of %vd
-unless it looks like a number or "undef". Do the same on PAUSE. If you
-read something (either from MM->parse_version or from 02packages) with
->2 dots in it, print it as it is but compare it as v-string. Looks
-like I need to abstract all that into a class:-( I've started to
-identify a few places where we need changes. Search for %vd. What
-makes it a major pain is that we want this to work on old and new
-perls.
 
 I have a patch by Jochen Wiedmann that implements a per-distribution
 permanent configuration directory. The new containsmods() method in

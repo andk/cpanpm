@@ -1,3 +1,35 @@
+2000-08-27  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.57_53 without enough testing in the hope that I
+	can test more the next days and maybe others can test a little.
+
+	* CPAN::Distribution did not handle the force_update attribute
+	correctly: it was never reset to false. Tried to fix that at the
+	end of sub install and by limiting the scope of the force_update
+	attribute to install, not to make anymore. Thirdly, the places
+	where we leave the make, test or install by means of the signal
+	handler, we also reset force.
+
+	* Added a test for CPAN::Version::vcmp.
+
+	* lib/CPAN/FirstTime.pm (init): corrected spelling (Thanks to Ask
+	B. Hansen)
+
+2000-08-25  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* rd_modpacks: track deletes on every reread, otherwise the
+	metadatacache won't forget a thing ever.
+
+	* Fixing Distribution->clean which was broken in that it set
+	"force_update" leading to a mess when the user later tried to
+	build this dist again. Thanks to Jost Krieger for spotting this.
+
+	* Minor cleanups
+
+	* CPAN::Version::readable now picks the head of the string
+
+	* Storable::store => nstore. Thanks to Tim Jenness for the hint
+
 2000-08-21  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Detected code duplication in CPAN::Shell::o and

@@ -6,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.57_51';
+$VERSION = '1.57_53';
 
-# $Id: CPAN.pm,v 1.314 2000/08/21 12:37:43 k Exp $
+# $Id: CPAN.pm,v 1.317 2000/08/27 22:02:12 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.314 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.317 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -829,6 +829,7 @@ sub cachesize {
     shift->{DU};
 }
 
+#-> sub CPAN::CacheMgr::tidyup ;
 sub tidyup {
   my($self) = @_;
   return unless -d $self->{ID};
@@ -1546,8 +1547,8 @@ sub _u_r_common {
     my($self) = shift @_;
     my($what) = shift @_;
     CPAN->debug("self[$self] what[$what] args[@_]") if $CPAN::DEBUG;
-    Carp::croak "Usage: \$obj->_u_r_common($what)" unless defined $what;
-    Carp::croak "Usage: \$obj->_u_r_common(a|r|u)" unless $what =~ /^[aru]$/;
+    Carp::croak "Usage: \$obj->_u_r_common(a|r|u)" unless
+          $what && $what =~ /^[aru]$/;
     my(@args) = @_;
     @args = '/./' unless @args;
     my(@result,$module,%seen,%need,$headerdone,
@@ -1610,14 +1611,6 @@ sub _u_r_common {
 		   "in CPAN file"
 		   ));
 	}
-####        for ($have,$latest) {
-####          # $_ = CPAN::Version->readable($_); # %vd already applied
-####          if (length($_) > 8){
-####            my $trunc = substr($_,0,8);
-####            $CPAN::Frontend->mywarn("Truncating VERSION from [$_] to [$trunc]\n");
-####            $_ = $trunc;
-####          }
-####        }
 	$CPAN::Frontend->myprint(sprintf $sprintf,
                                  $module->id,
                                  $have,
@@ -2899,15 +2892,17 @@ CPAN mirror. I'll continue but problems seem likely to happen.\a\n},
 $index_target, $line_count, scalar(@lines);
 
     }
+    # A necessity since we have metadata_cache: delete what isn't
+    # there anymore
+    my $secondtime = $CPAN::META->exists("CPAN::Module","CPAN");
+    CPAN->debug("secondtime[$secondtime]") if $CPAN::DEBUG;
+    my(%exists);
     foreach (@lines) {
 	chomp;
         # before 1.56 we split into 3 and discarded the rest. From
         # 1.57 we assign remaining text to $comment thus allowing to
         # influence isa_perl
 	my($mod,$version,$dist,$comment) = split " ", $_, 4;
-###	$version =~ s/^\+//;
-
-	# if it is a bundle, instantiate a bundle object
 	my($bundle,$id,$userid);
 
 	if ($mod eq 'CPAN' &&
@@ -2916,18 +2911,18 @@ $index_target, $line_count, scalar(@lines);
 	       CPAN::Queue->exists('CPAN')
 	      )
 	   ) {
-	    local($^W)= 0;
-	    if ($version > $CPAN::VERSION){
-		$CPAN::Frontend->myprint(qq{
-  There\'s a new CPAN.pm version (v$version) available!
+            local($^W)= 0;
+            if ($version > $CPAN::VERSION){
+                $CPAN::Frontend->myprint(qq{
+  There's a new CPAN.pm version (v$version) available!
   [Current version is v$CPAN::VERSION]
   You might want to try
     install Bundle::CPAN
     reload cpan
   without quitting the current session. It should be a seamless upgrade
   while we are running...
-});
-		sleep 2;
+}); #});
+                sleep 2;
 		$CPAN::Frontend->myprint(qq{\n});
 	    }
 	    last if $CPAN::Signal;
@@ -2937,21 +2932,15 @@ $index_target, $line_count, scalar(@lines);
 
 	if ($bundle){
 	    $id =  $CPAN::META->instance('CPAN::Bundle',$mod);
-	    # warn "made mod[$mod]a bundle";
 	    # Let's make it a module too, because bundles have so much
 	    # in common with modules
 	    $CPAN::META->instance('CPAN::Module',$mod);
-	    # warn "made mod[$mod]a module";
 
-# This "next" makes us faster but if the job is running long, we ignore
-# rereads which is bad. So we have to be a bit slower again.
-#	} elsif ($CPAN::META->exists('CPAN::Module',$mod)) {
-#	    next;
+	} else {
 
-	}
-	else {
 	    # instantiate a module object
 	    $id = $CPAN::META->instance('CPAN::Module',$mod);
+
 	}
 
 	if ($id->cpan_file ne $dist){ # update only if file is
@@ -2982,10 +2971,24 @@ $index_target, $line_count, scalar(@lines);
 				      'CPAN_USERID' => $userid
 				     );
 	}
-
+        if ($secondtime) {
+            for my $name ($mod,$dist) {
+                # CPAN->debug("confirm existence of name[$name]") if $CPAN::DEBUG;
+                $exists{$name} = undef;
+            }
+        }
 	return if $CPAN::Signal;
     }
     undef $fh;
+    if ($secondtime) {
+        for my $class (qw(CPAN::Module CPAN::Bundle CPAN::Distribution)) {
+            for my $o ($CPAN::META->all_objects($class)) {
+                next if exists $exists{$o->{ID}};
+                $CPAN::META->delete($class,$o->{ID});
+                CPAN->debug("deleting ID[$o->{ID}] in class[$class]") if $CPAN::DEBUG;
+            }
+        }
+    }
 }
 
 #-> sub CPAN::Index::rd_modlist ;
@@ -3038,7 +3041,7 @@ sub write_metadata_cache {
     my $metadata_file = MM->catfile($CPAN::Config->{cpan_home},"Metadata");
     $CPAN::Frontend->myprint("Going to write $metadata_file\n");
     $cache->{last_time} = $last_time;
-    eval { Storable::store($cache, $metadata_file) };
+    eval { Storable::nstore($cache, $metadata_file) };
     $CPAN::Frontent->mywarn($@) if $@;
 }
 
@@ -3056,6 +3059,11 @@ sub read_metadata_cache {
     return if (!$cache || ref $cache ne 'HASH');
     while(my($k,$v) = each %$cache) {
 	next unless $k =~ /^CPAN::/;
+        for my $k2 (keys %$v) {
+          delete $v->{$k2}{force_update}; # if a buggy CPAN.pm left
+                                          # over such a mess, it's
+                                          # high time to correct now
+        }
 	$CPAN::META->{$k} = $v;
     }
     $last_time = $cache->{last_time};
@@ -3147,12 +3155,6 @@ sub as_glimpse {
     join "", @m;
 }
 
-# Dead code, I would have liked to have,,, but it was never reached,,,
-#sub make {
-#    my($self) = @_;
-#    return "Don't be silly, you can't make $self->{FULLNAME} ;-)\n";
-#}
-
 #-> sub CPAN::Author::fullname ;
 sub fullname { shift->{'FULLNAME'} }
 *name = \&fullname;
@@ -3194,7 +3196,7 @@ sub get {
   EXCUSE: {
 	my @e;
 	exists $self->{'build_dir'} and push @e,
-	    "Unwrapped into directory $self->{'build_dir'}";
+	    "Is already unwrapped into directory $self->{'build_dir'}";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     my($local_file);
@@ -3617,15 +3619,31 @@ sub eq_MD5 {
 }
 
 #-> sub CPAN::Distribution::force ;
+
+# Both modules and distributions know if "force" is in effect by
+# autoinspection, not by inspecting a global variable. This has the
+# downside that ^C and die() will return to the prompt but will not be
+# able to reset the force_update attributes. We correct for it
+# currently in the read_meta_data routine, but XXX XXX! we must deal
+# with it in the cleanup code immediately.
+
 sub force {
-  my($self) = @_;
-  $self->{'force_update'}++;
+  my($self, $method) = @_;
   for my $att (qw(
   MD5_STATUS archived build_dir localfile make install unwrapped
   writemakefile
  )) {
     delete $self->{$att};
   }
+  if ($method && $method eq "install") {
+    $self->{"force_update"}++; # name should probably have been force_install
+  }
+}
+
+#-> sub CPAN::Distribution::unforce ;
+sub unforce {
+  my($self) = @_;
+  delete $self->{'force_update'};
 }
 
 #-> sub CPAN::Distribution::isa_perl ;
@@ -3682,7 +3700,8 @@ sub make {
     # Emergency brake if they said install Pippi and get newest perl
     if ($self->isa_perl) {
       if (
-	  $self->called_for ne $self->id && ! $self->{'force_update'}
+	  $self->called_for ne $self->id &&
+          ! $self->{force_update}
 	 ) {
         # if we die here, we break bundles
 	$CPAN::Frontend->mywarn(sprintf qq{
@@ -3785,6 +3804,7 @@ or
 	}
 	if (-f "Makefile") {
 	  $self->{writemakefile} = "YES";
+          delete $self->{make_clean}; # if cleaned before, enable next
 	} else {
 	  $self->{writemakefile} =
 	      qq{NO Makefile.PL refused to write a Makefile.};
@@ -3794,7 +3814,7 @@ or
 	  # $self->{writemakefile} .= <$fh>;
 	}
     }
-    return if $CPAN::Signal;
+    delete $self->{force_update}, return if $CPAN::Signal;
     if (my @prereq = $self->needs_prereq){
       my $id = $self->id;
       $CPAN::Frontend->myprint("---- Dependencies detected ".
@@ -3901,7 +3921,7 @@ sub needs_prereq {
 sub test {
     my($self) = @_;
     $self->make;
-    return if $CPAN::Signal;
+    delete $self->{force_update}, return if $CPAN::Signal;
     $CPAN::Frontend->myprint("Running make test\n");
   EXCUSE: {
 	my @e;
@@ -3941,7 +3961,9 @@ sub clean {
     $CPAN::Frontend->myprint("Running make clean\n");
   EXCUSE: {
 	my @e;
-	exists $self->{'build_dir'} or push @e, "Has no own directory";
+        exists $self->{make_clean} and $self->{make_clean} eq "YES" and
+            push @e, "make clean already called once";
+	exists $self->{build_dir} or push @e, "Has no own directory";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
@@ -3955,10 +3977,31 @@ sub clean {
 
     my $system = join " ", $CPAN::Config->{'make'}, "clean";
     if (system($system) == 0) {
-	$CPAN::Frontend->myprint("  $system -- OK\n");
-	$self->force;
+      $CPAN::Frontend->myprint("  $system -- OK\n");
+
+      # $self->force;
+
+      # Jost Krieger pointed out that this "force" was wrong because
+      # it has the effect that the next "install" on this distribution
+      # will untar everything again. Instead we should bring the
+      # object's state back to where it is after untarring.
+
+      delete $self->{force_update};
+      delete $self->{install};
+      delete $self->{writemakefile};
+      delete $self->{make};
+      delete $self->{make_test}; # no matter if yes or no, tests must be redone
+      $self->{make_clean} = "YES";
+
     } else {
-	# Hmmm, what to do if make clean failed?
+      # Hmmm, what to do if make clean failed?
+
+      $CPAN::Frontend->myprint(qq{  $system -- NOT OK
+
+make clean did not succeed, marking directory as unusable for further work.
+});
+      $self->force("make"); # so that this directory won't be used again
+
     }
 }
 
@@ -3966,7 +4009,7 @@ sub clean {
 sub install {
     my($self) = @_;
     $self->test;
-    return if $CPAN::Signal;
+    delete $self->{force_update}, return if $CPAN::Signal;
     $CPAN::Frontend->myprint("Running make install\n");
   EXCUSE: {
 	my @e;
@@ -4022,6 +4065,7 @@ sub install {
 				      qq{to root to install the package\n});
 	 }
     }
+    delete $self->{force_update};
 }
 
 #-> sub CPAN::Distribution::dir ;
@@ -4456,8 +4500,9 @@ sub rematein {
     }
     my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
-    $pack->force if exists $self->{'force_update'};
+    $pack->force($meth) if exists $self->{'force_update'};
     $pack->$meth();
+    $pack->unforce if $pack->can("unforce") && exists $self->{'force_update'};
     delete $self->{'force_update'};
 }
 
@@ -4784,18 +4829,25 @@ sub unzip {
 }
 
 package CPAN::Version;
-
-sub vgt {
+# CPAN::Version::vcmp courtesy Jost Krieger
+sub vcmp {
   my($self,$l,$r) = @_;
   local($^W) = 0;
   CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
-  return 1 if $r eq "undef" && $l ne "undef";
-  return if $l eq "undef" && $r ne "undef";
-  return 1 if $] >= 5.006 && $l =~ /^v/ && $r =~ /^v/ &&
-      $self->vstring($l) gt $self->vstring($r);
-  return 1 if $l > $r;
-  return 1 if $l gt $r;
-  return;
+
+  return
+      ($l ne "undef") <=> ($r ne "undef") ||
+          ($] >= 5.006 &&
+           $l =~ /^v/ &&
+           $r =~ /^v/ &&
+           $self->vstring($l) cmp $self->vstring($r)) ||
+               $l <=> $r ||
+                   $l cmp $r;
+}
+
+sub vgt {
+  my($self,$l,$r) = @_;
+  $self->vcmp($l,$r) > 0;
 }
 
 sub vstring {
@@ -4806,7 +4858,13 @@ sub vstring {
 
 sub readable {
   my($self,$n) = @_;
-  return $n if $n =~ /^[\w\-\+\.]+$/;
+  $n =~ /^([\w\-\+\.]+)/;
+
+  return $1 if defined $1 && length($1)>0;
+  # if the first user reaches version v43, he will be treated as "+".
+  # We'll have to decide about a new rule here then, depending on what
+  # will be the prevailing versioning behavior then.
+
   if ($] < 5.006) { # or whenever v-strings were introduced
     # we get them wrong anyway, whatever we do, because 5.005 will
     # have already interpreted 0.2.4 to be "0.24". So even if he

@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.41 $, 10;
+$VERSION = substr q$Revision: 1.42 $, 10;
 
 =head1 NAME
 
@@ -178,7 +178,7 @@ disable the cache scanning with 'never'.
 
 To speed up the initial CPAN shell startup, it is possible to use
 Storable or FreezeThaw to create an cache of metadata. If no
-serializer is avaiable, the normal index mechanism will be used.
+serializer is available, the normal index mechanism will be used.
 
 };
 
