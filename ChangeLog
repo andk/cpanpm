@@ -1,5 +1,9 @@
 2000-09-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
+	* lib/CPAN.pm (readable): After release spotted en error in the
+	FAQ about not being root. Improved it a little, added another FAQ
+	and gave it the VERSION 1.57_57.
+
 	* Releasing as 1.57_56 as candidate for 5.7.0
 
 	* missing_config_data and FirstTime: declared cache_metadata as

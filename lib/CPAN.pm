@@ -7,13 +7,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.57_56';
+$VERSION = '1.57_57';
 
-# $Id: CPAN.pm,v 1.323 2000/08/31 22:12:50 k Exp $
+# $Id: CPAN.pm,v 1.324 2000/09/01 12:04:57 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.323 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.324 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -5658,9 +5658,9 @@ so that STDOUT is captured in a file for later inspection.
 
 You will most probably like something like this:
 
-  o conf makepl_arg LIB=~/myperl/lib \
+  o conf makepl_arg "LIB=~/myperl/lib \
                     INSTALLMAN1DIR=~/myperl/man/man1 \
-                    INSTALLMAN3DIR=~/myperl/man/man3
+                    INSTALLMAN3DIR=~/myperl/man/man3"
   install Sybase::Sybperl
 
 You can make this setting permanent like all C<o conf> settings with
@@ -5674,9 +5674,29 @@ including
 
 or setting the PERL5LIB environment variable.
 
+Another thing you should bear in mind is that the UNINST parameter
+should never be set if you are not root.
+
 =item How to get a package, unwrap it, and make a change before building it?
 
   look Sybase::Sybperl
+
+=item I installed a Bundle and had a couple of fails. When I retried,
+      everything resolved nicely. Can this be fixed to work on first
+      try?
+
+The reason for this is that CPAN does not know the dependencies of all
+modules when it starts out. To decide about the additional items to
+install, it just uses data found in the generated Makefile. An
+undetected missing piece breaks the process. But it may well be that
+your Bundle installs some prerequisite later than some depending item
+and thus your second try is able to resolve everything. Please note,
+CPAN.pm does not know the dependency tree in advance and cannot sort
+the queue of things to install in a topologically correct sequence.
+For bundles which you need to install often, it is recommended to do
+the sorting manually. It is planned to improve the metadata situation
+for dependencies on CPAN in general, but this will still take some
+time.
 
 =back
 
