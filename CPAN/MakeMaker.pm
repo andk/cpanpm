@@ -1,5 +1,5 @@
 package CPAN::MakeMaker;
-$VERSION = '0.10';
+$CUSTOM_VERSION = '0.12';
 @EXPORT = qw(WriteMakefile prompt);
 use strict;
 use ExtUtils::MakeMaker();
@@ -19,6 +19,7 @@ sub WriteMakefile {
     $args{VERSION} = determine_VERSION()
       unless defined $args{VERSION} or defined $args{VERSION_FROM};
     update_manifest();
+    find_bad_installs('warn');
 
     ExtUtils::MakeMaker::WriteMakefile(%args);
     append_to_makefile();
@@ -45,14 +46,6 @@ END
 }
 
 sub find_files {
-  my(@args) = @_;
-  require ExtUtils::Manifest;
-  my $skip = ExtUtils::Manifest::_maniskip();
-  my @found = _find_files(@args);
-  grep ! $skip->($_), @found;
-}
-
-sub _find_files {
     my ($file, $path) = @_;
     $path = '' if not defined $path;
     $file = "$path/$file" if length($path);
@@ -152,6 +145,53 @@ sub read_manifest {
     return ($manifest, $manifest_path, $relative_path);
 }
 
+my @bad_installs;
+sub find_bad_installs {
+    my $warn = shift || 0;
+    @bad_installs = ();
+    for my $lib (@INC) {
+        next if $lib eq '.';
+        next unless -d $lib;
+        my $cpmm_file = File::Spec->catfile( 
+            File::Spec->catdir($lib, 'CPAN'), 'MakeMaker.pm'
+        );
+        open(CPMM, $cpmm_file) or next;
+        my $cpmm = do{local $/;<CPMM>};
+        if ($cpmm =~ /^\$VERSION = '0\.10'/m and
+            $cpmm !~ /^sub load_self /m
+                or
+            $cpmm =~ /^\$CUSTOM_VERSION /m and
+            $cpmm !~ /^\$VERSION /m
+           ) {
+            push @bad_installs, $cpmm_file;
+        }
+        close CPMM;
+    }
+    warn <<END if @bad_installs and $warn;
+
+WARNING...
+Invalid copies of CPAN::MakeMaker detected on your system:
+${\ join "\n", map "  $_", @bad_installs}
+These files must be removed or you may have future installation problems.
+Setting up Makefile so that 'make install' will remove the files for you.
+
+END
+}
+
+sub test_bad_installs {
+    find_bad_installs();
+    die <<END if @bad_installs;
+
+ERROR...
+Invalid copies of CPAN::MakeMaker detected on your system:
+${\ join "\n", map "  $_", @bad_installs}
+An attempt to remove these files has failed. Please make sure they are
+removed from your system to avoid future module installation problems.
+
+END
+    warn "Invalid copies of CPAN::MakeMaker successfully removed!\n";
+}
+
 sub append_to_makefile {
     open MAKEFILE, '>> Makefile'
       or die "CPAN::MakeMaker::WriteMakefile can't append to Makefile:\n$!";
@@ -159,10 +199,23 @@ sub append_to_makefile {
     print MAKEFILE <<MAKEFILE;
 # Well, not quite. CPAN::MakeMaker is adding this:
 
-# The cpurge target can be used by the author of this module to remove
+MAKEFILE
+
+    if (@bad_installs) {
+    print MAKEFILE <<MAKEFILE;
+pure_install ::
+	\$(RM_F) ${\ join " and ", @bad_installs}
+	\$(PERLRUN) -I. "-MCPAN::MakeMaker" \\
+		-e "CPAN::MakeMaker::test_bad_installs"
+
+MAKEFILE
+    }
+
+    print MAKEFILE <<MAKEFILE;
+# The reset target can be used by the author of this module to remove
 # files added by CPAN::MakeMaker. The files will not be removed from
 # the MANIFEST. You'll need to do that yourself.
-cpurge :: purge
+reset :: purge
 	\$(RM_RF) CPAN
 
 # Authors can use this target as a shortcut for 'perldoc CPAN::MakeMaker'

@@ -1,11 +1,11 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.65';
-# $Id: CPAN.pm,v 1.398 2003/02/08 17:06:51 k Exp $
+$VERSION = '1.70';
+# $Id: CPAN.pm,v 1.399 2003/03/01 10:59:07 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.398 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.399 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -803,8 +803,12 @@ sub savehist {
         return;
     }
     $histsize = $CPAN::Config->{'histsize'} || 100;
-    unless ($CPAN::term->can("GetHistory")) {
-        $CPAN::Frontend->mywarn("Terminal does not support GetHistory.\n");
+    if ($CPAN::term){
+        unless ($CPAN::term->can("GetHistory")) {
+            $CPAN::Frontend->mywarn("Terminal does not support GetHistory.\n");
+            return;
+        }
+    } else {
         return;
     }
     my @h = $CPAN::term->GetHistory;
@@ -4834,10 +4838,7 @@ package CPAN::Bundle;
 
 sub look {
     my $self = shift;
-    $CPAN::Frontend->myprint(
-                             qq{ look() commmand on bundles not}.
-                             qq{ implemented (What should it do?)}
-                            );
+    $CPAN::Frontend->myprint($self->as_string);
 }
 
 sub undelay {

@@ -1,3 +1,29 @@
+2003-02-28  Brian Ingerson <ingy@cpan.org>
+
+	* CPAN's use of CPAN::MakeMaker caused an ironic but serious bug.
+	It installed CPAN::MakeMaker into installprivlib, rendering
+	modules that used CPAN::MakeMaker potentially uninstallable. The
+	solution is to patch CPAN.pm's install process to detect and cure
+	infected systems. This will take time to propagate out, as people
+	upgrade to this and future versions of CPAN.pm. Eventually the
+	problem will fade away. I hope. The irony is that only CPAN.pm (by
+	the nature of its name) could cause ExtUtils to install
+	CPAN::MakeMaker. Why me?!
+
+	* This patch relies on a special version (0.12) of CPAN::MakeMaker
+	which was written for this situation, and will not be released
+	onto CPAN.
+
+2003-02-27  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Bundle::look: now dispatches to as_string. Thanks to
+	Juergen Christoffel for the suggestion.
+
+2003-02-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm: protect code running without a terminal from dying
+	on $term->can.
+
 2003-02-08  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Fixes for Win32, irrelevant for all other platforms. No code
