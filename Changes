@@ -1,5 +1,31 @@
 Revision history for Perl extension CPAN.
 
+=head2 February 1999 after 1.47
+
+Bundle::CPAN didn't reflect File::Spec, nor did the PREREQ_PM
+
+Queue was not reset at the end of the shell loop. 
+
+mkpath in Firsttime could let CPAN die. Is caught now.
+
+Loading of config file now deferred till the first command calls
+CPAN->all_objects. all_objects is the renamed method all() BTW. I
+renamed it because I prefer to have method names that are not too
+common words. If that causes any difficulties, please let me know.
+
+Chris Nandor sent a patch to enable a look() replacement for the Mac
+(which resides in MM_Mac.pm)
+
+New feature: when Term::ReadLine::{Gnu,Perl} is not available, probe
+for it repeatedly and if it's there use it immediately.
+
+Finally support for T::R::Gnu added. On my installation, I now must
+use ^J instead of RETURN because RETURN prints a ^M. I have no idea
+who's to blame for that. Suggestions for patches welcome.
+
+Probing for LWP::UserAgent instead of LWP before we run
+LWP::UserAgent->new.
+
 =head2 January 1999 after 1.46
 
 Robin Barker <rmb1@cise.npl.co.uk> sent me a patch to Firsttime.pm

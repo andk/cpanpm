@@ -1,13 +1,13 @@
 #!/usr/bin/perl -w
-BEGIN {$CPAN::No_Config_is_ok=1}
-BEGIN {$CPAN::No_Config_is_ok=1} # keep old perls with -w quiet
+BEGIN {$CPAN::Config_loaded=1}
+BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use lib "lib";
 use ExtUtils::MakeMaker qw(:DEFAULT neatvalue);
 use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.32 1999/01/09 17:53:32 k Exp $
+# $Id: Makefile.PL,v 1.33 1999/03/06 16:18:14 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -28,6 +28,7 @@ WriteMakefile(
     'VERSION_FROM' => 'lib/CPAN.pm',
     'EXE_FILES' => [qw(cpan)],
     'clean' => { FILES => "lib/CPAN/Config.pm" },
+    'PREREQ_PM' => { 'File::Spec' => 0 },
     'dist' => { 
 	       PREOP => 'co -l README && pod2text lib/CPAN.pm > README && ci -u README',
 	       DIST_DEFAULT => 'all tardist',
@@ -35,15 +36,3 @@ WriteMakefile(
 	      },
 );
 
-# sub MY::postamble {
-#     my($self) = shift;
-#     my @m;
-#     push @m, qq{
-# # This is only for me (Andreas Koenig) for the distribution
-# private: MIRRORED.BY
-# 
-# MIRRORED.BY: /net/dubravka/home/ftp/pub/CPAN/MIRRORED.BY.gz
-# 	  gzip -dc \$? > \$\@
-# };
-#     return join "", @m;
-# }

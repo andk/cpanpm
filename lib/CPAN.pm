@@ -1,17 +1,18 @@
 package CPAN;
-use vars qw{$Try_autoload $Revision
+use vars qw{$Try_autoload
+            $Revision
 	    $META $Signal $Cwd $End
 	    $Suppress_readline %Dontload
 	    $Frontend  $Defaultsite
-	   };
+	   }; #};
 
-$VERSION = '1.47';
+$VERSION = '1.48';
 
-# $Id: CPAN.pm,v 1.256 1999/01/25 13:06:22 k Exp $
+# $Id: CPAN.pm,v 1.260 1999/03/06 19:31:02 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.256 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.260 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -70,6 +71,7 @@ sub AUTOLOAD {
     $l =~ s/.*:://;
     my(%EXPORT);
     @EXPORT{@EXPORT} = '';
+    CPAN::Config->load unless $CPAN::Config_loaded++;
     if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
@@ -87,7 +89,9 @@ sub AUTOLOAD {
 
 #-> sub CPAN::shell ;
 sub shell {
+    my($self) = @_;
     $Suppress_readline ||= ! -t STDIN;
+    CPAN::Config->load unless $CPAN::Config_loaded++;
 
     my $prompt = "cpan> ";
     local($^W) = 1;
@@ -95,8 +99,20 @@ sub shell {
 	require Term::ReadLine;
 #	import Term::ReadLine;
 	$term = Term::ReadLine->new('CPAN Monitor');
-	$readline::rl_completion_function =
-	    $readline::rl_completion_function = 'CPAN::Complete::cpl';
+	if ($term->ReadLine eq "Term::ReadLine::Gnu") {
+	    my $attribs = $term->Attribs;
+#	     $attribs->{completion_entry_function} =
+#		 $attribs->{'list_completion_function'};
+	     $attribs->{attempted_completion_function} = sub {
+		 &CPAN::Complete::gnu_cpl;
+	     }
+#	    $attribs->{completion_word} =
+#		[qw(help me somebody to find out how
+#                    to use completion with GNU)];
+	} else {
+	    $readline::rl_completion_function =
+		$readline::rl_completion_function = 'CPAN::Complete::cpl';
+	}
     }
 
     no strict;
@@ -104,6 +120,7 @@ sub shell {
     my $getcwd;
     $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
     my $cwd = CPAN->$getcwd();
+    my $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub";
     my $rl_avail = $Suppress_readline ? "suppressed" :
 	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
 	    "available (try ``install Bundle::CPAN'')";
@@ -163,6 +180,20 @@ ReadLine support $rl_avail
 	}
     } continue {
       $Signal=0;
+      CPAN::Queue->nullify_queue;
+      if ($try_detect_readline) {
+	if ($CPAN::META->has_inst("Term::ReadLine::Gnu")
+	    ||
+	    $CPAN::META->has_inst("Term::ReadLine::Perl")
+	   ) {
+	    delete $INC{"Term/ReadLine.pm"};
+	    my $redef;
+	    local($SIG{__WARN__}) = CPAN::Shell::dotdot_onreload(\$redef);
+	    require Term::ReadLine;
+	    $CPAN::Frontend->myprint("\n$redef subroutines in Term::ReadLine redefined\n");
+	    goto &shell;
+	}
+      }
     }
 }
 
@@ -282,7 +313,7 @@ sub try_dot_al {
 	}
     } else {
 
-	$ok = 1;
+      $ok = 1;
 
     }
     $@ = $save;
@@ -300,7 +331,7 @@ sub try_dot_al {
 # $Try_autoload = 1;
 
 if ($CPAN::Try_autoload) {
-    my $p;
+  my $p;
     for $p (qw(
 	       CPAN::Author CPAN::Bundle CPAN::CacheMgr CPAN::Complete
 	       CPAN::Config CPAN::Debug CPAN::Distribution CPAN::FTP
@@ -427,12 +458,15 @@ sub delete {
   # warn "Deleting Queue object for mod[$mod] all[@all]";
 }
 
+sub nullify_queue {
+  @All = ();
+}
+
+
+
 package CPAN;
 
 $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
-
-# Do this after you have set up the whole inheritance
-CPAN::Config->load unless defined $CPAN::No_Config_is_ok;
 
 1;
 
@@ -456,12 +490,14 @@ sub clean;
 sub test;
 
 #-> sub CPAN::all ;
-sub all {
+sub all_objects {
     my($mgr,$class) = @_;
+    CPAN::Config->load unless $CPAN::Config_loaded++;
     CPAN->debug("mgr[$mgr] class[$class]") if $CPAN::DEBUG;
     CPAN::Index->reload;
     values %{ $META->{$class} };
 }
+*all = \&all_objects;
 
 # Called by shell, not in batch mode. Not clean XXX
 #-> sub CPAN::checklock ;
@@ -1281,6 +1317,21 @@ Known options:
     }
 }
 
+sub dotdot_onreload {
+    my($ref) = shift;
+    sub {
+	if ( $_[0] =~ /Subroutine (\w+) redefined/ ) {
+	    my($subr) = $1;
+	    ++$$ref;
+	    local($|) = 1;
+	    # $CPAN::Frontend->myprint(".($subr)");
+	    $CPAN::Frontend->myprint(".");
+	    return;
+	}
+	warn @_;
+    };
+}
+
 #-> sub CPAN::Shell::reload ;
 sub reload {
     my($self,$command,@arg) = @_;
@@ -1291,18 +1342,7 @@ sub reload {
 	my $fh = FileHandle->new($INC{'CPAN.pm'});
 	local($/);
 	$redef = 0;
-	local($SIG{__WARN__})
-	    = sub {
-		if ( $_[0] =~ /Subroutine (\w+) redefined/ ) {
-		  my($subr) = $1;
-		  ++$redef;
-		  local($|) = 1;
-		  # $CPAN::Frontend->myprint(".($subr)");
-		  $CPAN::Frontend->myprint(".");
-		  return;
-		}
-		warn @_;
-	    };
+	local($SIG{__WARN__}) = dotdot_onreload(\$redef);
 	eval <$fh>;
 	warn $@ if $@;
 	$CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
@@ -1465,6 +1505,7 @@ sub u {
 #-> sub CPAN::Shell::autobundle ;
 sub autobundle {
     my($self) = shift;
+    CPAN::Config->load unless $CPAN::Config_loaded++;
     my(@bundle) = $self->_u_r_common("a",@_);
     my($todir) = MM->catdir($CPAN::Config->{'cpan_home'},"Bundle");
     File::Path::mkpath($todir);
@@ -1521,7 +1562,7 @@ sub expand {
 	my $class = "CPAN::$type";
 	my $obj;
 	if (defined $regex) {
-	    for $obj ( sort {$a->id cmp $b->id} $CPAN::META->all($class)) {
+	    for $obj ( sort {$a->id cmp $b->id} $CPAN::META->all_objects($class)) {
 		push @m, $obj
 		    if
 			$obj->id =~ /$regex/i
@@ -1841,7 +1882,7 @@ sub localize {
     to insufficient permissions.\n}) unless -w $aslocal_dir;
 
     # Inheritance is not easier to manage than a few if/else branches
-    if ($CPAN::META->has_inst('LWP')) {
+    if ($CPAN::META->has_inst('LWP::UserAgent')) {
 	require LWP::UserAgent;
  	unless ($Ua) {
 	    $Ua = LWP::UserAgent->new;
@@ -1940,8 +1981,11 @@ sub hosteasy {
 		# fileurl = "file://" [ host | "localhost" ] "/" fpath
 		# Thanks to "Mark D. Baushke" <mdb@cisco.com> for
 		# the code
-		($l = $url) =~ s,^file://[^/]+,,; # discard the host part
-		$l =~ s/^file://;	# assume they meant file://localhost
+		($l = $url) =~ s|^file://[^/]*/|/|; # discard the host part
+		$l =~ s|^file:||;                   # assume they
+                                                    # meant
+                                                    # file://localhost
+		$l =~ s|^/|| unless -f $l;          # e.g. /P:
 	    }
 	    if ( -f $l && -r _) {
 		$Thesite = $i;
@@ -2217,7 +2261,7 @@ sub hosthardest {
 	    $CPAN::Frontend->mywarn("Your ~/.netrc neither contains $host
   nor does it have a default entry\n");
 	}
-	
+
 	# OK, they don't have a valid ~/.netrc. Use 'ftp -n'
 	# then and login manually to host, using e-mail as
 	# password.
@@ -2381,6 +2425,27 @@ sub contains {
 
 package CPAN::Complete;
 
+sub gnu_cpl {
+    my($text, $line, $start, $end) = @_;
+    my(@perlret) = cpl($text, $line, $start);
+    # find longest common match. Can anybody show me how to peruse
+    # T::R::Gnu to have this done automatically? Seems expensive.
+    return () unless @perlret;
+    my($newtext) = $text;
+    for (my $i = length($text)+1;;$i++) {
+	last unless length($perlret[0]) && length($perlret[0]) >= $i;
+	my $try = substr($perlret[0],0,$i);
+	my @tries = grep {substr($_,0,$i) eq $try} @perlret;
+	# warn "try[$try]tries[@tries]";
+	if (@tries == @perlret) {
+	    $newtext = $try;
+	} else {
+	    last;
+	}
+    }
+    ($newtext,@perlret);
+}
+
 #-> sub CPAN::Complete::cpl ;
 sub cpl {
     my($word,$line,$pos) = @_;
@@ -2426,7 +2491,7 @@ sub cpl {
 #-> sub CPAN::Complete::cplx ;
 sub cplx {
     my($class, $word) = @_;
-    grep /^\Q$word\E/, map { $_->id } $CPAN::META->all($class);
+    grep /^\Q$word\E/, map { $_->id } $CPAN::META->all_objects($class);
 }
 
 #-> sub CPAN::Complete::cpl_any ;
@@ -2799,6 +2864,7 @@ sub as_glimpse {
 #-> sub CPAN::Author::fullname ;
 sub fullname { shift->{'FULLNAME'} }
 *name = \&fullname;
+
 #-> sub CPAN::Author::email ;
 sub email    { shift->{'EMAIL'} }
 
@@ -2979,6 +3045,12 @@ sub new {
 #-> sub CPAN::Distribution::look ;
 sub look {
     my($self) = @_;
+
+    if ($^O eq 'MacOS') {
+      $self->ExtUtils::MM_MacOS::look;
+      return;
+    }
+
     if (  $CPAN::Config->{'shell'} ) {
 	$CPAN::Frontend->myprint(qq{
 Trying to open a subshell in the build directory...

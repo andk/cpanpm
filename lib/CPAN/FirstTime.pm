@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.35 $, 10;
+$VERSION = substr q$Revision: 1.36 $, 10;
 
 =head1 NAME
 
@@ -113,13 +113,18 @@ First of all, I\'d like to create this directory. Where?
 
     $default = $cpan_home;
     while ($ans = prompt("CPAN build and cache directory?",$default)) {
-	File::Path::mkpath($ans); # dies if it can't
-	if (-d $ans && -w _) {
-	    last;
-	} else {
-	    warn "Couldn't find directory $ans
+      eval { File::Path::mkpath($ans); }; # dies if it can't
+      if ($@) {
+	warn "Couldn't create directory $ans.
+Please retry.\n";
+	next;
+      }
+      if (-d $ans && -w _) {
+	last;
+      } else {
+	warn "Couldn't find directory $ans
   or directory is not writable. Please retry.\n";
-	}
+      }
     }
     $CPAN::Config->{cpan_home} = $ans;
 

@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 
-$VERSION = '1.40';
+$VERSION = '1.48';
 
 1;
 
@@ -17,6 +17,8 @@ C<perl -MCPAN -e 'install Bundle::CPAN'>
 =head1 CONTENTS
 
 MD5
+
+File::Spec
 
 Compress::Zlib
 
