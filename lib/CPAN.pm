@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.14';
+$VERSION = '1.15';
 
-# $Id: CPAN.pm,v 1.104 1997/01/24 01:01:03 k Exp $
+# $Id: CPAN.pm,v 1.106 1997/01/24 12:26:36 k Exp $
 
-# my $version = substr q$Revision: 1.104 $, 10; # only used during development
+# my $version = substr q$Revision: 1.106 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -55,7 +55,7 @@ use strict qw(vars);
 $META ||= new CPAN;                 # In case we reeval ourselves we
                                     # need a ||
 
-CPAN::Config->load;
+CPAN::Config->load unless defined $CPAN::No_Config_is_ok;
 
 @EXPORT = qw( 
 	     autobundle bundle expand force get
@@ -931,6 +931,7 @@ sub localize {
 		$timestamp = $mtime if defined $mtime;
 
 		my($netrc) = CPAN::FTP::netrc->new;
+		my($verbose) = $CPAN::DEBUG{'FTP'} & $CPAN::DEBUG ? " -v" : "";
 
 		my $targetfile = File::Basename::basename($aslocal);
 		my(@dialog);
@@ -946,7 +947,13 @@ sub localize {
 		if (! $netrc->netrc) {
 		    warn "No ~/.netrc file found";
 		} elsif ($netrc->hasdefault || $netrc->contains($host)) {
-		    CPAN->debug(sprintf "hasdef[%d]cont($host)[%d]",$netrc->hasdefault,$netrc->contains($host)) if $CPAN::DEBUG;
+		    CPAN->debug(
+				sprint(
+				       "hasdef[%d]cont($host)[%d]",
+				       $netrc->hasdefault,
+				       $netrc->contains($host)
+				      )
+			       ) if $CPAN::DEBUG;
 		    if ($netrc->protected) {
 			print(
 			      qq{
@@ -958,7 +965,7 @@ sub localize {
 }
 			     );
 			my $fh = FileHandle->new;
-			$fh->open("|$CPAN::Config->{'ftp'} $host")
+			$fh->open("|$CPAN::Config->{'ftp'}$verbose $host")
 			    or die "Couldn't open ftp: $!";
 			# pilot is blind now
 			CPAN->debug("dialog [".(join "|",@dialog)."]") if $CPAN::DEBUG;
@@ -982,7 +989,7 @@ sub localize {
 
 		# OK, they don't have a valid ~/.netrc. Use 'ftp -n' then and
 		# login manually to host, using e-mail as password.
-		print qq{Issuing "ftp -n"\n};
+		print qq{Issuing "ftp$verbose -n"\n};
 		unshift @dialog, "open $host", "user anonymous $Config::Config{'cf_email'}";
 		CPAN->debug("dialog [".(join "|",@dialog)."]") if $CPAN::DEBUG;
 		$fh = FileHandle->new;
@@ -1040,8 +1047,6 @@ sub localize {
     }
     Carp::croak("Cannot fetch $file from anywhere");
 }
-
-package CPAN::FTP::external;
 
 package CPAN::FTP::netrc;
 
@@ -2414,12 +2419,6 @@ sub load {
 	      my($configpmdir) = MY->catdir($path_to_cpan,"CPAN");
 	      my($configpmtest) = MY->catfile($configpmdir,"Config.pm");
 	      if (-d $configpmdir || File::Path::mkpath($configpmdir)) {
-#_#_# following code dumped core on me with 5.003_11, a.k.
-#_#_#		       $fh = FileHandle->new;
-#_#_#		       if ($fh->open(">$configpmtest")) {
-#_#_#			  $fh->print("1;\n");
-#_#_#			   $configpm = $configpmtest;
-#_#_#		       }
 		  if (-w $configpmtest or -w $configpmdir) {
 		      $configpm = $configpmtest;
 		  }
@@ -2446,9 +2445,12 @@ sub load_succeeded {
     for (qw(
 	    cpan_home keep_source_where build_dir build_cache index_expire
 	    gzip tar unzip make pager makepl_arg make_arg make_install_arg
-	    urllist inhibit_startup_message
+	    urllist inhibit_startup_message ftp_proxy http_proxy no_proxy
 	   )) {
-	$miss++ unless defined $CPAN::Config->{$_}; # we want them all
+	unless (defined $CPAN::Config->{$_}){
+	    $miss++;
+	    CPAN->debug("undefined configuration parameter $_") if $CPAN::DEBUG;
+	}
     }
     return !$miss;
 }

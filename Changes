@@ -2,6 +2,16 @@ Revision history for Perl extension CPAN.
 
 =head2 Jan 24, 1997
 
+New Makefile.PL asks only questions to the very first user (when there
+are no CPAN::Config nor CPAN::MyConfig files to load).
+
+Again improved debugging capabilities for external ftp and
+the completeness of Configuration parameters (load_succeeded).
+
+Released 1.15.
+
+=head2 Jan 24, 1997
+
 Larry Virden discovered his hundredth bug. When the .netrc file
 contains an autologin routine with "cd" for a given host, we did not
 cd to the right directory. Fixed and improved debugging for the

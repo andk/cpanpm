@@ -1,17 +1,27 @@
 #!/usr/bin/perl -w
+BEGIN {$CPAN::No_Config_is_ok=1}
+BEGIN {$CPAN::No_Config_is_ok=1}
 use lib "lib";
 use ExtUtils::MakeMaker qw(:DEFAULT neatvalue);
 use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.23 1996/12/10 10:13:30 k Exp $
+# $Id: Makefile.PL,v 1.24 1997/01/24 12:14:48 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
 WriteMakefile(
-    'CONFIGURE' => sub { &CPAN::FirstTime::init(MY->catfile(qw(lib CPAN Config.pm))) },
+    'CONFIGURE' => sub {
+	my($bad);
+	eval {require CPAN::Config;};
+	$bad++ if $@;
+	eval {require CPAN::MyConfig;};
+	$bad++ if $@;
+	return if $bad<2;
+	CPAN::FirstTime::init(MY->catfile(qw(lib CPAN Config.pm)));
+    },
     'INSTALLDIRS' => 'perl',  # as it is coming with perl
     'NAME'	=> 'CPAN',
     'VERSION_FROM' => 'lib/CPAN.pm',
