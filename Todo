@@ -1,3 +1,6 @@
+Provide something, so that the next "o conf commit" will not overwrite
+the config file. maybe "myconfig_readonly"?
+
 Prepare for the first module that comes with 1.2.3 version numbering
 style (like diagnostic.pm). This includes: print with the help of %vd
 unless it looks like a number or "undef". Do the same on PAUSE. If you

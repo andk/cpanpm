@@ -1,3 +1,18 @@
+2000-08-21  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Detected code duplication in CPAN::Shell::o and
+	CPAN::Config::edit. Moved everything to CPAN::Config::prettyprint
+
+	* Introduced package CPAN::Version which fixed and extended the
+	support for v-strings. Old perls should not be affected at all and
+	new perls should be protected against broken displays. New perls
+	should also "do the right thing" as soon as the index files write
+	"v1.0" for the literal v1.0 . Seems now feature-complete to me.
+	Next thing to do is upgrade PAUSE and see what happens.
+
+	* Applied a patch by Slaven Rezic to allow cacheing of the
+	metadata from the index files via Storable.
+
 2000-08-16  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Fixed numerous chdir that were not checked for success.

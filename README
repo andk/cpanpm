@@ -410,6 +410,7 @@ CONFIGURATION
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
       index_expire       after this many days refetch index files
+      cache_metadata     use serializer to cache metadata
       cpan_home          local directory reserved for this package
       dontload_hash      anonymous hash: modules in the keys will not be
                          loaded by the CPAN::has_inst() routine
