@@ -1666,9 +1666,9 @@ sub _u_r_common {
              # for metadata cache
         $CPAN::Frontend->myprint(sprintf "%d matches in the database\n", $expand);
     }
-    for $module (@expand) {
+  MODULE: for $module (@expand) {
 	my $file  = $module->cpan_file;
-	next unless defined $file; # ??
+	next MODULE unless defined $file; # ??
 	my($latest) = $module->cpan_version;
 	my($inst_file) = $module->inst_file;
 	my($have);
@@ -1684,18 +1684,18 @@ sub _u_r_common {
 		} elsif ($have == 0){
 		    $version_zeroes++;
 		}
-		next unless CPAN::Version->vgt($latest, $have);
+		next MODULE unless CPAN::Version->vgt($latest, $have);
 # to be pedantic we should probably say:
 #    && !($have eq "undef" && $latest ne "undef" && $latest gt "");
 # to catch the case where CPAN has a version 0 and we have a version undef
 	    } elsif ($what eq "u") {
-		next;
+		next MODULE;
 	    }
 	} else {
 	    if ($what eq "a") {
-		next;
+		next MODULE;
 	    } elsif ($what eq "r") {
-		next;
+		next MODULE;
 	    } elsif ($what eq "u") {
 		$have = "-";
 	    }
@@ -1706,11 +1706,11 @@ sub _u_r_common {
 	    push @result, sprintf "%s %s\n", $module->id, $have;
 	} elsif ($what eq "r") {
 	    push @result, $module->id;
-	    next if $seen{$file}++;
+	    next MODULE if $seen{$file}++;
 	} elsif ($what eq "u") {
 	    push @result, $module->id;
-	    next if $seen{$file}++;
-	    next if $file =~ /^Contact/;
+	    next MODULE if $seen{$file}++;
+	    next MODULE if $file =~ /^Contact/;
 	}
 	unless ($headerdone++){
 	    $CPAN::Frontend->myprint("\n");
