@@ -495,19 +495,18 @@ ftp.sunet.se:
 # dst_contact      = "mailto:ftp-admin@ftp.sunet.se"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
-ftp.switch.ch:
+sunsite.cnlab-switch.ch:
   frequency        = "daily"
-  dst_directory    = "ftp.switch.ch:/mirror/CPAN/"
+  dst_directory    = "sunsite.cnlab-switch.ch:/mirror/CPAN/"
   dst_location     = "Zürich, Switzerland, Europe (47.22N 8.32E)"
   dst_organisation = "; Swiss Academic and Research Network"
   dst_timezone     = "GMT+1"
-  dst_contact      = "switchinfo@switch.ch"
-  dst_src          = "ftp.cs.ruu.nl:/pub/PERL/CPAN/"
-  dst_note      = "bandwidth for Swiss non-SWITCH customers and for foreign non-educational/research institutions severely restricted"
+  dst_contact      = "archive@sunsite.cnlab-switch.ch"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://ftp.switch.ch/mirror/CPAN/"
-# dst_contact      = "mailto:switchinfo@switch.ch"
-# dst_src          = "ftp://ftp.cs.ruu.nl/pub/PERL/CPAN/"
+# dst_dst          = "ftp://sunsite.cnlab-switch.ch/mirror/CPAN/"
+# dst_contact      = "mailto:archive@sunsite.cnlab-switch.ch"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.demon.co.uk:
   frequency        = "daily"

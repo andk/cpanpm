@@ -4,4 +4,5 @@ MIRRORED.BY
 Makefile.PL
 README
 lib/CPAN.pm
+lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm

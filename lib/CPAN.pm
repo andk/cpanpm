@@ -1,13 +1,13 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.46a';
+$VERSION = '1.00';
 
-# $Id: CPAN.pm,v 1.73 1996/12/01 18:16:16 k Exp k $
+# $Id: CPAN.pm,v 1.75 1996/12/10 00:50:33 k Exp $
 
-# my $version = substr q$Revision: 1.73 $, 10; # only used during development
+# my $version = substr q$Revision: 1.75 $, 10; # only used during development
 
-require 5.003;
+BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
 
 use Carp ();
@@ -16,6 +16,7 @@ use Cwd ();
 use DirHandle;
 use Exporter ();
 use ExtUtils::MakeMaker ();
+use File::Basename ();
 use File::Find;
 use File::Path ();
 use IO::File ();
@@ -53,7 +54,7 @@ $META ||= new CPAN;                 # In case we reeval ourselves we need a ||
 
 CPAN::Config->load;
 
-@EXPORT = qw(autobundle bundle bundles expand force install make shell test clean);
+@EXPORT = qw(autobundle bundle expand force install make recompile shell test clean);
 
 sub autobundle;
 sub bundle;
@@ -500,7 +501,7 @@ sub _u_r_common {
     Carp::croak "Usage: \$obj->_u_r_common(a|r|u)" unless $what =~ /^[aru]$/;
     my(@args) = @_;
     @args = '/./' unless @args;
-    my(@result,$module,%seen,%need,$headerdone);
+    my(@result,$module,%seen,%need,$headerdone,$version_zeroes);
     my $sprintf = "%-25s %9s %9s  %s\n";
     for $module ($self->expand('Module',@args)) {
 	my $file  = $module->cpan_file;
@@ -514,6 +515,7 @@ sub _u_r_common {
 	    } elsif ($what eq "r") {
 		$have = $module->inst_version;
 		local($^W) = 0;
+		$version_zeroes++ unless $have;
 		next if $have >= $latest;
 	    } elsif ($what eq "u") {
 		next;
@@ -554,6 +556,9 @@ sub _u_r_common {
 	} elsif ($what eq "r") {
 	    print "All modules are up to date for @args\n";
 	}
+    }
+    if ($what eq "r") {
+	print qq{$version_zeroes installed modules have no version number to compare\n};
     }
     @result;
 }
@@ -1156,7 +1161,7 @@ sub get {
 		$self->{unwrapped} = "NO";
 	    }
 	}
-	# Let's check if the package has his own directory.
+	# Let's check if the package has its own directory.
 	opendir DIR, "." or Carp::croak("Weird: couldn't opendir .: $!");
 	my @readdir = grep $_ !~ /^\.\.?$/, readdir DIR; ### MAC??
 	closedir DIR;
@@ -1914,13 +1919,18 @@ or
 
 sub commit {
     my($self, $configpm) = @_;
+    my $mode;
+    # mkpath!?
+
     my($fh) = IO::File->new;
     $configpm ||= cfile();
-    my $mode = (stat $configpm)[2];
-    unless(-w _) {
-	print "$configpm is not writable\n" and return;
+    if (-f $configpm) {
+	$mode = (stat $configpm)[2];
+	if ($mode && ! -w _) {
+	    print "$configpm is not writable\n" and return;
+	}
+	#chmod 0644, $configpm; #?
     }
-    #chmod 0644, $configpm; #?
 
     my $msg = <<EOF unless $configpm =~ /MyConfig/;
 
@@ -1933,7 +1943,7 @@ EOF
     open $fh, ">$configpm" or warn "Couldn't open >$configpm: $!";
     print $fh qq[$msg\$CPAN::Config = \{\n];
     foreach (sort keys %$CPAN::Config) {
-	print $fh "  '$_' => ", neatvalue($CPAN::Config->{$_}), ",\n";
+	print $fh "  '$_' => ", ExtUtils::MakeMaker::neatvalue($CPAN::Config->{$_}), ",\n";
     }
 
     print $fh "};\n1;\n__END__\n";
@@ -1960,6 +1970,54 @@ sub load {
     eval {require CPAN::Config;};       # We eval, because of some MakeMaker problems
     unshift @INC, $CPAN::META->catdir($ENV{HOME},".cpan") unless $dot_cpan++;
     eval {require CPAN::MyConfig;};     # where you can override system wide settings
+    unless ( $self->load_succeeded ) {
+	  require CPAN::FirstTime;
+	  my($configpm,$fh);
+	  if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
+	      $configpm = $INC{"CPAN/Config.pm"};
+	  } elsif (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
+	      $configpm = $INC{"CPAN/MyConfig.pm"};
+	  } else {
+	      my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
+	      my($configpmdir) = MY->catdir($path_to_cpan,"CPAN");
+	      my($configpmtest) = MY->catfile($configpmdir,"Config.pm");
+	      if (-d $configpmdir || File::Path::mkpath($configpmdir)) {
+#_#_# following code dumped core on me with 5.003_11, a.k.
+#_#_#		       $fh = IO::File->new;
+#_#_#		       if ($fh->open(">$configpmtest")) {
+#_#_#			  $fh->print("1;\n");
+#_#_#			   $configpm = $configpmtest;
+#_#_#		       }
+		  if (-w $configpmtest or -w $configpmdir) {
+		      $configpm = $configpmtest;
+		  }
+	      }
+	      unless ($configpm) {
+		  $configpmdir = MY->catdir($ENV{HOME},".cpan","CPAN");
+		  File::Path::mkpath($configpmdir);
+		  $configpmtest = MY->catfile($configpmdir,"MyConfig.pm");
+		  if (-w $configpmtest or -w $configpmdir) {
+		      $configpm = $configpmtest;
+		  } else {
+		      warn "WARNING: CPAN.pm is unable to create a configuration file.\n";
+		  }
+	      }
+	  }
+	  warn "Calling CPAN::FirstTime::init($configpm)";
+	  CPAN::FirstTime::init($configpm);
+    }
+}
+
+sub load_succeeded {
+    my($miss) = 0;
+    for (qw(
+	    cpan_home keep_source_where build_dir build_cache index_expire
+	    gzip tar unzip make pager makepl_arg make_arg make_install_arg
+	    urllist inhibit_startup_message
+	   )) {
+	$miss++ unless defined $CPAN::Config->{$_}; # we want them all
+    }
+    return !$miss;
 }
 
 sub unload {
@@ -2025,13 +2083,6 @@ Batch mode:
 
   autobundle, bundle, clean, expand, install, make, recompile, test
 
-=head1 ALPHA ALERT
-
-The interface of this B<package is not yet stable>. Parts of it may
-still change. This is especially true for the programming
-interface. The interactive "shell" interface is already rather well
-established.
-
 =head1 DESCRIPTION
 
 The CPAN module is designed to automate the building and installing of
@@ -2083,7 +2134,9 @@ Currently the cache manager only keeps track of the build directory
 ($CPAN::Config->{build_dir}). It is a simple FIFO mechanism that
 deletes complete directories below build_dir as soon as the size of
 all directories there gets bigger than $CPAN::Config->{build_cache}
-(in MB).
+(in MB). The contents of this cache may be used for later
+re-installations that you intend to do manually, but will never be
+trusted by CPAN itself.
 
 There is another directory ($CPAN::Config->{keep_source_where}) where
 the original distribution files are kept. This directory is not
@@ -2222,10 +2275,12 @@ determine the arguments.
 
 =head1 SECURITY
 
-There's no security layer in the alpha version of CPAN.pm. CPAN.pm
-helps you to install foreign, unmasked, unsigned code on your
-machine. It's not different than when you do that on your own, but you
-should be warned now.
+There's no strong security layer in CPAN.pm. CPAN.pm helps you to
+install foreign, unmasked, unsigned code on your machine. We compare
+to a checksum that comes from the net just as the distribution file
+itself. If somebody has managed to tamper with the distribution file,
+they may have as well tampered with the CHECKSUMS file. Future
+development will go towards stong authentification.
 
 =head1 EXPORT
 
@@ -2237,13 +2292,13 @@ oneliners.
 
 The debugging of this module is pretty difficult, because we have
 interferences of the software producing the indices on CPAN, of the
-mirroring process on CPAN, of packaging, of configuration, and of bugs
-within CPAN.pm.
+mirroring process on CPAN, of packaging, of configuration, of
+synchronicity, and of bugs within CPAN.pm.
 
 In interactive mode you can try "o debug" which will list options for
 debugging the various parts of the package. The output may not be very
 useful for you as it's just a byproduct of my own testing, but if you
-have an idea which part of the package may have a bug, it's certainly
+have an idea which part of the package may have a bug, it's sometimes
 worth to give it a try and send me more specific output. You should
 know that "o debug" has built-in completion support.
 
@@ -2252,7 +2307,8 @@ know that "o debug" has built-in completion support.
 If you have a local mirror of CPAN and can access all files with
 "file:" URLs, then you only need perl5.003 to run this
 module. Otherwise you need Net::FTP intalled. LWP may be required for
-non-UNIX systems.
+non-UNIX systems or if your nearest CPAN site is associated with an
+URL that is not C<ftp:>.
 
 This module presumes that all packages on CPAN
 
@@ -2264,8 +2320,7 @@ declare their $VERSION variable in an easy to parse manner. This
 prerequisite can hardly be relaxed because it consumes by far too much
 memory to load all packages into the running program just to determine
 the $VERSION variable . Currently all programs that are dealing with
-VERSION use something like this (requires MakeMaker-5.38, but don't
-bother if you don't have it):
+VERSION use something like this
 
     perl -MExtUtils::MakeMaker -le \
         'print MM->parse_version($ARGV[0])' filename
@@ -2275,8 +2330,9 @@ parsed, please try the above method.
 
 =item *
 
-come as compressed or gzipped tarfiles or as zip files (well we try to
-handle a bit more, but without much enthusiasm).
+come as compressed or gzipped tarfiles or as zip files and contain a
+Makefile.PL (well we try to handle a bit more, but without much
+enthusiasm).
 
 =back
 
