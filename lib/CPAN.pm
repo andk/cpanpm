@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_68RC';
+$VERSION = '1.58';
 
-# $Id: CPAN.pm,v 1.354 2000/10/08 14:20:57 k Exp $
+# $Id: CPAN.pm,v 1.355 2000/10/18 14:48:21 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.354 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.355 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -5952,7 +5952,22 @@ Because there are people who have their precise expectations about who
 may install where in the @INC path and who uses which @INC array. In
 fine tuned environments C<UNINST=1> can cause damage.
 
-=item 3) When I install bundles or multiple modules with one command
+=item 3) I want to clean up my mess, and install a new perl along with
+      all modules I have. How do I go about it?
+
+Run the autobundle command for your old perl and optionally rename the
+resulting bundle file (e.g. Bundle/mybundle.pm), install the new perl
+with the Configure option prefix, e.g.
+
+    ./Configure -Dprefix=/usr/local/perl-5.6.78.9
+
+Install the bundle file you produced in the first step with something like
+
+    cpan> install Bundle::mybundle
+
+and you're done.
+
+=item 4) When I install bundles or multiple modules with one command
       there is too much output to keep track of
 
 You may want to configure something like
@@ -5963,7 +5978,7 @@ You may want to configure something like
 so that STDOUT is captured in a file for later inspection.
 
 
-=item 4) I am not root, how can I install a module in a personal
+=item 5) I am not root, how can I install a module in a personal
       directory?
 
 You will most probably like something like this:
@@ -5987,12 +6002,12 @@ or setting the PERL5LIB environment variable.
 Another thing you should bear in mind is that the UNINST parameter
 should never be set if you are not root.
 
-=item 5) How to get a package, unwrap it, and make a change before
+=item 6) How to get a package, unwrap it, and make a change before
       building it?
 
   look Sybase::Sybperl
 
-=item 6) I installed a Bundle and had a couple of fails. When I
+=item 7) I installed a Bundle and had a couple of fails. When I
       retried, everything resolved nicely. Can this be fixed to work
       on first try?
 
@@ -6011,11 +6026,18 @@ definition file manually. It is planned to improve the metadata
 situation for dependencies on CPAN in general, but this will still
 take some time.
 
-=item 7) In our intranet we have many modules for internal use. How
+=item 8) In our intranet we have many modules for internal use. How
       can I integrate these modules with CPAN.pm but without uploading
       the modules to CPAN?
 
 Have a look at the CPAN::Site module.
+
+=item 9) When I run CPAN's shell, I get error msg about line 1 to 4,
+      setting meta input/output via the /etc/inputrc file.
+
+I guess, /etc/inputrc interacts with Term::ReadLine somehow. Maybe
+just remove /etc/inputrc or set the INPUTRC environment variable (see
+the readline documentation).
 
 =back
 

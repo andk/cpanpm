@@ -1,3 +1,11 @@
+2000-10-18  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.58
+
+2000-10-15  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* FAQ: two new FAQ items added: autobundle and readline
+
 2000-10-07  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Setting Version to 1.57_68RC
