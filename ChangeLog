@@ -1,8 +1,67 @@
 2000-12-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
-	* Declaring 1.58_93 as 1.59 and releasing as such to have a stable
-	baseline again. 1.58_93 had been integrated into the development
-	track of 5.7.0 with patch 7737 on 2000/11/18.
+	* normalize: protect against the case when normalize is called
+	without argument. Releasing as 1.59_51.
+
+        * Declaring 1.58_93 as 1.59 and releasing as such to have a stable
+        baseline again. 1.58_93 had been integrated into the development
+        track of 5.7.0 with patch 7737 on 2000/11/18.
+
+2000-11-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Distribution::get: removed a special case that was never
+	documented and apparently never worked: when keep_source_where
+	matched /^no/, we tried to delete the source again after an
+	installation.
+
+	* POD: documented expandany
+
+	* CPAN::Bundle::inst_file: now takes the newest Bundle definition
+	file it finds within @INC and ~/.cpan/Bundle/. Sets INST_VERSION
+	as side effect. CPAN::Bundle::inst_version calls inst_file.
+
+	* CPAN::Distribution::uptodate: New method.
+
+	* CPAN::Bundle::uptodate: New method. Thanks to Jeremy Wadsack who
+	discovered that an uptodate method for Bundles was missing.
+
+	* POD: Wrote at least the headlines for all public methods to make
+	a second step at opening CPAN.pm for programmers.
+
+2000-11-28  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Admin (CPAN::Shell::register): opened for XML, Tk, and Apache.
+
+	* CPAN::Author::ls: include the author's ID in the listing to make
+	copy&paste easier.
+
+	* normalize: Allowed the special case "N/A ..." for bundles.
+
+	* CPAN::Complete::cpl: made completion for bundles work on install
+	et al.
+
+	* localize: Encountered a C<Can't locate object method "new" via
+	package "LWP::UserAgent"> although has_usable returned true. Could
+	not find out the reason, so I wrapped it into an eval.
+
+2000-11-23  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Sending as 1.58_94 to Steffen, no release to avoid confusion.
+
+	* Due to a bug report by Steffen Beyer I added a whole lot of
+	debugging statements to get in the hope, I can find a reason why
+	his copy misbehaves under 5.00503.
+
+	* CPAN::Distribution::get: Fixed indenting in get(). Added $! to
+	the error messages there.
+
+
+2000-11-22  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::FirstTime::conf_sites: Added the option to download a
+	MIRRORED.BY immediately even if the local one seems fresh enough.
+
+	* POD: Lots of fixes spotted by John P. Linderman
 
 2000-11-15  Andreas J. Koenig  <andreas.koenig@anima.de>
 
@@ -144,7 +203,7 @@
 	$CPAN::Config->{term_is_latin} is set to true.
 
 	* CPAN::Module::as_glimpse and CPAN::Shell::_u_r_common: enabled
-	coloring of module names that are alredy registered in the module
+	coloring of module names that are already registered in the module
 	list. This feature bloat will have to go away in a future version,
 	but for a while it might prove useful. The diffs between RCS 1.361
 	and 1.362 should then be applied reversed. The feature bloat is

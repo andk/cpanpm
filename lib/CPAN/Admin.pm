@@ -5,7 +5,7 @@ use strict;
 use vars qw(@EXPORT $VERSION);
 use constant PAUSE => "pause.perl.org";
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -61,8 +61,8 @@ sub CPAN::Shell::register {
   my $rootns = $namespace[0];
 
   # Tk, XML and Apache need special treatment
-  if ($rootns=~/^(Tk|XML|Apache|Bundle)\b/){
-    print "Tk, XML, and Apache are not yet ready for registering\n";
+  if ($rootns=~/^(Bundle)\b/){
+    print "Bundles are not yet ready for registering\n";
     return;
   }
 

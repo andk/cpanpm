@@ -32,12 +32,11 @@ DESCRIPTION
     processes and deletes excess space according to a simple FIFO mechanism.
 
     For extended searching capabilities there's a plugin for CPAN available,
-    the CPAN::WAIT manpage. "CPAN::WAIT" is a full-text search engine that
-    indexes all documents available in CPAN authors directories. If
-    "CPAN::WAIT" is installed on your system, the interactive shell of
-    <CPAN.pm> will enable the "wq", "wr", "wd", "wl", and "wh" commands
-    which send queries to the WAIT server that has been configured for your
-    installation.
+    "CPAN::WAIT". "CPAN::WAIT" is a full-text search engine that indexes all
+    documents available in CPAN authors directories. If "CPAN::WAIT" is
+    installed on your system, the interactive shell of CPAN.pm will enable
+    the "wq", "wr", "wd", "wl", and "wh" commands which send queries to the
+    WAIT server that has been configured for your installation.
 
     All other methods provided are accessible in a programmer style and in
     an interactive shell style.
@@ -233,6 +232,11 @@ DESCRIPTION
       of CPAN::Module objects according to the "@things" arguments given. In
       scalar context it only returns the first element of the list.
 
+    expandany(@things)
+      Like expand, but returns objects of the appropriate type, i.e.
+      CPAN::Bundle objects for bundles, CPAN::Module objects for modules and
+      CPAN::Distribution objects fro distributions.
+
     Programming Examples
       This enables the programmer to do operations that combine
       functionalities that are available in the shell.
@@ -268,7 +272,7 @@ DESCRIPTION
       only if it doesn't match. Ick?
 
       If you prefer to do it more in a programmer style in one single
-      process, maybe something like this suites you better:
+      process, maybe something like this suits you better:
 
         # list all modules on my disk that have newer versions on CPAN
         for $mod (CPAN::Shell->expand("Module","/./")){
@@ -292,7 +296,247 @@ DESCRIPTION
         # new mod_perl arrived, let me know all update recommendations
         CPAN::Shell->r;
 
-  Methods in the four Classes
+  Methods in the other Classes
+
+    The programming interface for the classes CPAN::Module,
+    CPAN::Distribution, CPAN::Bundle, and CPAN::Author is still considered
+    beta and partially even alpha. In the following paragraphs only those
+    methods are documented that have proven useful over a longer time and
+    thus are unlikely to change.
+
+    CPAN::Author::as_glimpse()
+        Returns a one-line description of the author
+
+    CPAN::Author::as_string()
+        Returns a multi-line description of the author
+
+    CPAN::Author::email()
+        Returns the author's email address
+
+    CPAN::Author::fullname()
+        Returns the author's name
+
+    CPAN::Author::name()
+        An alias for fullname
+
+    CPAN::Bundle::as_glimpse()
+        Returns a one-line description of the bundle
+
+    CPAN::Bundle::as_string()
+        Returns a multi-line description of the bundle
+
+    CPAN::Bundle::clean()
+        Recursively runs the "clean" method on all items contained in the
+        bundle.
+
+    CPAN::Bundle::contains()
+        Returns a list of objects' IDs contained in a bundle. The associated
+        objects may be bundles, modules or distributions.
+
+    CPAN::Bundle::force($method,@args)
+        Forces CPAN to perform a task that normally would have failed. Force
+        takes as arguments a method name to be called and any number of
+        additional arguments that should be passed to the called method. The
+        internals of the object get the needed changes so that CPAN.pm does
+        not refuse to take the action. The "force" is passed recursively to
+        all contained objects.
+
+    CPAN::Bundle::get()
+        Recursively runs the "get" method on all items contained in the
+        bundle
+
+    CPAN::Bundle::inst_file()
+        Returns the highest installed version of the bundle in either @INC
+        or "$CPAN::Config-"{cpan_home}>. Note that this is different from
+        CPAN::Module::inst_file.
+
+    CPAN::Bundle::inst_version()
+        Like CPAN::Bundle::inst_file, but returns the $VERSION
+
+    CPAN::Bundle::uptodate()
+        Returns 1 if the bundle itself and all its members are uptodate.
+
+    CPAN::Bundle::install()
+        Recursively runs the "install" method on all items contained in the
+        bundle
+
+    CPAN::Bundle::make()
+        Recursively runs the "make" method on all items contained in the
+        bundle
+
+    CPAN::Bundle::readme()
+        Recursively runs the "readme" method on all items contained in the
+        bundle
+
+    CPAN::Bundle::test()
+        Recursively runs the "test" method on all items contained in the
+        bundle
+
+    CPAN::Distribution::as_glimpse()
+        Returns a one-line description of the distribution
+
+    CPAN::Distribution::as_string()
+        Returns a multi-line description of the distribution
+
+    CPAN::Distribution::clean()
+        Changes to the directory where the distribution has been unpacked
+        and runs "make clean" there.
+
+    CPAN::Distribution::containsmods()
+        Returns a list of IDs of modules contained in a distribution file.
+        Only works for distributions listed in the 02packages.details.txt.gz
+        file. This typically means that only the most recent version of a
+        distribution is covered.
+
+    CPAN::Distribution::cvs_import()
+        Changes to the directory where the distribution has been unpacked
+        and runs something like
+
+            cvs -d $cvs_root import -m $cvs_log $cvs_dir $userid v$version
+
+        there.
+
+    CPAN::Distribution::dir()
+        Returns the directory into which this distribution has been
+        unpacked.
+
+    CPAN::Distribution::force($method,@args)
+        Forces CPAN to perform a task that normally would have failed. Force
+        takes as arguments a method name to be called and any number of
+        additional arguments that should be passed to the called method. The
+        internals of the object get the needed changes so that CPAN.pm does
+        not refuse to take the action.
+
+    CPAN::Distribution::get()
+        Downloads the distribution from CPAN and unpacks it. Does nothing if
+        the distribution has already been downloaded and unpacked within the
+        current session.
+
+    CPAN::Distribution::install()
+        Changes to the directory where the distribution has been unpacked
+        and runs the external command "make install" there. If "make" has
+        not yet been run, it will be run first. A "make test" will be issued
+        in any case and if this fails, the install will be cancelled. The
+        cancellation can be avoided by letting "force" run the "install" for
+        you.
+
+    CPAN::Distribution::isa_perl()
+        Returns 1 if this distribution file seems to be a perl distribution.
+        Normally this is derived from the file name only, but the index from
+        CPAN can contain a hint to achieve a return value of true for other
+        filenames too.
+
+    CPAN::Distribution::look()
+        Changes to the directory where the distribution has been unpacked
+        and opens a subshell there. Exiting the subshell returns.
+
+    CPAN::Distribution::make()
+        First runs the "get" method to make sure the distribution is
+        downloaded and unpacked. Changes to the directory where the
+        distribution has been unpacked and runs the external commands "perl
+        Makefile.PL" and "make" there.
+
+    CPAN::Distribution::prereq_pm()
+        Returns the hash reference that has been announced by a distribution
+        as the PREREQ_PM hash in the Makefile.PL. Note: works only after an
+        attempt has been made to "make" the distribution. Returns undef
+        otherwise.
+
+    CPAN::Distribution::readme()
+        Downloads the README file associated with a distribution and runs it
+        through the pager specified in "$CPAN::Config-"{pager}>.
+
+    CPAN::Distribution::test()
+        Changes to the directory where the distribution has been unpacked
+        and runs "make test" there.
+
+    CPAN::Distribution::uptodate()
+        Returns 1 if all the modules contained in the distribution are
+        uptodate. Relies on containsmods.
+
+    CPAN::Index::force_reload()
+        Forces a reload of all indices.
+
+    CPAN::Index::reload()
+        Reloads all indices if they have been read more than
+        "$CPAN::Config-"{index_expire}> days.
+
+    CPAN::InfoObj::dump()
+        CPAN::Author, CPAN::Bundle, CPAN::Module, and CPAN::Distribution
+        inherit this method. It prints the data structure associated with an
+        object. Useful for debugging. Note: the data structure is considered
+        internal and thus subject to change without notice.
+
+    CPAN::Module::as_glimpse()
+        Returns a one-line description of the module
+
+    CPAN::Module::as_string()
+        Returns a multi-line description of the module
+
+    CPAN::Module::clean()
+        Runs a clean on the distribution associated with this module.
+
+    CPAN::Module::cpan_file()
+        Returns the filename on CPAN that is associated with the module.
+
+    CPAN::Module::cpan_version()
+        Returns the latest version of this module available on CPAN.
+
+    CPAN::Module::cvs_import()
+        Runs a cvs_import on the distribution associated with this module.
+
+    CPAN::Module::description()
+        Returns a 44 chracter description of this module. Only available for
+        modules listed in The Module List (CPAN/modules/00modlist.long.html
+        or 00modlist.long.txt.gz)
+
+    CPAN::Module::force($method,@args)
+        Forces CPAN to perform a task that normally would have failed. Force
+        takes as arguments a method name to be called and any number of
+        additional arguments that should be passed to the called method. The
+        internals of the object get the needed changes so that CPAN.pm does
+        not refuse to take the action.
+
+    CPAN::Module::get()
+        Runs a get on the distribution associated with this module.
+
+    CPAN::Module::inst_file()
+        Returns the filename of the module found in @INC. The first file
+        found is reported just like perl itself stops searching @INC when it
+        finds a module.
+
+    CPAN::Module::inst_version()
+        Returns the version number of the module in readable format.
+
+    CPAN::Module::install()
+        Runs an "install" on the distribution associated with this module.
+
+    CPAN::Module::look()
+        Changes to the directory where the distribution assoicated with this
+        module has been unpacked and opens a subshell there. Exiting the
+        subshell returns.
+
+    CPAN::Module::make()
+        Runs a "make" on the distribution associated with this module.
+
+    CPAN::Module::manpage_headline()
+        If module is installed, peeks into the module's manpage, reads the
+        headline and returns it. Moreover, if the module has been downloaded
+        within this session, does the equivalent on the downloaded module
+        even if it is not installed.
+
+    CPAN::Module::readme()
+        Runs a "readme" on the distribution associated with this module.
+
+    CPAN::Module::test()
+        Runs a "test" on the distribution associated with this module.
+
+    CPAN::Module::uptodate()
+        Returns 1 if the module is installed and up-to-date.
+
+    CPAN::Module::userid()
+        Returns the author's ID of the module.
+
 
   Cache Manager
 
@@ -511,8 +755,8 @@ EXPORT
     oneliners.
 
 POPULATE AN INSTALLATION WITH LOTS OF MODULES
-    To populate a freshly installed perl with my favorite modules is pretty
-    easiest by maintaining a private bundle definition file. To get a useful
+    Populating a freshly installed perl with my favorite modules is pretty
+    easy if you maintain a private bundle definition file. To get a useful
     blueprint of a bundle definition file, the command autobundle can be
     used on the CPAN shell command line. This command writes a bundle
     definition file for all modules that are installed for the currently
@@ -524,7 +768,7 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
     then answer a few questions and then go out for a coffee.
 
-    Maintaining a bundle definition file means to keep track of two things:
+    Maintaining a bundle definition file means keeping track of two things:
     dependencies and interactivity. CPAN.pm sometimes fails on calculating
     dependencies because not all modules define all MakeMaker attributes
     correctly, so a bundle definition file should specify prerequisites as
@@ -532,7 +776,7 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
     distributions need some interactive configuring. So what I try to
     accomplish in my private bundle file is to have the packages that need
     to be configured early in the file and the gentle ones later, so I can
-    go out after a few minutes and leave CPAN.pm unattained.
+    go out after a few minutes and leave CPAN.pm untended.
 
 WORKING WITH CPAN.pm BEHIND FIREWALLS
     Thanks to Graham Barr for contributing the following paragraphs about
@@ -586,7 +830,7 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
         IP Masquerade
             This is the firewall implemented in the Linux kernel, it allows
             you to hide a complete network behind one IP address. With this
-            firewall no special compiling is need as you can access hosts
+            firewall no special compiling is needed as you can access hosts
             directly.
 
   Configuring lynx or ncftp for going through a firewall
