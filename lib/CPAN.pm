@@ -6,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.57_53';
+$VERSION = '1.57_54';
 
-# $Id: CPAN.pm,v 1.317 2000/08/27 22:02:12 k Exp $
+# $Id: CPAN.pm,v 1.319 2000/08/30 11:21:26 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.317 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.319 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -1860,6 +1860,8 @@ sub rematein {
 	my $obj;
 	if (ref $s) {
 	    $obj = $s;
+	} elsif ($s =~ m|^/|) { # looks like a regexp
+          $CPAN::Frontend->mydie("Sorry, $meth with a regular expression is not supported");
 	} elsif ($s =~ m|/|) { # looks like a file
 	    $obj = $CPAN::META->instance('CPAN::Distribution',$s);
 	} elsif ($s =~ m|^Bundle::|) {
@@ -1869,22 +1871,22 @@ sub rematein {
 		if $CPAN::META->exists('CPAN::Module',$s);
 	}
 	if (ref $obj) {
+            if ($pragma
+                &&
+                ($] < 5.00303 || $obj->can($pragma))){
+              ### compatibility with 5.003
+              $obj->$pragma($meth); # the pragma "force" in
+                                    # "CPAN::Distribution" must know
+                                    # what we are intending
+            }
+	    if ($]>=5.00303 && $obj->can('called_for')) {
+	      $obj->called_for($s);
+	    }
 	    CPAN->debug(
 			qq{pragma[$pragma]meth[$meth]obj[$obj]as_string\[}.
 			$obj->as_string.
 			qq{\]}
 		       ) if $CPAN::DEBUG;
-	    $obj->$pragma()
-		if
-		    $pragma
-			&&
-		    ($] < 5.00303 || $obj->can($pragma)); ###
-                                                          ### compatibility
-                                                          ### with
-                                                          ### 5.003
-	    if ($]>=5.00303 && $obj->can('called_for')) {
-	      $obj->called_for($s);
-	    }
 	    CPAN::Queue->delete($s) if $obj->$meth(); # if it is more
                                                       # than once in
                                                       # the queue
@@ -3621,11 +3623,14 @@ sub eq_MD5 {
 #-> sub CPAN::Distribution::force ;
 
 # Both modules and distributions know if "force" is in effect by
-# autoinspection, not by inspecting a global variable. This has the
-# downside that ^C and die() will return to the prompt but will not be
-# able to reset the force_update attributes. We correct for it
-# currently in the read_meta_data routine, but XXX XXX! we must deal
-# with it in the cleanup code immediately.
+# autoinspection, not by inspecting a global variable. One of the
+# reason why this was chosen to work that way was the treatment of
+# dependencies. They should not autpomatically inherit the force
+# status. But this has the downside that ^C and die() will return to
+# the prompt but will not be able to reset the force_update
+# attributes. We try to correct for it currently in the read_meta_data
+# routine, and immediately before we check for a Signal. I hope this
+# works out in one of v1.57_53ff
 
 sub force {
   my($self, $method) = @_;
@@ -3814,7 +3819,10 @@ or
 	  # $self->{writemakefile} .= <$fh>;
 	}
     }
-    delete $self->{force_update}, return if $CPAN::Signal;
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
+    }
     if (my @prereq = $self->needs_prereq){
       my $id = $self->id;
       $CPAN::Frontend->myprint("---- Dependencies detected ".
@@ -3921,7 +3929,10 @@ sub needs_prereq {
 sub test {
     my($self) = @_;
     $self->make;
-    delete $self->{force_update}, return if $CPAN::Signal;
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
+    }
     $CPAN::Frontend->myprint("Running make test\n");
   EXCUSE: {
 	my @e;
@@ -3930,7 +3941,7 @@ sub test {
 
 	exists $self->{'make'} and
 	    $self->{'make'} eq 'NO' and
-		push @e, "Oops, make had returned bad status";
+		push @e, "Can't test without successful make";
 
 	exists $self->{'build_dir'} or push @e, "Has no own directory";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
@@ -4009,7 +4020,10 @@ make clean did not succeed, marking directory as unusable for further work.
 sub install {
     my($self) = @_;
     $self->test;
-    delete $self->{force_update}, return if $CPAN::Signal;
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
+    }
     $CPAN::Frontend->myprint("Running make install\n");
   EXCUSE: {
 	my @e;
@@ -4020,7 +4034,7 @@ sub install {
 
 	exists $self->{'make'} and
 	    $self->{'make'} eq 'NO' and
-		push @e, "Oops, make had returned bad status";
+		push @e, "make had returned bad status, won't install without force";
 
 	push @e, "make test had returned bad status, ".
 	    "won't install without force"
@@ -4834,6 +4848,8 @@ sub vcmp {
   my($self,$l,$r) = @_;
   local($^W) = 0;
   CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
+
+  return 0 if $l eq $r; # short circuit for quicker success
 
   return
       ($l ne "undef") <=> ($r ne "undef") ||

@@ -1,3 +1,20 @@
+2000-08-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Call to force now wants a first argument and this was not there.
+	This was the reason why force DIST didn't work. Thanks to Jost
+	Krieger for the bugreport.
+
+	* install /xyz/ always needlessly went down the wrong path of
+	trying to download "/xyz/". We're now catching this mistake
+	earlier. Thanks to Jost Krieger for he idea.
+
+	* changed the messages on a failure of make in test and install
+	from "Oops" to something much more certifying. Thanks to Jost
+	Krieger for the idea.
+
+	* in vcmp short circuit for equality for speedup. Thanks to Jost
+	Krieger for the idea.
+
 2000-08-27  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Releasing as 1.57_53 without enough testing in the hope that I
