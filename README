@@ -1,0 +1,115 @@
+This is an alpha release. The interface presented here is still
+subject to change.
+
+=head1 What it does
+
+It's a shell for downloading and installing modules from CPAN. The
+prompt is 'cpan> ' in the examples below.
+
+  cpan> h
+
+  command   arguments   description
+  a                             authors
+  b         string              bundles
+  d         or          display distributions
+  m         regex       info    modules
+  i         or          about   anything of above
+  r         none                reinstall recommendations
+  u                             uninstalled modules
+
+  make      module,     make
+  test      dist or     make test (implies make)
+  install   bundle      make install (implies test)
+
+  h                     display this menu
+  !         perl-code   eval a perl command
+  q                     quit the shell subroutine
+
+  cpan> a LWALL
+  Author id = LWALL
+      EMAIL        larry@wall.org
+      FULLNAME     Larry Wall. Author of Perl. Busy man.
+
+
+  cpan> m /news/
+  Module          News::NNTPClient (RVA/NNTPClient-0.26.tar.gz)
+  Module          News::NNTPFetchProgress (RVA/NNTPClient-0.26.tar.gz)
+  Module          News::Newsrc    (SWMCD/News-Newsrc-1.02.tar.gz)
+  Module          URI::URL::news  (GAAS/libwww-perl-5.01.tar.gz)
+
+  cpan> m News::Ne<TAB>
+  cpan> m News::Newsrc _< cursor here
+  cpan> m News::Newsrc
+  Module id = News::Newsrc
+      DESCRIPTION  Manage .newsrc files
+      CPAN_USERID  SWMCD (Steven McDougall)
+      CPAN_VERSION 1.02
+      CPAN_FILE    SWMCD/News-Newsrc-1.02.tar.gz
+      DSLI_STATUS  adpO (alpha,developer,perl,object-oriented)
+      MANPAGE      News::Newsrc - manage newsrc files
+      INST_FILE    /usr/local/lib/perl5/site_perl/News/Newsrc.pm
+      INST_VERSION 1.02
+
+  cpan> r
+
+  Package namespace         installed    latest  in CPAN file
+  Date::GetDate                  1.01      2.00  TOMC/modules/Date-GetDate-2.00.tar.gz
+  Devel::DProf               19960302  19960626  DMR/DProf-19960626.tar.gz
+  File::Copy                      1.5       2.0  ASHER/File-Tools-2.0.tar.gz
+  Filter::decrypt                1.02      1.03  PMQS/Filter-1.10.tar.gz
+  Ioctl                             0       0.7  KJALB/Ioctl-0_7.tar.gz
+  MIME::Decoder                     0       1.9  ERYQ/MIME-parser-1.13.tar.gz
+  Mail::Folder                   0.02      0.03  KJOHNSON/MailFolder-0.03.tar.gz
+  Pod::Text                         0         2  BRADAPP/PodParser-1.00.tar.gz
+  Tk::FileDialog                    0       1.3  BPOWERS/Tk-FileDialog-1.3.tar.gz
+  Tk::WaitBox                       0       1.2  BPOWERS/Tk-WaitBox-1.2.tar.gz
+
+  cpan> in<TAB>
+  cpan> install _<cursor here
+  cpan> install Po<TAB>
+  cpan> install Pod::_<cursor here
+  cpan> install Pod::Text
+  Running make
+  PodParser-0.01/
+  PodParser-0.01/Text.pm
+  PodParser-0.01/Makefile.PL
+  [...]
+    /usr/local/bin/make -- OK
+  Running make test
+  [...]
+    /usr/local/bin/make test -- OK
+  Running make install
+  [...]
+    /usr/local/bin/make install UNINST=1 -- OK
+
+  cpan> a /rand/
+  Author          JOEHIL (Joe Hildebrand)
+  Author          MERLYN (Randal L. Schwartz)
+  Author          RJRAY (Randy J Ray)
+
+
+And so forth.
+
+=head1 Prerequisites
+
+perl5.003
+
+Net::FTP
+
+=head1 Recommended
+
+ExtUtils::MakeMaker v5.38
+
+Term::ReadKey
+
+Term::ReadLine::Perl
+
+MD5
+
+LWP
+
+
+
+
+andreas
+
