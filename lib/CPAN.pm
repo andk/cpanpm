@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58';
+$VERSION = '1.58_51';
 
-# $Id: CPAN.pm,v 1.355 2000/10/18 14:48:21 k Exp $
+# $Id: CPAN.pm,v 1.358 2000/10/21 13:23:54 k Exp k $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.355 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.358 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -56,7 +56,7 @@ package CPAN;
 use strict qw(vars);
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
-            $Revision $Signal $Cwd $End $Suppress_readline $Frontend
+            $Revision $Signal $End $Suppress_readline $Frontend
             $Defaultsite $Have_warned);
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
@@ -88,14 +88,12 @@ sub shell {
     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
     CPAN::Config->load unless $CPAN::Config_loaded++;
 
-    CPAN::Index->read_metadata_cache;
-
     my $prompt = "cpan> ";
     local($^W) = 1;
     unless ($Suppress_readline) {
 	require Term::ReadLine;
 #	import Term::ReadLine;
-	$term = Term::ReadLine->new('CPAN Monitor');
+	$term ||= Term::ReadLine->new('CPAN Monitor');
 	if ($term->ReadLine eq "Term::ReadLine::Gnu") {
 	    my $attribs = $term->Attribs;
 #	     $attribs->{completion_entry_function} =
@@ -120,9 +118,7 @@ sub shell {
 
     # no strict; # I do not recall why no strict was here (2000-09-03)
     $META->checklock();
-    my $getcwd;
-    $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
-    my $cwd = CPAN->$getcwd();
+    my $cwd = CPAN::anycwd();
     my $try_detect_readline;
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
@@ -205,6 +201,7 @@ ReadLine support %s
 	}
       }
     }
+    chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
 }
 
 package CPAN::CacheMgr;
@@ -583,6 +580,13 @@ sub DESTROY {
     &cleanup; # need an eval?
 }
 
+#-> sub CPAN::anycwd ;
+sub anycwd () {
+    my $getcwd;
+    $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
+    CPAN->$getcwd();
+}
+
 #-> sub CPAN::cwd ;
 sub cwd {Cwd::cwd();}
 
@@ -592,6 +596,7 @@ sub getcwd {Cwd::getcwd();}
 #-> sub CPAN::exists ;
 sub exists {
     my($mgr,$class,$id) = @_;
+    CPAN::Config->load unless $CPAN::Config_loaded++;
     CPAN::Index->reload;
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
@@ -788,9 +793,7 @@ sub entries {
     return unless defined $dir;
     $self->debug("reading dir[$dir]") if $CPAN::DEBUG;
     $dir ||= $self->{ID};
-    my $getcwd;
-    $getcwd  = $CPAN::Config->{'getcwd'} || 'cwd';
-    my($cwd) = CPAN->$getcwd();
+    my($cwd) = CPAN::anycwd();
     chdir $dir or Carp::croak("Can't chdir to $dir: $!");
     my $dh = DirHandle->new(File::Spec->curdir)
         or Carp::croak("Couldn't opendir $dir: $!");
@@ -1030,7 +1033,7 @@ EOF
     my($fh) = FileHandle->new;
     rename $configpm, "$configpm~" if -f $configpm;
     open $fh, ">$configpm" or
-        $CPAN::Frontend->mywarn("Couldn't open >$configpm: $!");
+        $CPAN::Frontend->mydie("Couldn't open >$configpm: $!");
     $fh->print(qq[$msg\$CPAN::Config = \{\n]);
     foreach (sort keys %$CPAN::Config) {
 	$fh->print(
@@ -2291,7 +2294,7 @@ sub hosthard {
 
 	$self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
 	my($f,$funkyftp);
-	for $f ('lynx','ncftpget','ncftp') {
+	for $f ('lynx','ncftpget','ncftp','wget') {
 	  next unless exists $CPAN::Config->{$f};
 	  $funkyftp = $CPAN::Config->{$f};
 	  next unless defined $funkyftp;
@@ -2304,6 +2307,8 @@ sub hosthard {
 	    $src_switch = " -source";
 	  } elsif ($f eq "ncftp"){
 	    $src_switch = " -c";
+          } elsif ($f eq "wget"){
+              $src_switch = " -O -";
 	  }
 	  my($chdir) = "";
 	  my($stdout_redir) = " > $asl_ungz";
@@ -2609,6 +2614,7 @@ sub new {
 	  }, $class;
 }
 
+# CPAN::FTP::hasdefault;
 sub hasdefault { shift->{'hasdefault'} }
 sub netrc      { shift->{'netrc'}      }
 sub protected  { shift->{'protected'}  }
@@ -2757,7 +2763,15 @@ sub reload {
     for ($CPAN::Config->{index_expire}) {
 	$_ = 0.001 unless $_ && $_ > 0.001;
     }
-    $CPAN::META->{PROTOCOL} ||= "1.0";
+    unless (1 || $CPAN::Have_warned->{readmetadatacache}++) {
+        # debug here when CPAN doesn't seem to read the Metadata
+        require Carp;
+        Carp::cluck("META-PROTOCOL[$CPAN::META->{PROTOCOL}]");
+    }
+    unless ($CPAN::META->{PROTOCOL}) {
+        $cl->read_metadata_cache;
+        $CPAN::META->{PROTOCOL} ||= "1.0";
+    }
     if ( $CPAN::META->{PROTOCOL} < PROTOCOL  ) {
         # warn "Setting last_time to 0";
         $last_time = 0; # No warning necessary
@@ -3300,15 +3314,16 @@ sub as_string {
 #-> sub CPAN::Distribution::containsmods ;
 sub containsmods {
   my $self = shift;
-  return if exists $self->{CONTAINSMODS};
+  return keys %{$self->{CONTAINSMODS}} if exists $self->{CONTAINSMODS};
+  my $dist_id = $self->{ID};
   for my $mod ($CPAN::META->all_objects("CPAN::Module")) {
     my $mod_file = $mod->cpan_file or next;
-    my $dist_id = $self->{ID} or next;
     my $mod_id = $mod->{ID} or next;
     # warn "mod_file[$mod_file] dist_id[$dist_id] mod_id[$mod_id]";
     # sleep 1;
     $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
   }
+  keys %{$self->{CONTAINSMODS}};
 }
 
 #-> sub CPAN::Distribution::called_for ;
@@ -3337,6 +3352,7 @@ sub get {
                    );
 
     $self->debug("Doing localize") if $CPAN::DEBUG;
+    my $CWD = CPAN::anycwd();
     $local_file =
 	CPAN::FTP->localize("authors/id/$self->{ID}", $local_wanted)
 	    or $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n");
@@ -3374,11 +3390,14 @@ sub get {
     } else {
 	$self->{archived} = "NO";
     }
-    my $cwd = File::Spec->updir;
-    chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "": $!});
+    my $updir = File::Spec->updir;
+    unless (chdir $updir) {
+        my $cwd = CPAN::anycwd();
+        $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] to updir[$updir]: $!});
+    }
     if ($self->{archived} ne 'NO') {
-      $cwd = File::Spec->catdir(File::Spec->curdir, "tmp");
-      chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
+        my $cwd = File::Spec->catdir(File::Spec->curdir, "tmp");
+        chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
       # Let's check if the package has its own directory.
       my $dh = DirHandle->new(File::Spec->curdir)
           or Carp::croak("Couldn't opendir .: $!");
@@ -3411,8 +3430,11 @@ sub get {
           }
       }
       $self->{'build_dir'} = $packagedir;
-      $cwd = File::Spec->updir;
-      chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
+      chdir $updir;
+        unless (chdir $updir) {
+            my $cwd = CPAN::anycwd();
+            $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] to updir[$updir]: $!});
+        }
 
       $self->debug("Changed directory to .. (self[$self]=[".
                    $self->as_string."])") if $CPAN::DEBUG;
@@ -3460,6 +3482,7 @@ WriteMakefile(NAME => q[$cf]);
         }
       }
     }
+    chdir $CWD or die "Could not chdir to $CWD: $!";
     return $self;
 }
 
@@ -3531,9 +3554,7 @@ Please define it with "o conf shell <your shell>"
     my $dist = $self->id;
     my $dir  = $self->dir or $self->get;
     $dir = $self->dir;
-    my $getcwd;
-    $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
-    my $pwd  = CPAN->$getcwd();
+    my $pwd  = CPAN::anycwd();
     chdir($dir) or $CPAN::Frontend->mydie(qq{Could not chdir to "$dir": $!});
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
     system($CPAN::Config->{'shell'}) == 0
@@ -3567,9 +3588,7 @@ sub cvs_import {
     my @cmd = ('cvs', '-d', $cvs_root, 'import', '-m', $cvs_log,
 	       "$cvs_dir", $userid, "v$version");
 
-    my $getcwd;
-    $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
-    my $pwd  = CPAN->$getcwd();
+    my $pwd  = CPAN::anycwd();
     chdir($dir) or $CPAN::Frontend->mydie(qq{Could not chdir to "$dir": $!});
 
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
@@ -3824,8 +3843,7 @@ sub isa_perl {
 sub perl {
     my($self) = @_;
     my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
-    my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
-    my $pwd  = CPAN->$getcwd();
+    my $pwd  = CPAN::anycwd();
     my $candidate = MM->catfile($pwd,$^X);
     $perl ||= $candidate if MM->maybe_command($candidate);
     unless ($perl) {
@@ -4403,8 +4421,7 @@ sub find_bundle_file {
     my $manifest = MM->catfile($where,"MANIFEST");
     unless (-f $manifest) {
 	require ExtUtils::Manifest;
-	my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
-	my $cwd = CPAN->$getcwd();
+	my $cwd = CPAN::anycwd();
 	chdir $where or $CPAN::Frontend->mydie(qq{Could not chdir to "$where": $!});
 	ExtUtils::Manifest::mkmanifest();
 	chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
@@ -4689,8 +4706,41 @@ sub as_string {
 		     $stati{$self->{RO}{stati}}
 		    ) if $self->{RO}{statd};
     my $local_file = $self->inst_file;
-    if ($local_file) {
-      $self->{MANPAGE} ||= $self->manpage_headline($local_file);
+    unless ($self->{MANPAGE}) {
+        if ($local_file) {
+            $self->{MANPAGE} = $self->manpage_headline($local_file);
+        } else {
+            # If we have already untarred it, we should look there
+            my $dist = $CPAN::META->instance('CPAN::Distribution',
+                                             $self->cpan_file);
+            # warn "dist[$dist]";
+            # mff=manifest file; mfh=manifest handle
+            my($mff,$mfh);
+            if ($dist->{build_dir} and
+                -f ($mff = MM->catfile($dist->{build_dir}, "MANIFEST")) and
+                $mfh = FileHandle->new($mff)
+               ) {
+                # warn "mff[$mff]";
+                my $lfre = $self->id; # local file RE
+                $lfre =~ s/::/./g;
+                $lfre .= "\\.pm\$";
+                my($lfl); # local file file
+                local $/ = "\n";
+                my(@mflines) = <$mfh>;
+                while (length($lfre)>5 and !$lfl) {
+                    ($lfl) = grep /$lfre/, @mflines;
+                    $lfre =~ s/.+?\.//;
+                    # warn "lfl[$lfl]lfre[$lfre]";
+                }
+                $lfl =~ s/\s.*//; # remove comments
+                $lfl =~ s/\s+//g; # chomp would maybe be too system-specific
+                my $lfl_abs = MM->catfile($dist->{build_dir},$lfl);
+                # warn "lfl_abs[$lfl_abs]";
+                if (-f $lfl_abs) {
+                    $self->{MANPAGE} = $self->manpage_headline($lfl_abs);
+                }
+            }
+        }
     }
     my($item);
     for $item (qw/MANPAGE/) {

@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 
-$VERSION = '1.55';
+$VERSION = '1.58';
 
 1;
 
@@ -36,28 +36,24 @@ CPAN
 
 =head1 DESCRIPTION
 
-This bundle includes CPAN.pm as the base module and CPAN::WAIT, the
-first plugin for CPAN that was developed even before there was an API.
+This bundle includes CPAN.pm as the base module and CPAN::WAIT, a
+plugin for the first WAIT based CPAN search engine.
 
-After installing this bundle, it is recommended to quit the current
-session and start again in a new process to enable Term::ReadLine. If
-you have Term::ReadLine already, it should not be necessary to quit
-and restart as all other packages are recognized at runtime and will
-immediately be used.
+When CPAN installs this bundle it tries immediately to enable
+Term::ReadLine so that you do not need to restart your CPAN session.
 
 Compress::Zlib needs as a prerequisite the zlib library. Currently
 (January 1998) this library is not shipped with the Compress::Zlib
 distribution.
 
 In this bundle Term::ReadLine::Perl is preferred over
-Term::ReadLine::Gnu because I
-have not come around to study the differences between the two.
+Term::ReadLine::Gnu because I expect that it gives less problems on
+portability.
 
 Note that all modules in this Bundle are not strict prerequisites to
 get a working CPAN.pm. CPAN.pm can work quite well without the other
 modules (except for Net::FTP which is really highly recommended). The
-other modules are just goodies that make a smooth operation of
-CPAN.pm more likely.
+other modules are just goodies that make using CPAN.pm more fun.
 
 =head1 AUTHOR
 

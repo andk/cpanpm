@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.46 $, 10;
+$VERSION = substr q$Revision: 1.47 $, 10;
 
 =head1 NAME
 
@@ -216,10 +216,11 @@ policy to one of the three values.
 
     print qq{
 
-The CPAN module will need a few external programs to work
-properly. Please correct me, if I guess the wrong path for a program.
-Don\'t panic if you do not have some of them, just press ENTER for
-those.
+The CPAN module will need a few external programs to work properly.
+Please correct me, if I guess the wrong path for a program. Don\'t
+panic if you do not have some of them, just press ENTER for those. To
+disable the use of a download program, you can type a space followed
+by ENTER.
 
 };
 
@@ -228,7 +229,7 @@ those.
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
     local $^W = $old_warn;
     my $progname;
-    for $progname (qw/gzip tar unzip make lynx ncftpget ncftp ftp/){
+    for $progname (qw/gzip tar unzip make lynx wget ncftpget ncftp ftp/){
       if ($^O eq 'MacOS') {
           $CPAN::Config->{$progname} = 'not_here';
           next;

@@ -1,4 +1,43 @@
+2000-10-21  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* hosthard: applied a patch by Michael Dean
+	<sysmwd@blackhole.detir.qld.gov.au> to support wget.
+
+2000-10-20  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Distribution::containsmods: Did not return a value, now
+	returns the contained modules
+
+	* CPAN::Distribution::get: chdir back to initial CWD
+
+	* CPAN::anycwd: new routine replaces all occurrences of replicated
+	two-line code
+
+	* shell: chdir-ing back to initial directory at end of CPAN::shell
+
+	* CPAN::exists: added a config loader because everything depends
+	on it. Will have to identify other places that need it.
+
+	* shell: Assignment of a readline interface to term now is a "||="
+	rather than a "=" in case somebody calls shell multiple times.
+
+	* Moved the call to read_metadata_cache from shell to
+	CPAN::Index::reload so that (1) it isn't called so early and (2)
+	programmers can enjoy its availability too.
+
+	* CPAN::Config::commit: die when you can't write the config file.
+	We did only warn, but it is more frustrating to repeatedly get the
+	same questions asked than to get at least a good error message.
+	Will have to catch some error conditions earlier.
+
 2000-10-18  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Module::as_string: up to now the MANPAGE attribute was
+	only generated for installed modules. Now we try to read the
+	manpage headline if a get has been issued so that a build_dir
+	exists. This is helpful for exploring CPAN without installing
+	anything, e.g. when you have no or only slow access to a WAIT
+	server.
 
 	* Releasing as 1.58
 
