@@ -1,3 +1,12 @@
+2002-05-07  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.61.
+
+	* The default WAIT server has got a new domain name:
+	ls6-www.informatik.uni-dortmund.de
+
+	* Protecting against not existing $META->{is_tested} element.
+
 2002-04-21  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Repackaging, no changes in the code. The reason is that
