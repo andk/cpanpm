@@ -8,6 +8,10 @@ OS dependent fallbacks.
 
 Released that as 1.08.
 
+Another big documentation fix.
+
+Fixed big bug in the parsing code for .netrc.
+
 =head2 Dec 22, 1996
 
 An afternoon of intense email exchange with Mark D. Baushke helped to
