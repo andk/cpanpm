@@ -3,7 +3,29 @@ Revision history for Perl extension CPAN.
 Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
-      MakeMaker: install INSTALLDIRS into ARCH (INST_LIB = $(INST_ARCH))
+
+=head2 July 1997
+
+Applied a patch by Ilya Zakharevich <ilya@math.ohio-state.edu> to use
+binmode before checking the checksum.
+
+Got "cwd" patch from Ilya and accomodated it by introducing CPAN::cwd
+and CPAN::getcwd.
+
+Eliminated the hasLWP, hasFTP, hasWAIT, hasMD5 routines in favor of a
+runtime solution with a single has() method. This makes it possible
+use the packages immediately after installation without restarting
+CPAN.
+
+Major code review under the light of a new AutoSplit.pm. AutoLoading
+doesn't work yet, but we're closer, I hope.
+
+Updated Bundle::CPAN to fit better current needs and changed the
+initial prompt to suggest Bundle::CPAN instead of just the Term
+family.
+
+Skipping lynx, ncftp, and other external programs if they aren't
+defined or empty strings.
 
 =head2 June 1997
 

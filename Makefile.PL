@@ -7,7 +7,7 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.25 1997/06/30 18:01:41 k Exp $
+# $Id: Makefile.PL,v 1.27 1997/07/28 12:51:06 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -17,6 +17,7 @@ WriteMakefile(
 	my($bad);
 	eval {require CPAN::Config;};
 	$bad++ if $@;
+	push @INC, MY->catdir($ENV{HOME}, ".cpan");
 	eval {require CPAN::MyConfig;};
 	$bad++ if $@;
 	return if $bad<2;

@@ -15,7 +15,7 @@ use ExtUtils::MakeMaker qw(prompt);
 use FileHandle ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.19 $, 10;
+$VERSION = substr q$Revision: 1.20 $, 10;
 
 =head1 NAME
 
@@ -198,7 +198,7 @@ the default and recommended setting.
 
     $default = $CPAN::Config->{inactivity_timeout} || 0;
     $CPAN::Config->{inactivity_timeout} =
-	prompt("Timout for inacivity during Makefile.PL?",$default);
+	prompt("Timeout for inacivity during Makefile.PL?",$default);
 
 
     #

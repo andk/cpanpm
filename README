@@ -66,12 +66,12 @@ DESCRIPTION
       of object->as_string, but if we find more than one, we display each as
       object->as_glimpse. E.g.
 
-          cpan> a ANDK     
+          cpan> a ANDK
           Author id = ANDK
               EMAIL        a.koenig@franz.ww.TU-Berlin.DE
               FULLNAME     Andreas König
 
-          cpan> a /andk/   
+          cpan> a /andk/
           Author id = ANDK
               EMAIL        a.koenig@franz.ww.TU-Berlin.DE
               FULLNAME     Andreas König
