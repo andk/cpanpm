@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.18';
+$VERSION = '1.19';
 
-# $Id: CPAN.pm,v 1.119 1997/02/03 00:30:59 k Exp $
+# $Id: CPAN.pm,v 1.121 1997/02/03 09:08:23 k Exp $
 
-# my $version = substr q$Revision: 1.119 $, 10; # only used during development
+# my $version = substr q$Revision: 1.121 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -319,7 +319,8 @@ Readline support $rl_avail
     while () {
 	if ($Suppress_readline) {
 	    print $prompt;
-	    last unless defined (chomp($_ = <>));
+	    last unless defined ($_ = <>);
+	    chomp;
 	} else {
 #	     if ($CPAN::DEBUG) {
 #		 my($report,$item);

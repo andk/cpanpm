@@ -1,5 +1,10 @@
 Revision history for Perl extension CPAN.
 
+=head2 Feb 3, 1997
+
+With ReadLine suppressed, CPAN didn't exit of EOF. Fix by Roderick
+Schertler E<lt>roderick@gate.netE<gt> applied.
+
 =head2 Feb 2, 1997
 
 Ulrich Pfeifer reports another permission problem with the Config
