@@ -3,9 +3,10 @@ BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
 use File::Path;
+use File::Spec;
 use strict;
 
-# $Id: Makefile.PL,v 1.50 2003/07/27 13:16:56 k Exp $
+# $Id: Makefile.PL,v 1.51 2003/07/28 08:17:51 k Exp $
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){
