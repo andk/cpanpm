@@ -3,7 +3,7 @@ methods via plugin?)
 
 Allow different site preferences for index files and other files
 
-Replace tar and make with Archive::Tar and Make
+Replace make with Make
 
 Maintain the cache at runtime. Currently we only check it at startup.
 

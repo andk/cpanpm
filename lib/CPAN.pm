@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.33';
+$VERSION = '1.35';
 
-# $Id: CPAN.pm,v 1.218 1998/01/10 17:34:00 k Exp $
+# $Id: CPAN.pm,v 1.221 1998/02/03 17:12:33 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.218 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.221 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -44,8 +44,7 @@ END { $End++; &cleanup; }
 		  Shell          1024
 		  Eval           2048
 		  Config         4096
-		  Gzip           8192
-		  Tar           16384
+		  Tarzip         8192
 		 );
 
 $CPAN::DEBUG ||= 0;
@@ -222,7 +221,7 @@ use vars qw($AUTOLOAD $redef @ISA);
 sub AUTOLOAD {
     my($autoload) = $AUTOLOAD;
     my $class = shift(@_);
-    warn "autoload[$autoload] class[$class]";
+    # warn "autoload[$autoload] class[$class]";
     $autoload =~ s/.*:://;
     if ($autoload =~ /^w/) {
 	if ($CPAN::META->has_inst('CPAN::WAIT')) {
@@ -314,9 +313,9 @@ if ($CPAN::Try_autoload) {
     }
 }
 
-package CPAN::Gzip;
+package CPAN::Tarzip;
 use vars qw($AUTOLOAD @ISA);
-@CPAN::Gzip::ISA = qw(CPAN::Debug);
+@CPAN::Tarzip::ISA = qw(CPAN::Debug);
 
 package CPAN;
 
@@ -1771,7 +1770,7 @@ sub hosteasy {
 	    # Maybe mirror has compressed it?
 	    if (-f "$l.gz") {
 		$self->debug("found compressed $l.gz") if $CPAN::DEBUG;
-		CPAN::Gzip->gunzip("$l.gz", $aslocal);
+		CPAN::Tarzip->gunzip("$l.gz", $aslocal);
 		if ( -f $aslocal) {
 		    $Thesite = $i;
 		    return $aslocal;
@@ -1779,33 +1778,35 @@ sub hosteasy {
 	    }
 	}
 	if ($CPAN::META->has_inst('LWP')) {
-	    $CPAN::Frontend->myprint("Fetching with LWP:
+	  $CPAN::Frontend->myprint("Fetching with LWP:
   $url
 ");
-	    my $res = $Ua->mirror($url, $aslocal);
-	    if ($res->is_success) {
-		$Thesite = $i;
-		return $aslocal;
-	    } elsif ($url !~ /\.gz$/) {
-		my $gzurl = "$url.gz";
-		$CPAN::Frontend->myprint("Fetching with LWP:
+	  my $res = $Ua->mirror($url, $aslocal);
+	  if ($res->is_success) {
+	    $Thesite = $i;
+	    return $aslocal;
+	  } elsif ($url !~ /\.gz$/) {
+	    my $gzurl = "$url.gz";
+	    $CPAN::Frontend->myprint("Fetching with LWP:
   $gzurl
 ");
-		$res = $Ua->mirror($gzurl, "$aslocal.gz");
-		if ($res->is_success &&
-		    CPAN::Gzip->gunzip("$aslocal.gz",$aslocal)
-		   ) {
-		    $Thesite = $i;
-		    return $aslocal;
-		} else {
-		  # next HOSTEASY ;
-		}
+	    $res = $Ua->mirror($gzurl, "$aslocal.gz");
+	    if ($res->is_success &&
+		CPAN::Tarzip->gunzip("$aslocal.gz",$aslocal)
+	       ) {
+	      $Thesite = $i;
+	      return $aslocal;
 	    } else {
-	      # Alan Burlison informed me that in firewall envs Net::FTP
-	      # can still succeed where LWP fails. So we do not skip
-	      # Net::FTP anymore when LWP is available.
 	      # next HOSTEASY ;
 	    }
+	  } else {
+	    # Alan Burlison informed me that in firewall envs Net::FTP
+	    # can still succeed where LWP fails. So we do not skip
+	    # Net::FTP anymore when LWP is available.
+	    # next HOSTEASY ;
+	  }
+	} else {
+	  $self->debug("LWP not installed") if $CPAN::DEBUG;
 	}
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	    # that's the nice and easy way thanks to Graham
@@ -1830,7 +1831,7 @@ sub hosteasy {
 					   $dir,
 					   "$getfile.gz",
 					   $gz) &&
-			CPAN::Gzip->gunzip($gz,$aslocal)
+			CPAN::Tarzip->gunzip($gz,$aslocal)
 		       ){
 			$Thesite = $i;
 			return $aslocal;
@@ -1896,11 +1897,11 @@ Trying with "$funkyftp $source_switch" to get
 		if ($aslocal_uncompressed ne $aslocal) {
 		  # test gzip integrity
 		  if (
-		      CPAN::Gzip->gtest($aslocal_uncompressed)
+		      CPAN::Tarzip->gtest($aslocal_uncompressed)
 		     ) {
 		    rename $aslocal_uncompressed, $aslocal;
 		  } else {
-		    CPAN::Gzip->gzip($aslocal_uncompressed,
+		    CPAN::Tarzip->gzip($aslocal_uncompressed,
 				     "$aslocal_uncompressed.gz");
 		  }
 		  $Thesite = $i;
@@ -1923,8 +1924,8 @@ Trying with "$funkyftp $source_switch" to get
 		    -s "$aslocal_uncompressed.gz"
 		   ) {
 		    # test gzip integrity
-		    if (CPAN::Gzip->gtest("$aslocal_uncompressed.gz")) {
-		      CPAN::Gzip->gunzip("$aslocal_uncompressed.gz",
+		    if (CPAN::Tarzip->gtest("$aslocal_uncompressed.gz")) {
+		      CPAN::Tarzip->gunzip("$aslocal_uncompressed.gz",
 					 $aslocal);
 		    } else {
 			rename $aslocal_uncompressed, $aslocal;
@@ -2356,11 +2357,11 @@ sub rd_authindex {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
-#    my $fh = CPAN::Gzip->TIEHANDLE($index_target);
+#    my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
 #    while ($_ = $fh->READLINE) {
     # no strict 'refs';
     local(*FH);
-    tie *FH, CPAN::Gzip, $index_target;
+    tie *FH, CPAN::Tarzip, $index_target;
     while (<FH>) {
 	chomp;
 	my($userid,$fullname,$email) =
@@ -2379,7 +2380,7 @@ sub rd_modpacks {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
-    my $fh = CPAN::Gzip->TIEHANDLE($index_target);
+    my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     while ($_ = $fh->READLINE) {
 	last if /^\s*$/;
     }
@@ -2456,7 +2457,7 @@ sub rd_modlist {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
-    my $fh = CPAN::Gzip->TIEHANDLE($index_target);
+    my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     my @eval;
     while ($_ = $fh->READLINE) {
 	if (/^Date:\s+(.*)/){
@@ -2689,7 +2690,7 @@ WriteMakefile(NAME => q[$cf]);
 sub untar_me {
     my($self,$local_file) = @_;
     $self->{archived} = "tar";
-    if (CPAN::Tar->untar($local_file)) {
+    if (CPAN::Tarzip->untar($local_file)) {
 	$self->{unwrapped} = "YES";
     } else {
 	$self->{unwrapped} = "NO";
@@ -2712,7 +2713,7 @@ sub pm2dir_me {
     $self->{archived} = "pm";
     my $to = File::Basename::basename($local_file);
     $to =~ s/\.(gz|Z)$//;
-    if (CPAN::Gzip->gunzip($local_file,$to)) {
+    if (CPAN::Tarzip->gunzip($local_file,$to)) {
 	$self->{unwrapped} = "YES";
     } else {
 	$self->{unwrapped} = "NO";
@@ -2822,7 +2823,7 @@ sub verifyMD5 {
 				       "$lc_want.gz",1);
 	if ($lc_file) {
 	    $lc_file =~ s/\.gz$//;
-	    CPAN::Gzip->gunzip("$lc_file.gz",$lc_file);
+	    CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
 	} else {
 	    return;
 	}
@@ -2859,7 +2860,7 @@ sub MD5_check_file {
 	binmode $fh;
 	my $eq = $self->eq_MD5($fh,$cksum->{$basename}{'md5'});
 	$fh->close;
-	$fh = CPAN::Gzip->TIEHANDLE($file);
+	$fh = CPAN::Tarzip->TIEHANDLE($file);
 
 	unless ($eq) {
 	  # had to inline it, when I tied it, the tiedness got lost on
@@ -3071,17 +3072,32 @@ or
 		return;
 	    }
 	} else {
-	  my $fh = FileHandle->new("$system 2>&1 |") or
-	      die "Couldn't run '$system': $!";
-	  while (defined($_ = <$fh>)) {
-	    print; # we want to parse that some day!
-	  }
-	  $ret = $fh->close;
-	  unless ($ret) {
-	    warn $! ? "Error during 'perl Makefile.PL' subprocess: $!" :
-		"Exit status of 'perl Makefile.PL': $?";
-	    $self->{writemakefile} = "NO";
-	    return;
+	  if (0) {
+	    warn "Trying to intercept the output of 'perl Makefile.PL'";
+	    require IO::File;
+	    # my $fh = FileHandle->new("$system 2>&1 |") or
+	    my $fh = IO::File->new("$system 2>&1 |") or
+		die "Couldn't run '$system': $!";
+	    local($|) = 1;
+	    while (length($_ = getc($fh))) {
+	      print $_; # we want to parse that some day!
+	      # unfortunately we have Makefile.PLs that want to talk
+	      # and we can't emulate that reliably. I think, we have
+	      # to parse Makefile.PL directly
+	    }
+	    $ret = $fh->close;
+	    unless ($ret) {
+	      warn $! ? "Error during 'perl Makefile.PL' subprocess: $!" :
+		  "Exit status of 'perl Makefile.PL': $?";
+	      $self->{writemakefile} = "NO";
+	      return;
+	    }
+	  } else {
+	    $ret = system($system);
+	    if ($ret != 0) {
+	      $self->{writemakefile} = "NO";
+	      return;
+	    }
 	  }
 	}
 	$self->{writemakefile} = "YES";
@@ -3461,8 +3477,8 @@ sub manpage_headline {
   my(@local_file) = $local_file;
   $local_file =~ s/\.pm$/.pod/;
   push @local_file, $local_file;
-  my(@result);
-  for my $locf (@local_file) {
+  my(@result,$locf);
+  for $locf (@local_file) {
     next unless -f $locf;
     my $fh = FileHandle->new($locf)
 	or $Carp::Frontend->mydie("Couldn't open $locf: $!");
@@ -3636,7 +3652,7 @@ sub inst_version {
     $have;
 }
 
-package CPAN::Gzip;
+package CPAN::Tarzip;
 
 sub gzip {
   my($class,$read,$write) = @_;
@@ -3748,18 +3764,16 @@ sub DESTROY {
   undef $self;
 }
 
-package CPAN::Tar;
-
 sub untar {
   my($class,$file) = @_;
   # had to disable, because version 0.07 seems to be buggy
-  if (0 && $CPAN::META->has_inst("Archive::Tar")) {
+  if ($CPAN::META->has_inst("Archive::Tar")) {
     my $tar = Archive::Tar->new($file,1);
     $tar->extract($tar->list_files); # I'm pretty sure we have nothing
                                      # that isn't compressed
     return 1;
   } else {
-    my $system = "$CPAN::Config->{gzip} --decompress --stdout " .
+    my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
 	"$file | $CPAN::Config->{tar} xvf -";
     return system($system) == 0;
   }

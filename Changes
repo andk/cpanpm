@@ -2,6 +2,25 @@ Revision history for Perl extension CPAN.
 
 =head2 January 1998
 
+Activated the code for Archive::Tar support. After Sarathy's updates
+to Archive::Tar it seems ready for prime time.
+
+Retrofit for 5.003 again.
+
+FirstTime: Moved the configuration of proxies up, so they are
+configured before the URLs come.
+
+=head2 January 1998
+
+Renamed packages CPAN::Gzip and CPAN::Tar to CPAN::Tarzip.
+
+Discovered that version 1.33 was broken for modules that want to
+implement a dialog in Makefile.PL. Released 1.34 with a step back to
+calling system() for the 'perl Makefile.PL' call instead of the
+proposed open(PIPE).
+
+=head2 January 1998
+
 Larry Virden reported: "cpan> install Image::Colorimetry" doesn't give
 an answer at all. We are more verbose now.
 

@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.25 $, 10;
+$VERSION = substr q$Revision: 1.26 $, 10;
 
 =head1 NAME
 
@@ -237,6 +237,20 @@ the default and recommended setting.
     $CPAN::Config->{inactivity_timeout} =
 	prompt("Timeout for inactivity during Makefile.PL?",$default);
 
+    # Proxies
+
+    print qq{
+
+If you\'re accessing the net via proxies, you can specify them in the
+CPAN configuration or via environment variables. The variable in
+the \$CPAN::Config takes precedence.
+
+};
+
+    for (qw/ftp_proxy http_proxy no_proxy/) {
+	$default = $CPAN::Config->{$_} || $ENV{$_};
+	$CPAN::Config->{$_} = prompt("Your $_?",$default);
+    }
 
     #
     # MIRRORED.BY
@@ -255,19 +269,6 @@ you don\'t know a WAIT server near you, just press ENTER.
 	$default = "wait://ls6.informatik.uni-dortmund.de:1404";
 	$ans = prompt("Your favorite WAIT server?\n  ",$default);
 	push @{$CPAN::Config->{'wait_list'}}, $ans;
-    }
-
-    print qq{
-
-If you\'re accessing the net via proxies, you can specify them in the
-CPAN configuration or via environment variables. The variable in
-the \$CPAN::Config takes precedence.
-
-};
-
-    for (qw/ftp_proxy http_proxy no_proxy/) {
-	$default = $CPAN::Config->{$_} || $ENV{$_};
-	$CPAN::Config->{$_} = prompt("Your $_?",$default);
     }
 
     # We don't ask that now, it will be noticed in time, won't it?
