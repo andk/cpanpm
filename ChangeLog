@@ -1,3 +1,8 @@
+2000-03-25  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Change all \z back to $ because \z is not in perl5.004_05.
+	Thanks to Paul Schinder <schinder@pobox.com> for the report.
+
 2000-03-22  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Both Andrew Speer <andrew.speer@isolutions.com.au> and Michael
