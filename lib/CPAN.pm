@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_51';
+$VERSION = '1.58_52';
 
-# $Id: CPAN.pm,v 1.358 2000/10/21 13:23:54 k Exp k $
+# $Id: CPAN.pm,v 1.359 2000/10/25 07:02:39 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.358 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.359 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -88,22 +88,24 @@ sub shell {
     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
     CPAN::Config->load unless $CPAN::Config_loaded++;
 
-    my $prompt = "cpan> ";
+    my $oprompt = shift || "cpan> ";
+    my $prompt = $oprompt;
+    my $commandline = shift || "";
+
     local($^W) = 1;
     unless ($Suppress_readline) {
 	require Term::ReadLine;
-#	import Term::ReadLine;
-	$term ||= Term::ReadLine->new('CPAN Monitor');
+        if (! $term
+            or
+            $term->ReadLine eq "Term::ReadLine::Stub"
+           ) {
+            $term = Term::ReadLine->new('CPAN Monitor');
+        }
 	if ($term->ReadLine eq "Term::ReadLine::Gnu") {
 	    my $attribs = $term->Attribs;
-#	     $attribs->{completion_entry_function} =
-#		 $attribs->{'list_completion_function'};
 	     $attribs->{attempted_completion_function} = sub {
 		 &CPAN::Complete::gnu_cpl;
 	     }
-#	    $attribs->{completion_word} =
-#		[qw(help me somebody to find out how
-#                    to use completion with GNU)];
 	} else {
 	    $readline::rl_completion_function =
 		$readline::rl_completion_function = 'CPAN::Complete::cpl';
@@ -143,7 +145,7 @@ ReadLine support %s
 	    last unless defined ($_ = <> );
 	    chomp;
 	} else {
-	    last unless defined ($_ = $term->readline($prompt));
+	    last unless defined ($_ = $term->readline($prompt, $commandline));
 	}
 	$_ = "$continuation$_" if $continuation;
 	s/^\s+//;
@@ -165,7 +167,7 @@ ReadLine support %s
 	    eval($eval);
 	    warn $@ if $@;
 	    $continuation = "";
-	    $prompt = "cpan> ";
+	    $prompt = $oprompt;
 	} elsif (/./) {
 	    my(@line);
 	    if ($] < 5.00322) { # parsewords had a bug until recently
@@ -181,9 +183,12 @@ ReadLine support %s
 	    chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
 	    $CPAN::Frontend->myprint("\n");
 	    $continuation = "";
-	    $prompt = "cpan> ";
+	    $prompt = $oprompt;
 	}
     } continue {
+      $commandline = ""; # I do want to be able to pass a default to
+                         # shell, but on the second command I see no
+                         # use in that
       $Signal=0;
       CPAN::Queue->nullify_queue;
       if ($try_detect_readline) {
@@ -197,6 +202,7 @@ ReadLine support %s
 	    require Term::ReadLine;
 	    $CPAN::Frontend->myprint("\n$redef subroutines in ".
 				     "Term::ReadLine redefined\n");
+            @_ = ($oprompt,"");
 	    goto &shell;
 	}
       }

@@ -1,4 +1,16 @@
+2000-10-25  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* shell: The $term||= from 2000-10-20 broke the re-detection of
+	ReadLine for fresh installations. Fixed that again so that both
+	ways are possible, desposing the Stub interface and re-using an
+	interface that is better than Stub.
+
 2000-10-21  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::shell: Now takes two arguments, one is the Prompt string,
+	the second is the default first command line.
+
+	* Released this snapshot as 1.58_51
 
 	* hosthard: applied a patch by Michael Dean
 	<sysmwd@blackhole.detir.qld.gov.au> to support wget.
