@@ -14,12 +14,6 @@ SYNOPSIS
       autobundle, bundle, clean, expand, install, make, recompile, test
 
 
-ALPHA ALERT
-    The interface of this package is not yet stable. Parts of it may
-    still change. This is especially true for the programming
-    interface. The interactive "shell" interface is already rather
-    well established.
-
 DESCRIPTION
     The CPAN module is designed to automate the building and
     installing of perl modules and extensions including the
@@ -73,7 +67,9 @@ DESCRIPTION
     directory ($CPAN::Config->{build_dir}). It is a simple FIFO
     mechanism that deletes complete directories below build_dir as
     soon as the size of all directories there gets bigger than
-    $CPAN::Config->{build_cache} (in MB).
+    $CPAN::Config->{build_cache} (in MB). The contents of this cache
+    may be used for later re-installations that you intend to do
+    manually, but will never be trusted by CPAN itself.
 
     There is another directory ($CPAN::Config->{keep_source_where})
     where the original distribution files are kept. This directory
@@ -93,7 +89,7 @@ DESCRIPTION
     other pod with the only difference, that one pod section exists
     starting with (verbatim):
 
-            =head1 CONTENTS
+    	=head1 CONTENTS
 
 
     In this pod section each line obeys the format
@@ -175,19 +171,19 @@ CONFIGURATION
       build_dir         locally accessible directory to build modules
       index_expire      after how many days refetch index files
       cpan_home         local directory reserved for this package
-      gzip              location of external program gzip
+      gzip		    location of external program gzip
       inhibit_startup_message
                         if true, does not print the startup message
       keep_source       keep the source in a local directory?
       keep_source_where where keep the source (if we do)
       make              location of external program make
-      make_arg          arguments that should always be passed to 'make'
+      make_arg	    arguments that should always be passed to 'make'
       make_install_arg  same as make_arg for 'make install'
-      makepl_arg        arguments passed to 'perl Makefile.PL'
+      makepl_arg	    arguments passed to 'perl Makefile.PL'
       pager             location of external program more (or any pager)
       tar               location of external program tar
       unzip             location of external program unzip
-      urllist           arrayref to nearby CPAN sites (or equivalent locations)
+      urllist	    arrayref to nearby CPAN sites (or equivalent locations)
 
 
     You can set and query each of these options interactively in the
@@ -213,10 +209,13 @@ CONFIGURATION
 
 
 SECURITY
-    There's no security layer in the alpha version of CPAN.pm.
-    CPAN.pm helps you to install foreign, unmasked, unsigned code on
-    your machine. It's not different than when you do that on your
-    own, but you should be warned now.
+    There's no strong security layer in CPAN.pm. CPAN.pm helps you
+    to install foreign, unmasked, unsigned code on your machine. We
+    compare to a checksum that comes from the net just as the
+    distribution file itself. If somebody has managed to tamper with
+    the distribution file, they may have as well tampered with the
+    CHECKSUMS file. Future development will go towards stong
+    authentification.
 
 EXPORT
     Most functions in package CPAN are exported per default. The
@@ -227,13 +226,13 @@ Debugging
     The debugging of this module is pretty difficult, because we
     have interferences of the software producing the indices on
     CPAN, of the mirroring process on CPAN, of packaging, of
-    configuration, and of bugs within CPAN.pm.
+    configuration, of synchronicity, and of bugs within CPAN.pm.
 
     In interactive mode you can try "o debug" which will list
     options for debugging the various parts of the package. The
     output may not be very useful for you as it's just a byproduct
     of my own testing, but if you have an idea which part of the
-    package may have a bug, it's certainly worth to give it a try
+    package may have a bug, it's sometimes worth to give it a try
     and send me more specific output. You should know that "o debug"
     has built-in completion support.
 
@@ -242,7 +241,8 @@ Debugging
     If you have a local mirror of CPAN and can access all files with
     "file:" URLs, then you only need perl5.003 to run this module.
     Otherwise you need Net::FTP intalled. LWP may be required for
-    non-UNIX systems.
+    non-UNIX systems or if your nearest CPAN site is associated with
+    an URL that is not `ftp:'.
 
     This module presumes that all packages on CPAN
 
@@ -251,8 +251,6 @@ Debugging
       too much memory to load all packages into the running program
       just to determine the $VERSION variable . Currently all
       programs that are dealing with VERSION use something like this
-      (requires MakeMaker-5.38, but don't bother if you don't have
-      it):
 
           perl -MExtUtils::MakeMaker -le \
               'print MM->parse_version($ARGV[0])' filename
@@ -261,8 +259,9 @@ Debugging
       If you are author of a package and wonder if your VERSION can
       be parsed, please try the above method.
 
-    * come as compressed or gzipped tarfiles or as zip files (well we
-      try to handle a bit more, but without much enthusiasm).
+    * come as compressed or gzipped tarfiles or as zip files and contain
+      a Makefile.PL (well we try to handle a bit more, but without
+      much enthusiasm).
 
 
 AUTHOR

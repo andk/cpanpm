@@ -5,13 +5,14 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.22 1996/12/10 00:53:39 k Exp k $
+# $Id: Makefile.PL,v 1.23 1996/12/10 10:13:30 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
 WriteMakefile(
     'CONFIGURE' => sub { &CPAN::FirstTime::init(MY->catfile(qw(lib CPAN Config.pm))) },
+    'INSTALLDIRS' => 'perl',  # as it is coming with perl
     'NAME'	=> 'CPAN',
     'VERSION_FROM' => 'lib/CPAN.pm',
     'clean' => { FILES => "lib/CPAN/Config.pm" },

@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.00';
+$VERSION = '1.01';
 
-# $Id: CPAN.pm,v 1.75 1996/12/10 00:50:33 k Exp $
+# $Id: CPAN.pm,v 1.76 1996/12/10 10:11:28 k Exp $
 
-# my $version = substr q$Revision: 1.75 $, 10; # only used during development
+# my $version = substr q$Revision: 1.76 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -738,7 +738,7 @@ sub ftp_get {
 	return;
     }
     $ftp->binary;
-    print qq[Going to ->get("$file","$target")\n];
+    print qq[Going to ->get("$file","$target")\n] if $CPAN::DEBUG;
     unless ( $ftp->get($file,$target) ){
 	warn "Couldn't fetch $file from $host";
 	return;
@@ -969,7 +969,7 @@ sub read_modpacks {
 	if ($mod eq 'CPAN') {
 	    local($^W)=0;
 	    if ($version > $CPAN::VERSION){
-		print qq{\cG
+		print qq{
   Hey, you know what? There\'s a new CPAN.pm version (v$version)
   available! I\'d suggest--provided you have time--you try
     install CPAN
@@ -977,8 +977,8 @@ sub read_modpacks {
   without quitting the current session. It should be a seemless upgrade
   while we are running...
 };
-		sleep 1;
-		print qq{\cG\n};
+		sleep 2;
+		print qq{\n};
 	    }
 	}
 
