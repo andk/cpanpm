@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.16_01';
+$VERSION = '1.17';
 
-# $Id: CPAN.pm,v 1.111 1997/02/02 13:42:26 k Exp $
+# $Id: CPAN.pm,v 1.112 1997/02/02 20:58:54 k Exp $
 
-# my $version = substr q$Revision: 1.111 $, 10; # only used during development
+# my $version = substr q$Revision: 1.112 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -668,6 +668,8 @@ sub load {
 		      $configpm = $configpmtest;
 		  } elsif (-w $configpmdir) {
 #_#_# following code dumped core on me with 5.003_11, a.k.
+		      unlink "$configpmtest.bak" if -f "$configpmtest.bak";
+		      rename $configpmtest, "$configpmtest.bak" if -f $configpmtest;
 		      my $fh = FileHandle->new;
 		      if ($fh->open(">$configpmtest")) {
 			  $fh->print("1;\n");

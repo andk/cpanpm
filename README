@@ -98,12 +98,12 @@ DESCRIPTION
 
       Any `make', `test', and `readme' are run unconditionally. A
 
-        C<install E<lt>distribution_fileE<gt>>
+        install <distribution_file>
 
 
       also is run unconditionally. But for
 
-        C<install E<lt>moduleE<gt>>
+        install <module>
 
 
       CPAN checks if an install is actually needed for it and prints
