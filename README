@@ -32,10 +32,10 @@ DESCRIPTION
     processes and deletes excess space according to a simple FIFO mechanism.
 
     For extended searching capabilities there's a plugin for CPAN available,
-    the CPAN::WAIT manpage. 'CPAN::WAIT' is a full-text search engine that
+    the CPAN::WAIT manpage. "CPAN::WAIT" is a full-text search engine that
     indexes all documents available in CPAN authors directories. If
-    'CPAN::WAIT' is installed on your system, the interactive shell of
-    <CPAN.pm> will enable the 'wq', 'wr', 'wd', 'wl', and 'wh' commands
+    "CPAN::WAIT" is installed on your system, the interactive shell of
+    <CPAN.pm> will enable the "wq", "wr", "wd", "wl", and "wh" commands
     which send queries to the WAIT server that has been configured for your
     installation.
 
@@ -55,15 +55,15 @@ DESCRIPTION
     Once you are on the command line, type 'h' and the rest should be
     self-explanatory.
 
-    The function call 'shell' takes two optional arguments, one is the
+    The function call "shell" takes two optional arguments, one is the
     prompt, the second is the default initial command line (the latter only
     works if a real ReadLine interface module is installed).
 
     The most common uses of the interactive modes are
 
     Searching for authors, bundles, distribution files and modules
-      There are corresponding one-letter commands 'a', 'b', 'd', and 'm' for
-      each of the four categories and another, 'i' for any of the mentioned
+      There are corresponding one-letter commands "a", "b", "d", and "m" for
+      each of the four categories and another, "i" for any of the mentioned
       four. Each of the four entities is implemented as a class with
       slightly differing methods for displaying an object.
 
@@ -75,7 +75,7 @@ DESCRIPTION
 
       The principle is that the number of found objects influences how an
       item is displayed. If the search finds one item, the result is
-      displayed with the rather verbose method 'as_string', but if we find
+      displayed with the rather verbose method "as_string", but if we find
       more than one, we display each object with the terse method
       <as_glimpse>.
 
@@ -88,7 +88,7 @@ DESCRIPTION
       the module's Makefile.PL (this behavior is controlled by
       *prerequisites_policy*.)
 
-      Any 'make' or 'test' are run unconditionally. An
+      Any "make" or "test" are run unconditionally. An
 
         install <distribution_file>
 
@@ -102,8 +102,8 @@ DESCRIPTION
 
       CPAN also keeps track of what it has done within the current session
       and doesn't try to build a package a second time regardless if it
-      succeeded or not. The 'force' command takes as a first argument the
-      method to invoke (currently: 'make', 'test', or 'install') and
+      succeeded or not. The "force" command takes as a first argument the
+      method to invoke (currently: "make", "test", or "install") and
       executes the command from scratch.
 
       Example:
@@ -116,28 +116,28 @@ DESCRIPTION
           OpenGL-0.4/COPYRIGHT
           [...]
 
-      A 'clean' command results in a
+      A "clean" command results in a
 
         make clean
 
       being executed within the distribution file's working directory.
 
     get, readme, look module or distribution
-      'get' downloads a distribution file without further action. 'readme'
-      displays the README file of the associated distribution. 'Look' gets
+      "get" downloads a distribution file without further action. "readme"
+      displays the README file of the associated distribution. "Look" gets
       and untars (if not yet done) the distribution file, changes to the
       appropriate directory and opens a subshell process in that directory.
 
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
-      in the cpan-shell it is intended that you can press '^C' anytime and
+      in the cpan-shell it is intended that you can press "^C" anytime and
       return to the cpan-shell prompt. A SIGTERM will cause the cpan-shell
       to clean up and leave the shell loop. You can emulate the effect of a
       SIGTERM by sending two consecutive SIGINTs, which usually means by
-      pressing '^C' twice.
+      pressing "^C" twice.
 
       CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
-      SIGALRM is used during the run of the 'perl Makefile.PL' subprocess.
+      SIGALRM is used during the run of the "perl Makefile.PL" subprocess.
 
   CPAN::Shell
 
@@ -151,8 +151,8 @@ DESCRIPTION
 
   autobundle
 
-    'autobundle' writes a bundle file into the
-    '$CPAN::Config->{cpan_home}/Bundle' directory. The file contains a list
+    "autobundle" writes a bundle file into the
+    "$CPAN::Config->{cpan_home}/Bundle" directory. The file contains a list
     of all modules that are both available from CPAN and currently installed
     within @INC. The name of the bundle file is based on the current date
     and a counter.
@@ -167,16 +167,16 @@ DESCRIPTION
     You decide to do a completely independent fresh installation. You start
     on one architecture with the help of a Bundle file produced earlier.
     CPAN installs the whole Bundle for you, but when you try to repeat the
-    job on the second architecture, CPAN responds with a '"Foo up to date"'
+    job on the second architecture, CPAN responds with a ""Foo up to date""
     message for all modules. So you invoke CPAN's recompile on the second
     architecture and you're done.
 
-    Another popular use for 'recompile' is to act as a rescue in case your
+    Another popular use for "recompile" is to act as a rescue in case your
     perl breaks binary compatibility. If one of the modules that CPAN uses
     is in turn depending on binary compatibility (so you cannot run CPAN
     commands), then you should try the CPAN::Nox module for recovery.
 
-  The four 'CPAN::*' Classes: Author, Bundle, Module, Distribution
+  The four "CPAN::*" Classes: Author, Bundle, Module, Distribution
 
     Although it may be considered internal, the class hierarchy does matter
     for both users and programmer. CPAN.pm deals with above mentioned four
@@ -217,20 +217,20 @@ DESCRIPTION
   Programmer's interface
 
     If you do not enter the shell, the available shell commands are both
-    available as methods ('CPAN::Shell->install(...)') and as functions in
-    the calling package ('install(...)').
+    available as methods ("CPAN::Shell->install(...)") and as functions in
+    the calling package ("install(...)").
 
     There's currently only one class that has a stable interface -
     CPAN::Shell. All commands that are available in the CPAN shell are
     methods of the class CPAN::Shell. Each of the commands that produce
-    listings of modules ('r', 'autobundle', 'u') also return a list of the
+    listings of modules ("r", "autobundle", "u") also return a list of the
     IDs of all modules within the list.
 
     expand($type,@things)
       The IDs of all objects available within a program are strings that can
       be expanded to the corresponding real objects with the
-      'CPAN::Shell->expand("Module",@things)' method. Expand returns a list
-      of CPAN::Module objects according to the '@things' arguments given. In
+      "CPAN::Shell->expand("Module",@things)" method. Expand returns a list
+      of CPAN::Module objects according to the "@things" arguments given. In
       scalar context it only returns the first element of the list.
 
     Programming Examples
@@ -298,7 +298,7 @@ DESCRIPTION
 
     Currently the cache manager only keeps track of the build directory
     ($CPAN::Config->{build_dir}). It is a simple FIFO mechanism that deletes
-    complete directories below 'build_dir' as soon as the size of all
+    complete directories below "build_dir" as soon as the size of all
     directories there gets bigger than $CPAN::Config->{build_cache} (in MB).
     The contents of this cache may be used for later re-installations that
     you intend to do manually, but will never be trusted by CPAN itself.
@@ -350,7 +350,7 @@ DESCRIPTION
     URLs, then you only need a perl better than perl5.003 to run this
     module. Otherwise Net::FTP is strongly recommended. LWP may be required
     for non-UNIX systems or if your nearest CPAN site is associated with an
-    URL that is not 'ftp:'.
+    URL that is not "ftp:".
 
     If you have neither Net::FTP nor LWP, there is a fallback mechanism
     implemented for an external ftp command or for an external lynx command.
@@ -386,7 +386,7 @@ DESCRIPTION
     list options for debugging the various parts of the code. You should
     know that "o debug" has built-in completion support.
 
-    For data debugging there is the 'dump' command which takes the same
+    For data debugging there is the "dump" command which takes the same
     arguments as make/test/install and outputs the object's Data::Dumper
     dump.
 
@@ -445,22 +445,22 @@ CONFIGURATION
         no_proxy      }  and as environment variables configurable.
 
     You can set and query each of these options interactively in the cpan
-    shell with the command set defined within the 'o conf' command:
+    shell with the command set defined within the "o conf" command:
 
-    'o conf <scalar option>'
+    "o conf <scalar option>"
       prints the current value of the *scalar option*
 
-    'o conf <scalar option> <value>'
+    "o conf <scalar option> <value>"
       Sets the value of the *scalar option* to *value*
 
-    'o conf <list option>'
+    "o conf <list option>"
       prints the current value of the *list option* in MakeMaker's neatvalue
       format.
 
-    'o conf <list option> [shift|pop]'
+    "o conf <list option> [shift|pop]"
       shifts or pops the array in the *list option* variable
 
-    'o conf <list option> [unshift|push|splice] <list>'
+    "o conf <list option> [unshift|push|splice] <list>"
       works like the corresponding perl commands.
 
   Note on urllist parameter's format
@@ -477,12 +477,12 @@ CONFIGURATION
 
   urllist parameter has CD-ROM support
 
-    The 'urllist' parameter of the configuration table contains a list of
+    The "urllist" parameter of the configuration table contains a list of
     URLs that are to be used for downloading. If the list contains any
-    'file' URLs, CPAN always tries to get files from there first. This
+    "file" URLs, CPAN always tries to get files from there first. This
     feature is disabled for index files. So the recommendation for the owner
     of a CD-ROM with CPAN contents is: include your local, possibly outdated
-    CD-ROM as a 'file' URL at the end of urllist, e.g.
+    CD-ROM as a "file" URL at the end of urllist, e.g.
 
       o conf urllist push file://localhost/CDROM/CPAN
 
@@ -615,7 +615,7 @@ FAQ
         path than it was previously installed. This is not really a CPAN.pm
         problem, you would have the same problem when installing the module
         manually. The easiest way to prevent this behaviour is to add the
-        argument 'UNINST=1' to the 'make install' call, and that is why many
+        argument "UNINST=1" to the "make install" call, and that is why many
         people add this argument permanently by configuring
 
           o conf make_install_arg UNINST=1
@@ -623,7 +623,7 @@ FAQ
     2) So why is UNINST=1 not the default?
         Because there are people who have their precise expectations about
         who may install where in the @INC path and who uses which @INC
-        array. In fine tuned environments 'UNINST=1' can cause damage.
+        array. In fine tuned environments "UNINST=1" can cause damage.
 
     3) I want to clean up my mess, and install a new perl along with all
     modules I have. How do I go about it?
@@ -657,8 +657,8 @@ FAQ
                             INSTALLMAN3DIR=~/myperl/man/man3"
           install Sybase::Sybperl
 
-        You can make this setting permanent like all 'o conf' settings with
-        'o conf commit'.
+        You can make this setting permanent like all "o conf" settings with
+        "o conf commit".
 
         You will have to add ~/myperl/man to the MANPATH environment
         variable and also tell your perl programs to look into ~/myperl/lib,
@@ -701,8 +701,8 @@ FAQ
     meta input/output via the /etc/inputrc file.
         Some versions of readline are picky about capitalization in the
         /etc/inputrc file and specifically RedHat 6.2 comes with a
-        /etc/inputrc that contains the word 'on' in lowercase. Change the
-        occurrences of 'on' to 'On' and the bug should disappear.
+        /etc/inputrc that contains the word "on" in lowercase. Change the
+        occurrences of "on" to "On" and the bug should disappear.
 
     10) Some authors have strange characters in their names.
         Internally CPAN.pm uses the UTF-8 charset. If your terminal is

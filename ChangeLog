@@ -1,3 +1,9 @@
+2000-12-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Declaring 1.58_93 as 1.59 and releasing as such to have a stable
+	baseline again. 1.58_93 had been integrated into the development
+	track of 5.7.0 with patch 7737 on 2000/11/18.
+
 2000-11-15  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Fixed an incompatibility with 5.00503 discovered by Ask B.
