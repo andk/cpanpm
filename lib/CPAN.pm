@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_52';
+$VERSION = '1.58_53';
 
-# $Id: CPAN.pm,v 1.359 2000/10/25 07:02:39 k Exp $
+# $Id: CPAN.pm,v 1.362 2000/10/26 08:01:07 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.359 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.362 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -229,6 +229,10 @@ use vars qw($Ua $Thesite $Themethod);
 
 package CPAN::Complete;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
+@CPAN::Complete::COMMANDS = sort qw(
+		       ! a b d h i m o q r u autobundle clean dump
+		       make test install force readme reload look cvs_import
+);
 
 package CPAN::Index;
 use vars qw($last_time $date_of_03);
@@ -254,8 +258,9 @@ package CPAN::Module;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Shell;
-use vars qw($AUTOLOAD @ISA);
+use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED);
 @CPAN::Shell::ISA = qw(CPAN::Debug);
+$COLOR_REGISTERED ||= 0;
 
 #-> sub CPAN::Shell::AUTOLOAD ;
 sub AUTOLOAD {
@@ -1508,7 +1513,7 @@ sub _u_r_common {
     my(@result,$module,%seen,%need,$headerdone,
        $version_undefs,$version_zeroes);
     $version_undefs = $version_zeroes = 0;
-    my $sprintf = "%-25s %9s %9s  %s\n";
+    my $sprintf = "%s%-25s%s %9s %9s  %s\n";
     my @expand = $self->expand('Module',@args);
     my $expand = scalar @expand;
     if (0) { # Looks like noise to me, was very useful for debugging
@@ -1564,15 +1569,31 @@ sub _u_r_common {
 	unless ($headerdone++){
 	    $CPAN::Frontend->myprint("\n");
 	    $CPAN::Frontend->myprint(sprintf(
-		   $sprintf,
-		   "Package namespace",
-		   "installed",
-		   "latest",
-		   "in CPAN file"
-		   ));
+                                             $sprintf,
+                                             "",
+                                             "Package namespace",
+                                             "",
+                                             "installed",
+                                             "latest",
+                                             "in CPAN file"
+                                            ));
 	}
+        my $color_on = "";
+        my $color_off = "";
+        if (
+            $COLOR_REGISTERED
+            &&
+            $CPAN::META->has_inst("Term::ANSIColor")
+            &&
+            $module->{RO}{description}
+           ) {
+            $color_on = Term::ANSIColor::color("green");
+            $color_off = Term::ANSIColor::color("reset");
+        }
 	$CPAN::Frontend->myprint(sprintf $sprintf,
+                                 $color_on,
                                  $module->id,
+                                 $color_off,
                                  $have,
                                  $latest,
                                  $file);
@@ -2668,13 +2689,7 @@ sub cpl {
     }
     my @return;
     if ($pos == 0) {
-	@return = grep(
-		       /^$word/,
-		       sort qw(
-			       ! a b d h i m o q r u autobundle clean dump
-			       make test install force readme reload look cvs_import
-			      )
-		      );
+	@return = grep /^$word/, @CPAN::Complete::COMMANDS;
     } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^a\s/) {
@@ -2693,6 +2708,9 @@ sub cpl {
 	@return = cpl_reload($word,$line,$pos);
     } elsif ($line =~ /^o\s/) {
 	@return = cpl_option($word,$line,$pos);
+    } elsif ($line =~ m/^\S+\s/ ) {
+        # fallback for future commands and what we have forgotten above
+	@return = (cplx('CPAN::Module',$word),cplx('CPAN::Bundle',$word));
     } else {
 	@return = ();
     }
@@ -3067,7 +3085,7 @@ sub rd_modlist {
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
     for (keys %$ret) {
-	my $obj = $CPAN::META->instance(CPAN::Module,$_);
+	my $obj = $CPAN::META->instance("CPAN::Module",$_);
         delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
 	$obj->set(%{$ret->{$_}});
 	return if $CPAN::Signal;
@@ -3209,7 +3227,7 @@ sub as_string {
 	if ($_ eq "CPAN_USERID") {
 	  $extra .= " (".$self->author;
 	  my $email; # old perls!
-	  if ($email = $CPAN::META->instance(CPAN::Author,
+	  if ($email = $CPAN::META->instance("CPAN::Author",
                                              $self->cpan_userid
                                             )->email) {
 	    $extra .= " <$email>";
@@ -3241,7 +3259,7 @@ sub as_string {
 #-> sub CPAN::InfoObj::author ;
 sub author {
     my($self) = @_;
-    $CPAN::META->instance(CPAN::Author,$self->cpan_userid)->fullname;
+    $CPAN::META->instance("CPAN::Author",$self->cpan_userid)->fullname;
 }
 
 #-> sub CPAN::InfoObj::dump ;
@@ -4647,7 +4665,23 @@ sub as_glimpse {
     my(@m);
     my $class = ref($self);
     $class =~ s/^CPAN:://;
-    push @m, sprintf("%-15s %-15s (%s)\n", $class, $self->{ID},
+    my $color_on = "";
+    my $color_off = "";
+    if (
+        $CPAN::Shell::COLOR_REGISTERED
+        &&
+        $CPAN::META->has_inst("Term::ANSIColor")
+        &&
+        $self->{RO}{description}
+       ) {
+        $color_on = Term::ANSIColor::color("green");
+        $color_off = Term::ANSIColor::color("reset");
+    }
+    push @m, sprintf("%-15s %s%-15s%s (%s)\n",
+                     $class,
+                     $color_on,
+                     $self->id,
+                     $color_off,
 		     $self->cpan_file);
     join "", @m;
 }

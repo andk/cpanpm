@@ -1,14 +1,38 @@
+2000-10-26  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Module::as_glimpse and CPAN::Shell::_u_r_common: enabled
+	coloring of module names that are alredy registered in the module
+	list. This feature bloat will have to go away in a future version,
+	but for a while it might prove useful. The diffs between RCS 1.361
+	and 1.362 should then be applied reversed. The feature bloat is
+	only visible when the global $CPAN::Shell::COLOR_REGISTERED is
+	set, no visible changes are made otherwise.
+
+	* Added CPAN::Admin in an extra file. The subclass is for CPAN
+	admins only. For others it is an instructive programming example.
+	I consider the programming environment still alpha and need
+	feedback on its usefulness. E.g. I consider it ugly that
+	CPAN::Shell::expand and CPAN::instance have such a B<slightly>
+	different interface. I hate it that testing C<$m->{RO}{something}>
+	creates the RO slot. I'm unsure what one could make easier when
+	expand() returns a list of objects instead of a single object.
+
+	* cpl: made CPAN::Complete::cpl more flexible by assigning all
+	commands to the global @COMMANDS and offering a fallback for the
+	second word to modules and bundles when an unknown command is
+	entered. CPAN::Admin takes advantage of this feature.
+
 2000-10-25  Andreas J. Koenig  <andreas.koenig@anima.de>
 
-	* shell: The $term||= from 2000-10-20 broke the re-detection of
-	ReadLine for fresh installations. Fixed that again so that both
-	ways are possible, desposing the Stub interface and re-using an
-	interface that is better than Stub.
+	* shell: The C<$term||=> change of 2000-10-20 broke the
+	re-detection of ReadLine for fresh installations. Fixed that again
+	so that both ways are possible: disposing the Stub interface and
+	re-using an interface that is better than Stub.
 
 2000-10-21  Andreas J. Koenig  <andreas.koenig@anima.de>
 
-	* CPAN::shell: Now takes two arguments, one is the Prompt string,
-	the second is the default first command line.
+	* CPAN::shell: Now takes two arguments, one is the prompt, the
+	second is the default initial command line.
 
 	* Released this snapshot as 1.58_51
 
