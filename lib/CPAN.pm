@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.03';
+$VERSION = '1.04';
 
-# $Id: CPAN.pm,v 1.79 1996/12/21 03:04:53 k Exp $
+# $Id: CPAN.pm,v 1.81 1996/12/21 19:47:36 k Exp $
 
-# my $version = substr q$Revision: 1.79 $, 10; # only used during development
+# my $version = substr q$Revision: 1.81 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -21,6 +21,7 @@ use File::Find;
 use File::Path ();
 use IO::File ();
 use Safe ();
+use Text::ParseWords ();
 
 $Cwd = Cwd::cwd();
 
@@ -284,7 +285,10 @@ Readline support $rl_avail
 	} elsif (/^q(?:uit)?$/i) {
 	    last;
 	} elsif (/./) {
-	    my @line = split;
+	    my(@line);
+	    eval { @line = Text::ParseWords::shellwords($_) };
+	    warn($@), next if $@;
+	    $CPAN::META->debug("line[".join(":",@line)."]");
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
@@ -377,7 +381,7 @@ sub i {
 sub o {
     my($self,$o_type,@o_what) = @_;
     $o_type ||= "";
-    CPAN->debug("o_type[$o_type] o_what[@o_what]\n");
+    CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
 	shift @o_what if @o_what && $o_what[0] eq 'help';
 	if (!@o_what) {
@@ -1179,7 +1183,7 @@ sub get {
 	    $packagedir = $CPAN::META->catdir($builddir,$distdir);
 	    -d $packagedir and print "Removing previously used $packagedir\n";
 	    File::Path::rmtree($packagedir);
-	    rename($distdir,$packagedir) or Carp::confess("Couldn't rename $distdir to $packagedir");
+	    rename($distdir,$packagedir) or Carp::confess("Couldn't rename $distdir to $packagedir: $!");
 	} else {
 	    my $pragmatic_dir = $self->{'CPAN_USERID'} . '000';
 	    $pragmatic_dir =~ s/\W_//g;
@@ -1189,7 +1193,7 @@ sub get {
 	    my($f);
 	    for $f (@readdir) { # is already without "." and ".."
 		my $to = $CPAN::META->catdir($packagedir,$f);
-		rename($f,$to) or Carp::confess("Couldn't rename $f to $to");
+		rename($f,$to) or Carp::confess("Couldn't rename $f to $to: $!");
 	    }
 	}
 	$self->{'build_dir'} = $packagedir;
@@ -1499,7 +1503,7 @@ sub contains {
 	($me = $self->id) =~ s/.*://;
 	$from = $CPAN::META->catfile($dist->{'build_dir'},"$me.pm");
 	$to = $CPAN::META->catfile($todir,"$me.pm");
-	rename($from, $to) or Carp::croak("Couldn't rename $from to $to: $!");
+	File::Copy::copy($from, $to) or Carp::confess("Couldn't copy $from to $to: $!");
 	$parsefile = $to;
     }
     my @result;
@@ -1882,17 +1886,14 @@ use vars qw(%can);
 sub edit {
     my($class,@args) = @_;
     return unless @args;
-    CPAN->debug("class[$class]args[@args]");
+    CPAN->debug("class[$class]args[".join(" | ",@args)."]");
     my($o,$str,$func,$args,$key_exists);
     $o = shift @args;
     if($can{$o}) {
 	$class->$o(@args);
 	return 1;
-    }
-    return unless exists $CPAN::Config->{$o};
-
-    if (ref($CPAN::Config->{$o}) eq ARRAY) {
-	if (@args) {
+    } else {
+	if (ref($CPAN::Config->{$o}) eq ARRAY) {
 	    $func = shift @args;
 	    # Let's avoid eval, it's easier to comprehend without.
 	    if ($func eq "push") {
@@ -1909,19 +1910,10 @@ sub edit {
 		$CPAN::Config->{$o} = [@args];
 	    }
 	} else {
-	    print qq{    $o    }, neatvalue($CPAN::Config->{$o}), qq{
-Usage:
-    o conf $o [shift|pop]
-or
-    o conf $o [unshift|push|splice] <list>
-};
-	}
-    } else {
-	if (@args) {
 	    $CPAN::Config->{$o} = $args[0];
+	    print "    $o    ";
+	    print defined $CPAN::Config->{$o} ? $CPAN::Config->{$o} : "UNDEFINED";
 	}
-	print "    $o    ";
-	print defined $CPAN::Config->{$o} ? $CPAN::Config->{$o} : "UNDEFINED";
     }
 }
 

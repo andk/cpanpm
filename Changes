@@ -7,6 +7,17 @@ Improved bundle mechanism.
 Eliminated the star "*" that should save us some memory but introduced
 complications far beyond what its worth.
 
+Checked over occurrences of rename(). Replaced the one that might fail
+due to file system boundaries with File::Copy::copy.
+
+Introduced Text::ParseWords::shellwords instead of split for the
+parsed command lines. This means, you can now set variables to such
+complicated things as
+
+cpan> o conf make_install_args 'CC="gcc.96q1 -B/usr/ccs/bin/" UNINST=1'
+
+Thanks to "Mark D. Baushke" <mdb@cisco.com> for the hint!!!
+
 =head2 Dec 1, 1996
 
 Added security, evals of CHECKSUMS and 03modlist.data.gz now take
