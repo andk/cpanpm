@@ -18,7 +18,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec;
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.59 $, 10;
+$VERSION = substr q$Revision: 1.60 $, 10;
 
 =head1 NAME
 
@@ -363,8 +363,7 @@ If you don\'t understand this question, just press ENTER.
 	prompt("Parameters for the 'perl Makefile.PL' command?
 Typical frequently used settings:
 
-    POLLUTE=1        increasing backwards compatibility
-    LIB=~/perl       non-root users (please see manual for more hints)
+    PREFIX=~/perl       non-root users (please see manual for more hints)
 
 Your choice: ",$default);
     $default = $CPAN::Config->{make_arg} || "";

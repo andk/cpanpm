@@ -1,3 +1,9 @@
+2003-05-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* FirstTime.pm: Do not mention POLLUTE=1 anymore. It's an old
+	option that isn't interesting anymore nowadays. (Thanks to Michael
+	Schilli for the hint)
+
 2003-04-12  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Makefile.PL: do not require FirstTime anymore
