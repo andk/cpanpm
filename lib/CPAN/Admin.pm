@@ -1,10 +1,11 @@
 package CPAN::Admin;
 use base CPAN;
+use CPAN; # old base.pm did not load CPAN on previous line
 use strict;
 use vars qw(@EXPORT $VERSION);
 use constant PAUSE => "pause.perl.org";
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.8 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;

@@ -1,3 +1,16 @@
+2000-11-14  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN/FirstTime.pm: MyConfig/Config buglet during
+	site-picking and more verbosity for selecting good arguments for
+	make (Thanks to Larry Virden for the report)
+
+	* print_ornamented: Made shell output ornamenting dependent on a
+	global variable $CPAN::Shell::PRINT_ORNAMENTING. It is and will
+	stay a rarely used feature, so a global to turn it on and off
+	seems appropriate. For the record: this does not do anything but
+	colorize STDOUT and STDERR differently for debugging if all
+	messages are wrapped correctly.
+
 2000-11-11  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Admin: Made the machine name of PAUSE a constant.
@@ -7,17 +20,16 @@
 	* rematein: Enable dump of Author objects (was the useless silly
 	message)
 
-	* Two temporary global variables introduced:
+	* Two (temporary) global variables introduced:
 	$CPAN::Tarzip::BUGHUNTING enables naughty code that may help track
-	some bugs in Archive::Tar (alredy reported to SRZ). And
+	some bugs in Archive::Tar (already reported to SRZ). And
 	$CPAN::Shell::ADVANCED_QUERY turns on a form of the query like
 	    C<m userid=RFOLEY> or
 	    C<m userid=~FOL> or
-	    C<d cpan_userid=RFOLEY> or
-	    C<a face=:-)> :-)
+	    C<d cpan_userid=RFOLEY>
 
-	But this is highly experimental and WILL change, do not rely on
-	it.
+	But this syntax is highly experimental and WILL change, do not
+	rely on it.
 	
 2000-11-09  Andreas J. Koenig  <andreas.koenig@anima.de>
 

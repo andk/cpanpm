@@ -704,6 +704,17 @@ FAQ
         /etc/inputrc that contains the word 'on' in lowercase. Change the
         occurrences of 'on' to 'On' and the bug should disappear.
 
+    10) Some authors have strange characters in their names.
+        Internally CPAN.pm uses the UTF-8 charset. If your terminal is
+        expecting ISO-8859-1 charset, a converter can be activated by
+        setting term_is_latin to a true value in your config file. One way
+        of doing so would be
+
+            cpan> ! $CPAN::Config->{term_is_latin}=1
+
+        Extended support for converters will be made available as soon as
+        perl becomes stable with regard to charset issues.
+
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,
     right? In this discussion CPAN and PAUSE have become equal -- but they

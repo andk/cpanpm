@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_91';
+$VERSION = '1.58_92';
 
-# $Id: CPAN.pm,v 1.374 2000/11/12 14:22:17 k Exp $
+# $Id: CPAN.pm,v 1.375 2000/11/14 17:46:19 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.374 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.375 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -262,9 +262,10 @@ package CPAN::Module;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Shell;
-use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY);
+use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY $PRINT_ORNAMENTING);
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
+$PRINT_ORNAMENTING ||= 0;
 
 #-> sub CPAN::Shell::AUTOLOAD ;
 sub AUTOLOAD {
@@ -1842,17 +1843,19 @@ sub format_result {
 # The only reason for this method is currently to have a reliable
 # debugging utility that reveals which output is going through which
 # channel. No, I don't like the colors ;-)
+
+#-> sub CPAN::Shell::print_ornameted ;
 sub print_ornamented {
     my($self,$what,$ornament) = @_;
     my $longest = 0;
-    my $ornamenting = 0; # turn the colors on
+    return unless defined $what;
 
     if ($CPAN::Config->{term_is_latin}){
         # courtesy jhi:
         $what
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
     }
-    if ($ornamenting) {
+    if ($PRINT_ORNAMENTING) {
 	unless (defined &color) {
 	    if ($CPAN::META->has_inst("Term::ANSIColor")) {
 		import Term::ANSIColor "color";
@@ -6328,6 +6331,18 @@ Some versions of readline are picky about capitalization in the
 /etc/inputrc file and specifically RedHat 6.2 comes with a
 /etc/inputrc that contains the word C<on> in lowercase. Change the
 occurrences of C<on> to C<On> and the bug should disappear.
+
+=item 10) Some authors have strange characters in their names.
+
+Internally CPAN.pm uses the UTF-8 charset. If your terminal is
+expecting ISO-8859-1 charset, a converter can be activated by setting
+term_is_latin to a true value in your config file. One way of doing so
+would be
+
+    cpan> ! $CPAN::Config->{term_is_latin}=1
+
+Extended support for converters will be made available as soon as perl
+becomes stable with regard to charset issues.
 
 =back
 
