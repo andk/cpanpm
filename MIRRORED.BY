@@ -123,33 +123,18 @@ ftp.wownet.net:
 
 # Australasia
 
-# disabled 1997-02-09 21:10 UTC because of being almost two weeks stale
-# coombs.anu.edu.au:
-#   frequency        = "daily"
-#  dst_directory    = "coombs.anu.edu.au:/pub/perl/CPAN/"
-#  dst_location     = "Canberra, Australia, Australasia (35.15S 149.8E)"
-#  dst_organisation = "Coombs Australian National University"
-#  dst_timezone     = "GMT+10"
-#  dst_contact      = "doug@coombs.anu.edu.au"
-#  dst_src          = "ftp.cis.ufl.edu:/pub/perl/CPAN/"
-
-# dst_dst          = "ftp://coombs.anu.edu.au/pub/perl/CPAN/"
-# dst_contact      = "mailto:doug@coombs.anu.edu.au"
-# dst_src          = "ftp://ftp.cis.ufl.edu/pub/perl/CPAN/"
-
-ftp.mame.mu.oz.au:
-  frequency        = "weekly"
-  dst_directory    = "ftp.mame.mu.oz.au:/pub/perl/CPAN/"
-  dst_location     = "Melbourne, Australia, Australasia (37.50S 145E)"
-  dst_organisation = "Mechanical and Manufacturing Engineering, University of Melbourne"
+ftp.netinfo.com.au:
+  frequency        = "daily"
+  dst_directory    = "ftp.netinfo.com.au:/pub/perl/CPAN/"
+  dst_location     = "Canberra, Australia, Australasia (35.15S 149.8E)"
+  dst_organisation = "Netinfo Pty Ltd"
   dst_timezone     = "GMT+10"
-  dst_contact      = "mrg@ftp.mame.mu.oz.au"
-  dst_src          = "uiarchive.cso.uiuc.edu:/pub/lang/perl/CPAN/"
-  dst_notes        = "Australian access only"
+  dst_contact      = "ftpmaster@netinfo.com.au"
+  dst_src          = "ftp.digital.com.au:/pub/plan/perl/"
 
-# dst_dst          = "ftp://ftp.mame.mu.oz.au/pub/perl/CPAN/"
-# dst_contact      = "mailto:mrg@ftp.mame.mu.oz.au"
-# dst_src          = "ftp://uiarchive.cso.uiuc.edu/pub/lang/perl/CPAN/"
+# dst_dst          = "ftp://ftp.netinfo.com.au/pub/perl/CPAN/"
+# dst_contact      = "mailto:ftpmaster@netinfo.com.au"
+# dst_src          = "ftp://ftp.digital.com.au/pub/plan/perl/"
 
 ftp.tekotago.ac.nz
   frequency        = "weekly"
@@ -284,6 +269,19 @@ ftp.leo.org:
 
 # dst_dst          = "ftp://ftp.leo.org/pub/comp/programming/languages/perl/CPAN/"
 # dst_contact      = "mailto:perl-admin@oasis.leo.org"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.mpi-sb.mpg.de:
+  frequency            = "daily"
+  dst_directory        = "ftp.mpi-sb.mpg.de:/pub/perl/CPAN/"
+  dst_location         = "Saarbrücken, Germany, Europe"
+  dst_organization     = "Max-Planck-Institut für Informatik"
+  dst_timezone         = "GMT+1"
+  dst_contact          = "ftpadmin@mpi-sb.mpg.de"
+  dst_src              = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftp.mpi-sb.mpg.de/pub/perl/CPAN/"
+# dst_contact      = "mailto:ftpadmin@mpi-sb.mpg.de"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.rz.ruhr-uni-bochum.de:
@@ -642,15 +640,14 @@ ftp.cdrom.com:
 # dst_contact      = "mailto:ftp-bugs@ftp.cdrom.com"
 # dst_src          = "ftp://ftp.metronet.com/pub/perl/"
 
-# disabled 1997-02-09 21:10 UTC because of being almost one week stale
-#ftp.cs.colorado.edu:
-#  frequency        = "daily"
-#  dst_directory    = "ftp.cs.colorado.edu:/pub/perl/CPAN/"
-#  dst_location     = "Boulder, Colorado, USA, North America (40.3N 105.10W)"
-#  dst_organisation = "Computer Science, Colorado University"
-#  dst_timezone     = "GMT-7 (MST7MDT)"
-#  dst_contact      = "trouble@cs.colorado.edu"
-#  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+ftp.cs.colorado.edu:
+  frequency        = "daily"
+  dst_directory    = "ftp.cs.colorado.edu:/pub/perl/CPAN/"
+  dst_location     = "Boulder, Colorado, USA, North America (40.3N 105.10W)"
+  dst_organisation = "Computer Science, Colorado University"
+  dst_timezone     = "GMT-7 (MST7MDT)"
+  dst_contact      = "trouble@cs.colorado.edu"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.cs.colorado.edu/pub/perl/CPAN/"
 # dst_contact      = "mailto:trouble@cs.colorado.edu"
@@ -669,16 +666,16 @@ ftp.cis.ufl.edu:
 # dst_contact      = "mailto:japh@cis.ufl.edu"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
-uiarchive.cso.uiuc.edu:
+uiarchive.uiuc.edu:
   frequency        = "daily"
-  dst_directory    = "uiarchive.cso.uiuc.edu:/pub/lang/perl/CPAN/"
+  dst_directory    = "uiarchive.uiuc.edu:/pub/lang/perl/CPAN/"
   dst_location     = "Urbana, Illinois, USA, North America (40.7N 88.12W)"
   dst_organisation = "Computing and Communications Services Office, University of Illinois at Urbana-Champaign"
   dst_timezone     = "GMT-5"
   dst_contact      = "ftpadmin@uiuc.edu"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://uiarchive.cso.uiuc.edu/pub/lang/perl/CPAN/"
+# dst_dst          = "ftp://uiarchive.uiuc.edu/pub/lang/perl/CPAN/"
 # dst_contact      = "mailto:ftpadmin@uiuc.edu"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 

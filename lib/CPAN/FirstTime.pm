@@ -15,7 +15,7 @@ use ExtUtils::MakeMaker qw(prompt);
 use FileHandle ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.16 $, 10;
+$VERSION = substr q$Revision: 1.17 $, 10;
 
 =head1 NAME
 
@@ -128,7 +128,7 @@ those.
 
     my(@path) = split($Config{path_sep},$ENV{PATH});
     my $prog;
-    for $prog (qw/gzip tar unzip make lynx ftp/){
+    for $prog (qw/gzip tar unzip make lynx ncftp ftp/){
 	my $path = $CPAN::Config->{$prog} || find_exe($prog,[@path]) || $prog;
 	$ans = prompt("Where is your $prog program?",$path) || $path;
 	$CPAN::Config->{$prog} = $ans;
@@ -257,8 +257,9 @@ the \$CPAN::Config takes precedence.
 	$CPAN::Config->{$_} = prompt("Your $_?",$default);
     }
 
-    # We don't ask that now, it will be noticed in time....
+    # We don't ask that now, it will be noticed in time, won't it?
     $CPAN::Config->{'inhibit_startup_message'} = 0;
+    $CPAN::Config->{'getcwd'} = 'cwd';
 
     print "\n\n";
     CPAN::Config->commit($configpm);

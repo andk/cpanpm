@@ -1,5 +1,42 @@
 Revision history for Perl extension CPAN.
 
+Todo: CPAN.pm: How to live without CHECKSUM files?
+      CPAN.pm: Allow relative pathnames for external programs.
+          ($SIG{CHLD}!)
+      CPAN.pm: Security layer completely configurable/If only
+          Penguin were usable
+      MakeMaker: parse *VERSION = \'...'
+      Devel::Symdump: isatree/eertasi
+      MakeMaker: install INSTALLDIRS into ARCH (INST_LIB = $(INST_ARCH))
+      MakeMaker: EXEFILES posting by Achim
+      CPAN.pm: make plugins configurable
+      MakeMaker: Mike Stok says, MakeMaker doesn't find the right
+          ../../perl during perl builds
+
+=head2 Feb and March 1997
+
+Speedups during reading of the indices (Revision 1.125-128).
+
+Tiny speedups of CacheMgr. Elimination of clean_cache and substituing
+a call to force_clean_cache. Changed a couple of debugging statements.
+
+Improved feedback upon the invocation of a FirstTime dialog: we tell
+user which variables are missing.
+
+Beautified spacing with the help of Ilya's newest cperl-mode.
+
+Made the use of Cwd::cwd configurable. Default is ->cwd, but ->getcwd
+makes sense on some non UNIX systems (hint by Dominic Dunlop).
+
+Added an __END__
+
+Improved message "don't know what it is" with a hint to try "i" command.
+
+External programs are now run even more blindish. No check if they
+look executable before we run them.
+
+Released 1.22_01.
+
 =head2 Feb 11, 1997
 
 Wrong "Unknown argument" message when argument was lowercase fixed.
