@@ -15,7 +15,7 @@ use ExtUtils::MakeMaker qw(prompt);
 use FileHandle ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.17 $, 10;
+$VERSION = substr q$Revision: 1.18 $, 10;
 
 =head1 NAME
 
@@ -178,7 +178,8 @@ without caring about them. As sometimes the Makefile.PL contains
 question you\'re expected to answer, you can set a timer that will
 kill a 'perl Makefile.PL' process after the specified time in seconds.
 
-If you set this value to 0, these processes will wait forever.
+If you set this value to 0, these processes will wait forever. This is
+the default and recommended setting.
 
 };
 

@@ -9,9 +9,22 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       Devel::Symdump: isatree/eertasi
       MakeMaker: install INSTALLDIRS into ARCH (INST_LIB = $(INST_ARCH))
       MakeMaker: EXEFILES posting by Achim
-      CPAN.pm: make plugins configurable
+      CPAN.pm: make plugins configurable, adjust @ISA
       MakeMaker: Mike Stok says, MakeMaker doesn't find the right
           ../../perl during perl builds
+
+=head2 March 31 1997
+
+Fix bug with Bundle files that are not in the distribution's root
+directory.
+
+Added tolerance when a file is available in an older version but
+cannot be retrieved for some reason. (Suggested by Dale Amon and
+Ulrich Pfeifer)
+
+Fixed the duplicate writing of a Makefile and experimented with
+alternatives in the inactivity_timeout code. Thanks to Randal Schwartz
+and Larry Virden for continued heads up on this.
 
 =head2 Feb and March 1997
 

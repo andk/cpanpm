@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.22_01';
+$VERSION = '1.23';
 
-# $Id: CPAN.pm,v 1.132 1997/03/13 23:11:26 k Exp $
+# $Id: CPAN.pm,v 1.135 1997/03/31 11:52:23 k Exp $
 
-# my $version = substr q$Revision: 1.132 $, 10; # only used during development
+# my $version = substr q$Revision: 1.135 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -485,6 +485,7 @@ sub new {
     my $class = shift;
     my $time = time;
     my($debug,$t2);
+    $debug = "";
     my $self = {
 		ID => $CPAN::Config->{'build_dir'},
 		MAX => $CPAN::Config->{'build_cache'},
@@ -1212,7 +1213,7 @@ sub expand {
 	    push @m, $obj;
 	}
     }
-    return @m;
+    return wantarray ? @m : $m[0];
 }
 
 #-> sub CPAN::Shell::format_result ;
@@ -1338,6 +1339,7 @@ sub localize {
     $self->debug("file [$file] aslocal [$aslocal]") if $CPAN::DEBUG;
 
     return $aslocal if -f $aslocal && -r _ && ! $force;
+    rename $aslocal, "$aslocal.bak" if -f $aslocal;
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
@@ -1593,7 +1595,78 @@ Subprocess "|$CPAN::Config->{'ftp'}$verbose -n"
 	print Text::Wrap::wrap("","",$mess), "\n";
     }
     print "Cannot fetch $file\n";
+    if (-f "$aslocal.bak") {
+	rename "$aslocal.bak", $aslocal;
+	print "Trying to get away with old file:\n";
+	print $self->ls($aslocal);
+	return $aslocal;
+    }
     return;
+}
+
+# find2perl needs modularization, too, all the following is stolen
+# from there
+sub ls {
+    my($self,$name) = @_;
+    my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$sizemm,
+     $atime,$mtime,$ctime,$blksize,$blocks) = lstat($name);
+
+    my($perms,%user,%group);
+    my $pname = $name;
+
+    if (defined $blocks) {
+	$blocks = int(($blocks + 1) / 2);
+    }
+    else {
+	$blocks = int(($sizemm + 1023) / 1024);
+    }
+
+    if    (-f _) { $perms = '-'; }
+    elsif (-d _) { $perms = 'd'; }
+    elsif (-c _) { $perms = 'c'; $sizemm = &sizemm; }
+    elsif (-b _) { $perms = 'b'; $sizemm = &sizemm; }
+    elsif (-p _) { $perms = 'p'; }
+    elsif (-S _) { $perms = 's'; }
+    else         { $perms = 'l'; $pname .= ' -> ' . readlink($_); }
+
+    my(@rwx) = ('---','--x','-w-','-wx','r--','r-x','rw-','rwx');
+    my(@moname) = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+    my $tmpmode = $mode;
+    my $tmp = $rwx[$tmpmode & 7];
+    $tmpmode >>= 3;
+    $tmp = $rwx[$tmpmode & 7] . $tmp;
+    $tmpmode >>= 3;
+    $tmp = $rwx[$tmpmode & 7] . $tmp;
+    substr($tmp,2,1) =~ tr/-x/Ss/ if -u _;
+    substr($tmp,5,1) =~ tr/-x/Ss/ if -g _;
+    substr($tmp,8,1) =~ tr/-x/Tt/ if -k _;
+    $perms .= $tmp;
+
+    my $user = $user{$uid} || $uid;   # too lazy to implement lookup
+    my $group = $group{$gid} || $gid;
+
+    my($sec,$min,$hour,$mday,$mon,$year) = localtime($mtime);
+    my($timeyear);
+    my($moname) = $moname[$mon];
+    if (-M _ > 365.25 / 2) {
+	$timeyear = $year + 1900;
+    }
+    else {
+	$timeyear = sprintf("%02d:%02d", $hour, $min);
+    }
+
+    sprintf "%5lu %4ld %-10s %2d %-8s %-8s %8s %s %2d %5s %s\n",
+	    $ino,
+		 $blocks,
+		      $perms,
+			    $nlink,
+				$user,
+				     $group,
+					  $sizemm,
+					      $moname,
+						 $mday,
+						     $timeyear,
+							 $pname;
 }
 
 package CPAN::FTP::netrc;
@@ -1764,6 +1837,9 @@ sub reload {
     my $time = time;
 
     # XXX check if a newer one is available. (We currently read it from time to time)
+    for ($CPAN::Config->{index_expire}) {
+	$_ = 0.001 unless $_ > 0.001;
+    }
     return if $last_time + $CPAN::Config->{index_expire}*86400 > $time;
     my($debug,$t2);
     $last_time = $time;
@@ -2398,7 +2474,7 @@ sub make {
 	if ($CPAN::Config->{inactivity_timeout}) {
 	    eval {
 		alarm $CPAN::Config->{inactivity_timeout};
-		#$SIG{CHLD} = \&REAPER; # XXX
+		local $SIG{CHLD} = sub { wait };
 		if (defined($pid = fork)) {
 		    if ($pid) { #parent
 			wait;
@@ -2409,22 +2485,22 @@ sub make {
 		    print "Cannot fork: $!";
 		    return;
 		}
-		$ret = system($system);
 	    };
 	    alarm 0;
+	    if ($@){
+		kill 9, $pid;
+		waitpid $pid, 0;
+		print $@;
+		$self->{writemakefile} = "NO - $@";
+		$@ = "";
+		return;
+	    }
 	} else {
 	    $ret = system($system);
-	}
-	if ($@){
-	    kill 9, $pid;
-	    waitpid $pid, 0;
-	    print $@;
-	    $self->{writemakefile} = "NO - $@";
-	    $@ = "";
-	    return;
-	} elsif ($ret != 0) {
-	    $self->{writemakefile} = "NO";
-	    return;
+	    if ($ret != 0) {
+		$self->{writemakefile} = "NO";
+		return;
+	    }
 	}
     }
     $self->{writemakefile} = "YES";
@@ -2564,14 +2640,13 @@ sub contains {
 	# Try to get at it in the cpan directory
 	$self->debug("no parsefile") if $CPAN::DEBUG;
 	my $dist = $CPAN::META->instance('CPAN::Distribution',$self->{'CPAN_FILE'});
-	$self->debug($dist->as_string) if $CPAN::DEBUG;
 	$dist->get;
 	$self->debug($dist->as_string) if $CPAN::DEBUG;
 	my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
 	File::Path::mkpath($todir);
 	my($me,$from,$to);
 	($me = $self->id) =~ s/.*://;
-	$from = $CPAN::META->catfile($dist->{'build_dir'},"$me.pm");
+	$from = $self->find_bundle_file($dist->{'build_dir'},"$me.pm");
 	$to = $CPAN::META->catfile($todir,"$me.pm");
 	File::Copy::copy($from, $to) or Carp::confess("Couldn't copy $from to $to: $!");
 	$parsefile = $to;
@@ -2595,6 +2670,33 @@ sub contains {
     $self->{CONTAINS} = join ", ", @result;
     $self->debug("CONTAINS[@result]") if $CPAN::DEBUG;
     @result;
+}
+
+#-> sub CPAN::Bundle::find_bundle_file
+sub find_bundle_file {
+    my($self,$where,$what) = @_;
+    my $bu = $CPAN::META->catfile($where,$what);
+    return $bu if -f $bu;
+    my $manifest = $CPAN::META->catfile($where,"MANIFEST");
+    unless (-f $manifest) {
+	require ExtUtils::Manifest;
+	my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
+	my $cwd = Cwd->$getcwd();
+	chdir $where;
+	ExtUtils::Manifest::mkmanifest();
+	chdir $cwd;
+    }
+    my $fh = FileHandle->new($manifest) or Carp::croak("Couldn't open $manifest: $!");
+    local($/) = "\n";
+    while (<$fh>) {
+	next if /^\s*\#/;
+	my($file) = /(\S+)/;
+	if ($file =~ m|Bundle/$what$|) {
+	    $bu = $file;
+	    return $CPAN::META->catfile($where,$bu);
+	}
+    }
+    Carp::croak("Could't find a Bundle file in $where");
 }
 
 #-> sub CPAN::Bundle::inst_file ;
@@ -2688,7 +2790,7 @@ sub as_string {
 			 $sprintf2,
 			 'CPAN_USERID',
 			 $userid,
-			 $CPAN::META->instance(CPAN::Author,$userid)->fullname
+			 CPAN::Shell->expand('Author',$userid)->fullname
 			)
     }
     push @m, sprintf $sprintf, 'CPAN_VERSION', $self->{CPAN_VERSION} if $self->{CPAN_VERSION};
@@ -3082,9 +3184,38 @@ CPAN::Module, the second by an object of class Distribution.
 
 If you do not enter the shell, the available shell commands are both
 available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
-functions in the calling package (C<install(...)>). The
-programmerE<39>s interface has beta status. Do not heavily rely on it,
-changes may still be necessary.
+functions in the calling package (C<install(...)>).
+
+There's currently only one class that has a stable interface,
+CPAN::Shell. All commands that are available in the CPAN shell are
+methods of the class CPAN::Shell. The commands that produce listings
+of modules (C<r>, C<autobundle>, C<u>) return a list of the IDs of all
+modules within the list.
+
+=over 2
+
+=item expand($type,@things)
+
+The IDs of all objects available within a program are strings that can
+be expanded to the corresponding real objects with the
+C<CPAN::Shell-E<gt>expand()> method. Expand returns a list of
+CPAN::Module objects according to the C<@things> arguments given. In
+scalar context it only returns the first element of the list.
+
+=item Programming Examples
+
+This enables the programmer to do operations like these:
+
+    # install everything that is outdated on my disk:
+    perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
+
+    # install my favorite programs if necessary:
+    for $mod (qw(Net::FTP MD5 Data::Dumper)){
+        my $obj = CPAN::Shell->expand('Module',$mod);
+        $obj->install;
+    }
+
+=back
 
 =head2 Cache Manager
 

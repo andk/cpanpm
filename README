@@ -174,6 +174,48 @@ DESCRIPTION
     compatibility (so you cannot run CPAN commands), then you should
     try the CPAN::Nox module for recovery.
 
+  The 4 Classes: Authors, Bundles, Modules, Distributions
+
+    Although it may be considered internal, the class hierarchie
+    does matter for both users and programmer. CPAN.pm deals with
+    above mentioned four classes, and all those classes share a set
+    of methods. It is a classical single polymorphism that is in
+    effect. A metaclass object registers all objects of all kinds
+    and indexes them with a string. The strings referencing objects
+    have a separated namespace (well, not completely separated):
+
+             Namespace                         Class
+
+       words containing a "/" (slash)      Distribution
+        words starting with Bundle::          Bundle
+              everything else            Module or Author
+
+
+    Modules know their associated Distribution objects. They always
+    refer to the most recent official release. Developers may mark
+    their releases as unstable development versions (by inserting an
+    underbar into the visible version number), so not always is the
+    default distribution for a given module the really hottest and
+    newest. If a module Foo circulates on CPAN in both version 1.23
+    and 1.23_90, CPAN.pm offers a convenient way to install version
+    1.23 by saying
+
+        install Foo
+
+
+    This would install the complete distribution file (say BAR/Foo-
+    1.23.tar.gz) with all accompanying material in there. But if you
+    would like to install version 1.23_90, you need to know where
+    the distribution file resides on CPAN relative to the
+    authors/id/ directory. If the author is BAR, this might be
+    BAR/Foo-1.23_90.tar.gz, so he would have say
+
+        install BAR/Foo-1.23_90.tar.gz
+
+
+    The first example will be driven by an object of the class
+    CPAN::Module, the second by an object of class Distribution.
+
   Programmer's interface
 
     If you do not enter the shell, the available shell commands are
