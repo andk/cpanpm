@@ -1,5 +1,27 @@
 Revision history for Perl extension CPAN.
 
+=head2 Dec 22, 1996
+
+An afternoon of intense email exchange with Mark D. Baushke helped to
+iron out some nits and make the whole thing more robust. A big thank
+you to Mark.
+
+The CPAN::Bundle class now knows about force.
+
+File::Copy was not use()d but needed.
+
+Documentation turned out to be wrong and contain references to dead
+code. Especially the bundle() and the bundles() functions are now
+removed. Muchly improved docu.
+
+Made the whole source text friendlier to read by adding comments to
+each subroutine hinting the package.
+
+Inactivity timeout introduced that may kick in when a Makefile.PL
+expects a response but doesn't get it.
+
+Implemented a lynx fallback.
+
 =head2 Dec 21, 1996
 
 Improved bundle mechanism.

@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.06';
+$VERSION = '1.07';
 
-# $Id: CPAN.pm,v 1.83 1996/12/22 14:11:58 k Exp $
+# $Id: CPAN.pm,v 1.87 1996/12/23 03:58:42 k Exp $
 
-# my $version = substr q$Revision: 1.83 $, 10; # only used during development
+# my $version = substr q$Revision: 1.87 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -67,8 +67,6 @@ CPAN::Config->load;
 sub autobundle;
 #-> sub CPAN::bundle ;
 sub bundle;
-#-> sub CPAN::bundles ;
-sub bundles;
 #-> sub CPAN::expand ;
 sub expand;
 #-> sub CPAN::force ;
@@ -357,7 +355,7 @@ i         none                    anything of above
 
 r          as             reinstall recommendations
 u          above          uninstalled distributions
-See manpage for autobundle() and recompile()
+See manpage for autobundle, recompile, force, etc.
 
 make      modules,        make
 test      dists, bundles, make test (implies make)
@@ -668,27 +666,6 @@ sub autobundle {
     $to\n\n";
 }
 
-#-> sub CPAN::Shell::bundle ;
-sub bundle {
-    shift;
-    my(@bundles) = @_;
-    my $bundle;
-    my @pack = ();
-    foreach $bundle (@bundles) {
-	my $pack = $bundle;
-	$pack =~ s/^(Bundle::)?(.*)/Bundle::$2/;
-	push @pack, $CPAN::META->instance('CPAN::Bundle',$pack)->contains;
-    }
-    @pack;
-}
-
-#-> sub CPAN::Shell::bundles ;
-sub bundles {
-    my($self) = @_;
-    CPAN->debug("self[$self]") if $CPAN::DEBUG;
-    sort grep $_->id() =~ /^Bundle::/, $CPAN::META->all('CPAN::Bundle');
-}
-
 #-> sub CPAN::Shell::expand ;
 sub expand {
     shift;
@@ -850,10 +827,12 @@ sub localize {
 		require URI::URL;
 		my $u = new URI::URL $url;
 		$l = $u->path;
-	    } else { # works only on Unix, is poor constructed, but
-                     # better than nothing. Thanks to "Mark
-                     # D. Baushke" <mdb@cisco.com> for the code
-		($l = $url) =~ s,^file://localhost/,/,;
+	    } else { # works only on Unix, is poorly constructed, but
+                     # hopefully better than nothing. 
+		     # RFC 1738 says fileurl BNF is
+		     # fileurl = "file://" [ host | "localhost" ] "/" fpath
+		     # Thanks to "Mark D. Baushke" <mdb@cisco.com> for the code
+		($l = $url) =~ s,^file://[^/]+,,; # discard the host part
 		$l =~ s/^file://;	# assume they meant file://localhost
 	    }
 	    return $l if -f $l && -r _;
@@ -865,19 +844,41 @@ sub localize {
 	    if ($res->is_success) {
 		return $aslocal;
 	    }
-	} elsif ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
-	    unless ($CPAN::META->hasFTP) {
-		warn "Can't access URL $url without module Net::FTP";
-		next;
-	    }
+	}
+	if ($CPAN::META->hasFTP && $url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	    my($host,$dir,$getfile) = ($1,$2,$3);
 	    $dir =~ s|/+|/|g;
-	    print "Going to fetch file [$getfile] from dir [$dir] on host [$host] as local [$aslocal]\n";
-
-	    #### This was the bug where I contacted Graham and got so strange error messages
-	    #### ftp_get($host,$dir,$getfile,$aslocal) && return $aslocal;
+	    $self->debug("Going to fetch file [$getfile]
+  from dir [$dir]
+  on host  [$host]
+  as local [$aslocal]") if $CPAN::DEBUG;
 	    CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal) && return $aslocal;
 	}
+	if (-x $CPAN::Config->{'lynx'}) {
+##	    $self->debug("Trying with lynx for [$url]") if $CPAN::DEBUG;
+	    print(
+		  qq{
+  Trying with lynx to get $url
+  As lynx has so many options and versions, we\'re not sure, that we
+  get it right. It is recommended that you install Net::FTP as soon
+  as possible. Just type "install Net::FTP". Thank you.
+
+}
+		 );
+	    $aslocal =~ s/\.gz//;
+	    my($system) = "$CPAN::Config->{'lynx'} -source '$url' > $aslocal";
+	    if (system($system)==0) {
+		$system = "$CPAN::Config->{'gzip'} $aslocal";
+		system($system)==0 or die;
+		return "$aslocal.gz";
+	    }
+	}
+	if (-x $CPAN::Config->{'ftp'}) {
+	    print qq{The external ftp is not yet supported, sorry\n};
+	}
+	warn "Can't access URL $url.
+  Either get LWP or Net::FTP
+  or an external lynx or ftp";
     }
     Carp::croak("Cannot fetch $file from anywhere");
 }
@@ -1187,6 +1188,12 @@ sub as_glimpse {
     join "", @m;
 }
 
+# Dead code, I would have liked to have,,, but it was never reached,,,
+#sub make {
+#    my($self) = @_;
+#    return "Don't be silly, you can't make $self->{FULLNAME} ;-)\n";
+#}
+
 #-> sub CPAN::Author::fullname ;
 sub fullname { shift->{'FULLNAME'} }
 *name = \&fullname;
@@ -1462,7 +1469,37 @@ sub make {
 	my($perl) = $^X =~ /^\.\// ? "$CPAN::Cwd/$^X" : $^X; # XXX subclassing folks, forgive me!
 	$system = "$perl Makefile.PL $CPAN::Config->{makepl_arg}";
     }
-    if (system($system)!=0) {
+    $SIG{ALRM} = sub { die "inactivity_timeout reached\n" };
+    my($ret,$pid);
+    $@ = "";
+    if ($CPAN::Config->{inactivity_timeout}) {
+	eval {
+	    alarm $CPAN::Config->{inactivity_timeout};
+	    #$SIG{CHLD} = \&REAPER;
+	    if (defined($pid=fork)) {
+		if ($pid) { #parent
+		    wait;
+		} else {    #child
+		    exec $system;
+		}
+	    } else {
+		print "Cannot fork: $!";
+		return;
+	    }
+	    $ret = system($system);
+	};
+	alarm 0;
+    } else {
+	$ret = system($system);
+    }
+    if ($@){
+	kill 9, $pid;
+	waitpid $pid, 0;
+	print $@;
+	$self->{writemakefile} = "NO - $@";
+	$@ = "";
+	return;
+    } elsif ($ret != 0) {
 	 $self->{writemakefile} = "NO";
 	 return;
     }
@@ -1543,7 +1580,30 @@ sub install {
     my $system = join " ", $CPAN::Config->{'make'}, "install", $CPAN::Config->{make_install_arg};
     my($pipe) = IO::File->new("$system 2>&1 |");
     my($makeout) = "";
-    while (<$pipe>){
+
+ # #If I were to try this, I'd do something like:
+ # #
+ # #  $SIG{ALRM} = sub { die "alarm\n" };
+ # #
+ # #  open(PROC,"make somesuch|");
+ # #  eval {
+ # #	alarm 30;
+ # #	while(<PROC>) {
+ # #	  alarm 30;
+ # #	}
+ # #  }
+ # #  close(PROC);
+ # #  alarm 0;
+ # #
+ # #I'm really not sure how reliable this would is, though.
+ # #
+ # #--
+ # #Kenneth Albanowski (kjahds@kjahds.com, CIS: 70705,126)
+ # #
+ # #
+ # #
+ # #
+	while (<$pipe>){
 	print;
 	$makeout .= $_;
     }
@@ -2210,13 +2270,14 @@ Batch mode:
 
   use CPAN;
 
-  autobundle, bundle, clean, expand, install, make, recompile, test
+  autobundle, clean, install, make, recompile, test
 
 =head1 DESCRIPTION
 
-The CPAN module is designed to automate the building and installing of
-perl modules and extensions including the searching and fetching from
-the net.
+The CPAN module is designed to automate the make and install of perl
+modules and extensions. It includes some searching capabilities as
+well knows a how to use Net::FTP or LWP to fetch the raw data from the
+net.
 
 Modules are fetched from one or more of the mirrored CPAN
 (Comprehensive Perl Archive Network) sites and unpacked in a dedicated
@@ -2232,6 +2293,9 @@ of what has been fetched, built and installed in the current
 session. The cache manager keeps track of the disk space occupied by
 the make processes and deletes excess space in a simple FIFO style.
 
+All methods provided are accessible in a programmer style and in an
+interactive shell style.
+
 =head2 Interactive Mode
 
 The interactive mode is entered by running
@@ -2245,17 +2309,92 @@ completion.
 Once you are on the command line, type 'h' and the rest should be
 self-explanatory.
 
+The most common uses of the interactive modes are
+
+=over 2
+
+=item Searching for authors, bundles, distribution files and modules
+
+There are corresponding one-letter commands C<a>, C<b>, C<d>, and C<m>
+for each of the four categories and another, C<i> for any of the other
+four. Each of the four entities is implemented as a class with
+slightly differing methods for displaying an object.
+
+Arguments you pass to these commands are either strings matching exact
+the identification string of an object or regular expressions that are
+then matched case-insensitively against various attributes of the
+objects. The parser recognizes a regualar expression only if you
+enclose it between two slashes.
+
+The principle is that the number of found objects influences how an
+item is displayed. If the search finds one item, we display the result
+of object-E<gt>as_string, but if we find more than one, we display
+each as object-E<gt>as_glimpse. E.g.
+
+    cpan> a ANDK     
+    Author id = ANDK
+	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+	FULLNAME     Andreas König
+
+
+    cpan> a /andk/   
+    Author id = ANDK
+	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+	FULLNAME     Andreas König
+
+
+    cpan> a /and.*rt/
+    Author          ANDYD (Andy Dougherty)
+    Author          MERLYN (Randal L. Schwartz)
+
+=item make, test, install, clean modules or distributions
+
+The four commands do indeed exist just as written above. Each of them
+takes as many arguments as provided and investigates for each what it
+might be. Is it a distribution file (recognized by embedded slashes),
+this file is being processed. Is it a module, CPAN determines the
+distribution file where this module is included and processes that.
+
+Any C<make> and C<test> are run unconditionally. An C<install
+E<lt>distribution_fileE<gt>> also is run unconditionally.  But for
+C<install E<lt>module<gt>> CPAN checks if an install is actually
+needed for it and prints I<"Foo up to date"> in case the module
+doesnE<39>t need to be updated.
+
+CPAN also keeps track of what it has done within the current session
+and doesnE<39>t try to build a package a second time regardless if it
+succeeded or not. The C<force > command takes as first argument the
+method to invoke (currently: make, test, or install) and executes the
+command from scratch.
+
+Example:
+
+    cpan> install OpenGL
+    OpenGL is up to date.
+    cpan> force install OpenGL
+    Running make
+    OpenGL-0.4/
+    OpenGL-0.4/COPYRIGHT
+    [...]
+
+=back
+
 =head2 CPAN::Shell
 
 The commands that are available in the shell interface are methods in
 the package CPAN::Shell. If you enter the shell command, all your
-input is split on whitespace, the first word is being interpreted as
-the method to be called and the rest of the words are treated as
-arguments to this method.
+input is split by the Text::ParseWords::shellwords() routine which
+acts like most shells do. The first word is being interpreted as the
+method to be called and the rest of the words are treated as arguments
+to this method.
 
-If you do not enter the shell, most of the available shell commands
-are both available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
-functions in the calling package (C<install(...)>).
+=head2 ProgrammerE<39>s interface
+
+If you do not enter the shell, the available shell commands are both
+available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
+functions in the calling package (C<install(...)>). The
+programmerE<39>s interface has beta status. Do not heavily rely on it,
+changes may still happen.
 
 =head2 Cache Manager
 
@@ -2265,7 +2404,8 @@ deletes complete directories below build_dir as soon as the size of
 all directories there gets bigger than $CPAN::Config->{build_cache}
 (in MB). The contents of this cache may be used for later
 re-installations that you intend to do manually, but will never be
-trusted by CPAN itself.
+trusted by CPAN itself. This is due to the fact that the user might
+use these directories for building modules on different architectures.
 
 There is another directory ($CPAN::Config->{keep_source_where}) where
 the original distribution files are kept. This directory is not
@@ -2281,7 +2421,8 @@ define any functions or methods. It usually only contains documentation.
 
 It starts like a perl module with a package declaration and a $VERSION
 variable. After that the pod section looks like any other pod with the
-only difference, that one pod section exists starting with (verbatim):
+only difference, that I<one special pod section> exists starting with
+(verbatim):
 
 	=head1 CONTENTS
 
@@ -2307,31 +2448,17 @@ your @INC path. The autobundle() command which is available in the
 shell interface does that for you by including all currently installed
 modules in a snapshot bundle file.
 
+There is a meaningless Bundle::Demo available on CPAN. Try to install
+it, it usually does no harm, just demonstrates what the Bundle
+interface looks like.
+
 =head2 autobundle
 
-autobundle() writes a bundle file into the directory
-$CPAN::Config->{cpan_home}/Bundle directory. The file contains a list
+C<autobundle> writes a bundle file into the 
+C<$CPAN::Config->{cpan_home}/Bundle> directory. The file contains a list
 of all modules that are both available from CPAN and currently
 installed within @INC. The name of the bundle file is based on the
 current date and a counter.
-
-=head2 Pragma: force
-
-Normally CPAN keeps track of what it has done within the current
-session and doesn't try to build a package a second time regardless if
-it succeeded or not. The force command takes as first argument the
-method to invoke (currently: make, test, or install) and executes the
-command from scratch.
-
-Example:
-
-    cpan> install OpenGL
-    OpenGL is up to date.
-    cpan> force install OpenGL
-    Running make
-    OpenGL-0.4/
-    OpenGL-0.4/COPYRIGHT
-    [...]
 
 =head2 recompile
 
@@ -2342,6 +2469,16 @@ effect. Primary purpose of this command is to act as a rescue in case
 your perl breaks binary compatibility. If one of the modules that CPAN
 uses is in turn depending on binary compatibility (so you cannot run
 CPAN commands), then you should try the CPAN::Nox module for recovery.
+
+A very popular use for recompile is to finish a network
+installation. Imagine, you have a common source tree for two different
+architectures. You decide to do a completely independent fresh
+installation. You start on one architecture with the help of a Bundle
+file produced earlier. CPAN installs the whole Bundle for you, but
+when you try to repeat the job on the second architecture, CPAN
+responds with a C<"Foo up to date"> message for all modules. So you
+will be glad to run recompile in the second architecture and
+youE<39>re done.
 
 =head1 CONFIGURATION
 
