@@ -40,9 +40,9 @@ DESCRIPTION
 
         perl -MCPAN -e shell
 
-    which puts you into a readline interface. You will have most fun if you
-    install Term::ReadKey and Term::ReadLine to enjoy both history and
-    completion.
+    which puts you into a readline interface. You will have the most fun if
+    you install Term::ReadKey and Term::ReadLine to enjoy both history and
+    command completion.
 
     Once you are on the command line, type 'h' and the rest should be self-
     explanatory.
@@ -55,16 +55,16 @@ DESCRIPTION
       four. Each of the four entities is implemented as a class with
       slightly differing methods for displaying an object.
 
-      Arguments you pass to these commands are either strings matching exact
-      the identification string of an object or regular expressions that are
-      then matched case-insensitively against various attributes of the
-      objects. The parser recognizes a regualar expression only if you
+      Arguments you pass to these commands are either strings exactly
+      matching the identification string of an object or regular expressions
+      that are then matched case-insensitively against various attributes of
+      the objects. The parser recognizes a regular expression only if you
       enclose it between two slashes.
 
       The principle is that the number of found objects influences how an
-      item is displayed. If the search finds one item, we display the result
-      of object->as_string, but if we find more than one, we display each as
-      object->as_glimpse. E.g.
+      item is displayed. If the search finds one item, the result is
+      displayed as object->as_string, but if we find more than one, we
+      display each as object->as_glimpse. E.g.
 
           cpan> a ANDK
           Author id = ANDK
@@ -81,13 +81,13 @@ DESCRIPTION
           Author          MERLYN (Randal L. Schwartz)
 
     make, test, install, clean  modules or distributions
-      These commands do indeed exist just as written above. Each of them
-      takes any number of arguments and investigates for each what it might
-      be. Is it a distribution file (recognized by embedded slashes), this
-      file is being processed. Is it a module, CPAN determines the
-      distribution file where this module is included and processes that.
+      These commands take any number of arguments and investigate what is
+      necessary to perform the action. If the argument is a distribution
+      file name (recognized by embedded slashes), it is processed. If it is
+      a module, CPAN determines the distribution file in which this module
+      is included and processes that.
 
-      Any `make', `test', and `readme' are run unconditionally. A
+      Any `make' or `test' are run unconditionally. An
 
         install <distribution_file>
 
@@ -95,14 +95,15 @@ DESCRIPTION
 
         install <module>
 
-      CPAN checks if an install is actually needed for it and prints *Foo up
-      to date* in case the module doesn't need to be updated.
+      CPAN checks if an install is actually needed for it and prints *module
+      up to date* in the case that the distribution file containing the
+      module doesn't need to be updated.
 
       CPAN also keeps track of what it has done within the current session
       and doesn't try to build a package a second time regardless if it
-      succeeded or not. The `force ' command takes as first argument the
-      method to invoke (currently: make, test, or install) and executes the
-      command from scratch.
+      succeeded or not. The `force' command takes as a first argument the
+      method to invoke (currently: `make', `test', or `install') and
+      executes the command from scratch.
 
       Example:
 
@@ -114,12 +115,18 @@ DESCRIPTION
           OpenGL-0.4/COPYRIGHT
           [...]
 
+      A `clean' command results in a
+
+        make clean
+
+      being executed within the distribution file's working directory.
+
     readme, look module or distribution
       These two commands take only one argument, be it a module or a
-      distribution file. `readme' displays the README of the associated
-      distribution file. `Look' gets and untars (if not yet done) the
-      distribution file, changes to the appropriate directory and opens a
-      subshell process in that directory.
+      distribution file. `readme' unconditionally runs, displaying the
+      README of the associated distribution file. `Look' gets and untars (if
+      not yet done) the distribution file, changes to the appropriate
+      directory and opens a subshell process in that directory.
 
   CPAN::Shell
 
@@ -143,14 +150,14 @@ DESCRIPTION
     recompile() is a very special command in that it takes no argument and
     runs the make/test/install cycle with brute force over all installed
     dynamically loadable extensions (aka XS modules) with 'force' in effect.
-    Primary purpose of this command is to finish a network installation.
+    The primary purpose of this command is to finish a network installation.
     Imagine, you have a common source tree for two different architectures.
     You decide to do a completely independent fresh installation. You start
     on one architecture with the help of a Bundle file produced earlier.
     CPAN installs the whole Bundle for you, but when you try to repeat the
     job on the second architecture, CPAN responds with a `"Foo up to date"'
-    message for all modules. So you will be glad to run recompile in the
-    second architecture and you're done.
+    message for all modules. So you invoke CPAN's recompile on the second
+    architecture and you're done.
 
     Another popular use for `recompile' is to act as a rescue in case your
     perl breaks binary compatibility. If one of the modules that CPAN uses
@@ -159,10 +166,10 @@ DESCRIPTION
 
   The four `CPAN::*' Classes: Author, Bundle, Module, Distribution
 
-    Although it may be considered internal, the class hierarchie does matter
+    Although it may be considered internal, the class hierarchy does matter
     for both users and programmer. CPAN.pm deals with above mentioned four
-    classes, and all those classes share a set of methods. It is a classical
-    single polymorphism that is in effect. A metaclass object registers all
+    classes, and all those classes share a set of methods. A classical
+    single polymorphism is in effect. A metaclass object registers all
     objects of all kinds and indexes them with a string. The strings
     referencing objects have a separated namespace (well, not completely
     separated):
@@ -176,19 +183,18 @@ DESCRIPTION
     Modules know their associated Distribution objects. They always refer to
     the most recent official release. Developers may mark their releases as
     unstable development versions (by inserting an underbar into the visible
-    version number), so not always is the default distribution for a given
-    module the really hottest and newest. If a module Foo circulates on CPAN
-    in both version 1.23 and 1.23_90, CPAN.pm offers a convenient way to
-    install version 1.23 by saying
+    version number), so the really hottest and newest distribution file is
+    not always the default. If a module Foo circulates on CPAN in both
+    version 1.23 and 1.23_90, CPAN.pm offers a convenient way to install
+    version 1.23 by saying
 
         install Foo
 
     This would install the complete distribution file (say BAR/Foo-
-    1.23.tar.gz) with all accompanying material in there. But if you would
-    like to install version 1.23_90, you need to know where the distribution
-    file resides on CPAN relative to the authors/id/ directory. If the
-    author is BAR, this might be BAR/Foo-1.23_90.tar.gz, so you would have
-    to say
+    1.23.tar.gz) with all accompanying material. But if you would like to
+    install version 1.23_90, you need to know where the distribution file
+    resides on CPAN relative to the authors/id/ directory. If the author is
+    BAR, this might be BAR/Foo-1.23_90.tar.gz; so you would have to say
 
         install BAR/Foo-1.23_90.tar.gz
 
@@ -201,7 +207,7 @@ DESCRIPTION
     available as methods (`CPAN::Shell->install(...)') and as functions in
     the calling package (`install(...)').
 
-    There's currently only one class that has a stable interface,
+    There's currently only one class that has a stable interface -
     CPAN::Shell. All commands that are available in the CPAN shell are
     methods of the class CPAN::Shell. Each of the commands that produce
     listings of modules (`r', `autobundle', `u') returns a list of the IDs
@@ -262,8 +268,8 @@ DESCRIPTION
 
     It starts like a perl module with a package declaration and a $VERSION
     variable. After that the pod section looks like any other pod with the
-    only difference, that *one special pod section* exists starting with
-    (verbatim):
+    only difference being that *one special pod section* exists starting
+    with (verbatim):
 
             =head1 CONTENTS
 
@@ -271,7 +277,7 @@ DESCRIPTION
 
             Module_Name [Version_String] [- optional text]
 
-    The only required part is the first field, the name of a module (eg.
+    The only required part is the first field, the name of a module (e.g.
     Foo::Bar, ie. *not* the name of the distribution file). The rest of the
     line is optional. The comment part is delimited by a dash just as in the
     man page header.
@@ -301,9 +307,9 @@ DESCRIPTION
     This module presumes that all packages on CPAN
 
     * declare their $VERSION variable in an easy to parse manner. This
-      prerequisite can hardly be relaxed because it consumes by far too much
+      prerequisite can hardly be relaxed because it consumes far too much
       memory to load all packages into the running program just to determine
-      the $VERSION variable . Currently all programs that are dealing with
+      the $VERSION variable. Currently all programs that are dealing with
       version use something like this
 
           perl -MExtUtils::MakeMaker -le \
@@ -313,7 +319,7 @@ DESCRIPTION
       parsed, please try the above method.
 
     * come as compressed or gzipped tarfiles or as zip files and contain a
-      Makefile.PL (well we try to handle a bit more, but without much
+      Makefile.PL (well, we try to handle a bit more, but without much
       enthusiasm).
 
   Debugging
@@ -325,7 +331,7 @@ DESCRIPTION
 
     In interactive mode you can try "o debug" which will list options for
     debugging the various parts of the package. The output may not be very
-    useful for you as it's just a byproduct of my own testing, but if you
+    useful for you as it's just a by-product of my own testing, but if you
     have an idea which part of the package may have a bug, it's sometimes
     worth to give it a try and send me more specific output. You should know
     that "o debug" has built-in completion support.
@@ -342,7 +348,7 @@ DESCRIPTION
     floppy.
 
 CONFIGURATION
-    When the CPAN module is installed a site wide configuration file is
+    When the CPAN module is installed, a site wide configuration file is
     created as CPAN/Config.pm. The default values defined there can be
     overridden in another configuration file: CPAN/MyConfig.pm. You can
     store this file in $HOME/.cpan/CPAN/MyConfig.pm if you want, because
@@ -354,16 +360,16 @@ CONFIGURATION
 
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
-      index_expire       after how many days refetch index files
+      index_expire       after this many days refetch index files
       cpan_home          local directory reserved for this package
       gzip               location of external program gzip
-      inactivity_timeout breaks interactive Makefile.PLs after that
+      inactivity_timeout breaks interactive Makefile.PLs after this
                          many seconds inactivity. Set to 0 to never break.
       inhibit_startup_message
                          if true, does not print the startup message
       keep_source        keep the source in a local directory?
-      keep_source_where  where keep the source (if we do)
-      make               location of external program make
+      keep_source_where  directory in which to keep the source (if we do)
+      make               location of external make program
       make_arg           arguments that should always be passed to 'make'
       make_install_arg   same as make_arg for 'make install'
       makepl_arg         arguments passed to 'perl Makefile.PL'
@@ -420,13 +426,18 @@ EXPORT
     oneliners.
 
 BUGS
-    we should give coverage for _all_ of the CPAN and not just the PAUSE
+    We should give coverage for _all_ of the CPAN and not just the PAUSE
     part, right? In this discussion CPAN and PAUSE have become equal -- but
     they are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus the
     clpa/, doc/, misc/, ports/, src/, scripts/.
 
     Future development should be directed towards a better integration of
     the other parts.
+
+    If a Makefile.PL requires special customization of libraries, prompts
+    the user for special input, etc. then you may find CPAN is not able to
+    build the distribution. In that case, you should attempt the traditional
+    method of building a Perl module package from a shell.
 
 AUTHOR
     Andreas König <a.koenig@mind.de>

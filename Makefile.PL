@@ -7,7 +7,7 @@ use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.27 1997/07/28 12:51:06 k Exp $
+# $Id: Makefile.PL,v 1.28 1998/01/02 01:21:03 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -41,7 +41,7 @@ sub MY::postamble {
 # This is only for me (Andreas Koenig) for the distribution
 private: MIRRORED.BY
 
-MIRRORED.BY: /usr/sources/CPAN/MIRRORED.BY.gz
+MIRRORED.BY: /net/dubravka/home/ftp/pub/CPAN/MIRRORED.BY.gz
 	gzip -dc \$? > \$\@
 };
     return join "", @m;

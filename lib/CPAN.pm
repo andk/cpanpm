@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend
 	   };
 
-$VERSION = '1.3101';
+$VERSION = '1.32';
 
-# $Id: CPAN.pm,v 1.202 1997/09/23 18:30:36 k Exp $
+# $Id: CPAN.pm,v 1.210 1998/01/02 14:20:37 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.202 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.210 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -165,12 +165,11 @@ ReadLine support $rl_avail
 	    $prompt = "cpan> ";
 	}
     } continue {
-	&cleanup, $CPAN::Frontend->mydie("Goodbye\n") if $Signal;
+      $Signal=0;
     }
 }
 
 package CPAN::CacheMgr;
-use vars qw($Du);
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
 use File::Find;
 
@@ -424,9 +423,12 @@ or
 	$CPAN::Frontend->mydie("Got SIGTERM, leaving");
     };
     $SIG{'INT'} = sub {
-	my $s = $Signal == 2 ? "a second" : "another";
-	&cleanup, $CPAN::Frontend->mydie("Got $s SIGINT") if $Signal;
-	$Signal = 1;
+	if ($Signal){
+	  &cleanup;
+	  $CPAN::Frontend->mydie("Got another SIGINT");
+	} else {
+	  $Signal = 1;
+	}
     };
     $SIG{'__DIE__'} = \&cleanup;
     $self->debug("Signal handler set.") if $CPAN::DEBUG;
@@ -544,25 +546,21 @@ sub cachesize {
     shift->{DU};
 }
 
-# sub check {
-#     my($self,@dirs) = @_;
-#     return unless -d $self->{ID};
-#     my $dir;
-#     @dirs = $self->dirs unless @dirs;
-#     for $dir (@dirs) {
-# 	  $self->disk_usage($dir);
-#     }
-# }
-
-#-> sub CPAN::CacheMgr::clean_cache ;
-#=# sub clean_cache {
-#=# 	my $self = shift;
-#=# 	my $dir;
-#=# 	while ($self->{DU} > $self->{'MAX'} and $dir = shift @{$self->{FIFO}}) {
-#=# 	    $self->force_clean_cache($dir);
-#=# 	}
-#=# 	$self->debug("leaving clean_cache with $self->{DU}") if $CPAN::DEBUG;
-#=# }
+sub tidyup {
+  my($self) = @_;
+  return unless -d $self->{ID};
+  while ($self->{DU} > $self->{'MAX'} ) {
+    my($toremove) = shift @{$self->{FIFO}};
+    $CPAN::Frontend->myprint(sprintf(
+				     "Deleting from cache".
+				     ": $toremove (%.1f>%.1f MB)\n",
+				     $self->{DU}, $self->{'MAX'})
+			    );
+    return if $CPAN::Signal;
+    $self->force_clean_cache($toremove);
+    return if $CPAN::Signal;
+  }
+}
 
 #-> sub CPAN::CacheMgr::dir ;
 sub dir {
@@ -598,39 +596,29 @@ sub entries {
 #-> sub CPAN::CacheMgr::disk_usage ;
 sub disk_usage {
     my($self,$dir) = @_;
-#    if (! defined $dir or $dir eq "") {
-#	$self->debug("Cannot determine disk usage for some reason") if $CPAN::DEBUG;
-#	return;
-#    }
-    return if $self->{SIZE}{$dir};
-    local($Du) = 0;
+    return if exists $self->{SIZE}{$dir};
+    return if $CPAN::Signal;
+    my($Du) = 0;
     find(
 	 sub {
+	     $File::Find::prune++ if $CPAN::Signal;
 	     return if -l $_;
 	     $Du += -s _;
 	 },
 	 $dir
 	);
+    return if $CPAN::Signal;
     $self->{SIZE}{$dir} = $Du/1024/1024;
     push @{$self->{FIFO}}, $dir;
     $self->debug("measured $dir is $Du") if $CPAN::DEBUG;
     $self->{DU} += $Du/1024/1024;
-    if ($self->{DU} > $self->{'MAX'} ) {
-	my($toremove) = shift @{$self->{FIFO}};
-	$CPAN::Frontend->myprint(sprintf(
-					 "...Hold on a sec... ".
-					 "cleaning from cache ".
-					 "(%.1f>%.1f MB): $toremove\n",
-					 $self->{DU}, $self->{'MAX'})
-				);
-	$self->force_clean_cache($toremove);
-    }
     $self->{DU};
 }
 
 #-> sub CPAN::CacheMgr::force_clean_cache ;
 sub force_clean_cache {
     my($self,$dir) = @_;
+    return unless -e $dir;
     $self->debug("have to rmtree $dir, will free $self->{SIZE}{$dir}")
 	if $CPAN::DEBUG;
     File::Path::rmtree($dir);
@@ -652,12 +640,16 @@ sub new {
     File::Path::mkpath($self->{ID});
     my $dh = DirHandle->new($self->{ID});
     bless $self, $class;
-    $self->debug("dir [$self->{ID}]") if $CPAN::DEBUG;
     my $e;
-    for $e ($self->entries) {
+    $CPAN::Frontend->myprint(
+			     sprintf("Scanning cache %s for sizes\n",
+				     $self->{ID}));
+    for $e ($self->entries($self->{ID})) {
 	next if $e eq ".." || $e eq ".";
 	$self->disk_usage($e);
+	return if $CPAN::Signal;
     }
+    $self->tidyup;
     $t2 = time;
     $debug .= "timing of CacheMgr->new: ".($t2 - $time);
     $time = $t2;
@@ -759,7 +751,7 @@ Please specify a filename where to save the configuration or try
 
     my $msg = <<EOF unless $configpm =~ /MyConfig/;
 
-# This is CPAN.pm's systemwide configuration file.  This file provides
+# This is CPAN.pm's systemwide configuration file. This file provides
 # defaults for users, and the values can be changed in a per-user
 # configuration file. The user-config file is being looked for as
 # ~/.cpan/CPAN/MyConfig.pm.
@@ -813,9 +805,12 @@ sub load {
     my(@miss);
     eval {require CPAN::Config;};       # We eval because of some
                                         # MakeMaker problems
-    unshift @INC, MM->catdir($ENV{HOME},".cpan") unless $dot_cpan++;
-    eval {require CPAN::MyConfig;};     # where you can override
+    unless ($dot_cpan++){
+      unshift @INC, MM->catdir($ENV{HOME},".cpan");
+      eval {require CPAN::MyConfig;};   # where you can override
                                         # system wide settings
+      shift @INC;
+    }
     return unless @miss = $self->not_loaded;
     # XXX better check for arrayrefs too
     require CPAN::FirstTime;
@@ -933,9 +928,13 @@ sub cpl {
     CPAN->debug("word[$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
     my(@words) = split " ", substr($line,0,$pos+1);
     if (
-	$words[2] =~ /list$/ && @words == 3
-	||
-	$words[2] =~ /list$/ && @words == 4 && length($word) 
+	defined($words[2])
+	and
+	(
+	 $words[2] =~ /list$/ && @words == 3
+	 ||
+	 $words[2] =~ /list$/ && @words == 4 && length($word)
+	)
        ) {
 	return grep /^\Q$word\E/, qw(splice shift unshift pop push);
     } elsif (@words >= 4) {
@@ -1412,7 +1411,8 @@ sub print_ornamented {
 		*color = sub { return "" };
 	    }
 	}
-	for my $line (split /\n/, $what) {
+	my $line;
+	for $line (split /\n/, $what) {
 	    $longest = length($line) if length($line) > $longest;
 	}
 	my $sprintf = "%-" . $longest . "s";
@@ -1490,7 +1490,13 @@ sub rematein {
 		if
 		    $pragma
 			&&
-		    ($] < 5.00303 || $obj->can($pragma)); ### compatibility with 5.003
+		    ($] < 5.00303 || $obj->can($pragma)); ###
+                                                          ### compatibility
+                                                          ### with
+                                                          ### 5.003
+	    if ($]>=5.00303 && $obj->can('called_for')) {
+	      $obj->called_for($s);
+	    }
 	    $obj->$meth();
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
@@ -1560,20 +1566,58 @@ sub ftp_get {
     return 1;
 }
 
+# If more accuracy is wanted/needed, Chris Leach sent me this patch...
+ 
+ # leach,> *** /install/perl/live/lib/CPAN.pm-	Wed Sep 24 13:08:48 1997
+ # leach,> --- /tmp/cp	Wed Sep 24 13:26:40 1997
+ # leach,> ***************
+ # leach,> *** 1562,1567 ****
+ # leach,> --- 1562,1580 ----
+ # leach,>       return 1 if substr($url,0,4) eq "file";
+ # leach,>       return 1 unless $url =~ m|://([^/]+)|;
+ # leach,>       my $host = $1;
+ # leach,> +     my $proxy = $CPAN::Config->{'http_proxy'} || $ENV{'http_proxy'};
+ # leach,> +     if ($proxy) {
+ # leach,> +         $proxy =~ m|://([^/:]+)|;
+ # leach,> +         $proxy = $1;
+ # leach,> +         my $noproxy = $CPAN::Config->{'no_proxy'} || $ENV{'no_proxy'};
+ # leach,> +         if ($noproxy) {
+ # leach,> +             if ($host !~ /$noproxy$/) {
+ # leach,> +                 $host = $proxy;
+ # leach,> +             }
+ # leach,> +         } else {
+ # leach,> +             $host = $proxy;
+ # leach,> +         }
+ # leach,> +     }
+ # leach,>       require Net::Ping;
+ # leach,>       return 1 unless $Net::Ping::VERSION >= 2;
+ # leach,>       my $p;
+
+
+# this is quite optimistic and returns one on several occasions where
+# inappropriate. But this does no harm. It would do harm if we were
+# too pessimistic (as I was before the http_proxy
 sub is_reachable {
     my($self,$url) = @_;
     return 1; # we can't simply roll our own, firewalls may break ping
     return 0 unless $url;
     return 1 if substr($url,0,4) eq "file";
-    return 1 unless $url =~ m|://([^/]+)|;
-    my $host = $1;
+    return 1 unless $url =~ m|^(\w+)://([^/]+)|;
+    my $proxytype = $1 . "_proxy"; # ftp_proxy or http_proxy
+    my $host = $2;
+    return 1 if $CPAN::Config->{$proxytype} || $ENV{$proxytype};
     require Net::Ping;
     return 1 unless $Net::Ping::VERSION >= 2;
     my $p;
+    # 1.3101 had it different: only if the first eval raised an
+    # exception we tried it with TCP. Now we are happy if icmp wins
+    # the order and return, we don't even check for $@. Thanks to
+    # thayer@uis.edu for the suggestion.
     eval {$p = Net::Ping->new("icmp");};
-    eval {$p = Net::Ping->new("tcp");} if $@;
+    return 1 if $p && ref($p) && $p->ping($host, 10);
+    eval {$p = Net::Ping->new("tcp");};
     $CPAN::Frontend->mydie($@) if $@;
-    return $p->ping($host, 3);
+    return $p->ping($host, 10);
 }
 
 #-> sub CPAN::FTP::localize ;
@@ -1619,7 +1663,6 @@ sub localize {
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
     my(@reordered,$last);
-#line 1621
     $last = $#{$CPAN::Config->{urllist}};
     if ($force & 2) { # local cpans probably out of date, don't reorder
 	@reordered = (0..$last);
@@ -1738,10 +1781,13 @@ sub hosteasy {
 		    $Thesite = $i;
 		    return $aslocal;
 		} else {
-		    next HOSTEASY ;
+		  # next HOSTEASY ;
 		}
 	    } else {
-		next HOSTEASY ;
+	      # Alan Burlison informed me that in firewall envs Net::FTP
+	      # can still succeed where LWP fails. So we do not skip
+	      # Net::FTP anymore when LWP is available.
+	      # next HOSTEASY ;
 	    }
 	}
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
@@ -1761,7 +1807,7 @@ sub hosteasy {
 		if ($aslocal !~ /\.gz$/) {
 		    my $gz = "$aslocal.gz";
 		    $CPAN::Frontend->myprint("Fetching with Net::FTP
-   $gz
+  $gz
 ");
 		    if (CPAN::FTP->ftp_get($host,
 				       $dir,
@@ -1772,7 +1818,7 @@ sub hosteasy {
 			return $aslocal;
 		    }
 		}
-		next HOSTEASY;
+		# next HOSTEASY;
 	    }
 	}
     }
@@ -2006,6 +2052,7 @@ Subprocess "|$command"
 
 # find2perl needs modularization, too, all the following is stolen
 # from there
+# CPAN::FTP::ls
 sub ls {
     my($self,$name) = @_;
     my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$sizemm,
@@ -2230,7 +2277,8 @@ sub reload {
     my($cl,$force) = @_;
     my $time = time;
 
-    # XXX check if a newer one is available. (We currently read it from time to time)
+    # XXX check if a newer one is available. (We currently read it
+    # from time to time)
     for ($CPAN::Config->{index_expire}) {
 	$_ = 0.001 unless $_ > 0.001;
     }
@@ -2239,9 +2287,11 @@ sub reload {
     my($debug,$t2);
     $last_time = $time;
 
+    my $needshort = $^O eq "dos";
+
     $cl->rd_authindex($cl->reload_x(
 				    "authors/01mailrc.txt.gz",
-				    "01mailrc.gz",
+				    $needshort ? "01mailrc.gz" : "",
 				    $force));
     $t2 = time;
     $debug = "timing reading 01[".($t2 - $time)."]";
@@ -2249,7 +2299,7 @@ sub reload {
     return if $CPAN::Signal; # this is sometimes lengthy
     $cl->rd_modpacks($cl->reload_x(
 				   "modules/02packages.details.txt.gz",
-				   "02packag.gz",
+				   $needshort ? "02packag.gz" : "",
 				   $force));
     $t2 = time;
     $debug .= "02[".($t2 - $time)."]";
@@ -2257,7 +2307,7 @@ sub reload {
     return if $CPAN::Signal; # this is sometimes lengthy
     $cl->rd_modlist($cl->reload_x(
 				  "modules/03modlist.data.gz",
-				  "03mlist.gz",
+				  $needshort ? "03mlist.gz" : "",
 				  $force));
     $t2 = time;
     $debug .= "03[".($t2 - $time)."]";
@@ -2271,6 +2321,7 @@ sub reload_x {
     $force |= 2; # means we're dealing with an index here
     CPAN::Config->load; # we should guarantee loading wherever we rely
                         # on Config XXX
+    $localname ||= $wanted;
     my $abs_wanted = MM->catfile($CPAN::Config->{'keep_source_where'},
 				   $localname);
     if (
@@ -2593,25 +2644,32 @@ sub get {
 	}
 	my($makefilepl) = MM->catfile($packagedir,"Makefile.PL");
 	unless (-f $makefilepl) {
-	    my($configure) = MM->catfile($packagedir,"Configure");
-	    if (-f $configure) {
-		# do we have anything to do?
-		$self->{'configure'} = $configure;
-	    } else {
-		my $fh = FileHandle->new(">$makefilepl")
-		    or Carp::croak("Could not open >$makefilepl");
-		my $cf = $self->called_for || "unknown";
-		$fh->print(
+	  my($configure) = MM->catfile($packagedir,"Configure");
+	  if (-f $configure) {
+	    # do we have anything to do?
+	    $self->{'configure'} = $configure;
+	  } elsif (-f MM->catfile($packagedir,"Makefile")) {
+	    $CPAN::Frontend->myprint(qq{
+Package comes with a Makefile and without a Makefile.PL.
+We\'ll try to build it with that Makefile then.
+});
+	    $self->{writemakefile} = "YES";
+	    sleep 2;
+	  } else {
+	    my $fh = FileHandle->new(">$makefilepl")
+		or Carp::croak("Could not open >$makefilepl");
+	    my $cf = $self->called_for || "unknown";
+	    $fh->print(
 qq{# This Makefile.PL has been autogenerated by the module CPAN.pm
 # because there was no Makefile.PL supplied.
 # Autogenerated on: }.scalar localtime().qq{
 
-		    use ExtUtils::MakeMaker;
-		    WriteMakefile(NAME => q[$cf]);
+use ExtUtils::MakeMaker;
+WriteMakefile(NAME => q[$cf]);
 
 });
-		$CPAN::Frontend->myprint(qq{Package comes without Makefile.PL.\n}.
-		    qq{  Writing one on our own (calling it $cf)\n});
+	    $CPAN::Frontend->myprint(qq{Package comes without Makefile.PL.
+  Writing one on our own (calling it $cf)\n});
 	    }
 	}
     }
@@ -2711,6 +2769,7 @@ sub readme {
 				      $local_wanted)
 	or $CPAN::Frontend->mydie(qq{No $sans.readme found});;
     my $fh_pager = FileHandle->new;
+    local($SIG{PIPE}) = "IGNORE";
     $fh_pager->open("|$CPAN::Config->{'pager'}")
 	or die "Could not open pager $CPAN::Config->{'pager'}: $!";
     my $fh_readme = FileHandle->new;
@@ -2812,8 +2871,8 @@ sub MD5_check_file {
 							   $self->{CPAN_USERID}
 							  )->as_string);
 	    my $wrap = qq{I\'d recommend removing $file. It seems to
-be a bogus file.  Maybe you have configured your \`urllist\' with a
-bad URL.  Please check this array with \`o conf urllist\', and
+be a bogus file. Maybe you have configured your \`urllist\' with a
+bad URL. Please check this array with \`o conf urllist\', and
 retry.};
 	    $CPAN::Frontend->myprint(Text::Wrap::wrap("","",$wrap));
 	    $CPAN::Frontend->myprint("\n\n");
@@ -2859,6 +2918,19 @@ sub force {
     delete $self->{'writemakefile'};
 }
 
+sub isa_perl {
+  my($self) = @_;
+  my $file = File::Basename::basename($self->id);
+  return unless $file =~ m{ ^ perl
+			    (5)
+			    ([._-])
+			    (\d{3}(_[0-4][0-9])?)
+			    \.tar[._-]gz
+			    $
+			  }x;
+  "$1.$3";
+}
+
 #-> sub CPAN::Distribution::perl ;
 sub perl {
     my($self) = @_;
@@ -2888,6 +2960,29 @@ sub perl {
 sub make {
     my($self) = @_;
     $CPAN::Frontend->myprint(sprintf "Running make for %s\n", $self->id);
+    # Emergency brake if they said install Pippi and get newest perl
+    if ($self->isa_perl) {
+      if (
+	  $self->called_for ne $self->id && ! $self->{'force_update'}
+	 ) {
+	$CPAN::Frontend->mydie(sprintf qq{
+The most recent version "%s" of the module "%s"
+comes with the current version of perl (%s).
+I\'ll build that only if you ask for something like
+    force install %s
+or
+    install %s
+},
+			       $CPAN::META->instance(
+						     'CPAN::Module',
+						     $self->called_for
+						    )->cpan_version,
+			       $self->called_for,
+			       $self->isa_perl,
+			       $self->called_for,
+			       $self->id);
+      }
+    }
     $self->get;
   EXCUSE: {
 	my @e;
@@ -2913,7 +3008,7 @@ sub make {
 
     my $system;
     if ($self->{'configure'}) {
-	$system = $self->{'configure'};
+      $system = $self->{'configure'};
     } else {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
 	my $switch = "";
@@ -2923,7 +3018,7 @@ sub make {
 #	    if $] > 5.00310;
 	$system = "$perl $switch Makefile.PL $CPAN::Config->{makepl_arg}";
     }
-    {
+    unless (exists $self->{writemakefile}) {
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
 	my($ret,$pid);
 	$@ = "";
@@ -2958,8 +3053,8 @@ sub make {
 		return;
 	    }
 	}
+	$self->{writemakefile} = "YES";
     }
-    $self->{writemakefile} = "YES";
     return if $CPAN::Signal;
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
     if (system($system) == 0) {
@@ -3315,23 +3410,8 @@ sub as_string {
 		     $stati{$self->{stati}}
 		    ) if $self->{statd};
     my $local_file = $self->inst_file;
-    if ($local_file && ! exists $self->{MANPAGE}) {
-	my $fh = FileHandle->new($local_file)
-	    or Carp::croak("Couldn't open $local_file: $!");
-	my $inpod = 0;
-	my(@result);
-	local $/ = "\n";
-	while (<$fh>) {
-	    $inpod = /^=(?!head1\s+NAME)/ ? 0 :
-		/^=head1\s+NAME/ ? 1 : $inpod;
-	    next unless $inpod;
-	    next if /^=/;
-	    next if /^\s+$/;
-	    chomp;
-	    push @result, $_;
-	}
-	close $fh;
-	$self->{MANPAGE} = join " ", @result;
+    if ($local_file) {
+      $self->{MANPAGE} ||= $self->manpage_headline($local_file);
     }
     my($item);
     for $item (qw/MANPAGE CONTAINS/) {
@@ -3343,6 +3423,33 @@ sub as_string {
     push @m, sprintf($sprintf, 'INST_VERSION',
 		     $self->inst_version) if $local_file;
     join "", @m, "\n";
+}
+
+sub manpage_headline {
+  my($self,$local_file) = @_;
+  my(@local_file) = $local_file;
+  $local_file =~ s/\.pm$/.pod/;
+  push @local_file, $local_file;
+  my(@result);
+  for my $locf (@local_file) {
+    next unless -f $locf;
+    my $fh = FileHandle->new($locf)
+	or $Carp::Frontend->mydie("Couldn't open $locf: $!");
+    my $inpod = 0;
+    local $/ = "\n";
+    while (<$fh>) {
+      $inpod = /^=(?!head1\s+NAME)/ ? 0 :
+	  /^=head1\s+NAME/ ? 1 : $inpod;
+      next unless $inpod;
+      next if /^=/;
+      next if /^\s+$/;
+      chomp;
+      push @result, $_;
+    }
+    close $fh;
+    last if @result;
+  }
+  join " ", @result;
 }
 
 #-> sub CPAN::Module::cpan_file ;
@@ -3540,9 +3647,9 @@ The interactive mode is entered by running
 
     perl -MCPAN -e shell
 
-which puts you into a readline interface. You will have most fun if
+which puts you into a readline interface. You will have the most fun if
 you install Term::ReadKey and Term::ReadLine to enjoy both history and
-completion.
+command completion.
 
 Once you are on the command line, type 'h' and the rest should be
 self-explanatory.
@@ -3558,15 +3665,15 @@ for each of the four categories and another, C<i> for any of the
 mentioned four. Each of the four entities is implemented as a class
 with slightly differing methods for displaying an object.
 
-Arguments you pass to these commands are either strings matching exact
+Arguments you pass to these commands are either strings exactly matching
 the identification string of an object or regular expressions that are
 then matched case-insensitively against various attributes of the
-objects. The parser recognizes a regualar expression only if you
+objects. The parser recognizes a regular expression only if you
 enclose it between two slashes.
 
 The principle is that the number of found objects influences how an
-item is displayed. If the search finds one item, we display the result
-of object-E<gt>as_string, but if we find more than one, we display
+item is displayed. If the search finds one item, the result is displayed
+as object-E<gt>as_string, but if we find more than one, we display
 each as object-E<gt>as_glimpse. E.g.
 
     cpan> a ANDK
@@ -3587,27 +3694,28 @@ each as object-E<gt>as_glimpse. E.g.
 
 =item make, test, install, clean  modules or distributions
 
-These commands do indeed exist just as written above. Each of them
-takes any number of arguments and investigates for each what it might
-be. Is it a distribution file (recognized by embedded slashes), this
-file is being processed. Is it a module, CPAN determines the
-distribution file where this module is included and processes that.
+These commands take any number of arguments and investigate what is
+necessary to perform the action. If the argument is a distribution
+file name (recognized by embedded slashes), it is processed. If it is a
+module, CPAN determines the distribution file in which this module is
+included and processes that.
 
-Any C<make>, C<test>, and C<readme> are run unconditionally. A
+Any C<make> or C<test> are run unconditionally. An
 
   install <distribution_file>
 
-also is run unconditionally.  But for
+also is run unconditionally. But for
 
   install <module>
 
 CPAN checks if an install is actually needed for it and prints
-I<Foo up to date> in case the module doesnE<39>t need to be updated.
+I<module up to date> in the case that the distribution file containing
+the module doesnE<39>t need to be updated.
 
 CPAN also keeps track of what it has done within the current session
 and doesnE<39>t try to build a package a second time regardless if it
-succeeded or not. The C<force > command takes as first argument the
-method to invoke (currently: make, test, or install) and executes the
+succeeded or not. The C<force> command takes as a first argument the
+method to invoke (currently: C<make>, C<test>, or C<install>) and executes the
 command from scratch.
 
 Example:
@@ -3620,13 +3728,19 @@ Example:
     OpenGL-0.4/COPYRIGHT
     [...]
 
+A C<clean> command results in a 
+
+  make clean
+
+being executed within the distribution file's working directory.
+
 =item readme, look module or distribution
 
 These two commands take only one argument, be it a module or a
-distribution file. C<readme> displays the README of the associated
-distribution file. C<Look> gets and untars (if not yet done) the
-distribution file, changes to the appropriate directory and opens a
-subshell process in that directory.
+distribution file. C<readme> unconditionally runs, displaying the
+README of the associated distribution file. C<Look> gets and
+untars (if not yet done) the distribution file, changes to the
+appropriate directory and opens a subshell process in that directory.
 
 =back
 
@@ -3653,15 +3767,14 @@ current date and a counter.
 recompile() is a very special command in that it takes no argument and
 runs the make/test/install cycle with brute force over all installed
 dynamically loadable extensions (aka XS modules) with 'force' in
-effect. Primary purpose of this command is to finish a network
+effect. The primary purpose of this command is to finish a network
 installation. Imagine, you have a common source tree for two different
 architectures. You decide to do a completely independent fresh
 installation. You start on one architecture with the help of a Bundle
 file produced earlier. CPAN installs the whole Bundle for you, but
 when you try to repeat the job on the second architecture, CPAN
 responds with a C<"Foo up to date"> message for all modules. So you
-will be glad to run recompile in the second architecture and
-youE<39>re done.
+invoke CPAN's recompile on the second architecture and youE<39>re done.
 
 Another popular use for C<recompile> is to act as a rescue in case your
 perl breaks binary compatibility. If one of the modules that CPAN uses
@@ -3670,13 +3783,13 @@ commands), then you should try the CPAN::Nox module for recovery.
 
 =head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
-Although it may be considered internal, the class hierarchie does
-matter for both users and programmer. CPAN.pm deals with above
-mentioned four classes, and all those classes share a set of
-methods. It is a classical single polymorphism that is in effect.  A
-metaclass object registers all objects of all kinds and indexes them
-with a string. The strings referencing objects have a separated
-namespace (well, not completely separated):
+Although it may be considered internal, the class hierarchy does matter
+for both users and programmer. CPAN.pm deals with above mentioned four
+classes, and all those classes share a set of methods. A classical
+single polymorphism is in effect. A metaclass object registers all
+objects of all kinds and indexes them with a string. The strings
+referencing objects have a separated namespace (well, not completely
+separated):
 
          Namespace                         Class
 
@@ -3685,20 +3798,20 @@ namespace (well, not completely separated):
           everything else            Module or Author
 
 Modules know their associated Distribution objects. They always refer
-to the most recent official release. Developers may mark their
-releases as unstable development versions (by inserting an underbar
-into the visible version number), so not always is the default
-distribution for a given module the really hottest and newest. If a
-module Foo circulates on CPAN in both version 1.23 and 1.23_90,
-CPAN.pm offers a convenient way to install version 1.23 by saying
+to the most recent official release. Developers may mark their releases
+as unstable development versions (by inserting an underbar into the
+visible version number), so the really hottest and newest distribution
+file is not always the default.  If a module Foo circulates on CPAN in
+both version 1.23 and 1.23_90, CPAN.pm offers a convenient way to
+install version 1.23 by saying
 
     install Foo
 
 This would install the complete distribution file (say
-BAR/Foo-1.23.tar.gz) with all accompanying material in there. But if
-you would like to install version 1.23_90, you need to know where the
+BAR/Foo-1.23.tar.gz) with all accompanying material. But if you would
+like to install version 1.23_90, you need to know where the
 distribution file resides on CPAN relative to the authors/id/
-directory. If the author is BAR, this might be BAR/Foo-1.23_90.tar.gz,
+directory. If the author is BAR, this might be BAR/Foo-1.23_90.tar.gz;
 so you would have to say
 
     install BAR/Foo-1.23_90.tar.gz
@@ -3712,7 +3825,7 @@ If you do not enter the shell, the available shell commands are both
 available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
 functions in the calling package (C<install(...)>).
 
-There's currently only one class that has a stable interface,
+There's currently only one class that has a stable interface -
 CPAN::Shell. All commands that are available in the CPAN shell are
 methods of the class CPAN::Shell. Each of the commands that produce
 listings of modules (C<r>, C<autobundle>, C<u>) returns a list of the
@@ -3780,7 +3893,7 @@ define any functions or methods. It usually only contains documentation.
 
 It starts like a perl module with a package declaration and a $VERSION
 variable. After that the pod section looks like any other pod with the
-only difference, that I<one special pod section> exists starting with
+only difference being that I<one special pod section> exists starting with
 (verbatim):
 
 	=head1 CONTENTS
@@ -3790,7 +3903,7 @@ In this pod section each line obeys the format
         Module_Name [Version_String] [- optional text]
 
 The only required part is the first field, the name of a module
-(eg. Foo::Bar, ie. I<not> the name of the distribution file). The rest
+(e.g. Foo::Bar, ie. I<not> the name of the distribution file). The rest
 of the line is optional. The comment part is delimited by a dash just
 as in the man page header.
 
@@ -3799,7 +3912,7 @@ other distributions.
 
 Bundles are treated specially in the CPAN package. If you say 'install
 Bundle::Tkkit' (assuming such a bundle exists), CPAN will install all
-the modules in the CONTENTS section of the pod.  You can install your
+the modules in the CONTENTS section of the pod. You can install your
 own Bundles locally by placing a conformant Bundle file somewhere into
 your @INC path. The autobundle() command which is available in the
 shell interface does that for you by including all currently installed
@@ -3824,9 +3937,9 @@ This module presumes that all packages on CPAN
 =item *
 
 declare their $VERSION variable in an easy to parse manner. This
-prerequisite can hardly be relaxed because it consumes by far too much
+prerequisite can hardly be relaxed because it consumes far too much
 memory to load all packages into the running program just to determine
-the $VERSION variable . Currently all programs that are dealing with
+the $VERSION variable. Currently all programs that are dealing with
 version use something like this
 
     perl -MExtUtils::MakeMaker -le \
@@ -3838,7 +3951,7 @@ parsed, please try the above method.
 =item *
 
 come as compressed or gzipped tarfiles or as zip files and contain a
-Makefile.PL (well we try to handle a bit more, but without much
+Makefile.PL (well, we try to handle a bit more, but without much
 enthusiasm).
 
 =back
@@ -3852,7 +3965,7 @@ synchronicity, and of bugs within CPAN.pm.
 
 In interactive mode you can try "o debug" which will list options for
 debugging the various parts of the package. The output may not be very
-useful for you as it's just a byproduct of my own testing, but if you
+useful for you as it's just a by-product of my own testing, but if you
 have an idea which part of the package may have a bug, it's sometimes
 worth to give it a try and send me more specific output. You should
 know that "o debug" has built-in completion support.
@@ -3870,7 +3983,7 @@ with this floppy.
 
 =head1 CONFIGURATION
 
-When the CPAN module is installed a site wide configuration file is
+When the CPAN module is installed, a site wide configuration file is
 created as CPAN/Config.pm. The default values defined there can be
 overridden in another configuration file: CPAN/MyConfig.pm. You can
 store this file in $HOME/.cpan/CPAN/MyConfig.pm if you want, because
@@ -3882,16 +3995,16 @@ defined:
 
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
-  index_expire       after how many days refetch index files
+  index_expire       after this many days refetch index files
   cpan_home          local directory reserved for this package
   gzip		     location of external program gzip
-  inactivity_timeout breaks interactive Makefile.PLs after that
+  inactivity_timeout breaks interactive Makefile.PLs after this
                      many seconds inactivity. Set to 0 to never break.
   inhibit_startup_message
                      if true, does not print the startup message
   keep_source        keep the source in a local directory?
-  keep_source_where  where keep the source (if we do)
-  make               location of external program make
+  keep_source_where  directory in which to keep the source (if we do)
+  make               location of external make program
   make_arg	     arguments that should always be passed to 'make'
   make_install_arg   same as make_arg for 'make install'
   makepl_arg	     arguments passed to 'perl Makefile.PL'
@@ -3960,13 +4073,18 @@ oneliners.
 
 =head1 BUGS
 
-we should give coverage for _all_ of the CPAN and not just the
-PAUSE part, right? In this discussion CPAN and PAUSE have become
-equal -- but they are not. PAUSE is authors/ and modules/. CPAN is
-PAUSE plus the clpa/, doc/, misc/, ports/, src/, scripts/.
+We should give coverage for _all_ of the CPAN and not just the PAUSE
+part, right? In this discussion CPAN and PAUSE have become equal --
+but they are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus
+the clpa/, doc/, misc/, ports/, src/, scripts/.
 
 Future development should be directed towards a better integration of
 the other parts.
+
+If a Makefile.PL requires special customization of libraries, prompts
+the user for special input, etc. then you may find CPAN is not able to
+build the distribution. In that case, you should attempt the
+traditional method of building a Perl module package from a shell.
 
 =head1 AUTHOR
 

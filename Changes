@@ -1,8 +1,62 @@
 Revision history for Perl extension CPAN.
 
-Todo: CPAN.pm: How to live without CHECKSUM files?
-      CPAN.pm: Security layer completely configurable
-      CPAN.pm: make plugins configurable, adjust @ISA
+=head2 January 2, 1998: v1.32
+
+This release fixes the most urgent bugs reported during the last 5
+months. See the Todo file for unfixed bugs and planned features.
+Please let me know if your bug report isn't addressed in one of the
+"Changes" or "Todo" file. Let me know, if your favorite feature
+request doesn't show up there. Maybe I've overlooked something. Thank
+you.
+
+CPAN::Config::load no longer changes @INC (bug spotted by Ed Peschko)
+
+Build a new perl only when C<force> is in effect or they asked for it
+via the Distribution name. (Thanks to Ulrich Pfeifer and many others
+for reporting this)
+
+Reenabled the Cache Manager that was disabled for a long time, I don't
+know why. Thanks to Paul-Joseph de Werk <Paul.deWerk@MCI.Com> and
+Hallvard B Furuseth <h.b.furuseth@usit.uio.no> for spotting the bug.
+
+Fixed a "Use of undefined value" warning in the completion when
+words==2.
+
+Fixed the signal handling code to go back to the cpan prompt and not
+leave the shell loop. Still a second ^C is interpreted as user panic
+which causes a cleanup and bye bye. (Thanks to Tom, Jarkko and Ilya
+for reporting the deficiency in the old code)
+
+If LWP is present, Net::FTP is now being tried directly. It turned out
+that some networks setups work well with only one of them, not the
+other (Thanks for the reports from e.g. Alan Burlison, Stephen Zander,
+Phil Aston, et al.).
+
+If a package comes with a Makefile but no Makefile.PL, we now try to
+use that Makefile. Previously we overwrote the delivered Makefile.
+(Thanks to Larry Virden for spotting that)
+
+The MANPAGE headline now gets extracted from a .pod file if the .pm
+file doesn't contain any.
+
+=head2 October, 1997
+
+In CPAN::FTP::hosteasy no longer skip Net::FTP when LWP is available.
+Thanks to Alan Burlison for the report.
+
+=head2 September, 1997
+
+Made it 5.003 compatible again.
+
+Applied a *big* documentation patch by Larry Virden. Thank You, Larry!
+
+=head2 September, 1997
+
+Hugo van der Sanden sent me a patch to (a) ignore a SIGPIPE when in
+the readme, and (b) enable the cache to be used as an incomplete CPAN
+site that in turn offers its files via ftp. The index files are now
+stored with their original names instead of the 8.3 counterparts. I
+very much like this new feature. Thanks, Hugo!
 
 =head2 still September, 1997
 

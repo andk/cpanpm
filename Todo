@@ -1,0 +1,47 @@
+Make a preferred download method configurable (allow further download
+methods via plugin?)
+
+Allow different site preferences for index files and other files
+
+Replace tar, gzip, and make with Archive::Tar, Compress::Zlib, and
+Make
+
+Determine how to live without CHECKSUM files (e.g. not available)
+
+Distribute compressed CHECKSUM files
+
+Security layer
+
+make plugins configurable, adjust @ISA
+
+Distribute a file with timestamps. Interface could be: 'n 7' for new
+arrivals in the last 7 days.
+
+Start documenting the class model
+
+Make configurable that multiple additional index files can be
+integrated (for Intra-CPANs)
+
+Make DSLI more meaningful to reflect the availablity in CPAN (D-entry
+uppercase if module available on CPAN)
+
+Make the 'make' command itself configurable as suggested by Rujith de
+Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
+instead of 'make install'. (Fixing this is delayed, because it
+interacts with Make.pm)
+
+Parse the output of 'perl Makefile.PL' for warnings from PREREQ_PM and
+react accordingly (my favorite feature request by Randal). This might
+become a (too?) big endeavour if we extend that to third party
+software.
+
+I should study RPM. Too bad it doesn't work *at all* on my Linux box.
+RPM gurus are welcome to help me. I just don't enjoy software that
+doesn't work out of the box on my own box :-(
+
+Make the FirstTime dialog more Absolutely-First-Time-Without-Any-Clue
+style. Thanks to Mike Heins for providing me with insights how users
+feel when they haven't heard of CPAN ever before. Offering
+autodetermination of a CPAN site might help. Offering something like a
+Configure -des might help. Still thinking.
+

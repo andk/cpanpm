@@ -41,7 +41,33 @@ ftp.is.co.za:
 # dst_contact      = "mailto:ftp-admin@is.co.za"
 # dst_src          = "ftp://ftp.cis.ufl.edu/pub/perl/CPAN/"
 
+ftpza.co.za:
+  frequency        = "daily"
+  dst_directory    = "ftpza.co.za:/pub/mirrors/cpan/"
+  dst_location     = "Pretoria, South Africa, Africa (25.55S 28.0E)"
+  dst_organization = "M-Web"    
+  dst_timezone     = "GMT+2" 
+  dst_contact      = "ftp@mweb.co.za"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://ftpza.co.za/pub/mirrors/cpan/"
+# dst_contact      = "mailto:ftp@mweb.co.za" 
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
 # Asia
+
+freesoft.cei.gov.vn:
+  frequency        = "daily"
+  dst_directory    = "freesoft.cei.gov.cn:/pub/languages/perl/CPAN/"
+  dst_location     = "Beijing, China, Asia (39.92N 116.42E)"
+  dst_organisation = "Chinese Economic Information Net"
+  dst_timezone     = "GMT+8"
+  dst_contact      = "postman@freesoft.cei.gov.cn"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN"
+
+# dst_dst          = "ftp://freesoft.cei.gov.cn/pub/languages/perl/CPAN/"
+# dst_contact      = "mailto:postman@freesoft.cei.gv.cn"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.hkstar.com:
   frequency        = "daily"
@@ -55,6 +81,20 @@ ftp.hkstar.com:
 # dst_dst          = "ftp://ftp.hkstar.com/pub/CPAN/"
 # dst_contact      = "mailto:ftpadmin@hkstar.com"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+bioinfo.weizmann.ac.il:
+  frequency        = "daily"
+  dst_directory    = "bioinfo.weizmann.ac.il:/pub/software/perl/CPAN/"
+  dst_location     = "Rehovot, Israel, Asia (31.47N 35.14E)"
+  dst_organisation = "Weizmann Institute of Science"
+  dst_timezone     = "GMT+2"
+  dst_contact      = "ftpmaster@bioinfo.weizmann.ac.il"
+  dst_http         = "http://bioinfo.weizmann.ac.il/pub/software/perl/CPAN/"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN"
+
+# dst_dst          = "ftp://bioinfo.weizmann.ac.il/pub/software/perl/CPAN/","http://bioinfo.weizmann.ac.il/pub/software/perl/CPAN/"
+# dst_contact      = "mailto:ftpmaster@bioinfo.weizmann.ac.il"
+# dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN"
 
 ftp.dti.ad.jp:
   frequency        = "daily"
@@ -153,11 +193,11 @@ ftp.wownet.net:
   dst_location     = "Taipei, Taiwan, Asia (25N 121.5E)"
   dst_organization = "WOWNET Network Service Corporation"
   dst_timezone     = "GMT+8"
-  dst_contact      = "root@wownet.net"
+  dst_contact      = "service@wownet.net"
   dst_src          = "dongpo.math.ncu.edu.tw:/perl/CPAN/"
 
 # dst_dst          = "ftp://ftp.wownet.net/pub2/PERL/"
-# dst_contact      = "mailto:root@wownet.net"
+# dst_contact      = "mailto:service@wownet.net"
 # dst_src          = "ftp://dongpo.math.ncu.edu.tw/perl/CPAN/"
 
 ftp.riubon.ac.th:
@@ -174,6 +214,19 @@ ftp.riubon.ac.th:
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 # Australasia
+
+cpan.topend.com.au:
+  frequency        = "daily"
+  dst_directory    = "cpan.topend.com.au:/pub/CPAN/"
+  dst_location     = "Darwin, Australia, Australasia (12.43S 130.93E)"
+  dst_organisation = "Topend.Com.Au"
+  dst_timezone     = "GMT+9:30"
+  dst_contact      = "nagy@topend.com.au"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://cpan.topend.com.au/pub/CPAN/"
+# dst_contact      = "mailto:topend.com.au"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.motd.com:
   frequency        = "daily"
@@ -362,16 +415,17 @@ ftp.pasteur.fr:
 # dst_contact      = "mailto:netmaster@pasteur.fr"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
-ftp.Germany.EU.net:
-  frequency        = "daily"
-  dst_directory    = "ftp.Germany.EU.net:/pub/programming/perl/CPAN"
-  dst_location     = "Dortmund, Germany, Europe (51.3N 7.5E)"
-  dst_organization = "EUnet Deutschland GmbH"
-  dst_timezone     = "GMT+1"
-  dst_contact      = "archive-admin@ftp.Germany.EU.net"
-  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+# The pub/programming gives I/O errors. 1997-11-02
+# ftp.archive.de.uu.net:
+#  frequency        = "daily"
+#  dst_directory    = "ftp.archive.de.uu.net:/pub/programming/perl/CPAN"
+#  dst_location     = "Dortmund, Germany, Europe (51.3N 7.5E)"
+#  dst_organization = "EUnet Deutschland GmbH"
+#  dst_timezone     = "GMT+1"
+#  dst_contact      = "archive-admin@ftp.Germany.EU.net"
+#  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://ftp.Germany.EU.net/pub/programming/perl/CPAN/"
+# dst_dst          = "ftp://ftp.archive.de.uu.net/pub/programming/perl/CPAN/"
 # dst_contact      = "mailto:archive-admi@ftp.Germany.EU.net"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
@@ -530,8 +584,21 @@ ftp.EU.net:
   dst_contact      = "postmaster@EU.net"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://ftp.EU.net/packages/cpan/" 
+# dst_dst          = "ftp://ftp.EU.net/packages/cpan/"
 # dst_contact      = "mailto:postmaster@EU.net"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+sunsite.uio.no:
+  frequency        = "daily"
+  dst_directory    = "sunsite.uio.no:/pub/languages/perl/CPAN/"
+  dst_location     = "Oslo, Norway, Europe (59.93N 10.73E)"
+  dst_organisation = "Universitetet i Oslo; University of Oslo"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "sunsite@usit.uio.no"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+
+# dst_dst          = "ftp://sunsite.uio.no/pub/languages/perl/CPAN/"
+# dst_contact      = "mailto:sunsite@usit.uio.no"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.uit.no:
@@ -614,7 +681,7 @@ ftp.dntis.ro:
 
 ftp.dnttm.ro:
   frequency        = "daily"
-  dst_directory    = "ftp.dnttm.ro:/pub/CPAN"
+  dst_directory    = "ftp.dnttm.ro:/pub/CPAN/"
   dst_location     = "Timisoara, Romania, Europe (45.75N 21.22E)"
   dst_organization = "Dynamic Network Technologies Romania"
   dst_timezone     = "GMT+2"

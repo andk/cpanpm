@@ -3,6 +3,7 @@ MANIFEST
 MIRRORED.BY
 Makefile.PL
 README
+Todo
 lib/CPAN.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm
