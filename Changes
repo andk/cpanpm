@@ -1,5 +1,22 @@
 Revision history for Perl extension CPAN.
 
+=head2 Feb 5, 1997
+
+Changed warn to print for the "Reading..." messages.
+
+1.19 issued the ->load command too early, so inheritance was not yet
+set up correctly. Now later.
+
+Inserted the -Mops test suggested by Tim Bunce. Backed it out again,
+because it caches too many Makefie.PLs. Restructured
+CPAN::Distribution::make preparing for better (i.e. arbitrary) safety
+handlers. Not yet finished.
+
+Workaround for bug in _25: return statements at the end of
+subroutines.
+
+released 1.20
+
 =head2 Feb 3, 1997
 
 With ReadLine suppressed, CPAN didn't exit of EOF. Fix by Roderick

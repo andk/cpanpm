@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.19';
+$VERSION = '1.20';
 
-# $Id: CPAN.pm,v 1.121 1997/02/03 09:08:23 k Exp $
+# $Id: CPAN.pm,v 1.122 1997/02/05 09:32:20 k Exp $
 
-# my $version = substr q$Revision: 1.121 $, 10; # only used during development
+# my $version = substr q$Revision: 1.122 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -55,8 +55,6 @@ use strict qw(vars);
 
 $META ||= new CPAN;                 # In case we reeval ourselves we
                                     # need a ||
-
-CPAN::Config->load unless defined $CPAN::No_Config_is_ok;
 
 @EXPORT = qw( 
 	     autobundle bundle expand force get
@@ -782,7 +780,7 @@ sub AUTOLOAD {
 	    CPAN::WAIT->wh;
 	    return;
 	} else {
-	    warn qq{
+	    print STDERR qq{
 Commands starting with "w" require CPAN::WAIT to be installed.
 Please consider installing CPAN::WAIT to use the fulltext index.
 Type "install CPAN::WAIT" and restart CPAN.pm.
@@ -1361,7 +1359,7 @@ sub localize {
 	    return $l if -f $l && -r _;
 	    # Maybe mirror has compressed it?
 	    if (-f "$l.gz") {
-		$self->debug("found compressed $l.gz");
+		$self->debug("found compressed $l.gz") if $CPAN::DEBUG;
 		system("$CPAN::Config->{gzip} -dc $l.gz > $aslocal");
 		return $aslocal if -f $aslocal;
 	    }
@@ -1596,7 +1594,7 @@ sub new {
 		my($t) = shift @tokens;
 		if ($t eq "default"){
 		    $hasdefault++;
-		    warn "saw a default entry before tokens[@tokens]";
+		    # warn "saw a default entry before tokens[@tokens]";
 		    last NETRC;
 		}
 		last TOKEN if $t eq "macdef";
@@ -1779,7 +1777,7 @@ sub reload_x {
 sub read_authindex {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
-    warn "Going to read $index_target\n";
+    print "Going to read $index_target\n";
     my $fh = FileHandle->new("$pipe|");
     while (<$fh>) {
 	chomp;
@@ -1799,7 +1797,7 @@ sub read_authindex {
 sub read_modpacks {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
-    warn "Going to read $index_target\n";
+    print "Going to read $index_target\n";
     my $fh = FileHandle->new("$pipe|");
     while (<$fh>) {
 	next if 1../^\s*$/;
@@ -1868,7 +1866,7 @@ sub read_modpacks {
 sub read_modlist {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
-    warn "Going to read $index_target\n";
+    print "Going to read $index_target\n";
     my $fh = FileHandle->new("$pipe|");
     my $eval = "";
     while (<$fh>) {
@@ -2278,6 +2276,27 @@ sub force {
     delete $self->{'writemakefile'};
 }
 
+#-> sub CPAN::Distribution::perl ;
+sub perl {
+    my($self) = @_;
+    my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
+    $perl ||= "$CPAN::Cwd/$^X" if -x "$CPAN::Cwd/$^X";
+    unless ($perl) {
+	my ($component,$perl_name);
+      DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
+	    PATH_COMPONENT: foreach $component (MM->path(), $Config::Config{'binexp'}) {
+		  next unless defined($component) && $component;
+		  my($abs) = MM->catfile($component,$perl_name);
+		  if (MM->maybe_command($abs)) {
+		      $perl = $abs;
+		      last DIST_PERLNAME;
+		  }
+	      }
+	  }
+    }
+    $perl;
+}
+
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
@@ -2289,7 +2308,7 @@ sub make {
 	$self->{archived} eq "NO" and push @e,
 	"Is neither a tar nor a zip archive.";
 
-	$self->{unwrapped} eq "NO"   and push @e,
+	$self->{unwrapped} eq "NO" and push @e,
 	"had problems unarchiving. Please build manually";
 
 	exists $self->{writemakefile} &&
@@ -2310,24 +2329,14 @@ sub make {
     if ($self->{'configure'}) {
 	$system = $self->{'configure'};
     } else {
-	my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
-	$perl ||= "$CPAN::Cwd/$^X" if -x "$CPAN::Cwd/$^X";
-	unless ($perl) {
-	    my ($component,$perl_name);
-	    DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
-		  DIST_COMPONENT: foreach $component (MM->path(), $Config::Config{'binexp'}) {
-			next unless defined($component) && $component;
-			my($abs) = MM->catfile($component,$perl_name);
-			if (MM->maybe_command($abs)) {
-			    $perl = $abs;
-			    last DIST_PERLNAME;
-			}
-		    }
-		}
-	}
-	die "Couldn\'t find executable perl\n" unless $perl;
-	$system = "$perl Makefile.PL $CPAN::Config->{makepl_arg}";
-   }
+	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
+	my $switch = "";
+# This needs a handler that can be turned on or off:
+#	$switch = "-MExtUtils::MakeMaker ".
+#	    "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
+#	    if $] > 5.00310;
+	$system = "$perl $switch Makefile.PL $CPAN::Config->{makepl_arg}";
+    }
     $SIG{ALRM} = sub { die "inactivity_timeout reached\n" };
     my($ret,$pid);
     $@ = "";
@@ -2742,6 +2751,7 @@ sub inst_file {
 	    return $pmfile;
 	}
     }
+    return;
 }
 
 #-> sub CPAN::Module::xs_file ;
@@ -2757,6 +2767,7 @@ sub xs_file {
 	    return $xsfile;
 	}
     }
+    return;
 }
 
 #-> sub CPAN::Module::inst_version ;
@@ -2770,6 +2781,9 @@ sub inst_version {
     $have ||= 0;
     $have;
 }
+
+# Do this after you have set up the whole inheritance
+CPAN::Config->load unless defined $CPAN::No_Config_is_ok;
 
 1;
 
