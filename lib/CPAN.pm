@@ -7,13 +7,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.57_55';
+$VERSION = '1.57_56';
 
-# $Id: CPAN.pm,v 1.322 2000/08/31 08:06:14 k Exp $
+# $Id: CPAN.pm,v 1.323 2000/08/31 22:12:50 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.322 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.323 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -136,7 +136,7 @@ sub shell {
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
 	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
-	    "available (try ``install Bundle::CPAN'')";
+	    "available (try 'install Bundle::CPAN')";
 
     $CPAN::Frontend->myprint(
 			     qq{
@@ -1227,13 +1227,16 @@ $configpm initialized.
 #-> sub CPAN::Config::missing_config_data ;
 sub missing_config_data {
     my(@miss);
-    for (qw(
-	    cpan_home keep_source_where build_dir build_cache scan_cache
-	    index_expire gzip tar unzip make pager makepl_arg make_arg
-	    make_install_arg urllist inhibit_startup_message
-	    ftp_proxy http_proxy no_proxy prerequisites_policy
-	    cache_metadata
-	   )) {
+    for (
+         "cpan_home", "keep_source_where", "build_dir", "build_cache",
+         "scan_cache", "index_expire", "gzip", "tar", "unzip", "make", "pager",
+         "makepl_arg", "make_arg", "make_install_arg", "urllist",
+         "inhibit_startup_message", "ftp_proxy", "http_proxy", "no_proxy",
+         "prerequisites_policy",
+
+         # "cache_metadata" # not yet stable enough
+
+        ) {
 	push @miss, $_ unless defined $CPAN::Config->{$_};
     }
     return @miss;
@@ -2130,7 +2133,7 @@ sub localize {
             qq{Please check, if the URLs I found in your configuration file \(}.
                 join(", ", @{$CPAN::Config->{urllist}}).
                     qq{\) are valid. The urllist can be edited.},
-                        qq{E.g. with ``o conf urllist push ftp://myurl/''};
+                        qq{E.g. with 'o conf urllist push ftp://myurl/'};
         $CPAN::Frontend->myprint(Text::Wrap::wrap("","",@mess). "\n\n");
         sleep 2;
         $CPAN::Frontend->myprint("Cannot fetch $file\n\n");
@@ -3585,12 +3588,12 @@ sub MD5_check_file {
 							   $self->{CPAN_USERID}
 							  )->as_string);
 
-	    my $wrap = qq{I'd recommend removing $file. Its MD5
-checksum is incorrect. Maybe you have configured your \`urllist\' with
-a bad URL. Please check this array with \`o conf urllist\', and
+	    my $wrap = qq{I\'d recommend removing $file. Its MD5
+checksum is incorrect. Maybe you have configured your 'urllist' with
+a bad URL. Please check this array with 'o conf urllist', and
 retry.};
 
-	    $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
+            $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
 
             # former versions just returned here but this seems a
             # serious threat that deserves a die
@@ -3637,7 +3640,7 @@ sub eq_MD5 {
 # dependencies. They should not autpomatically inherit the force
 # status. But this has the downside that ^C and die() will return to
 # the prompt but will not be able to reset the force_update
-# attributes. We try to correct for it currently in the read_meta_data
+# attributes. We try to correct for it currently in the read_metadata
 # routine, and immediately before we check for a Signal. I hope this
 # works out in one of v1.57_53ff
 
@@ -4471,7 +4474,7 @@ sub cpan_file    {
 	my $email = $CPAN::META->instance(CPAN::Author,
 				      $self->{'userid'})->email;
 	unless (defined $fullname && defined $email) {
-	    return "Contact Author $self->{userid} (Try ``a $self->{userid}'')";
+	    return "Contact Author $self->{userid} (Try 'a $self->{userid}')";
 	}
 	return "Contact Author $fullname <$email>";
     } else {
@@ -4514,7 +4517,7 @@ sub rematein {
 
   Either the module has not yet been uploaded to CPAN, or it is
   temporary unavailable. Please contact the author to find out
-  more about the status. Try ``i %s''.
+  more about the status. Try 'i %s'.
 },
 			      $self->id,
 			      $self->id,
@@ -5585,7 +5588,7 @@ There are two that I can think off.
 =item SOCKS
 
 If you are using a SOCKS firewall you will need to compile perl and link
-it with the SOCKS library, this is what is normally called a ``socksified''
+it with the SOCKS library, this is what is normally called a 'socksified'
 perl. With this executable you will be able to connect to servers outside
 the firewall as if it is not there.
 
@@ -5649,6 +5652,31 @@ You may want to configure something like
   o conf make_install_arg "| tee -ai /root/.cpan/logs/make_install.out"
 
 so that STDOUT is captured in a file for later inspection.
+
+
+=item I am not root, how can I install a module in a personal directory?
+
+You will most probably like something like this:
+
+  o conf makepl_arg LIB=~/myperl/lib \
+                    INSTALLMAN1DIR=~/myperl/man/man1 \
+                    INSTALLMAN3DIR=~/myperl/man/man3
+  install Sybase::Sybperl
+
+You can make this setting permanent like all C<o conf> settings with
+C<o conf commit>.
+
+You will have to add ~/myperl/man to the MANPATH environment variable
+and also tell your perl programs to look into ~/myperl/lib, e.g. by
+including
+
+  use lib "$ENV{HOME}/myperl/lib";
+
+or setting the PERL5LIB environment variable.
+
+=item How to get a package, unwrap it, and make a change before building it?
+
+  look Sybase::Sybperl
 
 =back
 

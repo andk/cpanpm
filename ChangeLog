@@ -1,4 +1,22 @@
+2000-09-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Releasing as 1.57_56 as candidate for 5.7.0
+
+	* missing_config_data and FirstTime: declared cache_metadata as
+	not yet stable enough to turn it on per default. The reason is
+	that I want the official external data from CPAN and the generated
+	internal data from the current session clearly separated and this
+	will take another working session that I cannot provide before
+	5.7.0.
+
 2000-08-31  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* POD: Added two FAQs about not being root and about the look
+	command.
+
+	* Replaced all backticks that were misused in documentation or
+	dialogs as pretty left quotes by single ticks. I think it was
+	Markus Kuhn who said so.
 
 	* float2vv: added conversion of float to visible v-string for
 	comparisons. Added some tests too.

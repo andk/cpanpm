@@ -572,7 +572,7 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
         SOCKS
             If you are using a SOCKS firewall you will need to compile perl
             and link it with the SOCKS library, this is what is normally
-            called a ``socksified'' perl. With this executable you will be
+            called a 'socksified' perl. With this executable you will be
             able to connect to servers outside the firewall as if it is not
             there.
 
@@ -626,6 +626,28 @@ FAQ
           o conf make_install_arg "| tee -ai /root/.cpan/logs/make_install.out"
 
         so that STDOUT is captured in a file for later inspection.
+
+    I am not root, how can I install a module in a personal directory?
+        You will most probably like something like this:
+
+          o conf makepl_arg LIB=~/myperl/lib \
+                            INSTALLMAN1DIR=~/myperl/man/man1 \
+                            INSTALLMAN3DIR=~/myperl/man/man3
+          install Sybase::Sybperl
+
+        You can make this setting permanent like all `o conf' settings with
+        `o conf commit'.
+
+        You will have to add ~/myperl/man to the MANPATH environment
+        variable and also tell your perl programs to look into ~/myperl/lib,
+        e.g. by including
+
+          use lib "$ENV{HOME}/myperl/lib";
+
+        or setting the PERL5LIB environment variable.
+
+    How to get a package, unwrap it, and make a change before building it?
+          look Sybase::Sybperl
 
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,
