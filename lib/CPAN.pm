@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.05';
+$VERSION = '1.06';
 
-# $Id: CPAN.pm,v 1.82 1996/12/22 12:45:35 k Exp $
+# $Id: CPAN.pm,v 1.83 1996/12/22 14:11:58 k Exp $
 
-# my $version = substr q$Revision: 1.82 $, 10; # only used during development
+# my $version = substr q$Revision: 1.83 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -47,28 +47,44 @@ END { $End++; &cleanup; }
 $CPAN::DEBUG ||= 0;
 
 package CPAN;
-use vars qw($VERSION @ISA @EXPORT $AUTOLOAD $DEBUG $META);
+use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META);
 use strict qw(vars);
 
-@ISA = qw(CPAN::Debug Exporter MY); # the MY class from MakeMaker, gives us catfile and catdir
+@CPAN::ISA = qw(CPAN::Debug Exporter MY); # the MY class from
+                                          # MakeMaker, gives us
+                                          # catfile and catdir
 
-$META ||= new CPAN;                 # In case we reeval ourselves we need a ||
+$META ||= new CPAN;                 # In case we reeval ourselves we
+                                    # need a ||
 
 CPAN::Config->load;
 
 @EXPORT = qw(autobundle bundle expand force install make recompile shell test clean);
 
+
+
+#-> sub CPAN::autobundle ;
 sub autobundle;
+#-> sub CPAN::bundle ;
 sub bundle;
+#-> sub CPAN::bundles ;
 sub bundles;
+#-> sub CPAN::expand ;
 sub expand;
+#-> sub CPAN::force ;
 sub force;
+#-> sub CPAN::install ;
 sub install;
+#-> sub CPAN::make ;
 sub make;
+#-> sub CPAN::shell ;
 sub shell;
+#-> sub CPAN::clean ;
 sub clean;
+#-> sub CPAN::test ;
 sub test;
 
+#-> sub CPAN::AUTOLOAD ;
 sub AUTOLOAD {
     my($l) = $AUTOLOAD;
     $l =~ s/.*:://;
@@ -84,6 +100,7 @@ Nothing Done.
     }
 }
 
+#-> sub CPAN::all ;
 sub all {
     my($mgr,$class) = @_;
     CPAN->debug("mgr[$mgr] class[$class]") if $CPAN::DEBUG;
@@ -92,6 +109,7 @@ sub all {
 }
 
 # Called by shell, not in batch mode. Not clean XXX
+#-> sub CPAN::checklock ;
 sub checklock {
     my($self) = @_;
     my $lockfile = CPAN->catfile($CPAN::Config->{cpan_home},".lock");
@@ -159,10 +177,12 @@ or
     print STDERR "Signal handler set.\n" unless $CPAN::Config->{'inhibit_startup_message'};
 }
 
+#-> sub CPAN::DESTROY ;
 sub DESTROY {
     &cleanup; # need an eval?
 }
 
+#-> sub CPAN::exists ;
 sub exists {
     my($mgr,$class,$id) = @_;
     CPAN::Index->reload;
@@ -171,6 +191,7 @@ sub exists {
     exists $META->{$class}{$id};
 }
 
+#-> sub CPAN::hasFTP ;
 sub hasFTP {
     my($self,$arg) = @_;
     if (defined $arg) {
@@ -182,6 +203,7 @@ sub hasFTP {
     return $self->{'hasFTP'};
 }
 
+#-> sub CPAN::hasLWP ;
 sub hasLWP {
     my($self,$arg) = @_;
     if (defined $arg) {
@@ -194,6 +216,7 @@ sub hasLWP {
     return $self->{'hasLWP'};
 }
 
+#-> sub CPAN::hasMD5 ;
 sub hasMD5 {
     my($self,$arg) = @_;
     if (defined $arg) {
@@ -210,6 +233,7 @@ sub hasMD5 {
     return $self->{'hasMD5'};
 }
 
+#-> sub CPAN::instance ;
 sub instance {
     my($mgr,$class,$id) = @_;
     CPAN::Index->reload;
@@ -218,10 +242,12 @@ sub instance {
     $META->{$class}{$id} ||= $class->new(ID => $id );
 }
 
+#-> sub CPAN::new ;
 sub new {
     bless {}, shift;
 }
 
+#-> sub CPAN::cleanup ;
 sub cleanup {
     local $SIG{__DIE__} = '';
     my $i = 0; my $ineval = 0; my $sub;
@@ -237,6 +263,7 @@ sub cleanup {
 #    die @_;
 }
 
+#-> sub CPAN::shell ;
 sub shell {
     $Suppress_readline ||= ! -t STDIN;
 
@@ -302,10 +329,11 @@ Readline support $rl_avail
 }
 
 package CPAN::Shell;
-use vars qw(@ISA $AUTOLOAD);
-@ISA = qw(CPAN::Debug);
+use vars qw($AUTOLOAD);
+@CPAN::Shell::ISA = qw(CPAN::Debug);
 
 # private function ro re-eval this module (handy during development)
+#-> sub CPAN::Shell::AUTOLOAD ;
 sub AUTOLOAD {
     warn "CPAN::Shell doesn't know how to autoload $AUTOLOAD :-(
 Nothing Done.
@@ -313,6 +341,7 @@ Nothing Done.
 	CPAN::Shell->h;
 }
 
+#-> sub CPAN::Shell::h ;
 sub h {
     my($class,$about) = @_;
     if (defined $about) {
@@ -344,7 +373,9 @@ q                       quit the shell subroutine
     }
 }
 
+#-> sub CPAN::Shell::a ;
 sub a { print shift->format_result('Author',@_);}
+#-> sub CPAN::Shell::b ;
 sub b {
     my($self,@which) = @_;
     my($incdir,$bdir,$dh); 
@@ -361,9 +392,12 @@ sub b {
     }
     print $self->format_result('Bundle',@which);
 }
+#-> sub CPAN::Shell::d ;
 sub d { print shift->format_result('Distribution',@_);}
+#-> sub CPAN::Shell::m ;
 sub m { print shift->format_result('Module',@_);}
 
+#-> sub CPAN::Shell::i ;
 sub i {
     my($self) = shift;
     my(@args) = @_;
@@ -379,6 +413,7 @@ sub i {
     print $result;
 }
 
+#-> sub CPAN::Shell::o ;
 sub o {
     my($self,$o_type,@o_what) = @_;
     $o_type ||= "";
@@ -453,6 +488,7 @@ Known options:
     }
 }
 
+#-> sub CPAN::Shell::reload ;
 sub reload {
     if ($_[1] =~ /cpan/i) {
 	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
@@ -466,6 +502,7 @@ sub reload {
     }
 }
 
+#-> sub CPAN::Shell::_binary_extensions ;
 sub _binary_extensions {
     my($self) = shift @_;
     my(@result,$module,%seen,%need,$headerdone);
@@ -482,6 +519,7 @@ sub _binary_extensions {
     return @result;
 }
 
+#-> sub CPAN::Shell::recompile ;
 sub recompile {
     my($self) = shift @_;
     my($module,@module,$cpan_file,%dist);
@@ -502,6 +540,7 @@ sub recompile {
     }
 }
 
+#-> sub CPAN::Shell::_u_r_common ;
 sub _u_r_common {
     my($self) = shift @_;
     my($what) = shift @_;
@@ -574,14 +613,17 @@ sub _u_r_common {
     @result;
 }
 
+#-> sub CPAN::Shell::r ;
 sub r {
     shift->_u_r_common("r",@_);
 }
 
+#-> sub CPAN::Shell::u ;
 sub u {
     shift->_u_r_common("u",@_);
 }
 
+#-> sub CPAN::Shell::autobundle ;
 sub autobundle {
     my($self) = shift;
     my(@bundle) = $self->_u_r_common("a",@_);
@@ -626,6 +668,7 @@ sub autobundle {
     $to\n\n";
 }
 
+#-> sub CPAN::Shell::bundle ;
 sub bundle {
     shift;
     my(@bundles) = @_;
@@ -639,12 +682,14 @@ sub bundle {
     @pack;
 }
 
+#-> sub CPAN::Shell::bundles ;
 sub bundles {
     my($self) = @_;
     CPAN->debug("self[$self]") if $CPAN::DEBUG;
     sort grep $_->id() =~ /^Bundle::/, $CPAN::META->all('CPAN::Bundle');
 }
 
+#-> sub CPAN::Shell::expand ;
 sub expand {
     shift;
     my($type,@args) = @_;
@@ -678,6 +723,7 @@ sub expand {
     return @m;
 }
 
+#-> sub CPAN::Shell::format_result ;
 sub format_result {
     my($self) = shift;
     my($type,@args) = @_;
@@ -688,6 +734,7 @@ sub format_result {
     $result;
 }
 
+#-> sub CPAN::Shell::rematein ;
 sub rematein {
     shift;
     my($meth,@some) = @_;
@@ -719,17 +766,24 @@ sub rematein {
     }
 }
 
+#-> sub CPAN::Shell::force ;
 sub force   { shift->rematein('force',@_); }
+#-> sub CPAN::Shell::readme ;
 sub readme  { shift->rematein('readme',@_); }
+#-> sub CPAN::Shell::make ;
 sub make    { shift->rematein('make',@_); }
+#-> sub CPAN::Shell::clean ;
 sub clean   { shift->rematein('clean',@_); }
+#-> sub CPAN::Shell::test ;
 sub test    { shift->rematein('test',@_); }
+#-> sub CPAN::Shell::install ;
 sub install { shift->rematein('install',@_); }
 
 package CPAN::FTP;
-use vars qw($Ua @ISA);
-@ISA = qw(CPAN::Debug);
+use vars qw($Ua);
+@CPAN::FTP::ISA = qw(CPAN::Debug);
 
+#-> sub CPAN::FTP::ftp_get ;
 sub ftp_get {
     my($class,$host,$dir,$file,$target) = @_;
     $class->debug(
@@ -757,6 +811,7 @@ sub ftp_get {
     $ftp->quit;
 }
 
+#-> sub CPAN::FTP::localize ;
 sub localize {
     my($self,$file,$aslocal,$force) = @_;
     $force ||= 0;
@@ -795,8 +850,11 @@ sub localize {
 		require URI::URL;
 		my $u = new URI::URL $url;
 		$l = $u->path;
-	    } else { # works only on Unix
-		($l = $url) =~ s/^file://;
+	    } else { # works only on Unix, is poor constructed, but
+                     # better than nothing. Thanks to "Mark
+                     # D. Baushke" <mdb@cisco.com> for the code
+		($l = $url) =~ s,^file://localhost/,/,;
+		$l =~ s/^file://;	# assume they meant file://localhost
 	    }
 	    return $l if -f $l && -r _;
 	}
@@ -825,9 +883,9 @@ sub localize {
 }
 
 package CPAN::Complete;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug);
+@CPAN::Complete::ISA = qw(CPAN::Debug);
 
+#-> sub CPAN::Complete::complete ;
 sub complete {
     my($word,$line,$pos) = @_;
     $word ||= "";
@@ -860,11 +918,13 @@ sub complete {
     return @return;
 }
 
+#-> sub CPAN::Complete::completex ;
 sub completex {
     my($class, $word) = @_;
     grep /^\Q$word\E/, map { $_->id } $CPAN::META->all($class);
 }
 
+#-> sub CPAN::Complete::complete_any ;
 sub complete_any {
     my($word) = shift;
     return (
@@ -875,6 +935,7 @@ sub complete_any {
 	   );
 }
 
+#-> sub CPAN::Complete::complete_reload ;
 sub complete_reload {
     my($word,$line,$pos) = @_;
     $word ||= "";
@@ -885,6 +946,7 @@ sub complete_reload {
     return grep /^\Q$word\E/, @ok if @words==2 && $word;
 }
 
+#-> sub CPAN::Complete::complete_option ;
 sub complete_option {
     my($word,$line,$pos) = @_;
     $word ||= "";
@@ -904,16 +966,18 @@ sub complete_option {
 }
 
 package CPAN::Index;
-use vars qw($last_time @ISA);
-@ISA = qw(CPAN::Debug);
+use vars qw($last_time);
+@CPAN::Index::ISA = qw(CPAN::Debug);
 $last_time ||= 0;
 
+#-> sub CPAN::Index::force_reload ;
 sub force_reload {
     my($class) = @_;
     $CPAN::Index::last_time = 0;
     $class->reload(1);
 }
 
+#-> sub CPAN::Index::reload ;
 sub reload {
     my($cl,$force) = @_;
     my $time = time;
@@ -929,6 +993,7 @@ sub reload {
     $cl->read_modlist($cl->reload_x("modules/03modlist.data.gz","03mlist.gz",$force));
 }
 
+#-> sub CPAN::Index::reload_x ;
 sub reload_x {
     my($cl,$wanted,$localname,$force) = @_;
     $force ||= 0;
@@ -943,6 +1008,7 @@ sub reload_x {
     return CPAN::FTP->localize($wanted,$abs_wanted,$force);
 }
 
+#-> sub CPAN::Index::read_authindex ;
 sub read_authindex {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
@@ -962,6 +1028,7 @@ sub read_authindex {
     $? and Carp::croak "FAILED $pipe: exit status [$?]";
 }
 
+#-> sub CPAN::Index::read_modpacks ;
 sub read_modpacks {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
@@ -1029,6 +1096,7 @@ sub read_modpacks {
     $? and Carp::croak "FAILED $pipe: exit status [$?]";
 }
 
+#-> sub CPAN::Index::read_modlist ;
 sub read_modlist {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
@@ -1055,19 +1123,22 @@ sub read_modlist {
 }
 
 package CPAN::InfoObj;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug);
+@CPAN::InfoObj::ISA = qw(CPAN::Debug);
 
+#-> sub CPAN::InfoObj::new ;
 sub new { my $this = bless {}, shift; %$this = @_; $this }
 
+#-> sub CPAN::InfoObj::set ;
 sub set {
     my($self,%att) = @_;
     my(%oldatt) = %$self;
     %$self = (%oldatt, %att);
 }
 
+#-> sub CPAN::InfoObj::id ;
 sub id { shift->{'ID'} }
 
+#-> sub CPAN::InfoObj::as_glimpse ;
 sub as_glimpse {
     my($self) = @_;
     my(@m);
@@ -1077,6 +1148,7 @@ sub as_glimpse {
     join "", @m;
 }
 
+#-> sub CPAN::InfoObj::as_string ;
 sub as_string {
     my($self) = @_;
     my(@m);
@@ -1096,15 +1168,16 @@ sub as_string {
     join "", @m, "\n";
 }
 
+#-> sub CPAN::InfoObj::author ;
 sub author {
     my($self) = @_;
     $CPAN::META->instance(CPAN::Author,$self->{CPAN_USERID})->fullname;
 }
 
 package CPAN::Author;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug CPAN::InfoObj);
+@CPAN::Author::ISA = qw(CPAN::Debug CPAN::InfoObj);
 
+#-> sub CPAN::Author::as_glimpse ;
 sub as_glimpse {
     my($self) = @_;
     my(@m);
@@ -1114,20 +1187,23 @@ sub as_glimpse {
     join "", @m;
 }
 
+#-> sub CPAN::Author::fullname ;
 sub fullname { shift->{'FULLNAME'} }
 *name = \&fullname;
+#-> sub CPAN::Author::email ;
 sub email    { shift->{'EMAIL'} }
 
 package CPAN::Distribution;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug CPAN::InfoObj);
+@CPAN::Distribution::ISA = qw(CPAN::Debug CPAN::InfoObj);
 
+#-> sub CPAN::Distribution::called_for ;
 sub called_for {
     my($self,$id) = @_;
     $self->{'CALLED_FOR'} = $id if defined $id;
     return $self->{'CALLED_FOR'};
 }
 
+#-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
   EXCUSE: {
@@ -1231,6 +1307,7 @@ sub get {
     return $self;
 }
 
+#-> sub CPAN::Distribution::new ;
 sub new {
     my($class,%att) = @_;
 
@@ -1240,11 +1317,13 @@ sub new {
     return bless $this, $class;
 }
 
+#-> sub CPAN::Distribution::readme ;
 sub readme {
     my($self) = @_;
     print "Readme not yet implemented (says ".$self->id.")\n";
 }
 
+#-> sub CPAN::Distribution::verifyMD5 ;
 sub verifyMD5 {
     my($self) = @_;
   EXCUSE: {
@@ -1289,6 +1368,7 @@ sub verifyMD5 {
     $self->MD5_check_file($local_file,$basename);
 }
 
+#-> sub CPAN::Distribution::MD5_check_file ;
 sub MD5_check_file {
     my($self,$lfile,$basename) = @_;
     my($cksum);
@@ -1330,6 +1410,7 @@ sub MD5_check_file {
     }
 }
 
+#-> sub CPAN::Distribution::eq_MD5 ;
 sub eq_MD5 {
     my($self,$fh,$expectMD5) = @_;
     my $md5 = new MD5;
@@ -1338,6 +1419,7 @@ sub eq_MD5 {
     $hexdigest eq $expectMD5;
 }
 
+#-> sub CPAN::Distribution::force ;
 sub force {
     my($self) = @_;
     $self->{'force_update'}++;
@@ -1351,6 +1433,7 @@ sub force {
     delete $self->{'writemakefile'};
 }
 
+#-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
     $self->debug($self->id) if $CPAN::DEBUG;
@@ -1396,6 +1479,7 @@ sub make {
     }
 }
 
+#-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
     $self->make;
@@ -1420,6 +1504,7 @@ sub test {
     }
 }
 
+#-> sub CPAN::Distribution::clean ;
 sub clean {
     my($self) = @_;
     print "Running make clean\n";
@@ -1439,6 +1524,7 @@ sub clean {
     }
 }
 
+#-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
     $self->test;
@@ -1474,20 +1560,22 @@ sub install {
     }
 }
 
+#-> sub CPAN::Distribution::dir ;
 sub dir {
     shift->{'build_dir'};
 }
 
 package CPAN::Bundle;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug CPAN::InfoObj CPAN::Module);
+@CPAN::Bundle::ISA = qw(CPAN::Debug CPAN::InfoObj CPAN::Module);
 
+#-> sub CPAN::Bundle::as_string ;
 sub as_string {
     my($self) = @_;
     $self->contains;
     return $self->SUPER::as_string;
 }
 
+#-> sub CPAN::Bundle::contains ;
 sub contains {
     my($self) = @_;
     my($parsefile) = $self->inst_file;
@@ -1526,6 +1614,7 @@ sub contains {
     @result;
 }
 
+#-> sub CPAN::Bundle::inst_file ;
 sub inst_file {
     my($self) = @_;
     my($me,$inst_file);
@@ -1537,6 +1626,7 @@ sub inst_file {
     return $self->{'INST_FILE'}; # even if undefined?
 }
 
+#-> sub CPAN::Bundle::rematein ;
 sub rematein {
     my($self,$meth) = @_;
     $self->debug("self[$self] meth[$meth]") if $CPAN::DEBUG;
@@ -1546,12 +1636,19 @@ sub rematein {
     }
 }
 
+#-> sub CPAN::Bundle::force ;
+sub force   { shift->rematein('force',@_); }
+#-> sub CPAN::Bundle::install ;
 sub install { shift->rematein('install',@_); }
+#-> sub CPAN::Bundle::clean ;
 sub clean   { shift->rematein('clean',@_); }
+#-> sub CPAN::Bundle::test ;
 sub test    { shift->rematein('test',@_); }
+#-> sub CPAN::Bundle::make ;
 sub make    { shift->rematein('make',@_); }
 
 # XXX not yet implemented!
+#-> sub CPAN::Bundle::readme ;
 sub readme  {
     my($self) = @_;
     my($file) = $self->cpan_file or print("No File found for bundle ", $self->id, "\n"), return;
@@ -1561,9 +1658,9 @@ sub readme  {
 }
 
 package CPAN::Module;
-use vars qw(@ISA);
-@ISA = qw(CPAN::Debug CPAN::InfoObj);
+@CPAN::Module::ISA = qw(CPAN::Debug CPAN::InfoObj);
 
+#-> sub CPAN::Module::as_glimpse ;
 sub as_glimpse {
     my($self) = @_;
     my(@m);
@@ -1573,6 +1670,7 @@ sub as_glimpse {
     join "", @m;
 }
 
+#-> sub CPAN::Module::as_string ;
 sub as_string {
     my($self) = @_;
     my(@m);
@@ -1640,6 +1738,7 @@ sub as_string {
     join "", @m, "\n";
 }
 
+#-> sub CPAN::Module::cpan_file ;
 sub cpan_file    {
     my $self = shift;
     CPAN->debug($self->id) if $CPAN::DEBUG;
@@ -1657,13 +1756,16 @@ sub cpan_file    {
 
 *name = \&cpan_file;
 
+#-> sub CPAN::Module::cpan_version ;
 sub cpan_version { shift->{'CPAN_VERSION'} }
 
+#-> sub CPAN::Module::force ;
 sub force {
     my($self) = @_;
     $self->{'force_update'}++;
 }
 
+#-> sub CPAN::Module::rematein ;
 sub rematein {
     my($self,$meth) = @_;
     $self->debug($self->id) if $CPAN::DEBUG;
@@ -1677,10 +1779,15 @@ sub rematein {
     delete $self->{'force_update'};
 }
 
+#-> sub CPAN::Module::readme ;
 sub readme { shift->rematein('readme') }
+#-> sub CPAN::Module::make ;
 sub make   { shift->rematein('make') }
+#-> sub CPAN::Module::clean ;
 sub clean  { shift->rematein('clean') }
+#-> sub CPAN::Module::test ;
 sub test   { shift->rematein('test') }
+#-> sub CPAN::Module::install ;
 sub install {
     my($self) = @_;
     my($doit) = 0;
@@ -1699,6 +1806,7 @@ sub install {
     $self->rematein('install') if $doit;
 }
 
+#-> sub CPAN::Module::inst_file ;
 sub inst_file {
     my($self) = @_;
     my($dir,@packpath);
@@ -1712,6 +1820,7 @@ sub inst_file {
     }
 }
 
+#-> sub CPAN::Module::xs_file ;
 sub xs_file {
     my($self) = @_;
     my($dir,@packpath);
@@ -1726,6 +1835,7 @@ sub xs_file {
     }
 }
 
+#-> sub CPAN::Module::inst_version ;
 sub inst_version {
     my($self) = @_;
     my $parsefile = $self->inst_file or return 0;
@@ -1737,10 +1847,11 @@ sub inst_version {
 }
 
 package CPAN::CacheMgr;
-use vars qw($Du @ISA);
-@ISA=qw(CPAN::Debug CPAN::InfoObj);
+use vars qw($Du);
+@CPAN::CacheMgr::ISA = qw(CPAN::Debug CPAN::InfoObj);
 use File::Find;
 
+#-> sub CPAN::CacheMgr::as_string ;
 sub as_string {
     eval { require Data::Dumper };
     if ($@) {
@@ -1750,6 +1861,7 @@ sub as_string {
     }
 }
 
+#-> sub CPAN::CacheMgr::cachesize ;
 sub cachesize {
     shift->{DU};
 }
@@ -1764,6 +1876,7 @@ sub cachesize {
 #     }
 # }
 
+#-> sub CPAN::CacheMgr::clean_cache ;
 sub clean_cache {
     my $self = shift;
     my $dir;
@@ -1773,10 +1886,12 @@ sub clean_cache {
     $self->debug("leaving clean_cache with $self->{DU}") if $CPAN::DEBUG;
 }
 
+#-> sub CPAN::CacheMgr::dir ;
 sub dir {
     shift->{ID};
 }
 
+#-> sub CPAN::CacheMgr::entries ;
 sub entries {
     my($self,$dir) = @_;
     $dir ||= $self->{ID};
@@ -1798,6 +1913,7 @@ sub entries {
     sort {-M $b <=> -M $a} @entries;
 }
 
+#-> sub CPAN::CacheMgr::disk_usage ;
 sub disk_usage {
     my($self,$dir) = @_;
     if (! defined $dir or $dir eq "") {
@@ -1828,6 +1944,7 @@ sub disk_usage {
     $self->{DU};
 }
 
+#-> sub CPAN::CacheMgr::force_clean_cache ;
 sub force_clean_cache {
     my($self,$dir) = @_;
     $self->debug("have to rmtree $dir, will free $self->{SIZE}{$dir}") if $CPAN::DEBUG;
@@ -1836,6 +1953,7 @@ sub force_clean_cache {
     delete $self->{SIZE}{$dir};
 }
 
+#-> sub CPAN::CacheMgr::new ;
 sub new {
     my $class = shift;
     my $self = { ID => $CPAN::Config->{'build_dir'}, MAX => $CPAN::Config->{'build_cache'}, DU => 0 };
@@ -1854,6 +1972,7 @@ sub new {
 
 package CPAN::Debug;
 
+#-> sub CPAN::Debug::debug ;
 sub debug {
     my($self,$arg) = @_;
     my($caller,$func,$line,@rest) = caller(1); # caller(0) eg Complete, caller(1) eg readline
@@ -1884,6 +2003,7 @@ use vars qw(%can);
   'defaults' => "Reload defaults from disk",
 );
 
+#-> sub CPAN::Config::edit ;
 sub edit {
     my($class,@args) = @_;
     return unless @args;
@@ -1918,6 +2038,7 @@ sub edit {
     }
 }
 
+#-> sub CPAN::Config::commit ;
 sub commit {
     my($self, $configpm) = @_;
     my $mode;
@@ -1958,6 +2079,7 @@ EOF
 }
 
 *default = \&defaults;
+#-> sub CPAN::Config::defaults ;
 sub defaults {
     my($self) = @_;
     $self->unload;
@@ -1966,6 +2088,7 @@ sub defaults {
 }
 
 my $dot_cpan;
+#-> sub CPAN::Config::load ;
 sub load {
     my($self) = @_;
     eval {require CPAN::Config;};       # We eval, because of some MakeMaker problems
@@ -2009,6 +2132,7 @@ sub load {
     }
 }
 
+#-> sub CPAN::Config::load_succeeded ;
 sub load_succeeded {
     my($miss) = 0;
     for (qw(
@@ -2021,16 +2145,19 @@ sub load_succeeded {
     return !$miss;
 }
 
+#-> sub CPAN::Config::unload ;
 sub unload {
     delete $INC{'CPAN/MyConfig.pm'};
     delete $INC{'CPAN/Config.pm'};
 }
 
+#-> sub CPAN::Config::cfile ;
 sub cfile {
     $INC{'CPAN/MyConfig.pm'} || $INC{'CPAN/Config.pm'};
 }
 
 *h = \&help;
+#-> sub CPAN::Config::help ;
 sub help {
     print <<EOF;
 Known options:
@@ -2051,6 +2178,7 @@ EOF
     undef; #don't reprint CPAN::Config
 }
 
+#-> sub CPAN::Config::complete ;
 sub complete {
     my($word,$line,$pos) = @_;
     $word ||= "";
