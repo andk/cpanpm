@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_66';
+$VERSION = '1.57_67';
 
-# $Id: CPAN.pm,v 1.352 2000/09/12 08:28:49 k Exp $
+# $Id: CPAN.pm,v 1.353 2000/09/17 10:16:35 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.352 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.353 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -1161,7 +1161,7 @@ sub missing_config_data {
          "inhibit_startup_message", "ftp_proxy", "http_proxy", "no_proxy",
          "prerequisites_policy",
 
-         # "cache_metadata" # not yet stable enough
+         # "cache_metadata" # not yet enough tested
 
         ) {
 	push @miss, $_ unless defined $CPAN::Config->{$_};
@@ -2287,7 +2287,8 @@ sub hosthard {
 	} else {
 	  next HOSTHARD; # who said, we could ftp anything except ftp?
 	}
-        # next HOSTHARD if $proto eq "file";
+        next HOSTHARD if $proto eq "file"; # file URLs would have had
+                                           # success above. Likely a bogus URL
 
 	$self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
 	my($f,$funkyftp);
@@ -5102,15 +5103,13 @@ sub untar {
         # people find the most curious tar binaries that cannot handle
         # pipes
         if ($is_compressed) {
-            $system = "$CPAN::Config->{gzip} --decompress $file";
-            if (system($system)==0) {
+            (my $ungzf = $file) =~ s/\.gz(?!\n)\Z//;
+            if (CPAN::Tarzip->gunzip($file, $ungzf)) {
                 $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
             } else {
-                $CPAN::Frontend->mydie(
-                                       qq{Couldn\'t uncompress $file\n}
-                                      );
+                $CPAN::Frontend->mydie(qq{Couldn\'t uncompress $file\n});
             }
-            $file =~ s/\.gz(?!\n)\Z//;
+            $file = $ungzf;
         }
         $system = "$CPAN::Config->{tar} xvf $file";
         $CPAN::Frontend->myprint(qq{Using Tar:$system:\n});
@@ -5128,15 +5127,17 @@ sub untar {
       $CPAN::META->has_inst("Compress::Zlib") ) {
     my $tar = Archive::Tar->new($file,1);
     my $af; # archive file
+    my @af;
     for $af ($tar->list_files) {
         if ($af =~ m!^(/|\.\./)!) {
             $CPAN::Frontend->mydie("ALERT: Archive contains ".
                                    "illegal member [$af]");
         }
         $CPAN::Frontend->myprint("$af\n");
-        $tar->extract($af);
+        push @af, $af;
         return if $CPAN::Signal;
     }
+    $tar->extract(@af);
 
     ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
         if ($^O eq 'MacOS');

@@ -1,4 +1,25 @@
+2000-09-16  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* 1.57_67 is a release candidate.
+
+	* FirstTime: rewording of the intro for the cache_metadata feature
+	from experimental to beta. Leaving default to off. As it is still
+	turned off, I do not add the feature to the "necessary" features
+	in sub missing_config_data. Will do so when default changes to on.
+
+	* untar: for running the pipe, the external programs gzip and tar
+	are OK to use but for a pure uncompress I prefer to use our own
+	method gunzip for maximum code reuse (fallback to external gzip is
+	there anyway) and less use of system().
+
+	* hosthard: after Jost has approved that the code now is much more
+	defensive against the install-an-inexistent-distribution errors,
+	now the funkyftp programs are disallowed to process C<file> URLs
+	at all.
+
 2000-09-12  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* get: userid "anon" if cpan_userid does not provide one.
 
 	* 1.57_66 for the sole purpose of testing the error provoked by
 	the old lynx version. Next version will disable lynx for file:
