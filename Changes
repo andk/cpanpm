@@ -1,17 +1,50 @@
 Revision history for Perl extension CPAN.
 
 Todo: CPAN.pm: How to live without CHECKSUM files?
-      CPAN.pm: Allow relative pathnames for external programs.
-          ($SIG{CHLD}!)
-      CPAN.pm: Security layer completely configurable/If only
-          Penguin were usable
-      MakeMaker: parse *VERSION = \'...'
-      Devel::Symdump: isatree/eertasi
-      MakeMaker: install INSTALLDIRS into ARCH (INST_LIB = $(INST_ARCH))
-      MakeMaker: EXEFILES posting by Achim
+      CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
-      MakeMaker: Mike Stok says, MakeMaker doesn't find the right
-          ../../perl during perl builds
+      MakeMaker: install INSTALLDIRS into ARCH (INST_LIB = $(INST_ARCH))
+
+=head2 June 1997
+
+After carefully checking which changes have been made in perl5.00401,
+I dare to release what I'm currently working with as 1.25.
+
+Many small improvements have been made, but several bigger things are
+still missing.
+
+=head2 May 1997
+
+Richard L. Maus, Jr. <rmaus@monmouth.com> patch that adds -c switch to
+ncftp.
+
+Improved CPAN::FirstTime to better check for valid options.
+
+Removed a stupid -x check on external ftp programs that hindered
+executing of programs in the PATH.
+
+Improved debugging to inhibit "use of undefined..." messages.
+
+Improved renaming to .bak files and renaming back in case we cannot
+download for some reason.
+
+Now advertise Bundle::libnet instead of Net::FTP.
+
+Improved debugging and error checking of system calls, especially
+added a test after a download if the file has >0 bytes (lynx returns
+status 0 despite some errors).
+
+Added support for Foo.pm.gz files that can still be found on CPAN.
+
+=head2 April 16 1997
+
+Applied patch by Achim Bohnet to the TRL logic (To:
+perl5-porters@perl.org Subject: CPAN & TRL-Gnu Date: Fri, 04 Apr 1997
+10:09:03 +0200 From: Achim Bohnet <ach@rosat.mpe-garching.mpg.de>)
+which was already in 5.003_97e btw.
+
+Fixed leading whitespace bug discovered by Karl Glazebrook
+<kgb@aaoepp.aao.gov.au>
 
 =head2 March 31 1997
 

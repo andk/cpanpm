@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.24';
+$VERSION = '1.25';
 
-# $Id: CPAN.pm,v 1.139 1997/03/31 22:43:23 k Exp $
+# $Id: CPAN.pm,v 1.144 1997/06/30 17:45:59 k Exp $
 
-# my $version = substr q$Revision: 1.139 $, 10; # only used during development
+# my $version = substr q$Revision: 1.144 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -261,9 +261,7 @@ sub hasWAIT {
 #-> sub CPAN::instance ;
 sub instance {
     my($mgr,$class,$id) = @_;
-    ### CPAN::Index->reload; ### not faster: unless time - $CPAN::Index::last_time > 60;
     CPAN::Index->reload;
-    ### Carp::croak "instance called without class argument" unless $class;
     $id ||= "";
     $META->{$class}{$id} ||= $class->new(ID => $id );
 }
@@ -285,8 +283,6 @@ sub cleanup {
     return unless -f $META->{'LOCK'};
     unlink $META->{'LOCK'};
     print STDERR "Lockfile removed.\n";
-#    my $mess = Carp::longmess(@_);
-#    die @_;
 }
 
 #-> sub CPAN::shell ;
@@ -308,10 +304,10 @@ sub shell {
     my $getcwd;
     $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
     my $cwd = Cwd->$getcwd();
-    # How should we determine if we have more than stub ReadLine enabled?
     my $rl_avail = $Suppress_readline ? "suppressed" :
-	defined &Term::ReadLine::Perl::readline ? "enabled" :
-	    "available (get Term::ReadKey and Term::ReadLine::Perl)";
+	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
+	    "available (get Term::ReadKey and Term::ReadLine::Perl ".
+	    "or get Term::ReadLine::Gnu)";
 
     print qq{
 cpan shell -- CPAN exploration and modules installation (v$CPAN::VERSION)
@@ -324,20 +320,9 @@ Readline support $rl_avail
 	    last unless defined ($_ = <> );
 	    chomp;
 	} else {
-#	     if (defined($CPAN::ANDK) && $CPAN::DEBUG) { # !$CPAN::ANDK++;$CPAN::DEBUG=1024
-#		 my($report,$item);
-#		 $report = "";
-#		 for $item (qw/ReadLine IN OUT MinLine findConsole Features/) {
-#		     $report .= sprintf "%-15s", $item;
-#		     $report .= $term->$item() || "";
-#		     $report .= "\n";
-#		 }
-#		 print $report;
-#		CPAN->debug($report);
-#	    }
 	    last unless defined ($_ = $term->readline($prompt));
 	}
-	s/^\s//;
+	s/^\s+//;
 	next if /^$/;
 	$_ = 'h' if $_ eq '?';
 	if (/^\!/) {
@@ -419,6 +404,7 @@ sub dir {
 #-> sub CPAN::CacheMgr::entries ;
 sub entries {
     my($self,$dir) = @_;
+    return unless defined $dir;
     $self->debug("reading dir[$dir]") if $CPAN::DEBUG;
     $dir ||= $self->{ID};
     my $getcwd;
@@ -517,8 +503,14 @@ sub debug {
                                                # eg readline
     ($caller) = caller(0);
     $caller =~ s/.*:://;
-#    print "caller[$caller]func[$func]line[$line]rest[@rest]\n";
-#    print "CPAN::DEBUG{caller}[$CPAN::DEBUG{$caller}]CPAN::DEBUG[$CPAN::DEBUG]\n";
+    $arg = "" unless defined $arg;
+    my $rest = join ":", map { defined $_ ? $_ : "UNDEF" } @rest;
+#    print "caller[$caller]\n";
+#    print "func[$func]\n";
+#    print "line[$line]\n";
+#    print "rest[@rest]\n";
+#    print "CPAN::DEBUG{caller}[$CPAN::DEBUG{$caller}]\n";
+#    print "CPAN::DEBUG[$CPAN::DEBUG]\n";
     if ($CPAN::DEBUG{$caller} & $CPAN::DEBUG){
 	if (ref $arg) {
 	    eval { require Data::Dumper };
@@ -528,7 +520,7 @@ sub debug {
 		print Data::Dumper::Dumper($arg);
 	    }
 	} else {
-	    print "Debug($caller:$func,$line,@rest): $arg\n"
+	    print "Debug($caller:$func,$line,[$rest]): $arg\n"
 	}
     }
 }
@@ -664,8 +656,9 @@ sub load {
     eval {require CPAN::MyConfig;};     # where you can override system wide settings
     return unless @miss = $self->not_loaded;
     require CPAN::FirstTime;
-    my($configpm,$fh,$redo);
+    my($configpm,$fh,$redo,$theycalled);
     $redo ||= "";
+    $theycalled++ if @miss==1 && $miss[0] eq 'inhibit_startup_message';
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
 	$configpm = $INC{"CPAN/Config.pm"};
 	$redo++;
@@ -720,7 +713,7 @@ sub load {
 We have to reconfigure CPAN.pm due to following uninitialized parameters:
 
 @miss
-} if $redo ;
+} if $redo && ! $theycalled;
     print qq{
 $configpm initialized.
 };
@@ -1331,15 +1324,22 @@ sub ftp_get {
 }
 
 #-> sub CPAN::FTP::localize ;
+# sorry for the ugly code here, I'll clean it up as soon as Net::FTP
+# is in the core
 sub localize {
     my($self,$file,$aslocal,$force) = @_;
     $force ||= 0;
     Carp::croak "Usage: ->localize(cpan_file,as_local_file[,$force])"
 	unless defined $aslocal;
-    $self->debug("file [$file] aslocal [$aslocal]") if $CPAN::DEBUG;
+    $self->debug("file[$file] aslocal[$aslocal] force[$force]")
+	if $CPAN::DEBUG;
 
     return $aslocal if -f $aslocal && -r _ && ! $force;
-    rename $aslocal, "$aslocal.bak" if -f $aslocal;
+    my($restore) = 0;
+    if (-f $aslocal){
+	rename $aslocal, "$aslocal.bak";
+	$restore++;
+    }
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
@@ -1414,8 +1414,9 @@ sub localize {
 		warn "Net::FTP failed for some reason\n";
 	    } else {
 		warn qq{
-  Please, install Net::FTP as soon as possible. Just type
-    install Net::FTP
+  Please, install Net::FTP as soon as possible. CPAN.pm installs it for you
+  if you just type
+      install Bundle::libnet
   Thank you.
 
 }
@@ -1430,7 +1431,6 @@ sub localize {
 	# does ncftp handle http?
 	for $funkyftp ($CPAN::Config->{'lynx'},$CPAN::Config->{'ncftp'}) {
 	    next unless defined $funkyftp;
-	    next unless -x $funkyftp;
 	    my($want_compressed);
 	    print(
 		  qq{
@@ -1440,9 +1440,14 @@ Trying with $funkyftp to get
 	    $want_compressed = $aslocal =~ s/\.gz//;
 	    my($source_switch) = "";
 	    $source_switch = "-source" if $funkyftp =~ /\blynx$/;
+	    $source_switch = "-c" if $funkyftp =~ /\bncftp$/;
 	    my($system) = "$funkyftp $source_switch '$url' > $aslocal";
+	    $self->debug("system[$system]") if $CPAN::DEBUG;
 	    my($wstatus);
-	    if (($wstatus = system($system)) == 0) {
+	    if (($wstatus = system($system)) == 0
+		&&
+		-s $aslocal   # lynx returns 0 on my system even if it fails
+	       ) {
 		if ($want_compressed) {
 		    $system = "$CPAN::Config->{'gzip'} -dt $aslocal";
 		    if (system($system) == 0) {
@@ -1464,9 +1469,11 @@ Trying with $funkyftp to get
 		}
 	    } else {
 		my $estatus = $wstatus >> 8;
+		my $size = -s $aslocal;
 		print qq{
 System call "$system"
-returned status $estatus (wstat $wstatus)
+returned status $estatus (wstat $wstatus), left
+$aslocal with size $size
 };
 	    }
 	}
@@ -1595,7 +1602,7 @@ Subprocess "|$CPAN::Config->{'ftp'}$verbose -n"
 	print Text::Wrap::wrap("","",$mess), "\n";
     }
     print "Cannot fetch $file\n";
-    if (-f "$aslocal.bak") {
+    if ($restore) {
 	rename "$aslocal.bak", $aslocal;
 	print "Trying to get away with old file:\n";
 	print $self->ls($aslocal);
@@ -2133,31 +2140,27 @@ sub get {
     if ($CPAN::META->hasMD5) {
 	$self->verifyMD5;
     }
-    if ($local_file =~ /(\.tar\.(gz|Z)|\.tgz|\.zip)$/i){
-	$self->debug("Removing tmp") if $CPAN::DEBUG;
-	File::Path::rmtree("tmp");
-	mkdir "tmp", 0777 or Carp::croak "Couldn't mkdir tmp: $!";
+    $self->debug("Removing tmp") if $CPAN::DEBUG;
+    File::Path::rmtree("tmp");
+    mkdir "tmp", 0755 or Carp::croak "Couldn't mkdir tmp: $!";
+    chdir "tmp";
+    $self->debug("Changed directory to tmp") if $CPAN::DEBUG;
+    if ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)$/i){
+	$self->untar_me($local_file);
+    } elsif ( $local_file =~ /\.zip$/i ) {
+	$self->unzip_me($local_file);
+    } elsif ( $local_file =~ /\.pm\.(gz|Z)$/) {
+	$self->pm2dir_me($local_file);
+    } else {
+	$self->{archived} = "NO";
+    }
+    chdir "..";
+    if ($self->{archived} ne 'NO') {
 	chdir "tmp";
-	$self->debug("Changed directory to tmp") if $CPAN::DEBUG;
-	if ($local_file =~ /z$/i){
-	    $self->{archived} = "tar";
-	    if (system("$CPAN::Config->{gzip} --decompress --stdout $local_file | $CPAN::Config->{tar} xvf -")== 0) {
-		$self->{unwrapped} = "YES";
-	    } else {
-		$self->{unwrapped} = "NO";
-	    }
-	} elsif ($local_file =~ /zip$/i) {
-	    $self->{archived} = "zip";
-	    if (system("$CPAN::Config->{unzip} $local_file") == 0) {
-		$self->{unwrapped} = "YES";
-	    } else {
-		$self->{unwrapped} = "NO";
-	    }
-	}
 	# Let's check if the package has its own directory.
-	opendir DIR, "." or Carp::croak("Weird: couldn't opendir .: $!");
-	my @readdir = grep $_ !~ /^\.\.?$/, readdir DIR; ### MAC??
-	closedir DIR;
+	my $dh = DirHandle->new(".") or Carp::croak("Couldn't opendir .: $!");
+	my @readdir = grep $_ !~ /^\.\.?$/, $dh->read; ### MAC??
+	$dh->close;
 	my ($distdir,$packagedir);
 	if (@readdir == 1 && -d $readdir[0]) {
 	    $distdir = $readdir[0];
@@ -2178,8 +2181,8 @@ sub get {
 	    }
 	}
 	$self->{'build_dir'} = $packagedir;
-
 	chdir "..";
+
 	$self->debug("Changed directory to .. (self is $self [".$self->as_string."])")
 	    if $CPAN::DEBUG;
 	File::Path::rmtree("tmp");
@@ -2197,20 +2200,53 @@ sub get {
 		my $fh = FileHandle->new(">$makefilepl")
 		    or Carp::croak("Could not open >$makefilepl");
 		my $cf = $self->called_for || "unknown";
-		$fh->print(qq{
-# This Makefile.PL has been autogenerated by the module CPAN.pm
+		$fh->print(
+qq{# This Makefile.PL has been autogenerated by the module CPAN.pm
+# because there was no Makefile.PL supplied.
 # Autogenerated on: }.scalar localtime().qq{
+
 		    use ExtUtils::MakeMaker;
 		    WriteMakefile(NAME => q[$cf]);
+
 });
 		print qq{Package comes without Makefile.PL.\n}.
 		    qq{  Writing one on our own (calling it $cf)\n};
 	    }
 	}
-    } else {
-	$self->{archived} = "NO";
     }
     return $self;
+}
+
+sub untar_me {
+    my($self,$local_file) = @_;
+    $self->{archived} = "tar";
+    if (system("$CPAN::Config->{gzip} --decompress --stdout $local_file | $CPAN::Config->{tar} xvf -")== 0) {
+	$self->{unwrapped} = "YES";
+    } else {
+	$self->{unwrapped} = "NO";
+    }
+}
+
+sub unzip_me {
+    my($self,$local_file) = @_;
+    $self->{archived} = "zip";
+    if (system("$CPAN::Config->{unzip} $local_file") == 0) {
+	$self->{unwrapped} = "YES";
+    } else {
+	$self->{unwrapped} = "NO";
+    }
+}
+
+sub pm2dir_me {
+    my($self,$local_file) = @_;
+    $self->{archived} = "pm";
+    my $to = File::Basename::basename($local_file);
+    $to =~ s/\.(gz|Z)$//;
+    if (system("$CPAN::Config->{gzip} --decompress --stdout $local_file > $to") == 0) {
+	$self->{unwrapped} = "YES";
+    } else {
+	$self->{unwrapped} = "NO";
+    }
 }
 
 #-> sub CPAN::Distribution::new ;
@@ -3145,7 +3181,7 @@ perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
 
-=head2 The 4 Classes: Authors, Bundles, Modules, Distributions
+=head2 The 4 C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
 Although it may be considered internal, the class hierarchie does
 matter for both users and programmer. CPAN.pm deals with above
@@ -3176,7 +3212,7 @@ BAR/Foo-1.23.tar.gz) with all accompanying material in there. But if
 you would like to install version 1.23_90, you need to know where the
 distribution file resides on CPAN relative to the authors/id/
 directory. If the author is BAR, this might be BAR/Foo-1.23_90.tar.gz,
-so he would have say
+so he would have to say
 
     install BAR/Foo-1.23_90.tar.gz
 
@@ -3191,9 +3227,9 @@ functions in the calling package (C<install(...)>).
 
 There's currently only one class that has a stable interface,
 CPAN::Shell. All commands that are available in the CPAN shell are
-methods of the class CPAN::Shell. The commands that produce listings
-of modules (C<r>, C<autobundle>, C<u>) return a list of the IDs of all
-modules within the list.
+methods of the class CPAN::Shell. Each of the commands that produce
+listings of modules (C<r>, C<autobundle>, C<u>) returns a list of the
+IDs of all modules within the list.
 
 =over 2
 
@@ -3201,13 +3237,15 @@ modules within the list.
 
 The IDs of all objects available within a program are strings that can
 be expanded to the corresponding real objects with the
-C<CPAN::Shell-E<gt>expand()> method. Expand returns a list of
-CPAN::Module objects according to the C<@things> arguments given. In
-scalar context it only returns the first element of the list.
+C<CPAN::Shell-E<gt>expand("Module",@things)> method. Expand returns a
+list of CPAN::Module objects according to the C<@things> arguments
+given. In scalar context it only returns the first element of the
+list.
 
 =item Programming Examples
 
-This enables the programmer to do operations like these:
+This enables the programmer to do operations that combine
+functionalities that are available in the shell.
 
     # install everything that is outdated on my disk:
     perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
@@ -3218,7 +3256,16 @@ This enables the programmer to do operations like these:
         $obj->install;
     }
 
+    # list all modules on my disk that have no VERSION number
+    for $mod (CPAN::Shell->expand("Module","/./")){
+	next unless $mod->inst_file;
+	next if $mod->inst_version;
+	print "No VERSION in ", $mod->id, "\n";
+    }
+
 =back
+
+=head2 Methods in the four
 
 =head2 Cache Manager
 

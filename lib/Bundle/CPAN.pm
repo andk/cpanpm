@@ -16,6 +16,8 @@ C<perl -MCPAN -e 'install Bundle::CPAN'>
 
 =head1 CONTENTS
 
+Bundle::libnet
+
 CPAN
 
 CPAN::WAIT
