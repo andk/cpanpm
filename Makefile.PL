@@ -1,13 +1,13 @@
 #!/usr/bin/perl -w
 BEGIN {$CPAN::No_Config_is_ok=1}
-BEGIN {$CPAN::No_Config_is_ok=1}
+BEGIN {$CPAN::No_Config_is_ok=1} # keep old perls with -w quiet
 use lib "lib";
 use ExtUtils::MakeMaker qw(:DEFAULT neatvalue);
 use CPAN::FirstTime;
 use File::Path;
 use strict;
 
-# $Id: Makefile.PL,v 1.28 1998/01/02 01:21:03 k Exp $
+# $Id: Makefile.PL,v 1.31 1998/01/10 16:59:57 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -29,21 +29,20 @@ WriteMakefile(
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'dist' => { 
 	       PREOP => 'co -l README && pod2text lib/CPAN.pm > README && ci -u README',
-	       DIST_DEFAULT => 'private all tardist',
+	       DIST_DEFAULT => 'all tardist',
 	       COMPRESS => 'gzip -9f'
 	      },
 );
 
-sub MY::postamble {
-    my($self) = shift;
-    my @m;
-    push @m, qq{
-# This is only for me (Andreas Koenig) for the distribution
-private: MIRRORED.BY
-
-MIRRORED.BY: /net/dubravka/home/ftp/pub/CPAN/MIRRORED.BY.gz
-	gzip -dc \$? > \$\@
-};
-    return join "", @m;
-}
-
+# sub MY::postamble {
+#     my($self) = shift;
+#     my @m;
+#     push @m, qq{
+# # This is only for me (Andreas Koenig) for the distribution
+# private: MIRRORED.BY
+# 
+# MIRRORED.BY: /net/dubravka/home/ftp/pub/CPAN/MIRRORED.BY.gz
+# 	  gzip -dc \$? > \$\@
+# };
+#     return join "", @m;
+# }

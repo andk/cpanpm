@@ -3,8 +3,9 @@ methods via plugin?)
 
 Allow different site preferences for index files and other files
 
-Replace tar, gzip, and make with Archive::Tar, Compress::Zlib, and
-Make
+Replace tar and make with Archive::Tar and Make
+
+Maintain the cache at runtime. Currently we only check it at startup.
 
 Determine how to live without CHECKSUM files (e.g. not available)
 

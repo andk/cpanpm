@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 1;
 
@@ -17,6 +17,10 @@ C<perl -MCPAN -e 'install Bundle::CPAN'>
 =head1 CONTENTS
 
 MD5
+
+Compress::Zlib
+
+Archive::Tar
 
 Data::Dumper  # Bundle::libnet may have problems to work without it
 
@@ -36,7 +40,14 @@ This bundle includes CPAN.pm as the base module and CPAN::WAIT, the
 first plugin for CPAN that was developed even before there was an API.
 
 After installing this bundle, it is recommended to quit the current
-session and start again in a new process to enable Term::ReadLine.
+session and start again in a new process to enable Term::ReadLine. If
+you have Term::ReadLine already, it should not be necessary to quit
+and restart as all other packages are recognized at runtime and will
+immediately be used.
+
+Compress::Zlib needs as a prerequisite the zlib library. Currently
+(January 1998) this library is not shipped with the Compress::Zlib
+distribution.
 
 =head1 AUTHOR
 

@@ -1,5 +1,34 @@
 Revision history for Perl extension CPAN.
 
+=head2 January 1998
+
+Larry Virden reported: "cpan> install Image::Colorimetry" doesn't give
+an answer at all. We are more verbose now.
+
+Applied a patch by Ilya Zakharevich to improve the documentation.
+
+Simplified CPAN::FirstTime for Newbies (automatic configuration
+available), advanced users (the MIRRORED.BY list is available for
+selecting CPAN sites) and myself (code overhaul).
+
+Made the output of 'o conf' more verbose: now tells us which
+Configuration files have been read.
+
+Added a Gzip abstraction layer that works with Compress::Zlib as well
+as with the previously used system().
+
+Added support for Archive::Tar. I had to comment it out again, because
+I found a bug in Archive::Tar.
+
+Updated Bundle::CPAN to reflect Compress::Zlib and Archive::Tar.
+
+Documented how the signal handling within the shell is supposed to
+work.
+
+Added a Signal breakpoint to 'r' and 'u' command.
+
+Changed the 'perl Makefile.PL' call from system() to open().
+
 =head2 January 2, 1998: v1.32
 
 This release fixes the most urgent bugs reported during the last 5

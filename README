@@ -128,6 +128,17 @@ DESCRIPTION
       not yet done) the distribution file, changes to the appropriate
       directory and opens a subshell process in that directory.
 
+    Signals
+      CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
+      in the cpan-shell it is intended that you can press `^C' anytime and
+      return to the cpan-shell prompt. A SIGTERM will cause the cpan-shell
+      to clean up and leave the shell loop. You can emulate the effect of a
+      SIGTERM by sending two consecutive SIGINTs, which usually means by
+      pressing `^C' twice.
+
+      CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
+      SIGALRM is used during the run of the `perl Makefile.PL' subprocess.
+
   CPAN::Shell
 
     The commands that are available in the shell interface are methods in
@@ -304,6 +315,8 @@ DESCRIPTION
     If you have neither Net::FTP nor LWP, there is a fallback mechanism
     implemented for an external ftp command or for an external lynx command.
 
+  Finding packages and VERSION
+
     This module presumes that all packages on CPAN
 
     * declare their $VERSION variable in an easy to parse manner. This
@@ -377,6 +390,7 @@ CONFIGURATION
       tar                location of external program tar
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
+      wait_list          arrayref to a wait server to try (See CPAN::WAIT)
 
     You can set and query each of these options interactively in the cpan
     shell with the command set defined within the `o conf' command:
