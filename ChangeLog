@@ -1,3 +1,35 @@
+2000-09-04  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm (dump): made dumo more userfriendly by adding a
+	print statement, it is now a regular command to type C<dump
+	Net::FTP>. But still left undocumented to augment comments from
+	those who read the ChangeLog (That's you:)
+
+2000-09-03  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* heavy re-structuring of Metadata in memory with high potential
+	for breakage. All metadata are now split into a readonly and a
+	read-write part and all objects have a pointer to the readonly
+	part. The Metadata cache logic stores only the readonly part, so
+	that no session-specific data will ever be found again in a future
+	session.
+
+	* AUTOLOAD: removed the autoloader support that was never used and
+	seems not very intersting anymore with today's hardware. RCS: 1.325
+
+	* removed all the %vd comments.
+
+	* shortened all lines longer than 80 characters to make future
+	patches better readable.
+
+	* read_metadata_cache: Introduced protocol version number for
+	Metadata.
+
+	* removing a 'no strict' around the shell loop I do not recall the
+	reason of.
+
+	* lib/CPAN.pm: Folding two occurrances of use vars into one.
+
 2000-09-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* lib/CPAN.pm (readable): After release spotted en error in the
