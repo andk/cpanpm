@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.44a';
+$VERSION = '0.45a';
 
-# $Id: CPAN.pm,v 1.70 1996/11/30 16:59:36 k Exp $
+# $Id: CPAN.pm,v 1.72 1996/12/01 12:15:35 k Exp k $
 
-# my $version = substr q$Revision: 1.70 $, 10; # only used during development
+# my $version = substr q$Revision: 1.72 $, 10; # only used during development
 
 require 5.003;
 require UNIVERSAL if $] == 5.003;
@@ -19,6 +19,7 @@ use ExtUtils::MakeMaker ();
 use File::Find;
 use File::Path ();
 use IO::File ();
+use Safe ();
 
 $Cwd = Cwd::cwd();
 
@@ -1018,17 +1019,19 @@ sub read_modlist {
     my $eval = "";
     while (<$fh>) {
 	next if 1../^\s*$/;
+	next if /use vars/; # will go away in 03...
 	$eval .= $_;
 	return if $CPAN::Signal;
     }
+    $eval .= q{CPAN::Modulelist->data;};
     local($^W) = 0;
-    eval $eval;
+    my($comp) = Safe->new("CPAN::Safe1");
+    my $ret = $comp->reval($eval);
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
-    my $result = CPAN::Modulelist->data;
-    for (keys %$result) {
+    for (keys %$ret) {
 	my $obj = $CPAN::META->instance(CPAN::Module,$_);
-	$obj->set(%{$result->{$_}});
+	$obj->set(%{$ret->{$_}});
 	return if $CPAN::Signal;
     }
 }
@@ -1274,8 +1277,11 @@ sub MD5_check_file {
     my $fh = new IO::File;
     local($/)=undef;
     if (open $fh, $lfile){
-	eval <$fh>;
+	my $eval = <$fh>;
 	close $fh;
+	my($comp) = Safe->new();
+	$cksum = $comp->reval($eval);
+	Carp::confess($@) if $@;
 	if ($cksum->{$basename}->{md5}) {
 	    $self->debug("Found checksum for $basename: $cksum->{$basename}->{md5}\n") if $CPAN::DEBUG;
 	    my $file = $self->{localfile};
@@ -1776,13 +1782,19 @@ sub entries {
 
 sub disk_usage {
     my($self,$dir) = @_;
-    if (not defined $dir or $dir eq "") {
+    if (! defined $dir or $dir eq "") {
 	$self->debug("Cannot determine disk usage for some reason") if $CPAN::DEBUG;
 	return;
     }
     return if defined $self->{SIZE}{$dir};
     local($Du) = 0;
-    find(sub { $Du += -s; }, $dir);
+    find(
+	 sub {
+	     return if -l $_;
+	     $Du += -s;
+	 },
+	 $dir
+	);
     $self->{SIZE}{$dir} = $Du/1024/1024;
     push @{$self->{FIFO}}, $dir;
     $self->debug("measured $dir is $Du") if $CPAN::DEBUG;

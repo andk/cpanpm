@@ -1,5 +1,14 @@
 Revision history for Perl extension CPAN.
 
+=head2 Dec 1, 1996
+
+Added security, evals of CHECKSUMS and 03modlist.data.gz now take
+place in Safe compartements.
+
+CacheMgr now skips symlinks.
+
+Released 0.45a.
+
 =head2 Nov 30, 1996
 
 New module CPAN::Nox is a wrapper with same functionality as CPAN.pm,
