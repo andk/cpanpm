@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.36a';
+$VERSION = '0.37a';
 
-# $Id: CPAN.pm,v 1.56 1996/09/23 12:50:04 k Exp $
-my $version = substr q$Revision: 1.56 $, 10;
+# $Id: CPAN.pm,v 1.58 1996/09/23 14:03:23 k Exp k $
+my $version = substr q$Revision: 1.58 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -68,7 +68,7 @@ eval {require CPAN::Config;};       # system wide config. We eval, because of so
 unshift @INC, $META->catdir($ENV{HOME},".cpan");
 eval {require CPAN::MyConfig;};     # where you can override system wide settings
 
-@EXPORT = qw(bundle bundles expand install make shell test);
+@EXPORT = qw(autobundle bundle bundles expand install make shell test);
 
 sub AUTOLOAD {
     my($l) = $AUTOLOAD;
