@@ -1,3 +1,32 @@
+2000-08-16  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Fixed numerous chdir that were not checked for success.
+
+2000-08-13  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Thought about v-strings and their impact. Marked the relevant
+	places in the code with "%vd" and applied some more or less simple
+	changes to try a few things out. See Todo for a few memo
+	sentences. At least diagnostics.pm is now reported fine as 1.0
+	again.
+
+	* Added support for Archive::Zip. The less external programs
+	needed the better (?)
+
+2000-08-11  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Changed all occurrences of $ in regular expressions to (?!\n)\Z
+	which is a 5.004-save equivalent of \z. Thus patch 5406 to the
+	perl core is re-integrated after it had been thrown out on
+	2000-03-25.
+
+	* isa_perl logic was duplicated in CPAN::Distribution::isa_perl
+	and in CPAN::Shell::_binary_extensions. Made the latter use the
+	former. Also extended the Distribution object with CPAN_COMMENT
+	that can be set from the "02..." index file. If that comment
+	matches /isa_perl\(.+?\)/, then it is a perl and $1 is the
+	version.
+
 2000-08-01  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Quick bugfix release 1.56. Thanks to Bruce Barnett <barnett
@@ -84,6 +113,9 @@
 
 	* Change all \z back to $ because \z is not in perl5.004_05.
 	Thanks to Paul Schinder <schinder@pobox.com> for the report.
+	Update: Later Ronald Kimball posted the better solution to P5P. He
+	said "'\z' is equivalent to '(?!\n)\Z' and '\Z(?!\n)', which
+	should work under 5.004."
 
 2000-03-22  Andreas J. Koenig  <andreas.koenig@anima.de>
 

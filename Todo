@@ -1,5 +1,12 @@
-Prepare for the first module that comes with 1.2.3 version numerbering
-style.
+Prepare for the first module that comes with 1.2.3 version numbering
+style (like diagnostic.pm). This includes: print with the help of %vd
+unless it looks like a number or "undef". Do the same on PAUSE. If you
+read something (either from MM->parse_version or from 02packages) with
+>2 dots in it, print it as it is but compare it as v-string. Looks
+like I need to abstract all that into a class:-( I've started to
+identify a few places where we need changes. Search for %vd. What
+makes it a major pain is that we want this to work on old and new
+perls.
 
 I have a patch by Jochen Wiedmann that implements a per-distribution
 permanent configuration directory. The new containsmods() method in
@@ -8,8 +15,6 @@ permanent configuration directory. The new containsmods() method in
 Option to skip testing (Ask Bjoern Hansen).
 
 Default Argument for make,test,look,etc. could be the last argument???
-
-Document file: URLs. (Lupe Christoph)
 
 Make a preferred download method configurable (allow further download
 methods via plugin?)
@@ -41,9 +46,3 @@ Make the 'make' command itself configurable as suggested by Rujith de
 Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
 instead of 'make install'. (Fixing this is delayed, because it
 interacts with Make.pm)
-
-Make the FirstTime dialog more Absolutely-First-Time-Without-Any-Clue
-style. Thanks to Mike Heins for providing me with insights how users
-feel when they haven't heard of CPAN ever before. Offering
-autodetermination of a CPAN site might help. Offering something like a
-Configure -des might help. Still thinking.
