@@ -1,5 +1,21 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 11, 1996
+
+Isolated both the FTP and the Shell subroutines into their own packages.
+
+Made debug a method in package CPAN::Debug.
+
+Added command o for setting options.
+
+Added a newline here or there.
+
+Added Ulrich's support for proxies.
+
+Local source cache was ignored, now working.
+
+'perl Makefile.PL < /dev/null'  now possible.
+
 =head2 Sep 10, 1996
 
 Releasing Version 0.14-alpha. Nearly everything has been

@@ -50,7 +50,7 @@ First of all, I\'d like to create this directory. Where?
 END
 }
     $default = $cpan_home;
-    $ans = prompt("CPAN build and cache directory?",$default) || $default;
+    $ans = prompt("CPAN build and cache directory?",$default);
     mkpath($ans); # dies if it can't
     $CPAN::Config->{cpan_home} = $ans;
     
@@ -64,7 +64,7 @@ next question.
 };
 
 #    $default = $CPAN::Config->{keep_source_mb}>0 ? $CPAN::Config->{keep_source_mb} : 10;
-#    $ans = prompt("How much diskspace do you want to dedicate to keeping sources (in MB)?", $default) || $default;
+#    $ans = prompt("How much diskspace do you want to dedicate to keeping sources (in MB)?", $default);
 #    $CPAN::Config->{keep_source_mb} = $ans;
 
     $CPAN::Config->{keep_source_where} = MM->catdir($CPAN::Config->{cpan_home},"sources");
@@ -78,7 +78,7 @@ with all the intermediate files?
 END
 
     $default = $CPAN::Config->{build_cache} || 10;
-    $ans = prompt("Cache size for build directory (in MB)?", $default) || $default;
+    $ans = prompt("Cache size for build directory (in MB)?", $default);
     $CPAN::Config->{build_cache} = $ans;
 
     # XXX This the time when we refetch the index files (in days)
@@ -117,13 +117,13 @@ END
 
     $default = $CPAN::Config->{makepl_arg} || "";
     $CPAN::Config->{makepl_arg} =
-	prompt("Parameters for the 'perl Makefile.PL' command?",$default) || $default;
+	prompt("Parameters for the 'perl Makefile.PL' command?",$default);
     $default = $CPAN::Config->{make_arg} || "";
-    $CPAN::Config->{make_arg} = prompt("Parameters for the 'make' command?",$default) || $default;
+    $CPAN::Config->{make_arg} = prompt("Parameters for the 'make' command?",$default);
 
     $default = $CPAN::Config->{make_install_arg} || $CPAN::Config->{make_arg} || "";
     $CPAN::Config->{make_install_arg} =
-	prompt("Parameters for the 'make install' command?",$default) || $default;
+	prompt("Parameters for the 'make install' command?",$default);
 
     {
 	my $local = 'MIRRORED.BY';
@@ -169,31 +169,31 @@ END
 	@{$CPAN::Config->{urllist}} = ();
     }
 
-    print <<END;
+    print qq{
 
 Now we need to know, where your favorite CPAN sites are located. Push
-a few sites onto the array (just in case the first on the array won't
+a few sites onto the array (just in case the first on the array won\'t
 work). If you are mirroring CPAN to your local workstation, specify a
 file: URL.
 
 You can enter the number in front of the URL on the next screen, a
 file:, ftp: or http: URL, or "q" to finish selecting.
 
-END
-
-# ';}
+};
 
     $ans = prompt("Press RETURN to continue");
     my $other;
     $ans = $other = "";
     while (1) {
-	open FH, "| $CPAN::Config->{more} ";
+	my $pipe = -t *STDIN ? "| $CPAN::Config->{more}" : ">/dev/null";
+	open FH, $pipe;
 	print FH @valid;
 	close FH;
 	$default = first_after($official_list_end,@valid);
 	$default ||= my_dom(@valid);
 	#print join ":", $#pos, $#valid, $pos[-1], "\n";
-	$ans = prompt("\nSelect an$other ftp or file URL or a number (q to finish)",$default) || $default;
+	$default ||= "q";
+	$ans = prompt("\nSelect an$other ftp or file URL or a number (q to finish)",$default);
 	my $sel;
 	if ($ans =~ /^\d/) {
 	    #print "Got $ans (corr $pos[$ans] corr $valid[$pos[$ans]])\n";
@@ -206,7 +206,7 @@ END
 	    for ($ans..$#pos) {
 		$pos[$_]--;
 	    }
-	} elsif (@{$CPAN::Config->{urllist}} && $ans =~ /^q|$/i) {
+	} elsif (@{$CPAN::Config->{urllist}} && $ans =~ /^q/i) {
 	    last;
 	} else {
 	    $ans =~ s|/?$|/|; # has to end with one slash

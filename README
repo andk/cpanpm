@@ -1,5 +1,6 @@
-This is an alpha release. The interface presented here is still
-subject to change.
+This is an alpha release. The interface presented here may still
+change. This is especially true for the programming interface. The
+shell interface is already rather stable.
 
 =head1 What it does
 
@@ -92,7 +93,7 @@ And so forth.
 
 =head1 Prerequisites
 
-perl5.003
+perl5.003_04
 
 Net::FTP
 
@@ -102,7 +103,7 @@ ExtUtils::MakeMaker v5.38
 
 Term::ReadKey
 
-Term::ReadLine::Perl
+Term::ReadLine::Perl (0.92)
 
 MD5
 
@@ -111,5 +112,6 @@ LWP
 
 
 
+Enjoy,
 andreas
 
