@@ -28,6 +28,20 @@ back out the code for the future MakeMaker.
 Michael G. Schwern. Moreover, I abandoned the Safe compartement within
 needs_prereqs and replaced it by a regular expression.
 
+In 1.44_55: Spider Boardman <spider@Orb.Nashua.NH.US> sent me a patch
+that fixes a problem he had with forking during inactivity_timeout
+(Message-Id: <199809291706.NAA10786@Orb.Nashua.NH.US>).
+
+Applied a typo patch by abigail@fnx.com sent to P5P.
+
+Ater 1.44_55 Michael G. Schwern sent me a documentation patch for the
+manpage to reflect the dependency tracking. He also reveiled the
+nonsense in a sleep 2 statement that I consequently removed. And he
+motivated me a little to write a comment on how I imagine that queuing
+actually works. The comment is in the source code.
+
+Cleaned up the needs_prereq routine, it had lots of unused code.
+
 =head2 December 1998 after 1.43
 
 Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()

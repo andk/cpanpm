@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.44_54';
+$VERSION = '1.45';
 
-# $Id: CPAN.pm,v 1.250 1999/01/14 12:26:13 k Exp $
+# $Id: CPAN.pm,v 1.253 1999/01/23 14:30:15 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.250 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.253 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -314,16 +314,51 @@ use vars qw($AUTOLOAD @ISA);
 @CPAN::Tarzip::ISA = qw(CPAN::Debug);
 
 package CPAN::Queue;
-# currently only used to determine if we should or shouldn't announce
-# the availability of a new CPAN module
 
-# but now we try to use it for dependency tracking. For that to happen
+# One use of the queue is to determine if we should or shouldn't
+# announce the availability of a new CPAN module
+
+# Now we try to use it for dependency tracking. For that to happen
 # we need to draw a dependency tree and do the leaves first. This can
 # easily be reached by running CPAN.pm recursively, but we don't want
 # to waste memory and run into deep recursion. So what we can do is
-# this: run the queue as the user suggested. When a dependency is
-# detected check if it is in the queue. If so, rearrange, otherwise
-# unshift it on the queue.
+# this:
+
+# CPAN::Queue is the package where the queue is maintained. Dependencies
+# often have high priority and must be brought to the head of the queue,
+# possibly by jumping the queue if they are already there. My first code
+# attempt tried to be extremely correct. Whenever a module needed
+# immediate treatment, I either unshifted it to the front of the queue,
+# or, if it was already in the queue, I spliced and let it bypass the
+# others. This became a too correct model that made it impossible to put
+# an item more than once into the queue. Why would you need that? Well,
+# you need temporary duplicates as the manager of the queue is a loop
+# that
+#
+#  (1) looks at the first item in the queue without shifting it off
+#
+#  (2) cares for the item
+#
+#  (3) removes the item from the queue, *even if its agenda failed and
+#      even if the item isn't the first in the queue anymore* (that way
+#      protecting against never ending queues)
+#
+# So if an item has prerequisites, the installation fails now, but we
+# want to retry later. That's easy if we have it twice in the queue.
+#
+# I also expect insane dependency situations where an item gets more
+# than two lives in the queue. Simplest example is triggered by 'install
+# Foo Foo Foo'. People make this kind of mistakes and I don't want to
+# get in the way. I wanted the queue manager to be a dumb servant, not
+# one that knows everything.
+#
+# Who would I tell in this model that the user wants to be asked before
+# processing? I can't attach that information to the module object,
+# because not modules are installed but distributions. So I'd have to
+# tell the distribution object that it should ask the user before
+# processing. Where would the question be triggered then? Most probably
+# in CPAN::Distribution::rematein.
+# Hope that makes sense, my head is a bit off:-) -- AK
 
 use vars qw{ @All };
 
@@ -334,7 +369,6 @@ sub new {
   # my @all = map { $_->{mod} } @All;
   # warn "Adding Queue object for mod[$mod] all[@all]";
   return $self;
-
 }
 
 sub first {
@@ -556,13 +590,18 @@ sub has_inst {
     $file =~ s|/|\\|g if $^O eq 'MSWin32';
     $file .= ".pm";
     if ($INC{$file}) {
-#	warn "$file in %INC"; #debug
+	# checking %INC is wrong, because $INC{LWP} may be true
+	# although $INC{"URI/URL.pm"} may have failed. But as
+	# I really want to say "bla loaded OK", I have to somehow
+	# cache results.
+	### warn "$file in %INC"; #debug
 	return 1;
     } elsif (eval { require $file }) {
 	# eval is good: if we haven't yet read the database it's
 	# perfect and if we have installed the module in the meantime,
 	# it tries again. The second require is only a NOOP returning
 	# 1 if we had success, otherwise it's retrying
+
 	$CPAN::Frontend->myprint("CPAN: $mod loaded ok\n");
 	if ($mod eq "CPAN::WAIT") {
 	    push @CPAN::Shell::ISA, CPAN::WAIT;
@@ -583,6 +622,8 @@ sub has_inst {
 
 });
 	sleep 2;
+    } else {
+	delete $INC{$file}; # if it inc'd LWP but failed during, say, URI
     }
     return 0;
 }
@@ -1261,8 +1302,7 @@ sub reload {
       CPAN::Index->force_reload;
     } else {
       $CPAN::Frontend->myprint(qq{cpan     re-evals the CPAN.pm file
-index    re-reads the index files
-});
+index    re-reads the index files\n});
     }
 }
 
@@ -3203,10 +3243,11 @@ or
 	if ($CPAN::Config->{inactivity_timeout}) {
 	    eval {
 		alarm $CPAN::Config->{inactivity_timeout};
-		local $SIG{CHLD} = sub { wait };
+		local $SIG{CHLD}; # = sub { wait };
 		if (defined($pid = fork)) {
 		    if ($pid) { #parent
-			wait;
+			# wait;
+			waitpid $pid, 0;
 		    } else {    #child
 		      # note, this exec isn't necessary if
 		      # inactivity_timeout is 0. On the Mac I'd
@@ -3245,7 +3286,6 @@ or
       for my $p (@prereq) {
 	$CPAN::Frontend->myprint("    $p\n");
       }
-      sleep 2;
       my $follow = 0;
       if ($CPAN::Config->{prerequisites_policy} eq "follow") {
 	$follow = 1;
@@ -3255,6 +3295,9 @@ or
 "Shall I follow them and prepend them to the queue
 of modules we are processing right now?", "yes");
 	$follow = $answer =~ /^\s*y/i;
+      } else {
+	local($") = ", ";
+	$CPAN::Frontend->myprint("  Ignoring dependencies on modules @prereq\n");
       }
       if ($follow) {
 	CPAN::Queue->jumpqueue(@prereq,$id); # requeue yourself
@@ -3279,46 +3322,33 @@ sub needs_prereq {
   my $fh = FileHandle->new("<Makefile") or
       $CPAN::Frontend->mydie("Couldn't open Makefile: $!");
   local($/) = "\n";
-  my($v);
-  while (<$fh>) {
-    last if ($v) = m| ^ \# \s+ ( \d+\.\d+ ) .* Revision: |x;
-  }
 
   my(@p,@need);
-  if (1) { # probably all versions of MakeMaker ever so far
-    while (<$fh>) {
-      last if /MakeMaker post_initialize section/;
-      my($p) = m{^[\#]
+  while (<$fh>) {
+    last if /MakeMaker post_initialize section/;
+    my($p) = m{^[\#]
 		 \s+PREREQ_PM\s+=>\s+(.+)
 		 }x;
-      next unless $p;
-      # warn "Found prereq expr[$p]";
+    next unless $p;
+    # warn "Found prereq expr[$p]";
 
-      while ( $p =~ m/(?:\s)([\w\:]+)=>q\[.*?\],?/g ){
-        push @p, $1;
-      }
-      last;
+    while ( $p =~ m/(?:\s)([\w\:]+)=>q\[.*?\],?/g ){
+      push @p, $1;
     }
-  } else { # MakeMaker after a patch I suggested. Let's wait and see
-    while (<$fh>) {
-      last if /MakeMaker post_initialize section/;
-      my($p) = m|\# prerequisite (\S+).+not found|;
-      next unless $p;
-      push @p, $p;
-    }
+    last;
   }
   for my $p (@p) {
-    unless ($CPAN::META->instance("CPAN::Module",$p)->inst_file){
-      if ($self->{'have_sponsored'}{$p}++) {
-	# We have already sponsored it and for some reason it's still
-	# not available. So we do nothing. Or what should we do?
-      } else {
-	# warn "----- Protegere $p -----";
-	push @need, $p;
-	# CPAN::Queue->jumpqueue($p);
-	# $ret++;
-      }
+    my $mo = $CPAN::META->instance("CPAN::Module",$p);
+    next if $mo->uptodate;
+    # it's not needed, so don't push it. We cannot omit this step, because
+    # if 'force' is in effect, nobody else will check.
+    if ($self->{'have_sponsored'}{$p}++){
+      # We have already sponsored it and for some reason it's still
+      # not available. So we do nothing. Or what should we do?
+      # if we push it again, we have a potential infinite loop
+      next;
     }
+    push @need, $p;
   }
   return @need;
 }
@@ -3839,15 +3869,12 @@ sub uptodate {
     if (defined $inst_file) {
 	$have = $self->inst_version;
     }
-    if (1){ # A block for scoping $^W, the if is just for the visual
-            # appeal
-	local($^W)=0;
-	if ($inst_file
-	    &&
-	    $have >= $latest
-	   ) {
-	    return 1;
-	}
+    local($^W)=0;
+    if ($inst_file
+	&&
+	$have >= $latest
+       ) {
+      return 1;
     }
     return;
 }
@@ -4176,11 +4203,13 @@ each as object-E<gt>as_glimpse. E.g.
 
 =item make, test, install, clean  modules or distributions
 
-These commands take any number of arguments and investigate what is
+These commands take any number of arguments and investigates what is
 necessary to perform the action. If the argument is a distribution
-file name (recognized by embedded slashes), it is processed. If it is a
-module, CPAN determines the distribution file in which this module is
-included and processes that.
+file name (recognized by embedded slashes), it is processed. If it is
+a module, CPAN determines the distribution file in which this module
+is included and processes that, following any dependencies named in
+the module's Makefile.PL (this behavior is controlled by
+I<prerequisites_policy>.)
 
 Any C<make> or C<test> are run unconditionally. An
 
@@ -4505,6 +4534,9 @@ defined:
   make_install_arg   same as make_arg for 'make install'
   makepl_arg	     arguments passed to 'perl Makefile.PL'
   pager              location of external program more (or any pager)
+  prerequisites_policy
+                     what to do if you are missing module prerequisites
+                     ('follow' automatically, 'ask' me, or 'ignore')
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   tar                location of external program tar
   unzip              location of external program unzip
@@ -4572,7 +4604,7 @@ install foreign, unmasked, unsigned code on your machine. We compare
 to a checksum that comes from the net just as the distribution file
 itself. If somebody has managed to tamper with the distribution file,
 they may have as well tampered with the CHECKSUMS file. Future
-development will go towards strong authentification.
+development will go towards strong authentication.
 
 =head1 EXPORT
 
@@ -4609,14 +4641,14 @@ CPAN.pm unattained.
 
 Thanks to Graham Barr for contributing the firewall following howto.
 
-Firewalls can be categorized into threee basic types.
+Firewalls can be categorized into three basic types.
 
 =over
 
 =item http firewall
 
 This is where the firewall machine runs a web server and to access the
-outside world you must do it via the web server. If you set envronment
+outside world you must do it via the web server. If you set environment
 variables like http_proxy or ftp_proxy to a values beginning with http://
 or in your web browser you have to set proxy information then you know
 you are running a http firewall.
@@ -4634,9 +4666,9 @@ connecting to the firewall with ftp, then entering a username like
 To access servers outside these type of firewalls with perl you
 will need to use Net::FTP.
 
-=item One way visability
+=item One way visibility
 
-I say one way visability as these firewalls try to make themselve look
+I say one way visibility as these firewalls try to make themselve look
 invisible to the users inside the firewall. An FTP data connection is
 normally created by sending the remote server your IP address and then
 listening for the connection. But the remote server will not be able to
@@ -4654,7 +4686,7 @@ it with the SOCKS library, this is what is normally called a ``socksified''
 perl. With this executable you will be able to connect to servers outside
 the firewall as if it is not there.
 
-=item IP Masquarade
+=item IP Masquerade
 
 This is the firewall implemented in the Linux kernel, it allows you to
 hide a complete network behind one IP address. With this firewall no
