@@ -15,7 +15,7 @@
 # - The "area" in dst_location is optional.
 #   It is the state (United States), county, prefecture, district.
 # - The "lon,lat" in dst_location are optional but preferable.
-#   They are the longitude, latitude, in degrees.minutes.
+#   They are the longitude, latitude, in degrees.minutes_in_decimal.
 # - The dst_organization tries to be correct but in some cases it
 #   cannot be because the format is so simple:
 #   - Greek/Cyrillic/Kanji/Hanzi/... cannot be rendered in ISO Latin 1
@@ -716,6 +716,19 @@ ftp.orst.edu:
 # dst_dst          = "ftp://ftp.orst.edu/pub/packages/CPAN/"
 # dst_contact      = "mailto:ftpadmin@ftp.orst.edu"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
+ftp.epix.net:
+  frequency        = "daily"
+  dst_directory    = "ftp.epix.net:/pub/languages/perl/"
+  dst_location     = "Dallas, Pennsylvania, USA, North America (41.32N 75.97W)"
+  dst_organisation = "EPIX Internet Services"
+  dst_timezone     = "GMT-5 (EST5EDT)"
+  dst_contact      = "archive@epix.net"
+  dst_src          = "ftp.rge.com:/pub/languages/perl/"
+
+# dst_dst          = "ftp://ftp.epix.net/pub/languages/perl/"
+# dst_contact      = "mailto:archive@epix.net"
+# dst_src          = "ftp://ftp.rge.com/pub/languages/perl/"
 
 ftp.sedl.org:
   frequency        = "daily"

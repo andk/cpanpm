@@ -1,5 +1,28 @@
 Revision history for Perl extension CPAN.
 
+=head2 Jan 17, 1997
+
+Raphael Manfredi considerably improved the logic of the external ftp
+program. No .netrc needed anymore.
+
+Made the proxy environment variables configurable in the Config hash.
+
+Introduced the "Don't be silly..." message when they try to make,
+test or install an author.
+
+MD5 is now checked earlier (before we unroll the tarball).
+
+ALPHA STUFF:
+
+Finished the readme method _without documenting it_. Documentation
+follows after a short testing period. This method just displays the
+readme file through a pager.
+
+Implemented the look method _without documenting it_. Documentation
+follows after a short testing period. This method opens a subprocess
+shell in the associated directory, e.g. for manual building or
+inspection. (Thanks to Gisle for the idea!)
+
 =head2 Dec 23, 1996
 
 Implemented the external-ftp fallback. We're deep in UNIX land here
