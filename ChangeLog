@@ -1,3 +1,7 @@
+2003-07-04  Andreas J Koenig  <andreas.koenig@anima.de>
+
+	* This is 1.71
+
 2003-05-09  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* FirstTime.pm: Do not mention POLLUTE=1 anymore. It's an old
