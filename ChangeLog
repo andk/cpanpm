@@ -1,3 +1,8 @@
+2003-09-20  Andreas J Koenig  <andreas.koenig@anima.de>
+
+	* Tiny tweak for the rare case that a module has an author who has
+	no email so seems to be inexistent. CGI::Request triggered this bug.
+
 2003-07-31  Andreas J Koenig  <andreas.koenig@anima.de>
 
 	* The pumpkin has asked for a longer testing period of the PKI

@@ -43,13 +43,20 @@ README: lib/CPAN.pm Makefile
 	pod2text lib/CPAN.pm > $@
 
 checkout_meta ::
-	co -l META.yml
+	false && co -l META.yml
 
 checkin_meta ::
-	ci -u META.yml
+	false && ci -u META.yml
 
 sign ::
 	cpansign -s
 
 }
 }
+
+sub MY::dist_ci {
+  return qq{ci :
+	svn ci
+};
+}
+
