@@ -1,5 +1,10 @@
 Revision history for Perl extension CPAN.
 
+=head2 Jan 22, 1997
+
+Made it compatible with 5.003 for testing purposes. Thanks for
+precious hints go to Mark D. Baushke again!
+
 =head2 Jan 20, 1997
 
 Made the proxy environment variables configurable in the Config hash
@@ -52,9 +57,9 @@ Fixed big bug in the parsing code for .netrc.
 
 =head2 Dec 22, 1996
 
-An afternoon of intense email exchange with Mark D. Baushke helped to
-iron out some nits and make the whole thing more robust. A big thank
-you to Mark.
+An afternoon of intense email exchange with Mark D. Baushke
+E<lt>mdb@cisco.comE<gt> helped to iron out some nits and make the
+whole thing more robust. A big thank you to Mark.
 
 The CPAN::Bundle class now knows about force.
 

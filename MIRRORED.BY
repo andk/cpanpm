@@ -283,6 +283,19 @@ ftp.rz.ruhr-uni-bochum.de:
 # dst_contact      = "mailto:ftp-bugs@rz.ruhr-uni-bochum.de"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
+ftp.uni-erlangen.de:
+  frequency        = "daily"
+  dst_directory    = "ftp.uni-erlangen.de:/pub/source/Perl/CPAN/"
+  dst_location     = "Erlangen, Germany, Europe (49.57N 11.03E)"
+  dst_organization = "Friedrich Alexander Universität Erlangen-Nürnberg;Friedrich Alexander University of Erlangen-Nürnberg"
+  dst_timezone     = "GMT+1"
+  dst_contact      = "ftpsrc@rrze.uni-erlangen.de"
+  dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN"
+
+# dst_dst          = "ftp://ftp.uni-erlangen.de/pub/source/Perl/CPAN/"
+# dst_contact      = "mailto:ftpsrc@rrze.uni-erlangen.de"
+# dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
+
 ftp.uni-hamburg.de:
   frequency        = "daily"
   dst_directory    = "ftp.uni-hamburg.de:/pub/soft/lang/perl/CPAN/"

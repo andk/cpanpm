@@ -75,28 +75,28 @@ DESCRIPTION
 
           cpan> a ANDK     
           Author id = ANDK
-      	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
-      	FULLNAME     Andreas König
+              EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+              FULLNAME     Andreas König
 
           cpan> a /andk/   
           Author id = ANDK
-      	EMAIL        a.koenig@franz.ww.TU-Berlin.DE
-      	FULLNAME     Andreas König
+              EMAIL        a.koenig@franz.ww.TU-Berlin.DE
+              FULLNAME     Andreas König
 
           cpan> a /and.*rt/
           Author          ANDYD (Andy Dougherty)
           Author          MERLYN (Randal L. Schwartz)
 
 
-    make, test, install, clean modules or distributions
-      The four commands do indeed exist just as written above. Each
-      of them takes as many arguments as provided and investigates
-      for each what it might be. Is it a distribution file
-      (recognized by embedded slashes), this file is being
-      processed. Is it a module, CPAN determines the distribution
-      file where this module is included and processes that.
+    make, test, install, clean  modules or distributions
+      These commands do indeed exist just as written above. Each of
+      them takes any number of arguments and investigates for each
+      what it might be. Is it a distribution file (recognized by
+      embedded slashes), this file is being processed. Is it a
+      module, CPAN determines the distribution file where this
+      module is included and processes that.
 
-      Any `make' and `test' are run unconditionally. A
+      Any `make', `test', and `readme' are run unconditionally. A
 
         C<install E<lt>distribution_fileE<gt>>
 
@@ -107,11 +107,11 @@ DESCRIPTION
 
 
       CPAN checks if an install is actually needed for it and prints
-      *Foo up to date* in case the module doesnE<39>t need to be
+      *Foo up to date* in case the module doesn't need to be
       updated.
 
       CPAN also keeps track of what it has done within the current
-      session and doesnE<39>t try to build a package a second time
+      session and doesn't try to build a package a second time
       regardless if it succeeded or not. The `force ' command takes
       as first argument the method to invoke (currently: make, test,
       or install) and executes the command from scratch.
@@ -125,6 +125,14 @@ DESCRIPTION
           OpenGL-0.4/
           OpenGL-0.4/COPYRIGHT
           [...]
+
+
+    readme, look module or distribution
+      These two commands take only one argument, be it a module or a
+      distribution file. `readme' displays the README of the
+      associated distribution file. `Look' gets and untars (if not
+      yet done) the distribution file, changes to the appropriate
+      directory and opens a subshell process in that directory.
 
 
   CPAN::Shell
@@ -151,29 +159,28 @@ DESCRIPTION
     argument and runs the make/test/install cycle with brute force
     over all installed dynamically loadable extensions (aka XS
     modules) with 'force' in effect. Primary purpose of this command
-    is to act as a rescue in case your perl breaks binary
-    compatibility. If one of the modules that CPAN uses is in turn
-    depending on binary compatibility (so you cannot run CPAN
-    commands), then you should try the CPAN::Nox module for
-    recovery.
+    is to finish a network installation. Imagine, you have a common
+    source tree for two different architectures. You decide to do a
+    completely independent fresh installation. You start on one
+    architecture with the help of a Bundle file produced earlier.
+    CPAN installs the whole Bundle for you, but when you try to
+    repeat the job on the second architecture, CPAN responds with a
+    `"Foo up to date"' message for all modules. So you will be glad
+    to run recompile in the second architecture and you're done.
 
-    Another popular use for recompile is to finish a network
-    installation. Imagine, you have a common source tree for two
-    different architectures. You decide to do a completely
-    independent fresh installation. You start on one architecture
-    with the help of a Bundle file produced earlier. CPAN installs
-    the whole Bundle for you, but when you try to repeat the job on
-    the second architecture, CPAN responds with a `"Foo up to date"'
-    message for all modules. So you will be glad to run recompile in
-    the second architecture and youE<39>re done.
+    Another popular use for `recompile' is to act as a rescue in
+    case your perl breaks binary compatibility. If one of the
+    modules that CPAN uses is in turn depending on binary
+    compatibility (so you cannot run CPAN commands), then you should
+    try the CPAN::Nox module for recovery.
 
-  ProgrammerE<39>s interface
+  Programmer's interface
 
     If you do not enter the shell, the available shell commands are
     both available as methods (`CPAN::Shell->install(...)') and as
     functions in the calling package (`install(...)'). The
-    programmerE<39>s interface has beta status. Do not heavily rely
-    on it, changes may still be necessary.
+    programmer's interface has beta status. Do not heavily rely on
+    it, changes may still be necessary.
 
   Cache Manager
 
@@ -205,7 +212,7 @@ DESCRIPTION
     other pod with the only difference, that *one special pod
     section* exists starting with (verbatim):
 
-    	=head1 CONTENTS
+            =head1 CONTENTS
 
 
     In this pod section each line obeys the format
@@ -309,7 +316,7 @@ CONFIGURATION
       build_dir          locally accessible directory to build modules
       index_expire       after how many days refetch index files
       cpan_home          local directory reserved for this package
-      gzip		     location of external program gzip
+      gzip               location of external program gzip
       inactivity_timeout breaks interactive Makefile.PLs after that
                          many seconds inactivity. Set to 0 to never break.
       inhibit_startup_message
@@ -317,13 +324,13 @@ CONFIGURATION
       keep_source        keep the source in a local directory?
       keep_source_where  where keep the source (if we do)
       make               location of external program make
-      make_arg	     arguments that should always be passed to 'make'
+      make_arg           arguments that should always be passed to 'make'
       make_install_arg   same as make_arg for 'make install'
-      makepl_arg	     arguments passed to 'perl Makefile.PL'
+      makepl_arg         arguments passed to 'perl Makefile.PL'
       pager              location of external program more (or any pager)
       tar                location of external program tar
       unzip              location of external program unzip
-      urllist	     arrayref to nearby CPAN sites (or equivalent locations)
+      urllist            arrayref to nearby CPAN sites (or equivalent locations)
 
 
     You can set and query each of these options interactively in the

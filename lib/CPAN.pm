@@ -1,13 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.10';
+$VERSION = '1.11';
 
-# $Id: CPAN.pm,v 1.99 1997/01/21 00:58:02 k Exp $
+# $Id: CPAN.pm,v 1.101 1997/01/22 18:43:40 k Exp $
 
-# my $version = substr q$Revision: 1.99 $, 10; # only used during development
-
-use 5.00315;
+# my $version = substr q$Revision: 1.101 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -19,7 +17,7 @@ use File::Basename ();
 use File::Copy ();
 use File::Find;
 use File::Path ();
-use IO::File ();
+use FileHandle ();
 use Safe ();
 use Text::ParseWords ();
 
@@ -44,6 +42,7 @@ END { $End++; &cleanup; }
 		 );
 
 $CPAN::DEBUG ||= 0;
+$CPAN::Signal ||= 0;
 
 package CPAN;
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META);
@@ -114,7 +113,7 @@ sub checklock {
     my($self) = @_;
     my $lockfile = CPAN->catfile($CPAN::Config->{cpan_home},".lock");
     if (-f $lockfile && -M _ > 0) {
-	my $fh = IO::File->new($lockfile);
+	my $fh = FileHandle->new($lockfile);
 	my $other = <$fh>;
 	$fh->close;
 	if (defined $other && $other) {
@@ -143,7 +142,7 @@ sub checklock {
     }
     File::Path::mkpath($CPAN::Config->{cpan_home});
     my $fh;
-    unless ($fh = IO::File->new(">$lockfile")) {
+    unless ($fh = FileHandle->new(">$lockfile")) {
 	if ($! =~ /Permission/) {
 	    my $incc = $INC{'CPAN/Config.pm'};
 	    my $myincc = MY->catfile($ENV{HOME},'.cpan','CPAN','MyConfig.pm');
@@ -498,7 +497,7 @@ Known options:
 sub reload {
     if ($_[1] =~ /cpan/i) {
 	CPAN->debug("reloading the whole CPAN.pm") if $CPAN::DEBUG;
-	my $fh = IO::File->new($INC{'CPAN.pm'});
+	my $fh = FileHandle->new($INC{'CPAN.pm'});
 	local $/;
 	undef $/;
 	$redef = 0;
@@ -598,6 +597,7 @@ sub _u_r_common {
 		$have = "-";
 	    }
 	}
+	return if $CPAN::Signal; # this is sometimes lengthy
 	$seen{$file} ||= 0;
 	if ($what eq "a") {
 	    push @result, sprintf "%s %s\n", $module->id, $have;
@@ -617,7 +617,6 @@ sub _u_r_common {
 	$have = substr($have,0,8) if length($have) > 8;
 	printf $sprintf, $module->id, $have, $latest, $file;
 	$need{$module->id}++;
-	return if $CPAN::Signal; # this is sometimes lengthy
     }
     unless (%need) {
 	if ($what eq "u") {
@@ -663,7 +662,7 @@ sub autobundle {
 	$me = sprintf "Snapshot_%04d_%02d_%02d_%02d", $y, $m, $d, ++$c;
 	$to = $CPAN::META->catfile($todir,"$me.pm");
     }
-    my($fh) = IO::File->new(">$to") or Carp::croak "Can't open >$to: $!";
+    my($fh) = FileHandle->new(">$to") or Carp::croak "Can't open >$to: $!";
     $fh->print(
 	       "package Bundle::$me;\n\n",
 	       "\$VERSION = '0.01';\n\n",
@@ -702,7 +701,19 @@ sub expand {
 	my $obj;
 	if (defined $regex) {
 	    for $obj ( sort {$a->id cmp $b->id} $CPAN::META->all($class)) {
-		push @m, $obj if $obj->id =~ /$regex/i or $obj->can('name') && $obj->name  =~ /$regex/i;
+		push @m, $obj
+		    if
+			$obj->id =~ /$regex/i
+			    or
+			(
+			 (
+			  $] < 5.00303 ### provide sort of compatibility with 5.003
+			  ||
+			  $obj->can('name')
+			 )
+			 &&
+			 $obj->name  =~ /$regex/i
+			);
 	    }
 	} else {
 	    my($xarg) = $arg;
@@ -757,7 +768,11 @@ sub rematein {
 	}
 	if (ref $obj) {
 	    CPAN->debug(qq{pragma[$pragma] meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
-	    $obj->$pragma() if $pragma && $obj->can($pragma);
+	    $obj->$pragma()
+		if
+		    $pragma
+			&&
+		    ($] < 5.00303 || $obj->can($pragma)); ### compatibility with 5.003
 	    $obj->$meth();
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
@@ -894,10 +909,14 @@ sub localize {
 	    # a socksified ftp program...
 	    if (-x $CPAN::Config->{'ftp'}) {
 		my($netrc) = CPAN::FTP::netrc->new;
-		use File::stat;
+#*#		use File::stat;
 		my $timestamp = 0;
-		my $st = stat($aslocal);
-		$timestamp = $st->mtime if defined $st;
+#*#		my $st = stat($aslocal);
+		my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+		 $atime,$mtime,$ctime,$blksize,$blocks)
+		    = stat($aslocal); #*# stat
+#*#		$timestamp = $st->mtime if defined $st;
+		$timestamp = $mtime if defined $mtime; #*# stat
 		if (
 		    ($netrc->hasdefault() || $netrc->contains($host)) &&
 		    $netrc->protected
@@ -911,7 +930,7 @@ sub localize {
 
 }
 			 );
-		    my($fh) = IO::File->new;
+		    my($fh) = FileHandle->new;
 		    my($targetfile) = File::Basename::basename($aslocal);
 		    my(@dialog);
 		    push @dialog, "lcd $aslocal_dir";
@@ -924,8 +943,12 @@ sub localize {
 			$fh->print("$_\n");
 		    }
 		    close $fh;		# Wait for process to complete
-		    $st = stat($aslocal);
-		    if (defined $st && $st->mtime > $timestamp) {
+#*#		    $st = stat($aslocal);
+		    my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+		       $atime,$mtime,$ctime,$blksize,$blocks)
+			= stat($aslocal); #*# stat
+#*#		    if (defined $st && $st->mtime > $timestamp) {
+		    if ($mtime > $timestamp) { #*#
 			print "GOT $aslocal\n";
 			return $aslocal;
 		    } else {
@@ -956,13 +979,17 @@ sub localize {
  get $getfile $targetfile
  bye
 ";
-		my $cmd = IO::File->new;
+		my $cmd = FileHandle->new;
 		$cmd->open("|$CPAN::Config->{'ftp'} -n") or
 		    die "Cannot fork: $!\n";
 		$cmd->print($template);
 		$cmd->close;
-		$st = stat($aslocal);
-		if (defined $st && $st->mtime > $timestamp) {
+#*#		$st = stat($aslocal);
+		($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+		   $atime,$mtime,$ctime,$blksize,$blocks)
+		    = stat($aslocal); #*# stat
+#*#		if (defined $st && $st->mtime > $timestamp) {
+		if ($mtime > $timestamp) { #*# stat
 			print "GOT $aslocal\n";
 			return $aslocal;
 		} else {
@@ -1023,7 +1050,7 @@ sub new {
     my $file = MY->catfile($ENV{HOME},".netrc");
     my($fh,@machines,$hasdefault);
     $hasdefault = 0;
-    if($fh = IO::File->new($file,"r")){
+    if($fh = FileHandle->new($file,"r")){
 	local($/) = "";
       NETRC: while (<$fh>) {
 	    my(@tokens) = split ' ', $_;
@@ -1041,10 +1068,14 @@ sub new {
     } else {
 	$file = "";
     }
-    use File::stat;
-    my $st = stat($file);
+#*#    use File::stat;
+#*#    my $st = stat($file);
+    my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
+       $atime,$mtime,$ctime,$blksize,$blocks)
+	= stat($file); #*# stat
     my $protected = 0;
-    $protected = ($st->mode & 077) == 0 if defined $st;
+#*#    $protected = ($st->mode & 077) == 0 if defined $st;
+    $protected = ($mode & 077) == 0; #*#
     bless {
 	   'mach' => [@machines],
 	   'netrc' => $file,
@@ -1201,7 +1232,7 @@ sub read_authindex {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
-    my $fh = IO::File->new("$pipe|");
+    my $fh = FileHandle->new("$pipe|");
     while (<$fh>) {
 	chomp;
 	my($userid,$fullname,$email) = /alias\s+(\S+)\s+\"([^\"\<]+)\s+<([^\>]+)\>\"/;
@@ -1221,7 +1252,7 @@ sub read_modpacks {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
-    my $fh = IO::File->new("$pipe|");
+    my $fh = FileHandle->new("$pipe|");
     while (<$fh>) {
 	next if 1../^\s*$/;
 	chomp;
@@ -1289,7 +1320,7 @@ sub read_modlist {
     my($cl,$index_target) = @_;
     my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $index_target";
     warn "Going to read $index_target\n";
-    my $fh = IO::File->new("$pipe|");
+    my $fh = FileHandle->new("$pipe|");
     my $eval = "";
     while (<$fh>) {
 	next if 1../^\s*$/;
@@ -1486,7 +1517,7 @@ sub get {
 		# do we have anything to do?
 		$self->{'configure'} = $configure;
 	    } else {
-		my $fh = IO::File->new(">$makefilepl") or Carp::croak("Could not open >$makefilepl");
+		my $fh = FileHandle->new(">$makefilepl") or Carp::croak("Could not open >$makefilepl");
 		my $cf = $self->called_for || "unknown";
 		$fh->print(qq{
 # This Makefile.PL has been autogenerated by the module CPAN.pm
@@ -1554,9 +1585,9 @@ sub readme {
 		       );
     $self->debug("Doing localize") if $CPAN::DEBUG;
     $local_file = CPAN::FTP->localize("authors/id/$sans.readme", $local_wanted);
-    my $fh_pager = IO::File->new;
+    my $fh_pager = FileHandle->new;
     $fh_pager->open("|$CPAN::Config->{'pager'}") or die "Could not open pager $CPAN::Config->{'pager'}: $!";
-    my $fh_readme = IO::File->new;
+    my $fh_readme = FileHandle->new;
     $fh_readme->open($local_file) or die "Could not open $local_file: $!";
     $fh_pager->print(<$fh_readme>);
 }
@@ -1610,7 +1641,7 @@ sub verifyMD5 {
 sub MD5_check_file {
     my($self,$lfile,$basename) = @_;
     my($cksum);
-    my $fh = new IO::File;
+    my $fh = new FileHandle;
     local($/)=undef;
     if (open $fh, $lfile){
 	my $eval = <$fh>;
@@ -1806,7 +1837,7 @@ sub install {
     chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
     my $system = join " ", $CPAN::Config->{'make'}, "install", $CPAN::Config->{make_install_arg};
-    my($pipe) = IO::File->new("$system 2>&1 |");
+    my($pipe) = FileHandle->new("$system 2>&1 |");
     my($makeout) = "";
 
  # #If I were to try this, I'd do something like:
@@ -1884,7 +1915,7 @@ sub contains {
 	$parsefile = $to;
     }
     my @result;
-    my $fh = new IO::File;
+    my $fh = new FileHandle;
     local $/ = "\n";
     open($fh,$parsefile) or die "Could not open '$parsefile': $!";
     my $inpod = 0;
@@ -2005,7 +2036,7 @@ sub as_string {
 		    ) if $self->{statd};
     my $local_file = $self->inst_file;
     if ($local_file && ! exists $self->{MANPAGE}) {
-	my $fh = IO::File->new($local_file) or Carp::croak("Couldn't open $local_file: $!");
+	my $fh = FileHandle->new($local_file) or Carp::croak("Couldn't open $local_file: $!");
 	my $inpod = 0;
 	my(@result);
 	local $/ = "\n";
@@ -2131,6 +2162,7 @@ sub xs_file {
 sub inst_version {
     my($self) = @_;
     my $parsefile = $self->inst_file or return 0;
+    local($^W) = 0 if $] < 5.00303;
     my $have = MY->parse_version($parsefile);
     $have ||= 0;
     $have =~ s/\s+//g;
@@ -2336,7 +2368,7 @@ sub commit {
     my $mode;
     # mkpath!?
 
-    my($fh) = IO::File->new;
+    my($fh) = FileHandle->new;
     $configpm ||= cfile();
     if (-f $configpm) {
 	$mode = (stat $configpm)[2];
@@ -2399,7 +2431,7 @@ sub load {
 	      my($configpmtest) = MY->catfile($configpmdir,"Config.pm");
 	      if (-d $configpmdir || File::Path::mkpath($configpmdir)) {
 #_#_# following code dumped core on me with 5.003_11, a.k.
-#_#_#		       $fh = IO::File->new;
+#_#_#		       $fh = FileHandle->new;
 #_#_#		       if ($fh->open(">$configpmtest")) {
 #_#_#			  $fh->print("1;\n");
 #_#_#			   $configpm = $configpmtest;
