@@ -1,3 +1,11 @@
+2003-04-12  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Makefile.PL: do not require FirstTime anymore
+
+2003-04-08  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN.pm: mydie was called as function instead of method
+
 2003-04-05  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* CPAN::FTP: Try maybe_command on $CPAN::Config->{ftp} plus minor
