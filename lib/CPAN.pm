@@ -1,3 +1,4 @@
+# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
 use vars qw{$Try_autoload
             $Revision
@@ -6,13 +7,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.57_54';
+$VERSION = '1.57_55';
 
-# $Id: CPAN.pm,v 1.319 2000/08/30 11:21:26 k Exp $
+# $Id: CPAN.pm,v 1.322 2000/08/31 08:06:14 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.319 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.322 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -511,7 +512,11 @@ sub all_objects {
 }
 *all = \&all_objects;
 
-# Called by shell, not in batch mode. Not clean XXX
+# Called by shell, not in batch mode. In batch mode I see no risk in
+# having many processes updating something as installations are
+# continually checked at runtime. In shell mode I suspect it is
+# unintentional to open more than one shell at a time
+
 #-> sub CPAN::checklock ;
 sub checklock {
     my($self) = @_;
@@ -1151,8 +1156,8 @@ sub load {
                                         # system wide settings
       shift @INC;
     }
-    return unless @miss = $self->not_loaded;
-    # XXX better check for arrayrefs too
+    return unless @miss = $self->missing_config_data;
+
     require CPAN::FirstTime;
     my($configpm,$fh,$redo,$theycalled);
     $redo ||= "";
@@ -1219,8 +1224,8 @@ $configpm initialized.
     CPAN::FirstTime::init($configpm);
 }
 
-#-> sub CPAN::Config::not_loaded ;
-sub not_loaded {
+#-> sub CPAN::Config::missing_config_data ;
+sub missing_config_data {
     my(@miss);
     for (qw(
 	    cpan_home keep_source_where build_dir build_cache scan_cache
@@ -2018,8 +2023,6 @@ sub is_reachable {
 }
 
 #-> sub CPAN::FTP::localize ;
-# sorry for the ugly code here, I'll clean it up as soon as Net::FTP
-# is in the core
 sub localize {
     my($self,$file,$aslocal,$force) = @_;
     $force ||= 0;
@@ -2062,13 +2065,16 @@ sub localize {
 	    $Ua = LWP::UserAgent->new;
 	    my($var);
 	    $Ua->proxy('ftp',  $var)
-		if $var = $CPAN::Config->{'ftp_proxy'} || $ENV{'ftp_proxy'};
+		if $var = $CPAN::Config->{ftp_proxy} || $ENV{ftp_proxy};
 	    $Ua->proxy('http', $var)
-		if $var = $CPAN::Config->{'http_proxy'} || $ENV{'http_proxy'};
+		if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
 	    $Ua->no_proxy($var)
-		if $var = $CPAN::Config->{'no_proxy'} || $ENV{'no_proxy'};
+		if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
 	}
     }
+    $ENV{ftp_proxy} = $CPAN::Config->{ftp_proxy} if $CPAN::Config->{ftp_proxy};
+    $ENV{http_proxy} = $CPAN::Config->{http_proxy} if $CPAN::Config->{http_proxy};
+    $ENV{no_proxy} = $CPAN::Config->{no_proxy} if $CPAN::Config->{no_proxy};
 
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
@@ -2091,14 +2097,16 @@ sub localize {
 		($a == $Thesite)
 	    } 0..$last;
     }
-    my($level,@levels);
+    my(@levels);
     if ($Themethod) {
 	@levels = ($Themethod, grep {$_ ne $Themethod} qw/easy hard hardest/);
     } else {
 	@levels = qw/easy hard hardest/;
     }
     @levels = qw/easy/ if $^O eq 'MacOS';
-    for $level (@levels) {
+    my($levelno);
+    for $levelno (0..$#levels) {
+        my $level = $levels[$levelno];
 	my $method = "host$level";
 	my @host_seq = $level eq "easy" ?
 	    @reordered : 0..$last;  # reordered has CDROM up front
@@ -2113,17 +2121,20 @@ sub localize {
 	  return $ret;
 	} else {
 	  unlink $aslocal;
+          last if $CPAN::Signal; # need to cleanup
 	}
     }
-    my(@mess);
-    push @mess,
-    qq{Please check, if the URLs I found in your configuration file \(}.
-	join(", ", @{$CPAN::Config->{urllist}}).
-	    qq{\) are valid. The urllist can be edited.},
-	    qq{E.g. with ``o conf urllist push ftp://myurl/''};
-    $CPAN::Frontend->myprint(Text::Wrap::wrap("","",@mess). "\n\n");
-    sleep 2;
-    $CPAN::Frontend->myprint("Cannot fetch $file\n\n");
+    unless ($CPAN::Signal) {
+        my(@mess);
+        push @mess,
+            qq{Please check, if the URLs I found in your configuration file \(}.
+                join(", ", @{$CPAN::Config->{urllist}}).
+                    qq{\) are valid. The urllist can be edited.},
+                        qq{E.g. with ``o conf urllist push ftp://myurl/''};
+        $CPAN::Frontend->myprint(Text::Wrap::wrap("","",@mess). "\n\n");
+        sleep 2;
+        $CPAN::Frontend->myprint("Cannot fetch $file\n\n");
+    }
     if ($restore) {
 	rename "$aslocal.bak", $aslocal;
 	$CPAN::Frontend->myprint("Trying to get away with old file:\n" .
@@ -2137,7 +2148,7 @@ sub hosteasy {
     my($self,$host_seq,$file,$aslocal) = @_;
     my($i);
   HOSTEASY: for $i (@$host_seq) {
-      my $url = $CPAN::Config->{urllist}[$i] || $CPAN::Defaultsite;
+        my $url = $CPAN::Config->{urllist}[$i] || $CPAN::Defaultsite;
 	unless ($self->is_reachable($url)) {
 	    $CPAN::Frontend->myprint("Skipping $url (seems to be not reachable)\n");
 	    sleep 2;
@@ -2177,7 +2188,7 @@ sub hosteasy {
 		}
 	    }
 	}
-      if ($CPAN::META->has_usable('LWP')) {
+        if ($CPAN::META->has_usable('LWP')) {
 	  $CPAN::Frontend->myprint("Fetching with LWP:
   $url
 ");
@@ -2203,18 +2214,16 @@ sub hosteasy {
 	       ) {
 	      $Thesite = $i;
 	      return $aslocal;
-	    } else {
-	      # next HOSTEASY ;
 	    }
 	  } else {
-	    # Alan Burlison informed me that in firewall envs Net::FTP
-	    # can still succeed where LWP fails. So we do not skip
-	    # Net::FTP anymore when LWP is available.
-	    # next HOSTEASY ;
+	    # Alan Burlison informed me that in firewall environments
+	    # Net::FTP can still succeed where LWP fails. So we do not
+	    # skip Net::FTP anymore when LWP is available.
 	  }
 	} else {
 	  $self->debug("LWP not installed") if $CPAN::DEBUG;
 	}
+        return if $CPAN::Signal;
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	    # that's the nice and easy way thanks to Graham
 	    my($host,$dir,$getfile) = ($1,$2,$3);
@@ -2247,6 +2256,7 @@ sub hosteasy {
 		# next HOSTEASY;
 	    }
 	}
+        return if $CPAN::Signal;
     }
 }
 
@@ -2373,8 +2383,9 @@ System call "$system"
 returned status $estatus (wstat $wstatus)$size
 });
 	  }
-	}
-    }
+          return if $CPAN::Signal;
+	} # lynx,ncftpget,ncftp
+    } # host
 }
 
 sub hosthardest {
@@ -2445,6 +2456,7 @@ sub hosthardest {
 		} else {
 		    $CPAN::Frontend->myprint("Hmm... Still failed!\n");
 		}
+                return if $CPAN::Signal;
 	    } else {
 		$CPAN::Frontend->mywarn(qq{Your $netrcfile is not }.
 					qq{correctly protected.\n});
@@ -2474,9 +2486,10 @@ sub hosthardest {
 	} else {
 	    $CPAN::Frontend->myprint("Bad luck... Still failed!\n");
 	}
+        return if $CPAN::Signal;
 	$CPAN::Frontend->myprint("Can't access URL $url.\n\n");
 	sleep 2;
-    }
+    } # host
 }
 
 sub talk_ftp {
@@ -3214,6 +3227,7 @@ sub get {
     $local_file =
 	CPAN::FTP->localize("authors/id/$self->{ID}", $local_wanted)
 	    or $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n");
+    return if $CPAN::Signal;
     $self->{localfile} = $local_file;
     $CPAN::META->{cachemgr} ||= CPAN::CacheMgr->new();
     my $builddir = $CPAN::META->{cachemgr}->dir;
@@ -3233,6 +3247,7 @@ sub get {
     mkdir "tmp", 0755 or Carp::croak "Couldn't mkdir tmp: $!";
     chdir "tmp" or $CPAN::Frontend->mydie(qq{Could not chdir to "tmp": $!});;
     $self->debug("Changed directory to tmp") if $CPAN::DEBUG;
+    return if $CPAN::Signal;
     if (! $local_file) {
 	Carp::croak "bad download, can't do anything :-(\n";
     } elsif ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)(?!\n)\Z/i){
@@ -3331,22 +3346,12 @@ sub untar_me {
 sub unzip_me {
     my($self,$local_file) = @_;
     $self->{archived} = "zip";
-    if ($CPAN::META->has_inst("Archive::Zip")) {
-      if (CPAN::Tarzip->unzip($local_file)) {
-	$self->{unwrapped} = "YES";
-      } else {
-	$self->{unwrapped} = "NO";
-      }
-      return;
-    }
-    my $unzip = $CPAN::Config->{unzip} or
-        $CPAN::Frontend->mydie("Cannot unzip, no unzip program available");
-    my @system = ($unzip, $local_file);
-    if (system(@system) == 0) {
+    if (CPAN::Tarzip->unzip($local_file)) {
 	$self->{unwrapped} = "YES";
     } else {
 	$self->{unwrapped} = "NO";
     }
+    return;
 }
 
 sub pm2dir_me {
@@ -3580,15 +3585,19 @@ sub MD5_check_file {
 							   $self->{CPAN_USERID}
 							  )->as_string);
 
-	    my $wrap = qq{I\'d recommend removing $file. Its MD5
+	    my $wrap = qq{I'd recommend removing $file. Its MD5
 checksum is incorrect. Maybe you have configured your \`urllist\' with
 a bad URL. Please check this array with \`o conf urllist\', and
 retry.};
 
-	    $CPAN::Frontend->myprint(Text::Wrap::wrap("","",$wrap));
-	    $CPAN::Frontend->myprint("\n\n");
-	    sleep 3;
-	    return;
+	    $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
+
+            # former versions just returned here but this seems a
+            # serious threat that deserves a die
+
+	    # $CPAN::Frontend->myprint("\n\n");
+	    # sleep 3;
+	    # return;
 	}
 	# close $fh if fileno($fh);
     } else {
@@ -4609,36 +4618,40 @@ sub inst_version {
 
     # there was a bug in 5.6.0 that let lots of unini warnings out of
     # parse_version. Fixed shortly after 5.6.0 by PMQS. We can remove
-    # this workaround after 5.6.1 is out.
+    # the following workaround after 5.6.1 is out.
     local($SIG{__WARN__}) =  sub { my $w = shift;
                                    return if $w =~ /uninitialized/i;
                                    warn $w;
                                  };
+
     $have = MM->parse_version($parsefile) || "undef";
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
     $have =~ s/ $//; # trailing whitespace happens all the time
 
     # local($SIG{__WARN__}) =  sub { warn "2. have[$have]"; };
 
-    # Should %vd hack happen here? Must we not maintain the original
-    # version string until it is used? Do we for printing make it
-    # human readable? Or do we maintain it in a human readable form?
-    # "v1.0.2"?
+    # My thoughts about why %vd processing should happen here
 
-    # OK, let's discuss the pros and cons:
-    #-maintain it as string with leading v:
+    # Alt1 maintain it as string with leading v:
     # read index files     do nothing
     # compare it           use utility for compare
     # print it             do nothing
 
-    # maintain it as what is is
+    # Alt2 maintain it as what is is
     # read index files     convert
     # compare it           use utility because there's still a ">" vs "gt" issue
     # print it             use CPAN::Version for print
 
     # Seems cleaner to hold it in memory as a string starting with a "v"
 
+    # If the author of this module made a mistake and wrote a quoted
+    # "v1.13" instead of v1.13, we simply leave it at that with the
+    # effect that *we* will treat it like a v-tring while the rest of
+    # perl won't. Seems sensible when we consider that any action we
+    # could take now would just add complexity.
+
     $have = CPAN::Version->readable($have);
+
     $have =~ s/\s*//g; # stringify to float around floating point issues
     $have; # no stringify needed, \s* above matches always
 }
@@ -4773,8 +4786,26 @@ sub DESTROY {
 # CPAN::Tarzip::untar
 sub untar {
   my($class,$file) = @_;
-  # had to disable, because version 0.07 seems to be buggy
-  if (MM->maybe_command($CPAN::Config->{'gzip'})
+  if (0) { # makes changing order easier
+  } elsif ($CPAN::META->has_inst("Archive::Tar")
+      &&
+      $CPAN::META->has_inst("Compress::Zlib") ) {
+    my $tar = Archive::Tar->new($file,1);
+    my $af; # archive file
+    for $af ($tar->list_files) {
+        if ($af =~ m!^(/|\.\./)!) {
+            $CPAN::Frontend->mydie("ALERT: Archive contains illegal member [$af]");
+        }
+        $CPAN::Frontend->myprint("$af\n");
+        $tar->extract($af);
+        return if $CPAN::Signal;
+    }
+
+    ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
+        if ($^O eq 'MacOS');
+
+    return 1;
+  } elsif (MM->maybe_command($CPAN::Config->{'gzip'})
       &&
       MM->maybe_command($CPAN::Config->{'tar'})) {
     my $system = "$CPAN::Config->{'gzip'} --decompress --stdout " .
@@ -4802,17 +4833,6 @@ sub untar {
     } else {
       return 1;
     }
-  } elsif ($CPAN::META->has_inst("Archive::Tar")
-      &&
-      $CPAN::META->has_inst("Compress::Zlib") ) {
-    my $tar = Archive::Tar->new($file,1);
-    $tar->extract($tar->list_files); # I'm pretty sure we have nothing
-                                     # that isn't compressed
-
-    ExtUtils::MM_MacOS::convert_files([$tar->list_files], 1)
-        if ($^O eq 'MacOS');
-
-    return 1;
   } else {
     $CPAN::Frontend->mydie(qq{
 CPAN.pm needs either both external programs tar and gzip installed or
@@ -4823,24 +4843,35 @@ is available. Can\'t continue.
 }
 
 sub unzip {
-  my($class,$file) = @_;
-  return unless $CPAN::META->has_inst("Archive::Zip");
-  # blueprint of the code from Archive::Zip::Tree::extractTree();
-  my $zip = Archive::Zip->new();
-  my $status;
-  $status = $zip->read($file);
-  die "Read of file[$file] failed\n" if $status != Archive::Zip::AZ_OK();
-  $CPAN::META->debug("Successfully read file[$file]") if $CPAN::DEBUG;
-  my @members = $zip->members();
-  for my $member ( @members ) {
-    my $f = $member->fileName();
-    my $status = $member->extractToFileNamed( $f );
-    $CPAN::META->debug("f[$f]status[$status]") if $CPAN::DEBUG;
-    die "Extracting of file[$f] from zipfile[$file] failed\n" if
-        $status != Archive::Zip::AZ_OK();
-  }
-  return 1;
+    my($class,$file) = @_;
+    if ($CPAN::META->has_inst("Archive::Zip")) {
+        # blueprint of the code from Archive::Zip::Tree::extractTree();
+        my $zip = Archive::Zip->new();
+        my $status;
+        $status = $zip->read($file);
+        die "Read of file[$file] failed\n" if $status != Archive::Zip::AZ_OK();
+        $CPAN::META->debug("Successfully read file[$file]") if $CPAN::DEBUG;
+        my @members = $zip->members();
+        for my $member ( @members ) {
+            my $af = $member->fileName();
+            if ($af =~ m!^(/|\.\./)!) {
+                $CPAN::Frontend->mydie("ALERT: Archive contains illegal member [$af]");
+            }
+            my $status = $member->extractToFileNamed( $af );
+            $CPAN::META->debug("af[$af]status[$status]") if $CPAN::DEBUG;
+            die "Extracting of file[$af] from zipfile[$file] failed\n" if
+                $status != Archive::Zip::AZ_OK();
+            return if $CPAN::Signal;
+        }
+        return 1;
+    } else {
+        my $unzip = $CPAN::Config->{unzip} or
+            $CPAN::Frontend->mydie("Cannot unzip, no unzip program available");
+        my @system = ($unzip, $file);
+        return system(@system) == 0;
+    }
 }
+
 
 package CPAN::Version;
 # CPAN::Version::vcmp courtesy Jost Krieger
@@ -4850,6 +4881,13 @@ sub vcmp {
   CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
 
   return 0 if $l eq $r; # short circuit for quicker success
+
+  if ($l=~/^v/ <=> $r=~/^v/) {
+      for ($l,$r) {
+          next if /^v/;
+          $_ = $self->float2vv($_);
+      }
+  }
 
   return
       ($l ne "undef") <=> ($r ne "undef") ||
@@ -4870,6 +4908,26 @@ sub vstring {
   my($self,$n) = @_;
   $n =~ s/^v// or die "CPAN::Version::vstring() called with invalid argument [$n]";
   pack "U*", split /\./, $n;
+}
+
+# vv => visible vstring
+sub float2vv {
+    my($self,$n) = @_;
+    my($rev) = int($n);
+    $rev ||= 0;
+    my($mantissa) = $n =~ /\.(\d{1,12})/; # limit to 12 digits so that
+                                          # architecture cannot
+                                          # influnce
+    $mantissa ||= 0;
+    $mantissa .= "0" while length($mantissa)%3;
+    my $ret = "v" . $rev;
+    while ($mantissa) {
+        $mantissa =~ s/(\d{1,3})// or
+            die "Panic: length>0 but not a digit? mantissa[$mantissa]";
+        $ret .= ".".int($1);
+    }
+    # warn "n[$n]ret[$ret]";
+    $ret;
 }
 
 sub readable {
@@ -5541,7 +5599,7 @@ special compiling is need as you can access hosts directly.
 
 =back
 
-=head2 Configuring lynx or ncftp for going throught the firewall
+=head2 Configuring lynx or ncftp for going through a firewall
 
 If you can go through your firewall with e.g. lynx, presumably with a
 command such as
@@ -5598,8 +5656,8 @@ so that STDOUT is captured in a file for later inspection.
 
 We should give coverage for B<all> of the CPAN and not just the PAUSE
 part, right? In this discussion CPAN and PAUSE have become equal --
-but they are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus
-the clpa/, doc/, misc/, ports/, src/, scripts/.
+but they are not. PAUSE is authors/, modules/ and scripts/. CPAN is 
+PAUSE plus the clpa/, doc/, misc/, ports/, and src/.
 
 Future development should be directed towards a better integration of
 the other parts.

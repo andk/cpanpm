@@ -1,4 +1,14 @@
-Bugfix: reset "force_update" by localizing
+Johan Vroman's recent messages: 1.) propagate the proxy envariables to
+the children processes; 2.) After ^C in the download loop, ask where
+they want to be delivered, quoting Johan... qq[I think that when a
+program exits by SIGINT, CPAN should return to its input loop. Maybe
+you can add a question, like "Program terminated on user request. Try
+other alternatives?".] 3.) Can a per-perl-release exception list be
+provided so that the "r" command outputs nothing after a release? 4.)
+PPresenter Problem, something I already exchanged notes with Jost
+Krieger.
+
+Profiling?
 
 Provide something, so that the next "o conf commit" will not overwrite
 the config file. maybe "myconfig_readonly"?

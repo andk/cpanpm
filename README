@@ -582,7 +582,7 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
             firewall no special compiling is need as you can access hosts
             directly.
 
-  Configuring lynx or ncftp for going throught the firewall
+  Configuring lynx or ncftp for going through a firewall
 
     If you can go through your firewall with e.g. lynx, presumably with a
     command such as
@@ -630,8 +630,8 @@ FAQ
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,
     right? In this discussion CPAN and PAUSE have become equal -- but they
-    are not. PAUSE is authors/ and modules/. CPAN is PAUSE plus the clpa/,
-    doc/, misc/, ports/, src/, scripts/.
+    are not. PAUSE is authors/, modules/ and scripts/. CPAN is PAUSE plus
+    the clpa/, doc/, misc/, ports/, and src/.
 
     Future development should be directed towards a better integration of
     the other parts.

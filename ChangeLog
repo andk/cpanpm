@@ -1,4 +1,34 @@
+2000-08-31  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* float2vv: added conversion of float to visible v-string for
+	comparisons. Added some tests too.
+
+	* MD5_check_file: Now die instead of print when the MD5 checksum
+	mismatches.
+
+	* untar and unzip: preferring Archive::Tar now that it works
+	again. Adding extra security check by testing for absolute path
+	and updir.
+
+	* unzip_me: made it symmetrical to untar_me and added a few Signal
+	checkers to both.
+
+	* hosteasy/hard/hardest: now checking for $Signal and giving up in
+	several places within the download loop. Thanks for the suggestion
+	to Johan Vromans. I'd be ready to ask a question where to continue
+	but it turns out to need careful wording because the loop is
+	deeply nested: method, host, and within the methods LWP/Net::FTP
+	or lynx/ncftpget/ncftp. Simple wording might cause more grief than
+	just giving up.
+
+	* localize: now setting $ENV for proxies if config has values for
+	them. Thanks for the bugreport to Johan Vromans.
+
+	* checklock: changed comment in the code
+
 2000-08-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Applied 2 doc patches by Elaine and Jarkko.
 
 	* Call to force now wants a first argument and this was not there.
 	This was the reason why force DIST didn't work. Thanks to Jost
