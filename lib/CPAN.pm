@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.28a';
+$VERSION = '0.29a';
 
-# $Id: CPAN.pm,v 1.47 1996/09/12 14:12:16 k Exp k $
-my $version = substr q$Revision: 1.47 $, 10;
+# $Id: CPAN.pm,v 1.48 1996/09/17 17:12:31 k Exp $
+my $version = substr q$Revision: 1.48 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -592,14 +592,15 @@ sub localize {
 	my $url = $CPAN::Config->{urllist}[$_] . $file;
 	$self->debug("for $url") if $CPAN::DEBUG;
 	if ($url =~ /^file:/) {
+	    my $l;
 	    if ($CPAN::META->hasLWP) {
 		require URI::URL;
 		my $u = new URI::URL $url;
-		return $u->path;
-	    } else { # Unix
-		$url =~ s/^file://;
-		return $url;
+		$l = $u->path;
+	    } else { # works only on Unix
+		($l = $url) =~ s/^file://;
 	    }
+	    return $l if -f $l && -r _;
 	}
 
 	if ($CPAN::META->hasLWP) {
@@ -1011,6 +1012,14 @@ sub verifyMD5 {
 		       );
     local($") = "/";
     $local_file = CPAN::FTP->localize("authors/id/@local", $local_wanted, 'force>:-{');
+    my($checksum_pipe);
+    if ($local_file) {
+	$checksum_pipe = $local_file;
+    } else {
+	$local[-1] .= ".gz";
+	$local_file = CPAN::FTP->localize("authors/id/@local", $local_wanted, 'force>:-{');
+	$checksum_pipe = "$CPAN::Config->{gzip} --decompress --stdout $local_file |"
+    }
     my $fh = new IO::File;
     local($/)=undef;
     if (open $fh, $local_file){

@@ -1,5 +1,14 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 17, 1996
+
+Support for CHECKSUMS files that have been gzipped by your CPAN site
+admin. Check if file is readable if it is a local file (and you are
+your own CPAN site admin :-) Released 0.29.
+
+Direct call of install/make/test/bundle etc. without shell was
+broken. Fixed and relleased 0.28.
+
 =head2 Sep 12, 1996
 
 Release of 0.26a.

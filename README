@@ -13,18 +13,21 @@ prompt is 'cpan> ' in the examples below.
   a                             authors
   b         string              bundles
   d         or          display distributions
-  m         regex       info    modules
+  m         /regex/     info    modules
   i         or          about   anything of above
   r         none                reinstall recommendations
   u                             uninstalled modules
 
-  make      module,     make
-  test      dist or     make test (implies make)
-  install   bundle      make install (implies test)
+  make      modules,    make
+  test      dists or    make test (implies make)
+  install   bundles     make install (implies test)
 
   h                     display this menu
+  o         various     set and query options
   !         perl-code   eval a perl command
   q                     quit the shell subroutine
+
+  A regular expression has to be between two slashes.
 
   cpan> a LWALL
   Author id = LWALL
@@ -36,7 +39,6 @@ prompt is 'cpan> ' in the examples below.
   Module          News::NNTPClient (RVA/NNTPClient-0.26.tar.gz)
   Module          News::NNTPFetchProgress (RVA/NNTPClient-0.26.tar.gz)
   Module          News::Newsrc    (SWMCD/News-Newsrc-1.02.tar.gz)
-  Module          URI::URL::news  (GAAS/libwww-perl-5.01.tar.gz)
 
   cpan> m News::Ne<TAB>
   cpan> m News::Newsrc _< cursor here
@@ -103,7 +105,7 @@ ExtUtils::MakeMaker v5.38
 
 Term::ReadKey
 
-Term::ReadLine::Perl (0.92)
+Term::ReadLine::* (0.92)
 
 MD5
 

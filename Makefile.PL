@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.11 1996/09/09 23:12:19 k Exp k $
+# $Id: Makefile.PL,v 1.12 1996/09/17 17:12:31 k Exp $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
