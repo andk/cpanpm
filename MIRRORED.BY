@@ -290,24 +290,24 @@ ftp.funet.fi:
   dst_location     = "Espoo, Finland, Europe (60.11N 24.50E)"
   dst_organisation = "; Finnish University NETwork"
   dst_timezone     = "GMT+2"
-  dst_contact      = "cpan-adm@ftp.funet.fi"
+  dst_contact      = "cpan@perl.org"
   dst_src          = ""
   dst_notes        = "not really mirroring itself"
 
 # dst_dst          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
-# dst_contact      = "mailto:cpan-adm@ftp.funet.fi"
+# dst_contact      = "mailto:cpan@perl.org"
 
-ftp.ibp.fr:
+ftp.lip6.fr:
   frequency        = "daily"
-  dst_directory    = "ftp.ibp.fr:/pub/perl/CPAN/"
+  dst_directory    = "ftp.lip6.fr:/pub/perl/CPAN/"
   dst_location     = "Paris, France, Europe (48.50N 2.20E)"
-  dst_organization = "l'Institut Blaise Pascal; Blaise Pascal Institute"
+  dst_organization = "Laboratoire d'Informatique de Paris 6; Informatics Laboratory of Paris 6"
   dst_timezone     = "GMT+1"
-  dst_contact      = "ftpmaint@ibp.fr"
+  dst_contact      = "ftpmaint@lip6.fr"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://ftp.ibp.fr/pub/perl/CPAN/"
-# dst_contact      = "mailto:ftpmaint@ibp.fr"
+# dst_dst          = "ftp://ftp.lip6.fr/pub/perl/CPAN/"
+# dst_contact      = "mailto:ftpmaint@lip6.fr"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
 ftp.oleane.net:
@@ -760,14 +760,14 @@ ftp.digital.com:
 
 ftp.cdrom.com:
   frequency        = "daily"
-  dst_directory    = "ftp.cdrom.com:/pub/perl/"
+  dst_directory    = "ftp.cdrom.com:/pub/perl/CPAN/"
   dst_location     = "San Francisco, California, USA, North America (37.47N 122.30W)"
   dst_organisation = "Walnut Creek CDROM"
   dst_timezone     = "GMT-8 (PST8PDT)"
   dst_contact      = "ftp-bugs@ftp.cdrom.com"
   dst_src          = "ftp.metronet.com:/pub/perl/"
 
-# dst_dst          = "ftp://ftp.cdrom.com/pub/perl/"
+# dst_dst          = "ftp://ftp.cdrom.com/pub/perl/CPAN/"
 # dst_contact      = "mailto:ftp-bugs@ftp.cdrom.com"
 # dst_src          = "ftp://ftp.metronet.com/pub/perl/"
 
@@ -858,8 +858,9 @@ ftp.rge.com:
   dst_timezone     = "GMT-5 (EST5EDT)"
   dst_contact      = "ftp@rge.com"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
+  dst_http         = "http://www.rge.com/pub/languages/perl/"
 
-# dst_dst          = "ftp://ftp.rge.com/pub/languages/perl/"
+# dst_dst          = "ftp://ftp.rge.com/pub/languages/perl/","http://www.rge.com/pub/languages/perl/"
 # dst_contact      = "mailto:ftp@rge.com"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
@@ -941,7 +942,7 @@ ftp.metronet.com:
 # dst_contact      = "mailto:wjm@metronet.com"
 # dst_src          = "ftp://ftp.ou.edu/mirrors/CPAN/"
 
-# disabled because too often stale 1996-10-02 cpan-adm@ftp.funet.fi
+# disabled because too often stale 1996-10-02 cpan@perl.org
 ftp.sterling.com:
   frequency        = "daily"
   dst_directory    = "ftp.sterling.com:/CPAN/"

@@ -4,6 +4,32 @@ Todo: CPAN.pm: How to live without CHECKSUM files?
       CPAN.pm: Security layer completely configurable
       CPAN.pm: make plugins configurable, adjust @ISA
 
+=head2 August 2 1997
+
+Retrofit for 5.003 again (thanks to Vladimir Alexiev
+<vladimir@cs.ualberta.ca> for the patch)
+
+Touch files back to 1997. There were files with timestamps 2020 due to
+an error on my side.
+
+Protocol change in the file 02packages on CPAN. A version of 0 is OK
+from now, a version of "undef" is an unrecognized version. This means
+that with the upcoming release there will only few "undef" versions be
+reported, because we have to tell CPAN to re-investigate all "0"
+versions, and that'll probably take some time.
+
+Fixed a bug in Bundle when we have no clue what Bundle they are
+talking about.
+
+Fixed completion for array options. Try ``o conf urllist TAB''.
+
+Reordered sequence how we try to access an URL: first we try all URLs
+with LWP and Net::FTP, then we switch to lynx and ncftp, last resort
+is ftp. Introduced new subroutine talk_ftp to factor out some
+duplicate code.
+
+Made code clearer wrt gzip/gunzip during lynx and ncftp calls.
+
 =head2 July 1997
 
 Applied a patch by Ilya Zakharevich <ilya@math.ohio-state.edu> to use

@@ -229,7 +229,8 @@ DESCRIPTION
           # list all modules on my disk that have no VERSION number
           for $mod (CPAN::Shell->expand("Module","/./")){
               next unless $mod->inst_file;
-              next if $mod->inst_version;
+              # MakeMaker convention for undefined $VERSION:
+              next unless $mod->inst_version eq "undef";
               print "No VERSION in ", $mod->id, "\n";
           }
 
