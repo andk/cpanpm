@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.45a';
+$VERSION = '0.46a';
 
-# $Id: CPAN.pm,v 1.72 1996/12/01 12:15:35 k Exp k $
+# $Id: CPAN.pm,v 1.73 1996/12/01 18:16:16 k Exp k $
 
-# my $version = substr q$Revision: 1.72 $, 10; # only used during development
+# my $version = substr q$Revision: 1.73 $, 10; # only used during development
 
 require 5.003;
 require UNIVERSAL if $] == 5.003;

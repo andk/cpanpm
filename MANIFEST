@@ -1,6 +1,7 @@
-lib/CPAN.pm
 Changes
 MANIFEST
 MIRRORED.BY
 Makefile.PL
 README
+lib/CPAN.pm
+lib/CPAN/Nox.pm
