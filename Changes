@@ -1,5 +1,15 @@
 Revision history for Perl extension CPAN.
 
+=head2 February 1998
+
+Fixed the logic when to use Archive::Tar and when to use a system
+call. Priority takes the system call because Archive::Tar is slow. tar
+or gzip isn't there, we use the modules. Besides, this fixes a
+horrible bug in 1.35 that breaks havoc if Archive::Tar is there but
+Compress::Zlib is missing. That's the reason why I make this release
+so quickly. Thanks to D Roland Walker <walker@sky.nlm.nih.gov> for
+the analysis.
+
 =head2 January 1998
 
 Activated the code for Archive::Tar support. After Sarathy's updates

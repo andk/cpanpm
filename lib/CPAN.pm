@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.35';
+$VERSION = '1.36';
 
-# $Id: CPAN.pm,v 1.221 1998/02/03 17:12:33 k Exp $
+# $Id: CPAN.pm,v 1.222 1998/02/08 01:11:20 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.221 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.222 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -2398,7 +2398,7 @@ sub rd_modpacks {
 		$CPAN::Frontend->myprint(qq{
   There\'s a new CPAN.pm version (v$version) available!
   You might want to try
-    install CPAN
+    install Bundle::CPAN
     reload cpan
   without quitting the current session. It should be a seamless upgrade
   while we are running...
@@ -3767,7 +3767,9 @@ sub DESTROY {
 sub untar {
   my($class,$file) = @_;
   # had to disable, because version 0.07 seems to be buggy
-  if ($CPAN::META->has_inst("Archive::Tar")) {
+  if ($CPAN::META->has_inst("Archive::Tar")
+      &&
+      $CPAN::META->has_inst("Compress::Zlib") ) {
     my $tar = Archive::Tar->new($file,1);
     $tar->extract($tar->list_files); # I'm pretty sure we have nothing
                                      # that isn't compressed
