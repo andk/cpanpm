@@ -16,9 +16,9 @@ C<perl -MCPAN -e 'install Bundle::CPAN'>
 
 =head1 CONTENTS
 
-MD5
-
 File::Spec
+
+MD5
 
 Compress::Zlib
 
