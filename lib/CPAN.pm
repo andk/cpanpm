@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.35a';
+$VERSION = '0.36a';
 
-# $Id: CPAN.pm,v 1.55 1996/09/22 19:18:45 k Exp $
-my $version = substr q$Revision: 1.55 $, 10;
+# $Id: CPAN.pm,v 1.56 1996/09/23 12:50:04 k Exp $
+my $version = substr q$Revision: 1.56 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -527,6 +527,11 @@ sub autobundle {
     my($self) = shift;
     my(@bundle) = $self->_u_r_common("a",@_);
     my($todir) = $CPAN::META->catdir($CPAN::Config->{'cpan_home'},"Bundle");
+    File::Path::mkpath($todir);
+    unless (-d $todir) {
+	print "Couldn't mkdir $todir for some reason\n";
+	return;
+    }
     my($y,$m,$d) =  (localtime)[5,4,3];
     $y+=1900;
     $m++;
