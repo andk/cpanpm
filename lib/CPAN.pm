@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_92';
+$VERSION = '1.58_93';
 
-# $Id: CPAN.pm,v 1.375 2000/11/14 17:46:19 k Exp $
+# $Id: CPAN.pm,v 1.376 2000/11/15 07:14:58 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.375 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.376 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -1796,7 +1796,7 @@ that may go away anytime.\n"
                           {$a->id cmp $b->id}
                           $CPAN::META->all_objects($class)
                          ) {
-                my $lhs = $self->$method or next;
+                my $lhs = $self->$method() or next; # () for 5.00503
                 if ($matchcrit) {
                     push @m, $self if $lhs =~ m/$matchcrit/;
                 } else {

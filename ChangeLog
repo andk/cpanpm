@@ -1,3 +1,8 @@
+2000-11-15  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Fixed an incompatibility with 5.00503 discovered by Ask B.
+	Hansen.
+
 2000-11-14  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* lib/CPAN/FirstTime.pm: MyConfig/Config buglet during
