@@ -1,5 +1,36 @@
 Revision history for Perl extension CPAN.
 
+=head2 July-November 1998 after 1.40
+
+Added documentation by Graham Barr about perl on firewalls. Thanks,
+Graham!
+
+Added documentation how I manage the populating of a perl freshly
+installed perl.
+
+Keep a backup copy of configuration files during commit.
+
+Applied a patch by Norbert Goevert
+<goevert@amaunet.informatik.uni-dortmund.de> to fix the "CPAN.pm
+overwrites Bundle/CPAN.pm" bug. Thanks, Norbert!
+
+Introduced a signal PIPE ignore in CPAN::FirstTime so that hitting 'q'
+during sitelist cannot throw you out of the whole program. Thanks to
+chris patti <cpatti@bur-po1.bbn.com> for the report.
+
+Applied a patch by Slaven Rezic <eserte@cs.tu-berlin.de> to introduce
+policies how often the cache is scanned for sizes. Currently
+implemented "atstart' and 'never'. Interesting further options should
+be 'after_install' (i.e. only after an install) and 'threaded' (i.e.
+in a low priority thread).
+
+Added a summary feedback at the end of a bundle install for easier
+checking of what went wrong.
+
+Don't require CPAN::Nox in CPAN::FirstTime::init if there is already
+CPAN.pm loaded. Thanks to Albert Dvornik <bert@genscan.com> for the
+bugreport.
+
 =head2 July 1998 after perl5.005 is out which contains 1.3901
 
 Improved documentation of Bundle::CPAN, upped version number to

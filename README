@@ -31,8 +31,16 @@ DESCRIPTION
     cache manager keeps track of the disk space occupied by the make
     processes and deletes excess space according to a simple FIFO mechanism.
 
-    All methods provided are accessible in a programmer style and in an
-    interactive shell style.
+    For extended searching capabilities there's a plugin for CPAN available,
+    the CPAN::WAIT manpage. `CPAN::WAIT' is a full-text search engine that
+    indexes all documents available in CPAN authors directories. If
+    `CPAN::WAIT' is installed on your system, the interactive shell of
+    <CPAN.pm> will enable the `wq', `wr', `wd', `wl', and `wh' commands
+    which send queries to the WAIT server that has been configured for your
+    installation.
+
+    All other methods provided are accessible in a programmer style and in
+    an interactive shell style.
 
   Interactive Mode
 
@@ -326,7 +334,7 @@ DESCRIPTION
       version use something like this
 
           perl -MExtUtils::MakeMaker -le \
-              'print MM->parse_version($ARGV[0])' filename
+              'print MM->parse_version(shift)' filename
 
       If you are author of a package and wonder if your $VERSION can be
       parsed, please try the above method.
@@ -411,7 +419,7 @@ CONFIGURATION
     o conf <list option> [unshift|push|splice] <list>
       works like the corresponding perl commands.
 
-  CD-ROM support
+  urllist parameter has CD-ROM support
 
     The `urllist' parameter of the configuration table contains a list of
     URLs that are to be used for downloading. If the list contains any
@@ -425,6 +433,13 @@ CONFIGURATION
     CPAN.pm will then fetch the index files from one of the CPAN sites that
     come at the beginning of urllist. It will later check for each module if
     there is a local copy of the most recent version.
+
+    Another peculiarity of urllist is that the site that we could
+    successfully fetch the last file from automatically gets a preference
+    token and is tried as the first site for the next request. So if you add
+    a new site at runtime it may happen that the previously preferred site
+    will be tried another time. This means that if you want to disallow a
+    site for the next transfer, it must be explicitly removed from urllist.
 
 SECURITY
     There's no strong security layer in CPAN.pm. CPAN.pm helps you to
@@ -454,7 +469,7 @@ BUGS
     method of building a Perl module package from a shell.
 
 AUTHOR
-    Andreas König <a.koenig@mind.de>
+    Andreas König <a.koenig@kulturbox.de>
 
 SEE ALSO
     perl(1), CPAN::Nox(3)

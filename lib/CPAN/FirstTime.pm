@@ -16,7 +16,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.30 $, 10;
+$VERSION = substr q$Revision: 1.31 $, 10;
 
 =head1 NAME
 
@@ -37,7 +37,9 @@ file. Nothing special.
 sub init {
     my($configpm) = @_;
     use Config;
-    require CPAN::Nox;
+    unless ($CPAN::VERSION) {
+	require CPAN::Nox;
+    }
     eval {require CPAN::Config;};
     $CPAN::Config ||= {};
     local($/) = "\n";
@@ -150,6 +152,20 @@ with all the intermediate files?
 
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{'index_expire'} = 1;
+
+    print qq{
+
+By default, each time the CPAN module is started, cache scanning
+is performed to keep the cache size in sync. To prevent from this, 
+disable the cache scanning with 'never'.
+
+};
+
+    $default = $CPAN::Config->{scan_cache} || 'atstart';
+    do {
+        $ans = prompt("Perform cache scanning (atstart or never)?", $default);
+    } while ($ans ne 'atstart' && $ans ne 'never');
+    $CPAN::Config->{scan_cache} = $ans;
 
     #
     # External programs
@@ -376,7 +392,8 @@ file:, ftp: or http: URL, or "q" to finish selecting.
     my $other;
     $ans = $other = "";
     my(%seen);
-    
+
+    local($SIG{PIPE}) = 'IGNORE';
     my $pipe = -t *STDIN ? "| $CPAN::Config->{'pager'}" : ">/dev/null";
     while () {
 	my(@valid,$previous_best);
