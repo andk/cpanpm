@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.58_90';
+$VERSION = '1.58_91';
 
-# $Id: CPAN.pm,v 1.373 2000/11/08 08:07:22 k Exp $
+# $Id: CPAN.pm,v 1.374 2000/11/12 14:22:17 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.373 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.374 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -262,7 +262,7 @@ package CPAN::Module;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Shell;
-use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED);
+use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY);
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
 
@@ -291,8 +291,9 @@ For this you just need to type
 }
 
 package CPAN::Tarzip;
-use vars qw($AUTOLOAD @ISA);
+use vars qw($AUTOLOAD @ISA $BUGHUNTING);
 @CPAN::Tarzip::ISA = qw(CPAN::Debug);
+$BUGHUNTING = 0; # released code must have turned off
 
 package CPAN::Queue;
 
@@ -1740,15 +1741,15 @@ sub expand {
 	my($regex,$command);
 	if ($arg =~ m|^/(.*)/$|) {
 	    $regex = $1;
-	} elsif ($arg =~ m/^=/) {
-            $command = substr($arg,1);
+	} elsif ($arg =~ m/=/) {
+            $command = 1;
         }
 	my $class = "CPAN::$type";
 	my $obj;
         CPAN->debug(sprintf "class[%s]regex[%s]command[%s]",
                     $class,
                     defined $regex ? $regex : "UNDEFINED",
-                    defined $command ? $command : "UNDEFINED",
+                    $command || "UNDEFINED",
                    ) if $CPAN::DEBUG;
 	if (defined $regex) {
             for $obj (
@@ -1781,15 +1782,25 @@ sub expand {
                             );
             }
         } elsif ($command) {
-            die "leading equal sign in command disabled, ".
-                "please edit CPAN.pm to enable eval() or ".
-                    "do not use = on argument list";
+            die "equal sign in command disabled (immature interface), ".
+                "you can set
+ ! \$CPAN::Shell::ADVANCED_QUERY=1
+to enable it. But please note, this is HIGHLY EXPERIMENTAL code
+that may go away anytime.\n"
+                    unless $ADVANCED_QUERY;
+            my($method,$criterion) = $arg =~ /(.+?)=(.+)/;
+            my($matchcrit) = $criterion =~ m/^~(.+)/;
             for my $self (
                           sort
                           {$a->id cmp $b->id}
                           $CPAN::META->all_objects($class)
                          ) {
-                push @m, $self if eval $command;
+                my $lhs = $self->$method or next;
+                if ($matchcrit) {
+                    push @m, $self if $lhs =~ m/$matchcrit/;
+                } else {
+                    push @m, $self if $lhs eq $criterion;
+                }
             }
 	} else {
 	    my($xarg) = $arg;
@@ -1954,13 +1965,17 @@ sub rematein {
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
-	    $CPAN::Frontend->myprint(
-				     join "",
-				     "Don't be silly, you can't $meth ",
-				     $obj->fullname,
-				     " ;-)\n"
-				    );
-            sleep 2;
+            if ($meth eq "dump") {
+                $obj->dump;
+            } else {
+                $CPAN::Frontend->myprint(
+                                         join "",
+                                         "Don't be silly, you can't $meth ",
+                                         $obj->fullname,
+                                         " ;-)\n"
+                                        );
+                sleep 2;
+            }
 	} else {
 	    $CPAN::Frontend
 		->myprint(qq{Warning: Cannot $meth $s, }.
@@ -2744,8 +2759,9 @@ sub cpl {
     } elsif ( $line !~ /^[\!abcdhimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^(a|ls)\s/) {
-	@return = cplx('CPAN::Author',$word);
+	@return = cplx('CPAN::Author',uc($word));
     } elsif ($line =~ /^b\s/) {
+        CPAN::Shell->local_bundles;
 	@return = cplx('CPAN::Bundle',$word);
     } elsif ($line =~ /^d\s/) {
 	@return = cplx('CPAN::Distribution',$word);
@@ -4762,8 +4778,8 @@ package CPAN::Module;
 # sub cpan_userid { shift->{RO}{CPAN_USERID} }
 sub userid {
     my $self = shift;
-    return unless exists $self->{RO}{userid};
-    $self->{RO}{userid};
+    return unless exists $self->{RO}; # should never happen
+    return $self->{RO}{CPAN_USERID} || $self->{RO}{userid};
 }
 sub description { shift->{RO}{description} }
 
@@ -5327,10 +5343,9 @@ sub DESTROY {
 sub untar {
   my($class,$file) = @_;
   my($prefer) = 0;
-  my($bughunting) = 0; # released code must have turned off
 
   if (0) { # makes changing order easier
-  } elsif ($bughunting){
+  } elsif ($BUGHUNTING){
       $prefer=2;
   } elsif (MM->maybe_command($CPAN::Config->{gzip})
            &&
@@ -5385,7 +5400,7 @@ is available. Can\'t continue.
     my $tar = Archive::Tar->new($file,1);
     my $af; # archive file
     my @af;
-    if ($bughunting) {
+    if ($BUGHUNTING) {
         # RCS 1.337 had this code, it turned out unacceptable slow but
         # it revealed a bug in Archive::Tar. Code is only here to hunt
         # the bug again. It should never be enabled in published code.

@@ -2,8 +2,9 @@ package CPAN::Admin;
 use base CPAN;
 use strict;
 use vars qw(@EXPORT $VERSION);
+use constant PAUSE => "pause.perl.org";
 @EXPORT = qw(shell);
-$VERSION = sprintf "%d.%03d", q$Revision: 1.6 $ =~ /(\d+)\.(\d+)/;
+$VERSION = sprintf "%d.%03d", q$Revision: 1.7 $ =~ /(\d+)\.(\d+)/;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 if ($CPAN::META->has_inst("Term::ANSIColor")) {
   $CPAN::Shell::COLOR_REGISTERED = 1;
@@ -31,8 +32,9 @@ sub CPAN::Shell::register {
     my $emodline = URI::Escape::uri_escape($modline, '^\w ');
     $emodline =~ s/ /+/g;
     my $url =
-        sprintf("https://p11.speedlink.de/pause/authenquery?pause99_add_mod_modid=".
+        sprintf("https://%s/pause/authenquery?pause99_add_mod_modid=".
                 "%s;SUBMIT_pause99_add_mod_hint=hint",
+                PAUSE,
                 $emodline,
                );
     print "$url\n\n";
@@ -128,11 +130,12 @@ sub CPAN::Shell::register {
   my $edescription = URI::Escape::uri_escape($description, '^\w ');
   $edescription =~ s/ /+/g;
   my $url =
-      sprintf("https://p11.speedlink.de/pause/authenquery?pause99_add_mod_modid=".
+      sprintf("https://%s/pause/authenquery?pause99_add_mod_modid=".
               "%s;pause99_add_mod_chapterid=%s;pause99_add_mod_statd=%s;".
               "pause99_add_mod_stats=%s;pause99_add_mod_statl=%s;".
               "pause99_add_mod_stati=%s;pause99_add_mod_description=%s;".
               "pause99_add_mod_userid=%s;SUBMIT_pause99_add_mod_preview=preview",
+              PAUSE,
               $emodid,
               $ech,
               "R",

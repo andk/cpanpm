@@ -1,4 +1,38 @@
+2000-11-11  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Admin: Made the machine name of PAUSE a constant.
+
+2000-11-10  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* rematein: Enable dump of Author objects (was the useless silly
+	message)
+
+	* Two temporary global variables introduced:
+	$CPAN::Tarzip::BUGHUNTING enables naughty code that may help track
+	some bugs in Archive::Tar (alredy reported to SRZ). And
+	$CPAN::Shell::ADVANCED_QUERY turns on a form of the query like
+	    C<m userid=RFOLEY> or
+	    C<m userid=~FOL> or
+	    C<d cpan_userid=RFOLEY> or
+	    C<a face=:-)> :-)
+
+	But this is highly experimental and WILL change, do not rely on
+	it.
+	
+2000-11-09  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Module::userid: change to mean either CPAN_USERID from
+	02modules or userid from 03modlist. Up to now it only meant the
+	latter. As both are always identical, we could save some space by
+	renaming CPAN_USERID to userid. --> Todo
+
 2000-11-08  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::Complete::cpl: Make completion work for locally installed
+	bundles on the first try, not just the second.
+
+	* CPAN::Complete::cpl: Make completion for authors work even when
+	lowercase was typed in so far.
 
 	* releasing as 1.58_90
 
