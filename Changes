@@ -1,14 +1,26 @@
 Revision history for Perl extension CPAN.
 
+=head2 Sep 28, 1996
+
+Implemented
+
+cpan> ! install(CPAN::Shell->r)    # install all recommendations
+cpan> ! install(CPAN::Shell->u)    # install all uninstalled
+
+following a Dale Amon suggestion. CPAN::Shell->r and u return the list
+of module names that are printed on STDOUT.
+
+Released 0.40a
+
 =head2 Sep 26, 1996
 
 Write Bundle/ (even if no previous call to "b" happened) whenever
 needed.
 
-Check for a "configure" script before writing your own
+Check for a "Configure" script before writing your own
 Makefile.PL. Run ./configure if you find it.
 
-Don't check for %Term::ReadLine::Perl, bacause that may be defined
+Don't check for %Term::ReadLine::Perl::, because that may be defined
 without a good reason. Better check for
 Term::ReadLine::Perl::readline. That's still silly, but I don't
 pretend it's clever. We need a way to determine if a readline

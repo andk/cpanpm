@@ -1,38 +1,13 @@
 package CPAN;
-# This is the object that is used as global variable.
-# If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End $Suppress_readline};
 
-$VERSION = '0.39a';
+$VERSION = '0.40a';
 
-# $Id: CPAN.pm,v 1.60 1996/09/27 12:48:56 k Exp $
-my $version = substr q$Revision: 1.60 $, 10;
+# $Id: CPAN.pm,v 1.61 1996/09/28 12:48:57 k Exp $
 
-BEGIN {require 5.002;}
+# my $version = substr q$Revision: 1.61 $, 10; # only used during development
 
-use Carp ();
-
-# term
-
-$Suppress_readline = shift || !-t STDIN; # undocumented how to turn off ReadLine
-my $term;
-if ($Suppress_readline) {
-} else {
-    require Term::ReadLine;
-    import Term::ReadLine;
-    $term = new Term::ReadLine 'CPAN Monitor';
-    $readline::rl_completion_function = 
-    $readline::rl_completion_function = 'CPAN::Complete::complete';
-}
-
-# prompt
-
-my $prompt = "cpan> ";
-
-$^W = 1;
-
-
-use Carp;
+use 5.003;
 use File::Find;
 use DirHandle;
 use Exporter ();
@@ -40,10 +15,8 @@ use File::Path ();
 use ExtUtils::MakeMaker ();
 use IO::File ();
 use Config ();
+use Carp ();
 
-package CPAN;
-use vars qw($VERSION @ISA @EXPORT $AUTOLOAD $DEBUG $META);
-use strict qw(vars);
 END { $End++; &cleanup; }
 
 %CPAN::DEBUG = qw(
@@ -58,19 +31,32 @@ END { $End++; &cleanup; }
 		  Complete        256
 		  FTP             512
 		  Shell          1024
+		  Eval           2048
 		 );
-#???		  all            2047
-# @CPAN::DEBUG{map {lc $_} keys %CPAN::DEBUG} = values CPAN::DEBUG;
+
 $CPAN::DEBUG ||= 0;
 
-@ISA = qw(CPAN::Debug Exporter MY); # the strange MY class from MakeMaker, gives us catfile and catdir
-$META ||= new CPAN;                 # Incase we reeval ourselves we need a ||
+package CPAN;
+use vars qw($VERSION @ISA @EXPORT $AUTOLOAD $DEBUG $META);
+use strict qw(vars);
 
-eval {require CPAN::Config;};       # system wide config. We eval, because of some MakeMaker problems
+@ISA = qw(CPAN::Debug Exporter MY); # the MY class from MakeMaker, gives us catfile and catdir
+
+$META ||= new CPAN;                 # In case we reeval ourselves we need a ||
+eval {require CPAN::Config;};       # We eval, because of some MakeMaker problems
 unshift @INC, $META->catdir($ENV{HOME},".cpan");
 eval {require CPAN::MyConfig;};     # where you can override system wide settings
 
 @EXPORT = qw(autobundle bundle bundles expand install make shell test);
+
+sub autobundle;
+sub bundle;
+sub bundles;
+sub expand;
+sub install;
+sub make;
+sub shell;
+sub test;
 
 sub AUTOLOAD {
     my($l) = $AUTOLOAD;
@@ -241,6 +227,19 @@ sub cleanup {
 }
 
 sub shell {
+    $Suppress_readline ||= ! -t STDIN;
+
+    my $prompt = "cpan> ";
+    local($^W) = 1;
+    my $term;
+    unless ($Suppress_readline) {
+	require Term::ReadLine;
+	import Term::ReadLine;
+	$term = new Term::ReadLine 'CPAN Monitor';
+	$readline::rl_completion_function = 
+	    $readline::rl_completion_function = 'CPAN::Complete::complete';
+    }
+
     no strict;
     $META->checklock();
     my $cwd = Cwd::cwd();
@@ -265,10 +264,13 @@ Readline support $rl_avail
 	next if /^$/;
 	if (/^\!/) {
 	    s/^\!//;
-	    eval($_);
+	    my($eval) = $_;
+	    package CPAN::Eval;
+	    use vars qw($import_done);
+	    CPAN->import(':DEFAULT') unless $import_done++;
+	    CPAN->debug("eval[$eval]") if $CPAN::DEBUG;
+	    eval($eval);
 	    warn $@ if $@;
-	    print "\n";
-	    next;
 	} elsif (/^q$/i) {
 	    last;
 	} elsif (/./) {
@@ -276,11 +278,11 @@ Readline support $rl_avail
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
-	    print "\n";
 	}
     } continue {
 	&cleanup, die if $Signal;
 	chdir $cwd;
+	print "\n";
     }
 }
 
@@ -302,24 +304,25 @@ sub h {
 	print "Detailed help not yet implemented\n";
     } else {
 	print q{
-command   arguments   description
-a                             authors
-b         string              bundles
-d         or          display distributions
-m         /regex/     info    modules
-i         or          about   anything of above
-r         none                reinstall recommendations
-u                             uninstalled modules
+command   arguments       description
+a         string                  authors
+b         or              display bundles
+d         /regex/         info    distributions
+m         or              about   modules
+i         none                    anything of above
 
-make      modules,    make
-test      dists or    make test (implies make)
-install   bundles     make install (implies test)
-      
-reload    index|cpan  load most recent of indices or CPAN.pm                
-h                     display this menu
-o         various     set and query options
-!         perl-code   eval a perl command
-q                     quit the shell subroutine
+r         as              reinstall recommendations
+u         above           uninstalled distributions
+
+make      modules,        make
+test      dists, bundles, make test (implies make)
+install   "r" or "u"      make install (implies test)
+
+reload    index|cpan    load most recent indices/CPAN.pm                
+h                       display this menu
+o         various       set and query options
+!         perl-code     eval a perl command
+q                       quit the shell subroutine
 
 A regular expression has to be between two slashes.
 };
@@ -453,7 +456,7 @@ sub reload {
 	CPAN::Index->force_reload;
     }
 }
-# u and r are too similar, we should factor out something XXX
+
 sub _u_r_common {
     my($self) = shift @_;
     my($what) = shift @_;
@@ -495,8 +498,10 @@ sub _u_r_common {
 	if ($what eq "a") {
 	    push @result, sprintf "%s %s\n", $module->id, $have;
 	} elsif ($what eq "r") {
+	    push @result, $module->id;
 	    next if $seen{$file}++;
 	} elsif ($what eq "u") {
+	    push @result, $module->id;
 	    next if $seen{$file}++;
 	}
 	unless ($headerdone++){
@@ -647,14 +652,14 @@ sub rematein {
 	} elsif ($s =~ m|^Bundle::|) {
 	    $obj = $CPAN::META->instance('CPAN::Bundle',$s);
 	} else {
-	    $obj = $CPAN::META->instance('CPAN::Module',$s);
+	    $obj = $CPAN::META->instance('CPAN::Module',$s) if $CPAN::META->exists('CPAN::Module',$s);
 	}
 	if (ref $obj) {
 	    CPAN->debug(qq{meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
 	    $obj->$meth();
 	    CPAN->debug(qq{meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
 	} else {
-	    print "Warning: Cannot $meth $s [obj $obj], don't know what it is\n";
+	    print "Warning: Cannot $meth $s, don't know what it is\n";
 	}
     }
 }
@@ -993,7 +998,7 @@ sub as_string {
 	next if $_ eq 'ID';
 	my $extra = "";
 	$_ eq "CPAN_USERID" and $extra = " (".$self->author.")";
-	if (ref $self->{$_}) { # Language? XXX
+	if (ref $self->{$_}) { # Should we setup a language interface? XXX
 	    push @m, sprintf "    %-12s %s%s\n", $_, "@{$self->{$_}}", $extra;
 	} else {
 	    push @m, sprintf "    %-12s %s%s\n", $_, $self->{$_}, $extra;
@@ -1389,6 +1394,8 @@ sub rematein {
 sub install { shift->rematein('install',@_); }
 sub test    { shift->rematein('test',@_); }
 sub make    { shift->rematein('make',@_); }
+
+# XXX not yet implemented!
 sub readme  {
     my($self) = @_;
     my($file) = $self->cpan_file or print("No File found for bundle ", $self->id, "\n"), return;
@@ -1478,11 +1485,17 @@ sub as_string {
 
 sub cpan_file    {
     my $self = shift;
+    CPAN->debug($self->id) if $CPAN::DEBUG;
     unless (defined $self->{'CPAN_FILE'}) {
 	CPAN::Index->reload;
     }
-    defined $self->{'CPAN_FILE'} ? $self->{'CPAN_FILE'} :
-	defined $self->{'userid'} ? "Contact Author ".$self->{'userid'}."=".$CPAN::META->instance(CPAN::Author,$self->{'userid'})->fullname : "N/A";
+    if (defined $self->{'CPAN_FILE'}){
+	return $self->{'CPAN_FILE'};
+    } elsif (defined $self->{'userid'}) {
+	return "Contact Author ".$self->{'userid'}."=".$CPAN::META->instance(CPAN::Author,$self->{'userid'})->fullname
+    } else {
+	return "N/A";
+    }
 }
 
 *name = \&cpan_file;
@@ -1493,6 +1506,7 @@ sub rematein {
     my($self,$meth) = @_;
     $self->debug("for [".$self->id."]") if $CPAN::DEBUG;
     my $cpan_file = $self->cpan_file;
+    return if $cpan_file eq "N/A";
     my $pack = $CPAN::META->instance('CPAN::Distribution',$self->cpan_file);
     $pack->called_for($self->id);
     $pack->$meth();
@@ -1656,18 +1670,16 @@ sub new {
 
 package CPAN::Debug;
 
-# VERRY PRIMITIVE, sorry XXX
-
 sub debug {
     my($self,$arg) = @_;
     my($caller,$func,$line) = caller();
     $caller =~ s/.*:://;
-    print "Debug($caller\[$CPAN::DEBUG{$caller}]:$func:$line): $arg\n" if $CPAN::DEBUG{$caller} & $CPAN::DEBUG;
+    print "Debug($caller\[$CPAN::DEBUG{$caller}]:$func:$line): $arg\n"
+	if $CPAN::DEBUG{$caller} & $CPAN::DEBUG;
 }
 
 1;
 __END__
-# Below is the stub of documentation for your module. You better edit it!
 
 =head1 NAME
 
@@ -1714,8 +1726,20 @@ which puts you into a readline interface. You will have most fun if
 you install Term::ReadKey and Term::ReadLine soon. That will give you
 both history and completion.
 
-Once you're on the command line, type 'h' and the rest should be
+Once you are on the command line, type 'h' and the rest should be
 self-explanatory.
+
+=head2 CPAN::Shell
+
+The commands that are available in the shell interface are methods in
+the package CPAN::Shell. If you enter the shell command, all your
+input is split on whitespace, the first word is being interpreted as
+the method to be called and the rest of the words are treated as
+arguments to this method.
+
+If you do not enter the shell, most of the available shell commands
+are both available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
+functions in the calling package (C<install(...)>).
 
 =head2 Cache Manager
 
