@@ -6,13 +6,13 @@ use vars qw{$Try_autoload
 	    $Frontend  $Defaultsite
 	   }; #};
 
-$VERSION = '1.55';
+$VERSION = '1.56';
 
-# $Id: CPAN.pm,v 1.302 2000/07/30 10:33:42 k Exp $
+# $Id: CPAN.pm,v 1.303 2000/08/01 15:57:15 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.302 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.303 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -4472,12 +4472,20 @@ sub inst_version {
     local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     # warn "HERE";
     my $have;
-    local($SIG{__WARN__}) =  sub { warn "1. have[$have]"; };
+    # local($SIG{__WARN__}) =  sub { warn "1. have[$have]"; };
+
+    # there was a bug in 5.6.0 that let lots of unini warnings out of
+    # parse_version. Fixed shortly after 5.6.0 by PMQS. We can remove
+    # this workaround after 5.6.1 is out.
+    local($SIG{__WARN__}) =  sub { my $w = shift;
+                                   return if $w =~ /uninitialized/i;
+                                   warn $w;
+                                 };
     $have = MM->parse_version($parsefile) || "undef";
-    local($SIG{__WARN__}) =  sub { warn "2. have[$have]"; };
+    # local($SIG{__WARN__}) =  sub { warn "2. have[$have]"; };
     $have =~ s/\s*//g; # stringify to float around floating point issues
-    local($SIG{__WARN__}) =  sub { warn "3. have[$have]"; };
-    $have;
+    # local($SIG{__WARN__}) =  sub { warn "3. have[$have]"; };
+    $have; # no stringify needed, \s* above matches always
 }
 
 package CPAN::Tarzip;

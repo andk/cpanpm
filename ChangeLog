@@ -1,3 +1,12 @@
+2000-08-01  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Quick bugfix release 1.56. Thanks to Bruce Barnett <barnett
+	birch.crd.ge.com> who showed me that I had forgotten debugging
+	statements in the CPAN::Module::inst_version method reminding me
+	also that unpatched 5.6.0 still produces warnings where it
+	shouldn't. A quick fix is in and I release that as 1.56
+	immediately.
+
 2000-07-30  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* Made completion output for a,b,d,m sorted. I have no idea when
