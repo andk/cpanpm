@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.44';
+$VERSION = '1.44_51';
 
-# $Id: CPAN.pm,v 1.245 1999/01/09 17:53:32 k Exp $
+# $Id: CPAN.pm,v 1.247 1999/01/10 16:53:15 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.245 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.247 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -269,7 +269,7 @@ sub try_dot_al {
 	    *$autoload = sub {};
 	    $ok = 1;
 	} else {
-	    if ($name =~ s/(\w{12,})\.al$/substr($1,0,11).".al"/e){
+	    if ($name =~ s{(\w{12,})\.al$}{substr($1,0,11).".al"}e){
 		eval {local $SIG{__DIE__};require $name};
 	    }
 	    if ($@){
@@ -316,10 +316,73 @@ use vars qw($AUTOLOAD @ISA);
 package CPAN::Queue;
 # currently only used to determine if we should or shouldn't announce
 # the availability of a new CPAN module
+
+# but now we try to use it for dependency tracking. For that to happen
+# we need to draw a dependency tree and do the leaves first. This can
+# easily be reached by running CPAN.pm recursively, but we don't want
+# to waste memory and run into deep recursion. So what we can do is
+# this: run the queue as the user suggested. When a dependency is
+# detected check if it is in the queue. If so, rearrange, otherwise
+# unshift it on the queue.
+
+use vars qw{ @All };
+
 sub new {
   my($class,$mod) = @_;
-  # warn "Queue object for mod[$mod]";
-  bless {mod => $mod}, $class;
+  my $self = bless {mod => $mod}, $class;
+  push @All, $self;
+  # my @all = map { $_->{mod} } @All;
+  # warn "Adding Queue object for mod[$mod] all[@all]";
+  $self;
+}
+
+sub first {
+  my $obj = $All[0];
+  $obj->{mod};
+}
+
+sub delete_first {
+  my($class,$what) = @_;
+  my $i;
+  for my $i (0..$#All) {
+    if (  $All[$i]->{mod} eq $what ) {
+      splice @All, $i, 1;
+      return;
+    }
+  }
+}
+
+sub jumpqueue {
+  my $class = shift;
+  my $what = shift;
+  my $obj;
+  for my $i (0..$#All) {
+    if ($All[$i]->{mod} eq $what) {
+	# put this object to thetop of the queue, record that in it, and return
+	$obj = splice @All, $i, 1;
+	unshift @All, $obj;
+	$obj->{jumped}++;
+	die "Deep dependencies" if $obj->{jumped} > 100;
+	return;
+      }
+  }
+  $obj = bless { mod => $what }, $class;
+  unshift @All, $obj;
+}
+
+sub exists {
+  my($self,$what) = @_;
+  my @all = map { $_->{mod} } @All;
+  my $exists = grep { $_->{mod} eq $what } @All;
+  # warn "Checking exists in Queue object for mod[$what] all[@all] exists[$exists]";
+  $exists;
+}
+
+sub delete {
+  my($self,$mod) = @_;
+  @All = grep { $_->{mod} ne $mod } @All;
+  # my @all = map { $_->{mod} } @All;
+  # warn "Deleting Queue object for mod[$mod] all[@all]";
 }
 
 package CPAN;
@@ -632,7 +695,7 @@ sub disk_usage {
 	 sub {
 	     $File::Find::prune++ if $CPAN::Signal;
 	     return if -l $_;
-	     $Du += -s _;
+	     $Du += (-s _); # parens to help cperl-mode
 	 },
 	 $dir
 	);
@@ -1524,22 +1587,23 @@ sub rematein {
     CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
     my($s,@s);
     foreach $s (@some) {
+      CPAN::Queue->new($s);
+    }
+    while ($s = CPAN::Queue->first) {
 	my $obj;
 	if (ref $s) {
 	    $obj = $s;
 	} elsif ($s =~ m|/|) { # looks like a file
 	    $obj = $CPAN::META->instance('CPAN::Distribution',$s);
 	} elsif ($s =~ m|^Bundle::|) {
-	    $CPAN::META->{'CPAN::Queue'}{$s} ||= CPAN::Queue->new($s);
 	    $obj = $CPAN::META->instance('CPAN::Bundle',$s);
 	} else {
-	    $CPAN::META->{'CPAN::Queue'}{$s} ||= CPAN::Queue->new($s);
 	    $obj = $CPAN::META->instance('CPAN::Module',$s)
 		if $CPAN::META->exists('CPAN::Module',$s);
 	}
 	if (ref $obj) {
 	    CPAN->debug(
-			qq{pragma[$pragma] meth[$meth] obj[$obj] as_string\[}.
+			qq{pragma[$pragma]meth[$meth]obj[$obj]as_string\[}.
 			$obj->as_string.
 			qq{\]}
 		       ) if $CPAN::DEBUG;
@@ -1554,7 +1618,9 @@ sub rematein {
 	    if ($]>=5.00303 && $obj->can('called_for')) {
 	      $obj->called_for($s);
 	    }
-	    $obj->$meth();
+	    CPAN::Queue->delete($s) if $obj->$meth(); # if it is more
+                                                      # than once in
+                                                      # the queue
 	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
 	    $obj = $CPAN::META->instance('CPAN::Author',$s);
 	    $CPAN::Frontend->myprint(
@@ -1564,7 +1630,9 @@ sub rematein {
 				     " ;-)\n"
 				    );
 	} else {
-	    $CPAN::Frontend->myprint(qq{Warning: Cannot $meth $s, don\'t know what it is.
+	    $CPAN::Frontend
+		->myprint(qq{Warning: Cannot $meth $s, }.
+			  qq{don\'t know what it is.
 Try the command
 
     i /$s/
@@ -1572,6 +1640,7 @@ Try the command
 to find objects with similar identifiers.
 });
 	}
+	CPAN::Queue->delete_first($s);
     }
 }
 
@@ -2451,11 +2520,11 @@ sub rd_modpacks {
 
 	# if it is a bundle, instatiate a bundle object
 	my($bundle,$id,$userid);
-	
+
 	if ($mod eq 'CPAN' &&
 	    ! (
-	       $CPAN::META->exists('CPAN::Queue','Bundle::CPAN') ||
-	       $CPAN::META->exists('CPAN::Queue','CPAN')
+	       CPAN::Queue->exists('Bundle::CPAN') ||
+	       CPAN::Queue->exists('CPAN')
 	      )
 	   ) {
 	    local($^W)= 0;
@@ -3006,16 +3075,14 @@ sub eq_MD5 {
 
 #-> sub CPAN::Distribution::force ;
 sub force {
-    my($self) = @_;
-    $self->{'force_update'}++;
-    delete $self->{'MD5_STATUS'};
-    delete $self->{'archived'};
-    delete $self->{'build_dir'};
-    delete $self->{'localfile'};
-    delete $self->{'make'};
-    delete $self->{'install'};
-    delete $self->{'unwrapped'};
-    delete $self->{'writemakefile'};
+  my($self) = @_;
+  $self->{'force_update'}++;
+  for my $att (qw(
+  MD5_STATUS archived build_dir localfile make install unwrapped
+  writemakefile have_sponsored
+ )) {
+    delete $self->{$att};
+  }
 }
 
 sub isa_perl {
@@ -3159,6 +3226,14 @@ or
 	$self->{writemakefile} = "YES";
     }
     return if $CPAN::Signal;
+    if ($self->needs_prereq){
+      my $id = $self->id;
+      $CPAN::Frontend->myprint("---- Dependencies detected ".
+			       "during [$id] -----");
+      sleep 2;
+      CPAN::Queue->new($id); # requeue yourself
+      return;
+    }
     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -3168,6 +3243,56 @@ or
 	 $self->{'make'} = "NO";
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
+}
+
+#-> sub CPAN::Distribution::needs_prereq ;
+sub needs_prereq {
+  my($self) = @_;
+  return unless -f "Makefile"; # we cannot say much
+  my $fh = FileHandle->new("<Makefile") or
+      $CPAN::Frontend->mydie("Couldn't open Makefile: $!");
+  local($/) = "\n";
+  my $v;
+  while (<$fh>) {
+    last if ($v) = m| ^ \# \s+ ( \d+\.\d+ ) .* Revision: |x;
+  }
+
+  my($ret,@p);
+  if ($v < 5.4303) {
+    while (<$fh>) {
+      last if /MakeMaker post_initialize section/;
+      my($p) = m{^#\s+PREREQ_PM\s+=>\s+(.+)}; # } CPERL
+      next unless $p;
+      # warn "Found prereq expr[$p]";
+      require Safe;
+      my($comp) = Safe->new("CPAN::Safe2");
+      my $ret = $comp->reval($p);
+      # warn "evaled it and got[$ret]";
+      Carp::confess($@) if $@;
+      @p = keys %$ret;
+      last;
+    }
+  } else {
+    while (<$fh>) {
+      last if /MakeMaker post_initialize section/;
+      my($p) = m|\# prerequisite (\S+).+not found|;
+      next unless $p;
+      push @p, $p;
+    }
+  }
+  for my $p (@p) {
+    unless ($CPAN::META->instance("CPAN::Module",$p)->inst_file){
+      if ($self->{'have_sponsored'}{$p}++) {
+	# We have already sponsored it and for some reason it's still
+	# not available. So we do nothing. Or what should we do?
+      } else {
+	# warn "----- Protegere $p -----";
+	CPAN::Queue->jumpqueue($p);
+	$ret++;
+      }
+    }
+  }
+  $ret;
 }
 
 #-> sub CPAN::Distribution::test ;
@@ -3466,7 +3591,6 @@ sub test    { shift->rematein('test',@_); }
 sub install {
   my $self = shift;
   $self->rematein('install',@_);
-  $CPAN::META->delete('CPAN::Queue',$self->id);
 }
 #-> sub CPAN::Bundle::clean ;
 sub clean   { shift->rematein('clean',@_); }
@@ -3712,7 +3836,6 @@ sub install {
 	$doit = 1;
     }
     $self->rematein('install') if $doit;
-    $CPAN::META->delete('CPAN::Queue',$self->id);
 }
 #-> sub CPAN::Module::clean ;
 sub clean  { shift->rematein('clean') }
@@ -3884,14 +4007,16 @@ sub untar {
 	if (system($system)==0) {
 	    $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
 	} else {
-	    $CPAN::Frontend->mydie(qq{Couldn't uncompress $file\n});
+	    $CPAN::Frontend->mydie(
+				   qq{Couldn\'t uncompress $file\n}
+				  );
 	}
 	$file =~ s/\.gz$//;
 	$system = "$CPAN::Config->{tar} xvf $file";
 	if (system($system)==0) {
 	    $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
 	} else {
-	    $CPAN::Frontend->mydie(qq{Couldn't untar $file\n});
+	    $CPAN::Frontend->mydie(qq{Couldn\'t untar $file\n});
 	}
 	return 1;
     } else {

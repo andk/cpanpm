@@ -1,5 +1,14 @@
 Revision history for Perl extension CPAN.
 
+=head2 January 1999 after 1.44
+
+Took a stab at dependencies. A separate package CPAN::Queue queues the
+items to be built. Bundles work unaltered, mudules have the ability to
+let others pass (queue jumping). Typically they let the prerequisites
+go to the head of the queue before they try to make themselves. Seems
+to work so far. I release a version 1.44_51 to let the community test
+before I try to up the version number.
+
 =head2 December 1998 after 1.43
 
 Greg Ward <gward@ase.com> sent me a patch to make read_mirrored_by()
