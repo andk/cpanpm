@@ -5,13 +5,13 @@ use vars qw{$Try_autoload $Revision
 	    $Frontend  $Defaultsite
 	   };
 
-$VERSION = '1.42';
+$VERSION = '1.43';
 
-# $Id: CPAN.pm,v 1.243 1998/12/01 07:57:12 k Exp $
+# $Id: CPAN.pm,v 1.244 1998/12/01 22:11:44 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.243 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.244 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -844,7 +844,6 @@ sub load {
     my($self) = shift;
     my(@miss);
     use Carp;
-    print Carp::confess;
     eval {require CPAN::Config;};       # We eval because of some
                                         # MakeMaker problems
     unless ($dot_cpan++){
