@@ -3,10 +3,10 @@ package CPAN;
 # If you want to inherit from CPAN, just change the constructor
 use vars qw{$META $Signal $End};
 
-$VERSION = '0.27a';
+$VERSION = '0.28a';
 
-# $Id: CPAN.pm,v 1.46 1996/09/10 20:41:06 k Exp k $
-my $version = substr q$Revision: 1.46 $, 10;
+# $Id: CPAN.pm,v 1.47 1996/09/12 14:12:16 k Exp k $
+my $version = substr q$Revision: 1.47 $, 10;
 
 BEGIN {require 5.002;}
 use Term::ReadLine;
@@ -74,7 +74,7 @@ sub AUTOLOAD {
     $l =~ s/.*:://;
     my(%EXPORT);
     @EXPORT{@EXPORT} = '';
-    if ($EXPORT{$l}){
+    if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
 	warn "CPAN doesn't know how to autoload $AUTOLOAD :-(
@@ -296,6 +296,7 @@ test      dists or    make test (implies make)
 install   bundles     make install (implies test)
                       
 h                     display this menu
+o         various     set and query options
 !         perl-code   eval a perl command
 q                     quit the shell subroutine
 

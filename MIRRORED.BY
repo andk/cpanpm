@@ -21,7 +21,7 @@
 #   - Greek/Cyrillic/Kanji/Hanzi/... cannot be rendered in ISO Latin 1
 #   - the format is usually "native;english"
 #     but for example in Canada, well, is native English or French?
-#   - sometimes the name of the organization is directly
+#   - sometimes the name of the organization is already
 #     in English (funet, sunet, hkstar, arnes, math.ncu, ...)
 #
 
@@ -601,14 +601,14 @@ ftp.iguide.com:
 
 ftp.rge.com:
   frequency        = "bidaily"
-  dst_directory    = "ftp.rge.com:/pub/languages/perl/CPAN/"
+  dst_directory    = "ftp.rge.com:/pub/languages/perl/"
   dst_location     = "Rochester, New York, USA, North America (43.1N 77.6W)"
   dst_organisation = "Rochester Gas and Electric"
   dst_timezone     = "GMT-5 (EST5EDT)"
   dst_contact      = "ftp@rge.com"
   dst_src          = "ftp.funet.fi:/pub/languages/perl/CPAN/"
 
-# dst_dst          = "ftp://ftp.rge.com/pub/languages/perl/CPAN/"
+# dst_dst          = "ftp://ftp.rge.com/pub/languages/perl/"
 # dst_contact      = "mailto:ftp@rge.com"
 # dst_src          = "ftp://ftp.funet.fi/pub/languages/perl/CPAN/"
 
