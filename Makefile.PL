@@ -6,7 +6,7 @@ use File::Path;
 
 # use strict;
 
-# $Id: Makefile.PL,v 1.14 1996/09/27 12:48:56 k Exp $
+# $Id: Makefile.PL,v 1.15 1996/10/01 21:04:08 k Exp k $
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -15,7 +15,11 @@ WriteMakefile(
     'CONFIGURE' => \&init,
     'NAME'	=> 'CPAN',
     'VERSION_FROM' => 'lib/CPAN.pm',
-    'dist' => { DIST_DEFAULT => 'private all tardist', COMPRESS => 'gzip -9f' },
+    'dist' => { 
+	       PREOP => 'co -l README && pod2text lib/CPAN.pm > README && ci -u README',
+	       DIST_DEFAULT => 'private all tardist',
+	       COMPRESS => 'gzip -9f'
+	      },
 );
 
 sub init {

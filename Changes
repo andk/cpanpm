@@ -1,11 +1,25 @@
 Revision history for Perl extension CPAN.
 
+=head2 Oct 1, 1996
+
+Implemented "force". Usage is simply:
+    force make args...
+    force test args...
+    force install args...
+This forces the fetch, untar, makefilepl, make and install even in
+cases where CPAN thinks, the package is either up-to-date or cannot be
+built or whatever.
+
 =head2 Sep 28, 1996
 
 Implemented
 
 cpan> ! install(CPAN::Shell->r)    # install all recommendations
 cpan> ! install(CPAN::Shell->u)    # install all uninstalled
+
+or if you prefer
+
+cpan> ! install(grep(/^[F-I]/,CPAN::Shell->r)) # only install from File to IO :-)
 
 following a Dale Amon suggestion. CPAN::Shell->r and u return the list
 of module names that are printed on STDOUT.

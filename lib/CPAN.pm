@@ -1,11 +1,11 @@
 package CPAN;
-use vars qw{$META $Signal $End $Suppress_readline};
+use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '0.40a';
+$VERSION = '0.41a';
 
-# $Id: CPAN.pm,v 1.61 1996/09/28 12:48:57 k Exp $
+# $Id: CPAN.pm,v 1.62 1996/10/01 21:04:08 k Exp $
 
-# my $version = substr q$Revision: 1.61 $, 10; # only used during development
+# my $version = substr q$Revision: 1.62 $, 10; # only used during development
 
 use 5.003;
 use File::Find;
@@ -16,6 +16,9 @@ use ExtUtils::MakeMaker ();
 use IO::File ();
 use Config ();
 use Carp ();
+use Cwd ();
+
+$Cwd = Cwd::cwd();
 
 END { $End++; &cleanup; }
 
@@ -47,12 +50,13 @@ eval {require CPAN::Config;};       # We eval, because of some MakeMaker problem
 unshift @INC, $META->catdir($ENV{HOME},".cpan");
 eval {require CPAN::MyConfig;};     # where you can override system wide settings
 
-@EXPORT = qw(autobundle bundle bundles expand install make shell test);
+@EXPORT = qw(autobundle bundle bundles expand force install make shell test);
 
 sub autobundle;
 sub bundle;
 sub bundles;
 sub expand;
+sub force;
 sub install;
 sub make;
 sub shell;
@@ -415,31 +419,11 @@ sub o {
 	} else {
 	    print "Debugging turned off completely.\n";
 	}
-    } elsif ($o_type eq 'update') {
-	if (@o_what) {
-	    if ( $o_what[0] eq 'force' ) {
-		$self->{'update_policy'} = 'force';
-	    } elsif ($o_what[0] eq 'noforce') {
-		$self->{'update_policy'} = 'noforce';
-	    } else {
-		$o_what[0] = 'help';
-	    }
-	} else {
-	    $o_what[0] = 'help';
-	}
-	if ($o_what[0] =~ /^h/) {
-	    print "Valid options for update are 'force' and 'noforce'.
-    Setting to 'force' will reinstall modules even if the installed version
-    is up-to-date.\n";
-	}
-	$CPAN::META->{'update_policy'} ||= 'noforce';
-	print "Update policy set to '$CPAN::META->{'update_policy'}'\n";
     } else {
 	print qq{
 Known options:
   conf    show configuration variables
   debug   set and get debugging options
-  update  set and get update options
 };
     }
 }
@@ -641,7 +625,12 @@ sub format_result {
 sub rematein {
     shift;
     my($meth,@some) = @_;
-    CPAN->debug("meth[$meth] some[@some]") if $CPAN::DEBUG;
+    my $pragma = "";
+    if ($meth eq 'force') {
+	$pragma = $meth;
+	$meth = shift @some;
+    }
+    CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
     my($s,@s);
     foreach $s (@some) {
 	my $obj;
@@ -655,15 +644,16 @@ sub rematein {
 	    $obj = $CPAN::META->instance('CPAN::Module',$s) if $CPAN::META->exists('CPAN::Module',$s);
 	}
 	if (ref $obj) {
-	    CPAN->debug(qq{meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
+	    CPAN->debug(qq{pragma[$pragma] meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
+	    $obj->$pragma() if $pragma && $obj->can($pragma);
 	    $obj->$meth();
-	    CPAN->debug(qq{meth[$meth] obj[$obj] as_string\[}.$obj->as_string.qq{\]}) if $CPAN::DEBUG;
 	} else {
 	    print "Warning: Cannot $meth $s, don't know what it is\n";
 	}
     }
 }
 
+sub force   { shift->rematein('force',@_); }
 sub readme  { shift->rematein('readme',@_); }
 sub make    { shift->rematein('make',@_); }
 sub test    { shift->rematein('test',@_); }
@@ -829,8 +819,6 @@ sub complete_option {
 	return ();
     } elsif ($words[1] eq 'debug') {
 	return sort grep /^\Q$word\E/, sort keys %CPAN::DEBUG, 'all';
-    } elsif ($words[1] eq 'update') {
-	return sort grep /^\Q$word\E/, 'force', 'noforce';
     }
     
 }
@@ -1226,9 +1214,21 @@ sub eq_MD5 {
     $hexdigest eq $expectMD5;
 }
 
+sub force {
+    my($self) = @_;
+    $self->{'force_update'}++;
+    delete $self->{'MD5_STATUS'};
+    delete $self->{'archived'};
+    delete $self->{'build_dir'};
+    delete $self->{'localfile'};
+    delete $self->{'make'};
+    delete $self->{'unwrapped'};
+    delete $self->{'writemakefile'};
+}
+
 sub make {
     my($self) = @_;
-    $self->debug("CPAN::Distribution::make for [".$self->id."]") if $CPAN::DEBUG;
+    $self->debug($self->id) if $CPAN::DEBUG;
     print "Running make\n";
     $self->get;
     if ($CPAN::META->hasMD5) {
@@ -1251,7 +1251,8 @@ sub make {
     if ($self->{'configure'}) {
 	$system = $self->{'configure'};
     } else {
-	$system = "$^X Makefile.PL $CPAN::Config->{makepl_arg}";
+	my($perl) = $^X =~ /^\.\// ? "$CPAN::Cwd/$^X" : $^X; # XXX subclassing folks, forgive me!
+	$system = "$perl Makefile.PL $CPAN::Config->{makepl_arg}";
     }
     if (system($system)!=0) {
 	 $self->{writemakefile} = "NO";
@@ -1420,6 +1421,7 @@ sub as_glimpse {
 sub as_string {
     my($self) = @_;
     my(@m);
+    CPAN->debug($self) if $CPAN::DEBUG;
     my $class = ref($self);
     $class =~ s/^CPAN:://;
     local($^W) = 0;
@@ -1502,14 +1504,21 @@ sub cpan_file    {
 
 sub cpan_version { shift->{'CPAN_VERSION'} }
 
+sub force {
+    my($self) = @_;
+    $self->{'force_update'}++;
+}
+
 sub rematein {
     my($self,$meth) = @_;
-    $self->debug("for [".$self->id."]") if $CPAN::DEBUG;
+    $self->debug($self->id) if $CPAN::DEBUG;
     my $cpan_file = $self->cpan_file;
     return if $cpan_file eq "N/A";
-    my $pack = $CPAN::META->instance('CPAN::Distribution',$self->cpan_file);
+    my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
+    $pack->force if exists $self->{'force_update'};
     $pack->$meth();
+    delete $self->{'force_update'};
 }
 
 sub readme { shift->rematein('readme') }
@@ -1518,23 +1527,18 @@ sub test { shift->rematein('test') }
 sub install { 
     my($self) = @_;
     my($doit) = 0;
-    $CPAN::META->{'update_policy'} ||= 'noforce';
-    if ($CPAN::META->{'update_policy'} eq 'force') {
-	$doit = 1;
+    my($latest) = $self->cpan_version;
+    $latest ||= 0;
+    my($inst_file) = $self->inst_file;
+    my($have) = 0;
+    if (defined $inst_file) {
+	$have = $self->inst_version;
+	$have ||= 0;
+    }
+    if ($have >= $latest && not exists $self->{'force_update'}) {
+	print $self->id, " up-to-date.\n";
     } else {
-	my($latest) = $self->cpan_version;
-	$latest ||= 0;
-	my($inst_file) = $self->inst_file;
-	my($have) = 0;
-	if (defined $inst_file) {
-	    $have = $self->inst_version;
-	    $have ||= 0;
-	}
-	if ($have >= $latest) {
-	    print $self->id, " up-to-date.\n";
-	} else {
-	    $doit = 1;
-	}
+	$doit = 1;
     }
     $self->rematein('install') if $doit;
 }
@@ -1672,10 +1676,20 @@ package CPAN::Debug;
 
 sub debug {
     my($self,$arg) = @_;
-    my($caller,$func,$line) = caller();
+    my($caller,$func,$line,@rest) = caller(1);
     $caller =~ s/.*:://;
-    print "Debug($caller\[$CPAN::DEBUG{$caller}]:$func:$line): $arg\n"
-	if $CPAN::DEBUG{$caller} & $CPAN::DEBUG;
+    if ($CPAN::DEBUG{$caller} & $CPAN::DEBUG){
+	if (ref $arg) {
+	    eval { require Data::Dumper };
+	    if ($@) {
+		print $arg->as_string;
+	    } else {
+		print Data::Dumper::Dumper($arg);
+	    }
+	} else {
+	    print "Debug($caller:$func,$line,@rest): $arg\n"    
+	}
+    }
 }
 
 1;
@@ -1697,10 +1711,18 @@ Batch mode:
 
   autobundle, bundle, bundles, expand, install, make, test
 
+=head1 ALPHA ALERT
+
+The interface of this B<package is not yet stable>. Parts of it may
+still change. This is especially true for the programming
+interface. The interactive "shell" interface is already rather well
+established.
+
 =head1 DESCRIPTION
 
-The CPAN module is designed to automate the fetching and, optionally,
-the building and installing of perl modules and extensions.
+The CPAN module is designed to automate the building and installing of
+perl modules and extensions including the searching and fetching from
+the net.
 
 Modules are fetched from one or more of the mirrored CPAN
 (Comprehensive Perl Archive Network) sites and unpacked in a dedicated
@@ -1712,9 +1734,9 @@ related modules. See BUNDLES below.
 
 The package contains a session manager and a cache manager. There is
 no status retained between sessions. The session manager keeps track
-of what has been fetched, built and installed in the current session
-and will nor redo a 'make' or a 'install'. 'test' can be run
-repeatedly.
+of what has been fetched, built and installed in the current
+session. The cache manager keeps track of the disk space occupied by
+the make processes and deletes excess space in a simple FIFO style.
 
 =head2 Interactive Mode
 
@@ -1723,8 +1745,8 @@ The interactive mode is entered by running
     perl -MCPAN -e shell
 
 which puts you into a readline interface. You will have most fun if
-you install Term::ReadKey and Term::ReadLine soon. That will give you
-both history and completion.
+you install Term::ReadKey and Term::ReadLine to enjoy both history and
+completion.
 
 Once you are on the command line, type 'h' and the rest should be
 self-explanatory.
@@ -1755,38 +1777,6 @@ covered by the cache manager and must be controlled by the user. If
 you choose to have the same directory as build_dir and as
 keep_source_where directory, then your sources will be deleted with
 the same fifo mechanism.
-
-=head2 Prerequisites
-
-If you have a local mirror of CPAN and can access all files with
-"file:" URLs, then you only need perl5.003 to run this
-module. Otherwise you need Net::FTP intalled. LWP may be required for
-non-UNIX systems.
-
-This module presumes that all packages on CPAN
-
-=over 2
-
-=item *
-
-Declare their $VERSION variable in an easy to parse manner. This
-prerequisite can hardly be relaxed because it consumes by far too much
-memory to load all packages into a single program just to determine
-the $VERSION variable . Currently all programs that are dealing with
-VERSION use something like this (requires MakeMaker-5.38, but don't
-bother if you don't have it):
-
-    perl -MExtUtils::MakeMaker -le \
-        'print MM->parse_version($ARGV[0])' filename
-
-If you are author of a package and wonder if your VERSION can be
-parsed, please try the above method.
-
-=item *
-
-come as compressed or gzipped tarfiles or as zip files,
-
-=back
 
 =head2 Bundles
 
@@ -1828,6 +1818,24 @@ of all modules that are both available from CPAN and currently
 installed within @INC. The name of the bundle file is based on the
 current date and a counter.
 
+=head2 Pragma: force
+
+Normally CPAN keeps track of what it has done within the current
+session and doesn't try to build a package a second time regardless if
+it succeeded or not. The force command takes as first argument the
+method to invoke (currently: make, test, or install) and executes the
+command from scratch.
+
+Example:
+
+    cpan> install OpenGL 
+    OpenGL up-to-date.
+    cpan> force install OpenGL 
+    Running make
+    OpenGL-0.4/
+    OpenGL-0.4/COPYRIGHT
+    [...]
+
 =head1 CONFIGURATION
 
 When the CPAN module is installed a site wide configuration file is
@@ -1867,8 +1875,9 @@ should be warned now.
 
 =head1 EXPORT
 
-All functions in package CPAN are exported. The reason for this is
-that the primary use is intended for the cpan-shell or for one-liners.
+Most functions in package CPAN are exported per default. The reason
+for this is that the primary use is intended for the cpan-shell or for
+one-liners.
 
 =head1 Debugging
 
@@ -1881,7 +1890,41 @@ In interactive mode you can try "o debug" which will list options for
 debugging the various parts of the package. The output may not be very
 useful for you as it's just a byproduct of my own testing, but if you
 have an idea which part of the package may have a bug, it's certainly
-worth to give it a try and send me more specific output.
+worth to give it a try and send me more specific output. You should
+know that "o debug" has built-in completion support.
+
+=head2 Prerequisites
+
+If you have a local mirror of CPAN and can access all files with
+"file:" URLs, then you only need perl5.003 to run this
+module. Otherwise you need Net::FTP intalled. LWP may be required for
+non-UNIX systems.
+
+This module presumes that all packages on CPAN
+
+=over 2
+
+=item *
+
+Declare their $VERSION variable in an easy to parse manner. This
+prerequisite can hardly be relaxed because it consumes by far too much
+memory to load all packages into a single program just to determine
+the $VERSION variable . Currently all programs that are dealing with
+VERSION use something like this (requires MakeMaker-5.38, but don't
+bother if you don't have it):
+
+    perl -MExtUtils::MakeMaker -le \
+        'print MM->parse_version($ARGV[0])' filename
+
+If you are author of a package and wonder if your VERSION can be
+parsed, please try the above method.
+
+=item *
+
+Come as compressed or gzipped tarfiles or as zip files (well we try to
+handle a bit more, but without much enthusiasm).
+
+=back
 
 =head1 AUTHOR
 
