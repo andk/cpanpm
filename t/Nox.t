@@ -1,5 +1,6 @@
 #!./perl
 
+use lib "BUNDLE";
 use Test::More tests => 8;
 
 # use this first to $CPAN::term can be undefined

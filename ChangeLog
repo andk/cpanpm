@@ -1,3 +1,60 @@
+2003-02-05  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm (savehist, CPAN::shell): new config variables
+	histfile and histsize control saving and retrieving of history.
+
+	* Explain the status of CPAN.pm vs. CPANPLUS.pm in the POD
+
+	* Documentation: mention FTP_PASSIVE; courtesy Peter Valdemar
+	Mørch
+
+2002-11-22  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* correct all split commands to use a regex instead of a string.
+	Thanks to Rafael Garcia-Suarez for detecting the abuse.
+
+2002-11-17  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* BUNDLE/Test/{Builder,More}.pm: Strip POD from the two bundled
+	modules.
+
+2002-11-15  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Makefile.PL: Switch to CPAN::MakeMaker for this one experimental
+	release. The implications of CPAN::MakeMaker are yet to be
+	evaluated. Here I use the "True Bundle" feature to add Test::More
+	and Test::Builder and remove the dependency on them.
+
+2002-11-12  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN/FirstTime.pm (read_mirrored_by): Bill Pollock made me
+	aware about simple mistakes that can be avoided in the URL
+	selection dialogue (entering URL strings instead of numbers,
+	entering leading or trailing whitespace). With a few simple tweaks
+	these should be avoided in the future.
+
+2002-10-20  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* lib/CPAN.pm: the last few patches also fixed accidentally some
+	"redefined" warnings during "reload cpan".
+
+2002-09-30  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Roland Bauer sent me a patch that carefully appended a trailing
+	newline to a couple of "mywarn" messages that came without it.
+	
+	* CPAN::FirstTime::display_some: Change the displayed dialogue to
+	make clear that SPACE ENTER is the trick to page through results.
+	Correct some indenting and trailing whitespace. Remove some unused
+	variables.
+
+	* print_ornamented: Newline fix for various Windows systems by
+	Roland Bauer
+
+2002-09-03  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::FirstTime::init: Catch non-absolute path in cpan_home.
+
 2002-08-30  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* New version of the cpan script by brian d foy.

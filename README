@@ -12,6 +12,15 @@ SYNOPSIS
 
       autobundle, clean, install, make, recompile, test
 
+STATUS
+    This module will eventually be replaced by CPANPLUS. CPANPLUS is kind of
+    a modern rewrite from ground up with greater extensibility and more
+    features but no full compatibility. If you're new to CPAN.pm, you
+    probably should investigate if CPANPLUS is the better choice for you. If
+    you're already used to CPAN.pm you're welcome to continue using it, if
+    you accept that its development is mostly (though not completely)
+    stalled.
+
 DESCRIPTION
     The CPAN module is designed to automate the make and install of perl
     modules and extensions. It includes some searching capabilities and
@@ -657,6 +666,8 @@ CONFIGURATION
       dontload_hash      anonymous hash: modules in the keys will not be
                          loaded by the CPAN::has_inst() routine
       gzip               location of external program gzip
+      histfile           file to maintain history between sessions
+      histsize           maximum number of lines to keep in histfile
       inactivity_timeout breaks interactive Makefile.PLs after this
                          many seconds inactivity. Set to 0 to never break.
       inhibit_startup_message
@@ -824,6 +835,15 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
             you to hide a complete network behind one IP address. With this
             firewall no special compiling is needed as you can access hosts
             directly.
+
+            For accessing ftp servers behind such firewalls you may need to
+            set the environment variable "FTP_PASSIVE" to a true value, e.g.
+
+                env FTP_PASSIVE=1 perl -MCPAN -eshell
+
+            or
+
+                perl -MCPAN -e '$ENV{FTP_PASSIVE} = 1; shell'
 
   Configuring lynx or ncftp for going through a firewall
     If you can go through your firewall with e.g. lynx, presumably with a
