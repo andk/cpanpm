@@ -4,6 +4,9 @@ use Test::More tests => 8;
 
 # use this first to $CPAN::term can be undefined
 use_ok( 'CPAN' );
+$CPAN::Suppress_readline = $CPAN::Suppress_readline; # silence
+$CPAN::META = $CPAN::META; # silence
+$CPAN::term = $CPAN::term; # silence
 undef $CPAN::term;
 
 # this kicks off all the magic
