@@ -2,6 +2,20 @@ Revision history for Perl extension CPAN.
 
 =head2 Feb 2, 1997
 
+Ulrich Pfeifer reports another permission problem with the Config
+file. Fixed.
+
+Found another $^X problem and fixed that too.
+
+We now try to give sensible diagnostics when the CHECKSUMS file is
+missing or incomplete.
+
+Included a Bundle::CPAN file.
+
+Released 1.18.
+
+=head2 Feb 2, 1997
+
 Now fetching MIRRORED.BY whenever we get the first URL in the init
 dialogue. Offering a loop to correct the URL. Reading MIRRORED.BY if
 it is younger than 30 days.
@@ -14,6 +28,8 @@ we're losing connection to ReadLine when we run 'o conf init'.
 
 We have no API yet, but we have a Plugin :-) Thanks to Ulrich Pfeifer
 for WAIT. Try 'wh' to see what gives.
+
+Released 1.17.
 
 =head2 Jan 29, 1997
 

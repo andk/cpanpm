@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.17';
+$VERSION = '1.18';
 
-# $Id: CPAN.pm,v 1.112 1997/02/02 20:58:54 k Exp $
+# $Id: CPAN.pm,v 1.119 1997/02/03 00:30:59 k Exp $
 
-# my $version = substr q$Revision: 1.112 $, 10; # only used during development
+# my $version = substr q$Revision: 1.119 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -779,6 +779,7 @@ sub AUTOLOAD {
     if ($autoload =~ /^w/) {
 	if ($CPAN::META->hasWAIT) {
 	    CPAN::WAIT->wh;
+	    return;
 	} else {
 	    warn qq{
 Commands starting with "w" require CPAN::WAIT to be installed.
@@ -2148,7 +2149,8 @@ sub verifyMD5 {
     my($self) = @_;
   EXCUSE: {
 	my @e;
-	$self->{MD5_STATUS} and push @e, "MD5 Checksum was ok";
+	$self->{MD5_STATUS} ||= "";
+	$self->{MD5_STATUS} eq "OK" and push @e, "MD5 Checksum was ok";
 	print join "", map {"  $_\n"} @e and return if @e;
     }
     my($local_file);
@@ -2168,7 +2170,7 @@ sub verifyMD5 {
 	&&
 	$self->MD5_check_file($local_wanted,$basename)
        ) {
-	return $self->{MD5_STATUS}="OK";
+	return $self->{MD5_STATUS} = "OK";
     }
     $local_file = CPAN::FTP->localize(
 				      "authors/id/@local",
@@ -2214,23 +2216,37 @@ sub MD5_check_file {
 		open($fh, $pipe) && $self->eq_MD5($fh,$cksum->{$basename}->{'md5-ungz'})
 	       ){
 		print "Checksum for $file ok\n";
-		return $self->{MD5_STATUS}="OK";
+		return $self->{MD5_STATUS} = "OK";
 	    } else {
-		die join(
-			 "",
-			 qq{\nChecksum mismatch for distribution file. },
-			 qq{Please investigate.\n\n},
-			 $self->as_string,
-			 $CPAN::META->instance(
-					       'CPAN::Author',
-					       $self->{CPAN_USERID}
-					      )->as_string,
-			 qq{Please contact the author or your CPAN site admin},
-			);
+		print join(
+			   "",
+			   qq{Checksum mismatch for distribution file. },
+			   qq{Please investigate.\n\n}
+			  );
+		print $self->as_string;
+		print $CPAN::META->instance(
+					    'CPAN::Author',
+					    $self->{CPAN_USERID}
+					   )->as_string;
+		my $wrap = qq{I\'d recommend removing $self->{'localfile'}}.
+		    qq{, put another URL at the top of the list of URLs to }.
+		    qq{visit, and restart CPAN.pm. If all this doesn\'t help, }.
+		    qq{please contact the author or your CPAN site admin};
+		print Text::Wrap::wrap("","",$wrap);
+		print "\n\n";
+		sleep 3;
+		return;
 	    }
 	    close $fh if fileno($fh);
 	} else {
-	    print "No md5 checksum for $basename in local $lfile\n";
+	    $self->{MD5_STATUS} ||= "";
+	    if ($self->{MD5_STATUS} eq "NIL") {
+		print "\nNo md5 checksum for $basename in local $lfile.";
+		print "Removing $lfile\n";
+		unlink $lfile or print "Could not unlink: $!";
+		sleep 1;
+	    }
+	    $self->{MD5_STATUS} = "NIL";
 	    return;
 	}
     } else {
@@ -2267,23 +2283,23 @@ sub make {
     $self->debug($self->id) if $CPAN::DEBUG;
     print "Running make\n";
     $self->get;
-    EXCUSE: {
-	  my @e;
-	  $self->{archived} eq "NO" and push @e,
-	  "Is neither a tar nor a zip archive.";
+  EXCUSE: {
+	my @e;
+	$self->{archived} eq "NO" and push @e,
+	"Is neither a tar nor a zip archive.";
 
-	  $self->{unwrapped} eq "NO"   and push @e,
-	  "had problems unarchiving. Please build manually";
+	$self->{unwrapped} eq "NO"   and push @e,
+	"had problems unarchiving. Please build manually";
 
-	  exists $self->{writemakefile} &&
-	      $self->{writemakefile} eq "NO" and push @e,
-	      "Had some problem writing Makefile";
+	exists $self->{writemakefile} &&
+	    $self->{writemakefile} eq "NO" and push @e,
+	    "Had some problem writing Makefile";
 
-	  defined $self->{'make'} and push @e,
-	  "Has already been processed within this session";
+	defined $self->{'make'} and push @e,
+	"Has already been processed within this session";
 
-	  print join "", map {"  $_\n"} @e and return if @e;
-     }
+	print join "", map {"  $_\n"} @e and return if @e;
+    }
     print "\n  CPAN.pm: Going to build ".$self->id."\n\n";
     my $builddir = $self->dir;
     chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
@@ -2293,9 +2309,24 @@ sub make {
     if ($self->{'configure'}) {
 	$system = $self->{'configure'};
     } else {
-	my($perl) = $^X =~ /^\.\// ? "$CPAN::Cwd/$^X" : $^X; # XXX subclassing folks, forgive me!
+	my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
+	$perl ||= "$CPAN::Cwd/$^X" if -x "$CPAN::Cwd/$^X";
+	unless ($perl) {
+	    my ($component,$perl_name);
+	    DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
+		  DIST_COMPONENT: foreach $component (MM->path(), $Config::Config{'binexp'}) {
+			next unless defined($component) && $component;
+			my($abs) = MM->catfile($component,$perl_name);
+			if (MM->maybe_command($abs)) {
+			    $perl = $abs;
+			    last DIST_PERLNAME;
+			}
+		    }
+		}
+	}
+	die "Couldn\'t find executable perl\n" unless $perl;
 	$system = "$perl Makefile.PL $CPAN::Config->{makepl_arg}";
-    }
+   }
     $SIG{ALRM} = sub { die "inactivity_timeout reached\n" };
     my($ret,$pid);
     $@ = "";
@@ -2349,18 +2380,18 @@ sub test {
     $self->make;
     return if $CPAN::Signal;
     print "Running make test\n";
-    EXCUSE: {
-	  my @e;
-	  exists $self->{'make'} or push @e,
-	  "Make had some problems, maybe interrupted? Won't test";
+  EXCUSE: {
+	my @e;
+	exists $self->{'make'} or push @e,
+	"Make had some problems, maybe interrupted? Won't test";
 
-	  exists $self->{'make'} and
-	      $self->{'make'} eq 'NO' and
-		  push @e, "Oops, make had returned bad status";
+	exists $self->{'make'} and
+	    $self->{'make'} eq 'NO' and
+		push @e, "Oops, make had returned bad status";
 
-	  exists $self->{'build_dir'} or push @e, "Has no own directory";
-	  print join "", map {"  $_\n"} @e and return if @e;
-     }
+	exists $self->{'build_dir'} or push @e, "Has no own directory";
+	print join "", map {"  $_\n"} @e and return if @e;
+    }
     chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
     my $system = join " ", $CPAN::Config->{'make'}, "test";
@@ -2377,11 +2408,11 @@ sub test {
 sub clean {
     my($self) = @_;
     print "Running make clean\n";
-    EXCUSE: {
-	  my @e;
-	  exists $self->{'build_dir'} or push @e, "Has no own directory";
-	  print join "", map {"  $_\n"} @e and return if @e;
-     }
+  EXCUSE: {
+	my @e;
+	exists $self->{'build_dir'} or push @e, "Has no own directory";
+	print join "", map {"  $_\n"} @e and return if @e;
+    }
     chdir $self->{'build_dir'} or Carp::croak("Couldn't chdir to $self->{'build_dir'}");
     $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
     my $system = join " ", $CPAN::Config->{'make'}, "clean";
