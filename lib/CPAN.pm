@@ -1,12 +1,12 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.57_67';
+$VERSION = '1.57_68RC';
 
-# $Id: CPAN.pm,v 1.353 2000/09/17 10:16:35 k Exp $
+# $Id: CPAN.pm,v 1.354 2000/10/08 14:20:57 k Exp $
 
 # only used during development:
 $Revision = "";
-# $Revision = "[".substr(q$Revision: 1.353 $, 10)."]";
+# $Revision = "[".substr(q$Revision: 1.354 $, 10)."]";
 
 use Carp ();
 use Config ();
@@ -57,7 +57,7 @@ use strict qw(vars);
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Revision $Signal $Cwd $End $Suppress_readline $Frontend
-            $Defaultsite );
+            $Defaultsite $Have_warned);
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
@@ -685,8 +685,8 @@ sub has_inst {
   if you just type
       install Bundle::libnet
 
-});
-	sleep 2;
+}) unless $Have_warned->{"Net::FTP"}++;
+	sleep 3;
     } elsif ($mod eq "MD5"){
 	$CPAN::Frontend->myprint(qq{
   CPAN: MD5 security checks disabled because MD5 not installed.
@@ -1156,13 +1156,12 @@ sub missing_config_data {
     my(@miss);
     for (
          "cpan_home", "keep_source_where", "build_dir", "build_cache",
-         "scan_cache", "index_expire", "gzip", "tar", "unzip", "make", "pager",
+         "scan_cache", "index_expire", "gzip", "tar", "unzip", "make",
+         "pager",
          "makepl_arg", "make_arg", "make_install_arg", "urllist",
          "inhibit_startup_message", "ftp_proxy", "http_proxy", "no_proxy",
          "prerequisites_policy",
-
-         # "cache_metadata" # not yet enough tested
-
+         "cache_metadata",
         ) {
 	push @miss, $_ unless defined $CPAN::Config->{$_};
     }
@@ -5072,15 +5071,16 @@ sub READ {
 
 # CPAN::Tarzip::DESTROY
 sub DESTROY {
-  my($self) = @_;
-  if (exists $self->{GZ}) {
-    my $gz = $self->{GZ};
-    $gz->gzclose();
-  } else {
-    my $fh = $self->{FH};
-    $fh->close if defined $fh;
-  }
-  undef $self;
+    my($self) = @_;
+    if (exists $self->{GZ}) {
+        my $gz = $self->{GZ};
+        $gz->gzclose() if defined $gz; # hard to say if it is allowed
+                                       # to be undef ever. AK, 2000-09
+    } else {
+        my $fh = $self->{FH};
+        $fh->close if defined $fh;
+    }
+    undef $self;
 }
 
 
@@ -5933,8 +5933,8 @@ Your milage may vary...
 
 =over
 
-=item I installed a new version of module X but CPAN keeps saying, I
-      have the old version installed
+=item 1) I installed a new version of module X but CPAN keeps saying,
+      I have the old version installed
 
 Most probably you B<do> have the old version installed. This can
 happen if a module installs itself into a different directory in the
@@ -5946,13 +5946,13 @@ many people add this argument permanently by configuring
 
   o conf make_install_arg UNINST=1
 
-=item So why is UNINST=1 not the default?
+=item 2) So why is UNINST=1 not the default?
 
 Because there are people who have their precise expectations about who
 may install where in the @INC path and who uses which @INC array. In
 fine tuned environments C<UNINST=1> can cause damage.
 
-=item When I install bundles or multiple modules with one command
+=item 3) When I install bundles or multiple modules with one command
       there is too much output to keep track of
 
 You may want to configure something like
@@ -5963,7 +5963,8 @@ You may want to configure something like
 so that STDOUT is captured in a file for later inspection.
 
 
-=item I am not root, how can I install a module in a personal directory?
+=item 4) I am not root, how can I install a module in a personal
+      directory?
 
 You will most probably like something like this:
 
@@ -5986,13 +5987,14 @@ or setting the PERL5LIB environment variable.
 Another thing you should bear in mind is that the UNINST parameter
 should never be set if you are not root.
 
-=item How to get a package, unwrap it, and make a change before building it?
+=item 5) How to get a package, unwrap it, and make a change before
+      building it?
 
   look Sybase::Sybperl
 
-=item I installed a Bundle and had a couple of fails. When I retried,
-      everything resolved nicely. Can this be fixed to work on first
-      try?
+=item 6) I installed a Bundle and had a couple of fails. When I
+      retried, everything resolved nicely. Can this be fixed to work
+      on first try?
 
 The reason for this is that CPAN does not know the dependencies of all
 modules when it starts out. To decide about the additional items to
@@ -6001,11 +6003,19 @@ undetected missing piece breaks the process. But it may well be that
 your Bundle installs some prerequisite later than some depending item
 and thus your second try is able to resolve everything. Please note,
 CPAN.pm does not know the dependency tree in advance and cannot sort
-the queue of things to install in a topologically correct order.
-For bundles which you need to install often, it is recommended to do
-the sorting manually. It is planned to improve the metadata situation
-for dependencies on CPAN in general, but this will still take some
-time.
+the queue of things to install in a topologically correct order. It
+resolves perfectly well IFF all modules declare the prerequisites
+correctly with the PREREQ_PM attribute to MakeMaker. For bundles which
+fail and you need to install often, it is recommended sort the Bundle
+definition file manually. It is planned to improve the metadata
+situation for dependencies on CPAN in general, but this will still
+take some time.
+
+=item 7) In our intranet we have many modules for internal use. How
+      can I integrate these modules with CPAN.pm but without uploading
+      the modules to CPAN?
+
+Have a look at the CPAN::Site module.
 
 =back
 

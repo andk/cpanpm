@@ -602,8 +602,8 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
     Your milage may vary...
 
 FAQ
-    I installed a new version of module X but CPAN keeps saying, I have the
-    old version installed
+    1) I installed a new version of module X but CPAN keeps saying, I have
+    the old version installed
         Most probably you do have the old version installed. This can happen
         if a module installs itself into a different directory in the @INC
         path than it was previously installed. This is not really a CPAN.pm
@@ -614,13 +614,13 @@ FAQ
 
           o conf make_install_arg UNINST=1
 
-    So why is UNINST=1 not the default?
+    2) So why is UNINST=1 not the default?
         Because there are people who have their precise expectations about
         who may install where in the @INC path and who uses which @INC
         array. In fine tuned environments `UNINST=1' can cause damage.
 
-    When I install bundles or multiple modules with one command there is too
-    much output to keep track of
+    3) When I install bundles or multiple modules with one command there is
+    too much output to keep track of
         You may want to configure something like
 
           o conf make_arg "| tee -ai /root/.cpan/logs/make.out"
@@ -628,7 +628,7 @@ FAQ
 
         so that STDOUT is captured in a file for later inspection.
 
-    I am not root, how can I install a module in a personal directory?
+    4) I am not root, how can I install a module in a personal directory?
         You will most probably like something like this:
 
           o conf makepl_arg "LIB=~/myperl/lib \
@@ -650,10 +650,11 @@ FAQ
         Another thing you should bear in mind is that the UNINST parameter
         should never be set if you are not root.
 
-    How to get a package, unwrap it, and make a change before building it?
+    5) How to get a package, unwrap it, and make a change before building
+    it?
           look Sybase::Sybperl
 
-    I installed a Bundle and had a couple of fails. When I retried,
+    6) I installed a Bundle and had a couple of fails. When I retried,
     everything resolved nicely. Can this be fixed to work on first try?
         The reason for this is that CPAN does not know the dependencies of
         all modules when it starts out. To decide about the additional items
@@ -663,10 +664,17 @@ FAQ
         item and thus your second try is able to resolve everything. Please
         note, CPAN.pm does not know the dependency tree in advance and
         cannot sort the queue of things to install in a topologically
-        correct order. For bundles which you need to install often, it is
-        recommended to do the sorting manually. It is planned to improve the
-        metadata situation for dependencies on CPAN in general, but this
-        will still take some time.
+        correct order. It resolves perfectly well IFF all modules declare
+        the prerequisites correctly with the PREREQ_PM attribute to
+        MakeMaker. For bundles which fail and you need to install often, it
+        is recommended sort the Bundle definition file manually. It is
+        planned to improve the metadata situation for dependencies on CPAN
+        in general, but this will still take some time.
+
+    7) In our intranet we have many modules for internal use. How can I
+    integrate these modules with CPAN.pm but without uploading the modules
+    to CPAN?
+        Have a look at the CPAN::Site module.
 
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,

@@ -1,3 +1,26 @@
+2000-10-07  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* Setting Version to 1.57_68RC
+
+	* POD: numbering FAQ items; rewording of FAQ item 6 about bundles;
+	introduced FAQ item 7 about CPAN::Site.
+
+	* CPAN::FirstTime::init: Making cache_metadata default to 1.
+
+	* missing_config_data: Making cache_metadata a reason to rerun
+	configuration.
+
+2000-09-29  Andreas J. Koenig  <andreas.koenig@anima.de>
+
+	* CPAN::DESTROY: Protected the call to $gz->gzclose with an if
+	defined $gz. Thanks to abigail for reporting the bug, apologies
+	that I'm also not sure if this fixes the cause, or just the
+	sympton.
+
+	* has_inst: 2nd warning for not having installed Net::FTP
+	silencified with a global (Thanks to Anno Siegel for the
+	suggestion)
+
 2000-09-16  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* 1.57_67 is a release candidate.
