@@ -6,13 +6,11 @@ SYNOPSIS
 
       perl -MCPAN -e shell;
 
-
     Batch mode:
 
       use CPAN;
 
       autobundle, clean, install, make, recompile, test
-
 
 DESCRIPTION
     The CPAN module is designed to automate the make and install of
@@ -43,7 +41,6 @@ DESCRIPTION
     The interactive mode is entered by running
 
         perl -MCPAN -e shell
-
 
     which puts you into a readline interface. You will have most fun
     if you install Term::ReadKey and Term::ReadLine to enjoy both
@@ -87,7 +84,6 @@ DESCRIPTION
           Author          ANDYD (Andy Dougherty)
           Author          MERLYN (Randal L. Schwartz)
 
-
     make, test, install, clean  modules or distributions
       These commands do indeed exist just as written above. Each of
       them takes any number of arguments and investigates for each
@@ -100,11 +96,9 @@ DESCRIPTION
 
         install <distribution_file>
 
-
       also is run unconditionally. But for
 
         install <module>
-
 
       CPAN checks if an install is actually needed for it and prints
       *Foo up to date* in case the module doesn't need to be
@@ -125,7 +119,6 @@ DESCRIPTION
           OpenGL-0.4/
           OpenGL-0.4/COPYRIGHT
           [...]
-
 
     readme, look module or distribution
       These two commands take only one argument, be it a module or a
@@ -190,7 +183,6 @@ DESCRIPTION
         words starting with Bundle::          Bundle
               everything else            Module or Author
 
-
     Modules know their associated Distribution objects. They always
     refer to the most recent official release. Developers may mark
     their releases as unstable development versions (by inserting an
@@ -202,7 +194,6 @@ DESCRIPTION
 
         install Foo
 
-
     This would install the complete distribution file (say BAR/Foo-
     1.23.tar.gz) with all accompanying material in there. But if you
     would like to install version 1.23_90, you need to know where
@@ -212,7 +203,6 @@ DESCRIPTION
 
         install BAR/Foo-1.23_90.tar.gz
 
-
     The first example will be driven by an object of the class
     CPAN::Module, the second by an object of class Distribution.
 
@@ -220,9 +210,34 @@ DESCRIPTION
 
     If you do not enter the shell, the available shell commands are
     both available as methods (`CPAN::Shell->install(...)') and as
-    functions in the calling package (`install(...)'). The
-    programmer's interface has beta status. Do not heavily rely on
-    it, changes may still be necessary.
+    functions in the calling package (`install(...)').
+
+    There's currently only one class that has a stable interface,
+    CPAN::Shell. All commands that are available in the CPAN shell
+    are methods of the class CPAN::Shell. The commands that produce
+    listings of modules (`r', `autobundle', `u') return a list of
+    the IDs of all modules within the list.
+
+    expand($type,@things)
+      The IDs of all objects available within a program are strings
+      that can be expanded to the corresponding real objects with
+      the `CPAN::Shell->expand()' method. Expand returns a list of
+      CPAN::Module objects according to the `@things' arguments
+      given. In scalar context it only returns the first element of
+      the list.
+
+    Programming Examples
+      This enables the programmer to do operations like these:
+
+          # install everything that is outdated on my disk:
+          perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
+
+          # install my favorite programs if necessary:
+          for $mod (qw(Net::FTP MD5 Data::Dumper)){
+              my $obj = CPAN::Shell->expand('Module',$mod);
+              $obj->install;
+          }
+
 
   Cache Manager
 
@@ -256,11 +271,9 @@ DESCRIPTION
 
             =head1 CONTENTS
 
-
     In this pod section each line obeys the format
 
             Module_Name [Version_String] [- optional text]
-
 
     The only required part is the first field, the name of a module
     (eg. Foo::Bar, ie. *not* the name of the distribution file). The
@@ -305,7 +318,6 @@ DESCRIPTION
 
           perl -MExtUtils::MakeMaker -le \
               'print MM->parse_version($ARGV[0])' filename
-
 
       If you are author of a package and wonder if your $VERSION can
       be parsed, please try the above method.
@@ -373,7 +385,6 @@ CONFIGURATION
       tar                location of external program tar
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
-
 
     You can set and query each of these options interactively in the
     cpan shell with the command set defined within the `o conf'

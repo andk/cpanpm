@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.23';
+$VERSION = '1.24';
 
-# $Id: CPAN.pm,v 1.135 1997/03/31 11:52:23 k Exp $
+# $Id: CPAN.pm,v 1.139 1997/03/31 22:43:23 k Exp $
 
-# my $version = substr q$Revision: 1.135 $, 10; # only used during development
+# my $version = substr q$Revision: 1.139 $, 10; # only used during development
 
 use Carp ();
 use Config ();
@@ -2410,7 +2410,10 @@ sub force {
 sub perl {
     my($self) = @_;
     my($perl) = MM->file_name_is_absolute($^X) ? $^X : "";
-    $perl ||= "$CPAN::Cwd/$^X" if -x "$CPAN::Cwd/$^X";
+    my $getcwd = $CPAN::Config->{'getcwd'} || 'cwd';
+    my $pwd  = Cwd->$getcwd();
+    my $candidate = $CPAN::META->catfile($pwd,$^X);
+    $perl ||= $candidate if MM->maybe_command($candidate);
     unless ($perl) {
 	my ($component,$perl_name);
       DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
