@@ -39,7 +39,7 @@ sub init {
     eval {require CPAN::Config;};
     $CPAN::Config ||= {};
     
-    my($ans,$default,$local,%ALL,$cont,$url,$expected_size);
+    my($ans,$default,$local,$cont,$url,$expected_size);
     
     print qq{
 
@@ -135,113 +135,20 @@ the calls, please specify them here.
 	prompt("Parameters for the 'make install' command?",$default);
 
     $local = 'MIRRORED.BY';
-    if (-f $local) { # if they really have a MIRRORED.BY in the
-                     # current directory, we can't help
-	my($host,$dst,$country,$continent,@location);
-	open FH, $local or die "Couldn't open $local: $!";
-	while (<FH>) {
-	    ($host) = /^([\w\.\-]+)/ unless defined $host;
-	    next unless defined $host;
-	    next unless /\s+dst_(dst|location)/;
-	    /location\s+=\s+\"([^\"]+)/ and @location = (split /\s*,\s*/, $1) and
-		($continent, $country) = @location[-1,-2];
-	    $continent =~ s/\s\(.*//;
-	    /dst_dst\s+=\s+\"([^\"]+)/  and $dst = $1;
-	    next unless $host && $dst && $continent && $country;
-	    $ALL{$continent}{$country}{$dst} = CPAN::Mirrored::By->new($continent,$country,$dst);
-	    undef $host;
-	    $dst=$continent=$country="";
-	}
-	$CPAN::Config->{urllist} ||= [];
-	if ($expected_size = @{$CPAN::Config->{urllist}}) {
-	    for $url (@{$CPAN::Config->{urllist}}) {
-		# sanity check, scheme+colon, not "q" there:
-		next unless $url =~ /^\w+:\/./;
-		$ALL{"[From previous setup]"}{"found URL"}{$url}=CPAN::Mirrored::By->new('[From previous setup]','found URL',$url);
-	    }
-	    $CPAN::Config->{urllist} = [];
-	} else {
-	    $expected_size = 6;
-	}
-
+    if (@{$CPAN::Config->{urllist}||[]}) {
 	print qq{
+I found a list of URLs in CPAN::Config and will use this.
+You can change it later with the 'o conf' command.
 
-Now we need to know, where your favorite CPAN sites are located. Push
-a few sites onto the array (just in case the first on the array won\'t
-work). If you are mirroring CPAN to your local workstation, specify a
-file: URL.
-
-You can enter the number in front of the URL on the next screen, a
-file:, ftp: or http: URL, or "q" to finish selecting.
-
-};
-
-	$ans = prompt("Press RETURN to continue");
-	my $other;
-	$ans = $other = "";
-	my(%seen);
-    
-	while () {
-	    my $pipe = -t *STDIN ? "| $CPAN::Config->{'pager'}" : ">/dev/null";
-	    my(@valid,$previous_best);
-	    open FH, $pipe;
-	    {
-		my($cont,$country,$url,$item);
-		my(@cont) = sort keys %ALL;
-		for $cont (@cont) {
-		    print FH "    $cont\n";
-		    for $country (sort {lc $a cmp lc $b} keys %{$ALL{$cont}}) {
-			for $url (sort {lc $a cmp lc $b} keys %{$ALL{$cont}{$country}}) {
-			    my $t = sprintf(
-					    "      %-18s (%2d) %s\n",
-					    $country,
-					    ++$item,
-					    $url
-					   );
-			    if ($cont =~ /^\[/) {
-				$previous_best ||= $item;
-			    }
-			    push @valid, $ALL{$cont}{$country}{$url};
-			    print FH $t;
-			}
-		    }
-		}
-	    }
-	    close FH;
-	    $previous_best ||= 1;
-	    $default =
-		@{$CPAN::Config->{urllist}} >= $expected_size ? "q" : $previous_best;
-	    $ans = prompt(
-			  "\nSelect an$other ftp or file URL or a number (q to finish)",
-			  $default
-			 );
-	    my $sel;
-	    if ($ans =~ /^\d/) {
-		my $this = $valid[$ans-1];
-		my($con,$cou,$url) = ($this->con,$this->cou,$this->url);
-		push @{$CPAN::Config->{urllist}}, $url unless $seen{$url}++;
-		delete $ALL{$con}{$cou}{$url};
-#	    print "Was a number [$ans] con[$con] cou[$cou] url[$url]\n";
-	    } elsif (@{$CPAN::Config->{urllist}} && $ans =~ /^q/i) {
-		last;
-	    } else {
-		$ans =~ s|/?$|/|; # has to end with one slash
-		$ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
-		if ($ans =~ /^\w+:\/./) {
-		    push @{$CPAN::Config->{urllist}}, $ans unless $seen{$ans}++;
-		} else {
-		    print qq{"$ans" doesn\'t look like an URL at first sight.
-I\'ll ignore it for now. You can add it to lib/CPAN/Config.pm
-later and report a bug in my Makefile.PL to me (andreas koenig).
-Thanks.\n};
-		}
-	    }
-	    $other ||= "other";
-	} # while ()
+}
+    } elsif (-f $local) { # if they really have a MIRRORED.BY in the
+                     # current directory, we can't help
+	read_mirrored_by($local);
     } else {
 	$CPAN::Config->{urllist} ||= [];
 	while (! @{$CPAN::Config->{urllist}}) {
-	    print qq{We need to know the URL of your favorite CPAN site.
+	    print qq{
+We need to know the URL of your favorite CPAN site.
 Please enter it here: };
 	    chop($_ = <>);
 	    s/\s//g;
@@ -266,6 +173,111 @@ sub find_exe {
 	if ($MY->maybe_command($abs)) {
 	    return $abs;
 	}
+    }
+}
+
+sub read_mirrored_by {
+    my($local) = @_;
+    my(%all,$url,$expected_size,$default,$ans,$host,$dst,$country,$continent,@location);
+    open FH, $local or die "Couldn't open $local: $!";
+    while (<FH>) {
+	($host) = /^([\w\.\-]+)/ unless defined $host;
+	next unless defined $host;
+	next unless /\s+dst_(dst|location)/;
+	/location\s+=\s+\"([^\"]+)/ and @location = (split /\s*,\s*/, $1) and
+	    ($continent, $country) = @location[-1,-2];
+	$continent =~ s/\s\(.*//;
+	/dst_dst\s+=\s+\"([^\"]+)/  and $dst = $1;
+	next unless $host && $dst && $continent && $country;
+	$all{$continent}{$country}{$dst} = CPAN::Mirrored::By->new($continent,$country,$dst);
+	undef $host;
+	$dst=$continent=$country="";
+    }
+    $CPAN::Config->{urllist} ||= [];
+    if ($expected_size = @{$CPAN::Config->{urllist}}) {
+	for $url (@{$CPAN::Config->{urllist}}) {
+	    # sanity check, scheme+colon, not "q" there:
+	    next unless $url =~ /^\w+:\/./;
+	    $all{"[From previous setup]"}{"found URL"}{$url}=CPAN::Mirrored::By->new('[From previous setup]','found URL',$url);
+	}
+	$CPAN::Config->{urllist} = [];
+    } else {
+	$expected_size = 6;
+    }
+    
+    print qq{
+
+Now we need to know, where your favorite CPAN sites are located. Push
+a few sites onto the array (just in case the first on the array won\'t
+work). If you are mirroring CPAN to your local workstation, specify a
+file: URL.
+
+You can enter the number in front of the URL on the next screen, a
+file:, ftp: or http: URL, or "q" to finish selecting.
+
+};
+
+    $ans = prompt("Press RETURN to continue");
+    my $other;
+    $ans = $other = "";
+    my(%seen);
+    
+    while () {
+	my $pipe = -t *STDIN ? "| $CPAN::Config->{'pager'}" : ">/dev/null";
+	my(@valid,$previous_best);
+	open FH, $pipe;
+	{
+	    my($cont,$country,$url,$item);
+	    my(@cont) = sort keys %all;
+	    for $cont (@cont) {
+		print FH "    $cont\n";
+		for $country (sort {lc $a cmp lc $b} keys %{$all{$cont}}) {
+		    for $url (sort {lc $a cmp lc $b} keys %{$all{$cont}{$country}}) {
+			my $t = sprintf(
+					"      %-18s (%2d) %s\n",
+					$country,
+					++$item,
+					$url
+				       );
+			if ($cont =~ /^\[/) {
+			    $previous_best ||= $item;
+			}
+			push @valid, $all{$cont}{$country}{$url};
+			print FH $t;
+		    }
+		}
+	    }
+	}
+	close FH;
+	$previous_best ||= 1;
+	$default =
+	    @{$CPAN::Config->{urllist}} >= $expected_size ? "q" : $previous_best;
+	$ans = prompt(
+		      "\nSelect an$other ftp or file URL or a number (q to finish)",
+		      $default
+		     );
+	my $sel;
+	if ($ans =~ /^\d/) {
+	    my $this = $valid[$ans-1];
+	    my($con,$cou,$url) = ($this->con,$this->cou,$this->url);
+	    push @{$CPAN::Config->{urllist}}, $url unless $seen{$url}++;
+	    delete $all{$con}{$cou}{$url};
+	    #	    print "Was a number [$ans] con[$con] cou[$cou] url[$url]\n";
+	} elsif (@{$CPAN::Config->{urllist}} && $ans =~ /^q/i) {
+	    last;
+	} else {
+	    $ans =~ s|/?$|/|; # has to end with one slash
+	    $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
+	    if ($ans =~ /^\w+:\/./) {
+		push @{$CPAN::Config->{urllist}}, $ans unless $seen{$ans}++;
+	    } else {
+		print qq{"$ans" doesn\'t look like an URL at first sight.
+I\'ll ignore it for now. You can add it to lib/CPAN/Config.pm
+later and report a bug in my Makefile.PL to me (andreas koenig).
+Thanks.\n};
+	    }
+	}
+	$other ||= "other";
     }
 }
 

@@ -1,11 +1,11 @@
 package CPAN;
 use vars qw{$META $Signal $Cwd $End $Suppress_readline};
 
-$VERSION = '1.01';
+$VERSION = '1.02';
 
-# $Id: CPAN.pm,v 1.76 1996/12/10 10:11:28 k Exp $
+# $Id: CPAN.pm,v 1.77 1996/12/11 01:26:43 k Exp $
 
-# my $version = substr q$Revision: 1.76 $, 10; # only used during development
+# my $version = substr q$Revision: 1.77 $, 10; # only used during development
 
 BEGIN {require 5.003;}
 require UNIVERSAL if $] == 5.003;
@@ -502,6 +502,7 @@ sub _u_r_common {
     my(@args) = @_;
     @args = '/./' unless @args;
     my(@result,$module,%seen,%need,$headerdone,$version_zeroes);
+    $version_zeroes = 0;
     my $sprintf = "%-25s %9s %9s  %s\n";
     for $module ($self->expand('Module',@args)) {
 	my $file  = $module->cpan_file;
@@ -557,8 +558,9 @@ sub _u_r_common {
 	    print "All modules are up to date for @args\n";
 	}
     }
-    if ($what eq "r") {
-	print qq{$version_zeroes installed modules have no version number to compare\n};
+    if ($what eq "r" && $version_zeroes) {
+	my $s = $version_zeroes>1 ? "s have" : " has";
+	print qq{$version_zeroes installed module$s no version number to compare\n};
     }
     @result;
 }
