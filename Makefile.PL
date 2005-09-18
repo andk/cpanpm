@@ -76,7 +76,7 @@ WriteMakefile(
     'clean' => { FILES => "lib/CPAN/Config.pm" },
     'PREREQ_PM' => $prereq_pm,
     'dist' => {
-	       DIST_DEFAULT => 'README all metafile sign tardist',
+	       DIST_DEFAULT => 'setversion README all metafile sign tardist',
 	       COMPRESS => 'gzip -9f'
 	      },
 );
@@ -92,15 +92,12 @@ WriteMakefile(
 
 sub MY::postamble {
   q{
+setversion:
+	$(PERL) Makefile.PL --setversion
+
 README: lib/CPAN.pm Makefile
 	chmod +w $@
 	pod2text lib/CPAN.pm > $@
-
-checkout_meta ::
-	false && co -l META.yml
-
-checkin_meta ::
-	false && ci -u META.yml
 
 sign ::
 	cpansign -s
