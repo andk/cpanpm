@@ -7,7 +7,6 @@ MANIFEST.SKIP
 Makefile.PL
 PAUSE2003.pub
 README
-SIGNATURE
 Todo
 cpan
 lib/Bundle/CPAN.pm
