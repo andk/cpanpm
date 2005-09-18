@@ -75,7 +75,7 @@ WriteMakefile(
               'EXE_FILES' => [qw(scripts/cpan)],
               'clean' => { FILES => "lib/CPAN/Config.pm" },
               'PREREQ_PM' => $prereq_pm,
-              SIGN => 1,
+              (MM->can("signature_target") ? (SIGN => 1) : ()),
               'dist' => {
                          DIST_DEFAULT => 'setversion README all tardist',
                          COMPRESS => 'gzip -9f'
