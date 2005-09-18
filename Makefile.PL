@@ -100,7 +100,7 @@ README: lib/CPAN.pm Makefile
 	pod2text lib/CPAN.pm > $@
 
 sign ::
-	cpansign -s
+	cpansign -s && mv SIGNATURE $(DISTVNAME)/SIGNATURE
 
 }
 }
