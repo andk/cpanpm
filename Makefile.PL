@@ -69,16 +69,17 @@ for my $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
 }
 
 WriteMakefile(
-    'INSTALLDIRS' => 'perl',  # as it is coming with perl
-    'NAME'	=> 'CPAN',
-    'VERSION_FROM' => 'lib/CPAN.pm',
-    'EXE_FILES' => [qw(scripts/cpan)],
-    'clean' => { FILES => "lib/CPAN/Config.pm" },
-    'PREREQ_PM' => $prereq_pm,
-    'dist' => {
-	       DIST_DEFAULT => 'setversion README all metafile sign tardist',
-	       COMPRESS => 'gzip -9f'
-	      },
+              'INSTALLDIRS' => 'perl',  # as it is coming with perl
+              'NAME'	=> 'CPAN',
+              'VERSION_FROM' => 'lib/CPAN.pm',
+              'EXE_FILES' => [qw(scripts/cpan)],
+              'clean' => { FILES => "lib/CPAN/Config.pm" },
+              'PREREQ_PM' => $prereq_pm,
+              SIGN => 1,
+              'dist' => {
+                         DIST_DEFAULT => 'setversion README all tardist',
+                         COMPRESS => 'gzip -9f'
+                        },
 );
 
 # if we make sign first and make dist then, then any change to
