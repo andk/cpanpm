@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.76_01';
+$VERSION = '1.76_51';
 $VERSION = eval $VERSION;
 # $Id: CPAN.pm,v 1.412 2003/07/31 14:53:04 k Exp $
 
@@ -54,6 +54,8 @@ $CPAN::DEBUG ||= 0;
 $CPAN::Signal ||= 0;
 $CPAN::Frontend ||= "CPAN::Shell";
 $CPAN::Defaultsite ||= "ftp://ftp.perl.org/pub/CPAN";
+$CPAN::Perl ||= CPAN::find_perl();
+
 
 package CPAN;
 use strict qw(vars);
@@ -84,6 +86,7 @@ sub AUTOLOAD {
 });
     }
 }
+
 
 #-> sub CPAN::shell ;
 sub shell {
@@ -249,7 +252,7 @@ use vars qw($Ua $Thesite $Themethod);
 
 package CPAN::LWP::UserAgent;
 use vars qw(@ISA $USER $PASSWD $SETUPDONE);
-# we delay requiring LWP::UserAgent and setting up inheritence until we need it
+# we delay requiring LWP::UserAgent and setting up inheritance until we need it
 
 package CPAN::Complete;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
@@ -667,6 +670,32 @@ sub cwd {Cwd::cwd();}
 
 #-> sub CPAN::getcwd ;
 sub getcwd {Cwd::getcwd();}
+
+#-> sub CPAN::find_perl ;
+sub find_perl {
+    my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
+    my $pwd  = CPAN::anycwd();
+    my $candidate = File::Spec->catfile($pwd,$^X);
+    $perl ||= $candidate if MM->maybe_command($candidate);
+
+    unless ($perl) {
+	my ($component,$perl_name);
+      DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
+	    PATH_COMPONENT: foreach $component (File::Spec->path(),
+						$Config::Config{'binexp'}) {
+		  next unless defined($component) && $component;
+		  my($abs) = File::Spec->catfile($component,$perl_name);
+		  if (MM->maybe_command($abs)) {
+		      $perl = $abs;
+		      last DIST_PERLNAME;
+		  }
+	      }
+	  }
+    }
+
+    return $perl;
+}
+
 
 #-> sub CPAN::exists ;
 sub exists {
@@ -1374,8 +1403,8 @@ sub h {
 Display Information
  command  argument          description
  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
- i        WORD or /REGEXP/  about anything of above
- r        NONE              reinstall recommendations
+ i        WORD or /REGEXP/  about any of the above
+ r        NONE              report updatable modules
  ls       AUTHOR            about files in the author's directory
 
 Download, Test, Make, Install...
@@ -1470,13 +1499,14 @@ sub m { # emacs confused here }; sub mimimimimi { # emacs in sync here
 sub i {
     my($self) = shift;
     my(@args) = @_;
-    my(@type,$type,@m);
-    @type = qw/Author Bundle Distribution Module/;
     @args = '/./' unless @args;
     my(@result);
-    for $type (@type) {
+    for my $type (qw/Bundle Distribution Module/) {
 	push @result, $self->expand($type,@args);
     }
+    # Authors are always uppercase.
+    push @result, $self->expand("Author", map { uc $_ } @args);
+
     my $result = @result == 1 ?
 	$result[0]->as_string :
             @result == 0 ?
@@ -2620,23 +2650,29 @@ sub hosthard {
                                            # success above. Likely a bogus URL
 
 	$self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
-	my($f,$funkyftp);
-	for $f ('lynx','ncftpget','ncftp','wget') {
-	  next unless exists $CPAN::Config->{$f};
-	  $funkyftp = $CPAN::Config->{$f};
-	  next unless defined $funkyftp;
+
+        # Try the most capable first and leave ncftp* for last as it only 
+        # does FTP.
+	for my $f (qw(curl wget lynx ncftpget ncftp)) {
+          my $funkyftp = $CPAN::Config->{$f};
+          next unless defined $funkyftp;
 	  next if $funkyftp =~ /^\s*$/;
+
 	  my($asl_ungz, $asl_gz);
 	  ($asl_ungz = $aslocal) =~ s/\.gz//;
           $asl_gz = "$asl_ungz.gz";
+
 	  my($src_switch) = "";
 	  if ($f eq "lynx"){
 	    $src_switch = " -source";
 	  } elsif ($f eq "ncftp"){
 	    $src_switch = " -c";
-          } elsif ($f eq "wget"){
-              $src_switch = " -O -";
+	  } elsif ($f eq "wget"){
+	    $src_switch = " -O -";
+	  } elsif ($f eq 'curl'){
+	    $src_switch = ' -L';
 	  }
+
 	  my($chdir) = "";
 	  my($stdout_redir) = " > $asl_ungz";
 	  if ($f eq "ncftpget"){
@@ -2712,7 +2748,7 @@ returned status $estatus (wstat $wstatus)$size
 });
 	  }
           return if $CPAN::Signal;
-	} # lynx,ncftpget,ncftp
+	} # transfer programs
     } # host
 }
 
@@ -3973,9 +4009,9 @@ sub get {
         -d $packagedir and $CPAN::Frontend->myprint("Removing previously used ".
                                                     "$packagedir\n");
         File::Path::rmtree($packagedir);
-        rename($distdir,$packagedir) or
-            Carp::confess("Couldn't rename $distdir to $packagedir: $!");
-        $self->debug(sprintf("renamed distdir[%s] to packagedir[%s] -e[%s]-d[%s]",
+        File::Copy::move($distdir,$packagedir) or
+            Carp::confess("Couldn't move $distdir to $packagedir: $!");
+        $self->debug(sprintf("moved distdir[%s] to packagedir[%s] -e[%s]-d[%s]",
                              $distdir,
                              $packagedir,
                              -e $packagedir,
@@ -3996,7 +4032,7 @@ sub get {
         my($f);
         for $f (@readdir) { # is already without "." and ".."
             my $to = File::Spec->catdir($packagedir,$f);
-            rename($f,$to) or Carp::confess("Couldn't rename $f to $to: $!");
+            File::Copy::move($f,$to) or Carp::confess("Couldn't move $f to $to: $!");
         }
     }
     if ($CPAN::Signal){
@@ -4504,29 +4540,12 @@ sub isa_perl {
   }
 }
 
+
 #-> sub CPAN::Distribution::perl ;
 sub perl {
-    my($self) = @_;
-    my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
-    my $pwd  = CPAN::anycwd();
-    my $candidate = File::Spec->catfile($pwd,$^X);
-    $perl ||= $candidate if MM->maybe_command($candidate);
-    unless ($perl) {
-	my ($component,$perl_name);
-      DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
-	    PATH_COMPONENT: foreach $component (File::Spec->path(),
-						$Config::Config{'binexp'}) {
-		  next unless defined($component) && $component;
-		  my($abs) = File::Spec->catfile($component,$perl_name);
-		  if (MM->maybe_command($abs)) {
-		      $perl = $abs;
-		      last DIST_PERLNAME;
-		  }
-	      }
-	  }
-    }
-    $perl;
+    return $CPAN::Perl;
 }
+
 
 #-> sub CPAN::Distribution::make ;
 sub make {
@@ -6016,6 +6035,11 @@ sub vcmp {
 
   return 0 if $l eq $r; # short circuit for quicker success
 
+  for ($l,$r) {
+      next unless tr/.// > 1;
+      s/^v?/v/;
+      1 while s/\.0+(\d)/.$1/;
+  }
   if ($l=~/^v/ <=> $r=~/^v/) {
       for ($l,$r) {
           next if /^v/;
@@ -6023,14 +6047,17 @@ sub vcmp {
       }
   }
 
-  return
-      ($l ne "undef") <=> ($r ne "undef") ||
-          ($] >= 5.006 &&
+  return (
+          ($l ne "undef") <=> ($r ne "undef") ||
+          (
+           $] >= 5.006 &&
            $l =~ /^v/ &&
            $r =~ /^v/ &&
-           $self->vstring($l) cmp $self->vstring($r)) ||
-               $l <=> $r ||
-                   $l cmp $r;
+           $self->vstring($l) cmp $self->vstring($r)
+          ) ||
+          $l <=> $r ||
+          $l cmp $r
+         );
 }
 
 sub vgt {
@@ -6855,7 +6882,7 @@ added to the search path of the CPAN module before the use() or
 require() statements.
 
 The configuration dialog can be started any time later again by
-issueing the command C< o conf init > in the CPAN shell.
+issuing the command C< o conf init > in the CPAN shell.
 
 Currently the following keys in the hash reference $CPAN::Config are
 defined:
@@ -7004,7 +7031,7 @@ untended.
 
 Thanks to Graham Barr for contributing the following paragraphs about
 the interaction between perl, and various firewall configurations. For
-further informations on firewalls, it is recommended to consult the
+further information on firewalls, it is recommended to consult the
 documentation that comes with the ncftp program. If you are unable to
 go through the firewall with a simple Perl setup, it is very likely
 that you can configure ncftp so that it works for your firewall.

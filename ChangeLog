@@ -1,3 +1,36 @@
+2005-09-18  Andreas Koenig  <andk@cpan.org>
+
+	* Shame, two years without a release. Most of the code in this
+	release has been collected by perl5porters over the last two
+	years. Thanks a lot to all of them. The whole Module::Signature
+	code has been written by Autrijus two years ago and I have to
+	apologize that I didn't make a release with it. Real life was
+	intruding too strongly.
+
+	I have made cautious changes to the version comparison functions,
+	anticipating the likely changes we're gonna see with a better
+	indexer on CPAN courtesy John Peacock.
+
+	I'm releasing 1.76_51 as an orientation for CPANPLUS so we can
+	find the smoothest transition possible between the old and the new
+	indexer.
+
+	The new indexer will be based on version.pm 0.48 and will bring
+	the substantial change that all modules that are using version
+	strings will be represented as floats according to the conversion
+	routine implemented in version.pm. Up to now the conversion from
+	version strings to floats was lossy but with the new version.pm it
+	is a well defined 1 to 1 mapping. See version.pm for the details.
+
+	To make the transition smoother, I'm intending to leave the
+	indexer with the old algorithm for all strings that look like
+	floating point numbers, and for other strings that contain an
+	underline character or alphabetical stuff.
+
+	Future plans: once we have rolled out the version related changes,
+	I'm planning to fix open bugs and integrate waiting patches that
+	have not yet made their way into CPAN.pm.
+
 2003-09-20  Andreas J Koenig  <andreas.koenig@anima.de>
 
 	* Tiny tweak for the rare case that a module has an author who has

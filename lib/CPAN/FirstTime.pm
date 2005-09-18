@@ -12,13 +12,14 @@ sub url { shift->[2] }
 package CPAN::FirstTime;
 
 use strict;
-use ExtUtils::MakeMaker qw(prompt);
+use ExtUtils::MakeMaker ();
 use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use File::Spec;
 use vars qw($VERSION);
-$VERSION = substr q$Revision: 1.60 $, 10;
+my $Id = q$Id: APC.pm 147 2005-08-09 04:25:25Z k $;
+our $VERSION = sprintf "%.3f", 2 + substr(q$Rev: 147 $,4)/1000;
 
 =head1 NAME
 
@@ -68,23 +69,22 @@ dialog anytime later by typing 'o conf init' at the cpan prompt.)
 
 ];
 
-    my $manual_conf =
-	ExtUtils::MakeMaker::prompt("Are you ready for manual configuration?",
-				    "yes");
+    my $manual_conf = prompt("Are you ready for manual configuration?", "yes");
     my $fastread;
     {
-      local $^W;
-      if ($manual_conf =~ /^\s*y/i) {
+      if ($manual_conf =~ /^y/i) {
 	$fastread = 0;
-	*prompt = \&ExtUtils::MakeMaker::prompt;
       } else {
 	$fastread = 1;
 	$CPAN::Config->{urllist} ||= [];
+
+        local $^W = 0;
 	# prototype should match that of &MakeMaker::prompt
-	*prompt = sub ($;$) {
+	*_real_prompt = sub ($;$) {
 	  my($q,$a) = @_;
 	  my($ret) = defined $a ? $a : "";
 	  printf qq{%s [%s]\n\n}, $q, $ret;
+
 	  $ret;
 	};
       }
@@ -198,8 +198,8 @@ is not available, the normal index mechanism will be used.
     defined($default = $CPAN::Config->{cache_metadata}) or $default = 1;
     do {
         $ans = prompt("Cache metadata (yes/no)?", ($default ? 'yes' : 'no'));
-    } while ($ans !~ /^\s*[yn]/i);
-    $CPAN::Config->{cache_metadata} = ($ans =~ /^\s*y/i ? 1 : 0);
+    } while ($ans !~ /^[yn]/i);
+    $CPAN::Config->{cache_metadata} = ($ans =~ /^y/i ? 1 : 0);
 
     #
     # term_is_latin
@@ -222,8 +222,8 @@ will be output in UTF-8.
     do {
         $ans = prompt("Your terminal expects ISO-8859-1 (yes/no)?",
                       ($default ? 'yes' : 'no'));
-    } while ($ans !~ /^\s*[yn]/i);
-    $CPAN::Config->{term_is_latin} = ($ans =~ /^\s*y/i ? 1 : 0);
+    } while ($ans !~ /^[yn]/i);
+    $CPAN::Config->{term_is_latin} = ($ans =~ /^y/i ? 1 : 0);
 
     #
     # save history in file histfile
@@ -241,8 +241,6 @@ set this variable, please hit SPACE RETURN to the following question.
     defined($default = $CPAN::Config->{histfile}) or
         $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
     $ans = prompt("File to save your history?", $default);
-    $ans =~ s/^\s+//;
-    $ans =~ s/\s+\z//;
     $CPAN::Config->{histfile} = $ans;
 
     if ($CPAN::Config->{histfile}) {
@@ -292,7 +290,10 @@ by ENTER.
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
     local $^W = $old_warn;
     my $progname;
-    for $progname (qw/gzip tar unzip make lynx wget ncftpget ncftp ftp gpg/){
+    for $progname (qw/gzip tar unzip make 
+                      curl lynx wget ncftpget ncftp ftp 
+                      gpg/)
+    {
       if ($^O eq 'MacOS') {
           $CPAN::Config->{$progname} = 'not_here';
           next;
@@ -448,7 +449,7 @@ be echoed to the terminal!
 
 };
             }
-            $CPAN::Config->{proxy_pass} = prompt("Your proxy password?");
+            $CPAN::Config->{proxy_pass} = prompt_no_strip("Your proxy password?");
             if ($CPAN::META->has_inst("Term::ReadKey")) {
                 Term::ReadKey::ReadMode("restore");
             }
@@ -692,8 +693,6 @@ Please enter your CPAN site:};
         $ans = prompt ($prompt, "");
 
         if ($ans) {
-            $ans =~ s/^\s+//;  # no leading spaces
-            $ans =~ s/\s+\z//; # no trailing spaces
             $ans =~ s|/?\z|/|; # has to end with one slash
             $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
             if ($ans =~ /^\w+:\/./) {
@@ -715,5 +714,29 @@ later if you\'re sure it\'s right.\n},
     print "New set of picks:\n";
     map { print "  $_\n" } @{$CPAN::Config->{urllist}};
 }
+
+
+sub _strip_spaces {
+    $_[0] =~ s/^\s+//;  # no leading spaces
+    $_[0] =~ s/\s+\z//; # no trailing spaces
+}
+
+
+sub prompt ($;$) {
+    my $ans = _real_prompt(@_);
+
+    _strip_spaces($ans);
+
+    return $ans;
+}
+
+
+sub prompt_no_strip ($;$) {
+    return _real_prompt(@_);
+}
+
+
+*_real_prompt = \*ExtUtils::MakeMaker::prompt;
+
 
 1;

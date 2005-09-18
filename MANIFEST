@@ -10,6 +10,7 @@ PAUSE2003.pub
 README
 SIGNATURE
 Todo
+cpan
 lib/Bundle/CPAN.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
@@ -21,3 +22,4 @@ t/loadme.t
 t/mirroredby.t
 t/signature.t
 t/vcmp.t
+t/version.t

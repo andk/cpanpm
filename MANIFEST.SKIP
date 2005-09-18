@@ -1,7 +1,10 @@
+.svn
 ,v$
 CPAN-.+gz$
 CPAN-.+/.+
 CPAN.ppd
+CPAN/MakeMaker
+^Changes$
 ChangeLog.*
 MIRRORED.BY
 TAGS

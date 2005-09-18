@@ -6,7 +6,48 @@ use File::Path;
 use File::Spec;
 use strict;
 
-# $Id: Makefile.PL,v 1.53 2003/07/31 14:47:45 k Exp $
+my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
+our $VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
+
+my $version_diff = 0; # we'll have to die if this becomes true
+my $version_from = File::Spec->catfile(qw(lib Perl Repository APC.pm));
+
+if ($ARGV[0] && $ARGV[0] eq "--setversion") {
+  shift @ARGV;
+  open my $st, "svn st -u|" or die;
+  my $dirty = 0;
+  while (<$st>) {
+    next if /^\?/;
+    next if /^Head revision:/;
+    next if /^Status against revision:/;
+    print;
+    $dirty++;
+  }
+  close $st;
+  die "Not everything checked in?" if $dirty;
+
+  # $re parses the upper boundary of the output of svnversion
+  my $re = qr/(?:\d+:)?(\d+)[SM]*$/;
+  my($sv_dot)  = `svnversion .`             =~ $re;
+  my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
+  die "Could not determine sv_from or sv_dot"
+      unless $sv_from > 0 && $sv_dot > 0;
+  if ($sv_dot > $sv_from) {
+    warn "setting some property to make a checkin of this file possible";
+    0==system(svn => "propset",
+              "cpan:release",
+              "after_$sv_dot",
+              $version_from) or die;
+    warn "checking in to get the version up to the bleading edge";
+    0==system(svn => "ci",
+              "-m",
+              "Property set for release after_$sv_dot",
+              $version_from) or die;
+    # will have to die after Makefile is rewritten:
+    $version_diff = 1;
+  }
+  exit unless $version_diff;
+}
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){

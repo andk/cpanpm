@@ -658,7 +658,7 @@ CONFIGURATION
     $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is added to the search
     path of the CPAN module before the use() or require() statements.
 
-    The configuration dialog can be started any time later again by issueing
+    The configuration dialog can be started any time later again by issuing
     the command " o conf init " in the CPAN shell.
 
     Currently the following keys in the hash reference $CPAN::Config are
@@ -791,7 +791,7 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
 WORKING WITH CPAN.pm BEHIND FIREWALLS
     Thanks to Graham Barr for contributing the following paragraphs about
     the interaction between perl, and various firewall configurations. For
-    further informations on firewalls, it is recommended to consult the
+    further information on firewalls, it is recommended to consult the
     documentation that comes with the ncftp program. If you are unable to go
     through the firewall with a simple Perl setup, it is very likely that
     you can configure ncftp so that it works for your firewall.
@@ -867,6 +867,20 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
         o conf ncftp "/usr/bin/ncftp -f /home/scott/ncftplogin.cfg"
 
     Your mileage may vary...
+
+Cryptographically signed modules
+    Since release 1.77 CPAN.pm has been able to verify cryptographically
+    signed module distributions using Module::Signature. The CPAN modules
+    can be signed by their authors, thus giving more security. The simple
+    unsigned MD5 checksums that were used before by CPAN protect mainly
+    against accidental file corruption.
+
+    You will need to have Module::Signature installed, which in turn
+    requires that you have at least one of Crypt::OpenPGP module or the
+    command-line gpg tool installed.
+
+    You will also need to be able to connect over the Internet to the public
+    keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 
 FAQ
     1)  I installed a new version of module X but CPAN keeps saying, I have
