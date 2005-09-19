@@ -82,15 +82,6 @@ WriteMakefile(
                         },
 );
 
-# if we make sign first and make dist then, then any change to
-# META.yml will ruin the signature
-
-# if we make dist first and make sign then, then the correct signature
-# will not be part of the tarball
-
-# So we must alter make dist to first write META.yml, then let us
-# sign, then do the tarball.
-
 sub MY::postamble {
   q{
 setversion:
@@ -99,9 +90,6 @@ setversion:
 README: lib/CPAN.pm Makefile
 	chmod +w $@
 	pod2text lib/CPAN.pm > $@
-
-sign ::
-	cpansign -s && mv SIGNATURE $(DISTVNAME)/SIGNATURE
 
 }
 }
