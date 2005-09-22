@@ -14,6 +14,7 @@ lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm
+lib/CPAN/Version.pm
 scripts/cpan
 t/Nox.t
 t/loadme.t
