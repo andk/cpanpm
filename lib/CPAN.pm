@@ -1,13 +1,9 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.76_51';
+$VERSION = '1.76_52';
 $VERSION = eval $VERSION;
-# $Id: CPAN.pm,v 1.412 2003/07/31 14:53:04 k Exp $
 
-# only used during development:
-$Revision = "";
-# $Revision = "[".substr(q$Revision: 1.412 $, 10)."]";
-
+use CPAN::Version;
 use Carp ();
 use Config ();
 use Cwd ();
@@ -61,13 +57,13 @@ package CPAN;
 use strict qw(vars);
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
-            $Revision $Signal $End $Suppress_readline $Frontend
+            $Signal $End $Suppress_readline $Frontend
             $Defaultsite $Have_warned);
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
 @EXPORT = qw(
-	     autobundle bundle expand force get cvs_import
+	     autobundle bundle expand force notest get cvs_import
 	     install make readme recompile shell test clean
 	    );
 
@@ -2085,13 +2081,13 @@ sub setup_output {
 sub rematein {
     shift;
     my($meth,@some) = @_;
-    my $pragma = "";
-    if ($meth eq 'force') {
-	$pragma = $meth;
+    my @pragma;
+    while($meth =~ /^(force|notest)$/) {
+	push @pragma, $meth;
 	$meth = shift @some;
     }
     setup_output();
-    CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
+    CPAN->debug("pragma[@pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
 
     # Here is the place to set "test_count" on all involved parties to
     # 0. We then can pass this counter on to the involved
@@ -2164,19 +2160,21 @@ to find objects with matching identifiers.
 	} else {
 	    $obj = CPAN::Shell->expandany($s);
 	}
-        if ($pragma
-            &&
-            ($] < 5.00303 || $obj->can($pragma))){
-            ### compatibility with 5.003
-            $obj->$pragma($meth); # the pragma "force" in
-                                  # "CPAN::Distribution" must know
-                                  # what we are intending
+	for my $pragma (@pragma) {
+	    if ($pragma
+		&&
+		($] < 5.00303 || $obj->can($pragma))){
+		### compatibility with 5.003
+		$obj->$pragma($meth); # the pragma "force" in
+                                      # "CPAN::Distribution" must know
+                                      # what we are intending
+	    }
         }
         if ($]>=5.00303 && $obj->can('called_for')) {
             $obj->called_for($s);
         }
         CPAN->debug(
-                    qq{pragma[$pragma]meth[$meth]obj[$obj]as_string\[}.
+                    qq{pragma[@pragma]meth[$meth]obj[$obj]as_string\[}.
                     $obj->as_string.
                     qq{\]}
                    ) if $CPAN::DEBUG;
@@ -2199,6 +2197,8 @@ to find objects with matching identifiers.
 sub dump    { shift->rematein('dump',@_); }
 #-> sub CPAN::Shell::force ;
 sub force   { shift->rematein('force',@_); }
+#-> sub CPAN::Shell::notest ;
+sub notest  { shift->rematein('notest',@_); }
 #-> sub CPAN::Shell::get ;
 sub get     { shift->rematein('get',@_); }
 #-> sub CPAN::Shell::readme ;
@@ -4510,6 +4510,18 @@ sub force {
   }
 }
 
+sub notest {
+  my($self, $method) = @_;
+  # warn "XDEBUG: set notest for $self $method";
+  $self->{"notest"}++; # name should probably have been force_install
+}
+
+sub unnotest {
+  my($self) = @_;
+  # warn "XDEBUG: deleting notest";
+  delete $self->{'notest'};
+}
+
 #-> sub CPAN::Distribution::unforce ;
 sub unforce {
   my($self) = @_;
@@ -4822,6 +4834,12 @@ sub test {
       delete $self->{force_update};
       return;
     }
+    # warn "XDEBUG: checking for notest: $self->{notest} $self";
+    if ($self->{notest}) {
+	$CPAN::Frontend->myprint("Skipping test because of notest pragma\n");
+	return 1;
+    }
+
     $CPAN::Frontend->myprint("Running make test\n");
     if (my @prereq = $self->unsat_prereq){
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
@@ -5589,6 +5607,12 @@ sub force {
     $self->{'force_update'}++;
 }
 
+sub notest {
+    my($self) = @_;
+    # warn "XDEBUG: set notest for Module";
+    $self->{'notest'}++;
+}
+
 #-> sub CPAN::Module::rematein ;
 sub rematein {
     my($self,$meth) = @_;
@@ -5612,9 +5636,12 @@ sub rematein {
     my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
     $pack->force($meth) if exists $self->{'force_update'};
+    $pack->notest($meth) if exists $self->{'notest'};
     $pack->$meth();
     $pack->unforce if $pack->can("unforce") && exists $self->{'force_update'};
+    $pack->unnotest if $pack->can("unnotest") && exists $self->{'notest'};
     delete $self->{'force_update'};
+    delete $self->{'notest'};
 }
 
 #-> sub CPAN::Module::readme ;
@@ -6023,95 +6050,6 @@ sub unzip {
         my @system = ($unzip, $file);
         return system(@system) == 0;
     }
-}
-
-
-package CPAN::Version;
-# CPAN::Version::vcmp courtesy Jost Krieger
-sub vcmp {
-  my($self,$l,$r) = @_;
-  local($^W) = 0;
-  CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
-
-  return 0 if $l eq $r; # short circuit for quicker success
-
-  for ($l,$r) {
-      next unless tr/.// > 1;
-      s/^v?/v/;
-      1 while s/\.0+(\d)/.$1/;
-  }
-  if ($l=~/^v/ <=> $r=~/^v/) {
-      for ($l,$r) {
-          next if /^v/;
-          $_ = $self->float2vv($_);
-      }
-  }
-
-  return (
-          ($l ne "undef") <=> ($r ne "undef") ||
-          (
-           $] >= 5.006 &&
-           $l =~ /^v/ &&
-           $r =~ /^v/ &&
-           $self->vstring($l) cmp $self->vstring($r)
-          ) ||
-          $l <=> $r ||
-          $l cmp $r
-         );
-}
-
-sub vgt {
-  my($self,$l,$r) = @_;
-  $self->vcmp($l,$r) > 0;
-}
-
-sub vstring {
-  my($self,$n) = @_;
-  $n =~ s/^v// or die "CPAN::Version::vstring() called with invalid arg [$n]";
-  pack "U*", split /\./, $n;
-}
-
-# vv => visible vstring
-sub float2vv {
-    my($self,$n) = @_;
-    my($rev) = int($n);
-    $rev ||= 0;
-    my($mantissa) = $n =~ /\.(\d{1,12})/; # limit to 12 digits to limit
-                                          # architecture influence
-    $mantissa ||= 0;
-    $mantissa .= "0" while length($mantissa)%3;
-    my $ret = "v" . $rev;
-    while ($mantissa) {
-        $mantissa =~ s/(\d{1,3})// or
-            die "Panic: length>0 but not a digit? mantissa[$mantissa]";
-        $ret .= ".".int($1);
-    }
-    # warn "n[$n]ret[$ret]";
-    $ret;
-}
-
-sub readable {
-  my($self,$n) = @_;
-  $n =~ /^([\w\-\+\.]+)/;
-
-  return $1 if defined $1 && length($1)>0;
-  # if the first user reaches version v43, he will be treated as "+".
-  # We'll have to decide about a new rule here then, depending on what
-  # will be the prevailing versioning behavior then.
-
-  if ($] < 5.006) { # or whenever v-strings were introduced
-    # we get them wrong anyway, whatever we do, because 5.005 will
-    # have already interpreted 0.2.4 to be "0.24". So even if he
-    # indexer sends us something like "v0.2.4" we compare wrongly.
-
-    # And if they say v1.2, then the old perl takes it as "v12"
-
-    $CPAN::Frontend->mywarn("Suspicious version string seen [$n]\n");
-    return $n;
-  }
-  my $better = sprintf "v%vd", $n;
-  CPAN->debug("n[$n] better[$better]") if $CPAN::DEBUG;
-  return $better;
 }
 
 package CPAN;

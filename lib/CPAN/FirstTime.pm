@@ -18,7 +18,6 @@ use File::Basename ();
 use File::Path ();
 use File::Spec;
 use vars qw($VERSION);
-my $Id = q$Id: APC.pm 147 2005-08-09 04:25:25Z k $;
 our $VERSION = sprintf "%.3f", 2 + substr(q$Rev: 147 $,4)/1000;
 
 =head1 NAME
@@ -163,7 +162,9 @@ with all the intermediate files\?
 
 };
 
-    $default = $CPAN::Config->{build_cache} || 100;
+    $default = $CPAN::Config->{build_cache} || 100; # large enough to
+                                                    # build large
+                                                    # dists like Tk
     $ans = prompt("Cache size for build directory (in MB)?", $default);
     $CPAN::Config->{build_cache} = $ans;
 

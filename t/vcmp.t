@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; -*-
 
 use strict;
-use CPAN;
+use CPAN::Version;
 use vars qw($D $N);
 
 while (<DATA>) {
