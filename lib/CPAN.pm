@@ -2,7 +2,6 @@
 package CPAN;
 $VERSION = '1.76_53';
 $VERSION = eval $VERSION;
-$Revision = ""; # used by somebody else
 
 use CPAN::Version;
 use Carp ();
@@ -146,12 +145,11 @@ sub shell {
 
     $CPAN::Frontend->myprint(
 			     sprintf qq{
-cpan shell -- CPAN exploration and modules installation (v%s%s)
+cpan shell -- CPAN exploration and modules installation (v%s)
 ReadLine support %s
 
 },
                              $CPAN::VERSION,
-                             $CPAN::Revision,
                              $rl_avail
                             )
         unless $CPAN::Config->{'inhibit_startup_message'} ;
