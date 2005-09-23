@@ -1,5 +1,5 @@
-BUNDLE/Test/Builder.pm
-BUNDLE/Test/More.pm
+inc/Test/Builder.pm
+inc/Test/More.pm
 ChangeLog
 Changes.old
 MANIFEST

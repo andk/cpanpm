@@ -2,6 +2,7 @@
 package CPAN;
 $VERSION = '1.76_53';
 $VERSION = eval $VERSION;
+$Revision = ""; # used by somebody else
 
 use CPAN::Version;
 use Carp ();

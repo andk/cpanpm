@@ -76,6 +76,9 @@ WriteMakefile(
               'clean' => { FILES => "lib/CPAN/Config.pm" },
               'PREREQ_PM' => $prereq_pm,
               (MM->can("signature_target") ? (SIGN => 1) : ()),
+              ($] >= 5.005 ?
+               (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
+                AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
               'dist' => {
                          DIST_DEFAULT => 'setversion README all tardist',
                          COMPRESS => 'gzip -9f'
