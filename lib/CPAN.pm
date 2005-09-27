@@ -7134,12 +7134,20 @@ so that STDOUT is captured in a file for later inspection.
 
 I am not root, how can I install a module in a personal directory?
 
+First of all, you will want to use your own configuration, not the one
+that your root user installed. The following command sequence is a
+possible approach:
+
+    % mkdir -p $HOME/.cpan/CPAN
+    % echo '$CPAN::Config={ };' > $HOME/.cpan/CPAN/MyConfig.pm
+    % cpan
+    [...answer all questions...]
+
 You will most probably like something like this:
 
   o conf makepl_arg "LIB=~/myperl/lib \
                     INSTALLMAN1DIR=~/myperl/man/man1 \
                     INSTALLMAN3DIR=~/myperl/man/man3"
-  install Sybase::Sybperl
 
 You can make this setting permanent like all C<o conf> settings with
 C<o conf commit>.
