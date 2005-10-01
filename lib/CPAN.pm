@@ -5636,11 +5636,17 @@ sub rematein {
     $pack->called_for($self->id);
     $pack->force($meth) if exists $self->{'force_update'};
     $pack->notest($meth) if exists $self->{'notest'};
-    $pack->$meth();
+    eval {
+	$pack->$meth();
+    };
+    my $err = $@;
     $pack->unforce if $pack->can("unforce") && exists $self->{'force_update'};
     $pack->unnotest if $pack->can("unnotest") && exists $self->{'notest'};
     delete $self->{'force_update'};
     delete $self->{'notest'};
+    if ($err) {
+	die $err;
+    }
 }
 
 #-> sub CPAN::Module::readme ;
