@@ -51,6 +51,8 @@ $CPAN::Signal ||= 0;
 $CPAN::Frontend ||= "CPAN::Shell";
 $CPAN::Defaultsite ||= "ftp://ftp.perl.org/pub/CPAN";
 $CPAN::Perl ||= CPAN::find_perl();
+$CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
+$CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
 package CPAN;
@@ -58,13 +60,14 @@ use strict qw(vars);
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $End $Suppress_readline $Frontend
-            $Defaultsite $Have_warned);
+            $Defaultsite $Have_warned $Defaultdocs $Defaultrecent);
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
 @EXPORT = qw(
 	     autobundle bundle expand force notest get cvs_import
 	     install make readme recompile shell test clean
+             perldoc recent
 	    );
 
 #-> sub CPAN::AUTOLOAD ;
@@ -254,7 +257,7 @@ package CPAN::Complete;
 @CPAN::Complete::COMMANDS = sort qw(
 		       ! a b d h i m o q r u autobundle clean dump
 		       make test install force readme reload look
-                       cvs_import ls
+                       cvs_import ls perldoc recent
 ) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
@@ -1401,6 +1404,7 @@ Display Information
  i        WORD or /REGEXP/  about any of the above
  r        NONE              report updatable modules
  ls       AUTHOR            about files in the author's directory
+ recent   NONE              latest CPAN uploads
 
 Download, Test, Make, Install...
  get                        download
@@ -1410,6 +1414,7 @@ Download, Test, Make, Install...
  clean                      make clean
  look                       open subshell in these dists' directories
  readme                     display these dists' README files
+ perldoc                    display module's POD documentation
 
 Other
  h,?           display this menu       ! perl-code   eval a perl command
@@ -2192,6 +2197,14 @@ to find objects with matching identifiers.
     }
 }
 
+#-> sub CPAN::Shell::recent ;
+sub recent {
+  my($self) = @_;
+
+  CPAN::Distribution::_display_url( $self, $CPAN::Defaultrecent );
+  return;
+}
+
 #-> sub CPAN::Shell::dump ;
 sub dump    { shift->rematein('dump',@_); }
 #-> sub CPAN::Shell::force ;
@@ -2214,6 +2227,8 @@ sub clean   { shift->rematein('clean',@_); }
 sub look   { shift->rematein('look',@_); }
 #-> sub CPAN::Shell::cvs_import ;
 sub cvs_import   { shift->rematein('cvs_import',@_); }
+#-> sub CPAN::Shell::perldoc ;
+sub perldoc  { shift->rematein('perldoc',@_); }
 
 package CPAN::LWP::UserAgent;
 
@@ -3036,7 +3051,7 @@ sub cpl {
     } elsif ($line =~ /^d\s/) {
 	@return = cplx('CPAN::Distribution',$word);
     } elsif ($line =~ m/^(
-                          [mru]|make|clean|dump|get|test|install|readme|look|cvs_import
+                          [mru]|make|clean|dump|get|test|install|readme|look|cvs_import|perldoc|recent
                          )\s/x ) {
         if ($word =~ /^Bundle::/) {
             CPAN::Shell->local_bundles;
@@ -4302,6 +4317,7 @@ with pager "$CPAN::Config->{'pager'}"
 });
     sleep 2;
     $fh_pager->print(<$fh_readme>);
+    $fh_pager->close;
 }
 
 #-> sub CPAN::Distribution::verifyMD5 ;
@@ -5014,6 +5030,181 @@ sub dir {
     shift->{'build_dir'};
 }
 
+#-> sub CPAN::Distribution::perldoc ;
+sub perldoc {
+    my($self) = @_;
+
+    my($dist) = $self->id;
+    my $package = $self->called_for;
+
+    $self->_display_url( $CPAN::Defaultdocs . $package );
+}
+
+#-> sub CPAN::Distribution::_check_binary ;
+sub _check_binary {
+    my ($dist,$shell,$binary) = @_;
+    my ($pid,$readme,$out);
+
+    $CPAN::Frontend->myprint(qq{ + _check_binary($binary)\n})
+      if $CPAN::DEBUG;
+
+    $pid = open $readme, "-|", "which", $binary
+      or $CPAN::Frontend->mydie(qq{Could not fork $binary: $!});
+    while (<$readme>) {
+	$out .= $_;
+    }
+    close $readme;
+
+    $CPAN::Frontend->myprint(qq{   + $out \n})
+      if $CPAN::DEBUG && $out;
+
+    return $out;
+}
+
+#-> sub CPAN::Distribution::_display_url ;
+sub _display_url {
+    my($self,$url) = @_;
+    my($res,$saved_file,$pid,$readme,$out);
+
+    $CPAN::Frontend->myprint(qq{ + _display_url($url)\n})
+      if $CPAN::DEBUG;
+
+    # should we define it in the config instead?
+    my $html_converter = "html2text";
+
+    my $web_browser = $CPAN::Config->{'lynx'} || undef;
+    my $web_browser_out = $web_browser
+      ? CPAN::Distribution->_check_binary($self,$web_browser)
+	: undef;
+
+    my ($tmpout,$tmperr);
+    if (not $web_browser_out) {
+        # web browser not found, let's try text only
+	my $html_converter_out =
+	  CPAN::Distribution->_check_binary($self,$html_converter);
+
+        if ($html_converter_out ) {
+            # html2text found, run it
+            $saved_file = CPAN::Distribution->_getsave_url( $self, $url );
+            $CPAN::Frontend->myprint(qq{ERROR: problems while getting $url, $!\n})
+              unless defined($saved_file);
+
+	    $pid = open $readme, "-|", $html_converter, $saved_file
+	      or $CPAN::Frontend->mydie(qq{
+Could not fork $html_converter $saved_file: $!});
+	    my $fh = FileHandle->new;
+	    my $tmpdir = File::Spec->tmpdir();
+	    my $tmpin  = File::Spec->catfile( $tmpdir,
+					      "cpan__htmlconvert_out.txt" );
+	    if ($fh->open(">$tmpin")) {
+		while (<$readme>) {
+		    $fh->print($_);
+		}
+	    } else {
+		$CPAN::Frontend->mydie(qq{Could not open $tmpin $!});
+	    }
+
+	    close $readme
+	      or $CPAN::Frontend->mydie(qq{Could not close file handle: $!});
+	    $CPAN::Frontend->myprint(qq{
+Run '$html_converter $saved_file' and
+saved output to $tmpin\n})
+              if $CPAN::DEBUG;
+            my $fh_readme = FileHandle->new;
+	    $fh_readme->open($tmpin)
+	      or $CPAN::Frontend->mydie(qq{Could not open "$tmpin": $!});
+            my $fh_pager = FileHandle->new;
+            local($SIG{PIPE}) = "IGNORE";
+            $fh_pager->open("|$CPAN::Config->{'pager'}")
+              or $CPAN::Frontend->mydie(qq{
+Could not open pager $CPAN::Config->{'pager'}: $!});
+	    $CPAN::Frontend->myprint(qq{
+Displaying URL
+  $url
+with pager "$CPAN::Config->{'pager'}"
+});
+	    sleep 2;
+            $fh_pager->print(<$fh_readme>);
+	    $fh_pager->close;
+        } else {
+            # coldn't find the web browser or html converter
+            $CPAN::Frontend->myprint(qq{
+You need to install lynx or $html_converter to use this feature.});
+        }
+    } else {
+        # web browser found, run the action
+	my $browser = $CPAN::Config->{'lynx'};
+        $CPAN::Frontend->myprint(qq{system[$browser $url]})
+	  if $CPAN::DEBUG;
+	$CPAN::Frontend->myprint(qq{
+Displaying URL
+  $url
+with browser $browser
+});
+	sleep 2;
+        system("$browser $url");
+	if ($saved_file) { 1 while unlink($saved_file) }
+    }
+}
+
+#-> sub CPAN::Distribution::_getsave_url ;
+sub _getsave_url {
+    my($dist, $shell, $url) = @_;
+
+    $CPAN::Frontend->myprint(qq{ + _getsave_url($url)\n})
+      if $CPAN::DEBUG;
+
+    my $tmpdir = File::Spec->tmpdir();
+    my $tmpin  = File::Spec->catfile( $tmpdir, "cpan__getsave_url.html" );
+
+    if ($CPAN::META->has_usable('LWP')) {
+        $CPAN::Frontend->myprint("Fetching with LWP:
+  $url
+");
+        my $Ua;
+        CPAN::LWP::UserAgent->config;
+	eval { $Ua = CPAN::LWP::UserAgent->new; };
+	if ($@) {
+	    $CPAN::Frontend->mywarn("ERROR: CPAN::LWP::UserAgent->new dies with $@\n");
+	    return;
+	} else {
+	    my($var);
+	    $Ua->proxy('http', $var)
+	      if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
+	    $Ua->no_proxy($var)
+	      if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
+	}
+
+        my $req = HTTP::Request->new(GET => $url);
+        $req->header('Accept' => 'text/html');
+        my $res = $Ua->request($req);
+          if ($res->is_success) {
+              $CPAN::Frontend->myprint(" + request sucesuful.\n")
+                if $CPAN::DEBUG;
+              my $fh = FileHandle->new;
+	    if ($fh->open(">$tmpin")) {
+		print $fh $res->content;
+		close $fh;
+		$CPAN::Frontend->myprint(qq{ + saved content to $tmpin \n})
+		  if $CPAN::DEBUG;
+		return $tmpin;
+	    } else {
+              $CPAN::Frontend->myprint(qq{ + Could not open $tmpin: $! \n});
+	    }
+          } else {
+              $CPAN::Frontend->myprint(sprintf(
+                                             "LWP failed with code[%s], message[%s]\n",
+                                             $res->code,
+                                             $res->message,
+                                            ));
+              return;
+        }
+    } else {
+        $CPAN::Frontend->myprint("LWP not available\n");
+        return;
+    }
+}
+
 package CPAN::Bundle;
 
 sub look {
@@ -5649,6 +5840,8 @@ sub rematein {
     }
 }
 
+#-> sub CPAN::Module::perldoc ;
+sub perldoc { shift->rematein('perldoc') }
 #-> sub CPAN::Module::readme ;
 sub readme { shift->rematein('readme') }
 #-> sub CPAN::Module::look ;
@@ -6206,12 +6399,14 @@ A C<clean> command results in a
 
 being executed within the distribution file's working directory.
 
-=item get, readme, look module or distribution
+=item get, readme, ,perldoc, look module or distribution
 
 C<get> downloads a distribution file without further action. C<readme>
 displays the README file of the associated distribution. C<Look> gets
 and untars (if not yet done) the distribution file, changes to the
 appropriate directory and opens a subshell process in that directory.
+C<perldoc> displays the pod documentation of the module in html or
+plain text format.
 
 =item ls author
 
@@ -6578,6 +6773,15 @@ otherwise.
 Downloads the README file associated with a distribution and runs it
 through the pager specified in C<$CPAN::Config->{pager}>.
 
+=item CPAN::Distribution::perldoc()
+
+Downloads the pod documentation of the file associated with a
+distribution (in html format) and runs it through the external
+command lynx specified in C<$CPAN::Config->{lynx}>. If lynx
+isn't available, it converts it to plain text with external
+command html2text and runs it through the pager specified
+in C<$CPAN::Config->{pager}>
+
 =item CPAN::Distribution::test()
 
 Changes to the directory where the distribution has been unpacked and
@@ -6680,6 +6884,10 @@ if it is not installed.
 =item CPAN::Module::readme()
 
 Runs a C<readme> on the distribution associated with this module.
+
+=item CPAN::Module::perldoc()
+
+Runs a C<perldoc> on this module.
 
 =item CPAN::Module::test()
 
