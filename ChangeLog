@@ -1,3 +1,10 @@
+2005-10-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Applied three patches by Slaven Rezic, David Storrs, and Toni
+	Prug. Untested--just to get it out the door. All patches look very
+	reasonable, but I repeat: untested, so we make it a developer
+	version.
+
 2005-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* lib/CPAN.pm: Integrate patch by Slaven Rezic to support a notest

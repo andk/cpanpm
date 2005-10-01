@@ -129,11 +129,13 @@ DESCRIPTION
 
       being executed within the distribution file's working directory.
 
-    get, readme, look module or distribution
+    get, readme, ,perldoc, look module or distribution
       "get" downloads a distribution file without further action. "readme"
       displays the README file of the associated distribution. "Look" gets
       and untars (if not yet done) the distribution file, changes to the
       appropriate directory and opens a subshell process in that directory.
+      "perldoc" displays the pod documentation of the module in html or
+      plain text format.
 
     ls author
       "ls" lists all distribution files in and below an author's CPAN
@@ -455,6 +457,14 @@ DESCRIPTION
         Downloads the README file associated with a distribution and runs it
         through the pager specified in "$CPAN::Config-"{pager}>.
 
+    CPAN::Distribution::perldoc()
+        Downloads the pod documentation of the file associated with a
+        distribution (in html format) and runs it through the external
+        command lynx specified in "$CPAN::Config-"{lynx}>. If lynx isn't
+        available, it converts it to plain text with external command
+        html2text and runs it through the pager specified in
+        "$CPAN::Config-"{pager}>
+
     CPAN::Distribution::test()
         Changes to the directory where the distribution has been unpacked
         and runs "make test" there.
@@ -536,6 +546,9 @@ DESCRIPTION
 
     CPAN::Module::readme()
         Runs a "readme" on the distribution associated with this module.
+
+    CPAN::Module::perldoc()
+        Runs a "perldoc" on this module.
 
     CPAN::Module::test()
         Runs a "test" on the distribution associated with this module.
@@ -930,12 +943,20 @@ FAQ
 
     5)  I am not root, how can I install a module in a personal directory?
 
+        First of all, you will want to use your own configuration, not the
+        one that your root user installed. The following command sequence is
+        a possible approach:
+
+            % mkdir -p $HOME/.cpan/CPAN
+            % echo '$CPAN::Config={ };' > $HOME/.cpan/CPAN/MyConfig.pm
+            % cpan
+            [...answer all questions...]
+
         You will most probably like something like this:
 
           o conf makepl_arg "LIB=~/myperl/lib \
                             INSTALLMAN1DIR=~/myperl/man/man1 \
                             INSTALLMAN3DIR=~/myperl/man/man3"
-          install Sybase::Sybperl
 
         You can make this setting permanent like all "o conf" settings with
         "o conf commit".

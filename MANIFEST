@@ -22,3 +22,4 @@ t/mirroredby.t
 t/signature.t
 t/vcmp.t
 t/version.t
+META.yml                                 Module meta-data (added by MakeMaker)
