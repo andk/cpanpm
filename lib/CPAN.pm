@@ -19,6 +19,7 @@ use Safe ();
 use Text::ParseWords ();
 use Text::Wrap;
 use File::Spec;
+use File::Temp ();
 use Sys::Hostname;
 no lib "."; # we need to run chdir all over and we would get at wrong
             # libraries there
@@ -60,7 +61,8 @@ use strict qw(vars);
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $End $Suppress_readline $Frontend
-            $Defaultsite $Have_warned $Defaultdocs $Defaultrecent);
+            $Defaultsite $Have_warned $Defaultdocs $Defaultrecent
+            $Be_Silent );
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
@@ -1247,7 +1249,7 @@ sub _configpmtest {
         unlink $configpm_bak if -f $configpm_bak;
         if( -f $configpmtest ) {	
             if( rename $configpmtest, $configpm_bak ) {  
-                $CPAN::Frontend->mywarn(<<END)
+				$CPAN::Frontend->mywarn(<<END);
 Old configuration file $configpmtest
     moved to $configpm_bak
 END
@@ -1266,7 +1268,9 @@ END
 
 #-> sub CPAN::Config::load ;
 sub load {
-    my($self) = shift;
+    my($self, %args) = @_;
+	$CPAN::Be_Silent++ if $args{be_silent};
+
     my(@miss);
     use Carp;
     eval {require CPAN::Config;};       # We eval because of some
@@ -1302,8 +1306,9 @@ sub load {
 	    $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
 	    $configpm = _configpmtest($configpmdir,$configpmtest); 
 	    unless ($configpm) {
-		Carp::confess(qq{WARNING: CPAN.pm is unable to }.
-			      qq{create a configuration file.});
+			my $text = qq{WARNING: CPAN.pm is unable to } .
+			  qq{create a configuration file.}; 
+			output($text, 'confess');
 	    }
 	}
     }
@@ -1316,8 +1321,9 @@ END
     $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
+
     sleep 2;
-    CPAN::FirstTime::init($configpm);
+    CPAN::FirstTime::init($configpm, %args);
 }
 
 #-> sub CPAN::Config::missing_config_data ;
@@ -1999,6 +2005,28 @@ sub format_result {
     $result;
 }
 
+#-> sub CPAN::Shell::report_fh ;
+{
+	my $installation_report_fh;
+	my $previously_noticed = 0;
+
+	sub report_fh {
+		return $installation_report_fh if $installation_report_fh;
+
+		$installation_report_fh = new File::Temp(
+												 template => 'cpan_install_XXXX',
+												 suffix   => '.txt',
+												 unlink   => 0,
+												);
+		unless ( $installation_report_fh ) {
+			warn("Couldn't open installation report file; " .
+				 "no report file will be generated."
+				) unless $previously_noticed++;
+	   }
+	}
+}
+
+
 # The only reason for this method is currently to have a reliable
 # debugging utility that reveals which output is going through which
 # channel. No, I don't like the colors ;-)
@@ -2008,6 +2036,12 @@ sub print_ornamented {
     my($self,$what,$ornament) = @_;
     my $longest = 0;
     return unless defined $what;
+
+	if ( $CPAN::Be_Silent ) {
+		local $| = 1; # Flush immediately
+		print {report_fh()} $what;
+		return;
+	}
 
     if ($CPAN::Config->{term_is_latin}){
         # courtesy jhi:
@@ -2272,6 +2306,21 @@ sub get_basic_credentials {
     }
     return($USER,$PASSWD);
 }
+
+# mirror(): Its purpose is to deal with proxy authentication. When we
+# call SUPER::mirror, we relly call the mirror method in
+# LWP::UserAgent. LWP::UserAgent will then call
+# $self->get_basic_credentials or some equivalent and this will be
+# $self->dispatched to our own get_basic_credentials method.
+
+# Our own get_basic_credentials sets $USER and $PASSWD, two globals.
+
+# 407 stands for HTTP_PROXY_AUTHENTICATION_REQUIRED. Which means
+# although we have gone through our get_basic_credentials, the proxy
+# server refuses to connect. This could be a case where the username or
+# password has changed in the meantime, so I'm trying once again without
+# $USER and $PASSWD to give the get_basic_credentials routine another
+# chance to set $USER and $PASSWD.
 
 # mirror(): Its purpose is to deal with proxy authentication. When we
 # call SUPER::mirror, we relly call the mirror method in
@@ -5991,8 +6040,9 @@ sub gzip {
     my($buffer,$fhw);
     $fhw = FileHandle->new($read)
 	or $CPAN::Frontend->mydie("Could not open $read: $!");
+	my $cwd = `pwd`;
     my $gz = Compress::Zlib::gzopen($write, "wb")
-	or $CPAN::Frontend->mydie("Cannot gzopen $write: $!\n");
+	or $CPAN::Frontend->mydie("Cannot gzopen $write: $! (pwd is $cwd)\n");
     $gz->gzwrite($buffer)
 	while read($fhw,$buffer,4096) > 0 ;
     $gz->gzclose() ;
