@@ -1,3 +1,17 @@
+2005-10-11  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
+	have a different path. I installed a new CPAN.pm from CPAN and it
+	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
+	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
+	always just said "0 subroutines redefined".
+
+	* Bug: "o conf foo bar" should complain about invalid key "foo".
+	It does instead set "foo" to "bar" and it happened to me to set
+	"debug" to "all" and then I wondered why debugging was not turned
+	on. Would it have complained, I would have found the correct
+	command ("o debug all") much quicker.
+
 2003-08-13  Andreas J Koenig
 
 	cpan script should accept arguments as suggested by Matt Sergeant:

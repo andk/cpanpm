@@ -1640,7 +1640,7 @@ sub reload {
     if ($command =~ /cpan/i) {
         for my $f (qw(CPAN.pm CPAN/FirstTime.pm)) {
             next unless $INC{$f};
-            CPAN->debug("reloading the whole $f") if $CPAN::DEBUG;
+            CPAN->debug("reloading the whole '$f' from '$INC{$f}'") if $CPAN::DEBUG;
             my $fh = FileHandle->new($INC{$f});
             local($/);
             my $redef = 0;
