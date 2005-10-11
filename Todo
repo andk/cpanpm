@@ -1,44 +1,51 @@
-cpan script should accept arguments as suggested by Matt Sergeant:
-   cpan install My::Foo
+2003-08-13  Andreas J Koenig
 
-Cache manager should read youngest directories first and start
-deleting without measuring as soon as the cache limit is reached.
-
-Rename 'o conf' to 'set' and 'o debug' to 'set debug'.
-
-Profiling?
-
-Provide something, so that the next "o conf commit" will not overwrite
-the config file. maybe "myconfig_readonly"?
-
-I have a patch by Jochen Wiedmann that implements a per-distribution
-permanent configuration directory. The new containsmods() method in
-1.52 should help to fit the patch with the rest of CPAN.pm.
-
-Option to skip testing (Ask Bjoern Hansen).
-
-Default Argument for make,test,look,etc. could be the last argument???
-
-Make a preferred download method configurable (allow further download
-methods via plugin?)
-
-Allow different site preferences for index files and other files
-
-Replace make with Make
-
-Maintain the cache at runtime. Currently we only check it at startup.
-
-Distribute compressed CHECKSUM files
-
-Security layer
-
-make plugins configurable, adjust @ISA
-
-Make configurable that multiple additional index files can be
-integrated (for Intra-CPANs). I believe CPAN::Site did it right
-anyway, so we might skip this.
-
-Make the 'make' command itself configurable as suggested by Rujith de
-Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
-instead of 'make install'. (Fixing this is delayed, because it
-interacts with Make.pm)
+	cpan script should accept arguments as suggested by Matt Sergeant:
+	   cpan install My::Foo
+	
+	Cache manager should read youngest directories first and start
+	deleting without measuring as soon as the cache limit is reached.
+	
+	Rename 'o conf' to 'set' and 'o debug' to 'set debug'.
+	
+	Profiling?
+	
+	Provide something, so that the next "o conf commit" will not overwrite
+	the config file. maybe "myconfig_readonly"?
+	
+	I have a patch by Jochen Wiedmann that implements a per-distribution
+	permanent configuration directory. The new containsmods() method in
+	1.52 should help to fit the patch with the rest of CPAN.pm.
+	
+	Option to skip testing (Ask Bjoern Hansen).
+	
+	Default Argument for make,test,look,etc. could be the last argument???
+	
+	Make a preferred download method configurable (allow further download
+	methods via plugin?)
+	
+	Allow different site preferences for index files and other files
+	
+	Replace make with Make
+	
+	Maintain the cache at runtime. Currently we only check it at startup.
+	
+	Distribute compressed CHECKSUM files
+	
+	Security layer
+	
+	make plugins configurable, adjust @ISA
+	
+	Make configurable that multiple additional index files can be
+	integrated (for Intra-CPANs). I believe CPAN::Site did it right
+	anyway, so we might skip this.
+	
+	Make the 'make' command itself configurable as suggested by Rujith de
+	Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
+	instead of 'make install'. (Fixing this is delayed, because it
+	interacts with Make.pm)
+	
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "Todo"
+	End:
