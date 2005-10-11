@@ -1640,12 +1640,18 @@ sub reload {
     if ($command =~ /cpan/i) {
         for my $f (qw(CPAN.pm CPAN/FirstTime.pm)) {
             next unless $INC{$f};
-            CPAN->debug("reloading the whole '$f' from '$INC{$f}'") if $CPAN::DEBUG;
+            my $pwd = CPAN::anycwd();
+            CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
+                if $CPAN::DEBUG;
             my $fh = FileHandle->new($INC{$f});
             local($/);
             my $redef = 0;
+            local $^W = 1;
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
-            eval <$fh>;
+            my $eval = <$fh>;
+            CPAN->debug("evaling '$eval'")
+                if $CPAN::DEBUG;
+            eval $eval;
             warn $@ if $@;
             $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
         }
