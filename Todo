@@ -1,3 +1,23 @@
+2005-10-12  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: checksum mismatch on a file is being reported even when the
+	file has 0 bytes. 0 bytes should clearly constitute the right/the
+	duty to overwrite.
+
+	* Bug: what? we still do not support Build.PL? Didn't anybody send
+	me a patch? Try 'install CPAN::Metadata::RDF' and see how this can
+	be fixed as quickly as possible.
+
+	Try:        look CPAN::Metadata::RDF
+	then there: perl Build.PL;./Build;./Build install
+
+	This does nothing for the prerequisites. We could lookup META.yml
+	either then or beforehand.
+
+	* Bug: the nonsense command 'force ls andk' should just do a plain
+	'ls andk'. Instead it complains: C<Warning: Cannot ls andk, don't
+	know what it is.>
+
 2005-10-11  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Bug: "o conf foo bar" should complain about invalid key "foo".

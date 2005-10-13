@@ -2131,7 +2131,7 @@ sub rematein {
 	$meth = shift @some;
     }
     setup_output();
-    CPAN->debug("pragma[@pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
+    CPAN->debug("pragma[@pragma]meth[$meth]some[@some]") if $CPAN::DEBUG;
 
     # Here is the place to set "test_count" on all involved parties to
     # 0. We then can pass this counter on to the involved
@@ -2264,11 +2264,11 @@ sub install { shift->rematein('install',@_); }
 #-> sub CPAN::Shell::clean ;
 sub clean   { shift->rematein('clean',@_); }
 #-> sub CPAN::Shell::look ;
-sub look   { shift->rematein('look',@_); }
+sub look    { shift->rematein('look',@_); }
 #-> sub CPAN::Shell::cvs_import ;
-sub cvs_import   { shift->rematein('cvs_import',@_); }
+sub cvs_import { shift->rematein('cvs_import',@_); }
 #-> sub CPAN::Shell::perldoc ;
-sub perldoc  { shift->rematein('perldoc',@_); }
+sub perldoc    { shift->rematein('perldoc',@_); }
 
 package CPAN::LWP::UserAgent;
 
@@ -5898,18 +5898,15 @@ sub rematein {
 #-> sub CPAN::Module::perldoc ;
 sub perldoc { shift->rematein('perldoc') }
 #-> sub CPAN::Module::readme ;
-sub readme { shift->rematein('readme') }
+sub readme  { shift->rematein('readme') }
 #-> sub CPAN::Module::look ;
-sub look { shift->rematein('look') }
+sub look    { shift->rematein('look') }
 #-> sub CPAN::Module::cvs_import ;
 sub cvs_import { shift->rematein('cvs_import') }
 #-> sub CPAN::Module::get ;
-sub get    { shift->rematein('get',@_); }
+sub get     { shift->rematein('get',@_) }
 #-> sub CPAN::Module::make ;
-sub make   {
-    my $self = shift;
-    $self->rematein('make');
-}
+sub make    { shift->rematein('make') }
 #-> sub CPAN::Module::test ;
 sub test   {
     my $self = shift;
