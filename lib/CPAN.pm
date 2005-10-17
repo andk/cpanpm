@@ -2013,23 +2013,22 @@ sub format_result {
 
 #-> sub CPAN::Shell::report_fh ;
 {
-	my $installation_report_fh;
-	my $previously_noticed = 0;
+    my $installation_report_fh;
+    my $previously_noticed = 0;
 
-	sub report_fh {
-		return $installation_report_fh if $installation_report_fh;
-
-		$installation_report_fh = new File::Temp(
-												 template => 'cpan_install_XXXX',
-												 suffix   => '.txt',
-												 unlink   => 0,
-												);
-		unless ( $installation_report_fh ) {
-			warn("Couldn't open installation report file; " .
-				 "no report file will be generated."
-				) unless $previously_noticed++;
-	   }
-	}
+    sub report_fh {
+        return $installation_report_fh if $installation_report_fh;
+        $installation_report_fh = File::Temp->new(
+                                                  template => 'cpan_install_XXXX',
+                                                  suffix   => '.txt',
+                                                  unlink   => 0,
+                                                 );
+        unless ( $installation_report_fh ) {
+            warn("Couldn't open installation report file; " .
+                 "no report file will be generated."
+                ) unless $previously_noticed++;
+        }
+    }
 }
 
 
@@ -5147,26 +5146,26 @@ sub _display_url {
 	    $pid = open $readme, "-|", $html_converter, $saved_file
 	      or $CPAN::Frontend->mydie(qq{
 Could not fork $html_converter $saved_file: $!});
-	    my $fh = FileHandle->new;
-	    my $tmpdir = File::Spec->tmpdir();
-	    my $tmpin  = File::Spec->catfile( $tmpdir,
-					      "cpan__htmlconvert_out.txt" );
-	    if ($fh->open(">$tmpin")) {
-		while (<$readme>) {
-		    $fh->print($_);
-		}
-	    } else {
-		$CPAN::Frontend->mydie(qq{Could not open $tmpin $!});
-	    }
-
+	    my $fh = File::Temp->new(
+                                     template => 'cpan_htmlconvert_XXXX',
+                                     suffix => '.txt',
+                                     unlink => 0,
+                                    );
+            while (<$readme>) {
+                $fh->print($_);
+            }
 	    close $readme
 	      or $CPAN::Frontend->mydie(qq{Could not close file handle: $!});
-	    $CPAN::Frontend->myprint(qq{
-Run '$html_converter $saved_file' and
-saved output to $tmpin\n})
-              if $CPAN::DEBUG;
-            my $fh_readme = FileHandle->new;
-	    $fh_readme->open($tmpin)
+            my $tmpin = $fh->filename;
+	    $CPAN::Frontend->myprint(sprintf(qq{
+Run '%s %s' and
+saved output to %s\n},
+                                             $html_converter,
+                                             $saved_file,
+                                             $tmpin,
+                                            )) if $CPAN::DEBUG;
+            close $fh; undef $fh;
+	    open $fh, $tmpin
 	      or $CPAN::Frontend->mydie(qq{Could not open "$tmpin": $!});
             my $fh_pager = FileHandle->new;
             local($SIG{PIPE}) = "IGNORE";
@@ -5179,7 +5178,7 @@ Displaying URL
 with pager "$CPAN::Config->{'pager'}"
 });
 	    sleep 2;
-            $fh_pager->print(<$fh_readme>);
+            $fh_pager->print(<$fh>);
 	    $fh_pager->close;
         } else {
             # coldn't find the web browser or html converter
@@ -5209,9 +5208,12 @@ sub _getsave_url {
     $CPAN::Frontend->myprint(qq{ + _getsave_url($url)\n})
       if $CPAN::DEBUG;
 
-    my $tmpdir = File::Spec->tmpdir();
-    my $tmpin  = File::Spec->catfile( $tmpdir, "cpan__getsave_url.html" );
-
+    my $fh  = File::Temp->new(
+                              template => "cpan_getsave_url_XXXX",
+                              suffix => ".html",
+                              unlink => 0,
+                             );
+    my $tmpin = $fh->filename;
     if ($CPAN::META->has_usable('LWP')) {
         $CPAN::Frontend->myprint("Fetching with LWP:
   $url
@@ -5225,34 +5227,29 @@ sub _getsave_url {
 	} else {
 	    my($var);
 	    $Ua->proxy('http', $var)
-	      if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
+                if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
 	    $Ua->no_proxy($var)
-	      if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
+                if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
 	}
 
         my $req = HTTP::Request->new(GET => $url);
         $req->header('Accept' => 'text/html');
         my $res = $Ua->request($req);
-          if ($res->is_success) {
-              $CPAN::Frontend->myprint(" + request sucesuful.\n")
+        if ($res->is_success) {
+            $CPAN::Frontend->myprint(" + request successful.\n")
                 if $CPAN::DEBUG;
-              my $fh = FileHandle->new;
-	    if ($fh->open(">$tmpin")) {
-		print $fh $res->content;
-		close $fh;
-		$CPAN::Frontend->myprint(qq{ + saved content to $tmpin \n})
-		  if $CPAN::DEBUG;
-		return $tmpin;
-	    } else {
-              $CPAN::Frontend->myprint(qq{ + Could not open $tmpin: $! \n});
-	    }
-          } else {
-              $CPAN::Frontend->myprint(sprintf(
+            print $fh $res->content;
+            close $fh;
+            $CPAN::Frontend->myprint(qq{ + saved content to $tmpin \n})
+                if $CPAN::DEBUG;
+            return $tmpin;
+        } else {
+            $CPAN::Frontend->myprint(sprintf(
                                              "LWP failed with code[%s], message[%s]\n",
                                              $res->code,
                                              $res->message,
                                             ));
-              return;
+            return;
         }
     } else {
         $CPAN::Frontend->myprint("LWP not available\n");
