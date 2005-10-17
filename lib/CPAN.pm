@@ -1446,8 +1446,11 @@ sub a {
 sub ls      {
     my($self,@arg) = @_;
     my @accept;
+    if ($arg[0] eq "*") {
+        @arg = map { $_->id } $self->expand('Author','/./');
+    }
     for (@arg) {
-        unless (/^[A-Z\-]+$/i) {
+        unless (/^[A-Z0-9\-]+$/i) {
             $CPAN::Frontend->mywarn("ls command rejects argument $_: not an author\n");
             next;
         }
@@ -1455,7 +1458,7 @@ sub ls      {
     }
     for my $a (@accept){
         my $author = $self->expand('Author',$a) or die "No author found for $a";
-        $author->ls;
+        $author->ls(@accept>1); # silent if more than one author
     }
 }
 
@@ -3762,28 +3765,32 @@ sub email    { shift->{RO}{EMAIL}; }
 #-> sub CPAN::Author::ls ;
 sub ls {
     my $self = shift;
+    my $silent = shift || 0;
     my $id = $self->id;
 
     # adapted from CPAN::Distribution::verifyMD5 ;
     my(@csf); # chksumfile
     @csf = $self->id =~ /(.)(.)(.*)/;
     $csf[1] = join "", @csf[0,1];
-    $csf[2] = join "", @csf[1,2];
+    $csf[2] = join "", @csf[1,2]; # ("A","AN","ANDK")
     my(@dl);
     @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0);
     unless (grep {$_->[2] eq $csf[1]} @dl) {
-        $CPAN::Frontend->myprint("No files in the directory of $id\n");
+        $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent ;
         return;
     }
     @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0);
     unless (grep {$_->[2] eq $csf[2]} @dl) {
-        $CPAN::Frontend->myprint("No files in the directory of $id\n");
+        $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent;
         return;
     }
     @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1);
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
-    } sort { $a->[2] cmp $b->[2] } @dl);
+    } sort { $a->[2] cmp $b->[2] } @dl) unless $silent;
+    if ($silent) {
+        $CPAN::Frontend->myprint($csf[2]."...");
+    }
 }
 
 # returns an array of arrays, the latter contain (size,mtime,filename)
