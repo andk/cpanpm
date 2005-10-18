@@ -1247,14 +1247,14 @@ sub _configpmtest {
         #_#_# following code dumped core on me with 5.003_11, a.k.
         my $configpm_bak = "$configpmtest.bak";
         unlink $configpm_bak if -f $configpm_bak;
-        if( -f $configpmtest ) {	
-            if( rename $configpmtest, $configpm_bak ) {  
+        if( -f $configpmtest ) {
+            if( rename $configpmtest, $configpm_bak ) {
 				$CPAN::Frontend->mywarn(<<END);
 Old configuration file $configpmtest
     moved to $configpm_bak
 END
 	    }
-	}	
+	}
 	my $fh = FileHandle->new;
 	if ($fh->open(">$configpmtest")) {
 	    $fh->print("1;\n");
@@ -1263,7 +1263,7 @@ END
 	    # Should never happen
 	    Carp::confess("Cannot open >$configpmtest");
 	}
-    } else { return } 
+    } else { return }
 }
 
 #-> sub CPAN::Config::load ;
@@ -1443,7 +1443,7 @@ sub a {
 }
 
 #-> sub CPAN::Shell::ls ;
-sub ls      {
+sub ls {
     my($self,@arg) = @_;
     my @accept;
     if ($arg[0] eq "*") {
@@ -1456,9 +1456,22 @@ sub ls      {
         }
         push @accept, uc $_;
     }
+    my $silent = @accept>1;
+    my $last_alpha = "";
     for my $a (@accept){
         my $author = $self->expand('Author',$a) or die "No author found for $a";
-        $author->ls(@accept>1); # silent if more than one author
+        $author->ls($silent); # silent if more than one author
+        if ($silent) {
+            my $alphadot = substr $author->id, 0, 1;
+            my $ad;
+            if ($alphadot eq $last_alpha) {
+                $ad = ".";
+            } else {
+                $ad = $alphadot;
+                $last_alpha = $alphadot;
+            }
+            $CPAN::Frontend->myprint($ad);
+        }
     }
 }
 
@@ -2045,11 +2058,11 @@ sub print_ornamented {
     my $longest = 0;
     return unless defined $what;
 
-	if ( $CPAN::Be_Silent ) {
-		local $| = 1; # Flush immediately
-		print {report_fh()} $what;
-		return;
-	}
+    local $| = 1; # Flush immediately
+    if ( $CPAN::Be_Silent ) {
+        print {report_fh()} $what;
+        return;
+    }
 
     if ($CPAN::Config->{term_is_latin}){
         # courtesy jhi:
@@ -3788,9 +3801,6 @@ sub ls {
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
     } sort { $a->[2] cmp $b->[2] } @dl) unless $silent;
-    if ($silent) {
-        $CPAN::Frontend->myprint($csf[2]."...");
-    }
 }
 
 # returns an array of arrays, the latter contain (size,mtime,filename)
