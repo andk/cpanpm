@@ -5547,6 +5547,8 @@ sub xs_file {
 
 #-> sub CPAN::Bundle::force ;
 sub force   { shift->rematein('force',@_); }
+#-> sub CPAN::Bundle::notest ;
+sub notest  { shift->rematein('notest',@_); }
 #-> sub CPAN::Bundle::get ;
 sub get     { shift->rematein('get',@_); }
 #-> sub CPAN::Bundle::make ;
@@ -6436,8 +6438,8 @@ the module doesn't need to be updated.
 
 CPAN also keeps track of what it has done within the current session
 and doesn't try to build a package a second time regardless if it
-succeeded or not. The C<force> command takes as a first argument the
-method to invoke (currently: C<make>, C<test>, or C<install>) and executes the
+succeeded or not. The C<force> pragma may precede another command
+(currently: C<make>, C<test>, or C<install>) and executes the
 command from scratch.
 
 Example:
@@ -6449,6 +6451,13 @@ Example:
     OpenGL-0.4/
     OpenGL-0.4/COPYRIGHT
     [...]
+
+The C<notest> pragma may be set to skip the test part in the build
+process.
+
+Example:
+
+    cpan> notest install Tk
 
 A C<clean> command results in a
 
