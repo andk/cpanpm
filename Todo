@@ -1,5 +1,8 @@
 2005-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: installing SWETH/IPv4.pm did not seem to work anymore.
+	Fixed in revision 172.
+
 	* Bug: there is a directory ZTANG/Text-PORE-102/ on CPAN with a
 	single file README in it. ls chokes on ZTANG because of this. Is
 	it a bug that the directory exists or is it a bug that it has no

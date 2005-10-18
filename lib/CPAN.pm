@@ -4065,13 +4065,15 @@ sub get {
     #
     # Unpack the goods
     #
+    $self->debug("local_file[$local_file]") if $CPAN::DEBUG;
     if ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)(?!\n)\Z/i){
         $self->{was_uncompressed}++ unless CPAN::Tarzip->gtest($local_file);
 	$self->untar_me($local_file);
     } elsif ( $local_file =~ /\.zip(?!\n)\Z/i ) {
 	$self->unzip_me($local_file);
-    } elsif ( $local_file =~ /\.pm\.(gz|Z)(?!\n)\Z/) {
+    } elsif ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/) {
         $self->{was_uncompressed}++ unless CPAN::Tarzip->gtest($local_file);
+        $self->debug("calling pm2dir for local_file[$local_file]") if $CPAN::DEBUG;
 	$self->pm2dir_me($local_file);
     } else {
 	$self->{archived} = "NO";
@@ -4254,11 +4256,15 @@ sub pm2dir_me {
     my($self,$local_file) = @_;
     $self->{archived} = "pm";
     my $to = File::Basename::basename($local_file);
-    $to =~ s/\.(gz|Z)(?!\n)\Z//;
-    if (CPAN::Tarzip->gunzip($local_file,$to)) {
-	$self->{unwrapped} = "YES";
+    if ($to =~ s/\.(gz|Z)(?!\n)\Z//) {
+        if (CPAN::Tarzip->gunzip($local_file,$to)) {
+            $self->{unwrapped} = "YES";
+        } else {
+            $self->{unwrapped} = "NO";
+        }
     } else {
-	$self->{unwrapped} = "NO";
+        File::Copy::cp($local_file,".");
+        $self->{unwrapped} = "YES";
     }
 }
 
