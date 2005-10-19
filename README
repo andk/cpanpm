@@ -109,9 +109,9 @@ DESCRIPTION
 
       CPAN also keeps track of what it has done within the current session
       and doesn't try to build a package a second time regardless if it
-      succeeded or not. The "force" command takes as a first argument the
-      method to invoke (currently: "make", "test", or "install") and
-      executes the command from scratch.
+      succeeded or not. The "force" pragma may precede another command
+      (currently: "make", "test", or "install") and executes the command
+      from scratch.
 
       Example:
 
@@ -122,6 +122,13 @@ DESCRIPTION
           OpenGL-0.4/
           OpenGL-0.4/COPYRIGHT
           [...]
+
+      The "notest" pragma may be set to skip the test part in the build
+      process.
+
+      Example:
+
+          cpan> notest install Tk
 
       A "clean" command results in a
 
