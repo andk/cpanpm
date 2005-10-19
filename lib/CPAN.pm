@@ -5077,7 +5077,12 @@ sub install {
         return;
     }
 
-    my $system = join(" ", $CPAN::Config->{'make'},
+    my($makeinstall) = $CPAN::Config->{'makeinstall'};
+    if(!defined($CPAN::Config->{'makeinstall'}) {
+	$makeinstall = $CPAN::Config->{'make'};
+    }
+
+    my($system) = join(" ", $makeinstall, 
 		      "install", $CPAN::Config->{make_install_arg});
     my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
     my($pipe) = FileHandle->new("$system $stderr |");
