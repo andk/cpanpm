@@ -2195,8 +2195,8 @@ sub rematein {
             $obj->color_cmd_tmps(0,1);
             CPAN::Queue->new($obj->id);
             push @qcopy, $obj;
-	} elsif ($CPAN::META->exists('CPAN::Author',$s)) {
-	    $obj = $CPAN::META->instance('CPAN::Author',$s);
+	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
+	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
             if ($meth =~ /^(dump|ls)$/) {
                 $obj->$meth();
             } else {
