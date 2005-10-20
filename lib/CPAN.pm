@@ -238,12 +238,22 @@ package CPAN::CacheMgr;
 use File::Find;
 
 package CPAN::Config;
-use vars qw(%can $dot_cpan);
+use vars qw(%can %keys $dot_cpan);
 
 %can = (
   'commit' => "Commit changes to disk",
   'defaults' => "Reload defaults from disk",
   'init'   => "Interactive setting of all options",
+);
+
+%keys = map { $_ => undef } qw(
+    build_cache build_dir cache_metadata cpan_home curl dontload_hash
+    ftp ftp_proxy getcwd gpg gzip histfile histsize http_proxy
+    inactivity_timeout index_expire inhibit_startup_message
+    keep_source_where lynx make make_arg make_install_arg
+    make_install_make_command makepl_arg ncftp ncftpget no_proxy pager
+    prerequisites_policy scan_cache shell tar term_is_latin unzip
+    urllist wait_list wget
 );
 
 package CPAN::FTP;
@@ -1096,6 +1106,9 @@ sub edit {
 	return 1;
     } else {
         CPAN->debug("o[$o]") if $CPAN::DEBUG;
+        unless (exists $keys{$o}) {
+            $CPAN::Frontend->mywarn("Warning: unknown configuration variable '$o'\n");
+        }
 	if ($o =~ /list$/) {
 	    $func = shift @args;
 	    $func ||= "";
@@ -1142,8 +1155,8 @@ sub prettyprint {
   if (ref $v) {
     my(@report) = ref $v eq "ARRAY" ?
         @$v :
-            map { sprintf("   %-18s => %s\n",
-                          $_,
+            map { sprintf("   %-18s => [%s]\n",
+                          map { "[$_]" } $_,
                           defined $v->{$_} ? $v->{$_} : "UNDEFINED"
                          )} keys %$v;
     $CPAN::Frontend->myprint(
@@ -1153,13 +1166,13 @@ sub prettyprint {
                                           "    %-18s\n",
                                           $k
                                          ),
-                                  map {"\t$_\n"} @report
+                                  map {"\t[$_]\n"} @report
                                  )
                             );
   } elsif (defined $v) {
-    $CPAN::Frontend->myprint(sprintf "    %-18s %s\n", $k, $v);
+    $CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
   } else {
-    $CPAN::Frontend->myprint(sprintf "    %-18s %s\n", $k, "UNDEFINED");
+    $CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, "UNDEFINED");
   }
 }
 
@@ -1562,7 +1575,7 @@ sub o {
 	    $CPAN::Frontend->myprint(":\n");
 	    for $k (sort keys %CPAN::Config::can) {
 		$v = $CPAN::Config::can{$k};
-		$CPAN::Frontend->myprint(sprintf "    %-18s %s\n", $k, $v);
+		$CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
 	    }
 	    $CPAN::Frontend->myprint("\n");
 	    for $k (sort keys %$CPAN::Config) {
@@ -5077,13 +5090,14 @@ sub install {
         return;
     }
 
-    my($makeinstall) = $CPAN::Config->{'makeinstall'};
-    if(!defined($CPAN::Config->{'makeinstall'}) {
-	$makeinstall = $CPAN::Config->{'make'};
-    }
+    my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
+        $CPAN::Config->{'make'};
 
-    my($system) = join(" ", $makeinstall, 
-		      "install", $CPAN::Config->{make_install_arg});
+    my($system) = join(" ",
+                       $make_install_make_command,
+                       "install",
+                       $CPAN::Config->{make_install_arg},
+                      );
     my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
@@ -7142,6 +7156,9 @@ defined:
   keep_source_where  directory in which to keep the source (if we do)
   make               location of external make program
   make_arg	     arguments that should always be passed to 'make'
+  make_install_make_command
+                     the make command for running 'make install', for
+                     example 'sudo make'
   make_install_arg   same as make_arg for 'make install'
   makepl_arg	     arguments passed to 'perl Makefile.PL'
   pager              location of external program more (or any pager)

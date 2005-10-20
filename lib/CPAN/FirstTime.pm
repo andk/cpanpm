@@ -384,6 +384,17 @@ Typical frequently used setting:
 
 Your choice: ",$default);
 
+    $default = $CPAN::Config->{make_install_make_command} || $CPAN::Config->{make} || "";
+    $CPAN::Config->{make_install_make_command} =
+	prompt("Do you want to use a different make command for 'make install'?
+Cautious people will probably prefer:
+
+    sudo make
+or
+    /usr/bin/sudo -u admin /usr/bin/make
+
+or some such. Your choice: ",$default);
+
     $default = $CPAN::Config->{make_install_arg} || $CPAN::Config->{make_arg} || "";
     $CPAN::Config->{make_install_arg} =
 	prompt("Parameters for the 'make install' command?
