@@ -1,6 +1,7 @@
 inc/Test/Builder.pm
 inc/Test/More.pm
 ChangeLog
+ChangeLog.old
 Changes.old
 MANIFEST
 MANIFEST.SKIP

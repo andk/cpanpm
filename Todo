@@ -5,7 +5,8 @@
 
 	* ChangeLog needs to be written by svn during make dist, and the
 	dependencies must care for a rerun of 'perl Makefile.PL' when
-	CPAN.pm gets edited.
+	CPAN.pm gets edited. This would be 'svn log -r HEAD:131' for the
+	ChangeLog, I think.
 
 2005-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

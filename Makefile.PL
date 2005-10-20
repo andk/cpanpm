@@ -80,7 +80,7 @@ WriteMakefile(
                (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
               'dist' => {
-                         DIST_DEFAULT => 'setversion README all tardist',
+                         DIST_DEFAULT => 'Makefile setversion README all chlog tardist',
                          COMPRESS => 'gzip -9f'
                         },
 );
@@ -94,6 +94,11 @@ README: lib/CPAN.pm Makefile
 	chmod +w $@
 	pod2text lib/CPAN.pm > $@
 
+chlog ::
+	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
+
+Makefile.PL: $(VERSION_FROM)
+	touch $@
 }
 }
 
