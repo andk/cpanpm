@@ -1,5 +1,8 @@
 2005-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
+	files. Currently it doesn't.
+
 	* ChangeLog needs to be written by svn during make dist, and the
 	dependencies must care for a rerun of 'perl Makefile.PL' when
 	CPAN.pm gets edited.
@@ -37,7 +40,7 @@
 
 	* Bug: the nonsense command 'force ls andk' should just do a plain
 	'ls andk'. Instead it complains: C<Warning: Cannot ls andk, don't
-	know what it is.>
+	know what it is.> FIXED in rev. 180
 
 2005-10-11  Andreas J Koenig  <akoenig@cellular.de>
 
