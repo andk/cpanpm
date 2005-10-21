@@ -4000,7 +4000,7 @@ sub upload_date {
   my @dl = CPAN::Shell->expand("Author",$self->cpan_userid)->dir_listing(\@local_wanted,0,1);
   return unless @dl;
   my($dirent) = grep { $_->[2] eq $filename } @dl;
-  warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;
+  # warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;
   return unless $dirent->[1];
   return $self->{UPLOAD_DATE} = $dirent->[1];
 }
