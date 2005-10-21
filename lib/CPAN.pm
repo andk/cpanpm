@@ -3997,7 +3997,9 @@ sub upload_date {
   my(@local_wanted) = split(/\//,$self->id);
   my $filename = pop @local_wanted;
   push @local_wanted, "CHECKSUMS";
-  my @dl = CPAN::Shell->expand("Author",$self->cpan_userid)->dir_listing(\@local_wanted,0,1);
+  my $author = CPAN::Shell->expand("Author",$self->cpan_userid);
+  return unless $author;
+  my @dl = $author->dir_listing(\@local_wanted,0,1);
   return unless @dl;
   my($dirent) = grep { $_->[2] eq $filename } @dl;
   # warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;
@@ -5758,9 +5760,11 @@ sub as_string {
 	if $self->cpan_version;
     if (my $cpan_file = $self->cpan_file){
         push @m, sprintf($sprintf, 'CPAN_FILE', $cpan_file);
-        my $upload_date = CPAN::Shell->expand("Distribution",$cpan_file)->upload_date;
-        if ($upload_date) {
-            push @m, sprintf($sprintf, 'UPLOAD_DATE', $upload_date);
+        if (my $dist = CPAN::Shell->expand("Distribution",$cpan_file)) {
+            my $upload_date = $dist->upload_date;
+            if ($upload_date) {
+                push @m, sprintf($sprintf, 'UPLOAD_DATE', $upload_date);
+            }
         }
     }
     my $sprintf3 = "    %-12s %1s%1s%1s%1s (%s,%s,%s,%s)\n";

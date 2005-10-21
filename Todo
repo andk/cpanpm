@@ -1,5 +1,10 @@
 2005-10-21  Andreas J Koenig  <akoenig@cellular.de>
 
+	* cpan> m Apache::AuthAny 
+	Can't call method "upload_date" on an undefined value at /usr/perl-5.8.4/lib/5.8.4/CPAN.pm line 5761.
+
+	FIXED in rev 186.
+
 	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
 	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
 
