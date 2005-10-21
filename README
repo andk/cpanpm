@@ -701,6 +701,9 @@ CONFIGURATION
       keep_source_where  directory in which to keep the source (if we do)
       make               location of external make program
       make_arg           arguments that should always be passed to 'make'
+      make_install_make_command
+                         the make command for running 'make install', for
+                         example 'sudo make'
       make_install_arg   same as make_arg for 'make install'
       makepl_arg         arguments passed to 'perl Makefile.PL'
       pager              location of external program more (or any pager)

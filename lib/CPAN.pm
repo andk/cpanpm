@@ -3800,17 +3800,17 @@ sub ls {
     $csf[1] = join "", @csf[0,1];
     $csf[2] = join "", @csf[1,2]; # ("A","AN","ANDK")
     my(@dl);
-    @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0);
+    @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[1]} @dl) {
         $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent ;
         return;
     }
-    @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0);
+    @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[2]} @dl) {
         $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent;
         return;
     }
-    @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1);
+    @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1, 1);
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
     } sort { $a->[2] cmp $b->[2] } @dl) unless $silent;
@@ -3822,6 +3822,7 @@ sub dir_listing {
     my $self = shift;
     my $chksumfile = shift;
     my $recursive = shift;
+    my $may_ftp = shift;
     my $lc_want =
 	File::Spec->catfile($CPAN::Config->{keep_source_where},
 			    "authors", "id", @$chksumfile);
@@ -3843,19 +3844,29 @@ sub dir_listing {
     if (my @stat = stat $lc_want) {
         $force = $stat[9] + $CPAN::Config->{index_expire}*86400 <= time;
     }
-    my $lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
-                                      $lc_want,$force);
-    unless ($lc_file) {
-        $CPAN::Frontend->myprint("Trying $lc_want.gz\n");
-	$chksumfile->[-1] .= ".gz";
-	$lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
-                                       "$lc_want.gz",1);
-	if ($lc_file) {
-	    $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
-	    CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
-	} else {
-	    return;
-	}
+    my $lc_file;
+    if ($may_ftp) {
+        $lc_file = CPAN::FTP->localize(
+                                       "authors/id/@$chksumfile",
+                                       $lc_want,
+                                       $force,
+                                      );
+        unless ($lc_file) {
+            $CPAN::Frontend->myprint("Trying $lc_want.gz\n");
+            $chksumfile->[-1] .= ".gz";
+            $lc_file = CPAN::FTP->localize("authors/id/@$chksumfile",
+                                           "$lc_want.gz",1);
+            if ($lc_file) {
+                $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
+                CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
+            } else {
+                return;
+            }
+        }
+    } else {
+        $lc_file = $lc_want; # XXX not reached; but if reached some
+                             # day, we'll be wrong because file://
+                             # URLS do not get copied to lc_want
     }
 
     # adapted from CPAN::Distribution::MD5_check_file ;
@@ -3872,8 +3883,10 @@ sub dir_listing {
 	    rename $lc_file, "$lc_file.bad";
 	    Carp::confess($@) if $@;
 	}
-    } else {
+    } elsif ($may_ftp) { # currently always true
 	Carp::carp "Could not open $lc_file for reading";
+    } else {
+	return; # not reached
     }
     my(@result,$f);
     for $f (sort keys %$cksum) {
@@ -3884,7 +3897,7 @@ sub dir_listing {
                 push @dir, $f, "CHECKSUMS";
                 push @result, map {
                     [$_->[0], $_->[1], "$f/$_->[2]"]
-                } $self->dir_listing(\@dir,1);
+                } $self->dir_listing(\@dir,1,$may_ftp);
             } else {
                 push @result, [ 0, "-", $f ];
             }
@@ -3958,6 +3971,7 @@ sub color_cmd_tmps {
 sub as_string {
   my $self = shift;
   $self->containsmods;
+  $self->upload_date;
   $self->SUPER::as_string(@_);
 }
 
@@ -3974,6 +3988,21 @@ sub containsmods {
     $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
   }
   keys %{$self->{CONTAINSMODS}};
+}
+
+#-> sub CPAN::Distribution::upload_date ;
+sub upload_date {
+  my $self = shift;
+  return $self->{UPLOAD_DATE} if exists $self->{UPLOAD_DATE};
+  my(@local_wanted) = split(/\//,$self->id);
+  my $filename = pop @local_wanted;
+  push @local_wanted, "CHECKSUMS";
+  my @dl = CPAN::Shell->expand("Author",$self->cpan_userid)->dir_listing(\@local_wanted,0,1);
+  return unless @dl;
+  my($dirent) = grep { $_->[2] eq $filename } @dl;
+  warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;
+  return unless $dirent->[1];
+  return $self->{UPLOAD_DATE} = $dirent->[1];
 }
 
 #-> sub CPAN::Distribution::uptodate ;
@@ -5727,8 +5756,13 @@ sub as_string {
     }
     push @m, sprintf($sprintf, 'CPAN_VERSION', $self->cpan_version)
 	if $self->cpan_version;
-    push @m, sprintf($sprintf, 'CPAN_FILE', $self->cpan_file)
-	if $self->cpan_file;
+    if (my $cpan_file = $self->cpan_file){
+        push @m, sprintf($sprintf, 'CPAN_FILE', $cpan_file);
+        my $upload_date = CPAN::Shell->expand("Distribution",$cpan_file)->upload_date;
+        if ($upload_date) {
+            push @m, sprintf($sprintf, 'UPLOAD_DATE', $upload_date);
+        }
+    }
     my $sprintf3 = "    %-12s %1s%1s%1s%1s (%s,%s,%s,%s)\n";
     my(%statd,%stats,%statl,%stati);
     @statd{qw,? i c a b R M S,} = qw,unknown idea
