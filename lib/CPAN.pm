@@ -2768,6 +2768,7 @@ sub hosthard {
 	    $src_switch = " -c";
 	  } elsif ($f eq "wget"){
 	    $src_switch = " -O $asl_ungz";
+	    $stdout_redir = "";
 	  } elsif ($f eq 'curl'){
 	    $src_switch = ' -L';
 	  }

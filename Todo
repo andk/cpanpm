@@ -22,7 +22,7 @@
 	* ChangeLog needs to be written by svn during make dist, and the
 	dependencies must care for a rerun of 'perl Makefile.PL' when
 	CPAN.pm gets edited. This would be 'svn log -r HEAD:131' for the
-	ChangeLog, I think.
+	ChangeLog, I think. FIXED
 
 2005-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -32,7 +32,7 @@
 2005-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: installing SWETH/IPv4.pm did not seem to work anymore.
-	Fixed in revision 172.
+	FIXED in revision 172.
 
 	* Bug: there is a directory ZTANG/Text-PORE-102/ on CPAN with a
 	single file README in it. ls chokes on ZTANG because of this. Is
