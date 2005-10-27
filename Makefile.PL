@@ -98,7 +98,7 @@ chlog ::
 	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
 
 Makefile.PL: $(VERSION_FROM)
-	touch $@
+	$(TOUCH) $@
 }
 }
 
