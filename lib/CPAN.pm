@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.76_56';
+$VERSION = '1.76_57';
 $VERSION = eval $VERSION;
 
 use CPAN::Version;
@@ -2760,18 +2760,18 @@ sub hosthard {
           $asl_gz = "$asl_ungz.gz";
 
 	  my($src_switch) = "";
+	  my($chdir) = "";
+	  my($stdout_redir) = " > $asl_ungz";
 	  if ($f eq "lynx"){
 	    $src_switch = " -source";
 	  } elsif ($f eq "ncftp"){
 	    $src_switch = " -c";
 	  } elsif ($f eq "wget"){
-	    $src_switch = " -O -";
+	    $src_switch = " -O $asl_ungz";
 	  } elsif ($f eq 'curl'){
 	    $src_switch = ' -L';
 	  }
 
-	  my($chdir) = "";
-	  my($stdout_redir) = " > $asl_ungz";
 	  if ($f eq "ncftpget"){
 	    $chdir = "cd $aslocal_dir && ";
 	    $stdout_redir = "";
