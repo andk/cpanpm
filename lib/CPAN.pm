@@ -778,7 +778,6 @@ sub has_inst {
     my $file = $mod;
     my $obj;
     $file =~ s|::|/|g;
-    $file =~ s|/|\\|g if $^O eq 'MSWin32';
     $file .= ".pm";
     if ($INC{$file}) {
 	# checking %INC is wrong, because $INC{LWP} may be true
