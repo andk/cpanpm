@@ -183,7 +183,7 @@ with all the intermediate files\?
 
 By default, each time the CPAN module is started, cache scanning is
 performed to keep the cache size in sync. To prevent this, answer
-'never'.  
+'never'.
 
 });
 
@@ -257,6 +257,25 @@ set this variable, please hit SPACE RETURN to the following question.
       $ans = prompt("Number of lines to save?", $default);
       $CPAN::Config->{histsize} = $ans;
     }
+
+    #
+    # do an ls on the m or the d command
+    #
+    $CPAN::Frontend->myprint( qq{
+
+The 'd' and the 'm' command normally only show you information they
+have in their in-memory database and thus will never connect to the
+internet. If you set the 'do_ls_on_m_and_d' variable to true, 'm' and
+'d' will additionally show you the upload date of the module or
+distribution. Per default this feature is off because it may require a
+net connection to get at the upload date.
+
+});
+
+    defined($default = $CPAN::Config->{do_ls_on_m_and_d}) or
+        $default = 0;
+    $ans = prompt("Always try to show upload date with 'd' and 'm' command?", $default);
+    $CPAN::Config->{do_ls_on_m_and_d} = $ans;
 
     #
     # prerequisites_policy

@@ -247,13 +247,22 @@ use vars qw(%can %keys $dot_cpan);
 );
 
 %keys = map { $_ => undef } qw(
-    build_cache build_dir cache_metadata cpan_home curl dontload_hash
-    ftp ftp_proxy getcwd gpg gzip histfile histsize http_proxy
+    build_cache build_dir
+    cache_metadata cpan_home curl
+    do_ls_on_m_and_d dontload_hash
+    ftp ftp_proxy
+    getcwd gpg gzip
+    histfile histsize http_proxy
     inactivity_timeout index_expire inhibit_startup_message
-    keep_source_where lynx make make_arg make_install_arg
-    make_install_make_command makepl_arg ncftp ncftpget no_proxy pager
-    prerequisites_policy scan_cache shell tar term_is_latin unzip
-    urllist wait_list wget
+    keep_source_where
+    lynx
+    make make_arg make_install_arg make_install_make_command makepl_arg
+    ncftp ncftpget no_proxy pager
+    prerequisites_policy
+    scan_cache shell
+    tar term_is_latin
+    unzip urllist
+    wait_list wget
 );
 
 package CPAN::FTP;
@@ -1403,7 +1412,11 @@ sub cpl {
     } elsif (@words >= 4) {
 	return ();
     }
-    my(@o_conf) = (keys %CPAN::Config::can, keys %$CPAN::Config);
+    my %seen;
+    my(@o_conf) =  sort grep { !$seen{$_}++ }
+        keys %CPAN::Config::can,
+            keys %$CPAN::Config,
+                keys %CPAN::Config::keys;
     return grep /^\Q$word\E/, @o_conf;
 }
 
@@ -3202,7 +3215,8 @@ sub cpl_option {
     } elsif ($words[1] eq 'conf') {
 	return CPAN::Config::cpl(@_);
     } elsif ($words[1] eq 'debug') {
-	return sort grep /^\Q$word\E/, sort keys %CPAN::DEBUG, 'all';
+	return sort grep /^\Q$word\E/,
+            sort keys %CPAN::DEBUG, 'all';
     }
 }
 
@@ -3802,12 +3816,12 @@ sub ls {
     my(@dl);
     @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[1]} @dl) {
-        $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent ;
+        $CPAN::Frontend->myprint("Directory $csf[1]/ does not exist\n") unless $silent ;
         return;
     }
     @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[2]} @dl) {
-        $CPAN::Frontend->myprint("No files in the directory of $id\n") unless $silent;
+        $CPAN::Frontend->myprint("Directory $id/ does not exist\n") unless $silent;
         return;
     }
     @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1, 1);
@@ -3864,9 +3878,11 @@ sub dir_listing {
             }
         }
     } else {
-        $lc_file = $lc_want; # XXX not reached; but if reached some
-                             # day, we'll be wrong because file://
-                             # URLS do not get copied to lc_want
+        $lc_file = $lc_want;
+        # we *could* second-guess and if the user has a file: URL,
+        # then we could look there. But on the other hand, igf they do
+        # have a file: URL, wy did they choose to set
+        # $CPAN::Config->{do_ls_on_m_and_d} to false?
     }
 
     # adapted from CPAN::Distribution::MD5_check_file ;
@@ -3883,10 +3899,11 @@ sub dir_listing {
 	    rename $lc_file, "$lc_file.bad";
 	    Carp::confess($@) if $@;
 	}
-    } elsif ($may_ftp) { # currently always true
-	Carp::carp "Could not open $lc_file for reading";
+    } elsif ($may_ftp) {
+	Carp::carp "Could not open $lc_file for reading.";
     } else {
-	return; # not reached
+        # Maybe should warn: "You may want to set do_ls_on_m_and_d to a true value"
+	return;
     }
     my(@result,$f);
     for $f (sort keys %$cksum) {
@@ -3999,7 +4016,7 @@ sub upload_date {
   push @local_wanted, "CHECKSUMS";
   my $author = CPAN::Shell->expand("Author",$self->cpan_userid);
   return unless $author;
-  my @dl = $author->dir_listing(\@local_wanted,0,1);
+  my @dl = $author->dir_listing(\@local_wanted,0,$CPAN::Config->{do_ls_on_m_and_d});
   return unless @dl;
   my($dirent) = grep { $_->[2] eq $filename } @dl;
   # warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;

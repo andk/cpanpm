@@ -37,7 +37,8 @@
 	* Bug: there is a directory ZTANG/Text-PORE-102/ on CPAN with a
 	single file README in it. ls chokes on ZTANG because of this. Is
 	it a bug that the directory exists or is it a bug that it has no
-	CHECKSUMS file?
+	CHECKSUMS file? FIXED by simply removing the README file from
+	CPAN.
 
 2005-10-12  Andreas J Koenig  <akoenig@cellular.de>
 
