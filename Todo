@@ -1,46 +1,13 @@
-2005-10-21  Andreas J Koenig  <akoenig@cellular.de>
-
-	* cpan> m Apache::AuthAny 
-	Can't call method "upload_date" on an undefined value at /usr/perl-5.8.4/lib/5.8.4/CPAN.pm line 5761.
-
-	FIXED in rev 186.
-
-	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
-	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
-
-	* Slaven suggests a variable "permanently_connected" that helps to
-	decide if a connection to the internet is available. Do ask the
-	community if people care about such stuff. Slaven expects, some
-	will care that the the 'm' and 'd' commands now make a connection
-	to the internet.
-
-2005-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.
 
-	* ChangeLog needs to be written by svn during make dist, and the
-	dependencies must care for a rerun of 'perl Makefile.PL' when
-	CPAN.pm gets edited. This would be 'svn log -r HEAD:131' for the
-	ChangeLog, I think. FIXED
-
-2005-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
+	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
 
 	* Bug: installing scripts without modules? How does it work? How
 	should it work?
-
-2005-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: installing SWETH/IPv4.pm did not seem to work anymore.
-	FIXED in revision 172.
-
-	* Bug: there is a directory ZTANG/Text-PORE-102/ on CPAN with a
-	single file README in it. ls chokes on ZTANG because of this. Is
-	it a bug that the directory exists or is it a bug that it has no
-	CHECKSUMS file? FIXED by simply removing the README file from
-	CPAN.
-
-2005-10-12  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Bug: checksum mismatch on a file is being reported even when the
 	file has 0 bytes. 0 bytes should clearly constitute the right/the
@@ -56,6 +23,45 @@
 	This does nothing for the prerequisites. We could lookup META.yml
 	either then or beforehand.
 
+	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
+	have a different path. I installed a new CPAN.pm from CPAN and it
+	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
+	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
+	always just said "0 subroutines redefined".
+
+2005-10-21  Andreas J Koenig  <akoenig@cellular.de>
+
+	* cpan> m Apache::AuthAny 
+	Can't call method "upload_date" on an undefined value at /usr/perl-5.8.4/lib/5.8.4/CPAN.pm line 5761.
+
+	FIXED in rev 186.
+
+	* Slaven suggests a variable "permanently_connected" that helps to
+	decide if a connection to the internet is available. Do ask the
+	community if people care about such stuff. Slaven expects, some
+	will care that the the 'm' and 'd' commands now make a connection
+	to the internet. FIXED by introducing do_ls_on_m_and_d.
+
+2005-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* ChangeLog needs to be written by svn during make dist, and the
+	dependencies must care for a rerun of 'perl Makefile.PL' when
+	CPAN.pm gets edited. This would be 'svn log -r HEAD:131' for the
+	ChangeLog, I think. FIXED
+
+2005-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: installing SWETH/IPv4.pm did not seem to work anymore.
+	FIXED in revision 172.
+
+	* Bug: there is a directory ZTANG/Text-PORE-102/ on CPAN with a
+	single file README in it. ls chokes on ZTANG because of this. Is
+	it a bug that the directory exists or is it a bug that it has no
+	CHECKSUMS file? FIXED by simply removing the README file from
+	CPAN.
+
+2005-10-12  Andreas J Koenig  <akoenig@cellular.de>
+
 	* Bug: the nonsense command 'force ls andk' should just do a plain
 	'ls andk'. Instead it complains: C<Warning: Cannot ls andk, don't
 	know what it is.> FIXED in rev. 180
@@ -67,12 +73,6 @@
 	"debug" to "all" and then I wondered why debugging was not turned
 	on. Would it have complained, I would have found the correct
 	command ("o debug all") much quicker. FIXED in rev. 178.
-
-	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
-	have a different path. I installed a new CPAN.pm from CPAN and it
-	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
-	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
-	always just said "0 subroutines redefined".
 
 	* Same effect can be illustrated by changing to the source's root
 	directory, running 'perl -Ilib -MCPAN -e shell', 'install
