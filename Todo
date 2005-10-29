@@ -1,5 +1,7 @@
 2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* bz2 support
+
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.
 
@@ -7,7 +9,7 @@
 	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
 
 	* Bug: installing scripts without modules? How does it work? How
-	should it work?
+	should it work? getting the latest version ad-hoc?
 
 	* Bug: checksum mismatch on a file is being reported even when the
 	file has 0 bytes. 0 bytes should clearly constitute the right/the

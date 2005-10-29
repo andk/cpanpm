@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.76_57';
+$VERSION = '1.76_58';
 $VERSION = eval $VERSION;
 
 use CPAN::Version;
@@ -82,7 +82,7 @@ sub AUTOLOAD {
     if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
-	$CPAN::Frontend->mywarn(qq{Unknown command "$AUTOLOAD". }.
+	$CPAN::Frontend->mywarn(qq{Unknown CPAN command "$AUTOLOAD". }.
 				qq{Type ? for help.
 });
     }
@@ -350,7 +350,7 @@ For this you just need to type
 });
 	}
     } else {
-	$CPAN::Frontend->mywarn(qq{Unknown command '$autoload'. }.
+	$CPAN::Frontend->mywarn(qq{Unknown shell command '$autoload'. }.
 				qq{Type ? for help.
 });
     }
@@ -2285,30 +2285,16 @@ sub recent {
   return;
 }
 
-#-> sub CPAN::Shell::dump ;
-sub dump    { shift->rematein('dump',@_); }
-#-> sub CPAN::Shell::force ;
-sub force   { shift->rematein('force',@_); }
-#-> sub CPAN::Shell::notest ;
-sub notest  { shift->rematein('notest',@_); }
-#-> sub CPAN::Shell::get ;
-sub get     { shift->rematein('get',@_); }
-#-> sub CPAN::Shell::readme ;
-sub readme  { shift->rematein('readme',@_); }
-#-> sub CPAN::Shell::make ;
-sub make    { shift->rematein('make',@_); }
-#-> sub CPAN::Shell::test ;
-sub test    { shift->rematein('test',@_); }
-#-> sub CPAN::Shell::install ;
-sub install { shift->rematein('install',@_); }
-#-> sub CPAN::Shell::clean ;
-sub clean   { shift->rematein('clean',@_); }
-#-> sub CPAN::Shell::look ;
-sub look    { shift->rematein('look',@_); }
-#-> sub CPAN::Shell::cvs_import ;
-sub cvs_import { shift->rematein('cvs_import',@_); }
-#-> sub CPAN::Shell::perldoc ;
-sub perldoc    { shift->rematein('perldoc',@_); }
+{
+    # set up the dispatching methods
+    no strict "refs";
+    for my $command (qw(
+                        clean cvs_import dump force get install look
+                        make notest perldoc readme test
+                       )) {
+        *$command = sub { shift->rematein($command, @_); };
+    }
+}
 
 package CPAN::LWP::UserAgent;
 
@@ -5161,9 +5147,22 @@ sub install {
     } else {
 	 $self->{'install'} = "NO";
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
-	 if ($makeout =~ /permission/s && $> > 0) {
-	     $CPAN::Frontend->myprint(qq{    You may have to su }.
-				      qq{to root to install the package\n});
+	 if (
+             $makeout =~ /permission/s
+             && $> > 0
+             && (
+                 ! $CPAN::Config->{make_install_make_command}
+                 || $CPAN::Config->{make_install_make_command} eq $CPAN::Config->{make}
+                )
+            ) {
+             $CPAN::Frontend->myprint(
+                                      qq{----\n}.
+                                      qq{  You may have to su }.
+                                      qq{to root to install the package\n}.
+                                      qq{  (Or you may want to run something like\n}.
+                                      qq{    o conf make_install_make_command 'sudo make'\n}.
+                                      qq{  to raise your permissions.}
+                                     );
 	 }
     }
     delete $self->{force_update};
@@ -6555,7 +6554,7 @@ A C<clean> command results in a
 
 being executed within the distribution file's working directory.
 
-=item get, readme, ,perldoc, look module or distribution
+=item get, readme, perldoc, look module or distribution
 
 C<get> downloads a distribution file without further action. C<readme>
 displays the README file of the associated distribution. C<Look> gets
@@ -7558,7 +7557,7 @@ CPAN.pm does not know the dependency tree in advance and cannot sort
 the queue of things to install in a topologically correct order. It
 resolves perfectly well IFF all modules declare the prerequisites
 correctly with the PREREQ_PM attribute to MakeMaker. For bundles which
-fail and you need to install often, it is recommended sort the Bundle
+fail and you need to install often, it is recommended to sort the Bundle
 definition file manually. It is planned to improve the metadata
 situation for dependencies on CPAN in general, but this will still
 take some time.
@@ -7594,6 +7593,36 @@ would be
 
 Extended support for converters will be made available as soon as perl
 becomes stable with regard to charset issues.
+
+=item 11)
+
+When an install fails for some reason and then I correct the error
+condition and retry, CPAN.pm refuses to install the module, saying
+C<Already tried without success>.
+
+Use the force pragma like so
+
+  force install Foo::Bar
+
+This does a bit more than really needed because it untars the
+distribution again and runs make and test and only then install.
+
+Or you can use
+
+  look Foo::Bar
+
+and then 'make install' directly in the subshell.
+
+Or you leave the CPAN shell and start it again.
+
+For the really curious, by accessing internals directly, you I<could>
+
+  ! delete  CPAN::Shell->expand("Distribution", \
+    CPAN::Shell->expand("Module","Foo::Bar") \
+    ->{RO}{CPAN_FILE})->{install}
+
+but this is neither guaranteed to work in the future nor is it a
+decent command.
 
 =back
 
