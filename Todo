@@ -1,6 +1,7 @@
 2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* bz2 support
+	* bz2 support (affects also CPAN::Checksums); can it be done with
+	Archive::Tar?
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.

@@ -49,6 +49,14 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
   exit unless $version_diff;
 }
 
+if ($version_diff){
+  die "
+==> I had to update some \$VERSIONs <==
+==> Your Makefile has been rebuilt. <==
+==> Please rerun the make command.  <==
+";
+}
+
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
 if ($] < 5.006001){
   # 5.6.0 / 1.52 downloads 5.8.0 due to File::Spec
@@ -97,8 +105,6 @@ README: lib/CPAN.pm Makefile
 chlog ::
 	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
 
-Makefile.PL: $(VERSION_FROM)
-	$(TOUCH) $@
 }
 }
 
