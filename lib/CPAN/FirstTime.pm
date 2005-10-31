@@ -410,7 +410,7 @@ Cautious people will probably prefer:
 
     sudo make
 or
-    /usr/bin/sudo -u admin /usr/bin/make
+    /path1/to/sudo -u admin_account /path2/to/make
 
 or some such. Your choice: ",$default);
 
