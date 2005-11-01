@@ -249,7 +249,7 @@ use vars qw(%can %keys $dot_cpan);
 %keys = map { $_ => undef } qw(
     build_cache build_dir
     cache_metadata cpan_home curl
-    do_ls_on_m_and_d dontload_hash
+    dontload_hash
     ftp ftp_proxy
     getcwd gpg gzip
     histfile histsize http_proxy
@@ -259,7 +259,7 @@ use vars qw(%can %keys $dot_cpan);
     make make_arg make_install_arg make_install_make_command makepl_arg
     ncftp ncftpget no_proxy pager
     prerequisites_policy
-    scan_cache shell
+    scan_cache shell show_upload_date
     tar term_is_latin
     unzip urllist
     wait_list wget
@@ -3866,9 +3866,9 @@ sub dir_listing {
     } else {
         $lc_file = $lc_want;
         # we *could* second-guess and if the user has a file: URL,
-        # then we could look there. But on the other hand, igf they do
+        # then we could look there. But on the other hand, if they do
         # have a file: URL, wy did they choose to set
-        # $CPAN::Config->{do_ls_on_m_and_d} to false?
+        # $CPAN::Config->{show_upload_date} to false?
     }
 
     # adapted from CPAN::Distribution::MD5_check_file ;
@@ -3888,7 +3888,7 @@ sub dir_listing {
     } elsif ($may_ftp) {
 	Carp::carp "Could not open $lc_file for reading.";
     } else {
-        # Maybe should warn: "You may want to set do_ls_on_m_and_d to a true value"
+        # Maybe should warn: "You may want to set show_upload_date to a true value"
 	return;
     }
     my(@result,$f);
@@ -4002,7 +4002,7 @@ sub upload_date {
   push @local_wanted, "CHECKSUMS";
   my $author = CPAN::Shell->expand("Author",$self->cpan_userid);
   return unless $author;
-  my @dl = $author->dir_listing(\@local_wanted,0,$CPAN::Config->{do_ls_on_m_and_d});
+  my @dl = $author->dir_listing(\@local_wanted,0,$CPAN::Config->{show_upload_date});
   return unless @dl;
   my($dirent) = grep { $_->[2] eq $filename } @dl;
   # warn sprintf "dirent[%s]id[%s]", $dirent, $self->id;

@@ -265,17 +265,17 @@ set this variable, please hit SPACE RETURN to the following question.
 
 The 'd' and the 'm' command normally only show you information they
 have in their in-memory database and thus will never connect to the
-internet. If you set the 'do_ls_on_m_and_d' variable to true, 'm' and
+internet. If you set the 'show_upload_date' variable to true, 'm' and
 'd' will additionally show you the upload date of the module or
 distribution. Per default this feature is off because it may require a
 net connection to get at the upload date.
 
 });
 
-    defined($default = $CPAN::Config->{do_ls_on_m_and_d}) or
+    defined($default = $CPAN::Config->{show_upload_date}) or
         $default = 0;
     $ans = prompt("Always try to show upload date with 'd' and 'm' command?", $default);
-    $CPAN::Config->{do_ls_on_m_and_d} = $ans;
+    $CPAN::Config->{show_upload_date} = $ans;
 
     #
     # prerequisites_policy
