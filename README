@@ -136,7 +136,7 @@ DESCRIPTION
 
       being executed within the distribution file's working directory.
 
-    get, readme, ,perldoc, look module or distribution
+    get, readme, perldoc, look module or distribution
       "get" downloads a distribution file without further action. "readme"
       displays the README file of the associated distribution. "Look" gets
       and untars (if not yet done) the distribution file, changes to the
@@ -1001,7 +1001,7 @@ FAQ
         correct order. It resolves perfectly well IFF all modules declare
         the prerequisites correctly with the PREREQ_PM attribute to
         MakeMaker. For bundles which fail and you need to install often, it
-        is recommended sort the Bundle definition file manually. It is
+        is recommended to sort the Bundle definition file manually. It is
         planned to improve the metadata situation for dependencies on CPAN
         in general, but this will still take some time.
 
@@ -1030,6 +1030,34 @@ FAQ
 
         Extended support for converters will be made available as soon as
         perl becomes stable with regard to charset issues.
+
+    11) When an install fails for some reason and then I correct the error
+        condition and retry, CPAN.pm refuses to install the module, saying
+        "Already tried without success".
+
+        Use the force pragma like so
+
+          force install Foo::Bar
+
+        This does a bit more than really needed because it untars the
+        distribution again and runs make and test and only then install.
+
+        Or you can use
+
+          look Foo::Bar
+
+        and then 'make install' directly in the subshell.
+
+        Or you leave the CPAN shell and start it again.
+
+        For the really curious, by accessing internals directly, you *could*
+
+          ! delete  CPAN::Shell->expand("Distribution", \
+            CPAN::Shell->expand("Module","Foo::Bar") \
+            ->{RO}{CPAN_FILE})->{install}
+
+        but this is neither guaranteed to work in the future nor is it a
+        decent command.
 
 BUGS
     We should give coverage for all of the CPAN and not just the PAUSE part,
