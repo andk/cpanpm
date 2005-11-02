@@ -16,7 +16,7 @@ our $VERSION = "0.001";
 
 sub dist {
   my($self) = @_;
-  my $messages = $self->run( "$self->{make} what-is-the-release-name 2>&1" );
+  my $messages = $self->run( "$self->{make} what-is-the-release-name" );
   $messages =~ s/^\s+//;
   $messages =~ s/\s+\z//;
   warn "messages[$messages]";
