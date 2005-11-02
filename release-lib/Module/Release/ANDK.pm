@@ -12,7 +12,6 @@ our $VERSION = "0.001";
     *cvs_tag =
     *make_cvs_tag =
     *clean =
-    *dist =
     sub { return };
 
 1;

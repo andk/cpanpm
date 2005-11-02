@@ -106,6 +106,9 @@ README: lib/CPAN.pm Makefile
 chlog ::
 	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
 
+release ::
+	perl -Irelease-lib -Sd release
+
 }
 }
 
