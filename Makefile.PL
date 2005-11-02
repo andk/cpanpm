@@ -109,6 +109,9 @@ chlog ::
 release ::
 	perl -Irelease-lib -Sd release
 
+what-is-the-release-name :
+	$(NOECHO) $(ECHO) $(DISTVNAME).tar$(SUFFIX)
+
 }
 }
 
