@@ -1,3 +1,43 @@
+2005-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: why did the release only contain a ChangeLog up to release
+	206 when we were at 212? Ah, I see, the disttest target does not
+	make a to-be-released file, must be done by make dist. So the
+	whole release was @206. No harm done because between 206 and 212 I
+	only worked on the release target.
+	
+	* Bug: as a non-root user and first-time caller (no ~/.cpan/
+	directory) I said "not ready for interactive configuration" and
+	then said 'o conf init'. I got no questions asked but into a fast
+	endless loop like so:
+
+(1) Africa
+(2) Asia
+(3) Central America
+(4) Europe
+(5) North America
+(6) Oceania
+(7) South America
+Select your continent (or several nearby continents) []
+
+Sorry! since you don't have any existing picks, you must make a
+geographic selection.
+
+(1) Africa
+(2) Asia
+(3) Central America
+(4) Europe
+(5) North America
+(6) Oceania
+(7) South America
+Select your continent (or several nearby continents) []
+
+Sorry! since you don't have any existing picks, you must make a
+geographic selection.
+
+
+	until I hot ^C. *Very* Clever tricks with prompt?
+
 2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* bz2 support (affects also CPAN::Checksums); can it be done with
