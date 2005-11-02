@@ -38,6 +38,10 @@ geographic selection.
 
 	until I hot ^C. *Very* Clever tricks with prompt?
 
+	Reproducable as described. Leaving the shell and entering it again
+	make it not reproducable. I must 'rm -rf ~/.cpan
+	lib/CPAN/Config.pm' to reproduce.
+
 2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* bz2 support (affects also CPAN::Checksums); can it be done with

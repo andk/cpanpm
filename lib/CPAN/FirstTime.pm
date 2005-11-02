@@ -71,6 +71,7 @@ dialog anytime later by typing 'o conf init' at the cpan prompt.)
 
     my $manual_conf;
 
+    local *_real_prompt = \&ExtUtils::MakeMaker::prompt;
     if ( $args{autoconfig} ) {
         $manual_conf = "no";
     } else {
@@ -90,7 +91,10 @@ dialog anytime later by typing 'o conf init' at the cpan prompt.)
 	  my($q,$a) = @_;
 	  my($ret) = defined $a ? $a : "";
 	  $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
-
+          eval { require Time::HiRes };
+          unless ($@) {
+              Time::HiRes::sleep(0.1);
+          }
 	  $ret;
 	};
       }
@@ -506,7 +510,7 @@ be echoed to the terminal!
     $CPAN::Config->{'inhibit_startup_message'} = 0;
     $CPAN::Config->{'getcwd'} = 'cwd';
 
-	$CPAN::Frontend->myprint("\n\n");
+    $CPAN::Frontend->myprint("\n\n");
     CPAN::Config->commit($configpm);
 }
 
@@ -773,9 +777,6 @@ sub prompt ($;$) {
 sub prompt_no_strip ($;$) {
     return _real_prompt(@_);
 }
-
-
-*_real_prompt = \*ExtUtils::MakeMaker::prompt;
 
 
 1;
