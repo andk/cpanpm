@@ -1,15 +1,18 @@
 use strict;
 use warnings;
 
-package Module::Relase::ANDK;
+package Module::Release::ANDK;
 use Module::Release;
 use base "Module::Release";
+our $VERSION = "0.001";
 
 *build_makefile =
     *test =
     *check_cvs =
     *cvs_tag =
     *make_cvs_tag =
-    sub { return }
+    *clean =
+    *dist =
+    sub { return };
 
 1;
