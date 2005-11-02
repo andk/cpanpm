@@ -19,7 +19,7 @@ TAGS
 ^memo
 ^patches
 ^pm_to_blib
-tutti-frutti
 ~$
 ^blibdirs
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup
+^release-lib
