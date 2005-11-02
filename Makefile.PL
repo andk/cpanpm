@@ -110,7 +110,7 @@ release ::
 	perl -Irelease-lib -S release
 
 what-is-the-release-name :
-	$(NOECHO) $(ECHO) $(DISTVNAME).tar$(SUFFIX)
+	$(NOECHO) $(echo) release-name-is: $(DISTVNAME).tar$(SUFFIX)
 
 }
 }
