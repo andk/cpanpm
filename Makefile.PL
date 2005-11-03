@@ -33,19 +33,35 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
   my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
   die "Could not determine sv_from or sv_dot"
       unless $sv_from > 0 && $sv_dot > 0;
-  if (!$version_set_manually && $sv_dot > $sv_from) {
-    warn "setting some property to make a checkin of this file possible";
-    0==system(svn => "propset",
-              "cpan:release",
-              "after_$sv_dot",
-              $version_from) or die;
-    warn "checking in to get the version up to the bleading edge";
-    0==system(svn => "ci",
-              "-m",
-              "Property set for release after_$sv_dot",
-              $version_from) or die;
-    # will have to die after Makefile is rewritten:
-    $version_diff = 1;
+  if ($version_set_manually) {
+    # we must control that the VERSION in CPAN.pm is the same as in the Makefile
+    require $version_from;
+    open my $fh, "make the-release-name|" or die;
+    my $have_version;
+    while (<$fh>) {
+      next unless /^version\s+(\S)/;
+      $have_version = $1;
+      last;
+    }
+    die "could not determine current version from Makefile" unless $have_version;
+    if ($CPAN::VERSION ne $have_version) {
+      $version_diff = 1;
+    }
+  } else {
+    if ($sv_dot > $sv_from) {
+      warn "setting some property to make a checkin of this file possible";
+      0==system(svn => "propset",
+                "cpan:release",
+                "after_$sv_dot",
+                $version_from) or die;
+      warn "checking in to get the version up to the bleading edge";
+      0==system(svn => "ci",
+                "-m",
+                "Property set for release after_$sv_dot",
+                $version_from) or die;
+      # will have to die after Makefile is rewritten:
+      $version_diff = 1;
+    }
   }
   exit unless $version_diff;
 }
@@ -105,6 +121,10 @@ README: lib/CPAN.pm Makefile
 
 chlog ::
 	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
+
+the-release-name :
+	$(NOECHO) $(echo) 'version ' $(VERSION)
+	$(NOECHO) $(echo) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
 release ::
 	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
