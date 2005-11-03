@@ -39,8 +39,8 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     open my $fh, "make the-release-name|" or die;
     my $have_version;
     while (<$fh>) {
-      next unless /^version\s+(\S+)/;
-      $have_version = $1;
+      next unless /^version\s+([\d\._]+)/;
+      $have_version = eval $1;
     }
     die "could not determine current version from Makefile" unless $have_version;
     no warnings "numeric";
