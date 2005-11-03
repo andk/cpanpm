@@ -41,11 +41,11 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     while (<$fh>) {
       next unless /^version\s+(\S+)/;
       $have_version = $1;
-      last;
     }
     die "could not determine current version from Makefile" unless $have_version;
     no warnings "numeric";
     if ($CPAN::VERSION != $have_version) {
+      warn "Not equal: CPAN::VERSION[$CPAN::VERSION] Makefile version[$have_version]";
       $version_diff = 1;
     }
   } else {
@@ -65,14 +65,6 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     }
   }
   exit unless $version_diff;
-}
-
-if ($version_diff){
-  die "
-==> I had to update some \$VERSIONs <==
-==> Your Makefile has been rebuilt. <==
-==> Please rerun the make command.  <==
-";
 }
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
@@ -110,6 +102,14 @@ WriteMakefile(
                          COMPRESS => 'gzip -9f'
                         },
 );
+
+if ($version_diff){
+  die "
+==> I had to update some \$VERSIONs <==
+==> Your Makefile has been rebuilt. <==
+==> Please rerun the make command.  <==
+";
+}
 
 sub MY::postamble {
   q{
