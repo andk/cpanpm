@@ -44,7 +44,8 @@ if ($ARGV[0] && $ARGV[0] eq "--setversion") {
       last;
     }
     die "could not determine current version from Makefile" unless $have_version;
-    if ($CPAN::VERSION ne $have_version) {
+    no warnings "numeric";
+    if ($CPAN::VERSION != $have_version) {
       $version_diff = 1;
     }
   } else {
