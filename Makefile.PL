@@ -123,8 +123,8 @@ chlog ::
 	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
 
 the-release-name :
-	$(NOECHO) $(echo) 'version ' $(VERSION)
-	$(NOECHO) $(echo) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
+	$(NOECHO) $(ECHO) 'version ' $(VERSION)
+	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
 release ::
 	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
