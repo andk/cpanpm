@@ -1,16 +1,53 @@
+2005-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* bz2 support (affects also CPAN::Checksums); can it be done with
+	Archive::Tar?
+
+	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
+	files. Currently it doesn't.
+
+	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
+	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
+
+	* Bug: installing scripts without modules? How does it work? How
+	should it work? getting the latest version ad-hoc?
+
+	* Bug: checksum mismatch on a file is being reported even when the
+	file has 0 bytes. 0 bytes should clearly constitute the right/the
+	duty to overwrite.
+
+	* Bug: what? we still do not support Build.PL? Didn't anybody send
+	me a patch? Try 'install CPAN::Metadata::RDF' and see how this can
+	be fixed as quickly as possible.
+
+	Try:        look CPAN::Metadata::RDF
+	then there: perl Build.PL;./Build;./Build install
+
+	This does nothing for the prerequisites. We could lookup META.yml
+	either then or beforehand.
+
+	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
+	have a different path. I installed a new CPAN.pm from CPAN and it
+	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
+	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
+	always just said "0 subroutines redefined".
+
+	* Need Releasenotes, the ChangeLog is a big mess with the numerous
+	checkins that all were just testing the release cycle itself and
+	not generating anything useful for the user. DONE
+
 2005-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: why did the release only contain a ChangeLog up to release
 	206 when we were at 212? Ah, I see, the disttest target does not
 	make a to-be-released file, must be done by make dist. So the
 	whole release was @206. No harm done because between 206 and 212 I
-	only worked on the release target.
-
-	I think I need a disttest of my own that takes the dist.tar.gz
-	already built and tests it, not the one that builds a dist from
-	the air again into the air and tests that. I want a real test of
-	that file that is going to be released. Then I can live with 'make
-	release' running both dist and disttest. I think.
+	only worked on the release target. I think I need a disttest of my
+	own that takes the dist.tar.gz already built and tests it, not the
+	one that builds a dist from the air again into the air and tests
+	that. I want a real test of that file that is going to be
+	released. Then I can live with 'make release' running both dist
+	and disttest. I think. DONE
 	
 	* Bug: as a non-root user and first-time caller (no ~/.cpan/
 	directory) I said "not ready for interactive configuration" and
@@ -49,38 +86,6 @@ geographic selection.
 	lib/CPAN/Config.pm' to reproduce. FIXED in rev 214
 
 2005-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* bz2 support (affects also CPAN::Checksums); can it be done with
-	Archive::Tar?
-
-	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
-	files. Currently it doesn't.
-
-	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
-	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
-
-	* Bug: installing scripts without modules? How does it work? How
-	should it work? getting the latest version ad-hoc?
-
-	* Bug: checksum mismatch on a file is being reported even when the
-	file has 0 bytes. 0 bytes should clearly constitute the right/the
-	duty to overwrite.
-
-	* Bug: what? we still do not support Build.PL? Didn't anybody send
-	me a patch? Try 'install CPAN::Metadata::RDF' and see how this can
-	be fixed as quickly as possible.
-
-	Try:        look CPAN::Metadata::RDF
-	then there: perl Build.PL;./Build;./Build install
-
-	This does nothing for the prerequisites. We could lookup META.yml
-	either then or beforehand.
-
-	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
-	have a different path. I installed a new CPAN.pm from CPAN and it
-	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
-	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
-	always just said "0 subroutines redefined".
 
 2005-10-21  Andreas J Koenig  <akoenig@cellular.de>
 

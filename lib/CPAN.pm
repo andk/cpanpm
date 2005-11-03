@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.76_59';
+$VERSION = '1.76_60';
 $VERSION = eval $VERSION;
 
 use CPAN::Version;

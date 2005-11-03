@@ -1,15 +1,17 @@
-inc/Test/Builder.pm
-inc/Test/More.pm
 ChangeLog
 ChangeLog.old
 Changes.old
 MANIFEST
 MANIFEST.SKIP
+META.yml                                 Module meta-data (added by MakeMaker)
 Makefile.PL
 PAUSE2003.pub
 README
+Releasenotes
 Todo
 cpan
+inc/Test/Builder.pm
+inc/Test/More.pm
 lib/Bundle/CPAN.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
@@ -23,4 +25,3 @@ t/mirroredby.t
 t/signature.t
 t/vcmp.t
 t/version.t
-META.yml                                 Module meta-data (added by MakeMaker)
