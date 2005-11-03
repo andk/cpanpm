@@ -118,3 +118,13 @@ sub MY::dist_ci {
 };
 }
 
+sub MY::dist_test {
+  return q{
+disttest : $(DISTVNAME).tar$(SUFFIX)
+	rm -rf $(DISTVNAME)
+	tar xvzf $(DISTVNAME).tar$(SUFFIX)
+	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
+	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
+	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
+}
+}
