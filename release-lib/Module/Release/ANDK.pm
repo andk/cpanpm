@@ -6,13 +6,18 @@ use Module::Release;
 use base "Module::Release";
 our $VERSION = "0.001";
 
-*build_makefile =
-    *test =
-    *check_cvs =
-    *cvs_tag =
-    *make_cvs_tag =
-    *clean =
-    *dist =
-    sub { return };
+no strict "refs";
+
+for my $method (qw(
+build_makefile
+check_cvs
+clean
+cvs_tag
+dist
+make_cvs_tag
+test
+)) {
+    *$method = sub { return };
+}
 
 1;
