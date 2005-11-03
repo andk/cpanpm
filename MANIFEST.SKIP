@@ -23,3 +23,4 @@ TAGS
 ^blibdirs
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup
 ^release-lib
+^SIGNATURE$
