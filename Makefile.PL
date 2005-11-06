@@ -142,7 +142,10 @@ release ::
 sign:
 	cpansign -s
 
-show-batch-signing-key:
+show-batch-signing-keys:
+	for f in PAUSE*.pub; do echo "++++$$f++++"; gpg --verbose --with-colons $$f; done
+
+show-imported:
 	gpg --list-sigs --with-colons 450F89EC
 
 # seems to need at least gnupg 1.4.2:
