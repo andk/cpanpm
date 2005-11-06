@@ -6,6 +6,7 @@ MANIFEST.SKIP
 META.yml                                 Module meta-data (added by MakeMaker)
 Makefile.PL
 PAUSE2003.pub
+PAUSE2005.pub
 README
 Releasenotes
 Todo

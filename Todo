@@ -1,4 +1,4 @@
-2005-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2005-11-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* bz2 support (affects also CPAN::Checksums); can it be done with
 	Archive::Tar?
@@ -31,6 +31,15 @@
 	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+2005-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* is version in script/cpan OK? It was 1.3 in perl @25981! Same
+	for Nox.pm FIXED
+
+	* PAUSE key 2005? DONE
+
+2005-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Need Releasenotes, the ChangeLog is a big mess with the numerous
 	checkins that all were just testing the release cycle itself and
