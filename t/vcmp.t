@@ -22,7 +22,7 @@ while (@$D) {
     print "# l[$l]r[$r]exp[$exp]res[$res]\n";
     print "not ";
   }
-  print "ok ", $N-@$D, " # l[$l]r[$r]res[$res]\n";
+  printf "ok %2d # %12s %12s %3d\n", $N-@$D, $l, $r, $res;
 }
 
 __END__
