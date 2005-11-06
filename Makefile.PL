@@ -139,6 +139,15 @@ the-release-name :
 release ::
 	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 
+sign:
+	cpansign -s
+
+show-batch-signing-key:
+	gpg --list-sigs --with-colons 450F89EC
+
+# seems to need at least gnupg 1.4.2:
+upload-batch-signing-key:
+	gpg --send-key 450F89EC
 }
 }
 
