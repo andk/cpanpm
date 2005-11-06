@@ -18,7 +18,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec;
 use vars qw($VERSION);
-$VERSION = sprintf "%.3f", substr(q$Rev$,4)/100;
+$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 =head1 NAME
 
