@@ -1,6 +1,6 @@
 # test if our own version numbers meet expectations
 
-my @m = qw(CPAN CPAN::FirstTime CPAN::Nox);
+my @m = qw(CPAN CPAN::Admin CPAN::FirstTime CPAN::Nox CPAN::Version);
 
 use Test::More;
 plan(tests => scalar @m);

@@ -5,7 +5,7 @@ use CPAN::Version;
 use vars qw($D $N);
 
 while (<DATA>) {
-  next if /^v/ && $]<5.006; # v-string tests are not for pre-5.6.0
+  next if tr/.// > 1 && $]<5.006; # multidot tests are not for pre-5.6.0
   last if /^__END__$/;
   chomp;
   s/\s*#.*//;
@@ -22,7 +22,7 @@ while (@$D) {
     print "# l[$l]r[$r]exp[$exp]res[$res]\n";
     print "not ";
   }
-  print "ok ", $N-@$D, "\n";
+  print "ok ", $N-@$D, " # l[$l]r[$r]res[$res]\n";
 }
 
 __END__

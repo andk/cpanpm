@@ -3,87 +3,96 @@ BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
 use File::Path;
-use File::Spec;
+eval { require File::Spec; };
+my $HAVE_FILE_SPEC = !$@;
 use strict;
+use vars qw($VERSION);
 
 my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
-our $VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
+$VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
 
 my $version_diff = 0; # we'll have to die if this becomes true
-my $version_from = File::Spec->catfile(qw(lib CPAN.pm));
-my $version_set_manually = 1; # not by SVN
+if ($HAVE_FILE_SPEC) {
+  my $version_from = File::Spec->catfile(qw(lib CPAN.pm));
+  my $version_set_manually = 1; # not by SVN
 
-if ($ARGV[0] && $ARGV[0] eq "--setversion") {
-  shift @ARGV;
-  open my $st, "svn st -u|" or die;
-  my $dirty = 0;
-  while (<$st>) {
-    next if /^\?/;
-    next if /^Head revision:/;
-    next if /^Status against revision:/;
-    print;
-    $dirty++;
-  }
-  close $st;
-  die "Not everything checked in?" if $dirty;
+  if ($ARGV[0] && $ARGV[0] eq "--setversion") {
+    shift @ARGV;
+    open my $st, "svn st -u|" or die;
+    my $dirty = 0;
+    while (<$st>) {
+      next if /^\?/;
+      next if /^Head revision:/;
+      next if /^Status against revision:/;
+      print;
+      $dirty++;
+    }
+    close $st;
+    die "Not everything checked in?" if $dirty;
 
-  # $re parses the upper boundary of the output of svnversion
-  my $re = qr/(?:\d+:)?(\d+)[SM]*$/;
-  my($sv_dot)  = `svnversion .`             =~ $re;
-  my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
-  die "Could not determine sv_from or sv_dot"
-      unless $sv_from > 0 && $sv_dot > 0;
-  if ($version_set_manually) {
-    # we must control that the VERSION in CPAN.pm is the same as in the Makefile
-    require $version_from;
-    open my $fh, "make the-release-name|" or die;
-    my $have_version;
-    while (<$fh>) {
-      next unless /^version\s+([\d\._]+)/;
-      $have_version = eval $1;
+    # $re parses the upper boundary of the output of svnversion
+    my $re;
+    eval q{ $qr = qr/(?:\d+:)?(\d+)[SM]*$/; };
+    die $@ if $@; # old perl
+    my($sv_dot)  = `svnversion .`             =~ $re;
+    my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
+    die "Could not determine sv_from or sv_dot"
+        unless $sv_from > 0 && $sv_dot > 0;
+    if ($version_set_manually) {
+      # we must control that the VERSION in CPAN.pm is the same as in the Makefile
+      require $version_from;
+      open my $fh, "make the-release-name|" or die;
+      my $have_version;
+      while (<$fh>) {
+        next unless /^version\s+([\d\._]+)/;
+        $have_version = eval $1;
+      }
+      die "could not determine current version from Makefile" unless $have_version;
+      eval q{
+      no warnings "numeric";
+      if ($CPAN::VERSION != $have_version) {
+        warn "Not equal: CPAN::VERSION[$CPAN::VERSION] Makefile version[$have_version]";
+        $version_diff = 1;
+      }
+};
+      die $@ if $@;
+    } else {
+      if ($sv_dot > $sv_from) {
+        warn "setting some property to make a checkin of this file possible";
+        0==system(svn => "propset",
+                  "cpan:release",
+                  "after_$sv_dot",
+                  $version_from) or die;
+        warn "checking in to get the version up to the bleading edge";
+        0==system(svn => "ci",
+                  "-m",
+                  "Property set for release after_$sv_dot",
+                  $version_from) or die;
+        # will have to die after Makefile is rewritten:
+        $version_diff = 1;
+      }
     }
-    die "could not determine current version from Makefile" unless $have_version;
-    no warnings "numeric";
-    if ($CPAN::VERSION != $have_version) {
-      warn "Not equal: CPAN::VERSION[$CPAN::VERSION] Makefile version[$have_version]";
-      $version_diff = 1;
-    }
-  } else {
-    if ($sv_dot > $sv_from) {
-      warn "setting some property to make a checkin of this file possible";
-      0==system(svn => "propset",
-                "cpan:release",
-                "after_$sv_dot",
-                $version_from) or die;
-      warn "checking in to get the version up to the bleading edge";
-      0==system(svn => "ci",
-                "-m",
-                "Property set for release after_$sv_dot",
-                $version_from) or die;
-      # will have to die after Makefile is rewritten:
-      $version_diff = 1;
-    }
+    exit unless $version_diff;
   }
-  exit unless $version_diff;
 }
 
 my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
-if ($] < 5.006001){
-  # 5.6.0 / 1.52 downloads 5.8.0 due to File::Spec
-  $prereq_pm = { 'Test::More' => 0 };
-}
 
-# import PAUSE public key to user's keychain
-require Config;
-for my $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
+if ($HAVE_FILE_SPEC) {
+  # import PAUSE public key to user's keychain
+  require Config;
+  my $dir;
+  for $dir (split /$Config::Config{path_sep}/, $ENV{PATH}) {
     my $abs = File::Spec->catfile($dir, 'gpg');
-    if (my $cmd = MM->maybe_command($abs)) {
-	print "Importing PAUSE public key into your GnuPG keychain... ";
-	system($cmd, '--quiet', '--import', <PAUSE*.pub>);
-	print "done!\n";
-	print "(You may wish to trust it locally with 'gpg --lsign-key 450F89EC')\n";
-	last;
+    my $cmd;
+    if ($cmd = MM->maybe_command($abs)) {
+      print "Importing PAUSE public key into your GnuPG keychain... ";
+      system($cmd, '--quiet', '--import', <PAUSE*.pub>);
+      print "done!\n";
+      print "(You may wish to trust it locally with 'gpg --lsign-key 450F89EC')\n";
+      last;
     }
+  }
 }
 
 WriteMakefile(
