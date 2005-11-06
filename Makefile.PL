@@ -32,7 +32,7 @@ if ($HAVE_FILE_SPEC) {
 
     # $re parses the upper boundary of the output of svnversion
     my $re;
-    eval q{ $qr = qr/(?:\d+:)?(\d+)[SM]*$/; };
+    eval q{ $re = qr/(?:\d+:)?(\d+)[SM]*$/; };
     die $@ if $@; # old perl
     my($sv_dot)  = `svnversion .`             =~ $re;
     my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
