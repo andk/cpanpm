@@ -178,11 +178,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Admin - A CPAN Shell for CPAN admins
+ CPAN::Admin - A CPAN Shell for CPAN admins
 
 =head1 SYNOPSIS
 
-perl -MCPAN::Admin -e shell
+ perl -MCPAN::Admin -e shell
 
 =head1 DESCRIPTION
 
