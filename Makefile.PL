@@ -17,8 +17,10 @@ if ($HAVE_FILE_SPEC) {
   my $version_set_manually = 1; # not by SVN
 
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
+    die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     shift @ARGV;
-    open my $st, "svn st -u|" or die;
+    my $st;
+    open $st, "svn st -u|" or die;
     my $dirty = 0;
     while (<$st>) {
       next if /^\?/;
