@@ -43,8 +43,8 @@ my $MAP = {
                                                  scripts/cpan
                                                 )]],
            "t/" => ["lib/CPAN/t/" => [qw(
-                                         t/*.t
-                                        )]],
+                                         t/[lmNv]*.t
+                                        )]], # not signature!
           };
 
 my @command;

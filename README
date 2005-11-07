@@ -1050,6 +1050,11 @@ FAQ
 
         Or you leave the CPAN shell and start it again.
 
+        Or, if you're not really sure and just want to run some make, test
+        or install command without this pesky error message, say "force get
+        Foo::Bar" first and then continue as always. "Force get" *forgets*
+        previous error conditions.
+
         For the really curious, by accessing internals directly, you *could*
 
           ! delete  CPAN::Shell->expand("Distribution", \
