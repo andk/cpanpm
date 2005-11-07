@@ -6,6 +6,7 @@ CPAN.ppd
 CPAN/MakeMaker
 ^Changes$
 ChangeLog.*
+^DIST
 MIRRORED.BY
 TAGS
 \bRCS/
@@ -14,6 +15,7 @@ TAGS
 ^Makefile(.old)?$
 ^\.
 ^blib/
+^cp-to-perl.pl
 ^lib/CPAN/Config\.pm
 ^mail
 ^memo
