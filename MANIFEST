@@ -10,7 +10,6 @@ PAUSE2005.pub
 README
 Releasenotes
 Todo
-cpan
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/Bundle/CPAN.pm
