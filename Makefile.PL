@@ -153,6 +153,9 @@ show-imported:
 # seems to need at least gnupg 1.4.2:
 upload-batch-signing-key:
 	gpg --send-key 450F89EC
+
+howto-release:
+	$(ECHO) make ci sign test dist release
 }
 }
 
