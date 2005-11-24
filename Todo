@@ -1,3 +1,35 @@
+2005-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* From: David Golden <david@hyperbolic.net>:
+
+	> Also, "lack of distname support" is overblowing the situation.
+	> Distnames are supported perfectly fine as long as you put it in the
+	> proper syntax with author's ID and version.
+	
+	I think the problem Jim encountered is that "proper syntax" is part of
+	the arcana of CPAN.  It's not obvious from the help:
+	
+	>  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
+	>  i        WORD or /REGEXP/  about anything of above
+	>  r        NONE              reinstall recommendations
+	>  ls       AUTHOR            about files in the author's directory
+	
+	Something that clarifies that AUTHOR/DIST-VERSION is a valid format
+	would help.  Or rather, some specific example of what that WORD can be:
+	
+	  where WORD is either a module, bundle or author name or a
+	  distribution name of the form AUTHOR/DISTRIBUTION-VERSION
+	
+	It's vaguely alluded to in the CPAN perldoc, but only in the section
+	describing the four CPAN::* classes.
+	
+	A doc patch would be a quick fix for this.
+
+2005-11-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: 4th colmn in the 'r' command has not the canonical name
+	but the unneeded D/DC/ stuff.
+
 2005-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* bz2 support (affects also CPAN::Checksums); can it be done with
@@ -202,4 +234,6 @@ geographic selection.
 	Local Variables:
 	mode: change-log
 	change-log-default-name: "Todo"
+	tab-width: 2
+	left-margin: 2
 	End:
