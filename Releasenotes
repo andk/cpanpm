@@ -1,7 +1,7 @@
 2005-11-24  Andreas Koenig  <andk@cpan.org>
 
 	* On 2005-11-17 the indexer on PAUSE got a first stab at improved
-	vesion.pm support and today it got another improvement. Multidot
+	version.pm support and today it got another improvement: multidot
 	versions should now be quite well understood by the indexer and
 	numified with version.pm. (Thanks to John Peacck for version.pm
 	and to Graham Barr for donating tricks to combine version.pm and
