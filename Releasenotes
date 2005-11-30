@@ -1,11 +1,8 @@
-2005-11-24  Andreas Koenig  <andk@cpan.org>
+2005-11-26  Andreas Koenig  <andk@cpan.org>
 
-	* On 2005-11-17 the indexer on PAUSE got a first stab at improved
-	version.pm support and today it got another improvement: multidot
-	versions should now be quite well understood by the indexer and
-	numified with version.pm. (Thanks to John Peacck for version.pm
-	and to Graham Barr for donating tricks to combine version.pm and
-	Safe.pm)
+	* During the last weeks the indexer on PAUSE got improved
+	version.pm support and spits out numified versions. (Thanks to
+	John Peacock and to Graham Barr for their help)
 
 2005-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

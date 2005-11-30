@@ -1,3 +1,23 @@
+2005-11-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: when the Metadata file has been read with the old version and
+	CPAN reads the new index it does not update the version. Witness
+	Crypt::Khazad. Once the Metadata are removed completely and built up
+	correctly, everything is OK.
+
+	Can be tested by running
+
+	!print $CPAN::META->{readonly}{"CPAN::Module"}{"Crypt::Khazad"}{"CPAN_VERSION"} = "1.0"
+	reload index
+
+	This may have nothing to do with multidot versions, just some
+	pessimization in the code dealing with replacement of META when
+	re-reading index files.
+
+2005-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: sha256
+
 2005-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* From: David Golden <david@hyperbolic.net>:
