@@ -30,6 +30,7 @@ version strings visible and comparable.
 
 package CPAN::Version;
 
+use strict;
 use vars qw($VERSION);
 $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 

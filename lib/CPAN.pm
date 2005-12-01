@@ -57,7 +57,7 @@ $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
 package CPAN;
-use strict qw(vars);
+use strict;
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $End $Suppress_readline $Frontend
@@ -752,7 +752,7 @@ sub has_usable {
                        sub {require HTTP::Request},
                        sub {require URI::URL},
                       ],
-               Net::FTP => [
+               'Net::FTP' => [
                             sub {require Net::FTP},
                             sub {require Net::Config},
                            ]
@@ -803,7 +803,7 @@ sub has_inst {
 
 	$CPAN::Frontend->myprint("CPAN: $mod loaded ok\n");
 	if ($mod eq "CPAN::WAIT") {
-	    push @CPAN::Shell::ISA, CPAN::WAIT;
+	    push @CPAN::Shell::ISA, 'CPAN::WAIT';
 	}
 	return 1;
     } elsif ($mod eq "Net::FTP") {
@@ -3324,7 +3324,7 @@ sub rd_authindex {
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     local(*FH);
-    tie *FH, CPAN::Tarzip, $index_target;
+    tie *FH, 'CPAN::Tarzip', $index_target;
     local($/) = "\n";
     push @lines, split /\012/ while <FH>;
     foreach (@lines) {
@@ -3402,7 +3402,7 @@ happen.\a
                       $last_updated);
         $DATE_OF_02 = $last_updated;
 
-        if ($CPAN::META->has_inst(HTTP::Date)) {
+        if ($CPAN::META->has_inst('HTTP::Date')) {
             require HTTP::Date;
             my($age) = (time - HTTP::Date::str2time($last_updated))/3600/24;
             if ($age > 30) {
@@ -5566,7 +5566,7 @@ explicitly a file $s.
         $self->debug("type[$type] s[$s]") if $CPAN::DEBUG;
 	my $obj = $CPAN::META->instance($type,$s);
 	$obj->$meth();
-        if ($obj->isa(CPAN::Bundle)
+        if ($obj->isa('CPAN::Bundle')
             &&
             exists $obj->{install_failed}
             &&
