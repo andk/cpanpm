@@ -3475,9 +3475,13 @@ happen.\a
 
 	}
 
-	if ($id->cpan_file ne $dist){ # update only if file is
-                                      # different. CPAN prohibits same
-                                      # name with different version
+        # Although CPAN prohibits same name with different version the
+        # indexer may have changed the version for the same distro
+        # since the last time ("Force Reindexing" feature)
+	if ($id->cpan_file ne $dist
+            ||
+            $id->cpan_version ne $version
+           ){
 	    $userid = $id->userid || $self->userid($dist);
 	    $id->set(
 		     'CPAN_USERID' => $userid,
