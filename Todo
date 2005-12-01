@@ -12,7 +12,7 @@
 
 	This may have nothing to do with multidot versions, just some
 	pessimization in the code dealing with replacement of META when
-	re-reading index files.
+	re-reading index files. FIXED
 
 2005-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

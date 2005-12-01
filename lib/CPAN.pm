@@ -1435,23 +1435,24 @@ Display Information
  i        WORD or /REGEXP/  about any of the above
  r        NONE              report updatable modules
  ls       AUTHOR            about files in the author's directory
- recent   NONE              latest CPAN uploads
+    (with WORD being a module, bundle or author name or a distribution
+    name of the form AUTHOR/DISTRIBUTION)
 
 Download, Test, Make, Install...
- get                        download
- make                       make (implies get)
- test      MODULES,         make test (implies make)
- install   DISTS, BUNDLES   make install (implies test)
- clean                      make clean
- look                       open subshell in these dists' directories
- readme                     display these dists' README files
- perldoc                    display module's POD documentation
+ get      download                     clean    make clean
+ make     make (implies get)           look     open subshell in dist directory
+ test     make test (implies make)     readme   display these README files
+ install  make install (implies test)  perldoc  display POD documentation
+
+Pragmas
+ force COMMAND    unconditionally do command
+ notest COMMAND   skip testing
 
 Other
  h,?           display this menu       ! perl-code   eval a perl command
  o conf [opt]  set and query options   q             quit the cpan shell
  reload cpan   load CPAN.pm again      reload index  load newer indices
- autobundle    Snapshot                force cmd     unconditionally do cmd});
+ autobundle    Snapshot                recent        latest CPAN uploads});
     }
 }
 
