@@ -20,6 +20,8 @@ if ($HAVE_FILE_SPEC) {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     die "Your MakeMaker is a bit dated[$]].\nDo not make a release with it\n"
         if $ExtUtils::MakeMaker::VERSION < 5.30;
+    die "Your MakeMaker doesn't do the sign woodoo" unless
+        MM->can("signature_target");
     shift @ARGV;
     my $st;
     open $st, "svn st -u|" or die;
