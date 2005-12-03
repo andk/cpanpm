@@ -1,76 +1,43 @@
-2005-11-26  Andreas Koenig  <andk@cpan.org>
+2005-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* During the last weeks the indexer on PAUSE got improved
-	version.pm support and spits out numified versions. (Thanks to
-	John Peacock and to Graham Barr for their help)
+	* this is release 1.80
 
-2005-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* support for Module::Signature courtesy Autrijus Tang
 
-	* 1.76_65 is a release candidate for 1.80
+	* separated out new module CPAN::Version that has muchly improved
+	support for multidot version notation that should make the
+	deployment of version.pm easy for everybody. During the last weeks
+	the indexer on PAUSE also got improved version.pm support and
+	spits out numified versions. This release is optimized for the new
+	version handling, regardless if used with or without version.pm
+	(Thanks to John Peacock and to Graham Barr for their help)
 
-	- Support for Module::Signature courtesy Autrijus Tang
+	* new pragma 'notest' courtesy Slaven Rezic
 
-	- separated out new module CPAN::Version that has muchly improved
-	  support for multidot version notation that should make the
-	  deployment of version.pm easy for everybody
+	* support for sudo in the config variable
+	'make_install_make_command' courtesy Michael Richardson
 
-	- new pragma 'notest' courtesy Slaven Rezic
+	* new commands 'recent' and 'perldoc' courtesy Toni Prug
 
-	- support for sudo in the config variable
-	  'make_install_make_command' courtesy Michael Richardson
+	* improved wget support for Windows users courtesy Daniel
 
-	- new commands 'recent' and 'perldoc' courtesy Toni Prug
+	* cleanup internal use of CPAN::Frontend courtesy David Storrs
 
-	- new feature 'show_upload_date': if set to true, all 'm' and 'd'
-	  commands will display the upload date
+	* fixes to distro bugs by Adriano Ferreira
 
-	- fix bug in FirstTime causing endless loop under some conditions
+	* runs under 5.004_05 courtesy Sébastien Aperghis-Tramoni
 
-	- improved some error messages
+	* new feature 'show_upload_date': if set to true, all 'm' and 'd'
+	commands will display the upload date
 
-	- better completion for config variables and a new warning if an
-	  unregistered config variable is being set
+	* fix bug in FirstTime causing endless loop under some conditions
 
-	- improved wget support for Windows users (courtesy Daniel)
+	* better completion for config variables and a new warning if an
+	unregistered config variable is being set
 
-	- cleanup internal use of CPAN::Frontend (courtesy David Storrs)
+	* improved some error messages
 
-	- fixes to distro bugs by Adriano Ferreira
-
-	- runs under 5.004_05 (courtesy Sébastien Aperghis-Tramoni)
-
-2005-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* 1.76_60 is a release candidate for 1.80
-
-	- Support for Module::Signature courtesy Autrijus Tang
-
-	- separated out new module CPAN::Version that has muchly improved
-	  support for multidot version notation that should make the
-	  deployment of version.pm easy for everybody
-
-	- new pragma 'notest' courtesy Slaven Rezic
-
-	- support for sudo in the config variable
-	  'make_install_make_command' courtesy Michael Richardson
-
-	- new commands 'recent' and 'perldoc' courtesy Toni Prug
-
-	- new feature 'show_upload_date': if set to true, all 'm' and 'd'
-	  commands will display the upload date
-
-	- fix bug in FirstTime causing endless loop under some conditions
-
-	- improved some error messages
-
-	- better completion for config variables and a new warning if an
-	  unregistered config variable is being set
-
-	- improved wget support for Windows users (courtesy Daniel)
-
-	- cleanup internal use of CPAN::Frontend (courtesy David Storrs)
-
-	- fixes to distro bugs by Adriano Ferreira
+	* improved help menu (Thanks to David Golden for the suggestion)
 
 
 	Local Variables:

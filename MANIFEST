@@ -22,6 +22,7 @@ scripts/cpan
 t/Nox.t
 t/loadme.t
 t/mirroredby.t
+t/pod.t
 t/signature.t
 t/vcmp.t
 t/version.t
