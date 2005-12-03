@@ -18,6 +18,8 @@ if ($HAVE_FILE_SPEC) {
 
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
+    die "Your MakeMaker is a bit dated[$]].\nDo not make a release with it\n"
+        if $ExtUtils::MakeMaker::VERSION < 5.30;
     shift @ARGV;
     my $st;
     open $st, "svn st -u|" or die;
@@ -96,7 +98,8 @@ if ($HAVE_FILE_SPEC) {
     }
   }
 }
-
+my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
+# warn "sign[@sign]";
 WriteMakefile(
               'INSTALLDIRS' => 'perl',  # as it is coming with perl
               'NAME'	=> 'CPAN',
@@ -104,7 +107,7 @@ WriteMakefile(
               'EXE_FILES' => [qw(scripts/cpan)],
               'clean' => { FILES => "lib/CPAN/Config.pm" },
               'PREREQ_PM' => $prereq_pm,
-              (MM->can("signature_target") ? (SIGN => 1) : ()),
+              @sign,
               ($] >= 5.005 ?
                (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
