@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80';
+$VERSION = '1.80_50';
 $VERSION = eval $VERSION;
 
 use CPAN::Version;
@@ -1471,33 +1471,43 @@ sub a {
 #-> sub CPAN::Shell::ls ;
 sub ls {
     my($self,@arg) = @_;
-    my @accept;
-    if ($arg[0] eq "*") {
-        @arg = map { $_->id } $self->expand('Author','/./');
+    my(@accept,@preexpand);
+    for my $arg (@arg) {
+        if ($arg =~ /[\*\?]/) {
+            if ($CPAN::META->has_inst("Text::Glob")) {
+                if (my($au,$pathglob) = $arg =~ m|(.*?)/(.*)|) {
+                    my $rau = Text::Glob::glob_to_regex(uc $au);
+                    push @preexpand, map { $_->id . "/" . $pathglob }
+                        $self->expand('Author',"/$rau/");
+                } else {
+                    my $rau = Text::Glob::glob_to_regex(uc $arg);
+                    push @preexpand, map { $_->id } $self->expand('Author',"/$rau/");
+                }
+            } else {
+                $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
+            }
+        } else {
+            push @preexpand, uc $arg;
+        }
     }
-    for (@arg) {
-        unless (/^[A-Z0-9\-]+$/i) {
+    for (@preexpand) {
+        unless (/^[A-Z0-9\-]+(\/|$)/i) {
             $CPAN::Frontend->mywarn("ls command rejects argument $_: not an author\n");
             next;
         }
-        push @accept, uc $_;
+        push @accept, $_;
     }
-    my $silent = @accept>1;
     my $last_alpha = "";
     for my $a (@accept){
-        my $author = $self->expand('Author',$a) or die "No author found for $a";
-        $author->ls($silent); # silent if more than one author
-        if ($silent) {
-            my $alphadot = substr $author->id, 0, 1;
-            my $ad;
-            if ($alphadot eq $last_alpha) {
-                $ad = ".";
-            } else {
-                $ad = $alphadot;
-                $last_alpha = $alphadot;
-            }
-            $CPAN::Frontend->myprint($ad);
+        my($author,$pathglob);
+        if ($a =~ m|(.*?)/(.*)|) {
+            my $a2 = $1;
+            $pathglob = $2;
+            $author = $self->expand('Author',"/$a2/") or die "No author found for $a2";
+        } else {
+            $author = $self->expand('Author',$a) or die "No author found for $a";
         }
+        $author->ls($pathglob); # silent if more than one author
     }
 }
 
@@ -3796,7 +3806,7 @@ sub email    { shift->{RO}{EMAIL}; }
 #-> sub CPAN::Author::ls ;
 sub ls {
     my $self = shift;
-    my $silent = shift || 0;
+    my $glob = shift || "";
     my $id = $self->id;
 
     # adapted from CPAN::Distribution::verifyMD5 ;
@@ -3807,18 +3817,22 @@ sub ls {
     my(@dl);
     @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[1]} @dl) {
-        $CPAN::Frontend->myprint("Directory $csf[1]/ does not exist\n") unless $silent ;
+        $CPAN::Frontend->myprint("Directory $csf[1]/ does not exist\n");
         return;
     }
     @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[2]} @dl) {
-        $CPAN::Frontend->myprint("Directory $id/ does not exist\n") unless $silent;
+        $CPAN::Frontend->myprint("Directory $id/ does not exist\n");
         return;
     }
     @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1, 1);
+    if ($glob) {
+        my $rglob = Text::Glob::glob_to_regex($glob);
+        @dl = grep { $_->[2] =~ /$rglob/ } @dl;
+    }
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
-    } sort { $a->[2] cmp $b->[2] } @dl) unless $silent;
+    } sort { $a->[2] cmp $b->[2] } @dl);
 }
 
 # returns an array of arrays, the latter contain (size,mtime,filename)

@@ -1,3 +1,14 @@
+2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Globbing on the ls command: completion? In any case needs more testing.
+
+	* Feature request: if I type 'm CGI:Session' (note the missng second
+	colon) I get
+
+	No objects of type Module found for argument CGI:Session
+
+	I believe, CPAN could supply the missing colon in this case.
+
 2005-11-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: when the Metadata file has been read with the old version and
@@ -85,7 +96,7 @@
 	always just said "0 subroutines redefined".
 
 	* globbing on the ls command: only ls 'GBARR/Scalar*', or even 'ls
-	*/makepatch'?
+	*/makepatch'? 2005-12-12: DONE 
 
 	* script to copy relevant files to the perl tree. DONE
 
