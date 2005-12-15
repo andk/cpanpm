@@ -1507,9 +1507,13 @@ sub ls {
         if ($a =~ m|(.*?)/(.*)|) {
             my $a2 = $1;
             $pathglob = $2;
-            $author = $self->expand('Author',$a2) or die "No author found for $a2";
+            $author = $self->expand_by_method('CPAN::Author',
+                                              ['id'],
+                                              $a2) or die "No author found for $a2";
         } else {
-            $author = $self->expand('Author',$a) or die "No author found for $a";
+            $author = $self->expand_by_method('CPAN::Author',
+                                              ['id'],
+                                              $a) or die "No author found for $a";
         }
         if ($silent) {
             my $alpha = substr $author->id, 0, 1;
@@ -2050,6 +2054,8 @@ that may go away anytime.\n"
 		$xarg =~ s/^(Bundle::)?(.*)/Bundle::$2/;
 	    } elsif ($class eq "CPAN::Distribution") {
                 $xarg = CPAN::Distribution->normalize($arg);
+            } else {
+                $xarg =~ s/:+/::/g;
             }
 	    if ($CPAN::META->exists($class,$xarg)) {
 		$obj = $CPAN::META->instance($class,$xarg);
