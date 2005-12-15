@@ -4,9 +4,6 @@
 
 	* Todo: sha256
 
-	* Todo: 4th colmn in the 'r' command has not the canonical name
-	but the unneeded D/DC/ stuff. DONE in rev 261.
-
 	* bz2 support (affects also CPAN::Checksums); can it be done with
 	Archive::Tar?
 
@@ -38,6 +35,9 @@
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+	* Todo: 4th colmn in the 'r' command has not the canonical name
+	but the unneeded D/DC/ stuff. DONE in rev 262.
 
 2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

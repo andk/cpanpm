@@ -2,6 +2,7 @@
 package CPAN;
 $VERSION = '1.80_50';
 $VERSION = eval $VERSION;
+use strict;
 
 use CPAN::Version;
 use Carp ();
@@ -26,7 +27,7 @@ no lib "."; # we need to run chdir all over and we would get at wrong
 
 require Mac::BuildTools if $^O eq 'MacOS';
 
-END { $End++; &cleanup; }
+END { $CPAN::End++; &cleanup; }
 
 %CPAN::DEBUG = qw[
 		  CPAN              1
@@ -60,7 +61,7 @@ package CPAN;
 use strict;
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
-            $Signal $End $Suppress_readline $Frontend
+            $Signal $Suppress_readline $Frontend
             $Defaultsite $Have_warned $Defaultdocs $Defaultrecent
             $Be_Silent );
 
@@ -182,6 +183,7 @@ ReadLine support %s
 	    s/^\!//;
 	    my($eval) = $_;
 	    package CPAN::Eval;
+            use strict;
 	    use vars qw($import_done);
 	    CPAN->import(':DEFAULT') unless $import_done++;
 	    CPAN->debug("eval[$eval]") if $CPAN::DEBUG;
@@ -234,10 +236,12 @@ ReadLine support %s
 }
 
 package CPAN::CacheMgr;
+use strict;
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
 use File::Find;
 
 package CPAN::Config;
+use strict;
 use vars qw(%can %keys $dot_cpan);
 
 %can = (
@@ -266,14 +270,17 @@ use vars qw(%can %keys $dot_cpan);
 );
 
 package CPAN::FTP;
+use strict;
 use vars qw($Ua $Thesite $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 package CPAN::LWP::UserAgent;
+use strict;
 use vars qw(@ISA $USER $PASSWD $SETUPDONE);
 # we delay requiring LWP::UserAgent and setting up inheritance until we need it
 
 package CPAN::Complete;
+use strict;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
 @CPAN::Complete::COMMANDS = sort qw(
 		       ! a b d h i m o q r u autobundle clean dump
@@ -282,6 +289,7 @@ package CPAN::Complete;
 ) unless @CPAN::Complete::COMMANDS;
 
 package CPAN::Index;
+use strict;
 use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03);
 @CPAN::Index::ISA = qw(CPAN::Debug);
 $LAST_TIME ||= 0;
@@ -290,21 +298,27 @@ $DATE_OF_03 ||= 0;
 sub PROTOCOL { 2.0 }
 
 package CPAN::InfoObj;
+use strict;
 @CPAN::InfoObj::ISA = qw(CPAN::Debug);
 
 package CPAN::Author;
+use strict;
 @CPAN::Author::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Distribution;
+use strict;
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Bundle;
+use strict;
 @CPAN::Bundle::ISA = qw(CPAN::Module);
 
 package CPAN::Module;
+use strict;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
 package CPAN::Exception::RecursiveDependency;
+use strict;
 use overload '""' => "as_string";
 
 sub new {
@@ -327,6 +341,7 @@ sub as_string {
 }
 
 package CPAN::Shell;
+use strict;
 use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY $PRINT_ORNAMENTING);
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
@@ -357,11 +372,13 @@ For this you just need to type
 }
 
 package CPAN::Tarzip;
+use strict;
 use vars qw($AUTOLOAD @ISA $BUGHUNTING);
 @CPAN::Tarzip::ISA = qw(CPAN::Debug);
 $BUGHUNTING = 0; # released code must have turned off
 
 package CPAN::Queue;
+use strict;
 
 # One use of the queue is to determine if we should or shouldn't
 # announce the availability of a new CPAN module
@@ -492,6 +509,7 @@ sub nullify_queue {
 
 
 package CPAN;
+use strict;
 
 $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 
@@ -814,10 +832,10 @@ sub has_inst {
 
 }) unless $Have_warned->{"Net::FTP"}++;
 	sleep 3;
-    } elsif ($mod eq "Digest::MD5"){
+    } elsif ($mod eq "Digest::SHA"){
 	$CPAN::Frontend->myprint(qq{
-  CPAN: MD5 security checks disabled because Digest::MD5 not installed.
-  Please consider installing the Digest::MD5 module.
+  CPAN: checksum security checks disabled because Digest::SHA not installed.
+  Please consider installing the Digest::SHA module.
 
 });
 	sleep 2;
@@ -860,7 +878,7 @@ sub new {
 
 #-> sub CPAN::cleanup ;
 sub cleanup {
-  # warn "cleanup called with arg[@_] End[$End] Signal[$Signal]";
+  # warn "cleanup called with arg[@_] End[$CPAN::End] Signal[$Signal]";
   local $SIG{__DIE__} = '';
   my($message) = @_;
   my $i = 0;
@@ -870,7 +888,7 @@ sub cleanup {
       $ineval = 1, last if
 	  $subroutine eq '(eval)';
   }
-  return if $ineval && !$End;
+  return if $ineval && !$CPAN::End;
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
@@ -930,6 +948,7 @@ sub set_perl5lib {
 }
 
 package CPAN::CacheMgr;
+use strict;
 
 #-> sub CPAN::CacheMgr::as_string ;
 sub as_string {
@@ -1074,6 +1093,7 @@ sub scan_cache {
 }
 
 package CPAN::Debug;
+use strict;
 
 #-> sub CPAN::Debug::debug ;
 sub debug {
@@ -1100,6 +1120,7 @@ sub debug {
 }
 
 package CPAN::Config;
+use strict;
 
 #-> sub CPAN::Config::edit ;
 # returns true on successful action
@@ -1421,6 +1442,7 @@ sub cpl {
 }
 
 package CPAN::Shell;
+use strict;
 
 #-> sub CPAN::Shell::h ;
 sub h {
@@ -2339,6 +2361,7 @@ sub recent {
 }
 
 package CPAN::LWP::UserAgent;
+use strict;
 
 sub config {
     return if $SETUPDONE;
@@ -2423,6 +2446,7 @@ sub mirror {
 }
 
 package CPAN::FTP;
+use strict;
 
 #-> sub CPAN::FTP::ftp_get ;
 sub ftp_get {
@@ -3072,6 +3096,7 @@ sub ls {
 }
 
 package CPAN::FTP::netrc;
+use strict;
 
 sub new {
     my($class) = @_;
@@ -3129,6 +3154,7 @@ sub contains {
 }
 
 package CPAN::Complete;
+use strict;
 
 sub gnu_cpl {
     my($text, $line, $start, $end) = @_;
@@ -3249,6 +3275,7 @@ sub cpl_option {
 }
 
 package CPAN::Index;
+use strict;
 
 #-> sub CPAN::Index::force_reload ;
 sub force_reload {
@@ -3688,6 +3715,7 @@ sub read_metadata_cache {
 }
 
 package CPAN::InfoObj;
+use strict;
 
 # Accessors
 sub cpan_userid {
@@ -3802,6 +3830,7 @@ sub dump {
 }
 
 package CPAN::Author;
+use strict;
 
 #-> sub CPAN::Author::id
 sub id {
@@ -3841,7 +3870,7 @@ sub ls {
     my $silent = shift || 0;
     my $id = $self->id;
 
-    # adapted from CPAN::Distribution::verifyMD5 ;
+    # adapted from CPAN::Distribution::verifyCHECKSUM ;
     my(@csf); # chksumfile
     @csf = $self->id =~ /(.)(.)(.*)/;
     $csf[1] = join "", @csf[0,1];
@@ -3922,7 +3951,7 @@ sub dir_listing {
         # $CPAN::Config->{show_upload_date} to false?
     }
 
-    # adapted from CPAN::Distribution::MD5_check_file ;
+    # adapted from CPAN::Distribution::CHECKSUM_check_file ;
     $fh = FileHandle->new;
     my($cksum);
     if (open $fh, $lc_file){
@@ -3967,6 +3996,7 @@ sub dir_listing {
 }
 
 package CPAN::Distribution;
+use strict;
 
 # Accessors
 sub cpan_comment { shift->{RO}{CPAN_COMMENT} }
@@ -4137,11 +4167,11 @@ sub get {
     #
     # Check integrity
     #
-    if ($CPAN::META->has_inst("Digest::MD5")) {
-	$self->debug("Digest::MD5 is installed, verifying");
-	$self->verifyMD5;
+    if ($CPAN::META->has_inst("Digest::SHA")) {
+	$self->debug("Digest::SHA is installed, verifying");
+	$self->verifyCHECKSUM;
     } else {
-	$self->debug("Digest::MD5 is NOT installed");
+	$self->debug("Digest::SHA is NOT installed");
     }
     return if $CPAN::Signal;
 
@@ -4495,13 +4525,13 @@ with pager "$CPAN::Config->{'pager'}"
     $fh_pager->close;
 }
 
-#-> sub CPAN::Distribution::verifyMD5 ;
-sub verifyMD5 {
+#-> sub CPAN::Distribution::verifyCHECKSUM ;
+sub verifyCHECKSUM {
     my($self) = @_;
   EXCUSE: {
 	my @e;
-	$self->{MD5_STATUS} ||= "";
-	$self->{MD5_STATUS} eq "OK" and push @e, "MD5 Checksum was ok";
+	$self->{CHECKSUM_STATUS} ||= "";
+	$self->{CHECKSUM_STATUS} eq "OK" and push @e, "Checksum was ok";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     my($lc_want,$lc_file,@local,$basename);
@@ -4515,9 +4545,9 @@ sub verifyMD5 {
     if (
 	-s $lc_want
 	&&
-	$self->MD5_check_file($lc_want)
+	$self->CHECKSUM_check_file($lc_want)
        ) {
-	return $self->{MD5_STATUS} = "OK";
+	return $self->{CHECKSUM_STATUS} = "OK";
     }
     $lc_file = CPAN::FTP->localize("authors/id/@local",
 				   $lc_want,1);
@@ -4533,7 +4563,7 @@ sub verifyMD5 {
 	    return;
 	}
     }
-    $self->MD5_check_file($lc_file);
+    $self->CHECKSUM_check_file($lc_file);
 }
 
 sub SIG_check_file {
@@ -4562,8 +4592,8 @@ retry.};
     }
 }
 
-#-> sub CPAN::Distribution::MD5_check_file ;
-sub MD5_check_file {
+#-> sub CPAN::Distribution::CHECKSUM_check_file ;
+sub CHECKSUM_check_file {
     my($self,$chk_file) = @_;
     my($cksum,$file,$basename);
 
@@ -4592,32 +4622,30 @@ sub MD5_check_file {
 	Carp::carp "Could not open $chk_file for reading";
     }
 
-    if (exists $cksum->{$basename}{md5}) {
+    if (exists $cksum->{$basename}{sha256}) {
 	$self->debug("Found checksum for $basename:" .
-		     "$cksum->{$basename}{md5}\n") if $CPAN::DEBUG;
+		     "$cksum->{$basename}{sha256}\n") if $CPAN::DEBUG;
 
 	open($fh, $file);
 	binmode $fh;
-	my $eq = $self->eq_MD5($fh,$cksum->{$basename}{'md5'});
+	my $eq = $self->eq_CHECKSUM($fh,$cksum->{$basename}{sha256});
 	$fh->close;
 	$fh = CPAN::Tarzip->TIEHANDLE($file);
 
 	unless ($eq) {
-	  # had to inline it, when I tied it, the tiedness got lost on
-	  # the call to eq_MD5. (Jan 1998)
-	  my $md5 = Digest::MD5->new;
+	  my $dg = Digest::SHA->new(256);
 	  my($data,$ref);
 	  $ref = \$data;
 	  while ($fh->READ($ref, 4096) > 0){
-	    $md5->add($data);
+	    $dg->add($data);
 	  }
-	  my $hexdigest = $md5->hexdigest;
-	  $eq += $hexdigest eq $cksum->{$basename}{'md5-ungz'};
+	  my $hexdigest = $dg->hexdigest;
+	  $eq += $hexdigest eq $cksum->{$basename}{'sha256-ungz'};
 	}
 
 	if ($eq) {
 	  $CPAN::Frontend->myprint("Checksum for $file ok\n");
-	  return $self->{MD5_STATUS} = "OK";
+	  return $self->{CHECKSUM_STATUS} = "OK";
 	} else {
 	    $CPAN::Frontend->myprint(qq{\nChecksum mismatch for }.
 				     qq{distribution file. }.
@@ -4628,7 +4656,7 @@ sub MD5_check_file {
 							   $self->cpan_userid
 							  )->as_string);
 
-	    my $wrap = qq{I\'d recommend removing $file. Its MD5
+	    my $wrap = qq{I\'d recommend removing $file. Its
 checksum is incorrect. Maybe you have configured your 'urllist' with
 a bad URL. Please check this array with 'o conf urllist', and
 retry.};
@@ -4644,10 +4672,10 @@ retry.};
 	}
 	# close $fh if fileno($fh);
     } else {
-	$self->{MD5_STATUS} ||= "";
-	if ($self->{MD5_STATUS} eq "NIL") {
+	$self->{CHECKSUM_STATUS} ||= "";
+	if ($self->{CHECKSUM_STATUS} eq "NIL") {
 	    $CPAN::Frontend->mywarn(qq{
-Warning: No md5 checksum for $basename in $chk_file.
+Warning: No checksum for $basename in $chk_file.
 
 The cause for this may be that the file is very new and the checksum
 has not yet been calculated, but it may also be that something is
@@ -4656,23 +4684,22 @@ going awry right now.
             my $answer = ExtUtils::MakeMaker::prompt("Proceed?", "yes");
             $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
 	}
-	$self->{MD5_STATUS} = "NIL";
+	$self->{CHECKSUM_STATUS} = "NIL";
 	return;
     }
 }
 
-#-> sub CPAN::Distribution::eq_MD5 ;
-sub eq_MD5 {
-    my($self,$fh,$expectMD5) = @_;
-    my $md5 = Digest::MD5->new;
+#-> sub CPAN::Distribution::eq_CHECKSUM ;
+sub eq_CHECKSUM {
+    my($self,$fh,$expect) = @_;
+    my $dg = Digest::SHA->new(256);
     my($data);
     while (read($fh, $data, 4096)){
-      $md5->add($data);
+      $dg->add($data);
     }
-    # $md5->addfile($fh);
-    my $hexdigest = $md5->hexdigest;
+    my $hexdigest = $dg->hexdigest;
     # warn "fh[$fh] hex[$hexdigest] aexp[$expectMD5]";
-    $hexdigest eq $expectMD5;
+    $hexdigest eq $expect;
 }
 
 #-> sub CPAN::Distribution::force ;
@@ -4690,7 +4717,7 @@ sub eq_MD5 {
 sub force {
   my($self, $method) = @_;
   for my $att (qw(
-  MD5_STATUS archived build_dir localfile make install unwrapped
+  CHECKSUM_STATUS archived build_dir localfile make install unwrapped
   writemakefile
  )) {
     delete $self->{$att};
@@ -5398,6 +5425,7 @@ sub _getsave_url {
 }
 
 package CPAN::Bundle;
+use strict;
 
 sub look {
     my $self = shift;
@@ -5722,6 +5750,7 @@ No File found for bundle } . $self->id . qq{\n}), return;
 }
 
 package CPAN::Module;
+use strict;
 
 # Accessors
 # sub CPAN::Module::userid
@@ -6181,6 +6210,7 @@ sub inst_version {
 }
 
 package CPAN::Tarzip;
+use strict;
 
 # CPAN::Tarzip::gzip
 sub gzip {
@@ -6450,6 +6480,7 @@ sub unzip {
 }
 
 package CPAN;
+use strict;
 
 1;
 
@@ -6749,7 +6780,7 @@ functionalities that are available in the shell.
     perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
 
     # install my favorite programs if necessary:
-    for $mod (qw(Net::FTP Digest::MD5 Data::Dumper)){
+    for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
         my $obj = CPAN::Shell->expand('Module',$mod);
         $obj->install;
     }
