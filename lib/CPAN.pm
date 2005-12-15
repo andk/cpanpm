@@ -1477,11 +1477,14 @@ sub ls {
             if ($CPAN::META->has_inst("Text::Glob")) {
                 if (my($au,$pathglob) = $arg =~ m|(.*?)/(.*)|) {
                     my $rau = Text::Glob::glob_to_regex(uc $au);
+                    $self->debug("au[$au]pathglob[$pathglob]rau[$rau]") if $CPAN::DEBUG;
                     push @preexpand, map { $_->id . "/" . $pathglob }
-                        $self->expand('Author',"/$rau/");
+                        $self->expand_by_method('CPAN::Author',['id'],"/$rau/");
                 } else {
                     my $rau = Text::Glob::glob_to_regex(uc $arg);
-                    push @preexpand, map { $_->id } $self->expand('Author',"/$rau/");
+                    push @preexpand, map { $_->id } $self->expand_by_method('CPAN::Author',
+                                                                            ['id'],
+                                                                            "/$rau/");
                 }
             } else {
                 $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
@@ -1497,17 +1500,29 @@ sub ls {
         }
         push @accept, $_;
     }
+    my $silent = @accept>1;
     my $last_alpha = "";
     for my $a (@accept){
         my($author,$pathglob);
         if ($a =~ m|(.*?)/(.*)|) {
             my $a2 = $1;
             $pathglob = $2;
-            $author = $self->expand('Author',"/$a2/") or die "No author found for $a2";
+            $author = $self->expand('Author',$a2) or die "No author found for $a2";
         } else {
             $author = $self->expand('Author',$a) or die "No author found for $a";
         }
-        $author->ls($pathglob); # silent if more than one author
+        if ($silent) {
+            my $alpha = substr $author->id, 0, 1;
+            my $ad;
+            if ($alpha eq $last_alpha) {
+                $ad = "";
+            } else {
+                $ad = "[$alpha]";
+                $last_alpha = $alpha;
+            }
+            $CPAN::Frontend->myprint($ad);
+        }
+        $author->ls($pathglob,$silent); # silent if more than one author
     }
 }
 
@@ -1957,10 +1972,23 @@ sub expandany {
 
 #-> sub CPAN::Shell::expand ;
 sub expand {
-    shift;
+    my $self = shift;
     my($type,@args) = @_;
-    my($arg,@m);
     CPAN->debug("type[$type]args[@args]") if $CPAN::DEBUG;
+    my $class = "CPAN::$type";
+    my $methods = ['id'];
+    for my $meth (qw(name)) {
+        next if $] < 5.00303; # no "can"
+        next unless $class->can($meth);
+        push @$methods, $meth;
+    }
+    $self->expand_by_method($class,$methods,@args);
+}
+
+sub expand_by_method {
+    my $self = shift;
+    my($class,$methods,@args) = @_;
+    my($arg,@m);
     for $arg (@args) {
 	my($regex,$command);
 	if ($arg =~ m|^/(.*)/$|) {
@@ -1968,17 +1996,14 @@ sub expand {
 	} elsif ($arg =~ m/=/) {
             $command = 1;
         }
-	my $class = "CPAN::$type";
 	my $obj;
         CPAN->debug(sprintf "class[%s]regex[%s]command[%s]",
                     $class,
                     defined $regex ? $regex : "UNDEFINED",
-                    $command || "UNDEFINED",
+                    defined $command ? $command : "UNDEFINED",
                    ) if $CPAN::DEBUG;
 	if (defined $regex) {
             for $obj (
-                      sort
-                      {$a->id cmp $b->id}
                       $CPAN::META->all_objects($class)
                      ) {
                 unless ($obj->id){
@@ -1991,19 +2016,12 @@ sub expand {
                                        )) if $CPAN::DEBUG;
                     next;
                 }
-                push @m, $obj
-                    if $obj->id =~ /$regex/i
-                        or
-                            (
-                             (
-                              $] < 5.00303 ### provide sort of
-                              ### compatibility with 5.003
-                              ||
-                              $obj->can('name')
-                             )
-                             &&
-                             $obj->name  =~ /$regex/i
-                            );
+                for my $method (@$methods) {
+                    if ($obj->$method() =~ /$regex/i) {
+                        push @m, $obj;
+                        last;
+                    }
+                }
             }
         } elsif ($command) {
             die "equal sign in command disabled (immature interface), ".
@@ -2028,9 +2046,9 @@ that may go away anytime.\n"
             }
 	} else {
 	    my($xarg) = $arg;
-	    if ( $type eq 'Bundle' ) {
+	    if ( $class eq 'CPAN::Bundle' ) {
 		$xarg =~ s/^(Bundle::)?(.*)/Bundle::$2/;
-	    } elsif ($type eq "Distribution") {
+	    } elsif ($class eq "CPAN::Distribution") {
                 $xarg = CPAN::Distribution->normalize($arg);
             }
 	    if ($CPAN::META->exists($class,$xarg)) {
@@ -2042,6 +2060,12 @@ that may go away anytime.\n"
 	    }
 	    push @m, $obj;
 	}
+    }
+    @m = sort {$a->id cmp $b->id} @m;
+    if ( $CPAN::DEBUG ) {
+        my $wantarray = wantarray;
+        my $join_m = join ",", map {$_->id} @m;
+        $self->debug("wantarray[$wantarray]join_m[$join_m]");
     }
     return wantarray ? @m : $m[0];
 }
@@ -3807,6 +3831,7 @@ sub email    { shift->{RO}{EMAIL}; }
 sub ls {
     my $self = shift;
     my $glob = shift || "";
+    my $silent = shift || 0;
     my $id = $self->id;
 
     # adapted from CPAN::Distribution::verifyMD5 ;
@@ -3817,12 +3842,12 @@ sub ls {
     my(@dl);
     @dl = $self->dir_listing([$csf[0],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[1]} @dl) {
-        $CPAN::Frontend->myprint("Directory $csf[1]/ does not exist\n");
+        $CPAN::Frontend->myprint("Directory $csf[1]/ does not exist\n") unless $silent ;
         return;
     }
     @dl = $self->dir_listing([@csf[0,1],"CHECKSUMS"], 0, 1);
     unless (grep {$_->[2] eq $csf[2]} @dl) {
-        $CPAN::Frontend->myprint("Directory $id/ does not exist\n");
+        $CPAN::Frontend->myprint("Directory $id/ does not exist\n") unless $silent;
         return;
     }
     @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1, 1);
