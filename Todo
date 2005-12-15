@@ -1,67 +1,11 @@
-2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2005-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Globbing on the ls command: completion? In any case needs more testing.
 
-	* Feature request: if I type 'm CGI:Session' (note the missng second
-	colon) I get
-
-	No objects of type Module found for argument CGI:Session
-
-	I believe, CPAN could supply the missing colon in this case. DONE
-
-2005-11-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: when the Metadata file has been read with the old version and
-	CPAN reads the new index it does not update the version. Witness
-	Crypt::Khazad. Once the Metadata are removed completely and built up
-	correctly, everything is OK.
-
-	Can be tested by running
-
-	!print $CPAN::META->{readonly}{"CPAN::Module"}{"Crypt::Khazad"}{"CPAN_VERSION"} = "1.0"
-	reload index
-
-	This may have nothing to do with multidot versions, just some
-	pessimization in the code dealing with replacement of META when
-	re-reading index files. FIXED
-
-2005-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* Todo: sha256
 
-2005-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* From: David Golden <david@hyperbolic.net>:
-
-	> Also, "lack of distname support" is overblowing the situation.
-	> Distnames are supported perfectly fine as long as you put it in the
-	> proper syntax with author's ID and version.
-	
-	I think the problem Jim encountered is that "proper syntax" is part of
-	the arcana of CPAN.  It's not obvious from the help:
-	
-	>  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
-	>  i        WORD or /REGEXP/  about anything of above
-	>  r        NONE              reinstall recommendations
-	>  ls       AUTHOR            about files in the author's directory
-	
-	Something that clarifies that AUTHOR/DIST-VERSION is a valid format
-	would help.  Or rather, some specific example of what that WORD can be:
-	
-	  where WORD is either a module, bundle or author name or a
-	  distribution name of the form AUTHOR/DISTRIBUTION-VERSION
-	
-	It's vaguely alluded to in the CPAN perldoc, but only in the section
-	describing the four CPAN::* classes.
-	
-	A doc patch would be a quick fix for this.
-
-2005-11-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* Todo: 4th colmn in the 'r' command has not the canonical name
-	but the unneeded D/DC/ stuff.
-
-2005-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	but the unneeded D/DC/ stuff. DONE in rev 261.
 
 	* bz2 support (affects also CPAN::Checksums); can it be done with
 	Archive::Tar?
@@ -91,9 +35,63 @@
 
 	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
 	have a different path. I installed a new CPAN.pm from CPAN and it
-	did remove the old /usr/share/perl/5.8/CPAN.pm but instelled the
+	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Feature request: if I type 'm CGI:Session' (note the missng second
+	colon) I get
+
+	No objects of type Module found for argument CGI:Session
+
+	I believe, CPAN could supply the missing colon in this case. DONE
+
+2005-11-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: when the Metadata file has been read with the old version and
+	CPAN reads the new index it does not update the version. Witness
+	Crypt::Khazad. Once the Metadata are removed completely and built up
+	correctly, everything is OK.
+
+	Can be tested by running
+
+	!print $CPAN::META->{readonly}{"CPAN::Module"}{"Crypt::Khazad"}{"CPAN_VERSION"} = "1.0"
+	reload index
+
+	This may have nothing to do with multidot versions, just some
+	pessimization in the code dealing with replacement of META when
+	re-reading index files. FIXED
+
+2005-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* From: David Golden <david@hyperbolic.net>:
+
+	> Also, "lack of distname support" is overblowing the situation.
+	> Distnames are supported perfectly fine as long as you put it in the
+	> proper syntax with author's ID and version.
+	
+	I think the problem Jim encountered is that "proper syntax" is part of
+	the arcana of CPAN.  It's not obvious from the help:
+	
+	>  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
+	>  i        WORD or /REGEXP/  about anything of above
+	>  r        NONE              reinstall recommendations
+	>  ls       AUTHOR            about files in the author's directory
+	
+	Something that clarifies that AUTHOR/DIST-VERSION is a valid format
+	would help.  Or rather, some specific example of what that WORD can be:
+	
+	  where WORD is either a module, bundle or author name or a
+	  distribution name of the form AUTHOR/DISTRIBUTION-VERSION
+	
+	It's vaguely alluded to in the CPAN perldoc, but only in the section
+	describing the four CPAN::* classes.
+	
+	A doc patch would be a quick fix for this.
+
+2005-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* globbing on the ls command: only ls 'GBARR/Scalar*', or even 'ls
 	*/makepatch'? 2005-12-12: DONE 

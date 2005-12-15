@@ -1798,6 +1798,7 @@ sub _u_r_common {
   MODULE: for $module (@expand) {
 	my $file  = $module->cpan_file;
 	next MODULE unless defined $file; # ??
+        $file =~ s|^./../||;
 	my($latest) = $module->cpan_version;
 	my($inst_file) = $module->inst_file;
 	my($have);
