@@ -5,6 +5,8 @@ $VERSION = eval $VERSION;
 use strict;
 
 use CPAN::Version;
+use CPAN::Debug;
+use CPAN::Tarzip;
 use Carp ();
 use Config ();
 use Cwd ();
@@ -251,7 +253,7 @@ use vars qw(%can %keys $dot_cpan);
 );
 
 %keys = map { $_ => undef } qw(
-    build_cache build_dir
+    build_cache build_dir bzip2
     cache_metadata cpan_home curl
     dontload_hash
     ftp ftp_proxy
@@ -370,12 +372,6 @@ For this you just need to type
 });
     }
 }
-
-package CPAN::Tarzip;
-use strict;
-use vars qw($AUTOLOAD @ISA $BUGHUNTING);
-@CPAN::Tarzip::ISA = qw(CPAN::Debug);
-$BUGHUNTING = 0; # released code must have turned off
 
 package CPAN::Queue;
 use strict;
@@ -1090,33 +1086,6 @@ sub scan_cache {
 	return if $CPAN::Signal;
     }
     $self->tidyup;
-}
-
-package CPAN::Debug;
-use strict;
-
-#-> sub CPAN::Debug::debug ;
-sub debug {
-    my($self,$arg) = @_;
-    my($caller,$func,$line,@rest) = caller(1); # caller(0) eg
-                                               # Complete, caller(1)
-                                               # eg readline
-    ($caller) = caller(0);
-    $caller =~ s/.*:://;
-    $arg = "" unless defined $arg;
-    my $rest = join "|", map { defined $_ ? $_ : "UNDEF" } @rest;
-    if ($CPAN::DEBUG{$caller} & $CPAN::DEBUG){
-	if ($arg and ref $arg) {
-	    eval { require Data::Dumper };
-	    if ($@) {
-		$CPAN::Frontend->myprint($arg->as_string);
-	    } else {
-		$CPAN::Frontend->myprint(Data::Dumper::Dumper($arg));
-	    }
-	} else {
-	    $CPAN::Frontend->myprint("Debug($caller:$func,$line,[$rest]): $arg\n");
-	}
-    }
 }
 
 package CPAN::Config;
@@ -2693,7 +2662,7 @@ sub hosteasy {
 	    # Maybe mirror has compressed it?
 	    if (-f "$l.gz") {
 		$self->debug("found compressed $l.gz") if $CPAN::DEBUG;
-		CPAN::Tarzip->gunzip("$l.gz", $aslocal);
+		CPAN::Tarzip->new("$l.gz")->gunzip($aslocal);
 		if ( -f $aslocal) {
 		    $Thesite = $i;
 		    return $aslocal;
@@ -2725,7 +2694,7 @@ sub hosteasy {
 ");
 	    $res = $Ua->mirror($gzurl, "$aslocal.gz");
 	    if ($res->is_success &&
-		CPAN::Tarzip->gunzip("$aslocal.gz",$aslocal)
+		CPAN::Tarzip->new("$aslocal.gz")->gunzip($aslocal)
 	       ) {
 	      $Thesite = $i;
 	      return $aslocal;
@@ -2763,11 +2732,11 @@ sub hosteasy {
 		    $CPAN::Frontend->myprint("Fetching with Net::FTP
   $url.gz
 ");
-		   if (CPAN::FTP->ftp_get($host,
-					   $dir,
-					   "$getfile.gz",
-					   $gz) &&
-			CPAN::Tarzip->gunzip($gz,$aslocal)
+                    if (CPAN::FTP->ftp_get($host,
+                                           $dir,
+                                           "$getfile.gz",
+                                           $gz) &&
+			CPAN::Tarzip->new($gz)->gunzip($aslocal)
 		       ){
 			$Thesite = $i;
 			return $aslocal;
@@ -2861,11 +2830,11 @@ Trying with "$funkyftp$src_switch" to get
 	      # Looks good
 	    } elsif ($asl_ungz ne $aslocal) {
 	      # test gzip integrity
-	      if (CPAN::Tarzip->gtest($asl_ungz)) {
+	      if (CPAN::Tarzip->new($asl_ungz)->gtest) {
                   # e.g. foo.tar is gzipped --> foo.tar.gz
                   rename $asl_ungz, $aslocal;
 	      } else {
-                  CPAN::Tarzip->gzip($asl_ungz,$asl_gz);
+                  CPAN::Tarzip->new($asl_gz)->gzip($asl_ungz);
 	      }
 	    }
 	    $Thesite = $i;
@@ -2888,8 +2857,9 @@ Trying with "$funkyftp$src_switch" to get
 		-s $asl_gz
 	       ) {
 	      # test gzip integrity
-	      if (CPAN::Tarzip->gtest($asl_gz)) {
-                  CPAN::Tarzip->gunzip($asl_gz,$aslocal);
+              my $ct = CPAN::Tarzip->new($asl_gz);
+	      if ($ct->gtest) {
+                  $ct->gunzip($aslocal);
 	      } else {
                   # somebody uncompressed file for us?
                   rename $asl_ungz, $aslocal;
@@ -3938,7 +3908,7 @@ sub dir_listing {
                                            "$lc_want.gz",1);
             if ($lc_file) {
                 $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
-                CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
+                CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file);
             } else {
                 return;
             }
@@ -4194,13 +4164,14 @@ sub get {
     # Unpack the goods
     #
     $self->debug("local_file[$local_file]") if $CPAN::DEBUG;
-    if ($local_file =~ /(\.tar\.(gz|Z)|\.tgz)(?!\n)\Z/i){
-        $self->{was_uncompressed}++ unless CPAN::Tarzip->gtest($local_file);
-	$self->untar_me($local_file);
+    my $ct = CPAN::Tarzip->new($local_file);
+    if ($local_file =~ /(\.tar\.(bz2|gz|Z)|\.tgz)(?!\n)\Z/i){
+        $self->{was_uncompressed}++ unless $ct->gtest();
+	$self->untar_me($ct);
     } elsif ( $local_file =~ /\.zip(?!\n)\Z/i ) {
-	$self->unzip_me($local_file);
+	$self->unzip_me($ct);
     } elsif ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/) {
-        $self->{was_uncompressed}++ unless CPAN::Tarzip->gtest($local_file);
+        $self->{was_uncompressed}++ unless $ct->gtest();
         $self->debug("calling pm2dir for local_file[$local_file]") if $CPAN::DEBUG;
 	$self->pm2dir_me($local_file);
     } else {
@@ -4359,9 +4330,9 @@ WriteMakefile(NAME => q[$cf]);
 
 # CPAN::Distribution::untar_me ;
 sub untar_me {
-    my($self,$local_file) = @_;
+    my($self,$ct) = @_;
     $self->{archived} = "tar";
-    if (CPAN::Tarzip->untar($local_file)) {
+    if ($ct->untar()) {
 	$self->{unwrapped} = "YES";
     } else {
 	$self->{unwrapped} = "NO";
@@ -4370,9 +4341,9 @@ sub untar_me {
 
 # CPAN::Distribution::unzip_me ;
 sub unzip_me {
-    my($self,$local_file) = @_;
+    my($self,$ct) = @_;
     $self->{archived} = "zip";
-    if (CPAN::Tarzip->unzip($local_file)) {
+    if ($ct->unzip()) {
 	$self->{unwrapped} = "YES";
     } else {
 	$self->{unwrapped} = "NO";
@@ -4385,7 +4356,7 @@ sub pm2dir_me {
     $self->{archived} = "pm";
     my $to = File::Basename::basename($local_file);
     if ($to =~ s/\.(gz|Z)(?!\n)\Z//) {
-        if (CPAN::Tarzip->gunzip($local_file,$to)) {
+        if (CPAN::Tarzip->new($local_file)->gunzip($to)) {
             $self->{unwrapped} = "YES";
         } else {
             $self->{unwrapped} = "NO";
@@ -4558,7 +4529,7 @@ sub verifyCHECKSUM {
 				       "$lc_want.gz",1);
 	if ($lc_file) {
 	    $lc_file =~ s/\.gz(?!\n)\Z//;
-	    CPAN::Tarzip->gunzip("$lc_file.gz",$lc_file);
+	    CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file);
 	} else {
 	    return;
 	}
@@ -6207,276 +6178,6 @@ sub inst_version {
 
     $have =~ s/\s*//g; # stringify to float around floating point issues
     $have; # no stringify needed, \s* above matches always
-}
-
-package CPAN::Tarzip;
-use strict;
-
-# CPAN::Tarzip::gzip
-sub gzip {
-  my($class,$read,$write) = @_;
-  if ($CPAN::META->has_inst("Compress::Zlib")) {
-    my($buffer,$fhw);
-    $fhw = FileHandle->new($read)
-	or $CPAN::Frontend->mydie("Could not open $read: $!");
-	my $cwd = `pwd`;
-    my $gz = Compress::Zlib::gzopen($write, "wb")
-	or $CPAN::Frontend->mydie("Cannot gzopen $write: $! (pwd is $cwd)\n");
-    $gz->gzwrite($buffer)
-	while read($fhw,$buffer,4096) > 0 ;
-    $gz->gzclose() ;
-    $fhw->close;
-    return 1;
-  } else {
-    system("$CPAN::Config->{gzip} -c $read > $write")==0;
-  }
-}
-
-
-# CPAN::Tarzip::gunzip
-sub gunzip {
-  my($class,$read,$write) = @_;
-  if ($CPAN::META->has_inst("Compress::Zlib")) {
-    my($buffer,$fhw);
-    $fhw = FileHandle->new(">$write")
-	or $CPAN::Frontend->mydie("Could not open >$write: $!");
-    my $gz = Compress::Zlib::gzopen($read, "rb")
-	or $CPAN::Frontend->mydie("Cannot gzopen $read: $!\n");
-    $fhw->print($buffer)
-	while $gz->gzread($buffer) > 0 ;
-    $CPAN::Frontend->mydie("Error reading from $read: $!\n")
-	if $gz->gzerror != Compress::Zlib::Z_STREAM_END();
-    $gz->gzclose() ;
-    $fhw->close;
-    return 1;
-  } else {
-    system("$CPAN::Config->{gzip} -dc $read > $write")==0;
-  }
-}
-
-
-# CPAN::Tarzip::gtest
-sub gtest {
-  my($class,$read) = @_;
-  # After I had reread the documentation in zlib.h, I discovered that
-  # uncompressed files do not lead to an gzerror (anymore?).
-  if ( $CPAN::META->has_inst("Compress::Zlib") ) {
-    my($buffer,$len);
-    $len = 0;
-    my $gz = Compress::Zlib::gzopen($read, "rb")
-	or $CPAN::Frontend->mydie(sprintf("Cannot gzopen %s: %s\n",
-                                          $read,
-                                          $Compress::Zlib::gzerrno));
-    while ($gz->gzread($buffer) > 0 ){
-        $len += length($buffer);
-        $buffer = "";
-    }
-    my $err = $gz->gzerror;
-    my $success = ! $err || $err == Compress::Zlib::Z_STREAM_END();
-    if ($len == -s $read){
-        $success = 0;
-        CPAN->debug("hit an uncompressed file") if $CPAN::DEBUG;
-    }
-    $gz->gzclose();
-    CPAN->debug("err[$err]success[$success]") if $CPAN::DEBUG;
-    return $success;
-  } else {
-      return system("$CPAN::Config->{gzip} -dt $read")==0;
-  }
-}
-
-
-# CPAN::Tarzip::TIEHANDLE
-sub TIEHANDLE {
-  my($class,$file) = @_;
-  my $ret;
-  $class->debug("file[$file]");
-  if ($CPAN::META->has_inst("Compress::Zlib")) {
-    my $gz = Compress::Zlib::gzopen($file,"rb") or
-	die "Could not gzopen $file";
-    $ret = bless {GZ => $gz}, $class;
-  } else {
-    my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $file |";
-    my $fh = FileHandle->new($pipe) or die "Could not pipe[$pipe]: $!";
-    binmode $fh;
-    $ret = bless {FH => $fh}, $class;
-  }
-  $ret;
-}
-
-
-# CPAN::Tarzip::READLINE
-sub READLINE {
-  my($self) = @_;
-  if (exists $self->{GZ}) {
-    my $gz = $self->{GZ};
-    my($line,$bytesread);
-    $bytesread = $gz->gzreadline($line);
-    return undef if $bytesread <= 0;
-    return $line;
-  } else {
-    my $fh = $self->{FH};
-    return scalar <$fh>;
-  }
-}
-
-
-# CPAN::Tarzip::READ
-sub READ {
-  my($self,$ref,$length,$offset) = @_;
-  die "read with offset not implemented" if defined $offset;
-  if (exists $self->{GZ}) {
-    my $gz = $self->{GZ};
-    my $byteread = $gz->gzread($$ref,$length);# 30eaf79e8b446ef52464b5422da328a8
-    return $byteread;
-  } else {
-    my $fh = $self->{FH};
-    return read($fh,$$ref,$length);
-  }
-}
-
-
-# CPAN::Tarzip::DESTROY
-sub DESTROY {
-    my($self) = @_;
-    if (exists $self->{GZ}) {
-        my $gz = $self->{GZ};
-        $gz->gzclose() if defined $gz; # hard to say if it is allowed
-                                       # to be undef ever. AK, 2000-09
-    } else {
-        my $fh = $self->{FH};
-        $fh->close if defined $fh;
-    }
-    undef $self;
-}
-
-
-# CPAN::Tarzip::untar
-sub untar {
-  my($class,$file) = @_;
-  my($prefer) = 0;
-
-  if (0) { # makes changing order easier
-  } elsif ($BUGHUNTING){
-      $prefer=2;
-  } elsif (MM->maybe_command($CPAN::Config->{gzip})
-           &&
-           MM->maybe_command($CPAN::Config->{'tar'})) {
-      # should be default until Archive::Tar is fixed
-      $prefer = 1;
-  } elsif (
-           $CPAN::META->has_inst("Archive::Tar")
-           &&
-           $CPAN::META->has_inst("Compress::Zlib") ) {
-      $prefer = 2;
-  } else {
-    $CPAN::Frontend->mydie(qq{
-CPAN.pm needs either both external programs tar and gzip installed or
-both the modules Archive::Tar and Compress::Zlib. Neither prerequisite
-is available. Can\'t continue.
-});
-  }
-  if ($prefer==1) { # 1 => external gzip+tar
-    my($system);
-    my $is_compressed = $class->gtest($file);
-    if ($is_compressed) {
-        $system = "$CPAN::Config->{gzip} --decompress --stdout " .
-            "< $file | $CPAN::Config->{tar} xvf -";
-    } else {
-        $system = "$CPAN::Config->{tar} xvf $file";
-    }
-    if (system($system) != 0) {
-        # people find the most curious tar binaries that cannot handle
-        # pipes
-        if ($is_compressed) {
-            (my $ungzf = $file) =~ s/\.gz(?!\n)\Z//;
-            if (CPAN::Tarzip->gunzip($file, $ungzf)) {
-                $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
-            } else {
-                $CPAN::Frontend->mydie(qq{Couldn\'t uncompress $file\n});
-            }
-            $file = $ungzf;
-        }
-        $system = "$CPAN::Config->{tar} xvf $file";
-        $CPAN::Frontend->myprint(qq{Using Tar:$system:\n});
-        if (system($system)==0) {
-            $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
-        } else {
-            $CPAN::Frontend->mydie(qq{Couldn\'t untar $file\n});
-        }
-        return 1;
-    } else {
-        return 1;
-    }
-  } elsif ($prefer==2) { # 2 => modules
-    my $tar = Archive::Tar->new($file,1);
-    my $af; # archive file
-    my @af;
-    if ($BUGHUNTING) {
-        # RCS 1.337 had this code, it turned out unacceptable slow but
-        # it revealed a bug in Archive::Tar. Code is only here to hunt
-        # the bug again. It should never be enabled in published code.
-        # GDGraph3d-0.53 was an interesting case according to Larry
-        # Virden.
-        warn(">>>Bughunting code enabled<<< " x 20);
-        for $af ($tar->list_files) {
-            if ($af =~ m!^(/|\.\./)!) {
-                $CPAN::Frontend->mydie("ALERT: Archive contains ".
-                                       "illegal member [$af]");
-            }
-            $CPAN::Frontend->myprint("$af\n");
-            $tar->extract($af); # slow but effective for finding the bug
-            return if $CPAN::Signal;
-        }
-    } else {
-        for $af ($tar->list_files) {
-            if ($af =~ m!^(/|\.\./)!) {
-                $CPAN::Frontend->mydie("ALERT: Archive contains ".
-                                       "illegal member [$af]");
-            }
-            $CPAN::Frontend->myprint("$af\n");
-            push @af, $af;
-            return if $CPAN::Signal;
-        }
-        $tar->extract(@af);
-    }
-
-    Mac::BuildTools::convert_files([$tar->list_files], 1)
-        if ($^O eq 'MacOS');
-
-    return 1;
-  }
-}
-
-sub unzip {
-    my($class,$file) = @_;
-    if ($CPAN::META->has_inst("Archive::Zip")) {
-        # blueprint of the code from Archive::Zip::Tree::extractTree();
-        my $zip = Archive::Zip->new();
-        my $status;
-        $status = $zip->read($file);
-        die "Read of file[$file] failed\n" if $status != Archive::Zip::AZ_OK();
-        $CPAN::META->debug("Successfully read file[$file]") if $CPAN::DEBUG;
-        my @members = $zip->members();
-        for my $member ( @members ) {
-            my $af = $member->fileName();
-            if ($af =~ m!^(/|\.\./)!) {
-                $CPAN::Frontend->mydie("ALERT: Archive contains ".
-                                       "illegal member [$af]");
-            }
-            my $status = $member->extractToFileNamed( $af );
-            $CPAN::META->debug("af[$af]status[$status]") if $CPAN::DEBUG;
-            die "Extracting of file[$af] from zipfile[$file] failed\n" if
-                $status != Archive::Zip::AZ_OK();
-            return if $CPAN::Signal;
-        }
-        return 1;
-    } else {
-        my $unzip = $CPAN::Config->{unzip} or
-            $CPAN::Frontend->mydie("Cannot unzip, no unzip program available");
-        my @system = ($unzip, $file);
-        return system(@system) == 0;
-    }
 }
 
 package CPAN;

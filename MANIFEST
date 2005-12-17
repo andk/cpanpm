@@ -15,8 +15,10 @@ inc/Test/More.pm
 lib/Bundle/CPAN.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
+lib/CPAN/Debug.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/Nox.pm
+lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
 scripts/cpan
 t/Nox.t

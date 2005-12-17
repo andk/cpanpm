@@ -322,7 +322,7 @@ by ENTER.
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
     local $^W = $old_warn;
     my $progname;
-    for $progname (qw/gzip tar unzip make
+    for $progname (qw/bzip2 gzip tar unzip make
                       curl lynx wget ncftpget ncftp ftp
                       gpg/)
     {

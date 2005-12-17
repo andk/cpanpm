@@ -1,17 +1,10 @@
 2005-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Globbing on the ls command: completion? In any case needs more testing.
-
-	* Todo: sha256
-
-	* bz2 support (affects also CPAN::Checksums); can it be done with
-	Archive::Tar?
-
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.
 
-	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we
-	already have D/DO/DOWENS/CHECKSUMS. Is this a bug wirth fixing?
+	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we already
+	have D/DO/DOWENS/CHECKSUMS. Is this a bug? Is it worth fixing?
 
 	* Bug: installing scripts without modules? How does it work? How
 	should it work? getting the latest version ad-hoc?
@@ -36,8 +29,15 @@
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
 
+	* bz2 support: testobject is ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2
+	DONE in rev 264
+
 	* Todo: 4th colmn in the 'r' command has not the canonical name
 	but the unneeded D/DC/ stuff. DONE in rev 262.
+
+	* Todo: sha256 DONE in rev 263
+
+	* Globbing on the ls command: completion? REJECTED
 
 2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
