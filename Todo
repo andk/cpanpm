@@ -1,5 +1,28 @@
 2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* make selectable in the config if M:B should be chosen over Makefile.PL???
+
+	* make 'sudo ./Build' available similarly as 'sudo make'
+
+	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
+	files. Currently it doesn't.
+
+	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we already
+	have D/DO/DOWENS/CHECKSUMS. Is this a bug? Is it worth fixing?
+
+	* Bug: installing scripts without modules? How does it work? How
+	should it work? getting the latest version ad-hoc?
+
+	* Bug: checksum mismatch on a file is being reported even when the
+	file has 0 bytes. 0 bytes should clearly constitute the right/the
+	duty to overwrite.
+
+	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
+	have a different path. I installed a new CPAN.pm from CPAN and it
+	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
+	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
+	always just said "0 subroutines redefined".
+
 	* Bug: tolerance on colon only works with m command but not with install command:
 
 cpan> install Class:Container
@@ -55,25 +78,6 @@ Module id = Class::Container
 	DONE for rev 269
 
 2005-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
-	files. Currently it doesn't.
-
-	* "ls dowens" fetches D/CHECKSUMS and D/DO/CHECKSUMS even if we already
-	have D/DO/DOWENS/CHECKSUMS. Is this a bug? Is it worth fixing?
-
-	* Bug: installing scripts without modules? How does it work? How
-	should it work? getting the latest version ad-hoc?
-
-	* Bug: checksum mismatch on a file is being reported even when the
-	file has 0 bytes. 0 bytes should clearly constitute the right/the
-	duty to overwrite.
-
-	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
-	have a different path. I installed a new CPAN.pm from CPAN and it
-	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
-	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
-	always just said "0 subroutines redefined".
 
 	* Bug: what? we still do not support Build.PL? Didn't anybody send
 	me a patch? Try 'install CPAN::Metadata::RDF' and see how this can
