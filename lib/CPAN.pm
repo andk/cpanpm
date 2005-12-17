@@ -737,6 +737,7 @@ sub exists {
     CPAN::Index->reload;
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
+    $id =~ s/:+/::/g if $class eq "CPAN::Module";
     exists $META->{readonly}{$class}{$id} or
         exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
 }
@@ -4278,7 +4279,9 @@ retry.};
         $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
         $mpldh->close;
     }
-    unless ($mpl_exists) {
+    if (-f File::Spec->catfile($packagedir,"Build.PL")) {
+        $self->{modulebuild} = "YES";
+    } elsif (! $mpl_exists) {
         $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
                              $mpl,
                              CPAN::anycwd(),
@@ -4751,7 +4754,8 @@ sub perl {
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
-    $CPAN::Frontend->myprint(sprintf "Running make for %s\n", $self->id);
+    my $make = $self->{modulebuild} ? "Build" : "make";
+    $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     # Emergency brake if they said install Pippi and get newest perl
     if ($self->isa_perl) {
       if (
@@ -4811,7 +4815,10 @@ or
 
     my $system;
     if ($self->{'configure'}) {
-      $system = $self->{'configure'};
+        $system = $self->{'configure'};
+    } elsif ($self->{modulebuild}) {
+	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
+        $system = "$perl Build.PL";
     } else {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
 	my $switch = "";
@@ -4834,10 +4841,10 @@ or
 			# wait;
 			waitpid $pid, 0;
 		    } else {    #child
-		      # note, this exec isn't necessary if
-		      # inactivity_timeout is 0. On the Mac I'd
-		      # suggest, we set it always to 0.
-		      exec $system;
+                        # note, this exec isn't necessary if
+                        # inactivity_timeout is 0. On the Mac I'd
+                        # suggest, we set it always to 0.
+                        exec $system;
 		    }
 		} else {
 		    $CPAN::Frontend->myprint("Cannot fork: $!");
@@ -4860,7 +4867,7 @@ or
 	    return;
 	  }
 	}
-	if (-f "Makefile") {
+	if (-f "Makefile" || -f "Build") {
 	  $self->{writemakefile} = "YES";
           delete $self->{make_clean}; # if cleaned before, enable next
 	} else {
@@ -4879,7 +4886,11 @@ or
     if (my @prereq = $self->unsat_prereq){
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
-    $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
+    if ($self->{modulebuild}) {
+        $system = "./Build";
+    } else {
+        $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
+    }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $self->{'make'} = "YES";
@@ -4977,7 +4988,8 @@ sub unsat_prereq {
 sub read_yaml {
     my($self) = @_;
     return $self->{yaml_content} if exists $self->{yaml_content};
-    my $yaml = "META.yml";
+    my $build_dir = $self->{build_dir};
+    my $yaml = File::Spec->catfile($build_dir,"META.yml");
     return unless -f $yaml;
     if ($CPAN::META->has_inst("YAML")) {
         eval { $self->{yaml_content} = YAML::LoadFile($yaml); };
@@ -4993,13 +5005,13 @@ sub prereq_pm {
     my($self) = @_;
     return $self->{prereq_pm} if
         exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
+    return unless $self->{writemakefile}  # no need to have succeeded
+                                          # but we must have run it
+        || $self->{mudulebuild};
     if (my $yaml = $self->read_yaml) {
         $self->{prereq_pm_detected}++;
         return $self->{prereq_pm} = $yaml->{requires};
     } else {
-        return unless $self->{writemakefile}; # no need to have
-                                              # succeeded but we must
-                                              # have run it
         my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
         my $makefile = File::Spec->catfile($build_dir,"Makefile");
         my(%p) = ();
@@ -5049,7 +5061,8 @@ sub test {
         return 1;
     }
 
-    $CPAN::Frontend->myprint("Running make test\n");
+    my $make = $self->{modulebuild} ? "Build" : "make";
+    $CPAN::Frontend->myprint("Running $make test\n");
     if (my @prereq = $self->unsat_prereq){
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
@@ -5087,7 +5100,12 @@ sub test {
                            : ($ENV{PERLLIB} || "");
 
     $CPAN::META->set_perl5lib;
-    my $system = join " ", $CPAN::Config->{'make'}, "test";
+    my $system;
+    if ($self->{modulebuild}) {
+        $system = "./Build test";
+    } else {
+        $system = join " ", $CPAN::Config->{'make'}, "test";
+    }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $CPAN::META->is_tested($self->{'build_dir'});
@@ -5102,7 +5120,8 @@ sub test {
 #-> sub CPAN::Distribution::clean ;
 sub clean {
     my($self) = @_;
-    $CPAN::Frontend->myprint("Running make clean\n");
+    my $make = $self->{modulebuild} ? "Build" : "make";
+    $CPAN::Frontend->myprint("Running $make clean\n");
   EXCUSE: {
 	my @e;
         exists $self->{make_clean} and $self->{make_clean} eq "YES" and
@@ -5119,7 +5138,12 @@ sub clean {
         return;
     }
 
-    my $system = join " ", $CPAN::Config->{'make'}, "clean";
+    my $system;
+    if ($self->{modulebuild}) {
+        $system = "./Build clean";
+    } else {
+        $system  = join " ", $CPAN::Config->{'make'}, "clean";
+    }
     if (system($system) == 0) {
       $CPAN::Frontend->myprint("  $system -- OK\n");
 
@@ -5135,6 +5159,7 @@ sub clean {
       delete $self->{writemakefile};
       delete $self->{make};
       delete $self->{make_test}; # no matter if yes or no, tests must be redone
+      delete $self->{yaml_content};
       $self->{make_clean} = "YES";
 
     } else {
@@ -5157,7 +5182,8 @@ sub install {
       delete $self->{force_update};
       return;
     }
-    $CPAN::Frontend->myprint("Running make install\n");
+    my $make = $self->{modulebuild} ? "Build" : "make";
+    $CPAN::Frontend->myprint("Running $make install\n");
   EXCUSE: {
 	my @e;
 	exists $self->{build_dir} or push @e, "Has no own directory";
@@ -5194,14 +5220,19 @@ sub install {
         return;
     }
 
-    my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
-        $CPAN::Config->{'make'};
-
-    my($system) = join(" ",
+    my $system;
+    if ($self->{modulebuild}) {
+        $system = "./Build install";
+    } else {
+        my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
+            $CPAN::Config->{'make'};
+        $system = join(" ",
                        $make_install_make_command,
                        "install",
                        $CPAN::Config->{make_install_arg},
                       );
+    }
+
     my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";

@@ -1,3 +1,59 @@
+2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: tolerance on colon only works with m command but not with install command:
+
+cpan> install Class:Container
+CPAN: Storable loaded ok
+Going to read /root/.cpan/Metadata
+  Database was generated on Sat, 17 Dec 2005 10:06:33 GMT
+Warning: Cannot install Class:Container, don't know what it is.
+Try the command
+
+    i /Class:Container/
+
+to find objects with matching identifiers.
+
+cpan> m Class:Container      
+Module id = Class::Container
+    CPAN_USERID  KWILLIAMS (Ken Williams <ken@mathforum.org>)
+    CPAN_VERSION 0.12
+    CPAN_FILE    K/KW/KWILLIAMS/Class-Container-0.12.tar.gz
+    MANPAGE      Class::Container - Glues object frameworks together transparently
+    INST_FILE    /usr/local/share/perl/5.8.7/Class/Container.pm
+    INST_VERSION 0.12
+
+	FIXED in rev 269
+
+	* switch back and forth between preferring Build.PL or Makefile.PL; find
+	12 modules that are good for testing Module::Build:
+
+	SVN::Notify::Mirror  failed a test with "could not exe svnnotify" but it
+                       worked on the commandline
+
+	SVN::Notify::Config  the whole family of SVN::Notify is a mess, dependency-wise???
+
+	SVN::Notify          must be installed first???
+
+	Text::Lorem
+
+	HTTP::Proxy
+
+	Workflow
+
+	Calendar::Simple
+
+	DateTime::HiRes
+
+	CGI::Wiki::Kwiki
+
+	Class::Container
+
+	HTML::TagCloud
+
+	Data::FormValidator::Util::HTML
+
+	DONE for rev 269
+
 2005-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
@@ -13,6 +69,12 @@
 	file has 0 bytes. 0 bytes should clearly constitute the right/the
 	duty to overwrite.
 
+	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
+	have a different path. I installed a new CPAN.pm from CPAN and it
+	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
+	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
+	always just said "0 subroutines redefined".
+
 	* Bug: what? we still do not support Build.PL? Didn't anybody send
 	me a patch? Try 'install CPAN::Metadata::RDF' and see how this can
 	be fixed as quickly as possible.
@@ -20,14 +82,8 @@
 	Try:        look CPAN::Metadata::RDF
 	then there: perl Build.PL;./Build;./Build install
 
-	This does nothing for the prerequisites. We could lookup META.yml
-	either then or beforehand.
-
-	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
-	have a different path. I installed a new CPAN.pm from CPAN and it
-	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
-	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
-	always just said "0 subroutines redefined".
+	This does nothing for the prerequisites. We could lookup META.yml either
+	then or beforehand. FIXED although only minimal tested in rev 269
 
 	* YAML for dependency checking in rev 268
 
