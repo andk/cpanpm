@@ -1,5 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN::Mirrored::By;
+use strict;
 
 sub new { 
     my($self,@arg) = @_;
