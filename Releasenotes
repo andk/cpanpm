@@ -1,3 +1,28 @@
+2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.80_50
+
+	* ls command supports globbing:
+
+	  ls KWILLIAMS/P*
+	and
+	  ls JV/make*
+
+	work nicely; even
+
+	  ls */*make*
+
+	works but this is, of course, very slow.
+
+	* support SHA256; stops using MD5
+
+	* support bzip2 compression; can be tested with 'install
+	ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2'; th CPAN indexer does not
+	yet index bz2 distros
+
+	* prettier r command output: the 4th column of the 'r' command
+	drops the redundant X/XX/ prefix
+
 2005-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* this is release 1.80
