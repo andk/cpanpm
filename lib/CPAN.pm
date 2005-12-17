@@ -1700,14 +1700,15 @@ sub reload {
     $command ||= "";
     $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
     if ($command =~ /cpan/i) {
-        for my $f (qw(CPAN.pm CPAN/FirstTime.pm)) {
+        my $redef = 0;
+        for my $f (qw(CPAN.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
+                      CPAN/Debug.pm CPAN/Version.pm)) {
             next unless $INC{$f};
             my $pwd = CPAN::anycwd();
             CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
                 if $CPAN::DEBUG;
             my $fh = FileHandle->new($INC{$f});
             local($/);
-            my $redef = 0;
             local $^W = 1;
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
             my $eval = <$fh>;
@@ -1715,8 +1716,8 @@ sub reload {
                 if $CPAN::DEBUG;
             eval $eval;
             warn $@ if $@;
-            $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
         }
+        $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
     } elsif ($command =~ /index/) {
       CPAN::Index->force_reload;
     } else {
@@ -4675,10 +4676,10 @@ sub eq_CHECKSUM {
 
 #-> sub CPAN::Distribution::force ;
 
-# Both modules and distributions know if "force" is in effect by
-# autoinspection, not by inspecting a global variable. One of the
-# reason why this was chosen to work that way was the treatment of
-# dependencies. They should not autpomatically inherit the force
+# Both CPAN::Modules and CPAN::Distributions know if "force" is in
+# effect by autoinspection, not by inspecting a global variable. One
+# of the reason why this was chosen to work that way was the treatment
+# of dependencies. They should not automatically inherit the force
 # status. But this has the downside that ^C and die() will return to
 # the prompt but will not be able to reset the force_update
 # attributes. We try to correct for it currently in the read_metadata
@@ -4972,46 +4973,66 @@ sub unsat_prereq {
     @need;
 }
 
+#-> sub CPAN::Distribution::read_yaml ;
+sub read_yaml {
+    my($self) = @_;
+    return $self->{yaml_content} if exists $self->{yaml_content};
+    my $yaml = "META.yml";
+    return unless -f $yaml;
+    if ($CPAN::META->has_inst("YAML")) {
+        eval { $self->{yaml_content} = YAML::LoadFile($yaml); };
+        if ($@) {
+            $self->mydie("Error while parsing META.yml: $@");
+        }
+    }
+    return $self->{yaml_content};
+}
+
 #-> sub CPAN::Distribution::prereq_pm ;
 sub prereq_pm {
-  my($self) = @_;
-  return $self->{prereq_pm} if
-      exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
-  return unless $self->{writemakefile}; # no need to have succeeded
-                                        # but we must have run it
-  my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
-  my $makefile = File::Spec->catfile($build_dir,"Makefile");
-  my(%p) = ();
-  my $fh;
-  if (-f $makefile
-      and
-      $fh = FileHandle->new("<$makefile\0")) {
+    my($self) = @_;
+    return $self->{prereq_pm} if
+        exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
+    if (my $yaml = $self->read_yaml) {
+        $self->{prereq_pm_detected}++;
+        return $self->{prereq_pm} = $yaml->{requires};
+    } else {
+        return unless $self->{writemakefile}; # no need to have
+                                              # succeeded but we must
+                                              # have run it
+        my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
+        my $makefile = File::Spec->catfile($build_dir,"Makefile");
+        my(%p) = ();
+        my $fh;
+        if (-f $makefile
+            and
+            $fh = FileHandle->new("<$makefile\0")) {
+            local($/) = "\n";
+            #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
+            while (<$fh>) {
+                last if /MakeMaker post_initialize section/;
+                my($p) = m{^[\#]
+                           \s+PREREQ_PM\s+=>\s+(.+)
+                       }x;
+                next unless $p;
+                # warn "Found prereq expr[$p]";
 
-      local($/) = "\n";
-
-      #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
-      while (<$fh>) {
-          last if /MakeMaker post_initialize section/;
-          my($p) = m{^[\#]
-		 \s+PREREQ_PM\s+=>\s+(.+)
-		 }x;
-          next unless $p;
-          # warn "Found prereq expr[$p]";
-
-          #  Regexp modified by A.Speer to remember actual version of file
-          #  PREREQ_PM hash key wants, then add to
-          while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
-              # In case a prereq is mentioned twice, complain.
-              if ( defined $p{$1} ) {
-                  warn "Warning: PREREQ_PM mentions $1 more than once, last mention wins";
-              }
-              $p{$1} = $2;
-          }
-          last;
-      }
-  }
-  $self->{prereq_pm_detected}++;
-  return $self->{prereq_pm} = \%p;
+                #  Regexp modified by A.Speer to remember actual version of file
+                #  PREREQ_PM hash key wants, then add to
+                while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
+                    # In case a prereq is mentioned twice, complain.
+                    if ( defined $p{$1} ) {
+                        warn "Warning: PREREQ_PM mentions $1 more than once, ".
+                            "last mention wins";
+                    }
+                    $p{$1} = $2;
+                }
+                last;
+            }
+        }
+        $self->{prereq_pm_detected}++;
+        return $self->{prereq_pm} = \%p;
+    }
 }
 
 #-> sub CPAN::Distribution::test ;
@@ -5024,8 +5045,8 @@ sub test {
     }
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
     if ($self->{notest}) {
-	$CPAN::Frontend->myprint("Skipping test because of notest pragma\n");
-	return 1;
+        $CPAN::Frontend->myprint("Skipping test because of notest pragma\n");
+        return 1;
     }
 
     $CPAN::Frontend->myprint("Running make test\n");
@@ -5751,6 +5772,7 @@ sub color_cmd_tmps {
 
     return if exists $self->{incommandcolor}
         && $self->{incommandcolor}==$color;
+    return if $depth>=1 && $self->uptodate;
     if ($depth>=100){
         $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
     }

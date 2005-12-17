@@ -1,7 +1,3 @@
-2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* YAML for dependency checking
-
 2005-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
@@ -33,13 +29,15 @@
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
 
+	* YAML for dependency checking in rev 268
+
 	* bz2 support: testobject is ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2
 	DONE in rev 264
 
+	* Todo: sha256 DONE in rev 263
+
 	* Todo: 4th colmn in the 'r' command has not the canonical name
 	but the unneeded D/DC/ stuff. DONE in rev 262.
-
-	* Todo: sha256 DONE in rev 263
 
 	* Globbing on the ls command: completion? REJECTED
 

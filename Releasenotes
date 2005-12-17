@@ -14,6 +14,9 @@
 
 	works but this is, of course, very slow.
 
+	* META.yml data replace the Makefile parsing code if YAML
+	available
+
 	* support SHA256; stops using MD5
 
 	* support bzip2 compression; can be tested with 'install
@@ -22,6 +25,8 @@
 
 	* prettier r command output: the 4th column of the 'r' command
 	drops the redundant X/XX/ prefix
+
+	* tolerant when you type one colon instead of two on module names
 
 2005-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
