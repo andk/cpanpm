@@ -46,6 +46,7 @@ if ($HAVE_FILE_SPEC) {
         unless $sv_from > 0 && $sv_dot > 0;
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
+      unshift @INC, "lib";
       require $version_from;
       open my $fh, "make the-release-name|" or die;
       my $have_version;
