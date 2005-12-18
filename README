@@ -264,7 +264,7 @@ DESCRIPTION
           perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
 
           # install my favorite programs if necessary:
-          for $mod (qw(Net::FTP Digest::MD5 Data::Dumper)){
+          for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
               my $obj = CPAN::Shell->expand('Module',$mod);
               $obj->install;
           }
