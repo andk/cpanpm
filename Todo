@@ -1,5 +1,7 @@
 2005-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Documentation of sudo, ls *, Module::Build, bzip2, YAML;
+
 	* Sudo for Build? Ask mailinglist if we need a
 	build_install_build_command or what weneed there.
 

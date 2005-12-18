@@ -29,6 +29,9 @@
 	ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2'; the CPAN indexer does
 	not yet index bz2 distros
 
+	* major speedup on all commands that need expansion of regular
+	expressions to module names
+	
 	* prettier r command output: the 4th column of the 'r' command
 	drops the redundant X/XX/ prefix
 
