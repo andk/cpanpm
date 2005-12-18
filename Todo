@@ -1,5 +1,8 @@
 2005-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* 'make release' is broken. Apparently I have to follow some sequence to
+	make release:-(
+
 	* Documentation of sudo, ls *, Module::Build, bzip2, YAML;
 
 	* Sudo for Build? Ask mailinglist if we need a
