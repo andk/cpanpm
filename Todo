@@ -1,8 +1,31 @@
-2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2005-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* make selectable in the config if M:B should be chosen over Makefile.PL???
+	* Sudo for Build? Ask mailinglist if we need a
+	build_install_build_command or what weneed there.
 
-	* make 'sudo ./Build' available similarly as 'sudo make'
+	* Bug: The following prints "incommandcolor" which should never happen:
+
+perl -Ilib -MCPAN -e 'CPAN::Shell->$_("MARKSTOS/Test-XML-Valid-0.04.tar.gz") for qw(clean d);'
+CPAN: LWP::UserAgent loaded ok
+CPAN: URI::URL loaded ok
+Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok
+Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
+  Database was generated on Sun, 18 Dec 2005 00:23:31 GMT
+Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
+CPAN: Storable loaded ok
+Going to write /home/k/.cpan/Metadata
+Running make clean
+  Has no own directory
+Distribution id = M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
+    CPAN_USERID  MARKSTOS (Mark Stosberg <mark@summersault.com>)
+    CALLED_FOR   M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
+    CONTAINSMODS Test::XML::Valid
+    UPLOAD_DATE  2004-06-01
+    incommandcolor 0
+
+	* FirstTime needs a stucture over each question or questiongroup so that
+	we can ask single questions.
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.
@@ -22,6 +45,11 @@
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* make selectable in the config if M:B should be chosen over
+	Makefile.PL. prefer_installer DONE in rev 271
 
 	* Bug: tolerance on colon only works with m command but not with install command:
 
@@ -50,29 +78,15 @@ Module id = Class::Container
 	* switch back and forth between preferring Build.PL or Makefile.PL; find
 	12 modules that are good for testing Module::Build:
 
-	SVN::Notify::Mirror  failed a test with "could not exe svnnotify" but it
+	SVN::Notify::Mirror  failed a test with "could not exec svnnotify" but it
                        worked on the commandline
 
-	SVN::Notify::Config  the whole family of SVN::Notify is a mess, dependency-wise???
+	SVN::Notify::Config  is the whole family of SVN::Notify a mess, dependency-wise?
 
 	SVN::Notify          must be installed first???
 
-	Text::Lorem
-
-	HTTP::Proxy
-
-	Workflow
-
-	Calendar::Simple
-
-	DateTime::HiRes
-
-	CGI::Wiki::Kwiki
-
-	Class::Container
-
-	HTML::TagCloud
-
+	Text::Lorem HTTP::Proxy Workflow Calendar::Simple DateTime::HiRes
+	CGI::Wiki::Kwiki Class::Container HTML::TagCloud
 	Data::FormValidator::Util::HTML
 
 	DONE for rev 269

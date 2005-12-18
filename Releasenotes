@@ -1,6 +1,11 @@
 2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.80_50
+	* release 1.80_51
+
+	* Support for Module::Build: to se the preference fo Module::Build over MakeMake, run
+
+	  o conf prefer_installer MB
+	  o conf commit
 
 	* ls command supports globbing:
 

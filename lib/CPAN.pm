@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_50';
+$VERSION = '1.80_51';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -264,7 +264,7 @@ use vars qw(%can %keys $dot_cpan);
     lynx
     make make_arg make_install_arg make_install_make_command makepl_arg
     ncftp ncftpget no_proxy pager
-    prerequisites_policy
+    prefer_installer prerequisites_policy
     scan_cache shell show_upload_date
     tar term_is_latin
     unzip urllist
@@ -3366,6 +3366,7 @@ sub rd_authindex {
     local(*FH);
     tie *FH, 'CPAN::Tarzip', $index_target;
     local($/) = "\n";
+    local($_);
     push @lines, split /\012/ while <FH>;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
@@ -3394,6 +3395,7 @@ sub rd_modpacks {
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local($/) = "\n";
+    local $_;
     while ($_ = $fh->READLINE) {
 	s/\012/\n/g;
 	my @ls = map {"$_\n"} split /\n/, $_;
@@ -3577,6 +3579,7 @@ sub rd_modlist {
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     my @eval;
     local($/) = "\n";
+    local $_;
     while ($_ = $fh->READLINE) {
 	s/\012/\n/g;
 	my @ls = map {"$_\n"} split /\n/, $_;
@@ -4266,7 +4269,6 @@ retry.};
     return if $CPAN::Signal;
 
 
-
     my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
@@ -4279,7 +4281,17 @@ retry.};
         $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
         $mpldh->close;
     }
+    my $prefer_installer = "eumm"; # eumm|mb
     if (-f File::Spec->catfile($packagedir,"Build.PL")) {
+        if ($mpl_exists) { # they *can* choose
+            if ($CPAN::META->has_inst("Module::Build")) {
+                $prefer_installer = $CPAN::Config->{prefer_installer};
+            }
+        } else {
+            $prefer_installer = "mb";
+        }
+    }
+    if (lc($prefer_installer) eq "mb") {
         $self->{modulebuild} = "YES";
     } elsif (! $mpl_exists) {
         $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
@@ -5154,12 +5166,15 @@ sub clean {
       # will untar everything again. Instead we should bring the
       # object's state back to where it is after untarring.
 
-      delete $self->{force_update};
-      delete $self->{install};
-      delete $self->{writemakefile};
-      delete $self->{make};
-      delete $self->{make_test}; # no matter if yes or no, tests must be redone
-      delete $self->{yaml_content};
+      for my $k (qw(
+                    force_update
+                    install
+                    writemakefile
+                    make
+                    make_test
+                   )) {
+          delete $self->{$k};
+      }
       $self->{make_clean} = "YES";
 
     } else {

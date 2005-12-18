@@ -383,6 +383,25 @@ by ENTER.
 
     $CPAN::Frontend->myprint( qq{
 
+When you have Module::Build installed and a module comes with both a
+Makefile.PL and a Build.PL, which shall have precedence? The two
+installer modules we have are the old and well established
+ExtUtils::MakeMaker (for short: EUMM) understands the Makefile.PL and
+the next generation installer Module::Build (MB) works with the
+Build.PL.
+
+});
+
+    $default = $CPAN::Config->{prefer_installer} || "";
+    do {
+      $ans =
+	  prompt("In case you could choose, which installer would you prefer (EUMM or MB)?",
+		 $default);
+    } while ($ans ne 'follow' && $ans ne 'ask' && $ans ne 'ignore');
+    $CPAN::Config->{prefer_installer} = $ans;
+
+    $CPAN::Frontend->myprint( qq{
+
 Every Makefile.PL is run by perl in a separate process. Likewise we
 run \'make\' and \'make install\' in separate processes. If you have
 any parameters \(e.g. PREFIX, LIB, UNINST or the like\) you want to
