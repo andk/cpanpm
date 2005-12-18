@@ -145,7 +145,7 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
-release :: dist
+release :: ci sign dist
 	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 
 sign:
