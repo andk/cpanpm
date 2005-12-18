@@ -2,7 +2,8 @@
 
 	* release 1.80_51
 
-	* Support for Module::Build: to se the preference fo Module::Build over MakeMake, run
+	* Support for Module::Build: to set the preference for
+	Module::Build over MakeMaker, run
 
 	  o conf prefer_installer MB
 	  o conf commit
@@ -22,11 +23,11 @@
 	* META.yml data replace the Makefile parsing code if YAML
 	available
 
-	* support SHA256; stops using MD5
+	* support SHA256; stop using MD5
 
 	* support bzip2 compression; can be tested with 'install
-	ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2'; th CPAN indexer does not
-	yet index bz2 distros
+	ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2'; the CPAN indexer does
+	not yet index bz2 distros
 
 	* prettier r command output: the 4th column of the 'r' command
 	drops the redundant X/XX/ prefix
