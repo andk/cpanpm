@@ -1,33 +1,15 @@
+2005-12-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* add to the Bundle: YAML, Text::Glob, Module::Build, Digest::SHA
+
 2005-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* 'make release' is broken. Apparently I have to follow some sequence to
-	make release:-(
+	* Frankly, among all open issues is none that attracts my attention at
+	the moment. I think that documentation should be the next step and see
+	what the M:B mailing list is asking for and quickly aim for a new stable
+	release.
 
 	* Documentation of sudo, ls *, Module::Build, bzip2, YAML;
-
-	* Sudo for Build? Ask mailinglist if we need a
-	build_install_build_command or what weneed there.
-
-	* Bug: The following prints "incommandcolor" which should never happen:
-
-perl -Ilib -MCPAN -e 'CPAN::Shell->$_("MARKSTOS/Test-XML-Valid-0.04.tar.gz") for qw(clean d);'
-CPAN: LWP::UserAgent loaded ok
-CPAN: URI::URL loaded ok
-Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
-CPAN: Compress::Zlib loaded ok
-Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
-  Database was generated on Sun, 18 Dec 2005 00:23:31 GMT
-Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
-CPAN: Storable loaded ok
-Going to write /home/k/.cpan/Metadata
-Running make clean
-  Has no own directory
-Distribution id = M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
-    CPAN_USERID  MARKSTOS (Mark Stosberg <mark@summersault.com>)
-    CALLED_FOR   M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
-    CONTAINSMODS Test::XML::Valid
-    UPLOAD_DATE  2004-06-01
-    incommandcolor 0
 
 	* FirstTime needs a stucture over each question or questiongroup so that
 	we can ask single questions.
@@ -50,6 +32,35 @@ Distribution id = M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+	* Sudo for Build? Ask mailinglist if we need a
+	build_install_build_command or what weneed there.
+
+	* 'make release' is broken. Apparently I have to follow some sequence to
+	make release:-( MAYBE FIXED
+
+	* Bug: The following prints "incommandcolor" which should never happen:
+
+perl -Ilib -MCPAN -e 'CPAN::Shell->$_("MARKSTOS/Test-XML-Valid-0.04.tar.gz") for qw(clean d);'
+CPAN: LWP::UserAgent loaded ok
+CPAN: URI::URL loaded ok
+Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok
+Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
+  Database was generated on Sun, 18 Dec 2005 00:23:31 GMT
+Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
+CPAN: Storable loaded ok
+Going to write /home/k/.cpan/Metadata
+Running make clean
+  Has no own directory
+Distribution id = M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
+    CPAN_USERID  MARKSTOS (Mark Stosberg <mark@summersault.com>)
+    CALLED_FOR   M/MA/MARKSTOS/Test-XML-Valid-0.04.tar.gz
+    CONTAINSMODS Test::XML::Valid
+    UPLOAD_DATE  2004-06-01
+    incommandcolor 0
+
+	FIXED in rev 279
 
 2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

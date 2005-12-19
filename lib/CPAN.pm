@@ -2309,6 +2309,7 @@ to find objects with matching identifiers.
     }
     for my $obj (@qcopy) {
         $obj->color_cmd_tmps(0,0);
+        delete $obj->{incommandcolor};
     }
 }
 
@@ -3998,6 +3999,7 @@ sub normalize {
     $s;
 }
 
+# mark as dirty/clean
 #-> sub CPAN::Distribution::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
@@ -5134,11 +5136,14 @@ sub clean {
     my($self) = @_;
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint("Running $make clean\n");
+    unless (exists $self->{build_dir}) {
+        $CPAN::Frontend->mywarn("Distribution has no own directory, nothing to do.\n");
+        return 1;
+    }
   EXCUSE: {
 	my @e;
         exists $self->{make_clean} and $self->{make_clean} eq "YES" and
             push @e, "make clean already called once";
-	exists $self->{build_dir} or push @e, "Has no own directory";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
@@ -5479,6 +5484,7 @@ sub undelay {
     }
 }
 
+# mark as dirty/clean
 #-> sub CPAN::Bundle::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
@@ -5808,6 +5814,7 @@ sub undelay {
     }
 }
 
+# mark as dirty/clean
 #-> sub CPAN::Module::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
