@@ -122,7 +122,7 @@ sub TIEHANDLE {
 	die "Could not gzopen $file";
     $ret = bless {GZ => $gz}, $class;
   } else {
-    my $pipe = "$CPAN::Config->{gzip} --decompress --stdout $file |";
+    my $pipe = "$CPAN::Config->{gzip} -dc $file |";
     my $fh = FileHandle->new($pipe) or die "Could not pipe[$pipe]: $!";
     binmode $fh;
     $ret = bless {FH => $fh}, $class;
@@ -207,7 +207,7 @@ installed. Can't continue.
     my($system);
     my $is_compressed = $self->gtest();
     if ($is_compressed) {
-      $system = "$self->{UNGZIPPRG} --decompress --stdout " .
+      $system = "$self->{UNGZIPPRG} -dc " .
           "< $file | $CPAN::Config->{tar} xvf -";
     } else {
       $system = "$CPAN::Config->{tar} xvf $file";
