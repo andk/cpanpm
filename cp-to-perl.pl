@@ -35,6 +35,7 @@ my $MAP = {
                                     )]],
            "lib/" => ["lib/"  => [qw(
                                      lib/CPAN.pm
+                                     lib/CPAN/Config.pm
                                      lib/CPAN/Debug.pm
                                      lib/CPAN/FirstTime.pm
                                      lib/CPAN/Nox.pm
