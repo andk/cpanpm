@@ -4,7 +4,7 @@ $VERSION = '1.80_52';
 $VERSION = eval $VERSION;
 use strict;
 
-use CPAN::Config;
+use CPAN::HandleConfig;
 use CPAN::Version;
 use CPAN::Debug;
 use CPAN::Tarzip;
@@ -32,26 +32,6 @@ require Mac::BuildTools if $^O eq 'MacOS';
 
 END { $CPAN::End++; &cleanup; }
 
-%CPAN::DEBUG = qw[
-		  CPAN              1
-		  Index             2
-		  InfoObj           4
-		  Author            8
-		  Distribution     16
-		  Bundle           32
-		  Module           64
-		  CacheMgr        128
-		  Complete        256
-		  FTP             512
-		  Shell          1024
-		  Eval           2048
-		  Config         4096
-		  Tarzip         8192
-		  Version       16384
-		  Queue         32768
-];
-
-$CPAN::DEBUG ||= 0;
 $CPAN::Signal ||= 0;
 $CPAN::Frontend ||= "CPAN::Shell";
 $CPAN::Defaultsite ||= "ftp://ftp.perl.org/pub/CPAN";
@@ -82,7 +62,7 @@ sub AUTOLOAD {
     $l =~ s/.*:://;
     my(%EXPORT);
     @EXPORT{@EXPORT} = '';
-    CPAN::Config->load unless $CPAN::Config_loaded++;
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
     if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
@@ -97,7 +77,7 @@ sub AUTOLOAD {
 sub shell {
     my($self) = @_;
     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
-    CPAN::Config->load unless $CPAN::Config_loaded++;
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
 
     my $oprompt = shift || "cpan> ";
     my $prompt = $oprompt;
@@ -487,7 +467,7 @@ $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 #-> sub CPAN::all_objects ;
 sub all_objects {
     my($mgr,$class) = @_;
-    CPAN::Config->load unless $CPAN::Config_loaded++;
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
     CPAN->debug("mgr[$mgr] class[$class]") if $CPAN::DEBUG;
     CPAN::Index->reload;
     values %{ $META->{readwrite}{$class} }; # unsafe meta access, ok
@@ -705,7 +685,7 @@ sub find_perl {
 #-> sub CPAN::exists ;
 sub exists {
     my($mgr,$class,$id) = @_;
-    CPAN::Config->load unless $CPAN::Config_loaded++;
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
     CPAN::Index->reload;
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
@@ -1257,8 +1237,8 @@ sub o {
 	      $CPAN::Frontend->myprint(" and $INC{'CPAN/MyConfig.pm'}");
 	    }
 	    $CPAN::Frontend->myprint(":\n");
-	    for $k (sort keys %CPAN::Config::can) {
-		$v = $CPAN::Config::can{$k};
+	    for $k (sort keys %CPAN::HandleConfig::can) {
+		$v = $CPAN::HandleConfig::can{$k};
 		$CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
 	    }
 	    $CPAN::Frontend->myprint("\n");
@@ -1266,7 +1246,7 @@ sub o {
                 CPAN::Config->prettyprint($k);
 	    }
 	    $CPAN::Frontend->myprint("\n");
-	} elsif (!CPAN::Config->edit(@o_what)) {
+	} elsif (!CPAN::HandleConfig->edit(@o_what)) {
 	    $CPAN::Frontend->myprint(qq{Type 'o conf' to view configuration }.
                                      qq{edit options\n\n});
 	}
@@ -1352,7 +1332,7 @@ sub reload {
     $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
     if ($command =~ /cpan/i) {
         my $redef = 0;
-        for my $f (qw(CPAN.pm CPAN/Config.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
+        for my $f (qw(CPAN.pm CPAN/HandleConfig.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
                       CPAN/Debug.pm CPAN/Version.pm)) {
             next unless $INC{$f};
             my $pwd = CPAN::anycwd();
@@ -1553,7 +1533,7 @@ sub u {
 #-> sub CPAN::Shell::autobundle ;
 sub autobundle {
     my($self) = shift;
-    CPAN::Config->load unless $CPAN::Config_loaded++;
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
     my(@bundle) = $self->_u_r_common("a",@_);
     my($todir) = File::Spec->catdir($CPAN::Config->{'cpan_home'},"Bundle");
     File::Path::mkpath($todir);
@@ -2890,7 +2870,7 @@ sub cpl_option {
     } elsif ($words[1] eq 'index') {
 	return ();
     } elsif ($words[1] eq 'conf') {
-	return CPAN::Config::cpl(@_);
+	return CPAN::HandleConfig::cpl(@_);
     } elsif ($words[1] eq 'debug') {
 	return sort grep /^\Q$word\E/,
             sort keys %CPAN::DEBUG, 'all';
@@ -2988,7 +2968,7 @@ sub reload {
 sub reload_x {
     my($cl,$wanted,$localname,$force) = @_;
     $force |= 2; # means we're dealing with an index here
-    CPAN::Config->load; # we should guarantee loading wherever we rely
+    CPAN::HandleConfig->load; # we should guarantee loading wherever we rely
                         # on Config XXX
     $localname ||= $wanted;
     my $abs_wanted = File::Spec->catfile($CPAN::Config->{'keep_source_where'},

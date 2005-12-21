@@ -1,4 +1,4 @@
-package CPAN::Config;
+package CPAN::HandleConfig;
 use strict;
 use vars qw(%can %keys $dot_cpan);
 

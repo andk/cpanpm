@@ -397,7 +397,7 @@ Build.PL.
       $ans =
 	  prompt("In case you could choose, which installer would you prefer (EUMM or MB)?",
 		 $default);
-    } while ($ans ne 'follow' && $ans ne 'ask' && $ans ne 'ignore');
+    } while (uc $ans ne 'MB' && uc $ans ne 'EUMM');
     $CPAN::Config->{prefer_installer} = $ans;
 
     $CPAN::Frontend->myprint( qq{
@@ -511,7 +511,7 @@ the default and recommended setting.
 
     $default = $CPAN::Config->{inactivity_timeout} || 0;
     $CPAN::Config->{inactivity_timeout} =
-	prompt("Timeout for inactivity during Makefile.PL?",$default);
+	prompt("Timeout for inactivity during {Makefile,Build}.PL?",$default);
 
     # Proxies
 
@@ -577,7 +577,7 @@ be echoed to the terminal!
     $CPAN::Config->{'getcwd'} = 'cwd';
 
     $CPAN::Frontend->myprint("\n\n");
-    CPAN::Config->commit($configpm);
+    CPAN::HandleConfig->commit($configpm);
 }
 
 sub conf_sites {
