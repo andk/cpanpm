@@ -1,10 +1,10 @@
 2005-12-21  Andreas J Koenig  <akoenig@cellular.de>
 
-	* Can't locate object method "prettyprint" via package "CPAN::Config" at
-	lib/CPAN.pm line 1246, <STDIN> line 2.
-
 	* Bug: Module::Install writes into META.yml "perl: 5.004" and we take it
-	as a Module requirement. Who's bug?
+	as a Module requirement. Whose bug?
+
+	* Can't locate object method "prettyprint" via package "CPAN::Config" at
+	lib/CPAN.pm line 1246, <STDIN> line 2. FIXED in rev 288
 
 2005-12-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
