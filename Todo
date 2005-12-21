@@ -1,6 +1,6 @@
 2005-12-21  Andreas J Koenig  <akoenig@cellular.de>
 
-	* complete 'o conf' does not show commit FIXED in 
+	* complete 'o conf' does not show commit. FIXED in rev 291
 
 	* Bug: Module::Install writes into META.yml "perl: 5.004" and we take it
 	as a Module requirement. Whose bug? WORKAROUND in rev 290

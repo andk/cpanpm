@@ -4655,7 +4655,9 @@ sub prereq_pm {
         || $self->{mudulebuild};
     if (my $yaml = $self->read_yaml) {
         $self->{prereq_pm_detected}++;
-        return $self->{prereq_pm} = $yaml->{requires};
+        my $req =  $yaml->{requires};
+        return unless ref $req eq "HASH";
+        return $self->{prereq_pm} = $req;
     } else {
         my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
         my $makefile = File::Spec->catfile($build_dir,"Makefile");
