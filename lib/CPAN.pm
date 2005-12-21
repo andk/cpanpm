@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_51';
+$VERSION = '1.80_52';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -4482,7 +4482,7 @@ or
         $system = $self->{'configure'};
     } elsif ($self->{modulebuild}) {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
-        $system = "$perl Build.PL";
+        $system = "$perl Build.PL $CPAN::Config->{mbuildpl_arg}";
     } else {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
 	my $switch = "";
@@ -4551,7 +4551,7 @@ or
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
     if ($self->{modulebuild}) {
-        $system = "./Build";
+        $system = "./Build $CPAN::Config->{mbuild_arg}";
     } else {
         $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
     }
@@ -4892,7 +4892,13 @@ sub install {
 
     my $system;
     if ($self->{modulebuild}) {
-        $system = "./Build install";
+        my($mbuild_install_build_command) = $CPAN::Config->{'mbuild_install_build_command'} ||
+            "./Build";
+        $system = join(" ",
+                       $mbuild_install_build_command,
+                       "install",
+                       $CPAN::Config->{mbuild_install_arg},
+                      );
     } else {
         my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
             $CPAN::Config->{'make'};

@@ -19,6 +19,7 @@ use vars qw(%can %keys $dot_cpan);
     keep_source_where
     lynx
     make make_arg make_install_arg make_install_make_command makepl_arg
+    mbuild_arg mbuild_install_arg mbuild_install_build_command mbuildpl_arg
     ncftp ncftpget no_proxy pager
     prefer_installer prerequisites_policy
     scan_cache shell show_upload_date
