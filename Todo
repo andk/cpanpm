@@ -1,7 +1,7 @@
 2005-12-21  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Bug: Module::Install writes into META.yml "perl: 5.004" and we take it
-	as a Module requirement. Whose bug?
+	as a Module requirement. Whose bug? WORKAROUND in rev 290
 
 	* Can't locate object method "prettyprint" via package "CPAN::Config" at
 	lib/CPAN.pm line 1246, <STDIN> line 2. FIXED in rev 288

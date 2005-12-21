@@ -4547,7 +4547,8 @@ or
 
 sub follow_prereqs {
     my($self) = shift;
-    my(@prereq) = @_;
+    my(@prereq) = grep {$_ ne "perl"} @_;
+    return unless @prereq;
     my $id = $self->id;
     $CPAN::Frontend->myprint("---- Unsatisfied dependencies detected ".
                              "during [$id] -----\n");
