@@ -1243,7 +1243,7 @@ sub o {
 	    }
 	    $CPAN::Frontend->myprint("\n");
 	    for $k (sort keys %$CPAN::Config) {
-                CPAN::Config->prettyprint($k);
+                CPAN::HandleConfig->prettyprint($k);
 	    }
 	    $CPAN::Frontend->myprint("\n");
 	} elsif (!CPAN::HandleConfig->edit(@o_what)) {
