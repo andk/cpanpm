@@ -28,7 +28,6 @@ use vars qw(%can %keys $dot_cpan);
     wait_list wget
 );
 
-#-> sub CPAN::Config::edit ;
 # returns true on successful action
 sub edit {
     my($self,@args) = @_;
@@ -111,7 +110,6 @@ sub prettyprint {
   }
 }
 
-#-> sub CPAN::Config::commit ;
 sub commit {
     my($self,$configpm) = @_;
     unless (defined $configpm){
@@ -165,7 +163,6 @@ EOF
 }
 
 *default = \&defaults;
-#-> sub CPAN::Config::defaults ;
 sub defaults {
     my($self) = @_;
     $self->unload;
@@ -214,7 +211,6 @@ END
     } else { return }
 }
 
-#-> sub CPAN::Config::load ;
 sub load {
     my($self, %args) = @_;
 	$CPAN::Be_Silent++ if $args{be_silent};
@@ -274,7 +270,6 @@ $configpm initialized.
     CPAN::FirstTime::init($configpm, %args);
 }
 
-#-> sub CPAN::Config::missing_config_data ;
 sub missing_config_data {
     my(@miss);
     for (
@@ -291,13 +286,11 @@ sub missing_config_data {
     return @miss;
 }
 
-#-> sub CPAN::Config::unload ;
 sub unload {
     delete $INC{'CPAN/MyConfig.pm'};
     delete $INC{'CPAN/Config.pm'};
 }
 
-#-> sub CPAN::Config::help ;
 sub help {
     $CPAN::Frontend->myprint(q[
 Known options:
@@ -320,7 +313,6 @@ letter o):
     undef; #don't reprint CPAN::Config
 }
 
-#-> sub CPAN::Config::cpl ;
 sub cpl {
     my($word,$line,$pos) = @_;
     $word ||= "";
@@ -341,9 +333,9 @@ sub cpl {
     }
     my %seen;
     my(@o_conf) =  sort grep { !$seen{$_}++ }
-        keys %CPAN::Config::can,
+        keys %can,
             keys %$CPAN::Config,
-                keys %CPAN::Config::keys;
+                keys %keys;
     return grep /^\Q$word\E/, @o_conf;
 }
 
