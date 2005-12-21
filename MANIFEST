@@ -17,6 +17,7 @@ lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/Debug.pm
 lib/CPAN/FirstTime.pm
+lib/CPAN/HandleConfig.pm
 lib/CPAN/Nox.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
