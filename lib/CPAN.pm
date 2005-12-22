@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_53';
+$VERSION = '1.80_54';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -4594,7 +4594,7 @@ sub unsat_prereq {
 
         # if they have not specified a version, we accept any installed one
         if (not defined $need_version or
-           $need_version == 0 or
+           $need_version eq "0" or
            $need_version eq "undef") {
             next if defined $nmo->inst_file;
         }
@@ -4602,20 +4602,44 @@ sub unsat_prereq {
         # We only want to install prereqs if either they're not installed
         # or if the installed version is too old. We cannot omit this
         # check, because if 'force' is in effect, nobody else will check.
-        {
+        if (defined $nmo->inst_file) {
+            my(@all_requirements) = split /\s*,\s*/, $need_version;
             local($^W) = 0;
-            if (
-                defined $nmo->inst_file &&
-                ! CPAN::Version->vgt($need_version, $nmo->inst_version)
-               ){
-                CPAN->debug(sprintf "id[%s]inst_file[%s]inst_version[%s]need_version[%s]",
+            my $ok = 0;
+          RQ: for my $rq (@all_requirements) {
+                if ($rq =~ s|>=\s*||) {
+                } elsif ($rq =~ s|>\s*||) {
+                    # 2005-12: one user
+                    if (CPAN::Version->vgt($nmo->inst_version,$rq)){
+                        $ok++;
+                    }
+                    next RQ;
+                } elsif ($rq =~ s|!=\s*||) {
+                    # 2005-12: no user
+                    if (CPAN::Version->vcmp($nmo->inst_version,$rq)){
+                        $ok++;
+                        next RQ;
+                    } else {
+                        last RQ;
+                    }
+                } elsif ($rq =~ m|<=?\s*|) {
+                    # 2005-12: no user
+                    $CPAN::Frontend->mywarn("Downgrading not supported (rq[$rq])");
+                    $ok++;
+                    next RQ;
+                }
+                if (! CPAN::Version->vgt($rq, $nmo->inst_version)){
+                    $ok++;
+                }
+                CPAN->debug(sprintf "id[%s]inst_file[%s]inst_version[%s]rq[%s]ok[%d]",
                             $nmo->id,
                             $nmo->inst_file,
                             $nmo->inst_version,
-                            CPAN::Version->readable($need_version)
-                           );
-                next NEED;
+                            CPAN::Version->readable($rq),
+                            $ok,
+                           ) if $CPAN::DEBUG;
             }
+            next NEED if $ok == @all_requirements;
         }
 
         if ($self->{sponsored_mods}{$need_module}++){
@@ -4639,7 +4663,8 @@ sub read_yaml {
     if ($CPAN::META->has_inst("YAML")) {
         eval { $self->{yaml_content} = YAML::LoadFile($yaml); };
         if ($@) {
-            $self->mydie("Error while parsing META.yml: $@");
+            $CPAN::Frontend->mywarn("Error while parsing META.yml: $@");
+            return;
         }
     }
     return $self->{yaml_content};
@@ -4653,21 +4678,51 @@ sub prereq_pm {
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
         || $self->{mudulebuild};
+    my $req;
     if (my $yaml = $self->read_yaml) {
-        $self->{prereq_pm_detected}++;
-        my $req =  $yaml->{requires};
-        return unless ref $req eq "HASH";
-        return $self->{prereq_pm} = $req;
-    } else {
+        $req =  $yaml->{requires};
+        undef $req unless ref $req eq "HASH" && %$req;
+        if ($req) {
+            if ($yaml->{generated_by} =~ /ExtUtils::MakeMaker version ([\d\._]+)/) {
+                my $eummv = do { local $^W = 0; $1+0; };
+                if ($eummv < 6.2501) {
+                    # thanks to Slaven for digging that out: MM before
+                    # that could be wrong because it could reflect a
+                    # previous release
+                    undef $req;
+                }
+            } elsif ($yaml->{generated_by} =~ /Module::Install/) {
+                # They do no input checking, witness RHUNDT/Oryx-0.17.tar.gz
+                my $areq;
+                my $do_replace;
+                while (my($k,$v) = each %$req) {
+                    if ($v =~ /\d/) {
+                        $areq->{$k} = $v;
+                    } elsif ($k =~ /[A-Za-z]/ && $v =~ /[A-Za-z]/) {
+                        $CPAN::Frontend->mywarn("Suspicious key-value pair in META.yml's ".
+                                                "requires hash: $k => $v; interpreting ".
+                                                "both as module names\n");
+                        sleep 1;
+                        $areq->{$k} = 0;
+                        $areq->{$v} = 0;
+                        $do_replace++;
+                    }
+                }
+                $req = $areq if $do_replace;
+            }
+        }
+        if ($req) {
+            delete $req->{perl};
+        }
+    }
+    unless ($req) {
         my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
         my $makefile = File::Spec->catfile($build_dir,"Makefile");
-        my(%p) = ();
         my $fh;
         if (-f $makefile
             and
             $fh = FileHandle->new("<$makefile\0")) {
             local($/) = "\n";
-            #  A.Speer @p -> %p, where %p is $p{Module::Name}=Required_Version
             while (<$fh>) {
                 last if /MakeMaker post_initialize section/;
                 my($p) = m{^[\#]
@@ -4680,18 +4735,18 @@ sub prereq_pm {
                 #  PREREQ_PM hash key wants, then add to
                 while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
                     # In case a prereq is mentioned twice, complain.
-                    if ( defined $p{$1} ) {
+                    if ( defined $req->{$1} ) {
                         warn "Warning: PREREQ_PM mentions $1 more than once, ".
                             "last mention wins";
                     }
-                    $p{$1} = $2;
+                    $req->{$1} = $2;
                 }
                 last;
             }
         }
-        $self->{prereq_pm_detected}++;
-        return $self->{prereq_pm} = \%p;
     }
+    $self->{prereq_pm_detected}++;
+    return $self->{prereq_pm} = $req;
 }
 
 #-> sub CPAN::Distribution::test ;
