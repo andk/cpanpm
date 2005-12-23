@@ -1095,7 +1095,7 @@ sub ls {
     my($self,@arg) = @_;
     my(@accept,@preexpand);
     for my $arg (@arg) {
-        if ($arg =~ /[\*\?]/) {
+        if ($arg =~ /[\*\?\/]/) {
             if ($CPAN::META->has_inst("Text::Glob")) {
                 if (my($au,$pathglob) = $arg =~ m|(.*?)/(.*)|) {
                     my $rau = Text::Glob::glob_to_regex(uc $au);
