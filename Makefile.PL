@@ -145,7 +145,7 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
-release :: ci sign dist
+release ::
 	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 
 sign:
@@ -162,7 +162,7 @@ upload-batch-signing-key:
 	gpg --send-key 450F89EC
 
 howto-release:
-	$(ECHO) make ci sign test dist release
+	@$(ECHO) make ci dist \&\& make release
 }
 }
 

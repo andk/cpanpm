@@ -8,29 +8,30 @@
 	  o conf prefer_installer MB
 	  o conf commit
 
-	* ls command supports globbing:
+	* ls command supports globbing; these work nicely:
 
 	  ls KWILLIAMS/P*
-	and
 	  ls JV/make*
 
-	work nicely; even
+	this works too but is slow:
 
 	  ls */*make*
 
-	works but this is, of course, very slow.
-
 	* META.yml data replace the Makefile parsing code if YAML
-	available
+	available (compensating for the frequent wrong usage of the
+	requires element)
 
 	* support SHA256; stop using MD5
 
 	* support bzip2 compression; can be tested with 'install
 	ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2'; the CPAN indexer does
-	not yet index bz2 distros
+	not yet index bz2 distros but will probably start to do so as soon
+	as CPANPLUS supports bzip2
 
-	* major speedup on all commands that need expansion of regular
-	expressions to module names
+	* tiny tweaks to make CPAN.pm run on a busybox (Guillaume Filion)
+
+	* bugfix: major speedup on all commands that need expansion of
+	regular expressions to module names
 	
 	* prettier r command output: the 4th column of the 'r' command
 	drops the redundant X/XX/ prefix

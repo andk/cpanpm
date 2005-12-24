@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_54';
+$VERSION = '1.80_55';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -4691,25 +4691,26 @@ sub prereq_pm {
                     # previous release
                     undef $req;
                 }
-            } elsif ($yaml->{generated_by} =~ /Module::Install/) {
-                # They do no input checking, witness RHUNDT/Oryx-0.17.tar.gz
-                my $areq;
-                my $do_replace;
-                while (my($k,$v) = each %$req) {
-                    if ($v =~ /\d/) {
-                        $areq->{$k} = $v;
-                    } elsif ($k =~ /[A-Za-z]/ && $v =~ /[A-Za-z]/) {
-                        $CPAN::Frontend->mywarn("Suspicious key-value pair in META.yml's ".
-                                                "requires hash: $k => $v; interpreting ".
-                                                "both as module names\n");
-                        sleep 1;
-                        $areq->{$k} = 0;
-                        $areq->{$v} = 0;
-                        $do_replace++;
-                    }
-                }
-                $req = $areq if $do_replace;
             }
+            my $areq;
+            my $do_replace;
+            while (my($k,$v) = each %$req) {
+                if ($v =~ /\d/) {
+                    $areq->{$k} = $v;
+                } elsif ($k =~ /[A-Za-z]/ &&
+                         $v =~ /[A-Za-z]/ &&
+                         $CPAN::META->exists("Module",$v)
+                        ) {
+                    $CPAN::Frontend->mywarn("Suspicious key-value pair in META.yml's ".
+                                            "requires hash: $k => $v; I'll take both ".
+                                            "key and value as a module name\n");
+                    sleep 1;
+                    $areq->{$k} = 0;
+                    $areq->{$v} = 0;
+                    $do_replace++;
+                }
+            }
+            $req = $areq if $do_replace;
         }
         if ($req) {
             delete $req->{perl};
@@ -6062,7 +6063,7 @@ necessary to perform the action. If the argument is a distribution
 file name (recognized by embedded slashes), it is processed. If it is
 a module, CPAN determines the distribution file in which this module
 is included and processes that, following any dependencies named in
-the module's Makefile.PL (this behavior is controlled by
+the module's META.yml or Makefile.PL (this behavior is controlled by
 I<prerequisites_policy>.)
 
 Any C<make> or C<test> are run unconditionally. An
@@ -6117,10 +6118,21 @@ plain text format.
 
 =item ls author
 
-C<ls> lists all distribution files in and below an author's CPAN
-directory. Only those files that contain modules are listed and if
-there is more than one for any given module, only the most recent one
-is listed.
+=item ls globbing_expresion
+
+The first form lists all distribution files in and below an author's
+CPAN directory as they are stored in the CHECKUMS files distrbute on
+CPAN.
+
+The second form allows to limit or expand the output with shell
+globbing as in the following examples:
+
+	  ls JV/make*
+	  ls GSAR/*make*
+	  ls */*make*
+
+The last example is very slow and outputs extra progress indicators
+that break the alignment of the result.
 
 =item Signals
 
@@ -6132,7 +6144,8 @@ SIGTERM by sending two consecutive SIGINTs, which usually means by
 pressing C<^C> twice.
 
 CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
-SIGALRM is used during the run of the C<perl Makefile.PL> subprocess.
+SIGALRM is used during the run of the C<perl Makefile.PL> or C<perl
+Build.PL> subprocess.
 
 =back
 
@@ -6466,14 +6479,14 @@ opens a subshell there. Exiting the subshell returns.
 First runs the C<get> method to make sure the distribution is
 downloaded and unpacked. Changes to the directory where the
 distribution has been unpacked and runs the external commands C<perl
-Makefile.PL> and C<make> there.
+Makefile.PL> or C<perl Build.PL> and C<make> there.
 
 =item CPAN::Distribution::prereq_pm()
 
 Returns the hash reference that has been announced by a distribution
-as the PREREQ_PM hash in the Makefile.PL. Note: works only after an
-attempt has been made to C<make> the distribution. Returns undef
-otherwise.
+as the C<requires> element of the META.yml or the C<PREREQ_PM> hash in
+the C<Makefile.PL>. Note: works only after an attempt has been made to
+C<make> the distribution. Returns undef otherwise.
 
 =item CPAN::Distribution::readme()
 
@@ -6695,8 +6708,8 @@ parsed, please try the above method.
 =item *
 
 come as compressed or gzipped tarfiles or as zip files and contain a
-Makefile.PL (well, we try to handle a bit more, but without much
-enthusiasm).
+C<Makefile.PL> or C<Build.PL> (well, we try to handle a bit more, but
+without much enthusiasm).
 
 =back
 
@@ -6755,8 +6768,9 @@ defined:
   gzip		     location of external program gzip
   histfile           file to maintain history between sessions
   histsize           maximum number of lines to keep in histfile
-  inactivity_timeout breaks interactive Makefile.PLs after this
-                     many seconds inactivity. Set to 0 to never break.
+  inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
+                     after this many seconds inactivity. Set to 0 to
+                     never break.
   inhibit_startup_message
                      if true, does not print the startup message
   keep_source_where  directory in which to keep the source (if we do)
@@ -6767,7 +6781,16 @@ defined:
                      example 'sudo make'
   make_install_arg   same as make_arg for 'make install'
   makepl_arg	     arguments passed to 'perl Makefile.PL'
+  mbuild_arg	     arguments passed to './Build'
+  mbuild_install_arg arguments passed to './Build install'
+  mbuild_install_build_command
+                     command to use instead of './Build' when we are
+                     in the install stage, for example 'sudo ./Build'
+  mbuildpl_arg       arguments passed to 'perl Build.PL'
   pager              location of external program more (or any pager)
+  prefer_installer   legal values are MB and EUMM: if a module
+                     comes with both a Makefile.PL and a Build.PL, use
+                     the former (EUMM) or the latter (MB)
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
@@ -7185,22 +7208,16 @@ decent command.
 
 =head1 BUGS
 
-We should give coverage for B<all> of the CPAN and not just the PAUSE
-part, right? In this discussion CPAN and PAUSE have become equal --
-but they are not. PAUSE is authors/, modules/ and scripts/. CPAN is
-PAUSE plus the clpa/, doc/, misc/, ports/, and src/.
-
-Future development should be directed towards a better integration of
-the other parts.
-
 If a Makefile.PL requires special customization of libraries, prompts
 the user for special input, etc. then you may find CPAN is not able to
-build the distribution. In that case, you should attempt the
-traditional method of building a Perl module package from a shell.
+build the distribution. In that case it is recommended to attempt the
+traditional method of building a Perl module package from a shell, for
+example by using the 'look' command to open a subshell in the
+distribution's own directory.
 
 =head1 AUTHOR
 
-Andreas Koenig E<lt>andreas.koenig@anima.deE<gt>
+Andreas Koenig andk@cpan.org
 
 =head1 TRANSLATIONS
 
@@ -7209,7 +7226,6 @@ http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 
 =head1 SEE ALSO
 
-perl(1), CPAN::Nox(3)
+CPAN::Nox, CPAN::Version
 
 =cut
-
