@@ -1,6 +1,9 @@
 2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.80_51
+	* release 1.80_56 is a release candidate for 1.81
+
+	* integrate release 1.5 of brian's cpan script from
+	http://sourceforge.net/projects/brian-d-foy/
 
 	* Support for Module::Build: to set the preference for
 	Module::Build over MakeMaker, run

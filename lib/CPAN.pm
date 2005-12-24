@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_55';
+$VERSION = '1.80_56';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -7217,7 +7217,7 @@ distribution's own directory.
 
 =head1 AUTHOR
 
-Andreas Koenig andk@cpan.org
+Andreas Koenig C<< <andk@cpan.org> >>
 
 =head1 TRANSLATIONS
 
@@ -7226,6 +7226,6 @@ http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 
 =head1 SEE ALSO
 
-CPAN::Nox, CPAN::Version
+cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
 =cut
