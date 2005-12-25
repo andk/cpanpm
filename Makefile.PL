@@ -83,7 +83,11 @@ if ($HAVE_FILE_SPEC) {
   }
 }
 
-my $prereq_pm = { 'File::Spec' => 0, 'Test::More' => 0 };
+my $prereq_pm = {
+                 'File::Temp' => 0,
+                 'File::Spec' => 0,
+                 'Test::More' => 0,
+                };
 
 if ($HAVE_FILE_SPEC) {
   # import PAUSE public key to user's keychain
