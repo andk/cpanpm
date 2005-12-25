@@ -35,7 +35,7 @@ sub debug {
     ($caller) = caller(0);
     $caller =~ s/.*:://;
     $arg = "" unless defined $arg;
-    pop @rest while @rest > 6;
+    pop @rest while @rest > 5;
     my $rest = join ",", map { defined $_ ? $_ : "UNDEF" } @rest;
     if ($CPAN::DEBUG{$caller} & $CPAN::DEBUG){
         if ($arg and ref $arg) {
