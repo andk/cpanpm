@@ -1247,8 +1247,8 @@ sub o {
 	    }
 	    $CPAN::Frontend->myprint("\n");
 	} elsif (!CPAN::HandleConfig->edit(@o_what)) {
-	    $CPAN::Frontend->myprint(qq{Type 'o conf' to view configuration }.
-                                     qq{edit options\n\n});
+	    $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
+                                     qq{items\n\n});
 	}
     } elsif ($o_type eq 'debug') {
 	my(%valid);
@@ -1343,7 +1343,7 @@ sub reload {
             local $^W = 1;
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
             my $eval = <$fh>;
-            CPAN->debug("evaling '$eval'")
+            CPAN->debug(sprintf("evaling [%s...]\n",substr($eval,0,64)))
                 if $CPAN::DEBUG;
             eval $eval;
             warn $@ if $@;

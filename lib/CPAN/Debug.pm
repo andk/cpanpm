@@ -35,7 +35,8 @@ sub debug {
     ($caller) = caller(0);
     $caller =~ s/.*:://;
     $arg = "" unless defined $arg;
-    my $rest = join "|", map { defined $_ ? $_ : "UNDEF" } @rest;
+    pop @rest while @rest > 6;
+    my $rest = join ",", map { defined $_ ? $_ : "UNDEF" } @rest;
     if ($CPAN::DEBUG{$caller} & $CPAN::DEBUG){
         if ($arg and ref $arg) {
             eval { require Data::Dumper };
