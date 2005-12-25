@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_56';
+$VERSION = '1.80_57';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -5858,7 +5858,10 @@ sub install {
 	&&
 	not exists $self->{'force_update'}
        ) {
-	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
+	$CPAN::Frontend->myprint(sprintf("%s is up to date (%s).\n",
+                                         $self->id,
+                                         $self->inst_version,
+                                        ));
     } else {
 	$doit = 1;
     }

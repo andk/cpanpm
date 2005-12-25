@@ -1094,12 +1094,12 @@ BUGS
     distribution's own directory.
 
 AUTHOR
-    Andreas Koenig andk@cpan.org
+    Andreas Koenig "<andk@cpan.org>"
 
 TRANSLATIONS
     Kawai,Takanori provides a Japanese translation of this manpage at
     http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 
 SEE ALSO
-    CPAN::Nox, CPAN::Version
+    cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
