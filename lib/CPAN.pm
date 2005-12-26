@@ -237,10 +237,22 @@ package CPAN::Complete;
 use strict;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
 @CPAN::Complete::COMMANDS = sort qw(
-		       ! a b d h i m o q r u autobundle clean dump
-		       make test install force readme reload look
-                       cvs_import ls perldoc recent
-) unless @CPAN::Complete::COMMANDS;
+                                    ! a b d h i m o q r u
+                                    autobundle
+                                    clean
+                                    cvs_import
+                                    dump
+                                    force
+                                    install
+                                    look
+                                    ls
+                                    make test
+                                    notest
+                                    perldoc
+                                    readme
+                                    recent
+                                    reload
+);
 
 package CPAN::Index;
 use strict;
@@ -1530,6 +1542,28 @@ sub u {
     shift->_u_r_common("u",@_);
 }
 
+#-> sub CPAN::Shell::failed ;
+sub failed {
+    my($self) = @_;
+    my $print = "";
+  DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
+        my $failed = "";
+        for my $nosayer (qw(make make_test make_install)) {
+            next unless exists $d->{$nosayer};
+            next unless substr($d->{$nosayer},0,2) eq "NO";
+            $failed = $nosayer;
+            last;
+        }
+        next DIST unless $failed;
+        $print .= sprintf " %-45s: %s %s\n", $d->id, $failed, $d->{$failed};
+    }
+    if ($print) {
+        $CPAN::Frontend->myprint("Failed installations:\n$print");
+    } else {
+        $CPAN::Frontend->myprint("No installations failed in this session");
+    }
+}
+
 #-> sub CPAN::Shell::autobundle ;
 sub autobundle {
     my($self) = shift;
@@ -1833,7 +1867,9 @@ sub rematein {
     my @pragma;
     while($meth =~ /^(force|notest)$/) {
 	push @pragma, $meth;
-	$meth = shift @some;
+	$meth = shift @some or
+            $CPAN::Frontend->mydie("Pragma $pragma[-1] used without method: ".
+                                   "cannot continue");
     }
     setup_output();
     CPAN->debug("pragma[@pragma]meth[$meth]some[@some]") if $CPAN::DEBUG;
