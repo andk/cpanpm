@@ -1555,7 +1555,9 @@ sub failed {
             last;
         }
         next DIST unless $failed;
-        $print .= sprintf " %-45s: %s %s\n", $d->id, $failed, $d->{$failed};
+        my $id = $d->id;
+        $id =~ s|^./../||;
+        $print .= sprintf " %-45s: %s %s\n", $id, $failed, $d->{$failed};
     }
     if ($print) {
         $CPAN::Frontend->myprint("Failed installations:\n$print");
