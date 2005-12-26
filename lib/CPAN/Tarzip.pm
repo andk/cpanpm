@@ -55,7 +55,7 @@ sub gzip {
     $fhw->close;
     return 1;
   } else {
-    system("$self->{UNGZIPPRG} -c $read > $write")==0;
+    system(qq{$self->{UNGZIPPRG} -c "$read" > "$write"})==0;
   }
 }
 
@@ -77,7 +77,7 @@ sub gunzip {
     $fhw->close;
     return 1;
   } else {
-    system("$self->{UNGZIPPRG} -dc $read > $write")==0;
+    system(qq{$self->{UNGZIPPRG} -dc "$read" > "$write"})==0;
   }
 }
 
@@ -108,7 +108,7 @@ sub gtest {
     CPAN->debug("err[$err]success[$success]") if $CPAN::DEBUG;
     return $success;
   } else {
-      return system("$self->{UNGZIPPRG} -dt $read")==0;
+      return system(qq{$self->{UNGZIPPRG} -dt "$read"})==0;
   }
 }
 
@@ -207,10 +207,10 @@ installed. Can't continue.
     my($system);
     my $is_compressed = $self->gtest();
     if ($is_compressed) {
-      $system = "$self->{UNGZIPPRG} -dc " .
-          "< $file | $CPAN::Config->{tar} xvf -";
+      $system = qq{$self->{UNGZIPPRG} -dc }.
+          qq{< "$file" | $CPAN::Config->{tar} xvf -};
     } else {
-      $system = "$CPAN::Config->{tar} xvf $file";
+      $system = qq{$CPAN::Config->{tar} xvf "$file"};
     }
     if (system($system) != 0) {
       # people find the most curious tar binaries that cannot handle
@@ -224,7 +224,7 @@ installed. Can't continue.
         }
         $file = $ungzf;
       }
-      $system = "$CPAN::Config->{tar} xvf $file";
+      $system = qq{$CPAN::Config->{tar} xvf "$file"};
       $CPAN::Frontend->myprint(qq{Using Tar:$system:\n});
       if (system($system)==0) {
         $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});

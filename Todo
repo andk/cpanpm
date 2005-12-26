@@ -1,3 +1,9 @@
+2005-12-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rt.cpan.org: #4943 about memory consumption??? QJZHOU/uncpan???
+
+	* readline: offer the choice between Gnu and Perl
+
 2005-12-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* FirstTime needs a stucture over each question or questiongroup so that
