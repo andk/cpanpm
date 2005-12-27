@@ -1566,6 +1566,36 @@ sub failed {
     }
 }
 
+sub status {
+    my($self) = @_;
+    require Devel::Size;
+    my $ps = FileHandle->new;
+    open $ps, "/proc/$$/status";
+    my $vm = 0;
+    while (<$ps>) {
+        next unless /VmSize:\s+(\d+)/;
+        $vm = $1;
+        last;
+    }
+    $CPAN::Frontend->mywarn(sprintf(
+                                    "%-27s %6d\n%-27s %6d\n",
+                                    "vm",
+                                    $vm,
+                                    "CPAN::META",
+                                    Devel::Size::total_size($CPAN::META)/1024,
+                                   ));
+    for my $k (sort keys %$CPAN::META) {
+        next unless substr($k,0,4) eq "read";
+        warn sprintf " %-26s %6d\n", $k, Devel::Size::total_size($CPAN::META->{$k})/1024;
+        for my $k2 (sort keys %{$CPAN::META->{$k}}) {
+            warn sprintf "  %-25s %6d %6d\n",
+                $k2,
+                    Devel::Size::total_size($CPAN::META->{$k}{$k2})/1024,
+                          scalar keys %{$CPAN::META->{$k}{$k2}};
+        }
+    }
+}
+
 #-> sub CPAN::Shell::autobundle ;
 sub autobundle {
     my($self) = shift;
