@@ -1496,7 +1496,7 @@ sub _u_r_common {
             &&
             $CPAN::META->has_inst("Term::ANSIColor")
             &&
-            $module->{RO}{description}
+            $module->description
            ) {
             $color_on = Term::ANSIColor::color("green");
             $color_off = Term::ANSIColor::color("reset");
@@ -1562,7 +1562,7 @@ sub failed {
     if ($print) {
         $CPAN::Frontend->myprint("Failed installations:\n$print");
     } else {
-        $CPAN::Frontend->myprint("No installations failed in this session");
+        $CPAN::Frontend->myprint("No installations failed in this session\n");
     }
 }
 
@@ -3300,13 +3300,7 @@ sub rd_modlist {
     my($eval) = join("", @eval);
     my $ret = $comp->reval($eval);
     Carp::confess($@) if $@;
-    return if $CPAN::Signal;
-    for (keys %$ret) {
-	my $obj = $CPAN::META->instance("CPAN::Module",$_);
-        delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
-	$obj->set(%{$ret->{$_}});
-	return if $CPAN::Signal;
-    }
+    $CPAN::META->{read}{Modulelist} = $ret;
 }
 
 #-> sub CPAN::Index::write_metadata_cache ;
@@ -3391,10 +3385,14 @@ sub read_metadata_cache {
 package CPAN::InfoObj;
 use strict;
 
-# Accessors
+sub ro {
+    my $self = shift;
+    exists $self->{RO} and return $self->{RO};
+}
+
 sub cpan_userid {
     my $self = shift;
-    $self->{RO}{CPAN_USERID}
+    $self->ro->{CPAN_USERID}
 }
 
 sub id { shift->{ID}; }
@@ -3452,7 +3450,8 @@ sub as_string {
     my $class = ref($self);
     $class =~ s/^CPAN:://;
     push @m, $class, " id = $self->{ID}\n";
-    for (sort keys %{$self->{RO}}) {
+    my $ro = $self->ro;
+    for (sort keys %$ro) {
 	# next if m/^(ID|RO)$/;
 	my $extra = "";
 	if ($_ eq "CPAN_USERID") {
@@ -3470,8 +3469,8 @@ sub as_string {
             push @m, sprintf "    %-12s %s\n", $_, $self->fullname;
             next;
         }
-        next unless defined $self->{RO}{$_};
-        push @m, sprintf "    %-12s %s%s\n", $_, $self->{RO}{$_}, $extra;
+        next unless defined $ro->{$_};
+        push @m, sprintf "    %-12s %s%s\n", $_, $ro->{$_}, $extra;
     }
     for (sort keys %$self) {
 	next if m/^(ID|RO)$/;
@@ -3530,12 +3529,12 @@ sub as_glimpse {
 
 #-> sub CPAN::Author::fullname ;
 sub fullname {
-    shift->{RO}{FULLNAME};
+    shift->ro->{FULLNAME};
 }
 *name = \&fullname;
 
 #-> sub CPAN::Author::email ;
-sub email    { shift->{RO}{EMAIL}; }
+sub email    { shift->ro->{EMAIL}; }
 
 #-> sub CPAN::Author::ls ;
 sub ls {
@@ -3673,7 +3672,7 @@ package CPAN::Distribution;
 use strict;
 
 # Accessors
-sub cpan_comment { shift->{RO}{CPAN_COMMENT} }
+sub cpan_comment { shift->ro->{CPAN_COMMENT} }
 
 sub undelay {
     my $self = shift;
@@ -5559,15 +5558,36 @@ No File found for bundle } . $self->id . qq{\n}), return;
 package CPAN::Module;
 use strict;
 
+sub ro {
+    my($self) = @_;
+    my $ro = $self->SUPER::ro;
+    return $ro if $ro && exists $ro->{description};
+    my $rml = $CPAN::META->{read}{Modulelist};
+    unless ($rml) {
+        CPAN::Index->rd_modlist(CPAN::Index
+                                ->reload_x(
+                                           "modules/03modlist.data.gz",
+                                           File::Spec->catfile('modules', '03modlist.data.gz')
+                                          )
+                               );
+    }
+    my $id = $self->id;
+    delete $rml->{$id}{modid};
+    # delete $rml->{$id}{userid}; # must not be deleted, may differ from CPAN_USERID
+    $self->set(%{$rml->{$id}});
+    $ro;
+}
+
 # Accessors
 # sub CPAN::Module::userid
 sub userid {
     my $self = shift;
-    return unless exists $self->{RO}; # should never happen
-    return $self->{RO}{userid} || $self->{RO}{CPAN_USERID};
+    my $ro = $self->ro;
+    return unless $ro;
+    return $ro->{userid} || $ro->{CPAN_USERID};
 }
 # sub CPAN::Module::description
-sub description { shift->{RO}{description} }
+sub description { shift->ro->{description} }
 
 sub undelay {
     my $self = shift;
@@ -5616,7 +5636,7 @@ sub as_glimpse {
         &&
         $CPAN::META->has_inst("Term::ANSIColor")
         &&
-        $self->{RO}{description}
+        $self->description
        ) {
         $color_on = Term::ANSIColor::color("green");
         $color_off = Term::ANSIColor::color("reset");
@@ -5685,18 +5705,19 @@ sub as_string {
     $stats{' '} = 'unknown';
     $statl{' '} = 'unknown';
     $stati{' '} = 'unknown';
+    my $ro = $self->ro;
     push @m, sprintf(
 		     $sprintf3,
 		     'DSLI_STATUS',
-		     $self->{RO}{statd},
-		     $self->{RO}{stats},
-		     $self->{RO}{statl},
-		     $self->{RO}{stati},
-		     $statd{$self->{RO}{statd}},
-		     $stats{$self->{RO}{stats}},
-		     $statl{$self->{RO}{statl}},
-		     $stati{$self->{RO}{stati}}
-		    ) if $self->{RO}{statd};
+		     $ro->{statd},
+		     $ro->{stats},
+		     $ro->{statl},
+		     $ro->{stati},
+		     $statd{$ro->{statd}},
+		     $stats{$ro->{stats}},
+		     $statl{$ro->{statl}},
+		     $stati{$ro->{stati}}
+		    ) if $ro->{statd};
     my $local_file = $self->inst_file;
     unless ($self->{MANPAGE}) {
         if ($local_file) {
@@ -5789,11 +5810,12 @@ sub manpage_headline {
 sub cpan_file {
     my $self = shift;
     CPAN->debug(sprintf "id[%s]", $self->id) if $CPAN::DEBUG;
-    unless (defined $self->{RO}{CPAN_FILE}) {
+    unless ($self->ro) {
 	CPAN::Index->reload;
     }
-    if (exists $self->{RO}{CPAN_FILE} && defined $self->{RO}{CPAN_FILE}){
-	return $self->{RO}{CPAN_FILE};
+    my $ro = $self->ro;
+    if ($ro && defined $ro->{CPAN_FILE}){
+	return $ro->{CPAN_FILE};
     } else {
         my $userid = $self->userid;
         if ( $userid ) {
@@ -5821,13 +5843,14 @@ sub cpan_file {
 sub cpan_version {
     my $self = shift;
 
-    $self->{RO}{CPAN_VERSION} = 'undef'
-	unless defined $self->{RO}{CPAN_VERSION};
+    my $ro = $self->ro;
+    $ro->{CPAN_VERSION} = 'undef'
+	unless defined $ro->{CPAN_VERSION};
     # I believe this is always a bug in the index and should be reported
     # as such, but usually I find out such an error and do not want to
     # provoke too many bugreports
 
-    $self->{RO}{CPAN_VERSION};
+    $ro->{CPAN_VERSION};
 }
 
 #-> sub CPAN::Module::force ;
@@ -5933,7 +5956,8 @@ sub install {
     } else {
 	$doit = 1;
     }
-    if ($self->{RO}{stats} && $self->{RO}{stats} eq "a") {
+    my $ro = $self->ro;
+    if ($ro->{stats} && $ro->{stats} eq "a") {
         $CPAN::Frontend->mywarn(qq{
 \n\n\n     ***WARNING***
      The module $self->{ID} has no active maintainer.\n\n\n
@@ -6589,7 +6613,7 @@ Forces a reload of all indices.
 
 =item CPAN::Index::reload()
 
-Reloads all indices if they have been read more than
+Reloads all indices if they have been read for more than
 C<$CPAN::Config->{index_expire}> days.
 
 =item CPAN::InfoObj::dump()
@@ -7270,7 +7294,7 @@ For the really curious, by accessing internals directly, you I<could>
 
   ! delete  CPAN::Shell->expand("Distribution", \
     CPAN::Shell->expand("Module","Foo::Bar") \
-    ->{RO}{CPAN_FILE})->{install}
+    ->cpan_file)->{install}
 
 but this is neither guaranteed to work in the future nor is it a
 decent command.
