@@ -273,13 +273,31 @@ $configpm initialized.
 sub missing_config_data {
     my(@miss);
     for (
-         "cpan_home", "keep_source_where", "build_dir", "build_cache",
-         "scan_cache", "index_expire", "gzip", "tar", "unzip", "make",
-         "pager",
-         "makepl_arg", "make_arg", "make_install_arg", "urllist",
-         "inhibit_startup_message", "ftp_proxy", "http_proxy", "no_proxy",
-         "prerequisites_policy",
+         "build_cache",
+         "build_dir",
          "cache_metadata",
+         "cpan_home",
+         "ftp_proxy",
+         "gzip",
+         "http_proxy",
+         "index_expire",
+         "inhibit_startup_message",
+         "keep_source_where",
+         "make",
+         "make_arg",
+         "make_install_arg",
+         "makepl_arg",
+         "mbuild_arg",
+         "mbuild_install_arg",
+         "mbuild_install_build_command",
+         "mbuildpl_arg",
+         "no_proxy",
+         "pager",
+         "prerequisites_policy",
+         "scan_cache",
+         "tar",
+         "unzip",
+         "urllist",
         ) {
 	push @miss, $_ unless defined $CPAN::Config->{$_};
     }

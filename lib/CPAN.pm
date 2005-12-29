@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_57';
+$VERSION = '1.81';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -3314,7 +3314,13 @@ sub rd_modlist {
     my($eval) = join("", @eval);
     my $ret = $comp->reval($eval);
     Carp::confess($@) if $@;
-    $CPAN::META->{read}{Modulelist} = $ret;
+    return if $CPAN::Signal;
+    for (keys %$ret) {
+	my $obj = $CPAN::META->instance("CPAN::Module",$_);
+        delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
+	$obj->set(%{$ret->{$_}});
+	return if $CPAN::Signal;
+    }
 }
 
 #-> sub CPAN::Index::write_metadata_cache ;
@@ -5573,26 +5579,6 @@ No File found for bundle } . $self->id . qq{\n}), return;
 package CPAN::Module;
 use strict;
 
-sub ro {
-    my($self) = @_;
-    my $ro = $self->SUPER::ro;
-    return $ro if $ro && exists $ro->{description};
-    my $rml = $CPAN::META->{read}{Modulelist};
-    unless ($rml) {
-        CPAN::Index->rd_modlist(CPAN::Index
-                                ->reload_x(
-                                           "modules/03modlist.data.gz",
-                                           File::Spec->catfile('modules', '03modlist.data.gz')
-                                          )
-                               );
-    }
-    my $id = $self->id;
-    delete $rml->{$id}{modid};
-    # delete $rml->{$id}{userid}; # must not be deleted, may differ from CPAN_USERID
-    $self->set(%{$rml->{$id}});
-    $ro;
-}
-
 # Accessors
 # sub CPAN::Module::userid
 sub userid {
@@ -5859,12 +5845,12 @@ sub cpan_version {
     my $self = shift;
 
     my $ro = $self->ro;
+    unless ($ro) {
+        # Can happen with modules that are not on CPAN
+        $ro = {};
+    }
     $ro->{CPAN_VERSION} = 'undef'
 	unless defined $ro->{CPAN_VERSION};
-    # I believe this is always a bug in the index and should be reported
-    # as such, but usually I find out such an error and do not want to
-    # provoke too many bugreports
-
     $ro->{CPAN_VERSION};
 }
 
@@ -7292,6 +7278,14 @@ Use the force pragma like so
 This does a bit more than really needed because it untars the
 distribution again and runs make and test and only then install.
 
+Or, if you find this is too fast and you would prefer to do smaller
+steps, say
+
+  force get Foo::Bar
+
+first and then continue as always. C<Force get> I<forgets> previous
+error conditions.
+
 Or you can use
 
   look Foo::Bar
@@ -7299,11 +7293,6 @@ Or you can use
 and then 'make install' directly in the subshell.
 
 Or you leave the CPAN shell and start it again.
-
-Or, if you're not really sure and just want to run some make, test or
-install command without this pesky error message, say C<force get
-Foo::Bar> first and then continue as always. C<Force get> I<forgets>
-previous error conditions.
 
 For the really curious, by accessing internals directly, you I<could>
 
