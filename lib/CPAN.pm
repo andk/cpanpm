@@ -11,20 +11,20 @@ use CPAN::Tarzip;
 use Carp ();
 use Config ();
 use Cwd ();
-use DirHandle;
+use DirHandle ();
 use Exporter ();
 use ExtUtils::MakeMaker (); # $SelfLoader::DEBUG=1;
 use File::Basename ();
 use File::Copy ();
 use File::Find;
 use File::Path ();
-use File::Spec;
+use File::Spec ();
 use File::Temp ();
 use FileHandle ();
 use Safe ();
-use Sys::Hostname;
+use Sys::Hostname qw(hostname);
 use Text::ParseWords ();
-use Text::Wrap;
+use Text::Wrap ();
 no lib "."; # we need to run chdir all over and we would get at wrong
             # libraries there
 
@@ -56,6 +56,8 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
              perldoc recent
 	    );
 
+sub soft_chdir_with_alternatives ($);
+
 #-> sub CPAN::AUTOLOAD ;
 sub AUTOLOAD {
     my($l) = $AUTOLOAD;
@@ -71,7 +73,6 @@ sub AUTOLOAD {
 });
     }
 }
-
 
 #-> sub CPAN::shell ;
 sub shell {
@@ -125,7 +126,7 @@ sub shell {
 
     # no strict; # I do not recall why no strict was here (2000-09-03)
     $META->checklock();
-    my $cwd = CPAN::anycwd();
+    my @cwd = (CPAN::anycwd(),File::Spec->tmpdir(),File::Spec->rootdir());
     my $try_detect_readline;
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
@@ -188,7 +189,7 @@ ReadLine support %s
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
-	    chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
+            soft_chdir_with_alternatives(\@cwd);
 	    $CPAN::Frontend->myprint("\n");
 	    $continuation = "";
 	    $prompt = $oprompt;
@@ -215,9 +216,22 @@ ReadLine support %s
 	}
       }
     }
-    chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
+    soft_chdir_with_alternatives(\@cwd);
 }
 
+sub soft_chdir_with_alternatives ($) {
+    my($cwd) = @_;
+    while (not chdir $cwd->[0]) {
+        if (@$cwd>1) {
+            $CPAN::Frontend->mywarn(qq{Could not chdir to "$cwd->[0]": $!
+Trying to chdir to "$cwd->[1]" instead.
+});
+            shift @$cwd;
+        } else {
+            $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd->[0]": $!});
+        }
+    }
+}
 package CPAN::CacheMgr;
 use strict;
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
@@ -4495,16 +4509,16 @@ or
     }
     $self->get;
   EXCUSE: {
-	my @e;
-	$self->{archived} eq "NO" and push @e,
-	"Is neither a tar nor a zip archive.";
+        my @e;
+        !$self->{archived} || $self->{archived} eq "NO" and push @e,
+        "Is neither a tar nor a zip archive.";
 
-	$self->{unwrapped} eq "NO" and push @e,
-	"had problems unarchiving. Please build manually";
+        !$self->{unwrapped} || $self->{unwrapped} eq "NO" and push @e,
+        "had problems unarchiving. Please build manually";
 
-	exists $self->{writemakefile} &&
-	    $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
-		$1 || "Had some problem writing Makefile";
+        exists $self->{writemakefile} &&
+            $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
+                $1 || "Had some problem writing Makefile";
 
 	defined $self->{'make'} and push @e,
             "Has already been processed within this session";
@@ -4515,7 +4529,8 @@ or
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
-    my $builddir = $self->dir;
+    my $builddir = $self->dir or
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory");
     chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 

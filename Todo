@@ -1,3 +1,15 @@
+2005-12-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* extend the "failed" idea to the current command and get rid of the
+	summary currently provided by install bundle.
+
+2005-12-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* memory: split the loading of Authors/Modules/Distros/Bundles into
+	separate pieces and make them lazy. Consider 'reload index', the
+	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
+	offsets into an uncompressed 02xxx file.
+
 2005-12-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* rt.cpan.org: #4943 about memory consumption??? QJZHOU/uncpan???
