@@ -258,7 +258,8 @@ sub load {
     }
     local($") = ", ";
     $CPAN::Frontend->myprint(<<END) if $redo && ! $theycalled;
-We have to reconfigure CPAN.pm due to following uninitialized parameters:
+Sorry, we have to rerun the configuration dialog for CPAN.pm due to
+the following indispensable but missing parameters:
 
 @miss
 END

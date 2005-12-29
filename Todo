@@ -1,8 +1,12 @@
 2005-12-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug suspected in Module::Install: it seems to run CPAN.pm in a
+	subshell with sudo and so we get directories under build/ that we do not
+	own. No release before this bug is traced down!
+
 	* branching and merging: make current HEAD a branch "1.80_56plus" and
 	roll HEAD back to contain only the zero-risk stuff (for maybe later
-	releasing that as 1.81?)
+	releasing that as 1.81?) DONE
 
 	* extend the "failed" idea to the current command and get rid of the
 	summary currently provided by install bundle.

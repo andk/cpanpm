@@ -1556,6 +1556,7 @@ sub u {
     shift->_u_r_common("u",@_);
 }
 
+# XXX intentionally undocumented because not considered enough
 #-> sub CPAN::Shell::failed ;
 sub failed {
     my($self) = @_;
@@ -1580,6 +1581,8 @@ sub failed {
     }
 }
 
+# XXX intentionally undocumented because not considered enough
+#-> sub CPAN::Shell::status ;
 sub status {
     my($self) = @_;
     require Devel::Size;
@@ -6971,9 +6974,22 @@ urllist.
 There's no strong security layer in CPAN.pm. CPAN.pm helps you to
 install foreign, unmasked, unsigned code on your machine. We compare
 to a checksum that comes from the net just as the distribution file
-itself. If somebody has managed to tamper with the distribution file,
-they may have as well tampered with the CHECKSUMS file. Future
-development will go towards strong authentication.
+itself. But we try to make it easy to add security on demand:
+
+=head2 Cryptographically signed modules
+
+Since release 1.77 CPAN.pm has been able to verify cryptographically
+signed module distributions using Module::Signature.  The CPAN modules
+can be signed by their authors, thus giving more security.  The simple
+unsigned MD5 checksums that were used before by CPAN protect mainly
+against accidental file corruption.
+
+You will need to have Module::Signature installed, which in turn
+requires that you have at least one of Crypt::OpenPGP module or the
+command-line F<gpg> tool installed.
+
+You will also need to be able to connect over the Internet to the public
+keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 
 =head1 EXPORT
 
@@ -7100,21 +7116,6 @@ like
     o conf ncftp "/usr/bin/ncftp -f /home/scott/ncftplogin.cfg"
 
 Your mileage may vary...
-
-=head1 Cryptographically signed modules
-
-Since release 1.77 CPAN.pm has been able to verify cryptographically
-signed module distributions using Module::Signature.  The CPAN modules
-can be signed by their authors, thus giving more security.  The simple
-unsigned MD5 checksums that were used before by CPAN protect mainly
-against accidental file corruption.
-
-You will need to have Module::Signature installed, which in turn
-requires that you have at least one of Crypt::OpenPGP module or the
-command-line F<gpg> tool installed.
-
-You will also need to be able to connect over the Internet to the public
-keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 
 =head1 FAQ
 
