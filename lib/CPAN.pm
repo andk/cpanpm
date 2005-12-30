@@ -1597,7 +1597,7 @@ sub failed {
         $print .= sprintf " %-45s: %s %s\n", $id, $failed, $d->{$failed};
     }
     if ($print) {
-        $CPAN::Frontend->myprint("Failed installations:\n$print");
+        $CPAN::Frontend->myprint("Failed installations in this session:\n$print");
     } else {
         $CPAN::Frontend->myprint("No installations failed in this session\n");
     }

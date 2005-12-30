@@ -13,8 +13,9 @@ $BUGHUNTING = 0; # released code must have turned off
 # it's ok if file doesn't exist, it just matters if it is .gz or .bz2
 sub new {
   my($class,$file) = @_;
-  die "new called without arg" unless defined $file;
-  die "file[$file] doesn't match /\\.(bz2|gz|zip|tgz)\$/" unless $file =~ /\.(bz2|gz|zip|tgz)$/i;
+  $CPAN::Frontend->mydie("new called without arg") unless defined $file;
+  $CPAN::Frontend->mydie("file[$file] doesn't match /\\.(bz2|gz|zip|tgz)\$/")
+      unless $file =~ /\.(bz2|gz|zip|tgz)$/i;
   my $me = { FILE => $file };
   if (0) {
   } elsif ($file =~ /\.bz2$/i) {
