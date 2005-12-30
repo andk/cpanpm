@@ -2,7 +2,8 @@
 
 	* Bug suspected in Module::Install: it seems to run CPAN.pm in a
 	subshell with sudo and so we get directories under build/ that we do not
-	own. No release before this bug is traced down!
+	own. No release before this bug is traced down! Bugreport sent to Audrey
+	a few minutes ago (already Friday, 0:30 Berlin time).
 
 	* branching and merging: make current HEAD a branch "1.80_56plus" and
 	roll HEAD back to contain only the zero-risk stuff (for maybe later
