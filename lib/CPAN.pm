@@ -6617,7 +6617,7 @@ Forces a reload of all indices.
 
 =item CPAN::Index::reload()
 
-Reloads all indices if they have been read for more than
+Reloads all indices if they have not been read for more than
 C<$CPAN::Config->{index_expire}> days.
 
 =item CPAN::InfoObj::dump()
@@ -7329,3 +7329,8 @@ http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
 =cut
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 2
+# End:

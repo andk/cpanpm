@@ -3,6 +3,7 @@ package CPAN::Tarzip;
 use strict;
 use vars qw($VERSION @ISA $BUGHUNTING);
 use CPAN::Debug;
+use File::Basename ();
 $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 # module is internal to CPAN.pm
 
@@ -13,7 +14,7 @@ $BUGHUNTING = 0; # released code must have turned off
 sub new {
   my($class,$file) = @_;
   die "new called without arg" unless defined $file;
-  die "file[$file] doesn't match /\\.(bz2|gz|zip)\$/" unless $file =~ /\.(bz2|gz|zip)$/i;
+  die "file[$file] doesn't match /\\.(bz2|gz|zip|tgz)\$/" unless $file =~ /\.(bz2|gz|zip|tgz)$/i;
   my $me = { FILE => $file };
   if (0) {
   } elsif ($file =~ /\.bz2$/i) {
@@ -217,7 +218,9 @@ installed. Can't continue.
       # pipes
       if ($is_compressed) {
         (my $ungzf = $file) =~ s/\.gz(?!\n)\Z//;
-        if (CPAN::Tarzip->gunzip($file, $ungzf)) {
+        $ungzf = File::Basename::basename($ungzf);
+        my $ct = CPAN::Tarzip->new($file);
+        if ($ct->gunzip($ungzf)) {
           $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
         } else {
           $CPAN::Frontend->mydie(qq{Couldn\'t uncompress $file\n});
