@@ -993,20 +993,42 @@ sub disk_usage {
     return if exists $self->{SIZE}{$dir};
     return if $CPAN::Signal;
     my($Du) = 0;
+    unless (-x $dir) {
+      unless (chmod 0755, $dir) {
+        $CPAN::Frontend->mywarn("I have neither the -x permission nor the permission ".
+                                "to change the permission; cannot estimate disk usage ".
+                                "of '$dir'\n");
+        sleep 5;
+        return;
+      }
+    }
     find(
-	 sub {
-	   $File::Find::prune++ if $CPAN::Signal;
-	   return if -l $_;
-	   if ($^O eq 'MacOS') {
-	     require Mac::Files;
-	     my $cat  = Mac::Files::FSpGetCatInfo($_);
-	     $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen() if $cat;
-	   } else {
-	     $Du += (-s _);
-	   }
-	 },
-	 $dir
-	);
+         sub {
+           $File::Find::prune++ if $CPAN::Signal;
+           return if -l $_;
+           if ($^O eq 'MacOS') {
+             require Mac::Files;
+             my $cat  = Mac::Files::FSpGetCatInfo($_);
+             $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen() if $cat;
+           } else {
+             if (-d _) {
+               unless (-x _) {
+                 unless (chmod 0755, $_) {
+                   $CPAN::Frontend->mywarn("I have neither the -x permission nor ".
+                                           "the permission to change the permission; ".
+                                           "can only partially estimate disk usage ".
+                                           "of '$_'\n");
+                   sleep 5;
+                   return;
+                 }
+               }
+             } else {
+               $Du += (-s _);
+             }
+           }
+         },
+         $dir
+        );
     return if $CPAN::Signal;
     $self->{SIZE}{$dir} = $Du/1024/1024;
     push @{$self->{FIFO}}, $dir;
@@ -3415,7 +3437,8 @@ sub ro {
 
 sub cpan_userid {
     my $self = shift;
-    $self->ro->{CPAN_USERID}
+    my $ro = $self->ro or return;
+    return $ro->{CPAN_USERID};
 }
 
 sub id { shift->{ID}; }
@@ -3808,18 +3831,34 @@ sub called_for {
 
 #-> sub CPAN::Distribution::safe_chdir ;
 sub safe_chdir {
-    my($self,$todir) = @_;
-    # we die if we cannot chdir and we are debuggable
-    Carp::confess("safe_chdir called without todir argument")
-          unless defined $todir and length $todir;
-    if (chdir $todir) {
-        $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
-            if $CPAN::DEBUG;
-    } else {
+  my($self,$todir) = @_;
+  # we die if we cannot chdir and we are debuggable
+  Carp::confess("safe_chdir called without todir argument")
+        unless defined $todir and length $todir;
+  if (chdir $todir) {
+    $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
+        if $CPAN::DEBUG;
+  } else {
+    unless (-x $todir) {
+      unless (chmod 0755, $todir) {
         my $cwd = CPAN::anycwd();
+        $CPAN::Frontend->mywarn("I have neither the -x permission nor the permission ".
+                                "to change the permission; cannot chdir ".
+                                "to '$todir'\n");
+        sleep 5;
         $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
                                qq{to todir[$todir]: $!});
+      }
     }
+    if (chdir $todir) {
+      $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
+          if $CPAN::DEBUG;
+    } else {
+      my $cwd = CPAN::anycwd();
+      $CPAN::Frontend->mydie(qq{Even after a chmod I could not chdir from cwd[$cwd] }.
+                             qq{to todir[$todir]: $!});
+    }
+  }
 }
 
 #-> sub CPAN::Distribution::get ;
@@ -5961,7 +6000,7 @@ sub install {
 	$doit = 1;
     }
     my $ro = $self->ro;
-    if ($ro->{stats} && $ro->{stats} eq "a") {
+    if ($ro && $ro->{stats} && $ro->{stats} eq "a") {
         $CPAN::Frontend->mywarn(qq{
 \n\n\n     ***WARNING***
      The module $self->{ID} has no active maintainer.\n\n\n
