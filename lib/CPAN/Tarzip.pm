@@ -269,7 +269,8 @@ installed. Can't continue.
         push @af, $af;
         return if $CPAN::Signal;
       }
-      $tar->extract(@af);
+      $tar->extract(@af) or
+          $CPAN::Frontend->mydie("Could not untar with Archive::Tar.");
     }
 
     Mac::BuildTools::convert_files([$tar->list_files], 1)
