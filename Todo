@@ -1,3 +1,16 @@
+2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
+
+	* add eg/ to the MANIFEST? Not yet, the script is too much focused on a
+	problem that is not of interest to others.
+
+	* rev 315 fixed a path/permission problem with the use of basename() and
+	I could see that the error message gets much better than before but we
+	need a test case that shows that this strategy can really work in some
+	cases. Maybe we need to store the tar file somewhere else to keep the
+	tmp/ directory tidy. Also we must see what happens when we cannot remove
+	the tmp/ directory. The list of broken distros in
+	eg/find-module-install-sudo-bugs.pl will help.
+
 2005-12-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* DBM::Deep for a hash behind $CPAN::META.
