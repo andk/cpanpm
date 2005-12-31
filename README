@@ -495,7 +495,7 @@ DESCRIPTION
         Forces a reload of all indices.
 
     CPAN::Index::reload()
-        Reloads all indices if they have been read more than
+        Reloads all indices if they have not been read for more than
         "$CPAN::Config-"{index_expire}> days.
 
     CPAN::InfoObj::dump()
@@ -799,9 +799,21 @@ SECURITY
     There's no strong security layer in CPAN.pm. CPAN.pm helps you to
     install foreign, unmasked, unsigned code on your machine. We compare to
     a checksum that comes from the net just as the distribution file itself.
-    If somebody has managed to tamper with the distribution file, they may
-    have as well tampered with the CHECKSUMS file. Future development will
-    go towards strong authentication.
+    But we try to make it easy to add security on demand:
+
+  Cryptographically signed modules
+    Since release 1.77 CPAN.pm has been able to verify cryptographically
+    signed module distributions using Module::Signature. The CPAN modules
+    can be signed by their authors, thus giving more security. The simple
+    unsigned MD5 checksums that were used before by CPAN protect mainly
+    against accidental file corruption.
+
+    You will need to have Module::Signature installed, which in turn
+    requires that you have at least one of Crypt::OpenPGP module or the
+    command-line gpg tool installed.
+
+    You will also need to be able to connect over the Internet to the public
+    keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 
 EXPORT
     Most functions in package CPAN are exported per default. The reason for
@@ -911,20 +923,6 @@ WORKING WITH CPAN.pm BEHIND FIREWALLS
         o conf ncftp "/usr/bin/ncftp -f /home/scott/ncftplogin.cfg"
 
     Your mileage may vary...
-
-Cryptographically signed modules
-    Since release 1.77 CPAN.pm has been able to verify cryptographically
-    signed module distributions using Module::Signature. The CPAN modules
-    can be signed by their authors, thus giving more security. The simple
-    unsigned MD5 checksums that were used before by CPAN protect mainly
-    against accidental file corruption.
-
-    You will need to have Module::Signature installed, which in turn
-    requires that you have at least one of Crypt::OpenPGP module or the
-    command-line gpg tool installed.
-
-    You will also need to be able to connect over the Internet to the public
-    keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 
 FAQ
     1)  I installed a new version of module X but CPAN keeps saying, I have
@@ -1063,6 +1061,14 @@ FAQ
         This does a bit more than really needed because it untars the
         distribution again and runs make and test and only then install.
 
+        Or, if you find this is too fast and you would prefer to do smaller
+        steps, say
+
+          force get Foo::Bar
+
+        first and then continue as always. "Force get" *forgets* previous
+        error conditions.
+
         Or you can use
 
           look Foo::Bar
@@ -1071,16 +1077,11 @@ FAQ
 
         Or you leave the CPAN shell and start it again.
 
-        Or, if you're not really sure and just want to run some make, test
-        or install command without this pesky error message, say "force get
-        Foo::Bar" first and then continue as always. "Force get" *forgets*
-        previous error conditions.
-
         For the really curious, by accessing internals directly, you *could*
 
           ! delete  CPAN::Shell->expand("Distribution", \
             CPAN::Shell->expand("Module","Foo::Bar") \
-            ->{RO}{CPAN_FILE})->{install}
+            ->cpan_file)->{install}
 
         but this is neither guaranteed to work in the future nor is it a
         decent command.
