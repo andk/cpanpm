@@ -1,3 +1,42 @@
+2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.80_57 adds on top of 1.80_56 the following:
+
+	* prerequisites fixed: File::Temp was missing in PREREQ_PM and
+	Bundle
+
+	* reduce noise when $Debug is on
+
+	* improved handling of whitespace in filenames (Roland Bauer;
+	rt.cpan.org #3201)
+
+	* add the Module::Build configuration parameters to the required
+	parameters (thus users are relayed to the init dialog)
+
+	* import less symbols
+
+	* enhanced robustness if cwd gets removed while we're running
+	(Rhet Turnbull; rt.cpan.org #321)
+
+	* add "notest" to the completion table
+
+	* enhanced robustness when untar is failing or poses permission
+	problems
+
+	* iron out some buglets in the "ls GLOB" code
+
+	* enhanced robustness on "reload cpan" when the path to CPAN.pm
+	has changed
+
+	* replace some hash accesses with method calls for a cleaner
+	interface (Work in Progress; no user-visible changes)
+
+	* do not fail anymore when finding empty files left over from a
+	previous unsuccessful download
+
+	* uptodate message more descriptive (Adam Kennedy; rt.cpan.rg
+	#15580)
+
 2005-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.80_56 is a release candidate for 1.81

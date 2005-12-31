@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.81';
+$VERSION = '1.80_57';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -35,7 +35,7 @@ END { $CPAN::End++; &cleanup; }
 $CPAN::Signal ||= 0;
 $CPAN::Frontend ||= "CPAN::Shell";
 $CPAN::Defaultsite ||= "ftp://ftp.perl.org/pub/CPAN";
-# $CPAN::iCwd is going to be initialized during find_perl
+# $CPAN::iCwd (i for initial) is going to be initialized during find_perl
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";

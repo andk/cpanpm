@@ -1,6 +1,11 @@
+2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* upgrade: new cmmand that does nothing but
+	CPAN::Shell->install(CPAN::Shell->r)?
+
 2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
 
-	* DBM::Deep for a hash behind $CPAN::META. See 12-28 for issues and
+	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
 	branches/1.80_56plus for a few lines that probably went in the wrong
 	direction.
 
@@ -9,8 +14,8 @@
 	* extend the "failed" idea to the current command and get rid of the
 	summary currently provided by install bundle.
 
-	* FirstTime needs a stucture over each question or questiongroup so that
-	we can ask single questions.
+	* FirstTime needs a structure over each question or questiongroup so
+	that we can ask single questions.
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.
