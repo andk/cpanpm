@@ -1,5 +1,9 @@
 2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
 
+	* DBM::Deep for a hash behind $CPAN::META. See 12-28 for issues and
+	branches/1.80_56plus for a few lines that probably went in the wrong
+	direction.
+
 	* readline: offer the choice between Gnu and Perl
 
 	* extend the "failed" idea to the current command and get rid of the
@@ -28,21 +32,15 @@
 	* Bug: installing scripts without modules? How does it work? How
 	should it work? getting the latest version ad-hoc?
 
-	* Bug: checksum mismatch on a file is being reported even when the
-	file has 0 bytes. 0 bytes should clearly constitute the right/the
-	duty to overwrite.
-
 	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
 	have a different path. I installed a new CPAN.pm from CPAN and it
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
 
-2005-12-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* DBM::Deep for a hash behind $CPAN::META. See 12-28 for issues and
-	branches/1.80_56plus for a few lines that probably went in the wrong
-	direction.
+	* Bug: checksum mismatch on a file is being reported even when the
+	file has 0 bytes. 0 bytes should clearly constitute the right/the
+	duty to overwrite. FIXED in rev. 320
 
 2005-12-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

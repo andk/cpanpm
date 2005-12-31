@@ -35,6 +35,7 @@ END { $CPAN::End++; &cleanup; }
 $CPAN::Signal ||= 0;
 $CPAN::Frontend ||= "CPAN::Shell";
 $CPAN::Defaultsite ||= "ftp://ftp.perl.org/pub/CPAN";
+# $CPAN::iCwd is going to be initialized during find_perl
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
@@ -685,7 +686,7 @@ sub getcwd {Cwd::getcwd();}
 #-> sub CPAN::find_perl ;
 sub find_perl {
     my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
-    my $pwd  = CPAN::anycwd();
+    my $pwd  = $CPAN::iCwd = CPAN::anycwd();
     my $candidate = File::Spec->catfile($pwd,$^X);
     $perl ||= $candidate if MM->maybe_command($candidate);
 
@@ -1380,13 +1381,26 @@ sub reload {
     $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
     if ($command =~ /cpan/i) {
         my $redef = 0;
-        for my $f (qw(CPAN.pm CPAN/HandleConfig.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
+        chdir $CPAN::iCwd if $CPAN::iCwd; # may fail
+        my $failed;
+      MFILE: for my $f (qw(CPAN.pm CPAN/HandleConfig.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
                       CPAN/Debug.pm CPAN/Version.pm)) {
             next unless $INC{$f};
             my $pwd = CPAN::anycwd();
             CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
                 if $CPAN::DEBUG;
-            my $fh = FileHandle->new($INC{$f});
+            my $read;
+            for my $inc (@INC) {
+                $read = File::Spec->catfile($inc,split /\//, $f);
+                last if -f $read;
+            }
+            unless (-f $read) {
+                $failed++;
+                $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
+                next MFILE;
+            }
+            my $fh = FileHandle->new($read) or
+                $CPAN::Frontend->mydie("Could not open $read: $!");
             local($/);
             local $^W = 1;
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
@@ -1394,9 +1408,17 @@ sub reload {
             CPAN->debug(sprintf("evaling [%s...]\n",substr($eval,0,64)))
                 if $CPAN::DEBUG;
             eval $eval;
-            warn $@ if $@;
+            if ($@){
+                $failed++;
+                warn $@;
+            }
         }
         $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
+        $failed++ unless $redef;
+        if ($failed) {
+            $CPAN::Frontend->mywarn("\n$failed errors during reload. You better quit ".
+                                    "this session.\n");
+        }
     } elsif ($command =~ /index/) {
       CPAN::Index->force_reload;
     } else {
@@ -3863,8 +3885,8 @@ sub safe_chdir {
           if $CPAN::DEBUG;
     } else {
       my $cwd = CPAN::anycwd();
-      $CPAN::Frontend->mydie(qq{Even after a chmod I could not chdir from cwd[$cwd] }.
-                             qq{to todir[$todir]: $!});
+      $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
+                             qq{to todir[$todir] (a chmod has been issued): $!});
     }
   }
 }
@@ -7379,5 +7401,5 @@ cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
 # Local Variables:
 # mode: cperl
-# cperl-indent-level: 2
+# cperl-indent-level: 4
 # End:
