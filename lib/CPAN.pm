@@ -2247,7 +2247,15 @@ sub localize {
         }
     }
 
-    return $aslocal if -f $aslocal && -r _ && !($force & 1);
+    if (-f $aslocal && -r _ && !($force & 1)){
+      if (-s $aslocal) {
+        return $aslocal;
+      } else {
+        # empty file from a previous unsuccessful attempt to download it
+        unlink $aslocal or
+            $CPAN::Frontend->mydie("Found a zero-length '$aslocal' that I could not remove.");
+      }
+    }
     my($restore) = 0;
     if (-f $aslocal){
 	rename $aslocal, "$aslocal.bak";

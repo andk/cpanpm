@@ -1,7 +1,9 @@
 2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
 
-	* add eg/ to the MANIFEST? Not yet, the script is too much focused on a
-	problem that is not of interest to others.
+	* readline: offer the choice between Gnu and Perl
+
+	* extend the "failed" idea to the current command and get rid of the
+	summary currently provided by install bundle.
 
 	* rev 315 fixed a path/permission problem with the use of basename() and
 	I could see that the error message gets much better than before but we
@@ -9,40 +11,10 @@
 	cases. Maybe we need to store the tar file somewhere else to keep the
 	tmp/ directory tidy. Also we must see what happens when we cannot remove
 	the tmp/ directory. The list of broken distros in
-	eg/find-module-install-sudo-bugs.pl will help.
+	eg/find-module-install-sudo-bugs.pl will help. DONE
 
-2005-12-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* DBM::Deep for a hash behind $CPAN::META.
-
-2005-12-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug suspected in Module::Install: it seems to run CPAN.pm in a
-	subshell with sudo and so we get directories under build/ that we do not
-	own. No release before this bug is traced down! Bugreport sent to Audrey
-	a few minutes ago (already Friday, 0:30 Berlin time).
-
-	* branching and merging: make current HEAD a branch "1.80_56plus" and
-	roll HEAD back to contain only the zero-risk stuff (for maybe later
-	releasing that as 1.81?) DONE
-
-	* extend the "failed" idea to the current command and get rid of the
-	summary currently provided by install bundle.
-
-2005-12-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* memory: split the loading of Authors/Modules/Distros/Bundles into
-	separate pieces and make them lazy. Consider 'reload index', the
-	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
-	offsets into an uncompressed 02xxx file.
-
-2005-12-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* rt.cpan.org: #4943 about memory consumption??? QJZHOU/uncpan???
-
-	* readline: offer the choice between Gnu and Perl
-
-2005-12-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* add eg/ to the MANIFEST? Not yet, the script is too much focused on a
+	problem that is not of interest to others. REJECT
 
 	* FirstTime needs a stucture over each question or questiongroup so that
 	we can ask single questions.
@@ -65,6 +37,37 @@
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
 	always just said "0 subroutines redefined".
+
+2005-12-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* DBM::Deep for a hash behind $CPAN::META. See 12-28 for issues and
+	branches/1.80_56plus for a few lines that probably went in the wrong
+	direction.
+
+2005-12-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug suspected in Module::Install: it seems to run CPAN.pm in a
+	subshell with sudo and so we get directories under build/ that we do not
+	own. No release before this bug is traced down! Bugreport sent to Audrey
+	a few minutes ago (already Friday, 0:30 Berlin time). Bug confirmed and
+	has already been fixed in 0.37 and old distros must be redistroed. DONE
+
+	* branching and merging: make current HEAD a branch "1.80_56plus" and
+	roll HEAD back to contain only the zero-risk stuff (for maybe later
+	releasing that as 1.81?) DONE
+
+2005-12-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* memory: split the loading of Authors/Modules/Distros/Bundles into
+	separate pieces and make them lazy. Consider 'reload index', the
+	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
+	offsets into an uncompressed 02xxx file.
+
+2005-12-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rt.cpan.org: #4943 about memory consumption??? QJZHOU/uncpan???
+
+2005-12-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 2005-12-21  Andreas J Koenig  <akoenig@cellular.de>
 
@@ -184,7 +187,7 @@ Module id = Class::Container
 
 2005-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Feature request: if I type 'm CGI:Session' (note the missng second
+	* Feature request: if I type 'm CGI:Session' (note the missing second
 	colon) I get
 
 	No objects of type Module found for argument CGI:Session
