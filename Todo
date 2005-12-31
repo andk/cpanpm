@@ -9,17 +9,6 @@
 	* extend the "failed" idea to the current command and get rid of the
 	summary currently provided by install bundle.
 
-	* rev 315 fixed a path/permission problem with the use of basename() and
-	I could see that the error message gets much better than before but we
-	need a test case that shows that this strategy can really work in some
-	cases. Maybe we need to store the tar file somewhere else to keep the
-	tmp/ directory tidy. Also we must see what happens when we cannot remove
-	the tmp/ directory. The list of broken distros in
-	eg/find-module-install-sudo-bugs.pl will help. DONE
-
-	* add eg/ to the MANIFEST? Not yet, the script is too much focused on a
-	problem that is not of interest to others. REJECT
-
 	* FirstTime needs a stucture over each question or questiongroup so that
 	we can ask single questions.
 
@@ -36,7 +25,18 @@
 	have a different path. I installed a new CPAN.pm from CPAN and it
 	did remove the old /usr/share/perl/5.8/CPAN.pm but installed the
 	new one as /usr/local/share/perl/5.8.7/CPAN.pm. The reload then
-	always just said "0 subroutines redefined".
+	always just said "0 subroutines redefined". FIXED in rev. 321
+
+	* rev 315 fixed a path/permission problem with the use of basename() and
+	I could see that the error message gets much better than before but we
+	need a test case that shows that this strategy can really work in some
+	cases. Maybe we need to store the tar file somewhere else to keep the
+	tmp/ directory tidy. Also we must see what happens when we cannot remove
+	the tmp/ directory. The list of broken distros in
+	eg/find-module-install-sudo-bugs.pl will help. DONE
+
+	* add eg/ to the MANIFEST? Not yet, the script is too much focused on a
+	problem that is not of interest to others. REJECT
 
 	* Bug: checksum mismatch on a file is being reported even when the
 	file has 0 bytes. 0 bytes should clearly constitute the right/the

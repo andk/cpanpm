@@ -1105,7 +1105,7 @@ Display Information
  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
  i        WORD or /REGEXP/  about any of the above
  r        NONE              report updatable modules
- ls       AUTHOR            about files in the author's directory
+ ls       AUTHOR or GLOB    about files in the author's directory
     (with WORD being a module, bundle or author name or a distribution
     name of the form AUTHOR/DISTRIBUTION)
 
@@ -1139,30 +1139,32 @@ sub a {
   $CPAN::Frontend->myprint($self->format_result('Author',@arg));
 }
 
-#-> sub CPAN::Shell::ls ;
-sub ls {
-    my($self,@arg) = @_;
+sub handle_ls {
+    my($self,$pragma,$s) = @_;
+    # ls is really very different, but we had it once as an ordinary
+    # command in the Shell (upto rev. 321) and we could not handle
+    # force well then
     my(@accept,@preexpand);
-    for my $arg (@arg) {
-        if ($arg =~ /[\*\?\/]/) {
-            if ($CPAN::META->has_inst("Text::Glob")) {
-                if (my($au,$pathglob) = $arg =~ m|(.*?)/(.*)|) {
-                    my $rau = Text::Glob::glob_to_regex(uc $au);
-                    $self->debug("au[$au]pathglob[$pathglob]rau[$rau]") if $CPAN::DEBUG;
-                    push @preexpand, map { $_->id . "/" . $pathglob }
-                        $self->expand_by_method('CPAN::Author',['id'],"/$rau/");
-                } else {
-                    my $rau = Text::Glob::glob_to_regex(uc $arg);
-                    push @preexpand, map { $_->id } $self->expand_by_method('CPAN::Author',
-                                                                            ['id'],
-                                                                            "/$rau/");
-                }
+    if ($s =~ /[\*\?\/]/) {
+        if ($CPAN::META->has_inst("Text::Glob")) {
+            if (my($au,$pathglob) = $s =~ m|(.*?)/(.*)|) {
+                my $rau = Text::Glob::glob_to_regex(uc $au);
+                CPAN::Shell->debug("au[$au]pathglob[$pathglob]rau[$rau]")
+                      if $CPAN::DEBUG;
+                push @preexpand, map { $_->id . "/" . $pathglob }
+                    CPAN::Shell->expand_by_method('CPAN::Author',['id'],"/$rau/");
             } else {
-                $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
+                my $rau = Text::Glob::glob_to_regex(uc $s);
+                push @preexpand, map { $_->id }
+                    CPAN::Shell->expand_by_method('CPAN::Author',
+                                                  ['id'],
+                                                  "/$rau/");
             }
         } else {
-            push @preexpand, uc $arg;
+            $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
         }
+    } else {
+        push @preexpand, uc $s;
     }
     for (@preexpand) {
         unless (/^[A-Z0-9\-]+(\/|$)/i) {
@@ -1178,13 +1180,13 @@ sub ls {
         if ($a =~ m|(.*?)/(.*)|) {
             my $a2 = $1;
             $pathglob = $2;
-            $author = $self->expand_by_method('CPAN::Author',
-                                              ['id'],
-                                              $a2) or die "No author found for $a2";
+            $author = CPAN::Shell->expand_by_method('CPAN::Author',
+                                                    ['id'],
+                                                    $a2) or die "No author found for $a2";
         } else {
-            $author = $self->expand_by_method('CPAN::Author',
-                                              ['id'],
-                                              $a) or die "No author found for $a";
+            $author = CPAN::Shell->expand_by_method('CPAN::Author',
+                                                    ['id'],
+                                                    $a) or die "No author found for $a";
         }
         if ($silent) {
             my $alpha = substr $author->id, 0, 1;
@@ -1955,7 +1957,7 @@ sub setup_output {
 #-> sub CPAN::Shell::rematein ;
 # RE-adme||MA-ke||TE-st||IN-stall
 sub rematein {
-    shift;
+    my $self = shift;
     my($meth,@some) = @_;
     my @pragma;
     while($meth =~ /^(force|notest)$/) {
@@ -1983,7 +1985,7 @@ sub rematein {
 
     # construct the queue
     my($s,@s,@qcopy);
-    foreach $s (@some) {
+  STHING: foreach $s (@some) {
 	my $obj;
 	if (ref $s) {
             CPAN->debug("s is an object[$s]") if $CPAN::DEBUG;
@@ -1993,7 +1995,10 @@ sub rematein {
                                     "not supported\n");
             sleep 2;
             next;
-	} else {
+	} elsif ($meth eq "ls") {
+            $self->handle_ls(\@pragma,$s);
+            next STHING;
+        } else {
             CPAN->debug("calling expandany [$s]") if $CPAN::DEBUG;
 	    $obj = CPAN::Shell->expandany($s);
 	}
@@ -2084,8 +2089,19 @@ sub recent {
     # set up the dispatching methods
     no strict "refs";
     for my $command (qw(
-                        clean cvs_import dump force get install look
-                        make notest perldoc readme test
+                        clean
+                        cvs_import
+                        dump
+                        force
+                        get
+                        install
+                        look
+                        ls
+                        make
+                        notest
+                        perldoc
+                        readme
+                        test
                        )) {
         *$command = sub { shift->rematein($command, @_); };
     }
