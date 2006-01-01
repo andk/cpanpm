@@ -1,6 +1,10 @@
 2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* upgrade: new cmmand that does nothing but
+	* Bug: I install Archive::Extract and it has the prerequisite
+	Module::Load::Conditional declared but nobody installs it.
+	FIXED in rev. 317
+
+	* upgrade: new command that does nothing but
 	CPAN::Shell->install(CPAN::Shell->r)?
 
 2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
