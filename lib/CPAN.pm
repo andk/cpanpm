@@ -3764,7 +3764,11 @@ package CPAN::Distribution;
 use strict;
 
 # Accessors
-sub cpan_comment { shift->ro->{CPAN_COMMENT} }
+sub cpan_comment {
+    my $self = shift;
+    my $ro = $self->ro or return;
+    $ro->{CPAN_COMMENT}
+}
 
 sub undelay {
     my $self = shift;

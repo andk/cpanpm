@@ -2,7 +2,7 @@
 
 	* Bug: I install Archive::Extract and it has the prerequisite
 	Module::Load::Conditional declared but nobody installs it.
-	FIXED in rev. 317
+	FIXED in rev. 326
 
 	* upgrade: new command that does nothing but
 	CPAN::Shell->install(CPAN::Shell->r)?
