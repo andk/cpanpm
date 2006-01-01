@@ -3025,7 +3025,7 @@ sub cpl_option {
     } elsif ($words[1] eq 'conf') {
 	return CPAN::HandleConfig::cpl(@_);
     } elsif ($words[1] eq 'debug') {
-	return sort grep /^\Q$word\E/,
+	return sort grep /^\Q$word\E/i,
             sort keys %CPAN::DEBUG, 'all';
     }
 }
