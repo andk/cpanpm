@@ -150,7 +150,7 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
 release ::
-	perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
+	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 
 sign:
 	cpansign -s
