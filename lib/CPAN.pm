@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.80_58';
+$VERSION = '1.81';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -3775,6 +3775,7 @@ sub undelay {
     delete $self->{later};
 }
 
+# add the A/AN/ stuff
 # CPAN::Distribution::normalize
 sub normalize {
     my($self,$s) = @_;
@@ -3790,6 +3791,13 @@ sub normalize {
         CPAN->debug("s[$s]") if $CPAN::DEBUG;
     }
     $s;
+}
+
+sub pretty_id {
+    my $self = shift;
+    my $id = $self->id;
+    return $id unless $id =~ m|^./../|;
+    substr($id,5);
 }
 
 # mark as dirty/clean
@@ -4064,10 +4072,17 @@ sub get {
                                                               )->as_string
                                         );
 
-                my $wrap = qq{I\'d recommend removing $self->{localfile}. Its signature
+                my $wrap =
+                    sprintf(qq{I\'d recommend removing %s. Its signature
 is invalid. Maybe you have configured your 'urllist' with
 a bad URL. Please check this array with 'o conf urllist', and
-retry.};
+retry. For more information, try opening a subshell with
+  look %s
+and there run
+  cpansign -v},
+                            $self->{localfile},
+                            $self->pretty_id,
+                           );
                 $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
             }
         } else {

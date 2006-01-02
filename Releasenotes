@@ -1,3 +1,25 @@
+2006-01-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.81 adds on top of 1.80_58:
+
+	* bugfix: completion of debug options was not case insensitive
+
+	* bugfix: installation of distributions was broken for distros
+	not mentioned in the index
+
+	* include a hint that su might work as well as sudo in the dialog
+	about make_install_make_command and mbuild_install_build_command
+
+	* add Module::Signature to the Bundle and move Digest::SHA higher
+	up so they start working as soon as possible
+
+	* improve the dialog that ensues when bad signatures are
+	encountered
+
+2006-01-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.80_58 was a quick bugfix release
+
 2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.80_57 adds on top of 1.80_56 the following:

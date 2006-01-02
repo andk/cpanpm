@@ -16,6 +16,10 @@ C<perl -MCPAN -e 'install Bundle::CPAN'>
 
 =head1 CONTENTS
 
+Digest::SHA
+
+Module::Signature
+
 File::Temp
 
 File::Spec
@@ -35,8 +39,6 @@ YAML
 Text::Glob
 
 Module::Build
-
-Digest::SHA
 
 CPAN
 
