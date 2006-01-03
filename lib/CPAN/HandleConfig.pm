@@ -1,6 +1,8 @@
 package CPAN::HandleConfig;
 use strict;
-use vars qw(%can %keys $dot_cpan);
+use vars qw(%can %keys $dot_cpan $VERSION);
+
+$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 %can = (
   'commit' => "Commit changes to disk",

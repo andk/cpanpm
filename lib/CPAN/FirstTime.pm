@@ -1,6 +1,8 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN::Mirrored::By;
 use strict;
+use vars qw($VERSION);
+$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 sub new { 
     my($self,@arg) = @_;
