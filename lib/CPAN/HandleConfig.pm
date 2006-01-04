@@ -2,7 +2,7 @@ package CPAN::Config;
 use strict;
 use vars qw($AUTOLOAD);
 
-# formerly this package was known as CPAN::Config
+# formerly CPAN::HandleConfig was known as CPAN::Config
 sub AUTOLOAD {
   my($l) = $AUTOLOAD;
   $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig");
