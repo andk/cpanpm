@@ -1,3 +1,23 @@
+package CPAN::Config;
+use strict;
+use vars qw($AUTOLOAD);
+
+# formerly this package was known as CPAN::Config
+sub AUTOLOAD {
+  my($l) = $AUTOLOAD;
+  $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig");
+  $l =~ s/.*:://;
+  CPAN::HandleConfig->$l(@_);
+}
+
+# note: J. Nick Koston wrote me that they are using
+# CPAN::Config->commit although undocumented. I suggested
+# CPAN::Shell->o("conf","commit") even when ugly it is at least
+# documented
+
+# that's why I added the CPAN::Config class with autoload and
+# deprecated warning
+
 package CPAN::HandleConfig;
 use strict;
 use vars qw(%can %keys $dot_cpan $VERSION);
