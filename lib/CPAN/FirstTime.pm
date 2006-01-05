@@ -394,7 +394,7 @@ Build.PL.
 
 });
 
-    $default = $CPAN::Config->{prefer_installer} || "";
+    $default = $CPAN::Config->{prefer_installer} || "EUMM";
     do {
       $ans =
 	  prompt("In case you could choose, which installer would you prefer (EUMM or MB)?",
