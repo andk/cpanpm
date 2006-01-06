@@ -3228,31 +3228,40 @@ happen.\a
                       $last_updated);
         $DATE_OF_02 = $last_updated;
 
+        my $age = time;
         if ($CPAN::META->has_inst('HTTP::Date')) {
             require HTTP::Date;
-            my($age) = (time - HTTP::Date::str2time($last_updated))/3600/24;
-            if ($age > 30) {
-
-                $CPAN::Frontend
-                    ->mywarn(sprintf
-                             qq{Warning: This index file is %d days old.
-  Please check the host you chose as your CPAN mirror for staleness.
-  I'll continue but problems seem likely to happen.\a\n},
-                             $age);
-
-            } elsif ($age < -1) {
-
-                $CPAN::Frontend
-                    ->mywarn(sprintf
-                             qq{Warning: This index file has a timestamp of
-  %s (%d days in the future)
-  Please fix your system time, it will likely cause problems with the make command.\n},
-                             $DATE_OF_02,
-                             -$age);
-
-            }
+            $age -= HTTP::Date::str2time($last_updated);
         } else {
             $CPAN::Frontend->myprint("  HTTP::Date not available\n");
+            require Time::Local;
+            my(@d) = $last_updated =~ / (\d+) (\w+) (\d+) (\d+):(\d+):(\d+) /;
+            $d[1] = index("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec", $d[1])/4;
+            $age -= $d[1]>=0 ? Time::Local::timegm(@d[5,4,3,0,1,2]) : 0;
+        }
+        $age /= 3600*24;
+        if ($age > 30) {
+
+            $CPAN::Frontend
+                ->mywarn(sprintf
+                         qq{Warning: This index file is %d days old.
+  Please check the host you chose as your CPAN mirror for staleness.
+  I'll continue but problems seem likely to happen.\a\n},
+                         $age);
+
+        } elsif ($age < -1) {
+
+            $CPAN::Frontend
+                ->mywarn(sprintf
+                         qq{Warning: Your system date is %d days behind this index file!
+  System time:          %s
+  Timestamp index file: %s
+  Please fix your system time, problems with the make command expected.\n},
+                         -$age,
+                         scalar gmtime,
+                         $DATE_OF_02,
+                        );
+
         }
     }
 
