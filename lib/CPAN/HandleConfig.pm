@@ -109,12 +109,15 @@ sub prettyprint {
   my($self,$k) = @_;
   my $v = $CPAN::Config->{$k};
   if (ref $v) {
-    my(@report) = ref $v eq "ARRAY" ?
-        @$v :
-            map { sprintf("   %-18s => [%s]\n",
-                          map { "[$_]" } $_,
-                          defined $v->{$_} ? $v->{$_} : "UNDEFINED"
-                         )} keys %$v;
+    my(@report);
+    if (ref $v eq "ARRAY") {
+      @report = map {"\t[$_]\n"} @$v;
+    } else {
+      @report = map { sprintf("\t%-18s => %s\n",
+                              map { "[$_]" } $_,
+                              defined $v->{$_} ? $v->{$_} : "UNDEFINED"
+                             )} keys %$v;
+    }
     $CPAN::Frontend->myprint(
                              join(
                                   "",
@@ -122,7 +125,7 @@ sub prettyprint {
                                           "    %-18s\n",
                                           $k
                                          ),
-                                  map {"\t[$_]\n"} @report
+                                  @report
                                  )
                             );
   } elsif (defined $v) {
