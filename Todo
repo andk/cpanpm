@@ -1,5 +1,9 @@
 2006-01-06  Andreas J Koenig  <akoenig@cellular.de>
 
+	* Slaven suggests: How to discover that we are in the subshell?
+	Environment? Prompt? Level? PS1 as an environment variable? How does
+	Debian's apt-get solve that?
+
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does
 	this.
