@@ -3240,6 +3240,16 @@ happen.\a
   I'll continue but problems seem likely to happen.\a\n},
                              $age);
 
+            } elsif ($age < -1) {
+
+                $CPAN::Frontend
+                    ->mywarn(sprintf
+                             qq{Warning: This index file has a timestamp of
+  %s (%d days in the future)
+  Please fix your system time, it will likely cause problems with the make command.\n},
+                             $DATE_OF_02,
+                             -$age);
+
             }
         } else {
             $CPAN::Frontend->myprint("  HTTP::Date not available\n");
