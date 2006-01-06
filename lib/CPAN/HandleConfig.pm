@@ -1,6 +1,7 @@
 package CPAN::Config;
 use strict;
-use vars qw($AUTOLOAD);
+use vars qw($AUTOLOAD $VERSION);
+$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 # formerly CPAN::HandleConfig was known as CPAN::Config
 sub AUTOLOAD {
