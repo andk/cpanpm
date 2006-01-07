@@ -34,7 +34,7 @@ if ($HAVE_FILE_SPEC) {
       $dirty++;
     }
     close $st;
-    die "Not everything checked in?" if $dirty;
+    die "Not everything checked in or out?" if $dirty;
 
     # $re parses the upper boundary of the output of svnversion
     my $re;
