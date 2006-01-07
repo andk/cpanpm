@@ -151,6 +151,7 @@ the-release-name :
 
 release ::
 	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
+	$(CP) $(DISTVNAME)/SIGNATURE ./
 
 sign:
 	cpansign -s
