@@ -152,6 +152,7 @@ the-release-name :
 release ::
 	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	rm -rf $(DISTVNAME)
 
 sign:
 	cpansign -s
@@ -187,6 +188,5 @@ disttest :
 	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
-	rm -rf $(DISTVNAME)
 }
 }
