@@ -141,9 +141,14 @@ README: lib/CPAN.pm Makefile
 	chmod +w $@
 	/usr/bin/pod2text lib/CPAN.pm > $@
 
-chlog ::
-	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog
-	cat ChangeLog.local >> ChangeLog
+chlog :: chlog-svn chlog-trad
+
+chlog-svn :
+	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
+	cat ChangeLog.local >> ChangeLog.svn
+
+chlog-trad :
+	/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day > ChangeLog
 
 the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
