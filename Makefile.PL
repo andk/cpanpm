@@ -164,6 +164,9 @@ release ::
 	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	rm -rf $(DISTVNAME)
 
+run :
+	$(PERL) -Ilib -MCPAN -eshell
+
 sign:
 	cpansign -s
 

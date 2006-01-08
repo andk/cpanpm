@@ -11,18 +11,19 @@ BEGIN {
 	exit 0;
     }
     eval { require Expect };
+    # I consider it good-enough to have this test only where somebody
+    # has Expect installed. I do not want to promote Expect to
+    # everywhere.
     if ($@) {
 	print "1..0 # Skip: no Expect\n";
 	exit 0;
     }
 }
 
-use strict;
 use File::Copy qw(cp);
 cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm" or die; # because commit will overwrite it
 
 my @prgs;
-
 {
     local $/;
     @prgs = split /########.*/, <DATA>;
