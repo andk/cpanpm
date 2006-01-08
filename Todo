@@ -1,8 +1,13 @@
+2006-01-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* find out why Expect is so noisy and when this did start
+
 2006-01-06  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Slaven suggests: How to discover that we are in the subshell?
 	Environment? Prompt? Level? PS1 as an environment variable? How does
-	Debian's apt-get solve that?
+	Debian's apt-get solve that? HALF-DONE in rev. 360: We now have the
+	envariable CPAN_SHELL_LEVEL but I'd still make a change to the prompt.
 
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does
@@ -20,7 +25,8 @@
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
 	of testing CPAN.pm. Also helps Test::Prereq and others.
-	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build?
+	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
+	start is done in t/shell.t
 
 2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -43,7 +49,8 @@
 	summary currently provided by install bundle.
 
 	* FirstTime needs a structure over each question or questiongroup so
-	that we can ask single questions.
+	that we can ask single questions. Structure was brought by Jim Comie
+	around rev. 355
 
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't.

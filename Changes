@@ -1,3 +1,23 @@
+2006-01-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_51 brings
+
+	* restructure FirstTime in a way to enable us to ask single questions RSN
+	(Jim Cromie)
+
+	* shell.t that can test dialogues
+
+	* show_upload_date now asks yes/no instead of 1/0
+
+	* envariable CPAN_SHELL_LEVEL now available for subshells (Slaven Rezic)
+
+	* enable date/time warnings without the help of HTTP::Date (inspired by
+	a bogus bugreport on perl monks that was only due to wrong system time)
+
+	* hide CPAN::Config from the indexer
+
+	* provide a more traditional style ChangeLog and Changes file
+
 2006-01-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.82 and 1.83 are quick bugfix releases.
@@ -150,5 +170,7 @@
 
 	Local Variables:
 	mode: change-log
-	change-log-default-name: "Releasenotes"
+	change-log-default-name: "Changes"
+	tab-width: 2
+	left-margin: 2
 	End:
