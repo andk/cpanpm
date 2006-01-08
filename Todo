@@ -6,7 +6,8 @@
 
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does
-	this.
+	this. Ah here: http://ch.tudelft.nl/~arthur/svn2cl/svn2cl-0.5.tar.gz
+	DONE up to rev. 352
 
 2006-01-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
