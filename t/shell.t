@@ -83,6 +83,14 @@ o conf build_cache
 ~~like~~
 build_cache
 ########
+o conf init
+~~like~~
+initialized
+########
+nothanks
+~~like~~
+wrote
+########
 quit
 ~~like~~
 ########
