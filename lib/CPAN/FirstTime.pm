@@ -216,10 +216,10 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Frontend->myprint($prompts{show_upload_date});
 
     defined($default = $CPAN::Config->{show_upload_date}) or
-        $default = 0;
-    $ans = prompt("Always try to show upload date with 'd' and 'm' command?",
- 			$default);
-    $CPAN::Config->{show_upload_date} = $ans;
+        $default = 'n';
+    $ans = prompt("Always try to show upload date with 'd' and 'm' command (yes/no)?",
+                  ($default ? 'yes' : 'no'));
+    $CPAN::Config->{show_upload_date} = ($ans =~ /^[y1]/i ? 1 : 0);
 
     #
     # prerequisites_policy
