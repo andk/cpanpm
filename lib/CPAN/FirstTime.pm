@@ -104,7 +104,7 @@ sub init {
 	$CPAN::Frontend->myprint(qq{
 
 I see you already have a  directory
-  $cpan_home
+    $cpan_home
 Shall we use it as the general CPAN build and cache directory?
 
 });
@@ -792,7 +792,6 @@ any parameters \(e.g. PREFIX, LIB, UNINST or the like\) you want to
 pass to the calls, please specify them here.
 
 If you don\'t understand this question, just press ENTER.
-
 },
 
 makepl_arg => qq{
@@ -856,8 +855,7 @@ Setting might be:
 Your choice: },
 
 
-mbuild_install_build_command => qq{
-	prompt("Do you want to use a different command for './Build install'?
+mbuild_install_build_command => qq{Do you want to use a different command for './Build install'?
 Sudo users will probably prefer:
 
     su root -c ./Build
