@@ -4272,9 +4272,12 @@ Could not determine which directory to use for looking at $dist.
     my $pwd  = CPAN::anycwd();
     $self->safe_chdir($dir);
     $CPAN::Frontend->myprint(qq{Working directory is $dir\n});
-    unless (system($CPAN::Config->{'shell'}) == 0) {
-        my $code = $? >> 8;
-        $CPAN::Frontend->mywarn("Subprocess shell exit code $code\n");
+    {
+	local $ENV{CPAN_SHELL_LEVEL} = $ENV{CPAN_SHELL_LEVEL} + 1;
+	unless (system($CPAN::Config->{'shell'}) == 0) {
+	    my $code = $? >> 8;
+	    $CPAN::Frontend->mywarn("Subprocess shell exit code $code\n");
+	}
     }
     $self->safe_chdir($pwd);
 }
