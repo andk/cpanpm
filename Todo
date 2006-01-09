@@ -1,8 +1,21 @@
+2006-01-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* document CPAN_SHELL_LEVEL
+
 2006-01-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* find out why Expect is so noisy and when this did start
+	* find out why Expect is so noisy and when this did start DONE
 
 2006-01-06  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
+	tweak FirstTime::init() interface to accept optional @sections
+
+	put various interactive Qs into groups of conditionals: if ( !@sections
+	     or grep /$this_sect_name/, @sections)
+
+	candidate sections: progs - external prog selection make - all make
+	options
 
 	* Slaven suggests: How to discover that we are in the subshell?
 	Environment? Prompt? Level? PS1 as an environment variable? How does
