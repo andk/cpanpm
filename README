@@ -820,6 +820,10 @@ EXPORT
     this is that the primary use is intended for the cpan shell or for
     one-liners.
 
+ENVIRONMENT
+    When the CPAN shell enters a subshell via the look command, it sets the
+    environment CPAN_SHELL_LEVEL to 1 or increments it if it is already set.
+
 POPULATE AN INSTALLATION WITH LOTS OF MODULES
     Populating a freshly installed perl with my favorite modules is pretty
     easy if you maintain a private bundle definition file. To get a useful
