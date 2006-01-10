@@ -1,6 +1,6 @@
 2006-01-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* document CPAN_SHELL_LEVEL
+	* document CPAN_SHELL_LEVEL DONE
 
 2006-01-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -20,7 +20,8 @@
 	* Slaven suggests: How to discover that we are in the subshell?
 	Environment? Prompt? Level? PS1 as an environment variable? How does
 	Debian's apt-get solve that? HALF-DONE in rev. 360: We now have the
-	envariable CPAN_SHELL_LEVEL but I'd still make a change to the prompt.
+	envariable CPAN_SHELL_LEVEL but I'd still like to make a change to the
+	prompt.
 
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does

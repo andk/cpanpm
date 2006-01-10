@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.83_51';
+$VERSION = '1.83_52';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -1099,8 +1099,9 @@ sub h {
     if (defined $about) {
 	$CPAN::Frontend->myprint("Detailed help not yet implemented\n");
     } else {
+        my $filler = " " x (80 - 28 - length($CPAN::VERSION));
 	$CPAN::Frontend->myprint(qq{
-Display Information   (ver $CPAN::VERSION)
+Display Information $filler (ver $CPAN::VERSION)
  command  argument          description
  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
  i        WORD or /REGEXP/  about any of the above
@@ -7124,6 +7125,12 @@ keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
 Most functions in package CPAN are exported per default. The reason
 for this is that the primary use is intended for the cpan shell or for
 one-liners.
+
+=head1 ENVIRONMENT
+
+When the CPAN shell enters a subshell via the look command, it sets
+the environment CPAN_SHELL_LEVEL to 1 or increments it if it is
+already set.
 
 =head1 POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
