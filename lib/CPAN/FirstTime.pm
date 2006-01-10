@@ -44,6 +44,7 @@ sub init {
     my($configpm, %args) = @_;
     my @sections;	# will become an arg sometime
     use Config;
+    my $matcher = qr/$args{args}[0]/;
 
     unless ($CPAN::VERSION) {
 	require CPAN::Nox;
@@ -95,7 +96,12 @@ sub init {
 	};
       }
     }
+    # if ('config_intro' ~= $matcher) {
+
     $CPAN::Frontend->myprint($prompts{config_intro});
+
+    #}
+
 
     my $cpan_home = $CPAN::Config->{cpan_home}
 	|| File::Spec->catdir($ENV{HOME}, ".cpan");
@@ -317,48 +323,39 @@ Shall we use it as the general CPAN build and cache directory?
 
     $CPAN::Frontend->myprint($prompts{makepl_arg_intro});
 
-    $default = $CPAN::Config->{makepl_arg} || "";
-    $CPAN::Config->{makepl_arg} = prompt($prompts{makepl_arg}, $default);
 
-    $default = $CPAN::Config->{make_arg} || "";
-    $CPAN::Config->{make_arg} = prompt($prompts{make_arg}, $default);
+    my_dflt_prompt(makepl_arg => "");
 
-    $default = $CPAN::Config->{make_install_make_command}
-	|| $CPAN::Config->{make} || "";
+    my_dflt_prompt(make_arg => "");
 
-    $CPAN::Config->{make_install_make_command} =
-	prompt($prompts{make_install_make_command},$default);
+    my_dflt_prompt(make_install_make_command => $CPAN::Config->{make} || "");
 
-    $default = $CPAN::Config->{make_install_arg} || $CPAN::Config->{make_arg} || "";
-    $CPAN::Config->{make_install_arg} =
-	prompt($prompts{make_install_arg},$default);
+    my_dflt_prompt(make_install_make_command => "");
+
+    my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "");
+
 
     $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro});
 
-    $default = $CPAN::Config->{mbuildpl_arg} || "";
-    $CPAN::Config->{mbuildpl_arg} =
-	prompt($prompts{mbuildpl_arg},$default);
+    my_dflt_prompt(mbuildpl_arg => "");
 
-    $default = $CPAN::Config->{mbuild_arg} || "";
-    $CPAN::Config->{mbuild_arg} = prompt($prompts{mbuild_arg},$default);
+    my_dflt_prompt(mbuild_arg => "");
 
-    $default = $CPAN::Config->{mbuild_install_build_command} || "./Build";
-    $CPAN::Config->{mbuild_install_build_command} =
-	prompt($prompts{mbuild_install_build_command}, $default);
+    my_dflt_prompt(mbuild_install_build_command => "./Build");
 
-    $default = $CPAN::Config->{mbuild_install_arg} || "";
-    $CPAN::Config->{mbuild_install_arg} =
-	prompt($prompts{mbuild_install_arg}, $default);
+    my_dflt_prompt(mbuild_install_arg => "");
 
     #
     # Alarm period
     #
 
-    $CPAN::Frontend->myprint($prompts{inactivity_timeout});
+    $CPAN::Frontend->myprint($prompts{inactivity_timeout_intro});
+
+    # my_dflt_prompt(inactivity_timeout => 0);
 
     $default = $CPAN::Config->{inactivity_timeout} || 0;
     $CPAN::Config->{inactivity_timeout} =
-	prompt("Timeout for inactivity during {Makefile,Build}.PL?",$default);
+      prompt("Timeout for inactivity during {Makefile,Build}.PL?",$default);
 
     # Proxies
 
@@ -405,6 +402,17 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Frontend->myprint("\n\n");
     CPAN::HandleConfig->commit($configpm);
 }
+
+sub my_dflt_prompt {	# no name clash - you dont swear
+
+    my ($item, $dflt) = @_;
+
+    my $default = $CPAN::Config->{$item} || $dflt;
+    $CPAN::Config->{$item} =
+	prompt($prompts{$item}, $default);
+
+}
+
 
 sub conf_sites {
   my $m = 'MIRRORED.BY';
@@ -876,7 +884,7 @@ Your choice: },
 
 
 
-inactivity_timeout => qq{
+inactivity_timeout_intro => qq{
 
 Sometimes you may wish to leave the processes run by CPAN alone
 without caring about them. Because the Makefile.PL sometimes contains
@@ -887,6 +895,10 @@ If you set this value to 0, these processes will wait forever. This is
 the default and recommended setting.
 
 },
+
+inactivity_timeout => 
+qq{Timeout for inactivity during {Makefile,Build}.PL? },
+
 
 proxies => qq{
 

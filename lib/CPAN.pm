@@ -1099,8 +1099,8 @@ sub h {
     if (defined $about) {
 	$CPAN::Frontend->myprint("Detailed help not yet implemented\n");
     } else {
-	$CPAN::Frontend->myprint(q{
-Display Information
+	$CPAN::Frontend->myprint(qq{
+Display Information   (ver $CPAN::VERSION)
  command  argument          description
  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
  i        WORD or /REGEXP/  about any of the above
@@ -1274,6 +1274,7 @@ sub i {
 # should have been called set and 'o debug' maybe 'set debug'
 sub o {
     my($self,$o_type,@o_what) = @_;
+    $DB::single = 1;
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
