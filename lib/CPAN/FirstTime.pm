@@ -44,7 +44,7 @@ sub init {
     my($configpm, %args) = @_;
     my @sections;	# will become an arg sometime
     use Config;
-    my $matcher = qr/$args{args}[0]/;
+    my $matcher = $args{args} && @{$args{args}} ? qr/$args{args}[0]/ : qr//;
 
     unless ($CPAN::VERSION) {
 	require CPAN::Nox;
@@ -329,8 +329,6 @@ Shall we use it as the general CPAN build and cache directory?
     my_dflt_prompt(make_arg => "");
 
     my_dflt_prompt(make_install_make_command => $CPAN::Config->{make} || "");
-
-    my_dflt_prompt(make_install_make_command => "");
 
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "");
 
