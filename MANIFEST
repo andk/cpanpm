@@ -4,6 +4,7 @@ Changes
 Changes.old
 MANIFEST
 MANIFEST.SKIP
+META.yml
 Makefile.PL
 PAUSE2003.pub
 PAUSE2005.pub
