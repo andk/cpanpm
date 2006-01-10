@@ -45,13 +45,24 @@ $exp->spawn(
            );
 my $timeout = 6;
 # $exp->log_stdout(0);
+$exp->notransfer(1);
 $exp->expect(
              $timeout,
              [ eof => sub { exit } ],
-             [ timeout => sub { print "timed out\n"; exit }],
+             [ timeout => sub {
+                   my $self = $exp;
+                   print "timed out\n";
+                   my $got = $self->clear_accum;
+                   if ($got =~ /lockfile/) {
+                       $self->send("y\n");
+                   } else {
+                       exit;
+                   }
+                   Expect::exp_continue;
+               }],
              '-re', $prompt
             );
-$exp->notransfer(1);
+
 for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my($prog,$expected) = split(/~~like~~.*/, $chunk);
