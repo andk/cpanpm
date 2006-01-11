@@ -81,9 +81,10 @@ sub shell {
     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
     CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
 
-    my $oprompt = shift || "cpan> ";
+    my $oprompt = shift || "cpan> "; # CPAN::Prompt->new;
     my $prompt = $oprompt;
     my $commandline = shift || "";
+    $CPAN::CurrentCommandId ||= 1;
 
     local($^W) = 1;
     unless ($Suppress_readline) {
@@ -190,9 +191,13 @@ ReadLine support %s
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
+            if ($command =~ /^(make|test|install)$/) {
+                CPAN::Shell->failed($CPAN::CurrentCommandId,1);
+            }
             soft_chdir_with_alternatives(\@cwd);
 	    $CPAN::Frontend->myprint("\n");
 	    $continuation = "";
+            $CPAN::CurrentCommandId++;
 	    $prompt = $oprompt;
 	}
     } continue {
@@ -319,6 +324,43 @@ sub as_string {
     "\nRecursive dependency detected:\n    " .
         join("\n => ", @{$self->{deps}}) .
             ".\nCannot continue.\n";
+}
+
+package CPAN::Prompt; use overload '""' => "as_string";
+our $prompt = "cpan> ";
+$CPAN::CurrentCommandId ||= 0;
+sub as_randomly_capitalized_string {
+    # pure fun variant
+    substr($prompt,$_,1)=rand()<0.5 ?
+        uc(substr($prompt,$_,1)) :
+            lc(substr($prompt,$_,1)) for 0..3;
+    $prompt;
+}
+sub new {
+    bless {}, shift;
+}
+sub as_string {
+    sprintf "cpan[%d]> ", $CPAN::CurrentCommandId;
+}
+
+package CPAN::Distrostatus;
+use overload '""' => "as_string";
+sub new {
+    my($class,$arg) = @_;
+    bless {
+           TEXT => $arg,
+           FAILED => substr($arg,0,2) eq "NO",
+           COMMANDID => $CPAN::CurrentCommandId,
+          }, $class;
+}
+sub commandid { shift->{COMMANDID} }
+sub failed { shift->{FAILED} }
+sub text { shift->{TEXT} }
+sub as_string {
+    my($self) = @_;
+    require Carp;
+    Carp::cluck("HERE");
+    $self->{TEXT};
 }
 
 package CPAN::Shell;
@@ -1607,25 +1649,32 @@ sub u {
 # XXX intentionally undocumented because not considered enough
 #-> sub CPAN::Shell::failed ;
 sub failed {
-    my($self) = @_;
+    my($self,$only_id,$silent) = @_;
     my $print = "";
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
-        for my $nosayer (qw(make make_test make_install)) {
+        for my $nosayer (qw(make make_test install)) {
             next unless exists $d->{$nosayer};
-            next unless substr($d->{$nosayer},0,2) eq "NO";
+            next unless $d->{$nosayer}->failed;
             $failed = $nosayer;
             last;
         }
         next DIST unless $failed;
+        next DIST if $only_id && $only_id != $d->{$failed}->commandid;
         my $id = $d->id;
         $id =~ s|^./../||;
-        $print .= sprintf " %-45s: %s %s\n", $id, $failed, $d->{$failed};
+        $print .= sprintf(
+                          "  %-45s: %s %s\n",
+                          $id,
+                          $failed,
+                          $d->{$failed}->text,
+                          );
     }
+    my $scope = $only_id ? "command" : "session";
     if ($print) {
-        $CPAN::Frontend->myprint("Failed installations in this session:\n$print");
-    } else {
-        $CPAN::Frontend->myprint("No installations failed in this session\n");
+        $CPAN::Frontend->myprint("Failed installations in this $scope:\n$print");
+    } elsif (!$only_id || !$silent) {
+        $CPAN::Frontend->myprint("No installations failed in this $scope\n");
     }
 }
 
@@ -4094,7 +4143,7 @@ sub get {
                                         );
 
                 my $wrap =
-                    sprintf(qq{I\'d recommend removing %s. Its signature
+                    sprintf(qq{I'd recommend removing %s. Its signature
 is invalid. Maybe you have configured your 'urllist' with
 a bad URL. Please check this array with 'o conf urllist', and
 retry. For more information, try opening a subshell with
@@ -4104,7 +4153,10 @@ and there run
                             $self->{localfile},
                             $self->pretty_id,
                            );
+                $self->{brokensig}++;
                 $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
+            } else {
+                delete $self->{brokensig};
             }
         } else {
             $CPAN::Frontend->myprint(qq{Package came without SIGNATURE\n\n});
@@ -4654,6 +4706,9 @@ or
         !$self->{unwrapped} || $self->{unwrapped} eq "NO" and push @e,
         "had problems unarchiving. Please build manually";
 
+        exists $self->{brokensig} and $self->{brokensig}
+            and push @e, "did not pass the signature test.";
+
         exists $self->{writemakefile} &&
             $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
                 $1 || "Had some problem writing Makefile";
@@ -4757,10 +4812,10 @@ or
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
-	 $self->{'make'} = "YES";
+	 $self->{'make'} = CPAN::Distrostatus->new("YES");
     } else {
 	 $self->{writemakefile} ||= "YES";
-	 $self->{'make'} = "NO";
+	 $self->{'make'} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
 }
@@ -4995,7 +5050,7 @@ sub test {
 	"Make had some problems, maybe interrupted? Won't test";
 
 	exists $self->{'make'} and
-	    $self->{'make'} eq 'NO' and
+	    $self->{'make'}->failed and
 		push @e, "Can't test without successful make";
 
 	exists $self->{build_dir} or push @e, "Has no own directory";
@@ -5032,9 +5087,9 @@ sub test {
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $CPAN::META->is_tested($self->{'build_dir'});
-	 $self->{make_test} = "YES";
+	 $self->{make_test} = CPAN::Distrostatus->new("YES");
     } else {
-	 $self->{make_test} = "NO";
+	 $self->{make_test} = CPAN::Distrostatus->new("NO");
          $self->{badtestcnt}++;
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
@@ -5121,13 +5176,13 @@ sub install {
 	"Make had some problems, maybe interrupted? Won't install";
 
 	exists $self->{'make'} and
-	    $self->{'make'} eq 'NO' and
+	    $self->{'make'}->failed and
 		push @e, "make had returned bad status, install seems impossible";
 
 	push @e, "make test had returned bad status, ".
 	    "won't install without force"
 	    if exists $self->{'make_test'} and
-	    $self->{'make_test'} eq 'NO' and
+	    $self->{'make_test'}->failed and
 	    ! $self->{'force_update'};
 
 	exists $self->{'install'} and push @e,
@@ -5179,9 +5234,9 @@ sub install {
     if ($?==0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $CPAN::META->is_installed($self->{'build_dir'});
-	 return $self->{'install'} = "YES";
+	 return $self->{'install'} = CPAN::Distrostatus->new("YES");
     } else {
-	 $self->{'install'} = "NO";
+	 $self->{'install'} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
 	 if (
              $makeout =~ /permission/s

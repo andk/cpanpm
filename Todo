@@ -1,3 +1,38 @@
+2006-01-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* get rid of the summary currently provided by install bundle, its
+	superceded by failed().
+
+	* Todo: document "failed" (and "status"?)
+
+	* Todo: see the newest cpan by brian.
+
+	* today's rev. 374 of CPAN.pm should be partially reverted: while
+	failed() looks good most of the time, it looks ugly that 'force install
+	version' installs version and still failed reports:
+
+Writing /usr/local/perl-5.8.0@26774/lib/site_perl/5.9.3/i686-linux-64int/auto/version/vxs/.packlist
+  ./Build install --uninst 1 -- OK
+Failed installations in this command:
+  JPEACOCK/version-0.53.tar.gz                 : make_test NO
+
+cpan> failed               
+Failed installations in this session:
+  BDFOY/Test-Prereq-1.029.tar.gz               : make_test NO
+  JPEACOCK/version-0.53.tar.gz                 : make_test NO
+
+	Correct behaviour should be that the 'make_test NO' bit be (silently ?)
+	nuked.
+
+	Above that, the "prompt" change was only interesting during debugging.
+	Nobody wants to see the internal number of commands in his prompt.
+
+	* Bug: YAML fails to unpack because of bad signature. Retrying leads to
+	prereq Test::Base failing due to bad signature. Retrying leads to
+	running make test on YAML. dump reveals that somehow SIG_STATUS was set
+	to YES. Ahh, that's the signature on the CHECKSUMS file. Need a new
+	attribute for broken signatures. FIXED in rev. 374
+
 2006-01-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* document CPAN_SHELL_LEVEL DONE
@@ -33,9 +68,7 @@
 	* Give every command a number and store that number in the object,
 	something like incommandcolor but without removing it at the end of the
 	command. With such a number we can make failed(commandnumber) filter on
-	that commandnumber and have instant per-command-failed.
-
-	* Todo: document "failed" and "status" but only after 1.81
+	that commandnumber and have instant per-command-failed. DONE in rev 374
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
 	of testing CPAN.pm. Also helps Test::Prereq and others.
@@ -58,9 +91,6 @@
 	direction.
 
 	* readline: offer the choice between Gnu and Perl
-
-	* extend the "failed" idea to the current command and get rid of the
-	summary currently provided by install bundle.
 
 	* FirstTime needs a structure over each question or questiongroup so
 	that we can ask single questions. Structure was brought by Jim Comie
