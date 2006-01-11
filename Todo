@@ -63,14 +63,6 @@ Failed installations in this session:
 
 2006-01-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* document CPAN_SHELL_LEVEL DONE
-
-2006-01-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* find out why Expect is so noisy and when this did start DONE
-
-2006-01-06  Andreas J Koenig  <akoenig@cellular.de>
-
 	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
 	tweak FirstTime::init() interface to accept optional @sections
 
@@ -80,14 +72,27 @@ Failed installations in this session:
 	candidate sections: progs - external prog selection make - all make
 	options
 
+	* hr ================ no todos below this line ================ /hr
+	
+	* document CPAN_SHELL_LEVEL DONE
+
+	* find out why Expect is so noisy and when this did start DONE
+
 	* Slaven suggests: How to discover that we are in the subshell?
 	Environment? Prompt? Level? PS1 as an environment variable? How does
 	Debian's apt-get solve that? HALF-DONE in rev. 360: We now have the
 	envariable CPAN_SHELL_LEVEL but I'd still like to make a change to the
-	prompt.
+	prompt. Update: Debian does not mangle the prompt, they just say 'Type
+	exit when you're done':
 
-	* hr ================ no todos below this line ================ /hr
-	
+	*** dvorak (Y/I/N/O/D/Z) [default=N] ? z
+Type `exit' when you're done.
+Abstaining from writing .zhistory, is younger than stats.dbhash at /root/bin/commandhistory.pl line 513.
+Zsh version 4.3.0-dev-2
+Linux dev05 2.6.12.6-xen0 #2 Tue Jan 10 17:34:37 CET 2006 i686 GNU/Linux
+
+	So this Todo can also be CLOSED.
+
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does
 	this. Ah here: http://ch.tudelft.nl/~arthur/svn2cl/svn2cl-0.5.tar.gz
