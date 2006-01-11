@@ -217,7 +217,7 @@ distdir ::
 
 sub distdir {
   my $self = shift;
-  my $out = $self->SUPER::dist_core;
+  my $out = $self->SUPER::distdir;
   $out =~ s/distdir :/distdir ::/g;
   return $out;
 }
