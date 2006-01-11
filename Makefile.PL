@@ -208,7 +208,7 @@ disttest :
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
 
-dist ::
+distdir ::
 	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 
@@ -218,6 +218,6 @@ dist ::
 sub dist_core {
   my $self = shift;
   my $out = $self->SUPER::dist_core;
-  $out =~ s/dist :/dist ::/g;
+  $out =~ s/distdir :/distdir ::/g;
   return $out;
 }
