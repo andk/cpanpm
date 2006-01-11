@@ -132,24 +132,26 @@ if ($version_diff){
 ";
 }
 
-sub MY::postamble {
+package MY;
+
+sub postamble {
   q{
 setversion:
 	$(PERL) Makefile.PL --setversion
 
 README: lib/CPAN.pm Makefile
 	chmod +w $@
-	/usr/bin/pod2text lib/CPAN.pm > $@
+	-/usr/bin/pod2text lib/CPAN.pm > $@
 
 chlog :: chlog-svn chlog-xml chlog-trad
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
-	LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
-	cat ChangeLog.local >> ChangeLog.svn
+	-LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
+	-cat ChangeLog.local >> ChangeLog.svn
 
 chlog-trad :
-	/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day > ChangeLog
+	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day > ChangeLog
 
 # for debugging
 chlog-xml :
@@ -186,13 +188,13 @@ howto-release:
 }
 }
 
-sub MY::dist_ci {
+sub dist_ci {
   return qq{ci :
 	svn ci
 };
 }
 
-sub MY::dist_test {
+sub dist_test {
   return q{
 # if we depend on $(DISTVNAME).tar$(SUFFIX), then the rest of the
 # Makefile breaks our intent to NOT remake dist
@@ -202,5 +204,17 @@ disttest :
 	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
+
+dist ::
+	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+
 }
+}
+
+sub dist_core {
+  my $self = shift;
+  my $out = $self->SUPER::dist_core;
+  $out =~ s/dist :/dist ::/g;
+  return $out;
 }
