@@ -119,7 +119,7 @@ WriteMakefile(
                (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
               'dist' => {
-                         DIST_DEFAULT => 'Makefile setversion README all chlog tardist',
+                         DIST_DEFAULT => 'Makefile META.yml setversion README all chlog tardist',
                          COMPRESS => 'gzip -9f'
                         },
 );
@@ -185,6 +185,9 @@ upload-batch-signing-key:
 
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
+
+META.yml:
+	$(ECHO) -n "" >> META.yml
 }
 }
 
