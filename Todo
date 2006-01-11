@@ -1,5 +1,7 @@
 2006-01-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* what happens to "failed" when we reload the index?
+
 	* Todo: Write a bunch of distros and upload them with the sole purpose
 	of testing CPAN.pm. Also helps Test::Prereq and others.
 	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
