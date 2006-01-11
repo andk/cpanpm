@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.83_52';
+$VERSION = '1.83_53';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -554,7 +554,7 @@ sub checklock {
     my $lockfile = File::Spec->catfile($CPAN::Config->{cpan_home},".lock");
     if (-f $lockfile && -M _ > 0) {
 	my $fh = FileHandle->new($lockfile) or
-            $CPAN::Frontend->mydie("Could not open $lockfile: $!");
+            $CPAN::Frontend->mydie("Could not open lockfile '$lockfile': $!");
 	my $otherpid  = <$fh>;
 	my $otherhost = <$fh>;
 	$fh->close;
@@ -568,7 +568,7 @@ sub checklock {
 	if (defined $otherhost && defined $thishost &&
 	    $otherhost ne '' && $thishost ne '' &&
 	    $otherhost ne $thishost) {
-            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile $lockfile\n".
+            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile '$lockfile'\n".
                                            "reports other host $otherhost and other process $otherpid.\n".
                                            "Cannot proceed.\n"));
 	}
@@ -588,20 +588,20 @@ You may want to kill it and delete the lockfile, maybe. On UNIX try:
 		my($ans) =
 		    ExtUtils::MakeMaker::prompt
 			(qq{Other job not responding. Shall I overwrite }.
-			 qq{the lockfile? (Y/N)},"y");
+			 qq{the lockfile '$lockfile'? (Y/n)},"y");
 		$CPAN::Frontend->myexit("Ok, bye\n")
 		    unless $ans =~ /^y/i;
 	    } else {
 		Carp::croak(
-			    qq{Lockfile $lockfile not writeable by you. }.
+			    qq{Lockfile '$lockfile' not writeable by you. }.
 			    qq{Cannot proceed.\n}.
 			    qq{    On UNIX try:\n}.
-			    qq{    rm $lockfile\n}.
+			    qq{    rm '$lockfile'\n}.
 			    qq{  and then rerun us.\n}
 			   );
 	    }
 	} else {
-            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile $lockfile\n".
+            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile '$lockfile'\n".
                                            "reports other process with ID ".
                                            "$otherpid. Cannot proceed.\n"));
         }
