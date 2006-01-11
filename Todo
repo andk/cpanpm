@@ -1,5 +1,31 @@
 2006-01-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: Write a bunch of distros and upload them with the sole purpose
+	of testing CPAN.pm. Also helps Test::Prereq and others.
+	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
+	start is done in t/shell.t
+
+	* upgrade: new command that does nothing but
+	CPAN::Shell->install(CPAN::Shell->r)?
+
+	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
+	branches/1.80_56plus for a few lines that probably went in the wrong
+	direction. Split the loading of Authors/Modules/Distros/Bundles into
+	separate pieces and make them lazy. Consider 'reload index', the
+	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
+	offsets into an uncompressed 02xxx file. Remember RT #4943.
+
+	* readline: offer the choice between Gnu and Perl
+
+	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
+	files. Currently it doesn't.
+
+	* optimize "ls dowens": currently fetches D/CHECKSUMS and D/DO/CHECKSUMS
+	even if we already have D/DO/DOWENS/CHECKSUMS. Is it worth fixing?
+
+	* Bug: installing scripts without modules? How does it work? How
+	should it work? getting the latest version ad-hoc?
+
 	* get rid of the summary currently provided by install bundle, its
 	superceded by failed().
 
@@ -58,6 +84,8 @@ Failed installations in this session:
 	envariable CPAN_SHELL_LEVEL but I'd still like to make a change to the
 	prompt.
 
+	* hr ================ no todos below this line ================ /hr
+	
 	* Rename Releasenotes to Changes and make the ChangeLog in the
 	traditional format, there is some XSLT stylesheet somewhere that does
 	this. Ah here: http://ch.tudelft.nl/~arthur/svn2cl/svn2cl-0.5.tar.gz
@@ -70,40 +98,17 @@ Failed installations in this session:
 	command. With such a number we can make failed(commandnumber) filter on
 	that commandnumber and have instant per-command-failed. DONE in rev 374
 
-	* Todo: Write a bunch of distros and upload them with the sole purpose
-	of testing CPAN.pm. Also helps Test::Prereq and others.
-	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
-	start is done in t/shell.t
-
 2005-12-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: I install Archive::Extract and it has the prerequisite
 	Module::Load::Conditional declared but nobody installs it.
 	FIXED in rev. 329
 
-	* upgrade: new command that does nothing but
-	CPAN::Shell->install(CPAN::Shell->r)?
-
 2005-12-30  Andreas J Koenig  <akoenig@cellular.de>
-
-	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
-	branches/1.80_56plus for a few lines that probably went in the wrong
-	direction.
-
-	* readline: offer the choice between Gnu and Perl
 
 	* FirstTime needs a structure over each question or questiongroup so
 	that we can ask single questions. Structure was brought by Jim Comie
 	around rev. 355
-
-	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
-	files. Currently it doesn't.
-
-	* optimize "ls dowens": currently fetches D/CHECKSUMS and D/DO/CHECKSUMS
-	even if we already have D/DO/DOWENS/CHECKSUMS. Is it worth fixing?
-
-	* Bug: installing scripts without modules? How does it work? How
-	should it work? getting the latest version ad-hoc?
 
 	* Bug: "reload cpan" does not work if the old and the new CPAN.pm
 	have a different path. I installed a new CPAN.pm from CPAN and it
@@ -137,19 +142,6 @@ Failed installations in this session:
 	* branching and merging: make current HEAD a branch "1.80_56plus" and
 	roll HEAD back to contain only the zero-risk stuff (for maybe later
 	releasing that as 1.81?) DONE
-
-2005-12-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* memory: split the loading of Authors/Modules/Distros/Bundles into
-	separate pieces and make them lazy. Consider 'reload index', the
-	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
-	offsets into an uncompressed 02xxx file.
-
-2005-12-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* rt.cpan.org: #4943 about memory consumption??? QJZHOU/uncpan???
-
-2005-12-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 2005-12-21  Andreas J Koenig  <akoenig@cellular.de>
 
