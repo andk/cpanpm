@@ -4149,7 +4149,7 @@ and there run
                            );
                 $self->{signature_verify} = CPAN::Distrostatus->new("NO");
                 $CPAN::Frontend->mywarn(Text::Wrap::wrap("","",$wrap));
-                $CPAN::Frontend->mysleep(5) if $CPAN::Fronend->can("mysleep");
+                $CPAN::Frontend->mysleep(5) if $CPAN::Frontend->can("mysleep");
             } else {
                 $self->{signature_verify} = CPAN::Distrostatus->new("YES");
             }
