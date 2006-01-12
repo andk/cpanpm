@@ -155,7 +155,7 @@ Shall we use it as the general CPAN build and cache directory?
     # Cache size, Index expire
     #
 
-    # $CPAN::Frontend->myprint($prompts{build_cache});
+    $CPAN::Frontend->myprint($prompts{build_cache_intro});
 
     # large enough to build large dists like Tk
     my_dflt_prompt(build_cache => 100, $matcher);
@@ -163,6 +163,7 @@ Shall we use it as the general CPAN build and cache directory?
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{'index_expire'} = 1;
 
+    $CPAN::Frontend->myprint($prompts{scan_cache_intro});
     my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
 
     #
@@ -210,7 +211,7 @@ Shall we use it as the general CPAN build and cache directory?
     #
     # do an ls on the m or the d command
     #
-    #$CPAN::Frontend->myprint($prompts{show_upload_date});
+    $CPAN::Frontend->myprint($prompts{show_upload_date_intro});
 
     defined($default = $CPAN::Config->{show_upload_date}) or
         $default = 'n';
@@ -226,7 +227,7 @@ Shall we use it as the general CPAN build and cache directory?
     # Do we follow PREREQ_PM?
     #
 
-    # $CPAN::Frontend->myprint($prompts{prerequisites_policy});
+    $CPAN::Frontend->myprint($prompts{prerequisites_policy_intro});
 
     my_prompt_loop(prerequisites_policy => 'ask', $matcher,
 		   'follow|ask|ignore');
@@ -251,7 +252,7 @@ Shall we use it as the general CPAN build and cache directory?
           $CPAN::Config->{$progname} = 'not_here';
           next;
       }
-      next unless $progname =~ /$matcher/;
+      next if $matcher && $progname !~ /$matcher/;
 
       my $progcall = $progname;
       # we don't need ncftp if we have ncftpget
@@ -393,7 +394,7 @@ sub my_dflt_prompt {
     my $default = $CPAN::Config->{$item} || $dflt;
 
     $DB::single = 1;
-    if ($item =~ /$m/) {
+    if (!$m || $item =~ /$m/) {
 	$CPAN::Config->{$item} = prompt($prompts{$item}, $default);
     } else {
 	$CPAN::Config->{$item} = $default;
@@ -406,7 +407,7 @@ sub my_prompt_loop {
     my $ans;
 
     $DB::single = 1;
-    if ($item =~ /$m/) {
+    if (!$m || $item =~ /$m/) {
 	do { $ans = prompt($prompts{$item}, $default);
 	} until $ans =~ /$ok/;
 	$CPAN::Config->{$item} = $ans;
@@ -713,10 +714,10 @@ with all the intermediate files\?
 },
 
 build_cache =>
-"Cache size for build directory (in MB)? ",
+"Cache size for build directory (in MB)?",
 
 
-scan_cache => qq{
+scan_cache_intro => qq{
 
 By default, each time the CPAN module is started, cache scanning is
 performed to keep the cache size in sync. To prevent this, answer
@@ -724,7 +725,7 @@ performed to keep the cache size in sync. To prevent this, answer
 
 },
 
-# "Perform cache scanning (atstart or never)?",
+scan_cache => "Perform cache scanning (atstart or never)?",
 
 cache_metadata => qq{
 
@@ -772,7 +773,7 @@ net connection to get at the upload date.
 show_upload_date =>
 "Always try to show upload date with 'd' and 'm' command (yes/no)?",
 
-prerequisites_policy => qq{
+prerequisites_policy_intro => qq{
 
 The CPAN module can detect when a module which you are trying to build
 depends on prerequisites. If this happens, it can build the
@@ -781,6 +782,9 @@ confirmation ('ask'), or just ignore them ('ignore'). Please set your
 policy to one of the three values.
 
 },
+
+prerequisites_policy =>
+               qq{Policy on building prerequisites (follow, ask or ignore)?},
 
 external_progs => qq{
 
@@ -804,7 +808,7 @@ Build.PL.
 },
 
 prefer_installer =>
-qq{In case you could choose, which installer would you prefer (EUMM or MB)? },
+qq{In case you could choose, which installer would you prefer (EUMM or MB)?},
 
 makepl_arg_intro => qq{
 
