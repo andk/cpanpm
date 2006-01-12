@@ -5774,7 +5774,11 @@ sub userid {
     return $ro->{userid} || $ro->{CPAN_USERID};
 }
 # sub CPAN::Module::description
-sub description { shift->ro->{description} }
+sub description {
+    my $self = shift;
+    my $ro = $self->ro or return "";
+    $ro->{description}
+}
 
 sub undelay {
     my $self = shift;
@@ -5904,7 +5908,7 @@ sub as_string {
 		     $stats{$ro->{stats}},
 		     $statl{$ro->{statl}},
 		     $stati{$ro->{stati}}
-		    ) if $ro->{statd};
+		    ) if $ro && $ro->{statd};
     my $local_file = $self->inst_file;
     unless ($self->{MANPAGE}) {
         if ($local_file) {
