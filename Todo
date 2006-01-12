@@ -1,3 +1,10 @@
+2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: "install Bundle::CPAN Expect Test::Pod" currently failes
+	correctly when we reach YAML because we cannot verify the signature. But
+	we must not die, we must only set the correct status so the rest of the
+	gang can be installed. Fixed in rev. 384
+
 2006-01-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* what happens to "failed" when we reload the index?

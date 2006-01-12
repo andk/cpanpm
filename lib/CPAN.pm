@@ -1653,7 +1653,7 @@ sub failed {
     my $print = "";
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
-        for my $nosayer (qw(make make_test install)) {
+        for my $nosayer (qw(signature_verify make make_test install)) {
             next unless exists $d->{$nosayer};
             next unless $d->{$nosayer}->failed;
             $failed = $nosayer;
@@ -1994,6 +1994,11 @@ sub mydie {
     my($self,$what) = @_;
     $self->print_ornamented($what, 'bold red on_white');
     die "\n";
+}
+
+sub mysleep {
+    my($self, $sleep) = @_;
+    sleep $sleep;
 }
 
 sub setup_output {
@@ -4153,10 +4158,11 @@ and there run
                             $self->{localfile},
                             $self->pretty_id,
                            );
-                $self->{brokensig}++;
-                $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
+                $self->{signature_verify} = CPAN::Distrostatus->new("NO");
+                $CPAN::Frontend->mywarn(Text::Wrap::wrap("","",$wrap));
+                $CPAN::Frontend->mysleep(5) if $CPAN::Fronend->can("mysleep");
             } else {
-                delete $self->{brokensig};
+                $self->{signature_verify} = CPAN::Distrostatus->new("YES");
             }
         } else {
             $CPAN::Frontend->myprint(qq{Package came without SIGNATURE\n\n});
@@ -4704,10 +4710,10 @@ or
         "Is neither a tar nor a zip archive.";
 
         !$self->{unwrapped} || $self->{unwrapped} eq "NO" and push @e,
-        "had problems unarchiving. Please build manually";
+        "Had problems unarchiving. Please build manually";
 
-        exists $self->{brokensig} and $self->{brokensig}
-            and push @e, "did not pass the signature test.";
+        exists $self->{signature_verify} and $self->{signature_verify}->failed
+            and push @e, "Did not pass the signature test.";
 
         exists $self->{writemakefile} &&
             $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
