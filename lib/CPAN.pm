@@ -6416,6 +6416,11 @@ globbing as in the following examples:
 The last example is very slow and outputs extra progress indicators
 that break the alignment of the result.
 
+=item failed
+
+The C<failed> command reports all distributions that failed for some
+reason in the current session.
+
 =item Signals
 
 CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are

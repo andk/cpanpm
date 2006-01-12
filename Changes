@@ -1,7 +1,14 @@
 2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.83_53 fixes a bug: do not die when you cannot verify a
-	signature, proceed with a fail instead.
+	* release 1.83_53
+
+	* bugfix: do not die when you cannot verify a signature, proceed with a
+	fail instead.
+
+	* new command "failed" reports about failed invocations of make, test or
+	install on CPAN::Distribution objects.
+
+	* Jim's bold fight against the FirstTime dragons continues.
 
 2006-01-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -17,14 +24,14 @@
 
 	* shell.t that can test dialogues
 
-	* show_upload_date now asks yes/no instead of 1/0 (Ask B. Hansen)
+	* bugfix: show_upload_date now asks yes/no instead of 1/0 (Ask B. Hansen)
 
 	* envariable CPAN_SHELL_LEVEL now available for subshells (Slaven Rezic)
 
 	* enable date/time warnings without the help of HTTP::Date (inspired by
 	a bogus bugreport on perl monks that was only due to wrong system time)
 
-	* hide CPAN::Config from the indexer
+	* bugfix: hide CPAN::Config from the indexer
 
 	* provide a more traditional style ChangeLog and Changes file
 
