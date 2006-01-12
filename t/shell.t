@@ -1,13 +1,16 @@
 use strict;
 no warnings 'redefine';
 
+
 BEGIN {
     chdir 't' if -d 't';
     unshift @INC, '../lib';
-    $ENV{PERL5LIB} = '../lib';    # so children will see it too
+    $ENV{PERL5LIB} = '.:../lib';    # so children will see it too
     require Config;
-    unless ($Config::Config{osname} eq "linux") {
-	print "1..0 # Skip: no linux\n"; # because I fear that expect works not everywhere
+    unless ($Config::Config{osname} eq "linux" or @ARGV) {
+	print "1..0 # Skip: test is only validated onf linux\n";
+	print "# pls try it on your box  and inform me if it works\n";
+	print "# ie: ls try it on your box  and inform me if it works\n";
 	exit 0;
     }
     eval { require Expect };
@@ -40,6 +43,7 @@ $exp->spawn(
             $^X,
             "-MCPAN::MyConfig",
             "-MCPAN",
+            # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
             "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
            );
@@ -54,8 +58,10 @@ $exp->expect(
                    print "timed out\n";
                    my $got = $self->clear_accum;
                    if ($got =~ /lockfile/) {
+		       print "- due to lockfile, proceeding\n";
                        $self->send("y\n");
                    } else {
+		       print "- unknown reason, got: $got\n";
                        exit;
                    }
                    Expect::exp_continue;
@@ -77,7 +83,7 @@ for my $i (0..$#prgs){
     $exp->send("$prog\n");
     $exp->expect(
                  [ eof => sub { exit } ],
-                 [ timeout => sub { print "timed out\n"; exit } ],
+                 [ timeout => sub { print "timed out on $i: $prog\n"; exit } ],
                  '-re', $expected
                 );
     my $got = $exp->clear_accum;
