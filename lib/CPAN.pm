@@ -347,8 +347,10 @@ sub text {
 }
 sub as_string {
     my($self) = @_;
-    require Carp;
-    Carp::cluck("HERE");
+    if (0) { # called from rematein during install?
+        require Carp;
+        Carp::cluck("HERE");
+    }
     $self->{TEXT};
 }
 
@@ -5013,6 +5015,10 @@ sub prereq_pm {
                     $req->{$1} = $2;
                 }
                 last;
+            }
+        } elsif (-f "Build") {
+            if ($CPAN::META->has_inst("Module::Build")) {
+                $req = Module::Build->current->requires();
             }
         }
     }

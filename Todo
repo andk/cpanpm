@@ -2,11 +2,8 @@
 
 	* Bug: We cannot determine the prereequisites of File::Find::Rule
 	because we have no YAML installed and Richard uses Module::Build, so we
-	have no Makefile to parse. There is some MB interface to get them:
-
-	my $need = Module::Build->current->prereq_failures();
-
-	??? Something like that. I'll ask on the mailing list.
+	have no Makefile to parse. There is some MB interface to get them. fixed
+	in rev. 396
 
 	* Bug: "install Bundle::CPAN Expect Test::Pod" currently failes
 	correctly when we reach YAML because we cannot verify the signature. But
