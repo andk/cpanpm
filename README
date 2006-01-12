@@ -160,6 +160,10 @@ DESCRIPTION
       The last example is very slow and outputs extra progress indicators
       that break the alignment of the result.
 
+    failed
+      The "failed" command reports all distributions that failed for some
+      reason in the current session.
+
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
       in the cpan-shell it is intended that you can press "^C" anytime and

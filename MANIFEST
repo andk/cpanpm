@@ -31,3 +31,4 @@ t/shell.t
 t/signature.t
 t/vcmp.t
 t/version.t
+SIGNATURE                                Public-key signature (added by MakeMaker)
