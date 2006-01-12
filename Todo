@@ -56,8 +56,8 @@ Failed installations in this session:
   BDFOY/Test-Prereq-1.029.tar.gz               : make_test NO
   JPEACOCK/version-0.53.tar.gz                 : make_test NO
 
-	Correct behaviour should be that the 'make_test NO' bit be (silently ?)
-	nuked.
+	Correct behaviour should be that the 'make_test NO' bit be nuked. FIXED
+	in rev. 387
 
 	Above that, the "prompt" change was only interesting during debugging.
 	Nobody wants to see the internal number of commands in his prompt.

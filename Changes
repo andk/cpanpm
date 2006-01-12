@@ -1,3 +1,8 @@
+2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_53 fixes a bug: do not die when you cannot verify a
+	signature, proceed with a fail instead.
+
 2006-01-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_52 is a work in progress: Jim is proceeding with the
@@ -12,7 +17,7 @@
 
 	* shell.t that can test dialogues
 
-	* show_upload_date now asks yes/no instead of 1/0
+	* show_upload_date now asks yes/no instead of 1/0 (Ask B. Hansen)
 
 	* envariable CPAN_SHELL_LEVEL now available for subshells (Slaven Rezic)
 

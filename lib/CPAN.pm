@@ -355,7 +355,13 @@ sub new {
 }
 sub commandid { shift->{COMMANDID} }
 sub failed { shift->{FAILED} }
-sub text { shift->{TEXT} }
+sub text {
+    my($self,$set) = @_;
+    if (defined $set) {
+        $self->{TEXT} = $set;
+    }
+    $self->{TEXT};
+}
 sub as_string {
     my($self) = @_;
     require Carp;
@@ -5185,11 +5191,15 @@ sub install {
 	    $self->{'make'}->failed and
 		push @e, "make had returned bad status, install seems impossible";
 
-	push @e, "make test had returned bad status, ".
-	    "won't install without force"
-	    if exists $self->{'make_test'} and
-	    $self->{'make_test'}->failed and
-	    ! $self->{'force_update'};
+        if (exists $self->{make_test} and
+	    $self->{make_test}->failed){
+	    if ($self->{force_update}) {
+                $self->{make_test}->text("FAILED but failure ignored because ".
+                                         "'force' in effect");
+            } else {
+                push @e, "make test had returned bad status, ".
+                    "won't install without force"
+            }
 
 	exists $self->{'install'} and push @e,
 	$self->{'install'} eq "YES" ?
