@@ -211,6 +211,7 @@ disttest :
 distdir ::
 	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 
 }
 }
