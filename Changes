@@ -2,6 +2,9 @@
 
 	* release 1.83_53
 
+	* bugfix: b command on unpublished bundles was broken due to wrong
+	handling of missing RO elements.
+
 	* bugfix: do not die when you cannot verify a signature, proceed with a
 	fail instead.
 
