@@ -60,7 +60,8 @@ Failed installations in this session:
 	in rev. 387
 
 	Above that, the "prompt" change was only interesting during debugging.
-	Nobody wants to see the internal number of commands in his prompt.
+	Nobody wants to see the internal number of commands in his prompt. FIXED
+	in rev. 388
 
 	* Bug: YAML fails to unpack because of bad signature. Retrying leads to
 	prereq Test::Base failing due to bad signature. Retrying leads to

@@ -5183,7 +5183,7 @@ sub install {
                 push @e, "make test had returned bad status, ".
                     "won't install without force"
             }
-
+        }
 	exists $self->{'install'} and push @e,
 	$self->{'install'} eq "YES" ?
 	    "Already done" : "Already tried without success";
