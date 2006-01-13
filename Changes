@@ -1,3 +1,16 @@
+2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_84
+
+	* better choice for command processor on Win32 (Gisle Aas)
+
+	* newest cpan script (1.51) from brian d foy
+
+	* force ls now refetches the CHECKSUMS files
+
+	* shell.t now conforming to Test-Anything-Protocol and hopefully working
+	on more platforms.
+
 2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_53
