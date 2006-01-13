@@ -1174,7 +1174,7 @@ sub a {
 }
 
 sub handle_ls {
-    my($self,$pragma,$s) = @_;
+    my($self,$pragmas,$s) = @_;
     # ls is really very different, but we had it once as an ordinary
     # command in the Shell (upto rev. 321) and we could not handle
     # force well then
@@ -1233,7 +1233,18 @@ sub handle_ls {
             }
             $CPAN::Frontend->myprint($ad);
         }
+        for my $pragma (@$pragmas) {
+            if ($author->can($pragma)) {
+                $author->$pragma();
+            }
+        }
         $author->ls($pathglob,$silent); # silent if more than one author
+        for my $pragma (@$pragmas) {
+            my $meth = "un$pragma";
+            if ($author->can($meth)) {
+                $author->$meth();
+            }
+        }
     }
 }
 
@@ -3663,6 +3674,18 @@ sub dump {
 package CPAN::Author;
 use strict;
 
+#-> sub CPAN::Author::force
+sub force {
+    my $self = shift;
+    $self->{force}++;
+}
+
+#-> sub CPAN::Author::force
+sub unforce {
+    my $self = shift;
+    delete $self->{force};
+}
+
 #-> sub CPAN::Author::id
 sub id {
     my $self = shift;
@@ -3751,9 +3774,9 @@ sub dir_listing {
 
     local($") = "/";
     # connect "force" argument with "index_expire".
-    my $force = 0;
+    my $force = $self->{force};
     if (my @stat = stat $lc_want) {
-        $force = $stat[9] + $CPAN::Config->{index_expire}*86400 <= time;
+        $force ||= $stat[9] + $CPAN::Config->{index_expire}*86400 <= time;
     }
     my $lc_file;
     if ($may_ftp) {
