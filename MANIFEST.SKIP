@@ -1,5 +1,6 @@
 ,v$
 .svn
+.orig$
 \bRCS/
 ^CPAN-.+/.+
 ^CPAN-.+gz$
@@ -20,6 +21,7 @@
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup
 ^mail
+^make-test-
 ^memo
 ^patches
 ^pm_to_blib
