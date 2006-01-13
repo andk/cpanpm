@@ -49,20 +49,22 @@ $exp->spawn(
             "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
            );
 my $timeout = 6;
-# $exp->log_stdout(0);
+$exp->log_stdout(0);
 $exp->notransfer(1);
 $exp->expect(
              $timeout,
              [ eof => sub { exit } ],
              [ timeout => sub {
                    my $self = $exp;
-                   print "timed out\n";
+                   print "# timed out\n";
                    my $got = $self->clear_accum;
                    if ($got =~ /lockfile/) {
-		       print "- due to lockfile, proceeding\n";
+		       diag " - due to lockfile, proceeding\n";
                        $self->send("y\n");
                    } else {
-		       print "- unknown reason, got: $got\n";
+                       $got = substr($got,0,60)."..." if length($got)>63;
+		       diag "- unknown reason, got: [$got]\n";
+                       diag "Giving up this test\n";
                        exit;
                    }
                    Expect::exp_continue;
@@ -84,12 +86,12 @@ for my $i (0..$#prgs){
     $exp->send("$prog\n");
     $exp->expect(
                  [ eof => sub { exit } ],
-                 [ timeout => sub { print "timed out on $i: $prog\n"; exit } ],
+                 [ timeout => sub { diag "timed out on $i: $prog\n"; exit } ],
                  '-re', $expected
                 );
     my $got = $exp->clear_accum;
     # warn "# DEBUG: prog[$prog]expected[$expected]got[$got]";
-    print "\n";
+    diag "$got\n";
     ok(1, $prog);
 }
 
