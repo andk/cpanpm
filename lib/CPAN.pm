@@ -4828,7 +4828,7 @@ or
     if ($self->{modulebuild}) {
         $system = "./Build $CPAN::Config->{mbuild_arg}";
     } else {
-        $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
+        $system = join " ", _make_command(), $CPAN::Config->{make_arg};
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -4838,6 +4838,10 @@ or
 	 $self->{'make'} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
+}
+
+sub _make_command {
+    return $CPAN::Config->{'make'} || $Config::Config{make} || 'make';
 }
 
 sub follow_prereqs {
@@ -5106,7 +5110,7 @@ sub test {
     if ($self->{modulebuild}) {
         $system = "./Build test";
     } else {
-        $system = join " ", $CPAN::Config->{'make'}, "test";
+        $system = join " ", _make_command(), "test";
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5147,7 +5151,7 @@ sub clean {
     if ($self->{modulebuild}) {
         $system = "./Build clean";
     } else {
-        $system  = join " ", $CPAN::Config->{'make'}, "clean";
+        $system  = join " ", _make_command(), "clean";
     }
     if (system($system) == 0) {
       $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5243,7 +5247,7 @@ sub install {
                       );
     } else {
         my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
-            $CPAN::Config->{'make'};
+            _make_command();
         $system = join(" ",
                        $make_install_make_command,
                        "install",
