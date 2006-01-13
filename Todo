@@ -1,3 +1,39 @@
+2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: see the newest cpan by brian.
+
+	* Todo: Write a bunch of distros and upload them with the sole purpose
+	of testing CPAN.pm. Also helps Test::Prereq and others.
+	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
+	start is done in t/shell.t
+
+	* upgrade: new command that does nothing but
+	CPAN::Shell->install(CPAN::Shell->r)?
+
+	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
+	branches/1.80_56plus for a few lines that probably went in the wrong
+	direction. Split the loading of Authors/Modules/Distros/Bundles into
+	separate pieces and make them lazy. Consider 'reload index', the
+	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
+	offsets into an uncompressed 02xxx file. Remember RT #4943. Remove the
+	code for "status" when finished
+
+	* readline: offer the choice between Gnu and Perl
+
+	* Bug: installing scripts without modules? How does it work? How
+	should it work? getting the latest version ad-hoc?
+
+	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
+	tweak FirstTime::init() interface to accept optional @sections
+
+	put various interactive Qs into groups of conditionals: if ( !@sections
+	     or grep /$this_sect_name/, @sections)
+
+	candidate sections: progs - external prog selection make - all make
+	options
+
+	* hr ================ no todos below this line ================ /hr
+	
 2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: We cannot determine the prereequisites of File::Find::Rule
@@ -14,38 +50,16 @@
 
 	* what happens to "failed" when we reload the index? TESTED OK
 
-	* Todo: Write a bunch of distros and upload them with the sole purpose
-	of testing CPAN.pm. Also helps Test::Prereq and others.
-	PITA::Test::Dummy::Perl5::Make and PITA::Test::Dummy::Perl5::Build? A
-	start is done in t/shell.t
-
-	* upgrade: new command that does nothing but
-	CPAN::Shell->install(CPAN::Shell->r)?
-
-	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
-	branches/1.80_56plus for a few lines that probably went in the wrong
-	direction. Split the loading of Authors/Modules/Distros/Bundles into
-	separate pieces and make them lazy. Consider 'reload index', the
-	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
-	offsets into an uncompressed 02xxx file. Remember RT #4943.
-
-	* readline: offer the choice between Gnu and Perl
-
 	* force: I'd expect 'force ls' to always fetch fresh CHECKSUMS
 	files. Currently it doesn't. FIXED in rev. 401
 
 	* optimize "ls dowens": currently fetches D/CHECKSUMS and D/DO/CHECKSUMS
-	even if we already have D/DO/DOWENS/CHECKSUMS. Is it worth fixing?
-
-	* Bug: installing scripts without modules? How does it work? How
-	should it work? getting the latest version ad-hoc?
+	even if we already have D/DO/DOWENS/CHECKSUMS. Is it worth fixing? NO
 
 	* get rid of the summary currently provided by install bundle, its
-	superceded by failed().
+	superceded by failed(). REJECT, maybe it's useful
 
-	* Todo: document "failed" (and "status"?)
-
-	* Todo: see the newest cpan by brian.
+	* Todo: document "failed" (and "status"?) DONE for failed, REJECT for status
 
 	* today's rev. 374 of CPAN.pm should be partially reverted: while
 	failed() looks good most of the time, it looks ugly that 'force install
@@ -76,17 +90,6 @@ Failed installations in this session:
 
 2006-01-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
-	tweak FirstTime::init() interface to accept optional @sections
-
-	put various interactive Qs into groups of conditionals: if ( !@sections
-	     or grep /$this_sect_name/, @sections)
-
-	candidate sections: progs - external prog selection make - all make
-	options
-
-	* hr ================ no todos below this line ================ /hr
-	
 	* document CPAN_SHELL_LEVEL DONE
 
 	* find out why Expect is so noisy and when this did start DONE
