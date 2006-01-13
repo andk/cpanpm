@@ -24,6 +24,9 @@ BEGIN {
 
 use File::Copy qw(cp);
 cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm" or die; # because commit will overwrite it
+open my $fh, ">", "CPAN/Config.pm" or die;
+print $fh "1;\n";
+close $fh;
 
 my @prgs;
 {
@@ -42,6 +45,7 @@ $exp->spawn(
             $^X,
             "-I.",                 # get this test's own MyConfig
             "-I../lib",
+            "-MCPAN::Config",
             "-MCPAN::MyConfig",
             "-MCPAN",
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
