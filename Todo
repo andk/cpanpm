@@ -1,3 +1,9 @@
+2006-01-13  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: $CPAN_config_loaded should be replaced with something like
+	$INC{"CPAN/Config.pm"} || $INC{"CPAN/MyConfig.pm"} so that loading one
+	of the two before starting the shell will do. Then revert patch 411.
+
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
