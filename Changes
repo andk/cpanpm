@@ -2,6 +2,9 @@
 
 	* release 1.83_84
 
+	* conveniently handle $Config->{make} on systems that often switch
+	between dmake and nmake, like ActiveState's perl (Gisle Aas)
+
 	* better choice for command processor on Win32 (Gisle Aas)
 
 	* newest cpan script (1.51) from brian d foy

@@ -51,6 +51,17 @@ $exp->spawn(
 my $timeout = 6;
 $exp->log_stdout(0);
 $exp->notransfer(1);
+
+sub mydiag {
+    my(@msgs) = @_;
+    my $msg = join '', map { defined($_) ? $_ : 'undef' } @msgs;
+    # Escape each line with a #.
+    $msg =~ s/^/# /gm;
+    # Stick a newline on the end if it needs it.
+    $msg .= "\n" unless $msg =~ /\n\Z/;
+    print $msg;
+}
+
 $exp->expect(
              $timeout,
              [ eof => sub { exit } ],
@@ -59,12 +70,12 @@ $exp->expect(
                    print "# timed out\n";
                    my $got = $self->clear_accum;
                    if ($got =~ /lockfile/) {
-		       diag " - due to lockfile, proceeding\n";
+		       mydiag " - due to lockfile, proceeding\n";
                        $self->send("y\n");
                    } else {
                        $got = substr($got,0,60)."..." if length($got)>63;
-		       diag "- unknown reason, got: [$got]\n";
-                       diag "Giving up this test\n";
+		       mydiag "- unknown reason, got: [$got]\n";
+                       mydiag "Giving up this test\n";
                        exit;
                    }
                    Expect::exp_continue;
@@ -86,12 +97,12 @@ for my $i (0..$#prgs){
     $exp->send("$prog\n");
     $exp->expect(
                  [ eof => sub { exit } ],
-                 [ timeout => sub { diag "timed out on $i: $prog\n"; exit } ],
+                 [ timeout => sub { mydiag "timed out on $i: $prog\n"; exit } ],
                  '-re', $expected
                 );
     my $got = $exp->clear_accum;
     # warn "# DEBUG: prog[$prog]expected[$expected]got[$got]";
-    diag "$got\n";
+    mydiag "$got\n";
     ok(1, $prog);
 }
 
