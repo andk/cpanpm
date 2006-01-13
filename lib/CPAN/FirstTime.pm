@@ -292,6 +292,9 @@ Shall we use it as the general CPAN build and cache directory?
 	$path = "";
     }
     $path ||= $ENV{SHELL};
+    if (!$path && $^O eq 'MSWin32') {
+	$path = Win32::IsWinNT() ? "cmd.exe" : "command.com";
+    }
     if ($^O eq 'MacOS') {
         $CPAN::Config->{'shell'} = 'not_here';
     } else {
