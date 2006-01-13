@@ -9,7 +9,7 @@
 
 	* newest cpan script (1.51) from brian d foy
 
-	* force ls now refetches the CHECKSUMS files
+	* "force ls" now refetches the CHECKSUMS files
 
 	* shell.t now conforming to Test-Anything-Protocol and hopefully working
 	on more platforms.
