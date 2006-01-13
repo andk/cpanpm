@@ -5,7 +5,6 @@ no warnings 'redefine';
 BEGIN {
     chdir 't' if -d 't';
     unshift @INC, '../lib';
-    $ENV{PERL5LIB} = '.:../lib';    # so children will see it too
     require Config;
     unless ($Config::Config{osname} eq "linux" or @ARGV) {
 	print "1..0 # Skip: test is only validated onf linux\n";
@@ -41,6 +40,8 @@ my $exp = Expect->new;
 my $prompt = "empty prompt next line";
 $exp->spawn(
             $^X,
+            "-I.",                 # get this test's own MyConfig
+            "-I../lib",
             "-MCPAN::MyConfig",
             "-MCPAN",
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
