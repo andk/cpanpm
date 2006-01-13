@@ -52,6 +52,7 @@ my $timeout = 6;
 $exp->log_stdout(0);
 $exp->notransfer(1);
 
+# shamelessly stolen from Test::Builder
 sub mydiag {
     my(@msgs) = @_;
     my $msg = join '', map { defined($_) ? $_ : 'undef' } @msgs;
