@@ -1674,7 +1674,7 @@ sub u {
 #-> sub CPAN::Shell::failed ;
 sub failed {
     my($self,$only_id,$silent) = @_;
-    my $print = "";
+    my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
         for my $nosayer (qw(signature_verify make make_test install)) {
@@ -1687,15 +1687,20 @@ sub failed {
         next DIST if $only_id && $only_id != $d->{$failed}->commandid;
         my $id = $d->id;
         $id =~ s|^./../||;
-        $print .= sprintf(
-                          "  %-45s: %s %s\n",
-                          $id,
-                          $failed,
-                          $d->{$failed}->text,
-                          );
+        #$print .= sprintf(
+        #                  "  %-45s: %s %s\n",
+        push @failed, [
+                       $d->{$failed}->commandid,
+                       $id,
+                       $failed,
+                       $d->{$failed}->text,
+                      ];
     }
     my $scope = $only_id ? "command" : "session";
-    if ($print) {
+    if (@failed) {
+        my $print = join "",
+            map { sprintf "  %-45s: %s %s\n", @$_[1,2,3] }
+                sort { $a->[0] <=> $b->[0] } @failed;
         $CPAN::Frontend->myprint("Failed installations in this $scope:\n$print");
     } elsif (!$only_id || !$silent) {
         $CPAN::Frontend->myprint("No installations failed in this $scope\n");
