@@ -6,10 +6,11 @@ BEGIN {
     chdir 't' if -d 't';
     unshift @INC, '../lib';
     require Config;
-    unless ($Config::Config{osname} eq "linux" or @ARGV) {
+    unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
 	print "1..0 # Skip: test is only validated on linux\n";
-	print "# pls try it on your box  and inform me if it works\n";
-	print "# ie: ls try it on your box  and inform me if it works\n";
+  warn "\n\n\a Skipping tests! If you want to run the test
+  please set environment variable \$CPAN_RUN_SHELL_TEST to 1.\n
+  Pls try it on your box and inform me if it works\n";
 	exit 0;
     }
     eval { require Expect };
