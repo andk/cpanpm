@@ -4641,7 +4641,7 @@ sub force {
  )) {
     delete $self->{$att};
   }
-  if ($method && $method eq "install") {
+  if ($method && $method =~ /make|test|install/) {
     $self->{"force_update"}++; # name should probably have been force_install
   }
 }
@@ -4735,8 +4735,10 @@ or
         !$self->{unwrapped} || $self->{unwrapped} eq "NO" and push @e,
         "Had problems unarchiving. Please build manually";
 
-        exists $self->{signature_verify} and $self->{signature_verify}->failed
-            and push @e, "Did not pass the signature test.";
+        unless ($self->{force_update}) {
+            exists $self->{signature_verify} and $self->{signature_verify}->failed
+                and push @e, "Did not pass the signature test.";
+        }
 
         exists $self->{writemakefile} &&
             $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
