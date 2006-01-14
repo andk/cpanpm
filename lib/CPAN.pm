@@ -5218,7 +5218,7 @@ sub install {
             }
         }
 	exists $self->{'install'} and push @e,
-	$self->{'install'} eq "YES" ?
+	$self->{'install'}->text eq "YES" ?
 	    "Already done" : "Already tried without success";
 
         exists $self->{later} and length($self->{later}) and
@@ -6455,8 +6455,9 @@ that break the alignment of the result.
 
 =item failed
 
-The C<failed> command reports all distributions that failed for some
-reason in the current session.
+The C<failed> command reports all distributions that failed on one of
+C<make>, C<test> or C<install> for some reason in the currently
+running shell session.
 
 =item Signals
 
