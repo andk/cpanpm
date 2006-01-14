@@ -2256,31 +2256,38 @@ use strict;
 
 #-> sub CPAN::FTP::ftp_get ;
 sub ftp_get {
-  my($class,$host,$dir,$file,$target) = @_;
-  $class->debug(
-		qq[Going to fetch file [$file] from dir [$dir]
+    my($class,$host,$dir,$file,$target) = @_;
+    $class->debug(
+                  qq[Going to fetch file [$file] from dir [$dir]
 	on host [$host] as local [$target]\n]
-		      ) if $CPAN::DEBUG;
-  my $ftp = Net::FTP->new($host);
-  return 0 unless defined $ftp;
-  $ftp->debug(1) if $CPAN::DEBUG{'FTP'} & $CPAN::DEBUG;
-  $class->debug(qq[Going to login("anonymous","$Config::Config{cf_email}")]);
-  unless ( $ftp->login("anonymous",$Config::Config{'cf_email'}) ){
-    warn "Couldn't login on $host";
-    return;
-  }
-  unless ( $ftp->cwd($dir) ){
-    warn "Couldn't cwd $dir";
-    return;
-  }
-  $ftp->binary;
-  $class->debug(qq[Going to ->get("$file","$target")\n]) if $CPAN::DEBUG;
-  unless ( $ftp->get($file,$target) ){
-    warn "Couldn't fetch $file from $host\n";
-    return;
-  }
-  $ftp->quit; # it's ok if this fails
-  return 1;
+                 ) if $CPAN::DEBUG;
+    my $ftp = Net::FTP->new($host);
+    unless ($ftp) {
+        $CPAN::Frontend->mywarn("  Could not connect to host '$host' with Net::FTP\n");
+        return;
+    }
+    return 0 unless defined $ftp;
+    $ftp->debug(1) if $CPAN::DEBUG{'FTP'} & $CPAN::DEBUG;
+    $class->debug(qq[Going to login("anonymous","$Config::Config{cf_email}")]);
+    unless ( $ftp->login("anonymous",$Config::Config{'cf_email'}) ){
+        my $msg = $ftp->message;
+        $CPAN::Frontend->mywarn("  Couldn't login on $host: $msg");
+        return;
+    }
+    unless ( $ftp->cwd($dir) ){
+        my $msg = $ftp->message;
+        $CPAN::Frontend->mywarn("  Couldn't cwd $dir: $msg");
+        return;
+    }
+    $ftp->binary;
+    $class->debug(qq[Going to ->get("$file","$target")\n]) if $CPAN::DEBUG;
+    unless ( $ftp->get($file,$target) ){
+        my $msg = $ftp->message;
+        $CPAN::Frontend->mywarn("  Couldn't fetch $file from $host: $msg");
+        return;
+    }
+    $ftp->quit; # it's ok if this fails
+    return 1;
 }
 
 # If more accuracy is wanted/needed, Chris Leach sent me this patch...
@@ -4169,7 +4176,8 @@ a bad URL. Please check this array with 'o conf urllist', and
 retry. For more information, try opening a subshell with
   look %s
 and there run
-  cpansign -v},
+  cpansign -v
+},
                             $self->{localfile},
                             $self->pretty_id,
                            );
