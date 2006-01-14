@@ -117,7 +117,15 @@ sub prettyprint {
 }
 
 sub commit {
-    my($self,$configpm) = @_;
+    my($self,@args) = @_;
+    my $configpm;
+    if (@args) {
+      if ($args[0] eq "args") {
+        # we have not signed that contract
+      } else {
+        $configpm = $args[0];
+      }
+    }
     unless (defined $configpm){
 	$configpm ||= $INC{"CPAN/MyConfig.pm"};
 	$configpm ||= $INC{"CPAN/Config.pm"};
@@ -164,7 +172,7 @@ EOF
     #$mode = 0444 | ( $mode & 0111 ? 0111 : 0 );
     #chmod $mode, $configpm;
 ###why was that so?    $self->defaults;
-    $CPAN::Frontend->myprint("commit: wrote $configpm\n");
+    $CPAN::Frontend->myprint("commit: wrote '$configpm'\n");
     1;
 }
 
