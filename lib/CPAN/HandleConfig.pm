@@ -223,12 +223,12 @@ sub load {
 
     my(@miss);
     use Carp;
-    eval {require CPAN::Config;};       # We eval because of some
-                                        # MakeMaker problems
+    unless ($INC{"CPAN/MyConfig.pm"}) { # this guy has settled his needs already
+      eval {require CPAN::Config;}; # not everybody has one
+    }
     unless ($dot_cpan++){
       unshift @INC, File::Spec->catdir($ENV{HOME},".cpan");
-      eval {require CPAN::MyConfig;};   # where you can override
-                                        # system wide settings
+      eval {require CPAN::MyConfig;}; # override system wide settings
       shift @INC;
     }
     return unless @miss = $self->missing_config_data;

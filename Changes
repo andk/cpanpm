@@ -1,3 +1,12 @@
+2006-01-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_55
+
+	* improve error handling on Net::FTP connections (R. Hauser; fixes rt
+	#1572)
+
+	* shell.t starts working on installations that have a CPAN/Config.pm
+
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_54

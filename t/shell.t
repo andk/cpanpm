@@ -7,7 +7,7 @@ BEGIN {
     unshift @INC, '../lib';
     require Config;
     unless ($Config::Config{osname} eq "linux" or @ARGV) {
-	print "1..0 # Skip: test is only validated onf linux\n";
+	print "1..0 # Skip: test is only validated on linux\n";
 	print "# pls try it on your box  and inform me if it works\n";
 	print "# ie: ls try it on your box  and inform me if it works\n";
 	exit 0;
@@ -24,9 +24,6 @@ BEGIN {
 
 use File::Copy qw(cp);
 cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm" or die; # because commit will overwrite it
-open my $fh, ">", "CPAN/Config.pm" or die;
-print $fh "1;\n";
-close $fh;
 
 my @prgs;
 {
@@ -45,7 +42,6 @@ $exp->spawn(
             $^X,
             "-I.",                 # get this test's own MyConfig
             "-I../lib",
-            "-MCPAN::Config",
             "-MCPAN::MyConfig",
             "-MCPAN",
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful

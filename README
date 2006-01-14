@@ -161,8 +161,9 @@ DESCRIPTION
       that break the alignment of the result.
 
     failed
-      The "failed" command reports all distributions that failed for some
-      reason in the current session.
+      The "failed" command reports all distributions that failed on one of
+      "make", "test" or "install" for some reason in the currently running
+      shell session.
 
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
