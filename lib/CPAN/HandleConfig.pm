@@ -12,7 +12,7 @@ $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 %keys = map { $_ => undef } qw(
     build_cache build_dir bzip2
-    cache_metadata cpan_home curl
+    cache_metadata commandnumber_in_prompt cpan_home curl
     dontload_hash
     ftp ftp_proxy
     getcwd gpg gzip

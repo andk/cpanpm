@@ -81,7 +81,7 @@ sub shell {
     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
     CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
 
-    my $oprompt = shift || "cpan> ";
+    my $oprompt = shift || CPAN::Prompt->new;
     my $prompt = $oprompt;
     my $commandline = shift || "";
     $CPAN::CurrentCommandId ||= 1;
@@ -324,6 +324,27 @@ sub as_string {
     "\nRecursive dependency detected:\n    " .
         join("\n => ", @{$self->{deps}}) .
             ".\nCannot continue.\n";
+}
+
+package CPAN::Prompt; use overload '""' => "as_string";
+our $prompt = "cpan> ";
+$CPAN::CurrentCommandId ||= 0;
+sub as_randomly_capitalized_string {
+    # pure fun variant
+    substr($prompt,$_,1)=rand()<0.5 ?
+        uc(substr($prompt,$_,1)) :
+            lc(substr($prompt,$_,1)) for 0..3;
+    $prompt;
+}
+sub new {
+    bless {}, shift;
+}
+sub as_string {
+    if ($CPAN::Config->{commandnumber_in_prompt}) {
+        sprintf "cpan[%d]> ", $CPAN::CurrentCommandId;
+    } else {
+        "cpan> ";
+    }
 }
 
 package CPAN::Distrostatus;
