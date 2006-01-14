@@ -18,6 +18,7 @@
 ^blib/
 ^blibdirs
 ^cp-to-perl.pl
+^eg/
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup
 ^mail
