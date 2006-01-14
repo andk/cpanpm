@@ -1,15 +1,3 @@
-2006-01-13  Andreas J Koenig  <akoenig@cellular.de>
-
-	* Bug: when ~/.cpan/sources/authors/id/A/AN/ANDK/CPAN-1.83_54.tar.gz is
-	not a tar file (because I mistyped a URL and got something else), then
-	even "force get ANDK/CPAN-1.83_54.tar.gz" does not overwrite the bogus
-	file. The stupid program just keeps complaining that the file is not a
-	tarfile and I must remove it manually.
-
-	* Bug: $CPAN_config_loaded should be replaced with something like
-	$INC{"CPAN/Config.pm"} || $INC{"CPAN/MyConfig.pm"} so that loading one
-	of the two before starting the shell will do. Then revert patch 411.
-
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
@@ -44,6 +32,20 @@
 
 	* hr ================ no todos below this line ================ /hr
 	
+	* Bug: when ~/.cpan/sources/authors/id/A/AN/ANDK/CPAN-1.83_54.tar.gz is
+	not a tar file (because I mistyped a URL and got something else), then
+	even "force get ANDK/CPAN-1.83_54.tar.gz" does not overwrite the bogus
+	file. The stupid program just keeps complaining that the file is not a
+	tarfile and I must remove it manually.
+
+	Ahh, this bug needs not be fixed because it only happens when you have
+	no Digest::SHA available. REJECT
+
+	* Bug: $CPAN_config_loaded should be replaced with something like
+	$INC{"CPAN/Config.pm"} || $INC{"CPAN/MyConfig.pm"} so that loading one
+	of the two before starting the shell will do. Then revert patch 411.
+	FIXED in rev. 418
+
 	* Todo: see the newest cpan by brian. DONE (BDFOY/cpan-1.51.tar.gz)
 
 2006-01-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
