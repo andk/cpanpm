@@ -1049,14 +1049,20 @@ sub disk_usage {
     return if exists $self->{SIZE}{$dir};
     return if $CPAN::Signal;
     my($Du) = 0;
-    unless (-x $dir) {
-      unless (chmod 0755, $dir) {
-        $CPAN::Frontend->mywarn("I have neither the -x permission nor the permission ".
-                                "to change the permission; cannot estimate disk usage ".
-                                "of '$dir'\n");
-        sleep 5;
+    if (-e $dir) {
+        unless (-x $dir) {
+            unless (chmod 0755, $dir) {
+                $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
+                                        "permission to change the permission; cannot ".
+                                        "estimate disk usage of '$dir'\n");
+                $CPAN::Frontend->mysleep(5);
+                return;
+            }
+        }
+    } else {
+        $CPAN::Frontend->mywarn("Directory '$dir' has gone. Cannot continue.\n");
+        $CPAN::Frontend->mysleep(2);
         return;
-      }
     }
     find(
          sub {
@@ -4020,16 +4026,20 @@ sub safe_chdir {
     $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
         if $CPAN::DEBUG;
   } else {
-    unless (-x $todir) {
-      unless (chmod 0755, $todir) {
-        my $cwd = CPAN::anycwd();
-        $CPAN::Frontend->mywarn("I have neither the -x permission nor the permission ".
-                                "to change the permission; cannot chdir ".
-                                "to '$todir'\n");
-        sleep 5;
-        $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
-                               qq{to todir[$todir]: $!});
-      }
+    if (-e $todir) {
+        unless (-x $todir) {
+            unless (chmod 0755, $todir) {
+                my $cwd = CPAN::anycwd();
+                $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
+                                        "permission to change the permission; cannot ".
+                                        "chdir to '$todir'\n");
+                $CPAN::Frontend->mysleep(5);
+                $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
+                                       qq{to todir[$todir]: $!});
+            }
+        }
+    } else {
+        $CPAN::Frontend->mydie("Directory '$todir' has gone. Cannot continue.\n");
     }
     if (chdir $todir) {
       $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
@@ -5850,6 +5860,11 @@ sub description {
     $ro->{description}
 }
 
+sub distribution {
+    my($self) = @_;
+    CPAN::Shell->expand("Distribution",$self->cpan_file);
+}
+
 sub undelay {
     my $self = shift;
     delete $self->{later};
@@ -6327,7 +6342,23 @@ Batch mode:
 
   use CPAN;
 
-  autobundle, clean, install, make, recompile, test
+  # modules:
+
+  $mod = "Acme::Meta";
+  install $mod;
+  CPAN::Shell->install($mod);                    # same thing
+  CPAN::Shell->expandany($mod)->install;         # same thing
+  CPAN::Shell->expand("Module",$mod)->install;   # same thing
+  CPAN::Shell->expand("Module",$mod)
+    ->distribution->install;                     # same thing
+
+  # distributions:
+
+  $distro = "NWCLARK/Acme-Meta-0.01.tar.gz";
+  install $distro;                                # same thing
+  CPAN::Shell->install($distro);                  # same thing
+  CPAN::Shell->expandany($distro)->install;       # same thing
+  CPAN::Shell->expand("Module",$distro)->install; # same thing
 
 =head1 STATUS
 
@@ -6438,7 +6469,7 @@ CPAN also keeps track of what it has done within the current session
 and doesn't try to build a package a second time regardless if it
 succeeded or not. The C<force> pragma may precede another command
 (currently: C<make>, C<test>, or C<install>) and executes the
-command from scratch.
+command from scratch and tries to continue in case of some errors.
 
 Example:
 
