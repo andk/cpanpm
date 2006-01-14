@@ -582,7 +582,8 @@ sub checklock {
 	    $otherhost ne '' && $thishost ne '' &&
 	    $otherhost ne $thishost) {
             $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile '$lockfile'\n".
-                                           "reports other host $otherhost and other process $otherpid.\n".
+                                           "reports other host $otherhost and other ".
+                                           "process $otherpid.\n".
                                            "Cannot proceed.\n"));
 	}
 	elsif (defined $otherpid && $otherpid) {
@@ -6373,9 +6374,9 @@ stalled.
 =head1 DESCRIPTION
 
 The CPAN module is designed to automate the make and install of perl
-modules and extensions. It includes some primitive searching capabilities and
-knows how to use Net::FTP or LWP (or lynx or an external ftp client)
-to fetch the raw data from the net.
+modules and extensions. It includes some primitive searching
+capabilities and knows how to use Net::FTP or LWP (or some external
+download clients) to fetch the raw data from the net.
 
 Modules are fetched from one or more of the mirrored CPAN
 (Comprehensive Perl Archive Network) sites and unpacked in a dedicated
@@ -6392,15 +6393,7 @@ session. The cache manager keeps track of the disk space occupied by
 the make processes and deletes excess space according to a simple FIFO
 mechanism.
 
-For extended searching capabilities there's a plugin for CPAN available,
-L<C<CPAN::WAIT>|CPAN::WAIT>. C<CPAN::WAIT> is a full-text search engine
-that indexes all documents available in CPAN authors directories. If
-C<CPAN::WAIT> is installed on your system, the interactive shell of
-CPAN.pm will enable the C<wq>, C<wr>, C<wd>, C<wl>, and C<wh> commands
-which send queries to the WAIT server that has been configured for your
-installation.
-
-All other methods provided are accessible in a programmer style and in an
+All methods provided are accessible in a programmer style and in an
 interactive shell style.
 
 =head2 Interactive Mode
@@ -6441,7 +6434,7 @@ The principle is that the number of found objects influences how an
 item is displayed. If the search finds one item, the result is
 displayed with the rather verbose method C<as_string>, but if we find
 more than one, we display each object with the terse method
-<as_glimpse>.
+C<as_glimpse>.
 
 =item make, test, install, clean  modules or distributions
 
@@ -6451,7 +6444,7 @@ file name (recognized by embedded slashes), it is processed. If it is
 a module, CPAN determines the distribution file in which this module
 is included and processes that, following any dependencies named in
 the module's META.yml or Makefile.PL (this behavior is controlled by
-I<prerequisites_policy>.)
+the configuration parameter C<prerequisites_policy>.)
 
 Any C<make> or C<test> are run unconditionally. An
 
@@ -6526,6 +6519,20 @@ that break the alignment of the result.
 The C<failed> command reports all distributions that failed on one of
 C<make>, C<test> or C<install> for some reason in the currently
 running shell session.
+
+=item Lockfile
+
+Interactive sessions maintain a lockfile, per default C<~/.cpan/.lock>
+(but the directory can be configured via the C<cpan_home> config
+variable). The shell is a bit picky if you try to start another CPAN
+session. It dies immediately if there is a lockfile and the lock seems
+to belong to a running process. In case you want to run a second shell
+session, it is probably safest to maintain another directory, say
+C<~/.cpan-for-X/> and a C<~/.cpan-for-X/CPAN/MyConfig.pm> that
+contains the configuration options. Then you can start the second
+shell with
+
+  perl -I ~/.cpan-for-X -MCPAN::MyConfig -MCPAN -e shell
 
 =item Signals
 
