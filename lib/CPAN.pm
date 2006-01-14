@@ -327,7 +327,8 @@ sub as_string {
 }
 
 package CPAN::Distrostatus;
-use overload '""' => "as_string";
+use overload '""' => "as_string",
+    fallback => 1;
 sub new {
     my($class,$arg) = @_;
     bless {
