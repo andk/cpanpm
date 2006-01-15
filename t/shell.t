@@ -26,6 +26,9 @@ BEGIN {
 use File::Copy qw(cp);
 cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm" or die; # because commit will overwrite it
 
+use Cwd;
+my $cwd = Cwd::cwd;
+
 sub read_myconfig () {
     open my $fh, "CPAN/MyConfig.pm" or die;
     local $/;
@@ -45,12 +48,11 @@ plan tests => scalar @prgs + 2;
 read_myconfig;
 is($CPAN::Config->{histsize},100);
 
-$Expect::Multiline_Matching = 0;
 my $exp = Expect->new;
-my $prompt = "empty prompt next line";
+my $prompt = "cpan> ";
 $exp->spawn(
             $^X,
-            "-I.",                 # get this test's own MyConfig
+            "-I$cwd",                 # get this test's own MyConfig
             "-I../lib",
             "-MCPAN::MyConfig",
             "-MCPAN",
@@ -94,10 +96,12 @@ $exp->expect(
              '-re', $prompt
             );
 
+$timeout = 60;
+$|=1;
 for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my($prog,$expected) = split(/~~like~~.*/, $chunk);
-    unless ($expected) {
+    unless (defined $expected) {
         ok(1,"empty test");
         next;
     }
@@ -105,15 +109,21 @@ for my $i (0..$#prgs){
       s/^\s+//;
       s/\s+\z//;
     }
+    mydiag "NEXT: $prog";
     $exp->send("$prog\n");
     $exp->expect(
+                 $timeout,
                  [ eof => sub { exit } ],
-                 [ timeout => sub { mydiag "timed out on $i: $prog\n"; exit } ],
+                 [ timeout => sub {
+                       my $got = $exp->clear_accum;
+                       diag "timed out on i[$i]prog[$prog]
+expected[$expected]\ngot[$got]\n\n";
+                       exit;
+                   } ],
                  '-re', $expected
                 );
     my $got = $exp->clear_accum;
-    # warn "# DEBUG: prog[$prog]expected[$expected]got[$got]";
-    mydiag "$got\n";
+    mydiag "GOT: $got\n";
     ok(1, $prog);
 }
 
@@ -138,11 +148,22 @@ wrote
 ########
 o conf histsize 101
 ~~like~~
-histsize.*101
+.  histsize.+101
 ########
 o conf commit
 ~~like~~
 wrote
+########
+o conf histsize 102
+~~like~~
+.  histsize.+102
+########
+o conf defaults
+~~like~~
+########
+o conf histsize
+~~like~~
+histsize.+101
 ########
 quit
 ~~like~~

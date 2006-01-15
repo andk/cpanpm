@@ -1462,33 +1462,8 @@ sub reload {
         my $failed;
       MFILE: for my $f (qw(CPAN.pm CPAN/HandleConfig.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
                       CPAN/Debug.pm CPAN/Version.pm)) {
-            next unless $INC{$f};
-            my $pwd = CPAN::anycwd();
-            CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
-                if $CPAN::DEBUG;
-            my $read;
-            for my $inc (@INC) {
-                $read = File::Spec->catfile($inc,split /\//, $f);
-                last if -f $read;
-            }
-            unless (-f $read) {
-                $failed++;
-                $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
-                next MFILE;
-            }
-            my $fh = FileHandle->new($read) or
-                $CPAN::Frontend->mydie("Could not open $read: $!");
-            local($/);
-            local $^W = 1;
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
-            my $eval = <$fh>;
-            CPAN->debug(sprintf("evaling [%s...]\n",substr($eval,0,64)))
-                if $CPAN::DEBUG;
-            eval $eval;
-            if ($@){
-                $failed++;
-                warn $@;
-            }
+            $self->reload_this($f) or $failed++;
         }
         $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
         $failed++ unless $redef;
@@ -1502,6 +1477,39 @@ sub reload {
       $CPAN::Frontend->myprint(qq{cpan     re-evals the CPAN.pm file
 index    re-reads the index files\n});
     }
+}
+
+sub reload_this {
+    my($self,$f) = @_;
+    return 1 unless $INC{$f};
+    my $pwd = CPAN::anycwd();
+    CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
+        if $CPAN::DEBUG;
+    my $read;
+    for my $inc (@INC) {
+        $read = File::Spec->catfile($inc,split /\//, $f);
+        last if -f $read;
+    }
+    unless (-f $read) {
+        $read = $INC{$f};
+    }
+    unless (-f $read) {
+        $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
+        return;
+    }
+    my $fh = FileHandle->new($read) or
+        $CPAN::Frontend->mydie("Could not open $read: $!");
+    local($/);
+    local $^W = 1;
+    my $eval = <$fh>;
+    CPAN->debug(sprintf("evaling [%s...]\n",substr($eval,0,64)))
+        if $CPAN::DEBUG;
+    eval $eval;
+    if ($@){
+        warn $@;
+        return;
+    }
+    return 1;
 }
 
 #-> sub CPAN::Shell::_binary_extensions ;
