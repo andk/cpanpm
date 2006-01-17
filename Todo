@@ -1,3 +1,8 @@
+2006-01-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rt #17089 suggests that we have to care for M:B being installed when
+	we find a distro that has only a Build.PL and no Makefile.PL
+
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
