@@ -96,6 +96,8 @@ $exp->expect(
              '-re', $prompt
             );
 
+my $got = $exp->clear_accum;
+mydiag "GOT: $got\n";
 $timeout = 60;
 $|=1;
 for my $i (0..$#prgs){
