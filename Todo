@@ -12,7 +12,7 @@
 	takes *quite* a while because of prerequisites (Class::MethodMaker,
 	Template::Toolkit, DateTime::TimeZone, DBD::SQLLite, LWP, etc.). And of
 	course after all the prerequisites, we HAVE Module::Build, so must
-	remove it again.
+	remove it again. FIXED in rev. 433
 
 	* Foreign Bug? I must investigate DateTime::TimeZone separately. It
 	wanted to install Module::Build on its own and then failed giving as a
