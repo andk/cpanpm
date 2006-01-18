@@ -80,14 +80,15 @@ $exp->expect(
              [ eof => sub { exit } ],
              [ timeout => sub {
                    my $self = $exp;
-                   mydiag "timed out\n";
+                   mydiag "+++timed out+++\n";
                    my $got = $self->clear_accum;
+                   mydiag "GOT: $got\n";
                    if ($got =~ /lockfile/) {
-		       mydiag "- due to lockfile, proceeding\n";
+		       mydiag "+++due to lockfile, proceeding+++\n";
                        $self->send("y\n");
                    } else {
-		       mydiag "- unknown reason\n";
-                       mydiag "Giving up this whole test\n";
+		       mydiag "+++unknown reason+++\n";
+                       mydiag "+++giving up this whole test+++\n";
                        exit;
                    }
                    Expect::exp_continue;
