@@ -10,7 +10,23 @@ SYNOPSIS
 
       use CPAN;
 
-      autobundle, clean, install, make, recompile, test
+      # modules:
+
+      $mod = "Acme::Meta";
+      install $mod;
+      CPAN::Shell->install($mod);                    # same thing
+      CPAN::Shell->expandany($mod)->install;         # same thing
+      CPAN::Shell->expand("Module",$mod)->install;   # same thing
+      CPAN::Shell->expand("Module",$mod)
+        ->distribution->install;                     # same thing
+
+      # distributions:
+
+      $distro = "NWCLARK/Acme-Meta-0.01.tar.gz";
+      install $distro;                                # same thing
+      CPAN::Shell->install($distro);                  # same thing
+      CPAN::Shell->expandany($distro)->install;       # same thing
+      CPAN::Shell->expand("Module",$distro)->install; # same thing
 
 STATUS
     This module will eventually be replaced by CPANPLUS. CPANPLUS is kind of
@@ -24,8 +40,8 @@ STATUS
 DESCRIPTION
     The CPAN module is designed to automate the make and install of perl
     modules and extensions. It includes some primitive searching
-    capabilities and knows how to use Net::FTP or LWP (or lynx or an
-    external ftp client) to fetch the raw data from the net.
+    capabilities and knows how to use Net::FTP or LWP (or some external
+    download clients) to fetch the raw data from the net.
 
     Modules are fetched from one or more of the mirrored CPAN (Comprehensive
     Perl Archive Network) sites and unpacked in a dedicated directory.
@@ -40,15 +56,8 @@ DESCRIPTION
     cache manager keeps track of the disk space occupied by the make
     processes and deletes excess space according to a simple FIFO mechanism.
 
-    For extended searching capabilities there's a plugin for CPAN available,
-    "CPAN::WAIT". "CPAN::WAIT" is a full-text search engine that indexes all
-    documents available in CPAN authors directories. If "CPAN::WAIT" is
-    installed on your system, the interactive shell of CPAN.pm will enable
-    the "wq", "wr", "wd", "wl", and "wh" commands which send queries to the
-    WAIT server that has been configured for your installation.
-
-    All other methods provided are accessible in a programmer style and in
-    an interactive shell style.
+    All methods provided are accessible in a programmer style and in an
+    interactive shell style.
 
   Interactive Mode
     The interactive mode is entered by running
@@ -84,7 +93,7 @@ DESCRIPTION
       item is displayed. If the search finds one item, the result is
       displayed with the rather verbose method "as_string", but if we find
       more than one, we display each object with the terse method
-      <as_glimpse>.
+      "as_glimpse".
 
     make, test, install, clean modules or distributions
       These commands take any number of arguments and investigate what is
@@ -93,7 +102,7 @@ DESCRIPTION
       a module, CPAN determines the distribution file in which this module
       is included and processes that, following any dependencies named in
       the module's META.yml or Makefile.PL (this behavior is controlled by
-      *prerequisites_policy*.)
+      the configuration parameter "prerequisites_policy".)
 
       Any "make" or "test" are run unconditionally. An
 
@@ -111,7 +120,7 @@ DESCRIPTION
       and doesn't try to build a package a second time regardless if it
       succeeded or not. The "force" pragma may precede another command
       (currently: "make", "test", or "install") and executes the command
-      from scratch.
+      from scratch and tries to continue in case of some errors.
 
       Example:
 
@@ -164,6 +173,18 @@ DESCRIPTION
       The "failed" command reports all distributions that failed on one of
       "make", "test" or "install" for some reason in the currently running
       shell session.
+
+    Lockfile
+      Interactive sessions maintain a lockfile, per default "~/.cpan/.lock"
+      (but the directory can be configured via the "cpan_home" config
+      variable). The shell is a bit picky if you try to start another CPAN
+      session. It dies immediately if there is a lockfile and the lock seems
+      to belong to a running process. In case you want to run a second shell
+      session, it is probably safest to maintain another directory, say
+      "~/.cpan-for-X/" and a "~/.cpan-for-X/CPAN/MyConfig.pm" that contains
+      the configuration options. Then you can start the second shell with
+
+        perl -I ~/.cpan-for-X -MCPAN::MyConfig -MCPAN -e shell
 
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are

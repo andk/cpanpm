@@ -1,3 +1,18 @@
+2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_56
+
+	* bugfix rt #17089 (Adam Kennedy): the existance of a Build.PL without a
+	Makefile.PL implies a Module::Build dependency
+
+	* skipping the signature test now possible with "force"
+
+	* more tests in shell.t
+
+	* improved documentation
+
+	* new method CPAN::Module->distribution
+
 2006-01-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_55
