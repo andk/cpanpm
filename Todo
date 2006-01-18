@@ -1,7 +1,22 @@
+2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign Bug: RDF::Simple has LWP::UserAgent as undeclared prereq???
+
 2006-01-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* rt #17089 suggests that we have to care for M:B being installed when
 	we find a distro that has only a Build.PL and no Makefile.PL
+
+	AFAIR only CPAN::Metadata::RDF is a module that comes with Build.PL and
+	without Makefile.PL, so it is the only one to test the bugreport. This
+	takes *quite* a while because of prerequisites (Class::MethodMaker,
+	Template::Toolkit, DateTime::TimeZone, DBD::SQLLite, LWP, etc.). And of
+	course after all the prerequisites, we HAVE Module::Build, so must
+	remove it again.
+
+	* Foreign Bug? I must investigate DateTime::TimeZone separately. It
+	wanted to install Module::Build on its own and then failed giving as a
+	reason that Module::Build was not installed???
 
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

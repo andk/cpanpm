@@ -4265,7 +4265,7 @@ and there run
         }
     }
     if (lc($prefer_installer) eq "mb") {
-        $self->{modulebuild} = "YES";
+        $self->{modulebuild} = 1;
     } elsif (! $mpl_exists) {
         $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
                              $mpl,
@@ -4858,7 +4858,7 @@ or
 	} else {
 	  $ret = system($system);
 	  if ($ret != 0) {
-	    $self->{writemakefile} = "NO Makefile.PL returned status $ret";
+	    $self->{writemakefile} = "NO '$system' returned status $ret";
 	    return;
 	  }
 	}
@@ -4867,7 +4867,7 @@ or
           delete $self->{make_clean}; # if cleaned before, enable next
 	} else {
 	  $self->{writemakefile} =
-	      qq{NO Makefile.PL refused to write a Makefile.};
+	      qq{NO -- Unknown reason.};
 	  # It's probably worth it to record the reason, so let's retry
 	  # local $/;
 	  # my $fh = IO::File->new("$system |"); # STDERR? STDIN?
@@ -5032,7 +5032,7 @@ sub prereq_pm {
         exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
-        || $self->{mudulebuild};
+        || $self->{modulebuild};
     my $req;
     if (my $yaml = $self->read_yaml) {
         $req =  $yaml->{requires};
@@ -5104,6 +5104,15 @@ sub prereq_pm {
                 $req = Module::Build->current->requires();
             }
         }
+    }
+    if (-f "Build.PL" && ! -f "Makefile.PL" && ! exists $req->{"Module::Build"}) {
+        $CPAN::Frontend->mywarn("  Warning: CPAN.pm discovered Module::Build as ".
+                                "undeclared prerequisite.\n".
+                                "  Adding it now as a prerequisite.\n"
+                               );
+        $CPAN::Frontend->mysleep(5);
+        $req->{"Module::Build"} = 0;
+        delete $self->{writemakefile};
     }
     $self->{prereq_pm_detected}++;
     return $self->{prereq_pm} = $req;
