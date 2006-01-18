@@ -24,13 +24,14 @@ BEGIN {
 }
 
 use File::Copy qw(cp);
-cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm" or die; # because commit will overwrite it
+cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm"
+    or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 
 use Cwd;
 my $cwd = Cwd::cwd;
 
 sub read_myconfig () {
-    open my $fh, "CPAN/MyConfig.pm" or die;
+    open my $fh, "CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
     local $/;
     eval <$fh>;
 }
