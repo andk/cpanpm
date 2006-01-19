@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.83_56';
+$VERSION = '1.83_57';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -4119,7 +4119,19 @@ sub get {
     $self->safe_chdir($builddir);
     $self->debug("Removing tmp") if $CPAN::DEBUG;
     File::Path::rmtree("tmp");
-    mkdir "tmp", 0755 or Carp::croak "Couldn't mkdir tmp: $!";
+    unless (mkdir "tmp", 0755) {
+        my $len1 = length("$builddir/tmp");
+        my $filler1 = $len1>62 ? "" : " "x(62-$len1)."<==";
+        $CPAN::Frontend->mydie(<<EOF);
+Couldn't mkdir '$builddir/tmp': $!
+
+==> Cannot continue: Please find the reason why I cannot make the <==
+==> directory                                                     <==
+==> $builddir/tmp$filler1
+==> and fix the problem, then retry.                              <==
+
+EOF
+    }
     if ($CPAN::Signal){
         $self->safe_chdir($sub_wd);
         return;
@@ -4161,8 +4173,22 @@ sub get {
         -d $packagedir and $CPAN::Frontend->myprint("Removing previously used ".
                                                     "$packagedir\n");
         File::Path::rmtree($packagedir);
-        File::Copy::move($distdir,$packagedir) or
-            Carp::confess("Couldn't move $distdir to $packagedir: $!");
+        unless (File::Copy::move($distdir,$packagedir)) {
+            my $len1 = length("$builddir/tmp/$distdir");
+            my $filler1 = $len1>58 ? "" : " "x(58-$len1)."<==";
+            my $len2 = length($packagedir);
+            my $filler2 = $len2>58 ? "" : " "x(58-$len2)."<==";
+            $CPAN::Frontend->mydie(<<EOF);
+Couldn't move '$distdir' to '$packagedir': $!
+
+==> Cannot continue: Please find the reason why I cannot move <==
+==> $builddir/tmp/$distdir$filler1
+==> to                                                        <==
+==> $packagedir$filler2
+==> and fix the problem, then retry                           <==
+
+EOF
+        }
         $self->debug(sprintf("moved distdir[%s] to packagedir[%s] -e[%s]-d[%s]",
                              $distdir,
                              $packagedir,
