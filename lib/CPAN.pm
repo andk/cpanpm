@@ -2040,6 +2040,31 @@ sub mydie {
     die "\n";
 }
 
+# use this only for unrecoverable errors!
+sub unrecoverable_error {
+    my($self,$what) = @_;
+    my @lines = split /\n/, $what;
+    my $longest = 0;
+    for my $l (@lines) {
+        $longest = length $l if length $l > $longest;
+    }
+    $longest = 62 if $longest > 62;
+    for my $l (@lines) {
+        if ($l =~ /^\s*$/){
+            $l = "\n";
+            next;
+        }
+        $l = "==> $l";
+        if (length $l < 66) {
+            $l = pack "A66 A*", $l, "<==";
+        }
+        $l .= "\n";
+    }
+    unshift @lines, "\n";
+    $self->mydie(join "", @lines);
+    die "\n";
+}
+
 sub mysleep {
     my($self, $sleep) = @_;
     sleep $sleep;
@@ -4120,15 +4145,13 @@ sub get {
     $self->debug("Removing tmp") if $CPAN::DEBUG;
     File::Path::rmtree("tmp");
     unless (mkdir "tmp", 0755) {
-        my $len1 = length("$builddir/tmp");
-        my $filler1 = $len1>62 ? "" : " "x(62-$len1)."<==";
-        $CPAN::Frontend->mydie(<<EOF);
+        $CPAN::Frontend->unrecoverable_error(<<EOF);
 Couldn't mkdir '$builddir/tmp': $!
 
-==> Cannot continue: Please find the reason why I cannot make the <==
-==> directory                                                     <==
-==> $builddir/tmp$filler1
-==> and fix the problem, then retry.                              <==
+Cannot continue: Please find the reason why I cannot make the
+directory
+$builddir/tmp
+and fix the problem, then retry.
 
 EOF
     }
@@ -4174,18 +4197,14 @@ EOF
                                                     "$packagedir\n");
         File::Path::rmtree($packagedir);
         unless (File::Copy::move($distdir,$packagedir)) {
-            my $len1 = length("$builddir/tmp/$distdir");
-            my $filler1 = $len1>58 ? "" : " "x(58-$len1)."<==";
-            my $len2 = length($packagedir);
-            my $filler2 = $len2>58 ? "" : " "x(58-$len2)."<==";
-            $CPAN::Frontend->mydie(<<EOF);
+            $CPAN::Frontend->unrecoverable_error(<<EOF);
 Couldn't move '$distdir' to '$packagedir': $!
 
-==> Cannot continue: Please find the reason why I cannot move <==
-==> $builddir/tmp/$distdir$filler1
-==> to                                                        <==
-==> $packagedir$filler2
-==> and fix the problem, then retry                           <==
+Cannot continue: Please find the reason why I cannot move
+$builddir/tmp/$distdir
+to
+$packagedir
+and fix the problem, then retry
 
 EOF
         }
