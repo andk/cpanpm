@@ -61,9 +61,6 @@ sub init {
     # Files, directories
     #
 
-    # not just yet
-    # if (!@sections or grep /^(files|dirs)$/, @sections) {
-
     print $prompts{manual_config};
 
     my $manual_conf;
@@ -96,12 +93,9 @@ sub init {
 	};
       }
     }
-    # if ('config_intro' ~= $matcher) {
 
-    $CPAN::Frontend->myprint($prompts{config_intro});
-
-    #}
-
+    $CPAN::Frontend->myprint($prompts{config_intro})
+      ; # if !$matcher or 'config_intro' ~= $matcher;	# suppress this too ??
 
     my $cpan_home = $CPAN::Config->{cpan_home}
 	|| File::Spec->catdir($ENV{HOME}, ".cpan");
@@ -192,10 +186,10 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{term_is_latin} = ($ans =~ /^y/i ? 1 : 0);
 
     #
-    # save history in file histfile
+    # save history in file 'histfile'
     #
 
-    $CPAN::Frontend->myprint($prompts{histfile});
+    $CPAN::Frontend->myprint($prompts{histfile_intro});
 
     defined($default = $CPAN::Config->{histfile}) or
         $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
@@ -348,9 +342,12 @@ Shall we use it as the general CPAN build and cache directory?
 
     # Proxies
 
-    $CPAN::Frontend->myprint($prompts{proxies});
+    $CPAN::Frontend->myprint($prompts{proxy_intro})
+      if !$matcher or 'proxy_intro' !~ /$matcher/;
 
     for (qw/ftp_proxy http_proxy no_proxy/) {
+	next if $matcher and 'proxy_intro' =~ /$matcher/;
+
 	$default = $CPAN::Config->{$_} || $ENV{$_};
 	$CPAN::Config->{$_} = prompt("Your $_?",$default);
     }
@@ -752,7 +749,7 @@ anyway. If you answer no, names will be output in UTF-8.
 
 },
 
-histfile => qq{
+histfile_intro => qq{
 
 If you have one of the readline packages (Term::ReadLine::Perl,
 Term::ReadLine::Gnu, possibly others) installed, the interactive CPAN
@@ -761,6 +758,8 @@ filename of the history file and with its size. If you do not want to
 set this variable, please hit SPACE RETURN to the following question.
 
 },
+
+histfile => qq{File to save your history?},
 
 show_upload_date_intro => qq{
 
@@ -787,7 +786,7 @@ policy to one of the three values.
 },
 
 prerequisites_policy =>
-               qq{Policy on building prerequisites (follow, ask or ignore)?},
+"Policy on building prerequisites (follow, ask or ignore)?",
 
 external_progs => qq{
 
@@ -921,7 +920,7 @@ inactivity_timeout =>
 qq{Timeout for inactivity during {Makefile,Build}.PL? },
 
 
-proxies => qq{
+proxy_intro => qq{
 
 If you\'re accessing the net via proxies, you can specify them in the
 CPAN configuration or via environment variables. The variable in
