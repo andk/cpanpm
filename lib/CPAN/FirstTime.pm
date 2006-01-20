@@ -33,8 +33,9 @@ CPAN::FirstTime::init()
 
 =head1 DESCRIPTION
 
-The init routine asks a few questions and writes a CPAN::Config
-file. Nothing special.
+The init routine asks a few questions and writes a CPAN/Config.pm or
+CPAN/MyConfig.pm file (depending on what it is currently using).
+
 
 =cut
 
@@ -45,6 +46,7 @@ sub init {
     use Config;
     # extra arg in 'o conf init make' selects only $item =~ /make/
     my $matcher = $args{args} && @{$args{args}} ? $args{args}[0] : '';
+    CPAN->debug("matcher[$matcher]") if $CPAN::DEBUG;
 
     unless ($CPAN::VERSION) {
 	require CPAN::Nox;

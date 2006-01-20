@@ -22,6 +22,7 @@ $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
                   Tarzip         8192
                   Version       16384
                   Queue         32768
+                  FirstTime     65536
 ];
 
 $CPAN::DEBUG ||= 0;
