@@ -97,21 +97,23 @@ sub init {
     }
 
     $CPAN::Frontend->myprint($prompts{config_intro})
-      ; # if !$matcher or 'config_intro' ~= $matcher;	# suppress this too ??
+      if !$matcher or 'config_intro' =~ /$matcher/;
 
     my $cpan_home = $CPAN::Config->{cpan_home}
 	|| File::Spec->catdir($ENV{HOME}, ".cpan");
 
     if (-d $cpan_home) {
-	$CPAN::Frontend->myprint(qq{
+	if (!$matcher or 'config_intro' =~ /$matcher/) {
+	    $CPAN::Frontend->myprint(qq{
 
 I see you already have a  directory
     $cpan_home
 Shall we use it as the general CPAN build and cache directory?
 
 });
-
+	}
     } else {
+	# no cpan-home, must prompt and get one
 	$CPAN::Frontend->myprint($prompts{cpan_home_where});
     }
 
@@ -151,7 +153,8 @@ Shall we use it as the general CPAN build and cache directory?
     # Cache size, Index expire
     #
 
-    $CPAN::Frontend->myprint($prompts{build_cache_intro});
+    $CPAN::Frontend->myprint($prompts{build_cache_intro})
+      if !$matcher or 'build_cache_intro' =~ /$matcher/;
 
     # large enough to build large dists like Tk
     my_dflt_prompt(build_cache => 100, $matcher);
@@ -159,26 +162,31 @@ Shall we use it as the general CPAN build and cache directory?
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{'index_expire'} = 1;
 
-    $CPAN::Frontend->myprint($prompts{scan_cache_intro});
+    $CPAN::Frontend->myprint($prompts{scan_cache_intro})
+      if !$matcher or 'build_cache_intro' =~ /$matcher/;
+
     my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
 
     #
     # cache_metadata
     #
 
-    $CPAN::Frontend->myprint($prompts{cache_metadata});
+    if (!$matcher or 'build_cache_intro' =~ /$matcher/) {
 
-    defined($default = $CPAN::Config->{cache_metadata}) or $default = 1;
-    do {
-        $ans = prompt("Cache metadata (yes/no)?", ($default ? 'yes' : 'no'));
-    } while ($ans !~ /^[yn]/i);
-    $CPAN::Config->{cache_metadata} = ($ans =~ /^y/i ? 1 : 0);
+	$CPAN::Frontend->myprint($prompts{cache_metadata});
 
+	defined($default = $CPAN::Config->{cache_metadata}) or $default = 1;
+	do {
+	    $ans = prompt("Cache metadata (yes/no)?", ($default ? 'yes' : 'no'));
+	} while ($ans !~ /^[yn]/i);
+	$CPAN::Config->{cache_metadata} = ($ans =~ /^y/i ? 1 : 0);
+    }
     #
     # term_is_latin
     #
 
-    $CPAN::Frontend->myprint($prompts{term_is_latin});
+    $CPAN::Frontend->myprint($prompts{term_is_latin})
+      if !$matcher or 'term_is_latin' =~ /$matcher/;
 
     defined($default = $CPAN::Config->{term_is_latin}) or $default = 1;
     do {
@@ -223,7 +231,8 @@ Shall we use it as the general CPAN build and cache directory?
     # Do we follow PREREQ_PM?
     #
 
-    $CPAN::Frontend->myprint($prompts{prerequisites_policy_intro});
+    $CPAN::Frontend->myprint($prompts{prerequisites_policy_intro})
+      if !$matcher or 'prerequisites_policy_intro' =~ /$matcher/;
 
     my_prompt_loop(prerequisites_policy => 'ask', $matcher,
 		   'follow|ask|ignore');
@@ -233,7 +242,8 @@ Shall we use it as the general CPAN build and cache directory?
     # External programs
     #
 
-    $CPAN::Frontend->myprint($prompts{external_progs});
+    $CPAN::Frontend->myprint($prompts{external_progs})
+      if !$matcher or 'external_progs' =~ /$matcher/;
 
     my $old_warn = $^W;
     local $^W if $^O eq 'MacOS';
@@ -303,12 +313,14 @@ Shall we use it as the general CPAN build and cache directory?
     # Arguments to make etc.
     #
 
-    $CPAN::Frontend->myprint($prompts{prefer_installer_intro});
+    $CPAN::Frontend->myprint($prompts{prefer_installer_intro})
+      if !$matcher or 'prerequisites_policy_intro' =~ /$matcher/;
 
     my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
 
 
-    $CPAN::Frontend->myprint($prompts{makepl_arg_intro});
+    $CPAN::Frontend->myprint($prompts{makepl_arg_intro})
+      if !$matcher or 'makepl_arg_intro' =~ /$matcher/;
 
     my_dflt_prompt(makepl_arg => "", $matcher);
 
@@ -320,7 +332,8 @@ Shall we use it as the general CPAN build and cache directory?
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "", 
 		   $matcher);
 
-    $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro});
+    $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro})
+      if !$matcher or 'mbuildpl_arg_intro' =~ /$matcher/;
 
     my_dflt_prompt(mbuildpl_arg => "", $matcher);
 
@@ -334,7 +347,8 @@ Shall we use it as the general CPAN build and cache directory?
     # Alarm period
     #
 
-    $CPAN::Frontend->myprint($prompts{inactivity_timeout_intro});
+    $CPAN::Frontend->myprint($prompts{inactivity_timeout_intro})
+      if !$matcher or 'inactivity_timeout_intro' =~ /$matcher/;
 
     # my_dflt_prompt(inactivity_timeout => 0);
 
@@ -345,10 +359,10 @@ Shall we use it as the general CPAN build and cache directory?
     # Proxies
 
     $CPAN::Frontend->myprint($prompts{proxy_intro})
-      if !$matcher or 'proxy_intro' !~ /$matcher/;
+      if !$matcher or 'proxy_intro' =~ /$matcher/;
 
     for (qw/ftp_proxy http_proxy no_proxy/) {
-	next if $matcher and 'proxy_intro' =~ /$matcher/;
+	next if $matcher and $_ =~ /$matcher/;
 
 	$default = $CPAN::Config->{$_} || $ENV{$_};
 	$CPAN::Config->{$_} = prompt("Your $_?",$default);
