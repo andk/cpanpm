@@ -16,6 +16,7 @@ $N = scalar @$D;
 print "1..$N\n";
 
 my $has_sort_versions = eval { require Sort::Versions; 1 };
+my $has_versionpm = eval { require version; 1 };
 while (@$D) {
   my($l,$r,$exp) = @{shift @$D};
   my $res = CPAN::Version->vcmp($l,$r);
@@ -23,13 +24,20 @@ while (@$D) {
     print "# l[$l]r[$r]exp[$exp]res[$res]\n";
     print "not ";
   }
-  my $sortv = "";
+  my @other = ();
   if ($has_sort_versions) {
     if (Sort::Versions::versioncmp($l,$r) != $res) {
-      $sortv = sprintf " (sv: %d)", Sort::Versions::versioncmp($l,$r);
+      push @other, sprintf "SV: %d", Sort::Versions::versioncmp($l,$r);
     }
   }
-  printf "ok %2d # %12s %12s %3d%s\n", $N-@$D, $l, $r, $res, $sortv;
+  if ($has_versionpm) {
+    my $vres = version->new($l) cmp version->new($r);
+    if ($vres != $res) {
+      push @other, sprintf "v.pm: %d", $vres;
+    }
+  }
+  my $other = @other ? " (".join("; ", @other).")" : "";
+  printf "ok %2d # %12s %12s %3d%s\n", $N-@$D, $l, $r, $res, $other;
 }
 
 __END__
