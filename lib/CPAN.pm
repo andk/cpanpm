@@ -1,4 +1,3 @@
-# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
 $VERSION = '1.83_57';
 $VERSION = eval $VERSION;
@@ -7700,6 +7699,7 @@ cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 =cut
 
 # Local Variables:
+# coding: utf-8;
 # mode: cperl
 # cperl-indent-level: 4
 # End:
