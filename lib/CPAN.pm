@@ -5979,12 +5979,13 @@ sub as_glimpse {
         $color_on = Term::ANSIColor::color("green");
         $color_off = Term::ANSIColor::color("reset");
     }
-    push @m, sprintf("%-15s %s%-15s%s (%s)\n",
+    push @m, sprintf("%-8s %s%-22s%s (%s)\n",
                      $class,
                      $color_on,
                      $self->id,
                      $color_off,
-		     $self->cpan_file);
+		     $self->distribution->pretty_id,
+                    );
     join "", @m;
 }
 

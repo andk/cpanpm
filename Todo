@@ -1,3 +1,8 @@
+2006-01-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* document and provide a dialog for commandnumber_in_prompt or provide a
+	sprintf based solution
+
 2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Foreign Bug: RDF::Simple has LWP::UserAgent as undeclared prereq???
