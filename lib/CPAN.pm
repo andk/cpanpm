@@ -1684,7 +1684,6 @@ sub u {
     shift->_u_r_common("u",@_);
 }
 
-# XXX intentionally undocumented because not considered enough
 #-> sub CPAN::Shell::failed ;
 sub failed {
     my($self,$only_id,$silent) = @_;
@@ -1721,7 +1720,9 @@ sub failed {
     }
 }
 
-# XXX intentionally undocumented because not considered enough
+# XXX intentionally undocumented because completely bogus, unportable,
+# useless, etc.
+
 #-> sub CPAN::Shell::status ;
 sub status {
     my($self) = @_;
@@ -3932,6 +3933,7 @@ sub cpan_comment {
     $ro->{CPAN_COMMENT}
 }
 
+# CPAN::Distribution::undelay
 sub undelay {
     my $self = shift;
     delete $self->{later};
@@ -4836,8 +4838,13 @@ or
 	defined $self->{'make'} and push @e,
             "Has already been processed within this session";
 
-        exists $self->{later} and length($self->{later}) and
-            push @e, $self->{later};
+        if (exists $self->{later} and length($self->{later})) {
+            if ($self->unsat_prereq) {
+                push @e, $self->{later};
+            } else {
+                delete $self->{later};
+            }
+        }
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
@@ -4944,6 +4951,7 @@ sub _make_command {
     return $CPAN::Config->{'make'} || $Config::Config{make} || 'make';
 }
 
+#-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
     my(@prereq) = grep {$_ ne "perl"} @_;
@@ -5927,6 +5935,7 @@ sub distribution {
     CPAN::Shell->expand("Distribution",$self->cpan_file);
 }
 
+# sub CPAN::Module::undelay
 sub undelay {
     my $self = shift;
     delete $self->{later};

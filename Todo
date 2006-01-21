@@ -1,5 +1,30 @@
 2006-01-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* see if podlators 2.0.1 fixes the broken README and if so, switch back
+	to ${PERL} in the Makefile.PL
+
+	* bug: while trying to install Bundle::CPAN, YAML was delayed "until
+	after prerequisites" but later was not retried or maybe was retried but
+	CPAN said, it was
+
+Running make for I/IN/INGY/YAML-0.53.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/YAML-0.53
+  Delayed until after prerequisites
+Running make test
+  Delayed until after prerequisites
+Running make install
+  Delayed until after prerequisites
+
+	So the installation of Bundle::CPAN was not really tried to finish.
+
+	The dependency chain is as follows:
+
+	  YAML depends on Class::Spiffy and Test::Base
+    Test::Base depends on Spiffy
+
+	Bug is that ->{later} is not double checked when encountered. Fixed in
+	rev. 454.
+
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution
 
@@ -22,6 +47,16 @@
 	* Foreign Bug? I must investigate DateTime::TimeZone separately. It
 	wanted to install Module::Build on its own and then failed giving as a
 	reason that Module::Build was not installed???
+
+	It turns out the prereq_pm is undef for some reason. But prereq_pm is
+	only built during the 'make' step and then not resetted during a 'force
+	get'. The 'prereq_pm_detected' bit is set and I must leave/enter the
+	shell to debug this. OK. I see a Makefile.PL that simply fails because
+	Module::Build is not installed. At least it says what it wants, but we
+	must be better prepared for such an attack. OK, I'll file a bugreport
+	against both DateTime::TimeZone and Module::Build -- somebody has to
+	confess that it is a prereq and write it into the META.yml. That's what
+	I would say. DONE
 
 2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
