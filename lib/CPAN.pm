@@ -1714,9 +1714,9 @@ sub failed {
         my $print = join "",
             map { sprintf "  %-45s: %s %s\n", @$_[1,2,3] }
                 sort { $a->[0] <=> $b->[0] } @failed;
-        $CPAN::Frontend->myprint("Failed installations in this $scope:\n$print");
+        $CPAN::Frontend->myprint("Failed during this $scope:\n$print");
     } elsif (!$only_id || !$silent) {
-        $CPAN::Frontend->myprint("No installations failed in this $scope\n");
+        $CPAN::Frontend->myprint("Nothing failed in this $scope\n");
     }
 }
 

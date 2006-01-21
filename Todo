@@ -32,6 +32,17 @@ Running make install
 
 	* Foreign Bug: RDF::Simple has LWP::UserAgent as undeclared prereq???
 
+	Running make against RDF::Simple pulls in a lot but it finally comes to
+	an end. When I then run test, the whole load of modules starts testing
+	and three fail their tests:
+
+Failed installations in this command:
+  ABW/AppConfig-1.56.tar.gz                    : make_test NO
+  FLUFFY/Class-MethodMaker-2.08.tar.gz         : make_test NO
+  ZOOLEIKA/RDF-Simple-0.22.tar.gz              : make_test NO
+
+	
+
 2006-01-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* rt #17089 suggests that we have to care for M:B being installed when
