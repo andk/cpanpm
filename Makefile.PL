@@ -134,6 +134,12 @@ if ($version_diff){
 
 package MY;
 
+sub macro {
+    q{
+LC_ALL=en_GB.utf8
+}
+}
+
 sub postamble {
   q{
 setversion:
@@ -147,7 +153,7 @@ chlog :: chlog-svn chlog-xml chlog-trad
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
-	-LC_ALL=en_GB.utf8 svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
+	-LC_ALL=$(LC_ALL) svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
 	-cat ChangeLog.local >> ChangeLog.svn
 
 chlog-trad :
