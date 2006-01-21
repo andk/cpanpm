@@ -6150,6 +6150,10 @@ sub manpage_headline {
     close $fh;
     last if @result;
   }
+  for (@result) {
+      s/^\s+//;
+      s/\s+$//;
+  }
   join " ", @result;
 }
 
