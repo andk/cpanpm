@@ -1,12 +1,33 @@
+2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_58
+
+	* command processor tweak on Win32 (Jan Dubois, Gisle Aas)
+
+	* README production was broken
+
+	* Ongoing heavy refactoring of FirstTime, currently still without
+	becoming visible to the user (Jim Cromie)
+
+	* More tests for CPAN::Version with output comparing the results with
+	Sort::Versions and version.pm
+
+	* bugfix: double check the "later" attribute before you excuse and unset
+	it if it is obsolete; fixes a bug where a postponed distro could be lost
+	from the queue
+
+	* output of as_glimpse more space efficient
+
 2006-01-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_57
 
-	* bugfix rt #17131 (Lee Goddard): better error messages on unrecoverable errors
+	* bugfix rt #17131 (Lee Goddard): better error messages on two
+	unrecoverable errors that require user intervention
 
-	* shell.t improved again: now the output reads really similar to a real
-	shell session so we can determine which problems were leading to a
-	a failing test
+	* shell.t improved again: now the output reads really similar to a shell
+	session so we can determine which problems were leading to a failing
+	test
 
 2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
