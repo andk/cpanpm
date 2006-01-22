@@ -31,6 +31,7 @@ while (@$D) {
     }
   }
   if ($has_versionpm) {
+    local $^W;
     my $vres = version->new($l) cmp version->new($r);
     if ($vres != $res) {
       push @other, sprintf "v.pm: %d", $vres;
