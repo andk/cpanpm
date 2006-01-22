@@ -146,8 +146,8 @@ setversion:
 	$(PERL) Makefile.PL --setversion
 
 README: lib/CPAN.pm Makefile
-	chmod +w $@
-	-/usr/bin/pod2text lib/CPAN.pm > $@
+	-[ -r $@ ] && chmod +w $@
+	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
 chlog :: chlog-svn chlog-xml chlog-trad
 
