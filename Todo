@@ -1,81 +1,7 @@
-2006-01-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* see if podlators 2.0.1 fixes the broken README and if so, switch back
-	to ${PERL} in the Makefile.PL
-
-	* bug: while trying to install Bundle::CPAN, YAML was delayed "until
-	after prerequisites" but later was not retried or maybe was retried but
-	CPAN said, it was
-
-Running make for I/IN/INGY/YAML-0.53.tar.gz
-  Is already unwrapped into directory /home/k/.cpan/build/YAML-0.53
-  Delayed until after prerequisites
-Running make test
-  Delayed until after prerequisites
-Running make install
-  Delayed until after prerequisites
-
-	So the installation of Bundle::CPAN was not really tried to finish.
-
-	The dependency chain is as follows:
-
-	  YAML depends on Class::Spiffy and Test::Base
-    Test::Base depends on Spiffy
-
-	Bug is that ->{later} is not double checked when encountered. Fixed in
-	rev. 454.
+2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution
-
-2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Foreign Bug: RDF::Simple has LWP::UserAgent as undeclared prereq???
-
-	Running make against RDF::Simple pulls in a lot but it finally comes to
-	an end. When I then run test, the whole load of modules starts testing
-	and three fail their tests:
-
-  ABW/AppConfig-1.56.tar.gz                    : make_test NO
-  FLUFFY/Class-MethodMaker-2.08.tar.gz         : make_test NO
-  ZOOLEIKA/RDF-Simple-0.22.tar.gz              : make_test NO
-
-	paging back reveals: all the RDF::Simple tests fail due to missing
-	LWP::UserAgent, RDF::Simple::Serialiser, and Class::MethodMaker.
-
-	App::Config fails due to "Can't modify non-lvalue subroutine call at
-	t/file.t line 112, <DATA> line 69."
-
-	Class-MethodMaker tests fail complaining that they cannot find
-	Class::MethodMaker.
-
-2006-01-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* rt #17089 suggests that we have to care for M:B being installed when
-	we find a distro that has only a Build.PL and no Makefile.PL
-
-	AFAIR only CPAN::Metadata::RDF is a module that comes with Build.PL and
-	without Makefile.PL, so it is the only one to test the bugreport. This
-	takes *quite* a while because of prerequisites (Class::MethodMaker,
-	Template::Toolkit, DateTime::TimeZone, DBD::SQLLite, LWP, etc.). And of
-	course after all the prerequisites, we HAVE Module::Build, so must
-	remove it again. FIXED in rev. 433
-
-	* Foreign Bug? I must investigate DateTime::TimeZone separately. It
-	wanted to install Module::Build on its own and then failed giving as a
-	reason that Module::Build was not installed???
-
-	It turns out the prereq_pm is undef for some reason. But prereq_pm is
-	only built during the 'make' step and then not resetted during a 'force
-	get'. The 'prereq_pm_detected' bit is set and I must leave/enter the
-	shell to debug this. OK. I see a Makefile.PL that simply fails because
-	Module::Build is not installed. At least it says what it wants, but we
-	must be better prepared for such an attack. OK, I'll file a bugreport
-	against both DateTime::TimeZone and Module::Build -- somebody has to
-	confess that it is a prereq and write it into the META.yml. That's what
-	I would say. DONE
-
-2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
 	of testing CPAN.pm. Also helps Test::Prereq and others.
@@ -109,6 +35,88 @@ Running make install
 
 	* hr ================ no todos below this line ================ /hr
 	
+2006-01-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* see if podlators 2.0.1 fixes the broken README and if so, switch back
+	to ${PERL} in the Makefile.PL. FIXED in rev. 457
+
+	* bug: while trying to install Bundle::CPAN, YAML was delayed "until
+	after prerequisites" but later was not retried or maybe was retried but
+	CPAN said, it was
+
+Running make for I/IN/INGY/YAML-0.53.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/YAML-0.53
+  Delayed until after prerequisites
+Running make test
+  Delayed until after prerequisites
+Running make install
+  Delayed until after prerequisites
+
+	So the installation of Bundle::CPAN was not really tried to finish.
+
+	The dependency chain is as follows:
+
+	  YAML depends on Class::Spiffy and Test::Base
+    Test::Base depends on Spiffy
+
+	Bug is that ->{later} is not double checked when encountered. Fixed in
+	rev. 454.
+
+2006-01-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign Bug: RDF::Simple has LWP::UserAgent as undeclared prereq???
+
+	Running make against RDF::Simple pulls in a lot but it finally comes to
+	an end. When I then run test, the whole load of modules starts testing
+	and three fail their tests:
+
+  ABW/AppConfig-1.56.tar.gz                    : make_test NO
+  FLUFFY/Class-MethodMaker-2.08.tar.gz         : make_test NO
+  ZOOLEIKA/RDF-Simple-0.22.tar.gz              : make_test NO
+
+	paging back reveals: all the RDF::Simple tests fail due to missing
+	LWP::UserAgent, RDF::Simple::Serialiser, and Class::MethodMaker. The
+	latter two do not appear when I test against 5.8.8-tobe. REPORTED via
+	RT.
+
+	AppConfig fails due to "Can't modify non-lvalue subroutine call at
+	t/file.t line 112, <DATA> line 69." This is a 5.9.3 issue, we succeed
+	with 5.8.8-tobe (@26917) REPORTED via p5p.
+
+	Class-MethodMaker tests fail complaining that they cannot find
+	Class::MethodMaker. This is also a 5.9.3 issue. Fully automated binary
+	search is impossible unless I find a smaller test case. 26492 ok, 26493
+	not ok. Ha! It is a Makefile.PL vs Build.PL issue! On RT #16241 I have
+	added this observation.
+
+2006-01-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rt #17089 suggests that we have to care for M:B being installed when
+	we find a distro that has only a Build.PL and no Makefile.PL
+
+	AFAIR only CPAN::Metadata::RDF is a module that comes with Build.PL and
+	without Makefile.PL, so it is the only one to test the bugreport. This
+	takes *quite* a while because of prerequisites (Class::MethodMaker,
+	Template::Toolkit, DateTime::TimeZone, DBD::SQLLite, LWP, etc.). And of
+	course after all the prerequisites, we HAVE Module::Build, so must
+	remove it again. FIXED in rev. 433
+
+	* Foreign Bug? I must investigate DateTime::TimeZone separately. It
+	wanted to install Module::Build on its own and then failed giving as a
+	reason that Module::Build was not installed???
+
+	It turns out the prereq_pm is undef for some reason. But prereq_pm is
+	only built during the 'make' step and then not resetted during a 'force
+	get'. The 'prereq_pm_detected' bit is set and I must leave/enter the
+	shell to debug this. OK. I see a Makefile.PL that simply fails because
+	Module::Build is not installed. At least it says what it wants, but we
+	must be better prepared for such an attack. OK, I'll file a bugreport
+	against both DateTime::TimeZone and Module::Build -- somebody has to
+	confess that it is a prereq and write it into the META.yml. That's what
+	I would say. DONE
+
+2006-01-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
 	* Bug: when ~/.cpan/sources/authors/id/A/AN/ANDK/CPAN-1.83_54.tar.gz is
 	not a tar file (because I mistyped a URL and got something else), then
 	even "force get ANDK/CPAN-1.83_54.tar.gz" does not overwrite the bogus
