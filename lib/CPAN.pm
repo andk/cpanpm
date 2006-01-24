@@ -1207,8 +1207,9 @@ sub a {
   $CPAN::Frontend->myprint($self->format_result('Author',@arg));
 }
 
-sub handle_ls {
-    my($self,$pragmas,$s) = @_;
+#-> sub CPAN::Shell::globls ;
+sub globls {
+    my($self,$s,$pragmas) = @_;
     # ls is really very different, but we had it once as an ordinary
     # command in the Shell (upto rev. 321) and we could not handle
     # force well then
@@ -1243,6 +1244,7 @@ sub handle_ls {
     }
     my $silent = @accept>1;
     my $last_alpha = "";
+    my @results;
     for my $a (@accept){
         my($author,$pathglob);
         if ($a =~ m|(.*?)/(.*)|) {
@@ -1272,7 +1274,9 @@ sub handle_ls {
                 $author->$pragma();
             }
         }
-        $author->ls($pathglob,$silent); # silent if more than one author
+        push @results, $author->ls($pathglob,$silent); # silent if
+                                                       # more than one
+                                                       # author
         for my $pragma (@$pragmas) {
             my $meth = "un$pragma";
             if ($author->can($meth)) {
@@ -1280,6 +1284,7 @@ sub handle_ls {
             }
         }
     }
+    @results;
 }
 
 #-> sub CPAN::Shell::local_bundles ;
@@ -2127,7 +2132,7 @@ sub rematein {
             sleep 2;
             next;
 	} elsif ($meth eq "ls") {
-            $self->handle_ls(\@pragma,$s);
+            $self->globls($s,\@pragma);
             next STHING;
         } else {
             CPAN->debug("calling expandany [$s]") if $CPAN::DEBUG;
@@ -3828,6 +3833,7 @@ sub ls {
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
     } sort { $a->[2] cmp $b->[2] } @dl);
+    @dl;
 }
 
 # returns an array of arrays, the latter contain (size,mtime,filename)
@@ -6579,11 +6585,11 @@ plain text format.
 
 =item ls author
 
-=item ls globbing_expresion
+=item ls globbing_expression
 
 The first form lists all distribution files in and below an author's
-CPAN directory as they are stored in the CHECKUMS files distrbute on
-CPAN.
+CPAN directory as they are stored in the CHECKUMS files distributed on
+CPAN. The listing goes recursive into all subdirectories.
 
 The second form allows to limit or expand the output with shell
 globbing as in the following examples:
@@ -6594,6 +6600,10 @@ globbing as in the following examples:
 
 The last example is very slow and outputs extra progress indicators
 that break the alignment of the result.
+
+Note that globbing only lists directories explicitly asked for, for
+example FOO/* will not list FOO/bar/Acme-Sthg-n.nn.tar.gz. This may be
+regarded as a bug and may be changed in future versions.
 
 =item failed
 
@@ -6733,7 +6743,8 @@ list.
 
 Like expand, but returns objects of the appropriate type, i.e.
 CPAN::Bundle objects for bundles, CPAN::Module objects for modules and
-CPAN::Distribution objects fro distributions.
+CPAN::Distribution objects for distributions. Note: it does not expand
+to CPAN::Author objects.
 
 =item Programming Examples
 
