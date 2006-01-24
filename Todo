@@ -1,3 +1,15 @@
+2006-01-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* dontload: make a dontload_list and deprecate dontload_hash
+
+	* 4 new bugs from in RT: 17237 17238 17241 17242
+
+	* Bug: setting "o conf dontload_hash ''" breaks the shell:
+
+	Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 833.
+
+	Fixed in rev 464.
+
 2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
@@ -9,7 +21,8 @@
 	start is done in t/shell.t
 
 	* upgrade: new command that does nothing but
-	CPAN::Shell->install(CPAN::Shell->r)?
+	CPAN::Shell->install(CPAN::Shell->r)? Do not forget that we still may
+	have perl distros in the "r" list.
 
 	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
 	branches/1.80_56plus for a few lines that probably went in the wrong

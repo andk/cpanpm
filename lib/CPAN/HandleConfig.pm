@@ -79,7 +79,10 @@ sub edit {
                 undef $CPAN::FTP::Themethod;
             }
             return $changed;
-	} else {
+        } elsif ($o =~ /_hash$/) {
+            push @args, "" if @args % 2;
+            $CPAN::Config->{$o} = { @args };
+        } else {
 	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
 	    $self->prettyprint($o);
 	}
@@ -404,5 +407,5 @@ sub AUTOLOAD {
 __END__
 # Local Variables:
 # mode: cperl
-# cperl-indent-level: 2
+# cperl-indent-level: 4
 # End:

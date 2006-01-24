@@ -2820,11 +2820,26 @@ sub hosthardest {
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
     my $ftpbin = $CPAN::Config->{ftp};
+    unless (length $ftpbin && MM->maybe_command($ftpbin)) {
+        $CPAN::Frontend->myprint("No external ftp command available\n\n");
+        return;
+    }
+    $CPAN::Frontend->myprint(qq{
+As a last ressort we now switch to the external ftp command '$ftpbin'
+to get '$aslocal'.
+
+Doing so often leads to problems that are hard to diagnose, even endless
+loops may be encountered.
+
+If you're victim of such problems, please consider unsetting the ftp
+config variable with
+
+    o conf ftp ""
+    o conf commit
+
+});
+    $CPAN::Frontend->mysleep(5);
   HOSTHARDEST: for $i (@$host_seq) {
-	unless (length $ftpbin && MM->maybe_command($ftpbin)) {
-	    $CPAN::Frontend->myprint("No external ftp command available\n\n");
-	    last HOSTHARDEST;
-	}
 	my $url = $CPAN::Config->{urllist}[$i] || $CPAN::Defaultsite;
 	$url .= "/" unless substr($url,-1) eq "/";
 	$url .= $file;
