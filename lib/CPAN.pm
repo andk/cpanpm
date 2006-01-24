@@ -738,6 +738,12 @@ sub cwd {Cwd::cwd();}
 #-> sub CPAN::getcwd ;
 sub getcwd {Cwd::getcwd();}
 
+#-> sub CPAN::fastcwd ;
+sub fastcwd {Cwd::fastcwd();}
+
+#-> sub CPAN::backtickcwd ;
+sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
+
 #-> sub CPAN::find_perl ;
 sub find_perl {
     my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
@@ -5993,7 +5999,7 @@ sub as_glimpse {
                      $color_on,
                      $self->id,
                      $color_off,
-		     $self->distribution->pretty_id,
+		     $self->distribution ? $self->distribution->pretty_id : $self->id,
                     );
     join "", @m;
 }
@@ -7235,17 +7241,18 @@ defined:
 
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
-  index_expire       after this many days refetch index files
   cache_metadata     use serializer to cache metadata
   cpan_home          local directory reserved for this package
   dontload_hash      anonymous hash: modules in the keys will not be
                      loaded by the CPAN::has_inst() routine
+  getcwd             see below
   gzip		     location of external program gzip
   histfile           file to maintain history between sessions
   histsize           maximum number of lines to keep in histfile
   inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                      after this many seconds inactivity. Set to 0 to
                      never break.
+  index_expire       after this many days refetch index files
   inhibit_startup_message
                      if true, does not print the startup message
   keep_source_where  directory in which to keep the source (if we do)
@@ -7309,6 +7316,18 @@ shifts or pops the array in the I<list option> variable
 works like the corresponding perl commands.
 
 =back
+
+=head2 Not on config variable getcwd
+
+CPAN.pm changes the current working directory often and needs to
+determine its own current working directory. Per default it uses
+Cwd::cwd but if this doesn't work on your system for some reason,
+alternatives can be configured according to the following table:
+
+    cwd         Cwd::cwd
+    getcwd      Cwd::getcwd
+    fastcwd     Cwd::fastcwd
+    backtickcwd external command cwd
 
 =head2 Note on urllist parameter's format
 
