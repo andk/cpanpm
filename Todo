@@ -3,7 +3,7 @@
 	* Bug: META.yml may contain build_requires which for example File::BOM
 	specifies. It doesn't matter that I believe that it is not a
 	build_requires, it is really a requires because only tests fail, not the
-	build process. But I must merge the two hashes.
+	build process. But I must merge the two hashes. FIXED in rev. 471
 
 	* Foreign bug: YAML with bleadperl fails a test which succeeds with
 	maintperl.
