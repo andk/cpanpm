@@ -154,10 +154,10 @@ DESCRIPTION
       plain text format.
 
     ls author
-    ls globbing_expresion
+    ls globbing_expression
       The first form lists all distribution files in and below an author's
-      CPAN directory as they are stored in the CHECKUMS files distrbute on
-      CPAN.
+      CPAN directory as they are stored in the CHECKUMS files distributed on
+      CPAN. The listing goes recursive into all subdirectories.
 
       The second form allows to limit or expand the output with shell
       globbing as in the following examples:
@@ -168,6 +168,10 @@ DESCRIPTION
 
       The last example is very slow and outputs extra progress indicators
       that break the alignment of the result.
+
+      Note that globbing only lists directories explicitly asked for, for
+      example FOO/* will not list FOO/bar/Acme-Sthg-n.nn.tar.gz. This may be
+      regarded as a bug and may be changed in future versions.
 
     failed
       The "failed" command reports all distributions that failed on one of
@@ -291,7 +295,8 @@ DESCRIPTION
     expandany(@things)
       Like expand, but returns objects of the appropriate type, i.e.
       CPAN::Bundle objects for bundles, CPAN::Module objects for modules and
-      CPAN::Distribution objects fro distributions.
+      CPAN::Distribution objects for distributions. Note: it does not expand
+      to CPAN::Author objects.
 
     Programming Examples
       This enables the programmer to do operations that combine
@@ -723,17 +728,18 @@ CONFIGURATION
 
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
-      index_expire       after this many days refetch index files
       cache_metadata     use serializer to cache metadata
       cpan_home          local directory reserved for this package
       dontload_hash      anonymous hash: modules in the keys will not be
                          loaded by the CPAN::has_inst() routine
+      getcwd             see below
       gzip               location of external program gzip
       histfile           file to maintain history between sessions
       histsize           maximum number of lines to keep in histfile
       inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                          after this many seconds inactivity. Set to 0 to
                          never break.
+      index_expire       after this many days refetch index files
       inhibit_startup_message
                          if true, does not print the startup message
       keep_source_where  directory in which to keep the source (if we do)
@@ -788,6 +794,17 @@ CONFIGURATION
 
     "o conf <list option> [unshift|push|splice] <list>"
       works like the corresponding perl commands.
+
+  Not on config variable getcwd
+    CPAN.pm changes the current working directory often and needs to
+    determine its own current working directory. Per default it uses
+    Cwd::cwd but if this doesn't work on your system for some reason,
+    alternatives can be configured according to the following table:
+
+        cwd         Cwd::cwd
+        getcwd      Cwd::getcwd
+        fastcwd     Cwd::fastcwd
+        backtickcwd external command cwd
 
   Note on urllist parameter's format
     urllist parameters are URLs according to RFC 1738. We do a little
@@ -1007,7 +1024,7 @@ FAQ
         a possible approach:
 
             % mkdir -p $HOME/.cpan/CPAN
-            % echo '$CPAN::Config={ };' > $HOME/.cpan/CPAN/MyConfig.pm
+            % echo '1;' > $HOME/.cpan/CPAN/MyConfig.pm
             % cpan
             [...answer all questions...]
 

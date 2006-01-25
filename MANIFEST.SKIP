@@ -1,6 +1,7 @@
 ,v$
-.svn
-.orig$
+\.svn
+\.orig$
+\.rej$
 \bRCS/
 ^CPAN-.+/.+
 ^CPAN-.+gz$
