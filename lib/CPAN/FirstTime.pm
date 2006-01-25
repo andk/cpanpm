@@ -395,9 +395,10 @@ Shall we use it as the general CPAN build and cache directory?
 
     conf_sites() unless $fastread;
 
-    # We don't ask that now, it will be noticed in time, won't it?
-    $CPAN::Config->{'inhibit_startup_message'} = 0;
-    $CPAN::Config->{'getcwd'} = 'cwd';
+    # We don't ask these now, the defaults are very likely OK.
+    $CPAN::Config->{inhibit_startup_message} = 0;
+    $CPAN::Config->{getcwd}                  = 'cwd';
+    $CPAN::Config->{ftp_passive}             = 1;
 
     $CPAN::Frontend->myprint("\n\n");
     CPAN::HandleConfig->commit($configpm);

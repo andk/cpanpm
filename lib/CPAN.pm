@@ -2521,6 +2521,7 @@ sub localize {
     }
     @levels = qw/easy/ if $^O eq 'MacOS';
     my($levelno);
+    local $ENV{FTP_PASSIVE} = $CPAN::Config->{ftp_passive} if exists $CPAN::Config->{ftp_passive};
     for $levelno (0..$#levels) {
         my $level = $levels[$levelno];
 	my $method = "host$level";
