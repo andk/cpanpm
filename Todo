@@ -4,6 +4,10 @@
 
 	* 4 new bugs from in RT: 17237 17238 17241 17242
 
+	17237 may be fixed with rev. 464 but not yet tested.
+
+	rev. 465 continued to work on 17237 and I consider it fixed now.
+
 	* Bug: setting "o conf dontload_hash ''" breaks the shell:
 
 	Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 833.

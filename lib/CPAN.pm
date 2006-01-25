@@ -2838,7 +2838,7 @@ config variable with
     o conf commit
 
 });
-    $CPAN::Frontend->mysleep(5);
+    $CPAN::Frontend->mysleep(4);
   HOSTHARDEST: for $i (@$host_seq) {
 	my $url = $CPAN::Config->{urllist}[$i] || $CPAN::Defaultsite;
 	$url .= "/" unless substr($url,-1) eq "/";
@@ -2873,12 +2873,21 @@ config variable with
 				$netrc->hasdefault,
 				$netrc->contains($host))) if $CPAN::DEBUG;
 	    if ($netrc->protected) {
+                my $dialog = join "", map { "    $_\n" } @dialog;
+                my $netrc_explain;
+                if ($netrc->contains($host)) {
+                    $netrc_explain = "Relying that your .netrc entry for '$host' ".
+                        "manages the login";
+                } else {
+                    $netrc_explain = "Relying that your default .netrc entry ".
+                        "manages the login";
+                }
 		$CPAN::Frontend->myprint(qq{
   Trying with external ftp to get
     $url
-  As this requires some features that are not thoroughly tested, we\'re
-  not sure, that we get it right....
-
+  $netrc_explain
+  Going to send the dialog
+$dialog
 }
 		     );
 		$self->talk_ftp("$ftpbin$verbose $host",
@@ -2912,6 +2921,14 @@ config variable with
 		"open $host",
 		"user anonymous $Config::Config{'cf_email'}"
 	       );
+        my $dialog = join "", map { "    $_\n" } @dialog;
+        $CPAN::Frontend->myprint(qq{
+  Trying with external ftp to get
+    $url
+  Going to send the dialog
+$dialog
+}
+		     );
 	$self->talk_ftp("$ftpbin$verbose -n", @dialog);
 	($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
 	 $atime,$mtime,$ctime,$blksize,$blocks) = stat($aslocal);
