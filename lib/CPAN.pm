@@ -7635,7 +7635,7 @@ that your root user installed. The following command sequence is a
 possible approach:
 
     % mkdir -p $HOME/.cpan/CPAN
-    % echo '$CPAN::Config={ };' > $HOME/.cpan/CPAN/MyConfig.pm
+    % echo '1;' > $HOME/.cpan/CPAN/MyConfig.pm
     % cpan
     [...answer all questions...]
 

@@ -25,6 +25,8 @@
 
 	rev. 465 continued to work on 17237 and I consider it fixed now.
 
+	rev. 467 fixes 17238
+
 	* Bug: setting "o conf dontload_hash ''" breaks the shell: C<Can't use
 	string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line
 	833.> FIXED in rev 464.
