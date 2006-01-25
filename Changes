@@ -2,7 +2,15 @@
 
 	* release 1.83_59
 
-	
+	* new config variable ftp_passive which causes $ENV{FTP_PASSIVE} to be
+	set; fixes #17266 (Adam Kennedy)
+
+	* have 2 Default Hosts instead of one; fixes rt #17238 (Adam Kennedy)
+
+	* be much more verbose when reaching the last ressort external ftp;
+	fixes rt #17237 and #17241 (Adam Kennedy)
+
+	* give the cwd command more flexibility (stimulated by Ashley M. Kirchner)
 
 2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

@@ -5172,6 +5172,17 @@ sub prereq_pm {
             }
             $req = $areq if $do_replace;
         }
+        if ($yaml->{build_requires}
+            && ref $yaml->{build_requires}
+            && ref $yaml->{build_requires} eq "HASH") {
+            while (my($k,$v) = each %{$yaml->{build_requires}}) {
+                if ($req->{$k}) {
+                    # merging of two "requires"-type values--what should we do?
+                } else {
+                    $req->{$k} = $v;
+                }
+            }
+        }
         if ($req) {
             delete $req->{perl};
         }
