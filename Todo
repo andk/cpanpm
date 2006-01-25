@@ -1,3 +1,12 @@
+2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: with 1.8358 from the core CPAN says after the start
+	"lib/CPAN/Config.pm initialized" and goes into the init dialog. After ^C
+	I find a lib/CPAN/Config.pm file.
+
+	Ahhh, that's how 'o conf commit' had written my dontload_hash: producing
+	a syntax error.
+
 2006-01-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* dontload: make a dontload_list and deprecate dontload_hash

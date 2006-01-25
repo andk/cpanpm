@@ -164,7 +164,7 @@ EOF
     foreach (sort keys %$CPAN::Config) {
 	$fh->print(
 		   "  '$_' => ",
-		   ExtUtils::MakeMaker::neatvalue($CPAN::Config->{$_}),
+		   $self->neatvalue($CPAN::Config->{$_}),
 		   ",\n"
 		  );
     }
@@ -179,7 +179,33 @@ EOF
     1;
 }
 
-*default = \&defaults;
+# stolen from MakeMaker; not taking the original because it is buggy;
+# bugreport will have to say: keys of hashes remain unquoted and can
+# produce syntax errors
+sub neatvalue {
+    my($self, $v) = @_;
+    return "undef" unless defined $v;
+    my($t) = ref $v;
+    return "q[$v]" unless $t;
+    if ($t eq 'ARRAY') {
+        my(@m, @neat);
+        push @m, "[";
+        foreach my $elem (@$v) {
+            push @neat, "q[$elem]";
+        }
+        push @m, join ", ", @neat;
+        push @m, "]";
+        return join "", @m;
+    }
+    return "$v" unless $t eq 'HASH';
+    my(@m, $key, $val);
+    while (($key,$val) = each %$v){
+        last unless defined $key; # cautious programming in case (undef,undef) is true
+        push(@m,"q[$key]=>".$self->neatvalue($val)) ;
+    }
+    return "{ ".join(', ',@m)." }";
+}
+
 sub defaults {
     my($self) = @_;
     my $done;

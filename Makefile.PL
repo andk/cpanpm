@@ -176,6 +176,9 @@ release ::
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
+rundb :
+	$(PERL) -Ilib -MCPAN -deshell
+
 sign:
 	cpansign -s
 
