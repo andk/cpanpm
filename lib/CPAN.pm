@@ -1,5 +1,5 @@
 package CPAN;
-$VERSION = '1.83_58';
+$VERSION = '1.83_59';
 $VERSION = eval $VERSION;
 use strict;
 

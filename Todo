@@ -19,13 +19,20 @@
 
 	* dontload: make a dontload_list and deprecate dontload_hash
 
-	* 4 new bugs from in RT: 17237 17238 17241 17242
+	* 5 new bugs from in RT: 17237 17238 17241 17242 17266
 
 	17237 may be fixed with rev. 464 but not yet tested.
 
 	rev. 465 continued to work on 17237 and I consider it fixed now.
 
 	rev. 467 fixes 17238
+
+	rev. 465 also is an answer to 17241 because this was most likely not a bug
+
+	rev. 469 fixes 17266
+
+	17242 is the request to work with Win32::OLE which I could only reply to
+	with 'patches welcome'
 
 	* Bug: setting "o conf dontload_hash ''" breaks the shell: C<Can't use
 	string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line
