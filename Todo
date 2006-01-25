@@ -1,11 +1,19 @@
 2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: META.yml may contain build_requires which for example File::BOM
+	specifies. It doesn't matter that I believe that it is not a
+	build_requires, it is really a requires because only tests fail, not the
+	build process. But I must merge the two hashes.
+
+	* Foreign bug: YAML with bleadperl fails a test which succeeds with
+	maintperl.
+
 	* Bug: with 1.8358 from the core CPAN says after the start
 	"lib/CPAN/Config.pm initialized" and goes into the init dialog. After ^C
 	I find a lib/CPAN/Config.pm file.
 
 	Ahhh, that's how 'o conf commit' had written my dontload_hash: producing
-	a syntax error.
+	a syntax error. FIXED in  rev. 466
 
 2006-01-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -17,11 +25,9 @@
 
 	rev. 465 continued to work on 17237 and I consider it fixed now.
 
-	* Bug: setting "o conf dontload_hash ''" breaks the shell:
-
-	Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 833.
-
-	Fixed in rev 464.
+	* Bug: setting "o conf dontload_hash ''" breaks the shell: C<Can't use
+	string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line
+	833.> FIXED in rev 464.
 
 2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
