@@ -2720,7 +2720,7 @@ sub hosthard {
 
         # Try the most capable first and leave ncftp* for last as it only 
         # does FTP.
-	for my $f (qw(curl wget lynx ncftpget ncftp)) {
+      DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
           my $funkyftp = $CPAN::Config->{$f};
           next unless defined $funkyftp;
 	  next if $funkyftp =~ /^\s*$/;
@@ -2740,7 +2740,7 @@ sub hosthard {
 	    $src_switch = " -O $asl_ungz";
 	    $stdout_redir = "";
 	  } elsif ($f eq 'curl'){
-	    $src_switch = ' -L';
+	    $src_switch = ' -L -f -s -S --netrc-optional';
 	  }
 
 	  if ($f eq "ncftpget"){
@@ -2755,14 +2755,27 @@ Trying with "$funkyftp$src_switch" to get
 	  my($system) =
 	      "$chdir$funkyftp$src_switch \"$url\" $devnull$stdout_redir";
 	  $self->debug("system[$system]") if $CPAN::DEBUG;
-	  my($wstatus);
-	  if (($wstatus = system($system)) == 0
-	      &&
-	      ($f eq "lynx" ?
-	       -s $asl_ungz # lynx returns 0 when it fails somewhere
-	       : 1
-	      )
-	     ) {
+	  my($wstatus) = system($system);
+          if ($f eq "lynx") {
+              # lynx returns 0 when it fails somewhere
+              if (-s $asl_ungz) {
+                  my $content = do { open my $fh, $asl_ungz or die; local $/; <$fh> };
+                  if ($content =~ /^<.*<title>[45]/si) {
+                      $CPAN::Frontend->myprint(qq{
+No success, the file that lynx has has downloaded looks like an error message:
+$content
+});
+                      $CPAN::Frontend->mysleep(1);
+                      next DLPRG;
+                  }
+              } else {
+                  $CPAN::Frontend->myprint(qq{
+No success, the file that lynx has has downloaded is an empty file.
+});
+                  next DLPRG;
+              }
+          }
+	  if ($wstatus == 0) {
 	    if (-s $aslocal) {
 	      # Looks good
 	    } elsif ($asl_ungz ne $aslocal) {

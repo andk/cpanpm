@@ -1,7 +1,8 @@
 2006-01-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: illegal entries in the Config hash are never removed and a hash
-	cannot be emptied. The latter is fixed with rev. 475.
+	cannot be emptied. The latter is fixed with rev. 475, the former with
+	rev. 476.
 
 	* Bug (Tyler MacDonald): OK, I've figured out what went wrong: 0.27_06
 	isn't on www.cpan.org/pub/CPAN yet. However, *how* it went wrong is
@@ -9,6 +10,10 @@
 	ended up with a .tar.gz and .tar file, and CPAN thinking it had actually
 	downloaded something. This looks like a bug in CPAN.pm, both in the 1.7
 	version that's distributed with 5.8.7, and the latest release, 1.83.
+
+	In my environment, this comes from curl. After fixing the curl switches,
+	the problem persists. This time is lynx to blame, but for lynx there is
+	no commandline switch that propagates a 404 to a false.
 
 2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
