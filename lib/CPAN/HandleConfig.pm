@@ -80,6 +80,7 @@ sub edit {
             }
             return $changed;
         } elsif ($o =~ /_hash$/) {
+            @args = () if @args==1 && $args[0] eq "";
             push @args, "" if @args % 2;
             $CPAN::Config->{$o} = { @args };
         } else {
