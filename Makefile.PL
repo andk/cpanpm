@@ -174,6 +174,9 @@ release ::
 	rm -rf $(DISTVNAME)
 	svn cp -m 'This is $(VERSION)' https://pause.perl.org:5460/svn/cpanpm/trunk https://pause.perl.org:5460/svn/cpanpm/tags/$(VERSION)
 
+checkout ::
+	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
+
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 

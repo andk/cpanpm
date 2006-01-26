@@ -1,5 +1,23 @@
 2006-01-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Locking: Linda W writes
+
+	>I'm not sure I understand the reason for the lock file
+	>placed in cpan_home.  If I have two different architectures
+	>with different build directories, I'm not sure I understand
+	>where the conflict is -- is it in storing/listing Bundles,
+	>the history file, the Metafile or the shared source?
+	
+	>I can understand private history, but the Bundles aren't
+	>updated often, the sources should be fairly static (unless
+	>new files are downloaded), The metafile would be updated about
+	>once a day (default).
+	
+	>If the build directories are separate, why would there be a
+	>need for locking more in interactive use vs. batch use?
+
+	And I promise to try out a more granular locking mechanism.
+
 	* Bug: illegal entries in the Config hash are never removed and a hash
 	cannot be emptied. The latter is fixed with rev. 475, the former with
 	rev. 476.
@@ -13,7 +31,9 @@
 
 	In my environment, this comes from curl. After fixing the curl switches,
 	the problem persists. This time is lynx to blame, but for lynx there is
-	no commandline switch that propagates a 404 to a false.
+	no commandline switch that propagates a 404 to a false. So we now read
+	the file that lynx sends us and heuristically decide if it is an error
+	message. FIXED in revision 477.
 
 2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
