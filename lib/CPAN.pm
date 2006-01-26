@@ -7698,18 +7698,17 @@ on first try?
 
 The reason for this is that CPAN does not know the dependencies of all
 modules when it starts out. To decide about the additional items to
-install, it just uses data found in the generated Makefile. An
-undetected missing piece breaks the process. But it may well be that
-your Bundle installs some prerequisite later than some depending item
-and thus your second try is able to resolve everything. Please note,
-CPAN.pm does not know the dependency tree in advance and cannot sort
-the queue of things to install in a topologically correct order. It
-resolves perfectly well IFF all modules declare the prerequisites
-correctly with the PREREQ_PM attribute to MakeMaker. For bundles which
-fail and you need to install often, it is recommended to sort the Bundle
-definition file manually. It is planned to improve the metadata
-situation for dependencies on CPAN in general, but this will still
-take some time.
+install, it just uses data found in the META.yml file or the generated
+Makefile. An undetected missing piece breaks the process. But it may
+well be that your Bundle installs some prerequisite later than some
+depending item and thus your second try is able to resolve everything.
+Please note, CPAN.pm does not know the dependency tree in advance and
+cannot sort the queue of things to install in a topologically correct
+order. It resolves perfectly well IF all modules declare the
+prerequisites correctly with the PREREQ_PM attribute to MakeMaker or
+the C<requires> stanza of Module::Build. For bundles which fail and
+you need to install often, it is recommended to sort the Bundle
+definition file manually.
 
 =item 8)
 
@@ -7721,13 +7720,14 @@ Have a look at the CPAN::Site module.
 
 =item 9)
 
-When I run CPAN's shell, I get error msg about line 1 to 4,
-setting meta input/output via the /etc/inputrc file.
+When I run CPAN's shell, I get an error message about things in my
+/etc/inputrc (or ~/.inputrc) file.
 
-Some versions of readline are picky about capitalization in the
-/etc/inputrc file and specifically RedHat 6.2 comes with a
-/etc/inputrc that contains the word C<on> in lowercase. Change the
-occurrences of C<on> to C<On> and the bug should disappear.
+These are readline issues and can only be fixed by studying readline
+configuration on your architecture and adjusting the referenced file
+accordingly. Please make a backup of the /etc/inputrc or ~/.inputrc
+and edit them. Quite often harmless changes like uppercasing or
+lowercasing some arguments solves the problem.
 
 =item 10)
 
@@ -7738,10 +7738,11 @@ expecting ISO-8859-1 charset, a converter can be activated by setting
 term_is_latin to a true value in your config file. One way of doing so
 would be
 
-    cpan> ! $CPAN::Config->{term_is_latin}=1
+    cpan> o conf term_is_latin 1
 
-Extended support for converters will be made available as soon as perl
-becomes stable with regard to charset issues.
+If other charset support is needed, please file a bugreport against
+CPAN.pm at rt.cpan.org and describe your needs. Maybe we can extend
+the support or maybe UTF-8 terminals become widely available.
 
 =item 11)
 
@@ -7774,9 +7775,7 @@ Or you leave the CPAN shell and start it again.
 
 For the really curious, by accessing internals directly, you I<could>
 
-  ! delete  CPAN::Shell->expand("Distribution", \
-    CPAN::Shell->expand("Module","Foo::Bar") \
-    ->cpan_file)->{install}
+  !delete CPAN::Shell->expandany("Foo::Bar")->distribution->{install}
 
 but this is neither guaranteed to work in the future nor is it a
 decent command.
