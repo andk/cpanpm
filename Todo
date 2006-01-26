@@ -1,7 +1,7 @@
 2006-01-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: illegal entries in the Config hash are never removed and a hash
-	cannot be emptied.
+	cannot be emptied. The latter is fixed with rev. 475.
 
 	* Bug (Tyler MacDonald): OK, I've figured out what went wrong: 0.27_06
 	isn't on www.cpan.org/pub/CPAN yet. However, *how* it went wrong is

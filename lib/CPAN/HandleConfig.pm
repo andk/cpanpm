@@ -163,6 +163,11 @@ EOF
         $CPAN::Frontend->mydie("Couldn't open >$configpm: $!");
     $fh->print(qq[$msg\$CPAN::Config = \{\n]);
     foreach (sort keys %$CPAN::Config) {
+        unless (exists $keys{$_}) {
+            $CPAN::Frontend->mywarn("Dropping unknown config variable '$_'\n");
+            delete $CPAN::Config->{$_};
+            next;
+        }
 	$fh->print(
 		   "  '$_' => ",
 		   $self->neatvalue($CPAN::Config->{$_}),
