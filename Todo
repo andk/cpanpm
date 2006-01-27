@@ -1,5 +1,8 @@
 2006-01-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Foreign bug: Email::Field or which module was it that just produced
+	more than 1000000 eval warnings?
+
 	* bug: if a META.yml specifies a prerequisite module that we do not
 	know, the whole prereq_pm became undef. FIXED in rev. 480.
 

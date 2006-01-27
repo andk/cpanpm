@@ -7368,6 +7368,7 @@ defined:
   unzip              location of external program unzip
   urllist	     arrayref to nearby CPAN sites (or equivalent locations)
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
+  ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
   ftp_proxy,      }  the three usual variables for configuring
     http_proxy,   }  proxy requests. Both as CPAN::Config variables
     no_proxy      }  and as environment variables configurable.
@@ -7480,6 +7481,13 @@ one-liners.
 When the CPAN shell enters a subshell via the look command, it sets
 the environment CPAN_SHELL_LEVEL to 1 or increments it if it is
 already set.
+
+When the config variable ftp_passive is set, all downloads will be run
+with the environment variable FTP_PASSIVE set to this value. This is
+in general a good idea. The same effect can be achieved by starting
+the cpan shell with the environment variable. If Net::FTP is
+installed, then it can also be configured to always set passive mode
+(run libnetcfg).
 
 =head1 POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
