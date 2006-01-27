@@ -4047,8 +4047,13 @@ sub color_cmd_tmps {
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
-        for my $pre (keys %$prereq_pm) {
-            my $premo = CPAN::Shell->expand("Module",$pre);
+      PREREQ: for my $pre (keys %$prereq_pm) {
+            my $premo;
+            unless ($premo = CPAN::Shell->expand("Module",$pre)) {
+                $CPAN::Frontend->mywarn("prerequisite module[$pre] not known\n");
+                $CPAN::Frontend->mysleep(2);
+                next PREREQ;
+            }
             $premo->color_cmd_tmps($depth+1,$color,[@$ancestors, $self->id]);
         }
     }
@@ -4794,7 +4799,7 @@ sub force {
   my($self, $method) = @_;
   for my $att (qw(
   CHECKSUM_STATUS archived build_dir localfile make install unwrapped
-  writemakefile
+  writemakefile modulebuild
  )) {
     delete $self->{$att};
   }
@@ -5132,6 +5137,7 @@ sub read_yaml {
     return $self->{yaml_content} if exists $self->{yaml_content};
     my $build_dir = $self->{build_dir};
     my $yaml = File::Spec->catfile($build_dir,"META.yml");
+    $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
     if ($CPAN::META->has_inst("YAML")) {
         eval { $self->{yaml_content} = YAML::LoadFile($yaml); };
@@ -5140,6 +5146,7 @@ sub read_yaml {
             return;
         }
     }
+    $self->debug("yaml_content[$self->{yaml_content}]") if $CPAN::DEBUG;
     return $self->{yaml_content};
 }
 
