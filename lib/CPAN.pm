@@ -1704,22 +1704,42 @@ sub failed {
         my $failed = "";
         for my $nosayer (qw(signature_verify make make_test install)) {
             next unless exists $d->{$nosayer};
-            next unless $d->{$nosayer}->failed;
+            next unless (
+                         $d->{$nosayer}->can("failed") ?
+                         $d->{$nosayer}->failed :
+                         $d->{$nosayer} =~ /^NO/
+                        );
             $failed = $nosayer;
             last;
         }
         next DIST unless $failed;
-        next DIST if $only_id && $only_id != $d->{$failed}->commandid;
+        next DIST if $only_id && $only_id != (
+                                              $d->{$failed}->can("commandid")
+                                              ?
+                                              $d->{$failed}->commandid
+                                              :
+                                              $CPAN::CurrentCommandId
+                                             );
         my $id = $d->id;
         $id =~ s|^./../||;
         #$print .= sprintf(
         #                  "  %-45s: %s %s\n",
-        push @failed, [
-                       $d->{$failed}->commandid,
-                       $id,
-                       $failed,
-                       $d->{$failed}->text,
-                      ];
+        push @failed,
+            (
+             $d->{$failed}->can("failed") ?
+             [
+              $d->{$failed}->commandid,
+              $id,
+              $failed,
+              $d->{$failed}->text,
+             ] :
+             [
+              1,
+              $id,
+              $failed,
+              $d->{$failed},
+             ]
+            );
     }
     my $scope = $only_id ? "command" : "session";
     if (@failed) {
@@ -4898,7 +4918,11 @@ or
         "Had problems unarchiving. Please build manually";
 
         unless ($self->{force_update}) {
-            exists $self->{signature_verify} and $self->{signature_verify}->failed
+            exists $self->{signature_verify} and (
+                         $self->{signature_verify}->can("failed") ?
+                         $self->{signature_verify}->failed :
+                         $self->{signature_verify} =~ /^NO/
+                        )
                 and push @e, "Did not pass the signature test.";
         }
 
@@ -5278,9 +5302,12 @@ sub test {
 	exists $self->{make} or exists $self->{later} or push @e,
 	"Make had some problems, maybe interrupted? Won't test";
 
-	exists $self->{'make'} and
-	    $self->{'make'}->failed and
-		push @e, "Can't test without successful make";
+	exists $self->{make} and
+	    (
+             $self->{make}->can("failed") ?
+             $self->{make}->failed :
+             $self->{make} =~ /^NO/
+            ) and push @e, "Can't test without successful make";
 
 	exists $self->{build_dir} or push @e, "Has no own directory";
         $self->{badtestcnt} ||= 0;
@@ -5404,12 +5431,20 @@ sub install {
 	exists $self->{make} or exists $self->{later} or push @e,
 	"Make had some problems, maybe interrupted? Won't install";
 
-	exists $self->{'make'} and
-	    $self->{'make'}->failed and
+	exists $self->{make} and
+	    (
+             $self->{make}->can("failed") ?
+             $self->{make}->failed :
+             $self->{make} =~ /^NO/
+            ) and
 		push @e, "make had returned bad status, install seems impossible";
 
         if (exists $self->{make_test} and
-	    $self->{make_test}->failed){
+	    (
+             $self->{make_test}->can("failed") ?
+             $self->{make_test}->failed :
+             $self->{make_test} =~ /^NO/
+            )){
 	    if ($self->{force_update}) {
                 $self->{make_test}->text("FAILED but failure ignored because ".
                                          "'force' in effect");

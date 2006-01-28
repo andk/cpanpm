@@ -1,3 +1,7 @@
+2006-01-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Feature request: integrate more than one source into a common index.
+
 2006-01-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Foreign bug: Email::Field or which module was it that just produced
