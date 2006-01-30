@@ -324,8 +324,12 @@ Shall we use it as the general CPAN build and cache directory?
 
     my_dflt_prompt(make_arg => "", $matcher);
 
-    my_dflt_prompt(make_install_make_command => $CPAN::Config->{make} || "",
-		   $matcher);
+    unless ($^O eq "MSWin32") {
+        # as long as Windows needs $self->_build_command, we cannot
+        # support sudo on windows :-)
+        my_dflt_prompt(make_install_make_command => $CPAN::Config->{make} || "",
+                       $matcher);
+    }
 
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "", 
 		   $matcher);
@@ -337,7 +341,11 @@ Shall we use it as the general CPAN build and cache directory?
 
     my_dflt_prompt(mbuild_arg => "", $matcher);
 
-    my_dflt_prompt(mbuild_install_build_command => "./Build", $matcher);
+    unless ($^O eq "MSWin32") {
+        # as long as Windows needs $self->_build_command, we cannot
+        # support sudo on windows :-)
+        my_dflt_prompt(mbuild_install_build_command => "./Build", $matcher);
+    }
 
     my_dflt_prompt(mbuild_install_arg => "", $matcher);
 

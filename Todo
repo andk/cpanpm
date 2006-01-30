@@ -1,16 +1,9 @@
-2006-01-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours.
 
 	* Feature request: integrate more than one source into a common index.
-
-2006-01-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Foreign bug: Email::Field or which module was it that just produced
-	more than 1000000 eval warnings?
-
-	* bug: if a META.yml specifies a prerequisite module that we do not
-	know, the whole prereq_pm became undef. FIXED in rev. 480.
-
-2006-01-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Locking: Linda W writes
 
@@ -30,64 +23,7 @@
 
 	And I promise to try out a more granular locking mechanism.
 
-	* Bug: illegal entries in the Config hash are never removed and a hash
-	cannot be emptied. The latter is fixed with rev. 475, the former with
-	rev. 476.
-
-	* Bug (Tyler MacDonald): OK, I've figured out what went wrong: 0.27_06
-	isn't on www.cpan.org/pub/CPAN yet. However, *how* it went wrong is
-	truly bizzare: LWP returned a "404 not found" error, yet somehow I still
-	ended up with a .tar.gz and .tar file, and CPAN thinking it had actually
-	downloaded something. This looks like a bug in CPAN.pm, both in the 1.7
-	version that's distributed with 5.8.7, and the latest release, 1.83.
-
-	In my environment, this comes from curl. After fixing the curl switches,
-	the problem persists. This time is lynx to blame, but for lynx there is
-	no commandline switch that propagates a 404 to a false. So we now read
-	the file that lynx sends us and heuristically decide if it is an error
-	message. FIXED in revision 477.
-
-2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: META.yml may contain build_requires which for example File::BOM
-	specifies. It doesn't matter that I believe that it is not a
-	build_requires, it is really a requires because only tests fail, not the
-	build process. But I must merge the two hashes. FIXED in rev. 471
-
-	* Foreign bug: YAML with bleadperl fails a test which succeeds with
-	maintperl.
-
-	* Bug: with 1.8358 from the core CPAN says after the start
-	"lib/CPAN/Config.pm initialized" and goes into the init dialog. After ^C
-	I find a lib/CPAN/Config.pm file.
-
-	Ahhh, that's how 'o conf commit' had written my dontload_hash: producing
-	a syntax error. FIXED in  rev. 466
-
-2006-01-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* dontload: make a dontload_list and deprecate dontload_hash
-
-	* 5 new bugs from in RT: 17237 17238 17241 17242 17266
-
-	17237 may be fixed with rev. 464 but not yet tested.
-
-	rev. 465 continued to work on 17237 and I consider it fixed now.
-
-	rev. 467 fixes 17238
-
-	rev. 465 also is an answer to 17241 because this was most likely not a bug
-
-	rev. 469 fixes 17266
-
-	17242 is the request to work with Win32::OLE which I could only reply to
-	with 'patches welcome'
-
-	* Bug: setting "o conf dontload_hash ''" breaks the shell: C<Can't use
-	string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line
-	833.> FIXED in rev 464.
-
-2006-01-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution
@@ -124,7 +60,81 @@
 	options
 
 	* hr ================ no todos below this line ================ /hr
-	
+
+	* Revisit 17313: Module::Build people have promised to write a
+	./Build.bat file instead of a ./Build file on Windows. Until this
+	becomes true, hide mbuild_install_build_command from Windows users.
+
+2006-01-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign bug: broke perl again YAML? blead@26994 fails on test
+	dump-perl-types.t of YAML-0.53. Wrote blame report about 26980--DONE
+
+2006-01-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign bug: Email::Field or which module was it that just produced
+	more than 1000000 eval warnings? Cannot reproduce.
+
+	* bug: if a META.yml specifies a prerequisite module that we do not
+	know, the whole prereq_pm became undef. FIXED in rev. 480.
+
+2006-01-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: illegal entries in the Config hash are never removed and a hash
+	cannot be emptied. The latter is FIXED with rev. 475, the former with
+	rev. 476.
+
+	* Bug (Tyler MacDonald): OK, I've figured out what went wrong: 0.27_06
+	isn't on www.cpan.org/pub/CPAN yet. However, *how* it went wrong is
+	truly bizzare: LWP returned a "404 not found" error, yet somehow I still
+	ended up with a .tar.gz and .tar file, and CPAN thinking it had actually
+	downloaded something. This looks like a bug in CPAN.pm, both in the 1.7
+	version that's distributed with 5.8.7, and the latest release, 1.83.
+
+	In my environment, this comes from curl. After fixing the curl switches,
+	the problem persists. This time is lynx to blame, but for lynx there is
+	no commandline switch that propagates a 404 to a false. So we now read
+	the file that lynx sends us and heuristically decide if it is an error
+	message. FIXED in revision 477.
+
+2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: META.yml may contain build_requires which for example File::BOM
+	specifies. It doesn't matter that I believe that it is not a
+	build_requires, it is really a requires because only tests fail, not the
+	build process. But I must merge the two hashes. FIXED in rev. 471
+
+	* Foreign bug: YAML with bleadperl fails a test which succeeds with
+	maintperl. REPORTED
+
+	* Bug: with 1.8358 from the core CPAN says after the start
+	"lib/CPAN/Config.pm initialized" and goes into the init dialog. After ^C
+	I find a lib/CPAN/Config.pm file.
+
+	Ahhh, that's how 'o conf commit' had written my dontload_hash: producing
+	a syntax error. FIXED in  rev. 466
+
+2006-01-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* 5 new bugs from in RT: 17237 17238 17241 17242 17266
+
+	17237 may be fixed with rev. 464 but not yet tested.
+
+	rev. 465 continued to work on 17237 and I consider it fixed now.
+
+	rev. 467 fixes 17238
+
+	rev. 465 also is an answer to 17241 because this was most likely not a bug
+
+	rev. 469 fixes 17266
+
+	17242 is the request to work with Win32::OLE which I could only reply to
+	with 'patches welcome'
+
+	* Bug: setting "o conf dontload_hash ''" breaks the shell: C<Can't use
+	string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line
+	833.> FIXED in rev 464.
+
 2006-01-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* see if podlators 2.0.1 fixes the broken README and if so, switch back

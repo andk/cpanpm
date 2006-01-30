@@ -1,5 +1,5 @@
 package CPAN;
-$VERSION = '1.83_59';
+$VERSION = '1.83_60';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -5028,7 +5028,7 @@ or
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
     if ($self->{modulebuild}) {
-        $system = "./Build $CPAN::Config->{mbuild_arg}";
+        $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
     } else {
         $system = join " ", _make_command(), $CPAN::Config->{make_arg};
     }
@@ -5336,7 +5336,7 @@ sub test {
     $CPAN::META->set_perl5lib;
     my $system;
     if ($self->{modulebuild}) {
-        $system = "./Build test";
+        $system = sprintf "%s test", $self->_build_command();
     } else {
         $system = join " ", _make_command(), "test";
     }
@@ -5377,7 +5377,7 @@ sub clean {
 
     my $system;
     if ($self->{modulebuild}) {
-        $system = "./Build clean";
+        $system = sprintf "%s clean", $self->_build_command();
     } else {
         $system  = join " ", _make_command(), "clean";
     }
@@ -5475,20 +5475,18 @@ sub install {
     my $system;
     if ($self->{modulebuild}) {
         my($mbuild_install_build_command) = $CPAN::Config->{'mbuild_install_build_command'} ||
-            "./Build";
-        $system = join(" ",
-                       $mbuild_install_build_command,
-                       "install",
-                       $CPAN::Config->{mbuild_install_arg},
-                      );
+            $self->_build_command();
+        $system = sprintf("%s install %s",
+                          $mbuild_install_build_command,
+                          $CPAN::Config->{mbuild_install_arg},
+                         );
     } else {
         my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
             _make_command();
-        $system = join(" ",
-                       $make_install_make_command,
-                       "install",
-                       $CPAN::Config->{make_install_arg},
-                      );
+        $system = sprintf("%s install %s",
+                          $make_install_make_command,
+                          $CPAN::Config->{make_install_arg},
+                         );
     }
 
     my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
@@ -5703,6 +5701,18 @@ sub _getsave_url {
         $CPAN::Frontend->myprint("LWP not available\n");
         return;
     }
+}
+
+# sub CPAN::Distribution::_build_command
+sub _build_command {
+    my($self) = @_;
+    if ($^O eq "MSWin32") { # special code needed at least up to
+                            # Module::Build 0.2611 and 0.2706; a fix
+                            # in M:B has been promised 2006-01-30
+        my($perl) = $self->perl or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
+        return "$perl ./Build";
+    }
+    return "./Build";
 }
 
 package CPAN::Bundle;

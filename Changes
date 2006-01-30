@@ -1,3 +1,23 @@
+2006-01-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_60
+
+	* feature: 'o conf commit' now drops unknown config variables
+
+	* bugfix for very rare cases: do not use CPAN::Distrostatus object
+	methods on strings left over from the current session before a 'cpan
+	reload' introduces the CPAN::Distrostatus class
+
+	* bugfix: better switches for the call to curl
+
+	* bugfix: more checks after lynx if the command was successful or not
+
+	* docs: revisited the FAQ section
+
+	* bugfix: if a META.yml specified a prerequisite module that we do not
+	know, the whole prereq_pm became undef; now issues a warning and skips
+	the unknown thing
+
 2006-01-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_59
