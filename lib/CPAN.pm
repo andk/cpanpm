@@ -245,7 +245,7 @@ use File::Find;
 
 package CPAN::FTP;
 use strict;
-use vars qw($Ua $Thesite $Themethod);
+use vars qw($Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 package CPAN::LWP::UserAgent;
@@ -2526,11 +2526,11 @@ sub localize {
 		    <=>
 		(substr($CPAN::Config->{urllist}[$a],0,4) eq "file")
 		    or
-		defined($Thesite)
+		defined($ThesiteURL)
 		    and
-                ($CPAN::Config->{urllist}[$b] eq $Thesite)
+                ($CPAN::Config->{urllist}[$b] eq $ThesiteURL)
 		    <=>
-                ($CPAN::Config->{urllist}[$a] eq $Thesite)
+                ($CPAN::Config->{urllist}[$a] eq $ThesiteURL)
 	    } 0..$last;
     }
     my(@levels);
@@ -2614,7 +2614,7 @@ sub hosteasy {
 		$self->debug("without URI::URL we try local file $l") if $CPAN::DEBUG;
 	    }
 	    if ( -f $l && -r _) {
-		$Thesite = $ro_url;
+		$ThesiteURL = $ro_url;
 		return $l;
 	    }
 	    # Maybe mirror has compressed it?
@@ -2622,7 +2622,7 @@ sub hosteasy {
 		$self->debug("found compressed $l.gz") if $CPAN::DEBUG;
 		CPAN::Tarzip->new("$l.gz")->gunzip($aslocal);
 		if ( -f $aslocal) {
-		    $Thesite = $ro_url;
+		    $ThesiteURL = $ro_url;
 		    return $aslocal;
 		}
 	    }
@@ -2640,7 +2640,7 @@ sub hosteasy {
 	  }
 	  my $res = $Ua->mirror($url, $aslocal);
 	  if ($res->is_success) {
-	    $Thesite = $ro_url;
+	    $ThesiteURL = $ro_url;
 	    my $now = time;
 	    utime $now, $now, $aslocal; # download time is more
                                         # important than upload time
@@ -2654,7 +2654,7 @@ sub hosteasy {
 	    if ($res->is_success &&
 		CPAN::Tarzip->new("$aslocal.gz")->gunzip($aslocal)
 	       ) {
-	      $Thesite = $ro_url;
+	      $ThesiteURL = $ro_url;
 	      return $aslocal;
 	    }
 	  } else {
@@ -2682,7 +2682,7 @@ sub hosteasy {
 		$self->debug("getfile[$getfile]dir[$dir]host[$host]" .
 			     "aslocal[$aslocal]") if $CPAN::DEBUG;
 		if (CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal)) {
-		    $Thesite = $ro_url;
+		    $ThesiteURL = $ro_url;
 		    return $aslocal;
 		}
 		if ($aslocal !~ /\.gz(?!\n)\Z/) {
@@ -2696,7 +2696,7 @@ sub hosteasy {
                                            $gz) &&
 			CPAN::Tarzip->new($gz)->gunzip($aslocal)
 		       ){
-			$Thesite = $ro_url;
+			$ThesiteURL = $ro_url;
 			return $aslocal;
 		    }
 		}
@@ -2807,7 +2807,7 @@ No success, the file that lynx has has downloaded is an empty file.
                   CPAN::Tarzip->new($asl_gz)->gzip($asl_ungz);
 	      }
 	    }
-	    $Thesite = $ro_url;
+	    $ThesiteURL = $ro_url;
 	    return $aslocal;
 	  } elsif ($url !~ /\.gz(?!\n)\Z/) {
 	    unlink $asl_ungz if
@@ -2834,7 +2834,7 @@ Trying with "$funkyftp$src_switch" to get
                   # somebody uncompressed file for us?
                   rename $asl_ungz, $aslocal;
 	      }
-	      $Thesite = $ro_url;
+	      $ThesiteURL = $ro_url;
 	      return $aslocal;
 	    } else {
 	      unlink $asl_gz if -f $asl_gz;
@@ -2937,7 +2937,7 @@ $dialog
 		$mtime ||= 0;
 		if ($mtime > $timestamp) {
 		    $CPAN::Frontend->myprint("GOT $aslocal\n");
-		    $Thesite = $ro_url;
+		    $ThesiteURL = $ro_url;
 		    return $aslocal;
 		} else {
 		    $CPAN::Frontend->myprint("Hmm... Still failed!\n");
@@ -2975,7 +2975,7 @@ $dialog
 	$mtime ||= 0;
 	if ($mtime > $timestamp) {
 	    $CPAN::Frontend->myprint("GOT $aslocal\n");
-	    $Thesite = $ro_url;
+	    $ThesiteURL = $ro_url;
 	    return $aslocal;
 	} else {
 	    $CPAN::Frontend->myprint("Bad luck... Still failed!\n");

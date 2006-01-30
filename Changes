@@ -1,6 +1,10 @@
-2006-01-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_60
+
+	* bugfix: Do not use ./Build directly on Windows, it must be called
+	together with the perl (fixes #17313; thanks to carl at fireartist for
+	the report and a patch skeleton)
 
 	* feature: 'o conf commit' now drops unknown config variables
 
