@@ -19,7 +19,7 @@ if ($HAVE_FILE_SPEC) {
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     die "Your MakeMaker is a bit dated[$]].\nDo not make a release with it\n"
-        if $ExtUtils::MakeMaker::VERSION < 6.30;
+        if $ExtUtils::MakeMaker::VERSION+0 < 6.30;
     die "Your MakeMaker doesn't do the sign woodoo" unless
         MM->can("signature_target");
     shift @ARGV;
@@ -149,15 +149,14 @@ README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
-chlog :: chlog-svn chlog-xml chlog-trad
+chlog :: chlog-svn chlog-trad
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
-	-LC_ALL=$(LC_ALL) svn log -v -r `svnversion . | perl -ne '/(?:\d+:)?(\d+)[SM]*$$/&&print $$1'`:1 > ChangeLog.svn
-	-cat ChangeLog.local >> ChangeLog.svn
+	-LC_ALL=$(LC_ALL) svn log -v https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog.svn
 
 chlog-trad :
-	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day > ChangeLog
+	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog
 
 # for debugging
 chlog-xml :
