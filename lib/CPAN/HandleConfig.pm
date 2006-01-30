@@ -29,6 +29,10 @@ $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
     unzip urllist
     wait_list wget
 );
+if ($^O eq "MSWin32") {
+    delete $keys{mbuild_install_build_command};
+    delete $keys{make_install_make_command};
+}
 
 # returns true on successful action
 sub edit {
@@ -358,6 +362,7 @@ sub missing_config_data {
          "unzip",
          "urllist",
         ) {
+        next unless exists $keys{$_};
 	push @miss, $_ unless defined $CPAN::Config->{$_};
     }
     return @miss;
