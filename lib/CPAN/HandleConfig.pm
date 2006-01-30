@@ -30,8 +30,17 @@ $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
     wait_list wget
 );
 if ($^O eq "MSWin32") {
-    delete $keys{mbuild_install_build_command};
-    delete $keys{make_install_make_command};
+    for my $k (qw(
+                  mbuild_install_build_command
+                  make_install_make_command
+                 )) {
+        delete $keys{$k};
+        if (exists $CPAN::Config->{$k}) {
+            $CPAN::Frontend->mywarn("deleting previously set config variable ".
+                                    "'$k' => '$CPAN::Config->{$k}'");
+            delete $CPAN::Config->{$k};
+        }
+    }
 }
 
 # returns true on successful action
