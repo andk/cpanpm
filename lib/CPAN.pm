@@ -5474,8 +5474,11 @@ sub install {
 
     my $system;
     if ($self->{modulebuild}) {
-        my($mbuild_install_build_command) = $CPAN::Config->{'mbuild_install_build_command'} ||
-            $self->_build_command();
+        my($mbuild_install_build_command) =
+            exists $CPAN::HandleConfig::keys{mbuild_install_build_command} &&
+                $CPAN::Config->{mbuild_install_build_command} ?
+                    $CPAN::Config->{mbuild_install_build_command} :
+                        $self->_build_command();
         $system = sprintf("%s install %s",
                           $mbuild_install_build_command,
                           $CPAN::Config->{mbuild_install_arg},
