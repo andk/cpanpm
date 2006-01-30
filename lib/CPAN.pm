@@ -1,3 +1,4 @@
+# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
 $VERSION = '1.83_60';
 $VERSION = eval $VERSION;
@@ -5501,29 +5502,29 @@ sub install {
     }
     $pipe->close;
     if ($?==0) {
-	 $CPAN::Frontend->myprint("  $system -- OK\n");
-	 $CPAN::META->is_installed($self->{'build_dir'});
-	 return $self->{'install'} = CPAN::Distrostatus->new("YES");
+        $CPAN::Frontend->myprint("  $system -- OK\n");
+        $CPAN::META->is_installed($self->{build_dir});
+        return $self->{install} = CPAN::Distrostatus->new("YES");
     } else {
-	 $self->{'install'} = CPAN::Distrostatus->new("NO");
-	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
-	 if (
-             $makeout =~ /permission/s
-             && $> > 0
-             && (
-                 ! $CPAN::Config->{make_install_make_command}
-                 || $CPAN::Config->{make_install_make_command} eq $CPAN::Config->{make}
-                )
-            ) {
-             $CPAN::Frontend->myprint(
-                                      qq{----\n}.
-                                      qq{  You may have to su }.
-                                      qq{to root to install the package\n}.
-                                      qq{  (Or you may want to run something like\n}.
-                                      qq{    o conf make_install_make_command 'sudo make'\n}.
-                                      qq{  to raise your permissions.}
-                                     );
-	 }
+        $self->{install} = CPAN::Distrostatus->new("NO");
+        $CPAN::Frontend->myprint("  $system -- NOT OK\n");
+        if (
+            $makeout =~ /permission/s
+            && $> > 0
+            && (
+                ! $CPAN::Config->{make_install_make_command}
+                || $CPAN::Config->{make_install_make_command} eq $CPAN::Config->{make}
+               )
+           ) {
+            $CPAN::Frontend->myprint(
+                                     qq{----\n}.
+                                     qq{  You may have to su }.
+                                     qq{to root to install the package\n}.
+                                     qq{  (Or you may want to run something like\n}.
+                                     qq{    o conf make_install_make_command 'sudo make'\n}.
+                                     qq{  to raise your permissions.}
+                                    );
+        }
     }
     delete $self->{force_update};
 }
@@ -7868,9 +7869,3 @@ http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
 cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
 =cut
-
-# Local Variables:
-# coding: utf-8;
-# mode: cperl
-# cperl-indent-level: 4
-# End:
