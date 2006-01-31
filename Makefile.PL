@@ -139,7 +139,7 @@ package MY;
 
 sub macro {
     q{
-LC_ALL=en_GB.utf8
+LC_ALL_noexport=en_GB.utf8
 }
 }
 
@@ -156,7 +156,7 @@ chlog :: chlog-svn chlog-trad
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
-	-LC_ALL=$(LC_ALL) svn log -v https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog.svn
+	-LC_ALL=$(LC_ALL_noexport) svn log -v https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog.svn
 
 chlog-trad :
 	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog
