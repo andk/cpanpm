@@ -5,41 +5,6 @@
 	cannot 'reload cpan' when they started the shell from cpan.bat, only
 	when they used 'perl -MCPAN -eshell' (David Golden)
 
-	* Bug: with bleadperl and CPAN 1.83_62 I first install Bundle::CPAN.
-	Then I try to install Net::LDAP and answer all questions from
-	Module::Install with the default. It then installs Convert::ASN1
-	successfully and then says
-
-*** Convert::ASN1 successfully installed.                                       
-*** ExtUtils::AutoInstall installation finished.                                
-Writing Makefile for Net::LDAP                                                  
-make: getcwd: No such file or directory                                         
-make[1]: Entering directory `'                                                  
-make[1]: *** No targets specified and no makefile found.  Stop.                 
-make[1]: Leaving directory `'                                                   
-  /usr/bin/make  -- NOT OK                                                      
-
-	If I now start a new CPAN session, I can install Net::LDAP without problems.
-
-	If I uninstall Convert::ASN1 and start a new CPAN session I can get
-	nearly the same result:
-
-make[1]: Leaving directory `/home/k/.cpan/build/Convert-ASN1-0.19'
-  sudo make install UNINST=1 -- OK
-*** Convert::ASN1 successfully installed.
-*** ExtUtils::AutoInstall installation finished.
-Writing Makefile for Net::LDAP
-CPAN: YAML loaded ok
-make[1]: Entering directory `/home/k/.cpan/build/perl-ldap-0.33'
-make[1]: *** No targets specified and no makefile found.  Stop.
-make[1]: Leaving directory `/home/k/.cpan/build/perl-ldap-0.33'
-  /usr/bin/make  -- NOT OK
-
-	On the other hand, running same thing on a 5.8.7 with 1.83 succeeds, but
-	it asks me if I want to run sudo.
-
-2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* RT 17353: Flag outdated CPAN sites and move them to the end of the
 	list when they have reached 291 hours.
 
@@ -100,6 +65,63 @@ make[1]: Leaving directory `/home/k/.cpan/build/perl-ldap-0.33'
 	options
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Bug: with bleadperl and CPAN 1.83_62 I first install Bundle::CPAN.
+	Then I try to install Net::LDAP and answer all questions from
+	Module::Install with the default. It then installs Convert::ASN1
+	successfully and then says
+
+*** Convert::ASN1 successfully installed.                                       
+*** ExtUtils::AutoInstall installation finished.                                
+Writing Makefile for Net::LDAP                                                  
+make: getcwd: No such file or directory                                         
+make[1]: Entering directory `'                                                  
+make[1]: *** No targets specified and no makefile found.  Stop.                 
+make[1]: Leaving directory `'                                                   
+  /usr/bin/make  -- NOT OK                                                      
+
+	If I now start a new CPAN session, I can install Net::LDAP without problems.
+
+	If I uninstall Convert::ASN1 and start a new CPAN session I can get
+	nearly the same result:
+
+make[1]: Leaving directory `/home/k/.cpan/build/Convert-ASN1-0.19'
+  sudo make install UNINST=1 -- OK
+*** Convert::ASN1 successfully installed.
+*** ExtUtils::AutoInstall installation finished.
+Writing Makefile for Net::LDAP
+CPAN: YAML loaded ok
+make[1]: Entering directory `/home/k/.cpan/build/perl-ldap-0.33'
+make[1]: *** No targets specified and no makefile found.  Stop.
+make[1]: Leaving directory `/home/k/.cpan/build/perl-ldap-0.33'
+  /usr/bin/make  -- NOT OK
+
+	On the other hand, running same thing on a 5.8.7 with 1.83 succeeds, but
+	it asks me if I want to run sudo (and I say no and again no).
+
+	Now I tried bleadperl@27016 with its 1.8359: 'install YAML' then
+	'install Net::LDAP' and got the same error.
+
+	Now I try perl-5.8.8-RC1 with its 1.83: it succeeds but asks me again if
+	I want to run sudo.
+
+	5.8.8-RC1 with 1.8362: succeeds and asks me if I want to run sudo.
+
+	blead@26447 with 1.8362: error.
+
+	What is it about, the ExtUtils::AutoInstall line? ExtUtils::AutoInstall
+	is NOT part of the core. Net::LDAP comes with version 0.59, Audrey has
+	reached 0.63.
+
+	I think it goes like so:
+
+	have no perm -> ask sudo -> user says no -> success
+	have perm       implicit yes             -> failure
+
+	This is consistent with all of above.... After some more investigation
+	reported as bug to Audrey and Graham
+
+2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Revisit 17313: Module::Build people have promised to write a
 	./Build.bat file instead of a ./Build file on Windows. Until this
