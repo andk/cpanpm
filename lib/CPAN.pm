@@ -675,7 +675,7 @@ Please make sure the directory exists and is writable.
 };
 	$CPAN::Frontend->mydie($diemess);
       }
-    }
+    } # $@ after eval mkpath $dotcpan
     my $fh;
     unless ($fh = FileHandle->new(">$lockfile")) {
 	if ($! =~ /Permission/) {
@@ -698,14 +698,17 @@ this variable in either
 or
     $myincc
 });
-        if(!$INC{'CPAN/MyConfig.pm'}) {
-            $CPAN::Frontend->myprint("You don't seem to have a user configuration (MyConfig.pm) yet.\n");
-            my $new = ExtUtils::MakeMaker::prompt("Do you want to create a user configuration now?", "yes");
-            if($new =~ m{^y}i) {
-                CPAN::mkmyconfig();
-                return &checklock;
+            if(!$INC{'CPAN/MyConfig.pm'}) {
+                $CPAN::Frontend->myprint("You don't seem to have a user ".
+                                         "configuration (MyConfig.pm) yet.\n");
+                my $new = ExtUtils::MakeMaker::prompt("Do you want to create a ".
+                                                      "user configuration now? (Y/n)",
+                                                      "yes");
+                if($new =~ m{^y}i) {
+                    CPAN::mkmyconfig();
+                    return &checklock;
+                }
             }
-        }
 	}
 	$CPAN::Frontend->mydie("Could not open >$lockfile: $!");
     }
