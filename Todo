@@ -1,3 +1,43 @@
+2006-01-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Visit the p5p thread C<replacing "inuse" Win files (was Re: Help with
+	a Cwd.pm build error)> for our own cpan.bat. Currently Windows users
+	cannot 'reload cpan' when they started the shell from cpan.bat, only
+	when they used 'perl -MCPAN -eshell' (David Golden)
+
+	* Bug: with bleadperl and CPAN 1.83_62 I first install Bundle::CPAN.
+	Then I try to install Net::LDAP and answer all questions from
+	Module::Install with the default. It then installs Convert::ASN1
+	successfully and then says
+
+*** Convert::ASN1 successfully installed.                                       
+*** ExtUtils::AutoInstall installation finished.                                
+Writing Makefile for Net::LDAP                                                  
+make: getcwd: No such file or directory                                         
+make[1]: Entering directory `'                                                  
+make[1]: *** No targets specified and no makefile found.  Stop.                 
+make[1]: Leaving directory `'                                                   
+  /usr/bin/make  -- NOT OK                                                      
+
+	If I now start a new CPAN session, I can install Net::LDAP without problems.
+
+	If I uninstall Convert::ASN1 and start a new CPAN session I can get
+	nearly the same result:
+
+make[1]: Leaving directory `/home/k/.cpan/build/Convert-ASN1-0.19'
+  sudo make install UNINST=1 -- OK
+*** Convert::ASN1 successfully installed.
+*** ExtUtils::AutoInstall installation finished.
+Writing Makefile for Net::LDAP
+CPAN: YAML loaded ok
+make[1]: Entering directory `/home/k/.cpan/build/perl-ldap-0.33'
+make[1]: *** No targets specified and no makefile found.  Stop.
+make[1]: Leaving directory `/home/k/.cpan/build/perl-ldap-0.33'
+  /usr/bin/make  -- NOT OK
+
+	On the other hand, running same thing on a 5.8.7 with 1.83 succeeds, but
+	it asks me if I want to run sudo.
+
 2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* RT 17353: Flag outdated CPAN sites and move them to the end of the
