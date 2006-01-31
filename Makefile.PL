@@ -182,6 +182,9 @@ checkout ::
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
+runadmin :
+	$(PERL) -Ilib -MCPAN::Admin -eshell
+
 rundb :
 	$(PERL) -Ilib -MCPAN -deshell
 
@@ -203,6 +206,12 @@ howto-release:
 
 META.yml:
 	$(ECHO) -n "" >> META.yml
+
+testcover:
+	:>SIGNATURE
+	`dirname $(PERL)`/cover -delete
+	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
+	`dirname $(PERL)`/cover
 }
 }
 
