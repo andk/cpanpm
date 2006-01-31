@@ -52,10 +52,26 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
+# note that these functions live in CPAN::Shell and get executed via
+# AUTOLOAD when called directly
 @EXPORT = qw(
-	     autobundle bundle expand force notest get cvs_import
-	     install make readme recompile shell test clean
-             perldoc recent mkmyconfig
+             autobundle
+             bundle
+             clean
+             cvs_import
+             expand
+             force
+             get
+             install
+             make
+             mkmyconfig
+             notest
+             perldoc
+             readme
+             recent
+             recompile
+             shell
+             test
 	    );
 
 sub soft_chdir_with_alternatives ($);
@@ -240,26 +256,6 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
-#-> sub CPAN::mkmyconfig ;
-sub mkmyconfig {
-    my($cpanpm, %args) = @_;
-    require CPAN::FirstTime;
-    $cpanpm = $INC{'CPAN/MyConfig.pm'} || "$ENV{HOME}/.cpan/CPAN/MyConfig.pm";
-    File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
-    if(!$INC{'CPAN/Config.pm'}) {
-        eval { require CPAN::Config; };
-    }
-    $CPAN::Config ||= {};
-    $CPAN::Config = {
-        %$CPAN::Config,
-        build_dir           =>  undef,
-        cpan_home           =>  undef,
-        keep_source_where   =>  undef,
-        histfile            =>  undef,
-    };
-    CPAN::FirstTime::init($cpanpm, %args);
-}
-
 package CPAN::CacheMgr;
 use strict;
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
@@ -288,12 +284,15 @@ use strict;
                                     install
                                     look
                                     ls
-                                    make test
+                                    make
+                                    mkmyconfig
                                     notest
                                     perldoc
                                     readme
                                     recent
+                                    recompile
                                     reload
+                                    test
 );
 
 package CPAN::Index;
@@ -705,7 +704,7 @@ or
                                                       "user configuration now? (Y/n)",
                                                       "yes");
                 if($new =~ m{^y}i) {
-                    CPAN::mkmyconfig();
+                    CPAN::Shell->mkmyconfig();
                     return &checklock;
                 }
             }
@@ -1553,6 +1552,26 @@ sub reload_this {
         return;
     }
     return 1;
+}
+
+#-> sub CPAN::Shell::mkmyconfig ;
+sub mkmyconfig {
+    my($self, $cpanpm, %args) = @_;
+    require CPAN::FirstTime;
+    $cpanpm = $INC{'CPAN/MyConfig.pm'} || "$ENV{HOME}/.cpan/CPAN/MyConfig.pm";
+    File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
+    if(!$INC{'CPAN/Config.pm'}) {
+        eval { require CPAN::Config; };
+    }
+    $CPAN::Config ||= {};
+    $CPAN::Config = {
+        %$CPAN::Config,
+        build_dir           =>  undef,
+        cpan_home           =>  undef,
+        keep_source_where   =>  undef,
+        histfile            =>  undef,
+    };
+    CPAN::FirstTime::init($cpanpm, %args);
 }
 
 #-> sub CPAN::Shell::_binary_extensions ;
@@ -6829,6 +6848,12 @@ perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
 
+=head2 mkmyconfig
+
+mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
+directory so that you can save your own preferences instead of the
+system wide ones.
+
 =head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
 Although it may be considered internal, the class hierarchy does matter
@@ -7761,6 +7786,12 @@ your MyConfig.pm file.
 You can also manually initiate this process with the following command:
 
     % perl -MCPAN -e 'mkmyconfig'
+
+or by running
+
+    mkmyconfig
+
+from the CPAN shell.
 
 You will most probably also want to configure something like this:
 
