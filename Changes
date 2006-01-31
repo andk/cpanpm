@@ -1,3 +1,12 @@
+2006-01-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_62 came out today before this entry was written
+
+	* rename the LC_ALL macro so that it does not infect the whole
+	environment (Ken Williams)
+
+	* new command mkmyconfig: patch supplied by Tyler MacDonald
+
 2006-01-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_61
