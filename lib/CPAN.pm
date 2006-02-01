@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.83_62';
+$VERSION = '1.83_63';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -4774,7 +4774,18 @@ sub CHECKSUM_check_file {
 	Carp::carp "Could not open $chk_file for reading";
     }
 
-    if (exists $cksum->{$basename}{sha256}) {
+    if (! ref $cksum or ref $cksum ne "HASH") {
+        $CPAN::Frontend->mywarn(qq{
+Warning: checksum file '$chk_file' broken.
+
+When trying to read that file I expected to get a hash reference
+for further processing, but got garbage instead.
+});
+        my $answer = ExtUtils::MakeMaker::prompt("Proceed nonetheless?", "no");
+        $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
+        $self->{CHECKSUM_STATUS} = "NIL -- chk_file broken";
+        return;
+    } elsif (exists $cksum->{$basename}{sha256}) {
 	$self->debug("Found checksum for $basename:" .
 		     "$cksum->{$basename}{sha256}\n") if $CPAN::DEBUG;
 
@@ -4836,7 +4847,7 @@ going awry right now.
             my $answer = ExtUtils::MakeMaker::prompt("Proceed?", "yes");
             $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
 	}
-	$self->{CHECKSUM_STATUS} = "NIL";
+        $self->{CHECKSUM_STATUS} = "NIL -- distro not in chk_file";
 	return;
     }
 }
