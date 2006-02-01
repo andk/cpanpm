@@ -1,3 +1,10 @@
+2006-02-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_63
+
+	* bugfix: when the CHECKSUMS file contains garbage, tell the user and
+	default to aborting the process (bug reported by Linda W)
+
 2006-01-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_62 came out today before this entry was written
