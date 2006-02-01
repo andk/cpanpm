@@ -18,6 +18,7 @@
 ^\.
 ^blib/
 ^blibdirs
+^cover_db/
 ^cp-to-perl.pl
 ^eg/
 ^lib/CPAN/Config\.pm
