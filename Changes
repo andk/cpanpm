@@ -1,8 +1,10 @@
 2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* release 1.83_64 (potential release candidate for 1.84)
+
 	* bugfix: when M:B specifies both requires AND build_requires AND then
 	has no YAML to write the META.yml file, THEN we did not merge the two
-	requiries.
+	requiries. Seen in KCLARK/Text-RecordParser-v1.0.0.tar.gz.
 
 2006-02-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
