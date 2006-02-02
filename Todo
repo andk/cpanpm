@@ -28,7 +28,9 @@
 
 	And I promise to try out a more granular locking mechanism.
 
-	* dontload: make a dontload_list and deprecate dontload_hash
+	* dontload: make a dontload_list and deprecate dontload_hash. It seems
+	OK to keep $META->{dontload_hash} but it would be nice if changes on
+	$Config->{doneload_list} would always adjust the dontload_hash.
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution

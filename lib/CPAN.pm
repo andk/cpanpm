@@ -5323,7 +5323,9 @@ sub prereq_pm {
             }
         } elsif (-f "Build") {
             if ($CPAN::META->has_inst("Module::Build")) {
-                $req = Module::Build->current->requires();
+                my $requires  = Module::Build->current->requires();
+                my $brequires = Module::Build->current->build_requires();
+                $req = { %$requires, %$brequires };
             }
         }
     }
