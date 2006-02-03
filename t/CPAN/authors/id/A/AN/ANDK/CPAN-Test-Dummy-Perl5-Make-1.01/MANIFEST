@@ -4,4 +4,3 @@ Makefile.PL
 MANIFEST
 README
 t/00_load.t
-META.yml

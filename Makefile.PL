@@ -214,6 +214,8 @@ testcover:
 	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
 	`dirname $(PERL)`/cover
 
+testdistros: t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
+
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/Changes \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/MANIFEST \
@@ -221,7 +223,9 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/lib/CPAN/Test/Dummy/Perl5/Make.pm \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/t/00_load.t
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01 && \
-		$(MAKE) dist && mv CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz ..
+		$(PERL) Makefile.PL && \
+		$(MAKE) dist && \
+		mv CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz ..
 
 }
 }

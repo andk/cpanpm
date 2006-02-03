@@ -12,7 +12,7 @@ WriteMakefile(
 );
 
 
-sub postamble {
+sub MY::postamble {
   q{
 README: lib/CPAN/Test/Dummy/Perl5/Make.pm
 	-[ -r $@ ] && chmod +w $@
