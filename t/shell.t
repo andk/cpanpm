@@ -216,6 +216,10 @@ m Fcntl
 ~~like~~
 Defines fcntl
 ########
+a JHI
+~~like~~
+Hietaniemi
+########
 h
 ~~like~~
 (?s:make.*test.*install.*force.*notest.*reload)
