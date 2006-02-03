@@ -178,9 +178,17 @@ file:///.*CPAN
 !print$ENV{HARNESS_PERL_SWITCHES},$/
 ~~like~~
 ########
+rtlprnft
+~~like~~
+Unknown
+########
 m Fcntl
 ~~like~~
 Defines fcntl
+########
+h
+~~like~~
+(?s:make.*test.*install.*force.*notest.*reload)
 ########
 quit
 ~~like~~

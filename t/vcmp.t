@@ -39,6 +39,7 @@ while (@$D) {
   }
   my $other = @other ? " (".join("; ", @other).")" : "";
   printf "ok %2d # %12s %12s %3d%s\n", $N-@$D, $l, $r, $res, $other;
+  die "Panic" if CPAN::Version->vgt($l,$r) && CPAN::Version->vlt($l,$r);
 }
 
 __END__
