@@ -96,7 +96,7 @@ $exp->expect(
                    }
                    Expect::exp_continue;
                }],
-             '-re', $prompt
+             '-re', "(?s:ReadLine support enabled.*".quotemeta($prompt).")"
             );
 
 my $got = $exp->clear_accum;
