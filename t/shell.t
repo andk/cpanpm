@@ -50,7 +50,7 @@ read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
 my $exp = Expect->new;
-my $prompt = "cpan> ";
+my $prompt = "cpan>";
 $exp->spawn(
             $^X,
             "-I$cwd/t",                 # get this test's own MyConfig
@@ -60,7 +60,8 @@ $exp->spawn(
             ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
-            "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
+            # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
+            "shell('$prompt\n')",
            );
 my $timeout = 6;
 $exp->log_stdout(0);
@@ -114,7 +115,9 @@ for my $i (0..$#prgs){
       s/\s+\z//;
     }
     mydiag "NEXT: $prog";
-    $exp->send("$prog\n");
+    my $sendprog = $prog;
+    $sendprog =~ s/\\t/\t/g;
+    $exp->send("$sendprog\n");
     $expected .= "(?s:.*$prompt)" unless $expected =~ /\(/;
     mydiag "EXPECT: $expected";
     $exp->expect(
@@ -189,6 +192,18 @@ Defines fcntl
 h
 ~~like~~
 (?s:make.*test.*install.*force.*notest.*reload)
+########
+o conf
+~~like~~
+(?s:commit.*build_cache.*cpan_home.*inhibit_startup_message.*urllist)
+########
+o conf help
+~~like~~
+(?s:commit.*defaults.*help.*init.*urllist)
+########
+o conf inhibit_\t
+~~like~~
+inhibit_startup_message
 ########
 quit
 ~~like~~

@@ -1394,7 +1394,6 @@ sub o {
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
-	shift @o_what if @o_what && $o_what[0] eq 'help';
 	if (!@o_what) { # print all things, "o conf"
 	    my($k,$v);
 	    $CPAN::Frontend->myprint("CPAN::Config options");

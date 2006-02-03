@@ -5,9 +5,10 @@ use vars qw(%can %keys $dot_cpan $VERSION);
 $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
 %can = (
-  'commit' => "Commit changes to disk",
-  'defaults' => "Reload defaults from disk",
-  'init'   => "Interactive setting of all options",
+        commit   => "Commit changes to disk",
+        defaults => "Reload defaults from disk",
+        help     => "Short help about 'o conf' usage",
+        init     => "Interactive setting of all options",
 );
 
 %keys = map { $_ => undef } qw(
@@ -380,20 +381,17 @@ sub missing_config_data {
 sub help {
     $CPAN::Frontend->myprint(q[
 Known options:
-  defaults  reload default config values from disk
   commit    commit session changes to disk
+  defaults  reload default config values from disk
+  help      this help
   init      go through a dialog to set all parameters
 
-You may edit key values in the follow fashion (the "o" is a literal
-letter o):
-
+Edit key values as in the following (the "o" is a literal letter o):
   o conf build_cache 15
-
   o conf build_dir "/foo/bar"
-
   o conf urllist shift
-
   o conf urllist unshift ftp://ftp.foo.bar/
+  o conf inhibit_startup_message 1
 
 ]);
     undef; #don't reprint CPAN::Config
