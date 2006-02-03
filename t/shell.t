@@ -3,8 +3,8 @@ no warnings 'redefine';
 
 
 BEGIN {
-    chdir 't' if -d 't';
-    unshift @INC, '../lib';
+    #chdir 't' if -d 't';
+    unshift @INC, './lib';
     require Config;
     unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
 	print "1..0 # Skip: test is only validated on linux\n";
@@ -24,14 +24,14 @@ BEGIN {
 }
 
 use File::Copy qw(cp);
-cp "CPAN/TestConfig.pm", "CPAN/MyConfig.pm"
+cp "t/CPAN/TestConfig.pm", "t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 
 use Cwd;
 my $cwd = Cwd::cwd;
 
 sub read_myconfig () {
-    open my $fh, "CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
+    open my $fh, "t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
     local $/;
     eval <$fh>;
 }
@@ -53,10 +53,11 @@ my $exp = Expect->new;
 my $prompt = "cpan> ";
 $exp->spawn(
             $^X,
-            "-I$cwd",                 # get this test's own MyConfig
-            "-I$cwd/../lib",
+            "-I$cwd/t",                 # get this test's own MyConfig
+            "-I$cwd/lib",
             "-MCPAN::MyConfig",
             "-MCPAN",
+            ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
             "\$CPAN::Suppress_readline=1;
