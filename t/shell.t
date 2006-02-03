@@ -50,6 +50,9 @@ BEGIN {
     }
 }
 
+use File::Path qw(rmtree);
+rmtree "t/dot-cpan";
+
 use File::Copy qw(cp);
 cp "t/CPAN/TestConfig.pm", "t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
@@ -88,7 +91,7 @@ $exp->spawn(
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
             # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
-            "shell('$prompt\n')",
+            "\@CPAN::Defaultsites = (); shell('$prompt\n')",
            );
 my $timeout = 6;
 $exp->log_stdout(0);
@@ -212,6 +215,9 @@ rtlprnft
 ~~like~~
 Unknown
 ########
+o conf ftp ""
+~~like~~
+########
 m Fcntl
 ~~like~~
 Defines fcntl
@@ -219,6 +225,10 @@ Defines fcntl
 a JHI
 ~~like~~
 Hietaniemi
+########
+d ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
+~~like~~
+CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
 ########
 h
 ~~like~~
