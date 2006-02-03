@@ -5,7 +5,7 @@ no warnings 'redefine';
 
 Notes about coverage
 
-2006-02-03 after rev. 457 we have this coverage
+2006-02-03 after rev. 517 we have this coverage
 
 ----------------------------------- ------ ------ ------ ------ ------ ------
 File                                  stmt   bran   cond    sub   time  total
