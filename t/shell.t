@@ -1,6 +1,33 @@
 use strict;
 no warnings 'redefine';
 
+=pod
+
+Notes about coverage
+
+2006-02-03 after rev. 457 we have this coverage
+
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      20.1   10.2    7.9   37.0   37.9   16.7
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.1   55.3
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   40.1   44.6
+blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   21.6   54.6
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm                6.8    0.0    0.0   28.6    0.0    5.2
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.3   78.6
+Total                                 25.6   13.9   15.5   45.2  100.0   22.0
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+Admin.pm is kind of deprecated, but if we ever would like to test it,
+we would issue C<! use CPAN::Admin> rather late in the testing which
+would activate the override. C<reload cpan> would then switch back.
+
+
+
+=cut
 
 BEGIN {
     #chdir 't' if -d 't';
