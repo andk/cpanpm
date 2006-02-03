@@ -1,0 +1,1 @@
+alias JHI        "Jarkko Hietaniemi <jhi@iki.fi>"

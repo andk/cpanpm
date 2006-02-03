@@ -41,7 +41,7 @@ $CPAN::Config = {
                  'tar' => q[/bin/tar],
                  'term_is_latin' => q[0],
                  'unzip' => q[/usr/bin/unzip],
-                 'urllist' => [q[ftp://localhost/pub/CPAN]],
+                 'urllist' => [q[file:///dev/null]],
                  'wait_list' => [q[wait://ls6.informatik.uni-dortmund.de:1404]],
                  'wget' => q[/usr/bin/wget],
                 };

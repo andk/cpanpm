@@ -1,3 +1,8 @@
+2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* prerequisites: require perl version xxx: we should not delete that
+	information but honour it.
+
 2006-01-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Visit the p5p thread C<replacing "inuse" Win files (was Re: Help with
