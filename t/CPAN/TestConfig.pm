@@ -37,11 +37,11 @@ $CPAN::Config = {
                  'prerequisites_policy' => q[follow],
                  'scan_cache' => q[atstart],
                  'shell' => q[/usr/bin/zsh],
-                 'show_upload_date' => q[1],
+                 'show_upload_date' => q[0],
                  'tar' => q[/bin/tar],
                  'term_is_latin' => q[0],
                  'unzip' => q[/usr/bin/unzip],
-                 'urllist' => [q[file:///dev/null]],
+                 'urllist' => [qq[file://$cwd/t/CPAN]],
                  'wait_list' => [q[wait://ls6.informatik.uni-dortmund.de:1404]],
                  'wget' => q[/usr/bin/wget],
                 };

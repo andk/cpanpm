@@ -54,15 +54,13 @@ my $prompt = "cpan> ";
 $exp->spawn(
             $^X,
             "-I$cwd/t",                 # get this test's own MyConfig
-            "-I$cwd/lib",
+            "-Mblib",
             "-MCPAN::MyConfig",
             "-MCPAN",
             ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
-            "\$CPAN::Suppress_readline=1;
-\$CPAN::Config->{urllist} = [q{file://$cwd/CPAN}];
-shell('$prompt\n')",
+            "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
            );
 my $timeout = 6;
 $exp->log_stdout(0);
@@ -176,6 +174,9 @@ histsize.+101
 o conf urllist
 ~~like~~
 file:///.*CPAN
+########
+!print$ENV{HARNESS_PERL_SWITCHES},$/
+~~like~~
 ########
 m Fcntl
 ~~like~~
