@@ -25,7 +25,25 @@ Admin.pm is kind of deprecated, but if we ever would like to test it,
 we would issue C<! use CPAN::Admin> rather late in the testing which
 would activate the override. C<reload cpan> would then switch back.
 
+After rev. 523
 
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      26.7   15.6   10.4   42.6    4.2   22.5
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.1   55.3
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   61.8   44.6
+blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   33.4   54.6
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm               17.6    6.6    0.0   50.0    0.1   14.8
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.4   78.6
+Total                                 31.2   18.5   17.1   50.4  100.0   26.8
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+The time for the CPAN.pm tests is down because we're now using the
+local, test-specific index files. Next thing to do: upload the demo
+distro so that we can add a signed CHECKSUMS file.
 
 =cut
 
