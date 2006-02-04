@@ -30,6 +30,7 @@
 ^pm_to_blib
 ^release-lib
 ^t/CPAN/MyConfig\.pm
+^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/
 ^t/dot-cpan/build
 ^t/dot-cpan/histfile
 ^t/dot-cpan/Metadata
