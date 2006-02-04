@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.83_65';
+$VERSION = '1.83_66';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -3960,8 +3960,12 @@ sub ls {
     }
     @dl = $self->dir_listing([@csf,"CHECKSUMS"], 1, 1);
     if ($glob) {
-        my $rglob = Text::Glob::glob_to_regex($glob);
-        @dl = grep { $_->[2] =~ /$rglob/ } @dl;
+        if ($CPAN::META->has_inst("Text::Glob")) {
+            my $rglob = Text::Glob::glob_to_regex($glob);
+            @dl = grep { $_->[2] =~ /$rglob/ } @dl;
+        } else {
+            $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
+        }
     }
     $CPAN::Frontend->myprint(join "", map {
         sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
@@ -4100,6 +4104,43 @@ sub normalize {
         CPAN->debug("s[$s]") if $CPAN::DEBUG;
     }
     $s;
+}
+
+sub author {
+    my($self) = @_;
+    my($authorid) = $self->pretty_id =~ /^([\w\-]+)/;
+    CPAN::Shell->expand("Author",$authorid);
+}
+
+# tries to get the yaml from CPAN instead of the distro itself:
+# EXPERIMENTAL, UNDOCUMENTED AND UNTESTED, for Tels
+sub fast_yaml {
+    my($self) = @_;
+    my $meta = $self->pretty_id;
+    $meta =~ s/\.(tar.gz|tgz|zip|tar.bz2)/.meta/;
+    my(@ls) = CPAN::Shell->globls($meta);
+    my $norm = $self->normalize($meta);
+
+    my($local_file);
+    my($local_wanted) =
+        File::Spec->catfile(
+			    $CPAN::Config->{keep_source_where},
+			    "authors",
+			    "id",
+			    split(/\//,$norm)
+			   );
+    $self->debug("Doing localize") if $CPAN::DEBUG;
+    unless ($local_file =
+            CPAN::FTP->localize("authors/id/$norm",
+                                $local_wanted)) {
+        $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n");
+    }
+    if ($CPAN::META->has_inst("YAML")) {
+        my $yaml = YAML::LoadFile($local_file);
+        return $yaml;
+    } else {
+        $CPAN::Frontend->mydie("Yaml not installed, cannot parse '$local_file'\n");
+    }
 }
 
 sub pretty_id {
@@ -7106,6 +7147,11 @@ Returns a one-line description of the distribution
 
 Returns a multi-line description of the distribution
 
+=item CPAN::Distribution::author
+
+Returns the CPAN::Author object of the maintainer who uploaded this
+distribution
+
 =item CPAN::Distribution::clean()
 
 Changes to the directory where the distribution has been unpacked and
@@ -7173,18 +7219,6 @@ downloaded and unpacked. Changes to the directory where the
 distribution has been unpacked and runs the external commands C<perl
 Makefile.PL> or C<perl Build.PL> and C<make> there.
 
-=item CPAN::Distribution::prereq_pm()
-
-Returns the hash reference that has been announced by a distribution
-as the C<requires> element of the META.yml or the C<PREREQ_PM> hash in
-the C<Makefile.PL>. Note: works only after an attempt has been made to
-C<make> the distribution. Returns undef otherwise.
-
-=item CPAN::Distribution::readme()
-
-Downloads the README file associated with a distribution and runs it
-through the pager specified in C<$CPAN::Config->{pager}>.
-
 =item CPAN::Distribution::perldoc()
 
 Downloads the pod documentation of the file associated with a
@@ -7193,6 +7227,25 @@ command lynx specified in C<$CPAN::Config->{lynx}>. If lynx
 isn't available, it converts it to plain text with external
 command html2text and runs it through the pager specified
 in C<$CPAN::Config->{pager}>
+
+=item CPAN::Distribution::prereq_pm()
+
+Returns the hash reference that has been announced by a distribution
+as the merge of the C<requires> element and the C<build_requires>
+element of the META.yml or the C<PREREQ_PM> hash in the
+C<Makefile.PL>. Note: works only after an attempt has been made to
+C<make> the distribution. Returns undef otherwise.
+
+=item CPAN::Distribution::readme()
+
+Downloads the README file associated with a distribution and runs it
+through the pager specified in C<$CPAN::Config->{pager}>.
+
+=item CPAN::Distribution::read_yaml()
+
+Returns the content of the META.yml of this distro as a hashref. Note:
+works only after an attempt has been made to C<make> the distribution.
+Returns undef otherwise.
 
 =item CPAN::Distribution::test()
 
@@ -7250,6 +7303,11 @@ Returns a 44 character description of this module. Only available for
 modules listed in The Module List (CPAN/modules/00modlist.long.html
 or 00modlist.long.txt.gz)
 
+=item CPAN::Module::distribution()
+
+Returns the CPAN::Distribution object that contains the current
+version of this module.
+
 =item CPAN::Module::force($method,@args)
 
 Forces CPAN to perform a task that normally would have failed. Force
@@ -7293,13 +7351,13 @@ headline and returns it. Moreover, if the module has been downloaded
 within this session, does the equivalent on the downloaded module even
 if it is not installed.
 
-=item CPAN::Module::readme()
-
-Runs a C<readme> on the distribution associated with this module.
-
 =item CPAN::Module::perldoc()
 
 Runs a C<perldoc> on this module.
+
+=item CPAN::Module::readme()
+
+Runs a C<readme> on the distribution associated with this module.
 
 =item CPAN::Module::test()
 
