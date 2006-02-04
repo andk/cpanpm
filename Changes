@@ -1,3 +1,13 @@
+2006-02-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_65
+
+	* much more testing in shell.t
+
+	* bugfix: protect "make test" from outer environment variable MAKEFLAGS
+
+	* bring "o conf help" back which was lost
+
 2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_64 (potential release candidate for 1.84)
