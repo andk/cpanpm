@@ -277,6 +277,10 @@ a JHI
 ~~like~~
 Hietaniemi
 ########
+a ANDK JHI
+~~like~~
+(?s:Andreas.*Hietaniemi.*items found)
+########
 b
 ~~like~~
 (?s:Bundle::CPAN.*Bundle::CpanTestDummies.*items found)
@@ -300,6 +304,22 @@ ls ANDK/CPAN*
 test CPAN::Test::Dummy::Perl5::Make
 ~~like~~
 test\s+--\s+OK
+########
+dump CPAN::Test::Dummy::Perl5::Make
+~~like~~
+(?s:bless.*ID.*CPAN_FILE.*CPAN_USERID.*CPAN_VERSION)
+########
+test CPAN::Test::Dummy::Perl5::NotExists
+~~like~~
+Warning:
+########
+failed
+~~like~~
+Nothing
+########
+reload index
+~~like~~
+staleness
 ########
 m /l/
 ~~like~~
