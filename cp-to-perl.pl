@@ -1,5 +1,12 @@
 #!/usr/bin/perl
 
+=pod
+
+Script to copy those files that live also in the core into a perl
+source tree.
+
+=cut
+
 use strict;
 use warnings;
 use File::Copy qw(cp);
@@ -47,7 +54,7 @@ my $MAP = {
                                                 )]],
            "t/" => ["lib/CPAN/t/" => [qw(
                                          t/[lmNv]*.t
-                                        )]], # not signature!
+                                        )]], # not signature, shell, CPAN, pod
           };
 
 my @command;
