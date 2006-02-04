@@ -25,6 +25,10 @@ scripts/cpan
 t/CPAN/TestConfig.pm
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
 t/CPAN/authors/01mailrc.txt
+t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS
+t/CPAN/authors/id/A/AN/CHECKSUMS
+t/CPAN/authors/id/A/CHECKSUMS
+t/CPAN/authors/id/CHECKSUMS
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/Nox.t
