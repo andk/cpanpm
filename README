@@ -443,6 +443,10 @@ DESCRIPTION
     CPAN::Distribution::as_string()
         Returns a multi-line description of the distribution
 
+    CPAN::Distribution::author
+        Returns the CPAN::Author object of the maintainer who uploaded this
+        distribution
+
     CPAN::Distribution::clean()
         Changes to the directory where the distribution has been unpacked
         and runs "make clean" there.
@@ -501,16 +505,6 @@ DESCRIPTION
         distribution has been unpacked and runs the external commands "perl
         Makefile.PL" or "perl Build.PL" and "make" there.
 
-    CPAN::Distribution::prereq_pm()
-        Returns the hash reference that has been announced by a distribution
-        as the "requires" element of the META.yml or the "PREREQ_PM" hash in
-        the "Makefile.PL". Note: works only after an attempt has been made
-        to "make" the distribution. Returns undef otherwise.
-
-    CPAN::Distribution::readme()
-        Downloads the README file associated with a distribution and runs it
-        through the pager specified in "$CPAN::Config-"{pager}>.
-
     CPAN::Distribution::perldoc()
         Downloads the pod documentation of the file associated with a
         distribution (in html format) and runs it through the external
@@ -518,6 +512,22 @@ DESCRIPTION
         available, it converts it to plain text with external command
         html2text and runs it through the pager specified in
         "$CPAN::Config-"{pager}>
+
+    CPAN::Distribution::prereq_pm()
+        Returns the hash reference that has been announced by a distribution
+        as the merge of the "requires" element and the "build_requires"
+        element of the META.yml or the "PREREQ_PM" hash in the
+        "Makefile.PL". Note: works only after an attempt has been made to
+        "make" the distribution. Returns undef otherwise.
+
+    CPAN::Distribution::readme()
+        Downloads the README file associated with a distribution and runs it
+        through the pager specified in "$CPAN::Config-"{pager}>.
+
+    CPAN::Distribution::read_yaml()
+        Returns the content of the META.yml of this distro as a hashref.
+        Note: works only after an attempt has been made to "make" the
+        distribution. Returns undef otherwise.
 
     CPAN::Distribution::test()
         Changes to the directory where the distribution has been unpacked
@@ -563,6 +573,10 @@ DESCRIPTION
         for modules listed in The Module List
         (CPAN/modules/00modlist.long.html or 00modlist.long.txt.gz)
 
+    CPAN::Module::distribution()
+        Returns the CPAN::Distribution object that contains the current
+        version of this module.
+
     CPAN::Module::force($method,@args)
         Forces CPAN to perform a task that normally would have failed. Force
         takes as arguments a method name to be called and any number of
@@ -598,11 +612,11 @@ DESCRIPTION
         within this session, does the equivalent on the downloaded module
         even if it is not installed.
 
-    CPAN::Module::readme()
-        Runs a "readme" on the distribution associated with this module.
-
     CPAN::Module::perldoc()
         Runs a "perldoc" on this module.
+
+    CPAN::Module::readme()
+        Runs a "readme" on the distribution associated with this module.
 
     CPAN::Module::test()
         Runs a "test" on the distribution associated with this module.
