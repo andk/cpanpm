@@ -28,6 +28,7 @@ t/CPAN/authors/01mailrc.txt
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/Nox.t
+t/dot-cpan/Bundle/CpanTestDummies.pm
 t/loadme.t
 t/mirroredby.t
 t/pod.t
