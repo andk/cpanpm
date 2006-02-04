@@ -5406,6 +5406,8 @@ sub test {
                            : ($ENV{PERLLIB} || "");
 
     $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
     my $system;
     if ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
