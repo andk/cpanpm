@@ -29,6 +29,8 @@ To add a new distro, the following steps must be taken:
 
 - add the source code directory with a trailing slash to MANIFEST.SKIP
 
+- finish now the distro until it does what you intended
+
 - add a stanza to CPAN.pm's Makefile.PL that produces the distro with
   the whole dependency on all files within the distro and moves it up
   into the author's homedir
