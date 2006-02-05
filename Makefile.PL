@@ -174,8 +174,6 @@ the-release-name :
 
 release ::
 	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
-	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
-	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 	rm -rf $(DISTVNAME)
 	svn cp -m 'This is $(VERSION)' https://pause.perl.org:5460/svn/cpanpm/trunk https://pause.perl.org:5460/svn/cpanpm/tags/$(VERSION)
 
