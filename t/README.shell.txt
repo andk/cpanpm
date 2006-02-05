@@ -23,13 +23,17 @@ backdoor into the shell to ignore signatures.
 
 To add a new distro, the following steps must be taken:
 
+(1) Collect the source
+
 - svn mkdir the author's directory if it doesn't exist yet
 
-- svn add the whole source code under the author's homedir
+- svn add (or svn cp) the whole source code under the author's homedir
 
 - add the source code directory with a trailing slash to MANIFEST.SKIP
 
 - finish now the distro until it does what you intended
+
+(2) Create the distro zipfile
 
 - add a stanza to CPAN.pm's Makefile.PL that produces the distro with
   the whole dependency on all files within the distro and moves it up
@@ -37,14 +41,20 @@ To add a new distro, the following steps must be taken:
 
 - svn add the new testdistro (maybe we can skip that?)
 
-- upload the distro to the CPAN and wait until the indexer has
+(3) Upload and embed into our minicpan
+
+- if you want more distros, repeat (1) and (2) now
+
+- upload the distro(s) to the CPAN and wait until the indexer has
   produced a CHECKSUMS file
 
 - svn add the relevant CHECKSUMS files
 
-- add the dummy distro and the CHECKSUMS files to the MANIFEST
+- add the dummy distro(s) and the CHECKSUMS files to the MANIFEST
 
-- add the distro to t/CPAN/modules/02packages.details.txt
+(4) Work with the results
+
+- add the distro(s) to t/CPAN/modules/02packages.details.txt
 
 - add the test to shell.t that triggered the demand for a new distro
 
