@@ -35,6 +35,8 @@ To add a new distro, the following steps must be taken:
   the whole dependency on all files within the distro and moves it up
   into the author's homedir. Run this with 'make testdistros'.
 
+- svn add the new testdistro (maybe we can skip that?)
+
 - upload the distro to the CPAN and wait until the indexer has
   produced a CHECKSUMS file
 
