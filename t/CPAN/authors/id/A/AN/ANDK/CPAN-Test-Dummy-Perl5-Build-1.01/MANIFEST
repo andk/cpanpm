@@ -1,6 +1,6 @@
 Changes
-lib/CPAN/Test/Dummy/Perl5/Make.pm
-Makefile.PL
+lib/CPAN/Test/Dummy/Perl5/Build.pm
+Build.PL
 MANIFEST
 README
 t/00_load.t

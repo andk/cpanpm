@@ -1,4 +1,4 @@
-package CPAN::Test::Dummy::Perl5::Make;
+package CPAN::Test::Dummy::Perl5::Build;
 
 use 5.004;
 use strict;
@@ -18,11 +18,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Test::Dummy::Perl5::Make - CPAN Test Dummy
+CPAN::Test::Dummy::Perl5::Build - CPAN Test Dummy
 
 =head1 SYNOPSIS
 
-    use CPAN::Test::Dummy::Perl5::Make;
+    use CPAN::Test::Dummy::Perl5::Build;
 
 =head1 DESCRIPTION
 

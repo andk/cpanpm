@@ -1,4 +1,4 @@
-Revision history for CPAN-Test-Dummy-Perl5-Make
+Revision history for CPAN-Test-Dummy-Perl5-Build
 
-1.01 Frei 3 Feb 2006
-     - copy of PITA-Test-Dummy-Perl5-Make
+1.01 Sun 5 Feb 2006
+     - started as copy of CPAN-Test-Dummy-Perl5-Make, Build.PL
