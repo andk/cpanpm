@@ -43,6 +43,8 @@ To add a new distro, the following steps must be taken:
 
 (3) Upload and embed into our minicpan
 
+- verify that 'make dist' on CPAN.pm still works
+
 - if you want more distros, repeat (1) and (2) now
 
 - upload the distro(s) to the CPAN and wait until the indexer has
@@ -53,6 +55,8 @@ To add a new distro, the following steps must be taken:
 - add the dummy distro(s) and the CHECKSUMS files to the MANIFEST
 
 (4) Work with the results
+
+- verify that 'make dist' on CPAN.pm still works
 
 - add the distro(s) to t/CPAN/modules/02packages.details.txt
 
