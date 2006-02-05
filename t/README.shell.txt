@@ -33,7 +33,7 @@ To add a new distro, the following steps must be taken:
 
 - add a stanza to CPAN.pm's Makefile.PL that produces the distro with
   the whole dependency on all files within the distro and moves it up
-  into the author's homedir
+  into the author's homedir. Run this with 'make testdistros'.
 
 - upload the distro to the CPAN and wait until the indexer has
   produced a CHECKSUMS file
