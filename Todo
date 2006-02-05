@@ -15,16 +15,23 @@
 
 	These perls behave (exit 255):
 	
+	/home/src/perl/repoperls/installed-perls/maint-5.8/pIPN6hB/perl-5.8.0@26560/bin/perl
+	/home/src/perl/repoperls/installed-perls/maint-5.8/pcE7NPt/perl-5.8.0@24641//bin/perl
+	/home/src/perl/repoperls/installed-perls/maint-5.8/piFZwYU/perl-5.8.0@27040//bin/perl
+	/home/src/perl/repoperls/installed-perls/perl/pREyceB/perl-5.8.0@27088/bin/perl
 	/home/src/perl/repoperls/installed-perls/perl/piR9qHb/perl-5.8.0@27016/bin/perl
 	/usr/local/perl-5.8.0@27016/bin/perl
-	/home/src/perl/repoperls/installed-perls/maint-5.8/pIPN6hB/perl-5.8.0@26560/bin/perl
-	/home/src/perl/repoperls/installed-perls/perl/pREyceB/perl-5.8.0@27088/bin/perl
 
 	These don't (shell returns true):
 
 	/usr/local/perl-5.8.7/bin/perl
 	/usr/local/perl-5.8.8/bin/perl
 
+	Stepping in the debugger through 27088 and and 5.8.8:
+
+	27088 has Test::Harness 2.56 while my 5.8.8 has 2.57_03. Apparently a
+	Test::Harness bug. REPORTED as #17490
+	
 2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* prerequisites: require perl version xxx: we should not delete that

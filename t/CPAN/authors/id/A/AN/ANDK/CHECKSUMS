@@ -2,7 +2,7 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-# CHECKSUMS file written on Fri Feb  3 21:43:19 2006 GMT by CPAN::Checksums (v1.039)
+# CHECKSUMS file written on Sun Feb  5 13:43:10 2006 GMT by CPAN::Checksums (v1.039)
 $cksum = {
   'Apache-GzipChain-1.14.tar.gz' => {
     'md5' => '9330c5bfae432361fc4b1a955f2f7d91',
@@ -33,6 +33,20 @@ $cksum = {
     'sha256' => '75a52b717da0274e8f56976e19e93acd3e9fed5cf7b98cf2726f9ad025d4988c',
     'sha256-ungz' => 'b6cd51610092f370f6f0d2d3d8e5b9c290bcc90b0dcaedd15fa3b7bf0a696fdd',
     'size' => 18881
+  },
+  'Apache-HeavyCGI-0.013302.meta' => {
+    'md5' => '71246340b4bbf9e9018ca2afce5dd493',
+    'mtime' => '2006-02-04',
+    'sha256' => 'e3294fa3a5971daa0b4bdce7b6db8bab9d74e2244262982c24025334ea151dc7',
+    'size' => 318
+  },
+  'Apache-HeavyCGI-0.013302.tar.gz' => {
+    'md5' => 'f9b40642aec574d125ddbc812783730e',
+    'md5-ungz' => 'bb859fe4c1053701af4f0be45c99fa34',
+    'mtime' => '2006-02-04',
+    'sha256' => '8a047874d39da84c2449e46ab6eccbace59301e7ea3f2384239481bf5e81e2f0',
+    'sha256-ungz' => 'cd6b291b4ffae9ec873f790f67dcf923bce8677e75d6e650cdea8b952a783b2d',
+    'size' => 18793
   },
   'Apache-Session-Counted-1.118.tar.gz' => {
     'md5' => 'c102eee6eac93f441bc3069b9d206783',
@@ -166,6 +180,22 @@ $cksum = {
     'sha256-ungz' => 'df1d37a6eee3130ff82aff48be1db1c64727adcfad2a5eca3e454ed9b9e15b5a',
     'size' => 193166
   },
+  'CPAN-1.83_65.tar.gz' => {
+    'md5' => '827bc5af9c9be79272428084393f7387',
+    'md5-ungz' => '75793c4c59ca3b25fd04681268454604',
+    'mtime' => '2006-02-04',
+    'sha256' => '22751bebea895f3c744523d053a9f5beabf4b2c469ce529f3f665bb9f2727c77',
+    'sha256-ungz' => 'f621cfa0e32ace80e8b46710f9d7bc1c140015affed27880c2b3d47feda5b176',
+    'size' => 209155
+  },
+  'CPAN-1.83_66.tar.gz' => {
+    'md5' => 'f36a90959dc37021366cd47472e2e991',
+    'md5-ungz' => '60600556448ac2c9638f5b3ecaf0818a',
+    'mtime' => '2006-02-04',
+    'sha256' => 'b343bdb87d84f6c732865fec95edf2665cbecce6e85c1dcc2a385c87729a224b',
+    'sha256-ungz' => '5dbdab7960173d4bbd7b46bd933d3f07d2ad944a23d424a8b61b9f6d77f98a62',
+    'size' => 209709
+  },
   'CPAN-Checksums-1.039.meta' => {
     'md5' => '3e657b428744ffec715cef0276739249',
     'mtime' => '2005-11-11',
@@ -179,6 +209,28 @@ $cksum = {
     'sha256' => '84aa9a2ab9e8946ee061d89a39edfc9a0542641ddfdbaf5751398f8a7f8c80f6',
     'sha256-ungz' => '36f84811cb2b42aa1a7c7ff58bfa644caccb30d428dbd6cb5960d7e8c458584e',
     'size' => 10653
+  },
+  'CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz' => {
+    'md5' => 'e0bdfbb9dabd411745b28e190ecdef91',
+    'md5-ungz' => '0a95b1e3ba1f844ab24c47f97d7479a4',
+    'mtime' => '2006-02-05',
+    'sha256' => 'f6ac4317b1ad78561567908a1b4b381c5c732364d9e700a2fb895f174b7d20fc',
+    'sha256-ungz' => 'bf83ca36f311b8b55c5be351ba8b9be4302fc2b919aaecf4bc8ccd678435c20a',
+    'size' => 1315
+  },
+  'CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz' => {
+    'md5' => 'dfdceb2209d9a6ec4616811d57641e1b',
+    'md5-ungz' => '4aa777ef6f99e5fba0c1aa8715d09c44',
+    'mtime' => '2006-02-05',
+    'sha256' => 'f8c9619e11c838c446135f1101614195e71591fece9929c73e269a8f2350b47f',
+    'sha256-ungz' => '49fc321c37e02bacc6bda714db43219ca350748a8b2baafa36ec15427960ea99',
+    'size' => 1417
+  },
+  'CPAN-Test-Dummy-Perl5-Make-1.01.meta' => {
+    'md5' => '857d1650b94a8fa84fd049bca366d2e0',
+    'mtime' => '2006-02-03',
+    'sha256' => '6686818a9335e5ccc22614425916812b80479427a8649bfb8d7eb514232f5021',
+    'size' => 303
   },
   'CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz' => {
     'md5' => '28b2d89977202a86d02d1de415792879',
@@ -276,6 +328,34 @@ $cksum = {
     'sha256-ungz' => '660aa365648cf8e1c86645d76354960597479916ec0ad1bfc9f3fbc06dcde61c',
     'size' => 152648
   },
+  'Perl-Repository-APC-1.178.meta' => {
+    'md5' => '8f213657f14e6c0a373e201da7ad6817',
+    'mtime' => '2006-02-04',
+    'sha256' => '8eef425daae50162029822c530b50ef1d8565f9bb2f2a7f8dcc37cce9c7a5fb9',
+    'size' => 360
+  },
+  'Perl-Repository-APC-1.178.tar.gz' => {
+    'md5' => 'c3e8636b776d11fafb381c543f95b611',
+    'md5-ungz' => '7131ad2d4327119710e029ed115787b9',
+    'mtime' => '2006-02-04',
+    'sha256' => 'edbe9dc17b61a7d5996aba3fc778d91726fa9abca11d458388d4b86eeb8a1913',
+    'sha256-ungz' => '50511b635e362396370c6fafd4149f989b61a40e2516513f3e90f4b8993488e1',
+    'size' => 150597
+  },
+  'Perl-Repository-APC-1.186.meta' => {
+    'md5' => 'b3ade082f9db5a64becaf87c50894bc8',
+    'mtime' => '2006-02-04',
+    'sha256' => 'b56e03787fe421723aed983e385558db04c34e356ee45c4396fa31d6f04f3add',
+    'size' => 360
+  },
+  'Perl-Repository-APC-1.186.tar.gz' => {
+    'md5' => '5441d68984f42d435f3a20962e5a301e',
+    'md5-ungz' => 'eeaa9947bd5e58b0f9d5f9e90698aa83',
+    'mtime' => '2006-02-04',
+    'sha256' => 'ba7f76732cc519c20d39bd7ee499f99b5daf1b9f9ad0529856454bbd6f6cf9f8',
+    'sha256-ungz' => '31e0231dd4d4667bfa7a3f28de8cd35d4376756095ae327365ebaecd1726a01e',
+    'size' => 151582
+  },
   'keepcool-0.344' => {
     'md5' => 'b3247f765a3b40d10499480f12af2e14',
     'mtime' => '2005-03-15',
@@ -301,7 +381,7 @@ __END__
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (GNU/Linux)
 
-iD8DBQFD4853Mo2oZ0UPiewRAhx2AJ9+MyJ8/PJpfuiEULMkp3XrL3UAwgCfQRdx
-2xzyWsJNxVHb/513RVqWjF4=
-=tuuZ
+iD8DBQFD5gDuMo2oZ0UPiewRAq+bAJ945wckARiX/oGP3vEGMn/yG6dTSwCfYW/2
+rOvFeB4y5HqI9ak9gsV57pE=
+=1Uop
 -----END PGP SIGNATURE-----
