@@ -32,6 +32,7 @@ t/CPAN/authors/id/CHECKSUMS
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/Nox.t
+t/README.shell.txt
 t/dot-cpan/Bundle/CpanTestDummies.pm
 t/loadme.t
 t/mirroredby.t

@@ -1,3 +1,30 @@
+2006-02-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: RDF::Simple installs although I see failing tests?
+
+	./Build test returns true even if tests fail. This was not always the
+	case or was it? No, it wasn't.
+
+	I go into the Class-MethodMaker-2.08 directory and try
+
+	perl Build.PL
+	./Build test
+	./Build clean
+
+	If Module::Build is missing, I install it manually. No CPAN.pm involved.
+
+	These perls behave (exit 255):
+	
+	/home/src/perl/repoperls/installed-perls/perl/piR9qHb/perl-5.8.0@27016/bin/perl
+	/usr/local/perl-5.8.0@27016/bin/perl
+	/home/src/perl/repoperls/installed-perls/maint-5.8/pIPN6hB/perl-5.8.0@26560/bin/perl
+	/home/src/perl/repoperls/installed-perls/perl/pREyceB/perl-5.8.0@27088/bin/perl
+
+	These don't (shell returns true):
+
+	/usr/local/perl-5.8.7/bin/perl
+	/usr/local/perl-5.8.8/bin/perl
+
 2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* prerequisites: require perl version xxx: we should not delete that
@@ -35,7 +62,7 @@
 
 	* dontload: make a dontload_list and deprecate dontload_hash. It seems
 	OK to keep $META->{dontload_hash} but it would be nice if changes on
-	$Config->{doneload_list} would always adjust the dontload_hash.
+	$Config->{dontload_list} would always adjust the dontload_hash.
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution
