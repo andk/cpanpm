@@ -41,6 +41,8 @@ To add a new distro, the following steps must be taken:
 
 - svn add the new testdistro (maybe we can skip that?)
 
+- add it to the MANIFEST
+
 (3) Upload and embed into our minicpan
 
 - verify that 'make dist' on CPAN.pm still works
@@ -52,7 +54,7 @@ To add a new distro, the following steps must be taken:
 
 - svn add the relevant CHECKSUMS files
 
-- add the dummy distro(s) and the CHECKSUMS files to the MANIFEST
+- add the CHECKSUMS files to the MANIFEST
 
 (4) Work with the results
 
