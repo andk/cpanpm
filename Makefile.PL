@@ -239,7 +239,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01/t/00_load.t
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01 && \
 		$(PERL) Build.PL && \
-		$(MAKE) dist && \
+		./Build dist && \
 		mv CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz ..
 
 }
