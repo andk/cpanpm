@@ -1,4 +1,11 @@
 use strict;
+BEGIN {
+    if ($] < 5.006) {
+        print "1..0\n";
+        exit;
+    }
+    require 5.006; # use warnings
+}
 no warnings 'redefine';
 
 =pod

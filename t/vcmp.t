@@ -32,7 +32,8 @@ while (@$D) {
   }
   if ($has_versionpm) {
     local $^W;
-    my $vres = version->new($l) cmp version->new($r);
+    my $vpack = "version"; # hide the name from 5.004
+    my $vres = $vpack->new($l) cmp $vpack->new($r);
     if ($vres != $res) {
       push @other, sprintf "v.pm: %d", $vres;
     }

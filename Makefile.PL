@@ -86,10 +86,17 @@ if ($HAVE_FILE_SPEC) {
   }
 }
 
+# for 5.004_05 I installed all of them manually despite errors;
+# version hints as of 2006-02
 my $prereq_pm = {
-                 'File::Temp' => 0,
-                 'File::Spec' => 0,
-                 'Test::More' => 0,
+                 'Test::More' => 0,   # MSCHWERN;
+                                      # Test-Simple-0.62.tar.gz;
+                 'File::Temp' => 0,   # JTENNESS; requires Test::More;
+                 'File::Spec' => 0,   # KWILLIAMS; requires
+                                      # Scalar::Util;
+                                      # PathTools-3.16.tar.gz
+                 'Scalar::Util' => 0, # GBARR;
+                                      # Scalar-List-Utils-1.18.tar.gz;
                 };
 
 if ($HAVE_FILE_SPEC) {
@@ -288,6 +295,14 @@ distdir ::
 sub distdir {
   my $self = shift;
   my $out = $self->SUPER::distdir;
+  $out =~ s/distdir :/distdir ::/g;
+  return $out;
+}
+
+# dist_dir was the name in very old MakeMaker as of 5.005_04
+sub dist_dir {
+  my $self = shift;
+  my $out = $self->SUPER::dist_dir;
   $out =~ s/distdir :/distdir ::/g;
   return $out;
 }
