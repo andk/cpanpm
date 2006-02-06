@@ -75,6 +75,23 @@ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.3   78.6
 Total                                 45.1   29.3   25.4   65.1  100.0   39.3
 ----------------------------------- ------ ------ ------ ------ ------ ------
 
+After 553:
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      45.9   30.9   25.3   63.4   79.1   40.2
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   13.3   44.6
+blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2    7.2   54.6
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm               36.9   18.9   22.2   71.4    0.3   31.8
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+Total                                 46.9   31.2   27.5   67.4  100.0   41.1
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+Time goes up now that we have 3 distros and the other values rise only slowly.
+
 =cut
 
 BEGIN {
@@ -286,7 +303,7 @@ b
 ########
 b Bundle::CpanTestDummies
 ~~like~~
-\sCONTAINS\s+CPAN::Test::Dummy::Perl5::Make
+\sCONTAINS.+CPAN::Test::Dummy::Perl5::Make
 ########
 d ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
 ~~like~~
@@ -304,6 +321,18 @@ test CPAN::Test::Dummy::Perl5::Make
 ~~like~~
 test\s+--\s+OK
 ########
+test CPAN::Test::Dummy::Perl5::Build
+~~like~~
+test\s+--\s+OK
+########
+failed
+~~like~~
+Nothing
+########
+test CPAN::Test::Dummy::Perl5::Build::Fails
+~~like~~
+test\s+--\s+NOT OK
+########
 dump CPAN::Test::Dummy::Perl5::Make
 ~~like~~
 (?s:bless.*ID.*CPAN_FILE.*CPAN_USERID.*CPAN_VERSION)
@@ -314,7 +343,7 @@ Warning:
 ########
 failed
 ~~like~~
-Nothing
+Test-Dummy-Perl5-Build-Fails.*make_test NO
 ########
 reload index
 ~~like~~

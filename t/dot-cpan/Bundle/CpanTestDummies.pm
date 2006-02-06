@@ -16,6 +16,8 @@ Bundle::CpanTestDummies - A bundle only for testing CPAN.pm
 
 =head1 CONTENTS
 
+CPAN::Test::Dummy::Perl5::Build
+CPAN::Test::Dummy::Perl5::Build::Fails
 CPAN::Test::Dummy::Perl5::Make
 
 =head1 DESCRIPTION

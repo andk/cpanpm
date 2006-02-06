@@ -8,4 +8,6 @@ Line-Count:   2
 Last-Updated: Fri, 03 Feb 1970 03:17:06 GMT
 
 Fcntl                              1.05  N/NW/NWCLARK/perl-5.8.8.tar.gz
+CPAN::Test::Dummy::Perl5::Build    1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz
+CPAN::Test::Dummy::Perl5::Build::Fails 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Make     1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz

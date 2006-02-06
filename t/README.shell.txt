@@ -60,7 +60,7 @@ To add a new distro, the following steps must be taken:
 
 - verify that 'make dist' on CPAN.pm still works
 
-- add the distro(s) to t/CPAN/modules/02packages.details.txt
+- add the distro(s) to CPAN/modules/02packages.details.txt
 
 - add the test to shell.t that triggered the demand for a new distro
 
