@@ -902,12 +902,17 @@ sub has_inst {
 }) unless $Have_warned->{"Net::FTP"}++;
 	sleep 3;
     } elsif ($mod eq "Digest::SHA"){
-	$CPAN::Frontend->myprint(qq{
+        if ($Have_warned->{"Digest::SHA"}++) {
+            $CPAN::Frontend->myprint(qq{CPAN: checksum security checks disabled}.
+                                     qq{because Digest::SHA not installed.\n});
+        } else {
+            $CPAN::Frontend->myprint(qq{
   CPAN: checksum security checks disabled because Digest::SHA not installed.
   Please consider installing the Digest::SHA module.
 
 });
-	sleep 2;
+            sleep 2;
+        }
     } elsif ($mod eq "Module::Signature"){
 	unless ($Have_warned->{"Module::Signature"}++) {
 	    # No point in complaining unless the user can
