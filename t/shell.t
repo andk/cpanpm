@@ -1,7 +1,7 @@
 use strict;
 BEGIN {
     if ($] < 5.006) {
-        print "1..0\n";
+        print "1..0 # Skip: Older than 5.6\n";
         exit;
     }
     require 5.006; # use warnings

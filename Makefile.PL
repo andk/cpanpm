@@ -150,6 +150,10 @@ package MY;
 sub macro {
     q{
 LC_ALL_noexport=en_GB.utf8
+
+ALL_PERLS = /usr/bin/perl /usr/local/bin/perl \
+            /usr/local/perl-5.004_05/bin/perl \
+            /usr/local/perl-5.005_04/bin/perl
 }
 }
 
@@ -263,6 +267,12 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz: \
 		$(PERL) Build.PL && \
 		./Build dist && \
 		mv CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz ..
+
+testallperls :
+	:>SIGNATURE
+	for p in $(ALL_PERLS); do $$p Makefile.PL && $(MAKE) test; done
+
+
 
 }
 }
