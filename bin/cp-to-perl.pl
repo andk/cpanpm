@@ -35,7 +35,7 @@ my $MAP = {
                                                  scripts/cpan
                                                 )]],
            "t/" => ["lib/CPAN/t/" => [qw(
-                                         t/[lmNv]*.t
+                                         t/{01,02,03,10,11}*.t
                                         )]], # loadme, mirroredby, nox, vcmp, version
           };
 
@@ -59,3 +59,27 @@ exit unless prompt("y","Proceed?","","y");
 for my $c (@command) {
   cp @$c or die "Could not cp @$c";
 }
+
+warn "
+
+
+==== Please ====
+==== adjust ====
+=== MANIFEST ===
+A         t/01loadme.t
+D         t/loadme.t
+
+A         t/02nox.t
+D         t/Nox.t
+
+A         t/03pkgs.t
+D         t/version.t
+
+A         t/10version.t
+D         t/vcmp.t
+
+A         t/11mirroredby.t
+D         t/mirroredby.t
+
+
+";
