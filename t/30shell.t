@@ -1,12 +1,4 @@
 use strict;
-BEGIN {
-    if ($] < 5.006) {
-        print "1..0 # Skip: Older than 5.6\n";
-        exit;
-    }
-    require 5.006; # use warnings
-}
-no warnings 'redefine';
 
 =pod
 
@@ -135,9 +127,10 @@ use Cwd;
 my $cwd = Cwd::cwd;
 
 sub read_myconfig () {
-    open my $fh, "t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
+    local *FH;
+    open *FH, "t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
     local $/;
-    eval <$fh>;
+    eval <FH>;
 }
 
 my @prgs;
@@ -342,7 +335,7 @@ test\s+--\s+NOT OK
 ########
 dump CPAN::Test::Dummy::Perl5::Make
 ~~like~~
-(?s:bless.*ID.*CPAN_FILE.*CPAN_USERID.*CPAN_VERSION)
+(?s:bless.+('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+){4})
 ########
 test CPAN::Test::Dummy::Perl5::NotExists
 ~~like~~

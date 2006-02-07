@@ -1,3 +1,9 @@
+2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: when Running "Makefile.PL" fails, then the case is not reachable
+	for the failed routine. Need another Naysayer category?? Try
+	Digest-SHA-5.34.tar.gz under perl-5.004_05.
+
 2006-02-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: RDF::Simple installs although I see failing tests?
