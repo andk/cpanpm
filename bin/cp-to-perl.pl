@@ -17,24 +17,6 @@ die "Could not find directory '$target'" unless -d $target;
 $target =~ s|/+$||;
 # warn "Copying to '$target'\n";
 
-=pod
-
-lib/CPAN/bin/cpan		easily interact with CPAN from the command line
-lib/CPAN/FirstTime.pm		Utility for creating CPAN config files
-lib/CPAN/Nox.pm			Runs CPAN while avoiding compiled extensions
-lib/CPAN/PAUSE2003.pub		CPAN public key
-lib/CPAN/PAUSE2005.pub		CPAN public key
-lib/CPAN/SIGNATURE		CPAN public key
-lib/CPAN/Version.pm		Simple math with different flavors of version strings
-lib/CPAN.pm			Interface to Comprehensive Perl Archive Network
-lib/CPAN/t/loadme.t		See if CPAN the module works
-lib/CPAN/t/mirroredby.t		See if CPAN::Mirrored::By works
-lib/CPAN/t/Nox.t		See if CPAN::Nox works
-lib/CPAN/t/vcmp.t		See if CPAN the module works
-lib/CPAN/t/version.t		See if CPAN::Version works
-
-=cut
-
 my $MAP = {
            "" => ["lib/CPAN/" => [qw(
                                      SIGNATURE
@@ -54,7 +36,7 @@ my $MAP = {
                                                 )]],
            "t/" => ["lib/CPAN/t/" => [qw(
                                          t/[lmNv]*.t
-                                        )]], # not signature, shell, CPAN, pod
+                                        )]], # loadme, mirroredby, nox, vcmp, version
           };
 
 my @command;
