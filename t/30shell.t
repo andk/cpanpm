@@ -94,6 +94,7 @@ Time goes up now that we have 3 distros and the other values rise only slowly.
 =cut
 
 BEGIN {
+    $|++;
     #chdir 't' if -d 't';
     unshift @INC, './lib';
     require Config;
@@ -110,7 +111,7 @@ BEGIN {
     # everywhere.
     if ($@) {
 	print "1..0 # Skip: no Expect\n";
-	exit 0;
+	eval "require POSIX; 1" and POSIX::_exit(0);
     }
 }
 
