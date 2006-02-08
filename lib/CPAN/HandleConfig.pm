@@ -424,8 +424,8 @@ sub cpl {
 }
 
 
-package ####::###### #hide from indexer
-    CPAN::Config;
+package
+    CPAN::Config; ####::###### #hide from indexer
 # note: J. Nick Koston wrote me that they are using
 # CPAN::Config->commit although undocumented. I suggested
 # CPAN::Shell->o("conf","commit") even when ugly it is at least
