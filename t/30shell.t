@@ -141,8 +141,15 @@ my @prgs;
 }
 
 use Test::More;
-plan tests => scalar @prgs + 2;
+plan tests => scalar @prgs + 5;
 
+for my $m (qw(
+              Term::ReadKey
+              Term::ReadLine
+              Text::Glob
+             )) {
+    use_ok($m);
+}
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
