@@ -1,8 +1,13 @@
 2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
+	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
+	by Andrew Strebkov makes the URL selection nicer.
+
 	* Bug: when Running "Makefile.PL" fails, then the case is not reachable
 	for the failed routine. Need another Naysayer category?? Try
-	Digest-SHA-5.34.tar.gz under perl-5.004_05.
+	Digest-SHA-5.34.tar.gz under perl-5.004_05 before Module::Signature is
+	installed.
 
 2006-02-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
