@@ -1,3 +1,15 @@
+2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_68
+
+	* bring 5.004 compatibility back
+
+	* kick out a 5.8.1 warning (Ken Williams)
+
+	* renaming all tests to NNxxx.t style
+
+	* less noise when Digest::SHA is not installed (closes 17598; Adam Kennedy)
+
 2006-02-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_67
