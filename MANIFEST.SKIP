@@ -33,6 +33,7 @@
 ^release-lib
 ^t/CPAN/MyConfig\.pm
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/
+^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01/
 ^t/dot-cpan/build
