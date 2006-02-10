@@ -3855,7 +3855,8 @@ sub as_string {
 	# next if m/^(ID|RO)$/;
 	my $extra = "";
 	if ($_ eq "CPAN_USERID") {
-            $extra .= " (".$self->author;
+            $extra .= " (";
+            $extra .= $self->fullname;
             my $email; # old perls!
             if ($email = $CPAN::META->instance("CPAN::Author",
                                                $self->cpan_userid
@@ -3889,8 +3890,8 @@ sub as_string {
     join "", @m, "\n";
 }
 
-#-> sub CPAN::InfoObj::author ;
-sub author {
+#-> sub CPAN::InfoObj::fullname ;
+sub fullname {
     my($self) = @_;
     $CPAN::META->instance("CPAN::Author",$self->cpan_userid)->fullname;
 }
