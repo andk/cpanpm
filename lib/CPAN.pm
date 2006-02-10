@@ -3881,7 +3881,7 @@ sub as_string {
 	  push @m, sprintf(
 			   "    %-12s %s\n",
 			   $_,
-			   join(" ",keys %{$self->{$_}}),
+			   join(" ",sort keys %{$self->{$_}}),
                           );
 	} else {
 	  push @m, sprintf "    %-12s %s\n", $_, $self->{$_};
