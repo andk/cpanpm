@@ -2603,8 +2603,9 @@ sub localize {
     }
     @levels = qw/easy/ if $^O eq 'MacOS';
     my($levelno);
-    local $ENV{FTP_PASSIVE} = $CPAN::Config->{ftp_passive}
-        if exists $CPAN::Config->{ftp_passive};
+    local $ENV{FTP_PASSIVE} = 
+        exists $CPAN::Config->{ftp_passive} ?
+        $CPAN::Config->{ftp_passive} : 1;
     for $levelno (0..$#levels) {
         my $level = $levels[$levelno];
 	my $method = "host$level";
@@ -4118,6 +4119,7 @@ sub normalize {
     $s;
 }
 
+#-> sub CPAN::Distribution::author ;
 sub author {
     my($self) = @_;
     my($authorid) = $self->pretty_id =~ /^([\w\-]+)/;
@@ -7699,10 +7701,10 @@ already set.
 
 When the config variable ftp_passive is set, all downloads will be run
 with the environment variable FTP_PASSIVE set to this value. This is
-in general a good idea. The same effect can be achieved by starting
-the cpan shell with the environment variable. If Net::FTP is
-installed, then it can also be configured to always set passive mode
-(run libnetcfg).
+in general a good idea as it influences both Net::FTP and LWP based
+connections. The same effect can be achieved by starting the cpan
+shell with this environment variable set. For Net::FTP alone, one can
+also always set passive mode by running libnetcfg.
 
 =head1 POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
@@ -7792,15 +7794,9 @@ This is the firewall implemented in the Linux kernel, it allows you to
 hide a complete network behind one IP address. With this firewall no
 special compiling is needed as you can access hosts directly.
 
-For accessing ftp servers behind such firewalls you may need to set
-the environment variable C<FTP_PASSIVE> to a true value, e.g.
-
-    env FTP_PASSIVE=1 perl -MCPAN -eshell
-
-or
-
-    perl -MCPAN -e '$ENV{FTP_PASSIVE} = 1; shell'
-
+For accessing ftp servers behind such firewalls you usually need to
+set the environment variable C<FTP_PASSIVE> or the config variable
+ftp_passive to a true value.
 
 =back
 

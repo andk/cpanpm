@@ -1,3 +1,20 @@
+2006-02-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign bug: t/37-translator-graph....Can't locate object method
+	"is_trivial_link" via package "GLOB" at
+	/home/k/.cpan/build/SQL-Translator-0.07/blib/lib/SQL/Translator/Schema/Graph.pm
+	line 46.
+
+	with bleadperl@17102 when trying to test SQL::Translator. Happends on
+	blead, not on 5.8.8 but with 5.8.8 I have other (and much more) failures
+
+	With #16852 I have already a ticket there for the signasture.
+
+	I regret that I did not include the full command needed to upload one's
+	key. Here it is:
+
+    gpg -a --keyserver hkp://pgp.mit.edu:11371 --send-keys YOURID
+
 2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
