@@ -12,3 +12,4 @@ CPAN::Test::Dummy::Perl5::Build    1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1
 CPAN::Test::Dummy::Perl5::Build::Fails 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Make     1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Failearly 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz
+CPAN::Test::Dummy::Perl5::Make::Zip 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip

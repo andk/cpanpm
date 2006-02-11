@@ -91,6 +91,37 @@ Total                                 46.9   31.2   27.5   67.4  100.0   41.1
 
 Time goes up now that we have 3 distros and the other values rise only slowly.
 
+After 589 (5.8.8):
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      46.9   32.2   27.3   64.9   84.4   41.4
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    9.8   44.6
+blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    5.3   53.5
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+Total                                 47.8   32.2   28.9   68.9  100.0   42.1
+----------------------------------- ------ ------ ------ ------ ------ ------
+ditto (bleadperl@27154):
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+File                           stmt   bran   cond    sub    pod   time  total
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm               46.8   32.1   27.3   65.0   47.7   82.1   41.4
+blib/lib/CPAN/Admin.pm         12.9    0.0    0.0   62.5    0.0    0.0   11.7
+blib/lib/CPAN/Debug.pm         63.6   40.0    0.0  100.0    0.0    0.0   53.8
+blib/lib/CPAN/FirstTime.pm     55.6   33.0   27.8   79.3    n/a   11.4   44.6
+.../lib/CPAN/HandleConfig.pm   60.6   45.2   32.0   88.2    0.0    6.1   52.2
+blib/lib/CPAN/Nox.pm          100.0   50.0    n/a  100.0    n/a    0.0   95.0
+blib/lib/CPAN/Tarzip.pm        46.6   25.5   22.2   78.6    0.0    0.3   39.2
+blib/lib/CPAN/Version.pm       83.3   54.5   84.0  100.0    0.0    0.0   74.3
+Total                          48.0   32.3   28.9   69.0   34.8  100.0   42.2
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+Relevant patches: added the zip and the failearly distro
+
 =cut
 
 BEGIN {
@@ -334,6 +365,10 @@ test CPAN::Test::Dummy::Perl5::Make
 test\s+--\s+OK
 ########
 test CPAN::Test::Dummy::Perl5::Build
+~~like~~
+test\s+--\s+OK
+########
+test CPAN::Test::Dummy::Perl5::Make::Zip
 ~~like~~
 test\s+--\s+OK
 ########
