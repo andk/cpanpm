@@ -5607,9 +5607,14 @@ sub install {
                     "won't install without force"
             }
         }
-	exists $self->{'install'} and push @e,
-	$self->{'install'}->text eq "YES" ?
-	    "Already done" : "Already tried without success";
+	if (exists $self->{'install'}) {
+            if ($self->{'install'}->can("text") ?
+                $self->{'install'}->text eq "YES" :
+                $self->{'install'} =~ /^YES/
+               ) {
+                push @e, "Already done";
+            }
+        }
 
         exists $self->{later} and length($self->{later}) and
             push @e, $self->{later};

@@ -1,5 +1,15 @@
 2006-02-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug?: Somehow I managed to get POE to fail the installation, maybe
+	AutoInstall was involved. I then installed LWP and then tried POE again.
+	It succeeded in all tests, but make install said, it had "Already tried
+	without success". In such a moment this is simply the wrong thing, we
+	would much rather that CPAN.pm retried, especially as the test suite
+	runs forever!
+
+	So is this a bug? I cannot tell before I know why the first installation
+	attempt failed.
+
 	* Foreign bug: POE with bleadperl fails a few tests with
 
 	*** glibc detected *** double free or corruption (!prev): 0x085ed6e0 ***
@@ -12,6 +22,8 @@ tests/30_loops/10_select/comp_tcp    0     6    42   42 100.00%  1-42
 tests/30_loops/20_poll/comp_tcp_c    0     6    42   42 100.00%  1-42
 tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 44 tests and 16 subtests skipped.
+
+	Does not fail with 5.8.8
 
 2006-02-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
