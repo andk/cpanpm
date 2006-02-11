@@ -1,3 +1,18 @@
+2006-02-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign bug: POE with bleadperl fails a few tests with
+
+	*** glibc detected *** double free or corruption (!prev): 0x085ed6e0 ***
+tests/30_loops/30_event/comp_tcp_concurrent.........dubious                  
+        Test returned status 0 (wstat 6, 0x6)
+DIED. FAILED tests 1-42
+        Failed
+
+tests/30_loops/10_select/comp_tcp    0     6    42   42 100.00%  1-42
+tests/30_loops/20_poll/comp_tcp_c    0     6    42   42 100.00%  1-42
+tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
+44 tests and 16 subtests skipped.
+
 2006-02-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Foreign bug: t/37-translator-graph....Can't locate object method
@@ -97,8 +112,8 @@
 
 	* dontload: make a dontload_list and deprecate dontload_hash. It seems
 	OK to keep $META->{dontload_hash} but it would be nice if changes on
-	$Config->{dontload_list} would always adjust the dontload_hash. Needs
-	deprecation cycle!
+	$Config->{dontload_list} would always adjust the dontload_hash. DONE in
+	rev. 581
 
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution. Or just leave it as it is. Just like

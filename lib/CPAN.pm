@@ -862,11 +862,12 @@ sub has_inst {
     my($self,$mod,$message) = @_;
     Carp::croak("CPAN->has_inst() called without an argument")
 	unless defined $mod;
-    if (defined $message && $message eq "no"
+    my %dont = map { $_ => 1 } keys %{$CPAN::META->{dontload_hash}||{}},
+        keys %{$CPAN::Config->{dontload_hash}||{}},
+            @{$CPAN::Config->{dontload_list}||[]};
+    if (defined $message && $message eq "no"  # afair only used by Nox
         ||
-        exists $CPAN::META->{dontload_hash}{$mod} # unsafe meta access, ok
-        ||
-        exists $CPAN::Config->{dontload_hash}{$mod}
+        $dont{$mod}
        ) {
       $CPAN::META->{dontload_hash}{$mod}||=1; # unsafe meta access, ok
       return 0;
@@ -4784,6 +4785,7 @@ sub verifyCHECKSUM {
     $self->CHECKSUM_check_file($lc_file);
 }
 
+#-> sub CPAN::Distribution::SIG_check_file ;
 sub SIG_check_file {
     my($self,$chk_file) = @_;
     my $rv = eval { Module::Signature::_verify($chk_file) };
@@ -4943,11 +4945,14 @@ sub eq_CHECKSUM {
 # routine, and immediately before we check for a Signal. I hope this
 # works out in one of v1.57_53ff
 
+# "Force get forgets previous error conditions"
+
+#-> sub CPAN::Distribution::force ;
 sub force {
   my($self, $method) = @_;
   for my $att (qw(
   CHECKSUM_STATUS archived build_dir localfile make install unwrapped
-  writemakefile modulebuild
+  writemakefile modulebuild make_test
  )) {
     delete $self->{$att};
   }
@@ -7563,7 +7568,7 @@ defined:
   build_dir          locally accessible directory to build modules
   cache_metadata     use serializer to cache metadata
   cpan_home          local directory reserved for this package
-  dontload_hash      anonymous hash: modules in the keys will not be
+  dontload_list      arrayref: modules in the list will not be
                      loaded by the CPAN::has_inst() routine
   getcwd             see below
   gzip		     location of external program gzip

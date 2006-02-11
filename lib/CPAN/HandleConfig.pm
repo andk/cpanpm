@@ -11,25 +11,55 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
         init     => "Interactive setting of all options",
 );
 
-%keys = map { $_ => undef } qw(
-    build_cache build_dir bzip2
-    cache_metadata commandnumber_in_prompt cpan_home curl
-    dontload_hash
-    ftp ftp_passive ftp_proxy
-    getcwd gpg gzip
-    histfile histsize http_proxy
-    inactivity_timeout index_expire inhibit_startup_message
-    keep_source_where
-    lynx
-    make make_arg make_install_arg make_install_make_command makepl_arg
-    mbuild_arg mbuild_install_arg mbuild_install_build_command mbuildpl_arg
-    ncftp ncftpget no_proxy pager
-    prefer_installer prerequisites_policy
-    scan_cache shell show_upload_date
-    tar term_is_latin
-    unzip urllist
-    wait_list wget
-);
+%keys = map { $_ => undef } (
+                             "build_cache",
+                             "build_dir",
+                             "bzip2",
+                             "cache_metadata",
+                             "commandnumber_in_prompt",
+                             "cpan_home",
+                             "curl",
+                             "dontload_hash", # deprecated after 1.83_68 (rev. 581)
+                             "dontload_list",
+                             "ftp",
+                             "ftp_passive",
+                             "ftp_proxy",
+                             "getcwd",
+                             "gpg",
+                             "gzip",
+                             "histfile",
+                             "histsize",
+                             "http_proxy",
+                             "inactivity_timeout",
+                             "index_expire",
+                             "inhibit_startup_message",
+                             "keep_source_where",
+                             "lynx",
+                             "make",
+                             "make_arg",
+                             "make_install_arg",
+                             "make_install_make_command",
+                             "makepl_arg",
+                             "mbuild_arg",
+                             "mbuild_install_arg",
+                             "mbuild_install_build_command",
+                             "mbuildpl_arg",
+                             "ncftp",
+                             "ncftpget",
+                             "no_proxy",
+                             "pager",
+                             "prefer_installer",
+                             "prerequisites_policy",
+                             "scan_cache",
+                             "shell",
+                             "show_upload_date",
+                             "tar",
+                             "term_is_latin",
+                             "unzip",
+                             "urllist",
+                             "wait_list",
+                             "wget",
+                            );
 if ($^O eq "MSWin32") {
     for my $k (qw(
                   mbuild_install_build_command
@@ -87,10 +117,15 @@ sub edit {
 	    } else {
                 $self->prettyprint($o);
 	    }
-            if ($o eq "urllist" && $changed) {
-                # reset the cached values
-                undef $CPAN::FTP::Thesite;
-                undef $CPAN::FTP::Themethod;
+            if ($changed) {
+                if ($o eq "urllist") {
+                    # reset the cached values
+                    undef $CPAN::FTP::Thesite;
+                    undef $CPAN::FTP::Themethod;
+                } elsif ($o eq "dontload_list") {
+                    # empty it, it will be built up again
+                    $CPAN::META->{dontload_hash} = {};
+                }
             }
             return $changed;
         } elsif ($o =~ /_hash$/) {

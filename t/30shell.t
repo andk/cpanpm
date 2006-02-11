@@ -317,6 +317,10 @@ d ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
 ~~like~~
 CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
 ########
+d ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
+~~like~~
+CPAN_USERID.*ANDK.*Andreas
+########
 ls ANDK
 ~~like~~
 (?s:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy.*\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump)
