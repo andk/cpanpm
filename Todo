@@ -24,7 +24,7 @@
 	* Bug: when Running "Makefile.PL" fails, then the case is not reachable
 	for the failed routine. Need another Naysayer category?? Try
 	Digest-SHA-5.34.tar.gz under perl-5.004_05 before Module::Signature is
-	installed.
+	installed. FIXED in rev. 580
 
 2006-02-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -55,7 +55,7 @@
 	/usr/local/perl-5.8.7/bin/perl
 	/usr/local/perl-5.8.8/bin/perl
 
-	Stepping in the debugger through 27088 and and 5.8.8:
+	Stepping in the debugger through bleadperl@27088 and 5.8.8:
 
 	27088 has Test::Harness 2.56 while my 5.8.8 has 2.57_03. Apparently a
 	Test::Harness bug. REPORTED as #17490

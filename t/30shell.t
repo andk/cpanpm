@@ -345,6 +345,10 @@ dump CPAN::Test::Dummy::Perl5::Make
 ~~like~~
 (?s:bless.+('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+){4})
 ########
+install CPAN::Test::Dummy::Perl5::Make::Failearly
+~~like~~
+(?s:Failed during this command.+writemakefile NO)
+########
 test CPAN::Test::Dummy::Perl5::NotExists
 ~~like~~
 Warning:
@@ -352,6 +356,10 @@ Warning:
 failed
 ~~like~~
 Test-Dummy-Perl5-Build-Fails.*make_test NO
+########
+failed
+~~like~~
+Test-Dummy-Perl5-Make-Failearly.*writemakefile NO
 ########
 reload index
 ~~like~~

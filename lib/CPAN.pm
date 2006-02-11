@@ -394,11 +394,7 @@ sub text {
 }
 sub as_string {
     my($self) = @_;
-    if (0) { # called from rematein during install?
-        require Carp;
-        Carp::cluck("HERE");
-    }
-    $self->{TEXT};
+    $self->text;
 }
 
 package CPAN::Shell;
@@ -1761,7 +1757,13 @@ sub failed {
     my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
-        for my $nosayer (qw(signature_verify make make_test install)) {
+        for my $nosayer (
+                         "writemakefile",
+                         "signature_verify",
+                         "make",
+                         "make_test",
+                         "install",
+                        ) {
             next unless exists $d->{$nosayer};
             next unless (
                          $d->{$nosayer}->can("failed") ?
@@ -4532,7 +4534,7 @@ and there run
 Package comes with a Makefile and without a Makefile.PL.
 We\'ll try to build it with that Makefile then.
 });
-            $self->{writemakefile} = "YES";
+            $self->{writemakefile} = CPAN::Distrostatus->new("YES");
             sleep 2;
         } else {
             my $cf = $self->called_for || "unknown";
@@ -5052,9 +5054,21 @@ or
                 and push @e, "Did not pass the signature test.";
         }
 
-        exists $self->{writemakefile} &&
-            $self->{writemakefile} =~ m/ ^ NO\s* ( .* ) /sx and push @e,
-                $1 || "Had some problem writing Makefile";
+        if (exists $self->{writemakefile} &&
+            (
+             $self->{writemakefile}->can("failed") ?
+             $self->{writemakefile}->failed :
+             $self->{writemakefile} =~ /^NO/
+            )) {
+            # XXX maybe a retry would be in order?
+            my $err = $self->{writemakefile}->can("text") ?
+                $self->{writemakefile}->text :
+                    $self->{writemakefile};
+            $err =~ s/^NO\s*//;
+            $err ||= "Had some problem writing Makefile";
+            $err .= ", won't make";
+            push @e, $err;
+        }
 
 	defined $self->{'make'} and push @e,
             "Has already been processed within this session";
@@ -5093,7 +5107,11 @@ or
 #	$switch = "-MExtUtils::MakeMaker ".
 #	    "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
 #	    if $] > 5.00310;
-	$system = "$perl $switch Makefile.PL $CPAN::Config->{makepl_arg}";
+	$system = sprintf("%s%s Makefile.PL%s",
+                          $perl,
+                          $switch ? " $switch" : "",
+                          $CPAN::Config->{makepl_arg} ? " $CPAN::Config->{makepl_arg}" : "",
+                         );
     }
     unless (exists $self->{writemakefile}) {
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
@@ -5123,27 +5141,24 @@ or
 		kill 9, $pid;
 		waitpid $pid, 0;
 		$CPAN::Frontend->myprint($@);
-		$self->{writemakefile} = "NO $@";
+		$self->{writemakefile} = CPAN::Distrostatus->new("NO $@");
 		$@ = "";
 		return;
 	    }
 	} else {
 	  $ret = system($system);
 	  if ($ret != 0) {
-	    $self->{writemakefile} = "NO '$system' returned status $ret";
+	    $self->{writemakefile} = CPAN::Distrostatus
+                ->new("NO '$system' returned status $ret");
 	    return;
 	  }
 	}
 	if (-f "Makefile" || -f "Build") {
-	  $self->{writemakefile} = "YES";
+	  $self->{writemakefile} = CPAN::Distrostatus->new("YES");
           delete $self->{make_clean}; # if cleaned before, enable next
 	} else {
-	  $self->{writemakefile} =
-	      qq{NO -- Unknown reason.};
-	  # It's probably worth it to record the reason, so let's retry
-	  # local $/;
-	  # my $fh = IO::File->new("$system |"); # STDERR? STDIN?
-	  # $self->{writemakefile} .= <$fh>;
+	  $self->{writemakefile} = CPAN::Distrostatus
+              ->new(qq{NO -- Unknown reason.});
 	}
     }
     if ($CPAN::Signal){
@@ -5162,7 +5177,7 @@ or
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $self->{'make'} = CPAN::Distrostatus->new("YES");
     } else {
-	 $self->{writemakefile} ||= "YES";
+	 $self->{writemakefile} ||= CPAN::Distrostatus->new("YES");
 	 $self->{'make'} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
@@ -5427,8 +5442,10 @@ sub test {
     }
   EXCUSE: {
 	my @e;
-	exists $self->{make} or exists $self->{later} or push @e,
-	"Make had some problems, maybe interrupted? Won't test";
+        unless (exists $self->{make} or exists $self->{later}) {
+            push @e,
+                "Make had some problems, won't test";
+        }
 
 	exists $self->{make} and
 	    (
@@ -5558,8 +5575,10 @@ sub install {
 	my @e;
 	exists $self->{build_dir} or push @e, "Has no own directory";
 
-	exists $self->{make} or exists $self->{later} or push @e,
-	"Make had some problems, maybe interrupted? Won't install";
+	unless (exists $self->{make} or exists $self->{later}) {
+            push @e,
+                "Make had some problems, won't install";
+        }
 
 	exists $self->{make} and
 	    (
