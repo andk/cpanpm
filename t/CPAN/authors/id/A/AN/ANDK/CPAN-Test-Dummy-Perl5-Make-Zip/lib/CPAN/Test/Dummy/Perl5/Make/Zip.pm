@@ -1,14 +1,6 @@
-package CPAN::Test::Dummy::Perl5::Make;
+package CPAN::Test::Dummy::Perl5::Make::Zip;
 
-use 5.004;
-use strict;
-
-use vars qw{$VERSION};
-BEGIN {
-	$VERSION = '1.01';
-}
-
-sub dummy { 'Mike' }
+$VERSION = '1.01';
 
 1;
 
@@ -18,11 +10,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Test::Dummy::Perl5::Make - CPAN Test Dummy
+CPAN::Test::Dummy::Perl5::Make::Zip - CPAN Test Dummy
 
 =head1 SYNOPSIS
 
-    use CPAN::Test::Dummy::Perl5::Make;
+    use CPAN::Test::Dummy::Perl5::Make::Zip;
 
 =head1 DESCRIPTION
 
