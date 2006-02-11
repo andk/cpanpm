@@ -52,7 +52,7 @@ To add a new distro, the following steps must be taken:
 - upload the distro(s) to the CPAN and wait until the indexer has
   produced a CHECKSUMS file
 
-- svn add the relevant CHECKSUMS files
+- svn add/ci the relevant CHECKSUMS files
 
 - add the CHECKSUMS files to the MANIFEST
 
