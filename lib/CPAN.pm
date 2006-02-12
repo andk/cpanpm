@@ -5042,6 +5042,10 @@ or
       }
     }
     $self->get;
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
+    }
   EXCUSE: {
         my @e;
         !$self->{archived} || $self->{archived} eq "NO" and push @e,
@@ -5087,6 +5091,10 @@ or
         }
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+    }
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
     }
     $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
     my $builddir = $self->dir or
