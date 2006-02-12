@@ -91,36 +91,23 @@ Total                                 46.9   31.2   27.5   67.4  100.0   41.1
 
 Time goes up now that we have 3 distros and the other values rise only slowly.
 
-After 589 (5.8.8):
------------------------------------ ------ ------ ------ ------ ------ ------
-File                                  stmt   bran   cond    sub   time  total
------------------------------------ ------ ------ ------ ------ ------ ------
-blib/lib/CPAN.pm                      46.9   32.2   27.3   64.9   84.4   41.4
-blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
-blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
-blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    9.8   44.6
-blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    5.3   53.5
-blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
-blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
-blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
-Total                                 47.8   32.2   28.9   68.9  100.0   42.1
------------------------------------ ------ ------ ------ ------ ------ ------
-ditto (bleadperl@27154):
+After 590 (bleadperl@27154):
 ---------------------------- ------ ------ ------ ------ ------ ------ ------
 File                           stmt   bran   cond    sub    pod   time  total
 ---------------------------- ------ ------ ------ ------ ------ ------ ------
-blib/lib/CPAN.pm               46.8   32.1   27.3   65.0   47.7   82.1   41.4
+blib/lib/CPAN.pm               50.4   35.4   30.8   69.4   47.7   84.8   44.9
 blib/lib/CPAN/Admin.pm         12.9    0.0    0.0   62.5    0.0    0.0   11.7
 blib/lib/CPAN/Debug.pm         63.6   40.0    0.0  100.0    0.0    0.0   53.8
-blib/lib/CPAN/FirstTime.pm     55.6   33.0   27.8   79.3    n/a   11.4   44.6
-.../lib/CPAN/HandleConfig.pm   60.6   45.2   32.0   88.2    0.0    6.1   52.2
+blib/lib/CPAN/FirstTime.pm     55.6   33.0   27.8   79.3    n/a    9.7   44.6
+.../lib/CPAN/HandleConfig.pm   60.6   45.2   32.0   88.2    0.0    5.2   52.2
 blib/lib/CPAN/Nox.pm          100.0   50.0    n/a  100.0    n/a    0.0   95.0
 blib/lib/CPAN/Tarzip.pm        46.6   25.5   22.2   78.6    0.0    0.3   39.2
 blib/lib/CPAN/Version.pm       83.3   54.5   84.0  100.0    0.0    0.0   74.3
-Total                          48.0   32.3   28.9   69.0   34.8  100.0   42.2
+Total                          50.8   34.9   31.3   72.4   34.8  100.0   44.9
 ---------------------------- ------ ------ ------ ------ ------ ------ ------
 
-Relevant patches: added the zip and the failearly distro
+Relevant patches: added the zip and the failearly distro, removing
+unused code, low hanging fruits
 
 =cut
 
@@ -187,6 +174,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
 
 my $exp = Expect->new;
 my $prompt = "cpan>";
+my $prompt_re = "cpan[^>]*>";
 $exp->spawn(
             $^X,
             "-I$cwd/t",                 # get this test's own MyConfig
@@ -197,7 +185,7 @@ $exp->spawn(
             # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
             "-e",
             # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
-            "\@CPAN::Defaultsites = (); shell('$prompt\n')",
+            "\@CPAN::Defaultsites = (); shell",
            );
 my $timeout = 6;
 $exp->log_stdout(0);
@@ -214,6 +202,8 @@ sub mydiag {
     print $msg;
 }
 
+my $waiting_for = "(?s:ReadLine support enabled.*".$prompt_re.")";
+# warn "WAITING FOR: $waiting_for";
 $exp->expect(
              $timeout,
              [ eof => sub { exit } ],
@@ -232,7 +222,7 @@ $exp->expect(
                    }
                    Expect::exp_continue;
                }],
-             '-re', "(?s:ReadLine support enabled.*".quotemeta($prompt).")"
+             '-re', $waiting_for
             );
 
 my $got = $exp->clear_accum;
@@ -254,7 +244,7 @@ for my $i (0..$#prgs){
     my $sendprog = $prog;
     $sendprog =~ s/\\t/\t/g;
     $exp->send("$sendprog\n");
-    $expected .= "(?s:.*$prompt)" unless $expected =~ /\(/;
+    $expected .= "(?s:.*$prompt_re)" unless $expected =~ /\(/;
     mydiag "EXPECT: $expected";
     $exp->expect(
                  $timeout,
@@ -360,6 +350,10 @@ ls ANDK/CPAN*
 ~~like~~
 (?s:Text::Glob\s+loaded\s+ok.*CPAN-Test-Dummy)
 ########
+force ls ANDK/CPAN*
+~~like~~
+(?s:CPAN-Test-Dummy)
+########
 test CPAN::Test::Dummy::Perl5::Make
 ~~like~~
 test\s+--\s+OK
@@ -392,6 +386,10 @@ test CPAN::Test::Dummy::Perl5::NotExists
 ~~like~~
 Warning:
 ########
+test Bundle::CpanTestDummies
+~~like~~
+Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
+########
 failed
 ~~like~~
 Test-Dummy-Perl5-Build-Fails.*make_test NO
@@ -399,6 +397,13 @@ Test-Dummy-Perl5-Build-Fails.*make_test NO
 failed
 ~~like~~
 Test-Dummy-Perl5-Make-Failearly.*writemakefile NO
+########
+o conf commandnumber_in_prompt 1
+~~like~~
+########
+o conf build_cache 0.1
+~~like~~
+build_cache
 ########
 reload index
 ~~like~~
@@ -419,6 +424,18 @@ h
 o conf
 ~~like~~
 (?s:commit.*build_cache.*cpan_home.*inhibit_startup_message.*urllist)
+########
+r
+~~like~~
+(All modules are up to date|installed modules)
+########
+notest
+~~like~~
+Pragma.*method
+########
+autobundle
+~~like~~
+Wrote bundle file
 ########
 o conf help
 ~~like~~

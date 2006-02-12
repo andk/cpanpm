@@ -31,7 +31,7 @@ my %line_sub_pkg;
 my $curpkg = "main";
 while (<$pfh>) {
   s/#.*//;
-  $curpkg = $1 if /package\s+([\w:]+)/;
+  $curpkg = $1 if /^\s*package\s+([\w:]+)/;
   if (/^sub (\w+)/) {
     for my $delta (0,1) {
       my $line = $. + $delta;

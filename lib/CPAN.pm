@@ -2125,11 +2125,11 @@ sub mywarn {
     $self->print_ornamented($what, 'bold red on_yellow');
 }
 
-sub myconfess {
-    my($self,$what) = @_;
-    $self->print_ornamented($what, 'bold red on_white');
-    Carp::confess "died";
-}
+#sub myconfess {
+#    my($self,$what) = @_;
+#    $self->print_ornamented($what, 'bold red on_white');
+#    Carp::confess "died";
+#}
 
 sub mydie {
     my($self,$what) = @_;
@@ -6666,14 +6666,6 @@ sub inst_version {
     my $parsefile = $self->inst_file or return;
     local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     my $have;
-
-    # there was a bug in 5.6.0 that let lots of unini warnings out of
-    # parse_version. Fixed shortly after 5.6.0 by PMQS. We can remove
-    # the following workaround after 5.6.1 is out.
-    local($SIG{__WARN__}) =  sub { my $w = shift;
-                                   return if $w =~ /uninitialized/i;
-                                   warn $w;
-                                 };
 
     $have = MM->parse_version($parsefile) || "undef";
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
