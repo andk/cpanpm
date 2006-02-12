@@ -10,7 +10,7 @@
 	So is this a bug? I cannot tell before I know why the first installation
 	attempt failed.
 
-	* Foreign bug: POE with bleadperl fails a few tests with
+	* Foreign bug: POE with bleadperl@27154 fails a few tests with
 
 	*** glibc detected *** double free or corruption (!prev): 0x085ed6e0 ***
 tests/30_loops/30_event/comp_tcp_concurrent.........dubious                  
@@ -23,7 +23,7 @@ tests/30_loops/20_poll/comp_tcp_c    0     6    42   42 100.00%  1-42
 tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 44 tests and 16 subtests skipped.
 
-	Does not fail with 5.8.8
+	Does not fail with 5.8.8.	Blame? 27059! REPORTED
 
 2006-02-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
