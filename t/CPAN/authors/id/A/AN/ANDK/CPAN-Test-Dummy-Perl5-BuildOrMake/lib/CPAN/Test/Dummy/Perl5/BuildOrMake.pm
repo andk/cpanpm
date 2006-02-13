@@ -1,14 +1,6 @@
-package CPAN::Test::Dummy::Perl5::Build;
+package CPAN::Test::Dummy::Perl5::BuildOrMake;
 
-use 5.004;
-use strict;
-
-use vars qw{$VERSION};
-BEGIN {
-	$VERSION = '1.01';
-}
-
-sub dummy { 'Mike' }
+$VERSION = '1.01';
 
 1;
 
@@ -18,11 +10,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Test::Dummy::Perl5::Build - CPAN Test Dummy
+CPAN::Test::Dummy::Perl5::BuildOrMake - CPAN Test Dummy
 
 =head1 SYNOPSIS
 
-    use CPAN::Test::Dummy::Perl5::Build;
+    use CPAN::Test::Dummy::Perl5::BuildOrMake;
 
 =head1 DESCRIPTION
 

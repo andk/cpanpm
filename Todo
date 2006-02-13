@@ -1,3 +1,9 @@
+ 2006-02-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: Randal reports that Zoidberg has both a Makefile.PL and a
+	Build.PL and he has prefer_installer EUMM and yet CPAN chose to run the
+	Build.PL. rt #17612.
+
 2006-02-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug?: Somehow I managed to get POE to fail the installation, maybe
