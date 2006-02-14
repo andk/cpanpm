@@ -3903,6 +3903,8 @@ sub fullname {
 sub dump {
   my($self) = @_;
   require Data::Dumper;
+  local $Data::Dumper::Sortkeys;
+  $Data::Dumper::Sortkeys = 1;
   print Data::Dumper::Dumper($self);
 }
 

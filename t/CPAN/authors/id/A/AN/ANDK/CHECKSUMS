@@ -2,7 +2,7 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-# CHECKSUMS file written on Sat Feb 11 13:42:44 2006 GMT by CPAN::Checksums (v1.039)
+# CHECKSUMS file written on Tue Feb 14 01:42:50 2006 GMT by CPAN::Checksums (v1.039)
 $cksum = {
   'Apache-GzipChain-1.14.tar.gz' => {
     'md5' => '9330c5bfae432361fc4b1a955f2f7d91',
@@ -254,6 +254,20 @@ $cksum = {
     'sha256-ungz' => '49fc321c37e02bacc6bda714db43219ca350748a8b2baafa36ec15427960ea99',
     'size' => 1417
   },
+  'CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.meta' => {
+    'md5' => 'f1556172ca10bc2ca7c7b2acbbc3a02d',
+    'mtime' => '2006-02-13',
+    'sha256' => '239f5d203406a7222c9789ae2b1a9c767b13cd92c742a15ae10a3aab781af7eb',
+    'size' => 180
+  },
+  'CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz' => {
+    'md5' => '121019d3eabeb7537664a4a017e20f67',
+    'md5-ungz' => '92f4b7d82dbebddc1a20423b0b51db4e',
+    'mtime' => '2006-02-13',
+    'sha256' => '4b7b92521b4ed62a7a94584c6b4bdc51db99cb08cca862d5fb5b1b54955259d0',
+    'sha256-ungz' => 'e1bc2dd27760c2b2ba17f1a8b288a273a1d94d21919ce3718fce44e4df06eefb',
+    'size' => 1335
+  },
   'CPAN-Test-Dummy-Perl5-Make-1.01.meta' => {
     'md5' => '857d1650b94a8fa84fd049bca366d2e0',
     'mtime' => '2006-02-03',
@@ -449,7 +463,7 @@ __END__
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (GNU/Linux)
 
-iD8DBQFD7enVMo2oZ0UPiewRAncAAJ0S+wirDkyIsQxzouPHrJxp6uCQ9gCeNHCi
-hwhTn4jRrhvRhVmRbmnTHdw=
-=m602
+iD8DBQFD8TWaMo2oZ0UPiewRAtb3AJ40VhKksqs0DZ0h/LBUvgfpjdxlsgCfbHcu
+ilZ4q3h6eV/h6jLiZmQkSHE=
+=iUdH
 -----END PGP SIGNATURE-----

@@ -415,15 +415,15 @@ m /l/
 ########
 i /l/
 ~~like~~
-(?s:CPAN.*Dummies.*Dummy.*Perl5.*Fcntl)
+(?s:CPAN.*?Dummies.*?Dummy.*?Perl5.*?Fcntl)
 ########
 h
 ~~like~~
-(?s:make.*test.*install.*force.*notest.*reload)
+(?s:make.*?test.*?install.*?force.*?notest.*?reload)
 ########
 o conf
 ~~like~~
-(?s:commit.*build_cache.*cpan_home.*inhibit_startup_message.*urllist)
+(?s:commit.*?build_cache.*?cpan_home.*?inhibit_startup_message.*?urllist)
 ########
 r
 ~~like~~
