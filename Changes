@@ -1,3 +1,23 @@
+2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.83_69
+
+	* much more testing (70% sub coverage in CPAN.pm)
+
+	* deprecated "dontload_hash" and introduced "donload_list" instead
+
+	* better handling of errors during 'perl Makefile.PL'
+
+	* turn on sorting for the dump command
+
+	* turn on sorting for the CONTAINSMODS attribute of Distribution objects
+
+	* env FTP_PASSIVE now set to true also when config variable ftp_passive
+	does not exist (brought up by Jarkko)
+
+	* patch by Sebastien Aperghis-Tramoni to avoid a SEGV with 5.004_05
+	which happens when exit is called within BEGIN
+
 2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_68

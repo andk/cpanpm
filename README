@@ -749,7 +749,7 @@ CONFIGURATION
       build_dir          locally accessible directory to build modules
       cache_metadata     use serializer to cache metadata
       cpan_home          local directory reserved for this package
-      dontload_hash      anonymous hash: modules in the keys will not be
+      dontload_list      arrayref: modules in the list will not be
                          loaded by the CPAN::has_inst() routine
       getcwd             see below
       gzip               location of external program gzip
@@ -776,9 +776,11 @@ CONFIGURATION
                          in the install stage, for example 'sudo ./Build'
       mbuildpl_arg       arguments passed to 'perl Build.PL'
       pager              location of external program more (or any pager)
-      prefer_installer   legal values are MB and EUMM: if a module
-                         comes with both a Makefile.PL and a Build.PL, use
-                         the former (EUMM) or the latter (MB)
+      prefer_installer   legal values are MB and EUMM: if a module comes
+                         with both a Makefile.PL and a Build.PL, use the
+                         former (EUMM) or the latter (MB); if the module
+                         comes with only one of the two, that one will be
+                         used in any case
       prerequisites_policy
                          what to do if you are missing module prerequisites
                          ('follow' automatically, 'ask' me, or 'ignore')
