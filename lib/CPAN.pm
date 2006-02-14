@@ -3853,7 +3853,10 @@ sub as_string {
     my $class = ref($self);
     $class =~ s/^CPAN:://;
     push @m, $class, " id = $self->{ID}\n";
-    my $ro = $self->ro;
+    my $ro;
+    unless ($ro = $self->ro) {
+        $CPAN::Frontend->mydie("Unknown distribution $self->{ID}");
+    }
     for (sort keys %$ro) {
 	# next if m/^(ID|RO)$/;
 	my $extra = "";
@@ -5518,6 +5521,11 @@ sub clean {
     my($self) = @_;
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint("Running $make clean\n");
+    unless (exists $self->{archived}) {
+        $CPAN::Frontend->mywarn("Distribution seems to have never been unzipped".
+                                "/untarred, nothing done\n");
+        return 1;
+    }
     unless (exists $self->{build_dir}) {
         $CPAN::Frontend->mywarn("Distribution has no own directory, nothing to do.\n");
         return 1;

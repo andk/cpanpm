@@ -16,6 +16,7 @@ Running make clean
 Distribution has no own directory, nothing to do.
 Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 3857.
 
+	Fixed i rev. 604
 
 2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
