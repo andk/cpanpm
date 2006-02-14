@@ -1,3 +1,22 @@
+2006-02-14  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: inexistant distro leads to perl error; clean on uninstalled
+	distro would be nice as a test case
+
+	% perl -Ilib -MCPAN -e 'CPAN::Shell->$_("MARKSTOS/Test-XML-Valid-0.04345.tar.gz") for qw(clean d);'
+Going to read /home/akoenig/.cpan/sources/authors/01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok
+Going to read /home/akoenig/.cpan/sources/modules/02packages.details.txt.gz
+  Database was generated on Tue, 14 Feb 2006 02:18:00 GMT
+CPAN: HTTP::Date loaded ok
+Going to read /home/akoenig/.cpan/sources/modules/03modlist.data.gz
+CPAN: Storable loaded ok
+Going to write /home/akoenig/.cpan/Metadata
+Running make clean
+Distribution has no own directory, nothing to do.
+Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 3857.
+
+
 2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Foreign bug: Module-Build-0.27_07 fails the test runthrough.t with
