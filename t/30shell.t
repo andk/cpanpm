@@ -109,6 +109,23 @@ Total                          50.8   34.9   31.3   72.4   34.8  100.0   44.9
 Relevant patches: added the zip and the failearly distro, removing
 unused code, low hanging fruits
 
+After 597:
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      50.9   36.1   32.7   70.7   88.5   45.6
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    7.1   44.6
+blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    3.9   53.5
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+Total                                 50.9   35.3   32.6   73.5  100.0   45.4
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+added the BuildOrMake distro
+
 =cut
 
 BEGIN {

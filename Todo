@@ -1,8 +1,33 @@
- 2006-02-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Foreign bug: Module-Build-0.27_07 fails the test runthrough.t with
+	blead@27166:
+
+t/runthrough......ok 14/28                                                   
+#   Failed test 'Check version used to create META.yml: 0.2707 == 0.270700'
+#   in t/runthrough.t at line 142.
+#          got: '0.2707'
+#     expected: '0.270700'
+t/runthrough......NOK 19# Looks like you failed 1 test of 28.                
+t/runthrough......dubious                                                    
+        Test returned status 1 (wstat 256, 0x100)
+
+	Ditto for 27154, 27016; 26919 is OK. Hmmm, several perls in between are
+	OK. So far these are debugging perls. No, 27088 is another one that is
+	OK and it is nondebugging.
+
+	If YAML is not installed, the test is skipped, so I must make sure that
+	YAML is installed, but this is difficult because YAML was broken by perl
+	until recently.
+
+	OK, looked into the code instead and wrote bug report to the M:B mailing
+	list. DONE.
+
+2006-02-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: Randal reports that Zoidberg has both a Makefile.PL and a
 	Build.PL and he has prefer_installer EUMM and yet CPAN chose to run the
-	Build.PL. rt #17612.
+	Build.PL. rt #17612. RESOLVED as not a bug in CPAN.pm
 
 2006-02-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
