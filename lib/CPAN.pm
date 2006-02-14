@@ -7605,9 +7605,11 @@ defined:
                      in the install stage, for example 'sudo ./Build'
   mbuildpl_arg       arguments passed to 'perl Build.PL'
   pager              location of external program more (or any pager)
-  prefer_installer   legal values are MB and EUMM: if a module
-                     comes with both a Makefile.PL and a Build.PL, use
-                     the former (EUMM) or the latter (MB)
+  prefer_installer   legal values are MB and EUMM: if a module comes
+                     with both a Makefile.PL and a Build.PL, use the
+                     former (EUMM) or the latter (MB); if the module
+                     comes with only one of the two, that one will be
+                     used in any case
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
