@@ -425,6 +425,24 @@ o conf
 ~~like~~
 (?s:commit.*?build_cache.*?cpan_home.*?inhibit_startup_message.*?urllist)
 ########
+o conf prefer_installer EUMM
+~~like~~
+########
+make CPAN::Test::Dummy::Perl5::BuildOrMake
+~~like~~
+(?s:Running make.*Writing Makefile.*make\s+-- OK)
+########
+o conf prefer_installer MB
+~~like~~
+########
+force get CPAN::Test::Dummy::Perl5::BuildOrMake
+~~like~~
+Removing previously used
+########
+make CPAN::Test::Dummy::Perl5::BuildOrMake
+~~like~~
+(?s:Running Build.*Creating new.*Build\s+-- OK)
+########
 r
 ~~like~~
 (All modules are up to date|installed modules)
