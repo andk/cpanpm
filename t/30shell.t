@@ -403,6 +403,10 @@ test CPAN::Test::Dummy::Perl5::NotExists
 ~~like~~
 Warning:
 ########
+clean NOTEXISTS/Notxists-0.000.tar.gz
+~~like~~
+nothing done
+########
 test Bundle::CpanTestDummies
 ~~like~~
 Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO

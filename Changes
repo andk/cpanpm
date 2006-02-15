@@ -1,3 +1,20 @@
+2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.84
+
+	* see detailed release notes for releases 1.83_51 upto 1.83_69 below
+
+	* highlights of the changes between 1.83 and 1.84: better error handling
+	with new "failed" command and in many other places; new config variable
+	ftp_passive is on by default; new command mkmyconfig; Module::Build
+	support should now work on Windows and work better on all platforms; new
+	methods for programmers CPAN::Module::distribution and
+	CPAN::Distribution::author; improved docs; prettier output; and last not
+	least a heavy dose of refactoring, bugfixing, and testing
+
+	* Thanks to the bunch of helpful contributors and bug reporters (you
+	know who you are:)
+
 2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.83_69

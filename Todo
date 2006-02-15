@@ -1,3 +1,71 @@
+2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
+	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
+	by Andrew Strebkov makes the URL selection nicer.
+
+	* prerequisites: require perl version xxx: we should not delete that
+	information but honour it.
+
+	* RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* Locking: Linda W writes
+
+	>I'm not sure I understand the reason for the lock file
+	>placed in cpan_home.  If I have two different architectures
+	>with different build directories, I'm not sure I understand
+	>where the conflict is -- is it in storing/listing Bundles,
+	>the history file, the Metafile or the shared source?
+	
+	>I can understand private history, but the Bundles aren't
+	>updated often, the sources should be fairly static (unless
+	>new files are downloaded), The metafile would be updated about
+	>once a day (default).
+	
+	>If the build directories are separate, why would there be a
+	>need for locking more in interactive use vs. batch use?
+
+	And I promise to try out a more granular locking mechanism.
+
+	* Feature request: when asking 'm /svn::notify/', then I would like to
+	see in the list which of the modules are installed locally. Was that
+	what Admin was doing?
+
+  It would not work for distros, but for modules. Not for bundles either.
+
+  3 states: not installed, not up-to-date, up-to-date  ... space,"<","="
+
+  color codes: green=uptodate, yellow=not uptodate, black=not installed
+
+	* upgrade: new command that does nothing but
+	CPAN::Shell->install(CPAN::Shell->r)? Do not forget that we still may
+	have perl distros in the "r" list.
+
+	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
+	branches/1.80_56plus for a few lines that probably went in the wrong
+	direction. Split the loading of Authors/Modules/Distros/Bundles into
+	separate pieces and make them lazy. Consider 'reload index', the
+	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
+	offsets into an uncompressed 02xxx file. Remember RT #4943. Remove the
+	code for "status" when finished
+
+	* readline: offer the choice between Gnu and Perl
+
+	* Bug: installing scripts without modules? How does it work? How
+	should it work? getting the latest version ad-hoc?
+
+	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
+	tweak FirstTime::init() interface to accept optional @sections
+
+	put various interactive Qs into groups of conditionals: if ( !@sections
+	     or grep /$this_sect_name/, @sections)
+
+	candidate sections: progs - external prog selection make - all make
+	options
+
+	* hr ================ no todos below this line ================ /hr
+
 2006-02-14  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Bug: inexistant distro leads to perl error; clean on uninstalled
@@ -16,7 +84,7 @@ Running make clean
 Distribution has no own directory, nothing to do.
 Can't use string ("") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 3857.
 
-	Fixed i rev. 604
+	Fixed in rev. 604
 
 2006-02-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -59,7 +127,7 @@ t/runthrough......dubious
 	runs forever!
 
 	So is this a bug? I cannot tell before I know why the first installation
-	attempt failed.
+	attempt failed.	Cannot reproduce.
 
 	* Foreign bug: POE with bleadperl@27154 fails a few tests with
 
@@ -86,7 +154,7 @@ tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 	with bleadperl@17102 when trying to test SQL::Translator. Happends on
 	blead, not on 5.8.8 but with 5.8.8 I have other (and much more) failures
 
-	With #16852 I have already a ticket there for the signasture.
+	With #16852 I have already a ticket there for the signature.
 
 	I regret that I did not include the full command needed to upload one's
 	key. Here it is:
@@ -94,10 +162,6 @@ tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
     gpg -a --keyserver hkp://pgp.mit.edu:11371 --send-keys YOURID
 
 2006-02-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
-	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
-	by Andrew Strebkov makes the URL selection nicer.
 
 	* Bug: when Running "Makefile.PL" fails, then the case is not reachable
 	for the failed routine. Need another Naysayer category?? Try
@@ -140,9 +204,6 @@ tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 	
 2006-02-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* prerequisites: require perl version xxx: we should not delete that
-	information but honour it.
-
 2006-01-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Visit the p5p thread C<replacing "inuse" Win files (was Re: Help with
@@ -150,28 +211,7 @@ tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 	cannot 'reload cpan' when they started the shell from cpan.bat, only
 	when they used 'perl -MCPAN -eshell' (David Golden)
 
-	* RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
-
 	* Feature request: integrate more than one source into a common index.
-
-	* Locking: Linda W writes
-
-	>I'm not sure I understand the reason for the lock file
-	>placed in cpan_home.  If I have two different architectures
-	>with different build directories, I'm not sure I understand
-	>where the conflict is -- is it in storing/listing Bundles,
-	>the history file, the Metafile or the shared source?
-	
-	>I can understand private history, but the Bundles aren't
-	>updated often, the sources should be fairly static (unless
-	>new files are downloaded), The metafile would be updated about
-	>once a day (default).
-	
-	>If the build directories are separate, why would there be a
-	>need for locking more in interactive use vs. batch use?
-
-	And I promise to try out a more granular locking mechanism.
 
 	* dontload: make a dontload_list and deprecate dontload_hash. It seems
 	OK to keep $META->{dontload_hash} but it would be nice if changes on
@@ -181,34 +221,6 @@ tests/30_loops/30_event/comp_tcp_    0     6    42   42 100.00%  1-42
 	* document and provide a dialog for commandnumber_in_prompt or provide a
 	sprintf based solution. Or just leave it as it is. Just like
 	inhibit_startup_message.
-
-	* upgrade: new command that does nothing but
-	CPAN::Shell->install(CPAN::Shell->r)? Do not forget that we still may
-	have perl distros in the "r" list.
-
-	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
-	branches/1.80_56plus for a few lines that probably went in the wrong
-	direction. Split the loading of Authors/Modules/Distros/Bundles into
-	separate pieces and make them lazy. Consider 'reload index', the
-	storable Metadata file, readonly/readwrite, changes of the DSLIP thingy,
-	offsets into an uncompressed 02xxx file. Remember RT #4943. Remove the
-	code for "status" when finished
-
-	* readline: offer the choice between Gnu and Perl
-
-	* Bug: installing scripts without modules? How does it work? How
-	should it work? getting the latest version ad-hoc?
-
-	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
-	tweak FirstTime::init() interface to accept optional @sections
-
-	put various interactive Qs into groups of conditionals: if ( !@sections
-	     or grep /$this_sect_name/, @sections)
-
-	candidate sections: progs - external prog selection make - all make
-	options
-
-	* hr ================ no todos below this line ================ /hr
 
 	* Todo: Write a bunch of distros and upload them with the sole purpose
 	of testing CPAN.pm. Also helps Test::Prereq and others.
