@@ -1080,7 +1080,9 @@ FAQ
         or setting the PERL5LIB environment variable.
 
         Another thing you should bear in mind is that the UNINST parameter
-        should never be set if you are not root.
+        can be dnagerous when you are installing into a private area because
+        you might accidentally remove modules that other people depend on
+        that are not using the private area.
 
     6)  How to get a package, unwrap it, and make a change before building
         it?
@@ -1172,13 +1174,13 @@ FAQ
         module. If you want to install a dev release, you have to specify a
         partial path to the tarball you wish to install, like so:
 
-            cpan> install KWILLIAMS/Module-Build-0.27_06.tar.gz
+            cpan> install KWILLIAMS/Module-Build-0.27_07.tar.gz
 
-    13) How do I install a module and all it's dependancies from the
+    13) How do I install a module and all its dependencies from the
         commandline, without being prompted for anything, despite my CPAN
         configuration (or lack thereof)?
 
-        CPAN uses ExtUtils::MakeMaker's prompt() function to ask it's
+        CPAN uses ExtUtils::MakeMaker's prompt() function to ask its
         questions, so if you set the PERL_MM_USE_DEFAULT environment
         variable, you shouldn't be asked any questions at all (assuming the
         modules you are installing are nice about obeying that variable as
