@@ -8089,12 +8089,12 @@ nice about obeying that variable as well):
 
 =head1 BUGS
 
-If a Makefile.PL requires special customization of libraries, prompts
-the user for special input, etc. then you may find CPAN is not able to
-build the distribution. In that case it is recommended to attempt the
-traditional method of building a Perl module package from a shell, for
-example by using the 'look' command to open a subshell in the
-distribution's own directory.
+Please report bugs via http://rt.cpan.org/
+
+Before submitting a bug, please make sure that the traditional method
+of building a Perl module package from a shell by following the
+installation instructions of that package still works in your
+environment.
 
 =head1 AUTHOR
 
