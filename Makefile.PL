@@ -247,7 +247,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake && \
 		$(PERL) Build.PL && \
 		./Build dist && \
-		mv CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz ..
+		mv CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz .. && \
+		./Build clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01/Changes \
@@ -258,7 +259,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01 && \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
-		mv CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz ..
+		mv CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz .. && \
+		$(MAKE) clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip/MANIFEST \
@@ -268,7 +270,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip && \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
-		mv CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip ..
+		mv CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip .. && \
+		$(MAKE) clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01/MANIFEST \
@@ -277,7 +280,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01 && \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
-		mv CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz ..
+		mv CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz .. && \
+		$(MAKE) clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01/Changes \
@@ -288,7 +292,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01 && \
 		$(PERL) Build.PL && \
 		./Build dist && \
-		mv CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz ..
+		mv CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz .. && \
+		./Build clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01/Changes \
@@ -299,12 +304,18 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01 && \
 		$(PERL) Build.PL && \
 		./Build dist && \
-		mv CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz ..
+		mv CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz .. && \
+		./Build clean
 
 testallperls :
 	:>SIGNATURE
 	for p in $(ALL_PERLS); do $$p Makefile.PL && $(MAKE) test; done
 
+clean ::
+	$(RM) t/CPAN/authors/id/A/AN/ANDK/*/Build \
+		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old \
+		t/CPAN/authors/id/A/AN/ANDK/*/META.yml
+	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
 
 }
