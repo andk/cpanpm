@@ -1,3 +1,17 @@
+2006-02-17  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: on a system without make installed, CPAN happily tries
+
+Checking if your kit is complete...
+Looks good
+Writing Makefile for CPAN
+    -- NOT OK
+Running make test
+  Can't test without successful make
+Running make install
+  make had returned bad status, install seems impossible
+
+
 2006-02-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: rewrite the 30shell.t test for Open3 by concatenating all
