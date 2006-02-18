@@ -5975,6 +5975,9 @@ sub contains {
     my($inst_file) = $self->inst_file || "";
     my($id) = $self->id;
     $self->debug("inst_file[$inst_file]id[$id]") if $CPAN::DEBUG;
+    if ($inst_file && CPAN::Version->vlt($self->inst_version,$self->cpan_version)) {
+        undef $inst_file;
+    }
     unless ($inst_file) {
         # Try to get at it in the cpan directory
         $self->debug("no inst_file") if $CPAN::DEBUG;

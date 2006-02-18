@@ -5,6 +5,8 @@ use ExtUtils::MakeMaker qw(:DEFAULT);
 use File::Path;
 eval { require File::Spec; };
 my $HAVE_FILE_SPEC = !$@;
+require Config;
+my $HAVE_MAKE = $Config::Config{make} eq "make"; # file-scoped!
 use strict;
 use vars qw($VERSION);
 
@@ -158,6 +160,7 @@ ALL_PERLS = /usr/bin/perl /usr/local/bin/perl \
 }
 
 sub postamble {
+  return unless $HAVE_MAKE; # dmake has unknown issues with my Makfile
   q{
 setversion:
 	$(PERL) Makefile.PL --setversion
