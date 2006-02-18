@@ -6766,9 +6766,23 @@ This module will eventually be replaced by CPANPLUS. CPANPLUS is kind
 of a modern rewrite from ground up with greater extensibility and more
 features but no full compatibility. If you're new to CPAN.pm, you
 probably should investigate if CPANPLUS is the better choice for you.
-If you're already used to CPAN.pm you're welcome to continue using it,
-if you accept that its development is mostly (though not completely)
-stalled.
+
+If you're already used to CPAN.pm you're welcome to continue using it.
+I intend to support it until somebody convinces me that there is a
+both superior and sufficiently compatible drop-in replacement.
+
+=head1 COMPATIBILITY
+
+CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
+newer versions. It is getting more and more difficult to get the
+minimal prerequisites working on older perls. It is close to
+impossible to get the whole Bundle::CPAN working there. If you're in
+the position to have only these old versions, be advised that CPAN is
+designed to work fine without the Bundle::CPAN installed.
+
+To get things going, note that GBARR/Scalar-List-Utils-1.18.tar.gz is
+compatible with ancient perls and that File::Temp is listed as a
+prerequisite but CPAN has reasonable workarounds if it is missing.
 
 =head1 DESCRIPTION
 
