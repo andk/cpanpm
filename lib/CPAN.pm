@@ -5997,7 +5997,7 @@ sub contains {
         @me = split /::/, $self->id;
         $me[-1] .= ".pm";
         $me = File::Spec->catfile(@me);
-        $from = $self->find_bundle_file($dist->{'build_dir'},$me);
+        $from = $self->find_bundle_file($dist->{'build_dir'},join('/',@me));
         $to = File::Spec->catfile($todir,$me);
         File::Path::mkpath(File::Basename::dirname($to));
         File::Copy::copy($from, $to)
@@ -6036,6 +6036,7 @@ Sorry for the inconvenience.
 }
 
 #-> sub CPAN::Bundle::find_bundle_file
+# $where is in local format, $what is in unix format
 sub find_bundle_file {
     my($self,$where,$what) = @_;
     $self->debug("where[$where]what[$what]") if $CPAN::DEBUG;
@@ -6053,30 +6054,22 @@ sub find_bundle_file {
     my $fh = FileHandle->new($manifest)
 	or Carp::croak("Couldn't open $manifest: $!");
     local($/) = "\n";
-    my $what2 = $what;
-    if ($^O eq 'MacOS') {
-      $what =~ s/^://;
-      $what =~ tr|:|/|;
-      $what2 =~ s/:Bundle://;
-      $what2 =~ tr|:|/|;
-    } else {
-	$what2 =~ s|Bundle[/\\]||;
-    }
-    my $bu;
+    my $bundle_filename = $what;
+    $bundle_filename =~ s|Bundle.*/||;
+    my $bundle_unixpath;
     while (<$fh>) {
 	next if /^\s*\#/;
 	my($file) = /(\S+)/;
 	if ($file =~ m|\Q$what\E$|) {
-	    $bu = $file;
-	    # return File::Spec->catfile($where,$bu); # bad
+	    $bundle_unixpath = $file;
+	    # return File::Spec->catfile($where,$bundle_unixpath); # bad
 	    last;
 	}
-	# retry if she managed to
-	# have no Bundle directory
-	$bu = $file if $file =~ m|\Q$what2\E$|;
+	# retry if she managed to have no Bundle directory
+	$bundle_unixpath = $file if $file =~ m|\Q$bundle_filename\E$|;
     }
-    $bu =~ tr|/|:| if $^O eq 'MacOS';
-    return File::Spec->catfile($where, $bu) if $bu;
+    return File::Spec->catfile($where, split /\//, $bundle_unixpath)
+        if $bundle_unixpath;
     Carp::croak("Couldn't find a Bundle file in $where");
 }
 
@@ -8101,6 +8094,17 @@ asked any questions at all (assuming the modules you are installing are
 nice about obeying that variable as well):
 
     % PERL_MM_USE_DEFAULT=1 perl -MCPAN -e 'install My::Module'
+
+=item 14)
+
+I only know the usual options for ExtUtils::MakeMaker(Module::Build),
+how do I find out the corresponding options in
+Module::Build(ExtUtils::MakeMaker)?
+
+http://search.cpan.org/search?query=Module::Build::Convert
+
+http://accognoscere.org/papers/perl-module-build-convert/module-build-convert.html
+
 
 =back
 
