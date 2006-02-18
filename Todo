@@ -12,12 +12,19 @@ Running make install
   make had returned bad status, install seems impossible
 
 
+2006-02-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* watch http://perlmonks.org/?node_id=530600
+
+	Does anybody answer my question 'How do you run nmake when it is in a
+	path that contains spaces?'?
+
 2006-02-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: rewrite the 30shell.t test for Open3 by concatenating all
-	regexes. When we succeed with thi, make a version that runs within the
-	core of perl, maybe filter out just those tests tat do not require
-	additional resources.
+	* Todo: rewrite the 30shell.t test for Open3 (or just a tempfile) by
+	concatenating all regexes or split on the prompt. When we succeed with
+	this, make a version that runs within the core of perl, maybe filter out
+	just those tests that do not require additional resources.
 
 2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

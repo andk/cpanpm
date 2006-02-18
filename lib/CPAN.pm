@@ -3583,7 +3583,7 @@ happen.\a
   There's a new CPAN.pm version (v$version) available!
   [Current version is v$CPAN::VERSION]
   You might want to try
-    install Bundle::CPAN
+    install CPAN
     reload cpan
   without quitting the current session. It should be a seamless upgrade
   while we are running...
@@ -3812,6 +3812,42 @@ sub new {
 # related material may do anything else with instance variables but
 # must not touch the hash under the RO attribute. The reason is that
 # the RO hash gets written to Metadata file and is thus persistent.
+
+#-> sub CPAN::InfoObj::safe_chdir ;
+sub safe_chdir {
+  my($self,$todir) = @_;
+  # we die if we cannot chdir and we are debuggable
+  Carp::confess("safe_chdir called without todir argument")
+        unless defined $todir and length $todir;
+  if (chdir $todir) {
+    $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
+        if $CPAN::DEBUG;
+  } else {
+    if (-e $todir) {
+        unless (-x $todir) {
+            unless (chmod 0755, $todir) {
+                my $cwd = CPAN::anycwd();
+                $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
+                                        "permission to change the permission; cannot ".
+                                        "chdir to '$todir'\n");
+                $CPAN::Frontend->mysleep(5);
+                $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
+                                       qq{to todir[$todir]: $!});
+            }
+        }
+    } else {
+        $CPAN::Frontend->mydie("Directory '$todir' has gone. Cannot continue.\n");
+    }
+    if (chdir $todir) {
+      $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
+          if $CPAN::DEBUG;
+    } else {
+      my $cwd = CPAN::anycwd();
+      $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
+                             qq{to todir[$todir] (a chmod has been issued): $!});
+    }
+  }
+}
 
 #-> sub CPAN::InfoObj::set ;
 sub set {
@@ -4263,42 +4299,6 @@ sub called_for {
     my($self,$id) = @_;
     $self->{CALLED_FOR} = $id if defined $id;
     return $self->{CALLED_FOR};
-}
-
-#-> sub CPAN::Distribution::safe_chdir ;
-sub safe_chdir {
-  my($self,$todir) = @_;
-  # we die if we cannot chdir and we are debuggable
-  Carp::confess("safe_chdir called without todir argument")
-        unless defined $todir and length $todir;
-  if (chdir $todir) {
-    $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
-        if $CPAN::DEBUG;
-  } else {
-    if (-e $todir) {
-        unless (-x $todir) {
-            unless (chmod 0755, $todir) {
-                my $cwd = CPAN::anycwd();
-                $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
-                                        "permission to change the permission; cannot ".
-                                        "chdir to '$todir'\n");
-                $CPAN::Frontend->mysleep(5);
-                $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
-                                       qq{to todir[$todir]: $!});
-            }
-        }
-    } else {
-        $CPAN::Frontend->mydie("Directory '$todir' has gone. Cannot continue.\n");
-    }
-    if (chdir $todir) {
-      $self->debug(sprintf "changed directory to %s", CPAN::anycwd())
-          if $CPAN::DEBUG;
-    } else {
-      my $cwd = CPAN::anycwd();
-      $CPAN::Frontend->mydie(qq{Could not chdir from cwd[$cwd] }.
-                             qq{to todir[$todir] (a chmod has been issued): $!});
-    }
-  }
 }
 
 #-> sub CPAN::Distribution::get ;
@@ -6043,9 +6043,9 @@ sub find_bundle_file {
     unless (-f $manifest) {
 	require ExtUtils::Manifest;
 	my $cwd = CPAN::anycwd();
-	chdir $where or $CPAN::Frontend->mydie(qq{Could not chdir to "$where": $!});
+	$self->safe_chdir($where);
 	ExtUtils::Manifest::mkmanifest();
-	chdir $cwd or $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd": $!});
+	$self->safe_chdir($cwd);
     }
     my $fh = FileHandle->new($manifest)
 	or Carp::croak("Couldn't open $manifest: $!");
