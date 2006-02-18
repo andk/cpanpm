@@ -37,7 +37,7 @@ t/CPAN/authors/id/CHECKSUMS
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/README.shell.txt
-t/dot-cpan/Bundle/CpanTestDummies.pm
+t/dot-cpan/Bundle/CpanTestDummies-1.55.pm
 t/00signature.t
 t/01loadme.t
 t/02nox.t

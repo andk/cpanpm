@@ -27,4 +27,4 @@ bundle of the user we emulate.
 
 =head1 AUTHOR
 
-Andreas König
+Andreas Koenig

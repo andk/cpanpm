@@ -150,21 +150,30 @@ BEGIN {
     }
 }
 
+use File::Spec;
+
+sub _f ($) {
+    File::Spec->catfile(split /\//, shift);
+}
 use File::Path qw(rmtree);
-rmtree "t/dot-cpan/sources";
-rmtree "t/dot-cpan/build";
-unlink "t/dot-cpan/Metadata";
+rmtree _f"t/dot-cpan/sources";
+rmtree _f"t/dot-cpan/build";
+unlink _f"t/dot-cpan/Metadata";
 
 use File::Copy qw(cp);
-cp "t/CPAN/TestConfig.pm", "t/CPAN/MyConfig.pm"
+cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
+cp _f"t/dot-cpan/Bundle/CpanTestDummies-1.55.pm",
+    _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
+    "Could not cp t/dot-cpan/Bundle/CpanTestDummies-1.55.pm over ".
+    "t/dot-cpan/Bundle/CpanTestDummies-1.55.pm: $!";
 
 use Cwd;
 my $cwd = Cwd::cwd;
 
 sub read_myconfig () {
     local *FH;
-    open *FH, "t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
+    open *FH, _f"t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
     local $/;
     eval <FH>;
 }
@@ -192,9 +201,10 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
 my $exp = Expect->new;
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>";
+my $t = File::Spec->catfile($cwd,"t");
 $exp->spawn(
             $^X,
-            "-I$cwd/t",                 # get this test's own MyConfig
+            "-I$t",                 # get this test's own MyConfig
             "-Mblib",
             "-MCPAN::MyConfig",
             "-MCPAN",
