@@ -236,9 +236,11 @@ testdistros: t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz 
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip
 
+# sorry, unix centric
 testshell-with-protocol:
-	[ -d protocols ] || mkdir protocols
-	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | tee protocols/make-test-`date +%Y%m%dT%H%M%S`
+	$(PERL) -e '-d $$_ or mkdir $$_ for "protocols"'
+	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
+		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
 	ls -ltr protocols | tail
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz: \
