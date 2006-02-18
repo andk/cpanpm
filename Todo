@@ -1,15 +1,46 @@
+2006-02-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* To: Tyler MacDonald <tyler@yi.org>
+
+	 >> If I understand the problem right, it is that you wish to use a module in the
+	 >> current distribution (a subclass of Module::Build) to do the installing.
+	 >> If this is correct, you only need to put a 'use lib "lib";' in your Build.PL
+	 >> for it to be picked up properly.  (It does not need to be installed in the
+	 >> standard places before you use it.)
+	
+		> 	Nope, that problem is handled already in
+		> DBIx::Migration::Directories.
+	
+		> 	I now have a Schema::RDBMS::AUS package, which needs the subclass
+		> that DBIx::Migration::Directories supplies.
+		> DBIx::Migration::Directories::Build needs to be available at the time
+		> Build.PL is run so that it can alter Module::Build's config and supply extra
+		> actions.
+	
+	Add it to your "requires" hash, that way it will end up in META.yml and
+	if people have YAML installed, they can read it.
+	
+	If people have YAML not installed they will call either the
+	Makefile.PL or the Build.PL to hopefully find out what the
+	prerequisites are. That way you get the prerequisites but as you have
+	noticed, it is too late for your build process.
+	
+	I don't know how I will fix that. Suggestions welcome. I put it into my
+	Todo file.
+	
+
 2006-02-17  Andreas J Koenig  <akoenig@cellular.de>
 
 	* Bug: on a system without make installed, CPAN happily tries
 
-Checking if your kit is complete...
-Looks good
-Writing Makefile for CPAN
-    -- NOT OK
-Running make test
-  Can't test without successful make
-Running make install
-  make had returned bad status, install seems impossible
+	Checking if your kit is complete...
+	Looks good
+	Writing Makefile for CPAN
+			-- NOT OK
+	Running make test
+		Can't test without successful make
+	Running make install
+		make had returned bad status, install seems impossible
 
 
 2006-02-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
