@@ -42,7 +42,7 @@ while (<$pfh>) {
 }
 close $pfh;
 
-open my $rhfh, $html or die;
+open my $rhfh, $html or die "Could not open $html\: $!";
 open my $whfh, ">", "$html.new" or die;
 while (<$rhfh>) {
   if (m|^(<tr>.*<div class="s">)(\w+)(</div></td></tr>)|) {
