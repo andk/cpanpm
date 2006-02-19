@@ -30,6 +30,7 @@
 ^patches
 ^pm_to_blib
 ^protocols/
+^related/
 ^release-lib
 ^t/CPAN/MyConfig\.pm
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make/

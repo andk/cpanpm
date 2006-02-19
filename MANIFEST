@@ -12,7 +12,6 @@ README
 Todo
 inc/Test/Builder.pm
 inc/Test/More.pm
-lib/Bundle/CPAN.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/Debug.pm

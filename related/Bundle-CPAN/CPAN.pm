@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 use strict;
-$VERSION = '1.82';
+$VERSION = '1.84';
 
 1;
 
@@ -12,7 +12,7 @@ Bundle::CPAN - A bundle to play with all the other modules on CPAN
 
 =head1 SYNOPSIS
 
-C<perl -MCPAN -e 'install Bundle::CPAN'>
+ perl -MCPAN -e 'install Bundle::CPAN'
 
 =head1 CONTENTS
 
