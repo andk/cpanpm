@@ -2,7 +2,7 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-# CHECKSUMS file written on Tue Feb 14 01:42:50 2006 GMT by CPAN::Checksums (v1.039)
+# CHECKSUMS file written on Sun Feb 19 05:28:45 2006 GMT by CPAN::Checksums (v1.039)
 $cksum = {
   'Apache-GzipChain-1.14.tar.gz' => {
     'md5' => '9330c5bfae432361fc4b1a955f2f7d91',
@@ -212,6 +212,28 @@ $cksum = {
     'sha256-ungz' => 'f2d3c7743a3d2bec4c14be2f1a69ba701ad972331e8ed077b77b1d3edf401143',
     'size' => 217744
   },
+  'CPAN-1.83_69.tar.gz' => {
+    'md5' => 'a32ac340ca6b48ff2c83db527617cf03',
+    'md5-ungz' => 'b5a30642221d844b8955c57ce5184f9c',
+    'mtime' => '2006-02-14',
+    'sha256' => '0519dfd314bdf05d9cb5f1d91b25de0b10ba2122d6d4d16f48a649d8aedc854e',
+    'sha256-ungz' => '3c1a6e1c043b491350283caae259f9ccdd4532e8a21e887d3e24ac93a17488ad',
+    'size' => 227041
+  },
+  'CPAN-1.84.meta' => {
+    'md5' => 'ee953ec78f84bde72e943882035593e4',
+    'mtime' => '2006-02-15',
+    'sha256' => '09d1908494246ade6413cac463e018584a3592c55ead6f3484bc759f2b80b334',
+    'size' => 440
+  },
+  'CPAN-1.84.tar.gz' => {
+    'md5' => 'b2a055b4fbfdc5d08f277311d9099027',
+    'md5-ungz' => 'dc6653a562eceda0c0d688eb7f3aa12f',
+    'mtime' => '2006-02-15',
+    'sha256' => 'eac66fa1841a29b545954647f501e971aaa87e2768f4a75e907fd922f93ba25a',
+    'sha256-ungz' => 'da3d23564b150506c3817b154364f663ac760ac79b150abc7e8ae48510e4fab9',
+    'size' => 227767
+  },
   'CPAN-Checksums-1.039.meta' => {
     'md5' => '3e657b428744ffec715cef0276739249',
     'mtime' => '2005-11-11',
@@ -281,6 +303,14 @@ $cksum = {
     'sha256' => '0b88b1d63883f2d001d915d2eb0a3f15ca64c79b8a1fa62cb4e95def4a088840',
     'sha256-ungz' => '374182513d8a5189d8e94ab373772237fa20235f2a2726dc7045bac13f59b087',
     'size' => 1583
+  },
+  'CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz' => {
+    'md5' => '16d1f351a96467ed9b71b7236deaf1bb',
+    'md5-ungz' => '550c9928d3903cae6cc51af500cbb6fe',
+    'mtime' => '2006-02-19',
+    'sha256' => '4af33ddc3fe17fd34aa818153a0f1814da6873d8c78b893eef6cad6fd90cf356',
+    'sha256-ungz' => 'd30798dc098ade10f1927ba788c3e0901133c613b11fd767ec140716bb25d14c',
+    'size' => 1730
   },
   'CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.meta' => {
     'md5' => '1c0247ef82f031116f9e1db795375116',
@@ -463,7 +493,7 @@ __END__
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (GNU/Linux)
 
-iD8DBQFD8TWaMo2oZ0UPiewRAtb3AJ40VhKksqs0DZ0h/LBUvgfpjdxlsgCfbHcu
-ilZ4q3h6eV/h6jLiZmQkSHE=
-=iUdH
+iD8DBQFD+AIRMo2oZ0UPiewRAmt1AJ9hu+h5x715mXAno/ezWoBs1uBAOgCfYzy2
+LWWV3/qkXsMQGj0qob+lgRc=
+=rKQf
 -----END PGP SIGNATURE-----

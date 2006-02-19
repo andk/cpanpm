@@ -1,3 +1,18 @@
+2006-02-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.85
+
+	* Fix for 'install Bundle:CPAN' on Windows machines (closes #17699; Adam
+	Kennedy)
+
+	* Make a separate distro for Bundle::CPAN (works around the bug for
+	older versions of CPAN)
+
+	* Another fix for bundles: in some cases CPAN.pm installed an older
+	bundle than the most recent
+
+	* more tests: CPAN.pm ubroutine coverage now at 71.4%
+
 2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.84

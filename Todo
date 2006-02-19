@@ -1,3 +1,17 @@
+2006-02-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: with 'o debug all' we did not reach 'Distribution seems to have
+	never been unzipped/untarred, nothing done' but instead some "Unknown
+	distribution" or so. Fixed in 625
+
+	* Bug: in the last test run we did not detect that
+	ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz was not in the CHECKSUMS
+	file. We had the 
+
+	#     CHECKSUM_STATUS NIL -- distro not in CHECKSUMS file
+
+	in the "d" output but we did not pass he code that shouts. Fixed in 624
+
 2006-02-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* To: Tyler MacDonald <tyler@yi.org>

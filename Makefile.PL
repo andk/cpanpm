@@ -234,7 +234,8 @@ testdistros: t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz 
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz \
-	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip \
+        t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 
 # sorry, unix centric
 testshell-with-protocol:
@@ -242,6 +243,11 @@ testshell-with-protocol:
 	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
 	ls -ltr protocols | tail
+
+t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz :
+	echo " ----No content---- " > t/CPAN/authors/id/A/AN/ANDK/tempfile
+	cd t/CPAN/authors/id/A/AN/ANDK && tar cvzf NotInChecksums-0.000.tar.gz tempfile
+	$(RM) t/CPAN/authors/id/A/AN/ANDK/tempfile
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake/MANIFEST \
