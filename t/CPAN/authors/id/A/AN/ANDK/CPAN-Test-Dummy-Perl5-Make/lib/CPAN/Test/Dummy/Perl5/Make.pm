@@ -1,14 +1,6 @@
 package CPAN::Test::Dummy::Perl5::Make;
 
-use 5.004;
-use strict;
-
-use vars qw{$VERSION};
-BEGIN {
-	$VERSION = '1.01';
-}
-
-sub dummy { 'Mike' }
+$VERSION = '1.02';
 
 1;
 
