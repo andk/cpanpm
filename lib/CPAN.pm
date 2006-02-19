@@ -4856,7 +4856,7 @@ for further processing, but got garbage instead.
 });
         my $answer = ExtUtils::MakeMaker::prompt("Proceed nonetheless?", "no");
         $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
-        $self->{CHECKSUM_STATUS} = "NIL -- chk_file broken";
+        $self->{CHECKSUM_STATUS} = "NIL -- CHECKSUMS file broken";
         return;
     } elsif (exists $cksum->{$basename}{sha256}) {
 	$self->debug("Found checksum for $basename:" .
@@ -4908,8 +4908,7 @@ retry.};
 	}
 	# close $fh if fileno($fh);
     } else {
-	$self->{CHECKSUM_STATUS} ||= "";
-	if ($self->{CHECKSUM_STATUS} eq "NIL") {
+	unless ($self->{CHECKSUM_STATUS}) {
 	    $CPAN::Frontend->mywarn(qq{
 Warning: No checksum for $basename in $chk_file.
 
@@ -4920,7 +4919,7 @@ going awry right now.
             my $answer = ExtUtils::MakeMaker::prompt("Proceed?", "yes");
             $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
 	}
-        $self->{CHECKSUM_STATUS} = "NIL -- distro not in chk_file";
+        $self->{CHECKSUM_STATUS} = "NIL -- distro not in CHECKSUMS file";
 	return;
     }
 }
