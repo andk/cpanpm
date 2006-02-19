@@ -143,6 +143,22 @@ Total                                 51.9   36.1   32.7   74.0  100.0   46.2
 
 added a Bundle to the "Make" testdistro
 
+After 636
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN.pm                      53.9   38.0   33.3   73.3   89.8   48.0
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.0   57.9
+blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.3   44.6
+blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    3.4   53.5
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.0   78.6
+Total                                 53.3   36.8   33.0   75.5  100.0   47.2
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+
 =cut
 
 BEGIN {
