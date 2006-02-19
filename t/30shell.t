@@ -211,7 +211,7 @@ my @modules = qw(
 use Test::More;
 plan tests => (
                scalar @prgs
-               + 2                     # histsize tests
+               + 2                     # 2 histsize tests
                + scalar @modules
               );
 

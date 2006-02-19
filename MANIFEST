@@ -44,6 +44,7 @@ t/02nox.t
 t/03pkgs.t
 t/10version.t
 t/11mirroredby.t
+t/12cpan.t
 t/30shell.t
 t/50pod.t
 SIGNATURE                                Public-key signature (added by MakeMaker)

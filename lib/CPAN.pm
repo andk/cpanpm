@@ -87,9 +87,8 @@ sub AUTOLOAD {
     if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
-	$CPAN::Frontend->mywarn(qq{Unknown CPAN command "$AUTOLOAD". }.
-				qq{Type ? for help.
-});
+	$CPAN::Frontend->mydie(qq{Unknown CPAN command "$AUTOLOAD". }.
+                               qq{Type ? for help.\n});
     }
 }
 
@@ -356,13 +355,6 @@ package CPAN::Prompt; use overload '""' => "as_string";
 use vars qw($prompt);
 $prompt = "cpan> ";
 $CPAN::CurrentCommandId ||= 0;
-sub as_randomly_capitalized_string {
-    # pure fun variant
-    substr($prompt,$_,1)=rand()<0.5 ?
-        uc(substr($prompt,$_,1)) :
-            lc(substr($prompt,$_,1)) for 0..3;
-    $prompt;
-}
 sub new {
     bless {}, shift;
 }
@@ -2137,7 +2129,7 @@ sub mywarn {
 sub mydie {
     my($self,$what) = @_;
     $self->print_ornamented($what, 'bold red on_white');
-    die "\n";
+    die $what;
 }
 
 # use this only for unrecoverable errors!
@@ -2162,7 +2154,6 @@ sub unrecoverable_error {
     }
     unshift @lines, "\n";
     $self->mydie(join "", @lines);
-    die "\n";
 }
 
 sub mysleep {
