@@ -515,6 +515,10 @@ r
 ~~like~~
 (All modules are up to date|installed modules|Fcntl)
 ########
+u /--/
+~~like~~
+No modules found for
+########
 notest
 ~~like~~
 Pragma.*method
