@@ -2279,9 +2279,7 @@ to find objects with matching identifiers.
             $obj->called_for($s);
         }
         CPAN->debug(
-                    qq{pragma[@pragma]meth[$meth]obj[$obj]as_string\[}.
-                    $obj->as_string.
-                    qq{\]}
+                    qq{pragma[@pragma]meth[$meth]obj[$obj]as_string[$obj->{ID}]}
                    ) if $CPAN::DEBUG;
 
         if ($obj->$meth()){
@@ -3891,7 +3889,7 @@ sub as_string {
     push @m, $class, " id = $self->{ID}\n";
     my $ro;
     unless ($ro = $self->ro) {
-        $CPAN::Frontend->mydie("Unknown distribution $self->{ID}");
+        $CPAN::Frontend->mydie("Unknown object $self->{ID}");
     }
     for (sort keys %$ro) {
 	# next if m/^(ID|RO)$/;
@@ -5990,7 +5988,7 @@ sub contains {
         my $dist = $CPAN::META->instance('CPAN::Distribution',
                                          $self->cpan_file);
         $dist->get;
-        $self->debug($dist->as_string) if $CPAN::DEBUG;
+        $self->debug("id[$dist->{ID}]") if $CPAN::DEBUG;
         my($todir) = $CPAN::Config->{'cpan_home'};
         my(@me,$from,$to,$me);
         @me = split /::/, $self->id;
