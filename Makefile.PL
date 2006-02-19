@@ -154,6 +154,7 @@ sub macro {
 LC_ALL_noexport=en_GB.utf8
 
 ALL_PERLS = /usr/bin/perl /usr/local/bin/perl \
+	    /usr/local/perl-5.8.0/bin/perl \
             /usr/local/perl-5.004_05/bin/perl \
             /usr/local/perl-5.005_04/bin/perl
 }
@@ -239,7 +240,7 @@ testdistros: t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz 
 
 # sorry, unix centric
 testshell-with-protocol:
-	$(PERL) -e '-d $$_ or mkdir $$_ for "protocols"'
+	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
 	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
 	ls -ltr protocols | tail

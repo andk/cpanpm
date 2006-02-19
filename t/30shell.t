@@ -393,7 +393,7 @@ b Bundle::CpanTestDummies
 ########
 install ANDK/NotInChecksums-0.000.tar.gz
 ~~like~~
-(awry)
+(?s:awry.*yes)
 ########
 n
 ~~like~~
@@ -513,7 +513,7 @@ Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
 ########
 r
 ~~like~~
-(All modules are up to date|installed modules)
+(All modules are up to date|installed modules|Fcntl)
 ########
 notest
 ~~like~~

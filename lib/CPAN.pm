@@ -13,7 +13,9 @@ use Config ();
 use Cwd ();
 use DirHandle ();
 use Exporter ();
-use ExtUtils::MakeMaker (); # $SelfLoader::DEBUG=1;
+use ExtUtils::MakeMaker qw(prompt); # for some unknown reason,
+                                    # 5.005_04 does not work without
+                                    # this
 use File::Basename ();
 use File::Copy ();
 use File::Find;
@@ -2351,7 +2353,6 @@ sub get_basic_credentials {
         $USER = $CPAN::Config->{proxy_user};
         $PASSWD = $CPAN::Config->{proxy_pass};
     } else {
-        require ExtUtils::MakeMaker;
         ExtUtils::MakeMaker->import(qw(prompt));
         $USER = prompt("Proxy authentication needed!
  (Note: to permanently configure username and password run
@@ -5082,7 +5083,7 @@ or
             push @e, $err;
         }
 
-	defined $self->{'make'} and push @e,
+	defined $self->{make} and push @e,
             "Has already been processed within this session";
 
         if (exists $self->{later} and length($self->{later})) {
@@ -5191,16 +5192,16 @@ or
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
-	 $self->{'make'} = CPAN::Distrostatus->new("YES");
+	 $self->{make} = CPAN::Distrostatus->new("YES");
     } else {
 	 $self->{writemakefile} ||= CPAN::Distrostatus->new("YES");
-	 $self->{'make'} = CPAN::Distrostatus->new("NO");
+	 $self->{make} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
     }
 }
 
 sub _make_command {
-    return $CPAN::Config->{'make'} || $Config::Config{make} || 'make';
+    return $CPAN::Config->{make} || $Config::Config{make} || 'make';
 }
 
 #-> sub CPAN::Distribution::follow_prereqs ;
@@ -5219,7 +5220,6 @@ sub follow_prereqs {
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
 	$follow = 1;
     } elsif ($CPAN::Config->{prerequisites_policy} eq "ask") {
-	require ExtUtils::MakeMaker;
 	my $answer = ExtUtils::MakeMaker::prompt(
 "Shall I follow them and prepend them to the queue
 of modules we are processing right now?", "yes");
@@ -5662,7 +5662,7 @@ sub install {
                           $CPAN::Config->{mbuild_install_arg},
                          );
     } else {
-        my($make_install_make_command) = $CPAN::Config->{'make_install_make_command'} ||
+        my($make_install_make_command) = $CPAN::Config->{make_install_make_command} ||
             _make_command();
         $system = sprintf("%s install %s",
                           $make_install_make_command,
