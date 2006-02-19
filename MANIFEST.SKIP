@@ -39,8 +39,9 @@
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01/
-^t/dot-cpan/build
-^t/dot-cpan/histfile
+^t/dot-cpan/Bundle/CpanTestDummies.pm
 ^t/dot-cpan/Bundle/Snap
 ^t/dot-cpan/Metadata
+^t/dot-cpan/build
+^t/dot-cpan/histfile
 ~$
