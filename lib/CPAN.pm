@@ -1338,6 +1338,7 @@ sub local_bundles {
                 my($entry);
                 for $entry ($dh->read) {
                     next if $entry =~ /^\./;
+                    next unless $entry =~ /^\w+(\.pm)?(?!\n)\Z/;
                     if (-d File::Spec->catdir($bdir,$entry)){
                         push @bbase, "$bbase\::$entry";
                     } else {
