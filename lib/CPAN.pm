@@ -670,10 +670,16 @@ Please make sure the directory exists and is writable.
       }
     } # $@ after eval mkpath $dotcpan
     my $fh;
+    my $home;
+    if ($CPAN::META->has_inst("File::HomeDir")) {
+        $home = File::HomeDir->my_data;
+    } else {
+        $home = $ENV{HOME};
+    }
     unless ($fh = FileHandle->new(">$lockfile")) {
 	if ($! =~ /Permission/) {
 	    my $incc = $INC{'CPAN/Config.pm'};
-	    my $myincc = File::Spec->catfile($ENV{HOME},'.cpan','CPAN','MyConfig.pm');
+	    my $myincc = File::Spec->catfile($home,'.cpan','CPAN','MyConfig.pm');
 	    $CPAN::Frontend->myprint(qq{
 
 Your configuration suggests that CPAN.pm should use a working
@@ -1558,7 +1564,14 @@ sub reload_this {
 sub mkmyconfig {
     my($self, $cpanpm, %args) = @_;
     require CPAN::FirstTime;
-    $cpanpm = $INC{'CPAN/MyConfig.pm'} || "$ENV{HOME}/.cpan/CPAN/MyConfig.pm";
+    my $home;
+    if ($CPAN::META->has_inst("File::HomeDir")) {
+        $home = File::HomeDir->my_data;
+    } else {
+        $home = $ENV{HOME};
+    }
+    $cpanpm = $INC{'CPAN/MyConfig.pm'} ||
+        File::Spec->catfile(split /\//, "$home/.cpan/CPAN/MyConfig.pm");
     File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
     if(!$INC{'CPAN/Config.pm'}) {
         eval { require CPAN::Config; };
@@ -3148,7 +3161,13 @@ use strict;
 # package CPAN::FTP::netrc;
 sub new {
     my($class) = @_;
-    my $file = File::Spec->catfile($ENV{HOME},".netrc");
+    my $home;
+    if ($CPAN::META->has_inst("File::HomeDir")) {
+        $home = File::HomeDir->my_data;
+    } else {
+        $home = $ENV{HOME};
+    }
+    my $file = File::Spec->catfile($home,".netrc");
 
     my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
        $atime,$mtime,$ctime,$blksize,$blocks)
@@ -7977,6 +7996,10 @@ including
   use lib "$ENV{HOME}/myperl/lib";
 
 or setting the PERL5LIB environment variable.
+
+While we're speaking about $ENV{HOME}, it might be worth mentioning,
+that for Windows we use the File::HomeDir module that provides an
+equivalent to the concept of the home directory on Unix.
 
 Another thing you should bear in mind is that the UNINST parameter can
 be dnagerous when you are installing into a private area because you

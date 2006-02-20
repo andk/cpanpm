@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 use strict;
-$VERSION = '1.84';
+$VERSION = '1.86';
 
 1;
 
@@ -21,6 +21,8 @@ Digest::SHA
 Module::Signature
 
 File::Temp
+
+File::HomeDir
 
 File::Spec
 
