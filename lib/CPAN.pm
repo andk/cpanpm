@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.85';
+$VERSION = '1.86';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -87,8 +87,8 @@ sub AUTOLOAD {
     if (exists $EXPORT{$l}){
 	CPAN::Shell->$l(@_);
     } else {
-	$CPAN::Frontend->mydie(qq{Unknown CPAN command "$AUTOLOAD". }.
-                               qq{Type ? for help.\n});
+	die(qq{Unknown CPAN command "$AUTOLOAD". }.
+            qq{Type ? for help.\n});
     }
 }
 
@@ -2126,10 +2126,17 @@ sub mywarn {
 #    Carp::confess "died";
 #}
 
+# only to be used for shell commands
 sub mydie {
     my($self,$what) = @_;
     $self->print_ornamented($what, 'bold red on_white');
-    die $what;
+
+    # If it is the shell, we want that the following die to be silent,
+    # but if it is not the shell, we would need a 'die $what'. We need
+    # to take care that only shell commands use mydie. Is this
+    # possible?
+
+    die "\n";
 }
 
 # use this only for unrecoverable errors!
@@ -2506,13 +2513,15 @@ sub localize {
     }
 
     if (-f $aslocal && -r _ && !($force & 1)){
-      if (-s $aslocal) {
-        return $aslocal;
-      } else {
-        # empty file from a previous unsuccessful attempt to download it
-        unlink $aslocal or
-            $CPAN::Frontend->mydie("Found a zero-length '$aslocal' that I could not remove.");
-      }
+        my $size;
+        if ($size = -s $aslocal) {
+            $self->debug("aslocal[$aslocal]size[$size]") if $CPAN::DEBUG;
+            return $aslocal;
+        } else {
+            # empty file from a previous unsuccessful attempt to download it
+            unlink $aslocal or
+                $CPAN::Frontend->mydie("Found a zero-length '$aslocal' that I could not remove.");
+        }
     }
     my($restore) = 0;
     if (-f $aslocal){
@@ -4029,6 +4038,7 @@ sub dir_listing {
     my $chksumfile = shift;
     my $recursive = shift;
     my $may_ftp = shift;
+
     my $lc_want =
 	File::Spec->catfile($CPAN::Config->{keep_source_where},
 			    "authors", "id", @$chksumfile);
@@ -4092,7 +4102,7 @@ sub dir_listing {
 	    Carp::confess($@) if $@;
 	}
     } elsif ($may_ftp) {
-	Carp::carp "Could not open $lc_file for reading.";
+	Carp::carp "Could not open '$lc_file' for reading.";
     } else {
         # Maybe should warn: "You may want to set show_upload_date to a true value"
 	return;
@@ -4757,12 +4767,11 @@ sub verifyCHECKSUM {
 	File::Spec->catfile($CPAN::Config->{keep_source_where},
 			    "authors", "id", @local);
     local($") = "/";
-    if (
-	-s $lc_want
-	&&
-	$self->CHECKSUM_check_file($lc_want)
-       ) {
-	return $self->{CHECKSUM_STATUS} = "OK";
+    if (my $size = -s $lc_want) {
+        $self->debug("lc_want[$lc_want]size[$size]") if $CPAN::DEBUG;
+        if ($self->CHECKSUM_check_file($lc_want,1)) {
+            return $self->{CHECKSUM_STATUS} = "OK";
+        }
     }
     $lc_file = CPAN::FTP->localize("authors/id/@local",
 				   $lc_want,1);
@@ -4778,7 +4787,9 @@ sub verifyCHECKSUM {
 	    return;
 	}
     }
-    $self->CHECKSUM_check_file($lc_file);
+    if ($self->CHECKSUM_check_file($lc_file)) {
+        return $self->{CHECKSUM_STATUS} = "OK";
+    }
 }
 
 #-> sub CPAN::Distribution::SIG_check_file ;
@@ -4809,10 +4820,16 @@ retry.};
 }
 
 #-> sub CPAN::Distribution::CHECKSUM_check_file ;
+
+# sloppy is 1 when we have an old checksums file that maybe is good
+# enough
+
 sub CHECKSUM_check_file {
-    my($self,$chk_file) = @_;
+    my($self,$chk_file,$sloppy) = @_;
     my($cksum,$file,$basename);
 
+    $sloppy ||= 0;
+    $self->debug("chk_file[$chk_file]sloppy[$sloppy]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst("Module::Signature") and Module::Signature->VERSION >= 0.26) {
 	$self->debug("Module::Signature is installed, verifying");
 	$self->SIG_check_file($chk_file);
@@ -4846,7 +4863,7 @@ When trying to read that file I expected to get a hash reference
 for further processing, but got garbage instead.
 });
         my $answer = ExtUtils::MakeMaker::prompt("Proceed nonetheless?", "no");
-        $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
+        $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.\n");
         $self->{CHECKSUM_STATUS} = "NIL -- CHECKSUMS file broken";
         return;
     } elsif (exists $cksum->{$basename}{sha256}) {
@@ -4899,6 +4916,7 @@ retry.};
 	}
 	# close $fh if fileno($fh);
     } else {
+        return if $sloppy;
 	unless ($self->{CHECKSUM_STATUS}) {
 	    $CPAN::Frontend->mywarn(qq{
 Warning: No checksum for $basename in $chk_file.
@@ -4908,7 +4926,7 @@ has not yet been calculated, but it may also be that something is
 going awry right now.
 });
             my $answer = ExtUtils::MakeMaker::prompt("Proceed?", "yes");
-            $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.");
+            $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.\n");
 	}
         $self->{CHECKSUM_STATUS} = "NIL -- distro not in CHECKSUMS file";
 	return;
@@ -5093,7 +5111,7 @@ or
     }
     $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
     my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory");
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
     chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 

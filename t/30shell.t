@@ -293,7 +293,7 @@ $exp->expect(
 
 my $got = $exp->clear_accum;
 mydiag "GOT: $got\n";
-$timeout = 60;
+$timeout = 30;
 $|=1;
 for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
@@ -347,7 +347,7 @@ nothanks
 ~~like~~
 wrote
 ########
-# o debug all
+o debug all
 ~~like~~
 ########
 o conf histsize 101
