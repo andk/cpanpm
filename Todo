@@ -1,5 +1,31 @@
 2006-02-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: the new test 12cpan.t is not suited for 5.004_05:
+
+t/12cpan............Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 13.
+Unquoted string "command" may clash with future reserved word at t/12cpan.t line 13.
+syntax error at t/12cpan.t line 13, near "/,"
+Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
+syntax error at t/12cpan.t line 17, near "+=>"
+Unquoted string "bar" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "baz" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
+Execution of t/12cpan.t aborted due to compilation errors.
+# Looks like your test died before it could output anything.
+dubious
+
+	and not for 5.005_04:
+
+t/12cpan..........Can't locate object method "catfile" via package "File::Spec" at t/12cpan.t line 3.
+# Looks like your test died before it could output anything.
+t/12cpan..........dubious                                                    
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 1-3
+        Failed 3/3 tests, 0.00% okay
+
+	
+
 	* Bugalert: I saw the "awry" case without a reason.
 
 cpan[10]> install Bundle::Spd
@@ -53,7 +79,7 @@ Proceed? [yes]
 	one!) and indeed there is no Net-Daemon-0.39.tar.gz in it. On the CPAN
 	we do have a newer checksums file. Is this cool?
 
-	So e have the root of te cause. Now for a solution?
+	So we have the root of the cause. Now for a solution?
 
 	I can answer 'no' and then reproduce the problem. Note that the old
 	CHECKSUMS file is 3 months old and its timestamp is 1 month old.
