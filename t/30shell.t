@@ -249,25 +249,20 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $readline_enabled = "(?s:ReadLine support enabled.*cpan[^>]*>)";
-# warn "WAITING FOR: $readline_enabled";
-
-my $exp = Expect->new;
-$exp->spawn(
-            $^X,
-            "-I$t",                 # get this test's own MyConfig
-            "-Mblib",
-            "-MCPAN::MyConfig",
-            "-MCPAN",
-            ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
-            # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
-            "-e",
-            # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
-            "\@CPAN::Defaultsites = (); shell",
-           );
 my $timeout = 60;
-$exp->log_stdout(0);
-$exp->notransfer(1);
+
+my @system = (
+              $^X,
+              "-I$t",                 # get this test's own MyConfig
+              "-Mblib",
+              "-MCPAN::MyConfig",
+              "-MCPAN",
+              ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
+              # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
+              "-e",
+              # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
+              "\@CPAN::Defaultsites = (); shell",
+             );
 
 # shamelessly stolen from Test::Builder
 sub mydiag {
@@ -281,6 +276,11 @@ sub mydiag {
 }
 
 $|=1;
+my $expo = Expect->new;
+$expo->spawn(@system);
+$expo->log_stdout(0);
+$expo->notransfer(1);
+
 for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my($prog,$expected) = split(/~~like~~.*/, $chunk);
@@ -296,27 +296,26 @@ for my $i (0..$#prgs){
         mydiag "NEXT: $prog";
         my $sendprog = $prog;
         $sendprog =~ s/\\t/\t/g;
-        $exp->send("$sendprog\n");
+        $expo->send("$sendprog\n");
     }
     $expected .= "(?s:.*$prompt_re)" unless $expected =~ /\(/;
     mydiag "EXPECT: $expected";
-    $exp->expect(
-                 $timeout,
-                 [ eof => sub { exit } ],
-                 [ timeout => sub {
-                       my $got = $exp->clear_accum;
-                       diag "timed out on i[$i]prog[$prog]
+    $expo->expect(
+                  $timeout,
+                  [ eof => sub { exit } ],
+                  [ timeout => sub {
+                        my $got = $expo->clear_accum;
+                        diag "timed out on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
-                       exit;
-                   } ],
-                 '-re', $expected
-                );
-    my $got = $exp->clear_accum;
+                        exit;
+                    } ],
+                  '-re', $expected
+                 );
+    my $got = $expo->clear_accum;
     mydiag "GOT: $got\n";
     ok(1, $prog||"\"\\n\"");
 }
-
-$exp->soft_close;
+$expo->soft_close;
 
 
 
