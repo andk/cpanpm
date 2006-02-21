@@ -132,7 +132,7 @@ WriteMakefile(
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
               'dist' => {
                          DIST_DEFAULT => (
-                                          'Makefile META.yml setversion README '.
+                                          'Makefile no_CR META.yml setversion README '.
                                           'testdistros all chlog tardist'
                                          ),
                          COMPRESS => 'gzip -9f'
@@ -330,6 +330,8 @@ clean ::
 		t/CPAN/authors/id/A/AN/ANDK/*/META.yml
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
+no_CR :
+	$(PERL) bin/no_CR.pl MANIFEST
 
 }
 }
