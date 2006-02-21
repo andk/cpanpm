@@ -1092,6 +1092,10 @@ FAQ
 
         or setting the PERL5LIB environment variable.
 
+        While we're speaking about $ENV{HOME}, it might be worth mentioning,
+        that for Windows we use the File::HomeDir module that provides an
+        equivalent to the concept of the home directory on Unix.
+
         Another thing you should bear in mind is that the UNINST parameter
         can be dnagerous when you are installing into a private area because
         you might accidentally remove modules that other people depend on

@@ -280,7 +280,7 @@ sub mydiag {
 $|=1;
 my $expo;
 my @PAIRS;
-$RUN_EXPECT = $HAVE_EXPECT;
+$RUN_EXPECT = $HAVE_EXPECT || 0;
 ok(1,"RUN_EXPECT[$RUN_EXPECT]");
 if ($RUN_EXPECT) {
     $expo = Expect->new;

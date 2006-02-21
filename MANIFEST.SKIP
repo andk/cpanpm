@@ -44,4 +44,5 @@
 ^t/dot-cpan/Metadata
 ^t/dot-cpan/build
 ^t/dot-cpan/histfile
+^test.out
 ~$
