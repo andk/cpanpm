@@ -1,3 +1,26 @@
+2006-02-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.86_51
+
+	* replace the concept of $ENV{HOME} with File::HomeDir (fixes #17759;
+	Adam Kennedy)
+
+	* remove a spurious CARRIAGE RETURN in the Todo file: it broke
+	Module::Signature on Windows (fixes #17746; Adam Kennedy)
+
+	* return empty string instead of undef when HAVE_MAKE is false (fixes
+	#17768; Adam Kennedy)
+
+	* do not try to use $CPAN::Frontend before it exists (fixes #17770; Adam
+	Kennedy)
+
+	* t/12cpan.t now behaves on 5.004 and 5.005
+	
+	* t/30shell.t now can be run without Expect; needs to be enabled with
+	environment variable CPAN_RUN_SHELL_TEST in this case
+
+	* more testing in 30shell.t
+
 2006-02-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.86
