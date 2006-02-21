@@ -67,8 +67,9 @@ if ($^O eq "MSWin32") {
                  )) {
         delete $keys{$k};
         if (exists $CPAN::Config->{$k}) {
-            $CPAN::Frontend->mywarn("deleting previously set config variable ".
-                                    "'$k' => '$CPAN::Config->{$k}'");
+            for ("deleting previously set config variable '$k' => '$CPAN::Config->{$k}'") {
+                $CPAN::Frontend ? $CPAN::Frontend->mywarn($_) : warn $_;
+            }
             delete $CPAN::Config->{$k};
         }
     }
