@@ -161,7 +161,7 @@ ALL_PERLS = /usr/bin/perl /usr/local/bin/perl \
 }
 
 sub postamble {
-  return unless $HAVE_MAKE; # dmake has unknown issues with my Makfile
+  return "" unless $HAVE_MAKE; # dmake has unknown issues with my Makfile
   q{
 setversion:
 	$(PERL) Makefile.PL --setversion
