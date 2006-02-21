@@ -3,7 +3,7 @@
 	* release 1.86
 
 	* quick fix for a bug in the Checksums checking code: if the cache had
-	an old copy, it was in some cases not updated and if hthe file-to-check
+	an old copy, it was in some cases not updated and if the file-to-check
 	was newer, a false alarm was triggered.
 
 	* I expect a 1.87 soonish, because we have open bugs: test 12cpan.t not

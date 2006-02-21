@@ -161,6 +161,7 @@ Total                                 53.3   36.8   33.0   75.5  100.0   47.2
 
 =cut
 
+use vars qw($HAVE_EXPECT);
 BEGIN {
     $|++;
     #chdir 't' if -d 't';
@@ -168,10 +169,11 @@ BEGIN {
     require Config;
     unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
 	print "1..0 # Skip: test is only validated on linux\n";
-  warn "\n\n\a Skipping tests! If you want to run the test
-  please set environment variable \$CPAN_RUN_SHELL_TEST to 1.\n
-  Pls try it on your box and inform me if it works\n";
-	exit 0;
+#  warn "\n\n\a Skipping tests! If you want to run the test
+#  please set environment variable \$CPAN_RUN_SHELL_TEST to 1.\n
+#  Pls try it on your box and inform me if it works\n";
+	print "1..0 # Skip: no linux\n";
+	eval "require POSIX; 1" and POSIX::_exit(0);
     }
     eval { require Expect };
     # I consider it good-enough to have this test only where somebody
@@ -180,20 +182,26 @@ BEGIN {
     if ($@) {
 	print "1..0 # Skip: no Expect\n";
 	eval "require POSIX; 1" and POSIX::_exit(0);
+    } else {
+        $HAVE_EXPECT = 1;
     }
 }
 
 use File::Spec;
 
-sub _f ($) {
-    File::Spec->catfile(split /\//, shift);
-}
-use File::Path qw(rmtree);
-rmtree _f"t/dot-cpan/sources";
-rmtree _f"t/dot-cpan/build";
+sub _f ($) {File::Spec->catfile(split /\//, shift);}
+sub _d ($) {File::Spec->catdir(split /\//, shift);}
+use File::Path qw(rmtree mkpath);
+rmtree _d"t/dot-cpan/sources";
+rmtree _d"t/dot-cpan/build";
 unlink _f"t/dot-cpan/Metadata";
+mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
 
 use File::Copy qw(cp);
+cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588",
+    _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
+    or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588 ".
+    "over t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
 cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 cp _f"t/dot-cpan/Bundle/CpanTestDummies-1.55.pm",
@@ -237,10 +245,13 @@ for my $m (@modules) {
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
-my $exp = Expect->new;
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>";
 my $t = File::Spec->catfile($cwd,"t");
+my $readline_enabled = "(?s:ReadLine support enabled.*".$prompt_re.")";
+# warn "WAITING FOR: $readline_enabled";
+
+my $exp = Expect->new;
 $exp->spawn(
             $^X,
             "-I$t",                 # get this test's own MyConfig
@@ -268,8 +279,6 @@ sub mydiag {
     print $msg;
 }
 
-my $waiting_for = "(?s:ReadLine support enabled.*".$prompt_re.")";
-# warn "WAITING FOR: $waiting_for";
 $exp->expect(
              $timeout,
              [ eof => sub { exit } ],
@@ -282,13 +291,13 @@ $exp->expect(
 		       mydiag "+++due to lockfile, proceeding+++\n";
                        $self->send("y\n");
                    } else {
-		       mydiag "+++unknown reason+++\n";
+		       mydiag "+++didn't get '$readline_enabled'+++\n";
                        mydiag "+++giving up this whole test+++\n";
                        exit;
                    }
                    Expect::exp_continue;
                }],
-             '-re', $waiting_for
+             '-re', $readline_enabled
             );
 
 my $got = $exp->clear_accum;
@@ -329,6 +338,8 @@ expected[$expected]\ngot[$got]\n\n";
 }
 
 $exp->soft_close;
+
+
 
 read_myconfig;
 is($CPAN::Config->{histsize},101);
