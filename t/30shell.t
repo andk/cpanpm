@@ -195,6 +195,7 @@ use File::Path qw(rmtree mkpath);
 rmtree _d"t/dot-cpan/sources";
 rmtree _d"t/dot-cpan/build";
 unlink _f"t/dot-cpan/Metadata";
+unlink _f"t/dot-cpan/.lock";
 mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
 
 use File::Copy qw(cp);
@@ -246,9 +247,9 @@ read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
 my $prompt = "cpan>";
-my $prompt_re = "cpan[^>]*>";
+my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $readline_enabled = "(?s:ReadLine support enabled.*".$prompt_re.")";
+my $readline_enabled = "(?s:ReadLine support enabled.*cpan[^>]*>)";
 # warn "WAITING FOR: $readline_enabled";
 
 my $exp = Expect->new;
@@ -264,7 +265,7 @@ $exp->spawn(
             # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
             "\@CPAN::Defaultsites = (); shell",
            );
-my $timeout = 6;
+my $timeout = 60;
 $exp->log_stdout(0);
 $exp->notransfer(1);
 
@@ -279,30 +280,6 @@ sub mydiag {
     print $msg;
 }
 
-$exp->expect(
-             $timeout,
-             [ eof => sub { exit } ],
-             [ timeout => sub {
-                   my $self = $exp;
-                   mydiag "+++timed out+++\n";
-                   my $got = $self->clear_accum;
-                   mydiag "GOT: $got\n";
-                   if ($got =~ /lockfile/) {
-		       mydiag "+++due to lockfile, proceeding+++\n";
-                       $self->send("y\n");
-                   } else {
-		       mydiag "+++didn't get '$readline_enabled'+++\n";
-                       mydiag "+++giving up this whole test+++\n";
-                       exit;
-                   }
-                   Expect::exp_continue;
-               }],
-             '-re', $readline_enabled
-            );
-
-my $got = $exp->clear_accum;
-mydiag "GOT: $got\n";
-$timeout = 30;
 $|=1;
 for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
@@ -315,10 +292,12 @@ for my $i (0..$#prgs){
       s/^\s+//;
       s/\s+\z//;
     }
-    mydiag "NEXT: $prog";
-    my $sendprog = $prog;
-    $sendprog =~ s/\\t/\t/g;
-    $exp->send("$sendprog\n");
+    if ($prog) {
+        mydiag "NEXT: $prog";
+        my $sendprog = $prog;
+        $sendprog =~ s/\\t/\t/g;
+        $exp->send("$sendprog\n");
+    }
     $expected .= "(?s:.*$prompt_re)" unless $expected =~ /\(/;
     mydiag "EXPECT: $expected";
     $exp->expect(
@@ -345,6 +324,9 @@ read_myconfig;
 is($CPAN::Config->{histsize},101);
 
 __END__
+########
+~~like~~
+(?s:ReadLine support enabled.*cpan[^>]*>)
 ########
 o conf build_cache
 ~~like~~
