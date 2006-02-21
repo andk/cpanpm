@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.87';
+$VERSION = '1.86_51';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -671,7 +671,7 @@ Please make sure the directory exists and is writable.
     } # $@ after eval mkpath $dotcpan
     my $fh;
     my $home;
-    if ($CPAN::META->has_inst("File::HomeDir")) {
+    if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
     } else {
         $home = $ENV{HOME};
@@ -842,17 +842,28 @@ sub has_usable {
                'Net::FTP' => [
                             sub {require Net::FTP},
                             sub {require Net::Config},
-                           ]
+                           ],
+               'File::HomeDir' => [
+                                   sub {require File::HomeDir;
+                                        unless (File::HomeDir->VERSION >= 0.52){
+                                            for ("Will not use File::HomeDir, need 0.52\n") {
+                                                warn $_;
+                                                die $_;
+                                            }
+                                        }
+                                    },
+                                  ],
               };
     if ($usable->{$mod}) {
-      for my $c (0..$#{$usable->{$mod}}) {
-        my $code = $usable->{$mod}[$c];
-        my $ret = eval { &$code() };
-        if ($@) {
-          warn "DEBUG: c[$c]\$\@[$@]ret[$ret]";
-          return;
+        for my $c (0..$#{$usable->{$mod}}) {
+            my $code = $usable->{$mod}[$c];
+            my $ret = eval { &$code() };
+            $ret = "" unless defined $ret;
+            if ($@) {
+                # warn "DEBUG: c[$c]\$\@[$@]ret[$ret]";
+                return;
+            }
         }
-      }
     }
     return $HAS_USABLE->{$mod} = 1;
 }
@@ -1565,7 +1576,7 @@ sub mkmyconfig {
     my($self, $cpanpm, %args) = @_;
     require CPAN::FirstTime;
     my $home;
-    if ($CPAN::META->has_inst("File::HomeDir")) {
+    if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
     } else {
         $home = $ENV{HOME};
@@ -3162,7 +3173,7 @@ use strict;
 sub new {
     my($class) = @_;
     my $home;
-    if ($CPAN::META->has_inst("File::HomeDir")) {
+    if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
     } else {
         $home = $ENV{HOME};
