@@ -1,6 +1,7 @@
 BEGIN {
     $|++;
-    eval "qr/foo/";
+    local $^W;
+    eval "qr/qr/";
     if ($@) {
 	print "1..0 # Skip: no qr//\n";
 	eval "require POSIX; 1" and POSIX::_exit(0);
