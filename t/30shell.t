@@ -161,7 +161,7 @@ Total                                 53.3   36.8   33.0   75.5  100.0   47.2
 
 =cut
 
-use vars qw($HAVE_EXPECT);
+use vars qw($HAVE_EXPECT $RUN_EXPECT);
 BEGIN {
     $|++;
     #chdir 't' if -d 't';
@@ -169,19 +169,20 @@ BEGIN {
     require Config;
     unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
 	print "1..0 # Skip: test is only validated on linux\n";
+
 #  warn "\n\n\a Skipping tests! If you want to run the test
 #  please set environment variable \$CPAN_RUN_SHELL_TEST to 1.\n
 #  Pls try it on your box and inform me if it works\n";
+
 	print "1..0 # Skip: no linux\n";
 	eval "require POSIX; 1" and POSIX::_exit(0);
     }
     eval { require Expect };
-    # I consider it good-enough to have this test only where somebody
-    # has Expect installed. I do not want to promote Expect to
-    # everywhere.
     if ($@) {
-	print "1..0 # Skip: no Expect\n";
-	eval "require POSIX; 1" and POSIX::_exit(0);
+        unless ($ENV{CPAN_RUN_SHELL_TEST}) {
+            print "1..0 # Skip: no Expect\n";
+            eval "require POSIX; 1" and POSIX::_exit(0);
+        }
     } else {
         $HAVE_EXPECT = 1;
     }
@@ -237,6 +238,7 @@ use Test::More;
 plan tests => (
                scalar @prgs
                + 2                     # 2 histsize tests
+               + 1                     # 1 RUN_EXPECT feedback
                + scalar @modules
               );
 
@@ -247,7 +249,7 @@ read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
 my $prompt = "cpan>";
-my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
+my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
 my $timeout = 60;
 
@@ -276,48 +278,85 @@ sub mydiag {
 }
 
 $|=1;
-my $expo = Expect->new;
-$expo->spawn(@system);
-$expo->log_stdout(0);
-$expo->notransfer(1);
+my $expo;
+my @PAIRS;
+$RUN_EXPECT = $HAVE_EXPECT;
+ok(1,"RUN_EXPECT[$RUN_EXPECT]");
+if ($RUN_EXPECT) {
+    $expo = Expect->new;
+    $expo->spawn(@system);
+    $expo->log_stdout(0);
+    $expo->notransfer(1);
+} else {
+    my $system = join(" ", map { "\"$_\"" } @system)." > test.out";
+    warn "# DEBUG: system[$system]";
+    open SYSTEM, "| $system" or die;
+}
 
-for my $i (0..$#prgs){
+PAIR: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my($prog,$expected) = split(/~~like~~.*/, $chunk);
     unless (defined $expected) {
         ok(1,"empty test");
-        next;
+        next PAIR;
     }
     for ($prog,$expected) {
       s/^\s+//;
       s/\s+\z//;
     }
     if ($prog) {
-        mydiag "NEXT: $prog";
         my $sendprog = $prog;
         $sendprog =~ s/\\t/\t/g;
-        $expo->send("$sendprog\n");
+        if ($RUN_EXPECT) {
+            mydiag "NEXT: $prog";
+            $expo->send("$sendprog\n");
+        } else {
+            print SYSTEM "$sendprog\n";
+        }
     }
-    $expected .= "(?s:.*$prompt_re)" unless $expected =~ /\(/;
-    mydiag "EXPECT: $expected";
-    $expo->expect(
-                  $timeout,
-                  [ eof => sub { exit } ],
-                  [ timeout => sub {
-                        my $got = $expo->clear_accum;
-                        diag "timed out on i[$i]prog[$prog]
+    $expected .= "(?s:.*?$prompt_re)" unless $expected =~ /\(/;
+    if ($RUN_EXPECT) {
+        mydiag "EXPECT: $expected";
+        $expo->expect(
+                      $timeout,
+                      [ eof => sub {
+                            my $got = $expo->clear_accum;
+                            diag "EOF on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
-                        exit;
-                    } ],
-                  '-re', $expected
-                 );
-    my $got = $expo->clear_accum;
-    mydiag "GOT: $got\n";
-    ok(1, $prog||"\"\\n\"");
+                            exit;
+                        } ],
+                      [ timeout => sub {
+                            my $got = $expo->clear_accum;
+                            diag "timed out on i[$i]prog[$prog]
+expected[$expected]\ngot[$got]\n\n";
+                            exit;
+                        } ],
+                      '-re', $expected
+                     );
+        my $got = $expo->clear_accum;
+        mydiag "GOT: $got\n";
+        ok(1, $prog||"\"\\n\"");
+    } else {
+        $expected = "" if $prog =~ /\t/;
+        push @PAIRS, [$prog,$expected];
+    }
 }
-$expo->soft_close;
-
-
+if ($RUN_EXPECT) {
+    $expo->soft_close;
+} else {
+    close SYSTEM or die "Could not close SYSTEM filehandle: $!";
+    open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
+    local $/;
+    my $got = <SYSTEM>;
+    my $pair;
+    for $pair (@PAIRS) {
+        my($prog,$expected) = @$pair;
+        mydiag "EXPECT: $expected";
+        $got =~ /(\G.*?$expected)/sgc or die "Failed on prog[$prog]expected[$expected]";
+        mydiag "GOT: $1\n";
+        ok(1, $prog||"\"\\n\"");
+    }
+}
 
 read_myconfig;
 is($CPAN::Config->{histsize},101);
@@ -325,7 +364,7 @@ is($CPAN::Config->{histsize},101);
 __END__
 ########
 ~~like~~
-(?s:ReadLine support enabled.*cpan[^>]*>)
+(?s:ReadLine support (enabled|suppressed).*?cpan[^>]*?>)
 ########
 o conf build_cache
 ~~like~~
@@ -333,18 +372,18 @@ build_cache
 ########
 o conf init
 ~~like~~
-initialized(?s:.*manual.*configuration.*\])
+initialized(?s:.*?manual.*?configuration.*?\])
 ########
 nothanks
 ~~like~~
 wrote
 ########
-o debug all
+# o debug all
 ~~like~~
 ########
 o conf histsize 101
 ~~like~~
-.  histsize.+101
+.  histsize.+?101
 ########
 o conf commit
 ~~like~~
@@ -352,20 +391,20 @@ wrote
 ########
 o conf histsize 102
 ~~like~~
-.  histsize.+102
+.  histsize.+?102
 ########
 o conf defaults
 ~~like~~
 ########
 o conf histsize
 ~~like~~
-histsize.+101
+histsize.+?101
 ########
 o conf urllist
 ~~like~~
-file:///.*CPAN
+file:///.*?CPAN
 ########
-!print$ENV{HARNESS_PERL_SWITCHES},$/
+!print$ENV{HARNESS_PERL_SWITCHES}||"",$/
 ~~like~~
 ########
 rtlprnft
@@ -385,7 +424,7 @@ Hietaniemi
 ########
 a ANDK JHI
 ~~like~~
-(?s:Andreas.*Hietaniemi.*items found)
+(?s:Andreas.*?Hietaniemi.*?items found)
 ########
 autobundle
 ~~like~~
@@ -393,15 +432,15 @@ Wrote bundle file
 ########
 b
 ~~like~~
-(?s:Bundle::CpanTestDummies.*items found)
+(?s:Bundle::CpanTestDummies.*?items found)
 ########
 b Bundle::CpanTestDummies
 ~~like~~
-\sCONTAINS.+CPAN::Test::Dummy::Perl5::Make.+CPAN::Test::Dummy::Perl5::Make::Zip
+\sCONTAINS.+?CPAN::Test::Dummy::Perl5::Make.+?CPAN::Test::Dummy::Perl5::Make::Zip
 ########
 install ANDK/NotInChecksums-0.000.tar.gz
 ~~like~~
-(?s:awry.*yes)
+(?s:awry.*?yes)
 ########
 n
 ~~like~~
@@ -412,15 +451,15 @@ CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
 ########
 d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
 ~~like~~
-CPAN_USERID.*ANDK.*Andreas
+CPAN_USERID.*?ANDK.*?Andreas
 ########
 ls ANDK
 ~~like~~
-(?s:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy.*\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump)
+(?s:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy.*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump)
 ########
 ls ANDK/CPAN*
 ~~like~~
-(?s:Text::Glob\s+loaded\s+ok.*CPAN-Test-Dummy)
+(?s:Text::Glob\s+loaded\s+ok.*?CPAN-Test-Dummy)
 ########
 force ls ANDK/CPAN*
 ~~like~~
@@ -448,11 +487,11 @@ test\s+--\s+NOT OK
 ########
 dump CPAN::Test::Dummy::Perl5::Make
 ~~like~~
-(?s:bless.+('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+){4})
+(?s:bless.+?('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+?){4})
 ########
 install CPAN::Test::Dummy::Perl5::Make::Failearly
 ~~like~~
-(?s:Failed during this command.+writemakefile NO)
+(?s:Failed during this command.+?writemakefile NO)
 ########
 test CPAN::Test::Dummy::Perl5::NotExists
 ~~like~~
@@ -464,11 +503,11 @@ nothing done
 ########
 failed
 ~~like~~
-Test-Dummy-Perl5-Build-Fails.*make_test NO
+Test-Dummy-Perl5-Build-Fails.*?make_test NO
 ########
 failed
 ~~like~~
-Test-Dummy-Perl5-Make-Failearly.*writemakefile NO
+Test-Dummy-Perl5-Make-Failearly.*?writemakefile NO
 ########
 o conf commandnumber_in_prompt 1
 ~~like~~
@@ -483,7 +522,7 @@ staleness
 ########
 m /l/
 ~~like~~
-(?s:Perl5.*Fcntl)
+(?s:Perl5.*?Fcntl)
 ########
 i /l/
 ~~like~~
@@ -502,7 +541,7 @@ o conf prefer_installer EUMM
 ########
 make CPAN::Test::Dummy::Perl5::BuildOrMake
 ~~like~~
-(?s:Running make.*Writing Makefile.*make\s+-- OK)
+(?s:Running make.*?Writing Makefile.*?make\s+-- OK)
 ########
 o conf prefer_installer MB
 ~~like~~
@@ -513,7 +552,7 @@ Removing previously used
 ########
 make CPAN::Test::Dummy::Perl5::BuildOrMake
 ~~like~~
-(?s:Running Build.*Creating new.*Build\s+-- OK)
+(?s:Running Build.*?Creating new.*?Build\s+-- OK)
 ########
 test Bundle::CpanTestDummies
 ~~like~~
@@ -529,11 +568,11 @@ No modules found for
 ########
 notest
 ~~like~~
-Pragma.*method
+Pragma.*?method
 ########
 o conf help
 ~~like~~
-(?s:commit.*defaults.*help.*init.*urllist)
+(?s:commit.*?defaults.*?help.*?init.*?urllist)
 ########
 o conf inhibit_\t
 ~~like~~
