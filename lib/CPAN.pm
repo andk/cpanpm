@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.86_51';
+$VERSION = '1.86_52';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -670,16 +670,8 @@ Please make sure the directory exists and is writable.
       }
     } # $@ after eval mkpath $dotcpan
     my $fh;
-    my $home;
-    if ($CPAN::META->has_usable("File::HomeDir")) {
-        $home = File::HomeDir->my_data;
-    } else {
-        $home = $ENV{HOME};
-    }
     unless ($fh = FileHandle->new(">$lockfile")) {
 	if ($! =~ /Permission/) {
-	    my $incc = $INC{'CPAN/Config.pm'};
-	    my $myincc = File::Spec->catfile($home,'.cpan','CPAN','MyConfig.pm');
 	    $CPAN::Frontend->myprint(qq{
 
 Your configuration suggests that CPAN.pm should use a working
@@ -692,10 +684,8 @@ due to permission problems.
 Please make sure that the configuration variable
     \$CPAN::Config->{cpan_home}
 points to a directory where you can write a .lock file. You can set
-this variable in either
-    $incc
-or
-    $myincc
+this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
+\@INC path;
 });
             if(!$INC{'CPAN/MyConfig.pm'}) {
                 $CPAN::Frontend->myprint("You don't seem to have a user ".
@@ -1575,18 +1565,11 @@ sub reload_this {
 sub mkmyconfig {
     my($self, $cpanpm, %args) = @_;
     require CPAN::FirstTime;
-    my $home;
-    if ($CPAN::META->has_usable("File::HomeDir")) {
-        $home = File::HomeDir->my_data;
-    } else {
-        $home = $ENV{HOME};
-    }
+    my $home = CPAN::HandleConfig::home;
     $cpanpm = $INC{'CPAN/MyConfig.pm'} ||
         File::Spec->catfile(split /\//, "$home/.cpan/CPAN/MyConfig.pm");
     File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
-    if(!$INC{'CPAN/Config.pm'}) {
-        eval { require CPAN::Config; };
-    }
+    CPAN::HandleConfig::require_myconfig_or_config;
     $CPAN::Config ||= {};
     $CPAN::Config = {
         %$CPAN::Config,
@@ -3172,12 +3155,7 @@ use strict;
 # package CPAN::FTP::netrc;
 sub new {
     my($class) = @_;
-    my $home;
-    if ($CPAN::META->has_usable("File::HomeDir")) {
-        $home = File::HomeDir->my_data;
-    } else {
-        $home = $ENV{HOME};
-    }
+    my $home = CPAN::HandleConfig::home;
     my $file = File::Spec->catfile($home,".netrc");
 
     my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,

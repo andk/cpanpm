@@ -1,3 +1,11 @@
+2006-02-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.86_52
+
+	* simplification of the concepts of home and of the CPAN/MyConfig.pm and
+	the CPAN/Config.pm. There were too many place that tried to do the same
+	thing. Should now be centralized and consistent.
+
 2006-02-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.86_51

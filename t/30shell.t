@@ -407,6 +407,14 @@ file:///.*?CPAN
 !print$ENV{HARNESS_PERL_SWITCHES}||"",$/
 ~~like~~
 ########
+!print $INC{"CPAN/Config.pm"} || "NoCpAnCoNfIg",$/
+~~like~~
+NoCpAnCoNfIg
+########
+!print $INC{"CPAN/MyConfig.pm"},$/
+~~like~~
+CPAN/MyConfig.pm
+########
 rtlprnft
 ~~like~~
 Unknown

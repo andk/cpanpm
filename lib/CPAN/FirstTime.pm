@@ -51,7 +51,8 @@ sub init {
     unless ($CPAN::VERSION) {
 	require CPAN::Nox;
     }
-    eval {require CPAN::Config;};
+    require CPAN::HandleConfig;
+    CPAN::HandleConfig::require_myconfig_or_config();
     $CPAN::Config ||= {};
     local($/) = "\n";
     local($\) = "";
