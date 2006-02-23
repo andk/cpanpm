@@ -1,3 +1,29 @@
+2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: write a test fo Metadata usage
+
+	* Install without {My,}Config.pm, the rules should be:
+
+	if there is no CPAN/MyConfig.pm already loaded, we must try to load a
+	CPAN/Config.pm
+
+	if there is no CPAN/Config.pm, we must initialize one immediately. If we
+	are root, this should be something like
+	/usr/local/perl-5.8.0@27277/lib/5.8.8/CPAN/Config.pm as I just tested it
+	with 5.8.8.
+
+	So if root installs CPAN without testig it, they have no CPAN/Config.pm.
+	They start it and land immediately in the init process. Good.
+
+	If he runs 'make test' it should succeed all tests. Currently it fails
+	12cpan and skips 30shell because of 'no Expect'. ==> TODO
+
+	If they have no CPAN/Config.pm and start cpan as an ordinary user, then
+	they should get, without asking, a ~/.cpan/CPAN/MyConfig.pm and land in
+	the init dialog. This is currently OK.
+
+	* Todo: mention rt.cpan.org in the manpage
+
 2006-02-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* rethink if the CPAN/Config.pm file now is being built at all. Shouldn't
