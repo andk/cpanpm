@@ -1,5 +1,11 @@
 2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: run the test 30shell on a freshly installed perl and see that
+	onlythose tests fail that need prerequisites. Or better yet, no tests at
+	all?
+
+	* Todo: investigate what BUGHUNTING in Tarzip means "today".
+
 	* Todo: write a test fo Metadata usage
 
 	* Install without {My,}Config.pm, the rules should be:

@@ -168,7 +168,7 @@ BEGIN {
     unshift @INC, './lib';
     require Config;
     unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
-	print "1..0 # Skip: test is only validated on linux\n";
+	print "1..0 # Skip: only validated on linux; maybe try env CPAN_RUN_SHELL_TEST=1\n";
 
 #  warn "\n\n\a Skipping tests! If you want to run the test
 #  please set environment variable \$CPAN_RUN_SHELL_TEST to 1.\n
@@ -180,7 +180,7 @@ BEGIN {
     eval { require Expect };
     if ($@) {
         unless ($ENV{CPAN_RUN_SHELL_TEST}) {
-            print "1..0 # Skip: no Expect\n";
+            print "1..0 # Skip: no Expect, maybe try env CPAN_RUN_SHELL_TEST=1\n";
             eval "require POSIX; 1" and POSIX::_exit(0);
         }
     } else {
@@ -232,6 +232,7 @@ my @modules = qw(
                  Term::ReadKey
                  Term::ReadLine
                  Text::Glob
+                 Module::Build
                 );
 
 use Test::More;
