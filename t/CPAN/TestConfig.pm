@@ -1,6 +1,11 @@
 use Cwd;
 my $cwd = cwd;
+my $Iswin = $^O eq "MSWin32";
 $CPAN::Config = {
+                 $Iswin ? () : (
+                                'make_install_make_command' => q[make],
+                                'mbuild_install_build_command' => q[./Build],
+                               ),
                  'build_cache' => q[100],
                  'build_dir' => qq[$cwd/t/dot-cpan/build],
                  'bzip2' => q[/bin/bzip2],
@@ -23,11 +28,9 @@ $CPAN::Config = {
                  'make' => q[/usr/bin/make],
                  'make_arg' => q[],
                  'make_install_arg' => q[UNINST=1],
-                 'make_install_make_command' => q[make],
                  'makepl_arg' => q[],
                  'mbuild_arg' => q[],
                  'mbuild_install_arg' => q[--uninst 1],
-                 'mbuild_install_build_command' => q[./Build],
                  'mbuildpl_arg' => q[],
                  'ncftp' => q[],
                  'ncftpget' => q[],

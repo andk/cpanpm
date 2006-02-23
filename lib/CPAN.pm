@@ -5687,7 +5687,7 @@ sub install {
                          );
     }
 
-    my($stderr) = $^O =~ /Win/i ? "" : " 2>&1 ";
+    my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){
