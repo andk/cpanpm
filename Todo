@@ -1,144 +1,21 @@
-2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-02-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: run the test 30shell on a freshly installed perl and see that
-	onlythose tests fail that need prerequisites. Or better yet, no tests at
-	all?
+	* Todo 30shell:
+
+	Todo: rewrite the 30shell.t test for Open3 (or just a tempfile) by
+	concatenating all regexes or split on the prompt. DONE
+
+	Run the test 30shell on a freshly installed perl and see that only those
+	tests fail that need prerequisites. Or better yet, no tests at all? DONE
+	in rev. 663
+
+	When we succeed with this, make a version that runs within the core of
+	perl, maybe filter out just those tests that do not require additional
+	resources.
 
 	* Todo: investigate what BUGHUNTING in Tarzip means "today".
 
-	* Todo: write a test fo Metadata usage
-
-	* Install without {My,}Config.pm, the rules should be:
-
-	if there is no CPAN/MyConfig.pm already loaded, we must try to load a
-	CPAN/Config.pm
-
-	if there is no CPAN/Config.pm, we must initialize one immediately. If we
-	are root, this should be something like
-	/usr/local/perl-5.8.0@27277/lib/5.8.8/CPAN/Config.pm as I just tested it
-	with 5.8.8.
-
-	So if root installs CPAN without testig it, they have no CPAN/Config.pm.
-	They start it and land immediately in the init process. Good.
-
-	If he runs 'make test' it should succeed all tests. Currently it fails
-	12cpan and skips 30shell because of 'no Expect'. ==> TODO
-
-	If they have no CPAN/Config.pm and start cpan as an ordinary user, then
-	they should get, without asking, a ~/.cpan/CPAN/MyConfig.pm and land in
-	the init dialog. This is currently OK.
-
-	* Todo: mention rt.cpan.org in the manpage
-
-2006-02-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* rethink if the CPAN/Config.pm file now is being built at all. Shouldn't
-	it be built as a system-wide default?
-
-2006-02-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: the new test 12cpan.t is not suited for 5.004_05:
-
-t/12cpan............Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 13.
-Unquoted string "command" may clash with future reserved word at t/12cpan.t line 13.
-syntax error at t/12cpan.t line 13, near "/,"
-Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 17.
-Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
-syntax error at t/12cpan.t line 17, near "+=>"
-Unquoted string "bar" may clash with future reserved word at t/12cpan.t line 17.
-Unquoted string "baz" may clash with future reserved word at t/12cpan.t line 17.
-Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
-Execution of t/12cpan.t aborted due to compilation errors.
-# Looks like your test died before it could output anything.
-dubious
-
-	and not for 5.005_04:
-
-t/12cpan..........Can't locate object method "catfile" via package "File::Spec" at t/12cpan.t line 3.
-# Looks like your test died before it could output anything.
-t/12cpan..........dubious                                                    
-        Test returned status 255 (wstat 65280, 0xff00)
-DIED. FAILED tests 1-3
-        Failed 3/3 tests, 0.00% okay
-
-	
-
-	* Bugalert: I saw the "awry" case without a reason.
-
-cpan[10]> install Bundle::Spd
-Signature for /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS ok
-Checksum for /home/k/.cpan/sources/authors/id/G/GA/GAAS/libwww-perl-5.805.tar.gz ok
-libwww-perl-5.805/
-libwww-perl-5.805/lib/
-libwww-perl-5.805/lib/HTTP/
-libwww-perl-5.805/lib/HTTP/Cookies.pm
-[...]
-libwww-perl-5.805/Changes
-libwww-perl-5.805/AUTHORS
-libwww-perl-5.805/README
-libwww-perl-5.805/lwpcook.pod
-Removing previously used /home/k/.cpan/build/libwww-perl-5.805
-Package came without SIGNATURE
-
-Running install for module HTML::HeadParser
-Running make for G/GA/GAAS/HTML-Parser-3.50.tar.gz
-LWP not available
-Fetching with Net::FTP:
-  ftp://localhost/pub/CPAN/authors/id/G/GA/GAAS/HTML-Parser-3.50.tar.gz
-Signature for /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS ok
-
-Warning: No checksum for HTML-Parser-3.50.tar.gz in /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS.
-
-The cause for this may be that the file is very new and the checksum
-has not yet been calculated, but it may also be that something is
-going awry right now.
-Proceed? [yes] Caught SIGINT
-Got another SIGINT
-
-cpan[11]> ls GAAS
-
-
-	After that, the problem was not reproducable. Remove and reinstall perl,
-	install CPAN, install Bundle::CPAN, install Bundle::Spd works.
-
-	So we have a hard to reproduce bug.
-
-	Running 'install Bundle::Phalanx100' gives after 20 minutes
-
-Warning: No checksum for Net-Daemon-0.39.tar.gz in /home/k/.cpan/sources/authors/id/J/JW/JWIED/CHECKSUMS.
-
-The cause for this may be that the file is very new and the checksum
-has not yet been calculated, but it may also be that something is
-going awry right now.
-Proceed? [yes] 
-
-	This time I look immediately into the CHECKSUMS file (which is the cached
-	one!) and indeed there is no Net-Daemon-0.39.tar.gz in it. On the CPAN
-	we do have a newer checksums file. Is this cool?
-
-	So we have the root of the cause. Now for a solution?
-
-	I can answer 'no' and then reproduce the problem. Note that the old
-	CHECKSUMS file is 3 months old and its timestamp is 1 month old.
-
-	Fixed in 638 with the new argument $sloppy for CHECKSUM_check_file, but
-	test still missing.
-
-2006-02-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: with 'o debug all' we did not reach 'Distribution seems to have
-	never been unzipped/untarred, nothing done' but instead some "Unknown
-	distribution" or so. Fixed in 625
-
-	* Bug: in the last test run we did not detect that
-	ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz was not in the CHECKSUMS
-	file. We had the 
-
-	#     CHECKSUM_STATUS NIL -- distro not in CHECKSUMS file
-
-	in the "d" output but we did not pass he code that shouts. Fixed in 624
-
-2006-02-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* Todo: write a test for dot-cpan/Metadata usage
 
 	* To: Tyler MacDonald <tyler@yi.org>
 
@@ -168,38 +45,6 @@ Proceed? [yes]
 	I don't know how I will fix that. Suggestions welcome. I put it into my
 	Todo file.
 	
-
-2006-02-17  Andreas J Koenig  <akoenig@cellular.de>
-
-	* Bug: on a system without make installed, CPAN happily tries
-
-	Checking if your kit is complete...
-	Looks good
-	Writing Makefile for CPAN
-			-- NOT OK
-	Running make test
-		Can't test without successful make
-	Running make install
-		make had returned bad status, install seems impossible
-
-	REJECT: this is a bugreport against an old CPAN.pm
-
-2006-02-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* watch http://perlmonks.org/?node_id=530600
-
-	Does anybody answer my question 'How do you run nmake when it is in a
-	path that contains spaces?'?
-
-2006-02-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: rewrite the 30shell.t test for Open3 (or just a tempfile) by
-	concatenating all regexes or split on the prompt. When we succeed with
-	this, make a version that runs within the core of perl, maybe filter out
-	just those tests that do not require additional resources.
-
-2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
 	by Andrew Strebkov makes the URL selection nicer.
@@ -265,6 +110,167 @@ Proceed? [yes]
 	options
 
 	* hr ================ no todos below this line ================ /hr
+
+2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Install without {My,}Config.pm, the rules should be:
+
+	if there is no CPAN/MyConfig.pm already loaded, we must try to load a
+	CPAN/Config.pm
+
+	if there is no CPAN/Config.pm, we must initialize one immediately. If we
+	are root, this should be something like
+	/usr/local/perl-5.8.0@27277/lib/5.8.8/CPAN/Config.pm as I just tested it
+	with 5.8.8.
+
+	So if root installs CPAN without testing it, they have no CPAN/Config.pm.
+	They start it and land immediately in the init process. Good.
+
+	If he runs 'make test' it should succeed all tests. Currently it fails
+	12cpan and skips 30shell because of 'no Expect'. ==> TODO. DONE with
+	rev. 659
+
+	If they have no CPAN/Config.pm and start cpan as an ordinary user, then
+	they should get, without asking, a ~/.cpan/CPAN/MyConfig.pm and land in
+	the init dialog. This is currently OK.
+
+	* Todo: mention rt.cpan.org in the manpage. Oops, this was already DONE
+
+2006-02-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rethink if the CPAN/Config.pm file now is being built at all. Shouldn't
+	it be built as a system-wide default? Yes, it is being built. DONE
+
+2006-02-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: the new test 12cpan.t is not suited for 5.004_05:
+
+t/12cpan............Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 13.
+Unquoted string "command" may clash with future reserved word at t/12cpan.t line 13.
+syntax error at t/12cpan.t line 13, near "/,"
+Unquoted string "qr" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
+syntax error at t/12cpan.t line 17, near "+=>"
+Unquoted string "bar" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "baz" may clash with future reserved word at t/12cpan.t line 17.
+Unquoted string "foo" may clash with future reserved word at t/12cpan.t line 17.
+Execution of t/12cpan.t aborted due to compilation errors.
+# Looks like your test died before it could output anything.
+dubious
+
+	and not for 5.005_04:
+
+t/12cpan..........Can't locate object method "catfile" via package "File::Spec" at t/12cpan.t line 3.
+# Looks like your test died before it could output anything.
+t/12cpan..........dubious                                                    
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 1-3
+        Failed 3/3 tests, 0.00% okay
+
+	FIXED
+
+	* Bugalert: I saw the "awry" case without a reason.
+
+cpan[10]> install Bundle::Spd
+Signature for /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS ok
+Checksum for /home/k/.cpan/sources/authors/id/G/GA/GAAS/libwww-perl-5.805.tar.gz ok
+libwww-perl-5.805/
+libwww-perl-5.805/lib/
+libwww-perl-5.805/lib/HTTP/
+libwww-perl-5.805/lib/HTTP/Cookies.pm
+[...]
+libwww-perl-5.805/Changes
+libwww-perl-5.805/AUTHORS
+libwww-perl-5.805/README
+libwww-perl-5.805/lwpcook.pod
+Removing previously used /home/k/.cpan/build/libwww-perl-5.805
+Package came without SIGNATURE
+
+Running install for module HTML::HeadParser
+Running make for G/GA/GAAS/HTML-Parser-3.50.tar.gz
+LWP not available
+Fetching with Net::FTP:
+  ftp://localhost/pub/CPAN/authors/id/G/GA/GAAS/HTML-Parser-3.50.tar.gz
+Signature for /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS ok
+
+Warning: No checksum for HTML-Parser-3.50.tar.gz in /home/k/.cpan/sources/authors/id/G/GA/GAAS/CHECKSUMS.
+
+The cause for this may be that the file is very new and the checksum
+has not yet been calculated, but it may also be that something is
+going awry right now.
+Proceed? [yes] Caught SIGINT
+Got another SIGINT
+
+cpan[11]> ls GAAS
+
+
+	After that, the problem was not reproducable. Remove and reinstall perl,
+	install CPAN, install Bundle::CPAN, install Bundle::Spd works.
+
+	So we have a hard to reproduce bug.
+
+	Running 'install Bundle::Phalanx100' gives after 20 minutes
+
+Warning: No checksum for Net-Daemon-0.39.tar.gz in /home/k/.cpan/sources/authors/id/J/JW/JWIED/CHECKSUMS.
+
+The cause for this may be that the file is very new and the checksum
+has not yet been calculated, but it may also be that something is
+going awry right now.
+Proceed? [yes] 
+
+	This time I look immediately into the CHECKSUMS file (which is the cached
+	one!) and indeed there is no Net-Daemon-0.39.tar.gz in it. On the CPAN
+	we do have a newer checksums file. Is this cool?
+
+	So we have the root of the cause. Now for a solution?
+
+	I can answer 'no' and then reproduce the problem. Note that the old
+	CHECKSUMS file is 3 months old and its timestamp is 1 month old.
+
+	Fixed in 638 with the new argument $sloppy for CHECKSUM_check_file, but
+	test still missing. ... Test added by addng CHCKSUMS@588 in rev. 643
+
+2006-02-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: with 'o debug all' we did not reach 'Distribution seems to have
+	never been unzipped/untarred, nothing done' but instead some "Unknown
+	distribution" or so. Fixed in 625
+
+	* Bug: in the last test run we did not detect that
+	ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz was not in the CHECKSUMS
+	file. We had the 
+
+	#     CHECKSUM_STATUS NIL -- distro not in CHECKSUMS file
+
+	in the "d" output but we did not pass he code that shouts. Fixed in 624
+
+2006-02-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+2006-02-17  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: on a system without make installed, CPAN happily tries
+
+	Checking if your kit is complete...
+	Looks good
+	Writing Makefile for CPAN
+			-- NOT OK
+	Running make test
+		Can't test without successful make
+	Running make install
+		make had returned bad status, install seems impossible
+
+	REJECT: this is a bugreport against an old CPAN.pm
+
+2006-02-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* watch http://perlmonks.org/?node_id=530600
+
+	Does anybody answer my question 'How do you run nmake when it is in a
+	path that contains spaces?'? LEAVE WINDOWS ASIDE
+
+2006-02-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+2006-02-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 2006-02-14  Andreas J Koenig  <akoenig@cellular.de>
 

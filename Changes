@@ -1,3 +1,15 @@
+2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.86_53
+	
+	* t/30shell emits two test headers (fixes #17816; Adam Kennedy)
+
+	* make Tarzip work better on uncompressed files; fixes test failure of
+	test t/12cpan.t work under some conditions
+
+	* t/30shell now skips tests that need uninstalled prerequisites and so
+	passes all tests on a bare 5.8.8 for me when CPAN_RUN_SHELL_TEST is set
+
 2006-02-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.86_52
