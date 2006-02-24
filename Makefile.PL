@@ -5,8 +5,9 @@ use ExtUtils::MakeMaker qw(:DEFAULT);
 use File::Path;
 eval { require File::Spec; };
 my $HAVE_FILE_SPEC = !$@;
+use File::Basename qw(basename);
 require Config;
-my $HAVE_MAKE = $Config::Config{make} eq "make"; # file-scoped!
+my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 use strict;
 use vars qw($VERSION);
 

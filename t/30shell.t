@@ -159,6 +159,13 @@ Total                                 53.3   36.8   33.0   75.5  100.0   47.2
 ----------------------------------- ------ ------ ------ ------ ------ ------
 
 
+2006-02-24: Notes about 5.004_05: t30shell.t segfaults when trying to
+parse the test.out. One would have to look through the test.out output
+and find an alternate method of walking through the results tha works
+for 5.004_05. But it would have to be guesswork to find out what is
+triggering the SEGV.
+
+
 =cut
 
 use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
@@ -228,6 +235,7 @@ my @modules = qw(
                  Text::Glob
                  Module::Build
                  Archive::Zip
+                 Data::Dumper
                 );
 
 use Test::More;
@@ -334,6 +342,7 @@ TUPL: for my $i (0..$#prgs){
             mydiag "NEXT: $prog";
             $expo->send("$sendprog\n");
         } else {
+            print SYSTEM "# NEXT: $sendprog\n";
             print SYSTEM "$sendprog\n";
         }
     }
@@ -371,6 +380,7 @@ if ($RUN_EXPECT) {
     open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
     local $/;
     my $got = <SYSTEM>;
+    close SYSTEM;
     my $pair;
     for $pair (@PAIRS) {
         my($prog,$expected) = @$pair;
@@ -498,6 +508,7 @@ R:Module::Build
 ########
 P:dump CPAN::Test::Dummy::Perl5::Make
 E:(?s:bless.+?('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+?){4})
+R:Data::Dumper
 ########
 P:install CPAN::Test::Dummy::Perl5::Make::Failearly
 E:(?s:Failed during this command.+?writemakefile NO)
