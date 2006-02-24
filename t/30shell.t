@@ -205,6 +205,9 @@ cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588",
     _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
     or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588 ".
     "over t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
+END {
+    unlink _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS";
+}
 cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 cp _f"t/dot-cpan/Bundle/CpanTestDummies-1.55.pm",
