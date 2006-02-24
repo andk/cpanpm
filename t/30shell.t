@@ -161,7 +161,7 @@ Total                                 53.3   36.8   33.0   75.5  100.0   47.2
 
 =cut
 
-use vars qw($HAVE_EXPECT $RUN_EXPECT);
+use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
 BEGIN {
     $|++;
     #chdir 't' if -d 't';
@@ -227,6 +227,7 @@ my @modules = qw(
                  Term::ReadLine
                  Text::Glob
                  Module::Build
+                 Archive::Zip
                 );
 
 use Test::More;
@@ -234,11 +235,17 @@ plan tests => (
                scalar @prgs
                + 2                     # 2 histsize tests
                + 1                     # 1 RUN_EXPECT feedback
-               + scalar @modules
+               # + scalar @modules
               );
 
-for my $m (@modules) {
-    use_ok($m);
+sub mreq ($) {
+    my $m = shift;
+    eval "require $m; 1";
+}
+
+my $m;
+for $m (@modules) {
+    $HAVE->{$m}++ if mreq $m;
 }
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
@@ -298,13 +305,23 @@ sub splitchunk ($) {
     @s;
 }
 
-PAIR: for my $i (0..$#prgs){
+TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($prog,$expected) = @h{qw(P E)};
+    my($prog,$expected,$req) = @h{qw(P E R)};
     unless (defined $expected) {
         ok(1,"empty test");
-        next PAIR;
+        next TUPL;
+    }
+    if ($req) {
+        my @req = split " ", $req;
+        my $r;
+        for $r (@req) {
+            if (not $HAVE->{$r}) {
+                ok(1,"test skipped because $r missing");
+                next TUPL;
+            }
+        }
     }
     for ($prog,$expected) {
       s/^\s+//;
@@ -370,7 +387,7 @@ is($CPAN::Config->{histsize},101);
 __END__
 ########
 P:
-E:(?s:ReadLine support (enabled|suppressed).*?cpan[^>]*?>)
+E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
 ########
 P:o conf build_cache
 E:build_cache
@@ -434,12 +451,15 @@ E:(?s:Bundle::CpanTestDummies.*?items found)
 ########
 P:b Bundle::CpanTestDummies
 E:\sCONTAINS.+?CPAN::Test::Dummy::Perl5::Make.+?CPAN::Test::Dummy::Perl5::Make::Zip
+R:Archive::Zip
 ########
 P:install ANDK/NotInChecksums-0.000.tar.gz
 E:(?s:awry.*?yes)
+R:Digest::SHA
 ########
 P:n
 E:
+R:Digest::SHA
 ########
 P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
 E:CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
@@ -452,24 +472,29 @@ E:(?s:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy.*?\d+\s+\d\d\d\d-\d\d-\d\d\
 ########
 P:ls ANDK/CPAN*
 E:(?s:Text::Glob\s+loaded\s+ok.*?CPAN-Test-Dummy)
+R:Text::Glob
 ########
 P:force ls ANDK/CPAN*
 E:(?s:CPAN-Test-Dummy)
+R:Text::Glob
 ########
 P:test CPAN::Test::Dummy::Perl5::Make
 E:test\s+--\s+OK
 ########
 P:test CPAN::Test::Dummy::Perl5::Build
 E:test\s+--\s+OK
+R:Module::Build
 ########
 P:test CPAN::Test::Dummy::Perl5::Make::Zip
 E:test\s+--\s+OK
+R:Archive::Zip
 ########
 P:failed
 E:Nothing
 ########
 P:test CPAN::Test::Dummy::Perl5::Build::Fails
 E:test\s+--\s+NOT OK
+R:Module::Build
 ########
 P:dump CPAN::Test::Dummy::Perl5::Make
 E:(?s:bless.+?('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+?){4})
@@ -485,6 +510,7 @@ E:nothing done
 ########
 P:failed
 E:Test-Dummy-Perl5-Build-Fails.*?make_test NO
+R:Module::Build
 ########
 P:failed
 E:Test-Dummy-Perl5-Make-Failearly.*?writemakefile NO
@@ -518,15 +544,19 @@ E:(?s:Running make.*?Writing Makefile.*?make\s+-- OK)
 ########
 P:o conf prefer_installer MB
 E:
+R:Module::Build
 ########
 P:force get CPAN::Test::Dummy::Perl5::BuildOrMake
 E:Removing previously used
+R:Module::Build
 ########
 P:make CPAN::Test::Dummy::Perl5::BuildOrMake
 E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
+R:Module::Build
 ########
 P:test Bundle::CpanTestDummies
 E:Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
+R:Module::Build
 ########
 P:r
 E:(All modules are up to date|installed modules|Fcntl)
@@ -542,6 +572,7 @@ E:(?s:commit.*?defaults.*?help.*?init.*?urllist)
 ########
 P:o conf inhibit_\t
 E:inhibit_startup_message
+R:Term::ReadKey
 ########
 P:quit
 E:(removed\.)
