@@ -1,4 +1,5 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w -*- mode: cperl -*-
+use strict;
 BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
@@ -8,22 +9,22 @@ my $HAVE_FILE_SPEC = !$@;
 use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
-use strict;
 use vars qw($VERSION);
 
 my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
 $VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
 
 my $version_diff = 0; # we'll have to die if this becomes true
+my $version_from;
 if ($HAVE_FILE_SPEC) {
-  my $version_from = File::Spec->catfile(qw(lib CPAN.pm));
+  $version_from = File::Spec->catfile(qw(lib CPAN.pm));
   my $version_set_manually = 1; # not by SVN
 
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     {
       local $^W;
-      die "Your MakeMaker is a bit dated[$]].\nDo not make a release with it\n"
+      die "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nDo not make a release with it\n"
           if $ExtUtils::MakeMaker::VERSION+0 < 6.30;
     }
     die "Your MakeMaker doesn't do the sign woodoo" unless
@@ -118,27 +119,28 @@ if ($HAVE_FILE_SPEC) {
     }
   }
 }
+
 my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 # warn "sign[@sign]";
 WriteMakefile(
-              'INSTALLDIRS' => 'perl',  # as it is coming with perl
-              'NAME'	=> 'CPAN',
-              'VERSION_FROM' => 'lib/CPAN.pm',
-              'EXE_FILES' => [qw(scripts/cpan)],
-              'clean' => { FILES => "lib/CPAN/Config.pm" },
-              'PREREQ_PM' => $prereq_pm,
+              INSTALLDIRS  => 'perl',  # as it is coming with perl
+              NAME         => 'CPAN',
+              VERSION_FROM => $version_from,
+              EXE_FILES    => [qw(scripts/cpan)],
+              PREREQ_PM    => $prereq_pm,
+              clean        => { FILES => "lib/CPAN/Config.pm" },
               @sign,
               ($] >= 5.005 ?
                (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
-              'dist' => {
-                         DIST_DEFAULT => (
-                                          'Makefile no_CR META.yml setversion README '.
-                                          'testdistros all chlog tardist'
-                                         ),
-                         COMPRESS => 'gzip -9f'
-                        },
-);
+              dist => {
+                       DIST_DEFAULT => (
+                                        'Makefile no_CR META.yml setversion README '.
+                                        'testdistros all chlog tardist'
+                                       ),
+                       COMPRESS => 'gzip -9f'
+                      },
+             );
 
 if ($version_diff){
   die "
