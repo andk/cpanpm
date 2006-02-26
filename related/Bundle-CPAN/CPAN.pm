@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 use strict;
-$VERSION = '1.86';
+$VERSION = '1.8401'; # 1.84 erroneously did not have Archive::Zip
 
 1;
 
@@ -29,6 +29,8 @@ File::Spec
 Compress::Zlib
 
 Archive::Tar
+
+Archive::Zip
 
 Bundle::libnet
 

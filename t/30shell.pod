@@ -163,6 +163,22 @@ and find an alternate method of walking through the results tha works
 for 5.004_05. But it would have to be guesswork to find out what is
 triggering the SEGV.
 
+ After 671
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      17.6    8.4    6.6   34.9   80.7   14.6
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.1   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.5   57.9
+ blib/lib/CPAN/FirstTime.pm            11.2    1.0    0.0   55.2    1.2    7.8
+ blib/lib/CPAN/HandleConfig.pm         11.8    4.0    0.0   42.1    1.5    9.4
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.2   95.0
+ blib/lib/CPAN/Tarzip.pm               30.8   12.3   11.1   64.3    2.7   25.1
+ blib/lib/CPAN/Version.pm              77.1   50.0   80.0   87.5   13.1   72.8
+ Total                                 18.4    8.2    7.0   40.8  100.0   15.2
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+How the break-in in coverage? What's missing that I never checked for?
 
 =cut
 
