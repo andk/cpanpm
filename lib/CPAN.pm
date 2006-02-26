@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.86_53';
+$VERSION = '1.87';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -6343,6 +6343,48 @@ sub as_glimpse {
     join "", @m;
 }
 
+#-> sub CPAN::Module::dslip_status
+sub dslip_status {
+    my($self) = @_;
+    my($stat);
+    @{$stat->{D}}{qw,i c a b R M S,}     = qw,idea
+                                              pre-alpha alpha beta released
+                                              mature standard,;
+    @{$stat->{S}}{qw,m d u n a,}         = qw,mailing-list
+                                              developer comp.lang.perl.*
+                                              none abandoned,;
+    @{$stat->{L}}{qw,p c + o h,}         = qw,perl C C++ other hybrid,;
+    @{$stat->{I}}{qw,f r O p h n,}       = qw,functions
+                                              references+ties
+                                              object-oriented pragma
+                                              hybrid none,;
+    @{$stat->{P}}{qw,p g l b a o d r n,} = qw,Standard-Perl
+                                              GPL LGPL
+                                              BSD Artistic
+                                              open-source
+                                              distribution_allowed
+                                              restricted_distribution
+                                              no_licence,;
+    for my $x (qw(d s l i p)) {
+        $stat->{$x}{' '} = 'unknown';
+        $stat->{$x}{'?'} = 'unknown';
+    }
+    my $ro = $self->ro;
+    return +{} unless $ro && $ro->{statd};
+    return {
+            D  => $ro->{statd},
+            S  => $ro->{stats},
+            L  => $ro->{statl},
+            I  => $ro->{stati},
+            P  => $ro->{statp},
+            DV => $stat->{D}{$ro->{statd}},
+            SV => $stat->{S}{$ro->{stats}},
+            LV => $stat->{L}{$ro->{statl}},
+            IV => $stat->{I}{$ro->{stati}},
+            PV => $stat->{P}{$ro->{statp}},
+           };
+}
+
 #-> sub CPAN::Module::as_string ;
 sub as_string {
     my($self) = @_;
@@ -6385,32 +6427,13 @@ sub as_string {
             }
         }
     }
-    my $sprintf3 = "    %-12s %1s%1s%1s%1s (%s,%s,%s,%s)\n";
-    my(%statd,%stats,%statl,%stati);
-    @statd{qw,? i c a b R M S,} = qw,unknown idea
-	pre-alpha alpha beta released mature standard,;
-    @stats{qw,? m d u n a,}       = qw,unknown mailing-list
-	developer comp.lang.perl.* none abandoned,;
-    @statl{qw,? p c + o h,}       = qw,unknown perl C C++ other hybrid,;
-    @stati{qw,? f r O h,}         = qw,unknown functions
-	references+ties object-oriented hybrid,;
-    $statd{' '} = 'unknown';
-    $stats{' '} = 'unknown';
-    $statl{' '} = 'unknown';
-    $stati{' '} = 'unknown';
-    my $ro = $self->ro;
+    my $sprintf3 = "    %-12s %1s%1s%1s%1s%1s (%s,%s,%s,%s,%s)\n";
+    my $dslip = $self->dslip_status;
     push @m, sprintf(
-		     $sprintf3,
-		     'DSLI_STATUS',
-		     $ro->{statd},
-		     $ro->{stats},
-		     $ro->{statl},
-		     $ro->{stati},
-		     $statd{$ro->{statd}},
-		     $stats{$ro->{stats}},
-		     $statl{$ro->{statl}},
-		     $stati{$ro->{stati}}
-		    ) if $ro && $ro->{statd};
+                     $sprintf3,
+                     'DSLIP_STATUS',
+                     @{$dslip}{qw(D S L I P DV SV LV IV PV)},
+                    );
     my $local_file = $self->inst_file;
     unless ($self->{MANPAGE}) {
         if ($local_file) {
@@ -7411,6 +7434,60 @@ or 00modlist.long.txt.gz)
 
 Returns the CPAN::Distribution object that contains the current
 version of this module.
+
+=item CPAN::Module::dslip_status()
+
+Returns a hash reference. The keys of the hash are the letters C<D>,
+C<S>, C<L>, C<I>, and <P>, for development status, support level,
+language, interface and public licence respectively. The data for the
+DSLIP status are collected by pause.perl.org when authors register
+their namespaces. The values of the 5 hash elements are one-character
+words whose meaning is described in the table below. There are also 5
+hash elements C<DV>, C<SV>, C<LV>, C<IV>, and <PV> that carry a more
+verbose value of the 5 status variables.
+
+Where the 'DSLIP' characters have the following meanings:
+
+  D - Development Stage  (Note: *NO IMPLIED TIMESCALES*):
+    i   - Idea, listed to gain consensus or as a placeholder
+    c   - under construction but pre-alpha (not yet released)
+    a/b - Alpha/Beta testing
+    R   - Released
+    M   - Mature (no rigorous definition)
+    S   - Standard, supplied with Perl 5
+
+  S - Support Level:
+    m   - Mailing-list
+    d   - Developer
+    u   - Usenet newsgroup comp.lang.perl.modules
+    n   - None known, try comp.lang.perl.modules
+    a   - abandoned; volunteers welcome to take over maintainance
+
+  L - Language Used:
+    p   - Perl-only, no compiler needed, should be platform independent
+    c   - C and perl, a C compiler will be needed
+    h   - Hybrid, written in perl with optional C code, no compiler needed
+    +   - C++ and perl, a C++ compiler will be needed
+    o   - perl and another language other than C or C++
+
+  I - Interface Style
+    f   - plain Functions, no references used
+    h   - hybrid, object and function interfaces available
+    n   - no interface at all (huh?)
+    r   - some use of unblessed References or ties
+    O   - Object oriented using blessed references and/or inheritance
+
+  P - Public License
+    p   - Standard-Perl: user may choose between GPL and Artistic
+    g   - GPL: GNU General Public License
+    l   - LGPL: "GNU Lesser General Public License" (previously known as
+          "GNU Library General Public License")
+    b   - BSD: The BSD License
+    a   - Artistic license alone
+    o   - open source: appoved by www.opensource.org
+    d   - allows distribution without restrictions
+    r   - restricted distribtion
+    n   - no license at all
 
 =item CPAN::Module::force($method,@args)
 

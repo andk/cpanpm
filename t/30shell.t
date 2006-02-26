@@ -210,9 +210,9 @@ END {
 }
 cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
-cp _f"t/dot-cpan/Bundle/CpanTestDummies-1.55.pm",
+cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
-    "Could not cp t/dot-cpan/Bundle/CpanTestDummies-1.55.pm over ".
+    "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
     "t/dot-cpan/Bundle/CpanTestDummies-1.55.pm: $!";
 
 use Cwd;

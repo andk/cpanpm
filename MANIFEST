@@ -21,6 +21,7 @@ lib/CPAN/Nox.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
 scripts/cpan
+t/CPAN/CpanTestDummies-1.55.pm
 t/CPAN/TestConfig.pm
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip
@@ -38,7 +39,6 @@ t/CPAN/authors/id/CHECKSUMS
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/README.shell.txt
-t/dot-cpan/Bundle/CpanTestDummies-1.55.pm
 t/00signature.t
 t/01loadme.t
 t/02nox.t
