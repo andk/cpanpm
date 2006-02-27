@@ -400,10 +400,16 @@ E:Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
 R:Module::Build
 ########
 P:get Bundle::CpanTestDummies
+E:Is already unwrapped
 ########
 P:notest make Bundle::CpanTestDummies
+E:Has already been processed
 ########
 P:clean Bundle::CpanTestDummies
+E:Failed during this command
+########
+P:clean Bundle::CpanTestDummies
+E:make clean already called once
 ########
 P:r
 E:(All modules are up to date|installed modules|Fcntl)

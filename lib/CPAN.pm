@@ -212,7 +212,7 @@ ReadLine support %s
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
-            if ($command =~ /^(make|test|install|force|notest)$/) {
+            if ($command =~ /^(make|test|install|force|notest|clean)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
             soft_chdir_with_alternatives(\@cwd);
@@ -1760,30 +1760,31 @@ sub failed {
     my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
-        for my $nosayer (
-                         "writemakefile",
-                         "signature_verify",
-                         "make",
-                         "make_test",
-                         "install",
-                        ) {
+      NAY: for my $nosayer (
+                            "writemakefile",
+                            "signature_verify",
+                            "make",
+                            "make_test",
+                            "install",
+                            "make_clean",
+                           ) {
             next unless exists $d->{$nosayer};
             next unless (
                          $d->{$nosayer}->can("failed") ?
                          $d->{$nosayer}->failed :
                          $d->{$nosayer} =~ /^NO/
                         );
+            next NAY if $only_id && $only_id != (
+                                                 $d->{$nosayer}->can("commandid")
+                                                 ?
+                                                 $d->{$nosayer}->commandid
+                                                 :
+                                                 $CPAN::CurrentCommandId
+                                                );
             $failed = $nosayer;
             last;
         }
         next DIST unless $failed;
-        next DIST if $only_id && $only_id != (
-                                              $d->{$failed}->can("commandid")
-                                              ?
-                                              $d->{$failed}->commandid
-                                              :
-                                              $CPAN::CurrentCommandId
-                                             );
         my $id = $d->id;
         $id =~ s|^./../||;
         #$print .= sprintf(
@@ -5590,16 +5591,16 @@ sub clean {
                    )) {
           delete $self->{$k};
       }
-      $self->{make_clean} = "YES";
+      $self->{make_clean} = CPAN::Distrostatus->new("YES");
 
     } else {
       # Hmmm, what to do if make clean failed?
 
-      $CPAN::Frontend->myprint(qq{  $system -- NOT OK
+      $self->{make_clean} = CPAN::Distrostatus->new("NO");
+      $CPAN::Frontend->myprint(qq{  $system -- NOT OK\n});
 
-make clean did not succeed, marking directory as unusable for further work.
-});
-      $self->force("make"); # so that this directory won't be used again
+      # 2006-02-27: seems silly to me to force a make now
+      # $self->force("make"); # so that this directory won't be used again
 
     }
 }

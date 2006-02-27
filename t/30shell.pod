@@ -200,7 +200,22 @@ maybe just running twice? Hmmm. So this is after 672:
  Total                                 52.8   36.8   33.2   75.1  100.0   47.0
  ----------------------------------- ------ ------ ------ ------ ------ ------
 
+ After 673:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      54.0   38.4   33.9   75.7   89.9   48.3
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.0   57.9
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.2   44.6
+ blib/lib/CPAN/HandleConfig.pm         56.8   42.9   32.0   84.2    3.4   50.8
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               47.8   29.8   33.3   78.6    0.4   42.3
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+ Total                                 53.4   37.4   33.5   77.2  100.0   47.6
+ ----------------------------------- ------ ------ ------ ------ ------ ------
 
+Cheap 2.5% added by harvesting make, test, notest, clean on our bundle.
 
 =cut
 
