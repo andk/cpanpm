@@ -1,3 +1,15 @@
+2006-02-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87
+
+	* new method dslip_status for Module objects
+
+	* no t/dot-cpan/ directory in the distro anymore and removed after test
+
+	* bugfix: when make clean failed, we did not list this as a fail
+
+	* more tests in t/30shell.t, sub coverage on CPAN.pm now >75%
+
 2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.86_53
@@ -15,7 +27,7 @@
 	* release 1.86_52
 
 	* simplification of the concepts of home and of the CPAN/MyConfig.pm and
-	the CPAN/Config.pm. There were too many place that tried to do the same
+	the CPAN/Config.pm. There were too many places that tried to do the same
 	thing. Should now be centralized and consistent.
 
 2006-02-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
