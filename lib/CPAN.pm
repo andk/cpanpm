@@ -6207,10 +6207,10 @@ during recursive bundle calls: " unless $report_propagated++;
     }
 }
 
-#sub CPAN::Bundle::xs_file
+# If a bundle contains another that contains an xs_file we have here,
+# we just don't bother I suppose
+#-> sub CPAN::Bundle::xs_file
 sub xs_file {
-    # If a bundle contains another that contains an xs_file we have
-    # here, we just don't bother I suppose
     return 0;
 }
 

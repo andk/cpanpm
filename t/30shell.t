@@ -142,7 +142,7 @@ if ($RUN_EXPECT) {
 sub splitchunk ($) {
     my $ch = shift;
     my @s = split /(^[A-Z]:)/m, $ch;
-    shift @s;
+    shift @s; # leading empty string
     for (my $i = 0; $i < @s; $i+=2) {
         $s[$i] =~ s/://;
     }
@@ -153,7 +153,7 @@ TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
     my($prog,$expected,$req) = @h{qw(P E R)};
-    unless (defined $expected) {
+    unless (defined $expected or defined $prog) {
         ok(1,"empty test");
         next TUPL;
     }
@@ -168,8 +168,9 @@ TUPL: for my $i (0..$#prgs){
         }
     }
     for ($prog,$expected) {
-      s/^\s+//;
-      s/\s+\z//;
+        $_ = "" unless defined $_;
+        s/^\s+//;
+        s/\s+\z//;
     }
     if ($prog) {
         my $sendprog = $prog;
@@ -233,7 +234,6 @@ rmtree _d"t/dot-cpan";
 
 __END__
 ########
-P:
 E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
 ########
 P:o conf build_cache
@@ -246,7 +246,6 @@ P:nothanks
 E:wrote
 ########
 P:# o debug all
-E:
 ########
 P:o conf histsize 101
 E:.  histsize.+?101
@@ -258,7 +257,6 @@ P:o conf histsize 102
 E:.  histsize.+?102
 ########
 P:o conf defaults
-E:
 ########
 P:o conf histsize
 E:histsize.+?101
@@ -279,7 +277,6 @@ P:rtlprnft
 E:Unknown
 ########
 P:o conf ftp ""
-E:
 ########
 P:m Fcntl
 E:Defines fcntl
@@ -305,7 +302,6 @@ E:(?s:awry.*?yes)
 R:Digest::SHA
 ########
 P:n
-E:
 R:Digest::SHA
 ########
 P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
@@ -364,7 +360,6 @@ P:failed
 E:Test-Dummy-Perl5-Make-Failearly.*?writemakefile NO
 ########
 P:o conf commandnumber_in_prompt 1
-  E:
 ########
 P:o conf build_cache 0.1
 E:build_cache
@@ -385,13 +380,11 @@ P:o conf
 E:(?s:commit.*?build_cache.*?cpan_home.*?inhibit_startup_message.*?urllist)
 ########
 P:o conf prefer_installer EUMM
-E:
 ########
 P:make CPAN::Test::Dummy::Perl5::BuildOrMake
 E:(?s:Running make.*?Writing Makefile.*?make\s+-- OK)
 ########
 P:o conf prefer_installer MB
-E:
 R:Module::Build
 ########
 P:force get CPAN::Test::Dummy::Perl5::BuildOrMake
@@ -405,6 +398,12 @@ R:Module::Build
 P:test Bundle::CpanTestDummies
 E:Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
 R:Module::Build
+########
+P:get Bundle::CpanTestDummies
+########
+P:notest make Bundle::CpanTestDummies
+########
+P:clean Bundle::CpanTestDummies
 ########
 P:r
 E:(All modules are up to date|installed modules|Fcntl)
