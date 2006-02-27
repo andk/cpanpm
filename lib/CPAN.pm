@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.87';
+$VERSION = '1.88';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -3589,13 +3589,14 @@ happen.\a
             local($^W)= 0;
             if ($version > $CPAN::VERSION){
                 $CPAN::Frontend->myprint(qq{
-  There's a new CPAN.pm version (v$version) available!
-  [Current version is v$CPAN::VERSION]
+  New CPAN.pm version (v$version) available.
+  [Currently running version is v$CPAN::VERSION]
   You might want to try
     install CPAN
     reload cpan
-  without quitting the current session. It should be a seamless upgrade
-  while we are running...
+  to both upgrade CPAN.pm and run the new version without leaving
+  the current session.
+
 }); #});
                 sleep 2;
 		$CPAN::Frontend->myprint(qq{\n});
@@ -8218,6 +8219,13 @@ Before submitting a bug, please make sure that the traditional method
 of building a Perl module package from a shell by following the
 installation instructions of that package still works in your
 environment.
+
+=head1 SECURITY ADVICE
+
+This software enables you to upgrade software on your computer and so
+is inherently dangerous because the newly installed software may
+contain bugs and may alter the way your computer works or even make it
+unusable. Please consider backing up your data before every upgrade.
 
 =head1 AUTHOR
 
