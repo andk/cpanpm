@@ -590,6 +590,59 @@ DESCRIPTION
         Returns the CPAN::Distribution object that contains the current
         version of this module.
 
+    CPAN::Module::dslip_status()
+        Returns a hash reference. The keys of the hash are the letters "D",
+        "S", "L", "I", and <P>, for development status, support level,
+        language, interface and public licence respectively. The data for
+        the DSLIP status are collected by pause.perl.org when authors
+        register their namespaces. The values of the 5 hash elements are
+        one-character words whose meaning is described in the table below.
+        There are also 5 hash elements "DV", "SV", "LV", "IV", and <PV> that
+        carry a more verbose value of the 5 status variables.
+
+        Where the 'DSLIP' characters have the following meanings:
+
+          D - Development Stage  (Note: *NO IMPLIED TIMESCALES*):
+            i   - Idea, listed to gain consensus or as a placeholder
+            c   - under construction but pre-alpha (not yet released)
+            a/b - Alpha/Beta testing
+            R   - Released
+            M   - Mature (no rigorous definition)
+            S   - Standard, supplied with Perl 5
+
+          S - Support Level:
+            m   - Mailing-list
+            d   - Developer
+            u   - Usenet newsgroup comp.lang.perl.modules
+            n   - None known, try comp.lang.perl.modules
+            a   - abandoned; volunteers welcome to take over maintainance
+
+          L - Language Used:
+            p   - Perl-only, no compiler needed, should be platform independent
+            c   - C and perl, a C compiler will be needed
+            h   - Hybrid, written in perl with optional C code, no compiler needed
+            +   - C++ and perl, a C++ compiler will be needed
+            o   - perl and another language other than C or C++
+
+          I - Interface Style
+            f   - plain Functions, no references used
+            h   - hybrid, object and function interfaces available
+            n   - no interface at all (huh?)
+            r   - some use of unblessed References or ties
+            O   - Object oriented using blessed references and/or inheritance
+
+          P - Public License
+            p   - Standard-Perl: user may choose between GPL and Artistic
+            g   - GPL: GNU General Public License
+            l   - LGPL: "GNU Lesser General Public License" (previously known as
+                  "GNU Library General Public License")
+            b   - BSD: The BSD License
+            a   - Artistic license alone
+            o   - open source: appoved by www.opensource.org
+            d   - allows distribution without restrictions
+            r   - restricted distribtion
+            n   - no license at all
+
     CPAN::Module::force($method,@args)
         Forces CPAN to perform a task that normally would have failed. Force
         takes as arguments a method name to be called and any number of
