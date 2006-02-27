@@ -1,6 +1,6 @@
 package Bundle::CPAN;
 use strict;
-$VERSION = '1.8401'; # 1.84 erroneously did not have Archive::Zip
+$VERSION = '1.85';
 
 1;
 
