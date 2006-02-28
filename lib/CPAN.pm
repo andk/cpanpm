@@ -1404,13 +1404,15 @@ sub o {
     if ($o_type eq 'conf') {
 	if (!@o_what) { # print all things, "o conf"
 	    my($k,$v);
-	    $CPAN::Frontend->myprint("CPAN::Config options");
+	    $CPAN::Frontend->myprint("\$CPAN::Config options from ");
+            my @from;
 	    if (exists $INC{'CPAN/Config.pm'}) {
-	      $CPAN::Frontend->myprint(" from $INC{'CPAN/Config.pm'}");
+                push @from, $INC{'CPAN/Config.pm'};
 	    }
 	    if (exists $INC{'CPAN/MyConfig.pm'}) {
-	      $CPAN::Frontend->myprint(" and $INC{'CPAN/MyConfig.pm'}");
+                push @from, $INC{'CPAN/MyConfig.pm'};
 	    }
+            $CPAN::Frontend->myprint(join " and ", map {"'$_'"} @from);
 	    $CPAN::Frontend->myprint(":\n");
 	    for $k (sort keys %CPAN::HandleConfig::can) {
 		$v = $CPAN::HandleConfig::can{$k};
