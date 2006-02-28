@@ -1,3 +1,10 @@
+2006-02-28  Andreas J Koenig  <akoenig@cellular.de>
+
+	* Bug: it seems that a user who is in /bin and has "." in the beginning
+	of the path gets ./sh as his shell from FirstTime. If we encounter . in
+	the path we should rather ignore it. But first we must verify the
+	behaviour. Reported by Slaven Rezic on behalf of Tino Schulze.
+
 2006-02-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* dslip status shows only 4 fields instead of 5. For license infos from
