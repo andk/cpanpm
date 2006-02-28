@@ -17,27 +17,31 @@ die "Could not find directory '$target'" unless -d $target;
 $target =~ s|/+$||;
 # warn "Copying to '$target'\n";
 
-my $MAP = {
-           "" => ["lib/CPAN/" => [qw(
-                                     SIGNATURE
-                                     PAUSE*.pub
-                                    )]],
-           "lib/" => ["lib/"  => [qw(
-                                     lib/CPAN.pm
-                                     lib/CPAN/Debug.pm
-                                     lib/CPAN/FirstTime.pm
-                                     lib/CPAN/HandleConfig.pm
-                                     lib/CPAN/Nox.pm
-                                     lib/CPAN/Tarzip.pm
+my $MAP;
+{
+  no warnings 'qw';
+  $MAP = {
+          "" => ["lib/CPAN/" => [qw(
+                                    SIGNATURE
+                                    PAUSE*.pub
+                                   )]],
+          "lib/" => ["lib/"  => [qw(
+                                    lib/CPAN.pm
+                                    lib/CPAN/Debug.pm
+                                    lib/CPAN/FirstTime.pm
+                                    lib/CPAN/HandleConfig.pm
+                                    lib/CPAN/Nox.pm
+                                    lib/CPAN/Tarzip.pm
                                      lib/CPAN/Version.pm
-                                    )]],
-           "scripts/" => ["lib/CPAN/bin/" => [qw(
-                                                 scripts/cpan
-                                                )]],
-           "t/" => ["lib/CPAN/t/" => [qw(
-                                         t/{01,02,03,10,11}*.t
-                                        )]], # loadme, mirroredby, nox, vcmp, version
-          };
+                                   )]],
+          "scripts/" => ["lib/CPAN/bin/" => [qw(
+                                                scripts/cpan
+                                               )]],
+          "t/" => ["lib/CPAN/t/" => [qw(
+                                        t/{01,02,03,10,11}*.t
+                                       )]], # loadme, mirroredby, nox, vcmp, version
+         };
+}
 
 my @command;
 while (my($here,$v) = each %$MAP) {
@@ -60,26 +64,3 @@ for my $c (@command) {
   cp @$c or die "Could not cp @$c";
 }
 
-warn "
-
-
-==== Please ====
-==== adjust ====
-=== MANIFEST ===
-A         t/01loadme.t
-D         t/loadme.t
-
-A         t/02nox.t
-D         t/Nox.t
-
-A         t/03pkgs.t
-D         t/version.t
-
-A         t/10version.t
-D         t/vcmp.t
-
-A         t/11mirroredby.t
-D         t/mirroredby.t
-
-
-";
