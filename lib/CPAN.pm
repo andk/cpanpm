@@ -29,6 +29,49 @@ use Text::Wrap ();
 no lib "."; # we need to run chdir all over and we would get at wrong
             # libraries there
 
+=item currmem([$pid])
+
+=for category System
+
+Return ($mem, $realmem) of the current process or process $pid, if $pid
+is given.
+
+=cut
+
+sub main::currmem {
+    my $pid = shift || $$;
+    if (open(MAP, "/proc/$pid/map")) { # FreeBSD
+	my $mem = 0;
+	my $realmem = 0;
+	while(<MAP>) {
+	    my(@l) = split /\s+/;
+	    my $delta = (hex($l[1])-hex($l[0]));
+	    $mem += $delta;
+	    if ($l[11] ne 'vnode') {
+		$realmem += $delta;
+	    }
+	}
+	close MAP;
+	($mem, $realmem);
+    } elsif (open(MAP, "/proc/$pid/maps")) { # Linux
+	my $mem = 0;
+	my $realmem = 0;
+	while(<MAP>) {
+	    my(@l) = split /\s+/;
+	    my($start,$end) = split /-/, $l[0];
+	    my $delta = (hex($end)-hex($start));
+	    $mem += $delta;
+	    if (!defined $l[5] || $l[5] eq '') {
+		$realmem += $delta;
+	    }
+	}
+	close MAP;
+	($mem, $realmem);
+    } else {
+	undef;
+    }
+}
+
 require Mac::BuildTools if $^O eq 'MacOS';
 
 END { $CPAN::End++; &cleanup; }
@@ -944,6 +987,10 @@ sub instance {
     $id ||= "";
     # unsafe meta access, ok?
     return $META->{readwrite}{$class}{$id} if exists $META->{readwrite}{$class}{$id};
+    my $ro = $CPAN::META->{readonly}{$class}{$id};
+    if ($ro) {
+	$META->{readwrite}{$class}{$id} ||= $class->new(ID=>$id, RO=>$ro);
+    }
     $META->{readwrite}{$class}{$id} ||= $class->new(ID => $id);
 }
 
@@ -3742,9 +3789,14 @@ sub read_metadata_cache {
     return unless -r $metadata_file and -f $metadata_file;
     $CPAN::Frontend->myprint("Going to read $metadata_file\n");
     my $cache;
-    eval { $cache = Storable::retrieve($metadata_file) };
+#    eval { $cache = Storable::retrieve($metadata_file) };
+warn join(",", main::currmem());
+    use DBM::Deep;
+$cache = DBM::Deep->new("/tmp/deep.dbm") or die $!;
+warn join(",", main::currmem());
     $CPAN::Frontend->mywarn($@) if $@; # ?? missing "\n" after $@ in mywarn ??
-    if (!$cache || ref $cache ne 'HASH'){
+warn ref $cache;
+    if (!$cache || !UNIVERSAL::isa($cache, 'HASH')){
         $LAST_TIME = 0;
         return;
     }
@@ -3767,12 +3819,14 @@ sub read_metadata_cache {
     while(my($class,$v) = each %$cache) {
 	next unless $class =~ /^CPAN::/;
 	$CPAN::META->{readonly}{$class} = $v; # unsafe meta access, ok
-        while (my($id,$ro) = each %$v) {
-            $CPAN::META->{readwrite}{$class}{$id} ||=
-                $class->new(ID=>$id, RO=>$ro);
-            $idcnt++;
-        }
+#         while (my($id,$ro) = each %$v) {
+#             $CPAN::META->{readwrite}{$class}{$id} ||=
+#                 $class->new(ID=>$id, RO=>$ro);
+#             $idcnt++;
+#         }
+$idcnt += 1000; #keys %{ $v };
         $clcnt++;
+warn "$class: " . join(",", main::currmem());
     }
     unless ($clcnt) { # sanity check
         $CPAN::Frontend->myprint("Warning: Found no data in $metadata_file\n");
@@ -4398,14 +4452,15 @@ EOF
 	$self->untar_me($ct);
     } elsif ( $local_file =~ /\.zip(?!\n)\Z/i ) {
 	$self->unzip_me($ct);
-    } elsif ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/) {
-        $self->{was_uncompressed}++ unless $ct->gtest();
-        $self->debug("calling pm2dir for local_file[$local_file]") if $CPAN::DEBUG;
-	$self->pm2dir_me($local_file);
     } else {
-	$self->{archived} = "NO";
-        $self->safe_chdir($sub_wd);
-        return;
+        $self->{was_uncompressed}++ unless $ct->gtest();
+        $self->debug("calling pm2dir for local_file[$local_file]")
+	  if $CPAN::DEBUG;
+	$local_file = $self->handle_singlefile($local_file);
+#    } else {
+#	$self->{archived} = "NO";
+#        $self->safe_chdir($sub_wd);
+#        return;
     }
 
     # we are still in the tmp directory!
@@ -4570,6 +4625,61 @@ We\'ll try to build it with that Makefile then.
 
             # Writing our own Makefile.PL
 
+	    my $script = "";
+	    if ($self->{archived} eq "maybe_pl"){
+		my $fh = FileHandle->new;
+		my $script_file = File::Spec->catfile($packagedir,$local_file);
+		$fh->open($script_file)
+		  or Carp::croak("Could not open $script_file: $!");
+		local $/ = "\n";
+		# name parsen und prereq
+		my($state) = "poddir";
+		my($name, $prereq) = ("", "");
+		while (<$fh>){
+		    if ($state eq "poddir" && /^=head\d\s+(\S+)/) {
+			if ($1 eq 'NAME') {
+			    $state = "name";
+			} elsif ($1 eq 'PREREQUISITES') {
+			    $state = "prereq";
+			}
+		    } elsif ($state =~ m{^(name|prereq)$}) {
+			if (/^=/) {
+			    $state = "poddir";
+			} elsif (/^\s*$/) {
+			    # nop
+			} elsif ($state eq "name") {
+			    if ($name eq "") {
+				($name) = /^(\S+)/;
+				$state = "poddir";
+			    }
+			} elsif ($state eq "prereq") {
+			    $prereq .= $_;
+			}
+		    } elsif (/^=cut\b/) {
+			last;
+		    }
+		}
+		$fh->close;
+
+		chomp $prereq;
+		my($PREREQ_PM) = join("\n", map {
+		    s{.*<}{}; # strip X<...>
+		    s{>.*}{};
+		    " "x28 . "'$_' => 0,";
+		} split /\s*,\s*/, $prereq);
+
+		$script = "
+              EXE_FILES => ['$name'],
+              PREREQ_PM => {
+$PREREQ_PM
+                           },
+";
+
+		my $to_file = File::Spec->catfile($packagedir, $name);
+		rename $script_file, $to_file
+		  or die "Can't rename $script_file to $to_file: $!";
+	    }
+
             my $fh = FileHandle->new;
             $fh->open(">$mpl")
                 or Carp::croak("Could not open >$mpl: $!");
@@ -4579,8 +4689,9 @@ qq{# This Makefile.PL has been autogenerated by the module CPAN.pm
 # Autogenerated on: }.scalar localtime().qq{
 
 use ExtUtils::MakeMaker;
-WriteMakefile(NAME => q[$cf]);
-
+WriteMakefile(
+              NAME => q[$cf],$script
+             );
 });
             $fh->close;
         }
@@ -4612,9 +4723,15 @@ sub unzip_me {
     return;
 }
 
-sub pm2dir_me {
+sub handle_singlefile {
     my($self,$local_file) = @_;
-    $self->{archived} = "pm";
+
+    if ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/ ){
+	$self->{archived} = "pm";
+    } else {
+	$self->{archived} = "maybe_pl";
+    }
+
     my $to = File::Basename::basename($local_file);
     if ($to =~ s/\.(gz|Z)(?!\n)\Z//) {
         if (CPAN::Tarzip->new($local_file)->gunzip($to)) {
@@ -4626,6 +4743,7 @@ sub pm2dir_me {
         File::Copy::cp($local_file,".");
         $self->{unwrapped} = "YES";
     }
+    return $to;
 }
 
 #-> sub CPAN::Distribution::new ;
