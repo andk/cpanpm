@@ -43,9 +43,6 @@ $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
-#package CPAN;
-#use strict;
-
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $Suppress_readline $Frontend
             @Defaultsites $Have_warned $Defaultdocs $Defaultrecent
@@ -4674,12 +4671,12 @@ sub safe_quote {
     # Set up quote/default quote
     my $quote = $self->{commands_quote} || $quotes;
 
-    if (($quote ne ' ') and ($command !~ /\s/)) {
-        if ($command !~ /[$quote]/) {
-            return qq<$use_quote$command$use_quote>
-        }
+    if ($quote ne ' '
+        and $command =~ /\s/
+        and $command !~ /[$quote]/) {
+        return qq<$use_quote$command$use_quote>
     }
-    return $command
+    return $command;
 }
 
 #-> sub CPAN::Distribution::new ;
@@ -5278,7 +5275,7 @@ or
     if ($self->{modulebuild}) {
         $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
     } else {
-        $system = join " ", _make_command(), $CPAN::Config->{make_arg};
+        $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5299,8 +5296,7 @@ sub _make_command {
           );
     } else {
         # Old style call, without object. Deprecated
-        use Carp qw(croak);
-        carp "CPAN::_make_command() used as function. Don't Do That.";
+        Carp::confess("CPAN::_make_command() used as function. Don't Do That.");
         return
           safe_quote(undef, $CPAN::Config->{make} || $Config::Config{make} || 'make');
     }
@@ -5765,7 +5761,7 @@ sub install {
                          );
     } else {
         my($make_install_make_command) = $CPAN::Config->{make_install_make_command} ||
-            _make_command();
+            $self->_make_command();
         $system = sprintf("%s install %s",
                           $make_install_make_command,
                           $CPAN::Config->{make_install_arg},
