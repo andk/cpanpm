@@ -43,8 +43,8 @@ $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
-package CPAN;
-use strict;
+#package CPAN;
+#use strict;
 
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $Suppress_readline $Frontend
@@ -2826,7 +2826,7 @@ sub hosthard {
         # Try the most capable first and leave ncftp* for last as it only 
         # does FTP.
       DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
-          my $funkyftp = $CPAN::Config->{$f};
+          my $funkyftp = $self->safe_quote($CPAN::Config->{$f});
           next unless defined $funkyftp;
 	  next if $funkyftp =~ /^\s*$/;
 
@@ -4631,6 +4631,57 @@ sub pm2dir_me {
     }
 }
 
+# Instead of patching the guess, set commands_quote
+# to the right value
+my ($quotes,$use_quote)
+  = $^O eq 'MSWin32'
+    ? ('"', '"')
+    : (q<"'>, "'")
+  ;
+
+=head2 C<< $cpan->safe_quote ITEM >>
+
+Quotes an item to become safe against spaces
+in shell interpolation. An item is enclosed
+in double quotes if:
+
+  - the item contains spaces in the middle
+  - the item does not start with a quote
+
+This happens to avoid shell interpolation
+problems when whitespace is present in
+directory names.
+
+This method uses C<commands_quote> to determine
+the correct quote. If C<commands_quote> is
+a space, no quoting will take place.
+
+
+if it starts an ends with the same quote character: leave it as it is
+
+if it contains no whitespace: leave it as it is
+
+if it contains whitespace, then
+
+if it contains quotes: better leave it as it is
+
+else: quote it with the correct quote type for the box we're on
+
+=cut
+
+sub safe_quote {
+    my ($self, $command) = @_;
+    # Set up quote/default quote
+    my $quote = $self->{commands_quote} || $quotes;
+
+    if (($quote ne ' ') and ($command !~ /\s/)) {
+        if ($command !~ /[$quote]/) {
+            return qq<$use_quote$command$use_quote>
+        }
+    }
+    return $command
+}
+
 #-> sub CPAN::Distribution::new ;
 sub new {
     my($class,%att) = @_;
@@ -4678,7 +4729,8 @@ Could not determine which directory to use for looking at $dist.
     {
 	local $ENV{CPAN_SHELL_LEVEL} = $ENV{CPAN_SHELL_LEVEL}||0;
         $ENV{CPAN_SHELL_LEVEL} += 1;
-	unless (system($CPAN::Config->{'shell'}) == 0) {
+	my $shell = $self->safe_quote($CPAN::Config->{'shell'});
+	unless (system($shell) == 0) {
 	    my $code = $? >> 8;
 	    $CPAN::Frontend->mywarn("Subprocess shell exit code $code\n");
 	}
@@ -4709,6 +4761,7 @@ sub cvs_import {
     }
     my $cvs_log = qq{"imported $package $version sources"};
     $version =~ s/\./_/g;
+    # XXX cvs
     my @cmd = ('cvs', '-d', $cvs_root, 'import', '-m', $cvs_log,
 	       "$cvs_dir", $userid, "v$version");
 
@@ -4719,6 +4772,7 @@ sub cvs_import {
 
     $CPAN::Frontend->myprint(qq{@cmd\n});
     system(@cmd) == 0 or
+    # XXX cvs
 	$CPAN::Frontend->mydie("cvs import failed");
     chdir($pwd) or $CPAN::Frontend->mydie(qq{Could not chdir to "$pwd": $!});
 }
@@ -5036,7 +5090,13 @@ sub isa_perl {
 
 #-> sub CPAN::Distribution::perl ;
 sub perl {
-    return $CPAN::Perl;
+    my ($self) = @_;
+    if (! $self) {
+        use Carp qw(carp);
+        carp __PACKAGE__ . "::perl was called without parameters.";
+        return $self->safe_quote(undef, $CPAN::Perl);
+    }
+    return $self->safe_quote($CPAN::Perl);
 }
 
 
@@ -5142,6 +5202,9 @@ or
         $system = $self->{'configure'};
     } elsif ($self->{modulebuild}) {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
+        
+        # XXX fix $self->perl
+        $perl = $self->safe_quote($perl);
         $system = "$perl Build.PL $CPAN::Config->{mbuildpl_arg}";
     } else {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
@@ -5211,6 +5274,7 @@ or
     if (my @prereq = $self->unsat_prereq){
       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
     }
+    # XXX modulebuild / make
     if ($self->{modulebuild}) {
         $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
     } else {
@@ -5227,7 +5291,19 @@ or
 }
 
 sub _make_command {
-    return $CPAN::Config->{make} || $Config::Config{make} || 'make';
+    my ($self) = @_;
+    if ($self) {
+        return 
+          $self->safe_quote(
+            $CPAN::Config->{make} || $Config::Config{make} || 'make'
+          );
+    } else {
+        # Old style call, without object. Deprecated
+        use Carp qw(croak);
+        carp "CPAN::_make_command() used as function. Don't Do That.";
+        return
+          safe_quote(undef, $CPAN::Config->{make} || $Config::Config{make} || 'make');
+    }
 }
 
 #-> sub CPAN::Distribution::follow_prereqs ;
@@ -5527,7 +5603,7 @@ sub test {
     if ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
     } else {
-        $system = join " ", _make_command(), "test";
+        $system = join " ", $self->_make_command(), "test";
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5573,7 +5649,7 @@ sub clean {
     if ($self->{modulebuild}) {
         $system = sprintf "%s clean", $self->_build_command();
     } else {
-        $system  = join " ", _make_command(), "clean";
+        $system  = join " ", $self->_make_command(), "clean";
     }
     if (system($system) == 0) {
       $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5787,7 +5863,7 @@ sub _display_url {
 
     if ($web_browser_out) {
         # web browser found, run the action
-	my $browser = $CPAN::Config->{'lynx'};
+	my $browser = $self->safe_quote($CPAN::Config->{'lynx'});
         $CPAN::Frontend->myprint(qq{system[$browser $url]})
 	  if $CPAN::DEBUG;
 	$CPAN::Frontend->myprint(qq{
@@ -5802,6 +5878,7 @@ with browser $browser
         # web browser not found, let's try text only
 	my $html_converter_out =
 	  CPAN::Distribution->_check_binary($self,$html_converter);
+        $html_converter_out = $self->safe_quote($html_converter_out);
 
         if ($html_converter_out ) {
             # html2text found, run it
@@ -5933,6 +6010,7 @@ sub _build_command {
     if ($^O eq "MSWin32") { # special code needed at least up to
                             # Module::Build 0.2611 and 0.2706; a fix
                             # in M:B has been promised 2006-01-30
+                            
         my($perl) = $self->perl or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
         return "$perl ./Build";
     }
