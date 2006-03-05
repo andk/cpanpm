@@ -6437,7 +6437,7 @@ sub as_string {
                      $sprintf3,
                      'DSLIP_STATUS',
                      @{$dslip}{qw(D S L I P DV SV LV IV PV)},
-                    );
+                    ) if $dslip->{D};
     my $local_file = $self->inst_file;
     unless ($self->{MANPAGE}) {
         if ($local_file) {
