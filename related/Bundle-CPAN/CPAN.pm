@@ -1,6 +1,7 @@
 package Bundle::CPAN;
 use strict;
-$VERSION = '1.85';
+$VERSION = '1.851'; # use 3 digits to minimize confusion with the
+                    # other CPAN.pm
 
 1;
 
@@ -36,7 +37,9 @@ Bundle::libnet
 
 Term::ReadKey
 
-Term::ReadLine::Perl # sorry, I'm discriminating the ::Gnu module
+Term::ReadLine::Perl
+
+readline
 
 YAML
 
@@ -46,6 +49,8 @@ Module::Build
 
 CPAN
 
+File::Which
+
 =head1 DESCRIPTION
 
 This bundle includes CPAN.pm as the base module.
@@ -54,8 +59,8 @@ When CPAN installs this bundle it tries immediately to enable
 Term::ReadLine so that you do not need to restart your CPAN session.
 
 In this bundle Term::ReadLine::Perl is preferred over
-Term::ReadLine::Gnu because I expect that it gives less problems on
-portability.
+Term::ReadLine::Gnu because there is no way to express I<OR> in
+dependencies.
 
 Note that all modules in this Bundle are not strict prerequisites to
 get a working CPAN.pm. CPAN.pm can work quite well without the other
