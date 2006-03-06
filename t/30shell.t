@@ -91,6 +91,10 @@ my $m;
 for $m (@modules) {
     $HAVE->{$m}++ if mreq $m;
 }
+$HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
+    =
+    $HAVE->{"Term::ReadLine::Perl"}
+    || $HAVE->{"Term::ReadLine::Gnu"};
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
 
@@ -382,7 +386,7 @@ E:(?s:commit.*?build_cache.*?cpan_home.*?inhibit_startup_message.*?urllist)
 P:o conf prefer_installer EUMM
 ########
 P:make CPAN::Test::Dummy::Perl5::BuildOrMake
-E:(?s:Running make.*?Writing Makefile.*?make\s+-- OK)
+E:(?s:Running make.*?Writing Makefile.*?make["']?\s+-- OK)
 ########
 P:o conf prefer_installer MB
 R:Module::Build
@@ -425,7 +429,7 @@ E:(?s:commit.*?defaults.*?help.*?init.*?urllist)
 ########
 P:o conf inhibit_\t
 E:inhibit_startup_message
-R:Term::ReadKey
+R:Term::ReadLine::Perl||Term::ReadLine::Gnu
 ########
 P:quit
 E:(removed\.)
