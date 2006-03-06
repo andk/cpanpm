@@ -10,7 +10,7 @@ __END__
 
 =head1 NAME
 
-Bundle::CPAN - A bundle to play with all the other modules on CPAN
+Bundle::CPAN - Bundle to optmize the behaviour of CPAN.pm
 
 =head1 SYNOPSIS
 
@@ -38,9 +38,7 @@ Bundle::libnet
 
 Term::ReadKey
 
-Term::ReadLine::Perl
-
-readline
+ILYAZ/modules/Term-ReadLine-Perl-1.0207.tar.gz
 
 YAML
 
