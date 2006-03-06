@@ -558,6 +558,22 @@ $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 # from here on only subs.
 ################################################################################
 
+sub suggest_myconfig () {
+  SUGGEST_MYCONFIG: if(!$INC{'CPAN/MyConfig.pm'}) {
+        $CPAN::Frontend->myprint("You don't seem to have a user ".
+                                 "configuration (MyConfig.pm) yet.\n");
+        my $new = ExtUtils::MakeMaker::prompt("Do you want to create a ".
+                                              "user configuration now? (Y/n)",
+                                              "yes");
+        if($new =~ m{^y}i) {
+            CPAN::Shell->mkmyconfig();
+            return &checklock;
+        } else {
+            $CPAN::Frontend->mydie("OK, giving up.");
+        }
+    }
+}
+
 #-> sub CPAN::all_objects ;
 sub all_objects {
     my($mgr,$class) = @_;
@@ -635,36 +651,37 @@ You may want to kill it and delete the lockfile, maybe. On UNIX try:
     my $dotcpan = $CPAN::Config->{cpan_home};
     eval { File::Path::mkpath($dotcpan);};
     if ($@) {
-      # A special case at least for Jarkko.
-      my $firsterror = $@;
-      my $seconderror;
-      my $symlinkcpan;
-      if (-l $dotcpan) {
-	$symlinkcpan = readlink $dotcpan;
-	die "readlink $dotcpan failed: $!" unless defined $symlinkcpan;
-	eval { File::Path::mkpath($symlinkcpan); };
-	if ($@) {
-	  $seconderror = $@;
-	} else {
-	  $CPAN::Frontend->mywarn(qq{
+        # A special case at least for Jarkko.
+        my $firsterror = $@;
+        my $seconderror;
+        my $symlinkcpan;
+        if (-l $dotcpan) {
+            $symlinkcpan = readlink $dotcpan;
+            die "readlink $dotcpan failed: $!" unless defined $symlinkcpan;
+            eval { File::Path::mkpath($symlinkcpan); };
+            if ($@) {
+                $seconderror = $@;
+            } else {
+                $CPAN::Frontend->mywarn(qq{
 Working directory $symlinkcpan created.
 });
-	}
-      }
-      unless (-d $dotcpan) {
-	my $diemess = qq{
+            }
+        }
+        unless (-d $dotcpan) {
+            my $mess = qq{
 Your configuration suggests "$dotcpan" as your
 CPAN.pm working directory. I could not create this directory due
 to this error: $firsterror\n};
-	$diemess .= qq{
+            $mess .= qq{
 As "$dotcpan" is a symlink to "$symlinkcpan",
 I tried to create that, but I failed with this error: $seconderror
 } if $seconderror;
-	$diemess .= qq{
+            $mess .= qq{
 Please make sure the directory exists and is writable.
 };
-	$CPAN::Frontend->mydie($diemess);
-      }
+            $CPAN::Frontend->myprint($mess);
+            return suggest_myconfig;
+        }
     } # $@ after eval mkpath $dotcpan
     my $fh;
     unless ($fh = FileHandle->new(">$lockfile")) {
@@ -684,19 +701,8 @@ points to a directory where you can write a .lock file. You can set
 this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
 \@INC path;
 });
-            if(!$INC{'CPAN/MyConfig.pm'}) {
-                $CPAN::Frontend->myprint("You don't seem to have a user ".
-                                         "configuration (MyConfig.pm) yet.\n");
-                my $new = ExtUtils::MakeMaker::prompt("Do you want to create a ".
-                                                      "user configuration now? (Y/n)",
-                                                      "yes");
-                if($new =~ m{^y}i) {
-                    CPAN::Shell->mkmyconfig();
-                    return &checklock;
-                }
-            }
+            return suggest_myconfig;
 	}
-	$CPAN::Frontend->mydie("Could not open >$lockfile: $!");
     }
     $fh->print($$, "\n");
     $fh->print(hostname(), "\n");
@@ -2527,7 +2533,8 @@ sub localize {
         } else {
             # empty file from a previous unsuccessful attempt to download it
             unlink $aslocal or
-                $CPAN::Frontend->mydie("Found a zero-length '$aslocal' that I could not remove.");
+                $CPAN::Frontend->mydie("Found a zero-length '$aslocal' that I ".
+                                       "could not remove.");
         }
     }
     my($restore) = 0;
