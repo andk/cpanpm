@@ -693,13 +693,13 @@ my @prompts = (
 manual_config => qq[
 
 CPAN is the world-wide archive of perl resources. It consists of about
-100 sites that all replicate the same contents all around the globe.
+300 sites that all replicate the same contents around the globe.
 Many countries have at least one CPAN site already. The resources
 found on CPAN are easily accessible with the CPAN.pm module. If you
 want to use CPAN.pm, you have to configure it properly.
 
-If you do not want to enter a dialog now, you can answer 'no' to this
-question and I\'ll try to autoconfigure. (Note: you can revisit this
+If you do NOT want to enter a dialog now, you can answer 'no' to this
+question and I'll try to autoconfigure. (Note: you can revisit this
 dialog anytime later by typing 'o conf init' at the cpan prompt.)
 
 ],
