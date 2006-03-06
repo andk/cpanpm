@@ -814,6 +814,10 @@ CONFIGURATION
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
       cache_metadata     use serializer to cache metadata
+      commands_quote     prefered character to use for quoting external
+                         commands when running them. Defaults to double
+                         quote on Windows, single tick everywhere else;
+                         can be set to space to disable quoting
       cpan_home          local directory reserved for this package
       dontload_list      arrayref: modules in the list will not be
                          loaded by the CPAN::has_inst() routine
@@ -1274,6 +1278,12 @@ BUGS
     building a Perl module package from a shell by following the
     installation instructions of that package still works in your
     environment.
+
+SECURITY ADVICE
+    This software enables you to upgrade software on your computer and so is
+    inherently dangerous because the newly installed software may contain
+    bugs and may alter the way your computer works or even make it unusable.
+    Please consider backing up your data before every upgrade.
 
 AUTHOR
     Andreas Koenig "<andk@cpan.org>"
