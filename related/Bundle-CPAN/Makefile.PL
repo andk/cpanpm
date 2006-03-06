@@ -116,6 +116,10 @@ Makefile :: CPAN.pm
 setversion:
 	$(PERL) Makefile.PL --setversion
 
+the-release-name :
+	$(NOECHO) $(ECHO) 'version ' $(VERSION)
+	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
+
 
 }
 }
