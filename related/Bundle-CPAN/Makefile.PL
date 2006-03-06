@@ -54,8 +54,12 @@ if ($HAVE_FILE_SPEC) {
       eval q{
       no warnings "numeric";
       if ($CPAN::VERSION != $have_version) {
-        warn "Not equal: Bundle::CPAN::VERSION[$Bundle::CPAN::VERSION] ".
-             "Makefile version[$have_version]";
+        warn sprintf "Not equal: Bundle::CPAN::VERSION[%s] ".
+             "Makefile version[%s] <=>[%s]",
+$Bundle::CPAN::VERSION,
+$have_version,
+$Bundle::CPAN::VERSION <=> $have_version,
+;
         $version_diff = 1;
       }
 };
