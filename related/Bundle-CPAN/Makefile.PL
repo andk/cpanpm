@@ -54,7 +54,8 @@ if ($HAVE_FILE_SPEC) {
       eval q{
       no warnings "numeric";
       if ($CPAN::VERSION != $have_version) {
-        warn "Not equal: CPAN::VERSION[$CPAN::VERSION] Makefile version[$have_version]";
+        warn "Not equal: Bundle::CPAN::VERSION[$Bundle::CPAN::VERSION] ".
+             "Makefile version[$have_version]";
         $version_diff = 1;
       }
 };
