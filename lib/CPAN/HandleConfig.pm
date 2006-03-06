@@ -272,6 +272,59 @@ sub defaults {
     1;
 }
 
+=head2 C<< CLASS->safe_quote ITEM >>
+
+Quotes an item to become safe against spaces
+in shell interpolation. An item is enclosed
+in double quotes if:
+
+  - the item contains spaces in the middle
+  - the item does not start with a quote
+
+This happens to avoid shell interpolation
+problems when whitespace is present in
+directory names.
+
+This method uses C<commands_quote> to determine
+the correct quote. If C<commands_quote> is
+a space, no quoting will take place.
+
+
+if it starts an ends with the same quote character: leave it as it is
+
+if it contains no whitespace: leave it as it is
+
+if it contains whitespace, then
+
+if it contains quotes: better leave it as it is
+
+else: quote it with the correct quote type for the box we're on
+
+=cut
+
+{
+    # Instead of patching the guess, set commands_quote
+    # to the right value
+    my ($quotes,$use_quote)
+        = $^O eq 'MSWin32'
+            ? ('"', '"')
+                : (q<"'>, "'")
+                    ;
+
+    sub safe_quote {
+        my ($self, $command) = @_;
+        # Set up quote/default quote
+        my $quote = $CPAN::Config->{commands_quote} || $quotes;
+
+        if ($quote ne ' '
+            and $command =~ /\s/
+            and $command !~ /[$quote]/) {
+            return qq<$use_quote$command$use_quote>
+        }
+        return $command;
+    }
+}
+
 sub init {
     my($self,@args) = @_;
     undef $CPAN::Config->{'inhibit_startup_message'}; # lazy trick to

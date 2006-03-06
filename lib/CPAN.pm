@@ -2823,7 +2823,7 @@ sub hosthard {
         # Try the most capable first and leave ncftp* for last as it only 
         # does FTP.
       DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
-          my $funkyftp = $self->safe_quote($CPAN::Config->{$f});
+          my $funkyftp = CPAN::HandleConfig->safe_quote($CPAN::Config->{$f});
           next unless defined $funkyftp;
 	  next if $funkyftp =~ /^\s*$/;
 
@@ -4628,57 +4628,6 @@ sub pm2dir_me {
     }
 }
 
-# Instead of patching the guess, set commands_quote
-# to the right value
-my ($quotes,$use_quote)
-  = $^O eq 'MSWin32'
-    ? ('"', '"')
-    : (q<"'>, "'")
-  ;
-
-=head2 C<< $cpan->safe_quote ITEM >>
-
-Quotes an item to become safe against spaces
-in shell interpolation. An item is enclosed
-in double quotes if:
-
-  - the item contains spaces in the middle
-  - the item does not start with a quote
-
-This happens to avoid shell interpolation
-problems when whitespace is present in
-directory names.
-
-This method uses C<commands_quote> to determine
-the correct quote. If C<commands_quote> is
-a space, no quoting will take place.
-
-
-if it starts an ends with the same quote character: leave it as it is
-
-if it contains no whitespace: leave it as it is
-
-if it contains whitespace, then
-
-if it contains quotes: better leave it as it is
-
-else: quote it with the correct quote type for the box we're on
-
-=cut
-
-sub safe_quote {
-    my ($self, $command) = @_;
-    # Set up quote/default quote
-    my $quote = $self->{commands_quote} || $quotes;
-
-    if ($quote ne ' '
-        and $command =~ /\s/
-        and $command !~ /[$quote]/) {
-        return qq<$use_quote$command$use_quote>
-    }
-    return $command;
-}
-
 #-> sub CPAN::Distribution::new ;
 sub new {
     my($class,%att) = @_;
@@ -4726,7 +4675,7 @@ Could not determine which directory to use for looking at $dist.
     {
 	local $ENV{CPAN_SHELL_LEVEL} = $ENV{CPAN_SHELL_LEVEL}||0;
         $ENV{CPAN_SHELL_LEVEL} += 1;
-	my $shell = $self->safe_quote($CPAN::Config->{'shell'});
+	my $shell = CPAN::HandleConfig->safe_quote($CPAN::Config->{'shell'});
 	unless (system($shell) == 0) {
 	    my $code = $? >> 8;
 	    $CPAN::Frontend->mywarn("Subprocess shell exit code $code\n");
@@ -5091,9 +5040,8 @@ sub perl {
     if (! $self) {
         use Carp qw(carp);
         carp __PACKAGE__ . "::perl was called without parameters.";
-        return $self->safe_quote(undef, $CPAN::Perl);
     }
-    return $self->safe_quote($CPAN::Perl);
+    return CPAN::HandleConfig->safe_quote($CPAN::Perl);
 }
 
 
@@ -5199,9 +5147,6 @@ or
         $system = $self->{'configure'};
     } elsif ($self->{modulebuild}) {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
-        
-        # XXX fix $self->perl
-        $perl = $self->safe_quote($perl);
         $system = "$perl Build.PL $CPAN::Config->{mbuildpl_arg}";
     } else {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
@@ -5290,10 +5235,11 @@ or
 sub _make_command {
     my ($self) = @_;
     if ($self) {
-        return 
-          $self->safe_quote(
-            $CPAN::Config->{make} || $Config::Config{make} || 'make'
-          );
+        return
+          CPAN::HandleConfig
+                ->safe_quote(
+                             $CPAN::Config->{make} || $Config::Config{make} || 'make'
+                            );
     } else {
         # Old style call, without object. Deprecated
         Carp::confess("CPAN::_make_command() used as function. Don't Do That.");
@@ -5859,7 +5805,7 @@ sub _display_url {
 
     if ($web_browser_out) {
         # web browser found, run the action
-	my $browser = $self->safe_quote($CPAN::Config->{'lynx'});
+	my $browser = CPAN::HandleConfig->safe_quote($CPAN::Config->{'lynx'});
         $CPAN::Frontend->myprint(qq{system[$browser $url]})
 	  if $CPAN::DEBUG;
 	$CPAN::Frontend->myprint(qq{
@@ -5874,7 +5820,7 @@ with browser $browser
         # web browser not found, let's try text only
 	my $html_converter_out =
 	  CPAN::Distribution->_check_binary($self,$html_converter);
-        $html_converter_out = $self->safe_quote($html_converter_out);
+        $html_converter_out = CPAN::HandleConfig->safe_quote($html_converter_out);
 
         if ($html_converter_out ) {
             # html2text found, run it
@@ -6514,8 +6460,9 @@ sub as_string {
                     ) if $dslip->{D};
     my $local_file = $self->inst_file;
     unless ($self->{MANPAGE}) {
+        my $manpage;
         if ($local_file) {
-            $self->{MANPAGE} = $self->manpage_headline($local_file);
+            $manpage = $self->manpage_headline($local_file);
         } else {
             # If we have already untarred it, we should look there
             my $dist = $CPAN::META->instance('CPAN::Distribution',
@@ -6551,10 +6498,11 @@ sub as_string {
                 my $lfl_abs = File::Spec->catfile($dist->{build_dir},$lfl);
                 # warn "lfl_abs[$lfl_abs]";
                 if (-f $lfl_abs) {
-                    $self->{MANPAGE} = $self->manpage_headline($lfl_abs);
+                    $manpage = $self->manpage_headline($lfl_abs);
                 }
             }
         }
+        $self->{MANPAGE} = $manpage if $manpage;
     }
     my($item);
     for $item (qw/MANPAGE/) {
@@ -7770,6 +7718,10 @@ defined:
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
   cache_metadata     use serializer to cache metadata
+  commands_quote     prefered character to use for quoting external
+                     commands when running them. Defaults to double
+                     quote on Windows, single tick everywhere else;
+                     can be set to space to disable quoting
   cpan_home          local directory reserved for this package
   dontload_list      arrayref: modules in the list will not be
                      loaded by the CPAN::has_inst() routine
