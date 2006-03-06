@@ -53,7 +53,7 @@ if ($HAVE_FILE_SPEC) {
       die "could not determine current version from Makefile" unless $have_version;
       eval q{
       no warnings "numeric";
-      if ($CPAN::VERSION != $have_version) {
+      if ($Bundle::CPAN::VERSION != $have_version) {
         warn sprintf "Not equal: Bundle::CPAN::VERSION[%s] ".
              "Makefile version[%s] <=>[%s]",
 $Bundle::CPAN::VERSION,
