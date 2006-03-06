@@ -6,7 +6,7 @@ my $HAVE_FILE_SPEC = !$@;
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
 if ($HAVE_FILE_SPEC) {
-  $version_from = File::Spec->catfile(qw(lib CPAN.pm));
+  $version_from = File::Spec->catfile(qw(CPAN.pm));
   my $version_set_manually = 1; # not by SVN
 
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
