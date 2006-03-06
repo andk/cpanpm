@@ -1,3 +1,17 @@
+2006-03-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_51
+
+	* patch by Max Maischein to quote commands that contain spaces as is
+	often the case on Windows systems (addresses #17877)
+
+	* do not display DSLIP_STATUS when it is empty; same thing for MANPAGE
+
+	* add a security advice to the manpage
+
+	* do not advertise Bundle::CPAN when a new CPAN is available, CPAN alone
+	should do
+
 2006-02-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87
