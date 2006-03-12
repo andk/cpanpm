@@ -1,3 +1,8 @@
+2006-03-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* test the change that I made on Vassilii's suggestion in #18011,
+	checked in as 
+
 2006-03-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* feature request by Martin Sluka: the upgrade command, as described

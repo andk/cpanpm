@@ -372,8 +372,16 @@ sub require_myconfig_or_config () {
     my $home = home();
     unshift @INC, File::Spec->catdir($home,'.cpan');
     eval { require CPAN::MyConfig };
+    my $err_myconfig = $@;
+    if ($err_myconfig and $err_myconfig !~ m#locate CPAN/MyConfig\.pm#) {
+        die "Error while requiring CPAN::MyConfig:\n$err_myconfig";
+    }
     unless ($INC{"CPAN/MyConfig.pm"}) { # this guy has settled his needs already
       eval {require CPAN::Config;}; # not everybody has one
+      my $err_config = $@;
+      if ($err_config and $err_config !~ m#locate CPAN/Config\.pm#) {
+          die "Error while requiring CPAN::Config:\n$err_config";
+      }
     }
 }
 
