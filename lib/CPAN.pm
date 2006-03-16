@@ -840,7 +840,7 @@ sub has_usable {
                                    sub {require File::HomeDir;
                                         unless (File::HomeDir->VERSION >= 0.52){
                                             for ("Will not use File::HomeDir, need 0.52\n") {
-                                                warn $_;
+                                                $CPAN::Frontend->mywarn($_);
                                                 die $_;
                                             }
                                         }
@@ -1928,6 +1928,7 @@ sub expandany {
 sub expand {
     my $self = shift;
     my($type,@args) = @_;
+    local($_);
     CPAN->debug("type[$type]args[@args]") if $CPAN::DEBUG;
     my $class = "CPAN::$type";
     my $methods = ['id'];
@@ -4756,15 +4757,16 @@ sub readme {
 
     my $fh_pager = FileHandle->new;
     local($SIG{PIPE}) = "IGNORE";
-    $fh_pager->open("|$CPAN::Config->{'pager'}")
-	or die "Could not open pager $CPAN::Config->{'pager'}: $!";
+    my $pager = $CPAN::Config->{'pager'} || "cat";
+    $fh_pager->open("|$pager")
+	or die "Could not open pager $pager\: $!";
     my $fh_readme = FileHandle->new;
     $fh_readme->open($local_file)
 	or $CPAN::Frontend->mydie(qq{Could not open "$local_file": $!});
     $CPAN::Frontend->myprint(qq{
 Displaying file
   $local_file
-with pager "$CPAN::Config->{'pager'}"
+with pager "$pager"
 });
     sleep 2;
     $fh_pager->print(<$fh_readme>);
@@ -5871,13 +5873,14 @@ saved output to %s\n},
                 or $CPAN::Frontend->mydie(qq{Could not open "$tmpin": $!});
             my $fh_pager = FileHandle->new;
             local($SIG{PIPE}) = "IGNORE";
-            $fh_pager->open("|$CPAN::Config->{'pager'}")
+            my $pager = $CPAN::Config->{'pager'} || "cat";
+            $fh_pager->open("|pager")
                 or $CPAN::Frontend->mydie(qq{
-Could not open pager $CPAN::Config->{'pager'}: $!});
+Could not open pager $pager\: $!});
             $CPAN::Frontend->myprint(qq{
 Displaying URL
   $url
-with pager "$CPAN::Config->{'pager'}"
+with pager "$pager"
 });
             sleep 2;
             $fh_pager->print(<FH>);

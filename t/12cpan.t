@@ -7,7 +7,7 @@ BEGIN {
 	eval "require POSIX; 1" and POSIX::_exit(0);
     }
 }
-use Test::More tests => 3;
+use Test::More tests => 4;
 use File::Spec;
 sub _f ($) {
     File::Spec->catfile(split /\//, shift);
@@ -32,7 +32,22 @@ require CPAN;
                                )->distribution->author->as_string;
     like $a, qr/Andreas/;
 }
-
+{
+    no strict;
+    {
+        package S;
+        for my $m (qw(myprint mydie mywarn mysleep)){
+            *$m = sub {
+                return;
+            }
+        }
+    }
+    $CPAN::Frontend = $CPAN::Frontend = "S";
+    $_ = "Fcntl";
+    my $m = CPAN::Shell->expand(Module => $_);
+    $m->uptodate;
+    is($_,"Fcntl");
+}
 # Local Variables:
 # mode: cperl
 # cperl-indent-level: 4

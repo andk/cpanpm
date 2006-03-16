@@ -28,7 +28,7 @@ sub new {
         $bzip2 = File::Which::which("bzip2");
       }
       if ($bzip2) {
-        $me->{UNGZIPPRG} = $bzip2;
+        $me->{UNGZIPPRG} = $bzip2 || "bzip2";
       } else {
         $CPAN::Frontend->mydie(qq{
 CPAN.pm needs the external program bzip2 in order to handle '$file'.
@@ -39,7 +39,7 @@ program.
     }
   } else {
     # yes, we let gzip figure it out in *any* other case
-    $me->{UNGZIPPRG} = $CPAN::Config->{gzip};
+    $me->{UNGZIPPRG} = $CPAN::Config->{gzip} || "gzip";
   }
   bless $me, $class;
 }
@@ -223,7 +223,7 @@ installed. Can't continue.
   if ($prefer==1) { # 1 => external gzip+tar
     my($system);
     my $is_compressed = $self->gtest();
-    my $tarcommand = CPAN::HandleConfig->safe_quote($CPAN::Config->{tar});
+    my $tarcommand = CPAN::HandleConfig->safe_quote($CPAN::Config->{tar}) || "tar";
     if ($is_compressed) {
       my $command = CPAN::HandleConfig->safe_quote($self->{UNGZIPPRG});
       $system = qq{$command -dc }.
