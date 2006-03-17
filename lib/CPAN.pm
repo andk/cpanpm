@@ -1928,7 +1928,6 @@ sub expandany {
 sub expand {
     my $self = shift;
     my($type,@args) = @_;
-    local($_);
     CPAN->debug("type[$type]args[@args]") if $CPAN::DEBUG;
     my $class = "CPAN::$type";
     my $methods = ['id'];
