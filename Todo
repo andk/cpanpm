@@ -1,3 +1,20 @@
+2006-04-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Recap branches:
+
+% svn ls https://pause.perl.org:5460/svn/cpanpm/branches
+1.80_56plus/
+1.87-dbmdeep-hackery/
+1.87-install-scripts/
+
+	Merge in 1.87-install-scripts without much further ado.
+
+	Try to recall how broken 1.87-dbmdeep-hackery was. It was very broken
+	but I do not remember details.
+
+	* dynamic_config => 1 means that I must throw away the contents of the
+	META.yml and if the key is missing, I must default it to 1.
+
 2006-04-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: JV suggests treating build_dependencies differently
