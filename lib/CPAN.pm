@@ -8237,9 +8237,8 @@ nice about obeying that variable as well):
 
 =item 14)
 
-I only know the usual options for ExtUtils::MakeMaker(Module::Build),
-how do I find out the corresponding options in
-Module::Build(ExtUtils::MakeMaker)?
+How do I create a Module::Build based Build.PL derived from an 
+ExtUtils::MakeMaker focused Makefile.PL?
 
 http://search.cpan.org/search?query=Module::Build::Convert
 
