@@ -1,0 +1,190 @@
+diff -uNwr CPAN-1.87/MANIFEST CPAN-new/MANIFEST
+--- CPAN-1.87/MANIFEST	Tue Apr 25 19:34:36 2006
++++ CPAN-new/MANIFEST	Tue Apr 25 17:31:49 2006
+@@ -49,4 +49,5 @@
+ t/30shell.pod
+ t/30shell.t
+ t/50pod.t
++t/60credentials.t
+ SIGNATURE                                Public-key signature (added by MakeMaker)
+diff -uNwr CPAN-1.87/lib/CPAN/HandleConfig.pm CPAN-new/lib/CPAN/HandleConfig.pm
+--- CPAN-1.87/lib/CPAN/HandleConfig.pm	Tue Apr 25 19:34:36 2006
++++ CPAN-new/lib/CPAN/HandleConfig.pm	Tue Apr 25 19:16:47 2006
+@@ -48,6 +48,7 @@
+                              "ncftpget",
+                              "no_proxy",
+                              "pager",
++                             "password",
+                              "prefer_installer",
+                              "prerequisites_policy",
+                              "scan_cache",
+@@ -57,6 +58,7 @@
+                              "term_is_latin",
+                              "unzip",
+                              "urllist",
++                             "username",
+                              "wait_list",
+                              "wget",
+                             );
+diff -uNwr CPAN-1.87/lib/CPAN.pm CPAN-new/lib/CPAN.pm
+--- CPAN-1.87/lib/CPAN.pm	Tue Apr 25 19:34:35 2006
++++ CPAN-new/lib/CPAN.pm	Tue Apr 25 22:11:06 2006
+@@ -2352,31 +2352,78 @@
+ 
+ sub get_basic_credentials {
+     my($self, $realm, $uri, $proxy) = @_;
+-    return unless $proxy;
+     if ($USER && $PASSWD) {
+-    } elsif (defined $CPAN::Config->{proxy_user} &&
+-             defined $CPAN::Config->{proxy_pass}) {
+-        $USER = $CPAN::Config->{proxy_user};
+-        $PASSWD = $CPAN::Config->{proxy_pass};
++        return ($USER, $PASSWD);
++    }
++    if ( $proxy ) {
++        ($USER,$PASSWD) = $self->get_proxy_credentials();
+     } else {
+-        ExtUtils::MakeMaker->import(qw(prompt));
+-        $USER = prompt("Proxy authentication needed!
++        ($USER,$PASSWD) = $self->get_non_proxy_credentials();
++    }
++    return($USER,$PASSWD);
++}
++
++sub get_proxy_credentials {
++    my $self = shift;
++    my ($user, $password);
++    if ( defined $CPAN::Config->{proxy_user} &&
++         defined $CPAN::Config->{proxy_pass}) {
++        $user = $CPAN::Config->{proxy_user};
++        $password = $CPAN::Config->{proxy_pass};
++        return ($user, $password);
++    }
++    my $username_prompt = "\nProxy authentication needed!
+  (Note: to permanently configure username and password run
+    o conf proxy_user your_username
+    o conf proxy_pass your_password
+- )\nUsername:");
++     )\nUsername:";
++    ($user, $password) =
++        _get_username_and_password_from_user($username_prompt);
++    return ($user,$password);
++}
++
++sub get_non_proxy_credentials {
++    my $self = shift;
++    my ($user,$password);
++    if ( defined $CPAN::Config->{username} &&
++         defined $CPAN::Config->{password}) {
++        $user = $CPAN::Config->{username};
++        $password = $CPAN::Config->{password};
++        return ($user, $password);
++    }
++    my $username_prompt = "\nAuthentication needed!
++     (Note: to permanently configure username and password run
++       o conf username your_username
++       o conf password your_password
++     )\nUsername:";
++        
++    ($user, $password) =
++        _get_username_and_password_from_user($username_prompt);
++    return ($user,$password);
++}
++
++sub _get_username_and_password_from_user {
++    my $self = shift;
++    my $username_message = shift;
++    my ($username,$password);
++
++    ExtUtils::MakeMaker->import(qw(prompt));
++    $username = prompt($username_message);
+         if ($CPAN::META->has_inst("Term::ReadKey")) {
+             Term::ReadKey::ReadMode("noecho");
+-        } else {
+-            $CPAN::Frontend->mywarn("Warning: Term::ReadKey seems not to be available, your password will be echoed to the terminal!\n");
+         }
+-        $PASSWD = prompt("Password:");
++    else {
++        $CPAN::Frontend->mywarn(
++            "Warning: Term::ReadKey seems not to be available, your password will be echoed to the terminal!\n"
++        );
++    }
++    $password = prompt("Password:");
++
+         if ($CPAN::META->has_inst("Term::ReadKey")) {
+             Term::ReadKey::ReadMode("restore");
+         }
+         $CPAN::Frontend->myprint("\n\n");
+-    }
+-    return($USER,$PASSWD);
++    return ($username,$password);
+ }
+ 
+ # mirror(): Its purpose is to deal with proxy authentication. When we
+@@ -6763,6 +6810,7 @@
+ 
+ 1;
+ 
++
+ __END__
+ 
+ =head1 NAME
+diff -uNwr CPAN-1.87/t/60credentials.t CPAN-new/t/60credentials.t
+--- CPAN-1.87/t/60credentials.t	Wed Dec 31 16:00:00 1969
++++ CPAN-new/t/60credentials.t	Tue Apr 25 19:44:28 2006
+@@ -0,0 +1,55 @@
++use strict;
++
++use FindBin qw($Bin);
++use lib "$Bin/../lib";
++use lib "$Bin/../blib";
++use CPAN;
++use Test::More tests => 5;
++
++my $TRUE = 1;
++my $FALSE = undef;
++
++test_can_get_basic_credentials();
++test_get_basic_credentials_for_proxy();
++test_get_basic_credentials_without_proxy();
++exit;
++
++#############################################################################
++
++sub test_can_get_basic_credentials {
++    set_up();
++    can_ok('CPAN::LWP::UserAgent', 'get_basic_credentials');
++    can_ok('CPAN::LWP::UserAgent', 'get_proxy_credentials');
++    can_ok('CPAN::LWP::UserAgent', 'get_non_proxy_credentials');
++}
++
++sub test_get_basic_credentials_for_proxy {
++    set_up();
++    $CPAN::Config->{proxy_user} = 'proxy_username';
++    $CPAN::Config->{proxy_pass} = 'proxy_password';
++    my @proxy_credentials =
++      CPAN::LWP::UserAgent->get_basic_credentials('realm', 'uri', $TRUE);
++    is_deeply(\@proxy_credentials,
++              [$CPAN::Config->{proxy_user}, $CPAN::Config->{proxy_pass}],
++              'get_basic_credentials for proxy');
++}
++
++sub test_get_basic_credentials_without_proxy {
++    set_up();
++    $CPAN::Config->{username} = 'test_username';
++    $CPAN::Config->{password} = 'test_password';
++    my @credentials =
++      CPAN::LWP::UserAgent->get_basic_credentials('realm', 'uri', $FALSE);
++    is_deeply(\@credentials,
++              [$CPAN::Config->{username}, $CPAN::Config->{password}],
++              'get_basic_credentials for non-proxy');
++}
++
++sub set_up {
++    undef $CPAN::Config->{username};
++    undef $CPAN::Config->{password};
++    undef $CPAN::Config->{proxy_user};
++    undef $CPAN::Config->{proxy_pass};
++    undef $CPAN::LWP::UserAgent::USER;
++    undef $CPAN::LWP::UserAgent::PASSWD;
++}
