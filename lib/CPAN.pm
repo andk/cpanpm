@@ -5378,6 +5378,11 @@ sub read_yaml {
             $CPAN::Frontend->mywarn("Error while parsing META.yml: $@");
             return;
         }
+        if (not exists $self->{yaml_content}{dynamic_config}
+            or $self->{yaml_content}{dynamic_config}
+           ) {
+            $self->{yaml_content} = undef;
+        }
     }
     $self->debug("yaml_content[$self->{yaml_content}]") if $CPAN::DEBUG;
     return $self->{yaml_content};
