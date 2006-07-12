@@ -1,3 +1,8 @@
+2006-06-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* make signature-checking a feature that can be turned on or off and
+	which defaults to off. (requested by Adam Kennedy)
+
 2006-04-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* apply patch by
@@ -25,7 +30,8 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 	but I do not remember details.
 
 	* dynamic_config => 1 means that I must throw away the contents of the
-	META.yml and if the key is missing, I must default it to 1.
+	META.yml and if the key is missing, I must default it to 1. DONE in rev
+	720
 
 2006-04-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
