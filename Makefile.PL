@@ -220,6 +220,9 @@ show-imported:
 upload-batch-signing-key:
 	gpg --send-key 450F89EC
 
+diff::
+	svn diff | less
+
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 

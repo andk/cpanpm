@@ -12,10 +12,12 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 );
 
 %keys = map { $_ => undef } (
+                             #  allow_unauthenticated ?? some day...
                              "build_cache",
                              "build_dir",
                              "bzip2",
                              "cache_metadata",
+                             "check_sigs",
                              "commandnumber_in_prompt",
                              "cpan_home",
                              "curl",
@@ -290,7 +292,7 @@ the correct quote. If C<commands_quote> is
 a space, no quoting will take place.
 
 
-if it starts an ends with the same quote character: leave it as it is
+if it starts and ends with the same quote character: leave it as it is
 
 if it contains no whitespace: leave it as it is
 

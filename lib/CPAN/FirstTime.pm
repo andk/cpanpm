@@ -240,6 +240,17 @@ Shall we use it as the general CPAN build and cache directory?
 
 
     #
+    # Module::Signature
+    #
+    $CPAN::Frontend->myprint($prompts{check_sigs_intro});
+
+    defined($default = $CPAN::Config->{check_sigs}) or
+        $default = 0;
+    $ans = prompt($prompts{check_sigs},
+                  ($default ? 'yes' : 'no'));
+    $CPAN::Config->{check_sigs} = ($ans =~ /^y/i ? 1 : 0);
+
+    #
     # External programs
     #
 
@@ -812,6 +823,31 @@ policy to one of the three values.
 
 prerequisites_policy =>
 "Policy on building prerequisites (follow, ask or ignore)?",
+
+check_sigs_intro  => qq{
+
+CPAN packages can be digitally signed by authors and thus verified
+with the security provided by strong cryptography. The exact mechanism
+is defined in the Module::Signature module. While this is generally
+considered a good thing, it is not always convenient to the end user
+to install modules that are signed incorrectly or where the key of the
+author is not available or where some prerequisite for
+Module::Signature has a bug and so on.
+
+With the check_sigs parameter you can turn signature checking on and
+off. The default is off for now because the whole tool chain for the
+functionality is not yet considered mature by some. The author of
+CPAN.pm would recommend setting it to true most of the time and
+turning it off only if it turns out to be annoying.
+
+Note that if you do not have Module::Signature installed, no signature
+checks will be performed at all.
+
+},
+
+check_sigs =>
+qq{Always try to check and verify signatures if a SIGNATURE file is in the package
+and Module::Signature is installed (yes/no)?},
 
 external_progs => qq{
 

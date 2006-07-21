@@ -1,3 +1,36 @@
+2006-07-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* From: Adam Kennedy <adam@phase-n.com>
+	  Subject: Re: CPAN.pm, META.yml, PREREQ_PM and dynamic dependencies
+	  To: "Andreas J. Koenig" <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	  Date: Tue, 11 Jul 2006 16:58:34 +1000
+	  
+	  Andreas
+	  
+	  dynamic_config was a major major design mistake, that they got
+	  entirely backwards. It relies on authors to not forget to set the
+	  dynamic flag, or it results in a failed install.
+	  
+	  But of course, nobody ever does remember to set it, and we have a huge
+	  number of existing modules that don't do this properly.
+	  
+	  There is no problem at all in us having the requires values considered
+	  to be "advisory" only, and then "localize" the dependencies.
+	  
+	  In short, the flag should have actually been the other way around
+	  (i.e. static_config) and so dynamic_config should ALWAYS be 1, unless
+	  you have it EXPLICITLY set to 0.
+	  
+	  We may or may not be able to get the spec revised later on, but in the
+	  mean time, dynamic_config should aways be 1 unless you have an
+	  explicit 0, not just when there is no requires field.
+	  
+	  This makes installation potentially a bit slower, and less able to
+	  shortcut, but it makes sure that installation remains correct.
+
+	I just tried to make this a Todo item but then checked the code and
+	found it bahaves already as Adam suggests. ---> DONE
+
 2006-06-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* make signature-checking a feature that can be turned on or off and

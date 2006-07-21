@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.87_51';
+$VERSION = '1.87_52';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -919,7 +919,9 @@ sub has_inst {
             sleep 2;
         }
     } elsif ($mod eq "Module::Signature"){
-	unless ($Have_warned->{"Module::Signature"}++) {
+        if (not $CPAN::Config->{check_sigs}) {
+            # they do not want us:-(
+        } elsif (not $Have_warned->{"Module::Signature"}++) {
 	    # No point in complaining unless the user can
 	    # reasonably install and use it.
 	    if (eval { require Crypt::OpenPGP; 1 } ||
@@ -4476,25 +4478,26 @@ EOF
     File::Path::rmtree("tmp");
 
     $self->safe_chdir($packagedir);
-    if ($CPAN::META->has_inst("Module::Signature")) {
-        if (-f "SIGNATURE") {
-            $self->debug("Module::Signature is installed, verifying") if $CPAN::DEBUG;
-            my $rv = Module::Signature::verify();
-            if ($rv != Module::Signature::SIGNATURE_OK() and
-                $rv != Module::Signature::SIGNATURE_MISSING()) {
-                $CPAN::Frontend->myprint(
-                                         qq{\nSignature invalid for }.
-                                         qq{distribution file. }.
-                                         qq{Please investigate.\n\n}.
-                                         $self->as_string,
-                                         $CPAN::META->instance(
-                                                               'CPAN::Author',
-                                                               $self->cpan_userid,
-                                                              )->as_string
-                                        );
+    if ($CPAN::Config->{check_sigs}) {
+        if ($CPAN::META->has_inst("Module::Signature")) {
+            if (-f "SIGNATURE") {
+                $self->debug("Module::Signature is installed, verifying") if $CPAN::DEBUG;
+                my $rv = Module::Signature::verify();
+                if ($rv != Module::Signature::SIGNATURE_OK() and
+                    $rv != Module::Signature::SIGNATURE_MISSING()) {
+                    $CPAN::Frontend->myprint(
+                                             qq{\nSignature invalid for }.
+                                             qq{distribution file. }.
+                                             qq{Please investigate.\n\n}.
+                                             $self->as_string,
+                                             $CPAN::META->instance(
+                                                                   'CPAN::Author',
+                                                                   $self->cpan_userid,
+                                                                  )->as_string
+                                            );
 
-                my $wrap =
-                    sprintf(qq{I'd recommend removing %s. Its signature
+                    my $wrap =
+                        sprintf(qq{I'd recommend removing %s. Its signature
 is invalid. Maybe you have configured your 'urllist' with
 a bad URL. Please check this array with 'o conf urllist', and
 retry. For more information, try opening a subshell with
@@ -4502,20 +4505,22 @@ retry. For more information, try opening a subshell with
 and there run
   cpansign -v
 },
-                            $self->{localfile},
-                            $self->pretty_id,
-                           );
-                $self->{signature_verify} = CPAN::Distrostatus->new("NO");
-                $CPAN::Frontend->mywarn(Text::Wrap::wrap("","",$wrap));
-                $CPAN::Frontend->mysleep(5) if $CPAN::Frontend->can("mysleep");
+                                $self->{localfile},
+                                $self->pretty_id,
+                               );
+                    $self->{signature_verify} = CPAN::Distrostatus->new("NO");
+                    $CPAN::Frontend->mywarn(Text::Wrap::wrap("","",$wrap));
+                    $CPAN::Frontend->mysleep(5) if $CPAN::Frontend->can("mysleep");
+                } else {
+                    $self->{signature_verify} = CPAN::Distrostatus->new("YES");
+                    $self->debug("Module::Signature has verified") if $CPAN::DEBUG;
+                }
             } else {
-                $self->{signature_verify} = CPAN::Distrostatus->new("YES");
+                $CPAN::Frontend->myprint(qq{Package came without SIGNATURE\n\n});
             }
         } else {
-            $CPAN::Frontend->myprint(qq{Package came without SIGNATURE\n\n});
+            $self->debug("Module::Signature is NOT installed") if $CPAN::DEBUG;
         }
-    } else {
-	$self->debug("Module::Signature is NOT installed") if $CPAN::DEBUG;
     }
     $self->safe_chdir($builddir);
     return if $CPAN::Signal;
@@ -4852,11 +4857,13 @@ sub CHECKSUM_check_file {
 
     $sloppy ||= 0;
     $self->debug("chk_file[$chk_file]sloppy[$sloppy]") if $CPAN::DEBUG;
-    if ($CPAN::META->has_inst("Module::Signature") and Module::Signature->VERSION >= 0.26) {
-	$self->debug("Module::Signature is installed, verifying");
-	$self->SIG_check_file($chk_file);
-    } else {
-	$self->debug("Module::Signature is NOT installed");
+    if ($CPAN::Config->{check_sigs}) {
+        if ($CPAN::META->has_inst("Module::Signature") and Module::Signature->VERSION >= 0.26) {
+            $self->debug("Module::Signature is installed, verifying");
+            $self->SIG_check_file($chk_file);
+        } else {
+            $self->debug("Module::Signature is NOT installed");
+        }
     }
 
     $file = $self->{localfile};
@@ -7736,6 +7743,7 @@ defined:
                      commands when running them. Defaults to double
                      quote on Windows, single tick everywhere else;
                      can be set to space to disable quoting
+  check_sigs         if signatures should be verified
   cpan_home          local directory reserved for this package
   dontload_list      arrayref: modules in the list will not be
                      loaded by the CPAN::has_inst() routine
@@ -7882,6 +7890,9 @@ command-line F<gpg> tool installed.
 
 You will also need to be able to connect over the Internet to the public
 keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
+
+The configuration parameter check_sigs is there to turn signature
+checking on or off.
 
 =head1 EXPORT
 
