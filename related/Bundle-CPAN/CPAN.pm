@@ -1,7 +1,7 @@
 package Bundle::CPAN;
 use strict;
 use vars qw($VERSION);
-$VERSION = '1.851'; # use 3 digits to minimize confusion with the
+$VERSION = '1.852'; # use 3 digits to minimize confusion with the
                     # other CPAN.pm
 
 1;
@@ -20,8 +20,6 @@ Bundle::CPAN - Bundle to optmize the behaviour of CPAN.pm
 
 Digest::SHA
 
-Module::Signature
-
 File::Temp
 
 File::HomeDir
@@ -38,7 +36,7 @@ Bundle::libnet
 
 Term::ReadKey
 
-ILYAZ/modules/Term-ReadLine-Perl-1.0207.tar.gz
+ILYAZ/modules/Term-ReadLine-Perl-1.0302.tar.gz
 
 YAML
 

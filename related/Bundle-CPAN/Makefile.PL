@@ -126,6 +126,55 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
 
+diff::
+	svn diff | less
+
+howto-release:
+	@$(ECHO) make ci dist \&\& make release
+
+release ::
+	/usr/bin/perl -I../../release-lib -S release $(DISTVNAME).tar$(SUFFIX)
+	rm -rf $(DISTVNAME)
+
 }
 }
 
+sub dist_ci {
+  return qq{ci :
+	svn ci
+};
+}
+
+sub dist_test {
+  return q{
+# if we depend on $(DISTVNAME).tar$(SUFFIX), then the rest of the
+# Makefile breaks our intent to NOT remake dist
+disttest :
+	rm -rf $(DISTVNAME)
+	tar xvzf $(DISTVNAME).tar$(SUFFIX)
+	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
+	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
+	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
+
+distdir ::
+	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
+
+}
+}
+
+sub distdir {
+  my $self = shift;
+  my $out = $self->SUPER::distdir;
+  $out =~ s/distdir :/distdir ::/g;
+  return $out;
+}
+
+# dist_dir was the name in very old MakeMaker as of 5.005_04
+sub dist_dir {
+  my $self = shift;
+  my $out = $self->SUPER::dist_dir;
+  $out =~ s/distdir :/distdir ::/g;
+  return $out;
+}
