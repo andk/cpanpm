@@ -34,7 +34,8 @@
 2006-06-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* make signature-checking a feature that can be turned on or off and
-	which defaults to off. (requested by Adam Kennedy)
+	which defaults to off. (requested by Adam Kennedy) DONE in rev. 726 or
+	so
 
 2006-04-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

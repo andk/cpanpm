@@ -210,7 +210,7 @@ ReadLine support %s
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
-            if ($command =~ /^(make|test|install|force|notest|clean)$/) {
+            if ($command =~ /^(make|test|install|force|notest|clean|upgrade)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
             soft_chdir_with_alternatives(\@cwd);
