@@ -50,6 +50,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "ncftpget",
                              "no_proxy",
                              "pager",
+                             "password",
                              "prefer_installer",
                              "prerequisites_policy",
                              "scan_cache",
@@ -59,6 +60,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "term_is_latin",
                              "unzip",
                              "urllist",
+                             "username",
                              "wait_list",
                              "wget",
                             );
