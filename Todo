@@ -1,3 +1,19 @@
+2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	*  How do I merge the branch 1.87-install-scripts into current code base?
+
+	The problem is, I do not remember where the branch started. Is this a
+	problem? I have the branches already checked out in ../SVN-branches/.
+
+	There I find the train hackathon result was in 689 and 686 was the copy
+	that started the branch.
+
+	So I guess the merge command would have to be
+
+	svn merge -r 686:689 https://pause.perl.org:5460/svn/cpanpm/branches/1.87-install-scripts
+
+	YES, this did it and is now to be checked in as rev. 733
+
 2006-07-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* From: Adam Kennedy <adam@phase-n.com>
