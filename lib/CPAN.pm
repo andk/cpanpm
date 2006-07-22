@@ -927,7 +927,12 @@ sub has_inst {
 	    # No point in complaining unless the user can
 	    # reasonably install and use it.
 	    if (eval { require Crypt::OpenPGP; 1 } ||
-		defined $CPAN::Config->{'gpg'}) {
+		(
+                 defined $CPAN::Config->{'gpg'}
+                 &&
+                 $CPAN::Config->{'gpg'} =~ /\S/
+                )
+               ) {
 		$CPAN::Frontend->myprint(qq{
   CPAN: Module::Signature security checks disabled because Module::Signature
   not installed.  Please consider installing the Module::Signature module.
