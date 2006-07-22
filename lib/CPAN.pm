@@ -6511,7 +6511,8 @@ sub as_glimpse {
         $color_off = Term::ANSIColor::color("reset");
     }
     my $uptodateness = " ";
-    if ($self->uptodate) {
+    if ($class eq "Bundle") {
+    } elsif ($self->uptodate) {
         $uptodateness = "=";
     } elsif ($self->inst_version) {
         $uptodateness = "<";

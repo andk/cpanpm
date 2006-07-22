@@ -1,5 +1,25 @@
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* release 1.87_53
+
+	* make scripts installable when the path of the distro is given: you can
+	now 'install ANDK/keepcool-0.344'
+
+	* the m command displays one column more: an equals sign if we have this
+	version installed, a less-then sign if our installed version of the
+	module is smaller and a space if we do not have this thing installed
+
+	* fix #18438: weird dependency chain issue that is broke
+	amavisd/SpamAssassin
+
+	* fix #20168: when a user has neither Module::Signature nor gnupg, do
+	not warn them.
+
+	* patch by Matisse Enzer to support authenticating proxies
+	
+	* new command "upgrade" installs newer versions of all installed modules
+	if there are some (feature requested by Martin Sluka)
+
 	* release 1.87_52
 
 	* add support for check_sigs configuration option (turn signature
