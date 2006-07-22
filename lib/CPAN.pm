@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.87_52';
+$VERSION = '1.87_53';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -70,6 +70,7 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
              recompile
              shell
              test
+             upgrade
 	    );
 
 sub soft_chdir_with_alternatives ($);
@@ -294,6 +295,7 @@ use strict;
                                     recompile
                                     reload
                                     test
+                                    upgrade
 );
 
 package CPAN::Index;
@@ -1216,7 +1218,6 @@ Display Information $filler (ver $CPAN::VERSION)
  command  argument          description
  a,b,d,m  WORD or /REGEXP/  about authors, bundles, distributions, modules
  i        WORD or /REGEXP/  about any of the above
- r        NONE              report updatable modules
  ls       AUTHOR or GLOB    about files in the author's directory
     (with WORD being a module, bundle or author name or a distribution
     name of the form AUTHOR/DISTRIBUTION)
@@ -1233,6 +1234,7 @@ Pragmas
 
 Other
  h,?           display this menu       ! perl-code   eval a perl command
+ r             report module updates   upgrade       upgrade all modules
  o conf [opt]  set and query options   q             quit the cpan shell
  reload cpan   load CPAN.pm again      reload index  load newer indices
  autobundle    Snapshot                recent        latest CPAN uploads});
@@ -1628,6 +1630,12 @@ sub recompile {
                            # stop a package from recompiling,
                            # e.g. IO-1.12 when we have perl5.003_10
     }
+}
+
+#-> sub CPAN::Shell::upgrade ;
+sub upgrade {
+    my($self) = shift @_;
+    $self->install($self->r);
 }
 
 #-> sub CPAN::Shell::_u_r_common ;
@@ -5035,7 +5043,7 @@ sub isa_perl {
 		  (
                    \d{3}(_[0-4][0-9])?
                    |
-                   \d*[24680]\.\d+
+                   \d+\.\d+
                   )
 		  \.tar[._-]gz
 		  (?!\n)\Z
@@ -5088,7 +5096,9 @@ or
 			       $self->isa_perl,
 			       $self->called_for,
 			       $self->id);
-        sleep 5; return;
+        $self->{make} = CPAN::Distrostatus->new("NO isa perl");
+        sleep 2;
+        return;
       }
     }
     $self->get;
@@ -7085,6 +7095,11 @@ Another popular use for C<recompile> is to act as a rescue in case your
 perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
+
+=head2 upgrade
+
+The C<upgrade> command first runs an C<r> command and then installs
+the newest versions of all modules that were listed by that.
 
 =head2 mkmyconfig
 

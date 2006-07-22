@@ -228,7 +228,7 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 
 	* upgrade: new command that does nothing but
 	CPAN::Shell->install(CPAN::Shell->r)? Do not forget that we still may
-	have perl distros in the "r" list.
+	have perl distros in the "r" list. DONE in rev. 727
 
 	* DBM::Deep for a hash behind $CPAN::META. See 2005-12-28 for issues and
 	branches/1.80_56plus for a few lines that probably went in the wrong

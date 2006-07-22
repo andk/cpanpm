@@ -818,6 +818,7 @@ CONFIGURATION
                          commands when running them. Defaults to double
                          quote on Windows, single tick everywhere else;
                          can be set to space to disable quoting
+      check_sigs         if signatures should be verified
       cpan_home          local directory reserved for this package
       dontload_list      arrayref: modules in the list will not be
                          loaded by the CPAN::has_inst() routine
@@ -949,6 +950,9 @@ SECURITY
 
     You will also need to be able to connect over the Internet to the public
     keyservers, like pgp.mit.edu, and their port 11731 (the HKP protocol).
+
+    The configuration parameter check_sigs is there to turn signature
+    checking on or off.
 
 EXPORT
     Most functions in package CPAN are exported per default. The reason for
@@ -1262,9 +1266,8 @@ FAQ
 
             % PERL_MM_USE_DEFAULT=1 perl -MCPAN -e 'install My::Module'
 
-    14) I only know the usual options for
-        ExtUtils::MakeMaker(Module::Build), how do I find out the
-        corresponding options in Module::Build(ExtUtils::MakeMaker)?
+    14) How do I create a Module::Build based Build.PL derived from an
+        ExtUtils::MakeMaker focused Makefile.PL?
 
         http://search.cpan.org/search?query=Module::Build::Convert
 

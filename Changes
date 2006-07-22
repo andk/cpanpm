@@ -1,3 +1,10 @@
+2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_52
+
+	* add support for check_sigs configuration option (turn signature
+	checking on and off any time)
+
 2006-03-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_51
