@@ -5197,8 +5197,14 @@ or
         if (exists $self->{later} and length($self->{later})) {
             if ($self->unsat_prereq) {
                 push @e, $self->{later};
-            } else {
-                delete $self->{later};
+# RT ticket 18438 raises doubts if the deletion of {later} is valid.
+# YAML-0.53 triggered the later hodge-podge here, but my margin notes
+# are not sufficient to be sure if we really must/may do the delete
+# here. SO I accept the suggested patch for now. If we trigger a bug
+# again, I must go into deep contemplation about the {later} flag.
+
+#            } else {
+#                delete $self->{later};
             }
         }
 
