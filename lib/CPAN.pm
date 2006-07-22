@@ -6446,8 +6446,15 @@ sub as_glimpse {
         $color_on = Term::ANSIColor::color("green");
         $color_off = Term::ANSIColor::color("reset");
     }
-    push @m, sprintf("%-8s %s%-22s%s (%s)\n",
+    my $uptodateness = " ";
+    if ($self->uptodate) {
+        $uptodateness = "=";
+    } elsif ($self->inst_version) {
+        $uptodateness = "<";
+    }
+    push @m, sprintf("%-7s %1s %s%-22s%s (%s)\n",
                      $class,
+                     $uptodateness,
                      $color_on,
                      $self->id,
                      $color_off,

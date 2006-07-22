@@ -227,6 +227,8 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 
   color codes: green=uptodate, yellow=not uptodate, black=not installed
 
+	DONE in rev. 732
+
 	* upgrade: new command that does nothing but
 	CPAN::Shell->install(CPAN::Shell->r)? Do not forget that we still may
 	have perl distros in the "r" list. DONE in rev. 727
