@@ -1,6 +1,108 @@
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	*  How do I merge the branch 1.87-install-scripts into current code base?
+	* RT has 21 open and new tickets...
+
+	* branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	remember details. Hint: DBM::Deep promises significant memory savings
+	and in that branch we tried to see how it can be made to work for us.
+
+	* Todo: JV suggests treating build_dependencies differently
+
+	To: Johan Vromans <jvromans@squirrel.nl>
+	Cc: modules@perl.org
+	Subject: Re: Module requirements
+	X-Draft-From: ("king-2002" 44465)
+	From: andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig)
+	Gcc: nnml:sent
+	--text follows this line--
+	>>>>> On Sun, 02 Apr 2006 14:59:33 +0200, Johan Vromans <jvromans@squirrel.nl> said:
+
+		> andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig) writes:
+	 >> Would you really trust that the authors get it right? I didn't and so
+	 >> threw the two sorts of dependencies into one basket.
+
+		> Currently, there is no way to make the distinction so there is no real
+		> incentive to make the distinction correctly. This could change if a
+		> mechanism were available.
+
+	Good point.
+
+	 >> How much pain does the clobbering of the production environment
+	 >> cause you?
+
+		> The production environment is also the reference environment. If a
+		> module requires something that is not in the production environment,
+		> any additional requirements should be added very carefully. Every
+		> extension to the production environment is something extra to
+		> maintain, and I think it is a very valid argument to try to minimize
+		> this.
+
+	Very true.
+
+		> Actually, this question was triggered when I recently tried to install
+		> Bundle::CPAN. When it wanted to install a product called Spiffy I
+		> decided to hit the cancel button and investigate.
+
+	That brings me to the idea that it would be nice to add these
+	build-dependencies into ./blib/bdep or some such idf they are not
+	available. I put it on my Todo list.
+
+	-- 
+	andreas
+
+
+	* feature request by Juergen Christoffel: have time stamps on the
+	history and a history command to see them
+
+	* Bug: it seems that a user who is in /bin and has "." in the beginning
+	of the path gets ./sh as his shell from FirstTime. If we encounter . in
+	the path we should rather ignore it. But first we must verify the
+	behaviour. Reported by Slaven Rezic on behalf of Tino Schulze.
+
+	* Todo: investigate what BUGHUNTING in Tarzip means "today".
+
+	* Todo: write a test for dot-cpan/Metadata usage
+
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
+	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
+	by Andrew Strebkov makes the URL selection nicer.
+
+	* prerequisites: require perl version xxx: we should not delete that
+	information but honour it.
+
+	* RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* Locking: Linda W writes
+
+	>I'm not sure I understand the reason for the lock file
+	>placed in cpan_home.  If I have two different architectures
+	>with different build directories, I'm not sure I understand
+	>where the conflict is -- is it in storing/listing Bundles,
+	>the history file, the Metafile or the shared source?
+	
+	>I can understand private history, but the Bundles aren't
+	>updated often, the sources should be fairly static (unless
+	>new files are downloaded), The metafile would be updated about
+	>once a day (default).
+	
+	>If the build directories are separate, why would there be a
+	>need for locking more in interactive use vs. batch use?
+
+	And I promise to try out a more granular locking mechanism.
+
+	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
+	tweak FirstTime::init() interface to accept optional @sections
+
+	put various interactive Qs into groups of conditionals: if ( !@sections
+	     or grep /$this_sect_name/, @sections)
+
+	candidate sections: progs - external prog selection make - all make
+	options
+
+	* hr ================ no todos below this line ================ /hr
+
+	* How do I merge the branch 1.87-install-scripts into current code base?
 
 	The problem is, I do not remember where the branch started. Is this a
 	problem? I have the branches already checked out in ../SVN-branches/.
@@ -13,6 +115,9 @@
 	svn merge -r 686:689 https://pause.perl.org:5460/svn/cpanpm/branches/1.87-install-scripts
 
 	YES, this did it and is now to be checked in as rev. 733
+
+	'install ANDK/keepcool-0.344' works now like a charm, the stored script
+	name is even 'keepcool' and not 'keepcool-0.344'.
 
 2006-07-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -74,7 +179,7 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 1.87-dbmdeep-hackery/
 1.87-install-scripts/
 
-	Merge in 1.87-install-scripts without much further ado.
+	Merge in 1.87-install-scripts without much further ado. DONE in rev. 733
 
 	Try to recall how broken 1.87-dbmdeep-hackery was. It was very broken
 	but I do not remember details.
@@ -84,51 +189,6 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 	720
 
 2006-04-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: JV suggests treating build_dependencies differently
-
-	To: Johan Vromans <jvromans@squirrel.nl>
-	Cc: modules@perl.org
-	Subject: Re: Module requirements
-	X-Draft-From: ("king-2002" 44465)
-	From: andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig)
-	Gcc: nnml:sent
-	--text follows this line--
-	>>>>> On Sun, 02 Apr 2006 14:59:33 +0200, Johan Vromans <jvromans@squirrel.nl> said:
-
-		> andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig) writes:
-	 >> Would you really trust that the authors get it right? I didn't and so
-	 >> threw the two sorts of dependencies into one basket.
-
-		> Currently, there is no way to make the distinction so there is no real
-		> incentive to make the distinction correctly. This could change if a
-		> mechanism were available.
-
-	Good point.
-
-	 >> How much pain does the clobbering of the production environment
-	 >> cause you?
-
-		> The production environment is also the reference environment. If a
-		> module requires something that is not in the production environment,
-		> any additional requirements should be added very carefully. Every
-		> extension to the production environment is something extra to
-		> maintain, and I think it is a very valid argument to try to minimize
-		> this.
-
-	Very true.
-
-		> Actually, this question was triggered when I recently tried to install
-		> Bundle::CPAN. When it wanted to install a product called Spiffy I
-		> decided to hit the cancel button and investigate.
-
-	That brings me to the idea that it would be nice to add these
-	build-dependencies into ./blib/bdep or some such idf they are not
-	available. I put it on my Todo list.
-
-	-- 
-	andreas
-
 
 2006-03-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -141,22 +201,13 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 	further down; to catch the isa_perl issue, we must instantiate a
 	Distrostatus object instead of the bare "return" in line 5077. And test
 	thoroughly what happens the second time around and later when the user
-	finally says "force";
-
-	* feature request by Juergen Christoffel: have time stamps on the
-	history and a history command to see them
-
-2006-02-28  Andreas J Koenig  <akoenig@cellular.de>
-
-	* Bug: it seems that a user who is in /bin and has "." in the beginning
-	of the path gets ./sh as his shell from FirstTime. If we encounter . in
-	the path we should rather ignore it. But first we must verify the
-	behaviour. Reported by Slaven Rezic on behalf of Tino Schulze.
+	finally says "force"; DONE in rev. 727
 
 2006-02-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* dslip status shows only 4 fields instead of 5. For license infos from
-	META.yml see http://www.thepierianspring.org/perl/meta/.
+	META.yml see http://www.thepierianspring.org/perl/meta/. DONE in rev.
+	669
 
 2006-02-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -171,11 +222,7 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 
 	When we succeed with this, make a version that runs within the core of
 	perl, maybe filter out just those tests that do not require additional
-	resources.
-
-	* Todo: investigate what BUGHUNTING in Tarzip means "today".
-
-	* Todo: write a test for dot-cpan/Metadata usage
+	resources. REJECT: provides no extra utility
 
 	* To: Tyler MacDonald <tyler@yi.org>
 
@@ -205,34 +252,6 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 	I don't know how I will fix that. Suggestions welcome. I put it into my
 	Todo file.
 	
-	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
-	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
-	by Andrew Strebkov makes the URL selection nicer.
-
-	* prerequisites: require perl version xxx: we should not delete that
-	information but honour it.
-
-	* RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
-
-	* Locking: Linda W writes
-
-	>I'm not sure I understand the reason for the lock file
-	>placed in cpan_home.  If I have two different architectures
-	>with different build directories, I'm not sure I understand
-	>where the conflict is -- is it in storing/listing Bundles,
-	>the history file, the Metafile or the shared source?
-	
-	>I can understand private history, but the Bundles aren't
-	>updated often, the sources should be fairly static (unless
-	>new files are downloaded), The metafile would be updated about
-	>once a day (default).
-	
-	>If the build directories are separate, why would there be a
-	>need for locking more in interactive use vs. batch use?
-
-	And I promise to try out a more granular locking mechanism.
-
 	* Feature request: when asking 'm /svn::notify/', then I would like to
 	see in the list which of the modules are installed locally. Was that
 	what Admin was doing?
@@ -261,15 +280,6 @@ Date: Tue, 25 Apr 2006 22:17:35 -0700
 
 	* Bug: installing scripts without modules? How does it work? How
 	should it work? getting the latest version ad-hoc?
-
-	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
-	tweak FirstTime::init() interface to accept optional @sections
-
-	put various interactive Qs into groups of conditionals: if ( !@sections
-	     or grep /$this_sect_name/, @sections)
-
-	candidate sections: progs - external prog selection make - all make
-	options
 
 	* hr ================ no todos below this line ================ /hr
 
