@@ -249,6 +249,10 @@ DESCRIPTION
     is in turn depending on binary compatibility (so you cannot run CPAN
     commands), then you should try the CPAN::Nox module for recovery.
 
+  upgrade
+    The "upgrade" command first runs an "r" command and then installs the
+    newest versions of all modules that were listed by that.
+
   mkmyconfig
     mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
     directory so that you can save your own preferences instead of the
