@@ -1,3 +1,8 @@
+2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	get rid of the term_is_latin variable.
+
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* RT has 21 open and new tickets...
