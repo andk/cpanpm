@@ -5372,7 +5372,6 @@ or
     } else {
         $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
     }
-    warn "system[$system]";
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $self->{make} = CPAN::Distrostatus->new("YES");
