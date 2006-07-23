@@ -284,6 +284,8 @@ Shall we use it as the general CPAN build and cache directory?
 
 	# warn "Warning: configured $path does not exist\n" unless -e $path;
 	# $path = "";
+      } elsif ($path eq ' ') {
+          # preserve disabled programs
       } else {
 	$path = '';
       }
