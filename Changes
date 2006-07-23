@@ -9,8 +9,8 @@
 	version installed, a less-then sign if our installed version of the
 	module is smaller and a space if we do not have this thing installed
 
-	* fix #18438: weird dependency chain issue that is broke
-	amavisd/SpamAssassin
+	* fix #18438: weird dependency chain issue that broke
+	amavis/SpamAssassin
 
 	* fix #20168: when a user has neither Module::Signature nor gnupg, do
 	not warn them.
@@ -18,7 +18,7 @@
 	* patch by Matisse Enzer to support authenticating proxies
 	
 	* new command "upgrade" installs newer versions of all installed modules
-	if there are some (feature requested by Martin Sluka)
+	if there are any (feature requested by Martin Sluka)
 
 	* release 1.87_52
 
