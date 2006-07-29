@@ -297,6 +297,9 @@ E:Wrote bundle file
 P:b
 E:(?s:Bundle::CpanTestDummies.*?items found)
 ########
+P:b
+E:(?s:Bundle::Snapshot\S+\s+\(N/A\))
+########
 P:b Bundle::CpanTestDummies
 E:\sCONTAINS.+?CPAN::Test::Dummy::Perl5::Make.+?CPAN::Test::Dummy::Perl5::Make::Zip
 R:Archive::Zip
@@ -420,6 +423,12 @@ E:(All modules are up to date|installed modules|Fcntl)
 ########
 P:u /--/
 E:No modules found for
+########
+P:m _NEXISTE_::_NEXISTE_
+E:Defines nothing
+########
+P:m /_NEXISTE_/
+E:Contact Author J. Cpantest Hietaniemi
 ########
 P:notest
 E:Pragma.*?method

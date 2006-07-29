@@ -3937,8 +3937,8 @@ sub ro {
 
 sub cpan_userid {
     my $self = shift;
-    my $ro = $self->ro or return;
-    return $ro->{CPAN_USERID};
+    my $ro = $self->ro or return "N/A"; # N/A for bundles found locally
+    return $ro->{CPAN_USERID} || "N/A";
 }
 
 sub id { shift->{ID}; }
@@ -6597,7 +6597,10 @@ sub as_glimpse {
                      $color_on,
                      $self->id,
                      $color_off,
-		     $self->distribution ? $self->distribution->pretty_id : $self->id,
+		     ($self->distribution ?
+                      $self->distribution->pretty_id :
+                      $self->cpan_userid
+                     ),
                     );
     join "", @m;
 }
@@ -7669,7 +7672,13 @@ internal and thus subject to change without notice.
 
 =item CPAN::Module::as_glimpse()
 
-Returns a one-line description of the module
+Returns a one-line description of the module in four columns: The
+first column contains the word C<Module>, the second column consists
+of one character: an equals sign if this module is already installed
+and uptodate, a less-than sign if this module is installed but can be
+upgraded, and a space if the module is not installed. The third column
+is the name of the module and the fourth column gives maintainer or
+distribution information.
 
 =item CPAN::Module::as_string()
 

@@ -55,4 +55,26 @@ $CPAN::Modulelist::data = [
 'JHI',
 '4'
 ],
+[
+'_NEXISTE_',
+'S',
+'d',
+'c',
+'f',
+'?',
+'Defines exists and not exists',
+'JHI',
+'4'
+],
+[
+'_NEXISTE_::_NEXISTE_',
+'S',
+'d',
+'c',
+'f',
+'?',
+'Defines nothing, does not even exist',
+'JHI',
+'4'
+],
 ];

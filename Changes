@@ -1,3 +1,12 @@
+2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_55
+
+	* improve the heuristics when parsing PREREQ for scripts.
+
+	* document CPAN::Module::as_glimpse changes and fix the case where we
+	have no author or no distro and added some tests for these cases.
+
 2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_54
