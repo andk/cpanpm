@@ -1,6 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN;
-$VERSION = '1.87_54';
+$VERSION = '1.87_55';
 $VERSION = eval $VERSION;
 use strict;
 
@@ -297,6 +297,7 @@ use strict;
                                     recent
                                     recompile
                                     reload
+                                    scripts
                                     test
                                     upgrade
 );
@@ -1637,6 +1638,67 @@ sub recompile {
 	$CPAN::Signal = 0; # it's tempting to reset Signal, so we can
                            # stop a package from recompiling,
                            # e.g. IO-1.12 when we have perl5.003_10
+    }
+}
+
+#-> sub CPAN::Shell::scripts ;
+sub scripts {
+    my($self, $arg) = @_;
+    $CPAN::Frontend->mywarn(">>>> experimental command, currently unsupported <<<<\n\n");
+
+    require HTML::LinkExtor;
+    require Sort::Versions;
+    require List::Util;
+    my $p = HTML::LinkExtor->new();
+    my $indexfile = "/home/ftp/pub/PAUSE/scripts/new/index.html";
+    unless (-f $indexfile) {
+        $CPAN::Frontend->mydie("found no indexfile[$indexfile]\n");
+    }
+    $p->parse_file($indexfile);
+    my @hrefs;
+    my $qrarg;
+    if ($arg =~ s|^/(.+)/$|$1|) {
+        $qrarg = qr/$arg/;
+    }
+    for my $l ($p->links) {
+        my $tag = shift @$l;
+        next unless $tag eq "a";
+        my %att = @$l;
+        my $href = $att{href};
+        next unless $href =~ s|^\.\./authors/id/./../||;
+        if ($arg) {
+            if ($qrarg) {
+                if ($href =~ $qrarg) {
+                    push @hrefs, $href;
+                }
+            } else {
+                if ($href =~ /\Q$arg\E/) {
+                    push @hrefs, $href;
+                }
+            }
+        } else {
+            push @hrefs, $href;
+        }
+    }
+    # now filter for the latest version if there is more than one of a name
+    my %stems;
+    for (sort @hrefs) {
+        my $href = $_;
+        s/-v?\d.*//;
+        my $stem = $_;
+        $stems{$stem} ||= [];
+        push @{$stems{$stem}}, $href;
+    }
+    for (sort keys %stems) {
+        my $highest;
+        if (@{$stems{$_}} > 1) {
+            $highest = List::Util::reduce {
+                Sort::Versions::versioncmp($a,$b) > 0 ? $a : $b
+              } @{$stems{$_}};
+        } else {
+            $highest = $stems{$_}[0];
+        }
+        $CPAN::Frontend->myprint("$highest\n");
     }
 }
 
@@ -4682,11 +4744,20 @@ We\'ll try to build it with that Makefile then.
 		}
 		$fh->close;
 
+                for ($name) {
+		    s{.*<}{}; # strip X<...>
+		    s{>.*}{};
+                }
 		chomp $prereq;
+                $prereq = join " ", split /\s+/, $prereq;
 		my($PREREQ_PM) = join("\n", map {
 		    s{.*<}{}; # strip X<...>
 		    s{>.*}{};
-		    " "x28 . "'$_' => 0,";
+                    if (/[\s\'\"]/) { # prose?
+                    } else {
+                        s/[^\w:]$//; # period?
+                        " "x28 . "'$_' => 0,";
+                    }
 		} split /\s*,\s*/, $prereq);
 
 		$script = "

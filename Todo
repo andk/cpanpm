@@ -8,7 +8,8 @@
 	and jarkko
 
 	* Todo: add a command to list all scripts and use it to test-install all
-	of them to get a good coverage for the new 'install <script>' support
+	of them to get a good coverage for the new 'install <script>' support.
+	DONE in revision 746
 
 2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
