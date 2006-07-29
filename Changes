@@ -1,12 +1,21 @@
+2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_54
+
+	* fix #18165: new config option term_ornaments
+
+	* fix #20272: FirstTime::init did not preserve the space that signifies
+	"disabled program"
+
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_53
 
 	* make scripts installable when the path of the distro is given: you can
-	now 'install ANDK/keepcool-0.344'
+	now 'install ANDK/keepcool-0.344' and it is stored as 'keepcool'.
 
 	* the m command displays one column more: an equals sign if we have this
-	version installed, a less-then sign if our installed version of the
+	version installed, a less-than sign if our installed version of the
 	module is smaller and a space if we do not have this thing installed
 
 	* fix #18438: weird dependency chain issue that broke

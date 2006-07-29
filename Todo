@@ -1,3 +1,15 @@
+2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* As #20754 I requested bzip2 support from CPANPLUS. I should write the
+	code for mldistwatch so that I just have to turn on the indexing of bz2
+	files. DONE in rev 815 of the PAUSE repository.
+
+	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
+	and jarkko
+
+	* Todo: add a command to list all scripts and use it to test-install all
+	of them to get a good coverage for the new 'install <script>' support
+
 2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
