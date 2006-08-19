@@ -568,7 +568,13 @@ DESCRIPTION
         internal and thus subject to change without notice.
 
     CPAN::Module::as_glimpse()
-        Returns a one-line description of the module
+        Returns a one-line description of the module in four columns: The
+        first column contains the word "Module", the second column consists
+        of one character: an equals sign if this module is already installed
+        and uptodate, a less-than sign if this module is installed but can
+        be upgraded, and a space if the module is not installed. The third
+        column is the name of the module and the fourth column gives
+        maintainer or distribution information.
 
     CPAN::Module::as_string()
         Returns a multi-line description of the module

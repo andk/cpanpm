@@ -13,18 +13,18 @@
 
 2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	* Todo (E1): use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
 	get rid of the term_is_latin variable.
 
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* RT has 21 open and new tickets...
+	* RT (M5) has 21 open and new tickets...
 
-	* branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	* branch 1.87-dbmdeep-hackery revive (H4)? It was very broken but I do not
 	remember details. Hint: DBM::Deep promises significant memory savings
 	and in that branch we tried to see how it can be made to work for us.
 
-	* Todo: JV suggests treating build_dependencies differently
+	* Todo (H3): JV suggests treating build_dependencies differently
 
 	To: Johan Vromans <jvromans@squirrel.nl>
 	Cc: modules@perl.org
@@ -69,29 +69,30 @@
 	andreas
 
 
-	* feature request by Juergen Christoffel: have time stamps on the
+	* feature request by Juergen Christoffel (M3): have time stamps on the
 	history and a history command to see them
 
-	* Bug: it seems that a user who is in /bin and has "." in the beginning
-	of the path gets ./sh as his shell from FirstTime. If we encounter . in
-	the path we should rather ignore it. But first we must verify the
-	behaviour. Reported by Slaven Rezic on behalf of Tino Schulze.
+	* Bug (E4): it seems that a user who is in /bin and has "." in the
+	beginning of the path gets ./sh as his shell from FirstTime. If we
+	encounter . in the path we should rather ignore it. But first we must
+	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
+	Schulze.
 
-	* Todo: investigate what BUGHUNTING in Tarzip means "today".
+	* Todo (E4): investigate what BUGHUNTING in Tarzip means "today".
 
-	* Todo: write a test for dot-cpan/Metadata usage
+	* Todo (E3): write a test for dot-cpan/Metadata usage
 
-	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm and
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
 	by Andrew Strebkov makes the URL selection nicer.
 
-	* prerequisites: require perl version xxx: we should not delete that
+	* prerequisites (E3): require perl version xxx: we should not delete that
 	information but honour it.
 
-	* RT 17353: Flag outdated CPAN sites and move them to the end of the
+	* RT 17353 (M3): Flag outdated CPAN sites and move them to the end of the
 	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
-	* Locking: Linda W writes
+	* Locking (H3): Linda W writes
 
 	>I'm not sure I understand the reason for the lock file
 	>placed in cpan_home.  If I have two different architectures
@@ -109,8 +110,8 @@
 
 	And I promise to try out a more granular locking mechanism.
 
-	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
-	tweak FirstTime::init() interface to accept optional @sections
+	* Jim Cromie suggests (H4): tweak shell to allow cpan> o conf init
+	@sections tweak FirstTime::init() interface to accept optional @sections
 
 	put various interactive Qs into groups of conditionals: if ( !@sections
 	     or grep /$this_sect_name/, @sections)
@@ -1320,7 +1321,16 @@ geographic selection.
 	Silva <rujith.desilva@ps.net>, who wants to run 'sudo make install'
 	instead of 'make install'. (Fixing this is delayed, because it
 	interacts with Make.pm)
+
+
+	E=Easy
+	M=Middle
+	H=Hard
+	1 = unimportant
+	5 = important
 	
+	
+
 	Local Variables:
 	mode: change-log
 	change-log-default-name: "Todo"
