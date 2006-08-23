@@ -7060,7 +7060,7 @@ Batch mode:
   install $distro;                                # same thing
   CPAN::Shell->install($distro);                  # same thing
   CPAN::Shell->expandany($distro)->install;       # same thing
-  CPAN::Shell->expand("Module",$distro)->install; # same thing
+  CPAN::Shell->expand("Distribution",$distro)->install; # same thing
 
 =head1 STATUS
 
@@ -7597,6 +7597,8 @@ yet been run, it will be run first. A C<make test> will be issued in
 any case and if this fails, the install will be canceled. The
 cancellation can be avoided by letting C<force> run the C<install> for
 you.
+
+Note that install() gives no meaningful return value. See uptodate().
 
 =item CPAN::Distribution::isa_perl()
 
