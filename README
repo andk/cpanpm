@@ -26,7 +26,7 @@ SYNOPSIS
       install $distro;                                # same thing
       CPAN::Shell->install($distro);                  # same thing
       CPAN::Shell->expandany($distro)->install;       # same thing
-      CPAN::Shell->expand("Module",$distro)->install; # same thing
+      CPAN::Shell->expand("Distribution",$distro)->install; # same thing
 
 STATUS
     This module will eventually be replaced by CPANPLUS. CPANPLUS is kind of
@@ -505,6 +505,9 @@ DESCRIPTION
         in any case and if this fails, the install will be canceled. The
         cancellation can be avoided by letting "force" run the "install" for
         you.
+
+        Note that install() gives no meaningful return value. See
+        uptodate().
 
     CPAN::Distribution::isa_perl()
         Returns 1 if this distribution file seems to be a perl distribution.
