@@ -1,11 +1,19 @@
+2006-08-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_56
+
+	* Tiny documentation improvements
+
+	* Fix by David Golden to suppress warnings when using term_ornaments
+
 2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_55
 
-	* improve the heuristics when parsing PREREQ for scripts.
+	* improve the heuristics when parsing PREREQ for scripts
 
 	* document CPAN::Module::as_glimpse changes and fix the case where we
-	have no author or no distro and added some tests for these cases.
+	have no author or no distro and added some tests for these cases
 
 2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -21,7 +29,7 @@
 	* release 1.87_53
 
 	* make scripts installable when the path of the distro is given: you can
-	now 'install ANDK/keepcool-0.344' and it is stored as 'keepcool'.
+	now 'install ANDK/keepcool-0.344' and it is stored as 'keepcool'
 
 	* the m command displays one column more: an equals sign if we have this
 	version installed, a less-than sign if our installed version of the
@@ -31,7 +39,7 @@
 	amavis/SpamAssassin
 
 	* fix #20168: when a user has neither Module::Signature nor gnupg, do
-	not warn them.
+	not warn them
 
 	* patch by Matisse Enzer to support authenticating proxies
 	

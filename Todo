@@ -1,3 +1,8 @@
+2006-08-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: integrate branch
+	https://pause.perl.org:5460/svn/cpanpm/branches/dagolden-cpan-reporter
+
 2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* As #20754 I requested bzip2 support from CPANPLUS. I should write the
