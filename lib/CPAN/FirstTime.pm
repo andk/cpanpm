@@ -251,6 +251,17 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{check_sigs} = ($ans =~ /^y/i ? 1 : 0);
 
     #
+    # CPAN::Reporter
+    #
+    $CPAN::Frontend->myprint($prompts{test_report_intro});
+
+    defined($default = $CPAN::Config->{test_report}) or
+        $default = 0;
+    $ans = prompt($prompts{test_report},
+                  ($default ? 'yes' : 'no'));
+    $CPAN::Config->{test_report} = ($ans =~ /^y/i ? 1 : 0);
+
+    #
     # External programs
     #
 
@@ -851,6 +862,29 @@ checks will be performed at all.
 check_sigs =>
 qq{Always try to check and verify signatures if a SIGNATURE file is in the package
 and Module::Signature is installed (yes/no)?},
+
+test_report_intro =>
+qq{
+
+The goal of the CPAN Testers project (http://testers.cpan.org/) is to
+test as many CPAN packages as possible on as many platforms as
+possible.  This provides valuable feedback to module authors and
+potential users to identify bugs or platform compatibility issues and
+improves the overall quality and value of CPAN.
+
+One way you can contribute is to send test results for each module
+that you install.  If you install the CPAN::Reporter module, you have
+the option to automatically generate and email test reports to CPAN
+Testers whenever you run tests on a CPAN package.
+
+See the CPAN::Reporter documentation for additional details and 
+configuration settings.  If your firewall blocks outgoing email, 
+you will need to configure CPAN::Reporter before sending reports.
+
+},
+
+test_report =>
+qq{Email test reports if CPAN::Reporter is installed (yes/no)?},
 
 external_progs => qq{
 

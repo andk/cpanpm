@@ -5774,7 +5774,14 @@ sub test {
     } else {
         $system = join " ", $self->_make_command(), "test";
     }
-    if (system($system) == 0) {
+    my $tests_ok;
+    if ( $CPAN::Config->{test_report} && 
+         $CPAN::META->has_inst("CPAN::Reporter") ) {
+            $tests_ok = CPAN::Reporter::test($self, $system);
+    } else {
+            $tests_ok = system($system) == 0;
+    }
+    if ( $tests_ok ) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $CPAN::META->is_tested($self->{'build_dir'});
 	 $self->{make_test} = CPAN::Distrostatus->new("YES");
@@ -8018,6 +8025,7 @@ defined:
   tar                location of external program tar
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
+  test_report        email test reports (if CPAN::Reporter is installed)
   unzip              location of external program unzip
   urllist	     arrayref to nearby CPAN sites (or equivalent locations)
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
