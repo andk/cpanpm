@@ -8054,7 +8054,7 @@ works like the corresponding perl commands.
 
 =back
 
-=head2 Not on config variable getcwd
+=head2 Note on config variable getcwd
 
 CPAN.pm changes the current working directory often and needs to
 determine its own current working directory. Per default it uses
@@ -8368,7 +8368,7 @@ not using the private area.
 
 How to get a package, unwrap it, and make a change before building it?
 
-  look Sybase::Sybperl
+Have a look at the C<look> (!) command.
 
 =item 7)
 
@@ -8464,11 +8464,14 @@ decent command.
 
 How do I install a "DEVELOPER RELEASE" of a module?
 
-By default, CPAN will install the latest non-developer release of a module.
-If you want to install a dev release, you have to specify a partial path to
-the tarball you wish to install, like so:
+By default, CPAN will install the latest non-developer release of a
+module. If you want to install a dev release, you have to specify the
+partial path starting with the author id to the tarball you wish to
+install, like so:
 
     cpan> install KWILLIAMS/Module-Build-0.27_07.tar.gz
+
+Note that you can use the C<ls> command to get this path listed.
 
 =item 13)
 
