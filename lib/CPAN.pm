@@ -1528,8 +1528,18 @@ sub reload {
         my $redef = 0;
         chdir $CPAN::iCwd if $CPAN::iCwd; # may fail
         my $failed;
-      MFILE: for my $f (qw(CPAN.pm CPAN/HandleConfig.pm CPAN/FirstTime.pm CPAN/Tarzip.pm
-                      CPAN/Debug.pm CPAN/Version.pm)) {
+        my @relo = (
+                    "CPAN.pm",
+                    "CPAN/HandleConfig.pm",
+                    "CPAN/FirstTime.pm",
+                    "CPAN/Tarzip.pm",
+                    "CPAN/Debug.pm",
+                    "CPAN/Version.pm",
+                   );
+        if ($CPAN::Config->{test_report}) {
+            push @relo, "CPAN/Reporter.pm";
+        }
+      MFILE: for my $f (@relo) {
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
             $self->reload_this($f) or $failed++;
         }
