@@ -1,3 +1,9 @@
+2006-08-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_57
+
+	* Added by David Golden: support for CPAN::Reporter.
+
 2006-08-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_56

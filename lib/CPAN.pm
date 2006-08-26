@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.87_56';
+$CPAN::VERSION = '1.87_57';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1669,7 +1669,7 @@ sub scripts {
     my @hrefs;
     my $qrarg;
     if ($arg =~ s|^/(.+)/$|$1|) {
-        $qrarg = qr/$arg/;
+        $qrarg = eval 'qr/$arg/'; # hide construct from 5.004
     }
     for my $l ($p->links) {
         my $tag = shift @$l;
