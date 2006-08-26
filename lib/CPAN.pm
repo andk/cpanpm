@@ -1,8 +1,8 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
-package CPAN;
-$VERSION = '1.87_56';
-$VERSION = eval $VERSION;
 use strict;
+package CPAN;
+$CPAN::VERSION = '1.87_56';
+$CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
 use CPAN::Version;
