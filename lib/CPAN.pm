@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.87_57';
+$CPAN::VERSION = '1.87_58';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -6925,6 +6925,7 @@ sub test   {
 #-> sub CPAN::Module::uptodate ;
 sub uptodate {
     my($self) = @_;
+    local($_); # protect against a bug in MakeMaker 6.17
     my($latest) = $self->cpan_version;
     $latest ||= 0;
     my($inst_file) = $self->inst_file;
