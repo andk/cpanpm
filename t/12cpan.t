@@ -24,13 +24,13 @@ require CPAN;
 }
 {
     my $rdep = CPAN::Exception::RecursiveDependency->new([qw(foo bar baz foo)]);
-    like $rdep, qr/foo.+=>.+bar.+=>.+baz.+=>.+foo/s;
+    like $rdep, qr/foo.+=>.+bar.+=>.+baz.+=>.+foo/s, "recursive dependency detected";
 }
 {
     my $a = CPAN::Shell->expand("Module",
                                 "CPAN::Test::Dummy::Perl5::Make"
                                )->distribution->author->as_string;
-    like $a, qr/Andreas/;
+    like $a, qr/Andreas/, "found Andreas in CPAN::Test::Dummy::Perl5::Make";
 }
 {
     no strict;
@@ -46,7 +46,7 @@ require CPAN;
     $_ = "Fcntl";
     my $m = CPAN::Shell->expand(Module => $_);
     $m->uptodate;
-    is($_,"Fcntl");
+    is($_,"Fcntl","\$_ is properly localized");
 }
 # Local Variables:
 # mode: cperl

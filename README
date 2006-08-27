@@ -874,6 +874,7 @@ CONFIGURATION
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
+      test_report        email test reports (if CPAN::Reporter is installed)
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
@@ -901,7 +902,7 @@ CONFIGURATION
     "o conf <list option> [unshift|push|splice] <list>"
       works like the corresponding perl commands.
 
-  Not on config variable getcwd
+  Note on config variable getcwd
     CPAN.pm changes the current working directory often and needs to
     determine its own current working directory. Per default it uses
     Cwd::cwd but if this doesn't work on your system for some reason,
@@ -1178,7 +1179,7 @@ FAQ
     6)  How to get a package, unwrap it, and make a change before building
         it?
 
-          look Sybase::Sybperl
+        Have a look at the "look" (!) command.
 
     7)  I installed a Bundle and had a couple of fails. When I retried,
         everything resolved nicely. Can this be fixed to work on first try?
@@ -1262,10 +1263,13 @@ FAQ
     12) How do I install a "DEVELOPER RELEASE" of a module?
 
         By default, CPAN will install the latest non-developer release of a
-        module. If you want to install a dev release, you have to specify a
-        partial path to the tarball you wish to install, like so:
+        module. If you want to install a dev release, you have to specify
+        the partial path starting with the author id to the tarball you wish
+        to install, like so:
 
             cpan> install KWILLIAMS/Module-Build-0.27_07.tar.gz
+
+        Note that you can use the "ls" command to get this path listed.
 
     13) How do I install a module and all its dependencies from the
         commandline, without being prompted for anything, despite my CPAN
