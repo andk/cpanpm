@@ -1,3 +1,8 @@
+2006-08-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Address #18196 once again because people have still MakeMaker < 6.18
+	installed.
+
 2006-08-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_57
