@@ -4446,7 +4446,11 @@ sub uptodate {
     my $c;
     foreach $c ($self->containsmods) {
         my $obj = CPAN::Shell->expandany($c);
-        return 0 unless $obj->uptodate;
+        unless ($obj->uptodate){
+            my $id = $self->pretty_id;
+            $self->debug("$id not uptodate due to $c") if $CPAN::DEBUG;
+            return 0;
+        }
     }
     return 1;
 }
@@ -6978,6 +6982,9 @@ sub inst_file {
     my($dir,@packpath);
     @packpath = split /::/, $self->{ID};
     $packpath[-1] .= ".pm";
+    if (@packpath == 1 && $packpath[0] eq "readline.pm") {
+        unshift @packpath, "Term", "ReadLine"; # historical reasons
+    }
     foreach $dir (@INC) {
 	my $pmfile = File::Spec->catfile($dir,@packpath);
 	if (-f $pmfile){
