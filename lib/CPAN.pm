@@ -1411,8 +1411,9 @@ sub i {
 
 #-> sub CPAN::Shell::o ;
 
-# CPAN::Shell::o and CPAN::Config::edit are closely related. 'o conf'
-# should have been called set and 'o debug' maybe 'set debug'
+# CPAN::Shell::o and CPAN::HandleConfig::edit are closely related. 'o
+# conf' calls through to CPAN::HandleConfig::edit. 'o conf' should
+# have been called 'set' and 'o debug' maybe 'set debug' or 'debug'
 sub o {
     my($self,$o_type,@o_what) = @_;
     $DB::single = 1;

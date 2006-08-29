@@ -64,16 +64,23 @@ sub init {
     # Files, directories
     #
 
-    print $prompts{manual_config};
+    unless ($matcher) {
+        print $prompts{manual_config};
+    }
 
     my $manual_conf;
 
     local *_real_prompt = \&ExtUtils::MakeMaker::prompt;
     if ( $args{autoconfig} ) {
         $manual_conf = "no";
+    } elsif ($matcher) {
+        $manual_conf = "yes";
     } else {
-        $manual_conf = prompt("Are you ready for manual configuration?", "yes");
+        my $_conf = prompt("Would you like me to configure as much as possible ".
+                           "automatically?", "yes");
+        $manual_conf = ($_conf and $_conf =~ /^y/i) ? "no" : "yes";
     }
+    CPAN->debug("manual_conf[$manual_conf]") if $CPAN::DEBUG;
     my $fastread;
     {
       if ($manual_conf =~ /^y/i) {
@@ -100,55 +107,61 @@ sub init {
     $CPAN::Frontend->myprint($prompts{config_intro})
       if !$matcher or 'config_intro' =~ /$matcher/;
 
-    my $cpan_home = $CPAN::Config->{cpan_home}
-	|| File::Spec->catdir($ENV{HOME}, ".cpan");
+    if (!$matcher or 'cpan_home' =~ /$matcher/) {
+        my $cpan_home = $CPAN::Config->{cpan_home}
+            || File::Spec->catdir($ENV{HOME}, ".cpan");
 
-    if (-d $cpan_home) {
-	if (!$matcher or 'config_intro' =~ /$matcher/) {
-	    $CPAN::Frontend->myprint(qq{
+        if (-d $cpan_home) {
+            if (!$matcher or 'config_intro' =~ /$matcher/) {
+                $CPAN::Frontend->myprint(qq{
 
 I see you already have a  directory
     $cpan_home
 Shall we use it as the general CPAN build and cache directory?
 
 });
-	}
-    } else {
-	# no cpan-home, must prompt and get one
-	$CPAN::Frontend->myprint($prompts{cpan_home_where});
+            }
+        } else {
+            # no cpan-home, must prompt and get one
+            $CPAN::Frontend->myprint($prompts{cpan_home_where});
+        }
+
+        $default = $cpan_home;
+        while ($ans = prompt("CPAN build and cache directory?",$default)) {
+            unless (File::Spec->file_name_is_absolute($ans)) {
+                require Cwd;
+                my $cwd = Cwd::cwd();
+                my $absans = File::Spec->catdir($cwd,$ans);
+                warn "The path '$ans' is not an absolute path. Please specify an absolute path\n";
+                $default = $absans;
+                next;
+            }
+            eval { File::Path::mkpath($ans); }; # dies if it can't
+            if ($@) {
+                warn "Couldn't create directory $ans.\nPlease retry.\n";
+                next;
+            }
+            if (-d $ans && -w _) {
+                last;
+            } else {
+                warn "Couldn't find directory $ans\n"
+                    . "or directory is not writable. Please retry.\n";
+            }
+        }
+        $CPAN::Config->{cpan_home} = $ans;
     }
 
-    $default = $cpan_home;
-    while ($ans = prompt("CPAN build and cache directory?",$default)) {
-      unless (File::Spec->file_name_is_absolute($ans)) {
-        require Cwd;
-        my $cwd = Cwd::cwd();
-        my $absans = File::Spec->catdir($cwd,$ans);
-        warn "The path '$ans' is not an absolute path. Please specify an absolute path\n";
-        $default = $absans;
-        next;
-      }
-      eval { File::Path::mkpath($ans); }; # dies if it can't
-      if ($@) {
-	warn "Couldn't create directory $ans.\nPlease retry.\n";
-	next;
-      }
-      if (-d $ans && -w _) {
-	last;
-      } else {
-	warn "Couldn't find directory $ans\n"
-		. "or directory is not writable. Please retry.\n";
-      }
+    if (!$matcher or 'keep_source_where' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{keep_source_where});
+
+        $CPAN::Config->{keep_source_where}
+            = File::Spec->catdir($CPAN::Config->{cpan_home},"sources");
     }
-    $CPAN::Config->{cpan_home} = $ans;
 
-    $CPAN::Frontend->myprint($prompts{keep_source_where});
-
-    $CPAN::Config->{keep_source_where}
-	= File::Spec->catdir($CPAN::Config->{cpan_home},"sources");
-
-    $CPAN::Config->{build_dir}
-	= File::Spec->catdir($CPAN::Config->{cpan_home},"build");
+    if (!$matcher or 'build_dir' =~ /$matcher/) {
+        $CPAN::Config->{build_dir}
+            = File::Spec->catdir($CPAN::Config->{cpan_home},"build");
+    }
 
     #
     # Cache size, Index expire
@@ -164,7 +177,7 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{'index_expire'} = 1;
 
     $CPAN::Frontend->myprint($prompts{scan_cache_intro})
-      if !$matcher or 'build_cache_intro' =~ /$matcher/;
+      if !$matcher or 'scan_cache_intro' =~ /$matcher/;
 
     my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
 
@@ -172,7 +185,7 @@ Shall we use it as the general CPAN build and cache directory?
     # cache_metadata
     #
 
-    if (!$matcher or 'build_cache_intro' =~ /$matcher/) {
+    if (!$matcher or 'cache_metadata' =~ /$matcher/) {
 
 	$CPAN::Frontend->myprint($prompts{cache_metadata});
 
@@ -186,43 +199,47 @@ Shall we use it as the general CPAN build and cache directory?
     # term_is_latin
     #
 
-    $CPAN::Frontend->myprint($prompts{term_is_latin})
-      if !$matcher or 'term_is_latin' =~ /$matcher/;
+    if (!$matcher or 'term_is_latin' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{term_is_latin});
 
-    defined($default = $CPAN::Config->{term_is_latin}) or $default = 1;
-    do {
-        $ans = prompt("Your terminal expects ISO-8859-1 (yes/no)?",
-                      ($default ? 'yes' : 'no'));
-    } while ($ans !~ /^[yn]/i);
-    $CPAN::Config->{term_is_latin} = ($ans =~ /^y/i ? 1 : 0);
+        defined($default = $CPAN::Config->{term_is_latin}) or $default = 1;
+        do {
+            $ans = prompt("Your terminal expects ISO-8859-1 (yes/no)?",
+                          ($default ? 'yes' : 'no'));
+        } while ($ans !~ /^[yn]/i);
+        $CPAN::Config->{term_is_latin} = ($ans =~ /^y/i ? 1 : 0);
+    }
 
     #
     # save history in file 'histfile'
     #
 
-    $CPAN::Frontend->myprint($prompts{histfile_intro});
+    if (!$matcher or 'histfile' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{histfile_intro});
+        defined($default = $CPAN::Config->{histfile}) or
+            $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
+        $ans = prompt("File to save your history?", $default);
+        $CPAN::Config->{histfile} = $ans;
 
-    defined($default = $CPAN::Config->{histfile}) or
-        $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
-    $ans = prompt("File to save your history?", $default);
-    $CPAN::Config->{histfile} = $ans;
-
-    if ($CPAN::Config->{histfile}) {
-      defined($default = $CPAN::Config->{histsize}) or $default = 100;
-      $ans = prompt("Number of lines to save?", $default);
-      $CPAN::Config->{histsize} = $ans;
+        if ($CPAN::Config->{histfile}) {
+            defined($default = $CPAN::Config->{histsize}) or $default = 100;
+            $ans = prompt("Number of lines to save?", $default);
+            $CPAN::Config->{histsize} = $ans;
+        }
     }
 
     #
     # do an ls on the m or the d command
     #
-    $CPAN::Frontend->myprint($prompts{show_upload_date_intro});
+    if (!$matcher or 'show_upload_date' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{show_upload_date_intro});
 
-    defined($default = $CPAN::Config->{show_upload_date}) or
-        $default = 'n';
-    $ans = prompt("Always try to show upload date with 'd' and 'm' command (yes/no)?",
-                  ($default ? 'yes' : 'no'));
-    $CPAN::Config->{show_upload_date} = ($ans =~ /^[y1]/i ? 1 : 0);
+        defined($default = $CPAN::Config->{show_upload_date}) or
+            $default = 'n';
+        $ans = prompt("Always try to show upload date with 'd' and 'm' command (yes/no)?",
+                      ($default ? 'yes' : 'no'));
+        $CPAN::Config->{show_upload_date} = ($ans =~ /^[y1]/i ? 1 : 0);
+    }
 
     #my_prompt_loop(show_upload_date => 'n', $matcher,
 		   #'follow|ask|ignore');
@@ -242,102 +259,113 @@ Shall we use it as the general CPAN build and cache directory?
     #
     # Module::Signature
     #
-    $CPAN::Frontend->myprint($prompts{check_sigs_intro});
+    if (!$matcher or 'check_sigs' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{check_sigs_intro});
 
-    defined($default = $CPAN::Config->{check_sigs}) or
-        $default = 0;
-    $ans = prompt($prompts{check_sigs},
-                  ($default ? 'yes' : 'no'));
-    $CPAN::Config->{check_sigs} = ($ans =~ /^y/i ? 1 : 0);
+        defined($default = $CPAN::Config->{check_sigs}) or
+            $default = 0;
+        $ans = prompt($prompts{check_sigs},
+                      ($default ? 'yes' : 'no'));
+        $CPAN::Config->{check_sigs} = ($ans =~ /^y/i ? 1 : 0);
+    }
 
     #
     # CPAN::Reporter
     #
-    $CPAN::Frontend->myprint($prompts{test_report_intro});
+    if (!$matcher or 'test_report' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{test_report_intro});
 
-    defined($default = $CPAN::Config->{test_report}) or
-        $default = 0;
-    $ans = prompt($prompts{test_report},
-                  ($default ? 'yes' : 'no'));
-    $CPAN::Config->{test_report} = ($ans =~ /^y/i ? 1 : 0);
+        defined($default = $CPAN::Config->{test_report}) or
+            $default = 0;
+        $ans = prompt($prompts{test_report},
+                      ($default ? 'yes' : 'no'));
+        $CPAN::Config->{test_report} = ($ans =~ /^y/i ? 1 : 0);
+    }
 
     #
     # External programs
     #
 
-    $CPAN::Frontend->myprint($prompts{external_progs})
-      if !$matcher or 'external_progs' =~ /$matcher/;
-
-    my $old_warn = $^W;
-    local $^W if $^O eq 'MacOS';
-    my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
-    local $^W = $old_warn;
-    my $progname;
-    for $progname (qw/bzip2 gzip tar unzip make
+    my @external_progs = qw/bzip2 gzip tar unzip make
                       curl lynx wget ncftpget ncftp ftp
-                      gpg/)
-    {
-      if ($^O eq 'MacOS') {
-          $CPAN::Config->{$progname} = 'not_here';
-          next;
-      }
-      next if $matcher && $progname !~ /$matcher/;
+                      gpg/;
+    my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
+    if (!$matcher or "@external_progs" =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{external_progs});
 
-      my $progcall = $progname;
-      # we don't need ncftp if we have ncftpget
-      next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
-      my $path = $CPAN::Config->{$progname}
-	  || $Config::Config{$progname}
-	      || "";
-      if (File::Spec->file_name_is_absolute($path)) {
-	# testing existence is not good enough, some have these exe
-	# extensions
+        my $old_warn = $^W;
+        local $^W if $^O eq 'MacOS';
+        local $^W = $old_warn;
+        my $progname;
+        for $progname (@external_progs) {
+            if ($^O eq 'MacOS') {
+                $CPAN::Config->{$progname} = 'not_here';
+                next;
+            }
+            next if $matcher && $progname !~ /$matcher/;
 
-	# warn "Warning: configured $path does not exist\n" unless -e $path;
-	# $path = "";
-      } elsif ($path =~ /^\s+$/) {
-          # preserve disabled programs
-      } else {
-	$path = '';
-      }
-      unless ($path) {
-	# e.g. make -> nmake
-	$progcall = $Config::Config{$progname} if $Config::Config{$progname};
-      }
+            my $progcall = $progname;
+            # we don't need ncftp if we have ncftpget
+            next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
+            my $path = $CPAN::Config->{$progname}
+                || $Config::Config{$progname}
+                    || "";
+            if (File::Spec->file_name_is_absolute($path)) {
+                # testing existence is not good enough, some have these exe
+                # extensions
 
-      $path ||= find_exe($progcall,[@path]);
-      $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH\n") unless
-	  $path; # not -e $path, because find_exe already checked that
-      $ans = prompt("Where is your $progname program?",$path) || $path;
-      $CPAN::Config->{$progname} = $ans;
+                # warn "Warning: configured $path does not exist\n" unless -e $path;
+                # $path = "";
+            } elsif ($path =~ /^\s+$/) {
+                # preserve disabled programs
+            } else {
+                $path = '';
+            }
+            unless ($path) {
+                # e.g. make -> nmake
+                $progcall = $Config::Config{$progname} if $Config::Config{$progname};
+            }
+
+            $path ||= find_exe($progcall,[@path]);
+            $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH\n") unless
+                $path; # not -e $path, because find_exe already checked that
+            $ans = prompt("Where is your $progname program?",$path) || $path;
+            $CPAN::Config->{$progname} = $ans;
+        }
     }
-    my $path = $CPAN::Config->{'pager'} || 
-	$ENV{PAGER} || find_exe("less",[@path]) || 
-	    find_exe("more",[@path]) || ($^O eq 'MacOS' ? $ENV{EDITOR} : 0 )
-	    || "more";
-    $ans = prompt("What is your favorite pager program?",$path);
-    $CPAN::Config->{'pager'} = $ans;
-    $path = $CPAN::Config->{'shell'};
-    if (File::Spec->file_name_is_absolute($path)) {
-	warn "Warning: configured $path does not exist\n" unless -e $path;
-	$path = "";
+
+    if (!$matcher or 'pager' =~ /$matcher/) {
+        my $path = $CPAN::Config->{'pager'} || 
+            $ENV{PAGER} || find_exe("less",[@path]) || 
+                find_exe("more",[@path]) || ($^O eq 'MacOS' ? $ENV{EDITOR} : 0 )
+                    || "more";
+        $ans = prompt("What is your favorite pager program?",$path);
+        $CPAN::Config->{'pager'} = $ans;
     }
-    $path ||= $ENV{SHELL};
-    $path ||= $ENV{COMSPEC} if $^O eq "MSWin32";
-    if ($^O eq 'MacOS') {
-        $CPAN::Config->{'shell'} = 'not_here';
-    } else {
-        $path =~ s,\\,/,g if $^O eq 'os2';	# Cosmetic only
-        $ans = prompt("What is your favorite shell?",$path);
-        $CPAN::Config->{'shell'} = $ans;
+
+    if (!$matcher or 'shell' =~ /$matcher/) {
+        my $path = $CPAN::Config->{'shell'};
+        if (File::Spec->file_name_is_absolute($path)) {
+            warn "Warning: configured $path does not exist\n" unless -e $path;
+            $path = "";
+        }
+        $path ||= $ENV{SHELL};
+        $path ||= $ENV{COMSPEC} if $^O eq "MSWin32";
+        if ($^O eq 'MacOS') {
+            $CPAN::Config->{'shell'} = 'not_here';
+        } else {
+            $path =~ s,\\,/,g if $^O eq 'os2';	# Cosmetic only
+            $ans = prompt("What is your favorite shell?",$path);
+            $CPAN::Config->{'shell'} = $ans;
+        }
     }
 
     #
-    # Arguments to make etc.
+    # Installer, arguments to make etc.
     #
 
     $CPAN::Frontend->myprint($prompts{prefer_installer_intro})
-      if !$matcher or 'prerequisites_policy_intro' =~ /$matcher/;
+      if !$matcher or 'prefer_installer_intro' =~ /$matcher/;
 
     my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
 
@@ -379,14 +407,12 @@ Shall we use it as the general CPAN build and cache directory?
     # Alarm period
     #
 
-    $CPAN::Frontend->myprint($prompts{inactivity_timeout_intro})
-      if !$matcher or 'inactivity_timeout_intro' =~ /$matcher/;
-
-    # my_dflt_prompt(inactivity_timeout => 0);
-
-    $default = $CPAN::Config->{inactivity_timeout} || 0;
-    $CPAN::Config->{inactivity_timeout} =
-      prompt("Timeout for inactivity during {Makefile,Build}.PL?",$default);
+    if (!$matcher or 'inactivity_timeout' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{inactivity_timeout_intro});
+        $default = $CPAN::Config->{inactivity_timeout} || 0;
+        $CPAN::Config->{inactivity_timeout} =
+            prompt("Timeout for inactivity during {Makefile,Build}.PL?",$default);
+    }
 
     # Proxies
 
@@ -394,10 +420,10 @@ Shall we use it as the general CPAN build and cache directory?
       if !$matcher or 'proxy_intro' =~ /$matcher/;
 
     for (qw/ftp_proxy http_proxy no_proxy/) {
-	next if $matcher and $_ =~ /$matcher/;
-
-	$default = $CPAN::Config->{$_} || $ENV{$_};
-	$CPAN::Config->{$_} = prompt("Your $_?",$default);
+	if (!$matcher or /$matcher/){
+            $default = $CPAN::Config->{$_} || $ENV{$_};
+            $CPAN::Config->{$_} = prompt("Your $_?",$default);
+        }
     }
 
     if ($CPAN::Config->{ftp_proxy} ||
@@ -424,10 +450,21 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
-    # MIRRORED.BY
+    # MIRRORED.BY and conf_sites()
     #
 
-    conf_sites() unless $fastread;
+    if ($matcher && "urllist" =~ $matcher){
+        # conf_sites would go into endless loop with the smash prompt
+        local *_real_prompt;
+        *_real_prompt = \&ExtUtils::MakeMaker::prompt;
+        conf_sites();
+    } elsif ($fastread) {
+        $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".
+                                 "Please call 'o conf init urllist' to configure ".
+                                 "your CPAN server(s) now!");
+    } else {
+        conf_sites();
+    }
 
     # We don't ask these now, the defaults are very likely OK.
     $CPAN::Config->{inhibit_startup_message} = 0;
@@ -718,14 +755,17 @@ my @prompts = (
 manual_config => qq[
 
 CPAN is the world-wide archive of perl resources. It consists of about
-300 sites that all replicate the same contents around the globe.
-Many countries have at least one CPAN site already. The resources
-found on CPAN are easily accessible with the CPAN.pm module. If you
-want to use CPAN.pm, you have to configure it properly.
+300 sites that all replicate the same contents around the globe. Many
+countries have at least one CPAN site already. The resources found on
+CPAN are easily accessible with the CPAN.pm module. If you want to use
+CPAN.pm, lots of things have to be configured. Fortunately, most of
+them can be determined automatically. If you prefer the automatic
+configuration, answer 'yes' below.
 
-If you do NOT want to enter a dialog now, you can answer 'no' to this
-question and I'll try to autoconfigure. (Note: you can revisit this
-dialog anytime later by typing 'o conf init' at the cpan prompt.)
+If you prefer to enter a dialog instead, you can answer 'no' to this
+question and I'll let you configure in small steps one thing after the
+other. (Note: you can revisit this dialog anytime later by typing 'o
+conf init' at the cpan prompt.)
 
 ],
 
@@ -901,7 +941,7 @@ prefer_installer_intro => qq{
 When you have Module::Build installed and a module comes with both a
 Makefile.PL and a Build.PL, which shall have precedence? The two
 installer modules we have are the old and well established
-ExtUtils::MakeMaker (for short: EUMM) understands the Makefile.PL and
+ExtUtils::MakeMaker (for short: EUMM) which uses the Makefile.PL and
 the next generation installer Module::Build (MB) works with the
 Build.PL.
 

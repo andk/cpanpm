@@ -244,9 +244,9 @@ P:o conf build_cache
 E:build_cache
 ########
 P:o conf init
-E:initialized(?s:.*?manual.*?configuration.*?\])
+E:initialized(?s:.*?configure.as.much.as.possible.automatically.*?\])
 ########
-P:nothanks
+P:yesplease
 E:wrote
 ########
 P:# o debug all
