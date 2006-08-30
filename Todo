@@ -1,3 +1,16 @@
+2006-08-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: test many cases:
+
+	if we have a urllist, if have none: can we always hit RETURN
+
+	if we say 'o conf init'...yes/no (no is what the shell test does, so no
+	need here to investigate)
+
+	What's about the SPACE RETURN thing, is it broken and since when?
+
+	compare the 'make testshell-with-protocl' output carefully
+
 2006-08-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe

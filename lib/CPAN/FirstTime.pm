@@ -104,15 +104,14 @@ sub init {
       }
     }
 
-    $CPAN::Frontend->myprint($prompts{config_intro})
-      if !$matcher or 'config_intro' =~ /$matcher/;
+    if (!$matcher or 'cpan_home keep_source_where build_dir' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{config_intro});
 
-    if (!$matcher or 'cpan_home' =~ /$matcher/) {
-        my $cpan_home = $CPAN::Config->{cpan_home}
-            || File::Spec->catdir($ENV{HOME}, ".cpan");
+        if (!$matcher or 'cpan_home' =~ /$matcher/) {
+            my $cpan_home = $CPAN::Config->{cpan_home}
+                || File::Spec->catdir($ENV{HOME}, ".cpan");
 
-        if (-d $cpan_home) {
-            if (!$matcher or 'config_intro' =~ /$matcher/) {
+            if (-d $cpan_home) {
                 $CPAN::Frontend->myprint(qq{
 
 I see you already have a  directory
@@ -120,66 +119,68 @@ I see you already have a  directory
 Shall we use it as the general CPAN build and cache directory?
 
 });
-            }
-        } else {
-            # no cpan-home, must prompt and get one
-            $CPAN::Frontend->myprint($prompts{cpan_home_where});
-        }
-
-        $default = $cpan_home;
-        while ($ans = prompt("CPAN build and cache directory?",$default)) {
-            unless (File::Spec->file_name_is_absolute($ans)) {
-                require Cwd;
-                my $cwd = Cwd::cwd();
-                my $absans = File::Spec->catdir($cwd,$ans);
-                warn "The path '$ans' is not an absolute path. Please specify an absolute path\n";
-                $default = $absans;
-                next;
-            }
-            eval { File::Path::mkpath($ans); }; # dies if it can't
-            if ($@) {
-                warn "Couldn't create directory $ans.\nPlease retry.\n";
-                next;
-            }
-            if (-d $ans && -w _) {
-                last;
             } else {
-                warn "Couldn't find directory $ans\n"
-                    . "or directory is not writable. Please retry.\n";
+                # no cpan-home, must prompt and get one
+                $CPAN::Frontend->myprint($prompts{cpan_home_where});
             }
+
+            $default = $cpan_home;
+            while ($ans = prompt("CPAN build and cache directory?",$default)) {
+                unless (File::Spec->file_name_is_absolute($ans)) {
+                    require Cwd;
+                    my $cwd = Cwd::cwd();
+                    my $absans = File::Spec->catdir($cwd,$ans);
+                    warn "The path '$ans' is not an absolute path. Please specify an absolute path\n";
+                    $default = $absans;
+                    next;
+                }
+                eval { File::Path::mkpath($ans); }; # dies if it can't
+                if ($@) {
+                    warn "Couldn't create directory $ans.\nPlease retry.\n";
+                    next;
+                }
+                if (-d $ans && -w _) {
+                    last;
+                } else {
+                    warn "Couldn't find directory $ans\n"
+                        . "or directory is not writable. Please retry.\n";
+                }
+            }
+            $CPAN::Config->{cpan_home} = $ans;
         }
-        $CPAN::Config->{cpan_home} = $ans;
-    }
 
-    if (!$matcher or 'keep_source_where' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{keep_source_where});
+        if (!$matcher or 'keep_source_where' =~ /$matcher/) {
+            $CPAN::Frontend->myprint($prompts{keep_source_where});
 
-        $CPAN::Config->{keep_source_where}
-            = File::Spec->catdir($CPAN::Config->{cpan_home},"sources");
-    }
+            $CPAN::Config->{keep_source_where}
+                = File::Spec->catdir($CPAN::Config->{cpan_home},"sources");
+        }
 
-    if (!$matcher or 'build_dir' =~ /$matcher/) {
-        $CPAN::Config->{build_dir}
-            = File::Spec->catdir($CPAN::Config->{cpan_home},"build");
+        if (!$matcher or 'build_dir' =~ /$matcher/) {
+            $CPAN::Config->{build_dir}
+                = File::Spec->catdir($CPAN::Config->{cpan_home},"build");
+        }
     }
 
     #
     # Cache size, Index expire
     #
 
-    $CPAN::Frontend->myprint($prompts{build_cache_intro})
-      if !$matcher or 'build_cache_intro' =~ /$matcher/;
+    if (!$matcher or 'build_cache' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{build_cache_intro});
 
-    # large enough to build large dists like Tk
-    my_dflt_prompt(build_cache => 100, $matcher);
+        # large enough to build large dists like Tk
+        my_dflt_prompt(build_cache => 100, $matcher);
+    }
 
     # XXX This the time when we refetch the index files (in days)
     $CPAN::Config->{'index_expire'} = 1;
 
-    $CPAN::Frontend->myprint($prompts{scan_cache_intro})
-      if !$matcher or 'scan_cache_intro' =~ /$matcher/;
+    if (!$matcher or 'scan_cache' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{scan_cache_intro});
 
-    my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
+        my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
+    }
 
     #
     # cache_metadata
@@ -249,12 +250,12 @@ Shall we use it as the general CPAN build and cache directory?
     # Do we follow PREREQ_PM?
     #
 
-    $CPAN::Frontend->myprint($prompts{prerequisites_policy_intro})
-      if !$matcher or 'prerequisites_policy_intro' =~ /$matcher/;
+    if (!$matcher or 'prerequisites_policy' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{prerequisites_policy_intro});
 
-    my_prompt_loop(prerequisites_policy => 'ask', $matcher,
-		   'follow|ask|ignore');
-
+        my_prompt_loop(prerequisites_policy => 'ask', $matcher,
+                       'follow|ask|ignore');
+    }
 
     #
     # Module::Signature
@@ -364,18 +365,18 @@ Shall we use it as the general CPAN build and cache directory?
     # Installer, arguments to make etc.
     #
 
-    $CPAN::Frontend->myprint($prompts{prefer_installer_intro})
-      if !$matcher or 'prefer_installer_intro' =~ /$matcher/;
+    if (!$matcher or 'prefer_installer' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{prefer_installer_intro});
 
-    my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
+        my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
+    }
 
+    if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{makepl_arg_intro});
 
-    $CPAN::Frontend->myprint($prompts{makepl_arg_intro})
-      if !$matcher or 'makepl_arg_intro' =~ /$matcher/;
-
-    my_dflt_prompt(makepl_arg => "", $matcher);
-
-    my_dflt_prompt(make_arg => "", $matcher);
+        my_dflt_prompt(makepl_arg => "", $matcher);
+        my_dflt_prompt(make_arg => "", $matcher);
+    }
 
     require CPAN::HandleConfig;
     if (exists $CPAN::HandleConfig::keys{make_install_make_command}) {
@@ -388,12 +389,13 @@ Shall we use it as the general CPAN build and cache directory?
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "", 
 		   $matcher);
 
-    $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro})
-      if !$matcher or 'mbuildpl_arg_intro' =~ /$matcher/;
+    if (!$matcher or 'mbuildpl_arg mbuild_arg' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro});
 
-    my_dflt_prompt(mbuildpl_arg => "", $matcher);
+        my_dflt_prompt(mbuildpl_arg => "", $matcher);
 
-    my_dflt_prompt(mbuild_arg => "", $matcher);
+        my_dflt_prompt(mbuild_arg => "", $matcher);
+    }
 
     if (exists $CPAN::HandleConfig::keys{mbuild_install_build_command}) {
         # as long as Windows needs $self->_build_command, we cannot
@@ -416,36 +418,38 @@ Shall we use it as the general CPAN build and cache directory?
 
     # Proxies
 
-    $CPAN::Frontend->myprint($prompts{proxy_intro})
-      if !$matcher or 'proxy_intro' =~ /$matcher/;
+    my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
+    if (!$matcher or "@proxy_vars" =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{proxy_intro});
 
-    for (qw/ftp_proxy http_proxy no_proxy/) {
-	if (!$matcher or /$matcher/){
-            $default = $CPAN::Config->{$_} || $ENV{$_};
-            $CPAN::Config->{$_} = prompt("Your $_?",$default);
+        for (@proxy_vars) {
+            if (!$matcher or /$matcher/){
+                $default = $CPAN::Config->{$_} || $ENV{$_};
+                $CPAN::Config->{$_} = prompt("Your $_?",$default);
+            }
         }
-    }
 
-    if ($CPAN::Config->{ftp_proxy} ||
-        $CPAN::Config->{http_proxy}) {
+        if ($CPAN::Config->{ftp_proxy} ||
+            $CPAN::Config->{http_proxy}) {
 
-        $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER;
+            $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER;
 
-		$CPAN::Frontend->myprint($prompts{proxy_user});
+            $CPAN::Frontend->myprint($prompts{proxy_user});
 
-        if ($CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default)) {
-	    $CPAN::Frontend->myprint($prompts{proxy_pass});
+            if ($CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default)) {
+                $CPAN::Frontend->myprint($prompts{proxy_pass});
 
-            if ($CPAN::META->has_inst("Term::ReadKey")) {
-                Term::ReadKey::ReadMode("noecho");
-            } else {
-		$CPAN::Frontend->myprint($prompts{password_warn});
+                if ($CPAN::META->has_inst("Term::ReadKey")) {
+                    Term::ReadKey::ReadMode("noecho");
+                } else {
+                    $CPAN::Frontend->myprint($prompts{password_warn});
+                }
+                $CPAN::Config->{proxy_pass} = prompt_no_strip("Your proxy password?");
+                if ($CPAN::META->has_inst("Term::ReadKey")) {
+                    Term::ReadKey::ReadMode("restore");
+                }
+                $CPAN::Frontend->myprint("\n\n");
             }
-            $CPAN::Config->{proxy_pass} = prompt_no_strip("Your proxy password?");
-            if ($CPAN::META->has_inst("Term::ReadKey")) {
-                Term::ReadKey::ReadMode("restore");
-            }
-            $CPAN::Frontend->myprint("\n\n");
         }
     }
 
@@ -453,11 +457,13 @@ Shall we use it as the general CPAN build and cache directory?
     # MIRRORED.BY and conf_sites()
     #
 
-    if ($matcher && "urllist" =~ $matcher){
-        # conf_sites would go into endless loop with the smash prompt
-        local *_real_prompt;
-        *_real_prompt = \&ExtUtils::MakeMaker::prompt;
-        conf_sites();
+    if ($matcher){
+        if ("urllist" =~ $matcher) {
+            # conf_sites would go into endless loop with the smash prompt
+            local *_real_prompt;
+            *_real_prompt = \&ExtUtils::MakeMaker::prompt;
+            conf_sites();
+        }
     } elsif ($fastread) {
         $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".
                                  "Please call 'o conf init urllist' to configure ".
@@ -645,8 +651,8 @@ sub read_mirrored_by {
 
     my (@cont, $cont, %cont, @countries, @urls, %seen);
     my $no_previous_warn = 
-       "Sorry! since you don't have any existing picks, you must make a\n" .
-       "geographic selection.";
+        "Sorry! since you don't have any existing picks, you must make a\n" .
+            "geographic selection.";
     @cont = picklist([sort keys %all],
                      "Select your continent (or several nearby continents)",
                      '',
@@ -674,7 +680,7 @@ sub read_mirrored_by {
             my @u = sort keys %{$all{$cont{$bare_country}}{$bare_country}};
             @u = grep (! $seen{$_}, @u);
             @u = map ("$_ ($bare_country)", @u)
-               if @countries > 1;
+                if @countries > 1;
             push (@urls, @u);
         }
     }
@@ -682,11 +688,11 @@ sub read_mirrored_by {
     my $prompt = "Select as many URLs as you like (by number),
 put them on one line, separated by blanks, e.g. '1 4 5'";
     if (@previous_urls) {
-       $default = join (' ', ((scalar @urls) - (scalar @previous_urls) + 1) ..
-                             (scalar @urls));
-       $prompt .= "\n(or just hit RETURN to keep your previous picks)";
+        $default = join (' ', ((scalar @urls) - (scalar @previous_urls) + 1) ..
+                         (scalar @urls));
+        $prompt .= "\n(or just hit RETURN to keep your previous picks)";
     }
-
+    
     @urls = picklist (\@urls, $prompt, $default);
     foreach (@urls) { s/ \(.*\)//; }
     push @{$CPAN::Config->{urllist}}, @urls;
