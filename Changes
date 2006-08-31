@@ -1,4 +1,15 @@
-2006-08-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_58: work is still in progress to get "o conf init MATCH"
+	working (finishing the epochal Jim Cromie patches) but all tests pass
+
+	* initial configuration dialogue now has reversed meaning: automatic
+	configuration can be confirmed with yes instead of denying manual
+	configuration with no
+
+	* fix a bug reported by David Golden, that Bundle::CPAN is never
+	uptodate. Fixing it by special-casing readline.pm in the inst_file
+	method
 
 	* Address #18196 once again because people have still MakeMaker < 6.18
 	installed.

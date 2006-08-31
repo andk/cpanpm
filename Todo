@@ -1,15 +1,25 @@
+2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: investigate why 'o conf init histsize' still asks two questions.
+	Maybe we should write the test automatically with all available
+	variables and see if one question is asked.
+
+	* Todo: document 'o conf init MATCH' and write a couple tests into
+	30shell.t
+
 2006-08-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: test many cases:
 
-	if we have a urllist, if have none: can we always hit RETURN
+	if we have a urllist, if have none: can we always hit RETURN and reach
+	the end, especially if we already have a previous pick?
 
 	if we say 'o conf init'...yes/no (no is what the shell test does, so no
 	need here to investigate)
 
 	What's about the SPACE RETURN thing, is it broken and since when?
 
-	compare the 'make testshell-with-protocl' output carefully
+	compare the 'make testshell-with-protocol' output carefully
 
 2006-08-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

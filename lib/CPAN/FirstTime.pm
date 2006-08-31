@@ -215,7 +215,7 @@ Shall we use it as the general CPAN build and cache directory?
     # save history in file 'histfile'
     #
 
-    if (!$matcher or 'histfile' =~ /$matcher/) {
+    if (!$matcher or 'histfile histsize' =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{histfile_intro});
         defined($default = $CPAN::Config->{histfile}) or
             $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
