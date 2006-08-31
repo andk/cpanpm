@@ -1,5 +1,8 @@
 2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: use 'o conf init MATCH' when only a few mandatory variables is
+	missing so that people need not go through the whole cycle
+
 	* Todo: investigate why 'o conf init histsize' still asks two questions.
 	Maybe we should write the test automatically with all available
 	variables and see if one question is asked.
