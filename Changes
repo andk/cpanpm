@@ -4,8 +4,8 @@
 	working (finishing the epochal Jim Cromie patches) but all tests pass
 
 	* initial configuration dialogue now has reversed meaning: automatic
-	configuration can be confirmed with yes instead of denying manual
-	configuration with no
+	configuration can be confirmed with 'yes' instead of having to deny
+	manual configuration with 'no'
 
 	* fix a bug reported by David Golden, that Bundle::CPAN is never
 	uptodate. Fixing it by special-casing readline.pm in the inst_file
