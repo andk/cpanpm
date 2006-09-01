@@ -26,8 +26,17 @@ use Safe ();
 use Sys::Hostname qw(hostname);
 use Text::ParseWords ();
 use Text::Wrap ();
-no lib "."; # we need to run chdir all over and we would get at wrong
-            # libraries there
+
+# we need to run chdir all over and we would get at wrong libraries
+# there
+BEGIN {
+    if (File::Spec->can("rel2abs")) {
+        for my $inc (@INC) {
+            $inc = File::Spec->rel2abs($inc);
+        }
+    }
+}
+no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
 
