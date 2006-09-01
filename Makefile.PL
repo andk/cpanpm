@@ -138,7 +138,7 @@ WriteMakefile(
                                         'Makefile no_CR META.yml setversion README '.
                                         'testdistros all chlog tardist'
                                        ),
-                       COMPRESS => 'gzip -9f',
+                       COMPRESS => 'gzip -9',
                       },
              );
 
