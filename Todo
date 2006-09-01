@@ -1,3 +1,14 @@
+2006-09-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: why has the question for the ftp_proxy no square brackets?
+
+	* Todo: the prompt for keep_source_where seems bogus and people cannot
+	choose it anyway. With a bit of rewording one could call it
+	build_dir_intro and then we would find out that we have no prompt for
+	the keep_source_where config variable.
+
+	* Todo: completion for 'o conf init MATCH'
+
 2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* replace "no lib '.'" with rel2absing the INC if rel2abs is available
@@ -8,7 +19,15 @@
 
 	* Todo: investigate why 'o conf init histsize' still asks two questions.
 	Maybe we should write the test automatically with all available
-	variables and see if one question is asked.
+	variables and see if one question is asked. STARTED for all but the
+	_list and _hash stuff and for undocumented things like
+	commandnumber_in_prompt and things we never ask like ftp_passive. It
+	turned out that histsize really depends on histfile and they should be
+	asked as a pair. But then I tried 'ftp' which hit several options,
+	'^ftp$', '\bftp\b' which both did not match as all and I wondered if
+	this needs to be addressed or not and how. Same for make. What about
+	inactivity_timeout? why does it use prompt(), not my_default_prompt?
+	index_expire? username? password?
 
 	* Todo: document 'o conf init MATCH' and write a couple tests into
 	30shell.t

@@ -157,8 +157,10 @@ Shall we use it as the general CPAN build and cache directory?
         }
 
         if (!$matcher or 'build_dir' =~ /$matcher/) {
-            $CPAN::Config->{build_dir}
-                = File::Spec->catdir($CPAN::Config->{cpan_home},"build");
+            my_dflt_prompt("build_dir",
+                           File::Spec->catdir($CPAN::Config->{cpan_home},"build"),
+                           $matcher
+                          );
         }
     }
 
@@ -479,7 +481,9 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{term_ornaments}          = 1;
 
     $CPAN::Frontend->myprint("\n\n");
-    CPAN::HandleConfig->commit($configpm);
+    if (!$matcher) {
+        CPAN::HandleConfig->commit($configpm);
+    }
 }
 
 sub my_dflt_prompt {
@@ -812,6 +816,9 @@ with all the intermediate files\?
 build_cache =>
 "Cache size for build directory (in MB)?",
 
+build_dir =>
+
+"Directory where the build process takes place?",
 
 scan_cache_intro => qq{
 

@@ -208,6 +208,7 @@ expected[$expected]\ngot[$got]\n\n";
                      );
         my $got = $expo->clear_accum;
         mydiag "GOT: $got\n";
+        $prog =~ s/^(\d)/...$1/;
         ok(1, $prog||"\"\\n\"");
     } else {
         $expected = "" if $prog =~ /\t/;
@@ -267,6 +268,197 @@ E:histsize.+?101
 ########
 P:o conf urllist
 E:file:///.*?CPAN
+########
+P:o conf init build_cache
+E:(\])
+########
+P:100
+E:
+########
+P:o conf init build_dir
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init bzip2
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init cache_metadata
+E:(\])
+########
+P:y
+E:
+########
+P:o conf init check_sigs
+E:(\])
+########
+P:y
+E:
+########
+P:o conf init cpan_home
+E:(\])
+########
+P:/tmp/must_be_a_createable_absolute_path/../
+E:
+########
+P:o conf init curl
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init gpg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init gzip
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init lynx
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init make_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init make_install_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init make_install_make_command
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init makepl_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init mbuild_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init mbuild_install_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init mbuild_install_build_command
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init mbuildpl_arg
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init ncftp
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init ncftpget
+E:(\])
+########
+P:foo
+E:
+########
+P:foo
+E:
+########
+P:o conf init pager
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init prefer_installer
+E:(\])
+########
+P:EUMM
+E:
+########
+P:o conf init prerequisites_policy
+E:(\])
+########
+P:ask
+E:
+########
+P:o conf init scan_cache
+E:(\])
+########
+P:atstart
+E:
+########
+P:o conf init shell
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init show_upload_date
+E:(\])
+########
+P:y
+E:
+########
+P:o conf init tar
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init term_is_latin
+E:(\])
+########
+P:n
+E:
+########
+P:o conf init test_report
+E:(\])
+########
+P:n
+E:
+########
+P:o conf init unzip
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf init wget
+E:(\])
+########
+P:foo
+E:
+########
+P:o conf defaults
 ########
 P:!print$ENV{HARNESS_PERL_SWITCHES}||"",$/
 E:
