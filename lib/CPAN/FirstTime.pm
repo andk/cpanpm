@@ -198,16 +198,8 @@ Shall we use it as the general CPAN build and cache directory?
     # cache_metadata
     #
 
-    if (!$matcher or 'cache_metadata' =~ /$matcher/) {
+    my_yn_prompt(cache_metadata => 1, $matcher);
 
-	$CPAN::Frontend->myprint($prompts{cache_metadata});
-
-	defined($default = $CPAN::Config->{cache_metadata}) or $default = 1;
-	do {
-	    $ans = prompt("Cache metadata (yes/no)?", ($default ? 'yes' : 'no'));
-	} while ($ans !~ /^[yn]/i);
-	$CPAN::Config->{cache_metadata} = ($ans =~ /^y/i ? 1 : 0);
-    }
     #
     # term_is_latin
     #
@@ -466,6 +458,13 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
+    # the CPAN shell itself
+    #
+
+    my_yn_prompt(commandnumber_in_prompt => 1, $matcher);
+
+
+    #
     # MIRRORED.BY and conf_sites()
     #
 
@@ -503,6 +502,23 @@ sub my_dflt_prompt {
     $DB::single = 1;
     if (!$m || $item =~ /$m/) {
 	$CPAN::Config->{$item} = prompt($prompts{$item}, $default);
+    } else {
+	$CPAN::Config->{$item} = $default;
+    }
+}
+
+sub my_yn_prompt {
+    my ($item, $dflt, $m) = @_;
+    my $default;
+    defined($default = $CPAN::Config->{$item}) or $default = $dflt;
+
+    $DB::single = 1;
+    if (!$m || $item =~ /$m/) {
+        if (my $intro = $prompts{$item . "_intro"}) {
+            print $intro;
+        }
+	my $ans = prompt($prompts{$item}, $default ? 'yes' : 'no');
+        $CPAN::Config->{$item} = ($ans =~ /^[y1]/i ? 1 : 0);
     } else {
 	$CPAN::Config->{$item} = $default;
     }
@@ -840,13 +856,15 @@ performed to keep the cache size in sync. To prevent this, answer
 
 scan_cache => "Perform cache scanning (atstart or never)?",
 
-cache_metadata => qq{
+cache_metadata_intro => qq{
 
 To considerably speed up the initial CPAN shell startup, it is
 possible to use Storable to create a cache of metadata. If Storable
 is not available, the normal index mechanism will be used.
 
 },
+
+cache_metadata => qq{Cache metadata (yes/no)?},
 
 term_is_latin => qq{
 
@@ -1130,6 +1148,11 @@ be echoed to the terminal!
 
 },
 
+commandnumber_in_prompt => qq{
+
+The prompt of the cpan shell can contain the current command number
+for easier tracking of the session or be a plain string. Do you want
+the command number in the prompt (yes/no)?}
 );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"

@@ -469,6 +469,12 @@ E:(\])
 P:foo
 E:
 ########
+P:o conf init commandnumber_in_prompt
+E:(\])
+########
+P:y
+E:
+########
 P:o conf defaults
 ########
 P:!print$ENV{HARNESS_PERL_SWITCHES}||"",$/
