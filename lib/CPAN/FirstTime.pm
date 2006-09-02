@@ -185,8 +185,11 @@ Shall we use it as the general CPAN build and cache directory?
         my_dflt_prompt(build_cache => 100, $matcher);
     }
 
-    # XXX This the time when we refetch the index files (in days)
-    $CPAN::Config->{'index_expire'} = 1;
+    if (!$matcher or 'index_expire' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{index_expire_intro});
+        
+        my_dflt_prompt(index_expire => 1, $matcher);
+    }
 
     if (!$matcher or 'scan_cache' =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{scan_cache_intro});
@@ -1100,9 +1103,10 @@ Your choice: },
 inactivity_timeout_intro => qq{
 
 Sometimes you may wish to leave the processes run by CPAN alone
-without caring about them. Because the Makefile.PL sometimes contains
-question you\'re expected to answer, you can set a timer that will
-kill a 'perl Makefile.PL' process after the specified time in seconds.
+without caring about them. Because the Makefile.PL or the Build.PL
+sometimes contains question you\'re expected to answer, you can set a
+timer that will kill a 'perl Makefile.PL' process after the specified
+time in seconds.
 
 If you set this value to 0, these processes will wait forever. This is
 the default and recommended setting.
@@ -1189,6 +1193,20 @@ alternatives can be configured according to the following table:
 },
 
 getcwd => qq{Preferred method for determining the current working directory?},
+
+index_expire_intro => qq{
+
+The CPAN indexes are usually rebuilt once or twice per hour, but the
+typical CPAN mirror mirrors only once or twice per day. Depending on
+the quality of your mirror and your desire to be on the bleeding edge,
+you may want to set the following value to more or less than one day
+(which is the default). It determines after how many days CPAN.pm
+downloads new indexes.
+
+},
+
+index_expire => qq{Let the index expire after how many days?},
+
 );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"

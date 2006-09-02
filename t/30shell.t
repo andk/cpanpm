@@ -543,6 +543,36 @@ E:(\])
 P:cwd
 E:
 ########
+P:o conf init histfile
+E:(\])
+########
+P:/tmp/foo
+E:
+########
+P:100
+E:
+########
+P:o conf init histsize
+E:(\])
+########
+P:/tmp/foo
+E:
+########
+P:100
+E:
+########
+P:o conf init inactivity_timeout
+E:(\])
+########
+P:0
+E:
+########
+P:o conf init index_expire
+E:(\])
+########
+P:1
+E:
+########
 P:o conf defaults
 ########
 P:!print$ENV{HARNESS_PERL_SWITCHES}||"",$/

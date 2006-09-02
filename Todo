@@ -6,7 +6,8 @@
 
 2006-09-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: why has the question for the ftp_proxy no square brackets?
+	* Todo: why has the question for the ftp_proxy no square brackets? FIXED
+	somewhere between 775 and 782
 
 	* Todo: the prompt for keep_source_where seems bogus and people cannot
 	choose it anyway. With a bit of rewording one could call it
@@ -20,7 +21,7 @@
 	* replace "no lib '.'" with rel2absing the INC if rel2abs is available
 	(suggested by Slaven Rezic) DONE in rev 773
 
-	* Todo: use 'o conf init MATCH' when only a few mandatory variables is
+	* Todo: use 'o conf init MATCH' when only a few mandatory variables are
 	missing so that people need not go through the whole cycle
 
 	* Todo: investigate why 'o conf init histsize' still asks two questions.
