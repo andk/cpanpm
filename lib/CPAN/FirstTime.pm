@@ -388,7 +388,7 @@ Shall we use it as the general CPAN build and cache directory?
         if ($CPAN::Config->{ftp_proxy} ||
             $CPAN::Config->{http_proxy}) {
 
-            $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER;
+            $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER || "";
 
             $CPAN::Frontend->myprint($prompts{proxy_user});
 

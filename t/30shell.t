@@ -104,6 +104,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
     my @ociv_tests = map { /P:o conf init (\w+)/ && $1 } @prgs;
     my %ociv;
     @ociv{@ociv_tests} = ();
+    my $keys = %CPAN::HandleConfig::keys; # to keep warnings silent
     my @kwnt = sort grep { not exists $ociv{$_} }
         grep { ! /(?:^urllist|_list|_hash)$/ }
             keys %CPAN::HandleConfig::keys;
@@ -504,18 +505,36 @@ P:o conf init ftp_proxy
 E:(\])
 ########
 P:y
+E:(\?)
+########
+P:u
+E:(\?)
+########
+P:p
 E:
 ########
 P:o conf init http_proxy
 E:(\])
 ########
 P:y
+E:(\?)
+########
+P:u
+E:(\?)
+########
+P:p
 E:
 ########
 P:o conf init no_proxy
 E:(\])
 ########
 P:y
+E:(\?)
+########
+P:u
+E:(\?)
+########
+P:p
 E:
 ########
 P:o conf defaults
