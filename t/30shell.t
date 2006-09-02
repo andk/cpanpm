@@ -537,6 +537,12 @@ E:(\?)
 P:p
 E:
 ########
+P:o conf init getcwd
+E:(\])
+########
+P:cwd
+E:
+########
 P:o conf defaults
 ########
 P:!print$ENV{HARNESS_PERL_SWITCHES}||"",$/

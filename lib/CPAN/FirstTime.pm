@@ -416,6 +416,17 @@ Shall we use it as the general CPAN build and cache directory?
     my_yn_prompt(ftp_passive => 1, $matcher);
 
     #
+    #= how cwd works
+    #
+
+    if (!$matcher or 'getcwd' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{getcwd_intro});
+
+        my_prompt_loop(getcwd => 'cwd', $matcher,
+                       'cwd|getcwd|fastcwd|backtickcwd');
+    }
+
+    #
     #= the CPAN shell itself
     #
 
@@ -423,7 +434,7 @@ Shall we use it as the general CPAN build and cache directory?
 
 
     #
-    #= term_is_latin
+    #== term_is_latin
     #
 
     if (!$matcher or 'term_is_latin' =~ /$matcher/){
@@ -1162,6 +1173,22 @@ ftp_passive => qq{
 Shall we always set FTP_PASSIVE envariable when dealing with ftp
 download (yes/no)?},
 
+# taken from the manpage:
+getcwd_intro => qq{
+
+CPAN.pm changes the current working directory often and needs to
+determine its own current working directory. Per default it uses
+Cwd::cwd but if this doesn't work on your system for some reason,
+alternatives can be configured according to the following table:
+
+    cwd         Cwd::cwd
+    getcwd      Cwd::getcwd
+    fastcwd     Cwd::fastcwd
+    backtickcwd external command cwd
+
+},
+
+getcwd => qq{Preferred method for determining the current working directory?},
 );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"
