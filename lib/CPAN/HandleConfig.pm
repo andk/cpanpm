@@ -522,13 +522,25 @@ sub cpl {
     if (
 	defined($words[2])
 	and
+        $words[2] =~ /list$/
+        and
 	(
-	 $words[2] =~ /list$/ && @words == 3
+	 @words == 3
 	 ||
-	 $words[2] =~ /list$/ && @words == 4 && length($word)
+	 @words == 4 && length($word)
 	)
        ) {
 	return grep /^\Q$word\E/, qw(splice shift unshift pop push);
+    } elsif (defined($words[2])
+             and
+             $words[2] eq "init"
+             and
+            (
+             @words == 3
+             ||
+             @words == 4 && length($word)
+            )) {
+	return sort grep /^\Q$word\E/, keys %keys;
     } elsif (@words >= 4) {
 	return ();
     }

@@ -79,6 +79,7 @@ plan tests => (
                scalar @prgs
                + 2                     # 2 histsize tests
                + 1                     # 1 RUN_EXPECT feedback
+               + 1                     # 1 count keys for 'o conf init variable'
                # + scalar @modules
               );
 
@@ -97,6 +98,16 @@ $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
     || $HAVE->{"Term::ReadLine::Gnu"};
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100");
+
+{
+    require CPAN::HandleConfig;
+    my @ociv_tests = map { /P:o conf init (\w+)/ && $1 } @prgs;
+    my %ociv;
+    @ociv{@ociv_tests} = ();
+    my @kwnt = sort grep { not exists $ociv{$_} } keys %CPAN::HandleConfig::keys;
+    ok(@kwnt==0,"key words not tested[@kwnt]");
+    die if @kwnt;
+}
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
