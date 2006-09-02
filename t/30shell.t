@@ -106,7 +106,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
     @ociv{@ociv_tests} = ();
     my @kwnt = sort grep { not exists $ociv{$_} } keys %CPAN::HandleConfig::keys;
     ok(@kwnt==0,"key words not tested[@kwnt]");
-    die if @kwnt;
+    # die if @kwnt;
 }
 
 my $prompt = "cpan>";

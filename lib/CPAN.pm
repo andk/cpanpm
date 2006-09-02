@@ -1423,6 +1423,7 @@ sub i {
 # CPAN::Shell::o and CPAN::HandleConfig::edit are closely related. 'o
 # conf' calls through to CPAN::HandleConfig::edit. 'o conf' should
 # have been called 'set' and 'o debug' maybe 'set debug' or 'debug'
+# 'o conf XXX' calls ->edit in CPAN/HandleConfig.pm
 sub o {
     my($self,$o_type,@o_what) = @_;
     $DB::single = 1;
@@ -7998,7 +7999,9 @@ added to the search path of the CPAN module before the use() or
 require() statements.
 
 The configuration dialog can be started any time later again by
-issuing the command C< o conf init > in the CPAN shell.
+issuing the command C< o conf init > in the CPAN shell. A subset of
+the configuration dialog can be run by issuing C<o conf init VAR>
+where VAR is any valid config variable.
 
 Currently the following keys in the hash reference $CPAN::Config are
 defined:
