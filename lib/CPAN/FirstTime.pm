@@ -46,6 +46,16 @@ sub init {
     use Config;
     # extra arg in 'o conf init make' selects only $item =~ /make/
     my $matcher = $args{args} && @{$args{args}} ? $args{args}[0] : '';
+    if ($matcher =~ /^\w+$/) {
+        if (
+            exists $CPAN::HandleConfig::keys{$matcher}
+           ) {
+            $matcher = "\\b$matcher\\b";
+        } else {
+            $CPAN::Frontend->myprint("'$matcher' is not a valid configuration variable");
+            return;
+        }
+    }
     CPAN->debug("matcher[$matcher]") if $CPAN::DEBUG;
 
     unless ($CPAN::VERSION) {
