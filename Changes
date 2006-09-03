@@ -1,3 +1,12 @@
+2006-09-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_59: "o conf init MATCH" finally works and can be used to
+	jump into the configuration dialog and select an arbitrary subset of
+	questions.
+
+	* perl -I. -MCPAN ... now works because we replaced C<no lib .> with
+	rel2absing the INC (suggested by Slaven Rezic)
+
 2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_58: work is still in progress to get "o conf init MATCH"

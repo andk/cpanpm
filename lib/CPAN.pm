@@ -8000,8 +8000,8 @@ require() statements.
 
 The configuration dialog can be started any time later again by
 issuing the command C< o conf init > in the CPAN shell. A subset of
-the configuration dialog can be run by issuing C<o conf init VAR>
-where VAR is any valid config variable.
+the configuration dialog can be run by issuing C<o conf init WORD>
+where WORD is any valid config variable or a regular expression.
 
 Currently the following keys in the hash reference $CPAN::Config are
 defined:
