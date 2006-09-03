@@ -448,16 +448,18 @@ sub load {
 
     }
     local($") = ", ";
-    $CPAN::Frontend->myprint(<<END) if $redo && ! $theycalled;
+    if ($redo && ! $theycalled){
+        $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 the following indispensable but missing parameters:
 
 @miss
 END
-    $CPAN::Frontend->myprint(qq{
+        $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
-    $args{args} = ["\\b".join("|",@miss)."\\b"];
+        $args{args} = ["\\b".join("|",@miss)."\\b"];
+    }
     sleep 2;
     CPAN::FirstTime::init($configpm, %args);
 }

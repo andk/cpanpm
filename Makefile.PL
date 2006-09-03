@@ -201,6 +201,9 @@ checkout ::
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
+urllist :
+	$(PERL) -Ilib -MCPAN -MCPAN::FirstTime -e 'CPAN::FirstTime::init("$$ENV{HOME}/.cpan/CPAN/MyConfig", args => [qw(urllist)])'
+
 runadmin :
 	$(PERL) -Ilib -MCPAN::Admin -eshell
 
