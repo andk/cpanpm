@@ -1,5 +1,9 @@
 2006-09-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: Your proxy_user? [] Or not?
+
+	784,5,6 something terrible broken...
+
 	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe
 	it's just failing tests due to missing warnings.pm, I was impatient and
 	want to leave that for later. Now we want it for 5.8
