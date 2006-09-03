@@ -455,11 +455,11 @@ the following indispensable but missing parameters:
 
 @miss
 END
-        $CPAN::Frontend->myprint(qq{
-$configpm initialized.
-});
         $args{args} = ["\\b".join("|",@miss)."\\b"];
     }
+    $CPAN::Frontend->myprint(qq{
+$configpm initialized.
+});
     sleep 2;
     CPAN::FirstTime::init($configpm, %args);
 }

@@ -377,8 +377,9 @@ Shall we use it as the general CPAN build and cache directory?
     #= Proxies
     #
 
-    my @proxy_vars = qw/ftp_proxy http_proxy no_proxy proxy_user proxy_pass/;
-    if (!$matcher or "@proxy_vars" =~ /$matcher/){
+    my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
+    my @proxy_user_vars = qw/proxy_user proxy_pass/;
+    if (!$matcher or "@proxy_vars @proxy_user_vars" =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{proxy_intro});
 
         for (@proxy_vars) {

@@ -2,13 +2,11 @@
 
 	* Bug: Your proxy_user? [] Or not?
 
-	784,5,6 something terrible broken...
+	784,5,6 something terrible broken... FIXED in rev 788
 
 	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe
 	it's just failing tests due to missing warnings.pm, I was impatient and
-	want to leave that for later. Now we want it for 5.8
-
-	It seems that File::HomeDir cannot be installed under 5.6.1 oh well:-(
+	wanted to leave that for later. Now we want it for 5.8
 
 	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
 	and jarkko
