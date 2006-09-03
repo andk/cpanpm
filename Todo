@@ -117,7 +117,8 @@
 	compare the 'make testshell-with-protocol' output carefully
 
 	* Todo: use 'o conf init MATCH' when only a few mandatory variables are
-	missing so that people need not go through the whole cycle
+	missing so that people need not go through the whole cycle DONE in rev
+	785
 
 	* hr ================ no todos below this line ================ /hr
 

@@ -187,7 +187,7 @@ Shall we use it as the general CPAN build and cache directory?
 
     if (!$matcher or 'index_expire' =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{index_expire_intro});
-        
+
         my_dflt_prompt(index_expire => 1, $matcher);
     }
 
@@ -506,7 +506,10 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{inhibit_startup_message} = 0;
 
     $CPAN::Frontend->myprint("\n\n");
-    if (!$matcher) {
+    if ($matcher) {
+        $CPAN::Frontend->myprint("Please remember to call 'o conf commit' to ".
+                                 "make the config permanent!\n\n");
+    } else {
         CPAN::HandleConfig->commit($configpm);
     }
 }

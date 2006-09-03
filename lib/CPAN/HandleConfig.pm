@@ -457,7 +457,7 @@ END
     $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
-
+    $args{args} = ["\\b".join("|",@miss)."\\b"];
     sleep 2;
     CPAN::FirstTime::init($configpm, %args);
 }
