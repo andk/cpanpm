@@ -106,7 +106,16 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
     @ociv{@ociv_tests} = ();
     my $keys = %CPAN::HandleConfig::keys; # to keep warnings silent
     my @kwnt = sort grep { not exists $ociv{$_} }
-        grep { ! /(?:^urllist|_list|_hash)$/ }
+        grep { ! m/
+                   ^(?:
+                   urllist
+                   |inhibit_startup_message
+                   |username
+                   |password
+                   |proxy_(?:user|pass)
+                   |.*_list
+                   |.*_hash
+                  )$/x }
             keys %CPAN::HandleConfig::keys;
     my $test_tuning = 0;
     if ($test_tuning) {
@@ -544,19 +553,19 @@ P:cwd
 E:
 ########
 P:o conf init histfile
-E:(\])
+E:(hist)
 ########
 P:/tmp/foo
-E:
+E:(save)
 ########
 P:100
 E:
 ########
 P:o conf init histsize
-E:(\])
+E:(hist)
 ########
 P:/tmp/foo
-E:
+E:(save)
 ########
 P:100
 E:
@@ -564,13 +573,25 @@ E:
 P:o conf init inactivity_timeout
 E:(\])
 ########
-P:0
+P:10000
 E:
 ########
 P:o conf init index_expire
 E:(\])
 ########
-P:1
+P:y
+E:
+########
+P:o conf init keep_source_where
+E:(\])
+########
+P:/tmp
+E:
+########
+P:o conf init term_ornaments
+E:(\])
+########
+P:y
 E:
 ########
 P:o conf defaults

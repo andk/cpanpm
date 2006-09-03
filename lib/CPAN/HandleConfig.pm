@@ -53,6 +53,8 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "password",
                              "prefer_installer",
                              "prerequisites_policy",
+                             "proxy_pass",
+                             "proxy_user",
                              "scan_cache",
                              "shell",
                              "show_upload_date",

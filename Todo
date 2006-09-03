@@ -1,59 +1,4 @@
-2006-09-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: "o conf init novar" shall tell that it is not a config variable
-	but 'o conf init var' shall only go to this variable's dialog, not
-	everything that has this substring. DONE in rev 778
-
-2006-09-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: why has the question for the ftp_proxy no square brackets? FIXED
-	somewhere between 775 and 782
-
-	* Todo: the prompt for keep_source_where seems bogus and people cannot
-	choose it anyway. With a bit of rewording one could call it
-	build_dir_intro and then we would find out that we have no prompt for
-	the keep_source_where config variable.
-
-	* Todo: completion for 'o conf init MATCH' DONE in rev 776
-
-2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* replace "no lib '.'" with rel2absing the INC if rel2abs is available
-	(suggested by Slaven Rezic) DONE in rev 773
-
-	* Todo: use 'o conf init MATCH' when only a few mandatory variables are
-	missing so that people need not go through the whole cycle
-
-	* Todo: investigate why 'o conf init histsize' still asks two questions.
-	Maybe we should write the test automatically with all available
-	variables and see if one question is asked. STARTED for all but the
-	_list and _hash stuff and for undocumented things like
-	commandnumber_in_prompt and things we never ask like ftp_passive. It
-	turned out that histsize really depends on histfile and they should be
-	asked as a pair. But then I tried 'ftp' which hit several options,
-	'^ftp$', '\bftp\b' which both did not match at all and I wondered if
-	this needs to be addressed or not and how. Same for make. What about
-	inactivity_timeout? why does it use prompt(), not my_default_prompt?
-	index_expire? username? password?
-
-	* Todo: document 'o conf init MATCH' and write a couple tests into
-	30shell.t
-
-2006-08-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: test many cases:
-
-	if we have a urllist, if have none: can we always hit RETURN and reach
-	the end, especially if we already have a previous pick?
-
-	if we say 'o conf init'...yes/no (no is what the shell test does, so no
-	need here to investigate)
-
-	What's about the SPACE RETURN thing, is it broken and since when?
-
-	compare the 'make testshell-with-protocol' output carefully
-
-2006-08-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe
 	it's just failing tests due to missing warnings.pm, I was impatient and
@@ -61,31 +6,11 @@
 
 	It seems that File::HomeDir cannot be installed under 5.6.1 oh well:-(
 
-2006-08-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: integrate branch
-	https://pause.perl.org:5460/svn/cpanpm/branches/dagolden-cpan-reporter
-	DONE by David in rev. 758
-
-2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* As #20754 I requested bzip2 support from CPANPLUS. I should write the
-	code for mldistwatch so that I just have to turn on the indexing of bz2
-	files. DONE in rev 815 of the PAUSE repository.
-
 	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
 	and jarkko
 
-	* Todo: add a command to list all scripts and use it to test-install all
-	of them to get a good coverage for the new 'install <script>' support.
-	DONE in revision 746
-
-2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* Todo (E1): use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
 	get rid of the term_is_latin variable.
-
-2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* RT (M5) has 21 open and new tickets...
 
@@ -179,6 +104,81 @@
 
 	And I promise to try out a more granular locking mechanism.
 
+	* Todo: test many cases:
+
+	if we have a urllist, if have none: can we always hit RETURN and reach
+	the end, especially if we already have a previous pick?
+
+	if we say 'o conf init'...yes/no (no is what the shell test does, so no
+	need here to investigate)
+
+	What's about the SPACE RETURN thing, is it broken and since when?
+
+	compare the 'make testshell-with-protocol' output carefully
+
+	* Todo: use 'o conf init MATCH' when only a few mandatory variables are
+	missing so that people need not go through the whole cycle
+
+	* hr ================ no todos below this line ================ /hr
+
+2006-09-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: "o conf init novar" shall tell that it is not a config variable
+	but 'o conf init var' shall only go to this variable's dialog, not
+	everything that has this substring. DONE in rev 778
+
+2006-09-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: why has the question for the ftp_proxy no square brackets? FIXED
+	somewhere between 775 and 782
+
+	* Todo: the prompt for keep_source_where seems bogus and people cannot
+	choose it anyway. With a bit of rewording one could call it
+	build_dir_intro and then we would find out that we have no prompt for
+	the keep_source_where config variable. FIXED in rev 784
+
+	* Todo: completion for 'o conf init MATCH' DONE in rev 776
+
+2006-08-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* replace "no lib '.'" with rel2absing the INC if rel2abs is available
+	(suggested by Slaven Rezic) DONE in rev 773
+
+	* Todo: investigate why 'o conf init histsize' still asks two questions.
+	Maybe we should write the test automatically with all available
+	variables and see if one question is asked. STARTED for all but the
+	_list and _hash stuff and for undocumented things like
+	commandnumber_in_prompt and things we never ask like ftp_passive. It
+	turned out that histsize really depends on histfile and they should be
+	asked as a pair. But then I tried 'ftp' which hit several options,
+	'^ftp$', '\bftp\b' which both did not match at all and I wondered if
+	this needs to be addressed or not and how. Same for make. What about
+	inactivity_timeout? why does it use prompt(), not my_default_prompt?
+	index_expire? username? password? ALL FIXED between 775 and 784
+
+	* Todo: document 'o conf init MATCH' and write a couple tests into
+	30shell.t DONE
+
+2006-08-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: integrate branch
+	https://pause.perl.org:5460/svn/cpanpm/branches/dagolden-cpan-reporter
+	DONE by David in rev. 758
+
+2006-07-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* As #20754 I requested bzip2 support from CPANPLUS. I should write the
+	code for mldistwatch so that I just have to turn on the indexing of bz2
+	files. DONE in rev 815 of the PAUSE repository.
+
+	* Todo: add a command to list all scripts and use it to test-install all
+	of them to get a good coverage for the new 'install <script>' support.
+	DONE in revision 746
+
+2006-07-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
 	* Jim Cromie suggests (H4): tweak shell to allow cpan> o conf init
 	@sections tweak FirstTime::init() interface to accept optional @sections
 
@@ -186,7 +186,7 @@
 	     or grep /$this_sect_name/, @sections)
 
 	candidate sections: progs - external prog selection make - all make
-	options
+	options DONE in re 784
 
 	* hr ================ no todos below this line ================ /hr
 

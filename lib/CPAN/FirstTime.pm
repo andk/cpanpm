@@ -160,10 +160,10 @@ Shall we use it as the general CPAN build and cache directory?
         }
 
         if (!$matcher or 'keep_source_where' =~ /$matcher/) {
-            $CPAN::Frontend->myprint($prompts{keep_source_where});
-
-            $CPAN::Config->{keep_source_where}
-                = File::Spec->catdir($CPAN::Config->{cpan_home},"sources");
+            my_dflt_prompt("keep_source_where",
+                           File::Spec->catdir($CPAN::Config->{cpan_home},"sources"),
+                           $matcher,
+                          );
         }
 
         if (!$matcher or 'build_dir' =~ /$matcher/) {
@@ -377,7 +377,7 @@ Shall we use it as the general CPAN build and cache directory?
     #= Proxies
     #
 
-    my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
+    my @proxy_vars = qw/ftp_proxy http_proxy no_proxy proxy_user proxy_pass/;
     if (!$matcher or "@proxy_vars" =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{proxy_intro});
 
@@ -434,7 +434,7 @@ Shall we use it as the general CPAN build and cache directory?
     #
 
     my_yn_prompt(commandnumber_in_prompt => 1, $matcher);
-
+    my_yn_prompt(term_ornaments => 1, $matcher);
 
     #
     #== term_is_latin
@@ -501,10 +501,9 @@ Shall we use it as the general CPAN build and cache directory?
         conf_sites();
     }
 
-    # We don't ask these now, the defaults are very likely OK.
+    # We don't ask this one now, it's plain silly and maybe is not
+    # even used correctly everywhere.
     $CPAN::Config->{inhibit_startup_message} = 0;
-    $CPAN::Config->{getcwd}                  = 'cwd';
-    $CPAN::Config->{term_ornaments}          = 1;
 
     $CPAN::Frontend->myprint("\n\n");
     if (!$matcher) {
@@ -841,13 +840,9 @@ First of all, I\'d like to create this directory. Where?
 
 keep_source_where => qq{
 
-If you like, I can cache the source files after I build them.  Doing
-so means that, if you ever rebuild that module in the future, the
-files will be taken from the cache. The tradeoff is that it takes up
-space.  How much space would you like to allocate to this cache?  (If
-you don\'t want me to keep a cache, answer 0.)
-
-},
+Unless you are accessing the CPAN via the filesystem directly CPAN.pm
+needs to keep the source files it downloads somewhere. Please supply a
+directory where the downloaded files are to be kept.},
 
 build_cache_intro => qq{
 
@@ -1206,6 +1201,12 @@ downloads new indexes.
 },
 
 index_expire => qq{Let the index expire after how many days?},
+
+term_ornaments => qq{
+
+When using Term::ReadLine, you can turn ornaments on so that your
+input stands out against the output from CPAN.pm. Do you want to turn
+ornaments on?},
 
 );
 
