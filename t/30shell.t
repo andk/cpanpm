@@ -158,7 +158,19 @@ sub mydiag {
 $|=1;
 my $expo;
 my @PAIRS;
-$RUN_EXPECT = $HAVE_EXPECT || 0;
+if ($HAVE_EXPECT) {
+    if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
+        $RUN_EXPECT = 0;
+    } else {
+        $RUN_EXPECT = 1;
+    }
+} else {
+    if ($ENV{CPAN_RUN_SHELL_TEST}) {
+        $RUN_EXPECT = 1;
+    } else {
+        $RUN_EXPECT = 0;
+    }
+}
 ok(1,"RUN_EXPECT[$RUN_EXPECT]");
 if ($RUN_EXPECT) {
     $expo = Expect->new;
@@ -230,6 +242,12 @@ expected[$expected]\ngot[$got]\n\n";
                             my $got = $expo->clear_accum;
                             diag "timed out on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
+                            diag sprintf(
+                                         "and perl says that >>%s<< %s match >>%s<<!",
+                                         $got,
+                                         $got=~/$expected/ ? "DOES" : "doesN'T",
+                                         $expected
+                                        );
                             exit;
                         } ],
                       '-re', $expected
@@ -298,7 +316,7 @@ P:o conf urllist
 E:file:///.*?CPAN
 ########
 P:o conf init build_cache
-E:(\])
+E:(size.*?\])
 ########
 P:100
 E:
