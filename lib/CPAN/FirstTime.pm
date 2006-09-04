@@ -974,8 +974,8 @@ that you install.  If you install the CPAN::Reporter module, you have
 the option to automatically generate and email test reports to CPAN
 Testers whenever you run tests on a CPAN package.
 
-See the CPAN::Reporter documentation for additional details and 
-configuration settings.  If your firewall blocks outgoing email, 
+See the CPAN::Reporter documentation for additional details and
+configuration settings.  If your firewall blocks outgoing email,
 you will need to configure CPAN::Reporter before sending reports.
 
 },
@@ -988,8 +988,7 @@ external_progs => qq{
 The CPAN module will need a few external programs to work properly.
 Please correct me, if I guess the wrong path for a program. Don\'t
 panic if you do not have some of them, just press ENTER for those. To
-disable the use of a download program, you can type a space followed
-by ENTER.
+disable the use of a program, you can type a space followed by ENTER.
 
 },
 
