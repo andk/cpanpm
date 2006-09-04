@@ -1,8 +1,26 @@
-2006-09-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Bug: Your proxy_user? [] Or not?
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
+	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
+	by Andrew Strebkov makes the URL selection nicer.
 
-	784,5,6 something terrible broken... FIXED in rev 788
+	It allows hyphenated ranges like 10-14. It also fixed the SPACE RETURN
+	bug that seems to be fixed now anyway.
+
+	* Todo: test many cases:
+
+	if we have a urllist, if have none: can we always hit RETURN and reach
+	the end, especially if we already have a previous pick? Once upon a time
+	the user may have been able to reach the previous pick from the
+	continent question. The hint is the $no_previous_warn variable.
+
+	if we say 'o conf init'...yes/no (no is what the shell test does, so no
+	need here to investigate)
+
+	What's about the SPACE RETURN thing, is it broken and since when? It
+	seems it works again, maybe since rev. 
+
+	compare the 'make testshell-with-protocol' output carefully
 
 	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe
 	it's just failing tests due to missing warnings.pm, I was impatient and
@@ -78,10 +96,6 @@
 
 	* Todo (E3): write a test for dot-cpan/Metadata usage
 
-	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
-	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
-	by Andrew Strebkov makes the URL selection nicer.
-
 	* prerequisites (E3): require perl version xxx: we should not delete that
 	information but honour it.
 
@@ -106,23 +120,15 @@
 
 	And I promise to try out a more granular locking mechanism.
 
-	* Todo: test many cases:
-
-	if we have a urllist, if have none: can we always hit RETURN and reach
-	the end, especially if we already have a previous pick?
-
-	if we say 'o conf init'...yes/no (no is what the shell test does, so no
-	need here to investigate)
-
-	What's about the SPACE RETURN thing, is it broken and since when?
-
-	compare the 'make testshell-with-protocol' output carefully
+	* hr ================ no todos below this line ================ /hr
 
 	* Todo: use 'o conf init MATCH' when only a few mandatory variables are
 	missing so that people need not go through the whole cycle DONE in rev
 	785
 
-	* hr ================ no todos below this line ================ /hr
+	* Bug: Your proxy_user? [] Or not?
+
+	784,5,6 something terrible broken... FIXED in rev 788
 
 2006-09-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
