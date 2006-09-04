@@ -234,6 +234,7 @@ META.yml:
 
 testcover:
 	:>SIGNATURE
+	$(PERL) -MDevel::Cover -e 0
 	`dirname $(PERL)`/cover -delete
 	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
 	`dirname $(PERL)`/cover

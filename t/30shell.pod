@@ -183,7 +183,7 @@ How the break-in in coverage? What's missing that I never checked for?
 Apparently the result is now wrong and was correct -- from looking at
 the blib-lib-CPAN-pm--subroutine.html we find that e.g. the whole
 Shell appears as untested. [...time passes...] Removing cover_db/*.old
-and then rerunning the coverage brings it bck to the values we had. Or
+and then rerunning the coverage brings it back to the values we had. Or
 maybe just running twice? Hmmm. So this is after 672:
 
  ----------------------------------- ------ ------ ------ ------ ------ ------
@@ -216,6 +216,8 @@ maybe just running twice? Hmmm. So this is after 672:
  ----------------------------------- ------ ------ ------ ------ ------ ------
 
 Cheap 2.5% added by harvesting make, test, notest, clean on our bundle.
+
+
 
 =cut
 
