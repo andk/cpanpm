@@ -43,6 +43,7 @@ $CPAN::Config = {
                  'show_upload_date' => q[0],
                  #'tar' => q[/bin/tar],
                  'term_is_latin' => q[0],
+                 'term_ornaments' => q[0],
                  #'unzip' => q[/usr/bin/unzip],
                  'urllist' => [qq[file://$cwd/t/CPAN]],
                  'wait_list' => [q[wait://ls6.informatik.uni-dortmund.de:1404]],
