@@ -283,6 +283,7 @@ read_myconfig;
 is($CPAN::Config->{histsize},101);
 rmtree _d"t/dot-cpan";
 
+# note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on)
 __END__
 ########
 E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)

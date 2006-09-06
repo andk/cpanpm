@@ -218,13 +218,7 @@ Shall we use it as the general CPAN build and cache directory?
     #= Module::Signature
     #
     if (!$matcher or 'check_sigs' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{check_sigs_intro});
-
-        defined($default = $CPAN::Config->{check_sigs}) or
-            $default = 0;
-        $ans = prompt($prompts{check_sigs},
-                      ($default ? 'yes' : 'no'));
-        $CPAN::Config->{check_sigs} = ($ans =~ /^y/i ? 1 : 0);
+        my_yn_prompt(check_sigs => 0, $matcher);
     }
 
     #
@@ -233,16 +227,12 @@ Shall we use it as the general CPAN build and cache directory?
     if (!$matcher or 'test_report' =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{test_report_intro});
 
-        defined($default = $CPAN::Config->{test_report}) or
-            $default = 0;
-        $ans = prompt($prompts{test_report},
-                      ($default ? 'yes' : 'no'));
-        $CPAN::Config->{test_report} = ($ans =~ /^y/i ? 1 : 0);
-        if ( 
+        my_yn_prompt(test_report => 0, $matcher);
+        if (
             $CPAN::Config->{test_report} && 
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
-        ) {
+           ) {
             print "\nProceeding to configure CPAN::Reporter.\n";
             CPAN::Reporter::configure();
             print "\nReturning to CPAN configuration.\n";
