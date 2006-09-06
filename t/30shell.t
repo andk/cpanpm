@@ -129,7 +129,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $timeout = 60;
+my $timeout = 10;
 
 my @system = (
               $^X,
@@ -196,7 +196,7 @@ sub splitchunk ($) {
 TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($prog,$expected,$req) = @h{qw(P E R)};
+    my($prog,$expected,$req,$test_timeout) = @h{qw(P E R T)};
     unless (defined $expected or defined $prog) {
         ok(1,"empty test");
         next TUPL;
@@ -231,7 +231,7 @@ TUPL: for my $i (0..$#prgs){
     if ($RUN_EXPECT) {
         mydiag "EXPECT: $expected";
         $expo->expect(
-                      $timeout,
+                      $test_timeout || $timeout,
                       [ eof => sub {
                             my $got = $expo->clear_accum;
                             diag "EOF on i[$i]prog[$prog]
@@ -243,7 +243,7 @@ expected[$expected]\ngot[$got]\n\n";
                             diag "timed out on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
                             diag sprintf(
-                                         "and perl says that >>%s<< %s match >>%s<<!",
+                                         "and perl says that [[[%s]]] %s match [[[%s]]]!",
                                          $got,
                                          $got=~/$expected/ ? "DOES" : "doesN'T",
                                          $expected
@@ -295,6 +295,7 @@ E:initialized(?s:.*?configure.as.much.as.possible.automatically.*?\])
 ########
 P:yesplease
 E:wrote
+T:60
 ########
 P:# o debug all
 ########

@@ -234,7 +234,7 @@ howto-release:
 META.yml:
 	$(ECHO) -n "" >> META.yml
 
-testcover:
+testcover: testdistros
 	:>SIGNATURE
 	$(PERL) -MDevel::Cover -e 0
 	`dirname $(PERL)`/cover -delete
@@ -251,7 +251,7 @@ testdistros: t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz 
         t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 
 # sorry, unix centric
-testshell-with-protocol:
+testshell-with-protocol: testdistros
 	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
 	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
