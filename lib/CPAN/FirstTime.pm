@@ -238,6 +238,15 @@ Shall we use it as the general CPAN build and cache directory?
         $ans = prompt($prompts{test_report},
                       ($default ? 'yes' : 'no'));
         $CPAN::Config->{test_report} = ($ans =~ /^y/i ? 1 : 0);
+        if ( 
+            $CPAN::Config->{test_report} && 
+            $CPAN::META->has_inst("CPAN::Reporter") &&
+            CPAN::Reporter->can('configure')
+        ) {
+            print "\nProceeding to configure CPAN::Reporter.\n";
+            CPAN::Reporter::configure();
+            print "\nReturning to CPAN configuration.\n";
+        }
     }
 
     #
