@@ -225,8 +225,6 @@ Shall we use it as the general CPAN build and cache directory?
     #= CPAN::Reporter
     #
     if (!$matcher or 'test_report' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{test_report_intro});
-
         my_yn_prompt(test_report => 0, $matcher);
         if (
             $CPAN::Config->{test_report} && 
