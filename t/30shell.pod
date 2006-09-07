@@ -1,6 +1,7 @@
 =pod
 
-Notes about coverage
+Notes about coverage. The target in the Makefile is called
+C<testcover>.
 
  2006-02-03 after rev. 517 we have this coverage:
  ----------------------------------- ------ ------ ------ ------ ------ ------

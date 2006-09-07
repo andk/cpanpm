@@ -9,7 +9,10 @@ Our first distribution in the mini CPAN site was
 
 which was a clone of PITA::Test::Dummy::Perl5::Make.
 
-Now we need more distros, based on the following criteria:
+This document describes which distros we need and how they can be
+added.
+
+We need distros based on the following criteria:
 
 Testing:        success/failure
 Installer:      EU:MM/M:B/M:I

@@ -1,3 +1,46 @@
+=pod
+
+Documentation about this test script is scattered around, sorry.
+
+C<30shell.pod> only talks about results from Devel::Cover
+
+C<README.shell.txt> describes how to add new pseudo distributions
+
+In the following I want to provide an overview about how this
+testscript works.
+
+After the __END__ token you find small groups of lines like the
+following:
+
+    ########
+    P:make CPAN::Test::Dummy::Perl5::BuildOrMake
+    E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
+    R:Module::Build
+    T:15
+    ########
+
+P stands for program or print
+
+E for expect
+
+T for timeout
+
+R for requires or relies on
+
+
+The script starts a CPAN shell and feed it the chunks such that the P
+line is injected, the output of the shell is parsed and compared to
+the expression in the E line. With T the timeout can be changed (the
+default is rather low, maybe 10 seconds, see the code for details).
+The expression in R is used to filter tests.
+
+To get reliable and debuggable results, Expect.pm should be installed.
+Without Expect.pm, a fallback mode is started that should in principle
+also succeed but is pretty hard to debug because there is no mechanism
+to sync state between reader and writer.
+
+=cut
+
 use strict;
 
 use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
