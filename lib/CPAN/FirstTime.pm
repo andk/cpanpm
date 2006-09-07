@@ -617,6 +617,8 @@ sub find_exe {
 
 sub picklist {
     my($items,$prompt,$default,$require_nonempty,$empty_warning)=@_;
+    CPAN->debug("picklist($items,$prompt,$default,$require_nonempty,$empty_warning)")
+        if $CPAN::DEBUG;
     $default ||= '';
 
     my $pos = 0;
@@ -636,10 +638,10 @@ sub picklist {
 
         @nums = split (' ', $num);
         my $i = scalar @$items;
-        (warn "invalid items entered, try again\n"), next
+        (print "invalid items entered, try again\n"), next
             if grep (/\D/ || $_ < 1 || $_ > $i, @nums);
         if ($require_nonempty) {
-            (warn "$empty_warning\n");
+            (print "$empty_warning\n");
         }
         print "\n";
 
@@ -697,7 +699,7 @@ sub read_mirrored_by {
     print $prompts{urls_intro};
 
     my (@cont, $cont, %cont, @countries, @urls, %seen);
-    my $no_previous_warn = 
+    my $no_previous_warn =
         "Sorry! since you don't have any existing picks, you must make a\n" .
             "geographic selection.";
     @cont = picklist([sort keys %all],

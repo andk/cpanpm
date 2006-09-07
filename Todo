@@ -1,3 +1,9 @@
+2006-09-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bugs in FirstTime: print and warn not unified; needs to be
+	investigated: two calls to warn replaced with print in rev. 803:
+	somebody ate the warnings, they were not displayed for unknown reason.
+
 2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
