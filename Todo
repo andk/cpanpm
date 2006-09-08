@@ -2,7 +2,7 @@
 
 	* Bugs in FirstTime: print and warn not unified; needs to be
 	investigated: two calls to warn replaced with print in rev. 803:
-	somebody ate the warnings, they were not displayed for unknown reason.
+	somebody ate the warnings, they were not displayed for unknown reasons.
 
 2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

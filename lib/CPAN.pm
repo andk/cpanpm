@@ -2218,6 +2218,8 @@ sub print_ornamented {
     }
 }
 
+# where is myprint/mywarn/Frontend/etc. documented? We need guidelines
+# where to use what
 sub myprint {
     my($self,$what) = @_;
 
@@ -2503,7 +2505,7 @@ sub get_non_proxy_credentials {
        o conf username your_username
        o conf password your_password
      )\nUsername:";
-        
+
     ($user, $password) =
         _get_username_and_password_from_user($username_prompt);
     return ($user,$password);

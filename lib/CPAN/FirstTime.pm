@@ -140,20 +140,23 @@ Shall we use it as the general CPAN build and cache directory?
                     require Cwd;
                     my $cwd = Cwd::cwd();
                     my $absans = File::Spec->catdir($cwd,$ans);
-                    warn "The path '$ans' is not an absolute path. Please specify an absolute path\n";
+                    $CPAN::Frontend->mywarn("The path '$ans' is not an ".
+                                            "absolute path. Please specify ".
+                                            "an absolute path\n");
                     $default = $absans;
                     next;
                 }
                 eval { File::Path::mkpath($ans); }; # dies if it can't
                 if ($@) {
-                    warn "Couldn't create directory $ans.\nPlease retry.\n";
+                    $CPAN::Frontend->mywarn("Couldn't create directory $ans.\n".
+                                            "Please retry.\n");
                     next;
                 }
                 if (-d $ans && -w _) {
                     last;
                 } else {
-                    warn "Couldn't find directory $ans\n"
-                        . "or directory is not writable. Please retry.\n";
+                    $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
+                                            "or directory is not writable. Please retry.\n");
                 }
             }
             $CPAN::Config->{cpan_home} = $ans;
@@ -301,7 +304,8 @@ Shall we use it as the general CPAN build and cache directory?
     if (!$matcher or 'shell' =~ /$matcher/) {
         my $path = $CPAN::Config->{'shell'};
         if (File::Spec->file_name_is_absolute($path)) {
-            warn "Warning: configured $path does not exist\n" unless -e $path;
+            $CPAN::Frontend->mywarn("Warning: configured $path does not exist\n")
+                unless -e $path;
             $path = "";
         }
         $path ||= $ENV{SHELL};
@@ -617,14 +621,14 @@ sub find_exe {
 
 sub picklist {
     my($items,$prompt,$default,$require_nonempty,$empty_warning)=@_;
-    CPAN->debug("picklist($items,$prompt,$default,$require_nonempty,$empty_warning)")
-        if $CPAN::DEBUG;
+    CPAN->debug("picklist('$items','$prompt','$default','$require_nonempty',".
+                "'$empty_warning')") if $CPAN::DEBUG;
     $default ||= '';
 
     my $pos = 0;
 
     my @nums;
-    while (1) {
+  SELECTION: while (1) {
 
         # display, at most, 15 items at a time
         my $limit = $#{ $items } - $pos;
@@ -638,15 +642,17 @@ sub picklist {
 
         @nums = split (' ', $num);
         my $i = scalar @$items;
-        (print "invalid items entered, try again\n"), next
-            if grep (/\D/ || $_ < 1 || $_ > $i, @nums);
-        if ($require_nonempty) {
-            (print "$empty_warning\n");
+        if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)){
+            $CPAN::Frontend->mywarn("invalid items entered, try again\n");
+            next SELECTION;
         }
-        print "\n";
+        if ($require_nonempty) {
+            $CPAN::Frontend->mywarn("$empty_warning\n");
+        }
+        $CPAN::Frontend->myprint("\n");
 
         # a blank line continues...
-        next unless @nums;
+        next SELECTION unless @nums;
         last;
     }
     for (@nums) { $_-- }
@@ -654,18 +660,18 @@ sub picklist {
 }
 
 sub display_some {
-	my ($items, $limit, $pos) = @_;
-	$pos ||= 0;
+    my ($items, $limit, $pos) = @_;
+    $pos ||= 0;
 
-	my @displayable = @$items[$pos .. ($pos + $limit)];
+    my @displayable = @$items[$pos .. ($pos + $limit)];
     for my $item (@displayable) {
-		printf "(%d) %s\n", ++$pos, $item;
+        $CPAN::Frontend->myprint(sprintf "(%d) %s\n", ++$pos, $item);
     }
-	printf("%d more items, hit SPACE RETURN to show them\n",
-               (@$items - $pos)
-              )
-            if $pos < @$items;
-	return $pos;
+    $CPAN::Frontend->myprint(sprintf("%d more items, hit SPACE RETURN to show them\n",
+                                     (@$items - $pos)
+                                    ))
+        if $pos < @$items;
+    return $pos;
 }
 
 sub read_mirrored_by {
@@ -696,7 +702,7 @@ sub read_mirrored_by {
 	$CPAN::Config->{urllist} = [];
     }
 
-    print $prompts{urls_intro};
+    $CPAN::Frontend->myprint($prompts{urls_intro});
 
     my (@cont, $cont, %cont, @countries, @urls, %seen);
     my $no_previous_warn =
@@ -765,21 +771,24 @@ Please enter your CPAN site:};
             if ($ans =~ /^\w+:\/./) {
                 push @urls, $ans unless $seen{$ans}++;
             } else {
-                printf(qq{"%s" doesn\'t look like an URL at first sight.
+                $CPAN::Frontend->
+                    myprint(sprintf(qq{"%s" doesn\'t look like an URL at first sight.
 I\'ll ignore it for now.
 You can add it to your %s
 later if you\'re sure it\'s right.\n},
-                       $ans,
-                       $INC{'CPAN/MyConfig.pm'} || $INC{'CPAN/Config.pm'} || "configuration file",
-                      );
+                                   $ans,
+                                   $INC{'CPAN/MyConfig.pm'}
+                                   || $INC{'CPAN/Config.pm'}
+                                   || "configuration file",
+                                  ));
             }
         }
     } while $ans || !%seen;
 
     push @{$CPAN::Config->{urllist}}, @urls;
     # xxx delete or comment these out when you're happy that it works
-    print "New set of picks:\n";
-    map { print "  $_\n" } @{$CPAN::Config->{urllist}};
+    $CPAN::Frontend->myprint("New set of picks:\n");
+    map { $CPAN::Frontend->myprint("  $_\n") } @{$CPAN::Config->{urllist}};
 }
 
 
