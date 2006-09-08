@@ -643,6 +643,10 @@ sub picklist {
         my $num = prompt($prompt,$default);
 
         @nums = split (' ', $num);
+        {
+            my %seen;
+            @nums = grep { !$seen{$_}++ } @nums;
+        }
         my $i = scalar @$items;
         if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)){
             $CPAN::Frontend->mywarn("invalid items entered, try again\n");
