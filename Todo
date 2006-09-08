@@ -1,8 +1,18 @@
+2006-09-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: run everything with PRINT_ORNAMENTING turned on to see what is
+	myprint and what is mywarn. Are both going to STDERR? We should document
+	when to use myprint and mywarn. And we should not let anybody use print
+	directly.
+
 2006-09-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bugs in FirstTime: print and warn not unified; needs to be
 	investigated: two calls to warn replaced with print in rev. 803:
 	somebody ate the warnings, they were not displayed for unknown reasons.
+	Update: no, the warnings were not dropped but the global value of
+	$CPAN::Config->{urllist} was emptied when I interrupted the selection
+	process. Fixed in 804-807 or so.
 
 2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

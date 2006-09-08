@@ -2173,7 +2173,10 @@ sub format_result {
 # debugging utility that reveals which output is going through which
 # channel. No, I don't like the colors ;-)
 
-#-> sub CPAN::Shell::print_ornameted ;
+# to turn colordebugging on, write
+# cpan> !$CPAN::Shell::PRINT_ORNAMENTING++
+
+#-> sub CPAN::Shell::print_ornamented ;
 sub print_ornamented {
     my($self,$what,$ornament) = @_;
     my $longest = 0;
