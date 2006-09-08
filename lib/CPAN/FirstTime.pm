@@ -707,9 +707,14 @@ sub read_mirrored_by {
     my $no_previous_warn =
         "Sorry! since you don't have any existing picks, you must make a\n" .
             "geographic selection.";
-    @cont = picklist([sort keys %all],
+    my $offer_cont = [sort keys %all];
+    if (@previous_urls) {
+        push @$offer_cont, "(edit previous picks)";
+        $default = @$offer_cont;
+    }
+    @cont = picklist($offer_cont,
                      "Select your continent (or several nearby continents)",
-                     '',
+                     $default,
                      ! @previous_urls,
                      $no_previous_warn);
 
@@ -720,16 +725,21 @@ sub read_mirrored_by {
         @c = map ("$_ ($cont)", @c) if @cont > 1;
         push (@countries, @c);
     }
+    if (@previous_urls && @countries) {
+        push @countries, "(edit previous picks)";
+        $default = @countries;
+    }
 
     if (@countries) {
         @countries = picklist (\@countries,
                                "Select your country (or several nearby countries)",
-                               '',
+                               $default,
                                ! @previous_urls,
                                $no_previous_warn);
         %seen = map (($_ => 1), @previous_urls);
         # hmmm, should take list of defaults from CPAN::Config->{'urllist'}...
         foreach $country (@countries) {
+            next if $country =~ /edit previous picks/;
             (my $bare_country = $country) =~ s/ \(.*\)//;
             my @u = sort keys %{$all{$cont{$bare_country}}{$bare_country}};
             @u = grep (! $seen{$_}, @u);
