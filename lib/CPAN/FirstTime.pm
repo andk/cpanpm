@@ -20,7 +20,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use File::Spec;
-use vars qw($VERSION);
+use vars qw($VERSION $urllist);
 $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
 =head1 NAME
@@ -603,8 +603,10 @@ Shall I use the local database in $mby?};
       last;
     }
   }
+  local $urllist = [];
   read_mirrored_by($mby);
   bring_your_own();
+  $CPAN::Config->{urllist} = $urllist;
 }
 
 sub find_exe {
@@ -697,10 +699,7 @@ sub read_mirrored_by {
     }
     $fh->close;
     $CPAN::Config->{urllist} ||= [];
-    my(@previous_urls);
-    if (@previous_urls = @{$CPAN::Config->{urllist}}) {
-	$CPAN::Config->{urllist} = [];
-    }
+    my @previous_urls = @{$CPAN::Config->{urllist}};
 
     $CPAN::Frontend->myprint($prompts{urls_intro});
 
@@ -747,14 +746,14 @@ put them on one line, separated by blanks, e.g. '1 4 5'";
                          (scalar @urls));
         $prompt .= "\n(or just hit RETURN to keep your previous picks)";
     }
-    
+
     @urls = picklist (\@urls, $prompt, $default);
     foreach (@urls) { s/ \(.*\)//; }
-    push @{$CPAN::Config->{urllist}}, @urls;
+    push @$urllist, @urls;
 }
 
 sub bring_your_own {
-    my %seen = map (($_ => 1), @{$CPAN::Config->{urllist}});
+    my %seen = map (($_ => 1), @$urllist);
     my($ans,@urls);
     do {
 	my $prompt = "Enter another URL or RETURN to quit:";
@@ -785,10 +784,10 @@ later if you\'re sure it\'s right.\n},
         }
     } while $ans || !%seen;
 
-    push @{$CPAN::Config->{urllist}}, @urls;
+    push @$urllist, @urls;
     # xxx delete or comment these out when you're happy that it works
     $CPAN::Frontend->myprint("New set of picks:\n");
-    map { $CPAN::Frontend->myprint("  $_\n") } @{$CPAN::Config->{urllist}};
+    map { $CPAN::Frontend->myprint("  $_\n") } @$urllist;
 }
 
 
