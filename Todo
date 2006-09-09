@@ -23,7 +23,9 @@
 
 	But the important step is that I now have a workaround and can support
 	colorization with just a small compromize. AND I can turn the bug on and
-	investigate in many different contexts.
+	investigate in many different contexts. FIXED all that in 809
+
+	The $demobug thing is underdocumented!
 	
 2006-09-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
