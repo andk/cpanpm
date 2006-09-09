@@ -75,12 +75,12 @@ sub init {
     #
 
     unless ($matcher) {
-        print $prompts{manual_config};
+        $CPAN::Frontend->myprint($prompts{manual_config});
     }
 
     my $manual_conf;
 
-    local *_real_prompt = \&ExtUtils::MakeMaker::prompt;
+    local *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
     if ( $args{autoconfig} ) {
         $manual_conf = "no";
     } elsif ($matcher) {
@@ -101,13 +101,31 @@ sub init {
 
         local $^W = 0;
 	# prototype should match that of &MakeMaker::prompt
+        my $current_second = time;
+        my $current_second_count = 0;
+        my $i_am_mad = 0;
 	*_real_prompt = sub ($;$) {
 	  my($q,$a) = @_;
 	  my($ret) = defined $a ? $a : "";
 	  $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
           eval { require Time::HiRes };
           unless ($@) {
-              Time::HiRes::sleep(0.1);
+              if (time == $current_second) {
+                  $current_second_count++;
+                  if ($current_second_count > 20) {
+                      # I don't like more than 20 prompts per second
+                      $i_am_mad++;
+                  }
+              } else {
+                  $current_second = time;
+                  $current_second_count = 0;
+                  $i_am_mad-- if $i_am_mad;
+              }
+              if ($i_am_mad){
+                  #require Carp;
+                  #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
+                  Time::HiRes::sleep(0.1);
+              }
           }
 	  $ret;
 	};
@@ -234,9 +252,9 @@ Shall we use it as the general CPAN build and cache directory?
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
            ) {
-            print "\nProceeding to configure CPAN::Reporter.\n";
+            $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
             CPAN::Reporter::configure();
-            print "\nReturning to CPAN configuration.\n";
+            $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
         }
     }
 
@@ -437,6 +455,13 @@ Shall we use it as the general CPAN build and cache directory?
 
     my_yn_prompt(commandnumber_in_prompt => 1, $matcher);
     my_yn_prompt(term_ornaments => 1, $matcher);
+    if ("colorize_output colorize_print colorize_warn" =~ $matcher) {
+        my_yn_prompt(colorize_output => 0, $matcher);
+        if ($CPAN::Config->{colorize_output}) {
+            my_dflt_prompt(colorize_print => "bold blue", $matcher);
+            my_dflt_prompt(colorize_warn => "bold red", $matcher);
+        }
+    }
 
     #
     #== term_is_latin
@@ -444,13 +469,7 @@ Shall we use it as the general CPAN build and cache directory?
 
     if (!$matcher or 'term_is_latin' =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{term_is_latin});
-
-        defined($default = $CPAN::Config->{term_is_latin}) or $default = 1;
-        do {
-            $ans = prompt("Your terminal expects ISO-8859-1 (yes/no)?",
-                          ($default ? 'yes' : 'no'));
-        } while ($ans !~ /^[yn]/i);
-        $CPAN::Config->{term_is_latin} = ($ans =~ /^y/i ? 1 : 0);
+        my_yn_prompt(term_is_latin => 1, $matcher);
     }
 
     #
@@ -492,7 +511,7 @@ Shall we use it as the general CPAN build and cache directory?
         if ("urllist" =~ $matcher) {
             # conf_sites would go into endless loop with the smash prompt
             local *_real_prompt;
-            *_real_prompt = \&ExtUtils::MakeMaker::prompt;
+            *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
             conf_sites();
         }
     } elsif ($fastread) {
@@ -536,7 +555,7 @@ sub my_yn_prompt {
     $DB::single = 1;
     if (!$m || $item =~ /$m/) {
         if (my $intro = $prompts{$item . "_intro"}) {
-            print $intro;
+            $CPAN::Frontend->myprint($intro);
         }
 	my $ans = prompt($prompts{$item}, $default ? 'yes' : 'no');
         $CPAN::Config->{$item} = ($ans =~ /^[y1]/i ? 1 : 0);
@@ -586,18 +605,19 @@ Shall I use the local database in $mby?};
   }
   while ($mby) {
     if ($overwrite_local) {
-      print qq{Trying to overwrite $mby\n};
+      $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
       $mby = CPAN::FTP->localize($m,$mby,3);
       $overwrite_local = 0;
     } elsif ( ! -f $mby ){
-      print qq{You have no $mby\n  I\'m trying to fetch one\n};
+      $CPAN::Frontend->myprint(qq{You have no $mby\n  I\'m trying to fetch one\n});
       $mby = CPAN::FTP->localize($m,$mby,3);
     } elsif (-M $mby > 60 && $loopcount == 0) {
-      print qq{Your $mby is older than 60 days,\n  I\'m trying to fetch one\n};
-      $mby = CPAN::FTP->localize($m,$mby,3);
-      $loopcount++;
+        $CPAN::Frontend->myprint(qq{Your $mby is older than 60 days,\n  I\'m trying }.
+                                 qq{to fetch one\n});
+        $mby = CPAN::FTP->localize($m,$mby,3);
+        $loopcount++;
     } elsif (-s $mby == 0) {
-      print qq{You have an empty $mby,\n  I\'m trying to fetch one\n};
+      $CPAN::Frontend->myprint(qq{You have an empty $mby,\n  I\'m trying to fetch one\n});
       $mby = CPAN::FTP->localize($m,$mby,3);
     } else {
       last;
@@ -810,7 +830,6 @@ sub _strip_spaces {
     $_[0] =~ s/\s+\z//; # no trailing spaces
 }
 
-
 sub prompt ($;$) {
     my $ans = _real_prompt(@_);
 
@@ -903,7 +922,7 @@ is not available, the normal index mechanism will be used.
 
 cache_metadata => qq{Cache metadata (yes/no)?},
 
-term_is_latin => qq{
+term_is_latin_intro => qq{
 
 The next option deals with the charset (aka character set) your
 terminal supports. In general, CPAN is English speaking territory, so
@@ -916,6 +935,8 @@ because you will not be able to read the names of some authors
 anyway. If you answer no, names will be output in UTF-8.
 
 },
+
+term_is_latin => qq{Your terminal expects ISO-8859-1 (yes/no)?},
 
 histfile_intro => qq{
 
@@ -1232,6 +1253,18 @@ When using Term::ReadLine, you can turn ornaments on so that your
 input stands out against the output from CPAN.pm. Do you want to turn
 ornaments on?},
 
+colorize_output => qq{
+
+When you have Term::ANSIColor installed, you can turn on colorized
+output to have some visual differences between normal CPAN.pm output,
+warnings, and the output of the modules being installed. Set your
+favorite colors after some experimenting with the Term::ANSIColor
+module. Do you want to turn on colored output?},
+
+colorize_print => qq{Color for normal output?},
+
+colorize_warn => qq{Color for warnings?},
+
 );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"
@@ -1240,17 +1273,13 @@ die "Coding error in \@prompts declaration.  Odd number of elements, above"
 %prompts = @prompts;
 
 if (scalar(keys %prompts) != scalar(@prompts)/2) {
-
     my %already;
-
     for my $item (0..$#prompts) {
 	next if $item % 2;
-	die "$prompts[$item] is duplicated\n"
-	  if $already{$prompts[$item]}++;
+	die "$prompts[$item] is duplicated\n" if $already{$prompts[$item]}++;
     }
-
 }
 
-}
+} # EOBEGIN
 
 1;

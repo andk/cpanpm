@@ -1,3 +1,30 @@
+2006-09-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Tempted to give up on Term::ANSIColor. If I turn on colorize_output in
+	TestConfig.pm, then we do not pass tests. Somehow loading of
+	Term::ANSIColor changes too much.
+
+	utf8 handling wrong with ANSIColor; err, no, only an emacs issue.
+
+	several '# Can't exec "./Build": No such file or directory at /home/k/sources/CPAN/SVN/blib/lib/CPAN.pm line 5477.'
+
+	Yes, this is reproducable. The Makefile target
+	testshell-with-protocol-twice runs the testsuite once with
+	colorize_output off and once with on and we see that colorize breaks the
+	tests. Todo: make the difference between colorize and not colorize as
+	small as possible, then we know which lines we can blame.
+
+	Yes, now I have it reproducable and the blame is clearly not on
+	Term::ANSIColor but on some perl leakage. To demonstrate the bug, set
+	the $demobug variable in CPAN.pm to a true value. Then run make
+	testshell-with-protocol-twice. I seen the second run with
+	colorize_output==TRUE fail. Maybe it's the use of the regex, I don;t
+	know yet. Need to narrow down.
+
+	But the important step is that I now have a workaround and can support
+	colorization with just a small compromize. AND I can turn the bug on and
+	investigate in many different contexts.
+	
 2006-09-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: run everything with PRINT_ORNAMENTING turned on to see what is

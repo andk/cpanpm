@@ -18,6 +18,9 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "bzip2",
                              "cache_metadata",
                              "check_sigs",
+                             "colorize_output",
+                             "colorize_print",
+                             "colorize_warn",
                              "commandnumber_in_prompt",
                              "cpan_home",
                              "curl",
@@ -144,6 +147,7 @@ sub edit {
         } else {
 	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
 	    $self->prettyprint($o);
+            return 1;
 	}
     }
 }
@@ -460,7 +464,6 @@ END
     $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
-    sleep 2;
     CPAN::FirstTime::init($configpm, %args);
 }
 

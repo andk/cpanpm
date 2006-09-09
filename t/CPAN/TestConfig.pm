@@ -10,6 +10,7 @@ $CPAN::Config = {
                  'build_dir' => qq[$cwd/t/dot-cpan/build],
                  #'bzip2' => q[/bin/bzip2],
                  'cache_metadata' => q[1],
+                 colorize_output=>0,
                  'cpan_home' => qq[$cwd/t/dot-cpan],
                  #'curl' => q[],
                  #'ftp' => q[],

@@ -17,6 +17,7 @@ following:
     E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
     R:Module::Build
     T:15
+    C:comment
     ########
 
 P stands for program or print
@@ -26,6 +27,8 @@ E for expect
 T for timeout
 
 R for requires or relies on
+
+C for comment
 
 
 The script starts a CPAN shell and feed it the chunks such that the P
@@ -115,6 +118,7 @@ my @modules = qw(
                  Module::Build
                  Archive::Zip
                  Data::Dumper
+                 Term::ANSIColor
                 );
 
 use Test::More;
@@ -172,7 +176,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $timeout = 10;
+my $timeout = 20;
 
 my @system = (
               $^X,
@@ -239,7 +243,7 @@ sub splitchunk ($) {
 TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($prog,$expected,$req,$test_timeout) = @h{qw(P E R T)};
+    my($prog,$expected,$req,$test_timeout,$comment) = @h{qw(P E R T C)};
     unless (defined $expected or defined $prog) {
         ok(1,"empty test");
         next TUPL;
@@ -298,7 +302,8 @@ expected[$expected]\ngot[$got]\n\n";
         my $got = $expo->clear_accum;
         mydiag "GOT: $got\n";
         $prog =~ s/^(\d)/...$1/;
-        ok(1, $prog||"\"\\n\"");
+        $comment ||= "";
+        ok(1, "$comment" . ($prog ? " (testing command '$prog')" : "[empty RET]"));
     } else {
         $expected = "" if $prog =~ /\t/;
         push @PAIRS, [$prog,$expected];
@@ -668,6 +673,12 @@ E:NoCpAnCoNfIg
 P:!print $INC{"CPAN/MyConfig.pm"},$/
 E:CPAN/MyConfig.pm
 ########
+P:!print "\@INC: ", map { "    $_\n" } @INC
+E:
+########
+P:!print "%INC: ", map { "    $_\n" } sort values %INC
+E:
+########
 P:rtlprnft
 E:Unknown
 ########
@@ -709,14 +720,14 @@ P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
 E:CPAN_USERID.*?ANDK.*?Andreas
 ########
 P:ls ANDK
-E:(?s:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy.*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump)
+E:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy[\d\D]*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump
 ########
 P:ls ANDK/CPAN*
-E:(?s:Text::Glob\s+loaded\s+ok.*?CPAN-Test-Dummy)
+E:Text::Glob\s+loaded\s+ok[\d\D]*?CPAN-Test-Dummy
 R:Text::Glob
 ########
 P:force ls ANDK/CPAN*
-E:(?s:CPAN-Test-Dummy)
+E:CPAN-Test-Dummy
 R:Text::Glob
 ########
 P:test CPAN::Test::Dummy::Perl5::Make
@@ -742,7 +753,7 @@ E:(?s:bless.+?('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+?){4})
 R:Data::Dumper
 ########
 P:install CPAN::Test::Dummy::Perl5::Make::Failearly
-E:(?s:Failed during this command.+?writemakefile NO)
+E:Failed during this command[\d\D]+?writemakefile NO
 ########
 P:test CPAN::Test::Dummy::Perl5::NotExists
 E:Warning:
@@ -766,21 +777,29 @@ P:reload index
 E:staleness
 ########
 P:m /l/
-E:(?s:Perl5.*?Fcntl)
+E:(?s:Perl5.*?Fcntl.*?items)
 ########
 P:i /l/
-E:(?s:Dummies.*?Dummy.*?Perl5.*?Fcntl)
+E:(?s:Dummies.*?Dummy.*?Perl5.*?Fcntl.*?items)
 ########
 P:h
 E:(?s:make.*?test.*?install.*?force.*?notest.*?reload)
 ########
 P:o conf
-E:(?s:commit.*?build_cache.*?cpan_home.*?inhibit_startup_message.*?urllist)
+E:commit[\d\D]*?build_cache[\d\D]*?cpan_home[\d\D]*?inhibit_startup_message[\d\D]*?urllist[\d\D]*?wget
 ########
 P:o conf prefer_installer EUMM
+E:EUMM\]
+########
+P:dump CPAN::Test::Dummy::Perl5::BuildOrMake
+E:\}.+?CPAN::Module
+########
+P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+E:\}.+?CPAN::Distribution
 ########
 P:make CPAN::Test::Dummy::Perl5::BuildOrMake
 E:(?s:Running make.*?Writing Makefile.*?make["']?\s+-- OK)
+C:first try
 ########
 P:o conf prefer_installer MB
 R:Module::Build
@@ -789,16 +808,39 @@ P:force get CPAN::Test::Dummy::Perl5::BuildOrMake
 E:Removing previously used
 R:Module::Build
 ########
+P:dump CPAN::Test::Dummy::Perl5::BuildOrMake
+E:\}.+?CPAN::Module
+########
+P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+E:\}.+?CPAN::Distributio.
+########
 P:make CPAN::Test::Dummy::Perl5::BuildOrMake
 E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
 R:Module::Build
+C:second try
+########
+P:dump Bundle::CpanTestDummies
+E:\}
+R:Module::Build
+########
+P:dump CPAN::Test::Dummy::Perl5::Build::Fails
+E:\}
+R:Module::Build
+########
+P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+E:\}
+R:Module::Build
 ########
 P:test Bundle::CpanTestDummies
-E:Test-Dummy-Perl5-Build-Fails-\S+\s+make_test\s+NO
+E:Test-Dummy-Perl5-Build-Fails-.+?make_test\s+NO
 R:Module::Build
+T:30
 ########
 P:get Bundle::CpanTestDummies
 E:Is already unwrapped
+########
+P:dump ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz
+E:\}.*?CPAN::Distribution
 ########
 P:notest make Bundle::CpanTestDummies
 E:Has already been processed

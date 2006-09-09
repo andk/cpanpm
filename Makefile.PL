@@ -257,6 +257,17 @@ testshell-with-protocol: testdistros
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
 	ls -ltr protocols | tail
 
+testshell-with-protocol-twice: testdistros
+	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
+	$(PERL) -p -i~ -e 's/colorize_output\D+\d/colorize_output=>0/' t/CPAN/TestConfig.pm
+	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
+		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
+	$(PERL) -p -i~ -e 's/colorize_output\D+\d/colorize_output=>1/' t/CPAN/TestConfig.pm
+	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
+		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
+	$(PERL) -p -i~ -e 's/colorize_output\D+\d/colorize_output=>0/' t/CPAN/TestConfig.pm
+	ls -ltr protocols | tail
+
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz :
 	echo " ----No content---- " > t/CPAN/authors/id/A/AN/ANDK/tempfile
 	cd t/CPAN/authors/id/A/AN/ANDK && tar cvzf NotInChecksums-0.000.tar.gz tempfile
