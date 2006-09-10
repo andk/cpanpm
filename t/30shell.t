@@ -749,7 +749,7 @@ E:test\s+--\s+NOT OK
 R:Module::Build
 ########
 P:dump CPAN::Test::Dummy::Perl5::Make
-E:(?s:bless.+?('(ID|CPAN_FILE|CPAN_USERID|CPAN_VERSION)'.+?){4})
+E:\}.+?CPAN::Module.+?;
 R:Data::Dumper
 ########
 P:install CPAN::Test::Dummy::Perl5::Make::Failearly

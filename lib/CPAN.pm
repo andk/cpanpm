@@ -2194,6 +2194,7 @@ installed. To activate colorized output, please install Term::ANSIColor.\n\n";
     }
 }
 
+
 sub print_ornamented {
     my($self,$what,$ornament) = @_;
     return unless defined $what;
@@ -2203,39 +2204,68 @@ sub print_ornamented {
         print {report_fh()} $what;
         return;
     }
+    my $swhat = "$what"; # stringify if it is an object
     if ($CPAN::Config->{term_is_latin}){
         # courtesy jhi:
-        $what
+        $swhat
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
     }
+    my $line;
+    my $longest = 0; # Does list::util work on 5.004?
+    for $line (split /\n/, $swhat) {
+        $longest = length($line) if length($line) > $longest;
+    }
+    $longest = 78 if $longest > 78; # yes, arbitrary, who wants it set-able?
     if ($self->colorize_output) {
-        my $demobug = 1;
-        if ($demobug) {
-            my $line;
-            my $longest = 0; # Does list::util work on 5.004?
-            for $line (split /\n/, $what) {
-                $longest = length($line) if length($line) > $longest;
-            }
-            my $pwhat = "$what"; # stringify if it is an object
-            while ($pwhat) {
-                $pwhat =~ s/(.*\n?)//m;
-                my $line = $1;
-                last unless $line;
-                my($nl) = chomp $line ? "\n" : "";
+        my $demobug = 0; # (=0) works, (=1) has some obscure bugs and
+                         # breaks 30shell.t, (=2) has some obvious
+                         # bugs but passes 30shell.t
+        if ($demobug == 1) {
+            my $nl = chomp $swhat ? "\n" : "";
+            while (length $swhat) {
+                $line = "";
+                if (0) {
+                    $swhat =~ s/(.*\n?)//m;
+                    $line = $1;
+                    last unless $line;
+                } else {
+                    while (length $swhat) {
+                        my $c = substr($swhat,0,1);
+                        $swhat = substr($swhat,1);
+                        $line .= $c;
+                        if ($c eq "\n") {
+                            last;
+                        }
+                    }
+                }
+
+                # my($nl) = chomp $line ? "\n" : "";
                 # ->debug verboten within print_ornamented ==> recursion!
                 # warn("line[$line]ornament[$ornament]sprintf[$sprintf]\n") if $CPAN::DEBUG;
                 print Term::ANSIColor::color($ornament),
                     sprintf("%-*s",$longest,$line),
                         Term::ANSIColor::color("reset"),
-                              $nl;
+                              $line =~ /\n/ ? "" : $nl;
             }
+        } elsif ($demobug == 2) {
+            my $block = join "\n",
+                map {
+                    sprintf("%s%-*s%s",
+                            Term::ANSIColor::color($ornament),
+                            $longest,
+                            $_,
+                            Term::ANSIColor::color("reset"),
+                           )
+                }
+                    split /[\r ]*\n/, $swhat;
+            print $block;
         } else {
             print Term::ANSIColor::color($ornament),
-                $what,
+                $swhat,
                     Term::ANSIColor::color("reset");
         }
     } else {
-        print $what;
+        print $swhat;
     }
 }
 
