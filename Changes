@@ -1,3 +1,16 @@
+2006-09-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_61
+
+	* configuation of urllist uses a local urllist instead of the global
+	configured one: prevents that ^C kills the currently configured urllist
+
+	* configuration of urllist: if there is already a previous pick, one can
+	go through with RETURN only
+
+	* new options to get colored output: colorize_output, colorize_print,
+	colorize_warn
+
 2006-09-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_59: "o conf init MATCH" finally works and can be used to
