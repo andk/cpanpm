@@ -1667,9 +1667,11 @@ sub scripts {
     my($self, $arg) = @_;
     $CPAN::Frontend->mywarn(">>>> experimental command, currently unsupported <<<<\n\n");
 
-    require HTML::LinkExtor;
-    require Sort::Versions;
-    require List::Util;
+    for my $req (qw( HTML::LinkExtor Sort::Versions List::Util )) {
+        unless ($CPAN::META->has_inst($req)) {
+            $CPAN::Frontend->mywarn("  $req not available\n");
+        }
+    }
     my $p = HTML::LinkExtor->new();
     my $indexfile = "/home/ftp/pub/PAUSE/scripts/new/index.html";
     unless (-f $indexfile) {
@@ -2238,8 +2240,8 @@ sub print_ornamented {
 
 # where is myprint/mywarn/Frontend/etc. documented? We need guidelines
 # where to use what! I think, we send everything to STDOUT and use
-# print for good news and warn for news that need more attention, but
-# I need to document that.
+# print for normal/good news and warn for news that need more
+# attention. Yes, this is our working contract for now.
 sub myprint {
     my($self,$what) = @_;
 
@@ -2483,7 +2485,7 @@ sub config {
         @ISA = qw(Exporter LWP::UserAgent);
         $SETUPDONE++;
     } else {
-        $CPAN::Frontend->mywarn("LWP::UserAgent not available\n");
+        $CPAN::Frontend->mywarn("  LWP::UserAgent not available\n");
     }
 }
 
@@ -2936,7 +2938,7 @@ sub hosteasy {
 	    # skip Net::FTP anymore when LWP is available.
 	  }
 	} else {
-            $CPAN::Frontend->myprint("LWP not available\n");
+            $CPAN::Frontend->mywarn("  LWP not available\n");
 	}
         return if $CPAN::Signal;
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
@@ -3719,7 +3721,7 @@ happen.\a
             require HTTP::Date;
             $age -= HTTP::Date::str2time($last_updated);
         } else {
-            $CPAN::Frontend->myprint("  HTTP::Date not available\n");
+            $CPAN::Frontend->mywarn("  HTTP::Date not available\n");
             require Time::Local;
             my(@d) = $last_updated =~ / (\d+) (\w+) (\d+) (\d+):(\d+):(\d+) /;
             $d[1] = index("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec", $d[1])/4;
@@ -4698,7 +4700,7 @@ and there run
                     $self->debug("Module::Signature has verified") if $CPAN::DEBUG;
                 }
             } else {
-                $CPAN::Frontend->myprint(qq{Package came without SIGNATURE\n\n});
+                $CPAN::Frontend->mywarn(qq{Package came without SIGNATURE\n\n});
             }
         } else {
             $self->debug("Module::Signature is NOT installed") if $CPAN::DEBUG;
@@ -5849,7 +5851,7 @@ sub test {
     } else {
 	 $self->{make_test} = CPAN::Distrostatus->new("NO");
          $self->{badtestcnt}++;
-	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
+	 $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
 }
 
@@ -5919,7 +5921,7 @@ sub clean {
       # Hmmm, what to do if make clean failed?
 
       $self->{make_clean} = CPAN::Distrostatus->new("NO");
-      $CPAN::Frontend->myprint(qq{  $system -- NOT OK\n});
+      $CPAN::Frontend->mywarn(qq{  $system -- NOT OK\n});
 
       # 2006-02-27: seems silly to me to force a make now
       # $self->force("make"); # so that this directory won't be used again
@@ -6019,7 +6021,9 @@ sub install {
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){
-	$CPAN::Frontend->myprint($_);
+	print $_; # intentionally NOT use Frontend->myprint because it
+                  # looks irritating when we markup in color what we
+                  # just pass through from an external program
 	$makeout .= $_;
     }
     $pipe->close;
@@ -6029,7 +6033,7 @@ sub install {
         return $self->{install} = CPAN::Distrostatus->new("YES");
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");
-        $CPAN::Frontend->myprint("  $system -- NOT OK\n");
+        $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
         if (
             $makeout =~ /permission/s
             && $> > 0
@@ -6243,7 +6247,7 @@ sub _getsave_url {
             return;
         }
     } else {
-        $CPAN::Frontend->myprint("LWP not available\n");
+        $CPAN::Frontend->mywarn("  LWP not available\n");
         return;
     }
 }
