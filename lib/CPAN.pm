@@ -2209,7 +2209,7 @@ sub print_ornamented {
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
     }
     if ($self->colorize_output) {
-        my $demobug = 0;
+        my $demobug = 1;
         if ($demobug) {
             my $line;
             my $longest = 0; # Does list::util work on 5.004?
@@ -2226,7 +2226,8 @@ sub print_ornamented {
                 # warn("line[$line]ornament[$ornament]sprintf[$sprintf]\n") if $CPAN::DEBUG;
                 print Term::ANSIColor::color($ornament),
                     sprintf("%-*s",$longest,$line),
-                        Term::ANSIColor::color("reset");
+                        Term::ANSIColor::color("reset"),
+                              $nl;
             }
         } else {
             print Term::ANSIColor::color($ornament),
