@@ -119,9 +119,9 @@ sub init {
               } else {
                   $current_second = time;
                   $current_second_count = 0;
-                  $i_am_mad-- if $i_am_mad;
+                  $i_am_mad-- if $i_am_mad>0;
               }
-              if ($i_am_mad){
+              if ($i_am_mad>0){
                   #require Carp;
                   #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
                   Time::HiRes::sleep(0.1);
