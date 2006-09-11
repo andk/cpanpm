@@ -142,11 +142,11 @@ sub shell {
             }
             close $fh;
         }}
-	# $term->OUT is autoflushed anyway
-        for ($CPAN::Config->{term_ornaments}) {
+        for ($CPAN::Config->{term_ornaments}) { # alias
             local $Term::ReadLine::termcap_nowarn = 1;
             $term->ornaments($_) if defined;
         }
+	# $term->OUT is autoflushed anyway
 	my $odef = select STDERR;
 	$| = 1;
 	select STDOUT;
@@ -167,17 +167,19 @@ sub shell {
 	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
 	    "available (try 'install Bundle::CPAN')";
 
-    $CPAN::Frontend->myprint(
-			     sprintf qq{
+    unless ($CPAN::Config->{'inhibit_startup_message'}){
+        $CPAN::Frontend->myprint(
+                                 sprintf qq{
 cpan shell -- CPAN exploration and modules installation (v%s)
 ReadLine support %s
 
 },
-                             $CPAN::VERSION,
-                             $rl_avail
-                            )
-        unless $CPAN::Config->{'inhibit_startup_message'} ;
+                                 $CPAN::VERSION,
+                                 $rl_avail
+                                )
+    }
     my($continuation) = "";
+    my $last_term_ornaments;
   SHELLCOMMAND: while () {
 	if ($Suppress_readline) {
 	    print $prompt;
@@ -252,6 +254,19 @@ ReadLine support %s
             @_ = ($oprompt,"");
 	    goto &shell;
 	}
+      }
+      for ($CPAN::Config->{term_ornaments}) { # alias
+          if (defined $_) {
+              if (not defined $last_term_ornaments
+                  or $_ != $last_term_ornaments
+                 ) {
+                  local $Term::ReadLine::termcap_nowarn = 1;
+                  $term->ornaments($_);
+                  $last_term_ornaments = $_;
+              }
+          } else {
+              undef $last_term_ornaments;
+          }
       }
     }
     soft_chdir_with_alternatives(\@cwd);
