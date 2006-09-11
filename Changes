@@ -6,6 +6,9 @@
 
 	* verify that color settings are applicable
 
+	* improve wording and logic when user is offline and tries to run
+	through urllist dialog.
+
 2006-09-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_61
