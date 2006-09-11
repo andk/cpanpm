@@ -2884,12 +2884,18 @@ sub localize {
     }
     unless ($CPAN::Signal) {
         my(@mess);
-        push @mess,
-            qq{Please check, if the URLs I found in your configuration file \(}.
-                join(", ", @{$CPAN::Config->{urllist}}).
-                    qq{\) are valid. The urllist can be edited.},
-                        qq{E.g. with 'o conf urllist push ftp://myurl/'};
-        $CPAN::Frontend->mywarn(Text::Wrap::wrap("","",@mess). "\n\n");
+        local $" = " ";
+        if (@{$CPAN::Config->{urllist}}) {
+            push @mess,
+                qq{Please check, if the URLs I found in your configuration file \(}.
+                    join(", ", @{$CPAN::Config->{urllist}}).
+                        qq{\) are valid.};
+        } else {
+            push @mess, qq{Your urllist is empty!};
+        }
+        push @mess, qq{The urllist can be edited.},
+            qq{E.g. with 'o conf urllist push ftp://myurl/'};
+        $CPAN::Frontend->mywarn(Text::Wrap::wrap("","","@mess"). "\n\n");
         $CPAN::Frontend->mywarn("Could not fetch $file\n");
         $CPAN::Frontend->mysleep(2);
     }
@@ -3192,8 +3198,7 @@ sub hosthardest {
 As a last ressort we now switch to the external ftp command '$ftpbin'
 to get '$aslocal'.
 
-Doing so often leads to problems that are hard to diagnose, even endless
-loops may be encountered.
+Doing so often leads to problems that are hard to diagnose.
 
 If you're victim of such problems, please consider unsetting the ftp
 config variable with
@@ -3202,7 +3207,7 @@ config variable with
     o conf commit
 
 });
-    $CPAN::Frontend->mysleep(4);
+    $CPAN::Frontend->mysleep(2);
   HOSTHARDEST: for $ro_url (@$host_seq) {
 	my $url = "$ro_url$file";
 	$self->debug("localizing ftpwise[$url]") if $CPAN::DEBUG;

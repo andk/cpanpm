@@ -1,3 +1,10 @@
+2006-09-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: again go testing with several perl versions.
+
+	Especially the urllist dialog meeds test cases. But older perls as well
+	need attention.
+
 2006-09-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Tempted to give up on Term::ANSIColor. If I turn on colorize_output in

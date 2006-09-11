@@ -668,7 +668,7 @@ sub picklist {
         $limit = 15 if $limit > 15;
 
         # show the next $limit items, get the new position
-        $pos = display_some($items, $limit, $pos);
+        $pos = display_some($items, $limit, $pos, $default);
         $pos = 0 if $pos >= @$items;
 
         my $num = prompt($prompt,$default);
@@ -681,9 +681,12 @@ sub picklist {
         my $i = scalar @$items;
         if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)){
             $CPAN::Frontend->mywarn("invalid items entered, try again\n");
+            if ("@nums" =~ /\D/) {
+                $CPAN::Frontend->mywarn("(we are expecting at least one number between 1 and $i)\n");
+            }
             next SELECTION;
         }
-        if ($require_nonempty) {
+        if ($require_nonempty && !@nums) {
             $CPAN::Frontend->mywarn("$empty_warning\n");
         }
         $CPAN::Frontend->myprint("\n");
@@ -697,15 +700,17 @@ sub picklist {
 }
 
 sub display_some {
-    my ($items, $limit, $pos) = @_;
+    my ($items, $limit, $pos, $default) = @_;
     $pos ||= 0;
 
     my @displayable = @$items[$pos .. ($pos + $limit)];
     for my $item (@displayable) {
         $CPAN::Frontend->myprint(sprintf "(%d) %s\n", ++$pos, $item);
     }
-    $CPAN::Frontend->myprint(sprintf("%d more items, hit SPACE RETURN to show them\n",
-                                     (@$items - $pos)
+    my $hit_what = $default ? "SPACE RETURN" : "RETURN";
+    $CPAN::Frontend->myprint(sprintf("%d more items, hit %s to show them\n",
+                                     (@$items - $pos),
+                                     $hit_what,
                                     ))
         if $pos < @$items;
     return $pos;
@@ -1200,13 +1205,13 @@ a few sites onto the array (just in case the first on the array won\'t
 work). If you are mirroring CPAN to your local workstation, specify a
 file: URL.
 
-First, pick a nearby continent and country (you can pick several of
-each, separated by spaces, or none if you just want to keep your
-existing selections). Then, you will be presented with a list of URLs
-of CPAN mirrors in the countries you selected, along with previously
-selected URLs. Select some of those URLs, or just keep the old list.
-Finally, you will be prompted for any extra URLs -- file:, ftp:, or
-http: -- that host a CPAN mirror.
+First, pick a nearby continent and country by typing in the number(s)
+in front of the item(s) you want to select. You can pick several of
+each, separated by spaces. Then, you will be presented with a list of
+URLs of CPAN mirrors in the countries you selected, along with
+previously selected URLs. Select some of those URLs, or just keep the
+old list. Finally, you will be prompted for any extra URLs -- file:,
+ftp:, or http: -- that host a CPAN mirror.
 
 },
 
