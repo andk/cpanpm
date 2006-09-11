@@ -2,12 +2,14 @@
 
 	* release 1.87_62
 
-	* term_ornaments switchable while running
+	* make term_ornaments switchable while running (was only checked during
+	initialization)
 
-	* verify that color settings are applicable
+	* verify that color settings are applicable (was killing the shell
+	process completely)
 
 	* improve wording and logic when user is offline and tries to run
-	through urllist dialog.
+	through urllist dialog. (Address debian bug #380551)
 
 2006-09-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
