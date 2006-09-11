@@ -458,8 +458,19 @@ Shall we use it as the general CPAN build and cache directory?
     if ("colorize_output colorize_print colorize_warn" =~ $matcher) {
         my_yn_prompt(colorize_output => 0, $matcher);
         if ($CPAN::Config->{colorize_output}) {
-            my_dflt_prompt(colorize_print => "bold blue", $matcher);
-            my_dflt_prompt(colorize_warn => "bold red", $matcher);
+            for my $tuple (
+                           ["colorize_print", "bold blue"],
+                           ["colorize_warn", "bold red"],
+                          ) {
+                my_dflt_prompt($tuple->[0] => $tuple->[1], $matcher);
+                if ($CPAN::META->has_inst("Term::ANSIColor")) {
+                    eval { Term::ANSIColor::color($CPAN::Config->{$tuple->[0]})};
+                    if ($@) {
+                        $CPAN::Config->{$tuple->[0]} = $tuple->[1];
+                        $CPAN::Frontend->mywarn($@."setting to default '$tuple->[1]'\n");
+                    }
+                }
+            }
         }
     }
 

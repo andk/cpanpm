@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.87_61';
+$CPAN::VERSION = '1.87_62';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -2217,6 +2217,11 @@ sub print_ornamented {
     }
     $longest = 78 if $longest > 78; # yes, arbitrary, who wants it set-able?
     if ($self->colorize_output) {
+        my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
+        if ($@) {
+            print "Term::ANSIColor rejects color[$ornament]: $@\n
+Please choose a different color (Hint: try 'o conf init color.*')\n";
+        }
         my $demobug = 0; # (=0) works, (=1) has some obscure bugs and
                          # breaks 30shell.t, (=2) has some obvious
                          # bugs but passes 30shell.t
@@ -2242,7 +2247,7 @@ sub print_ornamented {
                 # my($nl) = chomp $line ? "\n" : "";
                 # ->debug verboten within print_ornamented ==> recursion!
                 # warn("line[$line]ornament[$ornament]sprintf[$sprintf]\n") if $CPAN::DEBUG;
-                print Term::ANSIColor::color($ornament),
+                print $color_on,
                     sprintf("%-*s",$longest,$line),
                         Term::ANSIColor::color("reset"),
                               $line =~ /\n/ ? "" : $nl;
@@ -2251,7 +2256,7 @@ sub print_ornamented {
             my $block = join "\n",
                 map {
                     sprintf("%s%-*s%s",
-                            Term::ANSIColor::color($ornament),
+                            $color_on,
                             $longest,
                             $_,
                             Term::ANSIColor::color("reset"),
@@ -2260,7 +2265,7 @@ sub print_ornamented {
                     split /[\r ]*\n/, $swhat;
             print $block;
         } else {
-            print Term::ANSIColor::color($ornament),
+            print $color_on,
                 $swhat,
                     Term::ANSIColor::color("reset");
         }
@@ -2308,7 +2313,8 @@ sub colorable_makemaker_prompt {
     my($foo,$bar) = @_;
     if (CPAN::Shell->colorize_output) {
         my $ornament = $CPAN::Config->{colorize_print}||'bold blue';
-        print Term::ANSIColor::color($ornament);
+        my $color_on = eval { Term::ANSIColor::color($ornament); } || "";
+        print $color_on;
     }
     my $ans = ExtUtils::MakeMaker::prompt($foo,$bar);
     if (CPAN::Shell->colorize_output) {
