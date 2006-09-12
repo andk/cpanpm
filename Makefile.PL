@@ -203,13 +203,16 @@ checkout ::
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
-run_emu_very_offline : rm_mirrored_by run_emu_offline
+testrun_very_offline : rm_mirrored_by run_emu_offline
 
-run_emu_offline :
+testrun_emu_offline :
 	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::MyConfig -MCPAN -e '@CPAN::Defaultsites = qw(file:///dev/null); $$CPAN::Config->{urllist} = []; shell'
 
 rm_mirrored_by :
 	rm -f $$HOME/.cpan/sources/MIRRORED.BY*
+
+testrun_http_only :
+	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{urllist} = [qw(http://www.planet-elektronik.de/CPAN/)]; shell'
 
 urllist :
 	$(PERL) -Ilib -MCPAN -MCPAN::FirstTime -e 'CPAN::FirstTime::init("$$ENV{HOME}/.cpan/CPAN/MyConfig", args => [qw(urllist)])'

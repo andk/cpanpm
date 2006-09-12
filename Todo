@@ -1,3 +1,8 @@
+2006-09-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: write a test that checks if the keys in HandleConfig are all
+	documented in the POD
+
 2006-09-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: again go testing with several perl versions.

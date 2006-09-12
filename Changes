@@ -44,7 +44,7 @@
 
 	* fix a bug reported by David Golden, that Bundle::CPAN is never
 	uptodate. Fixing it by special-casing readline.pm in the inst_file
-	method
+	method. See also #17963.
 
 	* Address #18196 once again because people have still MakeMaker < 6.18
 	installed.
