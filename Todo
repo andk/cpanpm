@@ -1,5 +1,9 @@
 2006-09-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* rev 807 broken (and _62 was most likely broken too): prompt namespaces
+	now too much voodoo. FirstTime::_real_prompt is not defined everywhere.
+	Goto the drawing board
+
 	* Todo: write a test that checks if the keys in HandleConfig are all
 	documented in the POD
 
