@@ -13,21 +13,22 @@
 	* make term_ornaments switchable while running (was only checked during
 	initialization)
 
-	* verify that color settings are applicable (was killing the shell
-	process completely)
+	* verify that color settings are applicable (bad colors were killing the
+	shell process completely)
 
 	* improve wording and logic when user is offline and tries to run
-	through urllist dialog. (Address debian bug #380551)
+	the urllist dialog. (Address debian bug #380551)
 
 2006-09-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_61
 
 	* configuation of urllist uses a local urllist instead of the global
-	configured one: prevents that ^C kills the currently configured urllist
+	configured one: prevents that ^C accidentally kills the currently
+	configured urllist
 
 	* configuration of urllist: if there is already a previous pick, one can
-	go through with RETURN only
+	go through the dialog with RETURN only
 
 	* new options to get colored output: colorize_output, colorize_print,
 	colorize_warn
