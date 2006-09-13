@@ -1,95 +1,12 @@
-2006-09-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* rev 807 broken (and _62 was most likely broken too): prompt namespaces
-	now too much voodoo. FirstTime::_real_prompt is not defined everywhere.
-	Goto the drawing board
-
-	CPAN::Shell::colorable_makemaker_prompt used in package CPAN and
-	CPAN::Distribution uses ExtUtils::MakeMaker::prompt
-
-	CPAN::FirstTime::_real_prompt is local in CPAN::FirstTime::init for
-	colorizable and later for a closure and yet later again directly for
-	colorizable again
-
-	CPAN::FirstTime::prompt is used within CPAN::FirstTime::init many times
-
-	my_dflt_prompt uses prompt
-
-	my_yn_prompt uses prompt
-
-	my_prompt_loop uses prompt
-
-	conf_sites uses prompt
-
-	picklist uses prompt
-
-	bring_your_own uses prompt
-
-	prompt uses _realprompt
-
-	Q.E.D. _real_prompt  may be undefined. Stupid. FIXED in rev. 825
-
-	825 also fixes 5.8.0 which always matched each prompt twice. All I had
-	to do was to change the tests so that no non-prompt-match ever matches a
-	prompt accidentally
+2006-09-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: write a test that checks if the keys in HandleConfig are all
 	documented in the POD
 
-2006-09-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* Especially the urllist dialog needs test cases.
 
-	* Todo: again go testing with several perl versions.
-
-	Especially the urllist dialog meeds test cases. But older perls as well
-	need attention.
-
-2006-09-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Tempted to give up on Term::ANSIColor. If I turn on colorize_output in
-	TestConfig.pm, then we do not pass tests. Somehow loading of
-	Term::ANSIColor changes too much.
-
-	utf8 handling wrong with ANSIColor; err, no, only an emacs issue.
-
-	several '# Can't exec "./Build": No such file or directory at /home/k/sources/CPAN/SVN/blib/lib/CPAN.pm line 5477.'
-
-	Yes, this is reproducable. The Makefile target
-	testshell-with-protocol-twice runs the testsuite once with
-	colorize_output off and once with on and we see that colorize breaks the
-	tests. Todo: make the difference between colorize and not colorize as
-	small as possible, then we know which lines we can blame.
-
-	Yes, now I have it reproducable and the blame is clearly not on
-	Term::ANSIColor but on some perl leakage. To demonstrate the bug, set
-	the $demobug variable in CPAN.pm to a true value. Then run make
-	testshell-with-protocol-twice. I seen the second run with
-	colorize_output==TRUE fail. Maybe it's the use of the regex, I don;t
-	know yet. Need to narrow down.
-
-	But the important step is that I now have a workaround and can support
-	colorization with just a small compromize. AND I can turn the bug on and
-	investigate in many different contexts. FIXED all that in 809
-
-	The $demobug thing is underdocumented!
+	* The $demobug thing is underdocumented! Go after the bug hidden there.
 	
-2006-09-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: run everything with PRINT_ORNAMENTING turned on to see what is
-	myprint and what is mywarn. Are both going to STDERR? We should document
-	when to use myprint and mywarn. And we should not let anybody use print
-	directly.
-
-2006-09-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bugs in FirstTime: print and warn not unified; needs to be
-	investigated: two calls to warn replaced with print in rev. 803:
-	somebody ate the warnings, they were not displayed for unknown reasons.
-	Update: no, the warnings were not dropped but the global value of
-	$CPAN::Config->{urllist} was emptied when I interrupted the selection
-	process. Fixed in 804-807 or so.
-
-2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
 	by Andrew Strebkov makes the URL selection nicer.
@@ -209,6 +126,97 @@
 	>need for locking more in interactive use vs. batch use?
 
 	And I promise to try out a more granular locking mechanism.
+
+	* hr ================ no todos below this line ================ /hr
+
+2006-09-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* rev 807 broken (and _62 was most likely broken too): prompt namespaces
+	now too much voodoo. FirstTime::_real_prompt is not defined everywhere.
+	Goto the drawing board
+
+	CPAN::Shell::colorable_makemaker_prompt used in package CPAN and
+	CPAN::Distribution uses ExtUtils::MakeMaker::prompt
+
+	CPAN::FirstTime::_real_prompt is local in CPAN::FirstTime::init for
+	colorizable and later for a closure and yet later again directly for
+	colorizable again
+
+	CPAN::FirstTime::prompt is used within CPAN::FirstTime::init many times
+
+	my_dflt_prompt uses prompt
+
+	my_yn_prompt uses prompt
+
+	my_prompt_loop uses prompt
+
+	conf_sites uses prompt
+
+	picklist uses prompt
+
+	bring_your_own uses prompt
+
+	prompt uses _realprompt
+
+	Q.E.D. _real_prompt  may be undefined. Stupid. FIXED in rev. 825
+
+	825 also fixes 5.8.0 which always matched each prompt twice. All I had
+	to do was to change the tests so that no non-prompt-match ever matches a
+	prompt accidentally
+
+2006-09-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: again go testing with several perl versions.
+
+	Especially the urllist dialog needs test cases. But older perls as well
+	need attention.
+
+2006-09-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Tempted to give up on Term::ANSIColor. If I turn on colorize_output in
+	TestConfig.pm, then we do not pass tests. Somehow loading of
+	Term::ANSIColor changes too much.
+
+	utf8 handling wrong with ANSIColor; err, no, only an emacs issue.
+
+	several '# Can't exec "./Build": No such file or directory at /home/k/sources/CPAN/SVN/blib/lib/CPAN.pm line 5477.'
+
+	Yes, this is reproducable. The Makefile target
+	testshell-with-protocol-twice runs the testsuite once with
+	colorize_output off and once with on and we see that colorize breaks the
+	tests. Todo: make the difference between colorize and not colorize as
+	small as possible, then we know which lines we can blame.
+
+	Yes, now I have it reproducable and the blame is clearly not on
+	Term::ANSIColor but on some perl leakage. To demonstrate the bug, set
+	the $demobug variable in CPAN.pm to a true value. Then run make
+	testshell-with-protocol-twice. I seen the second run with
+	colorize_output==TRUE fail. Maybe it's the use of the regex, I don;t
+	know yet. Need to narrow down.
+
+	But the important step is that I now have a workaround and can support
+	colorization with just a small compromize. AND I can turn the bug on and
+	investigate in many different contexts. FIXED all that in 809
+
+	The $demobug thing is underdocumented!
+	
+2006-09-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: run everything with PRINT_ORNAMENTING turned on to see what is
+	myprint and what is mywarn. Are both going to STDERR? We should document
+	when to use myprint and mywarn. And we should not let anybody use print
+	directly. DONE
+
+2006-09-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bugs in FirstTime: print and warn not unified; needs to be
+	investigated: two calls to warn replaced with print in rev. 803:
+	somebody ate the warnings, they were not displayed for unknown reasons.
+	Update: no, the warnings were not dropped but the global value of
+	$CPAN::Config->{urllist} was emptied when I interrupted the selection
+	process. Fixed in 804-807 or so.
+
+2006-09-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* hr ================ no todos below this line ================ /hr
 

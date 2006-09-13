@@ -260,17 +260,19 @@ ReadLine support %s
 	    goto &shell;
 	}
       }
-      for ($CPAN::Config->{term_ornaments}) { # alias
-          if (defined $_) {
-              if (not defined $last_term_ornaments
-                  or $_ != $last_term_ornaments
-                 ) {
-                  local $Term::ReadLine::termcap_nowarn = 1;
-                  $term->ornaments($_);
-                  $last_term_ornaments = $_;
+      if ($term and $term->can("ornaments")) {
+          for ($CPAN::Config->{term_ornaments}) { # alias
+              if (defined $_) {
+                  if (not defined $last_term_ornaments
+                      or $_ != $last_term_ornaments
+                     ) {
+                      local $Term::ReadLine::termcap_nowarn = 1;
+                      $term->ornaments($_);
+                      $last_term_ornaments = $_;
+                  }
+              } else {
+                  undef $last_term_ornaments;
               }
-          } else {
-              undef $last_term_ornaments;
           }
       }
     }
