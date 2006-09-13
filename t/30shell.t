@@ -340,7 +340,7 @@ P:o conf build_cache
 E:build_cache
 ########
 P:o conf init
-E:initialized(?s:.*?configure.as.much.as.possible.automatically.*?\])
+E:(?s:.*?configure.as.much.as.possible.automatically.*?\])
 ########
 P:yesplease
 E:commit: wrote.+?MyConfig

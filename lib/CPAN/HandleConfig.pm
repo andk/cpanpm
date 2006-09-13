@@ -462,9 +462,12 @@ the following indispensable but missing parameters:
 END
         $args{args} = ["\\b".join("|",@miss)."\\b"];
     }
-    $CPAN::Frontend->myprint(qq{
+    if (0) {
+        # where do we need this?
+        $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
+    }
     CPAN::FirstTime::init($configpm, %args);
 }
 
