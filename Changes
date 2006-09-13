@@ -1,3 +1,11 @@
+2006-09-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_63
+
+	* should run on 5.8.0 now
+
+	* address #17973: always honour user defined URLs over default URLs
+
 2006-09-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_62
