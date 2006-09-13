@@ -343,7 +343,7 @@ P:o conf init
 E:initialized(?s:.*?configure.as.much.as.possible.automatically.*?\])
 ########
 P:yesplease
-E:wrote
+E:commit: wrote.+?MyConfig
 T:60
 ########
 P:# o debug all
@@ -352,18 +352,25 @@ P:o conf histsize 101
 E:.  histsize.+?101
 ########
 P:o conf commit
-E:wrote
+E:commit: wrote.+?MyConfig
 ########
 P:o conf histsize 102
 E:.  histsize.+?102
 ########
 P:o conf defaults
+E:reread
 ########
 P:o conf histsize
 E:histsize.+?101
 ########
 P:o conf urllist
 E:file:///.*?CPAN
+########
+P:o conf init keep_source_where
+E:kept.+?(\])
+########
+P:/tmp
+E:
 ########
 P:o conf init build_cache
 E:(size.*?\])
@@ -372,214 +379,211 @@ P:100
 E:
 ########
 P:o conf init build_dir
-E:(\])
+E:Directory.+?(\])
 ########
 P:foo
 E:
 ########
 P:o conf init bzip2
-E:(\])
+E:bzip2.+?(\])
 ########
 P:foo
 E:
 ########
 P:o conf init cache_metadata
-E:(\])
+E:Cache.+?(\])
 ########
 P:y
 E:
 ########
 P:o conf init check_sigs
-E:(\])
+E:............(\])
 ########
 P:y
 E:
 ########
 P:o conf init cpan_home
-E:(\])
+E:............(\])
 ########
 P:/tmp/must_be_a_createable_absolute_path/../
 E:
 ########
 P:o conf init curl
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init gpg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init gzip
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init lynx
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init make_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init make_install_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init make_install_make_command
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init makepl_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init mbuild_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init mbuild_install_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init mbuild_install_build_command
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init mbuildpl_arg
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init ncftp
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init ncftpget
-E:(\])
-########
-P:foo
-E:
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init pager
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init prefer_installer
-E:(\])
+E:............(\])
 ########
 P:EUMM
 E:
 ########
 P:o conf init prerequisites_policy
-E:(\])
+E:............(\])
 ########
 P:ask
 E:
 ########
 P:o conf init scan_cache
-E:(\])
+E:............(\])
 ########
 P:atstart
 E:
 ########
 P:o conf init shell
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init show_upload_date
-E:(\])
+E:............(\])
 ########
 P:y
 E:
 ########
 P:o conf init tar
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init term_is_latin
-E:(\])
+E:............(\])
 ########
 P:n
 E:
 ########
 P:o conf init test_report
-E:(\])
+E:............(\])
 ########
 P:n
 E:
 ########
 P:o conf init unzip
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init wget
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init commandnumber_in_prompt
-E:(\])
+E:............(\])
 ########
 P:y
 E:
 ########
 P:o conf init ftp
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init make
-E:(\])
+E:............(\])
 ########
 P:foo
 E:
 ########
 P:o conf init ftp_passive
-E:(\])
+E:............(\])
 ########
 P:y
 E:
 ########
 P:o conf init ftp_proxy
-E:(\])
+E:............(\])
 ########
 P:y
 E:(\?)
@@ -591,7 +595,7 @@ P:p
 E:
 ########
 P:o conf init http_proxy
-E:(\])
+E:............(\])
 ########
 P:y
 E:(\?)
@@ -603,7 +607,7 @@ P:p
 E:
 ########
 P:o conf init no_proxy
-E:(\])
+E:............(\])
 ########
 P:y
 E:(\?)
@@ -615,7 +619,7 @@ P:p
 E:
 ########
 P:o conf init getcwd
-E:(\])
+E:............(\])
 ########
 P:cwd
 E:
@@ -639,25 +643,19 @@ P:100
 E:
 ########
 P:o conf init inactivity_timeout
-E:(\])
+E:............(\])
 ########
 P:10000
 E:
 ########
 P:o conf init index_expire
-E:(\])
+E:............(\])
 ########
 P:y
 E:
 ########
-P:o conf init keep_source_where
-E:(\])
-########
-P:/tmp
-E:
-########
 P:o conf init term_ornaments
-E:(\])
+E:............(\])
 ########
 P:y
 E:

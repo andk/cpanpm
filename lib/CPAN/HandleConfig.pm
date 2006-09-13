@@ -279,6 +279,7 @@ sub defaults {
     my $done;
     for my $config (qw(CPAN/MyConfig.pm CPAN/Config.pm)) {
       CPAN::Shell->reload_this($config) and $done++;
+      $CPAN::Frontend->myprint("'$config' reread\n");
       last if $done;
     }
     1;

@@ -4,6 +4,35 @@
 	now too much voodoo. FirstTime::_real_prompt is not defined everywhere.
 	Goto the drawing board
 
+	CPAN::Shell::colorable_makemaker_prompt used in package CPAN and
+	CPAN::Distribution uses ExtUtils::MakeMaker::prompt
+
+	CPAN::FirstTime::_real_prompt is local in CPAN::FirstTime::init for
+	colorizable and later for a closure and yet later again directly for
+	colorizable again
+
+	CPAN::FirstTime::prompt is used within CPAN::FirstTime::init many times
+
+	my_dflt_prompt uses prompt
+
+	my_yn_prompt uses prompt
+
+	my_prompt_loop uses prompt
+
+	conf_sites uses prompt
+
+	picklist uses prompt
+
+	bring_your_own uses prompt
+
+	prompt uses _realprompt
+
+	Q.E.D. _real_prompt  may be undefined. Stupid. FIXED in rev. 825
+
+	825 also fixes 5.8.0 which always matched each prompt twice. All I had
+	to do was to change the tests so that no non-prompt-match ever matches a
+	prompt accidentally
+
 	* Todo: write a test that checks if the keys in HandleConfig are all
 	documented in the POD
 

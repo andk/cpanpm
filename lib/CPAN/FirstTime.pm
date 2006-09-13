@@ -80,7 +80,7 @@ sub init {
 
     my $manual_conf;
 
-    local *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+    local *_real_prompt;
     if ( $args{autoconfig} ) {
         $manual_conf = "no";
     } elsif ($matcher) {
@@ -847,6 +847,9 @@ sub _strip_spaces {
 }
 
 sub prompt ($;$) {
+    unless (defined &_real_prompt) {
+        *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+    }
     my $ans = _real_prompt(@_);
 
     _strip_spaces($ans);
