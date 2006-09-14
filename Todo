@@ -1,10 +1,7 @@
-2006-09-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* MAYBE change syntax for 'o conf init MATCH' to require two slashes for
 	the regex version just for ortogonality
-
-	* Todo: write a test that checks if the keys in HandleConfig are all
-	documented in the POD
 
 	* Especially the urllist dialog needs test cases.
 
@@ -129,6 +126,9 @@
 	And I promise to try out a more granular locking mechanism.
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Todo: write a test that checks if the keys in HandleConfig are all
+	documented in the POD. DONE in rev. 831
 
 2006-09-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
