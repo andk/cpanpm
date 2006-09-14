@@ -221,6 +221,7 @@ if ($HAVE_EXPECT) {
 ok(1,"RUN_EXPECT[$RUN_EXPECT]");
 if ($RUN_EXPECT) {
     $expo = Expect->new;
+    $ENV{LANG} = "C";
     $expo->spawn(@system);
     $expo->log_stdout(0);
     $expo->notransfer(1);
