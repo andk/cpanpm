@@ -49,5 +49,6 @@ t/12cpan.t
 t/30shell.pod
 t/30shell.t
 t/50pod.t
+t/51pod.t
 t/60credentials.t
 SIGNATURE                                Public-key signature (added by MakeMaker)
