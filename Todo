@@ -24,15 +24,13 @@
 	the user may have been able to reach the previous pick from the
 	continent question. The hint is the $no_previous_warn variable.
 
-	if we say 'o conf init'...yes/no (no is what the shell test does, so no
-	need here to investigate)
+	if we say 'o conf init'...yes/no (yes is what the shell test does, so
+	there's no need here to investigate this branch)
 
 	What's about the SPACE RETURN thing, is it broken and since when? It
-	seems it works again, maybe since rev. 
+	seems it works again, maybe since rev. ???
 
-	compare the 'make testshell-with-protocol' output carefully
-
-	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.1. Maybe
+	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.2. Maybe
 	it's just failing tests due to missing warnings.pm, I was impatient and
 	wanted to leave that for later. Now we want it for 5.8
 
