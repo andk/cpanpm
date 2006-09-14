@@ -385,7 +385,7 @@ P:foo
 E:
 ########
 P:o conf init bzip2
-E:bzip2.+?(\])
+E:Where.+?bzip2.+?(\])
 ########
 P:foo
 E:
@@ -397,37 +397,37 @@ P:y
 E:
 ########
 P:o conf init check_sigs
-E:............(\])
+E:Module::Signature is installed.+?(\])
 ########
 P:y
 E:
 ########
 P:o conf init cpan_home
-E:............(\])
+E:directory.+?(\])
 ########
 P:/tmp/must_be_a_createable_absolute_path/../
 E:
 ########
 P:o conf init curl
-E:............(\])
+E:Where.+?(\])
 ########
 P:foo
 E:
 ########
 P:o conf init gpg
-E:............(\])
+E:Where.+?(\])
 ########
 P:foo
 E:
 ########
 P:o conf init gzip
-E:............(\])
+E:Where.+?(\])
 ########
 P:foo
 E:
 ########
 P:o conf init lynx
-E:............(\])
+E:Where.+?(\])
 ########
 P:foo
 E:
