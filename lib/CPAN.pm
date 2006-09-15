@@ -774,7 +774,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
       # no blocks!!!
       &cleanup if $Signal;
       $CPAN::Frontend->mydie("Got another SIGINT") if $Signal;
-      print "Caught SIGINT\n";
+      $CPAN::Frontend->myprint("Caught SIGINT\n");
       $Signal++;
     };
 
