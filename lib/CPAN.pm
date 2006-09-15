@@ -2253,59 +2253,38 @@ sub print_ornamented {
         $swhat
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
     }
-    my $line;
-    my $longest = 0; # Does list::util work on 5.004?
-    for $line (split /\n/, $swhat) {
-        $longest = length($line) if length($line) > $longest;
-    }
-    $longest = 78 if $longest > 78; # yes, arbitrary, who wants it set-able?
     if ($self->colorize_output) {
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
         if ($@) {
             print "Term::ANSIColor rejects color[$ornament]: $@\n
 Please choose a different color (Hint: try 'o conf init color.*')\n";
         }
-        my $demobug = 0; # (=0) works, (=1) has some obscure bugs and
-                         # breaks 30shell.t, (=2) has some obvious
-                         # bugs but passes 30shell.t
-        if ($demobug == 1) {
-            my $nl = chomp $swhat ? "\n" : "";
-            while (length $swhat) {
-                $line = "";
-                if (0) {
-                    $swhat =~ s/(.*\n?)//m;
-                    $line = $1;
-                    last unless $line;
-                } else {
-                    while (length $swhat) {
-                        my $c = substr($swhat,0,1);
-                        $swhat = substr($swhat,1);
-                        $line .= $c;
-                        if ($c eq "\n") {
-                            last;
-                        }
-                    }
-                }
-
-                # my($nl) = chomp $line ? "\n" : "";
-                # ->debug verboten within print_ornamented ==> recursion!
-                # warn("line[$line]ornament[$ornament]sprintf[$sprintf]\n") if $CPAN::DEBUG;
-                print $color_on,
-                    sprintf("%-*s",$longest,$line),
-                        Term::ANSIColor::color("reset"),
-                              $line =~ /\n/ ? "" : $nl;
+        my $colorstyle = 0; # (=0) works, (=1) tries to make
+                            # background colors more attractive by
+                            # appending whitespace to short lines, it
+                            # seems also to work but is less tested;
+                            # for testing use the make target
+                            # testshell-with-protocol-twice; overall
+                            # seems not worth any effort
+        if ($colorstyle == 1) {
+            my $line;
+            my $longest = 0; # Does list::util work on 5.004?
+            for $line (split /\n/, $swhat) {
+                $longest = length($line) if length($line) > $longest;
             }
-        } elsif ($demobug == 2) {
-            my $block = join "\n",
+            $longest = 78 if $longest > 78; # yes, arbitrary, who wants it set-able?
+            my $nl = chomp $swhat ? "\n" : "";
+            my $block = join "",
                 map {
-                    sprintf("%s%-*s%s",
+                    sprintf("%s%-*s%s%s",
                             $color_on,
                             $longest,
                             $_,
                             Term::ANSIColor::color("reset"),
+                            $nl,
                            )
                 }
-                    split /[\r ]*\n/, $swhat;
+                    split /[\r\t ]*\n/, $swhat, -1;
             print $block;
         } else {
             print $color_on,

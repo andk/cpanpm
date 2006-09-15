@@ -1,12 +1,7 @@
-2006-09-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* MAYBE change syntax for 'o conf init MATCH' to require two slashes for
-	the regex version just for ortogonality
+	* Test the urllist dialog.
 
-	* Especially the urllist dialog needs test cases.
-
-	* The $demobug thing is underdocumented! Go after the bug hidden there.
-	
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
 	by Andrew Strebkov makes the URL selection nicer.
@@ -127,6 +122,14 @@
 
 	* hr ================ no todos below this line ================ /hr
 
+	* MAYBE change syntax for 'o conf init MATCH' to require two slashes for
+	the regex version just for ortogonality. REJECTED because this argument
+	does not have the same magic as other arguments that may be several
+	different types of strings.
+
+	* The $demobug thing is underdocumented! Go after the bug hidden there.
+	FINISHED
+	
 	* Todo: write a test that checks if the keys in HandleConfig are all
 	documented in the POD. DONE in rev. 831
 
