@@ -46,7 +46,9 @@ sub init {
     use Config;
     # extra arg in 'o conf init make' selects only $item =~ /make/
     my $matcher = $args{args} && @{$args{args}} ? $args{args}[0] : '';
-    if ($matcher =~ /^\w+$/) {
+    if ($matcher =~ /^\/(.*)\/$/) {
+        $matcher = $1;
+    } else {
         if (
             exists $CPAN::HandleConfig::keys{$matcher}
            ) {

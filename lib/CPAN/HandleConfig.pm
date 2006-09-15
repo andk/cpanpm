@@ -463,7 +463,7 @@ the following indispensable but missing parameters:
 
 @miss
 END
-        $args{args} = ["\\b".join("|",@miss)."\\b"];
+        $args{args} = ["/\\b(".join("|",@miss).")\\b/"];
     }
     if (0) {
         # where do we need this?
@@ -515,7 +515,7 @@ Known options:
   commit    commit session changes to disk
   defaults  reload default config values from disk
   help      this help
-  init      go through a dialog to set all parameters
+  init      enter a dialog to set all or a set of parameters
 
 Edit key values as in the following (the "o" is a literal letter o):
   o conf build_cache 15
