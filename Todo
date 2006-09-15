@@ -1,6 +1,6 @@
 2006-09-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Test the urllist dialog.
+	* Test the urllist dialog. Requires a fake mirrored.by file.
 
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64

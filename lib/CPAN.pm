@@ -1610,9 +1610,12 @@ index    re-reads the index files\n});
     }
 }
 
+# reload means only load again what we have loaded before
+#-> sub CPAN::Shell::reload_this ;
 sub reload_this {
     my($self,$f) = @_;
-    return 1 unless $INC{$f};
+    return 1 unless $INC{$f}; # we never loaded this, so we do not
+                              # reload but say OK
     my $pwd = CPAN::anycwd();
     CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
         if $CPAN::DEBUG;
