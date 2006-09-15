@@ -5,13 +5,13 @@ use File::Spec;
 use Test::More;
 use lib "lib";
 require CPAN::HandleConfig;
-my %keys = %CPAN::HandleConfig::keys;
+
 my %special = map { $_ => undef } qw(
                                      dontload_hash
                                      mbuild_install_build_command
                                      make_install_make_command
                                     );
-my %all = (%keys,%special);
+my %all = (%CPAN::HandleConfig::keys,%special);
 plan tests => (
                scalar keys %all
               );
@@ -28,8 +28,8 @@ while (<$fh>) {
   my($leader,$gedoct) = unpack("a2 a40",$_);
   next if $gedoct =~ /^\s/;
   $gedoct =~ s/\s.*//;
-  if (exists $keys{$gedoct}){
-    delete $keys{$gedoct};
+  if (exists $CPAN::HandleConfig::keys{$gedoct}){
+    delete $CPAN::HandleConfig::keys{$gedoct};
     $seen++;
     ok(1,"'$gedoct' doc'd");
   } elsif (exists $special{$gedoct}) {
@@ -39,4 +39,4 @@ while (<$fh>) {
   }
 }
 
-ok(0,"missing docs: '$_'") for sort keys %keys;
+ok(0,"missing docs: '$_'") for sort keys %CPAN::HandleConfig::keys;
