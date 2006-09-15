@@ -5525,35 +5525,55 @@ or
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
 	my($ret,$pid);
 	$@ = "";
+        my $go_via_alarm;
 	if ($CPAN::Config->{inactivity_timeout}) {
-	    eval {
-		alarm $CPAN::Config->{inactivity_timeout};
-		local $SIG{CHLD}; # = sub { wait };
-		if (defined($pid = fork)) {
-		    if ($pid) { #parent
-			# wait;
-			waitpid $pid, 0;
-		    } else {    #child
+            require Config;
+            if ($Config::Config{d_alarm}
+                &&
+                $Config::Config{d_alarm} eq "define"
+               ) {
+                $go_via_alarm++
+            } else {
+                $CPAN::Frontend->mywarn("Warning: you have configured the config ".
+                                        "variable 'inactivity_timeout' to ".
+                                        "'$CPAN::Config->{inactivity_timeout}'. But ".
+                                        "on this machine the system call 'alarm' ".
+                                        "isn't available. This means that we cannot ".
+                                        "provide the feature of intercepting long ".
+                                        "waiting code and will turn this feature off.\n"
+                                       );
+                $CPAN::Config->{inactivity_timeout} = 0;
+            }
+        }
+        if ($go_via_alarm) {
+            eval {
+                alarm $CPAN::Config->{inactivity_timeout};
+                local $SIG{CHLD}; # = sub { wait };
+                if (defined($pid = fork)) {
+                    if ($pid) { #parent
+                        # wait;
+                        waitpid $pid, 0;
+                    } else {    #child
                         # note, this exec isn't necessary if
                         # inactivity_timeout is 0. On the Mac I'd
                         # suggest, we set it always to 0.
                         exec $system;
-		    }
-		} else {
-		    $CPAN::Frontend->myprint("Cannot fork: $!");
-		    return;
-		}
-	    };
-	    alarm 0;
-	    if ($@){
-		kill 9, $pid;
-		waitpid $pid, 0;
+                    }
+                } else {
+                    $CPAN::Frontend->myprint("Cannot fork: $!");
+                    return;
+                }
+            };
+            alarm 0;
+            if ($@){
+                kill 9, $pid;
+                waitpid $pid, 0;
                 my $err = "$@";
-		$CPAN::Frontend->myprint($err);
-		$self->{writemakefile} = CPAN::Distrostatus->new("NO $err");
-		$@ = "";
-		return;
-	    }
+                $CPAN::Frontend->myprint($err);
+                $self->{writemakefile} = CPAN::Distrostatus->new("NO $err");
+                $@ = "";
+                return;
+            }
 	} else {
 	  $ret = system($system);
 	  if ($ret != 0) {
