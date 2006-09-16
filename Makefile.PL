@@ -24,8 +24,9 @@ if ($HAVE_FILE_SPEC) {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     {
       local $^W;
+      $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
       die "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nDo not make a release with it\n"
-          if $ExtUtils::MakeMaker::VERSION+0 < 6.3004;
+          if $ExtUtils::MakeMaker::VERSION < 6.3004;
     }
     die "Your MakeMaker doesn't do the sign woodoo" unless
         MM->can("signature_target");
