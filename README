@@ -828,19 +828,32 @@ CONFIGURATION
 
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
+      bzip2              path to external prg
       cache_metadata     use serializer to cache metadata
       commands_quote     prefered character to use for quoting external
                          commands when running them. Defaults to double
                          quote on Windows, single tick everywhere else;
                          can be set to space to disable quoting
       check_sigs         if signatures should be verified
+      colorize_output    boolean if Term::ANSIColor should colorize output
+      colorize_print     Term::ANSIColor attributes for normal output
+      colorize_warn      Term::ANSIColor attributes for warnings
+      commandnumber_in_prompt
+                         boolean if you want to see current command number
       cpan_home          local directory reserved for this package
+      curl               path to external prg
+      dontload_hash      DEPRECATED
       dontload_list      arrayref: modules in the list will not be
                          loaded by the CPAN::has_inst() routine
+      ftp                path to external prg
+      ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
+      ftp_proxy          proxy host for ftp requests
       getcwd             see below
+      gpg                path to external prg
       gzip               location of external program gzip
       histfile           file to maintain history between sessions
       histsize           maximum number of lines to keep in histfile
+      http_proxy         proxy host for http requests
       inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                          after this many seconds inactivity. Set to 0 to
                          never break.
@@ -848,6 +861,7 @@ CONFIGURATION
       inhibit_startup_message
                          if true, does not print the startup message
       keep_source_where  directory in which to keep the source (if we do)
+      lynx               path to external prg
       make               location of external make program
       make_arg           arguments that should always be passed to 'make'
       make_install_make_command
@@ -861,7 +875,11 @@ CONFIGURATION
                          command to use instead of './Build' when we are
                          in the install stage, for example 'sudo ./Build'
       mbuildpl_arg       arguments passed to 'perl Build.PL'
+      ncftp              path to external prg
+      ncftpget           path to external prg
+      no_proxy           don't proxy to these hosts/domains (comma separated list)
       pager              location of external program more (or any pager)
+      password           your password if you CPAN server wants one
       prefer_installer   legal values are MB and EUMM: if a module comes
                          with both a Makefile.PL and a Build.PL, use the
                          former (EUMM) or the latter (MB); if the module
@@ -873,17 +891,18 @@ CONFIGURATION
       proxy_user         username for accessing an authenticating proxy
       proxy_pass         password for accessing an authenticating proxy
       scan_cache         controls scanning of cache ('atstart' or 'never')
+      shell              your favorite shell
+      show_upload_date   boolean if commands should try to determine upload date
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
+      term_ornaments     boolean to turn ReadLine ornamenting on/off
       test_report        email test reports (if CPAN::Reporter is installed)
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
+      username           your username if you CPAN server wants one
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
-      ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
-      ftp_proxy,      }  the three usual variables for configuring
-        http_proxy,   }  proxy requests. Both as CPAN::Config variables
-        no_proxy      }  and as environment variables configurable.
+      wget               path to external prg
 
     You can set and query each of these options interactively in the cpan
     shell with the command set defined within the "o conf" command:
@@ -1309,6 +1328,12 @@ SECURITY ADVICE
 
 AUTHOR
     Andreas Koenig "<andk@cpan.org>"
+
+LICENSE
+    This program is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
+
+    See <http://www.perl.com/perl/misc/Artistic.html>
 
 TRANSLATIONS
     Kawai,Takanori provides a Japanese translation of this manpage at

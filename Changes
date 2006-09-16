@@ -1,5 +1,32 @@
 2006-09-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* release 1.88 (still on hold)
+
+	* This release is identical to the 1.87_64 developer release. For
+	detailed changes see the entries in the Changes file of the release
+	itself. For finer grained change log see the ChangeLog.svn file in the
+	release. The highlights of this release are:
+
+	* convenient configuration: dialogs for individual items or groups of
+	items can be accessed with a single command (Courtesy Jim Cromie)
+
+	* support for CPAN::Reporter by David Golden: try 'o conf init /test/'
+	(Courtesy David Golden)
+
+	* make installation of scripts easier: try 'install
+	SREZIC/pingomatic-1.012' (Courtesy Slaven Rezic)
+
+	* colored output for better separation of process output, messages from
+	CPAN and warnings from CPAN: try 'o conf init /color/' to turn
+	colorization on/off
+
+	* formatting of lists of modules now features a column to indicate
+	installed and updateable modules
+
+	* init dialog now has reversed semantics: it suggests automatic
+	configuration that can be confirmed with 'yes' instead of suggesting
+	manual configuration that can be denied with 'no'.
+
 	* release 1.87_64
 
 	* added test for the urllist dialog
@@ -118,8 +145,9 @@
 
 	* release 1.87_53
 
-	* make scripts installable when the path of the distro is given: you can
-	now 'install ANDK/keepcool-0.344' and it is stored as 'keepcool'
+	* make *scripts* (as opposed to modules) installable when the path of
+	the distro is given: you can now 'install ANDK/keepcool-0.344' and it is
+	stored as 'keepcool'
 
 	* the m command displays one column more: an equals sign if we have this
 	version installed, a less-than sign if our installed version of the
