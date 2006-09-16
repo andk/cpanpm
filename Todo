@@ -2,13 +2,6 @@
 
 	* Test the urllist dialog. Requires a fake mirrored.by file.
 
-	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
-	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
-	by Andrew Strebkov makes the URL selection nicer.
-
-	It allows hyphenated ranges like 10-14. It also fixed the SPACE RETURN
-	bug that seems to be fixed now anyway.
-
 	* Todo: test many cases:
 
 	if we have a urllist, if have none: can we always hit RETURN and reach
@@ -121,6 +114,13 @@
 	And I promise to try out a more granular locking mechanism.
 
 	* hr ================ no todos below this line ================ /hr
+
+	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
+	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
+	by Andrew Strebkov makes the URL selection nicer.
+
+	It allows hyphenated ranges like 10-14. It also fixed the SPACE RETURN
+	bug that seems to be fixed now anyway. DONE in rev 848
 
 	* MAYBE change syntax for 'o conf init MATCH' to require two slashes for
 	the regex version just for ortogonality. REJECTED because this argument

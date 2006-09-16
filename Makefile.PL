@@ -25,7 +25,7 @@ if ($HAVE_FILE_SPEC) {
     {
       local $^W;
       die "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nDo not make a release with it\n"
-          if $ExtUtils::MakeMaker::VERSION+0 < 6.30;
+          if $ExtUtils::MakeMaker::VERSION+0 < 6.3004;
     }
     die "Your MakeMaker doesn't do the sign woodoo" unless
         MM->can("signature_target");
@@ -243,8 +243,8 @@ diff::
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 
-META.yml:
-	$(ECHO) -n "" >> META.yml
+META.yml: metafile
+	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 
 testcover: testdistros
 	:>SIGNATURE
