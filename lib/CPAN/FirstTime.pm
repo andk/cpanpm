@@ -48,18 +48,27 @@ use vars qw( %prompts );
 sub init {
     my($configpm, %args) = @_;
     use Config;
-    # extra arg in 'o conf init make' selects only $item =~ /make/
+    # extra args after 'o conf init'
     my $matcher = $args{args} && @{$args{args}} ? $args{args}[0] : '';
     if ($matcher =~ /^\/(.*)\/$/) {
+        # case /regex/ => take the first, ignore the rest
         $matcher = $1;
+        shift @{$args{args}};
+        if (@{$args{args}}) {
+            local $" = " ";
+            $CPAN::Frontend->mywarn("Ignoring excessive arguments '@{$args{args}}'");
+            $CPAN::Frontend->mysleep(2);
+        }
     } elsif (0 == length $matcher) {
-    } elsif (
-             exists $CPAN::HandleConfig::keys{$matcher}
-            ) {
-        $matcher = "\\b$matcher\\b";
     } else {
-        $CPAN::Frontend->myprint("'$matcher' is not a valid configuration variable");
-        return;
+        # case WORD... => all arguments must be valid
+        for my $arg (@{$args{args}}) {
+            unless (exists $CPAN::HandleConfig::keys{$arg}) {
+                $CPAN::Frontend->mywarn("'$arg' is not a valid configuration variable");
+                return;
+            }
+        }
+        $matcher = "\\b(".join("|",@{$args{args}}).")\\b";
     }
     CPAN->debug("matcher[$matcher]") if $CPAN::DEBUG;
 

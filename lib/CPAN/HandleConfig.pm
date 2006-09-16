@@ -463,7 +463,7 @@ the following indispensable but missing parameters:
 
 @miss
 END
-        $args{args} = ["/\\b(".join("|",@miss).")\\b/"];
+        $args{args} = \@miss;
     }
     if (0) {
         # where do we need this?
@@ -552,7 +552,7 @@ sub cpl {
             (
              @words == 3
              ||
-             @words == 4 && length($word)
+             @words >= 4 && length($word)
             )) {
 	return sort grep /^\Q$word\E/, keys %keys;
     } elsif (@words >= 4) {
