@@ -1,3 +1,27 @@
+2006-09-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.87_64
+
+	* added test for the urllist dialog
+
+	* added License to all pm files and to the Makefile.PL
+
+	* allow ranges in urllist dialog, as inspired by Andrew Strebkov
+
+	* allow "o conf init WORD WORD2..."
+
+	* address #21484: disable inactivity_timeout when d_alarm is not "define"
+
+	* regex in "o conf init MATCH" must now be enclosed in slashes as in all
+	other commands that allow regexes
+
+	* again tested with 5.8.0, this time with an UTF8 locale and it did
+	indeed not pass the 30test: turning LANG=C now for the 30shell test,
+	unconditionally
+
+	* all supported config variables now documented in the POD and added a
+	test to monitor changes in the future
+
 2006-09-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.87_63
