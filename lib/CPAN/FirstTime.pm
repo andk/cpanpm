@@ -53,15 +53,13 @@ sub init {
     if ($matcher =~ /^\/(.*)\/$/) {
         $matcher = $1;
     } elsif (0 == length $matcher) {
+    } elsif (
+             exists $CPAN::HandleConfig::keys{$matcher}
+            ) {
+        $matcher = "\\b$matcher\\b";
     } else {
-        if (
-            exists $CPAN::HandleConfig::keys{$matcher}
-           ) {
-            $matcher = "\\b$matcher\\b";
-        } else {
-            $CPAN::Frontend->myprint("'$matcher' is not a valid configuration variable");
-            return;
-        }
+        $CPAN::Frontend->myprint("'$matcher' is not a valid configuration variable");
+        return;
     }
     CPAN->debug("matcher[$matcher]") if $CPAN::DEBUG;
 
