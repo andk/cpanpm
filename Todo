@@ -1,37 +1,18 @@
 2006-09-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Test the urllist dialog. Requires a fake mirrored.by file.
-
-	* Todo: test many cases:
-
-	if we have a urllist, if have none: can we always hit RETURN and reach
-	the end, especially if we already have a previous pick? Once upon a time
-	the user may have been able to reach the previous pick from the
-	continent question. The hint is the $no_previous_warn variable.
-
-	if we say 'o conf init'...yes/no (yes is what the shell test does, so
-	there's no need here to investigate this branch)
-
-	What's about the SPACE RETURN thing, is it broken and since when? It
-	seems it works again, maybe since rev. ???
-
-	* Todo: make CPAN::Reporter run under 5.004 and 5.005 and 5.6.2. Maybe
-	it's just failing tests due to missing warnings.pm, I was impatient and
-	wanted to leave that for later. Now we want it for 5.8
-
 	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
 	and jarkko
 
-	* Todo (E1): use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
 	get rid of the term_is_latin variable.
 
-	* RT (M5) has 21 open and new tickets...
+	* M5 RT has 21 open and new tickets...
 
-	* branch 1.87-dbmdeep-hackery revive (H4)? It was very broken but I do not
+	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
 	remember details. Hint: DBM::Deep promises significant memory savings
 	and in that branch we tried to see how it can be made to work for us.
 
-	* Todo (H3): JV suggests treating build_dependencies differently
+	* H3 Todo: JV suggests treating build_dependencies differently
 
 	To: Johan Vromans <jvromans@squirrel.nl>
 	Cc: modules@perl.org
@@ -76,26 +57,26 @@
 	andreas
 
 
-	* feature request by Juergen Christoffel (M3): have time stamps on the
+	* M3 feature request by Juergen Christoffel: have time stamps on the
 	history and a history command to see them
 
-	* Bug (E4): it seems that a user who is in /bin and has "." in the
+	* E4 Bug: it seems that a user who is in /bin and has "." in the
 	beginning of the path gets ./sh as his shell from FirstTime. If we
 	encounter . in the path we should rather ignore it. But first we must
 	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
 	Schulze.
 
-	* Todo (E4): investigate what BUGHUNTING in Tarzip means "today".
+	* E4 Todo: investigate what BUGHUNTING in Tarzip means "today".
 
-	* Todo (E3): write a test for dot-cpan/Metadata usage
+	* E3 Todo: write a test for dot-cpan/Metadata usage
 
-	* prerequisites (E3): require perl version xxx: we should not delete that
+	* E3 prerequisites: require perl version xxx: we should not delete that
 	information but honour it.
 
-	* RT 17353 (M3): Flag outdated CPAN sites and move them to the end of the
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
 	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
-	* Locking (H3): Linda W writes
+	* H3 Locking: Linda W writes
 
 	>I'm not sure I understand the reason for the lock file
 	>placed in cpan_home.  If I have two different architectures
@@ -114,6 +95,21 @@
 	And I promise to try out a more granular locking mechanism.
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Test the urllist dialog. Requires a fake mirrored.by file. DONE in rev. 851
+
+	* Todo: test many cases:
+
+	if we have a urllist, if have none: can we always hit RETURN and reach
+	the end, especially if we already have a previous pick? Once upon a time
+	the user may have been able to reach the previous pick from the
+	continent question. The hint is the $no_previous_warn variable.
+
+	if we say 'o conf init'...yes/no (yes is what the shell test does, so
+	there's no need here to investigate this branch)
+
+	What's about the SPACE RETURN thing, is it broken and since when? It
+	seems it works again, maybe since rev. ???
 
 	* http://www.flight.us/misc/FirstTime.pm_AStrebkov.htm (E3) and
 	http://groups.google.com/group/comp.lang.perl.misc/browse_thread/thread/a3f172fedc02c280/5814e81793793b64#5814e81793793b64
@@ -1502,7 +1498,9 @@ geographic selection.
 	instead of 'make install'. (Fixing this is delayed, because it
 	interacts with Make.pm)
 
-
+	* What does E1, E2, E3, E4, E5, M1, M2, M3, M4, M5, H1, H2, H3, H4, H5
+	mean?
+	
 	E=Easy
 	M=Middle
 	H=Hard
