@@ -52,6 +52,7 @@ sub init {
     my $matcher = $args{args} && @{$args{args}} ? $args{args}[0] : '';
     if ($matcher =~ /^\/(.*)\/$/) {
         $matcher = $1;
+    } elsif (0 == length $matcher) {
     } else {
         if (
             exists $CPAN::HandleConfig::keys{$matcher}
