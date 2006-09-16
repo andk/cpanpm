@@ -30,12 +30,16 @@ R for requires or relies on
 
 C for comment
 
+S for status
+
 
 The script starts a CPAN shell and feed it the chunks such that the P
 line is injected, the output of the shell is parsed and compared to
 the expression in the E line. With T the timeout can be changed (the
 default is rather low, maybe 10 seconds, see the code for details).
-The expression in R is used to filter tests.
+The expression in R is used to filter tests. The keyword in S may be
+one of C<run> to run this test, C<skip> to skip it, and C<quit> to
+stop testing immediately when this test is reached.
 
 To get reliable and debuggable results, Expect.pm should be installed.
 Without Expect.pm, a fallback mode is started that should in principle
@@ -241,10 +245,29 @@ sub splitchunk ($) {
     @s;
 }
 
+my $skip_the_rest;
 TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($prog,$expected,$req,$test_timeout,$comment) = @h{qw(P E R T C)};
+    my($status,$prog,$expected,$req,$test_timeout,$comment) = @h{qw(S P E R T C)};
+    if ($skip_the_rest) {
+        ok(1,"skipping");
+        next TUPL;
+    }
+    if ($status) {
+        chomp $status;
+        if ($status eq "skip") {
+            ok(1,"skipping");
+            next TUPL;
+        } elsif ($status eq "run") {
+        } elsif ($status eq "quit") {
+            ok(1,"skipping");
+            $skip_the_rest++;
+            next TUPL;
+        } else {
+            die "Alert: illegal status [$status]";
+        }
+    }
     unless (defined $expected or defined $prog) {
         ok(1,"empty test");
         next TUPL;
@@ -329,7 +352,7 @@ if ($RUN_EXPECT) {
 }
 
 read_myconfig;
-is($CPAN::Config->{histsize},101);
+is($CPAN::Config->{histsize},100);
 rmtree _d"t/dot-cpan";
 
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on)
@@ -339,6 +362,7 @@ E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
 ########
 P:o conf build_cache
 E:build_cache
+S:run
 ########
 P:o conf init
 E:(?s:.*?configure.as.much.as.possible.automatically.*?\])
@@ -363,6 +387,12 @@ E:reread
 ########
 P:o conf histsize
 E:histsize.+?101
+########
+P:o conf histsize 100
+E:histsize.+?100
+########
+P:o conf commit
+E:commit: wrote.+?MyConfig
 ########
 P:o conf urllist
 E:file:///.*?CPAN
