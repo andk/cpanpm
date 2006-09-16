@@ -36,6 +36,10 @@ CPAN::FirstTime::init()
 The init routine asks a few questions and writes a CPAN/Config.pm or
 CPAN/MyConfig.pm file (depending on what it is currently using).
 
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
 
 =cut
 

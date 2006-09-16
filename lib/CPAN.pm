@@ -8724,6 +8724,13 @@ unusable. Please consider backing up your data before every upgrade.
 
 Andreas Koenig C<< <andk@cpan.org> >>
 
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+See L<http://www.perl.com/perl/misc/Artistic.html>
+
 =head1 TRANSLATIONS
 
 Kawai,Takanori provides a Japanese translation of this manpage at
