@@ -92,6 +92,8 @@ END {
 }
 cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
+cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
+    or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
 mkpath _d"t/dot-cpan/Bundle";
 cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
@@ -297,6 +299,14 @@ TUPL: for my $i (0..$#prgs){
             print SYSTEM "# NEXT: $sendprog\n";
             print SYSTEM "$sendprog\n";
         }
+    } else {
+        if ($RUN_EXPECT) {
+            mydiag "PRESSING RETURN";
+            $expo->send("\n");
+        } else {
+            print SYSTEM "# PRESSING RETURN\n";
+            print SYSTEM "\n";
+        }
     }
     $expected .= "(?s:.*?$prompt_re)" unless $expected =~ /\(/;
     if ($RUN_EXPECT) {
@@ -325,7 +335,7 @@ expected[$expected]\ngot[$got]\n\n";
                      );
         my $got = $expo->clear_accum;
         mydiag "GOT: $got\n";
-        $prog =~ s/^(\d)/...$1/;
+        $prog =~ s/^(\d)/$1/;
         $comment ||= "";
         ok(1, "$comment" . ($prog ? " (testing command '$prog')" : "[empty RET]"));
     } else {
@@ -359,6 +369,43 @@ rmtree _d"t/dot-cpan";
 __END__
 ########
 E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
+########
+P:o conf init urllist
+E:(MIRR).+?y\]
+########
+P:y
+E:continent.+?(\])
+########
+P:
+E:previous.+?(\])
+########
+P:
+E:another URL.+?(\])
+########
+P:
+E:(?s:New set.+?commit.+?(!).+?\])
+########
+P:o conf init urllist
+E:MIRR.+?(\])
+########
+P:y
+E:continent.+?(\])
+########
+P:1-8
+E:(\])
+########
+P:1-8
+E:(\])
+########
+P:1-8
+E:(\])
+########
+P:
+E:(?s:New set.+?commit.+?(!).+?\])
+########
+P:o conf urllist
+########
+P:o conf defaults
 ########
 P:o conf build_cache
 E:build_cache
