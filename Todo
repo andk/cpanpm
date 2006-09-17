@@ -1,3 +1,52 @@
+2006-09-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* E5 watch RT for open tickets. This todo can never be closed.
+
+	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
+	the future of locking, the future of DBM::Deep, protocol changes. Not
+	sure what to test.
+
+	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
+	about a very old bug in Archive::Tar that is most probably fixed. Turn
+	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
+	It is slow but everything should just plain work. When we're confident
+	that everything works, we could offer a tar_policy option that has
+	options "ext" and "mod", for external programs vs. modules, default to
+	"ext"?
+
+	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
+	the beginning of the path gets ./sh as his shell from FirstTime. If we
+	encounter . in the path we should rather ignore it. But first we must
+	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
+	Schulze. This has nothing to do with -I. but only with the shell and
+	$ENV{PATH} and as we do not know which shell it was it seems we cannot
+	test for the problem.
+
+2006-09-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* H1 These days developer TELS posted to perl5-porters that his newest
+	release is available at
+
+	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	Suddenly it dawned on me that I want to support
+
+	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	What am I missing?
+
+	The other commands dealing with files would have to learn a bit.
+
+	d http://      # fails as before with "No objects of...."
+
+	ls http://     # lists nothing
+
+	get http://    # this is probably all we need to implement. Maybe a new
+	               # class needed that does as_string and as_glimpse as well?
+
+	And maybe a pragma that turns this feature on? So that 'get http://...'
+	never works but 'force get http://...' does?
+
 2006-09-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
@@ -5,8 +54,6 @@
 
 	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
 	get rid of the term_is_latin variable. Test output with locales.
-
-	* M5 RT has 21 open and new tickets...
 
 	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
 	remember details. Hint: DBM::Deep promises significant memory savings
@@ -59,16 +106,6 @@
 
 	* M3 feature request by Juergen Christoffel: have time stamps on the
 	history and a history command to see them
-
-	* E4 Bug: it seems that a user who is in /bin and has "." in the
-	beginning of the path gets ./sh as his shell from FirstTime. If we
-	encounter . in the path we should rather ignore it. But first we must
-	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
-	Schulze.
-
-	* E4 Todo: investigate what BUGHUNTING in Tarzip means "today".
-
-	* E3 Todo: write a test for dot-cpan/Metadata usage
 
 	* E3 prerequisites: require perl version xxx: we should not delete that
 	information but honour it.
@@ -286,8 +323,8 @@
 
 2006-07-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Jim Cromie suggests (H4): tweak shell to allow cpan> o conf init
-	@sections tweak FirstTime::init() interface to accept optional @sections
+	* Jim Cromie suggests: tweak shell to allow cpan> o conf init @sections
+	tweak FirstTime::init() interface to accept optional @sections
 
 	put various interactive Qs into groups of conditionals: if ( !@sections
 	     or grep /$this_sect_name/, @sections)
