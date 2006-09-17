@@ -129,12 +129,16 @@ WriteMakefile(
               VERSION_FROM => $version_from,
               EXE_FILES    => [qw(scripts/cpan)],
               PREREQ_PM    => $prereq_pm,
-              LICENSE      => "perl",
+              ($ExtUtils::MakeMaker::VERSION >= 6.3001 ?
+               (LICENSE      => "perl") : (),
+              ),
               clean        => { FILES => "lib/CPAN/Config.pm" },
               @sign,
               ($] >= 5.005 ?
-               (ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
-                AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : ()),
+               (
+                ABSTRACT_FROM  => 'lib/CPAN.pm', # retrieve abstract from module
+                AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : (),
+              ),
               dist => {
                        DIST_DEFAULT => (
                                         'Makefile no_CR META.yml setversion README '.
