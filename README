@@ -944,16 +944,17 @@ CONFIGURATION
     Cwd::cwd but if this doesn't work on your system for some reason,
     alternatives can be configured according to the following table:
 
-    cwd Calls Cwd::cwd
+    cwd
+      Calls Cwd::cwd
 
     getcwd
-        Calls Cwd::getcwd
+      Calls Cwd::getcwd
 
     fastcwd
-        Calls Cwd::fastcwd
+      Calls Cwd::fastcwd
 
     backtickcwd
-        Calls the external command cwd.
+      Calls the external command cwd.
 
   Note on urllist parameter's format
     urllist parameters are URLs according to RFC 1738. We do a little
@@ -1362,14 +1363,4 @@ TRANSLATIONS
 
 SEE ALSO
     cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
-
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 8295:
-        '=item' outside of any '=over'
-
-    Around line 8311:
-        You forgot a '=back' before '=head2'
 
