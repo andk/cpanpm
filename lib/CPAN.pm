@@ -8138,6 +8138,8 @@ with this floppy. See also below the paragraph about CD-ROM support.
 
 =head2 Basic Utilities for Programmers
 
+=over 2
+
 =item has_inst($module)
 
 Returns true if the module is installed. See the source for details.
@@ -8153,6 +8155,8 @@ See the source for details.
 The constructor for all the singletons used to represent modules,
 distributions, authors and bundles. If the object already exists, this
 method returns the object, otherwise it calls the constructor.
+
+=back
 
 =head1 CONFIGURATION
 
