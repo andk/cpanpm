@@ -8292,6 +8292,8 @@ determine its own current working directory. Per default it uses
 Cwd::cwd but if this doesn't work on your system for some reason,
 alternatives can be configured according to the following table:
 
+=over 2
+
 =item cwd
 
 Calls Cwd::cwd
@@ -8307,6 +8309,8 @@ Calls Cwd::fastcwd
 =item backtickcwd
 
 Calls the external command cwd.
+
+=back
 
 =head2 Note on urllist parameter's format
 
