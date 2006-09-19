@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88';
+$CPAN::VERSION = '1.87_65';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -640,7 +640,6 @@ sub all_objects {
     CPAN::Index->reload;
     values %{ $META->{readwrite}{$class} }; # unsafe meta access, ok
 }
-*all = \&all_objects;
 
 # Called by shell, not in batch mode. In batch mode I see no risk in
 # having many processes updating something as installations are
@@ -1073,6 +1072,8 @@ sub is_tested {
     $self->{is_tested}{$what} = 1;
 }
 
+# looks suspicious but maybe it is really intended to set is_tested
+# here. Please document next time around
 sub is_installed {
     my($self,$what) = @_;
     delete $self->{is_tested}{$what};
@@ -7295,7 +7296,7 @@ mechanism.
 All methods provided are accessible in a programmer style and in an
 interactive shell style.
 
-=head2 Interactive Mode
+=head2 CPAN::shell([$prompt, $command]) Starting Interactive Mode
 
 The interactive mode is entered by running
 
@@ -7539,7 +7540,7 @@ so you would have to say
 The first example will be driven by an object of the class
 CPAN::Module, the second by an object of class CPAN::Distribution.
 
-=head2 Programmer's interface
+=head1 PROGRAMMER'S INTERFACE
 
 If you do not enter the shell, the available shell commands are both
 available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
@@ -8067,7 +8068,7 @@ your @INC path. The autobundle() command which is available in the
 shell interface does that for you by including all currently installed
 modules in a snapshot bundle file.
 
-=head2 Prerequisites
+=head1 PREREQUISITES
 
 If you have a local mirror of CPAN and can access all files with
 "file:" URLs, then you only need a perl better than perl5.003 to run
@@ -8078,6 +8079,8 @@ associated with a URL that is not C<ftp:>.
 If you have neither Net::FTP nor LWP, there is a fallback mechanism
 implemented for an external ftp command or for an external lynx
 command.
+
+=head1 UTILITIES
 
 =head2 Finding packages and VERSION
 
@@ -8132,6 +8135,24 @@ machine. Then copy the $CPAN::Config->{keep_source_where} (but not
 $CPAN::Config->{build_dir}) directory on a floppy. This floppy is kind
 of a personal CPAN. CPAN.pm on the non-networked machines works nicely
 with this floppy. See also below the paragraph about CD-ROM support.
+
+=head2 Basic Utilities for Programmers
+
+=item has_inst($module)
+
+Returns true if the module is installed. See the source for details.
+
+=item has_usable($module)
+
+Returns true if the module is installed and several and is in a usable
+state. Only useful for a handful of modules that are used internally.
+See the source for details.
+
+=item instance($module)
+
+The constructor for all the singletons used to represent modules,
+distributions, authors and bundles. If the object already exists, this
+method returns the object, otherwise it calls the constructor.
 
 =head1 CONFIGURATION
 
@@ -8260,17 +8281,28 @@ works like the corresponding perl commands.
 
 =back
 
-=head2 Note on config variable getcwd
+=head2 CPAN::anycwd($path): Note on config variable getcwd
 
 CPAN.pm changes the current working directory often and needs to
 determine its own current working directory. Per default it uses
 Cwd::cwd but if this doesn't work on your system for some reason,
 alternatives can be configured according to the following table:
 
-    cwd         Cwd::cwd
-    getcwd      Cwd::getcwd
-    fastcwd     Cwd::fastcwd
-    backtickcwd external command cwd
+=item cwd
+
+Calls Cwd::cwd
+
+=item getcwd
+
+Calls Cwd::getcwd
+
+=item fastcwd
+
+Calls Cwd::fastcwd
+
+=item backtickcwd
+
+Calls the external command cwd.
 
 =head2 Note on urllist parameter's format
 

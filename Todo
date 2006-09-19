@@ -1,3 +1,17 @@
+2006-09-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* verify that the CPAN.pm-using modules continue to work
+
+  AltaVista-BabelFish DMUEY CPAN-Unwind MSCHILLI CPAN-WAIT ULPFR
+	Devel-Modlist RJRAY PAR-Dist-FromCPAN SMUELLER Perl-Dist DAGOLDEN
+	Test-CPANpm CRAKRJACK
+
+	Dubious CPAN::Unwind (something to do with Log4perl)
+	Dubious Test-CPANpm (did this ever work?)
+
+	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
+	CPAN.pm is covered
+
 2006-09-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* E5 watch RT for open tickets. This todo can never be closed.
@@ -46,6 +60,31 @@
 
 	And maybe a pragma that turns this feature on? So that 'get http://...'
 	never works but 'force get http://...' does?
+
+	Brian likes the idea
+
+From: brian d foy <brian.d.foy@gmail.com>
+Subject: Re: Welcome new user LOCAL
+To: modules@perl.org
+Date: Mon, 18 Sep 2006 14:52:48 -0500
+Organization: Perl Authors Upload Server
+Reply-To: modules@perl.org
+
+In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
+<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
+
+> My spontaneous idea was to support the command
+> 
+>     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+
+oh, very interesting, especially if I already have the file:
+
+   cpan> get file:///....
+
+This makes CPAN::Mini::Inject a bit less useful because I no longer
+need the middle man.
+
 
 2006-09-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
