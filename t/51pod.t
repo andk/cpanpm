@@ -18,9 +18,9 @@ plan tests => (
 
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
 
-open my $fh, _f"lib/CPAN.pm" or die "Could not open CPAN.pm: $!";
+open FH, _f"lib/CPAN.pm" or die "Could not open CPAN.pm: $!";
 my $seen;
-while (<$fh>) {
+while (<FH>) {
   next if 1../^=head1 CONFIGURATION/;
   next if /^(\w|$)/ && !$seen;
   last if /^(\w|$)/ && $seen;
