@@ -1,3 +1,70 @@
+2006-09-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* find out why CPAN::Reporter cannot send mail on my home machine
+
+	Somebody seems to try to send mail and using the local address
+	(k75.linux.bogus) in a HELO or something. I'm testing with
+	Devel::Symdump.
+
+	Installed modules? Mail::Send from MailTools? Net::SMTP from libnet?
+
+	MailTools no, N:S yes.
+
+	Ah, Test::Reporter says "If you have MailTools installed". Hmmm. This
+	test succeeded today with blead@28866. Will have to wait again to see a
+	fail.
+
+	So now I have MailTools installed and now I see again the message
+
+% mailq
+MSP Queue status...
+/var/spool/mqueue-client is empty
+                Total requests: 0
+MTA Queue status...
+                /var/spool/mqueue (1 request)
+-----Q-ID----- --Size-- -----Q-Time----- ------------Sender/Recipient-----------
+k8J6VCVD013108     3070 Tue Sep 19 08:31 <k@k75.linux.bogus>
+                 (Deferred: 450 Could not resolve k75.linux.bogus)
+                                         <cpan-testers@perl.org>
+                Total requests: 1
+
+	This is the debugging output of {CPAN,Test}::Reporter:
+
+Sending test report with 'pass' to cpan-testers@perl.org
+Test::Reporter: debug
+Test::Reporter: send
+Test::Reporter: debug
+Test::Reporter: from
+Test::Reporter: debug
+Test::Reporter::Mail::Util: _mailaddress
+Test::Reporter: debug
+Test::Reporter: report
+Test::Reporter: debug
+Test::Reporter: subject
+Test::Reporter: debug
+Test::Reporter: _verify
+Test::Reporter: errstr
+Test::Reporter: debug
+Test::Reporter: _have_mail_send
+Test::Reporter: debug
+Test::Reporter: _mail_send
+Test::Reporter: via
+Test::Reporter: address
+Test::Reporter: debug
+Test::Reporter: from
+Test::Reporter: debug
+Test::Reporter::Mail::Util: _mailaddress
+Test::Reporter: debug
+Test::Reporter: subject
+Test::Reporter: debug
+Test::Reporter: mail_send_args
+Test::Reporter: debug
+Test::Reporter: _have_mail_send
+Test::Reporter: debug
+Test::Reporter: report
+
+	Need to repeat the process and then report as a bug.
+
 2006-09-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* verify that the CPAN.pm-using modules continue to work
