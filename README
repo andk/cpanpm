@@ -72,7 +72,7 @@ DESCRIPTION
     All methods provided are accessible in a programmer style and in an
     interactive shell style.
 
-  Interactive Mode
+  CPAN::shell([$prompt, $command]) Starting Interactive Mode
     The interactive mode is entered by running
 
         perl -MCPAN -e shell
@@ -296,7 +296,7 @@ DESCRIPTION
     The first example will be driven by an object of the class CPAN::Module,
     the second by an object of class CPAN::Distribution.
 
-  Programmer's interface
+PROGRAMMER'S INTERFACE
     If you do not enter the shell, the available shell commands are both
     available as methods ("CPAN::Shell->install(...)") and as functions in
     the calling package ("install(...)").
@@ -754,7 +754,7 @@ DESCRIPTION
     interface does that for you by including all currently installed modules
     in a snapshot bundle file.
 
-  Prerequisites
+PREREQUISITES
     If you have a local mirror of CPAN and can access all files with "file:"
     URLs, then you only need a perl better than perl5.003 to run this
     module. Otherwise Net::FTP is strongly recommended. LWP may be required
@@ -764,6 +764,7 @@ DESCRIPTION
     If you have neither Net::FTP nor LWP, there is a fallback mechanism
     implemented for an external ftp command or for an external lynx command.
 
+UTILITIES
   Finding packages and VERSION
     This module presumes that all packages on CPAN
 
@@ -806,6 +807,20 @@ DESCRIPTION
     $CPAN::Config->{build_dir}) directory on a floppy. This floppy is kind
     of a personal CPAN. CPAN.pm on the non-networked machines works nicely
     with this floppy. See also below the paragraph about CD-ROM support.
+
+  Basic Utilities for Programmers
+    has_inst($module)
+        Returns true if the module is installed. See the source for details.
+
+    has_usable($module)
+        Returns true if the module is installed and several and is in a
+        usable state. Only useful for a handful of modules that are used
+        internally. See the source for details.
+
+    instance($module)
+        The constructor for all the singletons used to represent modules,
+        distributions, authors and bundles. If the object already exists,
+        this method returns the object, otherwise it calls the constructor.
 
 CONFIGURATION
     When the CPAN module is used for the first time, a configuration dialog
@@ -923,16 +938,22 @@ CONFIGURATION
     "o conf <list option> [unshift|push|splice] <list>"
       works like the corresponding perl commands.
 
-  Note on config variable getcwd
+  CPAN::anycwd($path): Note on config variable getcwd
     CPAN.pm changes the current working directory often and needs to
     determine its own current working directory. Per default it uses
     Cwd::cwd but if this doesn't work on your system for some reason,
     alternatives can be configured according to the following table:
 
-        cwd         Cwd::cwd
-        getcwd      Cwd::getcwd
-        fastcwd     Cwd::fastcwd
-        backtickcwd external command cwd
+    cwd Calls Cwd::cwd
+
+    getcwd
+        Calls Cwd::getcwd
+
+    fastcwd
+        Calls Cwd::fastcwd
+
+    backtickcwd
+        Calls the external command cwd.
 
   Note on urllist parameter's format
     urllist parameters are URLs according to RFC 1738. We do a little
@@ -1341,4 +1362,20 @@ TRANSLATIONS
 
 SEE ALSO
     cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
+
+POD ERRORS
+    Hey! The above document had some coding errors, which are explained
+    below:
+
+    Around line 8141:
+        '=item' outside of any '=over'
+
+    Around line 8157:
+        You forgot a '=back' before '=head1'
+
+    Around line 8291:
+        '=item' outside of any '=over'
+
+    Around line 8307:
+        You forgot a '=back' before '=head2'
 
