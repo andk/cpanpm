@@ -1,4 +1,56 @@
+2006-09-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* #  FAIL  DBIx-Timeout  1.01 350359 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS Net-SDP 0.07 350354 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS GIS-Distance 0.01000 350352 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS Class-Measure 0.02 350351 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS WWW-Pagination 0.35 350350 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS Socket-Multicast6 0.01 350348 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+# PASS IO-Socket-INET6 2.51 350347 5.8.8 on Netbsd 3.0 (i386-netbsd-thread-multi-64int)
+
+	Repeating experiments with CPAN::Reporter and Net::SMTP and AUTOMATED_TESTING
+
+	I just started with a fresh blead@28875 and the command
+
+	    install CPAN::Reporter Bundle::CPAN Module::Signature Devel::Symdump
+
+	and all reports that CPAN::Reporter offered were accepted by me. So
+	tomorrow morning I expect reports on testers.cpan.org above the FAIL for
+	DBIx-Timeout. Then I can install Mail::Send again and send a few reports
+	and then I can set AUTOMATIC_TESTING and on the next perl I can do that
+	in opposite order.
+
+	* automatic testing? Is it anywhere documented what the impacts of
+	$ENV{AUTOMATED_TESTING} are?
+
+	* new keyword capture? CPAN::Reporter does not know the output of the
+	commands before "test" and cannot report about compilation failures.
+	This looks like a major flaw to me:-(
+
 2006-09-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* repeating the exercise of testing CPAN::Reporter
+
+	blead@28868: install CPAN::Reporter and its dependencies (no MailTools
+	but Net::SMTP ist there). Testing TAPx::Parser fails miserably, the
+	report seems to be sent. Testing CGI::Session succeeds with lots of
+	SKIPs. The report seems to have been sent. Testing Module::Signature
+	succeeds with just a single test, report seems to have been sent.
+	Installing CPANPLUS::Dist::Build installs among many other dependencies
+	CPANPLUS itself, the latter succeeds and I let CPAN::Reporter send a
+	mail which seems to work.
+
+	Now I install Mail::Mailer and succeed. The Mail is still sent by
+	Net::SMTP and apparently succeeds.
+
+	Now let's try IO::Tty. Tests succeed but it's a test.pl based distro, so
+	CPAN::Reporter cannot send mail. To get to a quick end, I now test
+	CPAN::Reporter itself. It pretends to send mail, from the debug output I
+	recognize Mail::Mailer. And now I have two mails in the mqueue with
+	"Could not resolve k75.linux.bogus". QED.
+
+	MASQUERADE_AS(`franz.ak.mind.de')dnl in the sendmail.mc seems to have
+	done the trick.
 
 	* find out why CPAN::Reporter cannot send mail on my home machine
 

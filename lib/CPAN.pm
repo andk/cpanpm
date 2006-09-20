@@ -7249,14 +7249,18 @@ Batch mode:
 
 =head1 STATUS
 
-This module will eventually be replaced by CPANPLUS. CPANPLUS is kind
-of a modern rewrite from ground up with greater extensibility and more
-features but no full compatibility. If you're new to CPAN.pm, you
-probably should investigate if CPANPLUS is the better choice for you.
+This module and its competitor, the CPANPLUS module, are each much
+cooler than the other. CPANPLUS is kind of a baby dragon with about 17
+heads unlimited extensibility and features up to the ceiling. CPAN.pm
+on the other hand, is a troll that although it didn't get anything
+right technically, was so helpfully lending his hand to the both the
+technically impaired and the wizards that nobody could resist its
+simplicity. If you're new to the game, you probably should consider
+using one or the other NOW.
 
 If you're already used to CPAN.pm you're welcome to continue using it.
-I intend to support it until somebody convinces me that there is a
-both superior and sufficiently compatible drop-in replacement.
+I intend to support it until there is a superior and sufficiently
+compatible drop-in replacement.
 
 =head1 COMPATIBILITY
 

@@ -10,22 +10,25 @@
 	* convenient configuration: dialogs for individual items or groups of
 	items can be accessed with a single command (Courtesy Jim Cromie)
 
-	* support for CPAN::Reporter by David Golden: try 'o conf init /test/'
+	* experimental support for CPAN::Reporter: try
+	    o conf init /test/
 	(Courtesy David Golden)
 
-	* make installation of scripts easier: try 'install
-	SREZIC/pingomatic-1.012' (Courtesy Slaven Rezic)
+	* make installation of scripts easier: try something like
+	    install	SREZIC/pingomatic-1.012
+	(Courtesy Slaven Rezic)
 
 	* colored output for better separation of process output, messages from
-	CPAN and warnings from CPAN: try 'o conf init /color/' to turn
-	colorization on/off
+	CPAN and warnings from CPAN: to turn colorization on/off try
+	    o conf init /color/
 
 	* formatting of lists of modules now features a column to indicate
 	installed and updateable modules
 
-	* Minor Incompatibility: the init dialog now has reversed semantics: it
-	suggests automatic configuration that can be confirmed with 'yes'
-	instead of suggesting manual configuration that can be denied with 'no'.
+	* Please note a minor incompatibility: the init dialog now has reversed
+	semantics: it suggests automatic configuration that can be confirmed
+	with 'yes' instead of suggesting manual configuration that can be denied
+	with 'no'.
 
 2006-09-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
