@@ -1,11 +1,11 @@
 2006-09-xx  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.88 (still on hold)
+	* release 1.88
 
-	* This release is identical to the 1.87_XX developer release. For
-	detailed changes see the entries in the Changes file of the release
-	itself. For finer grained change log see the ChangeLog.svn file in the
-	release. The highlights of this release are:
+	* This release is not substantially different from the 1.87_65 developer
+	release. For detailed changes since 1.87 see the entries in the Changes
+	file of the release itself. For finer grained change log see the
+	ChangeLog.svn file in the release. The highlights of this release are:
 
 	* convenient configuration: dialogs for individual items or groups of
 	items can be accessed with a single command (Courtesy Jim Cromie)
