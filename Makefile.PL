@@ -19,6 +19,8 @@ my $version_from;
 {
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
+  warn "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nYou should get a new one\n"
+        if $ExtUtils::MakeMaker::VERSION < 6.0;
 }
 if ($HAVE_FILE_SPEC) {
   $version_from = File::Spec->catfile(qw(lib CPAN.pm));
