@@ -29,14 +29,8 @@ SYNOPSIS
       CPAN::Shell->expand("Distribution",$distro)->install; # same thing
 
 STATUS
-    This module will eventually be replaced by CPANPLUS. CPANPLUS is kind of
-    a modern rewrite from ground up with greater extensibility and more
-    features but no full compatibility. If you're new to CPAN.pm, you
-    probably should investigate if CPANPLUS is the better choice for you.
-
-    If you're already used to CPAN.pm you're welcome to continue using it. I
-    intend to support it until somebody convinces me that there is a both
-    superior and sufficiently compatible drop-in replacement.
+    This module and its competitor, the CPANPLUS module, are both much
+    cooler than the other.
 
 COMPATIBILITY
     CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
