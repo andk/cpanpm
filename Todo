@@ -20,6 +20,15 @@
 	and then I can set AUTOMATIC_TESTING and on the next perl I can do that
 	in opposite order.
 
+	7 hours later nothing shows up on http://testers.cpan.org/recent.html
+
+	I'd better go subscribe to cpan-testers. Now I am subscribed and I
+	re-tested with blead@28876 and while Mail::Send does send out messages
+	since I added the MASQUERADE_AS line, they do not come back to me. I
+	need to change the email_to to me on the next try.... And yes, the mail
+	arrives. Apparently it is not accepted at testers, only Net::SMTP gets
+	through. Maybe some MX thingie going on.
+
 	* automatic testing? Is it anywhere documented what the impacts of
 	$ENV{AUTOMATED_TESTING} are?
 

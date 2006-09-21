@@ -25,6 +25,10 @@
 	* formatting of lists of modules now features a column to indicate
 	installed and updateable modules
 
+	* signature checking can now be turned on and off with 'o conf check_sigs'
+
+	* new command 'upgrade' installs newest version of all installed modules
+
 	* Please note a minor incompatibility: the init dialog now has reversed
 	semantics: it suggests automatic configuration that can be confirmed
 	with 'yes' instead of suggesting manual configuration that can be denied
