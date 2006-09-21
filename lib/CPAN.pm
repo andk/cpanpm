@@ -7249,18 +7249,8 @@ Batch mode:
 
 =head1 STATUS
 
-This module and its competitor, the CPANPLUS module, are each much
-cooler than the other. CPANPLUS is kind of a baby dragon with about 17
-heads unlimited extensibility and features up to the ceiling. CPAN.pm
-on the other hand, is a troll that although it didn't get anything
-right technically, was so helpfully lending his hand to the both the
-technically impaired and the wizards that nobody could resist its
-simplicity. If you're new to the game, you probably should consider
-using one or the other NOW.
-
-If you're already used to CPAN.pm you're welcome to continue using it.
-I intend to support it until there is a superior and sufficiently
-compatible drop-in replacement.
+This module and its competitor, the CPANPLUS module, are both much
+cooler than the other.
 
 =head1 COMPATIBILITY
 
