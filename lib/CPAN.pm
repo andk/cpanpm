@@ -2307,7 +2307,7 @@ Please choose a different color (Hint: try 'o conf init color.*')\n";
 sub myprint {
     my($self,$what) = @_;
 
-    $self->print_ornamented($what, $CPAN::Config->{colorize_print}||'bold blue');
+    $self->print_ornamented($what, $CPAN::Config->{colorize_print}||'bold blue on_white');
 }
 
 sub myexit {
@@ -2318,13 +2318,13 @@ sub myexit {
 
 sub mywarn {
     my($self,$what) = @_;
-    $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red');
+    $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red on_white');
 }
 
 # only to be used for shell commands
 sub mydie {
     my($self,$what) = @_;
-    $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red');
+    $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red on_white');
 
     # If it is the shell, we want that the following die to be silent,
     # but if it is not the shell, we would need a 'die $what'. We need
@@ -2338,7 +2338,7 @@ sub mydie {
 sub colorable_makemaker_prompt {
     my($foo,$bar) = @_;
     if (CPAN::Shell->colorize_output) {
-        my $ornament = $CPAN::Config->{colorize_print}||'bold blue';
+        my $ornament = $CPAN::Config->{colorize_print}||'bold blue on_white';
         my $color_on = eval { Term::ANSIColor::color($ornament); } || "";
         print $color_on;
     }
