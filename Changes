@@ -1,4 +1,11 @@
-2006-09-xx  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.8801
+
+	* trivial bugfix: init dialog had a tweak that made it impossible to set
+	'ncftp' when 'ncftpget' was installed and configured.
+
+2006-09-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88
 
