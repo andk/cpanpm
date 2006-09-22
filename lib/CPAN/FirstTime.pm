@@ -288,15 +288,18 @@ Shall we use it as the general CPAN build and cache directory?
         local $^W = $old_warn;
         my $progname;
         for $progname (@external_progs) {
+            next if $matcher && $progname !~ /$matcher/;
             if ($^O eq 'MacOS') {
                 $CPAN::Config->{$progname} = 'not_here';
                 next;
             }
-            next if $matcher && $progname !~ /$matcher/;
 
             my $progcall = $progname;
-            # we don't need ncftp if we have ncftpget
-            next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
+            unless ($matcher) {
+                # we really don't need ncftp if we have ncftpget, but
+                # if they chose this dialog via matcher, they shall have it
+                next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
+            }
             my $path = $CPAN::Config->{$progname}
                 || $Config::Config{$progname}
                     || "";
