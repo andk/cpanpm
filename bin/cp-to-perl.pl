@@ -44,6 +44,7 @@ my $MAP;
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
                                     lib/CPAN/Nox.pm
+                                    lib/CPAN/Queue.pm
                                     lib/CPAN/Tarzip.pm
                                      lib/CPAN/Version.pm
                                    )]],

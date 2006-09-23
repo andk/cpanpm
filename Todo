@@ -1,7 +1,7 @@
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: 'dump symbol', say 'dump $CPAN::META'. But always pipe into the
-	pager!
+	pager! DONE in rev. 885
 
 	* build_dependencies: need two modules that have build_dependencies
 	which I do not install and still both must build. This means, I inject
@@ -45,9 +45,10 @@
 	tests. But in the end, L:A:P:P passes its four tests quickly and skips
 	the one that need Test::NoBreakpoints. Vorbildlich!
 
-	Very stupid is CPAN.pm when I repeat a 'test L:A:P:P': it repeats all
-	tests for all dependencies and only then runs the test on L:A:P:P. This
-	is time-consuming and may be a bug or a feature. Don't know the reason.
+	Very stupid is CPAN.pm when I repeat the 'test L:A:P:P' command: it
+	repeats all tests for all dependencies and only then runs the test on
+	L:A:P:P. This is time-consuming and may be a bug or a feature. Don't
+	know the reason.
 	
 	ATRICKETT/Config-Trivial                  Test::Pod::Coverage
 
