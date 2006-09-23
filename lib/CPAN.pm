@@ -775,16 +775,18 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
     $fh->print(hostname(), "\n");
     $self->{LOCK} = $lockfile;
     $fh->close;
-    $SIG{TERM} = sub {
-      &cleanup;
-      $CPAN::Frontend->mydie("Got SIGTERM, leaving");
+    $SIG{TERM} = $SIG{TTIN} = sub {
+        my $sig = shift;
+        &cleanup;
+        $CPAN::Frontend->mydie("Got SIG$sig, leaving");
     };
     $SIG{INT} = sub {
       # no blocks!!!
-      &cleanup if $Signal;
-      $CPAN::Frontend->mydie("Got another SIGINT") if $Signal;
-      $CPAN::Frontend->myprint("Caught SIGINT\n");
-      $Signal++;
+        my $sig = shift;
+        &cleanup if $Signal;
+        $CPAN::Frontend->mydie("Got another SIG$sig") if $Signal;
+        $CPAN::Frontend->mywarn("Caught SIG$sig, trying to continue\n");
+        $Signal++;
     };
 
 #       From: Larry Wall <larry@wall.org>
@@ -2466,10 +2468,12 @@ sub rematein {
                                        );
                 $CPAN::Frontend->mysleep(2);
             }
-	} else {
+	} elsif ($meth eq "dump") {
+            CPAN::InfoObj->dump($s);
+        } else {
 	    $CPAN::Frontend
 		->mywarn(qq{Warning: Cannot $meth $s, }.
-			  qq{don\'t know what it is.
+			  qq{don't know what it is.
 Try the command
 
     i /$s/
@@ -4235,13 +4239,24 @@ sub fullname {
 
 #-> sub CPAN::InfoObj::dump ;
 sub dump {
-  my($self) = @_;
+  my($self, $what) = @_;
   unless ($CPAN::META->has_inst("Data::Dumper")) {
       $CPAN::Frontend->mydie("dump command requires Data::Dumper installed");
   }
   local $Data::Dumper::Sortkeys;
   $Data::Dumper::Sortkeys = 1;
-  $CPAN::Frontend->myprint(Data::Dumper::Dumper($self));
+  my $out = Data::Dumper::Dumper($what ? eval $what : $self);
+  if (length $out > 100000) {
+      my $fh_pager = FileHandle->new;
+      local($SIG{PIPE}) = "IGNORE";
+      my $pager = $CPAN::Config->{'pager'} || "cat";
+      $fh_pager->open("|$pager")
+          or die "Could not open pager $pager\: $!";
+      $fh_pager->print($out);
+      close $fh_pager;
+  } else {
+      $CPAN::Frontend->myprint($out);
+  }
 }
 
 package CPAN::Author;
