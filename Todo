@@ -1,3 +1,41 @@
+2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* build_dependencies: need two modules that have build_dependencies
+	which I do not install and still both must build. This means, I inject
+	the build_dependencies into the queue and flag them as build_dependency
+	which then leeds to a simple make or test for them, never to an install.
+	Up to now we use set_perl5lib during CPAN::Distribution::test. In the
+	future we would need a similar vein during the two earlier stages,
+	{Makefile,Build}.PL and make. Yes, this should do.
+
+	Where are our build_dependencies? I keep forgetting the URL where Randy
+	Sims provides so useful statistics. Here it is:
+	http://thepierianspring.org/perl/meta/
+
+	And the build_requires page is here:
+	http://thepierianspring.org/perl/meta/fields_in_use/build_requires.html
+
+	But manually skimming the 876 distros is tedious, so I need again my own
+	script.
+
+	One thing is complicated: when a module is a build_prereq, then all its
+	prereqs are also degraded into build_prereqs unless they are already
+	prereqs for something else:-!
+
+	OK, candidates for my tests:
+
+	MARCEL/Class-Null                         Test::Pod::Coverage
+	JFITZ/Lingua-Alphabet-Phonetic-Password   Test::Pod::Coverage
+	ATRICKETT/Config-Trivial                  Test::Pod::Coverage
+
+	ADIE/Test-Class          Test::Differences
+	KCLARK/SQL-Translator    Test::Differences
+	SPOON/WWW-Yahoo-Groups   Test::Differences
+
+	CHROMATIC/Class-StorageFactory  Test::Pod
+	MTHURN/Net-Address-Ethernet     Test::Pod
+	RCLAMP/Class-Persist            Test::Pod
+
 2006-09-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* automatic testing? Is it anywhere documented what the impacts of
