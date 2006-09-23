@@ -1,5 +1,36 @@
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* So what was 886 about? Put CPAN?::Queue in its own file.
+
+	* Bug introduced between 881 and 886. If a Module::Build module fails,
+	we happily take it as an OK. CPAN-Test-Dummy-Perl5-Build-Fails reveals
+	the bug. Going back step by step with 'svn up -r XXX' we see what was
+	broke too: 885, 884, 883, 882, 881!!!
+
+	What!??? 881 was a release! Between 879 and 881 no code changed.
+
+	878 was a bit different. And 877. And all have this bug suddenly.
+
+	So I start to believe it is a bug in the maint-5.8 branch or in some
+	module we installed since. My maint is 28854 right now.
+
+	Testing again with bleadperl and 886: NOT BROKEN!
+
+	The only two modules out of date in my blead are Class::Accessor and
+	version.pm.
+
+	Outdated modules in current maint-5.8:
+
+	CGI CPAN Devel::PPPort Digest Encode ExtUtils::Command ExtUtils::Install
+	ExtUtils::Manifest ExtUtils::ParseXS IO Locale::Maketext Math::Complex
+	Sys::Syslog Term::ANSIColor Test::Builder Test::Harness Text::Balanced
+	Text::Soundex Text::Tabs Tie::RefHash Time::HiRes Time::Local
+	Unicode::Normalize threads threads::shared
+
+	Updated as much as I could and ALL IS WELL.
+
+	So now we don't know who was to blame.
+
 	* Todo: 'dump symbol', say 'dump $CPAN::META'. But always pipe into the
 	pager! DONE in rev. 885
 
