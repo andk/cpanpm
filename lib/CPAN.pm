@@ -161,11 +161,10 @@ sub shell {
 
     # no strict; # I do not recall why no strict was here (2000-09-03)
     $META->checklock();
-    my @cwd = (
-               CPAN::anycwd(),
-               File::Spec->can("tmpdir") ? File::Spec->tmpdir() : (),
-               File::Spec->rootdir(),
-              );
+    my @cwd = grep { defined $_ and length $_ }
+        CPAN::anycwd(),
+              File::Spec->can("tmpdir") ? File::Spec->tmpdir() : (),
+                    File::Spec->rootdir();
     my $try_detect_readline;
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
@@ -281,14 +280,25 @@ ReadLine support %s
 
 sub soft_chdir_with_alternatives ($) {
     my($cwd) = @_;
-    while (not chdir $cwd->[0]) {
-        if (@$cwd>1) {
-            $CPAN::Frontend->mywarn(qq{Could not chdir to "$cwd->[0]": $!
+    unless (@$cwd) {
+        my $root = File::Spec->rootdir();
+        $CPAN::Frontend->mywarn(qq{Warning: no good directory to chdir to!
+Trying '$root' as temporary haven.
+});
+        push @$cwd, $root;
+    }
+    while () {
+        if (chdir $cwd->[0]) {
+            return;
+        } else {
+            if (@$cwd>1) {
+                $CPAN::Frontend->mywarn(qq{Could not chdir to "$cwd->[0]": $!
 Trying to chdir to "$cwd->[1]" instead.
 });
-            shift @$cwd;
-        } else {
-            $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd->[0]": $!});
+                shift @$cwd;
+            } else {
+                $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd->[0]": $!});
+            }
         }
     }
 }
@@ -1175,7 +1185,6 @@ sub disk_usage {
         }
     } else {
         $CPAN::Frontend->mywarn("Directory '$dir' has gone. Cannot continue.\n");
-        $CPAN::Frontend->mysleep(2);
         return;
     }
     find(
@@ -4158,7 +4167,8 @@ sub as_glimpse {
     my(@m);
     my $class = ref($self);
     $class =~ s/^CPAN:://;
-    push @m, sprintf "%-15s %s\n", $class, $self->{ID};
+    my $id = $self->can("pretty_id") ? $self->pretty_id : $self->{ID};
+    push @m, sprintf "%-15s %s\n", $class, $id;
     join "", @m;
 }
 
@@ -4485,6 +4495,7 @@ sub fast_yaml {
     }
 }
 
+#-> sub CPAN::Distribution::pretty_id
 sub pretty_id {
     my $self = shift;
     my $id = $self->id;
