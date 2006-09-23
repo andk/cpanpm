@@ -2130,7 +2130,12 @@ sub expand_by_method {
                     next;
                 }
                 for my $method (@$methods) {
-                    if ($obj->$method() =~ /$regex/i) {
+                    my $match = eval {$obj->$method() =~ /$regex/i};
+                    if ($@) {
+                        my($err) = $@ =~ /^(.+) at .+? line \d+\.$/;
+                        $err ||= $@; # if we were too restrictive above
+                        $CPAN::Frontend->mydie("$err\n");
+                    } elsif ($match) {
                         push @m, $obj;
                         last;
                     }
