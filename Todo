@@ -1,6 +1,6 @@
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* So what was 886 about? Put CPAN?::Queue in its own file.
+	* So what was 886 about? Put CPAN::Queue in its own file.
 
 	* Bug introduced between 881 and 886. If a Module::Build module fails,
 	we happily take it as an OK. CPAN-Test-Dummy-Perl5-Build-Fails reveals
@@ -29,7 +29,12 @@
 
 	Updated as much as I could and ALL IS WELL.
 
-	So now we don't know who was to blame.
+	So now we don't know who was to blame. Restarting over and going step by
+	step: it was Test::Harness 2.58. So we have a difficult-to-explain
+	dependency here: CPAN + Module::Build-deploying modules + Test::Harness
+	< 2.62 leads to not recognized test failures. I put Test::Harness into
+	the Bundle::CPAN. Maybe I must verify the Test::Harness version before
+	testing MB modules?
 
 	* Todo: 'dump symbol', say 'dump $CPAN::META'. But always pipe into the
 	pager! DONE in rev. 885
@@ -52,9 +57,9 @@
 	But manually skimming the 876 distros is tedious, so I need again my own
 	script.
 
-	One thing is complicated: when a module is a build_prereq, then all its
-	prereqs are also degraded into build_prereqs unless they are already
-	prereqs for something else:-!
+	One thing is complicated: when a module is a build_prereq, then all
+	*its* prereqs are also degraded into build_prereqs unless they are
+	already prereqs for something else:-!
 
 	OK, candidates for my tests:
 

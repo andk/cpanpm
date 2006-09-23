@@ -104,6 +104,7 @@ my $prereq_pm = {
                                       # PathTools-3.16.tar.gz
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
+                 'Test::Harness' => 2.62,
                 };
 
 if ($HAVE_FILE_SPEC) {

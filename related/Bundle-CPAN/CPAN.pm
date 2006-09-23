@@ -1,7 +1,7 @@
 package Bundle::CPAN;
 use strict;
 use vars qw($VERSION);
-$VERSION = '1.852'; # use 3 digits to minimize confusion with the
+$VERSION = '1.853'; # use 3 digits to minimize confusion with the
                     # other CPAN.pm
 
 1;
@@ -18,6 +18,8 @@ Bundle::CPAN - Bundle to optmize the behaviour of CPAN.pm
 
 =head1 CONTENTS
 
+Data::Dumper
+
 Digest::SHA
 
 File::Temp
@@ -32,7 +34,7 @@ Archive::Tar
 
 Archive::Zip
 
-Bundle::libnet
+Net::FTP
 
 Term::ReadKey
 
@@ -47,6 +49,9 @@ Module::Build
 CPAN
 
 File::Which
+
+
+
 
 =head1 DESCRIPTION
 

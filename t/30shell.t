@@ -823,6 +823,7 @@ E:Nothing
 P:test CPAN::Test::Dummy::Perl5::Build::Fails
 E:test\s+--\s+NOT OK
 R:Module::Build
+C:If this test fails, it's probably due to Test::Harness being < 2.62
 ########
 P:dump CPAN::Test::Dummy::Perl5::Make
 E:\}.+?CPAN::Module.+?;

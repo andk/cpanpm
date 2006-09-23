@@ -5816,7 +5816,15 @@ sub test {
         exists $self->{later} and length($self->{later}) and
             push @e, $self->{later};
 
-	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        if ($self->{modulebuild}) {
+            my $v = CPAN::Shell->expand("Module","Test::Harness")->inst_version;
+            if (CPAN::Version->vlt($v,2.62)) {
+                push @e, qq{The version of your Test::Harness is only
+  '$v', you need at least '2.62'. Please upgrade your Test::Harness.};
+            }
+        }
+
+	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
 	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
@@ -6262,7 +6270,6 @@ sub _build_command {
     if ($^O eq "MSWin32") { # special code needed at least up to
                             # Module::Build 0.2611 and 0.2706; a fix
                             # in M:B has been promised 2006-01-30
-                            
         my($perl) = $self->perl or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
         return "$perl ./Build";
     }
