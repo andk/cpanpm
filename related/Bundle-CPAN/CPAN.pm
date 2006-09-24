@@ -18,15 +18,23 @@ Bundle::CPAN - Bundle to optmize the behaviour of CPAN.pm
 
 =head1 CONTENTS
 
+Module::Build
+
+File::Spec -- prereq
+
+File::Temp -- prepreq
+
+Scalar::Util -- prereq
+
+Test::Harness -- prereq
+
+Test::More -- prereq
+
 Data::Dumper
 
 Digest::SHA
 
-File::Temp
-
 File::HomeDir
-
-File::Spec
 
 Compress::Zlib
 
@@ -34,17 +42,17 @@ Archive::Tar
 
 Archive::Zip
 
+Net::Cmd -- not sure if we need this for Net::FTP
+
 Net::FTP
 
 Term::ReadKey
 
-ILYAZ/modules/Term-ReadLine-Perl-1.0302.tar.gz
+Term::ReadLine::Perl -- could be replaced by "readline" some time after 1.88
 
 YAML
 
 Text::Glob
-
-Module::Build
 
 CPAN
 
