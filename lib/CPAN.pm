@@ -5675,7 +5675,7 @@ sub prereq_pm {
                                           # but we must have run it
         || $self->{modulebuild};
     my $req;
-    if (my $yaml = $self->read_yaml) {
+    if (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
         $req =  $yaml->{requires};
         undef $req unless ref $req eq "HASH" && %$req;
         if ($req) {
