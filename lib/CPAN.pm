@@ -2323,7 +2323,7 @@ sub rematein {
 	}
 	if (ref $obj) {
             $obj->color_cmd_tmps(0,1);
-            CPAN::Queue->new($obj->id);
+            CPAN::Queue->new(qmod => $obj->id);
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
 	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
@@ -2357,13 +2357,10 @@ to find objects with matching identifiers.
     # queuerunner (please be warned: when I started to change the
     # queue to hold objects instead of names, I made one or two
     # mistakes and never found which. I reverted back instead)
-    while ($s = CPAN::Queue->first) {
+    while (my $q = CPAN::Queue->first) {
         my $obj;
-	if (ref $s) {
-	    $obj = $s; # I do not believe, we would survive if this happened
-	} else {
-	    $obj = CPAN::Shell->expandany($s);
-	}
+        my $s = $q->as_string;
+        $obj = CPAN::Shell->expandany($s);
 	for my $pragma (@pragma) {
 	    if ($pragma
 		&&

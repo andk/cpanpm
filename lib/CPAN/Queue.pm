@@ -51,8 +51,8 @@ $VERSION = sprintf "%.6f", substr(q$Rev: 844 $,4)/1000000 + 5.4;
 
 # CPAN::Queue::new ;
 sub new {
-  my($class,$s) = @_;
-  my $self = bless { qmod => $s }, $class;
+  my($class,@attr) = @_;
+  my $self = bless { @attr }, $class;
   push @All, $self;
   return $self;
 }
@@ -60,7 +60,12 @@ sub new {
 # CPAN::Queue::first ;
 sub first {
   my $obj = $All[0];
-  $obj->{qmod};
+  $obj;
+}
+
+sub as_string {
+  my($self) = @_;
+  $self->{qmod};
 }
 
 # CPAN::Queue::delete_first ;

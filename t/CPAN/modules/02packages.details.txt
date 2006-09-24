@@ -15,3 +15,4 @@ CPAN::Test::Dummy::Perl5::Build::Fails    1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-
 CPAN::Test::Dummy::Perl5::Make            1.02  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Failearly 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Zip       1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.01.zip
+Test::Harness                             2.62  P/PE/PETDANCE/Test-Harness-2.62.tar.gz
