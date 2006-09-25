@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.8801';
+$CPAN::VERSION = '1.88_51';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -93,13 +93,24 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
 sub soft_chdir_with_alternatives ($);
 
 {
-    $autoload_recursion ||= 0; # XXX consolidate with CPAN::Shell::AUTOLOAD
+    $autoload_recursion ||= 0;
 
     #-> sub CPAN::AUTOLOAD ;
     sub AUTOLOAD {
         $autoload_recursion++;
         my($l) = $AUTOLOAD;
         $l =~ s/.*:://;
+        if ($CPAN::Signal) {
+            warn "Refusing to autoload '$l' while signal pending";
+            $autoload_recursion--;
+            return;
+        }
+        if ($autoload_recursion > 1) {
+            my $fullcommand = join " ", map { "'$_'" } $l, @_;
+            warn "Refusing to autoload $fullcommand in recursion\n";
+            $autoload_recursion--;
+            return;
+        }
         my(%export);
         @export{@EXPORT} = '';
         CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
@@ -1376,8 +1387,8 @@ sub i {
 
 # CPAN::Shell::o and CPAN::HandleConfig::edit are closely related. 'o
 # conf' calls through to CPAN::HandleConfig::edit. 'o conf' should
-# have been called 'set' and 'o debug' maybe 'set debug' or 'debug'
-# 'o conf XXX' calls ->edit in CPAN/HandleConfig.pm
+# probsably have been called 'set' and 'o debug' maybe 'set debug' or
+# 'debug'; 'o conf ARGS' calls ->edit in CPAN/HandleConfig.pm
 sub o {
     my($self,$o_type,@o_what) = @_;
     $DB::single = 1;
@@ -3610,8 +3621,8 @@ sub reload {
 sub reload_x {
     my($cl,$wanted,$localname,$force) = @_;
     $force |= 2; # means we're dealing with an index here
-    CPAN::HandleConfig->load; # we should guarantee loading wherever we rely
-                        # on Config XXX
+    CPAN::HandleConfig->load; # we should guarantee loading wherever
+                              # we rely on Config XXX
     $localname ||= $wanted;
     my $abs_wanted = File::Spec->catfile($CPAN::Config->{'keep_source_where'},
 					 $localname);
@@ -4989,7 +5000,7 @@ sub cvs_import {
     }
     my $cvs_log = qq{"imported $package $version sources"};
     $version =~ s/\./_/g;
-    # XXX cvs
+    # XXX cvs: undocumented and unclear how it was meant to work
     my @cmd = ('cvs', '-d', $cvs_root, 'import', '-m', $cvs_log,
 	       "$cvs_dir", $userid, "v$version");
 
