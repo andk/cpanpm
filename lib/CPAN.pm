@@ -61,7 +61,9 @@ $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
             $Signal $Suppress_readline $Frontend
             @Defaultsites $Have_warned $Defaultdocs $Defaultrecent
-            $Be_Silent );
+            $Be_Silent
+            $autoload_recursion
+           );
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
@@ -90,18 +92,24 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
 
 sub soft_chdir_with_alternatives ($);
 
-#-> sub CPAN::AUTOLOAD ;
-sub AUTOLOAD {
-    my($l) = $AUTOLOAD;
-    $l =~ s/.*:://;
-    my(%EXPORT);
-    @EXPORT{@EXPORT} = '';
-    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
-    if (exists $EXPORT{$l}){
-	CPAN::Shell->$l(@_);
-    } else {
-	die(qq{Unknown CPAN command "$AUTOLOAD". }.
-            qq{Type ? for help.\n});
+{
+    $autoload_recursion ||= 0; # XXX consolidate with CPAN::Shell::AUTOLOAD
+
+    #-> sub CPAN::AUTOLOAD ;
+    sub AUTOLOAD {
+        $autoload_recursion++;
+        my($l) = $AUTOLOAD;
+        $l =~ s/.*:://;
+        my(%export);
+        @export{@EXPORT} = '';
+        CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+        if (exists $export{$l}){
+            CPAN::Shell->$l(@_);
+        } else {
+            die(qq{Unknown CPAN command "$AUTOLOAD". }.
+                qq{Type ? for help.\n});
+        }
+        $autoload_recursion--;
     }
 }
 
@@ -460,31 +468,52 @@ sub as_string {
 
 package CPAN::Shell;
 use strict;
-use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY);
+use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY
+            $autoload_recursion
+           );
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
 
-#-> sub CPAN::Shell::AUTOLOAD ;
-sub AUTOLOAD {
-    my($autoload) = $AUTOLOAD;
-    my $class = shift(@_);
-    # warn "autoload[$autoload] class[$class]";
-    $autoload =~ s/.*:://;
-    if ($autoload =~ /^w/) {
-	if ($CPAN::META->has_inst('CPAN::WAIT')) {
-	    CPAN::WAIT->$autoload(@_);
-	} else {
-	    $CPAN::Frontend->mywarn(qq{
+{
+    # $GLOBAL_AUTOLOAD_RECURSION = 12;
+    $autoload_recursion   ||= 0;
+
+    #-> sub CPAN::Shell::AUTOLOAD ;
+    sub AUTOLOAD {
+        $autoload_recursion++;
+        my($l) = $AUTOLOAD;
+        my $class = shift(@_);
+        # warn "autoload[$l] class[$class]";
+        $l =~ s/.*:://;
+        if ($CPAN::Signal) {
+            warn "Refusing to autoload '$l' while signal pending";
+            $autoload_recursion--;
+            return;
+        }
+        if ($autoload_recursion > 1) {
+            my $fullcommand = join " ", map { "'$_'" } $l, @_;
+            warn "Refusing to autoload $fullcommand in recursion\n";
+            $autoload_recursion--;
+            return;
+        }
+        if ($l =~ /^w/) {
+            # XXX needs to be reconsidered
+            if ($CPAN::META->has_inst('CPAN::WAIT')) {
+                CPAN::WAIT->$l(@_);
+            } else {
+                $CPAN::Frontend->mywarn(qq{
 Commands starting with "w" require CPAN::WAIT to be installed.
 Please consider installing CPAN::WAIT to use the fulltext index.
 For this you just need to type
     install CPAN::WAIT
 });
-	}
-    } else {
-	$CPAN::Frontend->mywarn(qq{Unknown shell command '$autoload @_'. }.
-				qq{Type ? for help.
+            }
+        } else {
+            $CPAN::Frontend->mywarn(qq{Unknown shell command '$l'. }.
+                                    qq{Type ? for help.
 });
+        }
+        $autoload_recursion--;
     }
 }
 
@@ -654,6 +683,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
       # no blocks!!!
         my $sig = shift;
         &cleanup if $Signal;
+        die "Got yet another signal" if $Signal > 1;
         $CPAN::Frontend->mydie("Got another SIG$sig") if $Signal;
         $CPAN::Frontend->mywarn("Caught SIG$sig, trying to continue\n");
         $Signal++;
@@ -1459,7 +1489,7 @@ sub reload {
     my($self,$command,@arg) = @_;
     $command ||= "";
     $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
-    if ($command =~ /cpan/i) {
+    if ($command =~ /^cpan$/i) {
         my $redef = 0;
         chdir $CPAN::iCwd if $CPAN::iCwd; # may fail
         my $failed;
@@ -1470,6 +1500,7 @@ sub reload {
                     "CPAN/Tarzip.pm",
                     "CPAN/Debug.pm",
                     "CPAN/Version.pm",
+                    "CPAN/Queue.pm",
                    );
         if ($CPAN::Config->{test_report}) {
             push @relo, "CPAN/Reporter.pm";
@@ -1481,13 +1512,14 @@ sub reload {
         $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
         $failed++ unless $redef;
         if ($failed) {
-            $CPAN::Frontend->mywarn("\n$failed errors during reload. You better quit ".
+            my $errors = $failed == 1 ? "error" : "errors";
+            $CPAN::Frontend->mywarn("\n$failed $errors during reload. You better quit ".
                                     "this session.\n");
         }
-    } elsif ($command =~ /index/) {
+    } elsif ($command =~ /^index$/i) {
       CPAN::Index->force_reload;
     } else {
-      $CPAN::Frontend->myprint(qq{cpan     re-evals the CPAN.pm file
+      $CPAN::Frontend->myprint(qq{cpan     re-evals the CPAN modules
 index    re-reads the index files\n});
     }
 }
@@ -1739,6 +1771,7 @@ sub _u_r_common {
 	}
         my $color_on = "";
         my $color_off = "";
+        # $GLOBAL_AUTOLOAD_RECURSION = 12;
         if (
             $COLOR_REGISTERED
             &&

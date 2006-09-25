@@ -1,3 +1,7 @@
+2006-09-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: clean up XXX
+
 2006-09-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* build_requires: fortunately the things on the Queue are objects with
