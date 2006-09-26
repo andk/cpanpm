@@ -1,5 +1,40 @@
 2006-09-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
+	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
+	5.8.7 one. OR: take some maint-5.8 short before 5.8.8! Where to find the
+	patch number for 5.8.8? Module::CoreList!
+
+	% perl -MModule::CoreList -le 'use Data::Dumper;print Dumper(\%Module::CoreList::patchlevel);' 
+	[...]
+          '5.008008' => [
+                          'maint-5.8',
+                          27040
+                        ],
+
+	Paging through diff files in APC/5.8.1/ reveals: 25914 updated
+	PPPort.pm, 26929 Pod::Simple, 26985 Archive::Tar, 26988 Pod::Man, so I
+	expect 26984 a good test candidate.
+
+	My current 26984 replies to "r" command with....no 5.8.8?
+
+	Strange! Why no 5.8.8? Ahhh, because it had no Archive::Tar and Pod::Man
+	is on podlators 2.0.5.
+
+	Trying 26876: no good.
+
+	26727: Good! 26727 wants to upgrade Dumpvalue and bring it ot
+	perl-5.8.8. I upgrade everything in 26727 except for Dumpvalue. Being
+	time consuming, this needs a backup generated with
+
+	tar cvzf p-26727plus-near-588.tar.gz installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727
+	
+	* find out since when Expect has a failing test with bleadperl. Take
+	test #38 alone and do a binary search on it. 26453 has already once been
+	involved in an Expect case. Yes, this might mean we have to make
+	suggestions for Expect too: which constants are imported erroneously and
+	which correctly and how to make this valid for old and new perls?
+
 	* Todo: clean up XXX
 
 2006-09-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
