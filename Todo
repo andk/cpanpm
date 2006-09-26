@@ -28,6 +28,9 @@
 	time consuming, this needs a backup generated with
 
 	tar cvzf p-26727plus-near-588.tar.gz installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727
+
+	Gabor requests less noise, otherwise he consideres behaviour correct.
+	Hrm, think about it...
 	
 	* find out since when Expect has a failing test with bleadperl. Take
 	test #38 alone and do a binary search on it. 26453 has already once been
@@ -57,7 +60,9 @@
 	and handle req and breq differently and make sure that the inheritance
 	is correct: reqs of breq are only breqs) and finally we will have to
 	carefully differentiate what we do with the things that we get off the
-	queue: breqs shall not be installed.
+	queue: breqs shall not be installed. And we need a user pref here: treat
+	build_requires as requires would have the advantage that the
+	build_requires stuff be installed and may save time on the next occasion.
 
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
