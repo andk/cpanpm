@@ -52,11 +52,12 @@
 	CPAN::Distribution::color_cmd_tmps
 	(where we must mark both req and breq)[DONE in rev. 900], unsat_prereq
 	(where we must handle both req and breq)[STARTED in rev. 900, but still
-	in need of a differentiation of @need_req and @need_breq or so] and
-	follow_prereqs (where we must look closer on jumpqueue and handle req
-	and breq differently) and finally we will have to carefully
-	differentiate what we do with the things that we get off the queue:
-	breqs shall not be installed.
+	in need of a differentiation of @need_req and @need_breq or so; FINISHED
+	in rev. 902] and follow_prereqs (where we must look closer on jumpqueue
+	and handle req and breq differently and make sure that the inheritance
+	is correct: reqs of breq are only breqs) and finally we will have to
+	carefully differentiate what we do with the things that we get off the
+	queue: breqs shall not be installed.
 
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
