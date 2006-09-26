@@ -132,7 +132,7 @@ WriteMakefile(
               VERSION_FROM => $version_from,
               EXE_FILES    => [qw(scripts/cpan)],
               PREREQ_PM    => $prereq_pm,
-              ($ExtUtils::MakeMaker::VERSION >= 6.3001 ?
+              ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
               clean        => { FILES => "lib/CPAN/Config.pm" },
