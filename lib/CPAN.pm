@@ -4451,7 +4451,8 @@ sub color_cmd_tmps {
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
-      PREREQ: for my $pre (keys %$prereq_pm) {
+      PREREQ: for my $pre (keys %{$prereq_pm->{requires}||{}},
+                           keys %{$prereq_pm->{build_requires}||{}}) {
             my $premo;
             unless ($premo = CPAN::Shell->expand("Module",$pre)) {
                 $CPAN::Frontend->mywarn("prerequisite module[$pre] not known\n");
@@ -5585,11 +5586,9 @@ sub follow_prereqs {
     return unless @prereq;
     my $id = $self->id;
     $CPAN::Frontend->myprint("---- Unsatisfied dependencies detected ".
-                             "during [$id] -----\n");
-
-    for my $p (@prereq) {
-	$CPAN::Frontend->myprint("    $p\n");
-    }
+                             "during [$id] -----\n".
+                             join("", map {"    $_\n"} @prereq),
+                            );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
 	$follow = 1;
@@ -5620,7 +5619,8 @@ sub unsat_prereq {
     my($self) = @_;
     my $prereq_pm = $self->prereq_pm or return;
     my(@need);
-  NEED: while (my($need_module, $need_version) = each %$prereq_pm) {
+    my %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
+  NEED: while (my($need_module, $need_version) = each %merged) {
         my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
         # we were too demanding:
         next if $nmo->uptodate;
@@ -5718,9 +5718,10 @@ sub prereq_pm {
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
         || $self->{modulebuild};
-    my $req;
+    my($req,$breq);
     if (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
-        $req =  $yaml->{requires};
+        $req =  $yaml->{requires} || {};
+        $breq =  $yaml->{build_requires} || {};
         undef $req unless ref $req eq "HASH" && %$req;
         if ($req) {
             if ($yaml->{generated_by} =~ /ExtUtils::MakeMaker version ([\d\._]+)/) {
@@ -5752,22 +5753,12 @@ sub prereq_pm {
             }
             $req = $areq if $do_replace;
         }
-        if ($yaml->{build_requires}
-            && ref $yaml->{build_requires}
-            && ref $yaml->{build_requires} eq "HASH") {
-            while (my($k,$v) = each %{$yaml->{build_requires}}) {
-                if ($req->{$k}) {
-                    # merging of two "requires"-type values--what should we do?
-                } else {
-                    $req->{$k} = $v;
-                }
-            }
-        }
         if ($req) {
+            # XXX maybe needs to be reconsidered: what do we if perl is too old?
             delete $req->{perl};
         }
     }
-    unless ($req) {
+    unless ($req || $breq) {
         my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
         my $makefile = File::Spec->catfile($build_dir,"Makefile");
         my $fh;
@@ -5797,23 +5788,22 @@ sub prereq_pm {
             }
         } elsif (-f "Build") {
             if ($CPAN::META->has_inst("Module::Build")) {
-                my $requires  = Module::Build->current->requires();
-                my $brequires = Module::Build->current->build_requires();
-                $req = { %$requires, %$brequires };
+                $req  = Module::Build->current->requires();
+                $breq = Module::Build->current->build_requires();
             }
         }
     }
     if (-f "Build.PL" && ! -f "Makefile.PL" && ! exists $req->{"Module::Build"}) {
         $CPAN::Frontend->mywarn("  Warning: CPAN.pm discovered Module::Build as ".
                                 "undeclared prerequisite.\n".
-                                "  Adding it now as a prerequisite.\n"
+                                "  Adding it now as such.\n"
                                );
         $CPAN::Frontend->mysleep(5);
         $req->{"Module::Build"} = 0;
         delete $self->{writemakefile};
     }
     $self->{prereq_pm_detected}++;
-    return $self->{prereq_pm} = $req;
+    return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
 }
 
 #-> sub CPAN::Distribution::test ;
