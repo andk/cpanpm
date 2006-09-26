@@ -47,8 +47,11 @@
 	First step is to change the constructor to accept more arguments DONE in rev 889
 
 	Next thing will be to go through the chain prereq_pm (where we must not
-	merge req and breq), color_cmd_tmps (where we must mark both req and
-	breq) and unsat_prereq (where we must handle both req and breq) and
+	merge req and breq)[DONE in rev. 900],
+	CPAN::Distribution::color_cmd_tmps
+	(where we must mark both req and breq)[DONE in rev. 900], unsat_prereq
+	(where we must handle both req and breq)[STARTED in rev. 900, but still
+	in need of a differentiation of @need_req and @need_breq or so] and
 	follow_prereqs (where we must look closer on jumpqueue and handle req
 	and breq differently) and finally we will have to carefully
 	differentiate what we do with the things that we get off the queue:
