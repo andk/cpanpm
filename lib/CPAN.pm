@@ -6223,9 +6223,9 @@ saved output to %s\n},
             my $fh_pager = FileHandle->new;
             local($SIG{PIPE}) = "IGNORE";
             my $pager = $CPAN::Config->{'pager'} || "cat";
-            $fh_pager->open("|pager")
+            $fh_pager->open("|$pager")
                 or $CPAN::Frontend->mydie(qq{
-Could not open pager $pager\: $!});
+Could not open pager '$pager': $!});
             $CPAN::Frontend->myprint(qq{
 Displaying URL
   $url
