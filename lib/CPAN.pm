@@ -5582,8 +5582,9 @@ sub _make_command {
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
-    my(@prereq) = grep {$_ ne "perl"} @_;
-    return unless @prereq;
+    my(@prereq_tuples) = grep {$_->[0] ne "perl"} @_;
+    return unless @prereq_tuples;
+    my @prereq = map { $_->[0] } @prereq_tuples;
     my $id = $self->id;
     $CPAN::Frontend->myprint("---- Unsatisfied dependencies detected ".
                              "during [$id] -----\n".
@@ -5681,7 +5682,8 @@ sub unsat_prereq {
             # if we push it again, we have a potential infinite loop
             next;
         }
-        push @need, $need_module;
+        my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "req" : "breq";
+        push @need, [$need_module,$needed_as];
     }
     @need;
 }

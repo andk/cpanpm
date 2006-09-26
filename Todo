@@ -33,7 +33,8 @@
 	test #38 alone and do a binary search on it. 26453 has already once been
 	involved in an Expect case. Yes, this might mean we have to make
 	suggestions for Expect too: which constants are imported erroneously and
-	which correctly and how to make this valid for old and new perls?
+	which correctly and how to make this valid for old and new perls? DONE
+	see RT #21723.
 
 	* Todo: clean up XXX
 
