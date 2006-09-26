@@ -1212,17 +1212,20 @@ Download, Test, Make, Install...
  test     make test (implies make)     readme   display these README files
  install  make install (implies test)  perldoc  display POD documentation
 
+Upgrade
+ r        WORDs or /REGEXP/ or NONE    report updates for some/matching/all modules
+ upgrade  WORDs or /REGEXP/ or NONE    upgrade some/matching/all modules
+
 Pragmas
  force COMMAND    unconditionally do command
  notest COMMAND   skip testing
 
 Other
  h,?           display this menu       ! perl-code   eval a perl command
- r             report module updates   upgrade       upgrade all modules
  o conf [opt]  set and query options   q             quit the cpan shell
  reload cpan   load CPAN.pm again      reload index  load newer indices
  autobundle    Snapshot                recent        latest CPAN uploads});
-    }
+}
 }
 
 *help = \&h;
@@ -1698,8 +1701,8 @@ sub scripts {
 
 #-> sub CPAN::Shell::upgrade ;
 sub upgrade {
-    my($self) = shift @_;
-    $self->install($self->r);
+    my($self,@args) = @_;
+    $self->install($self->r(@args));
 }
 
 #-> sub CPAN::Shell::_u_r_common ;
@@ -7425,10 +7428,11 @@ perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
 
-=head2 upgrade
+=head2 upgrade [Module|/Regex/]...
 
-The C<upgrade> command first runs an C<r> command and then installs
-the newest versions of all modules that were listed by that.
+The C<upgrade> command first runs an C<r> command with the given
+arguments and then installs the newest versions of all modules that
+were listed by that.
 
 =head2 mkmyconfig
 
