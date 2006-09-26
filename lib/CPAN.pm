@@ -1387,7 +1387,7 @@ sub i {
 
 # CPAN::Shell::o and CPAN::HandleConfig::edit are closely related. 'o
 # conf' calls through to CPAN::HandleConfig::edit. 'o conf' should
-# probsably have been called 'set' and 'o debug' maybe 'set debug' or
+# probably have been called 'set' and 'o debug' maybe 'set debug' or
 # 'debug'; 'o conf ARGS' calls ->edit in CPAN/HandleConfig.pm
 sub o {
     my($self,$o_type,@o_what) = @_;
