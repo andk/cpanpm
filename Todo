@@ -64,6 +64,8 @@
 	build_requires as requires would have the advantage that the
 	build_requires stuff be installed and may save time on the next occasion.
 
+	This needs to be coordinated with David because it breaks CPAN::Reporter!
+
 2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* So what was 886 about? Put CPAN::Queue in its own file.
