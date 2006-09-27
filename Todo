@@ -1,3 +1,9 @@
+2006-09-27  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* Todo: canonify usage of req/reqtype/etc. into "reqtype" and shorten
+	the known reqtype to one letter: r,b,c and comment on them in
+	Queue::reqtype
+
 2006-09-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* New warnings
