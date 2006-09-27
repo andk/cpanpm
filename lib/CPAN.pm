@@ -995,8 +995,8 @@ sub is_tested {
     $self->{is_tested}{$what} = 1;
 }
 
-# looks suspicious but maybe it is really intended to set is_tested
-# here. Please document next time around
+# unsets the is_tested flag: as soon as the thing is installed, it is
+# not needed in set_perl5lib anymore
 sub is_installed {
     my($self,$what) = @_;
     delete $self->{is_tested}{$what};
