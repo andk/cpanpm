@@ -2370,7 +2370,7 @@ sub rematein {
 	}
 	if (ref $obj) {
             $obj->color_cmd_tmps(0,1);
-            CPAN::Queue->new(qmod => $obj->id);
+            CPAN::Queue->new(qmod => $obj->id, req => "command");
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
 	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
@@ -2407,7 +2407,9 @@ to find objects with matching identifiers.
     while (my $q = CPAN::Queue->first) {
         my $obj;
         my $s = $q->as_string;
+        my $reqtype = $q->reqtype;
         $obj = CPAN::Shell->expandany($s);
+        $obj->{reqtype} = $reqtype;
 	for my $pragma (@pragma) {
 	    if ($pragma
 		&&
@@ -5612,7 +5614,7 @@ of modules we are processing right now?", "yes");
             # warn "calling color_cmd_tmps(0,1)";
             CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
         }
-        CPAN::Queue->jumpqueue(@prereq,$id); # queue them and requeue yourself
+        CPAN::Queue->jumpqueue([$id,$self->{reqtype}],reverse @prereq_tuples); # queue them and requeue yourself
         $self->{later} = "Delayed until after prerequisites";
         return 1; # signal success to the queuerunner
     }
@@ -6999,6 +7001,7 @@ sub rematein {
     $pack->called_for($self->id);
     $pack->force($meth) if exists $self->{'force_update'};
     $pack->notest($meth) if exists $self->{'notest'};
+    $pack->{reqtype} = $self->{reqtype};
     eval {
 	$pack->$meth();
     };

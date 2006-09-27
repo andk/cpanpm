@@ -1,3 +1,15 @@
+2006-09-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* New warnings
+
+Use of uninitialized value in exists at lib/CPAN.pm line 3874, <FH> line 41067.
+Use of uninitialized value $id in delete at lib/CPAN.pm line 793, <FH> line 41067.
+Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 41067.
+
+	??
+
+	* Todo: do the right thing with prereq "perl"
+
 2006-09-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
@@ -58,11 +70,12 @@
 	in need of a differentiation of @need_req and @need_breq or so; FINISHED
 	in rev. 902] and follow_prereqs (where we must look closer on jumpqueue
 	and handle req and breq differently and make sure that the inheritance
-	is correct: reqs of breq are only breqs) and finally we will have to
-	carefully differentiate what we do with the things that we get off the
-	queue: breqs shall not be installed. And we need a user pref here: treat
-	build_requires as requires would have the advantage that the
-	build_requires stuff be installed and may save time on the next occasion.
+	is correct: reqs of breq are only breqs)[WIP when 910 is being checked
+	in] and finally we will have to carefully differentiate what we do with
+	the things that we get off the queue: breqs shall not be installed. And
+	we need a user pref here: treat build_requires as requires would have
+	the advantage that the build_requires stuff be installed and may save
+	time on the next occasion.
 
 	This needs to be coordinated with David because it breaks
 	CPAN::Reporter. Hi, Dave!

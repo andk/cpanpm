@@ -1,3 +1,4 @@
+# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN::Queue;
 use strict;
 
@@ -54,6 +55,9 @@ sub new {
   my($class,@attr) = @_;
   my $self = bless { @attr }, $class;
   push @All, $self;
+  CPAN->debug(sprintf("in new All[%s]",
+                      join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
+                     )) if $CPAN::DEBUG;
   return $self;
 }
 
@@ -66,6 +70,11 @@ sub first {
 sub as_string {
   my($self) = @_;
   $self->{qmod};
+}
+
+sub reqtype {
+  my($self) = @_;
+  $self->{req};
 }
 
 # CPAN::Queue::delete_first ;
@@ -85,14 +94,23 @@ sub jumpqueue {
     my $class = shift;
     my @what = @_;
     CPAN->debug(sprintf("before jumpqueue All[%s] what[%s]",
-                        join(",",map {$_->{qmod}} @All),
-                        join(",",@what)
+                        join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
+                        join(",",map {sprintf "%s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
                        )) if $CPAN::DEBUG;
-  WHAT: for my $what (reverse @what) {
+    my $inherit_reqtype = $what[0][1] =~ /^(command|requires)$/ ?
+        "requires" : "build_requires";
+  WHAT: for my $what_tuple (@what) {
+        my($what,$reqtype) = @$what_tuple;
+        if ($reqtype eq "requires"
+            &&
+            $inherit_reqtype eq "build_requires"
+           ) {
+            $reqtype = "build_requires";
+        }
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
-            CPAN->debug("i[$All[$i]]what[$what]") if $CPAN::DEBUG;
-            if ($All[$i]->{qmod} eq $what){
+            CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
+            if ($All[$i]{qmod} eq $what){
                 $jumped++;
                 if ($jumped > 100) { # one's OK if e.g. just
                                      # processing now; more are OK if
@@ -104,12 +122,15 @@ qq{Object [$what] queued more than 100 times, ignoring}
                 }
             }
         }
-        my $obj = bless { qmod => $what }, $class;
+        my $obj = bless {
+                         qmod => $what,
+                         req => $reqtype
+                        }, $class;
         unshift @All, $obj;
     }
     CPAN->debug(sprintf("after jumpqueue All[%s] what[%s]",
-                        join(",",map {$_->{qmod}} @All),
-                        join(",",@what)
+                        join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
+                        join(",",map {sprintf "%s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
                        )) if $CPAN::DEBUG;
 }
 
