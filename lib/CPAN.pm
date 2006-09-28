@@ -5715,7 +5715,8 @@ sub read_yaml {
             $self->{yaml_content} = undef;
         }
     }
-    $self->debug("yaml_content[$self->{yaml_content}]") if $CPAN::DEBUG;
+    $self->debug(sprintf "yaml_content[%s]", $self->{yaml_content} || "UNDEF")
+        if $CPAN::DEBUG;
     return $self->{yaml_content};
 }
 
@@ -6072,7 +6073,7 @@ sub install {
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
     if ($CPAN::VERSION < 1.89 && $CPAN::DEBUG) { # XXX temporary condition until finished with testing
         my $id = $self->id;
-        my $reqtype = $self->{reqtype};
+        my $reqtype = $self->{reqtype} or die "XXX ALERT: no reqtype!!!!!";
         my $default = $reqtype eq "b" ? "no" : "yes";
         my $want = CPAN::Shell::colorable_makemaker_prompt("Install ".
                                                            "$id\[$reqtype] now? (Y/n)",
@@ -6540,6 +6541,7 @@ explicitly a file $s.
 	# possibly noisy action:
         $self->debug("type[$type] s[$s]") if $CPAN::DEBUG;
 	my $obj = $CPAN::META->instance($type,$s);
+        $obj->{reqtype} = $self->{reqtype};
 	$obj->$meth();
         if ($obj->isa('CPAN::Bundle')
             &&

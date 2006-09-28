@@ -1,5 +1,7 @@
 2006-09-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: test bundles and reqtype
+
 	* Todo: ... and finally we will have to carefully differentiate what we
 	do with the things that we get off the queue: breqs shall not be
 	installed. And we need a user pref here: treat build_requires as
