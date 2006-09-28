@@ -2370,7 +2370,7 @@ sub rematein {
 	}
 	if (ref $obj) {
             $obj->color_cmd_tmps(0,1);
-            CPAN::Queue->new(qmod => $obj->id, req => "command");
+            CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
 	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
@@ -5614,7 +5614,9 @@ of modules we are processing right now?", "yes");
             # warn "calling color_cmd_tmps(0,1)";
             CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
         }
-        CPAN::Queue->jumpqueue([$id,$self->{reqtype}],reverse @prereq_tuples); # queue them and requeue yourself
+        # queue them and re-queue yourself
+        CPAN::Queue->jumpqueue([$id,$self->{reqtype}],
+                               reverse @prereq_tuples);
         $self->{later} = "Delayed until after prerequisites";
         return 1; # signal success to the queuerunner
     }
@@ -5687,7 +5689,7 @@ sub unsat_prereq {
             # if we push it again, we have a potential infinite loop
             next;
         }
-        my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "req" : "breq";
+        my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "r" : "b";
         push @need, [$need_module,$needed_as];
     }
     @need;
@@ -6068,6 +6070,18 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
+    if ($CPAN::VERSION < 1.89 && $CPAN::DEBUG) { # XXX temporary condition until finished with testing
+        my $id = $self->id;
+        my $reqtype = $self->{reqtype};
+        my $default = $reqtype eq "b" ? "no" : "yes";
+        my $want = CPAN::Shell::colorable_makemaker_prompt("Install ".
+                                                           "$id\[$reqtype] now? (Y/n)",
+                                                           $default);
+        unless ($want =~ /^y/i) {
+            $CPAN::Frontend->mywarn("not installing, returning from C:D:i...\n");
+            return;
+        }
+    }
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){
