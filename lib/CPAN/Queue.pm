@@ -56,7 +56,7 @@ sub new {
   my $self = bless { @attr }, $class;
   push @All, $self;
   CPAN->debug(sprintf("in new All[%s]",
-                      join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
+                      join("",map {sprintf " %s\[%s]\n",$_->{qmod},substr($_->{req},0,1)} @All),
                      )) if $CPAN::DEBUG;
   return $self;
 }
@@ -94,8 +94,8 @@ sub jumpqueue {
     my $class = shift;
     my @what = @_;
     CPAN->debug(sprintf("before jumpqueue All[%s] what[%s]",
-                        join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
-                        join(",",map {sprintf "%s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},substr($_->{req},0,1)} @All),
+                        join("",map {sprintf " %s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
                        )) if $CPAN::DEBUG;
     my $inherit_reqtype = $what[0][1] =~ /^(command|requires)$/ ?
         "requires" : "build_requires";
@@ -109,7 +109,7 @@ sub jumpqueue {
         }
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
-            CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
+            # CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
             if ($All[$i]{qmod} eq $what){
                 $jumped++;
                 if ($jumped > 100) { # one's OK if e.g. just
@@ -129,8 +129,8 @@ qq{Object [$what] queued more than 100 times, ignoring}
         unshift @All, $obj;
     }
     CPAN->debug(sprintf("after jumpqueue All[%s] what[%s]",
-                        join(",",map {sprintf "%s\[%s]",$_->{qmod},substr($_->{req},0,1)} @All),
-                        join(",",map {sprintf "%s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},substr($_->{req},0,1)} @All),
+                        join("",map {sprintf " %s\[%s]",$_->[0],substr($_->[1],0,1)} @what)
                        )) if $CPAN::DEBUG;
 }
 
