@@ -685,7 +685,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
     $fh->print(hostname(), "\n");
     $self->{LOCK} = $lockfile;
     $fh->close;
-    $SIG{TERM} = $SIG{TTIN} = sub {
+    $SIG{TERM} = sub {
         my $sig = shift;
         &cleanup;
         $CPAN::Frontend->mydie("Got SIG$sig, leaving");
