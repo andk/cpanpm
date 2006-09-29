@@ -15,8 +15,8 @@
 
 	* address #21716: fix the broken 'recent' command (Phil Pennock)
 
-	* fix a rare bug with deep recursion in AUTOLOAD during the 'reload
-	cpan' command.
+	* fixed a rare but extremely unpleasant bug with deep recursion in
+	AUTOLOAD during the 'reload cpan' command.
 
 2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
