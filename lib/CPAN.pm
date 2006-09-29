@@ -5865,6 +5865,17 @@ sub test {
             }
         }
 
+        if ($CPAN::META->{is_tested}{$self->{build_dir}}
+            &&
+            !(
+              $self->{make_test}->can("failed") ?
+              $self->{make_test}->failed :
+              $self->{make_test} =~ /^NO/
+             )
+           ) {
+            push @e, "Already tested successfully";
+        }
+
 	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
@@ -6080,6 +6091,8 @@ sub install {
                                                            $default);
         unless ($want =~ /^y/i) {
             $CPAN::Frontend->mywarn("not installing, returning from C:D:i...\n");
+            $self->{install} = CPAN::Distrostatus->new("NO -- is only 'build_requires'");
+            delete $self->{force_update};
             return;
         }
     }

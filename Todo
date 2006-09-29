@@ -1,6 +1,7 @@
 2006-09-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: test bundles and reqtype
+	* Todo: test bundles and reqtype; especially when you don NOT install
+	things because this opens new branches of code execution
 
 	* Todo: ... and finally we will have to carefully differentiate what we
 	do with the things that we get off the queue: breqs shall not be
@@ -17,7 +18,7 @@
 
 	* Bug: build_requires that are not installed currently are being tested
 	more than once within a single command. Maybe the same bug as described
-	below under "Very stupid is CPAN.pm..."
+	below under "Very stupid is CPAN.pm..." FIXED in rev. 915
 
 2006-09-27  Andreas J Koenig  <akoenig@iconmobile.com>
 
@@ -189,7 +190,7 @@ Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 4106
 	Very stupid is CPAN.pm when I repeat the 'test L:A:P:P' command: it
 	repeats all tests for all dependencies and only then runs the test on
 	L:A:P:P. This is time-consuming and may be a bug or a feature. Don't
-	know the reason.
+	know the reason. FIXED in rev. 915
 	
 	ATRICKETT/Config-Trivial                  Test::Pod::Coverage
 
