@@ -1,5 +1,8 @@
 2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: investigate if we want a different amount of newlines depending
+	on readline availability
+
 	* Todo: send a patch to P5P that adds Queue.pm to the MANIFEST.
 
 	* Todo: add to 30shell the case of repeated testing that was fixed in
