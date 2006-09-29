@@ -13,7 +13,7 @@
 	* address #21724: document that the 'r' command takes arguments; support
 	the same arguments for the 'upgrade' command (Adam Kennedy)
 
-	* address #21716: fix the broken 'recent' command
+	* address #21716: fix the broken 'recent' command (Phil Pennock)
 
 	* fix a rare bug with deep recursion in AUTOLOAD during the 'reload
 	cpan' command.
