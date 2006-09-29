@@ -7,6 +7,17 @@
 	* dependencies declared as 'build_requires' are now treated specially.
 	Try 'o conf init build_requires_install_policy' for more info.
 
+	* fixed bug where successful tests were repeated if things were not
+	installed
+
+	* address #21724: document that the 'r' command takes arguments; support
+	the same arguments for the 'upgrade' command (Adam Kennedy)
+
+	* address #21716: fix the broken 'recent' command
+
+	* fix a rare bug with deep recursion in AUTOLOAD during the 'reload
+	cpan' command.
+
 2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.8801

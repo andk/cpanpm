@@ -326,7 +326,7 @@ Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 4106
 	< 2.62 leads to not recognized test failures. I put Test::Harness into
 	the Bundle::CPAN. Maybe I must verify the Test::Harness version before
 	testing MB modules? FIXED by making T:H 2.62 a PREREQ_PM and testing
-	again in the code. Around rev. 886
+	again in the code. In rev. 888
 
 	* Todo: 'dump symbol', say 'dump $CPAN::META'. But pipe into the pager
 	for large datasets! DONE in rev. 885
