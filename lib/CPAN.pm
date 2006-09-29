@@ -5283,7 +5283,7 @@ sub force {
   my($self, $method) = @_;
   for my $att (qw(
   CHECKSUM_STATUS archived build_dir localfile make install unwrapped
-  writemakefile modulebuild make_test
+  writemakefile modulebuild make_test signature_verify
  )) {
     delete $self->{$att};
   }
@@ -5764,7 +5764,9 @@ sub prereq_pm {
             $req = $areq if $do_replace;
         }
         if ($req) {
-            # XXX maybe needs to be reconsidered: what do we if perl is too old?
+            # XXX maybe needs to be reconsidered: what do we if perl
+            # is too old? I think, we will set $self->{make} to
+            # Distrostatus NO and wind up the stack.
             delete $req->{perl};
         }
     }
@@ -5867,6 +5869,8 @@ sub test {
 
         if ($CPAN::META->{is_tested}{$self->{build_dir}}
             &&
+            exists $self->{make_test}
+            &&
             !(
               $self->{make_test}->can("failed") ?
               $self->{make_test}->failed :
@@ -5876,7 +5880,7 @@ sub test {
             push @e, "Already tested successfully";
         }
 
-	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     chdir $self->{'build_dir'} or
 	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
@@ -6082,19 +6086,38 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
-    if ($CPAN::VERSION < 1.89 && $CPAN::DEBUG) { # XXX temporary condition until finished with testing
-        my $id = $self->id;
-        my $reqtype = $self->{reqtype} or die "XXX ALERT: no reqtype!!!!!";
-        my $default = $reqtype eq "b" ? "no" : "yes";
-        my $want = CPAN::Shell::colorable_makemaker_prompt("Install ".
-                                                           "$id\[$reqtype] now? (Y/n)",
-                                                           $default);
-        unless ($want =~ /^y/i) {
-            $CPAN::Frontend->mywarn("not installing, returning from C:D:i...\n");
-            $self->{install} = CPAN::Distrostatus->new("NO -- is only 'build_requires'");
-            delete $self->{force_update};
-            return;
+    $CPAN::Config->{build_requires_install_policy}||="ask/yes";
+    my $id = $self->id;
+    my $reqtype = $self->{reqtype};
+    unless ($reqtype) {
+        $CPAN::Frontend->mywarn("Unknown require type for '$id', setting to 'r'. ".
+                                "This should not happen and is construed a bug.\n");
+        $reqtype = "r";
+    }
+    my $want_install;
+    if ($reqtype eq "b") {
+        my $want_install;
+        if ($CPAN::Config->{build_requires_install_policy} eq "no") {
+            $want_install = "no";
+        } elsif ($CPAN::Config->{build_requires_install_policy} =~ m|^ask/(.+)|) {
+            my $default = $1;
+            $default = "yes" unless $default =~ /^(y|n)/i;
+            $want_install =
+                CPAN::Shell::colorable_makemaker_prompt
+                      ("$id is just needed temporarily during building or testing. ".
+                       "Do you want to install it permanently? (Y/n)",
+                       $default);
+        } else {
+            $want_install = "yes";
         }
+    } else {
+        $want_install = "yes";
+    }
+    unless ($want_install =~ /^y/i) {
+        $CPAN::Frontend->mywarn("Not installing\n");
+        $self->{install} = CPAN::Distrostatus->new("NO -- is only 'build_requires'");
+        delete $self->{force_update};
+        return;
     }
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";

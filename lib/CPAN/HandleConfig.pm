@@ -15,6 +15,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              #  allow_unauthenticated ?? some day...
                              "build_cache",
                              "build_dir",
+                             "build_requires_install_policy",
                              "bzip2",
                              "cache_metadata",
                              "check_sigs",

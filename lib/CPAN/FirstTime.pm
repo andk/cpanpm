@@ -249,6 +249,13 @@ Shall we use it as the general CPAN build and cache directory?
                        'follow|ask|ignore');
     }
 
+    if (!$matcher or 'build_requires_install_policy' =~ /$matcher/){
+        $CPAN::Frontend->myprint($prompts{build_requires_install_policy_intro});
+
+        my_prompt_loop(build_requires_install_policy => 'ask/yes', $matcher,
+                       'yes|no|ask/yes|ask/no');
+    }
+
     #
     #= Module::Signature
     #
@@ -1318,6 +1325,24 @@ module. Do you want to turn on colored output?},
 colorize_print => qq{Color for normal output?},
 
 colorize_warn => qq{Color for warnings?},
+
+build_requires_install_policy_intro => qq{
+
+When a module declares another one as a 'build_requires' prerequisite
+this means that the other module is only needed for building or
+testing the module but not permanently. In this case you may wish to
+install that other module nonetheless or just keep it in the
+'build_dir' directory to have it available only during this session.
+
+You can choose if you want to always install (yes), never install (no)
+or be always asked. In the latter case you can set the default answer
+for the question.
+
+},
+
+build_requires_install_policy =>
+qq{Policy on installing 'build_require' modules
+  (yes, no, ask/yes, ask/no)?},
 
 );
 

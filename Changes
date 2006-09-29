@@ -1,3 +1,12 @@
+2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_51
+
+	* known issue: breaks CPAN::Reporter 0.21
+
+	* dependencies declared as 'build_requires' are now treated specially.
+	Try 'o conf init build_requires_install_policy' for more info.
+
 2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.8801

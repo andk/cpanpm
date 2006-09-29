@@ -1,44 +1,20 @@
-2006-09-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: test bundles and reqtype; especially when you don NOT install
-	things because this opens new branches of code execution
+	* Todo: send a patch to P5P that adds Queue.pm to the MANIFEST.
 
-	* Todo: ... and finally we will have to carefully differentiate what we
-	do with the things that we get off the queue: breqs shall not be
-	installed. And we need a user pref here: treat build_requires as
-	requires would have the advantage that the build_requires stuff be
-	installed and may save time on the next occasion.
+	* Todo: add to 30shell the case of repeated testing that was fixed in
+	rev 915
 
-	This needs to be coordinated with David because it breaks
-	CPAN::Reporter. Hi, Dave!
+	* Attention when testing: Lingua::Alphabet::Phonetic::Password makes
+	Test::Pod a "build_requires"; Lingua::Alphabet::Phonetic makes it a
+	"requires" instead. So we have it both as "r" and "b" in the queue and
+	the first one wins over the other. So once we have something not
+	installed due to "b", we cannot install it anymore unless we use
+	force:-( It would be nice to make this less confusing for the user and
+	resolvable without force for the expert.
 
-	* Attention when testing: Lingua-Alphabet-Phonetic makes Test-Pod a
-	"requires" instead of a "build_requires". In this case we cannot prevent
-	its installation and cannot even warn the user without AI.
-
-	* Bug: build_requires that are not installed currently are being tested
-	more than once within a single command. Maybe the same bug as described
-	below under "Very stupid is CPAN.pm..." FIXED in rev. 915
-
-2006-09-27  Andreas J Koenig  <akoenig@iconmobile.com>
-
-	* Todo: canonify usage of req/reqtype/etc. into "reqtype" and shorten
-	the known reqtype to one letter: r,b,c and comment on them in
-	Queue::reqtype DONE in rev.913
-
-2006-09-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* New warnings
-
-Use of uninitialized value in exists at lib/CPAN.pm line 3874, <FH> line 41067.
-Use of uninitialized value $id in delete at lib/CPAN.pm line 793, <FH> line 41067.
-Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 41067.
-
-	?? Cannot reproduce, maybe due to excessively hitting ^C in the wrong moment?
-
-	* Todo: do the right thing with prereq "perl"
-
-2006-09-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* Todo: do the right thing with prereq "perl". Find modules suited for
+	testing.
 
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
 	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
@@ -72,137 +48,7 @@ Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 4106
 	Gabor requests less noise, otherwise he consideres behaviour correct.
 	Hrm, think about it...
 	
-	* find out since when Expect has a failing test with bleadperl. Take
-	test #38 alone and do a binary search on it. 26453 has already once been
-	involved in an Expect case. Yes, this might mean we have to make
-	suggestions for Expect too: which constants are imported erroneously and
-	which correctly and how to make this valid for old and new perls? DONE
-	see RT #21723.
-
 	* Todo: clean up XXX
-
-2006-09-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* build_requires: fortunately the things on the Queue are objects with
-	currently only one attribute "qmod", the string.
-
-	    install Bundle::CPAN CPAN::Reporter Module::Signature Devel::Symdump Expect
-
-	First step is to change the constructor to accept more arguments DONE in rev 889
-
-	Next thing will be to go through the chain prereq_pm (where we must not
-	merge req and breq)[DONE in rev. 900],
-	CPAN::Distribution::color_cmd_tmps
-	(where we must mark both req and breq)[DONE in rev. 900], unsat_prereq
-	(where we must handle both req and breq)[STARTED in rev. 900, but still
-	in need of a differentiation of @need_req and @need_breq or so; FINISHED
-	in rev. 902] and follow_prereqs (where we must look closer on jumpqueue
-	and handle req and breq differently and make sure that the inheritance
-	is correct: reqs of breq are only breqs)[WIP when 910 is being checked
-	in; finished in rev. 913] See continuation above "and finally we
-	will..."
-
-2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* So what was 886 about? Put CPAN::Queue in its own file.
-
-	* Bug introduced between 881 and 886. If a Module::Build module fails,
-	we happily take it as an OK. CPAN-Test-Dummy-Perl5-Build-Fails reveals
-	the bug. Going back step by step with 'svn up -r XXX' we see what was
-	broke too: 885, 884, 883, 882, 881!!!
-
-	What!??? 881 was a release! Between 879 and 881 no code changed.
-
-	878 was a bit different. And 877. And all have this bug suddenly.
-
-	So I start to believe it is a bug in the maint-5.8 branch or in some
-	module we installed since. My maint is 28854 right now.
-
-	Testing again with bleadperl and 886: NOT BROKEN!
-
-	The only two modules out of date in my blead are Class::Accessor and
-	version.pm.
-
-	Outdated modules in current maint-5.8:
-
-	CGI CPAN Devel::PPPort Digest Encode ExtUtils::Command ExtUtils::Install
-	ExtUtils::Manifest ExtUtils::ParseXS IO Locale::Maketext Math::Complex
-	Sys::Syslog Term::ANSIColor Test::Builder Test::Harness Text::Balanced
-	Text::Soundex Text::Tabs Tie::RefHash Time::HiRes Time::Local
-	Unicode::Normalize threads threads::shared
-
-	Updated as much as I could and ALL IS WELL.
-
-	So now we don't know who was to blame. Restarting over and going step by
-	step: it was Test::Harness 2.58. So we have a difficult-to-explain
-	dependency here: CPAN + Module::Build-deploying modules + Test::Harness
-	< 2.62 leads to not recognized test failures. I put Test::Harness into
-	the Bundle::CPAN. Maybe I must verify the Test::Harness version before
-	testing MB modules?
-
-	* Todo: 'dump symbol', say 'dump $CPAN::META'. But pipe into the pager
-	for large datasets! DONE in rev. 885
-
-	* build_requires: need two modules that have build_dependencies which I
-	do not install and still both must build. This means, I inject the
-	build_dependencies into the queue and flag them as build_dependency
-	which then leeds to a simple make or test for them, never to an install.
-	Up to now we use set_perl5lib during CPAN::Distribution::test. In the
-	future we would need a similar vein during the two earlier stages,
-	{Makefile,Build}.PL and make. Yes, this should do.
-
-	Where are our build_requires? I keep forgetting the URL where Randy Sims
-	provides so useful statistics. Here it is:
-	http://thepierianspring.org/perl/meta/
-
-	And the build_requires page is here:
-	http://thepierianspring.org/perl/meta/fields_in_use/build_requires.html
-
-	But manually skimming the 876 distros is tedious, so I need again my own
-	script.
-
-	One thing is complicated: when a module is a build_prereq, then all
-	*its* prereqs are also degraded into build_prereqs unless they are
-	already prereqs for something else:-! And then we have the diamond
-	dependency: Foo buid_requires Bar and requires Baz. Bar requires Frob,
-	Baz requires Frob. So we make it a bit operation: REQ => 1, BREQ => 2?
-
-	OK, candidates for my tests:
-
-	MARCEL/Class-Null                         Test::Pod::Coverage
-
-	Not suited for testing. It has a Build.PL that requires Project::Build
-	which does not exist at all and when a user preferes Module::Build over
-	ExtUtils::MakeMaker he fails immediately. It has a Makefile.PL that has
-	Test::Pod and Test::Pod::Coverage as PREREQ_PM and it has a META.yml
-	that tells me that Test::Pod and Test::Pod::Coverage are build_requires.
-	But when I grep for Test::Pod and Test::Pod::Coverage, they are not
-	mentioned anywhere. The solution would be to remove the Build.PL and the
-	META.yml and remove the PREREQ_PM lines in the Makefile.PL.
-	
-	JFITZ/Lingua-Alphabet-Phonetic-Password   Test::Pod::Coverage
-
-	Need to set prefer_installer MB because it comes with a Makefile.PL. The
-	dependecy graph seems to get very large. Test::NoBreakpoints failes its
-	tests. But in the end, L:A:P:P passes its four tests quickly and skips
-	the one that need Test::NoBreakpoints. Vorbildlich!
-
-	Very stupid is CPAN.pm when I repeat the 'test L:A:P:P' command: it
-	repeats all tests for all dependencies and only then runs the test on
-	L:A:P:P. This is time-consuming and may be a bug or a feature. Don't
-	know the reason. FIXED in rev. 915
-	
-	ATRICKETT/Config-Trivial                  Test::Pod::Coverage
-
-	ADIE/Test-Class          Test::Differences
-	KCLARK/SQL-Translator    Test::Differences
-	SPOON/WWW-Yahoo-Groups   Test::Differences
-
-	CHROMATIC/Class-StorageFactory  Test::Pod
-	MTHURN/Net-Address-Ethernet     Test::Pod
-	RCLAMP/Class-Persist            Test::Pod
-
-2006-09-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* automatic testing? Is it anywhere documented what the impacts of
 	$ENV{AUTOMATED_TESTING} are?
@@ -374,6 +220,177 @@ need the middle man.
 	And I promise to try out a more granular locking mechanism.
 
 	* hr ================ no todos below this line ================ /hr
+
+2006-09-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: test bundles and reqtype; especially when you do NOT install
+	things because this opens new branches of code execution DONE
+
+	* Todo: ... and finally we will have to carefully differentiate what we
+	do with the things that we get off the queue: breqs shall not be
+	installed. And we need a user pref here: treat build_requires as
+	requires would have the advantage that the build_requires stuff be
+	installed and may save time on the next occasion.
+
+	This needs to be coordinated with David because it breaks
+	CPAN::Reporter. Hi, Dave!
+
+	New config option build_requires_install_policy: yes|no|ask/no|ask/yes
+
+	DONE in rev. 916
+
+	* Bug: build_requires that are not installed currently are being tested
+	more than once within a single command. Maybe the same bug as described
+	below under "Very stupid is CPAN.pm..." FIXED in rev. 915
+
+2006-09-27  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* Todo: canonify usage of req/reqtype/etc. into "reqtype" and shorten
+	the known reqtype to one letter: r,b,c and comment on them in
+	Queue::reqtype DONE in rev.913
+
+2006-09-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* New warnings
+
+Use of uninitialized value in exists at lib/CPAN.pm line 3874, <FH> line 41067.
+Use of uninitialized value $id in delete at lib/CPAN.pm line 793, <FH> line 41067.
+Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 41067.
+
+	?? Cannot reproduce, maybe due to excessively hitting ^C in the wrong moment?
+
+2006-09-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* find out since when Expect has a failing test with bleadperl. Take
+	test #38 alone and do a binary search on it. 26453 has already once been
+	involved in an Expect case. Yes, this might mean we have to make
+	suggestions for Expect too: which constants are imported erroneously and
+	which correctly and how to make this valid for old and new perls? DONE
+	see RT #21723.
+
+2006-09-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* build_requires: fortunately the things on the Queue are objects with
+	currently only one attribute "qmod", the string.
+
+	    install Bundle::CPAN CPAN::Reporter Module::Signature Devel::Symdump Expect
+
+	First step is to change the constructor to accept more arguments DONE in rev 889
+
+	Next thing will be to go through the chain prereq_pm (where we must not
+	merge req and breq)[DONE in rev. 900],
+	CPAN::Distribution::color_cmd_tmps
+	(where we must mark both req and breq)[DONE in rev. 900], unsat_prereq
+	(where we must handle both req and breq)[STARTED in rev. 900, but still
+	in need of a differentiation of @need_req and @need_breq or so; FINISHED
+	in rev. 902] and follow_prereqs (where we must look closer on jumpqueue
+	and handle req and breq differently and make sure that the inheritance
+	is correct: reqs of breq are only breqs)[WIP when 910 is being checked
+	in; finished in rev. 913] See continuation above "and finally we
+	will..."
+
+2006-09-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* So what was 886 about? Put CPAN::Queue in its own file.
+
+	* Bug introduced between 881 and 886. If a Module::Build module fails,
+	we happily take it as an OK. CPAN-Test-Dummy-Perl5-Build-Fails reveals
+	the bug. Going back step by step with 'svn up -r XXX' we see what was
+	broke too: 885, 884, 883, 882, 881!!!
+
+	What!??? 881 was a release! Between 879 and 881 no code changed.
+
+	878 was a bit different. And 877. And all have this bug suddenly.
+
+	So I start to believe it is a bug in the maint-5.8 branch or in some
+	module we installed since. My maint is 28854 right now.
+
+	Testing again with bleadperl and 886: NOT BROKEN!
+
+	The only two modules out of date in my blead are Class::Accessor and
+	version.pm.
+
+	Outdated modules in current maint-5.8:
+
+	CGI CPAN Devel::PPPort Digest Encode ExtUtils::Command ExtUtils::Install
+	ExtUtils::Manifest ExtUtils::ParseXS IO Locale::Maketext Math::Complex
+	Sys::Syslog Term::ANSIColor Test::Builder Test::Harness Text::Balanced
+	Text::Soundex Text::Tabs Tie::RefHash Time::HiRes Time::Local
+	Unicode::Normalize threads threads::shared
+
+	Updated as much as I could and ALL IS WELL.
+
+	So now we don't know who was to blame. Restarting over and going step by
+	step: it was Test::Harness 2.58. So we have a difficult-to-explain
+	dependency here: CPAN + Module::Build-deploying modules + Test::Harness
+	< 2.62 leads to not recognized test failures. I put Test::Harness into
+	the Bundle::CPAN. Maybe I must verify the Test::Harness version before
+	testing MB modules? FIXED by making T:H 2.62 a PREREQ_PM and testing
+	again in the code. Around rev. 886
+
+	* Todo: 'dump symbol', say 'dump $CPAN::META'. But pipe into the pager
+	for large datasets! DONE in rev. 885
+
+	* build_requires: need two modules that have build_dependencies which I
+	do not install and still both must build. This means, I inject the
+	build_dependencies into the queue and flag them as build_dependency
+	which then leeds to a simple make or test for them, never to an install.
+	Up to now we use set_perl5lib during CPAN::Distribution::test. In the
+	future we would need a similar vein during the two earlier stages,
+	{Makefile,Build}.PL and make. Yes, this should do.
+
+	Where are our build_requires? I keep forgetting the URL where Randy Sims
+	provides so useful statistics. Here it is:
+	http://thepierianspring.org/perl/meta/
+
+	And the build_requires page is here:
+	http://thepierianspring.org/perl/meta/fields_in_use/build_requires.html
+
+	But manually skimming the 876 distros is tedious, so I need again my own
+	script.
+
+	One thing is complicated: when a module is a build_prereq, then all
+	*its* prereqs are also degraded into build_prereqs unless they are
+	already prereqs for something else:-! And then we have the diamond
+	dependency: Foo buid_requires Bar and requires Baz. Bar requires Frob,
+	Baz requires Frob. So we make it a bit operation: REQ => 1, BREQ => 2?
+
+	OK, candidates for my tests:
+
+	MARCEL/Class-Null                         Test::Pod::Coverage
+
+	Not suited for testing. It has a Build.PL that requires Project::Build
+	which does not exist at all and when a user preferes Module::Build over
+	ExtUtils::MakeMaker he fails immediately. It has a Makefile.PL that has
+	Test::Pod and Test::Pod::Coverage as PREREQ_PM and it has a META.yml
+	that tells me that Test::Pod and Test::Pod::Coverage are build_requires.
+	But when I grep for Test::Pod and Test::Pod::Coverage, they are not
+	mentioned anywhere. The solution would be to remove the Build.PL and the
+	META.yml and remove the PREREQ_PM lines in the Makefile.PL.
+	
+	JFITZ/Lingua-Alphabet-Phonetic-Password   Test::Pod::Coverage
+
+	Need to set prefer_installer MB because it comes with a Makefile.PL. The
+	dependecy graph seems to get very large. Test::NoBreakpoints failes its
+	tests. But in the end, L:A:P:P passes its four tests quickly and skips
+	the one that need Test::NoBreakpoints. Vorbildlich!
+
+	Very stupid is CPAN.pm when I repeat the 'test L:A:P:P' command: it
+	repeats all tests for all dependencies and only then runs the test on
+	L:A:P:P. This is time-consuming and may be a bug or a feature. Don't
+	know the reason. FIXED in rev. 915
+	
+	ATRICKETT/Config-Trivial                  Test::Pod::Coverage
+
+	ADIE/Test-Class          Test::Differences
+	KCLARK/SQL-Translator    Test::Differences   # not good for testing
+	SPOON/WWW-Yahoo-Groups   Test::Differences
+
+	CHROMATIC/Class-StorageFactory  Test::Pod
+	MTHURN/Net-Address-Ethernet     Test::Pod
+	RCLAMP/Class-Persist            Test::Pod
+
+2006-09-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* I have seen this bug with 5.6.2, 5.8.3, 5.8.4, 5.8.5; it seems not to
 	effect bleadperl and 5.8.8, 5.8.6-RC1
