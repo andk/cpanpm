@@ -75,6 +75,7 @@ while (my($here,$v) = each %$MAP) {
 
 exit unless prompt("y","Proceed?","","y");
 for my $c (@command) {
-  cp @$c or die "Could not cp @$c";
+  unlink $c->[1] or warn "Could not unlink the target $c->[1]: $!";
+  cp @$c or die "Could not cp $c->[0] to $c->[1]: $!";
 }
 

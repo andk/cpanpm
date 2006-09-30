@@ -4,7 +4,7 @@
 
 	* dependencies declared as 'build_requires' are now treated according to
 	a new policy option: try 'o conf init build_requires_install_policy' for
-	more info.
+	more info. (Suggested/Requested by Johan Vromans)
 
 	* fixed a bug where successful tests were repeated if things were not
 	being installed like during the 'test' command itself.
