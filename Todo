@@ -16,6 +16,13 @@
 	force:-( It would be nice to make this less confusing for the user and
 	resolvable without force for the expert.
 
+	This warrants new tests in 30shell. Let's do diamond dependency:
+	CPAN-Test-Dummy-Perl5-Build shall build_require
+	CPAN-Test-Dummy-Perl5-Make and require CPAN-Test-Dummy-Perl5-Make-Zip.
+	And CPAN-Test-Dummy-Perl5-Make-Zip shall require
+	CPAN-Test-Dummy-Perl5-Make. We have not tested install yet (I think) and
+	we can try to set make_install_make_command to a perl oneliner or so.
+
 	* Todo: do the right thing with prereq "perl". Find modules suited for
 	testing.
 
