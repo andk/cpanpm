@@ -1,4 +1,7 @@
+use strict;
+
 package CPAN::Test::Dummy::Perl5::Make::Zip;
+use vars qw{$VERSION};
 
 $VERSION = '1.02';
 
