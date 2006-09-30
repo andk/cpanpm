@@ -741,10 +741,10 @@ R:Digest::SHA
 P:n
 R:Digest::SHA
 ########
-P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
+P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.03.tar.gz
 E:CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
 ########
-P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.02.tar.gz
+P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.03.tar.gz
 E:CPAN_USERID.*?ANDK.*?Andreas
 ########
 P:ls ANDK
@@ -868,7 +868,7 @@ T:30
 P:get Bundle::CpanTestDummies
 E:Is already unwrapped
 ########
-P:dump ANDK/CPAN-Test-Dummy-Perl5-Build-1.01.tar.gz
+P:dump ANDK/CPAN-Test-Dummy-Perl5-Build-1.02.tar.gz
 E:\}.*?CPAN::Distribution
 ########
 P:notest make Bundle::CpanTestDummies
