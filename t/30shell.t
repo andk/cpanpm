@@ -924,7 +924,7 @@ E:(removed\.)
 
 =head2 Coverage
 
-C<30shell.cover> collects results from Devel::Cover
+C<30shell.coverage> collects results from Devel::Cover
 
 =head2 How this script works
 
