@@ -5,26 +5,6 @@
 
 	* Todo: send a patch to P5P that adds Queue.pm to the MANIFEST.
 
-	* Todo: add to 30shell the case of repeated testing that was fixed in
-	rev 915
-
-	* Attention when testing: Lingua::Alphabet::Phonetic::Password makes
-	Test::Pod a "build_requires"; Lingua::Alphabet::Phonetic makes it a
-	"requires" instead. So we have it both as "r" and "b" in the queue and
-	the first one wins over the other. So once we have something not
-	installed due to "b", we cannot install it anymore unless we use
-	force:-( It would be nice to make this less confusing for the user and
-	resolvable without force for the expert.
-
-	This warrants new tests in 30shell. Let's do diamond dependency:
-	CPAN-Test-Dummy-Perl5-Build shall build_require
-	CPAN-Test-Dummy-Perl5-Make and require CPAN-Test-Dummy-Perl5-Make-Zip.
-	And CPAN-Test-Dummy-Perl5-Make-Zip shall require
-	CPAN-Test-Dummy-Perl5-Make. We have not tested install yet (I think) and
-	we can try to set make_install_make_command to a perl oneliner or so.
-	This constallation shall try to install CPAN-Test-Dummy-Perl5-Make
-	because requires trumps build_requires.
-
 	* Todo: do the right thing with prereq "perl". Find modules suited for
 	testing.
 
@@ -159,6 +139,66 @@ need the middle man.
 	remember details. Hint: DBM::Deep promises significant memory savings
 	and in that branch we tried to see how it can be made to work for us.
 
+	* M2 feature request by Juergen Christoffel: have time stamps on the
+	history and a history command to see them
+
+	* E3 prerequisites: require perl version xxx: we should not delete that
+	information but honour it.
+
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* H3 Locking: Linda W writes
+
+	>I'm not sure I understand the reason for the lock file
+	>placed in cpan_home.  If I have two different architectures
+	>with different build directories, I'm not sure I understand
+	>where the conflict is -- is it in storing/listing Bundles,
+	>the history file, the Metafile or the shared source?
+	
+	>I can understand private history, but the Bundles aren't
+	>updated often, the sources should be fairly static (unless
+	>new files are downloaded), The metafile would be updated about
+	>once a day (default).
+	
+	>If the build directories are separate, why would there be a
+	>need for locking more in interactive use vs. batch use?
+
+	And I promise to try out a more granular locking mechanism.
+
+	* hr ================ no todos below this line ================ /hr
+
+	* Todo: add to 30shell the case of repeated testing that was fixed in
+	rev 915
+
+	* Attention when testing: Lingua::Alphabet::Phonetic::Password makes
+	Test::Pod a "build_requires"; Lingua::Alphabet::Phonetic makes it a
+	"requires" instead. So we have it both as "r" and "b" in the queue and
+	the first one wins over the other. So once we have something not
+	installed due to "b", we cannot install it anymore unless we use
+	force:-( It would be nice to make this less confusing for the user and
+	resolvable without force for the expert.
+
+	This warrants new tests in 30shell. Let's do diamond dependency:
+	CPAN-Test-Dummy-Perl5-Build shall build_require
+	CPAN-Test-Dummy-Perl5-Make and require CPAN-Test-Dummy-Perl5-Make-Zip.
+	And CPAN-Test-Dummy-Perl5-Make-Zip shall require
+	CPAN-Test-Dummy-Perl5-Make. We have not tested install yet (I think) and
+	we can try to set make_install_make_command to a perl oneliner or so.
+	This constallation shall try to install CPAN-Test-Dummy-Perl5-Make
+	because requires trumps build_requires.
+
+	Interactive testing strategy right now:
+
+	rm -f /home/src/perl/repoperls/installed-perls/perl/prCXKHM/perl-5.8.0@28904/lib/site_perl/5.9.4/CPAN/Test/Dummy/Perl5/Build.pm /home/src/perl/repoperls/installed-perls/perl/prCXKHM/perl-5.8.0@28904/lib/site_perl/5.9.4/CPAN/Test/Dummy/Perl5/Make/Zip.pm
+	make run
+
+	o debug Distribution Queue Shell Module
+	o conf build_requires_install_policy no
+	install CPAN::Test::Dummy::Perl5::Build
+
+	DONE in rev. 941
+
 	* H3 Todo: JV suggests treating build_dependencies differently
 
 	To: Johan Vromans <jvromans@squirrel.nl>
@@ -203,35 +243,7 @@ need the middle man.
 	-- 
 	andreas
 
-
-	* M2 feature request by Juergen Christoffel: have time stamps on the
-	history and a history command to see them
-
-	* E3 prerequisites: require perl version xxx: we should not delete that
-	information but honour it.
-
-	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
-
-	* H3 Locking: Linda W writes
-
-	>I'm not sure I understand the reason for the lock file
-	>placed in cpan_home.  If I have two different architectures
-	>with different build directories, I'm not sure I understand
-	>where the conflict is -- is it in storing/listing Bundles,
-	>the history file, the Metafile or the shared source?
-	
-	>I can understand private history, but the Bundles aren't
-	>updated often, the sources should be fairly static (unless
-	>new files are downloaded), The metafile would be updated about
-	>once a day (default).
-	
-	>If the build directories are separate, why would there be a
-	>need for locking more in interactive use vs. batch use?
-
-	And I promise to try out a more granular locking mechanism.
-
-	* hr ================ no todos below this line ================ /hr
+	DONE in rev. 941
 
 2006-09-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

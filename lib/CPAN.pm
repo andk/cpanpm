@@ -2198,7 +2198,7 @@ sub print_ornamented {
     if ($self->colorize_output) {
         if ( $CPAN::DEBUG && $swhat =~ /^Debug\(/ ) {
             # if you want to have this configurable, please file a bugreport
-            $ornament = "bold magenta on_white";
+            $ornament = "black on_cyan";
         }
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
         if ($@) {
@@ -2387,9 +2387,32 @@ to find objects with matching identifiers.
     while (my $q = CPAN::Queue->first) {
         my $obj;
         my $s = $q->as_string;
-        my $reqtype = $q->reqtype;
+        my $reqtype = $q->reqtype || "";
         $obj = CPAN::Shell->expandany($s);
-        $obj->{reqtype} = $reqtype;
+        $obj->{reqtype} ||= "";
+        CPAN->debug("obj-reqtype[$obj->{reqtype}]".
+                    "q-reqtype[$reqtype]") if $CPAN::DEBUG;
+        if ($obj->{reqtype}) {
+            if ($obj->{reqtype} eq "b" && $reqtype =~ /^[rc]$/) {
+                $obj->{reqtype} = $reqtype;
+                if (
+                    exists $obj->{install}
+                    &&
+                    (
+                     $obj->{install}->can("failed") ?
+                     $obj->{install}->failed :
+                     $obj->{install} =~ /^NO/
+                    )
+                   ) {
+                    delete $obj->{install};
+                    $CPAN::Frontend->mywarn
+                        ("Promoting $obj->{ID} from 'build_requires' to 'requires'");
+                }
+            }
+        } else {
+            $obj->{reqtype} = $reqtype;
+        }
+
 	for my $pragma (@pragma) {
 	    if ($pragma
 		&&
@@ -2403,9 +2426,8 @@ to find objects with matching identifiers.
         if ($]>=5.00303 && $obj->can('called_for')) {
             $obj->called_for($s);
         }
-        CPAN->debug(
-                    qq{pragma[@pragma]meth[$meth]obj[$obj]as_string[$obj->{ID}]}
-                   ) if $CPAN::DEBUG;
+        CPAN->debug(qq{pragma[@pragma]meth[$meth]}.
+                    qq{ID[$obj->{ID}]}) if $CPAN::DEBUG;
 
         if ($obj->$meth()){
             CPAN::Queue->delete($s);
@@ -6095,8 +6117,9 @@ sub install {
         }
     }
     unless ($want_install =~ /^y/i) {
-        $CPAN::Frontend->mywarn("Not installing\n");
-        $self->{install} = CPAN::Distrostatus->new("NO -- is only 'build_requires'");
+        my $is_only = "is only 'build_requires'";
+        $CPAN::Frontend->mywarn("Not installing because $is_only\n");
+        $self->{install} = CPAN::Distrostatus->new("NO -- $is_only");
         delete $self->{force_update};
         return;
     }
@@ -7034,7 +7057,31 @@ sub rematein {
     $pack->called_for($self->id);
     $pack->force($meth) if exists $self->{'force_update'};
     $pack->notest($meth) if exists $self->{'notest'};
-    $pack->{reqtype} = $self->{reqtype};
+
+    $pack->{reqtype} ||= "";
+    CPAN->debug("dist-reqtype[$pack->{reqtype}]".
+                "self-reqtype[$self->{reqtype}]") if $CPAN::DEBUG;
+        if ($pack->{reqtype}) {
+            if ($pack->{reqtype} eq "b" && $self->{reqtype} =~ /^[rc]$/) {
+                $pack->{reqtype} = $self->{reqtype};
+                if (
+                    exists $pack->{install}
+                    &&
+                    (
+                     $pack->{install}->can("failed") ?
+                     $pack->{install}->failed :
+                     $pack->{install} =~ /^NO/
+                    )
+                   ) {
+                    delete $pack->{install};
+                    $CPAN::Frontend->mywarn
+                        ("Promoting $pack->{ID} from 'build_requires' to 'requires'");
+                }
+            }
+        } else {
+            $pack->{reqtype} = $self->{reqtype};
+        }
+
     eval {
 	$pack->$meth();
     };
