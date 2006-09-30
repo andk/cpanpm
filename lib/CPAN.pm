@@ -1515,11 +1515,10 @@ sub reload {
                     "CPAN/Debug.pm",
                     "CPAN/Version.pm",
                     "CPAN/Queue.pm",
+                    "CPAN/Reporter.pm",
                    );
-        if (exists $INC{"CPAN/Reporter.pm"}) {
-            push @relo, "CPAN/Reporter.pm";
-        }
       MFILE: for my $f (@relo) {
+            next unless exists $INC{$f};
             my $p = $f;
             $p =~ s/\.pm$//;
             $p =~ s|/|::|g;

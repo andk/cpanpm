@@ -12,8 +12,6 @@ sub url { shift->[2] }
 
 package CPAN::FirstTime;
 use strict;
-use vars qw($VERSION);
-$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
 use ExtUtils::MakeMaker ();
 use FileHandle ();
