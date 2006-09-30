@@ -5,7 +5,7 @@ sub _f ($) {File::Spec->catfile(split /\//, shift);}
 
 WriteMakefile(
               NAME          => 'CPAN::Test::Dummy::Perl5::Make::Zip',
-              VERSION_FROM  => _f'./lib/CPAN/Test/Dummy/Perl5/Make/Zip.pm',
+              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/Zip.pm'),
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
