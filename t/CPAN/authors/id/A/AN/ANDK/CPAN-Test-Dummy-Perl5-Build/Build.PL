@@ -9,10 +9,10 @@ my $b = Module::Build->new(
                            dist_version_from => _f('./lib/CPAN/Test/Dummy/Perl5/Build.pm'),
                            dist_author  => "Andreas Koenig",
                            build_requires => {
-                                              CPAN::Test::Dummy::Perl5::Make => 0,
+                                              "CPAN::Test::Dummy::Perl5::Make" => 0,
                                              },
                            requires     => {
-                                            CPAN::Test::Dummy::Perl5::Make::Zip => 0,
+                                            "CPAN::Test::Dummy::Perl5::Make::Zip" => 0,
                                            },
 );
 

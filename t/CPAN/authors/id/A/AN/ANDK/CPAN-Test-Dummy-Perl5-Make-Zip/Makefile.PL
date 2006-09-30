@@ -15,6 +15,6 @@ WriteMakefile(
                         },
               PL_FILES      => {},
               PREREQ_PM     => {
-                                CPAN::Test::Dummy::Perl5::Make => 0,
+                                "CPAN::Test::Dummy::Perl5::Make" => 0,
                                }
 );
