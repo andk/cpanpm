@@ -4,3 +4,4 @@ Build.PL
 MANIFEST
 t/00_load.t
 META.yml
+README

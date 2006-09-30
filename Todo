@@ -22,6 +22,8 @@
 	And CPAN-Test-Dummy-Perl5-Make-Zip shall require
 	CPAN-Test-Dummy-Perl5-Make. We have not tested install yet (I think) and
 	we can try to set make_install_make_command to a perl oneliner or so.
+	This constallation shall try to install CPAN-Test-Dummy-Perl5-Make
+	because requires trumps build_requires.
 
 	* Todo: do the right thing with prereq "perl". Find modules suited for
 	testing.
