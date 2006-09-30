@@ -2196,43 +2196,18 @@ sub print_ornamented {
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
     }
     if ($self->colorize_output) {
+        if ( $CPAN::DEBUG && $swhat =~ /^Debug\(/ ) {
+            # if you want to have this configurable, please file a bugreport
+            $ornament = "bold magenta on_white";
+        }
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
         if ($@) {
             print "Term::ANSIColor rejects color[$ornament]: $@\n
 Please choose a different color (Hint: try 'o conf init color.*')\n";
         }
-        my $colorstyle = 0; # (=0) works, (=1) tries to make
-                            # background colors more attractive by
-                            # appending whitespace to short lines, it
-                            # seems also to work but is less tested;
-                            # for testing use the make target
-                            # testshell-with-protocol-twice; overall
-                            # seems not worth any effort
-        if ($colorstyle == 1) {
-            my $line;
-            my $longest = 0; # Does list::util work on 5.004?
-            for $line (split /\n/, $swhat) {
-                $longest = length($line) if length($line) > $longest;
-            }
-            $longest = 78 if $longest > 78; # yes, arbitrary, who wants it set-able?
-            my $nl = chomp $swhat ? "\n" : "";
-            my $block = join "",
-                map {
-                    sprintf("%s%-*s%s%s",
-                            $color_on,
-                            $longest,
-                            $_,
-                            Term::ANSIColor::color("reset"),
-                            $nl,
-                           )
-                }
-                    split /[\r\t ]*\n/, $swhat, -1;
-            print $block;
-        } else {
-            print $color_on,
-                $swhat,
-                    Term::ANSIColor::color("reset");
-        }
+        print $color_on,
+            $swhat,
+                Term::ANSIColor::color("reset");
     } else {
         print $swhat;
     }
@@ -5596,10 +5571,16 @@ sub follow_prereqs {
     return unless @prereq_tuples;
     my @prereq = map { $_->[0] } @prereq_tuples;
     my $id = $self->id;
-    $CPAN::Frontend->myprint("---- Unsatisfied dependencies detected ".
-                             "during [$id] -----\n".
-                             join("", map {"    $_\n"} @prereq),
-                            );
+    my %map = (
+               b => "build_requires",
+               r => "requires",
+               c => "commandline",
+              );
+    $CPAN::Frontend->
+        myprint("---- Unsatisfied dependencies detected ".
+                "during [$id] -----\n".
+                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @prereq_tuples),
+               );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
 	$follow = 1;
@@ -6101,7 +6082,6 @@ sub install {
     }
     my $want_install = "yes";
     if ($reqtype eq "b") {
-        my $want_install;
         if ($CPAN::Config->{build_requires_install_policy} eq "no") {
             $want_install = "no";
         } elsif ($CPAN::Config->{build_requires_install_policy} =~ m|^ask/(.+)|) {

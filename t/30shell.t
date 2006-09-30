@@ -883,6 +883,25 @@ E:make clean already called once
 P:r
 E:(All modules are up to date|installed modules|Fcntl)
 ########
+P:r /cnt/
+E:(All modules are up to date|installed modules|Fcntl)
+########
+P:upgrade /cnt/
+E:(All modules are up to date|installed modules|Fcntl)
+########
+P:! $CPAN::Config->{make_install_make_command} = "'$^X' -le 'print q{SAW MAKE}'"
+E:SAW MAKE
+########
+P:! $CPAN::Config->{mbuild_install_build_command} = "'$^X' -le 'print q{SAW MBUILD}'"
+E:SAW MBUILD
+########
+P:o conf build_requires_install_policy no
+E:build_requires_install_policy
+########
+P:install CPAN::Test::Dummy::Perl5::Build
+E:SAW M
+R:Module::Build
+########
 P:u /--/
 E:No modules found for
 ########
