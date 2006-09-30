@@ -8203,6 +8203,9 @@ defined:
 
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
+  build_requires_install_policy
+                     to install or not to install: when a module is
+                     only needed for building. yes|no|ask/yes|ask/no
   bzip2              path to external prg
   cache_metadata     use serializer to cache metadata
   commands_quote     prefered character to use for quoting external
