@@ -2,13 +2,12 @@
 
 	* release 1.88_51
 
-	* known issue: breaks CPAN::Reporter 0.21
+	* dependencies declared as 'build_requires' are now treated according to
+	a new policy option: try 'o conf init build_requires_install_policy' for
+	more info.
 
-	* dependencies declared as 'build_requires' are now treated specially.
-	Try 'o conf init build_requires_install_policy' for more info.
-
-	* fixed bug where successful tests were repeated if things were not
-	installed
+	* fixed a bug where successful tests were repeated if things were not
+	being installed like during the 'test' command itself.
 
 	* address #21724: document that the 'r' command takes arguments; support
 	the same arguments for the 'upgrade' command (Adam Kennedy)
