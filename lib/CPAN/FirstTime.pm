@@ -1,8 +1,6 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN::Mirrored::By;
 use strict;
-use vars qw($VERSION);
-$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
 sub new { 
     my($self,@arg) = @_;
@@ -13,8 +11,10 @@ sub country { shift->[1] }
 sub url { shift->[2] }
 
 package CPAN::FirstTime;
-
 use strict;
+use vars qw($VERSION);
+$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
+
 use ExtUtils::MakeMaker ();
 use FileHandle ();
 use File::Basename ();
