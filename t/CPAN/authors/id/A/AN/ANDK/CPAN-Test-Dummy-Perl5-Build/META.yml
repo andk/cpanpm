@@ -1,6 +1,10 @@
 ---
 name: CPAN-Test-Dummy-Perl5-Build
-version: 1.02
+version: !!perl/hash:Module::Build::Version
+  original: 1.02
+  version:
+    - 1
+    - 20
 author:
   - Andreas Koenig
 abstract: CPAN Test Dummy
@@ -15,7 +19,7 @@ provides:
   CPAN::Test::Dummy::Perl5::Build:
     file: lib/CPAN/Test/Dummy/Perl5/Build.pm
     version: 1.02
-generated_by: Module::Build version 0.2805
+generated_by: Module::Build version 0.2804
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2

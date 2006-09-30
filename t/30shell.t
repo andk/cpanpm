@@ -1014,9 +1014,9 @@ To add a new distro, the following steps must be taken:
   the whole dependency on all files within the distro and moves it up
   into the author's homedir. Run this with 'make testdistros'.
 
-- svn add the new testdistro (first we did that, then we stopped doing
-  it for "it makes no sense"; tehen I realized we need to do it
-  because wit a newer MakeMaker or Moule::Build we cannot regenerate
+- *svn add* the new testdistro (first we did that, then we stopped
+  doing it for "it makes no sense"; then I realized we need to do it
+  because with a newer MakeMaker or Moule::Build we cannot regenerate
   them byte-by-byte and lose the signature war)
 
 - add it to the MANIFEST
