@@ -36,7 +36,8 @@
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip/
-^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.01/
+^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build/
+^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01/
 ^t/dot-cpan/Bundle/CpanTestDummies.pm
