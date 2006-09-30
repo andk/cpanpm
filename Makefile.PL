@@ -326,7 +326,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.02.zip: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip && \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
-		mv `basename $@` .. && \
+		mv CPAN-Test-Dummy-Perl5-Make-Zip-1.02.zip .. && \
 		$(MAKE) clean
 
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz: \
