@@ -975,26 +975,26 @@ and as such is able to test a shell session. To make reproducable
 tests we need a shell session that is based on a clone of a
 miniaturized CPAN site. This site lives under t/CPAN/{authors,modules}.
 
-Our first distribution in the mini CPAN site was
-
-    A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
-
-which was a clone of PITA::Test::Dummy::Perl5::Make.
+The first distribution in the fake CPAN site was
+CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz in the
+./CPAN/authors/id/A/AN/ANDK/ directory which was a clone of
+PITA::Test::Dummy::Perl5::Make.
 
 This document describes which distros we need and how they can be
 added.
 
-We need distros based on the following criteria:
+We need distros based on the following (and more) criteria:
 
  Testing:        success/failure
  Installer:      EU:MM/M:B/M:I
  YAML:           with/without
  SIGNATURE:      with/without
  Zipping:        tar.gz/tar.bz2/zip
+ Requires:       requires/build_requires
 
 Any new distro must be separately available on CPAN so that our
-CHECKSUMS files can be signed real ones and we need not introduce a
-backdoor into the shell to ignore signatures.
+CHECKSUMS files can be the real (signed) ones and we need not
+introduce a backdoor into the shell to ignore signatures.
 
 To add a new distro, the following steps must be taken:
 

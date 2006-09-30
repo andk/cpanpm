@@ -1,6 +1,8 @@
+use strict;
+
 package CPAN::Test::Dummy::Perl5::Make;
 
-$VERSION = '1.02';
+$VERSION = '1.03';
 
 1;
 
