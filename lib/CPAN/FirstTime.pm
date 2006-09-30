@@ -1330,19 +1330,21 @@ build_requires_install_policy_intro => qq{
 
 When a module declares another one as a 'build_requires' prerequisite
 this means that the other module is only needed for building or
-testing the module but not permanently. In this case you may wish to
-install that other module nonetheless or just keep it in the
-'build_dir' directory to have it available only during this session.
+testing the module but need not be installed permanently. In this case
+you may wish to install that other module nonetheless or just keep it
+in the 'build_dir' directory to have it available only temporarily.
+Installing saves time on future installations but makes the perl
+installation bigger.
 
 You can choose if you want to always install (yes), never install (no)
 or be always asked. In the latter case you can set the default answer
-for the question.
+for the question to yes (ask/yes) or no (ask/no).
 
 },
 
 build_requires_install_policy =>
-qq{Policy on installing 'build_require' modules
-  (yes, no, ask/yes, ask/no)?},
+qq{Policy on installing 'build_requires' modules (yes, no, ask/yes,
+ask/no)?},
 
 );
 

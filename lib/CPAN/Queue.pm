@@ -48,7 +48,7 @@ use strict;
 # Hope that makes sense, my head is a bit off:-) -- AK
 
 use vars qw{ @All $VERSION };
-$VERSION = sprintf "%.6f", substr(q$Rev: 844 $,4)/1000000 + 5.4;
+$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
 # CPAN::Queue::new ;
 sub new {

@@ -1516,12 +1516,18 @@ sub reload {
                     "CPAN/Version.pm",
                     "CPAN/Queue.pm",
                    );
-        if ($CPAN::Config->{test_report}) {
+        if (exists $INC{"CPAN/Reporter.pm"}) {
             push @relo, "CPAN/Reporter.pm";
         }
       MFILE: for my $f (@relo) {
+            my $p = $f;
+            $p =~ s/\.pm$//;
+            $p =~ s|/|::|g;
+            $CPAN::Frontend->myprint("($p");
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
             $self->reload_this($f) or $failed++;
+            my $v = eval "$p\::->VERSION";
+            $CPAN::Frontend->myprint("v$v)");
         }
         $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
         $failed++ unless $redef;
@@ -6094,7 +6100,7 @@ sub install {
                                 "This should not happen and is construed a bug.\n");
         $reqtype = "r";
     }
-    my $want_install;
+    my $want_install = "yes";
     if ($reqtype eq "b") {
         my $want_install;
         if ($CPAN::Config->{build_requires_install_policy} eq "no") {
@@ -6107,11 +6113,7 @@ sub install {
                       ("$id is just needed temporarily during building or testing. ".
                        "Do you want to install it permanently? (Y/n)",
                        $default);
-        } else {
-            $want_install = "yes";
         }
-    } else {
-        $want_install = "yes";
     }
     unless ($want_install =~ /^y/i) {
         $CPAN::Frontend->mywarn("Not installing\n");
