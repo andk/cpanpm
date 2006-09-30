@@ -1,0 +1,21 @@
+---
+name: CPAN-Test-Dummy-Perl5-Build
+version: 1.02
+author:
+  - Andreas Koenig
+abstract: CPAN Test Dummy
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
+requires:
+  CPAN::Test::Dummy::Perl5::Make::Zip: 0
+build_requires:
+  CPAN::Test::Dummy::Perl5::Make: 0
+provides:
+  CPAN::Test::Dummy::Perl5::Build:
+    file: lib/CPAN/Test/Dummy/Perl5/Build.pm
+    version: 1.02
+generated_by: Module::Build version 0.2805
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2
