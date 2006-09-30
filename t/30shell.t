@@ -1,53 +1,3 @@
-=pod
-
-Documentation about this test script is scattered around, sorry.
-
-C<30shell.pod> only talks about results from Devel::Cover
-
-C<README.shell.txt> describes how to add new pseudo distributions
-
-In the following I want to provide an overview about how this
-testscript works.
-
-After the __END__ token you find small groups of lines like the
-following:
-
-    ########
-    P:make CPAN::Test::Dummy::Perl5::BuildOrMake
-    E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
-    R:Module::Build
-    T:15
-    C:comment
-    ########
-
-P stands for program or print
-
-E for expect
-
-T for timeout
-
-R for requires or relies on
-
-C for comment
-
-S for status
-
-
-The script starts a CPAN shell and feed it the chunks such that the P
-line is injected, the output of the shell is parsed and compared to
-the expression in the E line. With T the timeout can be changed (the
-default is rather low, maybe 10 seconds, see the code for details).
-The expression in R is used to filter tests. The keyword in S may be
-one of C<run> to run this test, C<skip> to skip it, and C<quit> to
-stop testing immediately when this test is reached.
-
-To get reliable and debuggable results, Expect.pm should be installed.
-Without Expect.pm, a fallback mode is started that should in principle
-also succeed but is pretty hard to debug because there is no mechanism
-to sync state between reader and writer.
-
-=cut
-
 use strict;
 
 use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
@@ -113,8 +63,10 @@ sub read_myconfig () {
 my @prgs;
 {
     local $/;
-    @prgs = split /########.*/, <DATA>;
+    my $data = <DATA>;
     close DATA;
+    $data =~ s/^=head.*//s;
+    @prgs = split /########.*/, $data;
 }
 my @modules = qw(
                  Digest::SHA
@@ -953,6 +905,145 @@ R:Term::ReadLine::Perl||Term::ReadLine::Gnu
 P:quit
 E:(removed\.)
 ########
+
+
+=head1 NAME
+
+30shell - The main test script for CPAN.pm
+
+=head1 SYNOPSIS
+
+  make test                        # standard
+
+  make test TEST_FILES=t/30shell.t # traditional on file invocation
+
+  make testshell-with-protocol     # collects output for later reference
+
+=head1 DESCRIPTION
+
+
+=head2 Coverage
+
+C<30shell.cover> collects results from Devel::Cover
+
+=head2 How this script works
+
+In the following I want to provide an overview about how this
+testscript works.
+
+After the __END__ token you find small groups of lines like the
+following:
+
+    ########
+    P:make CPAN::Test::Dummy::Perl5::BuildOrMake
+    E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
+    R:Module::Build
+    T:15
+    C:comment
+    ########
+
+P stands for program or print
+
+E for expect
+
+T for timeout
+
+R for requires or relies on
+
+C for comment
+
+S for status
+
+
+The script starts a CPAN shell and feed it the chunks such that the P
+line is injected, the output of the shell is parsed and compared to
+the expression in the E line. With T the timeout can be changed (the
+default is rather low, maybe 10 seconds, see the code for details).
+The expression in R is used to filter tests. The keyword in S may be
+one of C<run> to run this test, C<skip> to skip it, and C<quit> to
+stop testing immediately when this test is reached.
+
+To get reliable and debuggable results, Expect.pm should be installed.
+Without Expect.pm, a fallback mode is started that should in principle
+also succeed but is pretty hard to debug because there is no mechanism
+to sync state between reader and writer.
+
+=head2 How to add new pseudo distributions
+
+The heart of the testing mechanism is shell.t which is based on Expect
+and as such is able to test a shell session. To make reproducable
+tests we need a shell session that is based on a clone of a
+miniaturized CPAN site. This site lives under t/CPAN/{authors,modules}.
+
+Our first distribution in the mini CPAN site was
+
+    A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz
+
+which was a clone of PITA::Test::Dummy::Perl5::Make.
+
+This document describes which distros we need and how they can be
+added.
+
+We need distros based on the following criteria:
+
+ Testing:        success/failure
+ Installer:      EU:MM/M:B/M:I
+ YAML:           with/without
+ SIGNATURE:      with/without
+ Zipping:        tar.gz/tar.bz2/zip
+
+Any new distro must be separately available on CPAN so that our
+CHECKSUMS files can be signed real ones and we need not introduce a
+backdoor into the shell to ignore signatures.
+
+To add a new distro, the following steps must be taken:
+
+(1) Collect the source
+
+- svn mkdir the author's directory if it doesn't exist yet
+
+- svn add (or svn cp) the whole source code under the author's homedir
+
+- add the source code directory with a trailing slash to MANIFEST.SKIP
+
+- finish now the distro until it does what you intended
+
+(2) Create the distro zipfile
+
+- add a stanza to CPAN.pm's Makefile.PL that produces the distro with
+  the whole dependency on all files within the distro and moves it up
+  into the author's homedir. Run this with 'make testdistros'.
+
+- svn add the new testdistro (first we did that, then we stopped doing
+  it for "it makes no sense"; tehen I realized we need to do it
+  because wit a newer MakeMaker or Moule::Build we cannot regenerate
+  them byte-by-byte and lose the signature war)
+
+- add it to the MANIFEST
+
+(3) Upload and embed into our minicpan
+
+- verify that 'make dist' on CPAN.pm still works
+
+- if you want more distros, repeat (1) and (2) now
+
+- upload the distro(s) to the CPAN and wait until the indexer has
+  produced a CHECKSUMS file
+
+- svn add/ci the relevant CHECKSUMS files
+
+- add the CHECKSUMS files to the MANIFEST
+
+(4) Work with the results
+
+- verify that 'make dist' on CPAN.pm still works
+
+- add the distro(s) to CPAN/modules/02packages.details.txt
+
+- add the test to shell.t that triggered the demand for a new distro
+
+=cut
+
 
 # Local Variables:
 # mode: cperl
