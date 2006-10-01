@@ -1931,7 +1931,7 @@ sub status {
         next unless substr($k,0,4) eq "read";
         warn sprintf " %-26s %6d\n", $k, Devel::Size::total_size($CPAN::META->{$k})/1024;
         for my $k2 (sort keys %{$CPAN::META->{$k}}) {
-            warn sprintf "  %-25s %6d %6d\n",
+            warn sprintf "  %-25s %6d (keys: %6d)\n",
                 $k2,
                     Devel::Size::total_size($CPAN::META->{$k}{$k2})/1024,
                           scalar keys %{$CPAN::META->{$k}{$k2}};
@@ -3659,6 +3659,7 @@ sub rd_authindex {
     local($/) = "\n";
     local($_);
     push @lines, split /\012/ while <FH>;
+    my $i = 0;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
 	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
@@ -3667,8 +3668,10 @@ sub rd_authindex {
 	# instantiate an author object
  	my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
 	$userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
+        $CPAN::Frontend->myprint(".") unless $i++ % int(@lines/75);
 	return if $CPAN::Signal;
     }
+    $CPAN::Frontend->myprint("DONE\n");
 }
 
 sub userid {
@@ -3687,12 +3690,15 @@ sub rd_modpacks {
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local($/) = "\n";
     local $_;
+    CPAN->debug("start fh[$fh]") if $CPAN::DEBUG;
     while ($_ = $fh->READLINE) {
 	s/\012/\n/g;
 	my @ls = map {"$_\n"} split /\n/, $_;
 	unshift @ls, "\n" x length($1) if /^(\n+)/;
 	push @lines, @ls;
     }
+    CPAN->debug("end fh[$fh]") if $CPAN::DEBUG;
+    undef $fh;
     # read header
     my($line_count,$last_updated);
     while (@lines) {
@@ -3701,6 +3707,7 @@ sub rd_modpacks {
 	$shift =~ /^Line-Count:\s+(\d+)/ and $line_count = $1;
         $shift =~ /^Last-Updated:\s+(.+)/ and $last_updated = $1;
     }
+    CPAN->debug("line_count[$line_count]last_updated[$last_updated]") if $CPAN::DEBUG;
     if (not defined $line_count) {
 
 	$CPAN::Frontend->mywarn(qq{Warning: Your $index_target does not contain a Line-Count header.
@@ -3778,6 +3785,7 @@ happen.\a
     my $secondtime = $CPAN::META->exists("CPAN::Module","CPAN");
     CPAN->debug("secondtime[$secondtime]") if $CPAN::DEBUG;
     my(%exists);
+    my $i = 0;
     foreach (@lines) {
 	chomp;
         # before 1.56 we split into 3 and discarded the rest. From
@@ -3863,13 +3871,14 @@ happen.\a
 	}
         if ($secondtime) {
             for my $name ($mod,$dist) {
-                CPAN->debug("exists name[$name]") if $CPAN::DEBUG;
+                # $self->debug("exists name[$name]") if $CPAN::DEBUG;
                 $exists{$name} = undef;
             }
         }
+        $CPAN::Frontend->myprint(".") unless $i++ % int(@lines/75);
 	return if $CPAN::Signal;
     }
-    undef $fh;
+    $CPAN::Frontend->myprint("DONE\n");
     if ($secondtime) {
         for my $class (qw(CPAN::Module CPAN::Bundle CPAN::Distribution)) {
             for my $o ($CPAN::META->all_objects($class)) {
@@ -3913,12 +3922,16 @@ sub rd_modlist {
     my $ret = $comp->reval($eval);
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
+    my $i = 0;
+    my $until = keys %$ret;
     for (keys %$ret) {
 	my $obj = $CPAN::META->instance("CPAN::Module",$_);
         delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
 	$obj->set(%{$ret->{$_}});
+        $CPAN::Frontend->myprint(".") unless $i++ % int($until/75);
 	return if $CPAN::Signal;
     }
+    $CPAN::Frontend->myprint("DONE\n");
 }
 
 #-> sub CPAN::Index::write_metadata_cache ;
@@ -3951,7 +3964,7 @@ sub read_metadata_cache {
     my $cache;
     eval { $cache = Storable::retrieve($metadata_file) };
     $CPAN::Frontend->mywarn($@) if $@; # ?? missing "\n" after $@ in mywarn ??
-    if (!$cache || ref $cache ne 'HASH'){
+    if (!$cache || !UNIVERSAL::isa($cache, 'HASH')){
         $LAST_TIME = 0;
         return;
     }

@@ -1,3 +1,31 @@
+2006-10-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Finish the debugging aid of reload. Current code (rev. 953 or so)
+	allows
+
+% perl -Ilib -MCPAN -e '
+my $ix = bless {}, CPAN::Index;
+$ix->reload(shift)' /home/ftp/pub/PAUSE/modules/02packages.details.txt 
+CPAN: File::HomeDir loaded ok
+CPAN: Term::ANSIColor loaded ok
+CPAN: LWP::UserAgent loaded ok
+CPAN: URI::URL loaded ok
+Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok
+............................................................................DONE
+Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
+  Database was generated on Sun, 01 Oct 2006 18:39:54 GMT
+............................................................................DONE
+Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
+............................................................................DONE
+
+	But it reveals unacceptable timing when run via 'reload index'. Timing
+	is much better when called as above. Quite confusing is the fact that
+	03modlist does not print dots during reload but does so on first time.
+	So more debugging called for.
+
+	* Bug: the line number in the Debug messages is very often wrong.
+
 2006-09-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: revisit rev 158:159, the introduction of recent and perldoc.
@@ -7,25 +35,6 @@
 	HTML::Display!
 
 2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Todo: do the right thing with prereq "perl". Find modules suited for
-	testing.
-
-	"5.8.3" : File-BOM-0.12, XML-DOM-Lite-0.08, Business-ReportWriter-0.09
-
-	">= 5.8.0" : Devel-FIXME-0.01
-
-	">= 5.008" : Data-Visitor-0.05
-
-	"0" : Net-Address-IPv4-Local-0.12
-
-	"" : Net-IRC2-0.27
-
-	The full list of found requires to "perl" today is:
-
-	5.002|5.000|>= 5|>= 5.6|5.6|5.8|5.8.4|>= 5.8.0|5.8.2|5.8.7|5.5.3|5.8.3|>= 5.6.0|5.004|>= 5.008|5.005_03|0|5.5.0|5.4.5|5.00307|5.00503|5.8.0|5.005|5.008|5.7.1|>= 5.005_04|5.007|5.8.1|5.005003|5.6.0|5.006|5.6.1|5.7.3|5
-
-	DONE in rev. 952
 
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
 	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
@@ -161,9 +170,6 @@ need the middle man.
 	* M2 feature request by Juergen Christoffel: have time stamps on the
 	history and a history command to see them
 
-	* E3 prerequisites: require perl version xxx: we should not delete that
-	information but honour it.
-
 	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
 	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
@@ -190,6 +196,28 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* E3 prerequisites: require perl version xxx: we should not delete that
+	information but honour it. DONE in rev. 952
+
+	* Todo: do the right thing with prereq "perl". Find modules suited for
+	testing.
+
+	"5.8.3" : File-BOM-0.12, XML-DOM-Lite-0.08, Business-ReportWriter-0.09
+
+	">= 5.8.0" : Devel-FIXME-0.01
+
+	">= 5.008" : Data-Visitor-0.05
+
+	"0" : Net-Address-IPv4-Local-0.12
+
+	"" : Net-IRC2-0.27
+
+	The full list of found requires to "perl" today is:
+
+	5.002|5.000|>= 5|>= 5.6|5.6|5.8|5.8.4|>= 5.8.0|5.8.2|5.8.7|5.5.3|5.8.3|>= 5.6.0|5.004|>= 5.008|5.005_03|0|5.5.0|5.4.5|5.00307|5.00503|5.8.0|5.005|5.008|5.7.1|>= 5.005_04|5.007|5.8.1|5.005003|5.6.0|5.006|5.6.1|5.7.3|5
+
+	DONE in rev. 952
 
 	* Todo: investigate if we want a different amount of newlines depending
 	on readline availability. Who is it who displays the extra newline as
