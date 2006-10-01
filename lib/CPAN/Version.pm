@@ -13,7 +13,7 @@ sub vcmp {
   return 0 if $l eq $r; # short circuit for quicker success
 
   for ($l,$r) {
-      s/_//;
+      s/_//g;
   }
   CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
   for ($l,$r) {
