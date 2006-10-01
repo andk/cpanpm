@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_51';
+$CPAN::VERSION = '1.88_52';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -4460,6 +4460,7 @@ sub color_cmd_tmps {
     if (defined $prereq_pm) {
       PREREQ: for my $pre (keys %{$prereq_pm->{requires}||{}},
                            keys %{$prereq_pm->{build_requires}||{}}) {
+            next PREREQ if $pre eq "perl";
             my $premo;
             unless ($premo = CPAN::Shell->expand("Module",$pre)) {
                 $CPAN::Frontend->mywarn("prerequisite module[$pre] not known\n");
@@ -5547,7 +5548,15 @@ or
       return;
     }
     if (my @prereq = $self->unsat_prereq){
-      return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+        if ($prereq[0][0] eq "perl") {
+            my $need = "requires perl '$prereq[0][1]'";
+            my $id = $self->pretty_id;
+            $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
+            $self->{make} = CPAN::Distrostatus->new("NO $need");
+            return;
+        } else {
+            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+        }
     }
     if ($self->{modulebuild}) {
         unless (-f "Build") {
@@ -5631,27 +5640,37 @@ of modules we are processing right now?", "yes");
 }
 
 #-> sub CPAN::Distribution::unsat_prereq ;
+# return ([Foo=>1],[Bar=>1.2]) for normal modules
+# return ([perl=>5.008]) if we need a newer perl than we are running under
 sub unsat_prereq {
     my($self) = @_;
     my $prereq_pm = $self->prereq_pm or return;
     my(@need);
     my %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
   NEED: while (my($need_module, $need_version) = each %merged) {
-        my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
-        # we were too demanding:
-        next if $nmo->uptodate;
+        my($have_version,$inst_file);
+        if ($need_module eq "perl") {
+            $have_version = $];
+            $inst_file = $^X;
+        } else {
+            my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
+            next if $nmo->uptodate;
+            $inst_file = $nmo->inst_file;
 
-        # if they have not specified a version, we accept any installed one
-        if (not defined $need_version or
-           $need_version eq "0" or
-           $need_version eq "undef") {
-            next if defined $nmo->inst_file;
+            # if they have not specified a version, we accept any installed one
+            if (not defined $need_version or
+                $need_version eq "0" or
+                $need_version eq "undef") {
+                next if defined $inst_file;
+            }
+
+            $have_version = $nmo->inst_version;
         }
 
         # We only want to install prereqs if either they're not installed
         # or if the installed version is too old. We cannot omit this
         # check, because if 'force' is in effect, nobody else will check.
-        if (defined $nmo->inst_file) {
+        if (defined $inst_file) {
             my(@all_requirements) = split /\s*,\s*/, $need_version;
             local($^W) = 0;
             my $ok = 0;
@@ -5659,13 +5678,13 @@ sub unsat_prereq {
                 if ($rq =~ s|>=\s*||) {
                 } elsif ($rq =~ s|>\s*||) {
                     # 2005-12: one user
-                    if (CPAN::Version->vgt($nmo->inst_version,$rq)){
+                    if (CPAN::Version->vgt($have_version,$rq)){
                         $ok++;
                     }
                     next RQ;
                 } elsif ($rq =~ s|!=\s*||) {
                     # 2005-12: no user
-                    if (CPAN::Version->vcmp($nmo->inst_version,$rq)){
+                    if (CPAN::Version->vcmp($have_version,$rq)){
                         $ok++;
                         next RQ;
                     } else {
@@ -5677,20 +5696,24 @@ sub unsat_prereq {
                     $ok++;
                     next RQ;
                 }
-                if (! CPAN::Version->vgt($rq, $nmo->inst_version)){
+                if (! CPAN::Version->vgt($rq, $have_version)){
                     $ok++;
                 }
-                CPAN->debug(sprintf "id[%s]inst_file[%s]inst_version[%s]rq[%s]ok[%d]",
-                            $nmo->id,
-                            $nmo->inst_file,
-                            $nmo->inst_version,
-                            CPAN::Version->readable($rq),
-                            $ok,
-                           ) if $CPAN::DEBUG;
+                CPAN->debug(sprintf("need_module[%s]inst_file[%s]".
+                                    "inst_version[%s]rq[%s]ok[%d]",
+                                    $need_module,
+                                    $inst_file,
+                                    $have_version,
+                                    CPAN::Version->readable($rq),
+                                    $ok,
+                                   )) if $CPAN::DEBUG;
             }
             next NEED if $ok == @all_requirements;
         }
 
+        if ($need_module eq "perl") {
+            return ["perl", $need_version];
+        }
         if ($self->{sponsored_mods}{$need_module}++){
             # We have already sponsored it and for some reason it's still
             # not available. So we do nothing. Or what should we do?
@@ -5771,12 +5794,6 @@ sub prereq_pm {
             }
             $req = $areq if $do_replace;
         }
-        if ($req) {
-            # XXX maybe needs to be reconsidered: what do we if perl
-            # is too old? I think, we will set $self->{make} to
-            # Distrostatus NO and wind up the stack.
-            delete $req->{perl};
-        }
     }
     unless ($req || $breq) {
         my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
@@ -5813,7 +5830,10 @@ sub prereq_pm {
             }
         }
     }
-    if (-f "Build.PL" && ! -f "Makefile.PL" && ! exists $req->{"Module::Build"}) {
+    if (-f "Build.PL"
+        && ! -f "Makefile.PL"
+        && ! exists $req->{"Module::Build"}
+        && ! $CPAN::META->has_inst("Module::Build")) {
         $CPAN::Frontend->mywarn("  Warning: CPAN.pm discovered Module::Build as ".
                                 "undeclared prerequisite.\n".
                                 "  Adding it now as such.\n"
@@ -5843,7 +5863,9 @@ sub test {
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint("Running $make test\n");
     if (my @prereq = $self->unsat_prereq){
-      return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+        unless ($prereq[0][0] eq "perl") {
+            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+        }
     }
   EXCUSE: {
 	my @e;

@@ -8,13 +8,24 @@
 
 2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: investigate if we want a different amount of newlines depending
-	on readline availability
-
-	* Todo: send a patch to P5P that adds Queue.pm to the MANIFEST.
-
 	* Todo: do the right thing with prereq "perl". Find modules suited for
 	testing.
+
+	"5.8.3" : File-BOM-0.12, XML-DOM-Lite-0.08, Business-ReportWriter-0.09
+
+	">= 5.8.0" : Devel-FIXME-0.01
+
+	">= 5.008" : Data-Visitor-0.05
+
+	"0" : Net-Address-IPv4-Local-0.12
+
+	"" : Net-IRC2-0.27
+
+	The full list of found requires to "perl" today is:
+
+	5.002|5.000|>= 5|>= 5.6|5.6|5.8|5.8.4|>= 5.8.0|5.8.2|5.8.7|5.5.3|5.8.3|>= 5.6.0|5.004|>= 5.008|5.005_03|0|5.5.0|5.4.5|5.00307|5.00503|5.8.0|5.005|5.008|5.7.1|>= 5.005_04|5.007|5.8.1|5.005003|5.6.0|5.006|5.6.1|5.7.3|5
+
+	DONE in rev. 952
 
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
 	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
@@ -175,6 +186,17 @@ need the middle man.
 	And I promise to try out a more granular locking mechanism.
 
 	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* Todo: investigate if we want a different amount of newlines depending
+	on readline availability. Who is it who displays the extra newline as
+	soon as readline is active? It is apparently coming from readline and I
+	see no reason to interfere. REJECT
+
+	* Todo: send a patch to P5P that adds Queue.pm to the MANIFEST.
 
 	* Todo: add to 30shell the case of repeated testing that was fixed in
 	rev 915
