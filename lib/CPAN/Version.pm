@@ -13,16 +13,22 @@ sub vcmp {
   return 0 if $l eq $r; # short circuit for quicker success
 
   for ($l,$r) {
+      s/_//;
+  }
+  CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
+  for ($l,$r) {
       next unless tr/.// > 1;
       s/^v?/v/;
       1 while s/\.0+(\d)/.$1/;
   }
+  CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
   if ($l=~/^v/ <=> $r=~/^v/) {
       for ($l,$r) {
           next if /^v/;
           $_ = $self->float2vv($_);
       }
   }
+  CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
 
   return (
           ($l ne "undef") <=> ($r ne "undef") ||
