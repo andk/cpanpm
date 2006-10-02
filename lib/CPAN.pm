@@ -2338,7 +2338,7 @@ sub rematein {
 	    $obj = $s;
 	} elsif ($s =~ m|^/|) { # looks like a regexp
             $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
-                                    "not supported\n");
+                                    "not supported. Rejecting argument '$s'\n");
             $CPAN::Frontend->mysleep(2);
             next;
 	} elsif ($meth eq "ls") {
@@ -5902,14 +5902,6 @@ sub test {
         exists $self->{later} and length($self->{later}) and
             push @e, $self->{later};
 
-        if ($self->{modulebuild}) {
-            my $v = CPAN::Shell->expand("Module","Test::Harness")->inst_version;
-            if (CPAN::Version->vlt($v,2.62)) {
-                push @e, qq{The version of your Test::Harness is only
-  '$v', you need at least '2.62'. Please upgrade your Test::Harness.};
-            }
-        }
-
         if ($CPAN::META->{is_tested}{$self->{build_dir}}
             &&
             exists $self->{make_test}
@@ -5933,6 +5925,16 @@ sub test {
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_test($self);
         return;
+    }
+
+    if ($self->{modulebuild}) {
+        my $v = CPAN::Shell->expand("Module","Test::Harness")->inst_version;
+        if (CPAN::Version->vlt($v,2.62)) {
+            $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
+  '$v', you need at least '2.62'. Please upgrade your Test::Harness.});
+            $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
+            return;
+        }
     }
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})

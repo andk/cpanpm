@@ -1,3 +1,82 @@
+2006-10-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: cpan[4]> install CPAN::Reporter
+Running install for module CPAN::Reporter
+Running Build for D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/CPAN-Reporter-0.24
+
+  CPAN.pm: Going to build D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
+
+Creating custom builder _build/lib/Module/Build/WikiDoc.pm in _build/lib/Module/Build
+Checking whether your kit is complete...
+Looks good
+
+Checking prerequisites...
+Package 'CPAN' already declared with version '1.87_64'
+ignoring new version ''.
+ - ERROR: IO::CaptureOutput is not installed
+ - ERROR: File::Copy::Recursive is not installed
+ - ERROR: CPAN (1.87_64) is installed, but we need version >= 1.88
+
+ERRORS/WARNINGS FOUND IN PREREQUISITES.  You may wish to install the versions
+of the modules indicated above before proceeding with this installation
+
+Creating new 'Build' script for 'CPAN-Reporter' version '0.24'
+lib/CPAN/Reporter.pm -> blib/lib/CPAN/Reporter.pm
+lib/CPAN/Reporter.pod -> blib/lib/CPAN/Reporter.pod
+Manifying blib/lib/CPAN/Reporter.pod -> blib/libdoc/CPAN::Reporter.3
+  ./Build  -- OK
+Running Build test
+  The version of your Test::Harness is only
+  '2.56', you need at least '2.62'. Please upgrade your Test::Harness.
+Running Build install
+Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pm
+Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pod
+Installing /usr/local/perl-5.8.7/man/man3/CPAN::Reporter.3
+Writing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/i686-linux-64int/auto/CPAN/Reporter/.packlist
+  sudo ./Build install --uninst 1 -- OK
+
+	Showstopper II! The test refused to run with the reference to
+	Test::Harness but the install succeeded nonetheless:(((
+
+	Fixed in about rev. 954 or so.
+
+	* Bug: cpan[15]> install File::Copy::Recursive                   
+Running install for module File::Copy::Recursive
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
+Sorry, test with a regular expression is not supported
+Running test for module File::Copy::Recursive
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
+Refusing to autoload 'test' 'CPAN::Distribution=HASH(0x9b6ff30)' '/usr/bin/make test' in recursion
+  /usr/bin/make test -- NOT OK
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+  Won't repeat unsuccessful test during this command
+  /usr/bin/make test -- OK
+Running make install
+Installing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/File/Copy/Recursive.pm
+Installing /usr/local/perl-5.8.8/man/man3/File::Copy::Recursive.3
+Writing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/i686-linux-64int/auto/File/Copy/Recursive/.packlist
+Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/perllocal.pod
+
+	What I had done was to install CPAN::Reporter but forgot the sudo for
+	make. Then I added the sudo to make_install_make_command and did a
+	'force get' and then the above. The install was successful in the end
+	but the "Sorry" message was written in red and completely bogus and
+	together with the 'Refusing to autoload' message was frightening.
+
+	Showstopper!
+
 2006-10-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Finish the debugging aid of reload. Current code (rev. 953 or so)
