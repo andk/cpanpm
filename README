@@ -785,13 +785,38 @@ UTILITIES
     mirroring process on CPAN, of packaging, of configuration, of
     synchronicity, and of bugs within CPAN.pm.
 
-    For code debugging in interactive mode you can try "o debug" which will
-    list options for debugging the various parts of the code. You should
-    know that "o debug" has built-in completion support.
+    For debugging the code of CPAN.pm itself in interactive mode some more
+    or less useful debugging aid can be turned on for most packages within
+    CPAN.pm with one of
 
-    For data debugging there is the "dump" command which takes the same
-    arguments as make/test/install and outputs the object's Data::Dumper
-    dump.
+    o debug package...
+      sets debug mode for packages.
+
+    o debug -package...
+      unsets debug mode for packages.
+
+    o debug all
+      turns debugging on for all packages.
+
+    o debug number
+
+    which sets the debugging packages directly. Note that "o debug 0" turns
+    debugging off.
+
+    What seems quite a successful strategy is the combination of "reload
+    cpan" and the debugging switches. Add a new debug statement while
+    running in the shell and then issue a "reload cpan" and see the new
+    debugging messages immediately without losing the current context.
+
+    "o debug" without an argument lists the valid package names and the
+    current set of packages in debugging mode. "o debug" has built-in
+    completion support.
+
+    For debugging of CPAN data there is the "dump" command which takes the
+    same arguments as make/test/install and outputs each object's
+    Data::Dumper dump. If an argument looks like a perl variable and
+    contains one of "$", "@" or "%", it is eval()ed and fed to Data::Dumper
+    directly.
 
   Floppy, Zip, Offline Mode
     CPAN.pm works nicely without network too. If you maintain machines that
