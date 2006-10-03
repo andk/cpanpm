@@ -873,7 +873,9 @@ sub has_inst {
 	# it tries again. The second require is only a NOOP returning
 	# 1 if we had success, otherwise it's retrying
 
-	$CPAN::Frontend->myprint("CPAN: $mod loaded ok\n");
+        my $v = eval "\$$mod\::VERSION";
+        $v = $v ? " (v$v)" : "";
+	$CPAN::Frontend->myprint("CPAN: $mod loaded ok$v\n");
 	if ($mod eq "CPAN::WAIT") {
 	    push @CPAN::Shell::ISA, 'CPAN::WAIT';
 	}
