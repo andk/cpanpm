@@ -1,3 +1,14 @@
+2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: during 'o conf defaults' I get
+
+Debug(HandleConfig,HandleConfig.pm,95,[Shell,CPAN.pm,1401,edit]): self[CPAN::HandleConfig]args[defaults]
+Can't locate CPAN/MyConfig.pm in @INC (@INC contains: _build/lib _build/lib _build/lib _build/lib /home/k/sources/CPAN/SVN/lib /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4 /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4 /home/k/sources/CPAN/SVN) at (eval 512) line 1, <GEN331> chunk 1.
+Use of uninitialized value within %INC in concatenation (.) or string at /home/k/sources/CPAN/SVN/lib/CPAN/HandleConfig.pm line 285.
+'' reread
+
+	Fixed in rev. 957
+
 2006-10-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: cpan[15]> install File::Copy::Recursive                   
@@ -35,6 +46,15 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 	together with the 'Refusing to autoload' message was frightening.
 
 	Showstopper!
+
+	Trying to reproduce by setting both m*_install_*_command variables to
+	"false", then install CPAN::Reporter. This gives a long list of failed
+	installs at the end. Then 'install File::Copy::Recursive' works as
+	expected: already tried without success. Then 'force get F:C:R' works as
+	expected. And then again 'install File::Copy::Recursive' works as
+	expected: tests again and tries to install.
+
+	Shhhhhhh, so I cannot reproduce this, something must have been different.
 
 2006-09-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

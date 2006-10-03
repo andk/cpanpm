@@ -148,7 +148,8 @@ sub edit {
             $CPAN::Config->{$o} = { @args };
         } else {
 	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
-	    $self->prettyprint($o);
+	    $self->prettyprint($o)
+                if exists $keys{$o} or defined $CPAN::Config->{$o};
             return 1;
 	}
     }

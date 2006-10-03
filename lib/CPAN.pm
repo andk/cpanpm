@@ -1547,17 +1547,25 @@ index    re-reads the index files\n});
 #-> sub CPAN::Shell::reload_this ;
 sub reload_this {
     my($self,$f) = @_;
+    CPAN->debug("f[$f]") if $CPAN::DEBUG;
     return 1 unless $INC{$f}; # we never loaded this, so we do not
                               # reload but say OK
     my $pwd = CPAN::anycwd();
-    my $file;
+    CPAN->debug("pwd[$pwd]") if $CPAN::DEBUG;
+    my($file);
     for my $inc (@INC) {
         $file = File::Spec->catfile($inc,split /\//, $f);
         last if -f $file;
+        $file = "";
     }
-    unless (-f $file) {
+    CPAN->debug("file[$file]") if $CPAN::DEBUG;
+    my @inc = @INC;
+    unless ($file && -f $file) {
+        # this thingie is not in the INC path, maybe CPAN/MyConfig.pm?
         $file = $INC{$f};
+        @inc = substr($file,0,-length($f)); # bring in back to me!
     }
+    CPAN->debug("file[$file]inc[@inc]") if $CPAN::DEBUG;
     unless (-f $file) {
         $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
         return;
@@ -1570,6 +1578,7 @@ sub reload_this {
     CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
         if $CPAN::DEBUG;
     delete $INC{$f};
+    local @INC = @inc;
     eval "require '$f'";
     if ($@){
         warn $@;
@@ -2335,6 +2344,7 @@ sub rematein {
 	if (ref $s) {
             CPAN->debug("s is an object[$s]") if $CPAN::DEBUG;
 	    $obj = $s;
+	} elsif ($s =~ m|[\$\@\%]|) { # looks like a perl variable
 	} elsif ($s =~ m|^/|) { # looks like a regexp
             $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
                                     "not supported. Rejecting argument '$s'\n");
@@ -2347,7 +2357,8 @@ sub rematein {
             CPAN->debug("calling expandany [$s]") if $CPAN::DEBUG;
 	    $obj = CPAN::Shell->expandany($s);
 	}
-	if (ref $obj) {
+	if (0) {
+        } elsif (ref $obj) {
             $obj->color_cmd_tmps(0,1);
             CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
@@ -2364,7 +2375,7 @@ sub rematein {
                                        );
                 $CPAN::Frontend->mysleep(2);
             }
-	} elsif ($meth eq "dump") {
+	} elsif ($s =~ m|[\$\@\%]| && $meth eq "dump") {
             CPAN::InfoObj->dump($s);
         } else {
 	    $CPAN::Frontend
@@ -8214,9 +8225,9 @@ completion support.
 
 For debugging of CPAN data there is the C<dump> command which takes
 the same arguments as make/test/install and outputs each object's
-Data::Dumper dump. If an argument does not look like a module,
-distribution or bundle, it is eval()ed and fed to Data::Dumper
-directly.
+Data::Dumper dump. If an argument looks like a perl variable and
+contains one of C<$>, C<@> or C<%>, it is eval()ed and fed to
+Data::Dumper directly.
 
 =head2 Floppy, Zip, Offline Mode
 
