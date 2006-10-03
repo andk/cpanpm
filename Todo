@@ -1,46 +1,5 @@
 2006-10-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Bug: cpan[4]> install CPAN::Reporter
-Running install for module CPAN::Reporter
-Running Build for D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
-  Is already unwrapped into directory /home/k/.cpan/build/CPAN-Reporter-0.24
-
-  CPAN.pm: Going to build D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
-
-Creating custom builder _build/lib/Module/Build/WikiDoc.pm in _build/lib/Module/Build
-Checking whether your kit is complete...
-Looks good
-
-Checking prerequisites...
-Package 'CPAN' already declared with version '1.87_64'
-ignoring new version ''.
- - ERROR: IO::CaptureOutput is not installed
- - ERROR: File::Copy::Recursive is not installed
- - ERROR: CPAN (1.87_64) is installed, but we need version >= 1.88
-
-ERRORS/WARNINGS FOUND IN PREREQUISITES.  You may wish to install the versions
-of the modules indicated above before proceeding with this installation
-
-Creating new 'Build' script for 'CPAN-Reporter' version '0.24'
-lib/CPAN/Reporter.pm -> blib/lib/CPAN/Reporter.pm
-lib/CPAN/Reporter.pod -> blib/lib/CPAN/Reporter.pod
-Manifying blib/lib/CPAN/Reporter.pod -> blib/libdoc/CPAN::Reporter.3
-  ./Build  -- OK
-Running Build test
-  The version of your Test::Harness is only
-  '2.56', you need at least '2.62'. Please upgrade your Test::Harness.
-Running Build install
-Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pm
-Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pod
-Installing /usr/local/perl-5.8.7/man/man3/CPAN::Reporter.3
-Writing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/i686-linux-64int/auto/CPAN/Reporter/.packlist
-  sudo ./Build install --uninst 1 -- OK
-
-	Showstopper II! The test refused to run with the reference to
-	Test::Harness but the install succeeded nonetheless:(((
-
-	Fixed in rev. 954.
-
 	* Bug: cpan[15]> install File::Copy::Recursive                   
 Running install for module File::Copy::Recursive
 Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
@@ -76,35 +35,6 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 	together with the 'Refusing to autoload' message was frightening.
 
 	Showstopper!
-
-2006-10-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Finish the debugging aid of reload. Current code (rev. 953)
-	allows
-
-% perl -Ilib -MCPAN -e '
-my $ix = bless {}, CPAN::Index;
-$ix->reload(shift)' /home/ftp/pub/PAUSE/modules/02packages.details.txt 
-CPAN: File::HomeDir loaded ok
-CPAN: Term::ANSIColor loaded ok
-CPAN: LWP::UserAgent loaded ok
-CPAN: URI::URL loaded ok
-Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
-CPAN: Compress::Zlib loaded ok
-............................................................................DONE
-Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
-  Database was generated on Sun, 01 Oct 2006 18:39:54 GMT
-............................................................................DONE
-Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
-............................................................................DONE
-
-	But it reveals unacceptable timing when run via 'reload index'. Timing
-	is much better when called as above. Quite confusing is the fact that
-	03modlist does not print dots during reload but does so on first time.
-	So more debugging called for.
-
-	* Bug: the line number in the Debug messages is very often wrong. Fixed
-	in rev. 955
 
 2006-09-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -276,6 +206,74 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Bug: cpan[4]> install CPAN::Reporter
+Running install for module CPAN::Reporter
+Running Build for D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/CPAN-Reporter-0.24
+
+  CPAN.pm: Going to build D/DA/DAGOLDEN/CPAN-Reporter-0.24.tar.gz
+
+Creating custom builder _build/lib/Module/Build/WikiDoc.pm in _build/lib/Module/Build
+Checking whether your kit is complete...
+Looks good
+
+Checking prerequisites...
+Package 'CPAN' already declared with version '1.87_64'
+ignoring new version ''.
+ - ERROR: IO::CaptureOutput is not installed
+ - ERROR: File::Copy::Recursive is not installed
+ - ERROR: CPAN (1.87_64) is installed, but we need version >= 1.88
+
+ERRORS/WARNINGS FOUND IN PREREQUISITES.  You may wish to install the versions
+of the modules indicated above before proceeding with this installation
+
+Creating new 'Build' script for 'CPAN-Reporter' version '0.24'
+lib/CPAN/Reporter.pm -> blib/lib/CPAN/Reporter.pm
+lib/CPAN/Reporter.pod -> blib/lib/CPAN/Reporter.pod
+Manifying blib/lib/CPAN/Reporter.pod -> blib/libdoc/CPAN::Reporter.3
+  ./Build  -- OK
+Running Build test
+  The version of your Test::Harness is only
+  '2.56', you need at least '2.62'. Please upgrade your Test::Harness.
+Running Build install
+Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pm
+Installing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/CPAN/Reporter.pod
+Installing /usr/local/perl-5.8.7/man/man3/CPAN::Reporter.3
+Writing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/i686-linux-64int/auto/CPAN/Reporter/.packlist
+  sudo ./Build install --uninst 1 -- OK
+
+	Showstopper II! The test refused to run with the reference to
+	Test::Harness but the install succeeded nonetheless:(((
+
+	Fixed in rev. 954.
+
+	* Finish the debugging aid of reload. Current code (rev. 953)
+	allows
+
+% perl -Ilib -MCPAN -e '
+my $ix = bless {}, CPAN::Index;
+$ix->reload(shift)' /home/ftp/pub/PAUSE/modules/02packages.details.txt 
+CPAN: File::HomeDir loaded ok
+CPAN: Term::ANSIColor loaded ok
+CPAN: LWP::UserAgent loaded ok
+CPAN: URI::URL loaded ok
+Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok
+............................................................................DONE
+Going to read /home/ftp/pub/CPAN/modules/02packages.details.txt.gz
+  Database was generated on Sun, 01 Oct 2006 18:39:54 GMT
+............................................................................DONE
+Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
+............................................................................DONE
+
+	But it reveals unacceptable timing when run via 'reload index'. Timing
+	is much better when called as above. Quite confusing is the fact that
+	03modlist does not print dots during reload but does so on first time.
+	So more debugging called for. FIXED in rev. 956
+
+	* Bug: the line number in the Debug messages is very often wrong. FIXED
+	in rev. 955
 
 	* E3 prerequisites: require perl version xxx: we should not delete that
 	information but honour it. DONE in rev. 952
