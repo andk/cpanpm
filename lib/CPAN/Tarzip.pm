@@ -133,16 +133,19 @@ sub TIEHANDLE {
     my $fh = FileHandle->new($file) or die "Could not open file[$file]: $!";
     binmode $fh;
     $self->{FH} = $fh;
+    $class->debug("via uncompressed FH");
   } elsif ($CPAN::META->has_inst("Compress::Zlib")) {
     my $gz = Compress::Zlib::gzopen($file,"rb") or
 	die "Could not gzopen $file";
     $self->{GZ} = $gz;
+    $class->debug("via Compress::Zlib");
   } else {
     my $gzip = CPAN::HandleConfig->safe_quote($self->{UNGZIPPRG});
     my $pipe = "$gzip -dc $file |";
     my $fh = FileHandle->new($pipe) or die "Could not pipe[$pipe]: $!";
     binmode $fh;
     $self->{FH} = $fh;
+    $class->debug("via external gzip");
   }
   $self;
 }

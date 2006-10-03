@@ -3659,6 +3659,7 @@ sub rd_authindex {
     local($_);
     push @lines, split /\012/ while <FH>;
     my $i = 0;
+    my $modulus = int(@lines/75) || 1;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
 	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
@@ -3667,7 +3668,7 @@ sub rd_authindex {
 	# instantiate an author object
  	my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
 	$userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
-        $CPAN::Frontend->myprint(".") unless $i++ % int(@lines/75);
+        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");
@@ -3683,20 +3684,18 @@ sub userid {
 #-> sub CPAN::Index::rd_modpacks ;
 sub rd_modpacks {
     my($self, $index_target) = @_;
-    my @lines;
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
-    local($/) = "\n";
     local $_;
-    CPAN->debug("start fh[$fh]") if $CPAN::DEBUG;
-    while ($_ = $fh->READLINE) {
-	s/\012/\n/g;
-	my @ls = map {"$_\n"} split /\n/, $_;
-	unshift @ls, "\n" x length($1) if /^(\n+)/;
-	push @lines, @ls;
+    CPAN->debug(sprintf "start[%d]", time) if $CPAN::DEBUG;
+    my $slurp = "";
+    my $chunk;
+    while (my $bytes = $fh->READ(\$chunk,8192)) {
+        $slurp.=$chunk;
     }
-    CPAN->debug("end fh[$fh]") if $CPAN::DEBUG;
+    my @lines = split /\012/, $slurp;
+    CPAN->debug(sprintf "end[%d]", time) if $CPAN::DEBUG;
     undef $fh;
     # read header
     my($line_count,$last_updated);
@@ -3785,8 +3784,8 @@ happen.\a
     CPAN->debug("secondtime[$secondtime]") if $CPAN::DEBUG;
     my(%exists);
     my $i = 0;
+    my $modulus = int(@lines/75) || 1;
     foreach (@lines) {
-	chomp;
         # before 1.56 we split into 3 and discarded the rest. From
         # 1.57 we assign remaining text to $comment thus allowing to
         # influence isa_perl
@@ -3874,7 +3873,7 @@ happen.\a
                 $exists{$name} = undef;
             }
         }
-        $CPAN::Frontend->myprint(".") unless $i++ % int(@lines/75);
+        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");
@@ -3883,8 +3882,8 @@ happen.\a
             for my $o ($CPAN::META->all_objects($class)) {
                 next if exists $exists{$o->{ID}};
                 $CPAN::META->delete($class,$o->{ID});
-                CPAN->debug("deleting ID[$o->{ID}] in class[$class]")
-                    if $CPAN::DEBUG;
+                # CPAN->debug("deleting ID[$o->{ID}] in class[$class]")
+                #     if $CPAN::DEBUG;
             }
         }
     }
@@ -3896,38 +3895,42 @@ sub rd_modlist {
     return unless defined $index_target;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
-    my @eval;
-    local($/) = "\n";
     local $_;
-    while ($_ = $fh->READLINE) {
-	s/\012/\n/g;
-	my @ls = map {"$_\n"} split /\n/, $_;
-	unshift @ls, "\n" x length($1) if /^(\n+)/;
-	push @eval, @ls;
+    my $slurp = "";
+    my $chunk;
+    while (my $bytes = $fh->READ(\$chunk,8192)) {
+        $slurp.=$chunk;
     }
-    while (@eval) {
-	my $shift = shift(@eval);
+    my @eval2 = split /\012/, $slurp;
+
+    while (@eval2) {
+	my $shift = shift(@eval2);
 	if ($shift =~ /^Date:\s+(.*)/){
-	    return if $DATE_OF_03 eq $1;
+	    if ($DATE_OF_03 eq $1){
+                $CPAN::Frontend->myprint("Unchanged.\n");
+                return;
+            }
 	    ($DATE_OF_03) = $1;
 	}
 	last if $shift =~ /^\s*$/;
     }
-    undef $fh;
-    push @eval, q{CPAN::Modulelist->data;};
+    push @eval2, q{CPAN::Modulelist->data;};
     local($^W) = 0;
     my($comp) = Safe->new("CPAN::Safe1");
-    my($eval) = join("", @eval);
-    my $ret = $comp->reval($eval);
+    my($eval2) = join("\n", @eval2);
+    CPAN->debug(sprintf "length of eval2[%d]", length $eval2) if $CPAN::DEBUG;
+    my $ret = $comp->reval($eval2);
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
     my $i = 0;
     my $until = keys %$ret;
+    my $modulus = int($until/75) || 1;
+    CPAN->debug(sprintf "until[%d]", $until) if $CPAN::DEBUG;
     for (keys %$ret) {
 	my $obj = $CPAN::META->instance("CPAN::Module",$_);
         delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
 	$obj->set(%{$ret->{$_}});
-        $CPAN::Frontend->myprint(".") unless $i++ % int($until/75);
+        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");

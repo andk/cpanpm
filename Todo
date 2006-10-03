@@ -39,7 +39,7 @@ Writing /usr/local/perl-5.8.7/lib/site_perl/5.8.7/i686-linux-64int/auto/CPAN/Rep
 	Showstopper II! The test refused to run with the reference to
 	Test::Harness but the install succeeded nonetheless:(((
 
-	Fixed in about rev. 954 or so.
+	Fixed in rev. 954.
 
 	* Bug: cpan[15]> install File::Copy::Recursive                   
 Running install for module File::Copy::Recursive
@@ -79,7 +79,7 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 
 2006-10-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Finish the debugging aid of reload. Current code (rev. 953 or so)
+	* Finish the debugging aid of reload. Current code (rev. 953)
 	allows
 
 % perl -Ilib -MCPAN -e '
@@ -103,7 +103,8 @@ Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
 	03modlist does not print dots during reload but does so on first time.
 	So more debugging called for.
 
-	* Bug: the line number in the Debug messages is very often wrong.
+	* Bug: the line number in the Debug messages is very often wrong. Fixed
+	in rev. 955
 
 2006-09-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
