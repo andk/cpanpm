@@ -1,16 +1,5 @@
 2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Bug: during 'o conf defaults' I get
-
-Debug(HandleConfig,HandleConfig.pm,95,[Shell,CPAN.pm,1401,edit]): self[CPAN::HandleConfig]args[defaults]
-Can't locate CPAN/MyConfig.pm in @INC (@INC contains: _build/lib _build/lib _build/lib _build/lib /home/k/sources/CPAN/SVN/lib /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4 /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4 /home/k/sources/CPAN/SVN) at (eval 512) line 1, <GEN331> chunk 1.
-Use of uninitialized value within %INC in concatenation (.) or string at /home/k/sources/CPAN/SVN/lib/CPAN/HandleConfig.pm line 285.
-'' reread
-
-	Fixed in rev. 957
-
-2006-10-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* Bug: cpan[15]> install File::Copy::Recursive                   
 Running install for module File::Copy::Recursive
 Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
@@ -56,15 +45,11 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 
 	Shhhhhhh, so I cannot reproduce this, something must have been different.
 
-2006-09-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* Todo: revisit rev 158:159, the introduction of recent and perldoc.
 	#21791 has its bugreport. I don't like that most of the subroutines are
 	thrown into CPAN::Distribution either. OTOH, we have commands that have
 	no central role within CPAN. One can always refuse to use them. Hrm.
 	HTML::Display!
-
-2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
 	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
@@ -226,6 +211,15 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Bug: during 'o conf defaults' I get
+
+Debug(HandleConfig,HandleConfig.pm,95,[Shell,CPAN.pm,1401,edit]): self[CPAN::HandleConfig]args[defaults]
+Can't locate CPAN/MyConfig.pm in @INC (@INC contains: _build/lib _build/lib _build/lib _build/lib /home/k/sources/CPAN/SVN/lib /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/5.9.4 /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pGHVCgA/perl-5.8.0@28914/lib/site_perl/5.9.4 /home/k/sources/CPAN/SVN) at (eval 512) line 1, <GEN331> chunk 1.
+Use of uninitialized value within %INC in concatenation (.) or string at /home/k/sources/CPAN/SVN/lib/CPAN/HandleConfig.pm line 285.
+'' reread
+
+	Fixed in rev. 958
 
 	* Bug: cpan[4]> install CPAN::Reporter
 Running install for module CPAN::Reporter

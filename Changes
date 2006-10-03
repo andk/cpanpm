@@ -1,3 +1,17 @@
+2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_52
+
+	* now does the right thing with prereq "perl"
+
+	* major speedup in parsing of index files
+
+	* repair debugging aid to display the correct line number
+
+	* fix bug introduced in _51 regarding Test::Harness version verification
+
+	* fix old bug in CPAN::Version wrt installed developer versions
+
 2006-09-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_51
