@@ -5381,7 +5381,6 @@ sub perl {
 sub make {
     my($self) = @_;
     my $make = $self->{modulebuild} ? "Build" : "make";
-    $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     # Emergency brake if they said install Pippi and get newest perl
     if ($self->isa_perl) {
       if (
@@ -5389,27 +5388,28 @@ sub make {
           ! $self->{force_update}
 	 ) {
         # if we die here, we break bundles
-	$CPAN::Frontend->mywarn(sprintf qq{
-The most recent version "%s" of the module "%s"
-comes with the current version of perl (%s).
-I\'ll build that only if you ask for something like
-    force install %s
-or
-    install %s
+	$CPAN::Frontend
+            ->mywarn(sprintf(
+                             qq{The most recent version "%s" of the module "%s"
+is part of the perl-%s distribution. To install that, you need to run
+  force install %s   --or--
+  install %s
 },
-			       $CPAN::META->instance(
-						     'CPAN::Module',
-						     $self->called_for
-						    )->cpan_version,
-			       $self->called_for,
-			       $self->isa_perl,
-			       $self->called_for,
-			       $self->id);
+                             $CPAN::META->instance(
+                                                   'CPAN::Module',
+                                                   $self->called_for
+                                                  )->cpan_version,
+                             $self->called_for,
+                             $self->isa_perl,
+                             $self->called_for,
+                             $self->id,
+                            ));
         $self->{make} = CPAN::Distrostatus->new("NO isa perl");
         $CPAN::Frontend->mysleep(1);
         return;
       }
     }
+    $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     $self->get;
     if ($CPAN::Signal){
       delete $self->{force_update};
@@ -5909,7 +5909,6 @@ sub test {
              $self->{make} =~ /^NO/
             ) and push @e, "Can't test without successful make";
 
-	exists $self->{build_dir} or push @e, "Has no own directory";
         $self->{badtestcnt} ||= 0;
         $self->{badtestcnt} > 0 and
             push @e, "Won't repeat unsuccessful test during this command";
@@ -5917,17 +5916,21 @@ sub test {
         exists $self->{later} and length($self->{later}) and
             push @e, $self->{later};
 
-        if ($CPAN::META->{is_tested}{$self->{build_dir}}
-            &&
-            exists $self->{make_test}
-            &&
-            !(
-              $self->{make_test}->can("failed") ?
-              $self->{make_test}->failed :
-              $self->{make_test} =~ /^NO/
-             )
-           ) {
-            push @e, "Already tested successfully";
+        if (exists $self->{build_dir}) {
+            if ($CPAN::META->{is_tested}{$self->{build_dir}}
+                &&
+                exists $self->{make_test}
+                &&
+                !(
+                  $self->{make_test}->can("failed") ?
+                  $self->{make_test}->failed :
+                  $self->{make_test} =~ /^NO/
+                 )
+               ) {
+                push @e, "Already tested successfully";
+            }
+        } elsif (!@e) {
+            push @e, "Has no own directory";
         }
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
@@ -6069,8 +6072,6 @@ sub install {
     $CPAN::Frontend->myprint("Running $make install\n");
   EXCUSE: {
 	my @e;
-	exists $self->{build_dir} or push @e, "Has no own directory";
-
 	unless (exists $self->{make} or exists $self->{later}) {
             push @e,
                 "Make had some problems, won't install";
@@ -6082,7 +6083,12 @@ sub install {
              $self->{make}->failed :
              $self->{make} =~ /^NO/
             ) and
-		push @e, "make had returned bad status, install seems impossible";
+		push @e, "Make had returned bad status, install seems impossible";
+
+        if (exists $self->{build_dir}) {
+        } elsif (!@e) {
+            push @e, "Has no own directory";
+        }
 
         if (exists $self->{make_test} and
 	    (
@@ -7088,7 +7094,7 @@ sub notest {
 #-> sub CPAN::Module::rematein ;
 sub rematein {
     my($self,$meth) = @_;
-    $CPAN::Frontend->myprint(sprintf("Running %s for module %s\n",
+    $CPAN::Frontend->myprint(sprintf("Running %s for module '%s'\n",
                                      $meth,
                                      $self->id));
     my $cpan_file = $self->cpan_file;
