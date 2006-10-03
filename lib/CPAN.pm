@@ -1464,7 +1464,7 @@ sub o {
 	  $CPAN::Frontend->myprint("\n\n");
 	}
 	if ($CPAN::DEBUG) {
-	    $CPAN::Frontend->myprint("Options set for debugging:\n");
+	    $CPAN::Frontend->myprint("Options set for debugging ($CPAN::DEBUG):\n");
 	    my($k,$v);
 	    for $k (sort {$CPAN::DEBUG{$a} <=> $CPAN::DEBUG{$b}} keys %CPAN::DEBUG) {
 		$v = $CPAN::DEBUG{$k};
@@ -1550,28 +1550,27 @@ sub reload_this {
     return 1 unless $INC{$f}; # we never loaded this, so we do not
                               # reload but say OK
     my $pwd = CPAN::anycwd();
-    CPAN->debug("reloading the whole '$f' from '$INC{$f}' while pwd='$pwd'")
-        if $CPAN::DEBUG;
-    my $read;
+    my $file;
     for my $inc (@INC) {
-        $read = File::Spec->catfile($inc,split /\//, $f);
-        last if -f $read;
+        $file = File::Spec->catfile($inc,split /\//, $f);
+        last if -f $file;
     }
-    unless (-f $read) {
-        $read = $INC{$f};
+    unless (-f $file) {
+        $file = $INC{$f};
     }
-    unless (-f $read) {
+    unless (-f $file) {
         $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
         return;
     }
-    my $fh = FileHandle->new($read) or
-        $CPAN::Frontend->mydie("Could not open $read: $!");
+    my $fh = FileHandle->new($file) or
+        $CPAN::Frontend->mydie("Could not open $file: $!");
     local($/);
     local $^W = 1;
-    my $eval = <$fh>;
-    CPAN->debug(sprintf("evaling [%s...]\n",substr($eval,0,64)))
+    my $content = <$fh>;
+    CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
         if $CPAN::DEBUG;
-    eval $eval;
+    delete $INC{$f};
+    eval "require '$f'";
     if ($@){
         warn $@;
         return;
@@ -5931,7 +5930,7 @@ sub test {
         my $v = CPAN::Shell->expand("Module","Test::Harness")->inst_version;
         if (CPAN::Version->vlt($v,2.62)) {
             $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
-  '$v', you need at least '2.62'. Please upgrade your Test::Harness.});
+  '$v', you need at least '2.62'. Please upgrade your Test::Harness.\n});
             $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
             return;
         }
@@ -8176,13 +8175,45 @@ interferences of the software producing the indices on CPAN, of the
 mirroring process on CPAN, of packaging, of configuration, of
 synchronicity, and of bugs within CPAN.pm.
 
-For code debugging in interactive mode you can try "o debug" which
-will list options for debugging the various parts of the code. You
-should know that "o debug" has built-in completion support.
+For debugging the code of CPAN.pm itself in interactive mode some more
+or less useful debugging aid can be turned on for most packages within
+CPAN.pm with one of
 
-For data debugging there is the C<dump> command which takes the same
-arguments as make/test/install and outputs the object's Data::Dumper
-dump.
+=over 2
+
+=item o debug package...
+
+sets debug mode for packages.
+
+=item o debug -package...
+
+unsets debug mode for packages.
+
+=item o debug all
+
+turns debugging on for all packages.
+
+=item o debug number
+
+=back
+
+which sets the debugging packages directly. Note that C<o debug 0>
+turns debugging off.
+
+What seems quite a successful strategy is the combination of C<reload
+cpan> and the debugging switches. Add a new debug statement while
+running in the shell and then issue a C<reload cpan> and see the new
+debugging messages immediately without losing the current context.
+
+C<o debug> without an argument lists the valid package names and the
+current set of packages in debugging mode. C<o debug> has built-in
+completion support.
+
+For debugging of CPAN data there is the C<dump> command which takes
+the same arguments as make/test/install and outputs each object's
+Data::Dumper dump. If an argument does not look like a module,
+distribution or bundle, it is eval()ed and fed to Data::Dumper
+directly.
 
 =head2 Floppy, Zip, Offline Mode
 
