@@ -16,7 +16,7 @@ WriteMakefile(
               PL_FILES      => {},
               dist => {
                        DIST_DEFAULT => (
-                                        'verify-MakeMaker-6.3002 all tardist'
+                                        'Makefile verify-MakeMaker-6.3002 verify-no-subdir all tardist'
                                        ),
                       },
 );
@@ -24,6 +24,9 @@ WriteMakefile(
 sub MY::postamble {
   return q{
 verify-MakeMaker-6.3002:
-	$(PERL) -MExtUtils::MakeMaker -e 'my $$v = eval $$ExtUtils::MakeMaker::VERSION; die "Your MM is old, do not use it for a distro" unless $$v >= 6.3002'
+	@$(PERL) -MExtUtils::MakeMaker -e 'my $$v = eval $$ExtUtils::MakeMaker::VERSION; die "Your MM is old, do not use it for a distro" unless $$v >= 6.3002'
+
+verify-no-subdir:
+	@$(PERL) -e 'my$$s=join",",grep{!/^(lib|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
 }
 }

@@ -3,6 +3,10 @@
 	* Todo: Write a new test: If one prerequisite doesn't pass its tests, we
 	sure want to test the dependent module but is must not install. I have
 	no example at hand.
+
+	First continue fixing dummy...Build and dummy...Make distros (and maybe
+	more), then make one that is depending on dummy...Fails and write the
+	new test for it.
 	
 2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
