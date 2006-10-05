@@ -536,7 +536,7 @@ __END__
 #E:
 ########
 #P:o conf init prerequisites_policy
-#E:............(\])
+#E:follow[\S\s]+?ask[\S\s]+?ignore[\S\s]+?............(\])
 ########
 #P:ask
 #E:
@@ -554,7 +554,7 @@ __END__
 #E:
 ########
 #P:o conf init show_upload_date
-#E:............(\])
+#E:upload[\S\s]+?date[\S\s]+?............(\])
 ########
 #P:y
 #E:
@@ -590,7 +590,7 @@ __END__
 #E:
 ########
 #P:o conf init commandnumber_in_prompt
-#E:............(\])
+#E:command[\S\s]+?number[\S\s]+?............(\])
 ########
 #P:y
 #E:
@@ -900,7 +900,7 @@ __END__
 #E:build_requires_install_policy
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build
-#E:is up to date|SAW MAKE[\s\S]+SAW MAKE[\s\S]+SAW MBUILD
+#E:is up to date|SAW MAKE[\s\S]+?SAW MAKE[\s\S]+?SAW MBUILD
 #C: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########
@@ -1059,7 +1059,9 @@ To add a new distro, the following steps must be taken:
 
 - verify that 'make dist' on CPAN.pm still works
 
-- add the distro(s) to CPAN/modules/02packages.details.txt
+- add the distro(s) to CPAN/modules/02packages.details.txt: this step
+  needs special care: if there is more than one module or bundle
+  inside the distro, write two lines; watch the line count;
 
 - add the test to shell.t that triggered the demand for a new distro
 
