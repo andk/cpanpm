@@ -2,7 +2,7 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-# CHECKSUMS file written on Thu Oct  5 03:20:05 2006 GMT by CPAN::Checksums (v1.050)
+# CHECKSUMS file written on Thu Oct  5 19:33:32 2006 GMT by CPAN::Checksums (v1.050)
 $cksum = {
   'Apache-GzipChain-1.14.tar.gz' => {
     'md5' => '9330c5bfae432361fc4b1a955f2f7d91',
@@ -362,6 +362,14 @@ $cksum = {
     'sha256-ungz' => 'f8539b2cadc63da745936e96083c083381c279c9cac1b57896ae5c92b72ccbf3',
     'size' => 1703
   },
+  'CPAN-Test-Dummy-Perl5-Build-DepeFails-1.01.tar.gz' => {
+    'md5' => 'd5da82ee31eff87865f23e58b4d8b46b',
+    'md5-ungz' => '4ae631dc66c113cb55142300f8f8c2c2',
+    'mtime' => '2006-10-05',
+    'sha256' => '2296e4aac8d9dcc010ad49d4bcc4c6122997eefec58e0dcae95460443878a980',
+    'sha256-ungz' => '56c46c496ce5ed51fccdb1c2ef99ec7192022340a2662123f1781cff8e75af69',
+    'size' => 1641
+  },
   'CPAN-Test-Dummy-Perl5-Build-Fails-1.01.meta' => {
     'md5' => '92e9488a5373b796052ce6056697fe63',
     'mtime' => '2006-02-05',
@@ -375,6 +383,20 @@ $cksum = {
     'sha256' => 'f8c9619e11c838c446135f1101614195e71591fece9929c73e269a8f2350b47f',
     'sha256-ungz' => '49fc321c37e02bacc6bda714db43219ca350748a8b2baafa36ec15427960ea99',
     'size' => 1417
+  },
+  'CPAN-Test-Dummy-Perl5-Build-Fails-1.02.meta' => {
+    'md5' => '61477abb2c65a5d924690757de3f1812',
+    'mtime' => '2006-10-05',
+    'sha256' => '4ed71d8a18124f7293b8a478547f2b40a06f84f213a8f0dcccd4bc2a9936fc43',
+    'size' => 430
+  },
+  'CPAN-Test-Dummy-Perl5-Build-Fails-1.02.tar.gz' => {
+    'md5' => '74ebb6857ef6f364643a91f62c91f39c',
+    'md5-ungz' => '1c6b8a30f8607b661fc14685e051cb3d',
+    'mtime' => '2006-10-05',
+    'sha256' => 'e342e77f6ef87817ac7a667dcce396945b4bedbfe5c7392b16740229bfd9b515',
+    'sha256-ungz' => 'a6eaff77176d2e91fb0b5e0949c343d9505770b1a88220991ef1969b659bfc4e',
+    'size' => 1733
   },
   'CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.meta' => {
     'md5' => 'f1556172ca10bc2ca7c7b2acbbc3a02d',
@@ -645,7 +667,7 @@ __END__
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.1 (GNU/Linux)
 
-iD8DBQFFJHnlMo2oZ0UPiewRAkJtAJ9X6OoNEGDmy/VDLI/TNmtO9+Jl4wCfYlnl
-55dYI04HqLj8WtvDU2E116I=
-=J8xZ
+iD8DBQFFJV4NMo2oZ0UPiewRAtikAJ9sWGLnrJF/48uiHmO482RK2mbzbgCglJUZ
+m8mqP+j06Vu0VV2LibYbDBU=
+=rZmM
 -----END PGP SIGNATURE-----
