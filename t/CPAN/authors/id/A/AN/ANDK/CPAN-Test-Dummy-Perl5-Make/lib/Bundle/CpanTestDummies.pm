@@ -1,6 +1,8 @@
+use strict;
+
 package Bundle::CpanTestDummies;
 
-$VERSION = 1.6 + sprintf "%.6f", substr(q$Rev$,4)/1000000;
+$Bundle::CpanTestDummies::VERSION = 1.6 + sprintf "%.6f", substr(q$Rev$,4)/1000000;
 
 1;
 
