@@ -7,12 +7,12 @@ Written-By:   Id: mldistwatch 697 1970-01-18 07:33:13Z k
 Line-Count:   9
 Last-Updated: Tue, 03 Feb 1970 03:17:06 GMT
 
-Bundle::CpanTestDummies                   1.600622 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.03.tar.gz
+Bundle::CpanTestDummies                   1.600967 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.04.tar.gz
 Fcntl                                     1.05  N/NW/NWCLARK/perl-5.8.8.tar.gz
-CPAN::Test::Dummy::Perl5::Build           1.02  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.02.tar.gz
+CPAN::Test::Dummy::Perl5::Build           1.03  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
 CPAN::Test::Dummy::Perl5::BuildOrMake     1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Build::Fails    1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.01.tar.gz
-CPAN::Test::Dummy::Perl5::Make            1.03  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.03.tar.gz
+CPAN::Test::Dummy::Perl5::Make            1.04  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.04.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Failearly 1.01  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.01.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Zip       1.02  A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.02.zip
 Test::Harness                             2.62  P/PE/PETDANCE/Test-Harness-2.62.tar.gz

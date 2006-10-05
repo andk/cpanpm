@@ -144,6 +144,7 @@ WriteMakefile(
               ),
               dist => {
                        DIST_DEFAULT => (
+                                        'verify-no-subdir '.
                                         'Makefile no_CR META.yml setversion README '.
                                         'testdistros all chlog tardist'
                                        ),
@@ -177,6 +178,10 @@ ALL_PERLS = /usr/bin/perl \
 sub postamble {
   return "" unless $HAVE_MAKE; # dmake has unknown issues with my Makefile
   q{
+# the subdirs on MY OWN BOX are allowed here (only used for make dist!)
+verify-no-subdir:
+	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|eg|inc|lib|patches|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
+
 setversion:
 	$(PERL) Makefile.PL --setversion
 
