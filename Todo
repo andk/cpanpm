@@ -5,8 +5,9 @@
 	have no example at hand.
 
 	First continue fixing dummy-Build and dummy-Make distros (and maybe
-	more), then make one that is depending on dummy-Fails and write the
-	new test for it.
+	more), then make one that is depending on dummy-Fails. DONE in rev. 973
+
+	And write the new test for it.
 	
 2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

@@ -5971,18 +5971,40 @@ sub test {
     my $tests_ok;
     if ( $CPAN::Config->{test_report} && 
          $CPAN::META->has_inst("CPAN::Reporter") ) {
-            $tests_ok = CPAN::Reporter::test($self, $system);
+        $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
-            $tests_ok = system($system) == 0;
+        $tests_ok = system($system) == 0;
     }
     if ( $tests_ok ) {
-	 $CPAN::Frontend->myprint("  $system -- OK\n");
-	 $CPAN::META->is_tested($self->{'build_dir'});
-	 $self->{make_test} = CPAN::Distrostatus->new("YES");
+        {
+            my @prereq;
+            for my $m (keys %{$self->{sponsored_mods}}) {
+                my $m_obj = CPAN::Shell->expand("Module",$m);
+                if (!$m_obj->distribution->{make_test}
+                    ||
+                    $m_obj->distribution->{make_test}->failed){
+                    #$m_obj->dump;
+                    push @prereq, $m;
+                }
+            }
+            if (@prereq){
+                my $cnt = @prereq;
+                my $which = join ",", @prereq;
+                my $verb = $cnt == 1 ? "one dependency not OK ($which)" :
+                    "$cnt dependencies missing ($which)";
+                $CPAN::Frontend->mywarn("Tests succeeded but $verb\n");
+                $self->{make_test} = CPAN::Distrostatus->new("NO -- $verb");
+                return;
+            }
+        }
+
+        $CPAN::Frontend->myprint("  $system -- OK\n");
+        $CPAN::META->is_tested($self->{'build_dir'});
+        $self->{make_test} = CPAN::Distrostatus->new("YES");
     } else {
-	 $self->{make_test} = CPAN::Distrostatus->new("NO");
-         $self->{badtestcnt}++;
-	 $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
+        $self->{make_test} = CPAN::Distrostatus->new("NO");
+        $self->{badtestcnt}++;
+        $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
 }
 

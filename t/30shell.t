@@ -904,6 +904,11 @@ __END__
 #C: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########
+#P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
+#E:is up to date|Failed during[\S\s]+?DepeFails.+?dependenc\S+ not OK.+?Fails
+#C: "is up to date" is for when they have it installed in INC
+#R:Module::Build
+########
 #P:u /--/
 #E:No modules found for
 ########
