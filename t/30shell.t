@@ -1042,8 +1042,6 @@ To add a new distro, the following steps must be taken:
 
 - add it to the MANIFEST
 
-- if this distro replaces another, svn rm the other one
-
 (3) Upload and embed into our minicpan
 
 - verify that 'make dist' on CPAN.pm still works
@@ -1064,6 +1062,8 @@ To add a new distro, the following steps must be taken:
 - add the distro(s) to CPAN/modules/02packages.details.txt: this step
   needs special care: if there is more than one module or bundle
   inside the distro, write two lines; watch the line count;
+
+- if this distro replaces another, svn rm the other one
 
 - if this distro replaces another, fix the tests that rely on the
   other one
