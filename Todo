@@ -1,4 +1,23 @@
+2006-10-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: Write a new test: If one prerequisite doesn't pass its tests, we
+	sure want to test the dependent module but is must not install. I have
+	no example at hand.
+	
 2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Wishlist: separate the TTLs for 01,02,03. If somebody asks 'a FOO', we
+	should only check for the authors database, etc.
+
+	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	get rid of the term_is_latin variable. Test output with locales.
+
+	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	remember details. Hint: DBM::Deep promises significant memory savings
+	and in that branch we tried to see how it can be made to work for us.
+
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
 	* Bug: cpan[15]> install File::Copy::Recursive                   
 Running install for module File::Copy::Recursive
@@ -51,38 +70,6 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 	no central role within CPAN. One can always refuse to use them. Hrm.
 	HTML::Display!
 
-	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
-	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
-	5.8.7 one. OR: take some maint-5.8 short before 5.8.8! Where to find the
-	patch number for 5.8.8? Module::CoreList!
-
-	% perl -MModule::CoreList -le 'use Data::Dumper;print Dumper(\%Module::CoreList::patchlevel);' 
-	[...]
-          '5.008008' => [
-                          'maint-5.8',
-                          27040
-                        ],
-
-	Paging through diff files in APC/5.8.1/ reveals: 25914 updated
-	PPPort.pm, 26929 Pod::Simple, 26985 Archive::Tar, 26988 Pod::Man, so I
-	expect 26984 a good test candidate.
-
-	My current 26984 replies to "r" command with....no 5.8.8?
-
-	Strange! Why no 5.8.8? Ahhh, because it had no Archive::Tar and Pod::Man
-	is on podlators 2.0.5.
-
-	Trying 26876: no good.
-
-	26727: Good! 26727 wants to upgrade Dumpvalue and bring it ot
-	perl-5.8.8. I upgrade everything in 26727 except for Dumpvalue. Being
-	time consuming, this needs a backup generated with
-
-	tar cvzf p-26727plus-near-588.tar.gz installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727
-
-	Gabor requests less noise, otherwise he consideres behaviour correct.
-	Hrm, think about it...
-	
 	* Todo: clean up XXX
 
 	* automatic testing? Is it anywhere documented what the impacts of
@@ -175,18 +162,8 @@ need the middle man.
 	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
 	and jarkko
 
-	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
-	get rid of the term_is_latin variable. Test output with locales.
-
-	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
-	remember details. Hint: DBM::Deep promises significant memory savings
-	and in that branch we tried to see how it can be made to work for us.
-
 	* M2 feature request by Juergen Christoffel: have time stamps on the
 	history and a history command to see them
-
-	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
 	* H3 Locking: Linda W writes
 
@@ -212,6 +189,40 @@ need the middle man.
 
 	* hr ================ no todos below this line ================ /hr
 
+	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
+	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
+	5.8.7 one. OR: take some maint-5.8 short before 5.8.8! Where to find the
+	patch number for 5.8.8? Module::CoreList!
+
+	% perl -MModule::CoreList -le 'use Data::Dumper;print Dumper(\%Module::CoreList::patchlevel);' 
+	[...]
+          '5.008008' => [
+                          'maint-5.8',
+                          27040
+                        ],
+
+	Paging through diff files in APC/5.8.1/ reveals: 25914 updated
+	PPPort.pm, 26929 Pod::Simple, 26985 Archive::Tar, 26988 Pod::Man, so I
+	expect 26984 a good test candidate.
+
+	My current 26984 replies to "r" command with....no 5.8.8?
+
+	Strange! Why no 5.8.8? Ahhh, because it had no Archive::Tar and Pod::Man
+	is on podlators 2.0.5.
+
+	Trying 26876: no good.
+
+	26727: Good! 26727 wants to upgrade Dumpvalue and bring it ot
+	perl-5.8.8. I upgrade everything in 26727 except for Dumpvalue. Being
+	time consuming, this needs a backup generated with
+
+	tar cvzf p-26727plus-near-588.tar.gz installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727
+
+	Gabor requests less noise, otherwise he consideres behaviour correct.
+	Hrm, think about it...
+
+	FIXED in rev. 963.
+	
 	* Bug: during 'o conf defaults' I get
 
 Debug(HandleConfig,HandleConfig.pm,95,[Shell,CPAN.pm,1401,edit]): self[CPAN::HandleConfig]args[defaults]
