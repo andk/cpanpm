@@ -905,7 +905,7 @@ __END__
 #R:Module::Build
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
-#E:is up to date|Failed during[\S\s]+?DepeFails.+?dependenc\S+ not OK.+?Fails
+#E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #C: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########
@@ -943,7 +943,7 @@ __END__
 
   make test TEST_FILES=t/30shell.t # traditional on file invocation
 
-  make testshell-with-protocol     # collects output for later reference
+  make testshell-with-protocol     # collects output in ../protocols
 
 =head1 DESCRIPTION
 

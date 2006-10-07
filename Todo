@@ -1,18 +1,18 @@
-2006-10-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-10-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: Write a new test: If one prerequisite doesn't pass its tests, we
-	sure want to test the dependent module but it must not be installed. I
-	have no example at hand.
+	* Todo: clean up XXX
 
-	First continue fixing dummy-Build and dummy-Make distros (and maybe
-	more), then make one that is depending on dummy-Fails. DONE in rev. 973
+	* automatic testing? Is it anywhere documented what the impacts of
+	$ENV{AUTOMATED_TESTING} are?
 
-	And write the new test for it.
-	
-2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* new keyword capture? CPAN::Reporter does not know the output of the
+	commands before "test" and cannot report about compilation failures.
+	This looks like a major flaw to me:-(
 
-	* Wishlist: separate the TTLs for 01,02,03. If somebody asks 'a FOO', we
-	should only check for the authors database, etc.
+	* E1: Nice to have: make YAML vs. YAML::Syck switchable
+
+	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
+	FOO', we should only check for the authors database, etc.
 
 	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
 	get rid of the term_is_latin variable. Test output with locales.
@@ -24,65 +24,11 @@
 	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
 	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
 
-	* Bug: cpan[15]> install File::Copy::Recursive                   
-Running install for module File::Copy::Recursive
-Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
-  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
-  Has already been processed within this session
-Running make test
-Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
-Sorry, test with a regular expression is not supported
-Running test for module File::Copy::Recursive
-Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
-  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
-  Has already been processed within this session
-Running make test
-Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
-Refusing to autoload 'test' 'CPAN::Distribution=HASH(0x9b6ff30)' '/usr/bin/make test' in recursion
-  /usr/bin/make test -- NOT OK
-Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
-  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
-  Has already been processed within this session
-Running make test
-  Won't repeat unsuccessful test during this command
-  /usr/bin/make test -- OK
-Running make install
-Installing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/File/Copy/Recursive.pm
-Installing /usr/local/perl-5.8.8/man/man3/File::Copy::Recursive.3
-Writing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/i686-linux-64int/auto/File/Copy/Recursive/.packlist
-Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/perllocal.pod
-
-	What I had done was to install CPAN::Reporter but forgot the sudo for
-	make. Then I added the sudo to make_install_make_command and did a
-	'force get' and then the above. The install was successful in the end
-	but the "Sorry" message was written in red and completely bogus and
-	together with the 'Refusing to autoload' message was frightening.
-
-	Showstopper!
-
-	Trying to reproduce by setting both m*_install_*_command variables to
-	"false", then install CPAN::Reporter. This gives a long list of failed
-	installs at the end. Then 'install File::Copy::Recursive' works as
-	expected: already tried without success. Then 'force get F:C:R' works as
-	expected. And then again 'install File::Copy::Recursive' works as
-	expected: tests again and tries to install.
-
-	Shhhhhhh, so I cannot reproduce this, something must have been different.
-
-	* Todo: revisit rev 158:159, the introduction of recent and perldoc.
+	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
 	#21791 has its bugreport. I don't like that most of the subroutines are
 	thrown into CPAN::Distribution either. OTOH, we have commands that have
 	no central role within CPAN. One can always refuse to use them. Hrm.
 	HTML::Display!
-
-	* Todo: clean up XXX
-
-	* automatic testing? Is it anywhere documented what the impacts of
-	$ENV{AUTOMATED_TESTING} are?
-
-	* new keyword capture? CPAN::Reporter does not know the output of the
-	commands before "test" and cannot report about compilation failures.
-	This looks like a major flaw to me:-(
 
 	* E5: (again and again) verify that the CPAN.pm-using modules continue
 	to work
@@ -131,13 +77,18 @@ Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/
 
 	d http://      # fails as before with "No objects of...."
 
+	               # alt: does a HEAD and tells user that the URL can e reached
+
 	ls http://     # lists nothing
+
+	               # alt: says that ls doesn't support URLs
 
 	get http://    # this is probably all we need to implement. Maybe a new
 	               # class needed that does as_string and as_glimpse as well?
 
 	And maybe a pragma that turns this feature on? So that 'get http://...'
-	never works but 'force get http://...' does?
+	never works but 'force get http://...' does? Alt: config variable to
+	turn feature on, then a separate module that implements it.
 
 	Brian likes the idea
 
@@ -194,6 +145,103 @@ need the middle man.
 
 	* hr ================ no todos below this line ================ /hr
 
+2006-10-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: cpan[15]> install File::Copy::Recursive                   
+Running install for module File::Copy::Recursive
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
+Sorry, test with a regular expression is not supported
+Running test for module File::Copy::Recursive
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+Prepending /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/arch /home/k/.cpan/build/File-Copy-Recursive-0.28/blib/lib to PERL5LIB.
+Refusing to autoload 'test' 'CPAN::Distribution=HASH(0x9b6ff30)' '/usr/bin/make test' in recursion
+  /usr/bin/make test -- NOT OK
+Running make for D/DM/DMUEY/File-Copy-Recursive-0.28.tar.gz
+  Is already unwrapped into directory /home/k/.cpan/build/File-Copy-Recursive-0.28
+  Has already been processed within this session
+Running make test
+  Won't repeat unsuccessful test during this command
+  /usr/bin/make test -- OK
+Running make install
+Installing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/File/Copy/Recursive.pm
+Installing /usr/local/perl-5.8.8/man/man3/File::Copy::Recursive.3
+Writing /usr/local/perl-5.8.8/lib/site_perl/5.8.8/i686-linux-64int/auto/File/Copy/Recursive/.packlist
+Appending installation info to /usr/local/perl-5.8.8/lib/5.8.8/i686-linux-64int/perllocal.pod
+
+	What I had done was to install CPAN::Reporter but forgot the sudo for
+	make. Then I added the sudo to make_install_make_command and did a
+	'force get' and then the above. The install was successful in the end
+	but the "Sorry" message was written in red and completely bogus and
+	together with the 'Refusing to autoload' message was frightening.
+
+	Showstopper!
+
+	Trying to reproduce by setting both m*_install_*_command variables to
+	"false", then install CPAN::Reporter. This gives a long list of failed
+	installs at the end. Then 'install File::Copy::Recursive' works as
+	expected: already tried without success. Then 'force get F:C:R' works as
+	expected. And then again 'install File::Copy::Recursive' works as
+	expected: tests again and tries to install.
+
+	Shhhhhhh, so I cannot reproduce this, something must have been different.
+
+	GIVEN UP: this did not show up again in any test
+
+	* Who broke libwww recently?
+
+	local/http-get........ok 1/20Use of uninitialized value in numeric eq (==) at local/http-get.t line 167, <DAEMON> line 1.
+local/http-get........FAILED test 5                                          
+        Failed 1/20 tests, 95.00% okay
+local/http............ok 1/18Use of uninitialized value in numeric eq (==) at local/http.t line 158, <DAEMON> line 1.
+local/http............FAILED test 5                                          
+        Failed 1/18 tests, 94.44% okay
+
+
+# HTTP/1.1 200 OK
+# Date: Sat, 07 Oct 2006 04:16:57 GMT
+# Server: libwww-perl-daemon/1.36
+# Content-Type: text/html
+# Last-Modified: Sat, 07 Oct 2006 03:29:15 GMT
+# Client-Date: Sat, 07 Oct 2006 04:16:57 GMT
+# Client-Peer: 192.168.0.75:45978
+# Client-Response-Num: 1
+# Title: En prøve
+#
+# <html><title>En prøve</title>
+# <h1>Dette er en testfil</h1>
+# Jeg vet ikke hvor stor fila behøver å være heller, men dette
+# er sikkert nok i massevis.
+not ok 5 # content_length=0
+
+
+HERE [html] at ../blib/lib/LWP/MediaTypes.pm line 70.
+size[0]mtime[1160191755] at ../blib/lib/HTTP/Daemon.pm line 531.
+
+	Daemon.pm:
+	sysopen(F, $file, 0) or 
+	  return $self->send_error(RC_FORBIDDEN);
+	binmode(F);
+	my($ct,$ce) = guess_media_type($file);
+	my($size,$mtime) = (stat _)[7,9];
+
+	Tracked and reported to P5P. FINI.
+	
+	* Todo: Write a new test: If one prerequisite doesn't pass its tests, we
+	sure want to test the dependent module but it must not be installed. I
+	have no example at hand.
+
+	First continue fixing dummy-Build and dummy-Make distros (and maybe
+	more), then make one that is depending on dummy-Fails. DONE in rev. 973
+
+	And write the new test for it. DONE in rev. 975
+	
 	* Gabor reports #21692: how to reproduce? Just get a 5.8.7 and call
 	upgrade on it. No, take a 5.8.8 and silently replace B::Concise with the
 	5.8.7 one. OR: take some maint-5.8 short before 5.8.8! Where to find the
