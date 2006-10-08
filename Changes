@@ -1,3 +1,13 @@
+2006-10-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_53 (still pending)
+
+	* displays the version during loading of our own modules
+
+	* address #21692: make the "isa perl" case less noisy (Gabor Szabo)
+
+	* new tests
+
 2006-10-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_52

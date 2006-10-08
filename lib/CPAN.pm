@@ -294,6 +294,16 @@ ReadLine support %s
               }
           }
       }
+      if ($CPAN::DEBUG && $CPAN::DEBUG & $CPAN::DEBUG{CPAN}) {
+          # debugging 'incommandcolor': should always be off at the end of a command
+          # (incommandcolor is used to detect recursive dependencies)
+          for my $class (qw(Module Distribution)) {
+              for my $dm (keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
+                  next unless $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
+                  CPAN->debug("BUG: $class '$dm' is in command state");
+              }
+          }
+      }
     }
     soft_chdir_with_alternatives(\@cwd);
 }
