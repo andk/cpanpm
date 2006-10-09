@@ -278,6 +278,14 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
+    #= YAML vs. YAML::Syck
+    #
+    if (!$matcher or "yaml_module" =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{yaml_module_intro});
+        my_dflt_prompt(yaml_module => "YAML::Syck", $matcher);
+    }
+
+    #
     #= External programs
     #
 
@@ -1343,6 +1351,17 @@ for the question to yes (ask/yes) or no (ask/no).
 build_requires_install_policy =>
 qq{Policy on installing 'build_requires' modules (yes, no, ask/yes,
 ask/no)?},
+
+yaml_module_intro => qq{
+
+At the time of this writing there are two competing YAML modules,
+YAML.pm and YAML::Syck. The latter is faster but needs a C compiler
+installed on your system. There may be more alternative YAML
+conforming modules.
+
+},
+
+yaml_module => qq{Which YAML implementation would you prefer?},
 
 );
 

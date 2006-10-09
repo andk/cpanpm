@@ -11,6 +11,9 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
         init     => "Interactive setting of all options",
 );
 
+# Q: where is the "How do I add a new config option" HOWTO?
+# A: svn diff -r757:758 # where dagolden added test_report
+# Maybe 2nd: svn diff -r 984:985 # where andk added yaml_module
 %keys = map { $_ => undef } (
                              #  allow_unauthenticated ?? some day...
                              "build_cache",
@@ -72,6 +75,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "username",
                              "wait_list",
                              "wget",
+                             "yaml_module",
                             );
 if ($^O eq "MSWin32") {
     for my $k (qw(

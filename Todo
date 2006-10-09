@@ -15,6 +15,14 @@
 	executable, Authen-PAM asks me for a password, Module::Signature asks
 	for importing the key)
 
+	Name? DistroPrefs is good. Customize is not so good because one would
+	expect that it is related to 'o conf'. Distro must be in the name.
+	DistroCustomize is too long so DistroBuildEnv seems completely out of
+	band. Only Prefs is tempting but again too easily confusable with 'o
+	conf' stuff. Something completely different? Its about Env, Args, Stdin.
+	BuildInput? Distrinput? Distrin? No. DistroPrefs the long word, prefs
+	the short one. 'reload prefs' might be a command if we need it at all.
+
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
 

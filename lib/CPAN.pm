@@ -337,6 +337,19 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
+sub yaml_loadfile {
+    my($self,$local_file) = @_;
+    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    if ($CPAN::META->has_inst($yaml_module)) {
+        my $code = main->can("$yaml_module\::LoadFile");
+        my $yaml = $code->($local_file);
+        return $yaml;
+    } else {
+        $CPAN::Frontend->mydie("'$yaml_module' not installed, cannot parse '$local_file'\n");
+    }
+
+}
+
 package CPAN::CacheMgr;
 use strict;
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
@@ -4492,12 +4505,7 @@ sub fast_yaml {
                                 $local_wanted)) {
         $CPAN::Frontend->mydie("Giving up on downloading yaml file '$local_wanted'\n");
     }
-    if ($CPAN::META->has_inst("YAML")) {
-        my $yaml = YAML::LoadFile($local_file);
-        return $yaml;
-    } else {
-        $CPAN::Frontend->mydie("Yaml not installed, cannot parse '$local_file'\n");
-    }
+    my $yaml = CPAN->yaml_loadfile($local_file);
 }
 
 #-> sub CPAN::Distribution::pretty_id
@@ -5801,17 +5809,14 @@ sub read_yaml {
     my $yaml = File::Spec->catfile($build_dir,"META.yml");
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    if ($CPAN::META->has_inst("YAML")) {
-        eval { $self->{yaml_content} = YAML::LoadFile($yaml); };
-        if ($@) {
-            $CPAN::Frontend->mywarn("Error while parsing META.yml: $@");
-            return;
-        }
-        if (not exists $self->{yaml_content}{dynamic_config}
-            or $self->{yaml_content}{dynamic_config}
-           ) {
-            $self->{yaml_content} = undef;
-        }
+    eval { $self->{yaml_content} = CPAN->yaml_loadfile($yaml); };
+    if ($@) {
+        return; # if we die, then we cannot read our own META.yml
+    }
+    if (not exists $self->{yaml_content}{dynamic_config}
+        or $self->{yaml_content}{dynamic_config}
+       ) {
+        $self->{yaml_content} = undef;
     }
     $self->debug(sprintf "yaml_content[%s]", $self->{yaml_content} || "UNDEF")
         if $CPAN::DEBUG;
@@ -8443,6 +8448,7 @@ defined:
   username           your username if you CPAN server wants one
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
   wget               path to external prg
+  yaml_module        which module to use to read/write YAML files
 
 You can set and query each of these options interactively in the cpan
 shell with the command set defined within the C<o conf> command:
