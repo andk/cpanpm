@@ -1576,7 +1576,7 @@ index    re-reads the index files\n});
 # reload means only load again what we have loaded before
 #-> sub CPAN::Shell::reload_this ;
 sub reload_this {
-    my($self,$f) = @_;
+    my($self,$f,$args) = @_;
     CPAN->debug("f[$f]") if $CPAN::DEBUG;
     return 1 unless $INC{$f}; # we never loaded this, so we do not
                               # reload but say OK
@@ -1603,6 +1603,8 @@ sub reload_this {
     my $mtime = (stat $file)[9];
     $reload->{$f} ||= $^T;
     my $must_reload = $mtime > $reload->{$f};
+    $args ||= {};
+    $must_reload ||= $args->{force};
     if ($must_reload) {
         my $fh = FileHandle->new($file) or
             $CPAN::Frontend->mydie("Could not open $file: $!");

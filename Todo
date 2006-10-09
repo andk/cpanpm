@@ -12,7 +12,8 @@
 	and always questions from Module::AutoInstall, Carp::Clan asks if I want
 	a prereq for testing from Makefile.PL, Net::DNS ask if I want to run
 	tests over the internet, mod_perl or Apache::Test asks me for the apache
-	executable, Authen-PAM asks me for a password)
+	executable, Authen-PAM asks me for a password, Module::Signature asks
+	for importing the key)
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
