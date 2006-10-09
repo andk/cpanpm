@@ -2385,7 +2385,7 @@ sub rematein {
 	} elsif ($s =~ m|[\$\@\%]|) { # looks like a perl variable
 	} elsif ($s =~ m|^/|) { # looks like a regexp
             $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
-                                    "not supported. Rejecting argument '$s'\n");
+                                    "not supported.\nRejecting argument '$s'\n");
             $CPAN::Frontend->mysleep(2);
             next;
 	} elsif ($meth eq "ls") {
@@ -5673,8 +5673,8 @@ sub follow_prereqs {
                c => "commandline",
               );
     $CPAN::Frontend->
-        myprint("---- Unsatisfied dependencies detected ".
-                "during [$id] -----\n".
+        myprint("---- Unsatisfied dependencies detected during\n".
+                "---- $id\n".
                 join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @prereq_tuples),
                );
     my $follow = 0;
