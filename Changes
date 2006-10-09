@@ -1,6 +1,9 @@
 2006-10-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.88_53 (still pending)
+	* release 1.88_53
+
+	* wrapping Module::Build calls into an eval to catch external errors
+	with the right consequences.
 
 	* 'reload cpan' now based on timestamps
 	

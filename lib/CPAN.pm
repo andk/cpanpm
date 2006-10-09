@@ -304,7 +304,7 @@ ReadLine support %s
       }
       if ($GOTOSHELL) {
           $GOTOSHELL = 0; # not too often
-          $META->savehist;
+          $META->savehist if $CPAN::term && $CPAN::term->can("GetHistory");
           @_ = ($oprompt,"");
           goto &shell;
       }

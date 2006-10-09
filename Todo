@@ -30,7 +30,7 @@
 	commandcolor and many were neither installed nor reported as failed, so
 	the rev. 908 may be buggier than we ever were?? Maybe its just the "run
 	it twice" problem due to late dependency resolving. Oh and watch the
-	ugly bug that shows up when makeing Mason! Try it with older CPAN.pm
+	ugly bug that shows up when makeing Mason!
 
 	AHHHH, that is fixable with eval! FIXED in rev. 981.
 
