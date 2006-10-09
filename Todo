@@ -1,6 +1,6 @@
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* write a test with PrerecqurseI and II
+	* write a test with new dummy modules PrerecqurseI and II
 
 	* Schwern reopened 21144. Go resolve, I have promised before the next release.
 
@@ -10,7 +10,9 @@
 	scripts to Makefile.PL/make/test/install based on regexes being matched
 	against the distroname. (think libwww, ReadLine, perl-ldap, Apache-Test,
 	and always questions from Module::AutoInstall, Carp::Clan asks if I want
-	a prereq for testing from Makefile.PL)
+	a prereq for testing from Makefile.PL, Net::DNS ask if I want to run
+	tests over the internet, mod_perl or Apache::Test asks me for the apache
+	executable, Authen-PAM asks me for a password)
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
@@ -23,6 +25,14 @@
 	So it's something with follow_prereqs.
 
 	Seems to be fixed with rev. 980 but needs to stay on the watchlist
+
+	No, I just tried Bundle::Phalanx100 and the majority of modules was in
+	commandcolor and many were neither installed nor reported as failed, so
+	the rev. 908 may be buggier than we ever were?? Maybe its just the "run
+	it twice" problem due to late dependency resolving. Oh and watch the
+	ugly bug that shows up when makeing Mason! Try it with older CPAN.pm
+
+	AHHHH, that is fixable with eval! FIXED in rev. 981.
 
 2006-10-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

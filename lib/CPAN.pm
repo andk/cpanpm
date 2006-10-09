@@ -5890,8 +5890,24 @@ sub prereq_pm {
             }
         } elsif (-f "Build") {
             if ($CPAN::META->has_inst("Module::Build")) {
-                $req  = Module::Build->current->requires();
-                $breq = Module::Build->current->build_requires();
+                eval {
+                    $req  = Module::Build->current->requires();
+                    $breq = Module::Build->current->build_requires();
+                };
+                if ($@) {
+                    # HTML::Mason prompted for this with bleadperl@28900 or so
+                    $CPAN::Frontend
+                        ->mywarn(
+                                 sprintf("Warning: while trying to determine ".
+                                         "prerequisites for %s with the help of ".
+                                         "Module::Build the following error ".
+                                         "occurred: '%s'\n\nCannot care for prerequisites\n",
+                                         $self->id,
+                                         $@
+                                        ));
+                    $self->{prereq_pm_detected}++;
+                    return $self->{prereq_pm} = {requires=>{},build_requires=>{}};
+                }
             }
         }
     }
