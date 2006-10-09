@@ -2477,6 +2477,7 @@ to find objects with matching identifiers.
         CPAN->debug(qq{pragma[@pragma]meth[$meth]}.
                     qq{ID[$obj->{ID}]}) if $CPAN::DEBUG;
 
+        push @qcopy, $obj;
         if ($obj->$meth()){
             CPAN::Queue->delete($s);
         } else {

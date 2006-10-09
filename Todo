@@ -1,5 +1,7 @@
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* write a test with PrerecqurseI and II
+
 	* Schwern reopened 21144. Go resolve, I have promised before the next release.
 
 2006-10-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
@@ -12,6 +14,15 @@
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
+
+	First example is "Net::Stomp" with a prereq of Class::Accessor::Fast.
+	After it and its prereq are installed, the module Class::Accessor::Fast
+	and the distro K/KA/KASEI/Class-Accessor-0.25.tar.gz are both still in
+	command state.
+
+	So it's something with follow_prereqs.
+
+	Seems to be fixed with rev. 980 but needs to stay on the watchlist
 
 2006-10-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

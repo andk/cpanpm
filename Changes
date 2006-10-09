@@ -2,6 +2,8 @@
 
 	* release 1.88_53 (still pending)
 
+	* 'reload cpan' now based on timestamps
+	
 	* displays the version during loading of our own modules
 
 	* address #21692: make the "isa perl" case less noisy (Gabor Szabo)
