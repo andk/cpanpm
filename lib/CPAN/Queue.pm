@@ -98,6 +98,11 @@ sub jumpqueue {
                         join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
                         join("",map {sprintf " %s\[%s]",$_->[0],$_->[1]} @what)
                        )) if $CPAN::DEBUG;
+    unless (defined $what[0][1]) {
+        # apparently it was not the Shell that sent us this enquiry,
+        # treat it as commandline
+        # $what[0][1] = "c";
+     }
     my $inherit_reqtype = $what[0][1] =~ /^(c|r)$/ ? "r" : "b";
   WHAT: for my $what_tuple (@what) {
         my($what,$reqtype) = @$what_tuple;

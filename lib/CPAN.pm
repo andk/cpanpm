@@ -58,7 +58,9 @@ $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
-use vars qw($VERSION @EXPORT $AUTOLOAD $DEBUG $META $HAS_USABLE $term
+use vars qw($VERSION @EXPORT $AUTOLOAD
+            $DEBUG $META $HAS_USABLE $term
+            $GOTOSHELL
             $Signal $Suppress_readline $Frontend
             @Defaultsites $Have_warned $Defaultdocs $Defaultrecent
             $Be_Silent
@@ -237,14 +239,10 @@ ReadLine support %s
 	    $prompt = $oprompt;
 	} elsif (/./) {
 	    my(@line);
-	    if ($] < 5.00322) { # parsewords had a bug until recently
-		@line = split;
-	    } else {
-		eval { @line = Text::ParseWords::shellwords($_) };
-		warn($@), next SHELLCOMMAND if $@;
-                warn("Text::Parsewords could not parse the line [$_]"),
-                    next SHELLCOMMAND unless @line;
-	    }
+            eval { @line = Text::ParseWords::shellwords($_) };
+            warn($@), next SHELLCOMMAND if $@;
+            warn("Text::Parsewords could not parse the line [$_]"),
+                next SHELLCOMMAND unless @line;
 	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
@@ -275,8 +273,7 @@ ReadLine support %s
 	    require Term::ReadLine;
 	    $CPAN::Frontend->myprint("\n$redef subroutines in ".
 				     "Term::ReadLine redefined\n");
-            @_ = ($oprompt,"");
-	    goto &shell;
+            $GOTOSHELL = 1;
 	}
       }
       if ($term and $term->can("ornaments")) {
@@ -300,9 +297,16 @@ ReadLine support %s
           for my $class (qw(Module Distribution)) {
               for my $dm (keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
                   next unless $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
-                  CPAN->debug("BUG: $class '$dm' is in command state");
+                  CPAN->debug("BUG: $class '$dm' was in command state, resetting");
+                  delete $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
               }
           }
+      }
+      if ($GOTOSHELL) {
+          $GOTOSHELL = 0; # not too often
+          $META->savehist;
+          @_ = ($oprompt,"");
+          goto &shell;
       }
     }
     soft_chdir_with_alternatives(\@cwd);
@@ -1495,6 +1499,7 @@ Known options:
     }
 }
 
+# CPAN::Shell::paintdots_onreload
 sub paintdots_onreload {
     my($ref) = shift;
     sub {
@@ -1504,6 +1509,15 @@ sub paintdots_onreload {
 	    local($|) = 1;
 	    # $CPAN::Frontend->myprint(".($subr)");
 	    $CPAN::Frontend->myprint(".");
+            if ($subr =~ /\bshell\b/i) {
+                # warn "debug[$_[0]]";
+
+                # It would be nice if we could detect that a
+                # subroutine has actually changed, but for now we
+                # practically always set the GOTOSHELL global
+
+                $CPAN::GOTOSHELL=1;
+            }
 	    return;
 	}
 	warn @_;

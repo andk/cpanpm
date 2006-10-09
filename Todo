@@ -1,8 +1,31 @@
+2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* reload cpan should be based on timestamps.
+
+	* Schwern reopened 21144. Go resolve, I have promised before the next release.
+
 2006-10-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug via Bundle::Phalanx100? Shortly after perl-ldap-0.33 I see 
+
+Unknown require type for 'G/GB/GBARR/Convert-ASN1-0.20.tar.gz', setting to 'r'. This should not happen and is construed a bug.
+
+	Later:
+	
+Unknown require type for 'A/AG/AGROLMS/GSSAPI-0.23.tar.gz', setting to 'r'. This should not happen and is construed a bug.
+
+	Todo: see after it. I think it's AutoInstall.
 
 	* Nice to have: CPAN::MyDistroPrefs to store arguments and expect
 	scripts to Makefile.PL/make/test/install based on regexes being matched
-	against the distroname. (think libwww, ReadLine)
+	against the distroname. (think libwww, ReadLine, perl-ldap, Apache-Test,
+	and always questions from Module::AutoInstall)
+
+	And	JJORE/Carp-Clan-5.7.tar.gz asks
+
+Add Object::Deadly 0.08+ to prerequisites for testing? [Ny] [no] y
+
+	Not sure if this is AutoInstall asking.
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
