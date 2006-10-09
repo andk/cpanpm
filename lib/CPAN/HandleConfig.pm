@@ -586,7 +586,7 @@ $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 # formerly CPAN::HandleConfig was known as CPAN::Config
 sub AUTOLOAD {
   my($l) = $AUTOLOAD;
-  $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig");
+  $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig\n");
   $l =~ s/.*:://;
   CPAN::HandleConfig->$l(@_);
 }

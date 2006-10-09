@@ -101,7 +101,7 @@ sub jumpqueue {
     unless (defined $what[0][1]) {
         # apparently it was not the Shell that sent us this enquiry,
         # treat it as commandline
-        # $what[0][1] = "c";
+        $what[0][1] = "c";
      }
     my $inherit_reqtype = $what[0][1] =~ /^(c|r)$/ ? "r" : "b";
   WHAT: for my $what_tuple (@what) {

@@ -493,8 +493,13 @@ sub as_string {
 
 package CPAN::Shell;
 use strict;
-use vars qw($AUTOLOAD @ISA $COLOR_REGISTERED $ADVANCED_QUERY
+use vars qw(
+            $ADVANCED_QUERY
+            $AUTOLOAD
+            $COLOR_REGISTERED
             $autoload_recursion
+            $reload
+            @ISA
            );
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
@@ -1555,7 +1560,6 @@ sub reload {
             $CPAN::Frontend->myprint("v$v)");
         }
         $CPAN::Frontend->myprint("\n$redef subroutines redefined\n");
-        $failed++ unless $redef;
         if ($failed) {
             my $errors = $failed == 1 ? "error" : "errors";
             $CPAN::Frontend->mywarn("\n$failed $errors during reload. You better quit ".
@@ -1596,19 +1600,27 @@ sub reload_this {
         $CPAN::Frontend->mywarn("Found no file to reload for '$f'\n");
         return;
     }
-    my $fh = FileHandle->new($file) or
-        $CPAN::Frontend->mydie("Could not open $file: $!");
-    local($/);
-    local $^W = 1;
-    my $content = <$fh>;
-    CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
-        if $CPAN::DEBUG;
-    delete $INC{$f};
-    local @INC = @inc;
-    eval "require '$f'";
-    if ($@){
-        warn $@;
-        return;
+    my $mtime = (stat $file)[9];
+    $reload->{$f} ||= $^T;
+    my $must_reload = $mtime > $reload->{$f};
+    if ($must_reload) {
+        my $fh = FileHandle->new($file) or
+            $CPAN::Frontend->mydie("Could not open $file: $!");
+        local($/);
+        local $^W = 1;
+        my $content = <$fh>;
+        CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
+            if $CPAN::DEBUG;
+        delete $INC{$f};
+        local @INC = @inc;
+        eval "require '$f'";
+        if ($@){
+            warn $@;
+            return;
+        }
+        $reload->{$f} = time;
+    } else {
+        $CPAN::Frontend->myprint("__unchanged__");
     }
     return 1;
 }
@@ -6200,12 +6212,7 @@ sub install {
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
     $CPAN::Config->{build_requires_install_policy}||="ask/yes";
     my $id = $self->id;
-    my $reqtype = $self->{reqtype};
-    unless ($reqtype) {
-        $CPAN::Frontend->mywarn("Unknown require type for '$id', setting to 'r'. ".
-                                "This should not happen and is construed a bug.\n");
-        $reqtype = "r";
-    }
+    my $reqtype = $self->{reqtype} ||= "c"; # in doubt it was a command
     my $want_install = "yes";
     if ($reqtype eq "b") {
         if ($CPAN::Config->{build_requires_install_policy} eq "no") {
