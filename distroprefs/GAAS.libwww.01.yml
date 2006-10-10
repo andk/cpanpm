@@ -1,0 +1,31 @@
+--- 
+qr: "^GAAS/libwww-perl-"
+prefer_installer: EUMM
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+pl: 
+  args: 
+    - -n
+  env: {}
+
+  expect: []
+
+test: 
+  args: []
+
+  env: {}
+
+  expect: []
+

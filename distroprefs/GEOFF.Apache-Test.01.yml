@@ -1,0 +1,32 @@
+--- 
+qr: "^GEOFF/Apache-Test-"
+prefer_installer: EUMM
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+pl: 
+  args: 
+    - -httpd
+    - /usr/sbin/apache-perl
+  env: {}
+
+  expect: []
+
+test: 
+  args: []
+
+  env: {}
+
+  expect: []
+

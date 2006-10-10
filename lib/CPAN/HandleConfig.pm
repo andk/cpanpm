@@ -12,8 +12,8 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 );
 
 # Q: where is the "How do I add a new config option" HOWTO?
-# A: svn diff -r757:758 # where dagolden added test_report
-# Maybe 2nd: svn diff -r 984:985 # where andk added yaml_module
+# A1: svn diff -r 757:758 # where dagolden added test_report
+# A2: svn diff -r 985:986 # where andk added yaml_module
 %keys = map { $_ => undef } (
                              #  allow_unauthenticated ?? some day...
                              "build_cache",
@@ -61,6 +61,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "password",
                              "prefer_installer",
                              "prerequisites_policy",
+                             "prefs_dir",
                              "proxy_pass",
                              "proxy_user",
                              "scan_cache",

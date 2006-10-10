@@ -1,3 +1,7 @@
+2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* New option 'yaml_module' to switch between YAML.pm and YAML::Syck
+
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_53

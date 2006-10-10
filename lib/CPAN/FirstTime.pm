@@ -144,7 +144,7 @@ sub init {
       }
     }
 
-    if (!$matcher or 'cpan_home keep_source_where build_dir' =~ /$matcher/){
+    if (!$matcher or 'cpan_home keep_source_where build_dir prefs_dir' =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{config_intro});
 
         if (!$matcher or 'cpan_home' =~ /$matcher/) {
@@ -205,6 +205,13 @@ Shall we use it as the general CPAN build and cache directory?
                            $matcher
                           );
         }
+
+        if (!$matcher or 'prefs_dir' =~ /$matcher/) {
+            my_dflt_prompt("prefs_dir",
+                           File::Spec->catdir($CPAN::Config->{cpan_home},"prefs"),
+                           $matcher
+                          );
+        }
     }
 
     #
@@ -212,21 +219,16 @@ Shall we use it as the general CPAN build and cache directory?
     #
 
     if (!$matcher or 'build_cache' =~ /$matcher/){
-        $CPAN::Frontend->myprint($prompts{build_cache_intro});
-
         # large enough to build large dists like Tk
         my_dflt_prompt(build_cache => 100, $matcher);
     }
 
     if (!$matcher or 'index_expire' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{index_expire_intro});
-
         my_dflt_prompt(index_expire => 1, $matcher);
     }
 
     if (!$matcher or 'scan_cache' =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{scan_cache_intro});
-
         my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
     }
 
@@ -281,7 +283,6 @@ Shall we use it as the general CPAN build and cache directory?
     #= YAML vs. YAML::Syck
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{yaml_module_intro});
         my_dflt_prompt(yaml_module => "YAML::Syck", $matcher);
     }
 
@@ -378,8 +379,6 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/){
-        $CPAN::Frontend->myprint($prompts{makepl_arg_intro});
-
         my_dflt_prompt(makepl_arg => "", $matcher);
         my_dflt_prompt(make_arg => "", $matcher);
     }
@@ -396,10 +395,7 @@ Shall we use it as the general CPAN build and cache directory?
 		   $matcher);
 
     if (!$matcher or 'mbuildpl_arg mbuild_arg' =~ /$matcher/){
-        $CPAN::Frontend->myprint($prompts{mbuildpl_arg_intro});
-
         my_dflt_prompt(mbuildpl_arg => "", $matcher);
-
         my_dflt_prompt(mbuild_arg => "", $matcher);
     }
 
@@ -582,6 +578,9 @@ sub my_dflt_prompt {
 
     $DB::single = 1;
     if (!$m || $item =~ /$m/) {
+        if (my $intro = $prompts{$item . "_intro"}) {
+            $CPAN::Frontend->myprint($intro);
+        }
 	$CPAN::Config->{$item} = prompt($prompts{$item}, $default);
     } else {
 	$CPAN::Config->{$item} = $default;
@@ -937,7 +936,7 @@ config_intro => qq{
 The following questions are intended to help you with the
 configuration. The CPAN module needs a directory of its own to cache
 important index files and maybe keep a temporary mirror of CPAN files.
-This may be a site-wide directory or a personal directory.
+This may be a site-wide or a personal directory.
 
 },
 
@@ -968,6 +967,22 @@ build_cache =>
 build_dir =>
 
 "Directory where the build process takes place?",
+
+prefs_dir_intro => qq{
+
+CPAN.pm can store customized build environments based on regular
+expressions for distribution names. These are YAML files where the
+default options for CPAN.pm and the environment can be overridden and
+expect sequences can be stored to emulate user input. The CPAN.pm
+distribution comes with some prefab YAML files that cover sample
+distributions that can be used as blueprints for your own preferences.
+
+},
+
+prefs_dir =>
+
+"Directory where to store default options/environment/dialogs for
+building modules that need some customization?",
 
 scan_cache_intro => qq{
 

@@ -1,3 +1,28 @@
+2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* write a dummy distro that reads arguments to Makefile.PL
+
+	* DistroPrefs:
+
+	Variable           Comment                      Done in file
+
+  prefer_installer
+  test_report       turn off for ReadLine
+  pl env
+     args                                         GAAS.libwww.01.yml
+     expect
+  make env
+       args
+       expect
+  test env
+       args
+       expect        ReadLine
+  install env
+          args
+          expect
+
+	* replace 03 index file with YAML.
+
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* write a test with new dummy modules PrerecqurseI and II
@@ -53,10 +78,6 @@
 	* new keyword capture? CPAN::Reporter does not know the output of the
 	commands before "test" and cannot report about compilation failures.
 	This looks like a major flaw to me:-(
-
-	* E1: Nice to have: make YAML vs. YAML::Syck switchable. Another
-	advantage would be that we could remove YAML from the Bundle.
-	Beforethought: replace 03 index file with YAML!
 
 	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
 	FOO', we should only check for the authors database, etc.
@@ -191,6 +212,9 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* E1: Nice to have: make YAML vs. YAML::Syck switchable. Another
+	advantage would be that we could remove YAML from the Bundle. DONE rev. 986
 
 	* reload cpan should be based on timestamps. Fixed in rev. 979
 

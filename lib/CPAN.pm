@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_53';
+$CPAN::VERSION = '1.88_54';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -337,6 +337,7 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
+# CPAN::yaml_loadfile
 sub yaml_loadfile {
     my($self,$local_file) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
@@ -345,9 +346,41 @@ sub yaml_loadfile {
         my $yaml = $code->($local_file);
         return $yaml;
     } else {
-        $CPAN::Frontend->mydie("'$yaml_module' not installed, cannot parse '$local_file'\n");
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
     }
+    return +{};
+}
 
+# CPAN::prefs
+sub prefs {
+    my($self,$distro) = @_;
+    CPAN->debug("distro[$distro]") if $CPAN::DEBUG;
+    my $prefs_dir = $CPAN::Config->{prefs_dir};
+    eval { File::Path::mkpath($prefs_dir); };
+    if ($@) {
+        $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
+    }
+    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    if ($CPAN::META->has_inst($yaml_module)) {
+        my $dh = DirHandle->new($prefs_dir)
+            or die Carp::croak("Couldn't open '$prefs_dir': $!");
+        for (sort $dh->read) {
+            next if $_ eq "." || $_ eq "..";
+            next unless /\.yml$/;
+            my $abs = File::Spec->catfile($prefs_dir, $_);
+            CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
+            if (-f $abs) {
+                my $yaml = $self->yaml_loadfile($abs);
+                my $qr = eval "qr{$yaml->{qr}}";
+                if ($distro =~ /$qr/) {
+                    return $yaml;
+                }
+            }
+        }
+    } else {
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
+    }
+    return;
 }
 
 package CPAN::CacheMgr;
@@ -5542,10 +5575,11 @@ is part of the perl-%s distribution. To install that, you need to run
 #	$switch = "-MExtUtils::MakeMaker ".
 #	    "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
 #	    if $] > 5.00310;
+        my $makepl_arg = $self->makepl_arg;
 	$system = sprintf("%s%s Makefile.PL%s",
                           $perl,
                           $switch ? " $switch" : "",
-                          $CPAN::Config->{makepl_arg} ? " $CPAN::Config->{makepl_arg}" : "",
+                          $makepl_arg ? " $makepl_arg" : "",
                          );
     }
     unless (exists $self->{writemakefile}) {
@@ -5654,6 +5688,41 @@ is part of the perl-%s distribution. To install that, you need to run
     }
 }
 
+# CPAN::Distribution::prefs
+sub prefs {
+    my($self) = @_;
+    if (exists $self->{prefs}) {
+        return $self->{prefs};
+    }
+    if ($CPAN::Config->{prefs_dir}) {
+        CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
+        my $prefs = CPAN->prefs($self->pretty_id);
+        CPAN->debug("prefs[$prefs]") if $CPAN::DEBUG;
+        if ($prefs) {
+            return $self->{prefs} = $prefs;
+        }
+    }
+}
+
+# CPAN::Distribution::makepl_arg
+sub makepl_arg {
+    my($self) = @_;
+    my $makepl_arg;
+    my $prefs = $self->prefs;
+    if (
+        $prefs
+        && exists $prefs->{pl}
+        && exists $prefs->{pl}{args}
+        && $prefs->{pl}{args}
+       ) {
+        # XXX quote them!
+        $makepl_arg = join " ", @{$prefs->{pl}{args}};
+    }
+    $makepl_arg ||= $CPAN::Config->{makepl_arg};
+    return $makepl_arg;
+}
+
+# CPAN::Distribution::_make_command
 sub _make_command {
     my ($self) = @_;
     if ($self) {
@@ -8433,6 +8502,7 @@ defined:
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
+  prefs_dir          local directory to store per-distro build options
   proxy_user         username for accessing an authenticating proxy
   proxy_pass         password for accessing an authenticating proxy
   scan_cache	     controls scanning of cache ('atstart' or 'never')
