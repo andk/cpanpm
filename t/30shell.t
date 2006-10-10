@@ -1030,7 +1030,7 @@ To add a new distro, the following steps must be taken:
 
 - svn add (or svn cp) the whole source code under the author's homedir
 
-- add the source code directory with a trailing slash to MANIFEST.SKIP
+- add the source code directory with a trailing slash to ../MANIFEST.SKIP
 
 - finish now the distro until it does what you intended
 
@@ -1042,10 +1042,10 @@ To add a new distro, the following steps must be taken:
 
 - *svn add* the new testdistro (first we did that, then we stopped
   doing it for "it makes no sense"; then I realized we need to do it
-  because with a newer MakeMaker or Moule::Build we cannot regenerate
+  because with a newer MakeMaker or Module::Build we cannot regenerate
   them byte-by-byte and lose the signature war)
 
-- add it to the MANIFEST
+- add it to the ../MANIFEST
 
 (3) Upload and embed into our minicpan
 

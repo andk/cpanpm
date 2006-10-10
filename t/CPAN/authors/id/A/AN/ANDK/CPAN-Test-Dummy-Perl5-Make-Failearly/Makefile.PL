@@ -1,22 +1,28 @@
 use strict;
 use ExtUtils::MakeMaker;
+
+die "This Makefile.PL of CPAN::Test::Dummy::Perl5::Make::Failearly
+demonstrates what happens when a Makefile.PL dies.
+
+This can be avoided by touching a file 'SURVIVE' in the current
+directory.
+
+Goodbye.
+" unless -e "SURVIVE";
 use File::Spec;
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
 
 WriteMakefile(
-              NAME          => 'CPAN::Test::Dummy::Perl5::Make::Zip',
-              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/Zip.pm'),
+              NAME          => 'CPAN::Test::Dummy::Perl5::Make::Failearly',
+              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/Failearly.pm'),
               ($ExtUtils::MakeMaker::VERSION >= 6.31 ?
                (LICENSE      => "perl") : (),
               ),
               ABSTRACT      => 'CPAN Test Dummy for CPAN.pm',
-              'dist' => {
-                         DIST_DEFAULT => 'Makefile verify-MakeMaker-6.31 verify-no-subdir all zipdist',
-                        },
               PL_FILES      => {},
-              PREREQ_PM     => {
-                                "CPAN::Test::Dummy::Perl5::Make" => 0,
-                               }
+              'dist' => {
+                         DIST_DEFAULT => 'Makefile verify-MakeMaker-6.31 verify-no-subdir all tardist',
+                        },
 );
 
 sub MY::postamble {

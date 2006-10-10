@@ -5718,7 +5718,7 @@ sub run_via_expect {
 sub prefs {
     my($self) = @_;
     if (exists $self->{prefs}) {
-        # return $self->{prefs}; # comment out during debugging
+        return $self->{prefs}; # XXX comment out during debugging
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;

@@ -3,7 +3,7 @@
 	* put the distroprefs directory into MANIFEST
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
-	one that reads something from STDIN (or maybe both in one!
+	one that reads something from STDIN (or maybe both in one)
 
 	* just a memo what I usually install:
 
