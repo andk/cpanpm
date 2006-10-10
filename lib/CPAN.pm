@@ -5696,7 +5696,6 @@ sub run_via_expect {
     my($self,$system,$expect) = @_;
     CPAN->debug("system[$system]expect[$expect]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst("Expect")) {
-        $CPAN::Frontend->mywarn("FIXME: Expect not yet implemented\n");
         my $expo = Expect->new;
         $expo->spawn($system);
         for (my $i = 0; $i < $#$expect; $i+=2) {
