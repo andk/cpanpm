@@ -19,7 +19,7 @@
   test_report       turn off for ReadLine
   pl env
      args                                         GAAS.libwww.01.yml
-     expect
+     expect                                       JJORE.Carp-Clan.01.yml
   make env
        args
        expect

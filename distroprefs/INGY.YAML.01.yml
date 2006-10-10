@@ -1,0 +1,33 @@
+--- 
+qr: "^INGY/YAML-0.62"
+prefer_installer: EUMM
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+pl: 
+  args: []
+
+  env: {}
+
+  expect:
+    - "Continue installing"
+    - "y\n"
+
+test: 
+  args: []
+
+  env: {}
+
+  expect: []
+
