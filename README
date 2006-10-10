@@ -926,6 +926,7 @@ CONFIGURATION
       prerequisites_policy
                          what to do if you are missing module prerequisites
                          ('follow' automatically, 'ask' me, or 'ignore')
+      prefs_dir          local directory to store per-distro build options
       proxy_user         username for accessing an authenticating proxy
       proxy_pass         password for accessing an authenticating proxy
       scan_cache         controls scanning of cache ('atstart' or 'never')
@@ -941,6 +942,7 @@ CONFIGURATION
       username           your username if you CPAN server wants one
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
       wget               path to external prg
+      yaml_module        which module to use to read/write YAML files
 
     You can set and query each of these options interactively in the cpan
     shell with the command set defined within the "o conf" command:

@@ -742,10 +742,10 @@ __END__
 #P:n
 #R:Digest::SHA
 ########
-#P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.04.tar.gz
+#P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.05.tar.gz
 #E:CONTAINSMODS\s+CPAN::Test::Dummy::Perl5::Make
 ########
-#P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.04.tar.gz
+#P:d ANDK/CPAN-Test-Dummy-Perl5-Make-1.05.tar.gz
 #E:CPAN_USERID.*?ANDK.*?Andreas
 ########
 #P:ls ANDK
@@ -824,7 +824,7 @@ __END__
 #P:dump CPAN::Test::Dummy::Perl5::BuildOrMake
 #E:\}.+?CPAN::Module
 ########
-#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
 #E:\}.+?CPAN::Distribution
 ########
 #P:make CPAN::Test::Dummy::Perl5::BuildOrMake
@@ -841,7 +841,7 @@ __END__
 #P:dump CPAN::Test::Dummy::Perl5::BuildOrMake
 #E:\}.+?CPAN::Module
 ########
-#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
 #E:\}.+?CPAN::Distributio.
 ########
 #P:make CPAN::Test::Dummy::Perl5::BuildOrMake
@@ -857,7 +857,7 @@ __END__
 #E:\}
 #R:Module::Build
 ########
-#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.01.tar.gz
+#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
 #E:\}
 #R:Module::Build
 ########
