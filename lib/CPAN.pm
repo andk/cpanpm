@@ -2537,7 +2537,6 @@ to find objects with matching identifiers.
     }
     for my $obj (@qcopy) {
         $obj->color_cmd_tmps(0,0);
-        delete $obj->{incommandcolor};
     }
 }
 
@@ -5636,13 +5635,17 @@ is part of the perl-%s distribution. To install that, you need to run
                 return;
             }
 	} else {
-	  $ret = system($system);
-	  if ($ret != 0) {
-	    $self->{writemakefile} = CPAN::Distrostatus
-                ->new("NO '$system' returned status $ret");
-            $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
-	    return;
-	  }
+            if (my $expect = $self->prefs->{pl}{expect}) {
+                $ret = $self->run_via_expect($system,$expect);
+            } else {
+                $ret = system($system);
+            }
+            if ($ret != 0) {
+                $self->{writemakefile} = CPAN::Distrostatus
+                    ->new("NO '$system' returned status $ret");
+                $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
+                return;
+            }
 	}
 	if (-f "Makefile" || -f "Build") {
 	  $self->{writemakefile} = CPAN::Distrostatus->new("YES");
@@ -5688,11 +5691,34 @@ is part of the perl-%s distribution. To install that, you need to run
     }
 }
 
+# CPAN::Distribution::run_via_expect
+sub run_via_expect {
+    my($self,$system,$expect) = @_;
+    CPAN->debug("system[$system]expect[$expect]") if $CPAN::DEBUG;
+    if ($CPAN::META->has_inst("Expect")) {
+        $CPAN::Frontend->mywarn("FIXME: Expect not yet implemented\n");
+        my $expo = Expect->new;
+        $expo->spawn($system);
+        for (my $i = 0; $i < $#$expect; $i+=2) {
+            my $regex = eval "qr{$expect->[$i]}";
+            my $send = $expect->[$i+1];
+            $expo->expect(10,
+                          -re => $regex);
+            $expo->send($send);
+        }
+        $expo->soft_close;
+        return $expo->exitstatus();
+    } else {
+        $CPAN::Frontend->mywarn("Expect not installed, falling back to system()");
+        return system($system);
+    }
+}
+
 # CPAN::Distribution::prefs
 sub prefs {
     my($self) = @_;
     if (exists $self->{prefs}) {
-        return $self->{prefs};
+        # return $self->{prefs}; # comment out during debugging
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
@@ -5702,6 +5728,7 @@ sub prefs {
             return $self->{prefs} = $prefs;
         }
     }
+    return +{};
 }
 
 # CPAN::Distribution::makepl_arg
@@ -5715,8 +5742,10 @@ sub makepl_arg {
         && exists $prefs->{pl}{args}
         && $prefs->{pl}{args}
        ) {
-        # XXX quote them!
-        $makepl_arg = join " ", @{$prefs->{pl}{args}};
+        $makepl_arg = join(" ",
+                           map {CPAN::HandleConfig
+                                 ->safe_quote($_)} @{$prefs->{pl}{args}},
+                          );
     }
     $makepl_arg ||= $CPAN::Config->{makepl_arg};
     return $makepl_arg;
@@ -5727,7 +5756,7 @@ sub _make_command {
     my ($self) = @_;
     if ($self) {
         return
-          CPAN::HandleConfig
+            CPAN::HandleConfig
                 ->safe_quote(
                              $CPAN::Config->{make} || $Config::Config{make} || 'make'
                             );
