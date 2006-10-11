@@ -6126,8 +6126,10 @@ sub test {
         $system = join " ", $self->_make_command(), "test";
     }
     my $tests_ok;
-    if ( $CPAN::Config->{test_report} && 
-         $CPAN::META->has_inst("CPAN::Reporter") ) {
+    if (my $expect = $self->prefs->{test}{expect}) {
+        $tests_ok = $self->run_via_expect($system,$expect) == 0;
+    } elsif ( $CPAN::Config->{test_report} && 
+              $CPAN::META->has_inst("CPAN::Reporter") ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
         $tests_ok = system($system) == 0;

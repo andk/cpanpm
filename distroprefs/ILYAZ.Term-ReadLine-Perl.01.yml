@@ -1,9 +1,9 @@
 --- 
-qr: "^GAAS/libwww-perl-"
+qr: "^ILYAZ/modules/Term-ReadLine-Perl-"
 prefer_installer: EUMM
 pl: 
-  args: 
-    - -n
+  args: []
+
   env: {}
 
   expect: []
@@ -20,7 +20,7 @@ test:
 
   env: {}
 
-  expect: []
+  expect: ["Enter arithmetic or Perl expression", "\n"]
 
 install: 
   args: []
