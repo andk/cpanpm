@@ -56,14 +56,14 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 	Variable           Comment                      Done in file
 
   prefer_installer
-  test_report       turn off for ReadLine
+  test_report       turn off for ReadLine?
   pl env
      args                                         GAAS.libwww.01.yml
      expect                                       JJORE.Carp-Clan.01.yml
   make env
        args
        expect
-  test env
+  test env           Tk-Getopt(BATCH=1)
        args
        expect        ReadLine
   install env
