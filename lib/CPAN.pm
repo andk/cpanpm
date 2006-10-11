@@ -6144,7 +6144,8 @@ sub test {
             $ENV{$e} = $env->{$e};
         }
     }
-    if (my $expect = $self->prefs->{test}{expect}) {
+    my $expect = $self->prefs->{test}{expect};
+    if ($expect && @$expect) {
         $tests_ok = $self->run_via_expect($system,$expect) == 0;
     } elsif ( $CPAN::Config->{test_report} && 
               $CPAN::META->has_inst("CPAN::Reporter") ) {
