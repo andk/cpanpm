@@ -35,12 +35,12 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
 	way we can catch bugs in M:C:A itself or in its dependencies.
 
-	* Since when fails a YAML test? 0.62 with blead @28890 fails today on
-	rt-bugs.t or so. Reported to P5P.
+	* Since when fails a YAML test? 0.62 with blead @28990 fails today on
+	rt-bugs.t or so. Reported to P5P. RESOLVED in blead @28997.
 
 2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* put the distroprefs directory into MANIFEST
+	* put the distroprefs directory into MANIFEST. DONE in rev. 993
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
 	one that reads something from STDIN (or maybe both in one)
@@ -62,7 +62,7 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
   make env
        args
        expect
-  test env           Tk-Getopt(BATCH=1)
+  test env           Tk-Getopt(BATCH=1)           SREZIC.Tk-Autoscroll.01.yml
        args
        expect        ReadLine                     ILYAZ.Term-ReadLine-Perl.01.yml
   install env

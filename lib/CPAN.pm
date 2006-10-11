@@ -6125,7 +6125,13 @@ sub test {
     } else {
         $system = join " ", $self->_make_command(), "test";
     }
-    my $tests_ok;
+    my($tests_ok);
+    local %ENV = %ENV;
+    if (my $env = $self->prefs->{test}{env}) {
+        for my $e (keys %$env) {
+            $ENV{$e} = $env->{$e};
+        }
+    }
     if (my $expect = $self->prefs->{test}{expect}) {
         $tests_ok = $self->run_via_expect($system,$expect) == 0;
     } elsif ( $CPAN::Config->{test_report} && 

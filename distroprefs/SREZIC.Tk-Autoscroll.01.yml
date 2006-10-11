@@ -1,0 +1,32 @@
+--- 
+qr: "^SREZIC/Tk-Autoscroll-"
+prefer_installer: EUMM
+pl: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+test: 
+  args: []
+
+  env:
+    BATCH: 1
+
+  expect: []
+
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+
