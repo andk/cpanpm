@@ -165,6 +165,7 @@ Shall we use it as the general CPAN build and cache directory?
             }
 
             $default = $cpan_home;
+            my $loop = 0;
             while ($ans = prompt("CPAN build and cache directory?",$default)) {
                 unless (File::Spec->file_name_is_absolute($ans)) {
                     require Cwd;
@@ -187,6 +188,9 @@ Shall we use it as the general CPAN build and cache directory?
                 } else {
                     $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
                                             "or directory is not writable. Please retry.\n");
+                    if (++$loop > 5) {
+                        $CPAN::Frontend->mydie("Giving up");
+                    }
                 }
             }
             $CPAN::Config->{cpan_home} = $ans;

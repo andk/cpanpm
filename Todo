@@ -1,5 +1,70 @@
 2006-10-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* F/FD/FDALY/Test-Deep-0.096.tar.gz is just needed temporarily during building or testing. Do you want to install it permanently? (Y/n) [no] 
+
+	* BTROTT/Crypt-DSA-0.14.tar.gz
+
+==> Auto-install the 1 optional module(s) from CPAN? [n] 
+==> Auto-install the 1 optional module(s) from CPAN? [n] 
+
+	* PETDANCE/WWW-Mechanize-1.20.tar.gz
+
+Do you want to install the mech-dump utility? [y] 
+
+	* ABW/Template-Toolkit-2.15.tar.gz
+
+Do you want to build the XS Stash module? [y] 
+
++ about 9 questions
+
+	* BYRNE/SOAP-Lite-0.69.tar.gz
+
+Press <enter> to see the detailed list.  
+
+Do you want to proceed with this configuration? [yes] 
+
+Do you want to perform these tests in addition to core tests? [no] 
+
+	* RCAPUTO/POE-0.38.tar.gz
+
+Would you like to skip the network tests?
+
+(Any text other than Y or y will be taken as a no) [n] 
+
+	* DBROBINS/Net-SSH-Perl-1.30.tar.gz asks
+
+Which protocol(s) do you plan to use? [3] 
+Enter your choices, separated by spaces: [1] 
+Would you like to install it? (y/n) [y] 
+Would you like to install it? (y/n) [y] 
+
+	* ILYAZ/modules/Math-Pari-2.010706.tar.gz asks
+
+Make sure you have a large scrollback buffer to see the messages.
+Fetch? (y/n, press Enter) 
+
+	* INGY/Inline-0.44.tar.gz asks for
+
+Do you want to install Inline::C? [y] 
+
+	* EESTABROO/IMAP-Admin-1.6.4.tar.gz asks me for...
+
+Enter server: 
+Enter login: 
+Enter password: 
+Test using SSL(y/n)? 
+Test using CRAM(y/n)? 
+Enter Port#: 
+
+	* NIKIP/Authen-PAM: asks me for a password during testing and I enter
+	"testing". Maybe I should enter exactly what he demands?
+
+	* GBARR/perl-ldap-0.33 and ExtUtils::AutoInstall. Read source code. Same
+	for GBARR/Authen-SASL-2.10
+
+	* CHAMAS/SSLeay: the first distro that shows us that Expect needs a
+	debugging aid. Maybe fixed in rev. 998 or so
+
 	* Interesting bug occurred with current maint when I tried to upgrade
 	everything. PathTools failed and I see this:
 

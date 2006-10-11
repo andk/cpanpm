@@ -5702,6 +5702,18 @@ sub run_via_expect {
             my $regex = eval "qr{$expect->[$i]}";
             my $send = $expect->[$i+1];
             $expo->expect(10,
+                          [ eof => sub {
+                                my $but = $expo->clear_accum;
+                                warn "EOF system[$system]
+expected[$regex]\nbut[$but]\n\n";
+                                exit;
+                            } ],
+                          [ timeout => sub {
+                                my $but = $expo->clear_accum;
+                                warn "TIMEOUT system[$system]
+expected[$regex]\nbut[$but]\n\n";
+                                exit;
+                            } ],
                           -re => $regex);
             $expo->send($send);
         }
