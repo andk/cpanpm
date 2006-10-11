@@ -10,6 +10,12 @@ PAUSE2003.pub
 PAUSE2005.pub
 README
 Todo
+distroprefs/CHAMAS.Crypt-SSLeay.01.yml
+distroprefs/GAAS.libwww.01.yml
+distroprefs/GEOFF.Apache-Test.01.yml
+distroprefs/INGY.YAML.01.yml
+distroprefs/JJORE.Carp-Clan.01.yml
+distroprefs/OLAF.Net-DNS.01.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm

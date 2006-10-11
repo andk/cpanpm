@@ -1,3 +1,11 @@
+2006-10-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
+	way we can catch bugs in M:C:A itself or in its dependencies.
+
+	* Since when fails a YAML test? 0.62 with blead @28890 fails today on
+	rt-bugs.t or so. Reported to P5P.
+
 2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* put the distroprefs directory into MANIFEST

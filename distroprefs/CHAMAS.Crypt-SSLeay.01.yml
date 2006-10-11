@@ -1,0 +1,32 @@
+--- 
+qr: "^CHAMAS/Crypt-SSLeay-"
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+pl: 
+  args: []
+
+  env: {}
+
+  expect:
+    - "Which OpenSSL build path"
+    - "/usr\n"
+
+test: 
+  args: []
+
+  env: {}
+
+  expect: []
+
