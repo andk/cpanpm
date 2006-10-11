@@ -1,5 +1,37 @@
 2006-10-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Interesting bug occurred with current maint when I tried to upgrade
+	everything. PathTools failed and I see this:
+
+	cpan[3]> d  KWILLIAMS/PathTools-3.22.tar.gz 
+Use of uninitialized value in sprintf at lib/CPAN.pm line 4258.
+Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
+    CPAN_USERID  P5P (The Perl5 Porters Mailing List <perl5-porters@perl.org>)
+    CALLED_FOR   File::Spec
+    CHECKSUM_STATUS OK
+    CONTAINSMODS Cwd File::Spec File::Spec::Cygwin File::Spec::Epoc File::Spec::Functions File::Spec::Mac File::Spec::OS2 File::Spec::Unix File::Spec::VMS File::Spec::Win32
+    UPLOAD_DATE  2006-10-10
+    archived     tar
+    build_dir    /home/k/.cpan/build/PathTools-3.22
+    incommandcolor 0
+    localfile    /home/ftp/pub/CPAN/authors/id/K/KW/KWILLIAMS/PathTools-3.22.tar.gz
+    make         NO
+    modulebuild  1
+    prereq_pm    build_requires requires
+    prereq_pm_detected 1
+    reqtype      c
+    unwrapped    YES
+    writemakefile YES
+    yaml_content 
+
+	But I cannot reproduce it. So I must have upgraded something that caused
+	the bug.
+
+	* Randy's CPAN-Search-Lite lives at
+	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
+	/home/src/perl/cpan-search-lite/CPAN-Search-Lite. As it needs DBI, it
+	cannot use bleadperl. Latest maint-perl is 28854.
+
 	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
 	way we can catch bugs in M:C:A itself or in its dependencies.
 
