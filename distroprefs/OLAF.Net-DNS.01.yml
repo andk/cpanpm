@@ -1,9 +1,8 @@
 --- 
 qr: "^OLAF/Net-DNS-"
-prefer_installer: EUMM
-install: 
-  args: []
-
+pl: 
+  args: 
+    - --no-online-tests
   env: {}
 
   expect: []
@@ -15,14 +14,14 @@ make:
 
   expect: []
 
-pl: 
-  args: 
-    - --no-online-tests
+test: 
+  args: []
+
   env: {}
 
   expect: []
 
-test: 
+install: 
   args: []
 
   env: {}

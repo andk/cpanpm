@@ -1,0 +1,5 @@
+--- 
+qr: "^DBROBINS/Net-SSH-Perl-"
+pl: 
+  env: 
+    PERL_MM_USE_DEFAULT: 1

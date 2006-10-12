@@ -1,0 +1,6 @@
+--- 
+qr: "^MIYAGAWA/XML-Atom-"
+pl: 
+  expect: 
+    - "Auto-install"
+    - "y\n"

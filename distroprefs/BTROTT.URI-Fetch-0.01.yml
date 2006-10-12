@@ -1,0 +1,6 @@
+--- 
+qr: "^BTROTT/URI-Fetch-0"
+pl: 
+  expect: 
+    - "Auto-install"
+    - "y\n"

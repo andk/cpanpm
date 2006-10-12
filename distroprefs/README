@@ -1,0 +1,37 @@
+The files in this directory are YAML files that specify how CPAN.pm shall treat
+distributions that deviate from the normal model of
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+Some modules try to get some data from the user interactively thus
+disturbing the installation of large bundles like Phalanx100 or
+modules like Plagger.
+
+CPAN.pm can use these YAML files to either pass additional arguments
+to one of the four commands, set environment variables or instantiate
+an Expect object that reads from the console, waits for some regular
+expression and enters some answer.
+
+Many of the files that come with the CPAN.pm distribution contain more
+fields than necessary so they can easier be used as blueprints. In
+practice all empty fields can be removed from the YAML files. To find
+a blueprint pick one of the larger files.
+
+The YAML files themselves must have the .yml extension, all other
+files are ignored. The containing directory can be specified in
+CPAN.pm in the prefs_dir config variable. Try 'o conf init /prefs/' in
+the CPAN shell.
+
+The names of the files can be picked freely, CPAN.pm always reads all
+files and takes the key "qr" as a regex that will be matched against
+the canonical distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
+
+Please report your improvements on the files. Any additions and
+corrections are welcome. Thank you!
+
+Enjoy,
+-- 
+andreas

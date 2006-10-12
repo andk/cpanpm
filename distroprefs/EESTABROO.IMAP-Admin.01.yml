@@ -1,0 +1,42 @@
+--- 
+qr: "^EESTABROO/IMAP-Admin-"
+pl: 
+  args: []
+
+  env: {}
+
+  expect:
+    - "Enter server:"
+    - "\n"
+    - "Enter login:"
+    - "\n"
+    - "Enter password:"
+    - "\n"
+    - "Test using SSL"
+    - "\n"
+    - "Test using CRAM"
+    - "\n"
+    - "Enter Port"
+    - "\n"
+
+make: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+test: 
+  args: []
+
+  env: {}
+
+  expect: []
+
+install: 
+  args: []
+
+  env: {}
+
+  expect: []
+

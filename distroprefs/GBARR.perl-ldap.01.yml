@@ -1,9 +1,8 @@
 --- 
-qr: "^GEOFF/Apache-Test-"
+qr: "^GBARR/perl-ldap-"
 pl: 
-  args: 
-    - -httpd
-    - /usr/sbin/apache-perl
+  args: ["--defaultdeps"]
+
   env: {}
 
   expect: []

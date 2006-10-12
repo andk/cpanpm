@@ -1,3 +1,16 @@
+2006-10-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* why did MIYAGAWA/XML-Atom not work?
+
+	* improve feedback when you pick a file for prefs settings, maybe store
+	the picked yaml file in the distro object.
+
+	* test if you can get around single modules by specifying
+	prefs->{make}{nosuchtarget}. Interesting for MailTools or DBI in current
+	bleadperl.
+
+	* test if the Test-Deep setting of brip works
+
 2006-10-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* F/FD/FDALY/Test-Deep-0.096.tar.gz is just needed temporarily during building or testing. Do you want to install it permanently? (Y/n) [no] 
@@ -60,7 +73,7 @@ Enter Port#:
 	"testing". Maybe I should enter exactly what he demands?
 
 	* GBARR/perl-ldap-0.33 and ExtUtils::AutoInstall. Read source code. Same
-	for GBARR/Authen-SASL-2.10
+	for GBARR/Authen-SASL-2.10 DONE
 
 	* CHAMAS/SSLeay: the first distro that shows us that Expect needs a
 	debugging aid. Maybe fixed in rev. 998 or so

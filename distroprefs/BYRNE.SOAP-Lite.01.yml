@@ -1,0 +1,10 @@
+--- 
+qr: "^BYRNE/SOAP-Lite-"
+pl: 
+  expect:
+    - "see the detailed list"
+    - "\n"
+    - "Do you want to proceed with this configuration\?"
+    - "\n"
+    - "Do you want to perform these tests in addition to core tests"
+    - "\n"

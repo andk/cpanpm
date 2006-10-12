@@ -1,0 +1,4 @@
+--- 
+qr: "^GBARR/Authen-SASL-"
+pl: 
+  args: ["--defaultdeps"]

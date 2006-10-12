@@ -1,9 +1,8 @@
 --- 
-qr: "^GEOFF/Apache-Test-"
+qr: "^NIKIP/Authen-PAM-"
 pl: 
-  args: 
-    - -httpd
-    - /usr/sbin/apache-perl
+  args: []
+
   env: {}
 
   expect: []
@@ -20,7 +19,9 @@ test:
 
   env: {}
 
-  expect: []
+  expect: 
+   -  Password
+   -  "Password\n"
 
 install: 
   args: []

@@ -1,0 +1,6 @@
+--- 
+qr: "^BTROTT/XML-Feed-0"
+pl: 
+  expect: 
+    - "Auto-install"
+    - "y\n"

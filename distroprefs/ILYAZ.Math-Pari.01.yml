@@ -1,12 +1,13 @@
 --- 
-qr: "^GEOFF/Apache-Test-"
+qr: "^ILYAZ/modules/Math-Pari-"
 pl: 
-  args: 
-    - -httpd
-    - /usr/sbin/apache-perl
+  args: []
+
   env: {}
 
-  expect: []
+  expect:
+    - "Fetch\?"
+    - "n\n"
 
 make: 
   args: []

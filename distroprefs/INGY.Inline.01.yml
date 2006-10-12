@@ -1,12 +1,13 @@
 --- 
-qr: "^GEOFF/Apache-Test-"
+qr: "^INGY/Inline-"
 pl: 
-  args: 
-    - -httpd
-    - /usr/sbin/apache-perl
+  args: []
+
   env: {}
 
-  expect: []
+  expect:
+    - "Do you want to install Inline::C"
+    - "\n"
 
 make: 
   args: []

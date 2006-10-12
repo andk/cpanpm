@@ -343,7 +343,15 @@ sub yaml_loadfile {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = main->can("$yaml_module\::LoadFile");
-        my $yaml = $code->($local_file);
+        my $yaml;
+        eval { $yaml = $code->($local_file); };
+        if ($@) {
+            $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
+                                   "  $local_file\n".
+                                   "the following error was encountered:\n".
+                                   "  $@\n"
+                                  );
+        }
         return $yaml;
     } else {
         $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
@@ -5581,6 +5589,12 @@ is part of the perl-%s distribution. To install that, you need to run
                           $makepl_arg ? " $makepl_arg" : "",
                          );
     }
+    local %ENV = %ENV;
+    if (my $env = $self->prefs->{pl}{env}) {
+        for my $e (keys %$env) {
+            $ENV{$e} = $env->{$e};
+        }
+    }
     unless (exists $self->{writemakefile}) {
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
 	my($ret,$pid);
@@ -5704,15 +5718,13 @@ sub run_via_expect {
             $expo->expect(10,
                           [ eof => sub {
                                 my $but = $expo->clear_accum;
-                                warn "EOF system[$system]
-expected[$regex]\nbut[$but]\n\n";
-                                exit;
+                                $CPAN::Frontend->mydie("EOF system[$system]
+expected[$regex]\nbut[$but]\n\n");
                             } ],
                           [ timeout => sub {
                                 my $but = $expo->clear_accum;
-                                warn "TIMEOUT system[$system]
-expected[$regex]\nbut[$but]\n\n";
-                                exit;
+                                $CPAN::Frontend->mydie("TIMEOUT system[$system]
+expected[$regex]\nbut[$but]\n\n");
                             } ],
                           -re => $regex);
             $expo->send($send);
@@ -6352,14 +6364,16 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
-    $CPAN::Config->{build_requires_install_policy}||="ask/yes";
+    my $brip = $self->prefs->{build_requires_install_policy};
+    $brip ||= $CPAN::Config->{build_requires_install_policy};
+    $brip ||="ask/yes";
     my $id = $self->id;
     my $reqtype = $self->{reqtype} ||= "c"; # in doubt it was a command
     my $want_install = "yes";
     if ($reqtype eq "b") {
-        if ($CPAN::Config->{build_requires_install_policy} eq "no") {
+        if ($brip eq "no") {
             $want_install = "no";
-        } elsif ($CPAN::Config->{build_requires_install_policy} =~ m|^ask/(.+)|) {
+        } elsif ($brip =~ m|^ask/(.+)|) {
             my $default = $1;
             $default = "yes" unless $default =~ /^(y|n)/i;
             $want_install =
@@ -8658,6 +8672,36 @@ add a new site at runtime it may happen that the previously preferred
 site will be tried another time. This means that if you want to disallow
 a site for the next transfer, it must be explicitly removed from
 urllist.
+
+=head2 prefs_dir for avoiding interactive questions (ALPHA)
+
+(B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
+still considered experimental)
+
+The files in the directory specified in C<prefs_dir> are YAML files
+that specify how CPAN.pm shall treat distributions that deviate from
+the normal non-interactive model of building and installing CPAN
+modules.
+
+Some modules try to get some data from the user interactively thus
+disturbing the installation of large bundles like Phalanx100 or
+modules like Plagger.
+
+CPAN.pm can use YAML files to either pass additional arguments to one
+of the four commands, set environment variables or instantiate an
+Expect object that reads from the console, waits for some regular
+expression and enters some answer. Needless to say that for the latter
+option Expect.pm needs to be installed.
+
+CPAN.pm comes with a couple of such YAML files. The structure is
+currently not documented. Please see the distroprefs directory of the
+CPAN distribution for examples and follow the README in there.
+
+Please note that setting the environment variable PERL_MM_USE_DEFAULT
+to a true value can also get you a long way if you want to always pick
+the default answers. But this only works if the author of apackage
+used the prompt function provided by ExtUtils::MakeMaker and if the
+defaults are OK for you.
 
 =head1 SECURITY
 

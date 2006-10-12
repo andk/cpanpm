@@ -1,0 +1,4 @@
+--- 
+qr: "^BTROTT/Crypt-DSA-"
+pl: 
+  args: ["--defaultdeps"]
