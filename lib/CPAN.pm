@@ -5842,13 +5842,20 @@ sub _make_command {
         return
             CPAN::HandleConfig
                 ->safe_quote(
-                             $CPAN::Config->{make} || $Config::Config{make} || 'make'
+                             $self->prefs->{cpanconfig}{make}
+                             || $CPAN::Config->{make}
+                             || $Config::Config{make}
+                             || 'make'
                             );
     } else {
         # Old style call, without object. Deprecated
         Carp::confess("CPAN::_make_command() used as function. Don't Do That.");
         return
-          safe_quote(undef, $CPAN::Config->{make} || $Config::Config{make} || 'make');
+          safe_quote(undef,
+                     $self->prefs->{cpanconfig}{make}
+                     || $CPAN::Config->{make}
+                     || $Config::Config{make}
+                     || 'make');
     }
 }
 
@@ -6416,8 +6423,10 @@ sub install {
                           $CPAN::Config->{mbuild_install_arg},
                          );
     } else {
-        my($make_install_make_command) = $CPAN::Config->{make_install_make_command} ||
-            $self->_make_command();
+        my($make_install_make_command) =
+            $self->prefs->{cpanconfig}{make_install_make_command}
+                || $CPAN::Config->{make_install_make_command}
+                    || $self->_make_command();
         $system = sprintf("%s install %s",
                           $make_install_make_command,
                           $CPAN::Config->{make_install_arg},
@@ -6467,12 +6476,16 @@ sub install {
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
+        my $mimc =
+            $self->prefs->{cpanconfig}{make_install_make_command} ||
+                $CPAN::Config->{make_install_make_command};
         if (
             $makeout =~ /permission/s
             && $> > 0
             && (
-                ! $CPAN::Config->{make_install_make_command}
-                || $CPAN::Config->{make_install_make_command} eq $CPAN::Config->{make}
+                ! $mimc
+                || $mimc eq ($self->prefs->{cpanconfig}{make}
+                             || $CPAN::Config->{make})
                )
            ) {
             $CPAN::Frontend->myprint(
