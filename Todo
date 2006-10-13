@@ -23,6 +23,12 @@
 
 	No HTML::TextToHTML
 
+	No Pod::Xhtml
+
+	No XML::SAX::ExpatXS
+
+	Finished installing prereqs, all tests except Mysql pass.
+
 	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
