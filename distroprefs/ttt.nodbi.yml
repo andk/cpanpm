@@ -1,5 +1,0 @@
---- 
-qr: "^TIMB/DBI-"
-make: 
-  args:
-    - nosuchtarget
