@@ -1,6 +1,18 @@
+2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* Slaven says that no user knows the distroname as well as the module
+	name. ==> Change the prefs hash structure. "qr" shall be replaced by
+	"match" and contain "module" and/or "distro" which are ANDed conditions
+	and each may contain a regex. We probably will rename all distroprefs
+	files too.
+
+2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* always check if *c*nm*b*l* has crept into the Todo file!
+
 2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* check the version numbers since we rolled over 1000.
+	* check the version numbers since we rolled over rev. 1000.
 
 	* Fix what podcover found: prefs and yaml_loadfile
 
@@ -756,7 +768,7 @@ Going to read /home/ftp/pub/CPAN/modules/03modlist.data.gz
 	more than once within a single command. Maybe the same bug as described
 	below under "Very stupid is CPAN.pm..." FIXED in rev. 915
 
-2006-09-27  Andreas J Koenig  <akoenig@iconmobile.com>
+2006-09-27  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
 	* Todo: canonify usage of req/reqtype/etc. into "reqtype" and shorten
 	the known reqtype to one letter: r,b,c and comment on them in
