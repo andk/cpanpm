@@ -1,5 +1,9 @@
 2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
+	* Slaven want direct support for $Config->{make} and
+	make_install_make_command so that it can be set to gnumake for PDL on
+	freebsd.
+
 	* Slaven says that no user knows the distroname as well as the module
 	name. ==> Change the prefs hash structure. "qr" shall be replaced by
 	"match" and contain "module" and/or "distro" which are ANDed conditions
