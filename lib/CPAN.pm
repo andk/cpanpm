@@ -3767,7 +3767,8 @@ sub rd_authindex {
     local($_);
     push @lines, split /\012/ while <FH>;
     my $i = 0;
-    my $modulus = int(@lines/75) || 1;
+    my $modulus = int($#lines/75) || 1;
+    CPAN->debug(sprintf "modulus[%d]lines[%s]", $modulus, scalar @lines) if $CPAN::DEBUG;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
 	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
@@ -3892,7 +3893,7 @@ happen.\a
     CPAN->debug("secondtime[$secondtime]") if $CPAN::DEBUG;
     my(%exists);
     my $i = 0;
-    my $modulus = int(@lines/75) || 1;
+    my $modulus = int($#lines/75) || 1;
     foreach (@lines) {
         # before 1.56 we split into 3 and discarded the rest. From
         # 1.57 we assign remaining text to $comment thus allowing to
@@ -4031,7 +4032,7 @@ sub rd_modlist {
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
     my $i = 0;
-    my $until = keys %$ret;
+    my $until = keys(%$ret) - 1;
     my $modulus = int($until/75) || 1;
     CPAN->debug(sprintf "until[%d]", $until) if $CPAN::DEBUG;
     for (keys %$ret) {
