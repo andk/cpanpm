@@ -1,0 +1,8 @@
+--- 
+qr: "^KWILLIAMS/AI-Categorizer-"
+pl:
+  expect:
+    - "install.*script"
+    - "y\n"
+    - "CLASSPATH"
+    - "\n"

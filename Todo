@@ -1,5 +1,13 @@
 2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Randy's CPAN-Search-Lite lives at
+	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
+	/home/src/perl/cpan-search-lite/CPAN-Search-Lite. As it needs DBI, it
+	cannot use bleadperl. Latest maint-perl is 28854.
+
+	AI::Categorizer needed by t/basic.t, not listed as prereq. Needs in turn
+	(unlisted?) Algorithm::NaiveBayes:-(
+
 	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
@@ -43,7 +51,7 @@ CPAN: File::HomeDir loaded ok (v0.58)
 	prefs->{make}{nosuchtarget}. Interesting for MailTools or DBI in current
 	bleadperl. EXACTLY! (and tested)
 
-	* test if the Test-Deep setting of brip works
+	* test if the Test-Deep setting of brip works. DONE
 
 2006-10-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -140,11 +148,6 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 
 	But I cannot reproduce it. So I must have upgraded something that caused
 	the bug.
-
-	* Randy's CPAN-Search-Lite lives at
-	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
-	/home/src/perl/cpan-search-lite/CPAN-Search-Lite. As it needs DBI, it
-	cannot use bleadperl. Latest maint-perl is 28854.
 
 	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
 	way we can catch bugs in M:C:A itself or in its dependencies.

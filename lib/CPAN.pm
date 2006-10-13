@@ -6399,7 +6399,7 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
-    my $brip = $self->prefs->{config}{build_requires_install_policy};
+    my $brip = $self->prefs->{cpanconfig}{build_requires_install_policy};
     $brip ||= $CPAN::Config->{build_requires_install_policy};
     $brip ||="ask/yes";
     my $id = $self->id;
