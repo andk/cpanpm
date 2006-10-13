@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^ILYAZ/modules/Term-ReadLine-Perl-"
+  module: "^Term::ReadLine::Perl$"
 pl: 
   args: []
 

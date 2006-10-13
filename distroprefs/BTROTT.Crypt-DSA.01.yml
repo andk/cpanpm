@@ -1,5 +1,5 @@
 --- 
 match:
-  distribution: "^BTROTT/Crypt-DSA-"
+  module: "^Crypt::DSA$"
 pl: 
   args: ["--defaultdeps"]

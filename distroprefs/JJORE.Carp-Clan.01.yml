@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^JJORE/Carp-Clan-"
+  module: "^Carp::Clan$"
 pl: 
   args: []
 

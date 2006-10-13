@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^BYRNE/SOAP-Lite-"
+  module: "^SOAP::Lite$"
 pl: 
   expect:
     - "see the detailed list"
