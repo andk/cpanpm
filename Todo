@@ -1,28 +1,4 @@
-2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
-
-	* Slaven want direct support for $Config->{make} and
-	make_install_make_command so that it can be set to gnumake for PDL on
-	freebsd. DONE in rev 1015
-
-	* Slaven says that no user knows the distroname as well as the module
-	name. ==> Change the prefs hash structure. "qr" shall be replaced by
-	"match" and contain "module" and/or "distro" which are ANDed conditions
-	and each may contain a regex. We probably will rename all distroprefs
-	files too. DONE in rev. 1013/14
-
-2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
-
-	* always check if *c*nm*b*l* has crept into the Todo file!
-
-2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* check the version numbers since we rolled over rev. 1000.
-
-	* Fix what podcover found: prefs and yaml_loadfile
-
-	* See if YAML::Tiny works and if so, mention it in FirstTime and maybe
-	make it the default?? Doesn't seem to work out of the box. DONE and
-	documented in FirstTime.
+2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Randy's CPAN-Search-Lite lives at
 	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
@@ -57,6 +33,188 @@
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
 	one that reads something from STDIN (or maybe both in one)
+
+	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
+	way we can catch bugs in M:C:A itself or in its dependencies.
+
+	* just a memo what I usually install:
+
+	    o debug CPAN Distribution
+	    install Bundle::CPAN YAML::Syck Module::Signature CPAN::Reporter Devel::Symdump
+	    force install Expect
+
+	* replace 03 index file with YAML.
+
+	* Schwern reopened 21144. Go resolve, I have promised before the next release.
+
+	* Todo/buglet: turn on debug "CPAN" and find the reason why
+	incommandcolor is quite often not reset. We had that further down but I
+	fear it is not yet fixed.
+
+	* Todo: clean up "XXX" in the code
+
+	* "I hate Module::AutoInstall". See down under the hr if you have much
+	time.
+
+	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
+	FOO', we should only check for the authors database, etc.
+
+	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	get rid of the term_is_latin variable. Test output with locales.
+
+	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	remember details. Hint: DBM::Deep promises significant memory savings
+	and in that branch we tried to see how it can be made to work for us.
+
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
+	#21791 has its bugreport. I don't like that most of the subroutines are
+	thrown into CPAN::Distribution either. OTOH, we have commands that have
+	no central role within CPAN. One can always refuse to use them. Hrm.
+	HTML::Display!
+
+	* E5: (again and again) verify that the CPAN.pm-using modules continue
+	to work
+
+  AltaVista-BabelFish DMUEY CPAN-Unwind MSCHILLI CPAN-WAIT ULPFR
+	Devel-Modlist RJRAY PAR-Dist-FromCPAN SMUELLER Perl-Dist DAGOLDEN
+	Test-CPANpm CRAKRJACK
+
+	* E5 watch RT for open tickets. This todo can never be closed.
+
+	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
+	CPAN.pm is covered
+
+	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
+	the future of locking, the future of DBM::Deep, protocol changes. Not
+	sure what to test.
+
+	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
+	about a very old bug in Archive::Tar that is most probably fixed. Turn
+	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
+	It is slow but everything should just plain work. When we're confident
+	that everything works, we could offer a tar_policy option that has
+	options "ext" and "mod", for external programs vs. modules, default to
+	"ext"?
+
+	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
+	the beginning of the path gets ./sh as his shell from FirstTime. If we
+	encounter . in the path we should rather ignore it. But first we must
+	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
+	Schulze. This has nothing to do with -I. but only with the shell and
+	$ENV{PATH} and as we do not know which shell it was it seems we cannot
+	test for the problem.
+
+	* H1 These days developer TELS posted to perl5-porters that his newest
+	release is available at
+
+	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	Suddenly it dawned on me that I want to support
+
+	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	What am I missing?
+
+	The other commands dealing with files would have to learn a bit.
+
+	d http://      # fails as before with "No objects of...."
+
+	               # alt: does a HEAD and tells user that the URL can e reached
+
+	ls http://     # lists nothing
+
+	               # alt: says that ls doesn't support URLs
+
+	get http://    # this is probably all we need to implement. Maybe a new
+	               # class needed that does as_string and as_glimpse as well?
+
+	And maybe a pragma that turns this feature on? So that 'get http://...'
+	never works but 'force get http://...' does? Alt: config variable to
+	turn feature on, then a separate module that implements it.
+
+	Brian likes the idea
+
+From: brian d foy <brian.d.foy@gmail.com>
+Subject: Re: Welcome new user LOCAL
+To: modules@perl.org
+Date: Mon, 18 Sep 2006 14:52:48 -0500
+Organization: Perl Authors Upload Server
+Reply-To: modules@perl.org
+
+In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
+<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
+
+> My spontaneous idea was to support the command
+> 
+>     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+
+oh, very interesting, especially if I already have the file:
+
+   cpan> get file:///....
+
+This makes CPAN::Mini::Inject a bit less useful because I no longer
+need the middle man.
+
+
+	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
+	and jarkko
+
+	* M2 feature request by Juergen Christoffel: have time stamps on the
+	history and a history command to see them
+
+	* H3 Locking: Linda W writes
+
+	>I'm not sure I understand the reason for the lock file
+	>placed in cpan_home.  If I have two different architectures
+	>with different build directories, I'm not sure I understand
+	>where the conflict is -- is it in storing/listing Bundles,
+	>the history file, the Metafile or the shared source?
+	
+	>I can understand private history, but the Bundles aren't
+	>updated often, the sources should be fairly static (unless
+	>new files are downloaded), The metafile would be updated about
+	>once a day (default).
+	
+	>If the build directories are separate, why would there be a
+	>need for locking more in interactive use vs. batch use?
+
+	And I promise to try out a more granular locking mechanism.
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* Slaven want direct support for $Config->{make} and
+	make_install_make_command so that it can be set to gnumake for PDL on
+	freebsd. DONE in rev 1015
+
+	* Slaven says that no user knows the distroname as well as the module
+	name. ==> Change the prefs hash structure. "qr" shall be replaced by
+	"match" and contain "module" and/or "distro" which are ANDed conditions
+	and each may contain a regex. We probably will rename all distroprefs
+	files too. DONE in rev. 1013/14
+
+2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* always check if *c*nm*b*l* has crept into the Todo file!
+
+2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* check the version numbers since we rolled over rev. 1000. DONE, is OK
+
+	* Fix what podcover found: prefs and yaml_loadfile DONE.
+
+	* See if YAML::Tiny works and if so, mention it in FirstTime and maybe
+	make it the default?? Doesn't seem to work out of the box. DONE and
+	documented in FirstTime.
 
 	* I hate Module::AutoInstall. Watching installation of Plagger:
 
@@ -194,21 +352,12 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 	But I cannot reproduce it. So I must have upgraded something that caused
 	the bug.
 
-	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
-	way we can catch bugs in M:C:A itself or in its dependencies.
-
 	* Since when fails a YAML test? 0.62 with blead @28990 fails today on
 	rt-bugs.t or so. Reported to P5P. RESOLVED in blead @28997.
 
 2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* put the distroprefs directory into MANIFEST. DONE in rev. 993
-
-	* just a memo what I usually install:
-
-	    o debug CPAN Distribution
-	    install Bundle::CPAN YAML::Syck Module::Signature CPAN::Reporter Devel::Symdump
-	    force install Expect
 
 	* DistroPrefs:
 
@@ -230,11 +379,7 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
     build_requires_install_policy                 FDALY.Test-Deep.01.yml
 
 
-	* replace 03 index file with YAML.
-
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Schwern reopened 21144. Go resolve, I have promised before the next release.
 
 2006-10-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -254,6 +399,8 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 	conf' stuff. Something completely different? Its about Env, Args, Stdin.
 	BuildInput? Distrinput? Distrin? No. DistroPrefs the long word, prefs
 	the short one. 'reload prefs' might be a command if we need it at all.
+
+	ALL DONE in rev. 1015; well, left in alpha state
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset.
@@ -285,140 +432,6 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 	* new keyword capture? CPAN::Reporter does not know the output of the
 	commands before "test" and cannot report about compilation failures.
 	This looks like a major flaw to me:-(
-
-	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
-	FOO', we should only check for the authors database, etc.
-
-	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
-	get rid of the term_is_latin variable. Test output with locales.
-
-	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
-	remember details. Hint: DBM::Deep promises significant memory savings
-	and in that branch we tried to see how it can be made to work for us.
-
-	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
-
-	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
-	#21791 has its bugreport. I don't like that most of the subroutines are
-	thrown into CPAN::Distribution either. OTOH, we have commands that have
-	no central role within CPAN. One can always refuse to use them. Hrm.
-	HTML::Display!
-
-	* E5: (again and again) verify that the CPAN.pm-using modules continue
-	to work
-
-  AltaVista-BabelFish DMUEY CPAN-Unwind MSCHILLI CPAN-WAIT ULPFR
-	Devel-Modlist RJRAY PAR-Dist-FromCPAN SMUELLER Perl-Dist DAGOLDEN
-	Test-CPANpm CRAKRJACK
-
-	* E5 watch RT for open tickets. This todo can never be closed.
-
-	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
-	CPAN.pm is covered
-
-	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
-	the future of locking, the future of DBM::Deep, protocol changes. Not
-	sure what to test.
-
-	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
-	about a very old bug in Archive::Tar that is most probably fixed. Turn
-	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
-	It is slow but everything should just plain work. When we're confident
-	that everything works, we could offer a tar_policy option that has
-	options "ext" and "mod", for external programs vs. modules, default to
-	"ext"?
-
-	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
-	the beginning of the path gets ./sh as his shell from FirstTime. If we
-	encounter . in the path we should rather ignore it. But first we must
-	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
-	Schulze. This has nothing to do with -I. but only with the shell and
-	$ENV{PATH} and as we do not know which shell it was it seems we cannot
-	test for the problem.
-
-	* H1 These days developer TELS posted to perl5-porters that his newest
-	release is available at
-
-	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-	Suddenly it dawned on me that I want to support
-
-	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-	What am I missing?
-
-	The other commands dealing with files would have to learn a bit.
-
-	d http://      # fails as before with "No objects of...."
-
-	               # alt: does a HEAD and tells user that the URL can e reached
-
-	ls http://     # lists nothing
-
-	               # alt: says that ls doesn't support URLs
-
-	get http://    # this is probably all we need to implement. Maybe a new
-	               # class needed that does as_string and as_glimpse as well?
-
-	And maybe a pragma that turns this feature on? So that 'get http://...'
-	never works but 'force get http://...' does? Alt: config variable to
-	turn feature on, then a separate module that implements it.
-
-	Brian likes the idea
-
-From: brian d foy <brian.d.foy@gmail.com>
-Subject: Re: Welcome new user LOCAL
-To: modules@perl.org
-Date: Mon, 18 Sep 2006 14:52:48 -0500
-Organization: Perl Authors Upload Server
-Reply-To: modules@perl.org
-
-In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
-<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
-
-> My spontaneous idea was to support the command
-> 
->     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-
-oh, very interesting, especially if I already have the file:
-
-   cpan> get file:///....
-
-This makes CPAN::Mini::Inject a bit less useful because I no longer
-need the middle man.
-
-
-	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
-	and jarkko
-
-	* M2 feature request by Juergen Christoffel: have time stamps on the
-	history and a history command to see them
-
-	* H3 Locking: Linda W writes
-
-	>I'm not sure I understand the reason for the lock file
-	>placed in cpan_home.  If I have two different architectures
-	>with different build directories, I'm not sure I understand
-	>where the conflict is -- is it in storing/listing Bundles,
-	>the history file, the Metafile or the shared source?
-	
-	>I can understand private history, but the Bundles aren't
-	>updated often, the sources should be fairly static (unless
-	>new files are downloaded), The metafile would be updated about
-	>once a day (default).
-	
-	>If the build directories are separate, why would there be a
-	>need for locking more in interactive use vs. batch use?
-
-	And I promise to try out a more granular locking mechanism.
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
 
 	* E1: Nice to have: make YAML vs. YAML::Syck switchable. Another
 	advantage would be that we could remove YAML from the Bundle. DONE rev. 986
