@@ -45,7 +45,8 @@
 
 	* replace 03 index file with YAML.
 
-	* Schwern reopened 21144. Go resolve, I have promised before the next release.
+	* Schwern reopened 21144. Go resolve, I have promised before the next
+	release. FIXED in rev. 1016
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset. We had that further down but I

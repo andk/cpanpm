@@ -7602,18 +7602,24 @@ Batch mode:
   $mod = "Acme::Meta";
   install $mod;
   CPAN::Shell->install($mod);                    # same thing
-  CPAN::Shell->expandany($mod)->install;         # same thing
-  CPAN::Shell->expand("Module",$mod)->install;   # same thing
-  CPAN::Shell->expand("Module",$mod)
-    ->distribution->install;                     # same thing
 
   # distributions:
 
-  $distro = "NWCLARK/Acme-Meta-0.01.tar.gz";
-  install $distro;                                # same thing
-  CPAN::Shell->install($distro);                  # same thing
-  CPAN::Shell->expandany($distro)->install;       # same thing
-  CPAN::Shell->expand("Distribution",$distro)->install; # same thing
+  $distro = "NWCLARK/Acme-Meta-0.02.tar.gz";
+  install $distro;                               # same thing
+  CPAN::Shell->install($distro);                 # same thing
+
+  # module objects:
+
+  $mo = CPAN::Shell->expandany($mod);
+  $mo = CPAN::Shell->expand("Module",$mod);      # same thing
+
+  # distribution objects:
+
+  $do = CPAN::Shell->expand("Module",$mod)->distribution;
+  $do = CPAN::Shell->expandany($distro);         # same thing
+  $do = CPAN::Shell->expand("Distribution",
+                            $distro);            # same thing
 
 =head1 STATUS
 
@@ -7943,8 +7949,7 @@ functionalities that are available in the shell.
 
     # install my favorite programs if necessary:
     for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
-        my $obj = CPAN::Shell->expand('Module',$mod);
-        $obj->install;
+        CPAN::Shell->install($mod);
     }
 
     # list all modules on my disk that have no VERSION number
@@ -8145,6 +8150,10 @@ yet been run, it will be run first. A C<make test> will be issued in
 any case and if this fails, the install will be canceled. The
 cancellation can be avoided by letting C<force> run the C<install> for
 you.
+
+This install method has only the power to install the distribution if
+there are no dependencies in the way. To install an object and all of
+its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
 
