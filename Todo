@@ -8,6 +8,21 @@
 	AI::Categorizer needed by t/basic.t, not listed as prereq. Needs in turn
 	(unlisted?) Algorithm::NaiveBayes:-(
 
+	Warning: prerequisite Config::IniFiles 0 not found.
+	Warning: prerequisite DBD::SQLite 0 not found.
+	Warning: prerequisite File::Listing 0 not found.
+
+	DBD::SQLite did not compile on the first try. But it did on the second.
+	I think in between I installed libsqlite0-dev.
+
+	No again I have no Lingua::StopWords:=(
+
+	No SOAP::Lite
+
+	No Perl::Tidy
+
+	No HTML::TextToHTML
+
 	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
 
 	* write a dummy distro that reads arguments to Makefile.PL and another

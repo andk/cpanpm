@@ -5754,7 +5754,7 @@ expected[$regex]\nbut[$but]\n\n");
         $expo->soft_close;
         return $expo->exitstatus();
     } else {
-        $CPAN::Frontend->mywarn("Expect not installed, falling back to system()");
+        $CPAN::Frontend->mywarn("Expect not installed, falling back to system()\n");
         return system($system);
     }
 }
