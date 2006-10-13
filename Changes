@@ -1,6 +1,12 @@
-2006-10-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_54
 
 	* New option 'yaml_module' to switch between YAML.pm and YAML::Syck
+
+	* New distroprefs system that lets the user store arguments, environment
+	variables and individual answers to questions asked by Distributions
+	when being built. Try 'o conf init /prefs/' for more info.
 
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

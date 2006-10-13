@@ -3,7 +3,7 @@
 	* Fix what podcover found: prefs and yaml_loadfile
 
 	* See if YAML::Tiny works and if so, mention it in FirstTime and maybe
-	make it the default
+	make it the default?? Doesn't seem to work out of the box.
 
 	* Randy's CPAN-Search-Lite lives at
 	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at

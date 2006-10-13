@@ -985,9 +985,11 @@ prefs_dir_intro => qq{
 CPAN.pm can store customized build environments based on regular
 expressions for distribution names. These are YAML files where the
 default options for CPAN.pm and the environment can be overridden and
-expect sequences can be stored to emulate user input. The CPAN.pm
-distribution comes with some prefab YAML files that cover sample
-distributions that can be used as blueprints for your own preferences.
+dialog sequences can be stored that can later be executed by an
+Expect.pm object. The CPAN.pm distribution comes with some prefab YAML
+files that cover sample distributions that can be used as blueprints
+to store one own prefs. Please check out the distroprefs/ directory of
+the CPAN.pm distribution to get a quick start into the prefs system.
 
 },
 

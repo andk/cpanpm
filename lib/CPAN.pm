@@ -337,8 +337,8 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
-# CPAN::yaml_loadfile
-sub yaml_loadfile {
+# CPAN::_yaml_loadfile
+sub _yaml_loadfile {
     my($self,$local_file) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if ($CPAN::META->has_inst($yaml_module)) {
@@ -360,7 +360,7 @@ sub yaml_loadfile {
 }
 
 # CPAN::prefs
-sub prefs {
+sub _find_prefs {
     my($self,$distro) = @_;
     CPAN->debug("distro[$distro]") if $CPAN::DEBUG;
     my $prefs_dir = $CPAN::Config->{prefs_dir};
@@ -378,7 +378,7 @@ sub prefs {
             my $abs = File::Spec->catfile($prefs_dir, $_);
             CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
             if (-f $abs) {
-                my $yaml = $self->yaml_loadfile($abs);
+                my $yaml = $self->_yaml_loadfile($abs);
                 my $qr = eval "qr{$yaml->{qr}}";
                 if ($distro =~ /$qr/) {
                     return {
@@ -4548,7 +4548,7 @@ sub fast_yaml {
                                 $local_wanted)) {
         $CPAN::Frontend->mydie("Giving up on downloading yaml file '$local_wanted'\n");
     }
-    my $yaml = CPAN->yaml_loadfile($local_file);
+    my $yaml = CPAN->_yaml_loadfile($local_file);
 }
 
 #-> sub CPAN::Distribution::pretty_id
@@ -5767,7 +5767,7 @@ sub prefs {
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
-        my $prefs = CPAN->prefs($self->pretty_id);
+        my $prefs = CPAN->_find_prefs($self->pretty_id);
         if ($prefs) {
             for my $x (qw(prefs prefs_file)) {
                 $self->{$x} = $prefs->{$x};
@@ -5965,7 +5965,7 @@ sub read_yaml {
     my $yaml = File::Spec->catfile($build_dir,"META.yml");
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = CPAN->yaml_loadfile($yaml); };
+    eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml); };
     if ($@) {
         return; # if we die, then we cannot read our own META.yml
     }
@@ -8136,6 +8136,15 @@ command lynx specified in C<$CPAN::Config->{lynx}>. If lynx
 isn't available, it converts it to plain text with external
 command html2text and runs it through the pager specified
 in C<$CPAN::Config->{pager}>
+
+=item CPAN::Distribution::prefs()
+
+Returns the hash reference from the first matching YAML file that the
+user has deposited in the C<prefs_dir/> directory. The first
+succeeding match wins. The files in the C<prefs_dir/> are processed
+alphabetically and the canonical distroname (e.g.
+AUTHOR/Foo-Bar-3.14.tar.gz) is matched against the regular expressions
+stored in the C<qr> attribute in the YAML file.
 
 =item CPAN::Distribution::prereq_pm()
 
