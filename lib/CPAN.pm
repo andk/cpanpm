@@ -342,13 +342,13 @@ sub _yaml_loadfile {
     my($self,$local_file) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if ($CPAN::META->has_inst($yaml_module)) {
-        my $code = main->can("$yaml_module\::LoadFile");
+        my $code = UNIVERSAL::can($yaml_module, "LoadFile");
         my $yaml;
         eval { $yaml = $code->($local_file); };
         if ($@) {
             $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
                                    "  $local_file\n".
-                                   "the following error was encountered:\n".
+                                   "with $yaml_module the following error was encountered:\n".
                                    "  $@\n"
                                   );
         }
@@ -357,41 +357,6 @@ sub _yaml_loadfile {
         $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
     }
     return +{};
-}
-
-# CPAN::prefs
-sub _find_prefs {
-    my($self,$distro) = @_;
-    CPAN->debug("distro[$distro]") if $CPAN::DEBUG;
-    my $prefs_dir = $CPAN::Config->{prefs_dir};
-    eval { File::Path::mkpath($prefs_dir); };
-    if ($@) {
-        $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
-    }
-    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
-    if ($CPAN::META->has_inst($yaml_module)) {
-        my $dh = DirHandle->new($prefs_dir)
-            or die Carp::croak("Couldn't open '$prefs_dir': $!");
-        for (sort $dh->read) {
-            next if $_ eq "." || $_ eq "..";
-            next unless /\.yml$/;
-            my $abs = File::Spec->catfile($prefs_dir, $_);
-            CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
-            if (-f $abs) {
-                my $yaml = $self->_yaml_loadfile($abs);
-                my $qr = eval "qr{$yaml->{qr}}";
-                if ($distro =~ /$qr/) {
-                    return {
-                            prefs => $yaml,
-                            prefs_file => $abs,
-                           };
-                }
-            }
-        }
-    } else {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
-    }
-    return;
 }
 
 package CPAN::CacheMgr;
@@ -5760,6 +5725,41 @@ expected[$regex]\nbut[$but]\n\n");
     }
 }
 
+# CPAN::Distribution::_find_prefs
+sub _find_prefs {
+    my($self,$distro) = @_;
+    CPAN->debug("distro[$distro]") if $CPAN::DEBUG;
+    my $prefs_dir = $CPAN::Config->{prefs_dir};
+    eval { File::Path::mkpath($prefs_dir); };
+    if ($@) {
+        $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
+    }
+    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    if ($CPAN::META->has_inst($yaml_module)) {
+        my $dh = DirHandle->new($prefs_dir)
+            or die Carp::croak("Couldn't open '$prefs_dir': $!");
+        for (sort $dh->read) {
+            next if $_ eq "." || $_ eq "..";
+            next unless /\.yml$/;
+            my $abs = File::Spec->catfile($prefs_dir, $_);
+            CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
+            if (-f $abs) {
+                my $yaml = CPAN->_yaml_loadfile($abs);
+                my $qr = eval "qr{$yaml->{qr}}";
+                if ($distro =~ /$qr/) {
+                    return {
+                            prefs => $yaml,
+                            prefs_file => $abs,
+                           };
+                }
+            }
+        }
+    } else {
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
+    }
+    return;
+}
+
 # CPAN::Distribution::prefs
 sub prefs {
     my($self) = @_;
@@ -5768,7 +5768,7 @@ sub prefs {
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
-        my $prefs = CPAN->_find_prefs($self->pretty_id);
+        my $prefs = $self->_find_prefs($self->pretty_id);
         if ($prefs) {
             for my $x (qw(prefs prefs_file)) {
                 $self->{$x} = $prefs->{$x};

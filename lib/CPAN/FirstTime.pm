@@ -287,7 +287,7 @@ Shall we use it as the general CPAN build and cache directory?
     #= YAML vs. YAML::Syck
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
-        my_dflt_prompt(yaml_module => "YAML::Syck", $matcher);
+        my_dflt_prompt(yaml_module => "YAML", $matcher);
     }
 
     #
@@ -1386,7 +1386,8 @@ yaml_module_intro => qq{
 At the time of this writing there are two competing YAML modules,
 YAML.pm and YAML::Syck. The latter is faster but needs a C compiler
 installed on your system. There may be more alternative YAML
-conforming modules.
+conforming modules but at the time of writing a potential third
+player, YAML::Tiny, is not yet sufficiently similar to the other two.
 
 },
 
