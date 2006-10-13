@@ -1,5 +1,6 @@
 --- 
-qr: "^ILYAZ/modules/Math-Pari-"
+match:
+  distribution: "^ILYAZ/modules/Math-Pari-"
 pl: 
   args: []
 

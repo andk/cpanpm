@@ -1,5 +1,6 @@
 --- 
-qr: "^EESTABROO/IMAP-Admin-"
+match:
+  distribution: "^EESTABROO/IMAP-Admin-"
 test: 
   args: []
 

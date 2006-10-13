@@ -1,5 +1,6 @@
 --- 
-qr: "^BYRNE/SOAP-Lite-"
+match:
+  distribution: "^BYRNE/SOAP-Lite-"
 pl: 
   expect:
     - "see the detailed list"

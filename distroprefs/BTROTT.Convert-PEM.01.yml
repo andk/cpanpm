@@ -1,5 +1,7 @@
 --- 
-qr: "^BTROTT/Convert-PEM-"
+match:
+  distribution: "^BTROTT"
+  module: "^Convert::PEM$"
 pl: 
   expect: 
     - "Auto-install"

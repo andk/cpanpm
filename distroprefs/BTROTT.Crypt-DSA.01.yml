@@ -1,4 +1,5 @@
 --- 
-qr: "^BTROTT/Crypt-DSA-"
+match:
+  distribution: "^BTROTT/Crypt-DSA-"
 pl: 
   args: ["--defaultdeps"]

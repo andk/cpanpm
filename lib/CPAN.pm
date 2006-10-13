@@ -5728,7 +5728,8 @@ expected[$regex]\nbut[$but]\n\n");
 # CPAN::Distribution::_find_prefs
 sub _find_prefs {
     my($self,$distro) = @_;
-    CPAN->debug("distro[$distro]") if $CPAN::DEBUG;
+    my $distroid = $distro->pretty_id;
+    CPAN->debug("distroid[$distroid]") if $CPAN::DEBUG;
     my $prefs_dir = $CPAN::Config->{prefs_dir};
     eval { File::Path::mkpath($prefs_dir); };
     if ($@) {
@@ -5738,15 +5739,39 @@ sub _find_prefs {
     if ($CPAN::META->has_inst($yaml_module)) {
         my $dh = DirHandle->new($prefs_dir)
             or die Carp::croak("Couldn't open '$prefs_dir': $!");
-        for (sort $dh->read) {
+      DIRENT: for (sort $dh->read) {
             next if $_ eq "." || $_ eq "..";
             next unless /\.yml$/;
             my $abs = File::Spec->catfile($prefs_dir, $_);
             CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
             if (-f $abs) {
                 my $yaml = CPAN->_yaml_loadfile($abs);
-                my $qr = eval "qr{$yaml->{qr}}";
-                if ($distro =~ /$qr/) {
+                my $ok = 1;
+                my $match = $yaml->{match} or
+                    $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
+                                           "missing attribut 'match'. Please ".
+                                           "remove, cannot continue.");
+                for my $sub_attribute (keys %$match) {
+                    my $qr = eval "qr{$yaml->{match}{$sub_attribute}}";
+                    if ($sub_attribute eq "module") {
+                        my $okm = 0;
+                        my @modules = $distro->containsmods;
+                        for my $module (@modules) {
+                            $okm ||= $module =~ /$qr/;
+                            last if $okm;
+                        }
+                        $ok &&= $okm;
+                    } elsif ($sub_attribute eq "distribution") {
+                        my $okd = $distroid =~ /$qr/;
+                        $ok &&= $okd;
+                    } else {
+                        $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
+                                               "unknown sub_attribut '$sub_attribute'. ".
+                                               "Please ".
+                                               "remove, cannot continue.");
+                    }
+                }
+                if ($ok) {
                     return {
                             prefs => $yaml,
                             prefs_file => $abs,
@@ -5768,7 +5793,7 @@ sub prefs {
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
-        my $prefs = $self->_find_prefs($self->pretty_id);
+        my $prefs = $self->_find_prefs($self);
         if ($prefs) {
             for my $x (qw(prefs prefs_file)) {
                 $self->{$x} = $prefs->{$x};
@@ -8145,7 +8170,11 @@ user has deposited in the C<prefs_dir/> directory. The first
 succeeding match wins. The files in the C<prefs_dir/> are processed
 alphabetically and the canonical distroname (e.g.
 AUTHOR/Foo-Bar-3.14.tar.gz) is matched against the regular expressions
-stored in the C<qr> attribute in the YAML file.
+stored in the $root->{match}{distribution} attribute value.
+Additionally all module names contained in a distribution are matched
+agains the regular expressions in the $root->{match}{module} attribute
+value. The two match values are ANDed together. Each of the two
+attributes are optional.
 
 =item CPAN::Distribution::prereq_pm()
 
@@ -8721,7 +8750,7 @@ urllist.
 =head2 prefs_dir for avoiding interactive questions (ALPHA)
 
 (B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
-still considered experimental)
+still considered experimental and may still be changed)
 
 The files in the directory specified in C<prefs_dir> are YAML files
 that specify how CPAN.pm shall treat distributions that deviate from

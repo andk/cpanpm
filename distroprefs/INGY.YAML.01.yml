@@ -1,5 +1,6 @@
 --- 
-qr: "^INGY/YAML-0.62"
+match:
+  distribution: "^INGY/YAML-0.62"
 pl: 
   expect:
     - "Continue installing"

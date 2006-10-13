@@ -1,4 +1,5 @@
 --- 
-qr: "^GBARR/Authen-SASL-"
+match:
+  distribution: "^GBARR/Authen-SASL-"
 pl: 
   args: ["--defaultdeps"]

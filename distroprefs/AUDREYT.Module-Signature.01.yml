@@ -1,5 +1,6 @@
 --- 
-qr: "^AUDREYT/Module-Signature-"
+match:
+  module: "^Module::Signature$"
 pl: 
   args: []
 

@@ -1,5 +1,6 @@
 --- 
-qr: "^GAAS/libwww-perl-"
+match:
+  distribution: "^GAAS/libwww-perl-"
 pl: 
   args: 
     - -n

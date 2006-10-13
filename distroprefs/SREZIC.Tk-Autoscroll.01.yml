@@ -1,5 +1,6 @@
 --- 
-qr: "^SREZIC/Tk-Autoscroll-"
+match:
+  distribution: "^SREZIC/Tk-Autoscroll-"
 pl: 
   args: []
 

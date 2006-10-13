@@ -1,5 +1,6 @@
 --- 
-qr: "^GEOFF/Apache-Test-"
+match:
+  distribution: "^GEOFF/Apache-Test-"
 pl: 
   args: 
     - -httpd

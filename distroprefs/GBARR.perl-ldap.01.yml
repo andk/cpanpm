@@ -1,5 +1,6 @@
 --- 
-qr: "^GBARR/perl-ldap-"
+match:
+  distribution: "^GBARR/perl-ldap-"
 pl: 
   args: ["--defaultdeps"]
 

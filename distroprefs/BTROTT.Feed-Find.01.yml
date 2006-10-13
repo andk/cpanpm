@@ -1,5 +1,6 @@
 --- 
-qr: "^BTROTT/Feed-Find-"
+match:
+  distribution: "^BTROTT/Feed-Find-"
 pl: 
   expect: 
     - "Auto-install"

@@ -1,5 +1,6 @@
 --- 
-qr: "^MIYAGAWA/XML-Atom-"
+match:
+  distribution: "^MIYAGAWA/XML-Atom-"
 pl: 
   expect: 
     - "Auto-install"

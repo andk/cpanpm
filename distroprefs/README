@@ -34,8 +34,20 @@ CPAN.pm in the prefs_dir config variable. Try 'o conf init /prefs/' in
 the CPAN shell.
 
 The names of the files can be picked freely, CPAN.pm always reads all
-files and takes the key "qr" as a regex that will be matched against
-the canonical distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
+files (in alphabetical order) and takes the key "match" as a hashref
+containing one or both of the keys C<distribution> or C<modules>. The
+corresponding values are interpreted as regular expressions. The
+C<distribution> related one will be matched against the canonical
+distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz". The C<module>
+related one will be matched against all modules contained in the
+distribution. The C<module> matches will be ORed which means that for
+a C<module> related match it is enough when one module matches. As
+there is only one name for the current distribution, a C<distribution>
+match can only be achieved if the name of the current distribution
+matches. If both C<module> and C<distribution> is specified, the two
+separately computed match values are ANDed. If the final result is
+true, then the hashref represented by the YAML file is returned as the
+preference structure for the current distribution.
 
 =head1 MAINTAINANCE
 

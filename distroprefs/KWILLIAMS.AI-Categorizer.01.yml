@@ -1,5 +1,6 @@
 --- 
-qr: "^KWILLIAMS/AI-Categorizer-"
+match:
+  distribution: "^KWILLIAMS/AI-Categorizer-"
 pl:
   expect:
     - "install.*script"

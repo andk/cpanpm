@@ -1,5 +1,6 @@
 --- 
-qr: "^JJORE/Carp-Clan-"
+match:
+  distribution: "^JJORE/Carp-Clan-"
 pl: 
   args: []
 

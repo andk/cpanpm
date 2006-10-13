@@ -1,11 +1,11 @@
 --- 
-qr: "^MIYAGAWA/Plagger-"
+match:
+  distribution: "^MIYAGAWA/Plagger-"
+  module: "Plagger::Walker"
 pl:
   env:
-    PERL5_CPANPLUS_IS_RUNNING: 1
     PERL_AUTOINSTALL: --skip    
   args: ["--defaultdeps"]
 make:
   env:
-    PERL5_CPANPLUS_IS_RUNNING: 1
     PERL_AUTOINSTALL: --skip    

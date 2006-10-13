@@ -1,5 +1,6 @@
 --- 
-qr: "^INGY/Inline-"
+match:
+  distribution: "^INGY/Inline-"
 pl: 
   args: []
 

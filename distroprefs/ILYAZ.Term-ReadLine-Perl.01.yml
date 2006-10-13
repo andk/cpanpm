@@ -1,5 +1,6 @@
 --- 
-qr: "^ILYAZ/modules/Term-ReadLine-Perl-"
+match:
+  distribution: "^ILYAZ/modules/Term-ReadLine-Perl-"
 pl: 
   args: []
 

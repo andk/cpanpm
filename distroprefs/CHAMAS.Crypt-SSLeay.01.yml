@@ -1,5 +1,6 @@
 --- 
-qr: "^CHAMAS/Crypt-SSLeay-"
+match:
+  distribution: "^CHAMAS/Crypt-SSLeay-"
 pl: 
   args: []
 
@@ -7,7 +8,7 @@ pl:
 
   expect:
     - "Which OpenSSL build path"
-    - "/usr\n"
+    - "\n"
 
 make: 
   args: []

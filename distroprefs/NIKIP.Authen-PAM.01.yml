@@ -1,5 +1,6 @@
 --- 
-qr: "^NIKIP/Authen-PAM-"
+match:
+  distribution: "^NIKIP/Authen-PAM-"
 pl: 
   args: []
 

@@ -1,5 +1,6 @@
 --- 
-qr: "^BTROTT/URI-Fetch-0"
+match:
+  distribution: "^BTROTT/URI-Fetch-"
 pl: 
   expect: 
     - "Auto-install"

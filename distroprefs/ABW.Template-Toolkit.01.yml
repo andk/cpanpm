@@ -1,5 +1,6 @@
 --- 
-qr: "^ABW/Template-Toolkit-"
+match:
+  distribution: "^ABW/Template-Toolkit-"
 pl: 
   expect:
     - "Do you want to build the XS Stash module"
