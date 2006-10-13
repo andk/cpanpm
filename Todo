@@ -1,5 +1,7 @@
 2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* check the version numbers since we rolled over 1000.
+
 	* Fix what podcover found: prefs and yaml_loadfile
 
 	* See if YAML::Tiny works and if so, mention it in FirstTime and maybe
