@@ -1,3 +1,9 @@
+=head1 NAME
+
+  DistroPrefs -- Preferences/Distributions/CPAN
+
+=head1 DESCRIPTION
+
 The files in this directory are YAML files that specify how CPAN.pm shall treat
 distributions that deviate from the normal model of
 
@@ -20,6 +26,8 @@ fields than necessary so they can easier be used as blueprints. In
 practice all empty fields can be removed from the YAML files. To find
 a blueprint pick one of the larger files.
 
+=head1 FILENAMES
+
 The YAML files themselves must have the .yml extension, all other
 files are ignored. The containing directory can be specified in
 CPAN.pm in the prefs_dir config variable. Try 'o conf init /prefs/' in
@@ -29,8 +37,72 @@ The names of the files can be picked freely, CPAN.pm always reads all
 files and takes the key "qr" as a regex that will be matched against
 the canonical distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
 
-Please report your improvements on the files. Any additions and
-corrections are welcome. Thank you!
+=head1 MAINTAINANCE
+
+Authors are changing their packages and introduce new dialogs, change
+the wording, change the order of questions, remove questions,
+introduce new options, update their autoinstaller etc. So you have to
+adjust your prefs from time to time. While CPAN.pm will probably
+contain some newer prefs files with every release, it will never be a
+reliable data source for a large amount of prefs file and more
+importantly will not always match your requirements.
+
+So if you decide to use distroprefs do not expect that you can have
+them without some maintainance overhead.
+
+=head1 TRICKS
+
+=head2 Repetitions
+
+Distros using older versions of Module::AutoInstall often do not
+support the --defaultdeps argument. So you probably have to use
+
+  pl:
+    expect:
+      - "Auto-install"
+      - "y\n"
+
+When you watch them you probably notice that they ask one question.
+Don't rely on that number. Next time you install that module it may
+ask 2 or more questions: because it calculates the number of questions
+from what you have installed at the moment. So better be prepared for
+more questions and repeat the above pattern once or twice.
+
+Don't hesitate to report this as a bug to the module author that is
+using Module::AutoInstall. They have to update the copy of
+Module::AutoInstall that comes with their package. It will not be
+sufficient that you update Module::AutoInstall.
+
+=head2 Exceptions
+
+You have a Bundle to install and notice that the Bundle has one module
+that you do NOT want for some reason? Add something like
+
+  make: 
+    args:
+      - nosuchtarget
+
+and you force this target to fail quickly.
+
+=head2 Fun (not!)
+
+Module::AutoInstall often doesn't get it right to find out under which
+circumstances it was invoked. Setting the environment variable
+PERL5_CPANPLUS_IS_RUNNING to 1 or setting PERL_AUTOINSTALL to --skip
+seems to help. Best to try both. I do not understand what's up there.
+If you know, please fix. If you don't, maybe try what I'm doing in
+MIYAGAWA.Plagger.yml.
+
+=head1 FEEDBACK
+
+Please report the improvements you apply to these files. Any additions
+and corrections are welcome. Also, please be aware that there are many
+areas of this system that need further attention and are not yet working
+as one would expect or hope.
+
+Please use the
+http://rt.cpan.org/Dist/Display.html?Status=Active&Queue=CPAN address
+to report any bugs and wished. Thank you!
 
 Enjoy,
 -- 

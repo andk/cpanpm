@@ -1,11 +1,13 @@
 --- 
-qr: "^SREZIC/Tk-Autoscroll-"
+qr: "^AUDREYT/Module-Signature-"
 pl: 
   args: []
 
   env: {}
 
-  expect: []
+  expect:
+    - "Import PAUSE"
+    - "y\n"
 
 make: 
   args: []

@@ -1,6 +1,6 @@
 --- 
 qr: "^EESTABROO/IMAP-Admin-"
-pl: 
+test: 
   args: []
 
   env: {}
@@ -18,25 +18,3 @@ pl:
     - "\n"
     - "Enter Port"
     - "\n"
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-test: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-

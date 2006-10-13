@@ -381,7 +381,10 @@ sub prefs {
                 my $yaml = $self->yaml_loadfile($abs);
                 my $qr = eval "qr{$yaml->{qr}}";
                 if ($distro =~ /$qr/) {
-                    return $yaml;
+                    return {
+                            prefs => $yaml,
+                            prefs_file => $abs,
+                           };
                 }
             }
         }
@@ -5582,7 +5585,7 @@ is part of the perl-%s distribution. To install that, you need to run
 #	$switch = "-MExtUtils::MakeMaker ".
 #	    "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
 #	    if $] > 5.00310;
-        my $makepl_arg = $self->makepl_arg;
+        my $makepl_arg = $self->make_x_arg("pl");
 	$system = sprintf("%s%s Makefile.PL%s",
                           $perl,
                           $switch ? " $switch" : "",
@@ -5595,7 +5598,8 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $env->{$e};
         }
     }
-    unless (exists $self->{writemakefile}) {
+    if (exists $self->{writemakefile}) {
+    } else {
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
 	my($ret,$pid);
 	$@ = "";
@@ -5684,6 +5688,10 @@ is part of the perl-%s distribution. To install that, you need to run
             return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
         }
     }
+    if ($CPAN::Signal){
+      delete $self->{force_update};
+      return;
+    }
     if ($self->{modulebuild}) {
         unless (-f "Build") {
             my $cwd = Cwd::cwd;
@@ -5694,6 +5702,19 @@ is part of the perl-%s distribution. To install that, you need to run
         $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
     } else {
         $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
+    }
+    my $make_arg = $self->make_x_arg("make");
+    $system = sprintf("%s%s",
+                      $system,
+                      $make_arg ? " $make_arg" : "",
+                     );
+    if (my $env = $self->prefs->{make}{env}) { # overriding the local
+                                               # ENV of PL, not the
+                                               # outer ENV, but
+                                               # unlikely to be a risk
+        for my $e (keys %$env) {
+            $ENV{$e} = $env->{$e};
+        }
     }
     if (system($system) == 0) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
@@ -5712,14 +5733,15 @@ sub run_via_expect {
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;
         $expo->spawn($system);
-        for (my $i = 0; $i < $#$expect; $i+=2) {
+      EXPECT: for (my $i = 0; $i < $#$expect; $i+=2) {
             my $regex = eval "qr{$expect->[$i]}";
             my $send = $expect->[$i+1];
             $expo->expect(10,
                           [ eof => sub {
                                 my $but = $expo->clear_accum;
-                                $CPAN::Frontend->mydie("EOF system[$system]
+                                $CPAN::Frontend->mywarn("EOF (maybe harmless) system[$system]
 expected[$regex]\nbut[$but]\n\n");
+                                last EXPECT;
                             } ],
                           [ timeout => sub {
                                 my $but = $expo->clear_accum;
@@ -5746,32 +5768,45 @@ sub prefs {
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
         my $prefs = CPAN->prefs($self->pretty_id);
-        CPAN->debug("prefs[$prefs]") if $CPAN::DEBUG;
         if ($prefs) {
-            return $self->{prefs} = $prefs;
+            for my $x (qw(prefs prefs_file)) {
+                $self->{$x} = $prefs->{$x};
+            }
+            my $basename = File::Basename::basename($self->{prefs_file});
+            my $filler1 = "_" x 22;
+            my $filler2 = int(66 - length($basename))/2;
+            $filler2 = 0 if $filler2 < 0;
+            $filler2 = " " x $filler2;
+            $CPAN::Frontend->myprint("
+$filler1 D i s t r o P r e f s $filler1
+$filler2 $basename $filler2
+");
+            $CPAN::Frontend->mysleep(1);
+            return $self->{prefs};
         }
     }
     return +{};
 }
 
-# CPAN::Distribution::makepl_arg
-sub makepl_arg {
-    my($self) = @_;
-    my $makepl_arg;
+# CPAN::Distribution::make_x_arg
+sub make_x_arg {
+    my($self, $whixh) = @_;
+    my $make_x_arg;
     my $prefs = $self->prefs;
     if (
         $prefs
-        && exists $prefs->{pl}
-        && exists $prefs->{pl}{args}
-        && $prefs->{pl}{args}
+        && exists $prefs->{$whixh}
+        && exists $prefs->{$whixh}{args}
+        && $prefs->{$whixh}{args}
        ) {
-        $makepl_arg = join(" ",
+        $make_x_arg = join(" ",
                            map {CPAN::HandleConfig
-                                 ->safe_quote($_)} @{$prefs->{pl}{args}},
+                                 ->safe_quote($_)} @{$prefs->{$whixh}{args}},
                           );
     }
-    $makepl_arg ||= $CPAN::Config->{makepl_arg};
-    return $makepl_arg;
+    my $what = sprintf "make%s_arg", $whixh eq "make" ? "" : $whixh;
+    $make_x_arg ||= $CPAN::Config->{$what};
+    return $make_x_arg;
 }
 
 # CPAN::Distribution::_make_command
@@ -6364,7 +6399,7 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
-    my $brip = $self->prefs->{build_requires_install_policy};
+    my $brip = $self->prefs->{config}{build_requires_install_policy};
     $brip ||= $CPAN::Config->{build_requires_install_policy};
     $brip ||="ask/yes";
     my $id = $self->id;

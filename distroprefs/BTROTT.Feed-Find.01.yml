@@ -1,9 +1,7 @@
 --- 
-qr: "^MIYAGAWA/XML-Atom-"
+qr: "^BTROTT/Feed-Find-"
 pl: 
   expect: 
-    - "Auto-install"
-    - "y\n"
     - "Auto-install"
     - "y\n"
     - "Auto-install"

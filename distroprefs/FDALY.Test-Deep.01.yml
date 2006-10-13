@@ -1,3 +1,4 @@
 --- 
 qr: "^FDALY/Test-Deep-"
-build_requires_install_policy: "yes"
+cpanconfig:
+  build_requires_install_policy: "yes"

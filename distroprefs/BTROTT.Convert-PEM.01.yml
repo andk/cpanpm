@@ -1,9 +1,7 @@
 --- 
-qr: "^MIYAGAWA/XML-Atom-"
+qr: "^BTROTT/Convert-PEM-"
 pl: 
   expect: 
-    - "Auto-install"
-    - "y\n"
     - "Auto-install"
     - "y\n"
     - "Auto-install"

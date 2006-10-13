@@ -1,13 +1,47 @@
+2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
+
+	* write a dummy distro that reads arguments to Makefile.PL and another
+	one that reads something from STDIN (or maybe both in one)
+
+	* I hate Module::AutoInstall. Watching installation of Plagger:
+
+  CPAN.pm: Going to build M/MI/MIYAGAWA/Plagger-0.7.13.tar.gz
+
+make[1]: Entering directory `/home/k/.cpan/build/Plagger-0.7.13'
+/home/src/perl/repoperls/installed-perls/perl/p4tTru3/perl-5.8.0@29004/bin/perl "-Iinc" Makefile.PL --config= --installdeps=File::Find::Rule,0,UNIVERSAL::require,0.1,Template,2.13,Template::Provider::Encoding,0.04,Text::Tags,0,DateTime::Format::Strptime,0,URI::Fetch,0.071,Cache::Cache,1.04,Module::Pluggable::Fast,0,HTML::ResolveLink,0,Date::Parse,0,MIME::Types,1.16,Net::DNS,0,XML::Feed,0.12,XML::Atom,0.23,Term::Encoding,0,XML::Liberal,0.14,XML::RSS::Liberal,0,HTML::Scrubber,0,XML::Feed,0.09,XML::Atom,0.20,HTML::Scrubber,0,Time::Duration::Parse,0,WebService::Bloglines,0.11
+CPAN: File::HomeDir loaded ok (v0.58)
+*** Installing dependencies...
+
+	Holy crap! Recursive installation where we are just eager to maintain a
+	clean and efficient queue of installation objects and could do it
+	ourselves so easily? And besides that, the INC path is not our INC path,
+	so I always get a different CPAN version. While the latter is only
+	disturbing a minority, it's a BUUUUUUG to go recursive.
+
+	Not only does it cost memory, this child is also uninformed about failed
+	installations!
+
+	This needs to be fixed.
+
+	The manpage of M:AI says it checks if it is running under CPAN.pm. Maybe
+	this check is wrong? Apparently yes.
+
 2006-10-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* why did MIYAGAWA/XML-Atom not work?
+	* restructure the prefs YAML files to have cpanconfig as key and all
+	CPAN.pm configs inside that. That gives room to cpanplus. DONE
+
+	* why did MIYAGAWA/XML-Atom not work? -- Because it asked us twice but
+	our yaml file only answered once FIXED.
 
 	* improve feedback when you pick a file for prefs settings, maybe store
-	the picked yaml file in the distro object.
+	the picked yaml file in the distro object. DONE.
 
 	* test if you can get around single modules by specifying
 	prefs->{make}{nosuchtarget}. Interesting for MailTools or DBI in current
-	bleadperl.
+	bleadperl. EXACTLY! (and tested)
 
 	* test if the Test-Deep setting of brip works
 
@@ -96,7 +130,9 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
     make         NO
     modulebuild  1
     prereq_pm    build_requires requires
+	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     prereq_pm_detected 1
+	  ^^^^^^^^^^^^^^^^^^^^
     reqtype      c
     unwrapped    YES
     writemakefile YES
@@ -120,21 +156,17 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
 
 	* put the distroprefs directory into MANIFEST. DONE in rev. 993
 
-	* write a dummy distro that reads arguments to Makefile.PL and another
-	one that reads something from STDIN (or maybe both in one)
-
 	* just a memo what I usually install:
 
 	    o debug CPAN Distribution
-	    install Bundle::CPAN Module::Signature CPAN::Reporter YAML::Syck Devel::Symdump
+	    install Bundle::CPAN YAML::Syck Module::Signature CPAN::Reporter Devel::Symdump
 	    force install Expect
 
 	* DistroPrefs:
 
 	Variable           Comment                      Done in file
 
-  prefer_installer
-  pl env
+  pl env                                          DBROBINS.Net-SSH-Perl.01.yml
      args                                         GAAS.libwww.01.yml
      expect                                       JJORE.Carp-Clan.01.yml
   make env
@@ -146,12 +178,13 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
   install env
           args
           expect
+	cpanconfig:
+    build_requires_install_policy                 FDALY.Test-Deep.01.yml
+
 
 	* replace 03 index file with YAML.
 
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
 
 	* Schwern reopened 21144. Go resolve, I have promised before the next release.
 
@@ -722,7 +755,7 @@ Use of uninitialized value $id in delete at lib/CPAN.pm line 794, <FH> line 4106
 	* build_requires: fortunately the things on the Queue are objects with
 	currently only one attribute "qmod", the string.
 
-	    install Bundle::CPAN CPAN::Reporter Module::Signature Devel::Symdump Expect
+	    install Bundle::CPAN CPAN::Reporter Expect Module::Signature Devel::Symdump
 
 	First step is to change the constructor to accept more arguments DONE in rev 889
 

@@ -1,6 +1,5 @@
 --- 
 qr: "^GAAS/libwww-perl-"
-prefer_installer: EUMM
 pl: 
   args: 
     - -n

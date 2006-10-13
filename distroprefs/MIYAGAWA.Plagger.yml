@@ -1,4 +1,11 @@
 --- 
 qr: "^MIYAGAWA/Plagger-"
-pl: 
+pl:
+  env:
+    PERL5_CPANPLUS_IS_RUNNING: 1
+    PERL_AUTOINSTALL: --skip    
   args: ["--defaultdeps"]
+make:
+  env:
+    PERL5_CPANPLUS_IS_RUNNING: 1
+    PERL_AUTOINSTALL: --skip    

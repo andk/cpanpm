@@ -1,6 +1,5 @@
 --- 
 qr: "^ILYAZ/modules/Term-ReadLine-Perl-"
-prefer_installer: EUMM
 pl: 
   args: []
 

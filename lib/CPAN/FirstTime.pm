@@ -856,6 +856,7 @@ put them on one line, separated by blanks, hyphenated ranges allowed
 sub bring_your_own {
     my %seen = map (($_ => 1), @$urllist);
     my($ans,@urls);
+    my $eacnt = 0; # empty answers
     do {
 	my $prompt = "Enter another URL or RETURN to quit:";
 	unless (%seen) {
@@ -881,6 +882,13 @@ later if you\'re sure it\'s right.\n},
                                    || $INC{'CPAN/Config.pm'}
                                    || "configuration file",
                                   ));
+            }
+        } else {
+            if (++$eacnt >= 5) {
+                $CPAN::Frontend->
+                    mywarn("Giving up.\n");
+                $CPAN::Frontend->mysleep(5);
+                return;
             }
         }
     } while $ans || !%seen;

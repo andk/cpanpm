@@ -1047,7 +1047,7 @@ To add a new distro, the following steps must be taken:
 
 - add it to the ../MANIFEST
 
-(3) Upload and embed into our minicpan
+(3) Upload and embed into our "./CPAN" minicpan
 
 - verify that 'make dist' on CPAN.pm still works
 
