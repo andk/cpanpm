@@ -10,23 +10,30 @@ SYNOPSIS
 
       use CPAN;
 
-      # modules:
+      # Modules:
 
-      $mod = "Acme::Meta";
-      install $mod;
-      CPAN::Shell->install($mod);                    # same thing
-      CPAN::Shell->expandany($mod)->install;         # same thing
-      CPAN::Shell->expand("Module",$mod)->install;   # same thing
-      CPAN::Shell->expand("Module",$mod)
-        ->distribution->install;                     # same thing
+      cpan> install Acme::Meta                       # in the shell
 
-      # distributions:
+      CPAN::Shell->install("Acme::Meta");            # in perl
 
-      $distro = "NWCLARK/Acme-Meta-0.01.tar.gz";
-      install $distro;                                # same thing
-      CPAN::Shell->install($distro);                  # same thing
-      CPAN::Shell->expandany($distro)->install;       # same thing
-      CPAN::Shell->expand("Distribution",$distro)->install; # same thing
+      # Distributions:
+
+      cpan> install NWCLARK/Acme-Meta-0.02.tar.gz    # in the shell
+
+      CPAN::Shell->
+        install("NWCLARK/Acme-Meta-0.02.tar.gz");    # in perl
+
+      # module objects:
+
+      $mo = CPAN::Shell->expandany($mod);
+      $mo = CPAN::Shell->expand("Module",$mod);      # same thing
+
+      # distribution objects:
+
+      $do = CPAN::Shell->expand("Module",$mod)->distribution;
+      $do = CPAN::Shell->expandany($distro);         # same thing
+      $do = CPAN::Shell->expand("Distribution",
+                                $distro);            # same thing
 
 STATUS
     This module and its competitor, the CPANPLUS module, are both much
@@ -324,8 +331,7 @@ PROGRAMMER'S INTERFACE
 
           # install my favorite programs if necessary:
           for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
-              my $obj = CPAN::Shell->expand('Module',$mod);
-              $obj->install;
+              CPAN::Shell->install($mod);
           }
 
           # list all modules on my disk that have no VERSION number
@@ -501,6 +507,10 @@ PROGRAMMER'S INTERFACE
         cancellation can be avoided by letting "force" run the "install" for
         you.
 
+        This install method has only the power to install the distribution
+        if there are no dependencies in the way. To install an object and
+        all of its dependencies, use CPAN::Shell->install.
+
         Note that install() gives no meaningful return value. See
         uptodate().
 
@@ -527,6 +537,18 @@ PROGRAMMER'S INTERFACE
         available, it converts it to plain text with external command
         html2text and runs it through the pager specified in
         "$CPAN::Config-"{pager}>
+
+    CPAN::Distribution::prefs()
+        Returns the hash reference from the first matching YAML file that
+        the user has deposited in the "prefs_dir/" directory. The first
+        succeeding match wins. The files in the "prefs_dir/" are processed
+        alphabetically and the canonical distroname (e.g.
+        AUTHOR/Foo-Bar-3.14.tar.gz) is matched against the regular
+        expressions stored in the $root->{match}{distribution} attribute
+        value. Additionally all module names contained in a distribution are
+        matched agains the regular expressions in the $root->{match}{module}
+        attribute value. The two match values are ANDed together. Each of
+        the two attributes are optional.
 
     CPAN::Distribution::prereq_pm()
         Returns the hash reference that has been announced by a distribution
@@ -1012,6 +1034,34 @@ CONFIGURATION
     a new site at runtime it may happen that the previously preferred site
     will be tried another time. This means that if you want to disallow a
     site for the next transfer, it must be explicitly removed from urllist.
+
+  prefs_dir for avoiding interactive questions (ALPHA)
+    (Note: This feature has been introduced in CPAN.pm 1.8854 and is still
+    considered experimental and may still be changed)
+
+    The files in the directory specified in "prefs_dir" are YAML files that
+    specify how CPAN.pm shall treat distributions that deviate from the
+    normal non-interactive model of building and installing CPAN modules.
+
+    Some modules try to get some data from the user interactively thus
+    disturbing the installation of large bundles like Phalanx100 or modules
+    like Plagger.
+
+    CPAN.pm can use YAML files to either pass additional arguments to one of
+    the four commands, set environment variables or instantiate an Expect
+    object that reads from the console, waits for some regular expression
+    and enters some answer. Needless to say that for the latter option
+    Expect.pm needs to be installed.
+
+    CPAN.pm comes with a couple of such YAML files. The structure is
+    currently not documented. Please see the distroprefs directory of the
+    CPAN distribution for examples and follow the README in there.
+
+    Please note that setting the environment variable PERL_MM_USE_DEFAULT to
+    a true value can also get you a long way if you want to always pick the
+    default answers. But this only works if the author of apackage used the
+    prompt function provided by ExtUtils::MakeMaker and if the defaults are
+    OK for you.
 
 SECURITY
     There's no strong security layer in CPAN.pm. CPAN.pm helps you to

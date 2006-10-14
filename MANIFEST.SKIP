@@ -21,9 +21,13 @@
 ^blibdirs
 ^cover_db/
 ^cp-to-perl.pl
+^distroprefs/ttt.nodbi.yml
+^distroprefs/ttt.nodbi.yml.bak
+^distroprefs/ttt.nomailsend.yml
 ^eg/
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup
+^lib/CPAN\.pm@
 ^mail
 ^make-test-
 ^memo
