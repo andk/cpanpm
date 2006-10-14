@@ -6238,11 +6238,14 @@ sub test {
             my @prereq;
             for my $m (keys %{$self->{sponsored_mods}}) {
                 my $m_obj = CPAN::Shell->expand("Module",$m);
-                if (!$m_obj->distribution->{make_test}
-                    ||
-                    $m_obj->distribution->{make_test}->failed){
-                    #$m_obj->dump;
-                    push @prereq, $m;
+                my $d_obj = $m_obj->distribution;
+                if ($d_obj) {
+                    if (!$d_obj->{make_test}
+                        ||
+                        $d_obj->{make_test}->failed){
+                        #$m_obj->dump;
+                        push @prereq, $m;
+                    }
                 }
             }
             if (@prereq){

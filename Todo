@@ -1,11 +1,5 @@
 2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
-	Take t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make as the
-	source and
-	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne as
-	target.
-
 	* Add support for all other CPAN::Config variables. Maybe by turning
 	them all into methods in CPAN::Distribution, maybe via autoload, maybe
 	with clever use of local(). Currently only "make",
@@ -227,6 +221,12 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
+	Take t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make as the
+	source and
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne as
+	target. DONE in rev. 1031
 
 2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 

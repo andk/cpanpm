@@ -909,6 +909,9 @@ __END__
 #C: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########
+#P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
+#E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue.[\s\S]+?Failed during this command
+########
 #P:u /--/
 #E:No modules found for
 ########
