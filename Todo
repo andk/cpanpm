@@ -1,5 +1,8 @@
 2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Test installing Plagger with saying yes to all dependcy questions.
+	Needs an uncountable number of Y.
+
 	* Add support for all other CPAN::Config variables. Maybe by turning
 	them all into methods in CPAN::Distribution, maybe via autoload, maybe
 	with clever use of local(). Currently only "make",
@@ -13,7 +16,7 @@
 	cannot use bleadperl. Latest maint-perl is 28854.
 
 	AI::Categorizer needed by t/basic.t, not listed as prereq. Needs in turn
-	(unlisted?) Algorithm::NaiveBayes:-(
+	(unlisted?) Algorithm::NaiveBayes. Bug report to Ken sent.
 
 	Warning: prerequisite Config::IniFiles 0 not found.
 	Warning: prerequisite DBD::SQLite 0 not found.
@@ -22,19 +25,16 @@
 	DBD::SQLite did not compile on the first try. But it did on the second.
 	I think in between I installed libsqlite0-dev.
 
-	No again I have no Lingua::StopWords:=(
+	Trying make test.
 
+	No again: I have no Lingua::StopWords:=(
 	No SOAP::Lite
-
 	No Perl::Tidy
-
 	No HTML::TextToHTML
-
 	No Pod::Xhtml
-
 	No XML::SAX::ExpatXS
 
-	Finished installing prereqs, all tests except Mysql pass.
+	Finished installing prereqs, all tests except Mysql pass which is OK.
 
 	make install is OK.
 
@@ -50,7 +50,6 @@ Cannot retrieve /home/src/perl/cpan-search-lite/indices/ls-lR.gz from file:///ho
 	/home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/bin/csl_index --config /home/src/perl/cpan-search-lite/cpan.conf --setup
 Using config file "/home/src/perl/cpan-search-lite/cpan.conf"
 Cannot retrieve /home/src/perl/cpan-search-lite/MIRRORED.BY from file:///home/ftp/pub/PAUSE/./MIRRORED.BY at /home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/lib/site_perl/5.8.8/CPAN/Search/Lite/Index.pm line 198.
-
 
 	Gotta get this mirroredby file as well...
 

@@ -5780,7 +5780,9 @@ sub _find_prefs {
             }
         }
     } else {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
+        unless ($self->{have_complained_about_missing_yaml}++) {
+            $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
+        }
     }
     return;
 }
