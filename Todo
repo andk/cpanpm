@@ -63,10 +63,12 @@ Argument "0.20a" isn't numeric in numeric comparison (<=>) at /home/src/perl/rep
 	
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
-	one that reads something from STDIN (or maybe both in one)
+	one that reads something from STDIN (or maybe both in one) DELAYED until
+	the distroprefs stuff leaves the alpha stage.
 
 	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
-	way we can catch bugs in M:C:A itself or in its dependencies.
+	way we can catch bugs in M:C:A itself or in its dependencies. DELAYED
+	because currently M:C:A doesn't pass its own tests.
 
 	* just a memo what I usually install:
 
@@ -75,9 +77,6 @@ Argument "0.20a" isn't numeric in numeric comparison (<=>) at /home/src/perl/rep
 	    force install Expect
 
 	* replace 03 index file with YAML.
-
-	* Schwern reopened 21144. Go resolve, I have promised before the next
-	release. FIXED in rev. 1016 and 1018
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset. We had that further down but I
@@ -227,6 +226,9 @@ need the middle man.
 	source and
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne as
 	target. DONE in rev. 1031
+
+	* Schwern reopened 21144. Go resolve, I have promised before the next
+	release. FIXED in rev. 1016 and 1018
 
 2006-10-13  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
