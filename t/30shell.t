@@ -908,9 +908,11 @@ __END__
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #C: "is up to date" is for when they have it installed in INC
 #R:Module::Build
+#T:60
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
 #E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue.[\s\S]+?Failed during this command
+#T:60
 ########
 #P:u /--/
 #E:No modules found for
