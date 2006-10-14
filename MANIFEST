@@ -2,15 +2,6 @@ ChangeLog
 ChangeLog.old
 Changes
 Changes.old
-MANIFEST
-MANIFEST.SKIP
-META.yml
-Makefile.PL
-PAUSE2003.pub
-PAUSE2005.pub
-README
-SIGNATURE                                Public-key signature (added by MakeMaker)
-Todo
 distroprefs/ABW.Template-Toolkit.01.yml
 distroprefs/AUDREYT.Module-Signature.01.yml
 distroprefs/BTROTT.Convert-PEM.01.yml
@@ -53,7 +44,15 @@ lib/CPAN/Nox.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
+Makefile.PL
+MANIFEST
+MANIFEST.SKIP
+META.yml
+PAUSE2003.pub
+PAUSE2005.pub
+README
 scripts/cpan
+SIGNATURE			Public-key signature (added by MakeMaker)
 t/00signature.t
 t/01loadme.t
 t/02nox.t
@@ -67,9 +66,6 @@ t/50pod.t
 t/51pod.t
 t/52podcover.t
 t/60credentials.t
-t/CPAN/CpanTestDummies-1.55.pm
-t/CPAN/TestConfig.pm
-t/CPAN/TestMirroredBy
 t/CPAN/authors/01mailrc.txt
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
@@ -86,6 +82,10 @@ t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 t/CPAN/authors/id/A/AN/CHECKSUMS
 t/CPAN/authors/id/A/CHECKSUMS
 t/CPAN/authors/id/CHECKSUMS
+t/CPAN/CpanTestDummies-1.55.pm
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
+t/CPAN/TestConfig.pm
+t/CPAN/TestMirroredBy
 t/dot-cpan/sources/MIRRORED.BY
+Todo

@@ -8,6 +8,7 @@
 ^CPAN/MakeMaker
 ^DIST
 ^DIST
+^MANIFEST.bak
 ^MIRRORED.BY
 ^Makefile(.old)?$
 ^TAGS
@@ -33,6 +34,7 @@
 ^related/
 ^release-lib
 ^t/CPAN/MyConfig\.pm
+^t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS@
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build/
