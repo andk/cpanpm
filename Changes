@@ -3,10 +3,21 @@
 	* release 1.88_54
 
 	* New option 'yaml_module' to switch between YAML.pm and YAML::Syck
+	Try 'o conf init /yaml/' to use it.
 
 	* New distroprefs system that lets the user store arguments, environment
-	variables and individual answers to questions asked by Distributions
-	when being built. Try 'o conf init /prefs/' for more info.
+	variables, individual answers to questions asked by Distributions when
+	being built, and config overrides. Try 'o conf init /prefs/' for more
+	information
+
+	* address #21144 major documentation bug: $obj->install is NOT the same
+	as CPAN::Shell->install($obj) as soon as a queue of dependencies comes
+	into play.
+
+	* fix "o conf defaults" which was broken in 1.88_53
+
+	* protect us against Module::Build errors with an eval around the
+	requires() and build_requires() calls.
 
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
