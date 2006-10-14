@@ -1,5 +1,12 @@
 2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Add support for all other CPAN::Config variables. Maybe by turning
+	them all into methods in CPAN::Distribution, maybe via autoload, maybe
+	with clever use of local(). Currently only "make",
+	"make_install_make_command", and "build_requires_install_policy" are
+	supported. The first two for PDL on freebsd, the last one was just for
+	quick testing of the mechanism.
+
 	* Randy's CPAN-Search-Lite lives at
 	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
 	/home/src/perl/cpan-search-lite/CPAN-Search-Lite. As it needs DBI, it
@@ -29,6 +36,32 @@
 
 	Finished installing prereqs, all tests except Mysql pass.
 
+	make install is OK.
+
+	First invocation of the indexer with
+
+	/home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/bin/csl_index --config /home/src/perl/cpan-search-lite/cpan.conf --setup
+Using config file "/home/src/perl/cpan-search-lite/cpan.conf"
+Cannot retrieve /home/src/perl/cpan-search-lite/indices/ls-lR.gz from file:///home/ftp/pub/PAUSE/indices/ls-lR.gz at /home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/lib/site_perl/5.8.8/CPAN/Search/Lite/Index.pm line 198.
+
+	Ouch, ls-lR.gz is used for what exactly? That's pure funet. I fetch it
+	from there. It's huge (2.4M)! How often do they update it?
+
+	/home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/bin/csl_index --config /home/src/perl/cpan-search-lite/cpan.conf --setup
+Using config file "/home/src/perl/cpan-search-lite/cpan.conf"
+Cannot retrieve /home/src/perl/cpan-search-lite/MIRRORED.BY from file:///home/ftp/pub/PAUSE/./MIRRORED.BY at /home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/lib/site_perl/5.8.8/CPAN/Search/Lite/Index.pm line 198.
+
+
+	Gotta get this mirroredby file as well...
+
+	% /home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/bin/csl_index --config /home/src/perl/cpan-search-lite/cpan.conf --setup
+Using config file "/home/src/perl/cpan-search-lite/cpan.conf"
+Argument "0.20a" isn't numeric in numeric comparison (<=>) at /home/src/perl/repoperls/installed-perls/maint-5.8/pjTSIuN/perl-5.8.0@28854/lib/site_perl/5.8.8/CPAN/Search/Lite/Util.pm line 274.
+	[...]
+
+	Ah, it's quite fast.
+	
+
 	* write a test with new dummy modules PrerecqurseI and II (or CircDep?)
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
@@ -46,7 +79,7 @@
 	* replace 03 index file with YAML.
 
 	* Schwern reopened 21144. Go resolve, I have promised before the next
-	release. FIXED in rev. 1016
+	release. FIXED in rev. 1016 and 1018
 
 	* Todo/buglet: turn on debug "CPAN" and find the reason why
 	incommandcolor is quite often not reset. We had that further down but I

@@ -7597,17 +7597,18 @@ Batch mode:
 
   use CPAN;
 
-  # modules:
+  # Modules:
 
-  $mod = "Acme::Meta";
-  install $mod;
-  CPAN::Shell->install($mod);                    # same thing
+  cpan> install Acme::Meta                       # in the shell
 
-  # distributions:
+  CPAN::Shell->install("Acme::Meta");            # in perl
 
-  $distro = "NWCLARK/Acme-Meta-0.02.tar.gz";
-  install $distro;                               # same thing
-  CPAN::Shell->install($distro);                 # same thing
+  # Distributions:
+
+  cpan> install NWCLARK/Acme-Meta-0.02.tar.gz    # in the shell
+
+  CPAN::Shell->
+    install("NWCLARK/Acme-Meta-0.02.tar.gz");    # in perl
 
   # module objects:
 
