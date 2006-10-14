@@ -68,6 +68,7 @@ t/52podcover.t
 t/60credentials.t
 t/CPAN/authors/01mailrc.txt
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS
+t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails-1.02.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.03.tar.gz

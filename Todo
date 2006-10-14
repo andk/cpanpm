@@ -1635,7 +1635,9 @@ Proceed? [yes]
 	CHECKSUMS file is 3 months old and its timestamp is 1 month old.
 
 	Fixed in 638 with the new argument $sloppy for CHECKSUM_check_file, but
-	test still missing. ... Test added by addng CHCKSUMS@588 in rev. 643
+	test still missing. ... Test added by adding CHECKSUMS@588 in rev. 643
+
+	Later renamed to CHECKSUMS.2nd (around rev. 1033)
 
 2006-02-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

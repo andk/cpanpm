@@ -33,9 +33,9 @@ unlink _f"t/dot-cpan/.lock";
 mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
 
 use File::Copy qw(cp);
-cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588",
+cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd",
     _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
-    or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS\@588 ".
+    or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd ".
     "over t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
 END {
     unlink _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS";
