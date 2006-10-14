@@ -4,8 +4,8 @@ use File::Spec;
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
 
 WriteMakefile(
-              NAME          => 'CPAN::Test::Dummy::Perl5::Make::CircDepeTwo',
-              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/CircDepeTwo.pm'),
+              NAME          => 'CPAN::Test::Dummy::Perl5::Make::CircDepeThree',
+              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/CircDepeThree.pm'),
               ABSTRACT      => 'CPAN Test Dummy for CPAN.pm',
               ($ExtUtils::MakeMaker::VERSION >= 6.31 ?
                (LICENSE      => "perl") : (),
@@ -20,7 +20,7 @@ WriteMakefile(
                                        ),
                       },
               PREREQ_PM => {
-                            "CPAN::Test::Dummy::Perl5::Make::CircDepeOne" => 0,
+                            "CPAN::Test::Dummy::Perl5::Make::CircDepeTwo" => 0,
                            },
 );
 
