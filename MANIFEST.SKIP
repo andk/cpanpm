@@ -52,6 +52,7 @@
 ^t/dot-cpan/Metadata
 ^t/dot-cpan/build
 ^t/dot-cpan/histfile
+^t/dot-cpan/sources/MIRRORED.BY
 ^t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS.bak
 ^test.out
 ~$
