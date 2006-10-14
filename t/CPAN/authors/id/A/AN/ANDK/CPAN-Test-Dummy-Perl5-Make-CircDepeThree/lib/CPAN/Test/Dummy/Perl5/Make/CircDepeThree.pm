@@ -1,8 +1,8 @@
 use strict;
 
-package CPAN::Test::Dummy::Perl5::Make::CircDepeOne;
+package CPAN::Test::Dummy::Perl5::Make::CircDepeThree;
 
-$CPAN::Test::Dummy::Perl5::Make::CircDepeOne::VERSION = '1.00';
+$CPAN::Test::Dummy::Perl5::Make::CircDepeThree::VERSION = '1.00';
 
 1;
 
@@ -12,11 +12,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Test::Dummy::Perl5::Make::CircDepeOne - CPAN Test Dummy
+CPAN::Test::Dummy::Perl5::Make::CircDepeThree - CPAN Test Dummy
 
 =head1 SYNOPSIS
 
-    use CPAN::Test::Dummy::Perl5::Make::CircDepeOne;
+    use CPAN::Test::Dummy::Perl5::Make::CircDepeThree;
 
 =head1 DESCRIPTION
 

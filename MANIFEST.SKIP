@@ -36,6 +36,7 @@
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeTwo/
+^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeThree/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build/
