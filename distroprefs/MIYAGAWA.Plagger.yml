@@ -4,8 +4,8 @@ match:
   module: "Plagger::Walker"
 pl:
   env:
-    PERL_AUTOINSTALL: --skip    
-  args: ["--defaultdeps"]
+    PERL_AUTOINSTALL: --skip
+  args: ["installdeps=y"]
 make:
   env:
     PERL_AUTOINSTALL: --skip    
