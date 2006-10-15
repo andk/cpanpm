@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_54';
+$CPAN::VERSION = '1.88_55';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -3736,12 +3736,14 @@ sub rd_authindex {
     CPAN->debug(sprintf "modulus[%d]lines[%s]", $modulus, scalar @lines) if $CPAN::DEBUG;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
-	    m/alias\s+(\S+)\s+\"([^\"\<]+)\s+\<([^\>]+)\>\"/;
-	next unless $userid && $fullname && $email;
-
-	# instantiate an author object
- 	my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
-	$userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
+	    m/alias\s+(\S+)\s+\"([^\"\<]*)\s+\<(.*)\>\"/;
+        $fullname ||= $email;
+	if ($userid && $fullname && $email){
+            my $userobj = $CPAN::META->instance('CPAN::Author',$userid);
+            $userobj->set('FULLNAME' => $fullname, 'EMAIL' => $email);
+        } else {
+            CPAN->debug(sprintf "line[%s]", $_) if $CPAN::DEBUG;
+        }
         $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
 	return if $CPAN::Signal;
     }
