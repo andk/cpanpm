@@ -1,5 +1,18 @@
 2006-10-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* just a memo what I usually install:
+
+	    o debug CPAN Distribution
+	    force install Expect
+	    install YAML::Syck Bundle::CPAN Module::Signature CPAN::Reporter Devel::Symdump Plagger Bundle::Phalanx100
+
+	This does not turn off interactivity.
+
+	YAML::Syck before Bundle::CPAN!
+
+	* Investigate what's going on with Crypt::DH and Net::SSH::Perl. Both
+	seem to hang during the tests.
+
 	* Feature request by Slaven: build a patched thing. Reminds me of Ilyas
 	words about something involving patches. Maybe (1) if the argument ends
 	with a dot, it is a local directory: go there and build. Maybe (2)
@@ -80,12 +93,6 @@ Argument "0.20a" isn't numeric in numeric comparison (<=>) at /home/src/perl/rep
 	* Measure kwalitee with Module::CPANTS::Analyse before uploading. That
 	way we can catch bugs in M:C:A itself or in its dependencies. DELAYED
 	because currently M:C:A doesn't pass its own tests.
-
-	* just a memo what I usually install:
-
-	    o debug CPAN Distribution
-	    install Bundle::CPAN YAML::Syck Module::Signature CPAN::Reporter Devel::Symdump
-	    force install Expect
 
 	* replace 03 index file with YAML.
 
