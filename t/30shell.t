@@ -5,11 +5,6 @@ BEGIN {
     $|++;
     #chdir 't' if -d 't';
     unshift @INC, './lib';
-    require Config;
-    unless ($Config::Config{osname} eq "linux" or $ENV{CPAN_RUN_SHELL_TEST}) {
-	print "1..0 # Skip: only validated on linux; maybe try env CPAN_RUN_SHELL_TEST=1\n";
-	eval "require POSIX; 1" and POSIX::_exit(0);
-    }
     eval { require Expect };
     if ($@) {
         unless ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
@@ -65,7 +60,7 @@ my @prgs;
     local $/;
     my $data = <DATA>;
     close DATA;
-    $data =~ s/^=head.*//s;
+    $data =~ s/^=head.*//ms;
     @prgs = split /########.*/, $data;
 }
 my @modules = qw(
@@ -102,7 +97,7 @@ $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
     $HAVE->{"Term::ReadLine::Perl"}
     || $HAVE->{"Term::ReadLine::Gnu"};
 read_myconfig;
-is($CPAN::Config->{histsize},100,"histsize is 100");
+is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 {
     require CPAN::HandleConfig;
@@ -161,22 +156,13 @@ sub mydiag {
 }
 
 $|=1;
-my $expo;
-my @PAIRS;
-if ($HAVE_EXPECT) {
-    if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
-        $RUN_EXPECT = 0;
-    } else {
-        $RUN_EXPECT = 1;
-    }
+if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
+    $RUN_EXPECT = 0;
 } else {
-    if ($ENV{CPAN_RUN_SHELL_TEST}) {
-        $RUN_EXPECT = 1;
-    } else {
-        $RUN_EXPECT = 0;
-    }
+    $RUN_EXPECT = 1;
 }
 ok(1,"RUN_EXPECT[$RUN_EXPECT]");
+my $expo;
 if ($RUN_EXPECT) {
     $expo = Expect->new;
     $ENV{LANG} = "C";
@@ -200,11 +186,17 @@ sub splitchunk ($) {
     @s;
 }
 
+sub test_name {
+    my($prog,$comment) = @_;
+    ($comment||"") . ($prog ? " (testing command '$prog')" : "[empty RET]")
+}
+
 my $skip_the_rest;
+my @PAIRS;
 TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($status,$prog,$expected,$req,$test_timeout,$comment) = @h{qw(S P E R T C)};
+    my($status,$prog,$expected,$req,$test_timeout,$comment) = @h{qw(S P E R T C N)};
     if ($skip_the_rest) {
         ok(1,"skipping");
         next TUPL;
@@ -223,8 +215,9 @@ TUPL: for my $i (0..$#prgs){
             die "Alert: illegal status [$status]";
         }
     }
+
     unless (defined $expected or defined $prog) {
-        ok(1,"empty test");
+        ok(1,"empty test %h=(".join(" ",%h).")");
         next TUPL;
     }
     if ($req) {
@@ -249,7 +242,6 @@ TUPL: for my $i (0..$#prgs){
             mydiag "NEXT: $prog";
             $expo->send("$sendprog\n");
         } else {
-            print SYSTEM "# NEXT: $sendprog\n";
             print SYSTEM "$sendprog\n";
         }
     } else {
@@ -257,7 +249,6 @@ TUPL: for my $i (0..$#prgs){
             mydiag "PRESSING RETURN";
             $expo->send("\n");
         } else {
-            print SYSTEM "# PRESSING RETURN\n";
             print SYSTEM "\n";
         }
     }
@@ -290,10 +281,10 @@ expected[$expected]\ngot[$got]\n\n";
         mydiag "GOT: $got\n";
         $prog =~ s/^(\d)/$1/;
         $comment ||= "";
-        ok(1, "$comment" . ($prog ? " (testing command '$prog')" : "[empty RET]"));
+        ok(1, test_name($prog,$comment));
     } else {
         $expected = "" if $prog =~ /\t/;
-        push @PAIRS, [$prog,$expected];
+        push @PAIRS, [$prog,$expected,$comment];
     }
 }
 if ($RUN_EXPECT) {
@@ -305,20 +296,26 @@ if ($RUN_EXPECT) {
     my $got = <SYSTEM>;
     close SYSTEM;
     my $pair;
+    my $pos = 0;
     for $pair (@PAIRS) {
-        my($prog,$expected) = @$pair;
+        my($prog,$expected,$comment) = @$pair;
+        mydiag "NEXT: $prog";
         mydiag "EXPECT: $expected";
-        $got =~ /(\G.*?$expected)/sgc or die "Failed on prog[$prog]expected[$expected]";
-        mydiag "GOT: $1\n";
-        ok(1, $prog||"\"\\n\"");
+        if ($got =~ /(\G.*?$expected)/sgc) {
+            mydiag "GOT: $1\n";
+            $pos = pos $got;
+        } else {
+            mydiag "FAILED at pos[$pos] in test.out";
+        }
+        ok(1, test_name($prog,$comment));
     }
 }
 
 read_myconfig;
-is($CPAN::Config->{histsize},100);
+is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
 rmtree _d"t/dot-cpan";
 
-# note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on)
+# note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__
 ########
 #E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
@@ -901,12 +898,12 @@ __END__
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build
 #E:is up to date|SAW MAKE[\s\S]+?SAW MAKE[\s\S]+?SAW MBUILD
-#C: "is up to date" is for when they have it installed in INC
+#N: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
-#C: "is up to date" is for when they have it installed in INC
+#N: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 #T:60
 ########
@@ -971,6 +968,7 @@ following:
     #R:Module::Build
     #T:15
     #C:comment
+    #N:internal note
     ########
 
 P stands for program or print
@@ -981,9 +979,11 @@ T for timeout
 
 R for requires or relies on
 
-C for comment
+C for comment (should be visible furing testing)
 
 S for status
+
+N for notes (just for the test writer, otherwise invisible)
 
 
 The script starts a CPAN shell and feed it the chunks such that the P

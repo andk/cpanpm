@@ -356,7 +356,7 @@ Shall we use it as the general CPAN build and cache directory?
 
     if (!$matcher or 'shell' =~ /$matcher/) {
         my $path = $CPAN::Config->{'shell'};
-        if (File::Spec->file_name_is_absolute($path)) {
+        if ($path && File::Spec->file_name_is_absolute($path)) {
             $CPAN::Frontend->mywarn("Warning: configured $path does not exist\n")
                 unless -e $path;
             $path = "";

@@ -3224,7 +3224,7 @@ sub hosthardest {
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
     my $ftpbin = $CPAN::Config->{ftp};
-    unless (length $ftpbin && MM->maybe_command($ftpbin)) {
+    unless ($ftpbin && length $ftpbin && MM->maybe_command($ftpbin)) {
         $CPAN::Frontend->myprint("No external ftp command available\n\n");
         return;
     }

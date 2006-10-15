@@ -285,7 +285,7 @@ testshell-with-protocol: testdistros
 	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
 	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
-	ls -ltr protocols | tail
+	ls -lt protocols | head
 
 testshell-with-protocol-twice: testdistros
 	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
