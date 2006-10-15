@@ -4223,15 +4223,36 @@ sub as_string {
         next unless defined $ro->{$_};
         push @m, sprintf "    %-12s %s%s\n", $_, $ro->{$_}, $extra;
     }
-    for (sort keys %$self) {
+  KEY: for (sort keys %$self) {
 	next if m/^(ID|RO)$/;
+        unless (defined $self->{$_}) {
+            delete $self->{$_};
+            next KEY;
+        }
 	if (ref($self->{$_}) eq "ARRAY") {
 	  push @m, sprintf "    %-12s %s\n", $_, "@{$self->{$_}}";
 	} elsif (ref($self->{$_}) eq "HASH") {
+            my $value;
+            if (/^CONTAINSMODS$/) {
+                $value = join(" ",sort keys %{$self->{$_}});
+            } elsif (/^prereq_pm$/) {
+                my @value;
+                my $v = $self->{$_};
+                for my $x (sort keys %$v) {
+                    my @svalue;
+                    for my $y (sort keys %{$v->{$x}}) {
+                        push @svalue, "$y=>$v->{$x}{$y}";
+                    }
+                    push @value, "$x\:" . join ",", @svalue;
+                }
+                $value = join ";", @value;
+            } else {
+                $value = $self->{$_};
+            }
 	  push @m, sprintf(
 			   "    %-12s %s\n",
 			   $_,
-			   join(" ",sort keys %{$self->{$_}}),
+			   $value,
                           );
 	} else {
 	  push @m, sprintf "    %-12s %s\n", $_, $self->{$_};
@@ -5371,10 +5392,23 @@ sub eq_CHECKSUM {
 sub force {
   my($self, $method) = @_;
   for my $att (qw(
-  CHECKSUM_STATUS archived build_dir localfile make install unwrapped
-  writemakefile modulebuild make_test signature_verify
+                  CHECKSUM_STATUS
+                  archived
+                  build_dir
+                  install
+                  localfile
+                  make
+                  make_test
+                  modulebuild
+                  prereq_pm
+                  prereq_pm_detected
+                  signature_verify
+                  unwrapped
+                  writemakefile
+                  yaml_content
  )) {
     delete $self->{$att};
+    CPAN->debug(sprintf "att[%s]", $att) if $CPAN::DEBUG;
   }
   if ($method && $method =~ /make|test|install/) {
     $self->{"force_update"}++; # name should probably have been force_install
@@ -5745,7 +5779,7 @@ sub _find_prefs {
             next if $_ eq "." || $_ eq "..";
             next unless /\.yml$/;
             my $abs = File::Spec->catfile($prefs_dir, $_);
-            CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
+            # CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
             if (-f $abs) {
                 my $yaml = CPAN->_yaml_loadfile($abs);
                 my $ok = 1;
