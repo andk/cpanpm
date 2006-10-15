@@ -408,7 +408,7 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
     yaml_content 
 
 	But I cannot reproduce it. So I must have upgraded something that caused
-	the bug.
+	the bug. REVISITED after 1.88_54 and FIXED in 1043.
 
 	* Since when fails a YAML test? 0.62 with blead @28990 fails today on
 	rt-bugs.t or so. Reported to P5P. RESOLVED in blead @28997.
