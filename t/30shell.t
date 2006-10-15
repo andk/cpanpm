@@ -979,7 +979,7 @@ T for timeout
 
 R for requires or relies on
 
-C for comment (should be visible furing testing)
+C for comment (should be visible during testing)
 
 S for status
 
