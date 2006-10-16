@@ -87,6 +87,7 @@ use vars qw($VERSION @EXPORT $AUTOLOAD
              readme
              recent
              recompile
+             report
              shell
              test
              upgrade
@@ -247,7 +248,7 @@ ReadLine support %s
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
 	    warn $@ if $@;
-            if ($command =~ /^(make|test|install|force|notest|clean|upgrade)$/) {
+            if ($command =~ /^(make|test|install|force|notest|clean|report|upgrade)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
             soft_chdir_with_alternatives(\@cwd);
@@ -395,6 +396,7 @@ use strict;
                                     recent
                                     recompile
                                     reload
+                                    report
                                     scripts
                                     test
                                     upgrade
@@ -1772,6 +1774,16 @@ sub scripts {
         }
         $CPAN::Frontend->myprint("$highest\n");
     }
+}
+
+#-> sub CPAN::Shell::report ;
+sub report {
+    my($self,@args) = @_;
+    unless ($CPAN::META->has_inst("CPAN::Reporter")) {
+        $CPAN::Frontend->mydie("CPAN::Reporter not installed; cannot continue");
+    }
+    local $CPAN::Config->{test_report} = 1;
+    $self->force("test",@args);
 }
 
 #-> sub CPAN::Shell::upgrade ;
@@ -7924,6 +7936,11 @@ Another popular use for C<recompile> is to act as a rescue in case your
 perl breaks binary compatibility. If one of the modules that CPAN uses
 is in turn depending on binary compatibility (so you cannot run CPAN
 commands), then you should try the CPAN::Nox module for recovery.
+
+=head2 report Bundle|Distribution|Module
+
+The C<report> command temporarily turns on the C<test_report> config
+variable, then runs the C<force test> command with the given arguments.
 
 =head2 upgrade [Module|/Regex/]...
 
