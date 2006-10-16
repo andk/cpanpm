@@ -2060,7 +2060,7 @@ sub autobundle {
 sub expandany {
     my($self,$s) = @_;
     CPAN->debug("s[$s]") if $CPAN::DEBUG;
-    if ($s =~ m|/|) { # looks like a file
+    if ($s =~ m|/| or substr($s,-1,1) eq ".") { # looks like a file or a directory
         $s = CPAN::Distribution->normalize($s);
         return $CPAN::META->instance('CPAN::Distribution',$s);
         # Distributions spring into existence, not expand
@@ -2408,10 +2408,14 @@ sub rematein {
 	    $obj = $s;
 	} elsif ($s =~ m|[\$\@\%]|) { # looks like a perl variable
 	} elsif ($s =~ m|^/|) { # looks like a regexp
-            $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
-                                    "not supported.\nRejecting argument '$s'\n");
-            $CPAN::Frontend->mysleep(2);
-            next;
+            if (substr($s,-1,1) eq ".") {
+                $obj = CPAN::Shell->expandany($s);
+            } else {
+                $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
+                                        "not supported.\nRejecting argument '$s'\n");
+                $CPAN::Frontend->mysleep(2);
+                next;
+            }
 	} elsif ($meth eq "ls") {
             $self->globls($s,\@pragma);
             next STHING;
@@ -4199,7 +4203,11 @@ sub as_string {
     push @m, $class, " id = $self->{ID}\n";
     my $ro;
     unless ($ro = $self->ro) {
-        $CPAN::Frontend->mydie("Unknown object $self->{ID}");
+        if (substr($self->{ID},-1,1) eq ".") { # directory
+            $ro = +{};
+        } else {
+            $CPAN::Frontend->mydie("Unknown object $self->{ID}");
+        }
     }
     for (sort keys %$ro) {
 	# next if m/^(ID|RO)$/;
@@ -4494,7 +4502,24 @@ sub undelay {
 sub normalize {
     my($self,$s) = @_;
     $s = $self->id unless defined $s;
-    if (
+    if (substr($s,-1,1) eq ".") {
+        if ($s eq ".") {
+            $s = "$CPAN::iCwd/.";
+        } elsif (File::Spec->file_name_is_absolute($s)) {
+        } elsif (File::Spec->can("rel2abs")) {
+            $s = File::Spec->rel2abs($s);
+        } else {
+            $CPAN::Frontend->mydie("Your File::Spec is too old, please upgrade File::Spec");
+        }
+        CPAN->debug("s[$s]") if $CPAN::DEBUG;
+        unless ($CPAN::META->exists("CPAN::Distribution", $s)) {
+            for ($CPAN::META->instance("CPAN::Distribution", $s)) {
+                $_->{build_dir} = $s;
+                $_->{archived} = "local_directory";
+                $_->{unwrapped} = "local_directory";
+            }
+        }
+    } elsif (
         $s =~ tr|/|| == 1
         or
         $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-]{2,}/|
