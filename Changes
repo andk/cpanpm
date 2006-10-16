@@ -1,3 +1,17 @@
+2006-10-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_55
+
+	* new command 'report' as requested by Schwern in #22118
+
+	* extend the Distribution object to local directories. Gives a meaning
+	to the 'cpan .' command. Suggested by Slaven Rezic.
+
+	* removes the linux centric behaviour of t/30shell.t
+
+	* do not complain THAT often about uninstalled YAML or YAML::Syck; once
+	is per distro enough
+
 2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_54

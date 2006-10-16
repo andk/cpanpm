@@ -6293,6 +6293,7 @@ sub test {
         $system = join " ", $self->_make_command(), "test";
     }
     my($tests_ok);
+    # XXX fix unini warnings
     local %ENV = %ENV;
     if (my $env = $self->prefs->{test}{env}) {
         for my $e (keys %$env) {

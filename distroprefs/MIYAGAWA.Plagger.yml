@@ -5,7 +5,6 @@ match:
 pl:
   env:
     PERL_AUTOINSTALL: --skip
-  args: ["--installdeps=y"]
 make:
   env:
     PERL_AUTOINSTALL: --skip    
