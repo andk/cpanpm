@@ -29,10 +29,13 @@ distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/NIKIP.Authen-PAM.01.yml
 distroprefs/OLAF.Net-DNS.01.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.01.yml
+distroprefs/PDF-FromHTML.yml
 distroprefs/PETDANCE.WWW-Mechanize.01.yml
 distroprefs/RCAPUTO.POE.01.yml
 distroprefs/README
 distroprefs/SREZIC.Tk-Autoscroll.01.yml
+distroprefs/XML-Twig.yml
+distroprefs/ZEV.Test-Dependencies.01.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm

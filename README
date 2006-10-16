@@ -250,6 +250,10 @@ DESCRIPTION
     is in turn depending on binary compatibility (so you cannot run CPAN
     commands), then you should try the CPAN::Nox module for recovery.
 
+  report Bundle|Distribution|Module
+    The "report" command temporarily turns on the "test_report" config
+    variable, then runs the "force test" command with the given arguments.
+
   upgrade [Module|/Regex/]...
     The "upgrade" command first runs an "r" command with the given arguments
     and then installs the newest versions of all modules that were listed by
