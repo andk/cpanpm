@@ -6,7 +6,7 @@
 	    force install Expect
 	    install YAML::Syck Bundle::CPAN Module::Signature CPAN::Reporter Devel::Symdump Plagger Bundle::Phalanx100
 
-	This does not turn off interactivity.
+	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 
 	YAML::Syck before Bundle::CPAN!
 
