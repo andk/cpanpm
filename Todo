@@ -1,3 +1,9 @@
+2006-10-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* new maint-5.8:
+drwxr-xr-x  34 k k     8192 Oct 15 21:38 perl-m-5.8.0@29022/
+drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
+
 2006-10-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* just a memo what I usually install:
@@ -25,8 +31,8 @@
 2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Test installing Plagger with saying yes to all dependcy questions.
-	Needs 63 times "Y\n" :-) => statt --defaultdeps sagen wir
-	--installdeps=y DONE
+	Needs 63 times "Y\n" :-) => say --defaultdeps instead of --installdeps=y
+	DONE in rev. 1038
 
 	* Add support for all other CPAN::Config variables. Maybe by turning
 	them all into methods in CPAN::Distribution, maybe via autoload, maybe
