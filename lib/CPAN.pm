@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_55';
+$CPAN::VERSION = '1.88_56';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -4547,7 +4547,12 @@ sub normalize {
 #-> sub CPAN::Distribution::author ;
 sub author {
     my($self) = @_;
-    my($authorid) = $self->pretty_id =~ /^([\w\-]+)/;
+    my($authorid);
+    if (substr($self->id,-1,1) eq ".") {
+        $authorid = "LOCAL";
+    } else {
+        ($authorid) = $self->pretty_id =~ /^([\w\-]+)/;
+    }
     CPAN::Shell->expand("Author",$authorid);
 }
 
