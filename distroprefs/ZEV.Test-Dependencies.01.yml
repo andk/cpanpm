@@ -1,11 +1,10 @@
 --- 
 match:
-  distribution: "^MIYAGAWA/Plagger-"
-  module: "Plagger::Walker"
+  module: "Test::Dependencies"
 pl:
   env:
     PERL_AUTOINSTALL: --skip
-  args: ["--installdeps=y"]
+  args: ["--defaultdeps"]
 make:
   env:
     PERL_AUTOINSTALL: --skip    
