@@ -1,5 +1,8 @@
 2006-10-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
+	and Math::BigIng internals.
+
 	* Need to look after Math::Pari's errors
 
 	* First thought: it would be cleaner if you just didn't pass any distro
@@ -18,7 +21,7 @@
 
 	Snag is that ChangeLog, META.yml, SIGNATURE, and
 	t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz are not intended
-	to be checked in.
+	to be checked in. --> svn:ignore
 
 	* new maint-5.8:
 drwxr-xr-x  34 k k     8192 Oct 15 21:38 perl-m-5.8.0@29022/
