@@ -5945,15 +5945,30 @@ sub follow_prereqs {
     my(@prereq_tuples) = grep {$_->[0] ne "perl"} @_;
     return unless @prereq_tuples;
     my @prereq = map { $_->[0] } @prereq_tuples;
-    my $id = $self->id;
+    my $pretty_id = $self->pretty_id;
     my %map = (
                b => "build_requires",
                r => "requires",
                c => "commandline",
               );
+    my($filler1,$filler2,$filler3,$filler4);
+    my $unsat = "Unsatisfied dependencies detected during";
+    my $w = length($unsat) > length($pretty_id) ? length($unsat) : length($pretty_id);
+    {
+        my $r = int(($w - length($unsat))/2);
+        my $l = $w - length($unsat) - $r;
+        $filler1 = "-"x4 . " "x$l;
+        $filler2 = " "x$r . "-"x4 . "\n";
+    }
+    {
+        my $r = int(($w - length($pretty_id))/2);
+        my $l = $w - length($pretty_id) - $r;
+        $filler3 = "-"x4 . " "x$l;
+        $filler4 = " "x$r . "-"x4 . "\n";
+    }
     $CPAN::Frontend->
-        myprint("---- Unsatisfied dependencies detected during\n".
-                "---- $id\n".
+        myprint("$filler1 $unsat $filler2".
+                "$filler3 $pretty_id $filler4".
                 join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @prereq_tuples),
                );
     my $follow = 0;
@@ -5970,6 +5985,7 @@ of modules we are processing right now?", "yes");
             myprint("  Ignoring dependencies on modules @prereq\n");
     }
     if ($follow) {
+        my $id = $self->id;
         # color them as dirty
         for my $p (@prereq) {
             # warn "calling color_cmd_tmps(0,1)";
@@ -6298,8 +6314,11 @@ sub test {
         $system = join " ", $self->_make_command(), "test";
     }
     my($tests_ok);
-    # XXX fix unini warnings
-    local %ENV = %ENV;
+    local %ENV;
+    while (my($k,$v) = each %ENV) {
+        next unless defined $v;
+        $ENV{$k} = $v;
+    }
     if (my $env = $self->prefs->{test}{env}) {
         for my $e (keys %$env) {
             $ENV{$e} = $env->{$e};

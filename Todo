@@ -1,3 +1,16 @@
+2006-10-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Need to look after Math::Pari's errors
+
+	* First thought: it would be cleaner if you just didn't pass any distro
+  > with LOCAL as the author to CPAN::Reporter.  I'd rather leave the
+  > logic of when CPAN::Reporter should be invoked to CPAN.pm.  (E.g.
+  > Expect scripts)
+
+	Good. I'll make that then.
+
+	* More files to be marked with svn:ignore.
+
 2006-10-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* two distroprefs files were in 1.88_55 but not in SVN:-( must write
@@ -17,14 +30,17 @@ drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
 
 	    o debug CPAN Distribution
 	    force install Expect
-	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Plagger Bundle::Phalanx100
+	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Plagger Bundle::Phalanx100
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 
 	YAML::Syck before Bundle::CPAN worked well.
 
 	* Investigate what's going on with Crypt::DH and Net::SSH::Perl. Both
-	seem to hang during the tests.
+	seem to hang during the tests. Might be a GMP issue. We must pull GMP to
+	the front, otherwise Math::Bigint takes all the time (I suppose). Hrm,
+	the DH test ran over hours even with GMP (but I'm not sure yet, need to
+	make the observation control tighter).
 
 	* Feature request by Slaven: build a patched thing. Reminds me of Ilyas
 	words about something involving patches. Maybe (1) if the argument ends
