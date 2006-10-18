@@ -338,8 +338,11 @@ Shall we use it as the general CPAN build and cache directory?
             }
 
             $path ||= find_exe($progcall,[@path]);
-            $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH\n") unless
-                $path; # not -e $path, because find_exe already checked that
+            {
+                local $"=";";
+                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@path]\n") unless
+                    $path; # not -e $path, because find_exe already checked that
+            }
             $ans = prompt("Where is your $progname program?",$path) || $path;
             $CPAN::Config->{$progname} = $ans;
         }

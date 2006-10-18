@@ -413,7 +413,7 @@ __END__
 #E:
 ########
 #P:o conf init bzip2
-#E:Where.+?bzip2.+?(\])
+#E:Where.+?bzip2.+?(\?)
 ########
 #P:foo
 #E:
@@ -437,25 +437,25 @@ __END__
 #E:
 ########
 #P:o conf init curl
-#E:Where.+?(\])
+#E:Where.+?(\?)
 ########
 #P:foo
 #E:
 ########
 #P:o conf init gpg
-#E:Where.+?(\])
+#E:Where.+?(\?)
 ########
 #P:foo
 #E:
 ########
 #P:o conf init gzip
-#E:Where.+?(\])
+#E:Where.+?(\?)
 ########
 #P:foo
 #E:
 ########
 #P:o conf init lynx
-#E:Where.+?(\])
+#E:Where.+?(\?)
 ########
 #P:foo
 #E:
