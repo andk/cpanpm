@@ -1,0 +1,5 @@
+--- 
+match:
+  module: "^Jifty$"
+pl: 
+  args: ["--defaultdeps"]
