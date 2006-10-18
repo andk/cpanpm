@@ -1,5 +1,11 @@
 2006-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Add Jifty to your regular testing.
+
+	* The Net::SSH::Perl test 03-packet still runs forever even with
+	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
+	Report sent.
+
 	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
 	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
 	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
@@ -74,16 +80,16 @@ drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
 
 2006-10-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Test installing Plagger with saying yes to all dependcy questions.
+	* Test installing Plagger with saying yes to all dependency questions.
 	Needs 63 times "Y\n" :-) => say --defaultdeps instead of --installdeps=y
 	DONE in rev. 1038
 
-	* Add support for all other CPAN::Config variables. Maybe by turning
+	* Add support for all(?) other CPAN::Config variables. Maybe by turning
 	them all into methods in CPAN::Distribution, maybe via autoload, maybe
 	with clever use of local(). Currently only "make",
 	"make_install_make_command", and "build_requires_install_policy" are
 	supported. The first two for PDL on freebsd, the last one was just for
-	quick testing of the mechanism.
+	quick testing of the mechanism. Added test_report around rev. 1061
 
 	* Randy's CPAN-Search-Lite lives at
 	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
