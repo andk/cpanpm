@@ -6328,11 +6328,12 @@ sub test {
         $system = join " ", $self->_make_command(), "test";
     }
     my($tests_ok);
-    local %ENV;
+    my %env;
     while (my($k,$v) = each %ENV) {
         next unless defined $v;
-        $ENV{$k} = $v;
+        $env{$k} = $v;
     }
+    local %ENV = %env;
     if (my $env = $self->prefs->{test}{env}) {
         for my $e (keys %$env) {
             $ENV{$e} = $env->{$e};
