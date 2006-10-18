@@ -1,9 +1,22 @@
-2006-10-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-10-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
-	and Math::BigIng internals.
+	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
+	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
+	not enough.
 
-	* Need to look after Math::Pari's errors
+	* as long as HTML::Mason/Module::Build are broken, we should use
+	Bundle::HTML::Mason? Alas, it doesn't list HTML::Entities. And after
+	that it still fails on 07-interp.t. Ah, ok. Report sent.
+
+2006-10-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Need to look after Math::Pari's errors DONE: 
+
+	#ifdef LONG_SHORTER_THAN_IV
+  #  error "LONG_SHORTER_THAN_IV not implemented"
+
+	seems to be related to -Duse64bitint. Report to Ilya sent.
 
 	* First thought: it would be cleaner if you just didn't pass any distro
   > with LOCAL as the author to CPAN::Reporter.  I'd rather leave the
@@ -33,11 +46,14 @@ drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
 
 	    o debug CPAN Distribution
 	    force install Expect
-	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Plagger Bundle::Phalanx100
+	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 
 	YAML::Syck before Bundle::CPAN worked well.
+
+	CPAN::Reporter before YAML worked well but we want to catch the early
+	YAML interactivity (which in turn can be avoided with YAML::Syck).
 
 	* Investigate what's going on with Crypt::DH and Net::SSH::Perl. Both
 	seem to hang during the tests. Might be a GMP issue. We must pull GMP to

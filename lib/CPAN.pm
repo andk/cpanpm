@@ -1783,7 +1783,9 @@ sub report {
         $CPAN::Frontend->mydie("CPAN::Reporter not installed; cannot continue");
     }
     local $CPAN::Config->{test_report} = 1;
-    $self->force("test",@args);
+    $self->force("test",@args); # force is there so that the test be
+                                # re-run (as documented)
+    $self->unforce();
 }
 
 #-> sub CPAN::Shell::upgrade ;
@@ -4693,8 +4695,8 @@ sub get {
     my($self) = @_;
   EXCUSE: {
 	my @e;
-	exists $self->{'build_dir'} and push @e,
-	    "Is already unwrapped into directory $self->{'build_dir'}";
+	exists $self->{build_dir} and push @e,
+	    "Is already unwrapped into directory $self->{build_dir}";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
@@ -5442,8 +5444,11 @@ sub force {
                   make
                   make_test
                   modulebuild
+                  prefs
+                  prefs_file
                   prereq_pm
                   prereq_pm_detected
+                  reqtype
                   signature_verify
                   unwrapped
                   writemakefile
@@ -5698,7 +5703,7 @@ is part of the perl-%s distribution. To install that, you need to run
             }
 	} else {
             if (my $expect = $self->prefs->{pl}{expect}) {
-                $ret = $self->run_via_expect($system,$expect);
+                $ret = $self->_run_via_expect($system,$expect);
             } else {
                 $ret = system($system);
             }
@@ -5770,17 +5775,26 @@ is part of the perl-%s distribution. To install that, you need to run
     }
 }
 
-# CPAN::Distribution::run_via_expect
-sub run_via_expect {
+# CPAN::Distribution::_run_via_expect
+sub _run_via_expect {
     my($self,$system,$expect) = @_;
     CPAN->debug("system[$system]expect[$expect]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;
         $expo->spawn($system);
       EXPECT: for (my $i = 0; $i < $#$expect; $i+=2) {
-            my $regex = eval "qr{$expect->[$i]}";
+            my $next = $expect->[$i];
+            my($timeout,$re);
+            if (ref $next) {
+                $timeout = $next->{timeout};
+                $re = $next->{expect};
+            } else {
+                $timeout = 15;
+                $re = $next;
+            }
+            my $regex = eval "qr{$re}";
             my $send = $expect->[$i+1];
-            $expo->expect(10,
+            $expo->expect($timeout,
                           [ eof => sub {
                                 my $but = $expo->clear_accum;
                                 $CPAN::Frontend->mywarn("EOF (maybe harmless) system[$system]
@@ -6325,10 +6339,34 @@ sub test {
         }
     }
     my $expect = $self->prefs->{test}{expect};
-    if ($expect && @$expect) {
-        $tests_ok = $self->run_via_expect($system,$expect) == 0;
-    } elsif ( $CPAN::Config->{test_report} && 
-              $CPAN::META->has_inst("CPAN::Reporter") ) {
+    my $can_expect = $CPAN::META->has_inst("Expect");
+    my $want_expect = 0;
+    if ( $expect && @$expect ) {
+        if ($can_expect) {
+            $want_expect = 1;
+        } else {
+            $CPAN::Frontend->mywarn("Expect not installed, falling back to ".
+                                    "testing without\n");
+        }
+    }
+    my $test_report = $self->prefs->{cpanconfig}{test_report} ||
+        $CPAN::Config->{test_report};
+    my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
+    my $want_report = $test_report && $can_report;
+    my $ready_to_report = $want_report;
+    if ($ready_to_report && $self->author->id eq "LOCAL") {
+        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
+                                "for the user 'LOCAL'\n");
+        $ready_to_report = 0;
+    }
+    if ($want_expect) {
+        if ($ready_to_report) {
+            $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is currently ".
+                                    "not supported when distroprefs specify ".
+                                    "an interactive test\n");
+        }
+        $tests_ok = $self->_run_via_expect($system,$expect) == 0;
+    } elsif ( $ready_to_report ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
         $tests_ok = system($system) == 0;
@@ -7965,7 +8003,9 @@ commands), then you should try the CPAN::Nox module for recovery.
 =head2 report Bundle|Distribution|Module
 
 The C<report> command temporarily turns on the C<test_report> config
-variable, then runs the C<force test> command with the given arguments.
+variable, then runs the C<force test> command with the given
+arguments. The C<force> pragma is used to re-run the tests and repeat
+every step that might have failed before.
 
 =head2 upgrade [Module|/Regex/]...
 

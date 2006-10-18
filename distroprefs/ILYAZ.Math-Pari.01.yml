@@ -3,13 +3,11 @@ match:
   module: "^Math::Pari$"
 pl: 
   args: 
-    - paridir=/home/src/perl/math-pari-megrez/pari-2.3.1
+    - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
 
   env: {}
 
-  expect:
-    - "Fetch\?"
-    - "n\n"
+  expect: []
 
 make: 
   args: []
