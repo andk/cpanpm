@@ -1,5 +1,5 @@
 --- 
 match:
-  module: "^Jifty$"
+  module: "^Jifty(::DBI)?$"
 pl: 
   args: ["--defaultdeps"]
