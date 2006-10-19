@@ -1,5 +1,15 @@
 2006-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Ilya's patch
+
+	svn cp -r 131 https://pause.perl.org:5460/svn/cpanpm/trunk https://pause.perl.org:5460/svn/cpanpm/branches/1.76-ilya200610
+
+	https://pause.perl.org:5460/svn/cpanpm/branches/1.76-ilya200610 now lives in
+
+	/home/k/sources/CPAN/SVN-branches/1.76-ilya200610/
+
+	and the patch is applied and checked in. Ready for studying.
+
 	* just a memo what I usually install:
 
 	    o debug CPAN Distribution
