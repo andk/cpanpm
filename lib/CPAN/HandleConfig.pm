@@ -345,6 +345,7 @@ else: quote it with the correct quote type for the box we're on
         my $quote = $CPAN::Config->{commands_quote} || $quotes;
 
         if ($quote ne ' '
+            and defined($command )
             and $command =~ /\s/
             and $command !~ /[$quote]/) {
             return qq<$use_quote$command$use_quote>
