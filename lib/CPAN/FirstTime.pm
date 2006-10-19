@@ -168,7 +168,9 @@ with all the intermediate files\?
     $CPAN::Config->{build_cache} = $ans;
 
     # XXX This the time when we refetch the index files (in days)
-    $CPAN::Config->{'index_expire'} = 1;
+    $default = $CPAN::Config->{index_expire} || 1;
+    $ans = prompt("How often should be refetch the listings of CPAN contents (in days)?", $default);
+    $CPAN::Config->{index_expire} = $ans;
 
     print qq{
 
@@ -380,6 +382,45 @@ Your choice: ",$default);
 Typical frequently used setting:
 
     UNINST=1         to always uninstall potentially conflicting files
+
+Your choice: ",$default);
+
+    #
+    # Should we trust old builds?
+    #
+
+    $default = exists $CPAN::Config->{expire_old_builds} ?
+		exists $CPAN::Config->{expire_old_builds} : -1 ;
+    $CPAN::Config->{expire_old_builds} =
+	prompt("When should we expire old successfully tested builds?
+The value is in days; the value of -1 means 'never rebuild'; the value of 0
+means 'rebuild each time the distribution is tested'.
+
+Your choice: ",$default);
+
+    #
+    # Should we test uptodate modules etc?
+    #
+
+    $default = exists $CPAN::Config->{test_uptodate} ?
+		exists $CPAN::Config->{test_uptodate} : "modules bundles distributions" ;
+    $CPAN::Config->{test_uptodate} =
+	prompt("What kinds of test requests for uptodate modules, bundles, distributions
+should be granted?  The value is a combination of words 'modules', 'bundles',
+'distributions'.
+
+Your choice: ",$default);
+
+    #
+    # Should we install uptodate modules etc?
+    #
+
+    $default = exists $CPAN::Config->{install_uptodate} ?
+		exists $CPAN::Config->{install_uptodate} : "bundles distributions" ;
+    $CPAN::Config->{install_uptodate} =
+	prompt("What kinds of install requests for uptodate modules, bundles, distributions
+should be granted?  The value is a combination of words 'modules', 'bundles',
+'distributions'.
 
 Your choice: ",$default);
 
