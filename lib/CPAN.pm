@@ -1617,7 +1617,12 @@ sub reload_this {
     unless ($file && -f $file) {
         # this thingie is not in the INC path, maybe CPAN/MyConfig.pm?
         $file = $INC{$f};
-        @inc = substr($file,0,-length($f)); # bring in back to me!
+        unless (CPAN->has_inst("File::Basename")) {
+            @inc = File::Basename::dirname($file);
+        } else {
+            # do we ever need this?
+            @inc = substr($file,0,-length($f)-1); # bring in back to me!
+        }
     }
     CPAN->debug("file[$file]inc[@inc]") if $CPAN::DEBUG;
     unless (-f $file) {

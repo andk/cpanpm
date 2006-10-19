@@ -192,6 +192,7 @@ sub prettyprint {
 
 sub commit {
     my($self,@args) = @_;
+    CPAN->debug("args[@args]") if $CPAN::DEBUG;
     my $configpm;
     if (@args) {
       if ($args[0] eq "args") {
@@ -262,7 +263,10 @@ sub neatvalue {
     my($self, $v) = @_;
     return "undef" unless defined $v;
     my($t) = ref $v;
-    return "q[$v]" unless $t;
+    unless ($t){
+        $v =~ s/\\/\\\\/g;
+        return "q[$v]";
+    }
     if ($t eq 'ARRAY') {
         my(@m, @neat);
         push @m, "[";
@@ -287,6 +291,7 @@ sub defaults {
     my $done;
     for my $config (qw(CPAN/MyConfig.pm CPAN/Config.pm)) {
         if ($INC{$config}) {
+            CPAN->debug("INC{'$config'}[$INC{$config}]") if $CPAN::DEBUG;
             CPAN::Shell->reload_this($config,{force => 1});
             $CPAN::Frontend->myprint("'$INC{$config}' reread\n");
             last;
