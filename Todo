@@ -1,3 +1,16 @@
+2006-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* In case somebody asks again, this is from Test::Harness 2.62
+
++2.62 Thu Jun  8 14:11:57 CDT 2006
++    [FIXES]
++    * Restored the behavior of dying if any subtests failed.  This is a
++      pretty crucial bug that I should have fixed long ago.  Not having this
++      means that CPANPLUS will install modules even if their tests fail. :-(
++
+
+	This came into blead @28384.
+
 2006-10-18  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
 	* See what we can do for Module::ThirdParty

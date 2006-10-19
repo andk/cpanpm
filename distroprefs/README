@@ -31,11 +31,11 @@ a blueprint pick one of the larger files.
 =head1 EXAMPLE FILES
 
 CPAN.pm comes with a collection of example YAML files. Note that these
-are really just examples and should be used with care because they
-cannot fit everybody's purpose. After all the authors of the packages
-that ask questions had a need to ask, so you should watch their
-questions and adjust the examples to your environment and your needs.
-You have beend warned:-)
+are really just examples and should not be used without care because
+they cannot fit everybody's purpose. After all the authors of the
+packages that ask questions had a need to ask, so you should watch
+their questions and adjust the examples to your environment and your
+needs. You have beend warned:-)
 
 =head1 FILENAMES
 

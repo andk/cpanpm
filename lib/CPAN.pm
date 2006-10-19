@@ -6355,9 +6355,15 @@ sub test {
     my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
     my $want_report = $test_report && $can_report;
     my $ready_to_report = $want_report;
-    if ($ready_to_report && $self->author->id eq "LOCAL") {
+    if ($ready_to_report
+        && (
+            substr($self->id,-1,1) eq "."
+            ||
+            $self->author->id eq "LOCAL"
+           )
+       ) {
         $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
-                                "for the user 'LOCAL'\n");
+                                "for for local directories\n");
         $ready_to_report = 0;
     }
     if ($want_expect) {
