@@ -1,0 +1,7 @@
+--- 
+comment: "local distros; I have them listed in a Bundle file and can say 'test Bundle::ANDK_at_home'"
+match:
+  distribution: "\.$"
+test: 
+  env: 
+    PERL_REPOSITORY_APC_REPO: "/home/src/perl/repoperls/APC"

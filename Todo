@@ -1,3 +1,9 @@
+2006-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: document the trailing dot and that it is useful in a Bundle file
+	and that there is a LOCAL.trailing_dot_distros.yml in the distroprefs
+	directory.
+
 2006-10-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Ilya's patch
@@ -14,7 +20,7 @@
 
 	Today I would suggest
 
-	(1) prio 1: organize patching into distroprefs, full path within the
+	(1) prio 1!: organize patching into distroprefs, full path within the
 	YAML file seems acceptable
 
 	(2) organize logging into distroprefs via redirection (might be easy but
@@ -33,10 +39,12 @@
 	succeeding without T:P:C
 
 	Poor man's variant of it may be one that works only with a perl
-	checksum. Still seems outside the scope of CPAN.pm
+	checksum. Still seems outside the scope of CPAN.pm but will be supported
+	once it works outside with simple mantra.
 
 	distroprefs give you a different 'make' command for a
 	permanently-known-to-be-tested module, that might be just 'true' on UNIX
+	or something to do with distcc-like solution.
 
 	That might be annoying if one works with different perls and want to
 	have different modules marked as tested_ok. Maybe we need to add "perl"
