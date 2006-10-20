@@ -22,8 +22,8 @@
 
 	(3) keep the new meaning of the trailing dot, it does not interfere with
 	patching as it is for *personal* distrodirectories (make sure it works
-	with local bundles!). For local distros one does not need patching (and
-	if you do, you know what you're doing).
+	with local bundles! (DONE[it did already])). For local distros one does
+	not need patching (and if you do, you know what you're doing).
 
 	(4) mark_tested_ok is similar to distcc and could probably be
 	implemented as such. The time consuming step on perl distros is 'make

@@ -7085,9 +7085,10 @@ sub rematein {
 	if ($type eq 'CPAN::Distribution') {
 	    $CPAN::Frontend->mywarn(qq{
 The Bundle }.$self->id.qq{ contains
-explicitly a file $s.
+explicitly a file '$s'.
+Going to $meth that.
 });
-	    $CPAN::Frontend->mysleep(3);
+	    $CPAN::Frontend->mysleep(5);
 	}
 	# possibly noisy action:
         $self->debug("type[$type] s[$s]") if $CPAN::DEBUG;
