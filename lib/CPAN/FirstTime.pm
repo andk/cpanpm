@@ -296,7 +296,7 @@ Shall we use it as the general CPAN build and cache directory?
 
     my @external_progs = qw/bzip2 gzip tar unzip make
                       curl lynx wget ncftpget ncftp ftp
-                      gpg/;
+                      gpg patch/;
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
     if (!$matcher or "@external_progs" =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{external_progs});

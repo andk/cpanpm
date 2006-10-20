@@ -4905,6 +4905,16 @@ EOF
 
 sub patch {
     my($self) = @_;
+    if (my $patches = $self->prefs->{patches}) {
+        CPAN->debug("patches[$patches]");
+        my $patchbin = $CPAN::Config->{patch};
+        unless ($patchbin && length $patchbin) {
+            $CPAN::Frontend->mydie("No external patch command configured\n\n");
+        }
+        unless (MM->maybe_command($patchbin)) {
+            $CPAN::Frontend->mydie("No external patch command available\n\n");
+        }
+    }
     return;
 }
 
@@ -8851,6 +8861,7 @@ defined:
   no_proxy           don't proxy to these hosts/domains (comma separated list)
   pager              location of external program more (or any pager)
   password           your password if you CPAN server wants one
+  patch              path to external prg
   prefer_installer   legal values are MB and EUMM: if a module comes
                      with both a Makefile.PL and a Build.PL, use the
                      former (EUMM) or the latter (MB); if the module

@@ -59,6 +59,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
                              "no_proxy",
                              "pager",
                              "password",
+                             "patch",
                              "prefer_installer",
                              "prerequisites_policy",
                              "prefs_dir",
