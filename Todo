@@ -10,6 +10,51 @@
 
 	and the patch is applied and checked in. Ready for studying.
 
+	Original discussion: google groups for prerequisites_policy expire_old_builds.
+
+	Today I would suggest
+
+	(1) prio 1: organize patching into distroprefs, full path within the
+	YAML file seems acceptable
+
+	(2) organize logging into distroprefs via redirection (might be easy but
+	prio low because we have colors now)
+
+	(3) keep the new meaning of the trailing dot, it does not interfere with
+	patching as it is for *personal* distrodirectories (make sure it works
+	with local bundles!). For local distros one does not need patching (and
+	if you do, you know what you're doing).
+
+	(4) mark_tested_ok is similar to distcc and could probably be
+	implemented as such. The time consuming step on perl distros is 'make
+	test' and that makes it very complicated. One would need a checksum of
+	perl AND all used modules during the test. Like for example File::Slurp
+	failing with current combination of perl and Test::Pod::Coverage but
+	succeeding without T:P:C
+
+	Poor man's variant of it may be one that works only with a perl
+	checksum. Still seems outside the scope of CPAN.pm
+
+	distroprefs give you a different 'make' command for a
+	permanently-known-to-be-tested module, that might be just 'true' on UNIX
+
+	That might be annoying if one works with different perls and want to
+	have different modules marked as tested_ok. Maybe we need to add "perl"
+	into the "match" structure? (Yes!)
+
+	(5) Faszinating is the idea to leave the shell and come back into the
+	same state of already tested but uninstalled modules. But why are they
+	not installed? Hrm, maybe because once installed, nobody will re-test
+	them? Need further arguments.
+
+	(6) install_tested is the normal default when running 'install' instead
+	of 'test'. What's the deal?
+
+	(7) containsdists is implemented but nowhere used, so what?
+
+	(8) I have not yet understood the distinction between force_test and
+	force_update and the call $self->test('install') seems bogus.
+
 	* just a memo what I usually install:
 
 	    o debug CPAN Distribution
