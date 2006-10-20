@@ -1,5 +1,13 @@
 2006-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* highest prio: patches. Easy to test with an example against one of my
+	failing dummy distros.
+
+	* add 'perl' to the matches stuff of distroprefs
+
+	* When we have support for patches and apply patches, we should also
+	disable reporting through CPAN::Reporter.
+
 	* Todo: document the trailing dot and that it is useful in a Bundle file
 	and that there is a LOCAL.trailing_dot_distros.yml in the distroprefs
 	directory.
@@ -38,9 +46,9 @@
 	failing with current combination of perl and Test::Pod::Coverage but
 	succeeding without T:P:C
 
-	Poor man's variant of it may be one that works only with a perl
-	checksum. Still seems outside the scope of CPAN.pm but will be supported
-	once it works outside with simple mantra.
+	Poor man's variant of it may be one that works only with a perl checksum
+	or mtime as Ilya did. Still seems outside the scope of CPAN.pm but
+	should be supported once it works outside with simple mantra.
 
 	distroprefs give you a different 'make' command for a
 	permanently-known-to-be-tested module, that might be just 'true' on UNIX

@@ -93,4 +93,5 @@ t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
 t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
+t/CPAN/TestPatch.txt
 Todo

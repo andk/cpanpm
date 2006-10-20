@@ -23,6 +23,7 @@ sub _d ($) {File::Spec->catdir(split /\//, shift);}
 use File::Path qw(rmtree mkpath);
 rmtree _d"t/dot-cpan/sources";
 rmtree _d"t/dot-cpan/build";
+rmtree _d"t/dot-cpan/prefs";
 unlink _f"t/dot-cpan/Metadata";
 unlink _f"t/dot-cpan/.lock";
 mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
@@ -44,9 +45,19 @@ cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
     "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
     "t/dot-cpan/Bundle/CpanTestDummies.pm: $!";
+mkpath _d"t/dot-cpan/prefs";
 
 use Cwd;
 my $cwd = Cwd::cwd;
+
+open FH, ">t/dot-cpan/prefs/TestDistroPrefsFile.yml" or die;
+print FH <<EOF;
+---
+match:
+  module: "CPAN::Test::Dummy::Perl5::Build::Fails"
+patches:
+  - $cwd/t/CPAN/TestPatch.txt
+EOF
 
 sub read_myconfig () {
     local *FH;
@@ -72,6 +83,7 @@ my @modules = qw(
                  Archive::Zip
                  Data::Dumper
                  Term::ANSIColor
+                 YAML
                 );
 
 use Test::More;
@@ -770,6 +782,12 @@ __END__
 #P:failed
 #E:Nothing
 ########
+#P:o conf prefs_dir ""
+#N:to hide the YAML file
+########
+#P:o conf prefs_dir
+#E:prefs_dir
+########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
 #E:test\s+--\s+NOT OK
 #R:Module::Build
@@ -913,6 +931,16 @@ __END__
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
 #E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue.[\s\S]+?Failed during this command
 #T:60
+########
+#P:o conf defaults
+########
+#P:force get CPAN::Test::Dummy::Perl5::Build::Fails
+#R:YAML
+########
+#P:test CPAN::Test::Dummy::Perl5::Build::Fails
+#E:D i s t r o
+#R:YAML
+#N:XXX will require patch when implemented
 ########
 #P:u /--/
 #E:No modules found for
