@@ -56,7 +56,7 @@ print FH <<EOF;
 match:
   module: "CPAN::Test::Dummy::Perl5::Build::Fails"
 patches:
-  - $cwd/t/CPAN/TestPatch.txt
+  - "$cwd/t/CPAN/TestPatch.txt"
 EOF
 
 sub read_myconfig () {

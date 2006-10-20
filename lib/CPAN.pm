@@ -4866,6 +4866,168 @@ EOF
     File::Path::rmtree("tmp");
 
     $self->safe_chdir($packagedir);
+    $self->_signature_business();
+    $self->safe_chdir($builddir);
+    return if $CPAN::Signal;
+
+
+    my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
+    my($mpl_exists) = -f $mpl;
+    unless ($mpl_exists) {
+        # NFS has been reported to have racing problems after the
+        # renaming of a directory in some environments.
+        # This trick helps.
+        $CPAN::Frontend->mysleep(1);
+        my $mpldh = DirHandle->new($packagedir)
+            or Carp::croak("Couldn't opendir $packagedir: $!");
+        $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
+        $mpldh->close;
+    }
+    my $prefer_installer = "eumm"; # eumm|mb
+    if (-f File::Spec->catfile($packagedir,"Build.PL")) {
+        if ($mpl_exists) { # they *can* choose
+            if ($CPAN::META->has_inst("Module::Build")) {
+                $prefer_installer = $CPAN::Config->{prefer_installer};
+            }
+        } else {
+            $prefer_installer = "mb";
+        }
+    }
+    $self->patch;
+    if (lc($prefer_installer) eq "mb") {
+        $self->{modulebuild} = 1;
+    } elsif (! $mpl_exists) {
+        $self->_edge_cases($mpl,$packagedir,$local_file);
+    }
+
+    return $self;
+}
+
+sub patch {
+    my($self) = @_;
+    return;
+}
+
+#-> sub CPAN::Distribution::_edge_cases
+# with "configure" or "Makefile" or single file scripts
+sub _edge_cases {
+    my($self,$mpl,$packagedir,$local_file) = @_;
+    $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
+                         $mpl,
+                         CPAN::anycwd(),
+                        )) if $CPAN::DEBUG;
+    my($configure) = File::Spec->catfile($packagedir,"Configure");
+    if (-f $configure) {
+        # do we have anything to do?
+        $self->{configure} = $configure;
+    } elsif (-f File::Spec->catfile($packagedir,"Makefile")) {
+        $CPAN::Frontend->mywarn(qq{
+Package comes with a Makefile and without a Makefile.PL.
+We\'ll try to build it with that Makefile then.
+});
+        $self->{writemakefile} = CPAN::Distrostatus->new("YES");
+        $CPAN::Frontend->mysleep(2);
+    } else {
+        my $cf = $self->called_for || "unknown";
+        if ($cf =~ m|/|) {
+            $cf =~ s|.*/||;
+            $cf =~ s|\W.*||;
+        }
+        $cf =~ s|[/\\:]||g;     # risk of filesystem damage
+        $cf = "unknown" unless length($cf);
+        $CPAN::Frontend->mywarn(qq{Package seems to come without Makefile.PL.
+  (The test -f "$mpl" returned false.)
+  Writing one on our own (setting NAME to $cf)\a\n});
+        $self->{had_no_makefile_pl}++;
+        $CPAN::Frontend->mysleep(3);
+
+        # Writing our own Makefile.PL
+
+        my $script = "";
+        if ($self->{archived} eq "maybe_pl") {
+            my $fh = FileHandle->new;
+            my $script_file = File::Spec->catfile($packagedir,$local_file);
+            $fh->open($script_file)
+                or Carp::croak("Could not open $script_file: $!");
+            local $/ = "\n";
+            # name parsen und prereq
+            my($state) = "poddir";
+            my($name, $prereq) = ("", "");
+            while (<$fh>) {
+                if ($state eq "poddir" && /^=head\d\s+(\S+)/) {
+                    if ($1 eq 'NAME') {
+                        $state = "name";
+                    } elsif ($1 eq 'PREREQUISITES') {
+                        $state = "prereq";
+                    }
+                } elsif ($state =~ m{^(name|prereq)$}) {
+                    if (/^=/) {
+                        $state = "poddir";
+                    } elsif (/^\s*$/) {
+                        # nop
+                    } elsif ($state eq "name") {
+                        if ($name eq "") {
+                            ($name) = /^(\S+)/;
+                            $state = "poddir";
+                        }
+                    } elsif ($state eq "prereq") {
+                        $prereq .= $_;
+                    }
+                } elsif (/^=cut\b/) {
+                    last;
+                }
+            }
+            $fh->close;
+
+            for ($name) {
+                s{.*<}{};       # strip X<...>
+                s{>.*}{};
+            }
+            chomp $prereq;
+            $prereq = join " ", split /\s+/, $prereq;
+            my($PREREQ_PM) = join("\n", map {
+                s{.*<}{};       # strip X<...>
+                s{>.*}{};
+                if (/[\s\'\"]/) { # prose?
+                } else {
+                    s/[^\w:]$//; # period?
+                    " "x28 . "'$_' => 0,";
+                }
+            } split /\s*,\s*/, $prereq);
+
+            $script = "
+              EXE_FILES => ['$name'],
+              PREREQ_PM => {
+$PREREQ_PM
+                           },
+";
+            if ($name) {
+                my $to_file = File::Spec->catfile($packagedir, $name);
+                rename $script_file, $to_file
+                    or die "Can't rename $script_file to $to_file: $!";
+            }
+        }
+
+        my $fh = FileHandle->new;
+        $fh->open(">$mpl")
+            or Carp::croak("Could not open >$mpl: $!");
+        $fh->print(
+                   qq{# This Makefile.PL has been autogenerated by the module CPAN.pm
+# because there was no Makefile.PL supplied.
+# Autogenerated on: }.scalar localtime().qq{
+
+use ExtUtils::MakeMaker;
+WriteMakefile(
+              NAME => q[$cf],$script
+             );
+});
+        $fh->close;
+    }
+}
+
+#-> CPAN::Distribution::_signature_business
+sub _signature_business {
+    my($self) = @_;
     if ($CPAN::Config->{check_sigs}) {
         if ($CPAN::META->has_inst("Module::Signature")) {
             if (-f "SIGNATURE") {
@@ -4910,152 +5072,9 @@ and there run
             $self->debug("Module::Signature is NOT installed") if $CPAN::DEBUG;
         }
     }
-    $self->safe_chdir($builddir);
-    return if $CPAN::Signal;
-
-
-    my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
-    my($mpl_exists) = -f $mpl;
-    unless ($mpl_exists) {
-        # NFS has been reported to have racing problems after the
-        # renaming of a directory in some environments.
-        # This trick helps.
-        $CPAN::Frontend->mysleep(1);
-        my $mpldh = DirHandle->new($packagedir)
-            or Carp::croak("Couldn't opendir $packagedir: $!");
-        $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
-        $mpldh->close;
-    }
-    my $prefer_installer = "eumm"; # eumm|mb
-    if (-f File::Spec->catfile($packagedir,"Build.PL")) {
-        if ($mpl_exists) { # they *can* choose
-            if ($CPAN::META->has_inst("Module::Build")) {
-                $prefer_installer = $CPAN::Config->{prefer_installer};
-            }
-        } else {
-            $prefer_installer = "mb";
-        }
-    }
-    if (lc($prefer_installer) eq "mb") {
-        $self->{modulebuild} = 1;
-    } elsif (! $mpl_exists) {
-        $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
-                             $mpl,
-                             CPAN::anycwd(),
-                            )) if $CPAN::DEBUG;
-        my($configure) = File::Spec->catfile($packagedir,"Configure");
-        if (-f $configure) {
-            # do we have anything to do?
-            $self->{'configure'} = $configure;
-        } elsif (-f File::Spec->catfile($packagedir,"Makefile")) {
-            $CPAN::Frontend->mywarn(qq{
-Package comes with a Makefile and without a Makefile.PL.
-We\'ll try to build it with that Makefile then.
-});
-            $self->{writemakefile} = CPAN::Distrostatus->new("YES");
-            $CPAN::Frontend->mysleep(2);
-        } else {
-            my $cf = $self->called_for || "unknown";
-            if ($cf =~ m|/|) {
-                $cf =~ s|.*/||;
-                $cf =~ s|\W.*||;
-            }
-            $cf =~ s|[/\\:]||g; # risk of filesystem damage
-            $cf = "unknown" unless length($cf);
-            $CPAN::Frontend->mywarn(qq{Package seems to come without Makefile.PL.
-  (The test -f "$mpl" returned false.)
-  Writing one on our own (setting NAME to $cf)\a\n});
-            $self->{had_no_makefile_pl}++;
-            $CPAN::Frontend->mysleep(3);
-
-            # Writing our own Makefile.PL
-
-	    my $script = "";
-	    if ($self->{archived} eq "maybe_pl"){
-		my $fh = FileHandle->new;
-		my $script_file = File::Spec->catfile($packagedir,$local_file);
-		$fh->open($script_file)
-		  or Carp::croak("Could not open $script_file: $!");
-		local $/ = "\n";
-		# name parsen und prereq
-		my($state) = "poddir";
-		my($name, $prereq) = ("", "");
-		while (<$fh>){
-		    if ($state eq "poddir" && /^=head\d\s+(\S+)/) {
-			if ($1 eq 'NAME') {
-			    $state = "name";
-			} elsif ($1 eq 'PREREQUISITES') {
-			    $state = "prereq";
-			}
-		    } elsif ($state =~ m{^(name|prereq)$}) {
-			if (/^=/) {
-			    $state = "poddir";
-			} elsif (/^\s*$/) {
-			    # nop
-			} elsif ($state eq "name") {
-			    if ($name eq "") {
-				($name) = /^(\S+)/;
-				$state = "poddir";
-			    }
-			} elsif ($state eq "prereq") {
-			    $prereq .= $_;
-			}
-		    } elsif (/^=cut\b/) {
-			last;
-		    }
-		}
-		$fh->close;
-
-                for ($name) {
-		    s{.*<}{}; # strip X<...>
-		    s{>.*}{};
-                }
-		chomp $prereq;
-                $prereq = join " ", split /\s+/, $prereq;
-		my($PREREQ_PM) = join("\n", map {
-		    s{.*<}{}; # strip X<...>
-		    s{>.*}{};
-                    if (/[\s\'\"]/) { # prose?
-                    } else {
-                        s/[^\w:]$//; # period?
-                        " "x28 . "'$_' => 0,";
-                    }
-		} split /\s*,\s*/, $prereq);
-
-		$script = "
-              EXE_FILES => ['$name'],
-              PREREQ_PM => {
-$PREREQ_PM
-                           },
-";
-                if ($name) {
-                    my $to_file = File::Spec->catfile($packagedir, $name);
-                    rename $script_file, $to_file
-                        or die "Can't rename $script_file to $to_file: $!";
-                }
-	    }
-
-            my $fh = FileHandle->new;
-            $fh->open(">$mpl")
-                or Carp::croak("Could not open >$mpl: $!");
-            $fh->print(
-qq{# This Makefile.PL has been autogenerated by the module CPAN.pm
-# because there was no Makefile.PL supplied.
-# Autogenerated on: }.scalar localtime().qq{
-
-use ExtUtils::MakeMaker;
-WriteMakefile(
-              NAME => q[$cf],$script
-             );
-});
-            $fh->close;
-        }
-    }
-
-    return $self;
 }
 
-# CPAN::Distribution::untar_me ;
+#-> CPAN::Distribution::untar_me ;
 sub untar_me {
     my($self,$ct) = @_;
     $self->{archived} = "tar";
