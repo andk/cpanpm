@@ -1,3 +1,12 @@
+2006-10-20  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* Tina suggests: if the user has change some config variable via 'o
+	conf' mechanism and has not yet saved the new config via 'o conf commit'
+	and is leaving the shell without saving, we could trigger a dialog.
+
+	After some thinking: maybe I prefer just a loud warning instead of a
+	hanging terminal. Hmmm.
+
 2006-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* highest prio: patches. Easy to test with an example against one of my
