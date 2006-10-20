@@ -4122,10 +4122,17 @@ sub ro {
     exists $self->{RO} and return $self->{RO};
 }
 
+#-> sub CPAN::InfoObj::cpan_userid
 sub cpan_userid {
     my $self = shift;
-    my $ro = $self->ro or return "N/A"; # N/A for bundles found locally
-    return $ro->{CPAN_USERID} || "N/A";
+    my $ro = $self->ro;
+    if ($ro) {
+        return $ro->{CPAN_USERID} || "N/A";
+    } else {
+        $self->debug("ID[$self->{ID}]");
+        # N/A for bundles found locally
+        return "N/A";
+    }
 }
 
 sub id { shift->{ID}; }
@@ -4589,6 +4596,15 @@ sub fast_yaml {
     my $yaml = CPAN->_yaml_loadfile($local_file);
 }
 
+#-> sub CPAN::Distribution::cpan_userid
+sub cpan_userid {
+    my $self = shift;
+    if ($self->{ID} =~ m{[A-Z]/[A-Z\-]{2}/([A-Z\-]+)/}) {
+        return $1;
+    }
+    return $self->SUPER::cpan_userid;
+}
+
 #-> sub CPAN::Distribution::pretty_id
 sub pretty_id {
     my $self = shift;
@@ -4782,8 +4798,6 @@ EOF
 	$self->unzip_me($ct);
     } else {
         $self->{was_uncompressed}++ unless $ct->gtest();
-        $self->debug("calling pm2dir for local_file[$local_file]")
-	  if $CPAN::DEBUG;
 	$local_file = $self->handle_singlefile($local_file);
 #    } else {
 #	$self->{archived} = "NO";
@@ -4826,8 +4840,8 @@ EOF
                             )) if $CPAN::DEBUG;
     } else {
         my $userid = $self->cpan_userid;
-        unless ($userid) {
-            CPAN->debug("no userid? self[$self]");
+        CPAN->debug("userid[$userid]");
+        if (!$userid or $userid eq "N/A") {
             $userid = "anon";
         }
         my $pragmatic_dir = $userid . '000';
@@ -5014,10 +5028,11 @@ We\'ll try to build it with that Makefile then.
 $PREREQ_PM
                            },
 ";
-
-		my $to_file = File::Spec->catfile($packagedir, $name);
-		rename $script_file, $to_file
-		  or die "Can't rename $script_file to $to_file: $!";
+                if ($name) {
+                    my $to_file = File::Spec->catfile($packagedir, $name);
+                    rename $script_file, $to_file
+                        or die "Can't rename $script_file to $to_file: $!";
+                }
 	    }
 
             my $fh = FileHandle->new;
@@ -5066,6 +5081,8 @@ sub unzip_me {
 sub handle_singlefile {
     my($self,$local_file) = @_;
 
+    $self->debug("local_file[$local_file]")
+        if $CPAN::DEBUG;
     if ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/ ){
 	$self->{archived} = "pm";
     } else {
