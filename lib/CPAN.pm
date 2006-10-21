@@ -1938,6 +1938,7 @@ sub failed {
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
       NAY: for my $nosayer (
+                            "unwrapped",
                             "writemakefile",
                             "signature_verify",
                             "make",
@@ -4542,7 +4543,7 @@ sub normalize {
             for ($CPAN::META->instance("CPAN::Distribution", $s)) {
                 $_->{build_dir} = $s;
                 $_->{archived} = "local_directory";
-                $_->{unwrapped} = "local_directory";
+                $_->{unwrapped} = CPAN::Distrostatus->new("YES -- local_directory");
             }
         }
     } elsif (
@@ -4718,7 +4719,11 @@ sub get {
 	my @e;
 	exists $self->{build_dir} and push @e,
 	    "Is already unwrapped into directory $self->{build_dir}";
-	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+
+        exists $self->{unwrapped} and $self->{unwrapped}->failed
+            and push @e, "Unwrapping had some problem, won't try again without force";
+
+	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
@@ -4893,7 +4898,7 @@ EOF
             $prefer_installer = "mb";
         }
     }
-    $self->patch;
+    return unless $self->patch;
     if (lc($prefer_installer) eq "mb") {
         $self->{modulebuild} = 1;
     } elsif (! $mpl_exists) {
@@ -4906,6 +4911,7 @@ EOF
 sub patch {
     my($self) = @_;
     if (my $patches = $self->prefs->{patches}) {
+        $self->safe_chdir($self->{build_dir});
         CPAN->debug("patches[$patches]");
         my $patchbin = $CPAN::Config->{patch};
         unless ($patchbin && length $patchbin) {
@@ -4914,8 +4920,30 @@ sub patch {
         unless (MM->maybe_command($patchbin)) {
             $CPAN::Frontend->mydie("No external patch command available\n\n");
         }
+        $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
+        my $args = "-g0 -p1 -N --fuzz=3";
+        my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
+        $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
+        for my $patch (@$patches) {
+            unless (-f $patch) {
+                my $fail = "Could not find patch '$patch'";
+                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                delete $self->{build_dir};
+                return;
+            }
+            $CPAN::Frontend->myprint("  $patch\n");
+            my $ret = system "$patchbin $args < $patch";
+            unless (0 == $ret) {
+                my $fail = "Could not apply patch '$patch'";
+                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                delete $self->{build_dir};
+                return;
+            }
+        }
     }
-    return;
+    return 1;
 }
 
 #-> sub CPAN::Distribution::_edge_cases
@@ -5089,9 +5117,9 @@ sub untar_me {
     my($self,$ct) = @_;
     $self->{archived} = "tar";
     if ($ct->untar()) {
-	$self->{unwrapped} = "YES";
+	$self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
-	$self->{unwrapped} = "NO";
+	$self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed");
     }
 }
 
@@ -5100,9 +5128,9 @@ sub unzip_me {
     my($self,$ct) = @_;
     $self->{archived} = "zip";
     if ($ct->unzip()) {
-	$self->{unwrapped} = "YES";
+	$self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
-	$self->{unwrapped} = "NO";
+	$self->{unwrapped} = CPAN::Distrostatus->new("NO -- unzip failed");
     }
     return;
 }
@@ -5121,13 +5149,13 @@ sub handle_singlefile {
     my $to = File::Basename::basename($local_file);
     if ($to =~ s/\.(gz|Z)(?!\n)\Z//) {
         if (CPAN::Tarzip->new($local_file)->gunzip($to)) {
-            $self->{unwrapped} = "YES";
+            $self->{unwrapped} = CPAN::Distrostatus->new("YES");
         } else {
-            $self->{unwrapped} = "NO";
+            $self->{unwrapped} = CPAN::Distrostatus->new("NO -- uncompressing failed");
         }
     } else {
         File::Copy::cp($local_file,".");
-        $self->{unwrapped} = "YES";
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- copying failed");
     }
     return $to;
 }
@@ -5610,7 +5638,7 @@ is part of the perl-%s distribution. To install that, you need to run
         !$self->{archived} || $self->{archived} eq "NO" and push @e,
         "Is neither a tar nor a zip archive.";
 
-        !$self->{unwrapped} || $self->{unwrapped} eq "NO" and push @e,
+        !$self->{unwrapped} || $self->{unwrapped}->failed and push @e,
         "Had problems unarchiving. Please build manually";
 
         unless ($self->{force_update}) {

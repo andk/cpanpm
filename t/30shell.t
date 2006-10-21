@@ -16,7 +16,9 @@ BEGIN {
     }
 }
 
-use File::Spec;
+use Config;
+use CPAN::FirstTime ();
+use File::Spec ();
 
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
 sub _d ($) {File::Spec->catdir(split /\//, shift);}
@@ -85,6 +87,9 @@ my @modules = qw(
                  Term::ANSIColor
                  YAML
                 );
+my @programs = qw(
+                  patch
+                 );
 
 use Test::More;
 plan tests => (
@@ -100,14 +105,27 @@ sub mreq ($) {
     eval "require $m; 1";
 }
 
-my $m;
-for $m (@modules) {
-    $HAVE->{$m}++ if mreq $m;
+{
+    my $m;
+    for $m (@modules) {
+        $HAVE->{$m}++ if mreq $m;
+    }
+}
+{
+    my $p;
+    my(@path) = split /$Config{path_sep}/, $ENV{PATH};
+    for my $p (@programs) {
+        $HAVE->{$p}++ if CPAN::FirstTime::find_exe($p,\@path);
+    }
 }
 $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
     =
     $HAVE->{"Term::ReadLine::Perl"}
     || $HAVE->{"Term::ReadLine::Gnu"};
+$HAVE->{"YAML&&patch"}
+    =
+    $HAVE->{"YAML"}
+    || $HAVE->{"patch"};
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
@@ -935,12 +953,12 @@ __END__
 #P:o conf defaults
 ########
 #P:force get CPAN::Test::Dummy::Perl5::Build::Fails
-#R:YAML
+#E:D i s t r o[\s\S]+?patch
+#R:YAML&&patch
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
-#E:D i s t r o
-#R:YAML
-#N:XXX will require patch when implemented
+#E:test -- OK
+#R:YAML&&patch
 ########
 #P:u /--/
 #E:No modules found for

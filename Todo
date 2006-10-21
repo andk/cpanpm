@@ -10,7 +10,7 @@
 2006-10-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* highest prio: patches. Easy to test with an example against one of my
-	failing dummy distros.
+	failing dummy distros. DONE in rev. 1086
 
 	* add 'perl' to the matches stuff of distroprefs
 
