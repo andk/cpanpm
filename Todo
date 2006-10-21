@@ -1,15 +1,13 @@
 2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* go after the Module::Build errors in Error.pm and Mason
+
 	* Tina suggests: if the user has changed some config variable via 'o
 	conf' mechanism and has not yet saved the new config via 'o conf commit'
 	and is leaving the shell without saving, we could trigger a dialog.
 
 	After some thinking: maybe I prefer just a loud warning instead of a
 	hanging terminal. Hmmm.
-
-	* Todo: document the trailing dot and that it is useful in a Bundle file
-	and that there is a LOCAL.trailing_dot_distros.yml in the distroprefs
-	directory.
 
 	* Todo: find out the remaining pieces of Ilya's patch
 
@@ -194,6 +192,10 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* Todo: document the trailing dot and that it is useful in a Bundle file
+	and that there is a LOCAL.trailing_dot_distros.yml in the distroprefs
+	directory. DONE in rev. 1093
 
 	* Todo: extend patch ability to files from CPAN to be downloaded on the
 	fly DONE in rev. 1089

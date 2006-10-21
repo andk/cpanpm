@@ -8174,9 +8174,9 @@ Modules know their associated Distribution objects. They always refer
 to the most recent official release. Developers may mark their releases
 as unstable development versions (by inserting an underbar into the
 module version number which will also be reflected in the distribution
-name when you run 'make dist'), so the really hottest and newest 
-distribution is not always the default.  If a module Foo circulates 
-on CPAN in both version 1.23 and 1.23_90, CPAN.pm offers a convenient 
+name when you run 'make dist'), so the really hottest and newest
+distribution is not always the default.  If a module Foo circulates
+on CPAN in both version 1.23 and 1.23_90, CPAN.pm offers a convenient
 way to install version 1.23 by saying
 
     install Foo
@@ -8192,6 +8192,27 @@ so you would have to say
 
 The first example will be driven by an object of the class
 CPAN::Module, the second by an object of class CPAN::Distribution.
+
+Distribution objects are normally distributions from the CPAN, but
+there is a slightly degenerate case for Distribution objects, too,
+normally only needed by developers. If a distribution object ands with
+C</.> or is a dot by itself, then it represents a local directory and
+all actions as C<make>, C<test>, and C<install> are applied directly
+to that directory. This gives the command C<cpan .> an interesting
+touch: while the normal mantra of installing a CPAN module without
+CPAN.pm is one of
+
+    perl Makefile.PL                 perl Build.PL
+           ( go and get prerequisites )
+    make                             ./Build
+    make test                        ./Build test
+    make install                     ./Build install
+
+the command C<cpan .> does all of this at once. It figures out which
+of the two mantras is appropriate, fetches and installs all
+prerequisites and cares for them recursively and finally finishes the
+installation of the module in the current directory, be it a CPAN
+module or not.
 
 =head1 PROGRAMMER'S INTERFACE
 
