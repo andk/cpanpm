@@ -1,6 +1,14 @@
 2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* go after the Module::Build errors in Error.pm and Mason
+	* add CPAN::Reporter to Bundle::CPAN (which version of CPAN.pm needs
+	CPAN::Reporter currently?)
+
+	* think about the locking from a different angle: currently it is
+	possible but unsafe to have concurrent access to the .cpan/build
+	directory
+
+	* go after the Module::Build errors in Error.pm and Mason: I suspect
+	that's the set_perl5lib bug mentioned by Ilya.
 
 	* Tina suggests: if the user has changed some config variable via 'o
 	conf' mechanism and has not yet saved the new config via 'o conf commit'
@@ -79,11 +87,15 @@
 	HTML::Display!
 
 	* E5: (again and again) verify that the CPAN.pm-using modules continue
-	to work
+	to work:
 
-  AltaVista-BabelFish DMUEY CPAN-Unwind MSCHILLI CPAN-WAIT ULPFR
-	Devel-Modlist RJRAY PAR-Dist-FromCPAN SMUELLER Perl-Dist DAGOLDEN
-	Test-CPANpm CRAKRJACK
+	DMUEY/AltaVista-BabelFish
+	MSCHILLI/CPAN-Unwind
+	ULPFR/CPAN-WAIT
+	RJRAY/Devel-Modlist
+	SMUELLER/PAR-Dist-FromCPAN
+	DAGOLDEN/Perl-Dist
+	CRAKRJACK/Test-CPANpm
 
 	* E5 watch RT for open tickets. This todo can never be closed.
 
@@ -185,7 +197,9 @@ need the middle man.
 	>If the build directories are separate, why would there be a
 	>need for locking more in interactive use vs. batch use?
 
-	And I promise to try out a more granular locking mechanism.
+	And I promise to try out a more granular locking mechanism. This was
+	between 2006-01-26 and 2006-02-01 (and I wrote a paragraph into the
+	manpage how multiple ~/.cpan* directories could work)
 
 	* hr ================ no todos below this line ================ /hr
 

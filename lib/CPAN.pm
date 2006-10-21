@@ -1055,8 +1055,17 @@ sub set_perl5lib {
     $env = $ENV{PERLLIB} unless defined $env;
     my @env;
     push @env, $env if defined $env and length $env;
-    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
-    $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
+    #my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
+    #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
+    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort keys %{$self->{is_tested}};
+    if (@dirs < 15) {
+        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
+    } else {
+        my @d = map {s/^\Q$CPAN::Config->{'build_dir'}/%BUILDDIR%/; $_ }
+            sort keys %{$self->{is_tested}};
+        $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of @d to PERL5LIB; %BUILDDIR%=$CPAN::Config->{'build_dir'}.\n");
+    }
+
     $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
 }
 
@@ -4715,6 +4724,13 @@ sub called_for {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
   EXCUSE: {
 	my @e;
 	exists $self->{build_dir} and push @e,
@@ -5655,6 +5671,13 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     $self->get;
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
     if ($CPAN::Signal){
       delete $self->{force_update};
       return;
@@ -6317,6 +6340,10 @@ sub prereq_pm {
                 };
                 if ($@) {
                     # HTML::Mason prompted for this with bleadperl@28900 or so
+                    # and Error.pm shared the problem space
+
+                    # XXX CPAN->debug("system was[$system]"); # but we have no system yet
+
                     $CPAN::Frontend
                         ->mywarn(
                                  sprintf("Warning: while trying to determine ".
@@ -6363,6 +6390,14 @@ sub test {
     }
 
     my $make = $self->{modulebuild} ? "Build" : "make";
+
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
     $CPAN::Frontend->myprint("Running $make test\n");
     if (my @prereq = $self->unsat_prereq){
         unless ($prereq[0][0] eq "perl") {
