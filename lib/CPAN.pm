@@ -4942,6 +4942,7 @@ sub patch {
                 return;
             }
         }
+        $self->{patched}++;
     }
     return 1;
 }
@@ -6446,6 +6447,18 @@ sub test {
        ) {
         $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
                                 "for for local directories\n");
+        $ready_to_report = 0;
+    }
+    if ($ready_to_report
+        &&
+        $self->prefs->{patches}
+        &&
+        @{$self->prefs->{patches}}
+        &&
+        $self->{patched}
+       ) {
+        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
+                                "when the source has been patched\n");
         $ready_to_report = 0;
     }
     if ($want_expect) {

@@ -19,7 +19,7 @@
 	* add 'perl' to the matches stuff of distroprefs DONE in rev. 1087
 
 	* When we have support for patches and apply patches, we should also
-	disable reporting through CPAN::Reporter.
+	disable reporting through CPAN::Reporter. DONE in rev. 1088
 
 	* Todo: document the trailing dot and that it is useful in a Bundle file
 	and that there is a LOCAL.trailing_dot_distros.yml in the distroprefs
