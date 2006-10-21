@@ -1,3 +1,7 @@
+2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: extend patch to files from CPAN
+
 2006-10-20  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
 	* Tina suggests: if the user has change some config variable via 'o
@@ -12,7 +16,7 @@
 	* highest prio: patches. Easy to test with an example against one of my
 	failing dummy distros. DONE in rev. 1086
 
-	* add 'perl' to the matches stuff of distroprefs
+	* add 'perl' to the matches stuff of distroprefs DONE in rev. 1087
 
 	* When we have support for patches and apply patches, we should also
 	disable reporting through CPAN::Reporter.

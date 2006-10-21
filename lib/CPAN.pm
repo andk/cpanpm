@@ -5935,6 +5935,9 @@ sub _find_prefs {
                     } elsif ($sub_attribute eq "distribution") {
                         my $okd = $distroid =~ /$qr/;
                         $ok &&= $okd;
+                    } elsif ($sub_attribute eq "perl") {
+                        my $okp = $^X =~ /$qr/;
+                        $ok &&= $okp;
                     } else {
                         $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
                                                "unknown sub_attribut '$sub_attribute'. ".
@@ -9022,17 +9025,18 @@ modules like Plagger.
 
 CPAN.pm can use YAML files to either pass additional arguments to one
 of the four commands, set environment variables or instantiate an
-Expect object that reads from the console, waits for some regular
-expression and enters some answer. Needless to say that for the latter
-option Expect.pm needs to be installed.
+Expect object that reads from the console and enters answers on your
+behalf (latter option requires Expect.pm installed). A further option
+is to apply locally stored patches.
 
 CPAN.pm comes with a couple of such YAML files. The structure is
-currently not documented. Please see the distroprefs directory of the
-CPAN distribution for examples and follow the README in there.
+currently not documented because in flux. Please see the distroprefs
+directory of the CPAN distribution for examples and follow the README
+in there.
 
 Please note that setting the environment variable PERL_MM_USE_DEFAULT
 to a true value can also get you a long way if you want to always pick
-the default answers. But this only works if the author of apackage
+the default answers. But this only works if the author of a package
 used the prompt function provided by ExtUtils::MakeMaker and if the
 defaults are OK for you.
 
