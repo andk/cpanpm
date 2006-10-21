@@ -4720,7 +4720,11 @@ sub get {
 	exists $self->{build_dir} and push @e,
 	    "Is already unwrapped into directory $self->{build_dir}";
 
-        exists $self->{unwrapped} and $self->{unwrapped}->failed
+        exists $self->{unwrapped} and (
+                                       $self->{unwrapped}->can("failed") ?
+                                       $self->{unwrapped}->failed :
+                                       $self->{unwrapped} =~ /^NO/
+                                      )
             and push @e, "Unwrapping had some problem, won't try again without force";
 
 	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
@@ -5657,11 +5661,18 @@ is part of the perl-%s distribution. To install that, you need to run
     }
   EXCUSE: {
         my @e;
-        !$self->{archived} || $self->{archived} eq "NO" and push @e,
-        "Is neither a tar nor a zip archive.";
+        if (!$self->{archived} || $self->{archived} eq "NO") {
+            push @e, "Is neither a tar nor a zip archive.";
+        }
 
-        !$self->{unwrapped} || $self->{unwrapped}->failed and push @e,
-        "Had problems unarchiving. Please build manually";
+        if (!$self->{unwrapped}
+            || (
+                $self->{unwrapped}->can("failed") ?
+                $self->{unwrapped}->failed :
+                $self->{unwrapped} =~ /^NO/
+               )) {
+            push @e, "Had problems unarchiving. Please build manually";
+        }
 
         unless ($self->{force_update}) {
             exists $self->{signature_verify} and (
