@@ -4908,6 +4908,23 @@ EOF
     return $self;
 }
 
+#-> CPAN::Distribution::patch
+sub try_download {
+    my($self,$patch) = @_;
+    my $norm = $self->normalize($patch);
+    my($local_wanted) =
+        File::Spec->catfile(
+                            $CPAN::Config->{keep_source_where},
+                            "authors",
+                            "id",
+                            split(/\//,$norm),
+			    );
+    $self->debug("Doing localize") if $CPAN::DEBUG;
+    return CPAN::FTP->localize("authors/id/$norm",
+                               $local_wanted);
+}
+
+#-> CPAN::Distribution::patch
 sub patch {
     my($self) = @_;
     if (my $patches = $self->prefs->{patches}) {
@@ -4921,16 +4938,20 @@ sub patch {
             $CPAN::Frontend->mydie("No external patch command available\n\n");
         }
         $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
-        my $args = "-g0 -p1 -N --fuzz=3";
+        my $args = "-b -g0 -p1 -N --fuzz=3";
         my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
         $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
         for my $patch (@$patches) {
             unless (-f $patch) {
-                my $fail = "Could not find patch '$patch'";
-                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
-                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
-                delete $self->{build_dir};
-                return;
+                if (my $trydl = $self->try_download($patch)) {
+                    $patch = $trydl;
+                } else {
+                    my $fail = "Could not find patch '$patch'";
+                    $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                    $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                    delete $self->{build_dir};
+                    return;
+                }
             }
             $CPAN::Frontend->myprint("  $patch\n");
             my $ret = system "$patchbin $args < $patch";

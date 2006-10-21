@@ -1,6 +1,7 @@
 2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: extend patch to files from CPAN
+	* Todo: extend patch ability to files from CPAN to be downloaded on the
+	fly DONE in rev. 1089
 
 2006-10-20  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
@@ -42,7 +43,7 @@
 	Today I would suggest
 
 	(1) prio 1!: organize patching into distroprefs, full path within the
-	YAML file seems acceptable
+	YAML file seems acceptable (DONE)
 
 	(2) organize logging into distroprefs via redirection (might be easy but
 	prio low because we have colors now)
@@ -63,13 +64,13 @@
 	or mtime as Ilya did. Still seems outside the scope of CPAN.pm but
 	should be supported once it works outside with simple mantra.
 
-	distroprefs give you a different 'make' command for a
+	For now, distroprefs give you a different 'make' command for a
 	permanently-known-to-be-tested module, that might be just 'true' on UNIX
 	or something to do with distcc-like solution.
 
 	That might be annoying if one works with different perls and want to
 	have different modules marked as tested_ok. Maybe we need to add "perl"
-	into the "match" structure? (Yes!)
+	into the "match" structure? (Yes!) (DONE)
 
 	(5) Faszinating is the idea to leave the shell and come back into the
 	same state of already tested but uninstalled modules. But why are they
