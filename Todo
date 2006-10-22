@@ -30,7 +30,8 @@
 	After some thinking: maybe I prefer just a loud warning instead of a
 	hanging terminal. Hmmm.
 
-	This is a critical thing because people perceive it as a bug.
+	This is a critical/showstopper thing because people perceive it as a
+	bug.
 
 	* Todo: find out the remaining relevant pieces of Ilya's patch:
 

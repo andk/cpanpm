@@ -38,9 +38,11 @@ distroprefs/PETDANCE.WWW-Mechanize.01.yml
 distroprefs/RCAPUTO.POE.01.yml
 distroprefs/README
 distroprefs/RGIERSIG.Expect.yml
+distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.01.yml
 distroprefs/Test-CTDPBF.yml
+distroprefs/URI.File-Slurp.yml
 distroprefs/XML-Twig.yml
 distroprefs/ZEV.Test-Dependencies.01.yml
 inc/Test/Builder.pm
