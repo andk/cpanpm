@@ -55,6 +55,10 @@ my $cwd = Cwd::cwd;
 open FH, ">t/dot-cpan/prefs/TestDistroPrefsFile.yml" or die;
 print FH <<EOF;
 ---
+comment: "More than one yaml variable per file is OK?"
+match:
+  distribution: "matches never^"
+---
 match:
   module: "CPAN::Test::Dummy::Perl5::Build::Fails"
 patches:
@@ -953,7 +957,7 @@ __END__
 #P:o conf defaults
 ########
 #P:force get CPAN::Test::Dummy::Perl5::Build::Fails
-#E:D i s t r o[\s\S]+?patch
+#E:D i s t r o[\s\S]+?TestDistroPrefsFile.yml\s+1[\s\S]+?patch
 #R:YAML&&patch
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails

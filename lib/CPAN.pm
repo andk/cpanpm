@@ -342,10 +342,12 @@ Trying to chdir to "$cwd->[1]" instead.
 sub _yaml_loadfile {
     my($self,$local_file) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    CPAN->debug("local_file[$local_file]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
-        my $yaml;
-        eval { $yaml = $code->($local_file); };
+        my @yaml;
+        eval { @yaml = $code->($local_file); };
+        CPAN->debug(sprintf "parts[%d]", scalar @yaml) if $CPAN::DEBUG;
         if ($@) {
             $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
                                    "  $local_file\n".
@@ -353,11 +355,11 @@ sub _yaml_loadfile {
                                    "  $@\n"
                                   );
         }
-        return $yaml;
+        return \@yaml;
     } else {
         $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
     }
-    return +{};
+    return +[];
 }
 
 package CPAN::CacheMgr;
@@ -1448,7 +1450,6 @@ sub i {
 # 'debug'; 'o conf ARGS' calls ->edit in CPAN/HandleConfig.pm
 sub o {
     my($self,$o_type,@o_what) = @_;
-    $DB::single = 1;
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
@@ -4603,7 +4604,7 @@ sub fast_yaml {
                                 $local_wanted)) {
         $CPAN::Frontend->mydie("Giving up on downloading yaml file '$local_wanted'\n");
     }
-    my $yaml = CPAN->_yaml_loadfile($local_file);
+    my $yaml = CPAN->_yaml_loadfile($local_file)->[0];
 }
 
 #-> sub CPAN::Distribution::cpan_userid
@@ -5954,8 +5955,8 @@ expected[$regex]\nbut[$but]\n\n");
 
 # CPAN::Distribution::_find_prefs
 sub _find_prefs {
-    my($self,$distro) = @_;
-    my $distroid = $distro->pretty_id;
+    my($self) = @_;
+    my $distroid = $self->pretty_id;
     CPAN->debug("distroid[$distroid]") if $CPAN::DEBUG;
     my $prefs_dir = $CPAN::Config->{prefs_dir};
     eval { File::Path::mkpath($prefs_dir); };
@@ -5970,42 +5971,52 @@ sub _find_prefs {
             next if $_ eq "." || $_ eq "..";
             next unless /\.yml$/;
             my $abs = File::Spec->catfile($prefs_dir, $_);
-            # CPAN->debug("abs[$abs]") if $CPAN::DEBUG;
             if (-f $abs) {
-                my $yaml = CPAN->_yaml_loadfile($abs);
-                my $ok = 1;
-                my $match = $yaml->{match} or
-                    $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
-                                           "missing attribut 'match'. Please ".
-                                           "remove, cannot continue.");
-                for my $sub_attribute (keys %$match) {
-                    my $qr = eval "qr{$yaml->{match}{$sub_attribute}}";
-                    if ($sub_attribute eq "module") {
-                        my $okm = 0;
-                        my @modules = $distro->containsmods;
-                        for my $module (@modules) {
-                            $okm ||= $module =~ /$qr/;
-                            last if $okm;
-                        }
-                        $ok &&= $okm;
-                    } elsif ($sub_attribute eq "distribution") {
-                        my $okd = $distroid =~ /$qr/;
-                        $ok &&= $okd;
-                    } elsif ($sub_attribute eq "perl") {
-                        my $okp = $^X =~ /$qr/;
-                        $ok &&= $okp;
-                    } else {
-                        $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
-                                               "unknown sub_attribut '$sub_attribute'. ".
-                                               "Please ".
-                                               "remove, cannot continue.");
+                CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
+                my @yaml = @{CPAN->_yaml_loadfile($abs)};
+                $DB::single=1;
+              ELEMENT: for my $y (0..$#yaml) {
+                    my $yaml = $yaml[$y];
+                    my $match = $yaml->{match};
+                    unless ($match) {
+                        CPAN->debug("no 'match' in abs[$abs], skipping");
+                        next ELEMENT;
                     }
-                }
-                if ($ok) {
-                    return {
-                            prefs => $yaml,
-                            prefs_file => $abs,
-                           };
+                    my $ok = 1;
+                    for my $sub_attribute (keys %$match) {
+                        my $qr = eval "qr{$yaml->{match}{$sub_attribute}}";
+                        if ($sub_attribute eq "module") {
+                            my $okm = 0;
+                            CPAN->debug(sprintf "abs[%s]yaml[%d]", $abs, scalar @yaml) if $CPAN::DEBUG;
+                            my @modules = $self->containsmods;
+                            CPAN->debug(sprintf "abs[%s]yaml[%d]modules[%s]", $abs, scalar @yaml, join(",",@modules)) if $CPAN::DEBUG;
+                          MODULE: for my $module (@modules) {
+                                $okm ||= $module =~ /$qr/;
+                                last MODULE if $okm;
+                            }
+                            $ok &&= $okm;
+                        } elsif ($sub_attribute eq "distribution") {
+                            my $okd = $distroid =~ /$qr/;
+                            $ok &&= $okd;
+                        } elsif ($sub_attribute eq "perl") {
+                            my $okp = $^X =~ /$qr/;
+                            $ok &&= $okp;
+                        } else {
+                            $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
+                                                   "unknown sub_attribut '$sub_attribute'. ".
+                                                   "Please ".
+                                                   "remove, cannot continue.");
+                        }
+                    }
+                    CPAN->debug(sprintf "abs[%s]yaml[%d]ok[%d]", $abs, scalar @yaml, $ok) if $CPAN::DEBUG;
+                    if ($ok) {
+                        return {
+                                prefs => $yaml,
+                                prefs_file => $abs,
+                                prefs_file_section => $y,
+                               };
+                    }
+
                 }
             }
         }
@@ -6025,19 +6036,23 @@ sub prefs {
     }
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
-        my $prefs = $self->_find_prefs($self);
+        my $prefs = $self->_find_prefs();
         if ($prefs) {
-            for my $x (qw(prefs prefs_file)) {
+            for my $x (qw(prefs prefs_file prefs_file_section)) {
                 $self->{$x} = $prefs->{$x};
             }
-            my $basename = File::Basename::basename($self->{prefs_file});
+            my $bs = sprintf(
+                             "%s[%s]",
+                             File::Basename::basename($self->{prefs_file}),
+                             $self->{prefs_file_section},
+                            );
             my $filler1 = "_" x 22;
-            my $filler2 = int(66 - length($basename))/2;
+            my $filler2 = int(66 - length($bs))/2;
             $filler2 = 0 if $filler2 < 0;
             $filler2 = " " x $filler2;
             $CPAN::Frontend->myprint("
 $filler1 D i s t r o P r e f s $filler1
-$filler2 $basename $filler2
+$filler2 $bs $filler2
 ");
             $CPAN::Frontend->mysleep(1);
             return $self->{prefs};
@@ -6246,9 +6261,9 @@ sub read_yaml {
     my $yaml = File::Spec->catfile($build_dir,"META.yml");
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml); };
+    eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
     if ($@) {
-        return; # if we die, then we cannot read our own META.yml
+        return; # if we die, then we cannot read YAML's own META.yml
     }
     if (not exists $self->{yaml_content}{dynamic_config}
         or $self->{yaml_content}{dynamic_config}
@@ -6338,23 +6353,28 @@ sub prereq_pm {
                     $req  = Module::Build->current->requires();
                     $breq = Module::Build->current->build_requires();
                 };
+                # this failed for example for HTML::Mason and for
+                # Error.pm because they are subclassing Module::Build
+                # in their Build.PL in such a way that Module::Build
+                # cannot read the _build directory. We DO need a dump
+                # command for that.
                 if ($@) {
-                    # HTML::Mason prompted for this with bleadperl@28900 or so
-                    # and Error.pm shared the problem space
-
-                    # XXX CPAN->debug("system was[$system]"); # but we have no system yet
-
                     $CPAN::Frontend
                         ->mywarn(
                                  sprintf("Warning: while trying to determine ".
                                          "prerequisites for %s with the help of ".
                                          "Module::Build the following error ".
-                                         "occurred: '%s'\n\nCannot care for prerequisites\n",
+                                         "occurred: '%s'\n\nFalling back to META.yml ".
+                                         "for prerequisites\n",
                                          $self->id,
                                          $@
                                         ));
-                    $self->{prereq_pm_detected}++;
-                    return $self->{prereq_pm} = {requires=>{},build_requires=>{}};
+                    my $build_dir = $self->{build_dir};
+                    my $yaml = File::Spec->catfile($build_dir,"META.yml");
+                    if ($yaml = CPAN->_yaml_loadfile($yaml)->[0]) {
+                        $req =  $yaml->{requires} || {};
+                        $breq =  $yaml->{build_requires} || {};
+                    }
                 }
             }
         }
@@ -8555,7 +8575,8 @@ through the pager specified in C<$CPAN::Config->{pager}>.
 
 Returns the content of the META.yml of this distro as a hashref. Note:
 works only after an attempt has been made to C<make> the distribution.
-Returns undef otherwise.
+Returns undef otherwise. Also returns undef if the content of META.yml
+is dynamic.
 
 =item CPAN::Distribution::test()
 

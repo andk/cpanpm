@@ -1,16 +1,26 @@
+2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_56
+
+	* add the ability to patch random distros into the distroprefs system
+	both with local patches and with patches from CPAN.
+
+	* Fixes from Ilya Zakharevich to the PERL5LIB environment handling for
+	not yet installed modules from a 3 year old patch
+
 2006-10-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_55
 
-	* new command 'report' as requested by Schwern in #22118
+	* new command 'report' as requested by Schwern in #22118.
 
 	* extend the Distribution object to local directories. Gives a meaning
 	to the 'cpan .' command. Suggested by Slaven Rezic.
 
-	* removes the linux centric behaviour of t/30shell.t
+	* removes the linux centric behaviour of t/30shell.t.
 
 	* do not complain THAT often about uninstalled YAML or YAML::Syck; once
-	is per distro enough
+	is per distro enough.
 
 2006-10-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -22,13 +32,13 @@
 	* New distroprefs system that lets the user store arguments, environment
 	variables, individual answers to questions asked by Distributions when
 	being built, and config overrides. Try 'o conf init /prefs/' for more
-	information
+	information.
 
 	* address #21144 major documentation bug: $obj->install is NOT the same
 	as CPAN::Shell->install($obj) as soon as a queue of dependencies comes
 	into play.
 
-	* fix "o conf defaults" which was broken in 1.88_53
+	* fix "o conf defaults" which was broken in 1.88_53.
 
 	* protect us against Module::Build errors with an eval around the
 	requires() and build_requires() calls.
@@ -41,9 +51,9 @@
 	with the right consequences.
 
 	* 'reload cpan' now based on timestamps and always jumps into a fresh
-	shell when needed
+	shell when needed.
 
-	* display the version during loading of our own modules
+	* display the version during loading of our own modules.
 
 	* address #21692: make the "isa perl" case less noisy (Gabor Szabo)
 

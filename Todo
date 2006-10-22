@@ -8,16 +8,23 @@
 	directory
 
 	* go after the Module::Build errors in Error.pm and Mason: I suspect
-	that's the set_perl5lib bug mentioned by Ilya.
+	that's the set_perl5lib bug mentioned by Ilya. NO, it was not the
+	set_perl5lib bug. The bug is that the two distros use subclassing in
+	their Build.PL and so Module::Build's own methods are unable to provide
+	the prerequisites. My workaround for now is to fall back to the content
+	of META.yml, the bug persists and needs to be discussed with M:B people.
 
 	* Tina suggests: if the user has changed some config variable via 'o
 	conf' mechanism and has not yet saved the new config via 'o conf commit'
 	and is leaving the shell without saving, we could trigger a dialog.
+	#22396 talks about this
 
 	After some thinking: maybe I prefer just a loud warning instead of a
 	hanging terminal. Hmmm.
 
-	* Todo: find out the remaining pieces of Ilya's patch
+	This is a critical thing because people perceive it as a bug.
+
+	* Todo: find out the remaining relevant pieces of Ilya's patch
 
 	* just a memo what I usually install:
 

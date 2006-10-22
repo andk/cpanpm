@@ -2,33 +2,6 @@
 match:
   module: "^Module::Signature$"
 pl: 
-  args: []
-
-  env: {}
-
   expect:
     - "Import PAUSE"
     - "y\n"
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-test: 
-  args: []
-
-  env:
-    BATCH: 1
-
-  expect: []
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-
