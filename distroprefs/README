@@ -4,8 +4,9 @@
 
 =head1 DESCRIPTION
 
-The files in this directory are YAML files that specify how CPAN.pm shall treat
-distributions that deviate from the normal model of
+The files in this directory are YAML files that specify how CPAN.pm
+shall treat distributions that you want or need to treat differently
+from the normal mantra of
 
     perl Makefile.PL
     make
@@ -116,10 +117,10 @@ MIYAGAWA.Plagger.yml.
 
 =head1 FEEDBACK
 
-Please report the improvements you apply to these files. Any additions
-and corrections are welcome. Also, please be aware that there are many
-areas of this system that need further attention and are not yet working
-as one would expect or hope.
+Please report interesting improvements you apply to these files. Any
+additions and corrections are welcome. Also, please be aware that
+there are many areas of this system that need further attention and
+are not yet working as one would expect or hope.
 
 Please use the
 http://rt.cpan.org/Dist/Display.html?Status=Active&Queue=CPAN address

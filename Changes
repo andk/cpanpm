@@ -1,12 +1,31 @@
-2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_56
 
 	* add the ability to patch random distros into the distroprefs system
-	both with local patches and with patches from CPAN.
+	both with local patches and with patches from CPAN. Demo patches to
+	UNIVERSAL::require, Expect, and Math::Pari are uploaded to CPAN.
 
-	* Fixes from Ilya Zakharevich to the PERL5LIB environment handling for
-	not yet installed modules from a 3 year old patch
+	* fixes from Ilya Zakharevich to the PERL5LIB environment handling for
+	not yet installed modules from a 3 year old patch.
+
+	* work around a Module::Build issue with Build.PL files that are
+	subclassing Module::Build like Error.pm and HTML::Mason. For now we fall
+	back to the META.yml file.
+
+	* in the distroprefs system allow for YAML files with an arbitrary
+	number of sections. (Caveat: YAML::Syck doesn't parse these)
+
+	* document how to integrate local unpacked distributions into the CPAN
+	shell. See section 'Integrating local directories' in the manpage.
+
+	* reporting of errors during unpacking is now integrated into the
+	report section at the end of each command and the 'failed' command.
+
+	* applied a patch by smpeters to silence an unini warning (RT #22277).
+
+	* address #20979: trailing backslashes in MyConfig variables with test
+	(Lars XXX via David Golden)
 
 2006-10-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

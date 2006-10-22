@@ -29,8 +29,7 @@
 	* just a memo what I usually install:
 
 	    o debug CPAN Distribution
-	    force install Expect
-	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty
+	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 

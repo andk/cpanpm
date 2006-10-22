@@ -1800,7 +1800,6 @@ sub report {
     local $CPAN::Config->{test_report} = 1;
     $self->force("test",@args); # force is there so that the test be
                                 # re-run (as documented)
-    $self->unforce();
 }
 
 #-> sub CPAN::Shell::upgrade ;
@@ -8247,6 +8246,8 @@ so you would have to say
 
 The first example will be driven by an object of the class
 CPAN::Module, the second by an object of class CPAN::Distribution.
+
+=head2 Integrating local directories
 
 Distribution objects are normally distributions from the CPAN, but
 there is a slightly degenerate case for Distribution objects, too,

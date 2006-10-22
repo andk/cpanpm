@@ -1,0 +1,8 @@
+--- 
+comment: "Missing dependency"
+match:
+  module: "^Template::Provider::Encoding$"
+  distribution: "-0.05\.tar\.gz"
+
+patches:
+  - ANDK/Template-Provider-Encoding-0.05-ANDK-01.patch

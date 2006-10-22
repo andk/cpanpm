@@ -55,7 +55,7 @@ my $cwd = Cwd::cwd;
 open FH, ">t/dot-cpan/prefs/TestDistroPrefsFile.yml" or die;
 print FH <<EOF;
 ---
-comment: "More than one yaml variable per file is OK?"
+comment: "Having more than one yaml variable per file is OK?"
 match:
   distribution: "matches never^"
 ---
