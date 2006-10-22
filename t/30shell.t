@@ -52,7 +52,7 @@ mkpath _d"t/dot-cpan/prefs";
 use Cwd;
 my $cwd = Cwd::cwd;
 
-open FH, ">t/dot-cpan/prefs/TestDistroPrefsFile.yml" or die;
+open FH, (">" . _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
 print FH <<EOF;
 ---
 comment: "Having more than one yaml variable per file is OK?"
@@ -64,6 +64,9 @@ match:
 patches:
   - "$cwd/t/CPAN/TestPatch.txt"
 EOF
+END {
+    unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
+}
 
 sub read_myconfig () {
     local *FH;
