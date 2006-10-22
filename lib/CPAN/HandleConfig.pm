@@ -138,6 +138,7 @@ sub edit {
                 $self->prettyprint($o);
 	    }
             if ($changed) {
+                $CPAN::CONFIG_DIRTY = 1;
                 if ($o eq "urllist") {
                     # reset the cached values
                     undef $CPAN::FTP::Thesite;
@@ -149,11 +150,15 @@ sub edit {
             }
             return $changed;
         } elsif ($o =~ /_hash$/) {
+            $CPAN::CONFIG_DIRTY = 1;
             @args = () if @args==1 && $args[0] eq "";
             push @args, "" if @args % 2;
             $CPAN::Config->{$o} = { @args };
         } else {
-	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
+            if (defined $args[0]){
+                $CPAN::CONFIG_DIRTY = 1;
+                $CPAN::Config->{$o} = $args[0];
+            }
 	    $self->prettyprint($o)
                 if exists $keys{$o} or defined $CPAN::Config->{$o};
             return 1;
@@ -254,6 +259,7 @@ EOF
     #chmod $mode, $configpm;
 ###why was that so?    $self->defaults;
     $CPAN::Frontend->myprint("commit: wrote '$configpm'\n");
+    $CPAN::CONFIG_DIRTY = 0;
     1;
 }
 
@@ -298,6 +304,7 @@ sub defaults {
             last;
         }
     }
+    $CPAN::CONFIG_DIRTY = 0;
     1;
 }
 

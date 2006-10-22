@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_56';
+$CPAN::VERSION = '1.88_57';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -58,13 +58,25 @@ $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
 
-use vars qw($VERSION @EXPORT $AUTOLOAD
-            $DEBUG $META $HAS_USABLE $term
-            $GOTOSHELL
-            $Signal $Suppress_readline $Frontend
-            @Defaultsites $Have_warned $Defaultdocs $Defaultrecent
+use vars qw(
+            $AUTOLOAD
             $Be_Silent
+            $CONFIG_DIRTY
+            $DEBUG
+            $Defaultdocs
+            $Defaultrecent
+            $Frontend
+            $GOTOSHELL
+            $HAS_USABLE
+            $Have_warned
+            $META
+            $Signal
+            $Suppress_readline
+            $VERSION
             $autoload_recursion
+            $term
+            @Defaultsites
+            @EXPORT
            );
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
@@ -1008,6 +1020,9 @@ sub cleanup {
   unlink $META->{LOCK};
   # require Carp;
   # Carp::cluck("DEBUGGING");
+  if ( $CPAN::CONFIG_DIRTY ) {
+      $CPAN::Frontend->mywarn("Warning: Configuration not saved.\n");
+  }
   $CPAN::Frontend->myprint("Lockfile removed.\n");
 }
 
