@@ -4,7 +4,8 @@
 
 	* add the ability to patch random distros into the distroprefs system
 	both with local patches and with patches from CPAN. Demo patches to
-	UNIVERSAL::require, Expect, and Math::Pari are uploaded to CPAN.
+	UNIVERSAL::require, Expect, Math::Pari, etc. are uploaded to my CPAN
+	directory, YAML files are in the distroprefs directory.
 
 	* fixes from Ilya Zakharevich to the PERL5LIB environment handling for
 	not yet installed modules from a 3 year old patch.
@@ -14,7 +15,7 @@
 	back to the META.yml file.
 
 	* in the distroprefs system allow for YAML files with an arbitrary
-	number of sections. (Caveat: YAML::Syck doesn't parse these)
+	number of sections.
 
 	* document how to integrate local unpacked distributions into the CPAN
 	shell. See section 'Integrating local directories' in the manpage.
