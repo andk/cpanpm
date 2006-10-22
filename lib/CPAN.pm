@@ -5790,7 +5790,12 @@ is part of the perl-%s distribution. To install that, you need to run
                           $makepl_arg ? " $makepl_arg" : "",
                          );
     }
-    local %ENV = %ENV;
+    my %env;
+    while (my($k,$v) = each %ENV) {
+        next unless defined $v;
+        $env{$k} = $v;
+    }
+    local %ENV = %env;
     if (my $env = $self->prefs->{pl}{env}) {
         for my $e (keys %$env) {
             $ENV{$e} = $env->{$e};

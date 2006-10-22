@@ -43,7 +43,7 @@
 	* just a memo what I usually install:
 
 	    o debug CPAN Distribution
-	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty
+	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 
@@ -56,7 +56,8 @@
 
 	* The Net::SSH::Perl test 03-packet still runs forever even with
 	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
-	Report sent. But can we patch it?
+	Report sent. But can we patch it? Maybe not as long as Math::Pari and
+	Crypt::Random are prereqs and fail themselves.
 
 	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
 	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
@@ -66,7 +67,7 @@
 	* as long as HTML::Mason/Module::Build are broken, we should use
 	Bundle::HTML::Mason? Alas, it doesn't list HTML::Entities. And after
 	that it still fails on 07-interp.t. Ah, ok. Report sent. But can we
-	patch it?
+	patch it? DONE
 
 	* Maybe add support for more CPAN::Config variables in distroprefs
 
