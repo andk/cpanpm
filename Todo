@@ -1,12 +1,13 @@
 2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: gzipped patches; patches that are not separate files but live in
-	the YAML file
+	* Todo: gzipped patches; DONE in rev. 1103
+
+	* patches that are not separate files but live in the YAML file?
 
 2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* add CPAN::Reporter to Bundle::CPAN (which version of CPAN.pm needs
-	CPAN::Reporter currently?)
+	CPAN::Reporter currently? -- 1.88)
 
 	* think about the locking from a different angle: currently it is
 	possible but unsafe to have concurrent access to the .cpan/build

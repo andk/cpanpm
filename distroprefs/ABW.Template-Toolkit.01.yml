@@ -1,6 +1,7 @@
 --- 
+comment: "The patch is a reaction to http://rt.cpan.org/Ticket/Display.html?id=20807 ; for the options you would probably prefer setting TT_* commandline args"
 match:
-  distribution: "^ABW/Template-Toolkit-"
+  distribution: "^ABW/Template-Toolkit-2.15"
 pl: 
   expect:
     - "Do you want to build the XS Stash module"
@@ -23,3 +24,5 @@ pl:
     - "\n"
     - "."
     - "\n"
+patches:
+  - ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz
