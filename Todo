@@ -32,7 +32,12 @@
 
 	This is a critical thing because people perceive it as a bug.
 
-	* Todo: find out the remaining relevant pieces of Ilya's patch
+	* Todo: find out the remaining relevant pieces of Ilya's patch:
+
+	(1) better logging (maybe with the help of CPAN::Reporter?) I said below
+	that we have colors now, but fact is that you have to scroll back and if
+	you install 100 modules, you cannot investigate without disturbing the
+	process. One would like to study STDOUT and STDERR in a separate window.
 
 	* just a memo what I usually install:
 
