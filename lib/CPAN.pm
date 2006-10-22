@@ -4948,14 +4948,17 @@ sub try_download {
 sub patch {
     my($self) = @_;
     if (my $patches = $self->prefs->{patches}) {
+        return unless @$patches;
         $self->safe_chdir($self->{build_dir});
         CPAN->debug("patches[$patches]");
         my $patchbin = $CPAN::Config->{patch};
         unless ($patchbin && length $patchbin) {
-            $CPAN::Frontend->mydie("No external patch command configured\n\n");
+            $CPAN::Frontend->mydie("No external patch command configured\n\n".
+                                   "Please run 'o conf init /patch/'");
         }
         unless (MM->maybe_command($patchbin)) {
-            $CPAN::Frontend->mydie("No external patch command available\n\n");
+            $CPAN::Frontend->mydie("No external patch command available\n\n".
+                                   "Please run 'o conf init /patch/'");
         }
         $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
         my $args = "-b -g0 -p1 -N --fuzz=3";
