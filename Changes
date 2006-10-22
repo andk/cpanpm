@@ -5,14 +5,16 @@
 	* add the ability to patch random distros both with local patches and
 	with patches from CPAN. Demo patches to UNIVERSAL::require, Expect,
 	Math::Pari, etc. are uploaded to my CPAN directory, corresponding YAML
-	files are in the distroprefs directory.
+	files are in the distroprefs directory. Heavily inspired by an old patch
+	from Ilya Zakharevich.
 
 	* fixes from Ilya Zakharevich to the PERL5LIB environment handling for
 	not yet installed modules from a 3 year old patch.
 
 	* work around a Module::Build issue with Build.PL files that are
 	subclassing Module::Build like Error.pm and HTML::Mason. For now we fall
-	back to the META.yml file.
+	back to the META.yml file. Needs further discussion with Module::Build
+	people.
 
 	* in the distroprefs system allow for YAML files with an arbitrary
 	number of sections.
