@@ -1,3 +1,8 @@
+2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: gzipped patches; patches that are not separate files but live in
+	the YAML file
+
 2006-10-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* add CPAN::Reporter to Bundle::CPAN (which version of CPAN.pm needs

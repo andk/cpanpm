@@ -9150,7 +9150,7 @@ CPAN.pm can use YAML files to either pass additional arguments to one
 of the four commands, set environment variables or instantiate an
 Expect object that reads from the console and enters answers on your
 behalf (latter option requires Expect.pm installed). A further option
-is to apply locally stored patches.
+is to apply patches from the local disk or from CPAN.
 
 CPAN.pm comes with a couple of such YAML files. The structure is
 currently not documented because in flux. Please see the distroprefs
