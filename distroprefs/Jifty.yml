@@ -2,4 +2,9 @@
 match:
   module: "^Jifty(::DBI)?$"
 pl: 
+  env:
+    PERL_AUTOINSTALL: --skip    
   args: ["--defaultdeps"]
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    

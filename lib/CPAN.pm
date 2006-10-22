@@ -4974,8 +4974,19 @@ sub patch {
                 }
             }
             $CPAN::Frontend->myprint("  $patch\n");
-            my $ret = system "$patchbin $args < $patch";
-            unless (0 == $ret) {
+            my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
+            my $writefh = FileHandle->new;
+            unless (open $writefh, "|$patchbin $args") {
+                my $fail = "Could not fork '$patchbin $args'";
+                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                delete $self->{build_dir};
+                return;
+            }
+            while (my $x = $readfh->READLINE) {
+                print $writefh $x;
+            }
+            unless (close $writefh) {
                 my $fail = "Could not apply patch '$patch'";
                 $CPAN::Frontend->mywarn("$fail; cannot continue\n");
                 $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
@@ -6580,7 +6591,7 @@ sub test {
                 my $verb = $cnt == 1 ? "one dependency not OK ($which)" :
                     "$cnt dependencies missing ($which)";
                 $CPAN::Frontend->mywarn("Tests succeeded but $verb\n");
-                $self->{make_test} = CPAN::Distrostatus->new("NO -- $verb");
+                $self->{make_test} = CPAN::Distrostatus->new("NO $verb");
                 return;
             }
         }

@@ -1,0 +1,7 @@
+--- 
+comment: "This patch fixes pod_coverage bugs with bleadperl; don't know who is to blame; needs further investigations"
+match:
+  distribution: "^URI/File-Slurp-9999.12.tar.gz$"
+
+patches:
+  - ANDK/File-Slurp-9999.12-ANDK-01.patch

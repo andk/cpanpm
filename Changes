@@ -2,10 +2,10 @@
 
 	* release 1.88_56
 
-	* add the ability to patch random distros into the distroprefs system
-	both with local patches and with patches from CPAN. Demo patches to
-	UNIVERSAL::require, Expect, Math::Pari, etc. are uploaded to my CPAN
-	directory, YAML files are in the distroprefs directory.
+	* add the ability to patch random distros both with local patches and
+	with patches from CPAN. Demo patches to UNIVERSAL::require, Expect,
+	Math::Pari, etc. are uploaded to my CPAN directory, corresponding YAML
+	files are in the distroprefs directory.
 
 	* fixes from Ilya Zakharevich to the PERL5LIB environment handling for
 	not yet installed modules from a 3 year old patch.
@@ -17,7 +17,7 @@
 	* in the distroprefs system allow for YAML files with an arbitrary
 	number of sections.
 
-	* document how to integrate local unpacked distributions into the CPAN
+	* document how to integrate local distribution directories into the CPAN
 	shell. See section 'Integrating local directories' in the manpage.
 
 	* reporting of errors during unpacking is now integrated into the
