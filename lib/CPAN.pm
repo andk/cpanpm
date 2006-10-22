@@ -4954,11 +4954,11 @@ sub patch {
         my $patchbin = $CPAN::Config->{patch};
         unless ($patchbin && length $patchbin) {
             $CPAN::Frontend->mydie("No external patch command configured\n\n".
-                                   "Please run 'o conf init /patch/'");
+                                   "Please run 'o conf init /patch/'\n\n");
         }
         unless (MM->maybe_command($patchbin)) {
             $CPAN::Frontend->mydie("No external patch command available\n\n".
-                                   "Please run 'o conf init /patch/'");
+                                   "Please run 'o conf init /patch/'\n\n");
         }
         $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
         my $args = "-b -g0 -p1 -N --fuzz=3";
