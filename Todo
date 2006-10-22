@@ -1,5 +1,7 @@
 2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Investigate if I want Math::Bigint::GMP in the core
+
 	* Todo: gzipped patches; DONE in rev. 1103
 
 	* patches that are not separate files but live in the YAML file?

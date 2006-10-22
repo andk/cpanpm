@@ -3,6 +3,8 @@ comment: "The patch is a reaction to http://rt.cpan.org/Ticket/Display.html?id=2
 match:
   distribution: "^ABW/Template-Toolkit-2.15"
 pl: 
+  args:
+    - TT_EXTRAS=no
   expect:
     - "Do you want to build the XS Stash module"
     - "n\n"
