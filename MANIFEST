@@ -22,10 +22,12 @@ distroprefs/ILYAZ.Math-Pari.01.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.01.yml
 distroprefs/INGY.Inline.01.yml
 distroprefs/INGY.YAML.01.yml
-distroprefs/JJORE.Carp-Clan.01.yml
 distroprefs/Jifty.yml
+distroprefs/JJORE.Carp-Clan.01.yml
 distroprefs/KWILLIAMS.AI-Categorizer.01.yml
+distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/MIYAGAWA.Plagger.yml
+distroprefs/MIYAGAWA.Template-P-E.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/Module-Install.yml
 distroprefs/NIKIP.Authen-PAM.01.yml
@@ -35,7 +37,10 @@ distroprefs/PDF-FromHTML.yml
 distroprefs/PETDANCE.WWW-Mechanize.01.yml
 distroprefs/RCAPUTO.POE.01.yml
 distroprefs/README
+distroprefs/RGIERSIG.Expect.yml
+distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.01.yml
+distroprefs/Test-CTDPBF.yml
 distroprefs/XML-Twig.yml
 distroprefs/ZEV.Test-Dependencies.01.yml
 inc/Test/Builder.pm
