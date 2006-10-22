@@ -253,6 +253,8 @@ DESCRIPTION
   report Bundle|Distribution|Module
     The "report" command temporarily turns on the "test_report" config
     variable, then runs the "force test" command with the given arguments.
+    The "force" pragma is used to re-run the tests and repeat every step
+    that might have failed before.
 
   upgrade [Module|/Regex/]...
     The "upgrade" command first runs an "r" command with the given arguments
@@ -301,6 +303,26 @@ DESCRIPTION
 
     The first example will be driven by an object of the class CPAN::Module,
     the second by an object of class CPAN::Distribution.
+
+  Integrating local directories
+    Distribution objects are normally distributions from the CPAN, but there
+    is a slightly degenerate case for Distribution objects, too, normally
+    only needed by developers. If a distribution object ends with a dot or
+    is a dot by itself, then it represents a local directory and all actions
+    such as "make", "test", and "install" are applied directly to that
+    directory. This gives the command "cpan ." an interesting touch: while
+    the normal mantra of installing a CPAN module without CPAN.pm is one of
+
+        perl Makefile.PL                 perl Build.PL
+               ( go and get prerequisites )
+        make                             ./Build
+        make test                        ./Build test
+        make install                     ./Build install
+
+    the command "cpan ." does all of this at once. It figures out which of
+    the two mantras is appropriate, fetches and installs all prerequisites,
+    cares for them recursively and finally finishes the installation of the
+    module in the current directory, be it a CPAN module or not.
 
 PROGRAMMER'S INTERFACE
     If you do not enter the shell, the available shell commands are both
@@ -568,7 +590,8 @@ PROGRAMMER'S INTERFACE
     CPAN::Distribution::read_yaml()
         Returns the content of the META.yml of this distro as a hashref.
         Note: works only after an attempt has been made to "make" the
-        distribution. Returns undef otherwise.
+        distribution. Returns undef otherwise. Also returns undef if the
+        content of META.yml is dynamic.
 
     CPAN::Distribution::test()
         Changes to the directory where the distribution has been unpacked
@@ -944,6 +967,7 @@ CONFIGURATION
       no_proxy           don't proxy to these hosts/domains (comma separated list)
       pager              location of external program more (or any pager)
       password           your password if you CPAN server wants one
+      patch              path to external prg
       prefer_installer   legal values are MB and EUMM: if a module comes
                          with both a Makefile.PL and a Build.PL, use the
                          former (EUMM) or the latter (MB); if the module
@@ -1053,17 +1077,18 @@ CONFIGURATION
 
     CPAN.pm can use YAML files to either pass additional arguments to one of
     the four commands, set environment variables or instantiate an Expect
-    object that reads from the console, waits for some regular expression
-    and enters some answer. Needless to say that for the latter option
-    Expect.pm needs to be installed.
+    object that reads from the console and enters answers on your behalf
+    (latter option requires Expect.pm installed). A further option is to
+    apply locally stored patches.
 
     CPAN.pm comes with a couple of such YAML files. The structure is
-    currently not documented. Please see the distroprefs directory of the
-    CPAN distribution for examples and follow the README in there.
+    currently not documented because in flux. Please see the distroprefs
+    directory of the CPAN distribution for examples and follow the README in
+    there.
 
     Please note that setting the environment variable PERL_MM_USE_DEFAULT to
     a true value can also get you a long way if you want to always pick the
-    default answers. But this only works if the author of apackage used the
+    default answers. But this only works if the author of a package used the
     prompt function provided by ExtUtils::MakeMaker and if the defaults are
     OK for you.
 

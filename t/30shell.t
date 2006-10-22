@@ -957,7 +957,7 @@ __END__
 #P:o conf defaults
 ########
 #P:force get CPAN::Test::Dummy::Perl5::Build::Fails
-#E:D i s t r o[\s\S]+?TestDistroPrefsFile.yml\s+1[\s\S]+?patch
+#E:D i s t r o[\s\S]+?TestDistroPrefsFile.yml\[1[\s\S]+?patch
 #R:YAML&&patch
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
