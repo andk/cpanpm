@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.8801';
+$CPAN::VERSION = '1.8802';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -291,6 +291,30 @@ Trying to chdir to "$cwd->[1]" instead.
             $CPAN::Frontend->mydie(qq{Could not chdir to "$cwd->[0]": $!});
         }
     }
+}
+
+# CPAN::_yaml_loadfile
+sub _yaml_loadfile {
+    my($self,$local_file) = @_;
+    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    CPAN->debug("local_file[$local_file]") if $CPAN::DEBUG;
+    if ($CPAN::META->has_inst($yaml_module)) {
+        my $code = UNIVERSAL::can($yaml_module, "LoadFile");
+        my @yaml;
+        eval { @yaml = $code->($local_file); };
+        CPAN->debug(sprintf "parts[%d]", scalar @yaml) if $CPAN::DEBUG;
+        if ($@) {
+            $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
+                                   "  $local_file\n".
+                                   "with $yaml_module the following error was encountered:\n".
+                                   "  $@\n"
+                                  );
+        }
+        return \@yaml;
+    } else {
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
+    }
+    return +[];
 }
 
 package CPAN::CacheMgr;
@@ -1072,8 +1096,8 @@ sub is_tested {
     $self->{is_tested}{$what} = 1;
 }
 
-# looks suspicious but maybe it is really intended to set is_tested
-# here. Please document next time around
+# unsets the is_tested flag: as soon as the thing is installed, it is
+# not needed in set_perl5lib anymore
 sub is_installed {
     my($self,$what) = @_;
     delete $self->{is_tested}{$what};
@@ -1300,7 +1324,7 @@ Other
  o conf [opt]  set and query options   q             quit the cpan shell
  reload cpan   load CPAN.pm again      reload index  load newer indices
  autobundle    Snapshot                recent        latest CPAN uploads});
-    }
+}
 }
 
 *help = \&h;
@@ -1539,7 +1563,7 @@ sub o {
 	  $CPAN::Frontend->myprint("\n\n");
 	}
 	if ($CPAN::DEBUG) {
-	    $CPAN::Frontend->myprint("Options set for debugging:\n");
+	    $CPAN::Frontend->myprint("Options set for debugging ($CPAN::DEBUG):\n");
 	    my($k,$v);
 	    for $k (sort {$CPAN::DEBUG{$a} <=> $CPAN::DEBUG{$b}} keys %CPAN::DEBUG) {
 		$v = $CPAN::DEBUG{$k};
@@ -1558,6 +1582,7 @@ Known options:
     }
 }
 
+# CPAN::Shell::paintdots_onreload
 sub paintdots_onreload {
     my($ref) = shift;
     sub {
@@ -1578,7 +1603,7 @@ sub reload {
     my($self,$command,@arg) = @_;
     $command ||= "";
     $self->debug("self[$self]command[$command]arg[@arg]") if $CPAN::DEBUG;
-    if ($command =~ /cpan/i) {
+    if ($command =~ /^cpan$/i) {
         my $redef = 0;
         chdir $CPAN::iCwd if $CPAN::iCwd; # may fail
         my $failed;
@@ -1603,7 +1628,7 @@ sub reload {
             $CPAN::Frontend->mywarn("\n$failed errors during reload. You better quit ".
                                     "this session.\n");
         }
-    } elsif ($command =~ /index/) {
+    } elsif ($command =~ /^index$/i) {
       CPAN::Index->force_reload;
     } else {
       $CPAN::Frontend->myprint(qq{cpan     re-evals the CPAN.pm file
@@ -3216,7 +3241,7 @@ sub hosthardest {
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
     my $ftpbin = $CPAN::Config->{ftp};
-    unless (length $ftpbin && MM->maybe_command($ftpbin)) {
+    unless ($ftpbin && length $ftpbin && MM->maybe_command($ftpbin)) {
         $CPAN::Frontend->myprint("No external ftp command available\n\n");
         return;
     }
@@ -3692,8 +3717,8 @@ sub reload {
 sub reload_x {
     my($cl,$wanted,$localname,$force) = @_;
     $force |= 2; # means we're dealing with an index here
-    CPAN::HandleConfig->load; # we should guarantee loading wherever we rely
-                        # on Config XXX
+    CPAN::HandleConfig->load; # we should guarantee loading wherever
+                              # we rely on Config XXX
     $localname ||= $wanted;
     my $abs_wanted = File::Spec->catfile($CPAN::Config->{'keep_source_where'},
 					 $localname);
@@ -4072,6 +4097,7 @@ sub ro {
     exists $self->{RO} and return $self->{RO};
 }
 
+#-> sub CPAN::InfoObj::cpan_userid
 sub cpan_userid {
     my $self = shift;
     my $ro = $self->ro or return "N/A"; # N/A for bundles found locally
@@ -4195,7 +4221,7 @@ sub as_string {
         next unless defined $ro->{$_};
         push @m, sprintf "    %-12s %s%s\n", $_, $ro->{$_}, $extra;
     }
-    for (sort keys %$self) {
+  KEY: for (sort keys %$self) {
 	next if m/^(ID|RO)$/;
 	if (ref($self->{$_}) eq "ARRAY") {
 	  push @m, sprintf "    %-12s %s\n", $_, "@{$self->{$_}}";
@@ -4485,6 +4511,7 @@ sub fast_yaml {
     }
 }
 
+#-> sub CPAN::Distribution::pretty_id
 sub pretty_id {
     my $self = shift;
     my $id = $self->id;
@@ -4675,8 +4702,6 @@ EOF
 	$self->unzip_me($ct);
     } else {
         $self->{was_uncompressed}++ unless $ct->gtest();
-        $self->debug("calling pm2dir for local_file[$local_file]")
-	  if $CPAN::DEBUG;
 	$local_file = $self->handle_singlefile($local_file);
 #    } else {
 #	$self->{archived} = "NO";
@@ -4933,7 +4958,7 @@ WriteMakefile(
     return $self;
 }
 
-# CPAN::Distribution::untar_me ;
+#-> CPAN::Distribution::untar_me ;
 sub untar_me {
     my($self,$ct) = @_;
     $self->{archived} = "tar";
@@ -4959,6 +4984,8 @@ sub unzip_me {
 sub handle_singlefile {
     my($self,$local_file) = @_;
 
+    $self->debug("local_file[$local_file]")
+        if $CPAN::DEBUG;
     if ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/ ){
 	$self->{archived} = "pm";
     } else {
@@ -5058,7 +5085,7 @@ sub cvs_import {
     }
     my $cvs_log = qq{"imported $package $version sources"};
     $version =~ s/\./_/g;
-    # XXX cvs
+    # XXX cvs: undocumented and unclear how it was meant to work
     my @cmd = ('cvs', '-d', $cvs_root, 'import', '-m', $cvs_log,
 	       "$cvs_dir", $userid, "v$version");
 
@@ -5338,6 +5365,7 @@ sub force {
   writemakefile modulebuild make_test
  )) {
     delete $self->{$att};
+    CPAN->debug(sprintf "att[%s]", $att) if $CPAN::DEBUG;
   }
   if ($method && $method =~ /make|test|install/) {
     $self->{"force_update"}++; # name should probably have been force_install
@@ -5855,16 +5883,44 @@ sub prereq_pm {
             }
         } elsif (-f "Build") {
             if ($CPAN::META->has_inst("Module::Build")) {
-                my $requires  = Module::Build->current->requires();
-                my $brequires = Module::Build->current->build_requires();
-                $req = { %$requires, %$brequires };
+                my $breq;
+                eval {
+                    $req  = Module::Build->current->requires();
+                    $breq = Module::Build->current->build_requires();
+                };
+                # this failed for example for HTML::Mason and for
+                # Error.pm because they are subclassing Module::Build
+                # in their Build.PL in such a way that Module::Build
+                # cannot read the _build directory. We DO need a dump
+                # command for that.
+                if ($@) {
+                    $CPAN::Frontend
+                        ->mywarn(
+                                 sprintf("Warning: while trying to determine ".
+                                         "prerequisites for %s with the help of ".
+                                         "Module::Build the following error ".
+                                         "occurred: '%s'\n\nFalling back to META.yml ".
+                                         "for prerequisites\n",
+                                         $self->id,
+                                         $@
+                                        ));
+                    my $build_dir = $self->{build_dir};
+                    my $yaml = File::Spec->catfile($build_dir,"META.yml");
+                    if ($yaml = CPAN->_yaml_loadfile($yaml)->[0]) {
+                        $req =  $yaml->{requires} || {};
+                        $breq =  $yaml->{build_requires} || {};
+                    }
+                }
+                while (my($k,$v) = each %$breq) {
+                    $req->{$k} ||= $v;
+                }
             }
         }
     }
     if (-f "Build.PL" && ! -f "Makefile.PL" && ! exists $req->{"Module::Build"}) {
         $CPAN::Frontend->mywarn("  Warning: CPAN.pm discovered Module::Build as ".
                                 "undeclared prerequisite.\n".
-                                "  Adding it now as a prerequisite.\n"
+                                "  Adding it now as such.\n"
                                );
         $CPAN::Frontend->mysleep(5);
         $req->{"Module::Build"} = 0;
@@ -5925,6 +5981,18 @@ sub test {
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_test($self);
         return;
+    }
+
+    if ($self->{modulebuild}) {
+        my $th = CPAN::Shell->expand("Module","Test::Harness");
+        CPAN->has_inst("Test::Harness") unless $th;
+        my $v = $th ? CPAN::Shell->expand("Module","Test::Harness")->inst_version : $Test::Harness::VERSION;
+        if (CPAN::Version->vlt($v,2.62)) {
+            $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
+  '$v', you need at least '2.62'. Please upgrade your Test::Harness.\n});
+            $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
+            return;
+        }
     }
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -6273,9 +6341,9 @@ saved output to %s\n},
             my $fh_pager = FileHandle->new;
             local($SIG{PIPE}) = "IGNORE";
             my $pager = $CPAN::Config->{'pager'} || "cat";
-            $fh_pager->open("|pager")
+            $fh_pager->open("|$pager")
                 or $CPAN::Frontend->mydie(qq{
-Could not open pager $pager\: $!});
+Could not open pager '$pager': $!});
             $CPAN::Frontend->myprint(qq{
 Displaying URL
   $url
@@ -6361,7 +6429,6 @@ sub _build_command {
     if ($^O eq "MSWin32") { # special code needed at least up to
                             # Module::Build 0.2611 and 0.2706; a fix
                             # in M:B has been promised 2006-01-30
-                            
         my($perl) = $self->perl or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
         return "$perl ./Build";
     }
@@ -7229,23 +7296,30 @@ Batch mode:
 
   use CPAN;
 
-  # modules:
+  # Modules:
 
-  $mod = "Acme::Meta";
-  install $mod;
-  CPAN::Shell->install($mod);                    # same thing
-  CPAN::Shell->expandany($mod)->install;         # same thing
-  CPAN::Shell->expand("Module",$mod)->install;   # same thing
-  CPAN::Shell->expand("Module",$mod)
-    ->distribution->install;                     # same thing
+  cpan> install Acme::Meta                       # in the shell
 
-  # distributions:
+  CPAN::Shell->install("Acme::Meta");            # in perl
 
-  $distro = "NWCLARK/Acme-Meta-0.01.tar.gz";
-  install $distro;                                # same thing
-  CPAN::Shell->install($distro);                  # same thing
-  CPAN::Shell->expandany($distro)->install;       # same thing
-  CPAN::Shell->expand("Distribution",$distro)->install; # same thing
+  # Distributions:
+
+  cpan> install NWCLARK/Acme-Meta-0.02.tar.gz    # in the shell
+
+  CPAN::Shell->
+    install("NWCLARK/Acme-Meta-0.02.tar.gz");    # in perl
+
+  # module objects:
+
+  $mo = CPAN::Shell->expandany($mod);
+  $mo = CPAN::Shell->expand("Module",$mod);      # same thing
+
+  # distribution objects:
+
+  $do = CPAN::Shell->expand("Module",$mod)->distribution;
+  $do = CPAN::Shell->expandany($distro);         # same thing
+  $do = CPAN::Shell->expand("Distribution",
+                            $distro);            # same thing
 
 =head1 STATUS
 
@@ -7574,8 +7648,7 @@ functionalities that are available in the shell.
 
     # install my favorite programs if necessary:
     for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
-        my $obj = CPAN::Shell->expand('Module',$mod);
-        $obj->install;
+        CPAN::Shell->install($mod);
     }
 
     # list all modules on my disk that have no VERSION number
@@ -7776,6 +7849,10 @@ yet been run, it will be run first. A C<make test> will be issued in
 any case and if this fails, the install will be canceled. The
 cancellation can be avoided by letting C<force> run the C<install> for
 you.
+
+This install method has only the power to install the distribution if
+there are no dependencies in the way. To install an object and all of
+its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
 

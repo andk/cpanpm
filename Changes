@@ -1,3 +1,14 @@
+2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.8802
+
+	* backported from the 1.88_56 developer release the code that protects
+	the user from using a broken version of Test::Harness.
+
+	* backported a bugfix from the 1.88_56 developer release that deals with
+	modules that subclass Module::Build in the Build.PL like Error.pm and
+	HTML::Mason
+
 2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.8801
