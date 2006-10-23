@@ -1,7 +1,36 @@
+2006-10-23  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* make a list of cpanconfig variables that can be changed via
+	distroprefs. Extend the list and document it, so people can look it up
+	and do not have to read the source and can file bug reports against it.
+
+	I fear for example that the preferred builder is not configurable(?)
+
+	* Write an executive summary of the state of affairs wrt. distroprefs so
+	we can decide about future directions. Update the README file to better
+	outline the executive summary. Update the examples to better reflect our
+	powers and weaknesses.
+
+	What we have:
+
+	- Give the user a simple system to store per-distro preferences related
+	to environment variables, commandline args and stdin for the four
+	commands of our traditional mantra: perl Makefile.PL, make, make test,
+	make install (and symmetrically for M:B modules)
+
+	- Give the user the option to patch distros with arbitrary patches from
+	local disk or CPAN
+
+	What we aim at:
+
+	- Give the users a simple means to exchange their preferences to reduce
+	the overhead of maintaining them. As it currently stands, those YAML
+	files devaluate quickly as new distros arrive.
+
 2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release a 1.8802 with the HTML::Mason workaround? Because it may take
-	a while until 1.89 is ready to go.
+	a while until 1.89 is ready to go. DONE in rev. 1120
 
 	* write a patch for Test::Reporter so you can choose the mail sending module?
 
