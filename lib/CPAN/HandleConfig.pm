@@ -150,10 +150,13 @@ sub edit {
             }
             return $changed;
         } elsif ($o =~ /_hash$/) {
-            $CPAN::CONFIG_DIRTY = 1;
-            @args = () if @args==1 && $args[0] eq "";
-            push @args, "" if @args % 2;
+            if (@args==1 && $args[0] eq ""){
+                @args = ();
+            } elsif (@args % 2) {
+                push @args, "";
+            }
             $CPAN::Config->{$o} = { @args };
+            $CPAN::CONFIG_DIRTY = 1;
         } else {
             if (defined $args[0]){
                 $CPAN::CONFIG_DIRTY = 1;

@@ -1,3 +1,10 @@
+2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release a 1.8802 with the HTML::Mason workaround? Because it may take
+	a while until 1.89 is ready to go.
+
+	* write a patch for Test::Reporter so you can choose the mail sending module?
+
 2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Randy needs an API to find out where the index files are located.
@@ -27,13 +34,13 @@
 	* Tina suggests: if the user has changed some config variable via 'o
 	conf' mechanism and has not yet saved the new config via 'o conf commit'
 	and is leaving the shell without saving, we could trigger a dialog.
-	#22396 talks about this
+	#22396 talks about this.
 
 	After some thinking: maybe I prefer just a loud warning instead of a
 	hanging terminal. Hmmm.
 
 	This is a critical/showstopper thing because people perceive it as a
-	bug.
+	bug. rev. 1114 FIXES
 
 	* Todo: find out the remaining relevant pieces of Ilya's patch:
 

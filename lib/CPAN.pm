@@ -1903,7 +1903,6 @@ sub _u_r_common {
 	}
         my $color_on = "";
         my $color_off = "";
-        # $GLOBAL_AUTOLOAD_RECURSION = 12;
         if (
             $COLOR_REGISTERED
             &&
