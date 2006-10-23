@@ -5,9 +5,12 @@
 	* backported from the 1.88_56 developer release the code that protects
 	the user from using a broken version of Test::Harness.
 
-	* backported a bugfix from the 1.88_56 developer release that deals with
+	* backported from the 1.88_56 developer release a bugfix that deals with
 	modules that subclass Module::Build in the Build.PL like Error.pm and
 	HTML::Mason
+
+	* backported from the 1.88_56 developer release another few very trivial
+	zero risk things
 
 2006-09-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
