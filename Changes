@@ -1,3 +1,20 @@
+2006-10-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_57
+
+	* address #22396: add a diagnostic warning at cleanup time when people
+	have changed their config but forgot to safe it (Tina Mueller, Alberto
+	Manuel Brandao Simoes)
+
+	* workaround for a weird interaction with a dated version.pm in
+	a probably dated Module::Build and UNIVERSAL::VERSION.
+
+	* document the config variables that are overridable via distroprefs
+
+	* add prefer_installer to the list of overridable config variables
+
+	* new and updated prefs files for DBI, Coro, etc.
+
 2006-10-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_56
