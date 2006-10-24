@@ -591,26 +591,28 @@ sub cpl {
 }
 
 
-package
-    CPAN::Config; ####::###### #hide from indexer
-# note: J. Nick Koston wrote me that they are using
-# CPAN::Config->commit although undocumented. I suggested
-# CPAN::Shell->o("conf","commit") even when ugly it is at least
-# documented
+{
+    package
+        CPAN::Config; ####::###### #hide from indexer
+    # note: J. Nick Koston wrote me that they are using
+    # CPAN::Config->commit although undocumented. I suggested
+    # CPAN::Shell->o("conf","commit") even when ugly it is at least
+    # documented
 
-# that's why I added the CPAN::Config class with autoload and
-# deprecated warning
+    # that's why I added the CPAN::Config class with autoload and
+    # deprecated warning
 
-use strict;
-use vars qw($AUTOLOAD $VERSION);
-$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
+    use strict;
+    use vars qw($AUTOLOAD $VERSION);
+    $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
 
-# formerly CPAN::HandleConfig was known as CPAN::Config
-sub AUTOLOAD {
-  my($l) = $AUTOLOAD;
-  $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig\n");
-  $l =~ s/.*:://;
-  CPAN::HandleConfig->$l(@_);
+    # formerly CPAN::HandleConfig was known as CPAN::Config
+    sub AUTOLOAD {
+        my($l) = $AUTOLOAD;
+        $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig\n");
+        $l =~ s/.*:://;
+        CPAN::HandleConfig->$l(@_);
+    }
 }
 
 1;
