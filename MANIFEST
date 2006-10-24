@@ -11,6 +11,7 @@ distroprefs/BTROTT.URI-Fetch-0.01.yml
 distroprefs/BTROTT.XML-Feed.01.yml
 distroprefs/BYRNE.SOAP-Lite.01.yml
 distroprefs/CHAMAS.Crypt-SSLeay.01.yml
+distroprefs/DBD-mysql.yml
 distroprefs/DBROBINS.Net-SSH-Perl.01.yml
 distroprefs/EESTABROO.IMAP-Admin.01.yml
 distroprefs/FDALY.Test-Deep.01.yml
@@ -28,6 +29,7 @@ distroprefs/KWILLIAMS.AI-Categorizer.01.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
+distroprefs/MLEHMANN.Coro.yml
 distroprefs/Module-Install.yml
 distroprefs/NIKIP.Authen-PAM.01.yml
 distroprefs/OLAF.Net-DNS.01.yml
@@ -41,6 +43,7 @@ distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.01.yml
 distroprefs/Test-CTDPBF.yml
+distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/XML-Twig.yml
 distroprefs/ZEV.Test-Dependencies.01.yml
