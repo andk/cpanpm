@@ -4934,9 +4934,8 @@ EOF
     my $prefer_installer = "eumm"; # eumm|mb
     if (-f File::Spec->catfile($packagedir,"Build.PL")) {
         if ($mpl_exists) { # they *can* choose
-            if ($CPAN::META->has_inst("Module::Build")) {
-                $prefer_installer = $CPAN::Config->{prefer_installer};
-            }
+            $prefer_installer = $self->prefs->{prefer_installer}
+                || $CPAN::Config->{prefer_installer};
         } else {
             $prefer_installer = "mb";
         }
