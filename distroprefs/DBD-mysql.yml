@@ -1,0 +1,11 @@
+--- 
+match:
+  distribution: "^CAPTTOFU/DBD-mysql-3.\d+.tar.gz$"
+pl: 
+  args: 
+    - --testdb=test
+    - --testhost=localhost
+    - --testport=3306
+    - --testuser=root
+    - --testpassword=geheim
+    - --testsocket=/var/run/mysqld/mysqld.sock
