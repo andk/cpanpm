@@ -4934,8 +4934,8 @@ EOF
     my $prefer_installer = "eumm"; # eumm|mb
     if (-f File::Spec->catfile($packagedir,"Build.PL")) {
         if ($mpl_exists) { # they *can* choose
-            $prefer_installer = $self->prefs->{prefer_installer}
-                || $CPAN::Config->{prefer_installer};
+            $prefer_installer = CPAN::HandleConfig->prefs_lookup($self,
+                                                                 q{prefer_installer});
         } else {
             $prefer_installer = "mb";
         }
@@ -6127,8 +6127,8 @@ sub _make_command {
         return
             CPAN::HandleConfig
                 ->safe_quote(
-                             $self->prefs->{cpanconfig}{make}
-                             || $CPAN::Config->{make}
+                             CPAN::HandleConfig->prefs_lookup($self,
+                                                              q{make})
                              || $Config::Config{make}
                              || 'make'
                             );
@@ -6137,7 +6137,7 @@ sub _make_command {
         Carp::confess("CPAN::_make_command() used as function. Don't Do That.");
         return
           safe_quote(undef,
-                     $self->prefs->{cpanconfig}{make}
+                     CPAN::HandleConfig->prefs_lookup($self,q{make})
                      || $CPAN::Config->{make}
                      || $Config::Config{make}
                      || 'make');
@@ -6558,8 +6558,8 @@ sub test {
                                     "testing without\n");
         }
     }
-    my $test_report = $self->prefs->{cpanconfig}{test_report} ||
-        $CPAN::Config->{test_report};
+    my $test_report = CPAN::HandleConfig->prefs_lookup($self,
+                                                       q{test_report});
     my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
     my $want_report = $test_report && $can_report;
     my $ready_to_report = $want_report;
@@ -6792,9 +6792,9 @@ sub install {
                          );
     } else {
         my($make_install_make_command) =
-            $self->prefs->{cpanconfig}{make_install_make_command}
-                || $CPAN::Config->{make_install_make_command}
-                    || $self->_make_command();
+            CPAN::HandleConfig->prefs_lookup($self,
+                                             q{make_install_make_command})
+                  || $self->_make_command();
         $system = sprintf("%s install %s",
                           $make_install_make_command,
                           $CPAN::Config->{make_install_arg},
@@ -6802,8 +6802,8 @@ sub install {
     }
 
     my($stderr) = $^O eq "MSWin32" ? "" : " 2>&1 ";
-    my $brip = $self->prefs->{cpanconfig}{build_requires_install_policy};
-    $brip ||= $CPAN::Config->{build_requires_install_policy};
+    my $brip = CPAN::HandleConfig->prefs_lookup($self,
+                                                q{build_requires_install_policy});
     $brip ||="ask/yes";
     my $id = $self->id;
     my $reqtype = $self->{reqtype} ||= "c"; # in doubt it was a command
@@ -6845,15 +6845,15 @@ sub install {
         $self->{install} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
         my $mimc =
-            $self->prefs->{cpanconfig}{make_install_make_command} ||
-                $CPAN::Config->{make_install_make_command};
+            CPAN::HandleConfig->prefs_lookup($self,
+                                             q{make_install_make_command});
         if (
             $makeout =~ /permission/s
             && $> > 0
             && (
                 ! $mimc
-                || $mimc eq ($self->prefs->{cpanconfig}{make}
-                             || $CPAN::Config->{make})
+                || $mimc eq (CPAN::HandleConfig->prefs_lookup($self,
+                                                              q{make}))
                )
            ) {
             $CPAN::Frontend->myprint(

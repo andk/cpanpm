@@ -1,3 +1,13 @@
+2006-10-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Coro 2.0 works with bleadperl Yay! YAML for Coro with default answers
+	written.
+
+	* bug with notest pragma: it seems to remain in the distro object. I did
+	a report DAGOLDEN/CPAN-Reporter-0.28_51.tar.gz, then I did a "notest
+	install" on it. Then I reloaded and tried a "report" on it again and
+	CPAN refused to run the test because of the notest pragma.
+
 2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* The ->VERSION bug was back for a short while. It happens when
@@ -8,17 +18,27 @@
 	and we now have 0.55, so I guess, I can remove the version test.
 
 	As soon as I have means to not call into Module::Build, this bug will
-	diappear for sure, so no need to hunt it down from here.
+	diappear for sure, so no need to hunt it down from here. FINISHED in
+	rev. 1123
 
-	* SMPETERS fixed DBI-1.52. Thank you!
+	So recall: one can turn off sig_check, then install version, then leave
+	and enter CPAN.pm and the bug should disappear. Or we release 1.88_57
+	now.
+
+	* SMPETERS fixed DBI-1.52. Thank you! YAML for DBI with patch address
+	written
 
 2006-10-23  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* make a list of cpanconfig variables that can be changed via
-	distroprefs. Extend the list and document it, so people can look it up
-	and do not have to read the source and can file bug reports against it.
+	distroprefs. Extend the list and document it, so that people can look it
+	up and do not have to read the source and can file bug reports against
+	it.
 
 	I fear for example that the preferred builder is not configurable(?)
+	latter half FIXED in rev. 1124
+
+	First half done with rev. 1125
 
 	* Write an executive summary of the state of affairs wrt. distroprefs so
 	we can decide about future directions. Update the README file to better

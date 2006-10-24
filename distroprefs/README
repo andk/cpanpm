@@ -21,8 +21,9 @@ CPAN.pm can use these YAML files to either pass additional arguments
 to one of the four commands, set environment variables or instantiate
 an Expect object that reads from the console, waits for some regular
 expression and enters some answer. Additionally, the YAML files can
-temporarily override the CPAN.pm configuration variables (at the time
-of this writing not all of them).
+temporarily override assorted CPAN.pm configuration variables (at the
+time of this writing only: build_requires_install_policy, make,
+make_install_make_command, prefer_installer, test_report).
 
 Many of the files that come with the CPAN.pm distribution contain more
 fields than necessary so they can easier be used as blueprints. In

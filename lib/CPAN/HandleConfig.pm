@@ -79,6 +79,16 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "wget",
      "yaml_module",
     );
+
+my %prefssupport = map { $_ => 1 }
+    (
+     "build_requires_install_policy",
+     "make",
+     "make_install_make_command",
+     "prefer_installer",
+     "test_report",
+    );
+
 if ($^O eq "MSWin32") {
     for my $k (qw(
                   mbuild_install_build_command
@@ -588,6 +598,16 @@ sub cpl {
             keys %$CPAN::Config,
                 keys %keys;
     return grep /^\Q$word\E/, @o_conf;
+}
+
+sub prefs_lookup {
+    my($self,$distro,$what) = @_;
+    if ($prefssupport{$what}) {
+        return $distro->prefs->{cpanconfig}{$what} || $CPAN::Config->{$what};
+    } else {
+        warn "Warning: $what no yet officially supported for distroprefs, doing a normal lookup";
+        return $CPAN::Config->{$what};
+    }
 }
 
 
