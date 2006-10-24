@@ -259,7 +259,10 @@ ReadLine support %s
 	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
-	    warn $@ if $@;
+	    if ($@){
+                require Carp;
+                Carp::cluck($@);
+            }
             if ($command =~ /^(make|test|install|force|notest|clean|report|upgrade)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
@@ -304,15 +307,12 @@ ReadLine support %s
               }
           }
       }
-      if ($CPAN::DEBUG && $CPAN::DEBUG & $CPAN::DEBUG{CPAN}) {
-          # debugging 'incommandcolor': should always be off at the end of a command
-          # (incommandcolor is used to detect recursive dependencies)
-          for my $class (qw(Module Distribution)) {
-              for my $dm (keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
-                  next unless $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
-                  CPAN->debug("BUG: $class '$dm' was in command state, resetting");
-                  delete $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
-              }
+      for my $class (qw(Module Distribution)) {
+          # again unsafe meta access?
+          for my $dm (keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
+              next unless $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
+              CPAN->debug("BUG: $class '$dm' was in command state, resetting");
+              delete $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
           }
       }
       if ($GOTOSHELL) {
@@ -354,12 +354,10 @@ Trying to chdir to "$cwd->[1]" instead.
 sub _yaml_loadfile {
     my($self,$local_file) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
-    CPAN->debug("local_file[$local_file]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
         my @yaml;
         eval { @yaml = $code->($local_file); };
-        CPAN->debug(sprintf "parts[%d]", scalar @yaml) if $CPAN::DEBUG;
         if ($@) {
             $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
                                    "  $local_file\n".
@@ -875,7 +873,7 @@ sub has_usable {
                            ],
                'File::HomeDir' => [
                                    sub {require File::HomeDir;
-                                        unless (File::HomeDir->VERSION >= 0.52){
+                                        unless (File::HomeDir::->VERSION >= 0.52){
                                             for ("Will not use File::HomeDir, need 0.52\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
@@ -1052,11 +1050,13 @@ sub savehist {
     close $fh;
 }
 
+#-> sub CPAN::is_tested
 sub is_tested {
     my($self,$what) = @_;
     $self->{is_tested}{$what} = 1;
 }
 
+#-> sub CPAN::is_installed
 # unsets the is_tested flag: as soon as the thing is installed, it is
 # not needed in set_perl5lib anymore
 sub is_installed {
@@ -1064,8 +1064,13 @@ sub is_installed {
     delete $self->{is_tested}{$what};
 }
 
+#-> sub CPAN::set_perl5lib
 sub set_perl5lib {
-    my($self) = @_;
+    my($self,$for) = @_;
+    unless ($for) {
+        (undef,undef,undef,$for) = caller(1);
+        $for =~ s/.*://;
+    }
     $self->{is_tested} ||= {};
     return unless %{$self->{is_tested}};
     my $env = $ENV{PERL5LIB};
@@ -1076,11 +1081,15 @@ sub set_perl5lib {
     #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
     my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort keys %{$self->{is_tested}};
     if (@dirs < 15) {
-        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
+        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for $for\n");
     } else {
         my @d = map {s/^\Q$CPAN::Config->{'build_dir'}/%BUILDDIR%/; $_ }
             sort keys %{$self->{is_tested}};
-        $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of @d to PERL5LIB; %BUILDDIR%=$CPAN::Config->{'build_dir'}.\n");
+        $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of ".
+                                 "@d to PERL5LIB; ".
+                                 "%BUILDDIR%=$CPAN::Config->{'build_dir'} ".
+                                 "for $for\n"
+                                );
     }
 
     $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
@@ -4785,7 +4794,8 @@ sub get {
         }
         $CPAN::Frontend->mydie("Giving up on '$local_wanted'\n$note");
     }
-    $self->debug("local_file[$local_file]") if $CPAN::DEBUG;
+
+    $self->debug("local_wanted[$local_wanted]local_file[$local_file]") if $CPAN::DEBUG;
     $self->{localfile} = $local_file;
     return if $CPAN::Signal;
 
@@ -4828,7 +4838,6 @@ EOF
     #
     # Unpack the goods
     #
-    $self->debug("local_file[$local_file]") if $CPAN::DEBUG;
     my $ct = CPAN::Tarzip->new($local_file);
     if ($local_file =~ /(\.tar\.(bz2|gz|Z)|\.tgz)(?!\n)\Z/i){
         $self->{was_uncompressed}++ unless $ct->gtest();
@@ -5208,8 +5217,6 @@ sub unzip_me {
 sub handle_singlefile {
     my($self,$local_file) = @_;
 
-    $self->debug("local_file[$local_file]")
-        if $CPAN::DEBUG;
     if ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/ ){
 	$self->{archived} = "pm";
     } else {
@@ -5447,7 +5454,7 @@ sub CHECKSUM_check_file {
     $sloppy ||= 0;
     $self->debug("chk_file[$chk_file]sloppy[$sloppy]") if $CPAN::DEBUG;
     if ($CPAN::Config->{check_sigs}) {
-        if ($CPAN::META->has_inst("Module::Signature") and Module::Signature->VERSION >= 0.26) {
+        if ($CPAN::META->has_inst("Module::Signature")) {
             $self->debug("Module::Signature is installed, verifying");
             $self->SIG_check_file($chk_file);
         } else {
@@ -6006,7 +6013,7 @@ sub _find_prefs {
             if (-f $abs) {
                 CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @yaml = @{CPAN->_yaml_loadfile($abs)};
-                $DB::single=1;
+                # $DB::single=1;
               ELEMENT: for my $y (0..$#yaml) {
                     my $yaml = $yaml[$y];
                     my $match = $yaml->{match};
@@ -7681,7 +7688,7 @@ sub manpage_headline {
 # Note: also inherited by CPAN::Bundle
 sub cpan_file {
     my $self = shift;
-    CPAN->debug(sprintf "id[%s]", $self->id) if $CPAN::DEBUG;
+    # CPAN->debug(sprintf "id[%s]", $self->id) if $CPAN::DEBUG;
     unless ($self->ro) {
 	CPAN::Index->reload;
     }

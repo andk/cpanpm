@@ -1,3 +1,17 @@
+2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* The ->VERSION bug was back for a short while. It happens when
+	version.pm is not installed and Module::Build loads its own version.pm
+	from <data>. There it finds 0.661 and this does something that isn't
+	fool proof, very hard to diagnose and to reproduce. Easy workaround: do
+	not check for Module::Signature->VERSION anymore. The test was on 0.26
+	and we now have 0.55, so I guess, I can remove the version test.
+
+	As soon as I have means to not call into Module::Build, this bug will
+	diappear for sure, so no need to hunt it down from here.
+
+	* SMPETERS fixed DBI-1.52. Thank you!
+
 2006-10-23  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* make a list of cpanconfig variables that can be changed via
