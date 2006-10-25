@@ -214,7 +214,7 @@ if ($RUN_EXPECT) {
 
 sub splitchunk ($) {
     my $ch = shift;
-    my @s = split /(^\#[A-Z]:)/m, $ch;
+    my @s = split /(^\#[A-Za-z]:)/m, $ch;
     shift @s; # leading empty string
     for (my $i = 0; $i < @s; $i+=2) {
         $s[$i] =~ s/\#//;
@@ -233,7 +233,8 @@ my @PAIRS;
 TUPL: for my $i (0..$#prgs){
     my $chunk = $prgs[$i];
     my %h = splitchunk $chunk;
-    my($status,$prog,$expected,$req,$test_timeout,$comment) = @h{qw(S P E R T C N)};
+    my($status,$prog,$expected,$notexpected,
+       $req,$test_timeout,$comment) = @h{qw(S P E e R T C N)};
     if ($skip_the_rest) {
         ok(1,"skipping");
         next TUPL;
@@ -253,7 +254,7 @@ TUPL: for my $i (0..$#prgs){
         }
     }
 
-    unless (defined $expected or defined $prog) {
+    unless (defined $expected or defined $notexpected or defined $prog) {
         ok(1,"empty test %h=(".join(" ",%h).")");
         next TUPL;
     }
@@ -267,7 +268,7 @@ TUPL: for my $i (0..$#prgs){
             }
         }
     }
-    for ($prog,$expected) {
+    for ($prog,$expected,$notexpected) {
         $_ = "" unless defined $_;
         s/^\s+//;
         s/\s+\z//;
@@ -292,6 +293,9 @@ TUPL: for my $i (0..$#prgs){
     $expected .= "(?s:.*?$prompt_re)" unless $expected =~ /\(/;
     if ($RUN_EXPECT) {
         mydiag "EXPECT: $expected";
+        if ($notexpected) {
+            mydiag "NOTEXPECT: $notexpected";
+        }
         $expo->expect(
                       $test_timeout || $timeout,
                       [ eof => sub {
@@ -316,12 +320,19 @@ expected[$expected]\ngot[$got]\n\n";
                      );
         my $got = $expo->clear_accum;
         mydiag "GOT: $got\n";
+        my $ok = 1;
+        if ($notexpected) {
+            if ($got =~ /$notexpected/) {
+                diag sprintf "found offending [[[%s]]] in [[[%s]]]", $notexpected, $got;
+                $ok = 0;
+            }
+        }
         $prog =~ s/^(\d)/$1/;
         $comment ||= "";
-        ok(1, test_name($prog,$comment));
+        ok($ok, test_name($prog,$comment));
     } else {
         $expected = "" if $prog =~ /\t/;
-        push @PAIRS, [$prog,$expected,$comment];
+        push @PAIRS, [$prog,$expected,$notexpected,$comment];
     }
 }
 if ($RUN_EXPECT) {
@@ -330,21 +341,33 @@ if ($RUN_EXPECT) {
     close SYSTEM or die "Could not close SYSTEM filehandle: $!";
     open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
     local $/;
-    my $got = <SYSTEM>;
+    my $biggot = <SYSTEM>;
     close SYSTEM;
     my $pair;
     my $pos = 0;
     for $pair (@PAIRS) {
-        my($prog,$expected,$comment) = @$pair;
+        my($prog,$expected,$notexpected,$comment) = @$pair;
         mydiag "NEXT: $prog";
         mydiag "EXPECT: $expected";
-        if ($got =~ /(\G.*?$expected)/sgc) {
-            mydiag "GOT: $1\n";
-            $pos = pos $got;
+        if ($notexpected) {
+            mydiag "NOTEXPECT: $notexpected";
+        }
+        my $ok = 1;
+        if ($biggot =~ /(\G.*?$expected)/sgc) {
+            my $got = $1;
+            mydiag "GOT: $got\n";
+            $pos = pos $biggot;
+            if ($notexpected) {
+                if ($got =~ /$notexpected/) {
+                    mydiag sprintf "found offending [[[%s]]] in [[[%s]]]", $notexpected, $got;
+                    $ok = 0;
+                }
+            }
         } else {
             mydiag "FAILED at pos[$pos] in test.out";
+            $ok = 0;
         }
-        ok(1, test_name($prog,$comment));
+        ok($ok, test_name($prog,$comment));
     }
 }
 
@@ -888,6 +911,20 @@ __END__
 #E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
 #R:Module::Build
 #C:second try
+########
+#P:force get ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
+#E:Removing previously used
+#R:Module::Build
+########
+#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
+#E:\}.+?CPAN::Distributio.
+########
+#P:notest test ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
+#E:Running Build[\s\S]*?Creating new[\s\S]*?Build\s+-- OK[\s\S]+?Skipping test
+#R:Module::Build
+########
+#P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
+#e:'notest' => 1,
 ########
 #P:dump Bundle::CpanTestDummies
 #E:\}

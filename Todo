@@ -1,3 +1,8 @@
+2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Since DBI is fixed we have new intersting breakages: Class::DBI,
+	RPC::PlServer,
+
 2006-10-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Coro 2.0 works with bleadperl Yay! YAML for Coro with default answers
@@ -7,6 +12,8 @@
 	a report DAGOLDEN/CPAN-Reporter-0.28_51.tar.gz, then I did a "notest
 	install" on it. Then I reloaded and tried a "report" on it again and
 	CPAN refused to run the test because of the notest pragma.
+
+	Fixed in rev. 1132 but what is a good test for it?
 
 2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
