@@ -1,5 +1,10 @@
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* The first thing that I encounter when I start testing instead of
+	installing things is that test doesn't stop when the installed version
+	is higher than or equal to the CPAN version. Ilya invented for that
+	test_uptodate
+
 	* Todo: if the user does not want to install a module (say a
 	build_requires), give him options to use the already tested module even
 	after he has left the shell.
@@ -18,13 +23,15 @@ Package 'CPAN' already declared with version '1.88_57'
 ignoring new version ''.
 Looks good
 
-	again? I think Module::Build did take the culprit...
+	again?
+	http://sourceforge.net/mailarchive/forum.php?forum=module-build-general
+	is down at the moment, but the subject line of the thread was "Bug in
+	prereq_report?" and it's some version.pm problem according to John
+	Peacock.
 
 	* just a memo what I usually install:
 
-	    o debug CPAN Distribution
-	    force install Expect
-	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class
+	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 

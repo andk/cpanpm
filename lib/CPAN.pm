@@ -5944,7 +5944,9 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $env->{$e};
         }
     }
-    if (system($system) == 0) {
+    my $system_ok = system($system) == 0;
+    $self->introduce_myself;
+    if ( $system_ok ) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
 	 $self->{make} = CPAN::Distrostatus->new("YES");
     } else {
@@ -6527,13 +6529,6 @@ sub test {
         }
     }
 
-    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
-                           ? $ENV{PERL5LIB}
-                           : ($ENV{PERLLIB} || "");
-
-    $CPAN::META->set_perl5lib;
-    local $ENV{MAKEFLAGS}; # protect us from outer make calls
-
     my $system;
     if ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
@@ -6603,6 +6598,7 @@ sub test {
     } else {
         $tests_ok = system($system) == 0;
     }
+    $self->introduce_myself;
     if ( $tests_ok ) {
         {
             my @prereq;
@@ -6680,7 +6676,9 @@ sub clean {
     } else {
         $system  = join " ", $self->_make_command(), "clean";
     }
-    if (system($system) == 0) {
+    my $system_ok = system($system) == 0;
+    $self->introduce_myself;
+    if ( $system_ok ) {
       $CPAN::Frontend->myprint("  $system -- OK\n");
 
       # $self->force;
@@ -6842,7 +6840,9 @@ sub install {
 	$makeout .= $_;
     }
     $pipe->close;
-    if ($?==0) {
+    my $close_ok = $? == 0;
+    $self->introduce_myself;
+    if ( $close_ok ) {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_installed($self->{build_dir});
         return $self->{install} = CPAN::Distrostatus->new("YES");
@@ -6872,6 +6872,11 @@ sub install {
         }
     }
     delete $self->{force_update};
+}
+
+sub introduce_myself {
+    my($self) = @_;
+    $CPAN::Frontend->myprint(sprintf("  %s\n",$self->pretty_id));
 }
 
 #-> sub CPAN::Distribution::dir ;
