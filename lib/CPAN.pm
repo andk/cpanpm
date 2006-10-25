@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_57';
+$CPAN::VERSION = '1.88_58';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1391,9 +1391,9 @@ sub globls {
                                                        # more than one
                                                        # author
         for my $pragma (@$pragmas) {
-            my $meth = "un$pragma";
-            if ($author->can($meth)) {
-                $author->$meth();
+            my $unpragma = "un$pragma";
+            if ($author->can($unpragma)) {
+                $author->$unpragma();
             }
         }
     }
@@ -2544,14 +2544,11 @@ to find objects with matching identifiers.
 	for my $pragma (@pragma) {
 	    if ($pragma
 		&&
-		($] < 5.00303 || $obj->can($pragma))){
-		### compatibility with 5.003
-		$obj->$pragma($meth); # the pragma "force" in
-                                      # "CPAN::Distribution" must know
-                                      # what we are intending
+		$obj->can($pragma)){
+		$obj->$pragma($meth);
 	    }
         }
-        if ($]>=5.00303 && $obj->can('called_for')) {
+        if ($obj->can('called_for')) {
             $obj->called_for($s);
         }
         CPAN->debug(qq{pragma[@pragma]meth[$meth]}.
@@ -2565,6 +2562,12 @@ to find objects with matching identifiers.
         }
 
         $obj->undelay;
+	for my $pragma (@pragma) {
+            my $unpragma = "un$pragma";
+	    if ($obj->can($unpragma)) {
+		$obj->$unpragma();
+	    }
+        }
 	CPAN::Queue->delete_first($s);
     }
     for my $obj (@qcopy) {
@@ -4310,7 +4313,7 @@ sub as_string {
                     for my $y (sort keys %{$v->{$x}}) {
                         push @svalue, "$y=>$v->{$x}{$y}";
                     }
-                    push @value, "$x\:" . join ",", @svalue;
+                    push @value, "$x\:" . join ",", @svalue if @svalue;
                 }
                 $value = join ";", @value;
             } else {
@@ -5617,12 +5620,14 @@ sub force {
   }
 }
 
+#-> sub CPAN::Distribution::notest ;
 sub notest {
   my($self, $method) = @_;
   # warn "XDEBUG: set notest for $self $method";
   $self->{"notest"}++; # name should probably have been force_install
 }
 
+#-> sub CPAN::Distribution::unnotest ;
 sub unnotest {
   my($self) = @_;
   # warn "XDEBUG: deleting notest";
