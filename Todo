@@ -1,7 +1,14 @@
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Since DBI is fixed we have new intersting breakages: Class::DBI,
-	RPC::PlServer,
+	* Since DBI is fixed I see other intersting breakages: Class::DBI,
+	RPC::PlServer, GD.
+
+	GD fails with 5.8.8 and 5.8.3
+
+	Class::DBI fails with 5.8.8
+
+	RPC::PlServer fails with 5.8.8 and 5.8.3 but only if Crypt::DES is
+	installed
 
 2006-10-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
