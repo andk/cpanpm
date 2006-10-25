@@ -1,5 +1,38 @@
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: if the user does not want to install a module (say a
+	build_requires), give him options to use the already tested module even
+	after he has left the shell.
+
+	Ilya seems to say, people do NOT want to install a number of modules
+	because they are not yet sure if they really need them. But they have
+	tested them and have them still lying around in their ~/.cpan/build
+	directory. So we should give them a chance to use them next time they
+	come around with the same perl.
+
+	* Todo: put the distro ID close to the OK or NOT OK line
+
+	* What was the deal with
+
+Package 'CPAN' already declared with version '1.88_57'
+ignoring new version ''.
+Looks good
+
+	again? I think Module::Build did take the culprit...
+
+	* just a memo what I usually install:
+
+	    o debug CPAN Distribution
+	    force install Expect
+	    install YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::GMP Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class
+
+	YAML::Syck after Bundle::CPAN did not turn off interactivity.
+
+	YAML::Syck before Bundle::CPAN worked well.
+
+	CPAN::Reporter before YAML worked well but we want to catch the early
+	YAML interactivity (which in turn can be avoided with YAML::Syck).
+
 	* Since DBI is fixed I see other intersting breakages: Class::DBI,
 	RPC::PlServer, GD.
 
@@ -20,7 +53,7 @@
 	install" on it. Then I reloaded and tried a "report" on it again and
 	CPAN refused to run the test because of the notest pragma.
 
-	Fixed in rev. 1132 but what is a good test for it?
+	FIXED in rev. 1132 but what is a good test for it? test WRITTEN in 1133.
 
 2006-10-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -125,6 +158,9 @@
 	that we have colors now, but fact is that you have to scroll back and if
 	you install 100 modules, you cannot investigate without disturbing the
 	process. One would like to study STDOUT and STDERR in a separate window.
+
+	(2) "cpantok#" keep some test OK state between sessions. I see no strong
+	need for this ATM.
 
 	* just a memo what I usually install:
 
