@@ -31,7 +31,7 @@ Looks good
 
 	* just a memo what I usually install:
 
-	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub
+	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 

@@ -1,11 +1,8 @@
 --- 
 comment: "This patch has been authorized by Ilya in an email and fixes compilation under the LONG_SHORTER_THAN_IV condition"
 match:
-  module: "^Math::Pari$"
-  distribution: "2.010708"
+  distribution: "^ILYAZ/modules/Math-Pari-2.010709"
 pl: 
   args: 
     - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
 
-patches:
-  - ANDK/Math-Pari-2.010708-ANDK-02.patch
