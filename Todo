@@ -15,7 +15,8 @@
 	directory. So we should give them a chance to use them next time they
 	come around with the same perl.
 
-	* Todo: put the distro ID close to the OK or NOT OK line
+	* Todo: put the distro ID close to the OK or NOT OK line DONE in rev.
+	1136 or so.
 
 	* What was the deal with
 
@@ -24,10 +25,8 @@ ignoring new version ''.
 Looks good
 
 	again?
-	http://sourceforge.net/mailarchive/forum.php?forum=module-build-general
-	is down at the moment, but the subject line of the thread was "Bug in
-	prereq_report?" and it's some version.pm problem according to John
-	Peacock.
+
+	http://www.mail-archive.com/module-build@perl.org/msg00340.html
 
 	* just a memo what I usually install:
 
