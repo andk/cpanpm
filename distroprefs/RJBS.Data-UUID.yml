@@ -1,5 +1,5 @@
 ---
-matches:
+match:
   distribution: "^RJBS/Data-UUID-"
 pl: 
   expect:
