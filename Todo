@@ -1,5 +1,11 @@
 2006-10-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Rethink if Ilya's expire_old_builds is better the build_dir_reuse in
+	that it sets an expiration date. His -1 is my 1. His 0 is my 0. I have
+	nothing like his 30. The name of his variable is not good in that
+	setting one would believe that expire_old_builds==0 might mean do not
+	expire them. Hmm.
+
 	* Todo: invent a test for build_dir_reuse
 
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
