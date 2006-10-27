@@ -1,7 +1,7 @@
 2006-10-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Test if "reuse" works without metadata (timing issues because the
-	entries do not exist yet?)
+	entries do not exist yet?) No, it doesn't!
 
 	* Investigate what happens if a user has CPAN 1.8802 and Module::Build
 	0.2611 and tries to upgrade to 0.2805. Gabor says, it fails.

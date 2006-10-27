@@ -5752,7 +5752,7 @@ sub isa_perl {
                    |
                    \d+\.\d+
                   )
-		  \.tar[._-]gz
+		  \.tar[._-](?:gz|bz2)
 		  (?!\n)\Z
 		}xs){
     return "$1.$3";
