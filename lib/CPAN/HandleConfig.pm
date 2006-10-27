@@ -18,6 +18,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
     (
      "build_cache",
      "build_dir",
+     "build_dir_reuse",
      "build_requires_install_policy",
      "bzip2",
      "cache_metadata",

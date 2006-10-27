@@ -144,7 +144,13 @@ sub init {
       }
     }
 
-    if (!$matcher or 'cpan_home keep_source_where build_dir prefs_dir' =~ /$matcher/){
+    if (!$matcher or q{
+                       build_dir
+                       build_dir_reuse
+                       cpan_home
+                       keep_source_where
+                       prefs_dir
+                      } =~ /$matcher/){
         $CPAN::Frontend->myprint($prompts{config_intro});
 
         if (!$matcher or 'cpan_home' =~ /$matcher/) {
@@ -208,6 +214,10 @@ Shall we use it as the general CPAN build and cache directory?
                            File::Spec->catdir($CPAN::Config->{cpan_home},"build"),
                            $matcher
                           );
+        }
+
+        if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
+            my_yn_prompt(build_dir_reuse => "y", $matcher);
         }
 
         if (!$matcher or 'prefs_dir' =~ /$matcher/) {
@@ -982,6 +992,27 @@ build_cache =>
 build_dir =>
 
 "Directory where the build process takes place?",
+
+build_dir_reuse_intro =>
+
+qq{Until version 1.88 CPAN.pm never trusted the contents of the
+build_dir directory between sessions. Since 1.88_58 CPAN.pm has a
+YAML-based mechanism that makes it possible to share the contents of
+the build_dir/ directory between different sessions with the same
+version of perl. People who prefer to test things several days before
+installing will like this feature because it safes a lot of time.
+
+If you say yes to the following question, CPAN will try to store
+enough information about the build process so that it can pick up in
+future sessions at the same state of affairs as it left a previous
+session.
+
+},
+
+build_dir_reuse =>
+
+qq{Store and re-use state information about distributions between
+CPAN.pm sessions?},
 
 prefs_dir_intro => qq{
 

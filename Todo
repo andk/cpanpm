@@ -1,3 +1,7 @@
+2006-10-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: invent a test for build_dir_reuse
+
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* The first thing that I encounter when I start testing instead of
@@ -15,6 +19,8 @@
 	directory. So we should give them a chance to use them next time they
 	come around with the same perl.
 
+	DONE in rev. 1140 with build_dir_reuse
+
 	* Todo: put the distro ID close to the OK or NOT OK line DONE in rev.
 	1136 or so.
 
@@ -30,7 +36,7 @@ Looks good
 
 	* just a memo what I usually install:
 
-	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause
+	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker
 
 	YAML::Syck after Bundle::CPAN did not turn off interactivity.
 
