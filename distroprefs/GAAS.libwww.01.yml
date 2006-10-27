@@ -1,4 +1,5 @@
 --- 
+comment: "The -n asks no questions, takes default values"
 match:
   distribution: "^GAAS/libwww-perl-"
 pl: 

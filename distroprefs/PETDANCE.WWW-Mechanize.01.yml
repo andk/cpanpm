@@ -4,4 +4,4 @@ match:
 pl: 
   expect:
     - "Do you want to install the mech-dump utility"
-    - "\n"
+    - "y\n"
