@@ -6,7 +6,11 @@
 	setting one would believe that expire_old_builds==0 might mean do not
 	expire them. Hmm.
 
-	* Todo: invent a test for build_dir_reuse
+	* Todo: invent a test for build_dir_reuse. It should construct a YAML
+	file before test start that will then be picked up and lead to some
+	"already in..." which we test for. And then we use force to actually get
+	that distro. Or we do that for an inexistent distro so that we do not
+	have to rewrite the test after each new release?
 
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
