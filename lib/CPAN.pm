@@ -3814,11 +3814,11 @@ sub reanimate_build_dir {
                 }
             }
         }
-        while (($painted/76) < ($i/$#candidates)) {
+        $i++;
+        while (($painted/76) < ($i/@candidates)) {
             $CPAN::Frontend->myprint(".");
             $painted++;
         }
-        $i++;
     }
     $CPAN::Frontend->myprint("DONE\n");
 }
