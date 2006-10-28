@@ -3810,6 +3810,16 @@ sub reanimate_build_dir {
                     && $Config::Config{sitearchexp} eq $c->{perl}{sitearchexp}
                    ) {
                     my $key = $c->{distribution}{ID};
+                    for my $k (keys %{$c->{distribution}}) {
+                        if ($c->{distribution}{$k}
+                            && ref $c->{distribution}{$k}
+                            && UNIVERSAL::isa($c->{distribution}{$k},"CPAN::Distrostatus")) {
+                            # the correct algorithm would be a
+                            # two-pass and we would subtract the
+                            # maximum of all old commands minus 2
+                            $c->{distribution}{$k}{COMMANDID} -= scalar @candidates - 2 ;
+                        }
+                    }
 
                     #we tried to restore only if element already
                     #exists; but then we do not work with metadata

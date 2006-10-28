@@ -25,6 +25,62 @@ sub _d ($) {File::Spec->catdir(split /\//, shift);}
 use File::Path qw(rmtree mkpath);
 rmtree _d"t/dot-cpan/sources";
 rmtree _d"t/dot-cpan/build";
+mkpath _d"t/dot-cpan/build";
+{
+    local *FH;
+    open *FH, (">"._f"t/dot-cpan/build/Something-From-Builddir-0.00.yml") or die;
+    my @stat = stat $^X;
+    my $dll = eval {OS2::DLLname()};
+    my $mtime_dll = 0;
+    if (defined $dll) {
+        $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
+    }
+    print FH <<EOF;
+---
+distribution: !!perl/hash:CPAN::Distribution
+  ID: A/AN/ANDK/Something-From-Builddir-0.00.tar.gz
+  RO:
+    CPAN_COMMENT: ~
+    CPAN_USERID: ANDK
+  archived: tar
+  make: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 78
+    FAILED: ''
+    TEXT: YES
+  make_test: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 78
+    FAILED: ''
+    TEXT: YES
+  prereq_pm_detected: 1
+  unwrapped: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 78
+    FAILED: ''
+    TEXT: YES
+  writemakefile: !!perl/hash:CPAN::Distrostatus
+    COMMANDID: 78
+    FAILED: ''
+    TEXT: YES
+perl:
+  \$^X: "$^X"
+  mtime_dll: "$mtime_dll"
+  sitearchexp: "$Config::Config{sitearchexp}"
+  stat(\$^X):
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - $stat[9]
+    - 0
+    - 0
+    - 0
+time: 1
+EOF
+}
 rmtree _d"t/dot-cpan/prefs";
 unlink _f"t/dot-cpan/Metadata";
 unlink _f"t/dot-cpan/.lock";
@@ -771,7 +827,7 @@ __END__
 #P:o conf ftp ""
 ########
 #P:m Fcntl
-#E:Defines fcntl
+#E:Found \d old builds, restored state of \d[\s\S]+?Defines fcntl
 ########
 #P:a JHI
 #E:Hietaniemi
