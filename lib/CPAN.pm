@@ -3792,6 +3792,7 @@ sub reanimate_build_dir {
     my $dirent;
     my $i = 0;
     my $painted = 0;
+    my $restored = 0;
     $CPAN::Frontend->myprint("Going to read $CPAN::Config->{build_dir}/\n");
     my @candidates = grep {/\.yml$/} readdir $dh;
   DISTRO: for $dirent (@candidates) {
@@ -3810,13 +3811,11 @@ sub reanimate_build_dir {
                    ) {
                     my $key = $c->{distribution}{ID};
 
-                    #if the 'exists' condition is enforced, then we do not work
-                    #with metadata turned off:
-
-                    #if (exists $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}) {
-                        # again unsafe meta access ?
-                        $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
-                    #}
+                    #we tried to restore only if element already
+                    #exists; but then we do not work with metadata
+                    #turned off.
+                    $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
+                    $restored++;
                 }
             }
         }
@@ -3826,7 +3825,11 @@ sub reanimate_build_dir {
             $painted++;
         }
     }
-    $CPAN::Frontend->myprint("DONE\n");
+    $CPAN::Frontend->myprint(sprintf(
+                                     "DONE\nFound %s old builds, restored state of %s\n",
+                                     @candidates ? sprintf("%d",scalar @candidates) : "no",
+                                     $restored || "none",
+                                    ));
 }
 
 
