@@ -1,10 +1,11 @@
 2006-10-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Test if "reuse" works without metadata (timing issues because the
-	entries do not exist yet?) No, it doesn't!
+	entries do not exist yet?) No, it doesn't! FIXED in rev 1149
 
 	* Investigate what happens if a user has CPAN 1.8802 and Module::Build
-	0.2611 and tries to upgrade to 0.2805. Gabor says, it fails.
+	0.2611 and tries to upgrade to 0.2805. Gabor says, it fails. If it
+	fails, I'll have to coin a new phrase for the bug: install suicide?
 
 	* Rethink if Ilya's expire_old_builds is better the build_dir_reuse in
 	that it sets an expiration date. His -1 is my 1. His 0 is my 0. I have

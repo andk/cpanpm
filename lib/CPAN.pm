@@ -3723,6 +3723,8 @@ sub reload {
     }
     if ($LAST_TIME + $CPAN::Config->{index_expire}*86400 > $time
 	and ! $force){
+        # called too often
+        # CPAN->debug("LAST_TIME[$LAST_TIME]index_expire[$CPAN::Config->{index_expire}]time[$time]");
     } elsif (0) {
         # IFF we are developing, it helps to wipe out the memory
         # between reloads, otherwise it is not what a user expects.
@@ -3807,10 +3809,14 @@ sub reanimate_build_dir {
                     && $Config::Config{sitearchexp} eq $c->{perl}{sitearchexp}
                    ) {
                     my $key = $c->{distribution}{ID};
-                    if (exists $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}) {
+
+                    #if the 'exists' condition is enforced, then we do not work
+                    #with metadata turned off:
+
+                    #if (exists $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}) {
                         # again unsafe meta access ?
                         $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
-                    }
+                    #}
                 }
             }
         }
