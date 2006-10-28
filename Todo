@@ -5,19 +5,21 @@
 
 	* Investigate what happens if a user has CPAN 1.8802 and Module::Build
 	0.2611 and tries to upgrade to 0.2805. Gabor says, it fails. If it
-	fails, I'll have to coin a new phrase for the bug: install suicide?
+	fails, I'll have to coin a new phrase for the bug: install suicide? No
+	need to worry, ATM it works more or less well, but it doesn't fail
+	rightaway. CHECKED after rev. 1149 or so.
 
 	* Rethink if Ilya's expire_old_builds is better the build_dir_reuse in
 	that it sets an expiration date. His -1 is my 1. His 0 is my 0. I have
-	nothing like his 30. The name of his variable is not good in that
-	setting one would believe that expire_old_builds==0 might mean do not
-	expire them. Hmm.
+	nothing like his 30. The name of his variable is not good in that one
+	could believe that setting expire_old_builds==0 might mean to do NOT
+	expire them at all. Hmm.
 
 	* Todo: invent a test for build_dir_reuse. It should construct a YAML
 	file before test start that will then be picked up and lead to some
 	"already in..." which we test for. And then we use force to actually get
 	that distro. Or we do that for an inexistent distro so that we do not
-	have to rewrite the test after each new release?
+	have to rewrite the test after each new release? DONE in rev. 1152
 
 2006-10-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -99,7 +101,7 @@ Looks good
 
 	So recall: one can turn off sig_check, then install version, then leave
 	and enter CPAN.pm and the bug should disappear. Or we release 1.88_57
-	now.
+	now. Update: I released 1.88_57 immediately after that.
 
 	* SMPETERS fixed DBI-1.52. Thank you! YAML for DBI with patch address
 	written
