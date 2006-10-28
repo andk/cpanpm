@@ -1,17 +1,31 @@
+2006-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_58
+
+	* new config option build_dir_reuse for persistent distro state in
+	build_dir inspired by Ilya Zakharevich.
+
+	* a few new and rewritten distropref files.
+
+	* add distribution name to every OK/NOT OK; also inspired by Ilya.
+
+	* bugfix on a rare bug related to the deletion of metadata after using a
+	pragma on a distribution.
+
 2006-10-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_57
 
 	* address #22396: add a diagnostic warning at cleanup time when people
 	have changed their config but forgot to safe it (Tina Mueller, Alberto
-	Manuel Brandao Simoes)
+	Manuel Brandao Simoes).
 
 	* workaround for a weird interaction with a dated version.pm in
 	a probably dated Module::Build and UNIVERSAL::VERSION.
 
-	* document the config variables that are overridable via distroprefs
+	* document the config variables that are overridable via distroprefs.
 
-	* add prefer_installer to the list of overridable config variables
+	* add prefer_installer to the list of overridable config variables.
 
 	* new and updated prefs files for DBI, Coro, etc.
 
