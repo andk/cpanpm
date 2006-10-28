@@ -116,7 +116,7 @@ sub init {
         my $current_second = time;
         my $current_second_count = 0;
         my $i_am_mad = 0;
-	*_real_prompt = sub ($;$) {
+	*_real_prompt = sub {
 	  my($q,$a) = @_;
 	  my($ret) = defined $a ? $a : "";
 	  $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
