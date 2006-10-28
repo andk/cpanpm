@@ -912,6 +912,7 @@ CONFIGURATION
 
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
+      build_dir_reuse    boolean if distros in build_dir are persistent
       build_requires_install_policy
                          to install or not to install: when a module is
                          only needed for building. yes|no|ask/yes|ask/no
