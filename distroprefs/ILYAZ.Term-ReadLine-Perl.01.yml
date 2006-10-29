@@ -1,31 +1,5 @@
 --- 
 match:
   module: "^Term::ReadLine::Perl$"
-pl: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
 test: 
-  args: []
-
-  env: {}
-
   expect: ["Enter arithmetic or Perl expression", "\n"]
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-

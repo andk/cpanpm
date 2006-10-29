@@ -2,32 +2,6 @@
 match:
   distribution: "^INGY/Inline-"
 pl: 
-  args: []
-
-  env: {}
-
   expect:
     - "Do you want to install Inline::C"
     - "\n"
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-test: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-

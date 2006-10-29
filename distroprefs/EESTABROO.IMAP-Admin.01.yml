@@ -2,10 +2,6 @@
 match:
   distribution: "^EESTABROO/IMAP-Admin-"
 test: 
-  args: []
-
-  env: {}
-
   expect:
     - "Enter server:"
     - "\n"

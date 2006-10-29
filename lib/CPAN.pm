@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_58';
+$CPAN::VERSION = '1.88_59';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -4861,6 +4861,13 @@ sub get {
 
   EXCUSE: {
 	my @e;
+        if ($self->prefs->{disabled}) {
+            push @e, sprintf(
+                             "disabled via prefs file '%s' doc %d",
+                             $self->{prefs_file},
+                             $self->{prefs_file_doc},
+                            );
+        }
 	exists $self->{build_dir} and push @e,
 	    "Is already unwrapped into directory $self->{build_dir}";
 
@@ -6005,6 +6012,12 @@ is part of the perl-%s distribution. To install that, you need to run
 	} else {
             if (my $expect = $self->prefs->{pl}{expect}) {
                 $ret = $self->_run_via_expect($system,$expect);
+                if (! defined $ret
+                    && $self->{writemakefile}
+                    && $self->{writemakefile}->failed) {
+                    # timeout
+                    return;
+                }
             } else {
                 $ret = system($system);
             }
@@ -6088,7 +6101,8 @@ sub _run_via_expect {
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;
         $expo->spawn($system);
-      EXPECT: for (my $i = 0; $i < $#$expect; $i+=2) {
+        my $timeout;
+      EXPECT: for (my $i = 0; $i <= $#$expect; $i+=2) {
             my $next = $expect->[$i];
             my($timeout,$re);
             if (ref $next) {
@@ -6109,10 +6123,17 @@ expected[$regex]\nbut[$but]\n\n");
                             } ],
                           [ timeout => sub {
                                 my $but = $expo->clear_accum;
-                                $CPAN::Frontend->mydie("TIMEOUT system[$system]
+                                $CPAN::Frontend->mywarn("TIMEOUT system[$system]
 expected[$regex]\nbut[$but]\n\n");
+                                $timeout++;
                             } ],
                           -re => $regex);
+            if ($timeout){
+                # note that the caller expects 0 for success
+                $self->{writemakefile} =
+                    CPAN::Distrostatus->new("NO timeout during expect dialog");
+                return;
+            }
             $expo->send($send);
         }
         $expo->soft_close;
@@ -6183,7 +6204,7 @@ sub _find_prefs {
                         return {
                                 prefs => $yaml,
                                 prefs_file => $abs,
-                                prefs_file_section => $y,
+                                prefs_file_doc => $y,
                                };
                     }
 
@@ -6208,13 +6229,13 @@ sub prefs {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
         my $prefs = $self->_find_prefs();
         if ($prefs) {
-            for my $x (qw(prefs prefs_file prefs_file_section)) {
+            for my $x (qw(prefs prefs_file prefs_file_doc)) {
                 $self->{$x} = $prefs->{$x};
             }
             my $bs = sprintf(
                              "%s[%s]",
                              File::Basename::basename($self->{prefs_file}),
-                             $self->{prefs_file_section},
+                             $self->{prefs_file_doc},
                             );
             my $filler1 = "_" x 22;
             my $filler2 = int(66 - length($bs))/2;

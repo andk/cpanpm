@@ -1,0 +1,5 @@
+--- 
+comment: "Since I know that installing 0.25 is not what I want"
+match:
+  distribution: "^KASEI/Class-Accessor-0.25"
+disabled: 1

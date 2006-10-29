@@ -1,5 +1,17 @@
 2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Need a disabled keyword on distroprefs. The hack to use
+	cpanconfig/make=false is both Unix centric and not obvious. ADDED in
+	rev. 1159
+
+	* distroprefs is harder to use with build_dir_reuse than before. We now
+	need "force get" more often because the old prefs value is in the distro
+	object. Force get can mean a network connection, so there's a need to
+	decide how we want to deal with that.
+
+	First idea is to remove the prefs from the serialized object but this is
+	much worse in case a patch has been applied.
+
 	* new method perl_fingerprint and _is_deeply or so to compare previous
 	and current fingerprint. DONE in rev. 1158
 
@@ -68,7 +80,7 @@ Continue installing YAML::Syck? [y]
 	the whole SQLite needs to be integrated
 
 	* Investigate if I want Math::Bigint::GMP in the core. Think of
-	Crypt::DH and the horrible test timings when Math::Biging::GMP is not
+	Crypt::DH and the horrible test timings when Math::Bigint::GMP is not
 	installed
 
 	* find out why upgrade always upgrades

@@ -5,28 +5,3 @@ match:
 pl: 
   args: 
     - -n
-  env: {}
-
-  expect: []
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-test: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-

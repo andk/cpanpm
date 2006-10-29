@@ -17,18 +17,37 @@ Some modules try to get some data from the user interactively thus
 disturbing the installation of large bundles like Phalanx100 or
 modules like Plagger.
 
-CPAN.pm can use these YAML files to either pass additional arguments
-to one of the four commands, set environment variables or instantiate
-an Expect object that reads from the console, waits for some regular
-expression and enters some answer. Additionally, the YAML files can
-temporarily override assorted CPAN.pm configuration variables (at the
-time of this writing only: build_requires_install_policy, make,
-make_install_make_command, prefer_installer, test_report).
+CPAN.pm can use these YAML files to either
 
-Many of the files that come with the CPAN.pm distribution contain more
-fields than necessary so they can easier be used as blueprints. In
-practice all empty fields can be removed from the YAML files. To find
-a blueprint pick one of the larger files.
+=over
+
+=item
+
+pass additional arguments to one of the four commands,
+
+=item
+
+set environment variables
+
+=item
+
+instantiate an Expect object that reads from the console, waits for
+some regular expression and enters some answers
+
+=item
+
+temporarily override assorted CPAN.pm configuration variables
+(supported are: build_requires_install_policy, make,
+make_install_make_command, prefer_installer, test_report)
+
+=item
+
+disable the installation of an object altogether
+
+=back
+
+See the YAML files that come with the CPAN.pm distribution in the
+C<distroprefs/> directory for examples.
 
 =head1 EXAMPLE FILES
 
@@ -140,6 +159,59 @@ YAML file into my prefs_dir/ directory that contains roughly
 
 That's all. From then I can install that distro for any perl version
 on that machine.
+
+=head1 BLUEPRINT
+
+The following example contains all supported keywords and structures:
+
+  --- 
+  comment: "Demo"
+  match:
+    module: "Dancing::Queen"
+    distribution: "^CHACHACHA/Dancing-"
+    perl: "/usr/local/cariba-perl/bin/perl"
+  disabled: 1
+  cpanconfig:
+    make: gmake
+  pl: 
+    args:
+      - "--somearg=specialcase"
+
+    env: {}
+
+    expect:
+      - "Which is your favorite fruit"
+      - "apple\n"
+
+  make: 
+    args:
+      - all
+      - extra-all
+
+    env: {}
+
+    expect: []
+
+  test: 
+    args: []
+
+    env: {}
+
+    expect: []
+
+  install: 
+    args: []
+
+    env:
+      WANT_TO_INSTALL: YES
+
+    expect:
+      - "Do you really want to install"
+      - "y\n"
+
+  patches:
+    - "ABCDE/Fedcba-3.14-ABCDE-01.patch"
+
 
 =head1 FEEDBACK
 
