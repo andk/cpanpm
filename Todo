@@ -1,13 +1,75 @@
+2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* new method perl_fingerprint and _is_deeply or so to compare previous
+	and current fingerprint. DONE in rev. 1158
+
+	* Math::Pari was definitely broken by blead. Make it a bug report(?)
+----Program----
+eval {require Math::Pari};
+print $@ ? "N/A" : Math::Pari->VERSION;
+print "\n";
+
+----Output of .../pAEBdqj/perl-5.8.0@24541/bin/perl----
+2.010709
+
+----EOF ($?='0')----
+----Output of .../pIwwDvK/perl-5.8.0@24542/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 24541 and 24542
+
+	This between Ilya and me:
+
+> But bleadperl@29045 doesn't compile with:
+> 
+> cc -c  -I pari-2.1.7/src -Ipari-2.1.7/src/headers -Ipari-2.1.7/src -I./libPARI -DDEBUGGING -fno-strict-aliasing -pipe -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g   -DVERSION=\"2.010708\" -DXS_VERSION=\"2.010708\" -fPIC "-I/home/src/perl/repoperls/installed-perls/perl/pqbZHKu/perl-5.8.0@29045/lib/5.9.5/i686-linux-64int/CORE"  -DPARI_VERSION_EXP=2001007 -DDEBUG_PARI -DLSB_in_U32=0 -DLONG_SHORTER_THAN_IV -Derr=pari_err Pari.c
+> Pari.xs:1219: error: 'XPVCV' has no member named 'xof_off'
+> Pari.xs: In function 'XS_Math__Pari_DESTROY':
+
+Yes, "they" removed a member, AND did not include my patch to make
+attaching info to a CV easier...
+
+	xray searching for "Ilya CV attach" finds
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2002-02/msg00633.html
+
+	Reading 24542.... Posting to P5P WRITTEN
+
+	Answer received with a pointer to a previous discussion where Nicholas said
+
+	|Assuming it is, in blead upgrading the PVCV to a PVFM and using
+	| IV		xfm_lines;
+	|instead should work. The structures are equivalent, except that PVFM
+	|has that one extra IV at the end.
+
+	
+
 2006-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* find out how to write a distropref with so much AI that it handles
+	several different dialogues. I just realized that YAML::Syck talked me
+	into a different dialogue on some older bleadperl that had YAML 0.60
+	installed:
+
+*** WARNING ***
+
+This release breaks compatibility with versions earlier than version 0.60 of
+YAML::Syck and YAML.pm when serializing blessed references.
+
+See the COMPATIBILITY file for more information.
+
+*** Pre-0.60 version of YAML.pm (0.53) detected.
+Continue installing YAML::Syck? [y]
+
+	We would like to answer to this question yes if it comes. Or we would
+	like to upgrade YAML first.
+	
 	* Randy needs an API to find out where the index files are located. And
 	the whole SQLite needs to be integrated
 
 	* Investigate if I want Math::Bigint::GMP in the core. Think of
 	Crypt::DH and the horrible test timings when Math::Biging::GMP is not
 	installed
-
-	* Math::Pari was definitely broken by blead. Make it a bug report(?)
 
 	* find out why upgrade always upgrades
 	Apache::Session::Generate::ModUniqueId and ...::ModUserTrack.

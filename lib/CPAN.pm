@@ -610,6 +610,33 @@ $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 # from here on only subs.
 ################################################################################
 
+sub _perl_fingerprint {
+    my($self,$other_fingerprint) = @_;
+    my $dll = eval {OS2::DLLname()};
+    my $mtime_dll = 0;
+    if (defined $dll) {
+        $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
+    }
+    my $this_fingerprint = {
+                            '$^X' => $^X,
+                            sitearchexp => $Config::Config{sitearchexp},
+                            'mtime_$^X' => (stat $^X)[9],
+                            'mtime_dll' => $mtime_dll,
+                           };
+    if ($other_fingerprint) {
+        if (exists $other_fingerprint->{'stat($^X)'}) { # repair fp from rev. 1.88_57
+            $other_fingerprint->{'mtime_$^X'} = $other_fingerprint->{'stat($^X)'}[9];
+        }
+        # mandatory keys since 1.88_57
+        for my $key (qw($^X sitearchexp mtime_dll mtime_$^X)) {
+            return unless $other_fingerprint->{$key} eq $this_fingerprint->{$key};
+        }
+        return 1;
+    } else {
+        return $this_fingerprint;
+    }
+}
+
 sub suggest_myconfig () {
   SUGGEST_MYCONFIG: if(!$INC{'CPAN/MyConfig.pm'}) {
         $CPAN::Frontend->myprint("You don't seem to have a user ".
@@ -3797,37 +3824,24 @@ sub reanimate_build_dir {
     my @candidates = grep {/\.yml$/} readdir $dh;
   DISTRO: for $dirent (@candidates) {
         my $c = CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))->[0];
-        if ($c && $^X eq $c->{perl}{'$^X'}) {
-            my @stat = stat $^X;
-            my $dll = eval {OS2::DLLname()};
-            my $mtime_dll = 0;
-            if (defined $dll) {
-                $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
-            }
-            if ($c->{perl}{'stat($^X)'}[9]) {
-                if ($stat[9] == $c->{perl}{'stat($^X)'}[9]
-                    && $mtime_dll == $c->{perl}{mtime_dll}
-                    && $Config::Config{sitearchexp} eq $c->{perl}{sitearchexp}
-                   ) {
-                    my $key = $c->{distribution}{ID};
-                    for my $k (keys %{$c->{distribution}}) {
-                        if ($c->{distribution}{$k}
-                            && ref $c->{distribution}{$k}
-                            && UNIVERSAL::isa($c->{distribution}{$k},"CPAN::Distrostatus")) {
-                            # the correct algorithm would be a
-                            # two-pass and we would subtract the
-                            # maximum of all old commands minus 2
-                            $c->{distribution}{$k}{COMMANDID} -= scalar @candidates - 2 ;
-                        }
-                    }
-
-                    #we tried to restore only if element already
-                    #exists; but then we do not work with metadata
-                    #turned off.
-                    $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
-                    $restored++;
+        if ($c && CPAN->_perl_fingerprint($c->{perl})) {
+            my $key = $c->{distribution}{ID};
+            for my $k (keys %{$c->{distribution}}) {
+                if ($c->{distribution}{$k}
+                    && ref $c->{distribution}{$k}
+                    && UNIVERSAL::isa($c->{distribution}{$k},"CPAN::Distrostatus")) {
+                    # the correct algorithm would be a
+                    # two-pass and we would subtract the
+                    # maximum of all old commands minus 2
+                    $c->{distribution}{$k}{COMMANDID} -= scalar @candidates - 2 ;
                 }
             }
+
+            #we tried to restore only if element already
+            #exists; but then we do not work with metadata
+            #turned off.
+            $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
+            $restored++;
         }
         $i++;
         while (($painted/76) < ($i/@candidates)) {
@@ -3836,7 +3850,7 @@ sub reanimate_build_dir {
         }
     }
     $CPAN::Frontend->myprint(sprintf(
-                                     "DONE\nFound %s old builds, restored state of %s\n",
+                                     "DONE\nFound %s old builds, restored the state of %s\n",
                                      @candidates ? sprintf("%d",scalar @candidates) : "no",
                                      $restored || "none",
                                     ));
@@ -5051,21 +5065,11 @@ EOF
 sub store_persistent_state {
     my($self) = @_;
     my $file = sprintf "%s.yml", $self->{build_dir};
-    my $dll = eval {OS2::DLLname()};
-    my $mtime_dll = 0;
-    if (defined $dll) {
-        $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
-    }
     CPAN->_yaml_dumpfile(
                          $file,
                          {
                           time => time,
-                          perl => {
-                                   '$^X' => $^X,
-                                   sitearchexp => $Config::Config{sitearchexp},
-                                   'stat($^X)' => [stat $^X],
-                                   'mtime_dll' => $mtime_dll,
-                                  },
+                          perl => CPAN::_perl_fingerprint,
                           distribution => $self,
                          }
                         );
