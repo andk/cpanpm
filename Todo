@@ -1,3 +1,8 @@
+2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* File::Slurp vs Pod::Coverage. Ticket opened:
+	http://rt.cpan.org/Ticket/Display.html?id=22693
+	
 2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Need to write build_dir/*.yml files also if reuse is turned off. And
@@ -132,7 +137,7 @@ Continue installing YAML::Syck? [y]
 
 	* Todo: clean up "XXX" in the code
 
-	* "I hate Module::AutoInstall". See down under the hr if you have much
+	* "I hate Module::AutoInstall". See down under the hr when you ever have
 	time.
 
 	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
