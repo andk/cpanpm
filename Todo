@@ -1,6 +1,9 @@
 2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Need a disabled keyword on distroprefs. The hack to use
+	* Need to write build_dir/*.yml files also if reuse is turned off. And
+	also when we fail.
+
+	* Need a 'disabled' keyword on distroprefs. The hack to use
 	cpanconfig/make=false is both Unix centric and not obvious. ADDED in
 	rev. 1159
 

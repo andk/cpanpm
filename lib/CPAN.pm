@@ -92,6 +92,7 @@ use vars qw(
              force
              get
              install
+             install_tested
              make
              mkmyconfig
              notest
@@ -409,6 +410,8 @@ use vars qw(@ISA $USER $PASSWD $SETUPDONE);
 package CPAN::Complete;
 use strict;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
+# Q: where is the "How do I add a new command" HOWTO?
+# A: svn diff -r 1048:1049 where andk added the report command
 @CPAN::Complete::COMMANDS = sort qw(
                                     ! a b d h i m o q r u
                                     autobundle
@@ -417,6 +420,7 @@ use strict;
                                     dump
                                     force
                                     install
+                                    install_tested
                                     look
                                     ls
                                     make
@@ -1871,6 +1875,29 @@ sub report {
     local $CPAN::Config->{test_report} = 1;
     $self->force("test",@args); # force is there so that the test be
                                 # re-run (as documented)
+}
+
+#-> sub CPAN::Shell::install_tested
+sub install_tested {
+    my($self,@some) = @_;
+    $CPAN::Frontend->mywarn("install_tested() requires no arguments.\n"),
+        return if @some;
+    CPAN::Index->reload;
+
+    for my $d (%{$CPAN::META->{readwrite}{'CPAN::Distribution'}}) {
+        my $do = CPAN::Shell->expandany($d);
+        next unless $do->{build_dir};
+        push @some, $do;
+    }
+
+    $CPAN::Frontend->mywarn("No tested distributions found.\n"),
+        return unless @some;
+
+    @some = grep { $_->{make_test} && ! $_->{make_test}->failed } @some;
+    $CPAN::Frontend->mywarn("No distributions tested with this build of perl found.\n"),
+        return unless @some;
+
+    $self->install(@some);
 }
 
 #-> sub CPAN::Shell::upgrade ;
@@ -6089,9 +6116,7 @@ is part of the perl-%s distribution. To install that, you need to run
 	 $self->{make} = CPAN::Distrostatus->new("NO");
 	 $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
-    if ( $CPAN::Config->{build_dir_reuse} ) {
-        $self->store_persistent_state;
-    }
+    $self->store_persistent_state;
 }
 
 # CPAN::Distribution::_run_via_expect
@@ -6101,9 +6126,9 @@ sub _run_via_expect {
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;
         $expo->spawn($system);
-        my $timeout;
+        my $ran_into_timeout;
       EXPECT: for (my $i = 0; $i <= $#$expect; $i+=2) {
-            my $next = $expect->[$i];
+            my($next,$send) = @$expect[$i,$i+1];
             my($timeout,$re);
             if (ref $next) {
                 $timeout = $next->{timeout};
@@ -6112,8 +6137,8 @@ sub _run_via_expect {
                 $timeout = 15;
                 $re = $next;
             }
+            CPAN->debug("timeout[$timeout]re[$re]") if $CPAN::DEBUG;
             my $regex = eval "qr{$re}";
-            my $send = $expect->[$i+1];
             $expo->expect($timeout,
                           [ eof => sub {
                                 my $but = $expo->clear_accum;
@@ -6125,10 +6150,10 @@ expected[$regex]\nbut[$but]\n\n");
                                 my $but = $expo->clear_accum;
                                 $CPAN::Frontend->mywarn("TIMEOUT system[$system]
 expected[$regex]\nbut[$but]\n\n");
-                                $timeout++;
+                                $ran_into_timeout++;
                             } ],
                           -re => $regex);
-            if ($timeout){
+            if ($ran_into_timeout){
                 # note that the caller expects 0 for success
                 $self->{writemakefile} =
                     CPAN::Distrostatus->new("NO timeout during expect dialog");
@@ -6779,9 +6804,7 @@ sub test {
         $self->{badtestcnt}++;
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
-    if ( $CPAN::Config->{build_dir_reuse} ) {
-        $self->store_persistent_state;
-    }
+    $self->store_persistent_state;
 }
 
 #-> sub CPAN::Distribution::clean ;
@@ -6858,9 +6881,7 @@ sub clean {
       # $self->force("make"); # so that this directory won't be used again
 
     }
-    if ( $CPAN::Config->{build_dir_reuse} ) {
-        $self->store_persistent_state;
-    }
+    $self->store_persistent_state;
 }
 
 #-> sub CPAN::Distribution::install ;
@@ -7024,9 +7045,7 @@ sub install {
         }
     }
     delete $self->{force_update};
-    if ( $CPAN::Config->{build_dir_reuse} ) {
-        $self->store_persistent_state;
-    }
+    $self->store_persistent_state;
 }
 
 sub introduce_myself {
