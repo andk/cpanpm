@@ -1,5 +1,18 @@
 2006-10-30  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
+	* From: "David Golden" <xdaveg@gmail.com>
+Subject: CPAN::Reporter and Bundle::CPAN
+To: "Andreas J. Koenig" <andreas.koenig.gmwojprw@franz.ak.mind.de>
+Date: Mon, 30 Oct 2006 10:04:05 -0500                                           
+
+With CPAN::Reporter 0.29, all the config items are switched over.  The
+Todo backlog is still non-trivial, but I don't think any of the items
+will cause back-compatibilty problems down the line.  Given that,
+please feel free to add CPAN::Reporter to Bundle::CPAN whenever you
+have a chance.
+
+David
+
 	* disable PerlMagick
 
 2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
