@@ -1,3 +1,54 @@
+2006-10-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* just a memo what I usually install:
+
+	    install Bundle::CPANxxl Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker Graph::Easy
+
+	YAML::Syck after Bundle::CPAN did not turn off interactivity.
+
+	YAML::Syck before Bundle::CPAN worked well.
+
+	CPAN::Reporter before YAML worked well but we want to catch the early
+	YAML interactivity (which in turn can be avoided with YAML::Syck).
+
+	* Todo: some capture stuff maybe collected into the YAML files in
+	build_dir that contains all relevant output of that distro so we can
+	study the nonsense that currently goes on when I do my mega install on
+	maint-5.8.
+
+	For some reason some modules failed early in the cycle and then never
+	got re-tested. And they broke others which also didn't get re-tested. In
+	the end we had a lot of modules uninstalled that would test individually
+	well but all refused to re-test without force.
+	
+	One simple solution was to 'force test Bundle::CPANxxl' but that took
+	many minutes again.
+
+	[What's the deal with PathTools? Ahh, the dependency on
+	ExtUtils::CBuilder again. I have reported the bug but it is not yet
+	fixed.]
+
+	For example the chain broke: CPAN::Checksums -> Data::Compare ->
+	File::Find::Rule -> Number::Compare. I could install Number::Compare now
+	when I asked for it (without force!), and then the chain could be
+	resolved step after step.
+
+	Something's fishy.
+
+2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Q: Why is this: during install Bundle::Phalanx100 I get a
+	writemakefile NO
+	'/home/src/perl/repoperls/installed-perls/perl/pIOeQkH/perl-5.8.0@29165/bin/perl
+	Makefile.PL' returned status 65280
+
+	When I leave the shell and start it again and call 'failed' it is gone.
+
+	A: because it didn't succeed in determining a build_dir. Only distros
+	that manage to determine their build_dir can ....
+
+	Q: can this be improved?
+
 2006-10-30  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 
 	* From: "David Golden" <xdaveg@gmail.com>
@@ -130,17 +181,6 @@ Continue installing YAML::Syck? [y]
 	of META.yml, the bug persists and needs to be discussed with M:B people.
 
 	* See what we can do for Module::ThirdParty
-
-	* just a memo what I usually install:
-
-	    install YAML::Syck Expect YAML Bundle::CPAN Module::Signature CPAN::Reporter Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker
-
-	YAML::Syck after Bundle::CPAN did not turn off interactivity.
-
-	YAML::Syck before Bundle::CPAN worked well.
-
-	CPAN::Reporter before YAML worked well but we want to catch the early
-	YAML interactivity (which in turn can be avoided with YAML::Syck).
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
 	one that reads something from STDIN (or maybe both in one) DELAYED until
