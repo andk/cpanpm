@@ -1,0 +1,4 @@
+^\.lwpcookies
+^\.releaserc
+^Bundle-CPAN.*tar.gz$
+^DIST/
