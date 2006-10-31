@@ -39,7 +39,8 @@ advantage.
 
 Last not least every full installation of CPAN needs the
 CPAN::Reporter. I put it into this xxl bundle because it may be a bit
-overkill for small installations. This is still subject to debate.
+overkill for small installations. Maybe we will shift it over to
+Bundle::CPAN.
 
 =head1 AUTHOR
 

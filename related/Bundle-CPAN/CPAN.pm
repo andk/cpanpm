@@ -75,9 +75,7 @@ modules (except for Net::FTP which is really highly recommended). The
 other modules are B<suggested> and can safely be installed later or
 not at all.
 
-Two modules have been omitted due to missing support on Windows
-although I consider them indispensable: Module::Signature and Expect.
-Please install the Bundle::CPANxxl to get those.
+Please install the Bundle::CPANxxl to get a few more.
 
 =head1 AUTHOR
 
