@@ -1,4 +1,8 @@
-^\.lwpcookies
-^\.releaserc
+\.svn/
 ^Bundle-CPAN.*tar.gz$
 ^DIST/
+^\.lwpcookies
+^\.releaserc
+^blib/
+^pm_to_blib$
+~$
