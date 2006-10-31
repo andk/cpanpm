@@ -18,6 +18,8 @@ Bundle::CPAN - Bundle to optimize the behaviour of CPAN.pm
 
 =head1 CONTENTS
 
+ExtUtils::CBuilder -- some of the things below depend on it without declaring (as of 2006-10)
+
 Module::Build
 
 File::Spec -- prereq
