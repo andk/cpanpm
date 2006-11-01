@@ -1,5 +1,8 @@
 2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* The bug in Strptime is in the ga locale. Installing hte ga locale on
+	my box doesn't solve it. Manana.
+
 	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
 	CONTAINSMODS is empty because Gabor has a distro in the bundle.
 
