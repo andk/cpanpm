@@ -1,5 +1,48 @@
 2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Locking needs to be resolved soonish to enable concurrent mageinstalls
+	and concurrent running shells.
+
+	I want to share the build_dir first because this is currently the most
+	dangerous spot. I suppose we can have it by using File::Temp for the
+	individual build_dir. We would have to turn off build_dir_reuse for the
+	second process. Nobody would ever overwrite a build_dir. Some guys would
+	remove old directories and this would do no harm.
+
+	Even if the second uses the same perl as the first one, we could coexist
+	because many commands scan the INC repeatedly. The only things we do not
+	scan again and again are 
+
+	historyfile: We would have to set histfile to nil for the second.
+
+	metadata: we would turn it off for the second. We could
+	neither read nor write it safely without locking protocol.
+
+	reading traditional index files: make writing atomic, let the second
+	only read them (by setting expiration time to inf).
+
+	ability to reload index: turn off for the second
+
+	storing/listing local bundles: risk
+
+	local directories with the dot: risk
+
+	shared source: make it atomic to download (if it isn't yet)
+
+	Different perspective: batch jobs have not had a lock ever since CPAN.pm
+	exists. They could break each other on any occasion. Did they write the
+	histfile? Seems not so. Timestamp does not change with my tests and it
+	does not say "Lockfile removed". Yes, checklock is only called from the
+	shell (and from mkmyconfig but this is negligible).
+
+	But they read metadata and shouldn't. Disable!
+
+	And they reuse build_dir. Disable!
+
+	But they MUST read the index files: make writing atomic!
+
+	Is CPAN::FTP::localize doing its storage management atomicly?
+
 	* Provide an API or documentation how to find out the CPAN::Config
 	variables.
 
@@ -11,7 +54,7 @@
 
 	* Todo: compare the output of the 'failed' command within megainstall
 	and after reentering the shell. DONE and found one bug and fixed it in
-	rev.
+	rev. 1178
 
 	* I wanted to watch some scenarios with persistent data. Especially with
 	modules that work and that are being tested again and again with prereqs
@@ -37,7 +80,7 @@
 
 	A: yes.
 
-	* Study pip by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
+	* Study "pip" by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
 	CPAN::Mini::Phalanx100
 
 2006-10-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
@@ -52,6 +95,8 @@
 
 	CPAN::Reporter before YAML worked well but we want to catch the early
 	YAML interactivity (which in turn can be avoided with YAML::Syck).
+
+	Now all in "make megainstall" including logging.
 
 	* Todo: some capture stuff maybe collected into the YAML files in
 	build_dir that contains all relevant output of that distro so we can
