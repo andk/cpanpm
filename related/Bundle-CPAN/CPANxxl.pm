@@ -21,8 +21,6 @@ YAML::Syck
 
 IO::Tty -- if we are not explicit, we get a delay and YAML comes interactively
 
-IO::Pty
-
 Expect
 
 YAML
