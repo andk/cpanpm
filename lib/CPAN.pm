@@ -6052,6 +6052,8 @@ is part of the perl-%s distribution. To install that, you need to run
                 $self->{writemakefile} = CPAN::Distrostatus
                     ->new("NO '$system' returned status $ret");
                 $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
+                $self->store_persistent_state;
+                $self->store_persistent_state;
                 return;
             }
 	}
@@ -6060,7 +6062,7 @@ is part of the perl-%s distribution. To install that, you need to run
           delete $self->{make_clean}; # if cleaned before, enable next
 	} else {
 	  $self->{writemakefile} = CPAN::Distrostatus
-              ->new(qq{NO -- Unknown reason.});
+              ->new(qq{NO -- Unknown reason});
 	}
     }
     if ($CPAN::Signal){
@@ -6073,6 +6075,7 @@ is part of the perl-%s distribution. To install that, you need to run
             my $id = $self->pretty_id;
             $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
             $self->{make} = CPAN::Distrostatus->new("NO $need");
+            $self->store_persistent_state;
             return;
         } else {
             return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner

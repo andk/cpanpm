@@ -16,8 +16,13 @@
 
 	Note the 0 in COMMANDID.
 
+	A: The reason is that we only issued one command with 'make
+	megainstall', so this is correct.
+
 	* Does the shell still do locking? Under which circumstances is locking
 	turned off? Console/terminal I suppose.
+
+	A: yes.
 
 	* Study pip by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
 	CPAN::Mini::Phalanx100
@@ -61,15 +66,14 @@
 
 2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Q: Why is this: during install Bundle::Phalanx100 I get a
-	writemakefile NO
+	* Q: Why is this: during install Bundle::Phalanx100 I get for
+	DBD::Oracle a writemakefile NO
 	'/home/src/perl/repoperls/installed-perls/perl/pIOeQkH/perl-5.8.0@29165/bin/perl
 	Makefile.PL' returned status 65280
 
 	When I leave the shell and start it again and call 'failed' it is gone.
 
-	A: because it didn't succeed in determining a build_dir. Only distros
-	that manage to determine their build_dir can ....
+	A: because somebody deletes the attribute writemakefile
 
 	Q: can this be improved?
 
