@@ -1,7 +1,7 @@
 package Bundle::CPANxxl;
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.1';
+$VERSION = '0.2';
 
 1;
 
@@ -18,6 +18,10 @@ Bundle::CPANxxl - Bundle with a few more components than Bundle::CPAN
 =head1 CONTENTS
 
 YAML::Syck
+
+IO::Tty -- if we are not explicit, we get a delay and YAML comes interactively
+
+IO::Pty
 
 Expect
 

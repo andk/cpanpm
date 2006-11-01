@@ -3,3 +3,8 @@ match:
   distribution: "^GBARR/perl-ldap-"
 pl: 
   args: ["--defaultdeps"]
+  env:
+    PERL_AUTOINSTALL: --skip    
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    

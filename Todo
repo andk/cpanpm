@@ -1,3 +1,27 @@
+2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* I wanted to watch some scenarios with persistent data. Especially with
+	modules that work and that are being tested again and again with prereqs
+	and without or within bundles and if they are retested or not, installed
+	or not with persistence and within the same session.
+
+	Write a megatest?
+
+	* Wondering why I find this in the build directory in Crypt-CBC-2.22.yml:
+
+  writemakefile: !!perl/hash:CPAN::Distrostatus 
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+
+	Note the 0 in COMMANDID.
+
+	* Does the shell still do locking? Under which circumstances is locking
+	turned off? Console/terminal I suppose.
+
+	* Study pip by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
+	CPAN::Mini::Phalanx100
+
 2006-10-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* just a memo what I usually install:
