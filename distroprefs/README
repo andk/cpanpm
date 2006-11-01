@@ -146,8 +146,8 @@ My procedure when I encounter a broken package:
     diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
     gzip DISTRODIR-ANDK-01.patch
 
-I then upload the resulting patch to my CPAN directory and write a
-YAML file into my prefs_dir/ directory that contains roughly
+I then upload the resulting patch to my CPAN patches/ directory and
+write a YAML file into my prefs_dir/ directory that contains roughly
 
     --- 
     comment: "This patch fixes ..."
@@ -155,7 +155,7 @@ YAML file into my prefs_dir/ directory that contains roughly
       distribution: "^DISTRO$"
 
     patches:
-      - ANDK/DISTRODIR-ANDK-01.patch
+      - ANDK/patches/DISTRODIR-ANDK-01.patch
 
 That's all. From then I can install that distro for any perl version
 on that machine.

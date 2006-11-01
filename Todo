@@ -1,5 +1,11 @@
 2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
+	CONTAINSMODS is empty because Gabor has a distro in the bundle.
+
+	* Todo: compare the output of the 'failed' command within megainstall
+	and after reentering the shell.
+
 	* I wanted to watch some scenarios with persistent data. Especially with
 	modules that work and that are being tested again and again with prereqs
 	and without or within bundles and if they are retested or not, installed

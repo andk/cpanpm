@@ -9,3 +9,5 @@ pl:
     - "\n"
     - "Do you want to perform these tests in addition to core tests"
     - "\n"
+patches:
+  - "ANDK/SOAP-Lite-0.69-ANDK-01.patch.gz"

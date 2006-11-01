@@ -5752,6 +5752,7 @@ sub force {
   for my $att (qw(
                   CHECKSUM_STATUS
                   archived
+                  badtestcnt
                   build_dir
                   install
                   localfile
