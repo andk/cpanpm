@@ -3,14 +3,15 @@
 	* Provide an API or documentation how to find out the CPAN::Config
 	variables.
 
-	* The bug in Strptime is in the ga locale. Installing hte ga locale on
+	* The bug in Strptime is in the "ga" locale. Installing the ga locale on
 	my box doesn't solve it. Manana.
 
 	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
 	CONTAINSMODS is empty because Gabor has a distro in the bundle.
 
 	* Todo: compare the output of the 'failed' command within megainstall
-	and after reentering the shell.
+	and after reentering the shell. DONE and found one bug and fixed it in
+	rev.
 
 	* I wanted to watch some scenarios with persistent data. Especially with
 	modules that work and that are being tested again and again with prereqs

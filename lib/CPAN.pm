@@ -6796,6 +6796,7 @@ sub test {
                     "$cnt dependencies missing ($which)";
                 $CPAN::Frontend->mywarn("Tests succeeded but $verb\n");
                 $self->{make_test} = CPAN::Distrostatus->new("NO $verb");
+                $self->store_persistent_state;
                 return;
             }
         }
