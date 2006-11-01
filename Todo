@@ -73,9 +73,9 @@
 
 	When I leave the shell and start it again and call 'failed' it is gone.
 
-	A: because somebody deletes the attribute writemakefile
+	A: because we did not care for the state safe
 
-	Q: can this be improved?
+	Fixed in rev. 1172
 
 2006-10-30  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 

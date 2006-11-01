@@ -172,6 +172,20 @@ ALL_PERLS = /usr/bin/perl \
             /usr/local/perl-5.004_05/bin/perl \
             /usr/local/perl-5.005_04/bin/perl \
             /usr/local/perl-5.6.2/bin/perl
+
+# not sorted because order matters
+MEGA_COLLECTION = Bundle::CPANxxl \
+		Math::BigInt::GMP \
+		Plagger Bundle::Phalanx100 \
+		Jifty \
+		Coro \
+		Getopt::Euclid \
+		DBIx::Class \
+		IPC::PubSub \
+		Bundle::Pause \
+		PadWalker \
+		Graph::Easy \
+		Module::Plan::Base
 }
 }
 
@@ -214,11 +228,11 @@ release ::
 checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
 
-megainstall: termreadkey
-	$(PERL) -Ilib -MCPAN -e 'install(qw(Bundle::CPANxxl Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker Graph::Easy Module::Plan::Base))' > megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+megainstall: termreadkeyinstall
+	$(PERL) -Ilib -MCPAN -e 'install(qw($(MEGA_COLLECTION)));CPAN::Shell->failed' > megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 # nohup needed by my zsh
-termreadkey:
+termreadkeyinstall:
 	nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > rk.`date +%Y%m%dT%H%M`.out 2>&1
 
 run :
