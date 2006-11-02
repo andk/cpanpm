@@ -954,7 +954,7 @@ __END__
 #R:Module::Build
 ########
 #P:force get CPAN::Test::Dummy::Perl5::BuildOrMake
-#E:Removing previously used
+#E:CPAN-Test-Dummy-Perl5-BuildOrMake-1.02/Build.PL
 #R:Module::Build
 ########
 #P:dump CPAN::Test::Dummy::Perl5::BuildOrMake
@@ -969,7 +969,7 @@ __END__
 #C:second try
 ########
 #P:force get ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
-#E:Removing previously used
+#E:CPAN-Test-Dummy-Perl5-BuildOrMake-1.02/Build.PL
 #R:Module::Build
 ########
 #P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz

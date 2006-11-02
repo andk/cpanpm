@@ -3056,7 +3056,7 @@ sub localize {
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
 	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile);
 	if ($ret) {
-            CPAN->debug("ret[$ret]aslocal[$aslocal]");
+            CPAN->debug("ret[$ret]aslocal[$aslocal]") if $CPAN::DEBUG;
             if ($ret eq $aslocal_tempfile) {
                 # if we got it exactly as we asked for, only then we
                 # want to rename

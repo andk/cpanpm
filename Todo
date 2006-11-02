@@ -1,3 +1,12 @@
+2006-11-02  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* 30shell fails because of missing checksum data after a force get.
+
+	New ideas from Slaven: patch -p0/1/etc might be autodetected
+
+	More match variables like all config variables or $^O ("os"?) and
+	perlver.
+
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* imacat writes in #22749:
