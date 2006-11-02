@@ -721,7 +721,6 @@ Please report if something unexpected happens\n");
                         $_->{build_dir_reuse} = 0;
                         $_->{commandnumber_in_prompt} = 0;
                         $_->{histfile} = "";
-                        $_->{index_expire} = 2**31;
                         $_->{cache_metadata} = 0;
                     }
                 } else {

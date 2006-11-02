@@ -13,6 +13,10 @@
 	More match variables like all config variables or $^O ("os"?) and
 	perlver.
 
+	Finally: leaving back the .orig files (which I called -g0, why?) only
+	when debugging turned on?? I think I'll remove -b and -g0 and use
+	$ENV{PATCH_GET}=0 instead.
+
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* imacat writes in #22749:
@@ -61,7 +65,9 @@
 	neither read nor write it safely without locking protocol. DONE 1181
 
 	reading traditional index files: make writing atomic, let the second
-	only read them (by setting expiration time to inf). DONE 1181
+	only read them (by setting expiration time to inf). DONE 1181 Actually,
+	this was nonsense. the expiration time must not be changed. The user
+	wants to read index files from time to time... REVERTED in 1188
 
 	ability to reload index: turn off for the second DONE 1181
 
