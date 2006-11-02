@@ -1,3 +1,28 @@
+2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* imacat writes in #22749:
+
+	> I found that CPAN is NOT downloading CHECKSUMS alone with the
+  > package file (*.tar.gz) from the SAME source.  This morning when I was
+  > updating the newly-updated DBI-1.53, it cannot match CHECKSUMS with
+  > DBI-1.53.tar.gz since they came from 2 different sources, and each has
+  > its own mirror schedule.  The package file DBI-1.53.tar.gz came from a
+  > mirror that has it, but CHECKSUMS came from another that doesn't have it
+  > yet.  Shouldn't they be downloaded from the same mirror source?
+
+	[the protocol shows how the fourth host succeeds for
+	TIMB/DBI-1.53.tar.gz but CPAN.pm then fetches the CHECKSUMS file from
+	the first]
+
+	For young files there is often a short timespan within which there is no
+	entry in the checksums file yet, even if they come from the same host.
+	As you are always working with very young files, I'm surprised it
+	doesn't happen more often to you.
+
+	But in principle you are right, CPAN.pm should try to get checksums file
+	from the same host because the likelihood is higher to get an uptpdate
+	checksums file.
+
 2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Locking needs to be resolved soonish to enable safe concurrent
@@ -7,7 +32,8 @@
 	dangerous spot. I suppose we can have it by using File::Temp for the
 	individual build_dir. We would have to turn off build_dir_reuse for the
 	second process. Nobody would ever overwrite a build_dir. Some guys would
-	remove old directories and this would do no harm.
+	remove old directories and this would do no harm. Should be done in rev.
+	1183.
 
 	Even if the second uses the same perl as the first one, we could coexist
 	because many commands scan the INC repeatedly. Things we do not scan
@@ -43,6 +69,8 @@
 	But they MUST read the index files: make writing atomic! DONE 1180
 
 	Is CPAN::FTP::localize doing its storage management atomicly? YES, since 1180
+
+	Todo: consider setting scan_cache to "never" or maybe not.
 
 	* Provide an API or documentation how to find out the CPAN::Config
 	variables.

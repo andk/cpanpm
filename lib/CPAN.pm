@@ -499,7 +499,7 @@ sub new {
 sub as_string {
     my $word = "cpan";
     unless ($CPAN::META->{LOCK}) {
-        $word = "2nd_cpan";
+        $word = "nolock_cpan";
     }
     if ($CPAN::Config->{commandnumber_in_prompt}) {
         sprintf "$word\[%d]> ", $CPAN::CurrentCommandId;
@@ -4729,7 +4729,9 @@ sub normalize {
     $s = $self->id unless defined $s;
     if (substr($s,-1,1) eq ".") {
         unless ($CPAN::META->{LOCK}) {
-            $CPAN::Frontend->mydie("visiting of local directories not supported without lock");
+            $CPAN::Frontend->mywarn("You are visiting a local directory without lock,
+  take care that concurrent processes do not do likewise.\n");
+            $CPAN::Frontend->mysleep(2);
         }
         if ($s eq ".") {
             $s = "$CPAN::iCwd/.";
@@ -4992,15 +4994,15 @@ sub get {
     $CPAN::META->{cachemgr} ||= CPAN::CacheMgr->new(); # unsafe meta access, ok
     my $builddir = $CPAN::META->{cachemgr}->dir; # unsafe meta access, ok
     $self->safe_chdir($builddir);
-    $self->debug("Removing tmp") if $CPAN::DEBUG;
-    File::Path::rmtree("tmp");
-    unless (mkdir "tmp", 0755) {
+    $self->debug("Removing tmp-$$") if $CPAN::DEBUG;
+    File::Path::rmtree("tmp-$$");
+    unless (mkdir "tmp-$$", 0755) {
         $CPAN::Frontend->unrecoverable_error(<<EOF);
-Couldn't mkdir '$builddir/tmp': $!
+Couldn't mkdir '$builddir/tmp-$$': $!
 
 Cannot continue: Please find the reason why I cannot make the
 directory
-$builddir/tmp
+$builddir/tmp-$$
 and fix the problem, then retry.
 
 EOF
@@ -5009,7 +5011,7 @@ EOF
         $self->safe_chdir($sub_wd);
         return;
     }
-    $self->safe_chdir("tmp");
+    $self->safe_chdir("tmp-$$");
 
     #
     # Unpack the goods
@@ -5035,50 +5037,84 @@ EOF
         or Carp::croak("Couldn't opendir .: $!");
     my @readdir = grep $_ !~ /^\.\.?(?!\n)\Z/s, $dh->read; ### MAC??
     $dh->close;
-    my ($distdir,$packagedir);
+    my ($packagedir);
     # XXX here we want in each branch File::Temp to protect all build_dir directories
-    if (@readdir == 1 && -d $readdir[0]) {
-        $distdir = $readdir[0];
-        $packagedir = File::Spec->catdir($builddir,$distdir);
-        $self->debug("packagedir[$packagedir]builddir[$builddir]distdir[$distdir]")
-            if $CPAN::DEBUG;
-        -d $packagedir and $CPAN::Frontend->myprint("Removing previously used ".
-                                                    "$packagedir\n");
-        File::Path::rmtree($packagedir);
-        unless (File::Copy::move($distdir,$packagedir)) {
-            $CPAN::Frontend->unrecoverable_error(<<EOF);
+    if (CPAN->has_inst("File::Temp")) {
+        my $tdir_base;
+        my $from_dir;
+        my @dirents;
+        if (@readdir == 1 && -d $readdir[0]) {
+            $tdir_base = $readdir[0];
+            $from_dir = File::Spec->catdir(File::Spec->curdir,$readdir[0]);
+            my $dh2 = DirHandle->new($from_dir)
+                or Carp::croak("Couldn't opendir $from_dir: $!");
+            @dirents = grep $_ !~ /^\.\.?(?!\n)\Z/s, $dh2->read; ### MAC??
+        } else {
+            my $userid = $self->cpan_userid;
+            CPAN->debug("userid[$userid]");
+            if (!$userid or $userid eq "N/A") {
+                $userid = "anon";
+            }
+            $tdir_base = $userid;
+            $from_dir = File::Spec->curdir;
+            @dirents = @readdir;
+        }
+        $packagedir = File::Temp::tempdir(
+                                          "$tdir_base-XXXXXX",
+                                          DIR => $builddir,
+                                          CLEANUP => 0,
+                                         );
+        my $f;
+        for $f (@dirents) { # is already without "." and ".."
+            my $from = File::Spec->catdir($from_dir,$f);
+            my $to = File::Spec->catdir($packagedir,$f);
+            File::Copy::move($from,$to) or Carp::confess("Couldn't move $from to $to: $!");
+        }
+    } else { # older code below, still better than nothing when there is no File::Temp
+        my($distdir);
+        if (@readdir == 1 && -d $readdir[0]) {
+            $distdir = $readdir[0];
+            $packagedir = File::Spec->catdir($builddir,$distdir);
+            $self->debug("packagedir[$packagedir]builddir[$builddir]distdir[$distdir]")
+                if $CPAN::DEBUG;
+            -d $packagedir and $CPAN::Frontend->myprint("Removing previously used ".
+                                                        "$packagedir\n");
+            File::Path::rmtree($packagedir);
+            unless (File::Copy::move($distdir,$packagedir)) {
+                $CPAN::Frontend->unrecoverable_error(<<EOF);
 Couldn't move '$distdir' to '$packagedir': $!
 
 Cannot continue: Please find the reason why I cannot move
-$builddir/tmp/$distdir
+$builddir/tmp-$$/$distdir
 to
 $packagedir
 and fix the problem, then retry
 
 EOF
-        }
-        $self->debug(sprintf("moved distdir[%s] to packagedir[%s] -e[%s]-d[%s]",
-                             $distdir,
-                             $packagedir,
-                             -e $packagedir,
-                             -d $packagedir,
-                            )) if $CPAN::DEBUG;
-    } else {
-        my $userid = $self->cpan_userid;
-        CPAN->debug("userid[$userid]");
-        if (!$userid or $userid eq "N/A") {
-            $userid = "anon";
-        }
-        my $pragmatic_dir = $userid . '000';
-        $pragmatic_dir =~ s/\W_//g;
-        $pragmatic_dir++ while -d "../$pragmatic_dir";
-        $packagedir = File::Spec->catdir($builddir,$pragmatic_dir);
-        $self->debug("packagedir[$packagedir]") if $CPAN::DEBUG;
-        File::Path::mkpath($packagedir);
-        my($f);
-        for $f (@readdir) { # is already without "." and ".."
-            my $to = File::Spec->catdir($packagedir,$f);
-            File::Copy::move($f,$to) or Carp::confess("Couldn't move $f to $to: $!");
+            }
+            $self->debug(sprintf("moved distdir[%s] to packagedir[%s] -e[%s]-d[%s]",
+                                 $distdir,
+                                 $packagedir,
+                                 -e $packagedir,
+                                 -d $packagedir,
+                                )) if $CPAN::DEBUG;
+        } else {
+            my $userid = $self->cpan_userid;
+            CPAN->debug("userid[$userid]");
+            if (!$userid or $userid eq "N/A") {
+                $userid = "anon";
+            }
+            my $pragmatic_dir = $userid . '000';
+            $pragmatic_dir =~ s/\W_//g;
+            $pragmatic_dir++ while -d "../$pragmatic_dir";
+            $packagedir = File::Spec->catdir($builddir,$pragmatic_dir);
+            $self->debug("packagedir[$packagedir]") if $CPAN::DEBUG;
+            File::Path::mkpath($packagedir);
+            my($f);
+            for $f (@readdir) { # is already without "." and ".."
+                my $to = File::Spec->catdir($packagedir,$f);
+                File::Copy::move($f,$to) or Carp::confess("Couldn't move $f to $to: $!");
+            }
         }
     }
     if ($CPAN::Signal){
@@ -5088,7 +5124,7 @@ EOF
 
     $self->{'build_dir'} = $packagedir;
     $self->safe_chdir($builddir);
-    File::Path::rmtree("tmp");
+    File::Path::rmtree("tmp-$$");
 
     $self->safe_chdir($packagedir);
     $self->_signature_business();
