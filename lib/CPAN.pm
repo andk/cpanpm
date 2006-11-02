@@ -2922,10 +2922,10 @@ sub localize {
                                        "could not remove.");
         }
     }
-    my($restore) = 0;
+    my($maybe_restore) = 0;
     if (-f $aslocal){
-	rename $aslocal, "$aslocal.bak";
-	$restore++;
+	rename $aslocal, "$aslocal.bak$$";
+	$maybe_restore++;
     }
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
@@ -3028,17 +3028,26 @@ sub localize {
             push @urllist, $u unless grep { $_ eq $u } @urllist;
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
-	my $ret = $self->$method(\@urllist,$file,$aslocal);
+        my $aslocal_tempfile = $aslocal . ".tmp" . $$;
+	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile);
 	if ($ret) {
-	  $Themethod = $level;
-	  my $now = time;
-	  # utime $now, $now, $aslocal; # too bad, if we do that, we
-                                      # might alter a local mirror
-	  $self->debug("level[$level]") if $CPAN::DEBUG;
-	  return $ret;
+            if ($ret eq $aslocal_tempfile) {
+                # if we got it exactly as we asked for, only then we
+                # want to rename
+                rename $aslocal_tempfile, $aslocal
+                    or $CPAN::Frontend->mydie("Error while trying to rename ".
+                                              "'$ret' to '$aslocal': $!");
+                $ret = $aslocal_tempfile;
+            }
+            $Themethod = $level;
+            my $now = time;
+            # utime $now, $now, $aslocal; # too bad, if we do that, we
+                                          # might alter a local mirror
+            $self->debug("level[$level]") if $CPAN::DEBUG;
+            return $ret;
 	} else {
-	  unlink $aslocal;
-          last if $CPAN::Signal; # need to cleanup
+            unlink $aslocal_tempfile;
+            last if $CPAN::Signal; # need to cleanup
 	}
     }
     unless ($CPAN::Signal) {
@@ -3058,8 +3067,8 @@ sub localize {
         $CPAN::Frontend->mywarn("Could not fetch $file\n");
         $CPAN::Frontend->mysleep(2);
     }
-    if ($restore) {
-	rename "$aslocal.bak", $aslocal;
+    if ($maybe_restore) {
+	rename "$aslocal.bak$$", $aslocal;
 	$CPAN::Frontend->myprint("Trying to get away with old file:\n" .
 				 $self->ls($aslocal));
 	return $aslocal;

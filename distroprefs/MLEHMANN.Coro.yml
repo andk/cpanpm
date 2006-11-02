@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^MLEHMANN/Coro-2."
+  distribution: "^MLEHMANN/Coro-2.0"
 pl: 
   expect:
     - "Do you want to enable C context sharing"
@@ -9,3 +9,16 @@ pl:
     - "l\n"
     - "C stack size factor"
     - "16384\n"
+--- 
+match:
+  distribution: "^MLEHMANN/Coro-2.1"
+pl: 
+  expect:
+    - "Do you want to enable C context sharing"
+    - "y\n"
+    - "<s>etjmp/longjump, <u>context, <i>rix, <l>inux or <w>indows"
+    - "l\n"
+    - "C stack size factor"
+    - "16384\n"
+    - "Number of guard pages \(0 disables\)"
+    - "\n"

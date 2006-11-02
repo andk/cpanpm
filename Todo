@@ -1,7 +1,7 @@
 2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Locking needs to be resolved soonish to enable concurrent mageinstalls
-	and concurrent running shells.
+	* Locking needs to be resolved soonish to enable safe concurrent
+	megainstalls and concurrent running shells.
 
 	I want to share the build_dir first because this is currently the most
 	dangerous spot. I suppose we can have it by using File::Temp for the
