@@ -10,36 +10,37 @@
 	remove old directories and this would do no harm.
 
 	Even if the second uses the same perl as the first one, we could coexist
-	because many commands scan the INC repeatedly. The only things we do not
-	scan again and again are 
+	because many commands scan the INC repeatedly. Things we do not scan
+	again and again are ???
 
-	historyfile: We would have to set histfile to nil for the second.
+	historyfile: We would have to set histfile to nil for the second. DONE
+	1181
 
 	metadata: we would turn it off for the second. We could
-	neither read nor write it safely without locking protocol.
+	neither read nor write it safely without locking protocol. DONE 1181
 
 	reading traditional index files: make writing atomic, let the second
-	only read them (by setting expiration time to inf).
+	only read them (by setting expiration time to inf). DONE 1181
 
-	ability to reload index: turn off for the second
+	ability to reload index: turn off for the second DONE 1181
 
-	storing/listing local bundles: risk
+	storing/listing local bundles: risk REVISIT LATER
 
-	local directories with the dot: risk
+	local directories with the dot: risk REVISIT LATER
 
-	shared source: make it atomic to download (if it isn't yet)
+	shared source: make it atomic to download (if it isn't yet) DONE 1180
 
 	Different perspective: batch jobs have not had a lock ever since CPAN.pm
 	exists. They could break each other on any occasion. Did they write the
 	histfile? Seems not so. Timestamp does not change with my tests and it
 	does not say "Lockfile removed". Yes, checklock is only called from the
-	shell (and from mkmyconfig but this is negligible).
+	shell (and from mkmyconfig but this is negligible). REVISIT mkmyconfig
 
-	But they read metadata and shouldn't. Disable!
+	But they read metadata and shouldn't. Disable! DONE 1181
 
-	And they reuse build_dir. Disable!
+	And they reuse build_dir. Disable! DONE 1181
 
-	But they MUST read the index files: make writing atomic!
+	But they MUST read the index files: make writing atomic! DONE 1180
 
 	Is CPAN::FTP::localize doing its storage management atomicly? YES, since 1180
 

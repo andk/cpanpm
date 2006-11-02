@@ -4728,6 +4728,9 @@ sub normalize {
     my($self,$s) = @_;
     $s = $self->id unless defined $s;
     if (substr($s,-1,1) eq ".") {
+        unless ($CPAN::META->{LOCK}) {
+            $CPAN::Frontend->mydie("visiting of local directories not supported without lock");
+        }
         if ($s eq ".") {
             $s = "$CPAN::iCwd/.";
         } elsif (File::Spec->file_name_is_absolute($s)) {
@@ -5033,6 +5036,7 @@ EOF
     my @readdir = grep $_ !~ /^\.\.?(?!\n)\Z/s, $dh->read; ### MAC??
     $dh->close;
     my ($distdir,$packagedir);
+    # XXX here we want in each branch File::Temp to protect all build_dir directories
     if (@readdir == 1 && -d $readdir[0]) {
         $distdir = $readdir[0];
         $packagedir = File::Spec->catdir($builddir,$distdir);
