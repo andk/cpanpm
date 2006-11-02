@@ -3056,13 +3056,14 @@ sub localize {
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
 	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile);
 	if ($ret) {
+            CPAN->debug("ret[$ret]aslocal[$aslocal]");
             if ($ret eq $aslocal_tempfile) {
                 # if we got it exactly as we asked for, only then we
                 # want to rename
                 rename $aslocal_tempfile, $aslocal
                     or $CPAN::Frontend->mydie("Error while trying to rename ".
                                               "'$ret' to '$aslocal': $!");
-                $ret = $aslocal_tempfile;
+                $ret = $aslocal;
             }
             $Themethod = $level;
             my $now = time;
