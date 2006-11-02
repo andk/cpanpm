@@ -1,4 +1,10 @@
-2006-11-02  Andreas J Koenig  <akoenig@iconmobile.com>
+2006-11-02  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* Oops! Something changed my
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails-1.02.tar.gz
+
+	!!! Ahh, that explains something! The copy I had here believed to be
+	newer and "M", I should have reverted, I suppose.
 
 	* 30shell fails because of missing checksum data after a force get.
 
