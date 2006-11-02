@@ -1,3 +1,21 @@
+2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_59 (in preparation)
+
+	* locking granular enough to let many CPAN shells coexist
+
+	* several small bugfixes to the persistent distro state feature
+	introduced in 1.88_58
+
+	* new bundle Bundle::CPANxxl with CPAN::Reporter, Module::Signature,
+	Expect, etc.
+
+	* new keyword "disabled" in distroprefs
+
+	* very early incarnation of new install_tested command (pre-alpha)
+
+	* sanitize the behaviour after an Expect.pm timeout
+
 2006-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_58
