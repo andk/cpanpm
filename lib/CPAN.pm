@@ -497,10 +497,14 @@ sub new {
     bless {}, shift;
 }
 sub as_string {
+    my $word = "cpan";
+    unless ($CPAN::META->{LOCK}) {
+        $word = "2nd_cpan";
+    }
     if ($CPAN::Config->{commandnumber_in_prompt}) {
-        sprintf "cpan[%d]> ", $CPAN::CurrentCommandId;
+        sprintf "$word\[%d]> ", $CPAN::CurrentCommandId;
     } else {
-        "cpan> ";
+        "$word> ";
     }
 }
 
@@ -675,6 +679,7 @@ sub all_objects {
 sub checklock {
     my($self) = @_;
     my $lockfile = File::Spec->catfile($CPAN::Config->{cpan_home},".lock");
+    my $run_degraded = 0;
     if (-f $lockfile && -M _ > 0) {
 	my $fh = FileHandle->new($lockfile) or
             $CPAN::Frontend->mydie("Could not open lockfile '$lockfile': $!");
@@ -703,11 +708,29 @@ sub checklock {
 There seems to be running another CPAN process (pid $otherpid).  Contacting...
 });
 	    if (kill 0, $otherpid) {
-		$CPAN::Frontend->mydie(qq{Other job is running.
-You may want to kill it and delete the lockfile, maybe. On UNIX try:
+		$CPAN::Frontend->mywarn(qq{Other job is running.\n});
+		my($ans) =
+		    CPAN::Shell::colorable_makemaker_prompt
+			(qq{Shall I try to run in degraded }.
+			 qq{mode? (Y/n)},"y");
+                if ($ans =~ /^y/i) {
+                    $CPAN::Frontend->mywarn("Running in degraded more is experimental.
+Please report if something unexpected happens\n");
+                    $run_degraded = 1;
+                    for ($CPAN::Config) {
+                        $_->{build_dir_reuse} = 0;
+                        $_->{commandnumber_in_prompt} = 0;
+                        $_->{histfile} = "";
+                        $_->{index_expire} = 2**31;
+                        $_->{cache_metadata} = 0;
+                    }
+                } else {
+                    $CPAN::Frontend->mydie("
+You may want to kill the other job and delete the lockfile. On UNIX try:
     kill $otherpid
     rm $lockfile
-});
+");
+                }
 	    } elsif (-w $lockfile) {
 		my($ans) =
 		    CPAN::Shell::colorable_makemaker_prompt
@@ -765,10 +788,11 @@ Please make sure the directory exists and is writable.
             return suggest_myconfig;
         }
     } # $@ after eval mkpath $dotcpan
-    my $fh;
-    unless ($fh = FileHandle->new(">$lockfile")) {
-	if ($! =~ /Permission/) {
-	    $CPAN::Frontend->myprint(qq{
+    unless ($run_degraded) {
+        my $fh;
+        unless ($fh = FileHandle->new(">$lockfile")) {
+            if ($! =~ /Permission/) {
+                $CPAN::Frontend->myprint(qq{
 
 Your configuration suggests that CPAN.pm should use a working
 directory of
@@ -783,13 +807,14 @@ points to a directory where you can write a .lock file. You can set
 this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
 \@INC path;
 });
-            return suggest_myconfig;
-	}
+                return suggest_myconfig;
+            }
+        }
+        $fh->print($$, "\n");
+        $fh->print(hostname(), "\n");
+        $self->{LOCK} = $lockfile;
+        $fh->close;
     }
-    $fh->print($$, "\n");
-    $fh->print(hostname(), "\n");
-    $self->{LOCK} = $lockfile;
-    $fh->close;
     $SIG{TERM} = sub {
         my $sig = shift;
         &cleanup;

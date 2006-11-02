@@ -41,7 +41,7 @@
 
 	But they MUST read the index files: make writing atomic!
 
-	Is CPAN::FTP::localize doing its storage management atomicly?
+	Is CPAN::FTP::localize doing its storage management atomicly? YES, since 1180
 
 	* Provide an API or documentation how to find out the CPAN::Config
 	variables.
