@@ -3056,7 +3056,8 @@ sub localize {
         my @urllist = grep { defined $_ and length $_ }
             map { $CPAN::Config->{urllist}[$_] } @host_seq;
         for my $u (@urllist) {
-            if ($u->can("text")) {
+            CPAN->debug("u[$u]") if $CPAN::DEBUG;
+            if (UNIVERSAL::can($u,"text")) {
                 $u->{TEXT} .= "/" unless substr($u->{TEXT},-1) eq "/";
             } else {
                 $u .= "/" unless substr($u,-1) eq "/";
@@ -3205,7 +3206,7 @@ sub hosteasy {
                 # skip Net::FTP anymore when LWP is available.
             }
 	} elsif (
-                 $ro_url->can("text")
+                 UNIVERSAL::can($ro_url,"text")
                  and
                  $ro_url->{FROM} eq "USER"
                 ){
