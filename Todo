@@ -1,22 +1,3 @@
-2006-11-02  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
-
-	* Oops! Something changed my
-	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails-1.02.tar.gz
-
-	!!! Ahh, that explains something! The copy I had here believed to be
-	newer and "M", I should have reverted, I suppose.
-
-	* 30shell fails because of missing checksum data after a force get.
-
-	New ideas from Slaven: patch -p0/1/etc might be autodetected
-
-	More match variables like all config variables or $^O ("os"?) and
-	perlver.
-
-	Finally: leaving back the .orig files (which I called -g0, why?) only
-	when debugging turned on?? I think I'll remove -b and -g0 and use
-	$ENV{PATCH_GET}=0 instead.
-
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* imacat writes in #22749:
@@ -42,233 +23,12 @@
 	from the same host because the likelihood is higher to get an uptpdate
 	checksums file.
 
-2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Locking needs to be resolved soonish to enable safe concurrent
-	megainstalls and concurrent running shells.
-
-	I want to share the build_dir first because this is currently the most
-	dangerous spot. I suppose we can have it by using File::Temp for the
-	individual build_dir. We would have to turn off build_dir_reuse for the
-	second process. Nobody would ever overwrite a build_dir. Some guys would
-	remove old directories and this would do no harm. Should be done in rev.
-	1183.
-
-	Even if the second uses the same perl as the first one, we could coexist
-	because many commands scan the INC repeatedly. Things we do not scan
-	again and again are ???
-
-	historyfile: We would have to set histfile to nil for the second. DONE
-	1181
-
-	metadata: we would turn it off for the second. We could
-	neither read nor write it safely without locking protocol. DONE 1181
-
-	reading traditional index files: make writing atomic, let the second
-	only read them (by setting expiration time to inf). DONE 1181 Actually,
-	this was nonsense. the expiration time must not be changed. The user
-	wants to read index files from time to time... REVERTED in 1188
-
-	ability to reload index: turn off for the second DONE 1181
-
-	storing/listing local bundles: risk REVISIT LATER
-
-	local directories with the dot: risk REVISIT LATER
-
-	shared source: make it atomic to download (if it isn't yet) DONE 1180
-
-	Different perspective: batch jobs have not had a lock ever since CPAN.pm
-	exists. They could break each other on any occasion. Did they write the
-	histfile? Seems not so. Timestamp does not change with my tests and it
-	does not say "Lockfile removed". Yes, checklock is only called from the
-	shell (and from mkmyconfig but this is negligible). REVISIT mkmyconfig
-
-	But they read metadata and shouldn't. Disable! DONE 1181
-
-	And they reuse build_dir. Disable! DONE 1181
-
-	But they MUST read the index files: make writing atomic! DONE 1180
-
-	Is CPAN::FTP::localize doing its storage management atomicly? YES, since 1180
-
-	Todo: consider setting scan_cache to "never" or maybe not.
-
-	* Provide an API or documentation how to find out the CPAN::Config
-	variables.
-
-	* The bug in Strptime is in the "ga" locale. Installing the ga locale on
-	my box doesn't solve it. Manana.
-
-	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
-	CONTAINSMODS is empty because Gabor has a distro in the bundle.
-
-	* Todo: compare the output of the 'failed' command within megainstall
-	and after reentering the shell. DONE and found one bug and fixed it in
-	rev. 1178
-
-	* I wanted to watch some scenarios with persistent data. Especially with
-	modules that work and that are being tested again and again with prereqs
-	and without or within bundles and if they are retested or not, installed
-	or not with persistence and within the same session.
-
-	Write a megatest?
-
-	* Wondering why I find this in the build directory in Crypt-CBC-2.22.yml:
-
-  writemakefile: !!perl/hash:CPAN::Distrostatus 
-    COMMANDID: 0
-    FAILED: ''
-    TEXT: YES
-
-	Note the 0 in COMMANDID.
-
-	A: The reason is that we only issued one command with 'make
-	megainstall', so this is correct.
-
-	* Does the shell still do locking? Under which circumstances is locking
-	turned off? Console/terminal I suppose.
-
-	A: yes.
-
-	* Study "pip" by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
-	CPAN::Mini::Phalanx100
-
-2006-10-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* just a memo what I usually install:
-
-	    install Bundle::CPANxxl Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker Graph::Easy
-
-	YAML::Syck after Bundle::CPAN did not turn off interactivity.
-
-	YAML::Syck before Bundle::CPAN worked well.
-
-	CPAN::Reporter before YAML worked well but we want to catch the early
-	YAML interactivity (which in turn can be avoided with YAML::Syck).
-
-	Now all in "make megainstall" including logging.
-
-	* Todo: some capture stuff maybe collected into the YAML files in
-	build_dir that contains all relevant output of that distro so we can
-	study the nonsense that currently goes on when I do my mega install on
-	maint-5.8.
-
-	For some reason some modules failed early in the cycle and then never
-	got re-tested. And they broke others which also didn't get re-tested. In
-	the end we had a lot of modules uninstalled that would test individually
-	well but all refused to re-test without force.
-	
-	One simple solution was to 'force test Bundle::CPANxxl' but that took
-	many minutes again.
-
-	[What's the deal with PathTools? Ahh, the dependency on
-	ExtUtils::CBuilder again. I have reported the bug but it is not yet
-	fixed.]
-
-	For example the chain broke: CPAN::Checksums -> Data::Compare ->
-	File::Find::Rule -> Number::Compare. I could install Number::Compare now
-	when I asked for it (without force!), and then the chain could be
-	resolved step after step.
-
-	Something's fishy.
-
-2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Q: Why is this: during install Bundle::Phalanx100 I get for
-	DBD::Oracle a writemakefile NO
-	'/home/src/perl/repoperls/installed-perls/perl/pIOeQkH/perl-5.8.0@29165/bin/perl
-	Makefile.PL' returned status 65280
-
-	When I leave the shell and start it again and call 'failed' it is gone.
-
-	A: because we did not care for the state safe
-
-	Fixed in rev. 1172
-
-2006-10-30  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
-
-	* From: "David Golden" <xdaveg@gmail.com>
-Subject: CPAN::Reporter and Bundle::CPAN
-To: "Andreas J. Koenig" <andreas.koenig.gmwojprw@franz.ak.mind.de>
-Date: Mon, 30 Oct 2006 10:04:05 -0500                                           
-
-With CPAN::Reporter 0.29, all the config items are switched over.  The
-Todo backlog is still non-trivial, but I don't think any of the items
-will cause back-compatibilty problems down the line.  Given that,
-please feel free to add CPAN::Reporter to Bundle::CPAN whenever you
-have a chance.
-
-David
-
-	* disable PerlMagick
-
-2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* File::Slurp vs Pod::Coverage. Ticket opened:
-	http://rt.cpan.org/Ticket/Display.html?id=22693
-	
-2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Need to write build_dir/*.yml files also if reuse is turned off. And
-	also when we fail.
-
-	* Need a 'disabled' keyword on distroprefs. The hack to use
-	cpanconfig/make=false is both Unix centric and not obvious. ADDED in
-	rev. 1159
-
-	* distroprefs is harder to use with build_dir_reuse than before. We now
-	need "force get" more often because the old prefs value is in the distro
-	object. Force get can mean a network connection, so there's a need to
-	decide how we want to deal with that.
-
-	First idea is to remove the prefs from the serialized object but this is
-	much worse in case a patch has been applied.
-
-	* new method perl_fingerprint and _is_deeply or so to compare previous
-	and current fingerprint. DONE in rev. 1158
-
-	* Math::Pari was definitely broken by blead. Make it a bug report(?)
-----Program----
-eval {require Math::Pari};
-print $@ ? "N/A" : Math::Pari->VERSION;
-print "\n";
-
-----Output of .../pAEBdqj/perl-5.8.0@24541/bin/perl----
-2.010709
-
-----EOF ($?='0')----
-----Output of .../pIwwDvK/perl-5.8.0@24542/bin/perl----
-N/A
-
-----EOF ($?='0')----
-Need a perl between 24541 and 24542
-
-	This between Ilya and me:
-
-> But bleadperl@29045 doesn't compile with:
-> 
-> cc -c  -I pari-2.1.7/src -Ipari-2.1.7/src/headers -Ipari-2.1.7/src -I./libPARI -DDEBUGGING -fno-strict-aliasing -pipe -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g   -DVERSION=\"2.010708\" -DXS_VERSION=\"2.010708\" -fPIC "-I/home/src/perl/repoperls/installed-perls/perl/pqbZHKu/perl-5.8.0@29045/lib/5.9.5/i686-linux-64int/CORE"  -DPARI_VERSION_EXP=2001007 -DDEBUG_PARI -DLSB_in_U32=0 -DLONG_SHORTER_THAN_IV -Derr=pari_err Pari.c
-> Pari.xs:1219: error: 'XPVCV' has no member named 'xof_off'
-> Pari.xs: In function 'XS_Math__Pari_DESTROY':
-
-Yes, "they" removed a member, AND did not include my patch to make
-attaching info to a CV easier...
-
-	xray searching for "Ilya CV attach" finds
-	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2002-02/msg00633.html
-
-	Reading 24542.... Posting to P5P WRITTEN
-
-	Answer received with a pointer to a previous discussion where Nicholas said
-
-	|Assuming it is, in blead upgrading the PVCV to a PVFM and using
-	| IV		xfm_lines;
-	|instead should work. The structures are equivalent, except that PVFM
-	|has that one extra IV at the end.
-
-	
-
-2006-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* Watch the Module::Build space for updates to the question of calling
+	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
+
+	* write a patch for Test::Reporter so you can choose the mail sending
+	module? Reported 2005-07:
+	http://rt.cpan.org/Ticket/Display.html?id=13836
 
 	* find out how to write a distropref with so much AI that it handles
 	several different dialogues. I just realized that YAML::Syck talked me
@@ -289,7 +49,8 @@ Continue installing YAML::Syck? [y]
 	like to upgrade YAML first.
 	
 	* Randy needs an API to find out where the index files are located. And
-	the whole SQLite needs to be integrated
+	the whole SQLite needs to be integrated. First question is what do we
+	use from it. Only the readonly stuff, I suppose.
 
 	* Investigate if I want Math::Bigint::GMP in the core. Think of
 	Crypt::DH and the horrible test timings when Math::Bigint::GMP is not
@@ -298,25 +59,37 @@ Continue installing YAML::Syck? [y]
 	* find out why upgrade always upgrades
 	Apache::Session::Generate::ModUniqueId and ...::ModUserTrack.
 
+	Seems to be Apache-Session-1.81/Session/Generate/ModUniqueId.pm and
+	Apache-Session-1.81/Session/Generate/ModUsertrack.pm
+
+	* The Net::SSH::Perl test 03-packet still runs forever even with
+	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
+	Report sent. But can we patch it? Maybe not as long as Math::Pari and
+	Crypt::Random are prereqs and fail themselves.
+
+	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
+	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
+	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
+	not enough. But can we patch it?
+
 	* The first thing that I encounter when I start testing instead of
 	installing things is that test doesn't stop when the installed version
 	is higher than or equal to the CPAN version. Ilya invented for that
 	test_uptodate
 
-	* write a patch for Test::Reporter so you can choose the mail sending module?
+	* CPAN::Checksums -> Data::Compare -> File::Find::Rule ->
+	Number::Compare
+	
+	* I wanted to watch some scenarios with persistent data. Especially with
+	modules that work and that are being tested again and again with prereqs
+	and without or within bundles and if they are retested or not, installed
+	or not with persistence and within the same session.
 
-	* think about the locking from a different angle: currently it is
-	possible but unsafe to have concurrent access to the .cpan/build
-	directory
+	Write a megatest?
 
-	* go after the Module::Build errors in Error.pm and Mason: I suspect
-	that's the set_perl5lib bug mentioned by Ilya. NO, it was not the
-	set_perl5lib bug. The bug is that the two distros use subclassing in
-	their Build.PL and so Module::Build's own methods are unable to provide
-	the prerequisites. My workaround for now is to fall back to the content
-	of META.yml, the bug persists and needs to be discussed with M:B people.
-
-	* See what we can do for Module::ThirdParty
+	* Study "pip" by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
+	CPAN::Mini::Phalanx100 and also see what we can do for
+	Module::ThirdParty
 
 	* write a dummy distro that reads arguments to Makefile.PL and another
 	one that reads something from STDIN (or maybe both in one) DELAYED until
@@ -324,9 +97,22 @@ Continue installing YAML::Syck? [y]
 
 	* replace 03 index file with YAML.
 
-	* Todo/buglet: turn on debug "CPAN" and find the reason why
-	incommandcolor is quite often not reset. We had that further down but I
-	fear it is not yet fixed.
+	* Provide an API or documentation how to find out the CPAN::Config
+	variables.
+
+	* The bug in Strptime is in the "ga" locale. Installing the ga locale on
+	my box doesn't solve it. Manana.
+
+	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
+	CONTAINSMODS is empty because Gabor has a distro in the bundle.
+
+	* Faszinating: Coro/eg/readline
+
+	* Now I know the first bug in install_tested: it re-tests already
+	installed modules.
+
+	* One thing we do not support yet in distroprefs is adding dependencies
+	without patching. Shall we?
 
 	* Todo: clean up "XXX" in the code
 
@@ -447,6 +233,265 @@ need the middle man.
 	* M2 feature request by Juergen Christoffel: have time stamps on the
 	history and a history command to see them
 
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+2006-11-02  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* Oops! Something changed my
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails-1.02.tar.gz
+
+	!!! Ahh, that explains something! The copy I had here believed to be
+	newer and "M", I should have reverted, I suppose.
+
+	* 30shell fails because of missing checksum data after a force get.
+	FIXED
+
+	New ideas from Slaven: patch -p0/1/etc might be autodetected
+
+	More match variables like all config variables or $^O ("os"?) and
+	perlver.
+
+	Finally: leaving back the .orig files (which I called -g0, why?) only
+	when debugging turned on?? I think I'll remove -b and -g0 and use
+	$ENV{PATCH_GET}=0 instead. Honorable mention: Text::Patch, unfortunately
+	stalled.
+
+2006-11-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Locking needs to be resolved soonish to enable safe concurrent
+	megainstalls and concurrent running shells.
+
+	I want to share the build_dir first because this is currently the most
+	dangerous spot. I suppose we can have it by using File::Temp for the
+	individual build_dir. We would have to turn off build_dir_reuse for the
+	second process. Nobody would ever overwrite a build_dir. Some guys would
+	remove old directories and this would do no harm. Should be done in rev.
+	1183.
+
+	Even if the second uses the same perl as the first one, we could coexist
+	because many commands scan the INC repeatedly. Things we do not scan
+	again and again are ???
+
+	historyfile: We would have to set histfile to nil for the second. DONE
+	1181
+
+	metadata: we would turn it off for the second. We could
+	neither read nor write it safely without locking protocol. DONE 1181
+
+	reading traditional index files: make writing atomic, let the second
+	only read them (by setting expiration time to inf). DONE 1181 Actually,
+	this was nonsense. the expiration time must not be changed. The user
+	wants to read index files from time to time... REVERTED in 1188
+
+	ability to reload index: turn off for the second DONE 1181
+
+	storing/listing local bundles: risk REVISIT LATER
+
+	local directories with the dot: risk REVISIT LATER
+
+	shared source: make it atomic to download (if it isn't yet) DONE 1180
+
+	Different perspective: batch jobs have not had a lock ever since CPAN.pm
+	exists. They could break each other on any occasion. Did they write the
+	histfile? Seems not so. Timestamp does not change with my tests and it
+	does not say "Lockfile removed". Yes, checklock is only called from the
+	shell (and from mkmyconfig but this is negligible). REVISIT mkmyconfig
+
+	But they read metadata and shouldn't. Disable! DONE 1181
+
+	And they reuse build_dir. Disable! DONE 1181
+
+	But they MUST read the index files: make writing atomic! DONE 1180
+
+	Is CPAN::FTP::localize doing its storage management atomicly? YES, since 1180
+
+	Todo: consider setting scan_cache to "never" or maybe not.
+
+	* Todo: compare the output of the 'failed' command within megainstall
+	and after reentering the shell. DONE and found one bug and fixed it in
+	rev. 1178
+
+	* I wanted to watch some scenarios with persistent data. Especially with
+	modules that work and that are being tested again and again with prereqs
+	and without or within bundles and if they are retested or not, installed
+	or not with persistence and within the same session.
+
+	Write a megatest?
+
+	* Wondering why I find this in the build directory in Crypt-CBC-2.22.yml:
+
+  writemakefile: !!perl/hash:CPAN::Distrostatus 
+    COMMANDID: 0
+    FAILED: ''
+    TEXT: YES
+
+	Note the 0 in COMMANDID.
+
+	A: The reason is that we only issued one command with 'make
+	megainstall', so this is correct.
+
+	* Does the shell still do locking? Under which circumstances is locking
+	turned off? Console/terminal I suppose.
+
+	A: yes.
+
+2006-10-31  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* just a memo what I usually install:
+
+	    install Bundle::CPANxxl Math::BigInt::GMP Plagger Bundle::Phalanx100 Jifty Coro Getopt::Euclid DBIx::Class IPC::PubSub Bundle::Pause PadWalker Graph::Easy
+
+	YAML::Syck after Bundle::CPAN did not turn off interactivity.
+
+	YAML::Syck before Bundle::CPAN worked well.
+
+	CPAN::Reporter before YAML worked well but we want to catch the early
+	YAML interactivity (which in turn can be avoided with YAML::Syck).
+
+	Now all in "make megainstall" including logging.
+
+	* Todo: some capture stuff maybe collected into the YAML files in
+	build_dir that contains all relevant output of that distro so we can
+	study the nonsense that currently goes on when I do my mega install on
+	maint-5.8.
+
+	For some reason some modules failed early in the cycle and then never
+	got re-tested. And they broke others which also didn't get re-tested. In
+	the end we had a lot of modules uninstalled that would test individually
+	well but all refused to re-test without force.
+	
+	One simple solution was to 'force test Bundle::CPANxxl' but that took
+	many minutes again.
+
+	[What's the deal with PathTools? Ahh, the dependency on
+	ExtUtils::CBuilder again. I have reported the bug but it is not yet
+	fixed. FIXED in Bundle::CPAN by pulling CBuilder to the front,]
+
+	For example the chain broke: CPAN::Checksums -> Data::Compare ->
+	File::Find::Rule -> Number::Compare. I could install Number::Compare now
+	when I asked for it (without force!), and then the chain could be
+	resolved step after step.
+
+	Something's fishy.
+
+2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Q: Why is this: during install Bundle::Phalanx100 I get for
+	DBD::Oracle a writemakefile NO
+	'/home/src/perl/repoperls/installed-perls/perl/pIOeQkH/perl-5.8.0@29165/bin/perl
+	Makefile.PL' returned status 65280
+
+	When I leave the shell and start it again and call 'failed' it is gone.
+
+	A: because we did not care for the state safe
+
+	Fixed in rev. 1172
+
+2006-10-30  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
+
+	* From: "David Golden" <xdaveg@gmail.com>
+Subject: CPAN::Reporter and Bundle::CPAN
+To: "Andreas J. Koenig" <andreas.koenig.gmwojprw@franz.ak.mind.de>
+Date: Mon, 30 Oct 2006 10:04:05 -0500                                           
+
+With CPAN::Reporter 0.29, all the config items are switched over.  The
+Todo backlog is still non-trivial, but I don't think any of the items
+will cause back-compatibilty problems down the line.  Given that,
+please feel free to add CPAN::Reporter to Bundle::CPAN whenever you
+have a chance.
+
+David
+
+	* disable PerlMagick
+
+2006-10-30  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* File::Slurp vs Pod::Coverage. Ticket opened:
+	http://rt.cpan.org/Ticket/Display.html?id=22693
+	
+2006-10-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Need to write build_dir/*.yml files also if reuse is turned off. And
+	also when we fail.
+
+	* Need a 'disabled' keyword on distroprefs. The hack to use
+	cpanconfig/make=false is both Unix centric and not obvious. ADDED in
+	rev. 1159
+
+	* distroprefs is harder to use with build_dir_reuse than before. We now
+	need "force get" more often because the old prefs value is in the distro
+	object. Force get can mean a network connection, so there's a need to
+	decide how we want to deal with that.
+
+	First idea is to remove the prefs from the serialized object but this is
+	much worse in case a patch has been applied.
+
+	* new method perl_fingerprint and _is_deeply or so to compare previous
+	and current fingerprint. DONE in rev. 1158
+
+	* Math::Pari was definitely broken by blead. Make it a bug report(?)
+----Program----
+eval {require Math::Pari};
+print $@ ? "N/A" : Math::Pari->VERSION;
+print "\n";
+
+----Output of .../pAEBdqj/perl-5.8.0@24541/bin/perl----
+2.010709
+
+----EOF ($?='0')----
+----Output of .../pIwwDvK/perl-5.8.0@24542/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 24541 and 24542
+
+	This between Ilya and me:
+
+> But bleadperl@29045 doesn't compile with:
+> 
+> cc -c  -I pari-2.1.7/src -Ipari-2.1.7/src/headers -Ipari-2.1.7/src -I./libPARI -DDEBUGGING -fno-strict-aliasing -pipe -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g   -DVERSION=\"2.010708\" -DXS_VERSION=\"2.010708\" -fPIC "-I/home/src/perl/repoperls/installed-perls/perl/pqbZHKu/perl-5.8.0@29045/lib/5.9.5/i686-linux-64int/CORE"  -DPARI_VERSION_EXP=2001007 -DDEBUG_PARI -DLSB_in_U32=0 -DLONG_SHORTER_THAN_IV -Derr=pari_err Pari.c
+> Pari.xs:1219: error: 'XPVCV' has no member named 'xof_off'
+> Pari.xs: In function 'XS_Math__Pari_DESTROY':
+
+	xray searching for "Ilya CV attach" finds
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2002-02/msg00633.html
+
+	Reading 24542.... Posting to P5P WRITTEN
+
+	Answer received with a pointer to a previous discussion where Nicholas said
+
+	|Assuming it is, in blead upgrading the PVCV to a PVFM and using
+	| IV		xfm_lines;
+	|instead should work. The structures are equivalent, except that PVFM
+	|has that one extra IV at the end.
+
+2006-10-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* think about the locking from a different angle: currently it is
+	possible but unsafe to have concurrent access to the .cpan/build
+	directory
+
+	* go after the Module::Build errors in Error.pm and Mason: I suspect
+	that's the set_perl5lib bug mentioned by Ilya. NO, it was not the
+	set_perl5lib bug. The bug is that the two distros use subclassing in
+	their Build.PL and so Module::Build's own methods are unable to provide
+	the prerequisites. My workaround for now is to fall back to the content
+	of META.yml, the bug persists and needs to be discussed with M:B people.
+
+	* write a dummy distro that reads arguments to Makefile.PL and another
+	one that reads something from STDIN (or maybe both in one) DELAYED until
+	the distroprefs stuff leaves the alpha stage.
+
+	* replace 03 index file with YAML.
+
+	* Todo/buglet: turn on debug "CPAN" and find the reason why
+	incommandcolor is quite often not reset. We had that further down but I
+	fear it is not yet fixed.
+
 	* H3 Locking: Linda W writes
 
 	>I'm not sure I understand the reason for the lock file
@@ -466,12 +511,6 @@ need the middle man.
 	And I promise to try out a more granular locking mechanism. This was
 	between 2006-01-26 and 2006-02-01 (and I wrote a paragraph into the
 	manpage how multiple ~/.cpan* directories could work)
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
 
 2006-10-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -649,16 +688,6 @@ Looks good
 
 	CPAN::Reporter before YAML worked well but we want to catch the early
 	YAML interactivity (which in turn can be avoided with YAML::Syck).
-
-	* The Net::SSH::Perl test 03-packet still runs forever even with
-	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
-	Report sent. But can we patch it? Maybe not as long as Math::Pari and
-	Crypt::Random are prereqs and fail themselves.
-
-	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
-	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
-	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
-	not enough. But can we patch it?
 
 	* as long as HTML::Mason/Module::Build are broken, we should use
 	Bundle::HTML::Mason? Alas, it doesn't list HTML::Entities. And after
