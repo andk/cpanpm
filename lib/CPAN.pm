@@ -3053,7 +3053,8 @@ sub localize {
 	my $method = "host$level";
 	my @host_seq = $level eq "easy" ?
 	    @reordered : 0..$last;  # reordered has CDROM up front
-        my @urllist = map { $CPAN::Config->{urllist}[$_] } @host_seq;
+        my @urllist = grep { defined $_ and length $_ }
+            map { $CPAN::Config->{urllist}[$_] } @host_seq;
         for my $u (@urllist) {
             if ($u->can("text")) {
                 $u->{TEXT} .= "/" unless substr($u->{TEXT},-1) eq "/";
