@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^DCONWAY/Parse-RecDescent-1.94"
+patches:
+  - ANDK/patches/Parse-RecDescent-1.94-SADAHIRO-01.patch.gz
