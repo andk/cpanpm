@@ -11,3 +11,8 @@ pl:
     - "\n"
 patches:
   - "ANDK/SOAP-Lite-0.69-ANDK-01.patch.gz"
+---
+comment: "This is from 2004-02-26"
+match:
+  distribution: "^BYRNE/SOAP/SOAP-Lite-0\.60a\.tar\.gz$"
+disabled: 1

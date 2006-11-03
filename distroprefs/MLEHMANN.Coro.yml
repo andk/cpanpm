@@ -10,6 +10,7 @@ pl:
     - "C stack size factor"
     - "16384\n"
 --- 
+comment: "The patch is just providing enough fix to compile under bleadperl and run the tests. It's not approved by the author who says that there are some other bugs lurking."
 match:
   distribution: "^MLEHMANN/Coro-2.1"
 pl: 
@@ -22,3 +23,12 @@ pl:
     - "16384\n"
     - "Number of guard pages \(0 disables\)"
     - "\n"
+patches:
+  - ANDK/patches/Coro-2.1-ANDK-01.patch.gz
+--- 
+comment: "or just to accept defaults in future releases..."
+match:
+  distribution: "^MLEHMANN/Coro-2"
+pl:
+  env:
+    PERL_MM_USE_DEFAULT: 1
