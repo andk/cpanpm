@@ -186,11 +186,13 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		PadWalker \
 		Graph::Easy \
 		Module::Plan::Base \
-		SVN::Notify::Config \
+		Cache::Memcached \
 		File::Rsync \
 		Net::SSH \
+		SVN::Mirror \
+		SVN::Notify::Config \
 		SVN::Notify::Mirror \
-		Cache::Memcached
+
 }
 }
 
