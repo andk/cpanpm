@@ -2785,7 +2785,6 @@ sub get_non_proxy_credentials {
 }
 
 sub _get_username_and_password_from_user {
-    my $self = shift;
     my $username_message = shift;
     my ($username,$password);
 
