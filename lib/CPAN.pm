@@ -1573,9 +1573,14 @@ sub o {
                 CPAN::HandleConfig->prettyprint($k);
 	    }
 	    $CPAN::Frontend->myprint("\n");
-	} elsif (!CPAN::HandleConfig->edit(@o_what)) {
-	    $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
-                                     qq{items\n\n});
+	} else {
+            if (CPAN::HandleConfig->edit(@o_what)) {
+                $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
+                                         "make the config permanent!\n\n");
+            } else {
+                $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
+                                         qq{items\n\n});
+            }
 	}
     } elsif ($o_type eq 'debug') {
 	my(%valid);
@@ -1921,7 +1926,17 @@ sub install_tested {
     $CPAN::Frontend->mywarn("No distributions tested with this build of perl found.\n"),
         return unless @some;
 
-    $self->install(@some);
+    @some = grep { not $_->uptodate } @some;
+    $CPAN::Frontend->mywarn("No non-uptodate distributions tested with this build of perl found.\n"),
+        return unless @some;
+
+    CPAN->debug("some[@some]");
+    for my $d (@some) {
+        my $id = $d->can("pretty_id") ? $d->pretty_id : $d->id;
+        $CPAN::Frontend->myprint("install_tested: Running for $id\n");
+        $CPAN::Frontend->sleep(1);
+        $self->install($d);
+    }
 }
 
 #-> sub CPAN::Shell::upgrade ;
@@ -5216,7 +5231,10 @@ sub patch {
                                    "Please run 'o conf init /patch/'\n\n");
         }
         $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
-        my $args = "-b -g0 -p1 -N --fuzz=3";
+        local $ENV{PATCH_GET} = 0; # shall replace -g0 which is not
+                                   # supported everywhere (and then,
+                                   # not ever necessary there)
+        my $args = "-p1 -N --fuzz=3";
         my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
         $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
         for my $patch (@$patches) {
