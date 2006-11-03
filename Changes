@@ -2,10 +2,17 @@
 
 	* release 1.88_59 (in preparation)
 
-	* locking granular enough to let many CPAN shells coexist
+	* fix a bug reported by Sujith Emmanuel to survive when illegal URLs are
+	entered
+
+	* make running concurrent batch jobs safe
+
+	* lock the shell more granular to let many CPAN shells coexist
 
 	* several small bugfixes to the persistent distro state feature
 	introduced in 1.88_58
+
+	* many new sample distroprefs files
 
 	* new bundle Bundle::CPANxxl with CPAN::Reporter, Module::Signature,
 	Expect, etc.
