@@ -9269,7 +9269,81 @@ The default values defined in the CPAN/Config.pm file can be
 overridden in a user specific file: CPAN/MyConfig.pm. Such a file is
 best placed in $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is
 added to the search path of the CPAN module before the use() or
-require() statements.
+require() statements. The mkmyconfig command writes this file for you.
+
+The C<o conf> command has various bells and whistles:
+
+=over
+
+=item completion support
+
+If you have a ReadLine module installed, you can hit TAB at any point
+of the commandline and C<o conf> will offer you completion for the
+built-in subcommands and/or config variable names.
+
+=item displaying some help: o conf help
+
+Displays a short help
+
+=item displaying current values: o conf [KEY]
+
+Displays the current value(s) for this config variable. Without KEY
+displays all subcommands and config variables.
+
+Example:
+
+  o conf shell
+
+=item changing of scalar values: o conf KEY VALUE
+
+Sets the config variable KEY to VALUE. The empty string can be
+specified as usual in shells, with C<''> or C<"">
+
+Example:
+
+  o conf wget /usr/bin/wget
+
+=item changing of list values: o conf KEY SHIFT|UNSHIFT|PUSH|POP|SPLICE|LIST
+
+If a config variable name ends with C<list>, it is a list. C<o conf
+KEY shift> removes the first element of the list, C<o conf KEY pop>
+removes the last element of the list. C<o conf KEYS unshift LIST>
+prepends a list of values to the list, C<o conf KEYS push LIST>
+appends a list of valued to the list.
+
+Likewise, C<o conf KEY splice LIST> passes the LIST to the according
+splice command.
+
+Finally, any other list of arguments is taken as a new list value for
+the KEY variable discarding the previous value.
+
+Examples:
+
+  o conf urllist unshift http://cpan.dev.local/CPAN
+  o conf urllist splice 3 1
+  o conf urllist http://cpan1.local http://cpan2.local ftp://ftp.perl.org
+
+=item interactive editing: o conf init [MATCH|LIST]
+
+Runs an interactive configuration dialog for matching variables.
+Without argument runs the dialog over all supported config variables.
+To specify a MATCH the argument must be enclosed by slashes.
+
+Examples:
+
+  o conf init ftp_passive ftp_proxy
+  o conf init /color/
+
+=item reverting to saved: o conf defaults
+
+Reverts all config variables to the state in the saved config file.
+
+=item saving the config: o conf commit
+
+Saves all config variables to the current config file (CPAN/Config.pm
+or CPAN/MyConfig.pm that was loaded at start).
+
+=back
 
 The configuration dialog can be started any time later again by
 issuing the command C< o conf init > in the CPAN shell. A subset of
@@ -9872,13 +9946,26 @@ nice about obeying that variable as well):
 
 =item 14)
 
-How do I create a Module::Build based Build.PL derived from an 
+How do I create a Module::Build based Build.PL derived from an
 ExtUtils::MakeMaker focused Makefile.PL?
 
 http://search.cpan.org/search?query=Module::Build::Convert
 
 http://accognoscere.org/papers/perl-module-build-convert/module-build-convert.html
 
+=item 15)
+
+What's the best CPAN site for me?
+
+The urllist config parameter is yours. You can add and remove sites at
+will. You should find out which sites have the best uptodateness,
+bandwidth, reliability, etc. and are topologically close to you. Some
+people prefer fast downloads, others uptodateness, others reliability.
+You decide which to try in which order.
+
+Henk P. Penning maintains a site that collects data about CPAN sites:
+
+  http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
 
 =back
 
