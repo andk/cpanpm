@@ -1,3 +1,18 @@
+2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Observing in a shell in degraded mode: it wrote a new Metadata file.
+
+	* Observing how install_tested behaves: within the same session it
+	installs without retesting. In a new session it does retest. What
+	*should* it do?
+	
+	Noting that the DH test runs forever again because GMP comes too late.
+
+2006-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* "shall I try to run in degraded mode" should not come a second time
+	within the same session. Currently it can happen.
+
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* imacat writes in #22749:
