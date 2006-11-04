@@ -12,7 +12,7 @@ distroprefs/BTROTT.XML-Feed.01.yml
 distroprefs/BYRNE.SOAP-Lite.01.yml
 distroprefs/CHAMAS.Crypt-SSLeay.01.yml
 distroprefs/CLKAO.SVN-Mirror.yml
-distroprefs/DBD-mysql.yml
+distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/DBROBINS.Net-SSH-Perl.01.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/EESTABROO.IMAP-Admin.01.yml
@@ -27,7 +27,7 @@ distroprefs/ILYAZ.Term-ReadLine-Perl.01.yml
 distroprefs/INGY.Inline.01.yml
 distroprefs/INGY.YAML.01.yml
 distroprefs/JCRISTY.PerlMagick.yml
-distroprefs/Jifty.yml
+distroprefs/JESSE.Jifty.yml
 distroprefs/JJORE.Carp-Clan.01.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KWILLIAMS.AI-Categorizer.01.yml

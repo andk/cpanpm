@@ -1,5 +1,78 @@
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
+	combined with long strings. Would like to see if bleadperl also fails.
+
+	* ALERT! A test in YAML turned red with blead??? It turns out that my
+	YAML crashes bugs-rt when the URI module is installed and passes all
+	tests when the URI module is not installed. The second test in bugs-rt.t
+	has "skip_unless_modules: URI". So it's an older bug that I just did not
+	see upto now.
+
+	* Bug that has to do with install_tested or build_dir_reuse or degraded
+	shell mode or some use of ^C at the wrong moment:
+
+  PEREINAR/File-Which-0.05.tar.gz              : install NO
+
+	But File::Which is installed. Maybe in a concurrent shell. When I ask
+	for 'install File::Which' I get 'is up to date' and nothing gets
+	repaired. When I ask for 'install PEREINAR/File-Which-0.05.tar.gz' then
+	the thing gets tested but not installed because 'Already tried without
+	success'.
+
+	Are we in trouble?
+
+	Maybe we must rethink how 'force test' works. I should not 'force get',
+	and 'force make', it should just test and not refuse to do it.
+
+	Or we must compute the COMMANDID better than we do during reanimate and
+	treat negative COMAMNDIDs with more rigor in some constellations?
+
+	The thing is that the module object for File::Which knows about the
+	correct distro object but it gets the installed version from @INC and
+	does not know who put it there and so should not be able to discard the
+	distro object. Hmmm.
+
+	* Da fällt mir ein, ich habs kürzlich anders gelöst, wenn du das nächste
+  > mal testest, probier mal diese Lösung (mit AnyEvent, sinngemäß gehts
+  > auch mit Coro):
+
+  >    BEGIN { $ENV{PERL_RL} = "gnu" } use Term::ReadLine;
+
+  >    my $rl = new Term::ReadLine "cfshell";
+
+  >    my $w = AnyEvent->io (fh => $rl->IN, poll => 'r', cb => sub { $rl->callback_read_char });
+
+  >    $rl->callback_handler_install ("$ARGV[0]> ", sub {
+  >       $rl->add_history ($_[0]);
+  >    }
+
+  > Allein das $ENV...= läßt mich grausen, aber irgendjemand hat halt
+  > entschieden, daß zwei völlig API-inkompatible module nicht getrennt
+  > ladbar sein dürfen.
+
+  > Ach ja, zum zwischendurch was ausgeben mache ich:
+
+  >    $rl->crlf;
+  >    print ...
+  >    $rl->forced_update_display;
+
+  > und beim exit muss man:
+
+  >    $rl->crlf;
+  >    $rl->deprep_terminal;
+
+  > machen.
+
+  > -- 
+  >                 The choice of a
+  >       -----==-     _GNU_
+  >       ----==-- _       generation     Marc Lehmann
+  >       ---==---(_)__  __ ____  __      pcg@goof.com
+  >       --==---/ / _ \/ // /\ \/ /      http://schmorp.de/
+  >       -=====/_/_//_/\_,_/ /_/\_\      XX11-RIPE
+
+
 	* Observing in a shell in degraded mode: it wrote a new Metadata file.
 
 	* Observing how install_tested behaves: within the same session it
@@ -45,10 +118,10 @@
 	module? Reported 2005-07:
 	http://rt.cpan.org/Ticket/Display.html?id=13836
 
-	* find out how to write a distropref with so much AI that it handles
-	several different dialogues. I just realized that YAML::Syck talked me
-	into a different dialogue on some older bleadperl that had YAML 0.60
-	installed:
+	* distroprefs with artificial intelligence: find out how to write a
+	distropref with so much AI that it handles several different dialogues.
+	I just realized that YAML::Syck talked me into a different dialogue on
+	some older bleadperl that had YAML 0.60 installed:
 
 *** WARNING ***
 
@@ -62,10 +135,31 @@ Continue installing YAML::Syck? [y]
 
 	We would like to answer to this question yes if it comes. Or we would
 	like to upgrade YAML first.
-	
-	* Randy needs an API to find out where the index files are located. And
-	the whole SQLite needs to be integrated. First question is what do we
-	use from it. Only the readonly stuff, I suppose.
+
+	One would think that Expect collects data and compares them to a pool of
+	regular expressions each of which has an associated answer. As soon as
+	one expression matches, its answer is given and it is taken out of the
+	pool. On EOF do not even complain. Very similar to what we do now. Is it
+	even worth to keep the current interface? Yes, because it has the
+	potential to break. Because Expect itself does not provide it. We must
+	write some code in between:
+
+	Variant 1: match on /./, look at the whole collected string, do the
+	match loop. On success do as we do now, on failure continue as we do
+	now. On timeout do like we do now. On EOF exit the loop silently. As
+	test write a distro that asks 12 questions in random order and dies if
+	the wrong answer is given.
+
+	Variant 2: match on /./ until timeout is reached. Now do your own
+	matching. On success do as we do now, on failure give up. One question
+	that we cannot answer is too much. There is no timeout error, just a "no
+	prepared regex matches the question". On EOF exit the loop silently.
+
+	Variant 2 is much better.
+
+	* Randy Kobes needs an API to find out where the index files are
+	located. And the whole SQLite needs to be integrated. First question is
+	what do we use from it. Only the readonly stuff, I suppose.
 
 	* Investigate if I want Math::Bigint::GMP in the core. Think of
 	Crypt::DH and the horrible test timings when Math::Bigint::GMP is not
@@ -888,7 +982,7 @@ drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
 	supported. The first two for PDL on freebsd, the last one was just for
 	quick testing of the mechanism. Added test_report around rev. 1061
 
-	* Randy's CPAN-Search-Lite lives at
+	* Randy Kobes' CPAN-Search-Lite lives at
 	http://sourceforge.net/cvs/?group_id=101571 and on my local disk at
 	/home/src/perl/cpan-search-lite/CPAN-Search-Lite. As it needs DBI, it
 	cannot use bleadperl. Latest maint-perl is 28854.

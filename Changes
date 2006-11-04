@@ -2,15 +2,20 @@
 
 	* release 1.88_59 (in preparation)
 
+	* Work in progress, new features (marked as alpha below) still in flux
+
+	* Large chunk of documentation added about the many 'o conf' variants
+	(after a smart kick From Marc Lehmann)
+
 	* fix a bug reported by Sujith Emmanuel to survive when illegal URLs are
 	entered
 
-	* make running concurrent batch jobs safe
+	* make running concurrent batch jobs safe (alpha)
 
-	* lock the shell more granular to let many CPAN shells coexist
+	* lock the shell more granular to let many CPAN shells coexist (alpha)
 
 	* several small bugfixes to the persistent distro state feature
-	introduced in 1.88_58
+	introduced in 1.88_58 (alpha)
 
 	* many new sample distroprefs files
 
@@ -19,7 +24,7 @@
 
 	* new keyword "disabled" in distroprefs
 
-	* very early incarnation of new install_tested command (pre-alpha)
+	* very early incarnation of new install_tested command (alpha)
 
 	* sanitize the behaviour after an Expect.pm timeout
 

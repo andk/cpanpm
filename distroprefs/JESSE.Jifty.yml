@@ -1,6 +1,6 @@
 --- 
 match:
-  module: "^Jifty(::DBI)?$"
+  distribution: "^JESSE/Jifty-"
 pl: 
   env:
     PERL_AUTOINSTALL: --skip    
