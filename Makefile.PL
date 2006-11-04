@@ -201,7 +201,7 @@ sub postamble {
   q{
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 verify-no-subdir:
-	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|distroprefs|eg|inc|lib|patches|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
+	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|distroprefs|eg|inc|lib|logs|patches|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
 
 setversion:
 	$(PERL) Makefile.PL --setversion
