@@ -124,7 +124,7 @@ sub edit {
 	if ($o =~ /list$/) {
 	    $func = shift @args;
 	    $func ||= "";
-            CPAN->debug("func[$func]") if $CPAN::DEBUG;
+            CPAN->debug("func[$func]args[@args]") if $CPAN::DEBUG;
             my $changed;
 	    # Let's avoid eval, it's easier to comprehend without.
 	    if ($func eq "push") {
@@ -140,10 +140,12 @@ sub edit {
 		unshift @{$CPAN::Config->{$o}}, @args;
                 $changed = 1;
 	    } elsif ($func eq "splice") {
-		splice @{$CPAN::Config->{$o}}, @args;
+                my $offset = shift @args || 0;
+                my $length = shift @args || 0;
+		splice @{$CPAN::Config->{$o}}, $offset, $length, @args; # may warn
                 $changed = 1;
-	    } elsif (@args) {
-		$CPAN::Config->{$o} = [@args];
+	    } elsif ($func) {
+		$CPAN::Config->{$o} = [$func, @args];
                 $changed = 1;
 	    } else {
                 $self->prettyprint($o);
