@@ -2,6 +2,8 @@
 
 Script to give an overview about the contents of the build_dir/
 
+Todo: select data, filter on data
+
 =cut
 
 use strict;

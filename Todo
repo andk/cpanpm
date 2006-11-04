@@ -1,5 +1,7 @@
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* 
+
 	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
 	combined with long strings. Would like to see if bleadperl also fails.
 
@@ -7,7 +9,7 @@
 	YAML crashes bugs-rt when the URI module is installed and passes all
 	tests when the URI module is not installed. The second test in bugs-rt.t
 	has "skip_unless_modules: URI". So it's an older bug that I just did not
-	see upto now.
+	see upto now. Bugreport to P5P written.
 
 	* Bug that has to do with install_tested or build_dir_reuse or degraded
 	shell mode or some use of ^C at the wrong moment:
@@ -32,6 +34,9 @@
 	correct distro object but it gets the installed version from @INC and
 	does not know who put it there and so should not be able to discard the
 	distro object. Hmmm.
+
+	Remember, we hat the notest pragma! Maybe we can let install_tested
+	support both the force and the notest pragma and are through?
 
 	* Da fällt mir ein, ich habs kürzlich anders gelöst, wenn du das nächste
   > mal testest, probier mal diese Lösung (mit AnyEvent, sinngemäß gehts
