@@ -3,5 +3,12 @@ match:
   distribution: "^RCAPUTO/POE-"
 pl: 
   expect:
-    - "Any text other than Y or y will be taken as a no"
+    - "Would you like to skip the network tests"
     - "y\n"
+--- 
+comment: "Or if you prefer to follow the defaults..."
+match:
+  distribution: "^RCAPUTO/POE-"
+pl: 
+  args:
+    - --default
