@@ -64,20 +64,7 @@ perl:
   \$^X: "$^X"
   mtime_dll: "$mtime_dll"
   sitearchexp: "$Config::Config{sitearchexp}"
-  stat(\$^X):
-    - 0
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 8
-    - $stat[9]
-    - 0
-    - 0
-    - 0
+  mtime_\$^X: $stat[9]
 time: 1
 EOF
 }
@@ -188,7 +175,7 @@ $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
 $HAVE->{"YAML&&patch"}
     =
     $HAVE->{"YAML"}
-    || $HAVE->{"patch"};
+    && $HAVE->{"patch"};
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
@@ -828,6 +815,7 @@ __END__
 ########
 #P:m Fcntl
 #E:Found \d old builds, restored the state of \d[\s\S]+?Defines fcntl
+#R:YAML
 ########
 #P:a JHI
 #E:Hietaniemi
