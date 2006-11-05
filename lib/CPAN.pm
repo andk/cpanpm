@@ -6204,14 +6204,14 @@ is part of the perl-%s distribution. To install that, you need to run
         }
     }
     my $expect = $self->prefs->{make}{expect};
-    my $can_expect = $CPAN::META->has_inst("Expect");
     my $want_expect = 0;
     if ( $expect && @$expect ) {
+        my $can_expect = $CPAN::META->has_inst("Expect");
         if ($can_expect) {
             $want_expect = 1;
         } else {
             $CPAN::Frontend->mywarn("Expect not installed, falling back to ".
-                                    "testing without\n");
+                                    "system\n");
         }
     }
     my $system_ok;
@@ -6832,9 +6832,9 @@ sub test {
         }
     }
     my $expect = $self->prefs->{test}{expect};
-    my $can_expect = $CPAN::META->has_inst("Expect");
     my $want_expect = 0;
     if ( $expect && @$expect ) {
+        my $can_expect = $CPAN::META->has_inst("Expect");
         if ($can_expect) {
             $want_expect = 1;
         } else {
@@ -6844,8 +6844,16 @@ sub test {
     }
     my $test_report = CPAN::HandleConfig->prefs_lookup($self,
                                                        q{test_report});
-    my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
-    my $want_report = $test_report && $can_report;
+    my $want_report;
+    if ($test_report) {
+        my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
+        if ($can_report) {
+            $want_report = 1;
+        } else {
+            $CPAN::Frontend->mywarn->("CPAN::Reporter not installed, falling back to ".
+                                      "testing without\n");
+        }
+    }
     my $ready_to_report = $want_report;
     if ($ready_to_report
         && (
@@ -6855,7 +6863,7 @@ sub test {
            )
        ) {
         $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
-                                "for for local directories\n");
+                                "for local directories\n");
         $ready_to_report = 0;
     }
     if ($ready_to_report
