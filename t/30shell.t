@@ -1244,6 +1244,15 @@ To add a new distro, the following steps must be taken:
 
 - add the test to shell.t that triggered the demand for a new distro
 
+=head2 Problems
+
+When you set up a new working copy of the SVN repository, you first
+have to run 'make testdistros' to get the pseudo distros that are not
+in the repository. This makes too many testdistros, so you must run
+'svk st' and see which are marked with 'M'. You must revert those and
+then the 30shell test should succeed. I'm sure this can be fixed but
+haven't yet found out how.
+
 =cut
 
 

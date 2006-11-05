@@ -212,7 +212,14 @@ README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
-chlog :: chlog-svn chlog-trad
+chlog :: chlog-svk-short
+chlog-oldstyle :: chlog-svn chlog-trad
+
+chlog-svk-short :
+	-LC_ALL=$(LC_ALL_noexport) svk log -v //local/cpanpm > ChangeLogShort.svk
+
+chlog-svk-long :
+	-LC_ALL=$(LC_ALL_noexport) svk log -v //mirror/cpanpm > ChangeLogLong.svk
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
