@@ -23,6 +23,7 @@ use File::Find;
 use File::Path ();
 use File::Spec ();
 use FileHandle ();
+use Fcntl qw(:flock);
 use Safe ();
 use Sys::Hostname qw(hostname);
 use Text::ParseWords ();
@@ -747,9 +748,8 @@ You may want to kill the other job and delete the lockfile. On UNIX try:
 			   );
 	    }
 	} else {
-            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Lockfile '$lockfile'\n".
-                                           "reports other process with ID ".
-                                           "$otherpid. Cannot proceed.\n"));
+            $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Found invalid lockfile ".
+                                           "'$lockfile', please remove. Cannot proceed.\n"));
         }
     }
     my $dotcpan = $CPAN::Config->{cpan_home};
@@ -787,9 +787,15 @@ Please make sure the directory exists and is writable.
             return suggest_myconfig;
         }
     } # $@ after eval mkpath $dotcpan
+    if (0) { # to test what happens when a race condition occurs
+        for (reverse 1..10) {
+            print $_, "\n";
+            sleep 1;
+        }
+    }
     unless ($run_degraded) {
         my $fh;
-        unless ($fh = FileHandle->new(">$lockfile")) {
+        unless ($fh = FileHandle->new("+>>$lockfile")) {
             if ($! =~ /Permission/) {
                 $CPAN::Frontend->myprint(qq{
 
@@ -809,10 +815,21 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
                 return suggest_myconfig;
             }
         }
+        my $sleep = 1;
+        while (!flock $fh, LOCK_EX|LOCK_NB) {
+            if ($sleep>10) {
+                $CPAN::Frontend->mydie("Giving up\n");
+            }
+            $CPAN::Frontend->mysleep($sleep++);
+            $CPAN::Frontend->mywarn("Could not lock lockfile with flock: $!; retrying\n");
+        }
+
+        seek $fh, 0, 0;
+        truncate $fh, 0;
         $fh->print($$, "\n");
         $fh->print(hostname(), "\n");
         $self->{LOCK} = $lockfile;
-        $fh->close;
+        $self->{LOCKFH} = $fh;
     }
     $SIG{TERM} = sub {
         my $sig = shift;
