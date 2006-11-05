@@ -457,6 +457,34 @@ __END__
 #E:(?s:New set.+?commit.+?(!).+?\])
 ########
 #P:o conf urllist
+#E:linuxforum
+########
+#P:o conf urllist pop
+########
+#P:o conf urllist pop
+########
+#P:o conf urllist pop
+########
+#P:o conf urllist splice 1 3
+########
+#P:o conf urllist
+#E:programming.+\n.+linuxforum
+########
+#P:o conf urllist push PUSH
+########
+#P:o conf urllist unshift UNSHIFT
+########
+#P:o conf urllist
+#E:UNSHIFT.+\n.+programming.+\n.+linuxforum.+\n.+PUSH
+########
+#P:o conf urllist ONE TWO
+########
+#P:o conf urllist push PUSH
+########
+#P:o conf urllist unshift UNSHIFT
+########
+#P:o conf urllist
+#E:UNSHIFT.+\n.+ONE.+\n.+TWO.+\n.+PUSH
 ########
 #P:o conf defaults
 ########
