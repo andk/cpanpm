@@ -1,7 +1,5 @@
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* 
-
 	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
 	combined with long strings. Would like to see if bleadperl also fails.
 
@@ -37,6 +35,15 @@
 
 	Remember, we hat the notest pragma! Maybe we can let install_tested
 	support both the force and the notest pragma and are through?
+
+	But no, even 'notest install ...' does not succeed because we need
+	force, not notest, but notest propagates down until we restart with get.
+	This is, of course a last resort, but it's no fun:-(
+
+	SHOWSTOPPER ALERT!
+
+	At least I get the impression this extreme case happens only on ^C, but
+	some other methods of dieing will certainly exist as well.
 
 	* Da fällt mir ein, ich habs kürzlich anders gelöst, wenn du das nächste
   > mal testest, probier mal diese Lösung (mit AnyEvent, sinngemäß gehts
