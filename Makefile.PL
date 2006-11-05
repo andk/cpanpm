@@ -176,6 +176,7 @@ ALL_PERLS = /usr/bin/perl \
 # not sorted because order matters
 MEGA_COLLECTION = Bundle::CPANxxl \
 		Math::BigInt::GMP \
+		IPC::ShareLite \
 		Plagger Bundle::Phalanx100 \
 		Jifty \
 		Coro \
@@ -192,6 +193,7 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		SVN::Mirror \
 		SVN::Notify::Config \
 		SVN::Notify::Mirror \
+		Term::ReadLine::GNU \
 
 }
 }
