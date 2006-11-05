@@ -1,0 +1,7 @@
+---
+match:
+  distribution: "^JPEACOCK/SVN-Notify-Mirror-"
+pl:
+  expect:
+    - "Do you want to run the SSH tests\?\s+\(see the README for details\)"
+    - "\n"
