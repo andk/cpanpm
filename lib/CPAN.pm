@@ -4761,10 +4761,14 @@ sub normalize {
     my($self,$s) = @_;
     $s = $self->id unless defined $s;
     if (substr($s,-1,1) eq ".") {
-        unless ($CPAN::META->{LOCK}) {
-            $CPAN::Frontend->mywarn("You are visiting a local directory without lock,
-  take care that concurrent processes do not do likewise.\n");
-            $CPAN::Frontend->mysleep(2);
+        # using a global because we are sometimes called as static method
+        if (!$CPAN::META->{LOCK}
+            && !$CPAN::Have_warned->{"$s is unlocked"}++
+           ) {
+            $CPAN::Frontend->mywarn("You are visiting the local directory
+  '$s'
+  without lock, take care that concurrent processes do not do likewise.\n");
+            $CPAN::Frontend->mysleep(1);
         }
         if ($s eq ".") {
             $s = "$CPAN::iCwd/.";

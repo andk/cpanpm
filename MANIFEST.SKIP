@@ -9,6 +9,7 @@
 ^DIST
 ^DIST
 ^MANIFEST.bak
+^MANIFEST.*\.svk
 ^MIRRORED.BY
 ^Makefile(.old)?$
 ^TAGS
