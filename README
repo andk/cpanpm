@@ -971,6 +971,7 @@ CONFIGURATION
     configuration dialog can be run by issuing "o conf init WORD" where WORD
     is any valid config variable or a regular expression.
 
+  Config Variables
     Currently the following keys in the hash reference $CPAN::Config are
     defined:
 
