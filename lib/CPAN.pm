@@ -6203,7 +6203,23 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $env->{$e};
         }
     }
-    my $system_ok = system($system) == 0;
+    my $expect = $self->prefs->{make}{expect};
+    my $can_expect = $CPAN::META->has_inst("Expect");
+    my $want_expect = 0;
+    if ( $expect && @$expect ) {
+        if ($can_expect) {
+            $want_expect = 1;
+        } else {
+            $CPAN::Frontend->mywarn("Expect not installed, falling back to ".
+                                    "testing without\n");
+        }
+    }
+    my $system_ok;
+    if ($want_expect) {
+        $system_ok = $self->_run_via_expect($system,$expect) == 0;
+    } else {
+        $system_ok = system($system) == 0;
+    }
     $self->introduce_myself;
     if ( $system_ok ) {
 	 $CPAN::Frontend->myprint("  $system -- OK\n");
