@@ -22,6 +22,14 @@ my $version_from;
   warn "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nYou should get a new one\n"
         if $ExtUtils::MakeMaker::VERSION < 6.0;
 }
+our $SVN_RELEASE = 0;
+if (-d ".svn") {
+  $SVN_RELEASE = 1;
+} else {
+  warn "making SVK based release, take care!";
+  @ARGV = ();
+  sleep 2;
+}
 if ($HAVE_FILE_SPEC) {
   $version_from = File::Spec->catfile(qw(lib CPAN.pm));
   my $version_set_manually = 1; # not by SVN
@@ -200,7 +208,8 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 
 sub postamble {
   return "" unless $HAVE_MAKE; # dmake has unknown issues with my Makefile
-  q{
+  my @m;
+  push @m, q{
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|distroprefs|eg|inc|lib|logs|patches|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
@@ -212,21 +221,23 @@ README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
-chlog :: chlog-svk-short
-chlog-oldstyle :: chlog-svn chlog-trad
+chlog-svkstyle :: chlog-svk-short
 
-chlog-svk-short :
-	-LC_ALL=$(LC_ALL_noexport) svk log -v //local/cpanpm > ChangeLogShort.svk
+chlog-svk-short : ChangeLogShort.svk
+ChangeLogShort.svk : 
+	-LC_ALL=$(LC_ALL_noexport) svk log -v //local/cpanpm > $@
 
-chlog-svk-long :
-	-LC_ALL=$(LC_ALL_noexport) svk log -v //mirror/cpanpm > ChangeLogLong.svk
+chlog-svk-long : ChangeLogLong.svk
+ChangeLogLong.svk :
+	-LC_ALL=$(LC_ALL_noexport) svk log -v //mirror/cpanpm > $@
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
 	-LC_ALL=$(LC_ALL_noexport) svn log -v https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog.svn
 
-chlog-trad :
-	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog
+chlog-trad : ChangeLogTrad.svn
+ChangeLogTrad.svn :
+	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > $@
 
 # for debugging
 chlog-xml :
@@ -489,10 +500,28 @@ clean ::
 		t/CPAN/authors/id/A/AN/ANDK/*/META.yml
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
-no_CR :
+no_CR : ChangeLog META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
-}
+};
+  if ($SVN_RELEASE) {
+    push @m, qq{
+chlog :: chlog-svn chlog-trad
+
+ChangeLog : ChangeLogTrad.svn
+	mv ChangeLogTrad.svn ChangeLog
+};
+  } else {
+    push @m, qq{
+chlog :: chlog-svkstyle
+
+ChangeLog : ChangeLogShort.svk
+	mv ChangeLogShort.svk ChangeLog
+
+};
+  }
+
+  join "", @m;
 }
 
 sub dist_ci {
@@ -513,7 +542,7 @@ disttest :
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
 
 distdir ::
-	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 

@@ -21,7 +21,7 @@ sub _f ($) {File::Spec->catfile(split /\//, shift);}
 open FH, _f"lib/CPAN.pm" or die "Could not open CPAN.pm: $!";
 my $seen;
 while (<FH>) {
-  next if 1../^=head1 CONFIGURATION/;
+  next if 1../^=head2 Config Variables/;
   next if /^(\w|$)/ && !$seen;
   last if /^(\w|$)/ && $seen;
   chomp;

@@ -3,6 +3,10 @@
 	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
 	combined with long strings. Would like to see if bleadperl also fails.
 
+	Its parent is https://rt.cpan.org/Ticket/Display.html?id=22134
+	
+	I've put my findings in there. FIXED.
+
 	* ALERT! A test in YAML turned red with blead??? It turns out that my
 	YAML crashes bugs-rt when the URI module is installed and passes all
 	tests when the URI module is not installed. The second test in bugs-rt.t

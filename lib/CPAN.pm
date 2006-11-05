@@ -9395,6 +9395,8 @@ issuing the command C< o conf init > in the CPAN shell. A subset of
 the configuration dialog can be run by issuing C<o conf init WORD>
 where WORD is any valid config variable or a regular expression.
 
+=head2 Config Variables
+
 Currently the following keys in the hash reference $CPAN::Config are
 defined:
 

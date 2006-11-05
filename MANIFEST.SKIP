@@ -6,10 +6,10 @@
 ^CPAN-.+/.+
 ^CPAN-.+gz$
 ^CPAN/MakeMaker
+^ChangeLog.*\.svk
 ^DIST
 ^DIST
 ^MANIFEST.bak
-^MANIFEST.*\.svk
 ^MIRRORED.BY
 ^Makefile(.old)?$
 ^TAGS
