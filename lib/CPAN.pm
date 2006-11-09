@@ -352,19 +352,24 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
-# CPAN::_yaml_loadfile
-sub _yaml_loadfile {
-    my($self,$local_file) = @_;
-    return +[] unless -s $local_file;
+sub _yaml_module {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if (
         $yaml_module ne "YAML"
         &&
         !$CPAN::META->has_inst($yaml_module)
        ) {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
+        # $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
         $yaml_module = "YAML";
     }
+    return $yaml_module;
+}
+
+# CPAN::_yaml_loadfile
+sub _yaml_loadfile {
+    my($self,$local_file) = @_;
+    return +[] unless -s $local_file;
+    my $yaml_module = $self->_yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
         my @yaml;
@@ -386,15 +391,7 @@ sub _yaml_loadfile {
 # CPAN::_yaml_dumpfile
 sub _yaml_dumpfile {
     my($self,$to_local_file,@what) = @_;
-    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
-    if (
-        $yaml_module ne "YAML"
-        &&
-        !$CPAN::META->has_inst($yaml_module)
-       ) {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
-        $yaml_module = "YAML";
-    }
+    my $yaml_module = $self->_yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
             my $code = UNIVERSAL::can($yaml_module, "Dump");
@@ -738,7 +735,7 @@ There seems to be running another CPAN process (pid $otherpid).  Contacting...
 			(qq{Shall I try to run in degraded }.
 			 qq{mode? (Y/n)},"y");
                 if ($ans =~ /^y/i) {
-                    $CPAN::Frontend->mywarn("Running in degraded more is experimental.
+                    $CPAN::Frontend->mywarn("Running in degraded mode (experimental).
 Please report if something unexpected happens\n");
                     $run_degraded = 1;
                     for ($CPAN::Config) {
@@ -2917,14 +2914,21 @@ sub _ftp_statistics {
     return $stats->[0];
 }
 
+sub _mytime () {
+    if (CPAN->has_inst("Time::HiRes")) {
+        return Time::HiRes::time();
+    } else {
+        return time;
+    }
+}
+
 sub _new_stats {
     my($self,$file) = @_;
-    my $ret = { file => $file };
-    if (CPAN->has_inst("Time::HiRes")) {
-        $ret->{start} = Time::HiRes::time();
-    } else {
-        $ret->{start} = time;
-    }
+    my $ret = {
+               file => $file,
+               attempts => [],
+               start => _mytime,
+              };
     $ret;
 }
 
@@ -2950,6 +2954,16 @@ sub _add_to_statistics {
 sub _recommend_url_for {
     my($self, $file) = @_;
     my $urllist = $self->_get_urllist;
+    if ($file =~ s|/CHECKSUMS(.gz)?$||) {
+        my $fullstats = $self->_ftp_statistics();
+        my $history = $fullstats->{history} || [];
+        while (my $last = pop @$history) {
+            last if $last->{end} - time > 3600; # only young results are interesting
+            next unless $file eq File::Basename::dirname($last->{file});
+            return $last->{thesiteurl};
+        }
+    }
+    return (); # XXX introduce some randomness!
     $urllist->[int rand scalar @$urllist];
 }
 
@@ -3203,6 +3217,9 @@ sub localize {
             last if $CPAN::Signal; # need to cleanup
 	}
     }
+    if ($ret) {
+        $stats->{filesize} = -s $ret;
+    }
     $self->_add_to_statistics($stats);
     if ($ret) {
         return $ret;
@@ -3233,11 +3250,21 @@ sub localize {
     return;
 }
 
+sub _set_attempt {
+    my($self,$stats,$method,$url) = @_;
+    push @{$stats->{attempts}}, {
+                                 method => $method,
+                                 start => _mytime,
+                                 url => $url,
+                                };
+}
+
 # package CPAN::FTP;
 sub hosteasy {
     my($self,$host_seq,$file,$aslocal,$stats) = @_;
     my($ro_url);
   HOSTEASY: for $ro_url (@$host_seq) {
+        $self->_set_attempt($stats,"easy",$ro_url);
 	my $url .= "$ro_url$file";
 	$self->debug("localizing perlish[$url]") if $CPAN::DEBUG;
 	if ($url =~ /^file:/) {
@@ -3368,7 +3395,7 @@ sub hosteasy {
            ){
             ##address #17973: default URLs should not try to override
             ##user-defined URLs just because LWP is not available
-            my $ret = $self->hosthard([$ro_url],$file,$aslocal);
+            my $ret = $self->hosthard([$ro_url],$file,$aslocal,$stats);
             return $ret if $ret;
         }
         return if $CPAN::Signal;
@@ -3389,6 +3416,7 @@ sub hosthard {
   my($aslocal_dir) = File::Basename::dirname($aslocal);
   File::Path::mkpath($aslocal_dir);
   HOSTHARD: for $ro_url (@$host_seq) {
+        $self->_set_attempt($stats,"hard",$ro_url);
 	my $url = "$ro_url$file";
 	my($proto,$host,$dir,$getfile);
 
@@ -3549,6 +3577,7 @@ config variable with
 });
     $CPAN::Frontend->mysleep(2);
   HOSTHARDEST: for $ro_url (@$host_seq) {
+        $self->_set_attempt($stats,"hardest",$ro_url);
 	my $url = "$ro_url$file";
 	$self->debug("localizing ftpwise[$url]") if $CPAN::DEBUG;
 	unless ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
@@ -5530,16 +5559,11 @@ sub _signature_business {
                 my $rv = Module::Signature::verify();
                 if ($rv != Module::Signature::SIGNATURE_OK() and
                     $rv != Module::Signature::SIGNATURE_MISSING()) {
-                    $CPAN::Frontend->myprint(
-                                             qq{\nSignature invalid for }.
-                                             qq{distribution file. }.
-                                             qq{Please investigate.\n\n}.
-                                             $self->as_string,
-                                             $CPAN::META->instance(
-                                                                   'CPAN::Author',
-                                                                   $self->cpan_userid,
-                                                                  )->as_string
-                                            );
+                    $CPAN::Frontend->mywarn(
+                                            qq{\nSignature invalid for }.
+                                            qq{distribution file. }.
+                                            qq{Please investigate.\n\n}
+                                           );
 
                     my $wrap =
                         sprintf(qq{I'd recommend removing %s. Its signature
@@ -6419,7 +6443,7 @@ sub _find_prefs {
     if ($@) {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
-    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    my $yaml_module = CPAN->_yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         my $dh = DirHandle->new($prefs_dir)
             or die Carp::croak("Couldn't open '$prefs_dir': $!");
