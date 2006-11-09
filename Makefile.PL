@@ -201,7 +201,7 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		SVN::Mirror \
 		SVN::Notify::Config \
 		SVN::Notify::Mirror \
-		Term::ReadLine::GNU \
+		Term::ReadLine::Gnu \
 
 }
 }
