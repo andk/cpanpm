@@ -1,5 +1,29 @@
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* From: Adam Kennedy <cpan@ali.as>
+Subject: Re: Trouble installing module: "LWP not available"
+To: cpan-discuss@perl.org
+Date: Wed, 08 Nov 2006 16:55:21 +1100
+
+Andreas
+
+Speaking of bad configs, I think I might be a good idea to start
+adding some basic error checks.
+
+Yesterday I got caught by the various paths not allowing the use of
+tilde ~. Instead of my homedir, it installed to a directory called,
+literally, "~".
+
+Apart from being a little annoying, fixing it required I make the
+scariest command I've ever done on a production system.
+
+rm -rf "~"
+
+:/
+
+Adam K
+
+
 	* Still in the code: $pid = open README, "which $binary|" in _check_binary.
 
 	See also #22893 and File::Which.
