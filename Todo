@@ -1,6 +1,39 @@
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* From: Adam Kennedy <cpan@ali.as>
+	* Bug: 'o conf init urllist' it offered me lots of URLs without trailing
+	slash, e.g. ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPAN but then
+	some other code appended authors/ without inserting the slash:
+
+cpan> reload index
+Fetching with LWP:
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
+LWP failed with code[404] message[Can't chdir to CPANauthors]
+Fetching with Net::FTP:
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
+  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
+Fetching with Net::FTP
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz.gz
+  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
+
+	
+
+	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
+
+	LWP failed with code[500] message[read timeout]
+Trying to get away with old file:
+6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
+Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
+  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
+.
+Caught SIGINT, trying to continue
+	
+cpan> hosts
+Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
+
+
+	* Bug: ~ expansion missing or warning demanded
+
+	From: Adam Kennedy <cpan@ali.as>
 Subject: Re: Trouble installing module: "LWP not available"
 To: cpan-discuss@perl.org
 Date: Wed, 08 Nov 2006 16:55:21 +1100
@@ -24,13 +57,14 @@ rm -rf "~"
 Adam K
 
 
-	* Still in the code: $pid = open README, "which $binary|" in _check_binary.
+	* Bug: Still in the code: $pid = open README, "which $binary|" in
+	_check_binary().
 
-	See also #22893 and File::Which.
+	Reported as #22893. See also File::Which.
 
 2006-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* randy kobes sent a patch--Thanks Randy, I'm swamped with work ATM
+	* randy kobes sent two patches--Thanks Randy, I'm swamped with work ATM
 
 	* imacat writes in #22749:
 
