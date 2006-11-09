@@ -1,5 +1,33 @@
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* To: Florian Scharinger <florian@epcc.ed.ac.uk>
+Cc: perl-qa@perl.org
+Subject: Re: CPAN::Shell->install() downloads dependencies, but doesn't add them to @INC for tests
+From: andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig)
+Gcc: nnml:sent
+--text follows this line--
+>>>>> On Wed, 08 Nov 2006 18:13:26 +0000, Florian Scharinger <florian@epcc.ed.ac.uk> said:
+
+  > Hi perl-qa,
+  > I'm trying to download missing Perl test modules automatically during
+  > build time of my project, by using:
+
+  >  use CPAN;
+  >  CPAN::Shell->install("Test::Exception");
+
+  > Test::Exception has dependencies, which the CPAN shell detects correctly:
+
+  > ---- Unsatisfied dependencies detected during
+  > [A/AD/ADIE/Test-Exception-0.24.tar.gz] -----
+  >     Test::Builder
+  >     Sub::Uplevel
+  >     Test::Builder::Tester
+
+  > The dependencies are downloaded and built, however, when then running
+  > the tests for Test::Exception it doesn't include the path to the just
+  > downloaded modules:
+
+
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
 	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
 	case I must disable installation of Mail::Send somehow or debug.

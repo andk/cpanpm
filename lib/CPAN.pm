@@ -2931,8 +2931,28 @@ sub _add_to_statistics {
 # checked from, maybe only for young files?
 sub _recommend_url_for {
     my($self, $file) = @_;
-    my @urllist = @{$CPAN::Config->{urllist}};
-    $urllist[int rand scalar @urllist];
+    my $urllist = $self->_get_urllist;
+    $urllist->[int rand scalar @$urllist];
+}
+
+sub _get_urllist {
+    my($self) = @_;
+    $CPAN::Config->{urllist} ||= [];
+    unless (ref $CPAN::Config->{urllist} eq 'ARRAY') {
+        $CPAN::Frontend->mywarn("Malformed urllist; ignoring.  Configuration file corrupt?\n");
+        $CPAN::Config->{urllist} = [];
+    }
+    my @urllist = grep { defined $_ and length $_ } @{$CPAN::Config->{urllist}};
+    for my $u (@urllist) {
+        CPAN->debug("u[$u]") if $CPAN::DEBUG;
+        if (UNIVERSAL::can($u,"text")) {
+            $u->{TEXT} .= "/" unless substr($u->{TEXT},-1) eq "/";
+        } else {
+            $u .= "/" unless substr($u,-1) eq "/";
+            $u = CPAN::URL->new(TEXT => $u, FROM => "USER");
+        }
+    }
+    \@urllist;
 }
 
 #-> sub CPAN::FTP::ftp_get ;
@@ -3097,31 +3117,27 @@ sub localize {
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
     my(@reordered,$last);
-    $CPAN::Config->{urllist} ||= [];
-    unless (ref $CPAN::Config->{urllist} eq 'ARRAY') {
-        $CPAN::Frontend->mywarn("Malformed urllist; ignoring.  Configuration file corrupt?\n");
-        $CPAN::Config->{urllist} = [];
-    }
-    $last = $#{$CPAN::Config->{urllist}};
+    my $ccurllist = $self->_get_urllist;
+    $last = $#$ccurllist;
     if ($force & 2) { # local cpans probably out of date, don't reorder
 	@reordered = (0..$last);
     } else {
 	@reordered =
 	    sort {
-		(substr($CPAN::Config->{urllist}[$b],0,4) eq "file")
+		(substr($ccurllist->[$b],0,4) eq "file")
 		    <=>
-		(substr($CPAN::Config->{urllist}[$a],0,4) eq "file")
+		(substr($ccurllist->[$a],0,4) eq "file")
 		    or
 		defined($ThesiteURL)
 		    and
-                ($CPAN::Config->{urllist}[$b] eq $ThesiteURL)
+                ($ccurllist->[$b] eq $ThesiteURL)
 		    <=>
-                ($CPAN::Config->{urllist}[$a] eq $ThesiteURL)
+                ($ccurllist->[$a] eq $ThesiteURL)
 	    } 0..$last;
     }
     my(@levels);
     $Themethod ||= "";
-    $self->debug("Themethod[$Themethod]") if $CPAN::DEBUG;
+    $self->debug("Themethod[$Themethod]reordered[@reordered]") if $CPAN::DEBUG;
     if ($Themethod) {
 	@levels = ($Themethod, grep {$_ ne $Themethod} qw/easy hard hardest/);
     } else {
@@ -3132,32 +3148,22 @@ sub localize {
     local $ENV{FTP_PASSIVE} = 
         exists $CPAN::Config->{ftp_passive} ?
         $CPAN::Config->{ftp_passive} : 1;
-    for $levelno (0..$#levels) {
+    my $ret;
+    my $stats = $self->_new_stats($file);
+  LEVEL: for $levelno (0..$#levels) {
         my $level = $levels[$levelno];
 	my $method = "host$level";
 	my @host_seq = $level eq "easy" ?
 	    @reordered : 0..$last;  # reordered has CDROM up front
-        my @urllist = grep { defined $_ and length $_ }
-            map { $CPAN::Config->{urllist}[$_] } @host_seq;
-        for my $u (@urllist) {
-            CPAN->debug("u[$u]") if $CPAN::DEBUG;
-            if (UNIVERSAL::can($u,"text")) {
-                $u->{TEXT} .= "/" unless substr($u->{TEXT},-1) eq "/";
-            } else {
-                $u .= "/" unless substr($u,-1) eq "/";
-                $u = CPAN::URL->new(TEXT => $u, FROM => "USER");
-            }
-        }
+        my @urllist = map { $ccurllist->[$_] } @host_seq;
         for my $u (@CPAN::Defaultsites) {
             push @urllist, $u unless grep { $_ eq $u } @urllist;
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
         unshift @urllist, $self->_recommend_url_for($file);
-        my $stats = $self->_new_stats($file);
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
-	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
-        $self->_add_to_statistics($stats);
+	$ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
 	if ($ret) {
             CPAN->debug("ret[$ret]aslocal[$aslocal]") if $CPAN::DEBUG;
             if ($ret eq $aslocal_tempfile) {
@@ -3173,11 +3179,15 @@ sub localize {
             # utime $now, $now, $aslocal; # too bad, if we do that, we
                                           # might alter a local mirror
             $self->debug("level[$level]") if $CPAN::DEBUG;
-            return $ret;
+            last LEVEL;
 	} else {
             unlink $aslocal_tempfile;
             last if $CPAN::Signal; # need to cleanup
 	}
+    }
+    $self->_add_to_statistics($stats);
+    if ($ret) {
+        return $ret;
     }
     unless ($CPAN::Signal) {
         my(@mess);
@@ -3252,6 +3262,7 @@ sub hosteasy {
 		}
 	    }
 	}
+	$self->debug("it was not a file URL") if $CPAN::DEBUG;
         if ($CPAN::META->has_usable('LWP')) {
             $CPAN::Frontend->myprint("Fetching with LWP:
   $url
@@ -3293,19 +3304,13 @@ sub hosteasy {
                 # Net::FTP can still succeed where LWP fails. So we do not
                 # skip Net::FTP anymore when LWP is available.
             }
-	} elsif (
-                 UNIVERSAL::can($ro_url,"text")
-                 and
-                 $ro_url->{FROM} eq "USER"
-                ){
-            my $ret = $self->hosthard([$ro_url],$file,$aslocal);
-            return $ret if $ret;
         } else {
             $CPAN::Frontend->mywarn("  LWP not available\n");
 	}
         return if $CPAN::Signal;
 	if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
 	    # that's the nice and easy way thanks to Graham
+            $self->debug("recognized ftp") if $CPAN::DEBUG;
 	    my($host,$dir,$getfile) = ($1,$2,$3);
 	    if ($CPAN::META->has_usable('Net::FTP')) {
 		$dir =~ s|/+|/|g;
@@ -3334,8 +3339,20 @@ sub hosteasy {
 		    }
 		}
 		# next HOSTEASY;
-	    }
+	    } else {
+                CPAN->debug("Net::FTP does not count as usable atm") if $CPAN::DEBUG;
+            }
 	}
+        if (
+            UNIVERSAL::can($ro_url,"text")
+            and
+            $ro_url->{FROM} eq "USER"
+           ){
+            ##address #17973: default URLs should not try to override
+            ##user-defined URLs just because LWP is not available
+            my $ret = $self->hosthard([$ro_url],$file,$aslocal);
+            return $ret if $ret;
+        }
         return if $CPAN::Signal;
     }
 }
