@@ -1,3 +1,8 @@
+2006-11-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: write a hosts command that sums up what is in FTPstats. Offer
+	randomness in the download selection.
+
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: somebody truncates the FTPstats file when YAML is not installed.
