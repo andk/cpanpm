@@ -357,6 +357,14 @@ sub _yaml_loadfile {
     my($self,$local_file) = @_;
     return +[] unless -s $local_file;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    if (
+        $yaml_module ne "YAML"
+        &&
+        !$CPAN::META->has_inst($yaml_module)
+       ) {
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
+        $yaml_module = "YAML";
+    }
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
         my @yaml;
@@ -379,6 +387,14 @@ sub _yaml_loadfile {
 sub _yaml_dumpfile {
     my($self,$to_local_file,@what) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    if (
+        $yaml_module ne "YAML"
+        &&
+        !$CPAN::META->has_inst($yaml_module)
+       ) {
+        $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
+        $yaml_module = "YAML";
+    }
     if ($CPAN::META->has_inst($yaml_module)) {
         if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
             my $code = UNIVERSAL::can($yaml_module, "Dump");
