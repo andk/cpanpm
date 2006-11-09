@@ -1,5 +1,8 @@
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: somebody truncates the FTPstats file when YAML is not installed.
+	Hopefully fixed in SVK rev. 1242
+
 	* To: Florian Scharinger <florian@epcc.ed.ac.uk>
 Cc: perl-qa@perl.org
 Subject: Re: CPAN::Shell->install() downloads dependencies, but doesn't add them to @INC for tests
@@ -48,7 +51,7 @@ Fetching with Net::FTP
   ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz.gz
   Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
 
-	
+	FIXED in SVK rev. 1240.
 
 	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
 

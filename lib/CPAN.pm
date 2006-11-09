@@ -2894,7 +2894,9 @@ sub _ftp_statistics {
     if ($locktype == LOCK_SH) {
     } else {
         seek $fh, 0, 0;
-        truncate $fh, 0;
+        if (@$stats){ # no yaml no write
+            truncate $fh, 0;
+        }
     }
     return $stats->[0];
 }
