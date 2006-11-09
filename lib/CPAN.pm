@@ -355,6 +355,7 @@ Trying to chdir to "$cwd->[1]" instead.
 # CPAN::_yaml_loadfile
 sub _yaml_loadfile {
     my($self,$local_file) = @_;
+    return +[] unless -s $local_file;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
@@ -379,10 +380,15 @@ sub _yaml_dumpfile {
     my($self,$to_local_file,@what) = @_;
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if ($CPAN::META->has_inst($yaml_module)) {
-        my $code = UNIVERSAL::can($yaml_module, "DumpFile");
-        eval { $code->($to_local_file,@what); };
+        if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
+            my $code = UNIVERSAL::can($yaml_module, "Dump");
+            eval { print $to_local_file $code->(@what) };
+        } else {
+            my $code = UNIVERSAL::can($yaml_module, "DumpFile");
+            eval { $code->($to_local_file,@what); };
+        }
         if ($@) {
-            $CPAN::Frontend->mydie("Alert: While trying to sump YAML file\n".
+            $CPAN::Frontend->mydie("Alert: While trying to dump YAML file\n".
                                    "  $to_local_file\n".
                                    "with $yaml_module the following error was encountered:\n".
                                    "  $@\n"
@@ -794,7 +800,7 @@ Please make sure the directory exists and is writable.
             sleep 1;
         }
     }
-    unless ($run_degraded) {
+    if (!$run_degraded && !$self->{LOCKFH}) {
         my $fh;
         unless ($fh = FileHandle->new("+>>$lockfile")) {
             if ($! =~ /Permission/) {
@@ -2875,8 +2881,8 @@ sub _ftp_statistics {
     my($self,$fh) = @_;
     my $locktype = $fh ? LOCK_EX : LOCK_SH;
     $fh ||= FileHandle->new;
-    my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTP-statistics.yml");
-    open $fh, ">>+$file" or die;
+    my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
+    open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
     my $sleep = 1;
     while (!flock $fh, $locktype|LOCK_NB) {
         if ($sleep>3) {
@@ -2884,37 +2890,49 @@ sub _ftp_statistics {
         }
         $CPAN::Frontend->mysleep($sleep++);
     }
-    my $stats = CPAN::_yaml_loadfile($file);
+    my $stats = CPAN->_yaml_loadfile($file);
     if ($locktype == LOCK_SH) {
     } else {
         seek $fh, 0, 0;
         truncate $fh, 0;
     }
-    return $stats;
+    return $stats->[0];
 }
 
 sub _new_stats {
-    my($self) = @_;
-    my $ret;
+    my($self,$file) = @_;
+    my $ret = { file => $file };
     if (CPAN->has_inst("Time::HiRes")) {
-        $ret = {
-                start => Time::HiRes::time(),
-               };
+        $ret->{start} = Time::HiRes::time();
     } else {
-        $ret = {
-                start => time,
-               };
+        $ret->{start} = time;
     }
     $ret;
 }
+
 sub _add_to_statistics {
-    my($self) = @_;
-    return;
+    my($self,$stats) = @_;
+    $stats->{thesiteurl} = $ThesiteURL;
+    if (CPAN->has_inst("Time::HiRes")) {
+        $stats->{end} = Time::HiRes::time();
+    } else {
+        $stats->{end} = time;
+    }
+    my $fh = FileHandle->new;
+    my $fullstats = $self->_ftp_statistics($fh);
+    push @{$fullstats->{history}}, $stats;
+    my $time = time;
+    shift @{$fullstats->{history}}
+        while $time - $fullstats->{history}[0]{start} > 30*86400; # one month too much?
+    CPAN->_yaml_dumpfile($fh,$fullstats);
 }
 
+# if file is CHECKSUMS, suggest the place where we got the file to be
+# checked from, maybe only for young files?
 sub _recommend_url_for {
-    my($self) = @_;
-    return;
+    my($self, $file) = @_;
+    my @urllist = @{$CPAN::Config->{urllist}};
+    $urllist[int rand scalar @urllist];
 }
 
 #-> sub CPAN::FTP::ftp_get ;
@@ -3136,7 +3154,8 @@ sub localize {
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
         unshift @urllist, $self->_recommend_url_for($file);
-        my $stats = $self->_new_stats;
+        my $stats = $self->_new_stats($file);
+        $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
 	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
         $self->_add_to_statistics($stats);
 	if ($ret) {
@@ -3188,7 +3207,7 @@ sub localize {
 
 # package CPAN::FTP;
 sub hosteasy {
-    my($self,$host_seq,$file,$aslocal) = @_;
+    my($self,$host_seq,$file,$aslocal,$stats) = @_;
     my($ro_url);
   HOSTEASY: for $ro_url (@$host_seq) {
 	my $url .= "$ro_url$file";
@@ -3323,7 +3342,7 @@ sub hosteasy {
 
 # package CPAN::FTP;
 sub hosthard {
-  my($self,$host_seq,$file,$aslocal) = @_;
+  my($self,$host_seq,$file,$aslocal,$stats) = @_;
 
   # Came back if Net::FTP couldn't establish connection (or
   # failed otherwise) Maybe they are behind a firewall, but they
@@ -3470,7 +3489,7 @@ returned status $estatus (wstat $wstatus)$size
 
 # package CPAN::FTP;
 sub hosthardest {
-    my($self,$host_seq,$file,$aslocal) = @_;
+    my($self,$host_seq,$file,$aslocal,$stats) = @_;
 
     my($ro_url);
     my($aslocal_dir) = File::Basename::dirname($aslocal);

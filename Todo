@@ -33,8 +33,16 @@
 	And then fill the stats hashref in each of the download methods
 	individually:
 
-	method, hosts tried with successmode, time finished, file size
+	method, hosts tried with successmode, time finished, file size,
+	timestamp!
 
+	First working version with crappy stats (no nosuccess reflection) now
+	tested with a couple of European sites in urllist and running
+
+	!unlink "/home/k/.cpan/sources/authors/id/N/NW/NWCLARK/Acme-Meta-0.02.tar.gz"
+	force test Acme::Meta
+
+	in an endless loop looks good.
 
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
