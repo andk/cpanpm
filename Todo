@@ -35,6 +35,7 @@ Gcc: nnml:sent
   > the tests for Test::Exception it doesn't include the path to the just
   > downloaded modules:
 
+	ANSWERED.
 
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
 	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
