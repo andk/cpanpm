@@ -400,6 +400,7 @@ use File::Find;
 
 package CPAN::FTP;
 use strict;
+use Fcntl qw(:flock);
 use vars qw($Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
@@ -2868,6 +2869,54 @@ sub mirror {
 package CPAN::FTP;
 use strict;
 
+#-> sub CPAN::FTP::ftp_statistics
+# if they want to rewrite, they need to pass in a filehandle
+sub _ftp_statistics {
+    my($self,$fh) = @_;
+    my $locktype = $fh ? LOCK_EX : LOCK_SH;
+    $fh ||= FileHandle->new;
+    my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTP-statistics.yml");
+    open $fh, ">>+$file" or die;
+    my $sleep = 1;
+    while (!flock $fh, $locktype|LOCK_NB) {
+        if ($sleep>3) {
+            die;
+        }
+        $CPAN::Frontend->mysleep($sleep++);
+    }
+    my $stats = CPAN::_yaml_loadfile($file);
+    if ($locktype == LOCK_SH) {
+    } else {
+        seek $fh, 0, 0;
+        truncate $fh, 0;
+    }
+    return $stats;
+}
+
+sub _new_stats {
+    my($self) = @_;
+    my $ret;
+    if (CPAN->has_inst("Time::HiRes")) {
+        $ret = {
+                start => Time::HiRes::time(),
+               };
+    } else {
+        $ret = {
+                start => time,
+               };
+    }
+    $ret;
+}
+sub _add_to_statistics {
+    my($self) = @_;
+    return;
+}
+
+sub _recommend_url_for {
+    my($self) = @_;
+    return;
+}
+
 #-> sub CPAN::FTP::ftp_get ;
 sub ftp_get {
     my($class,$host,$dir,$file,$target) = @_;
@@ -3086,7 +3135,10 @@ sub localize {
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
-	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile);
+        unshift @urllist, $self->_recommend_url_for($file);
+        my $stats = $self->_new_stats;
+	my $ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
+        $self->_add_to_statistics($stats);
 	if ($ret) {
             CPAN->debug("ret[$ret]aslocal[$aslocal]") if $CPAN::DEBUG;
             if ($ret eq $aslocal_tempfile) {

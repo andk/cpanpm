@@ -1,3 +1,41 @@
+2006-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* randy kobes sent a patch--Thanks Randy, I'm swamped with work ATM
+
+	* imacat writes in #22749:
+
+	> I found that CPAN is NOT downloading CHECKSUMS alone with the
+  > package file (*.tar.gz) from the SAME source.  This morning when I was
+  > updating the newly-updated DBI-1.53, it cannot match CHECKSUMS with
+  > DBI-1.53.tar.gz since they came from 2 different sources, and each has
+  > its own mirror schedule.  The package file DBI-1.53.tar.gz came from a
+  > mirror that has it, but CHECKSUMS came from another that doesn't have it
+  > yet.  Shouldn't they be downloaded from the same mirror source?
+
+	[the protocol shows how the fourth host succeeds for
+	TIMB/DBI-1.53.tar.gz but CPAN.pm then fetches the CHECKSUMS file from
+	the first]
+
+	For young files there is often a short timespan within which there is no
+	entry in the checksums file yet, even if they come from the same host.
+	As you are always working with very young files, I'm surprised it
+	doesn't happen more often to you.
+
+	But in principle you are right, CPAN.pm should try to get checksums file
+	from the same host because the likelihood is higher to get an uptpdate
+	checksums file.
+
+	sub _ftp_statistics
+	sub _new_stats
+	sub _add_to_statistics
+	sub _recommend_url_for
+
+	And then fill the stats hashref in each of the download methods
+	individually:
+
+	method, hosts tried with successmode, time finished, file size
+
+
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
@@ -103,29 +141,6 @@
 	within the same session. Currently it can happen.
 
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* imacat writes in #22749:
-
-	> I found that CPAN is NOT downloading CHECKSUMS alone with the
-  > package file (*.tar.gz) from the SAME source.  This morning when I was
-  > updating the newly-updated DBI-1.53, it cannot match CHECKSUMS with
-  > DBI-1.53.tar.gz since they came from 2 different sources, and each has
-  > its own mirror schedule.  The package file DBI-1.53.tar.gz came from a
-  > mirror that has it, but CHECKSUMS came from another that doesn't have it
-  > yet.  Shouldn't they be downloaded from the same mirror source?
-
-	[the protocol shows how the fourth host succeeds for
-	TIMB/DBI-1.53.tar.gz but CPAN.pm then fetches the CHECKSUMS file from
-	the first]
-
-	For young files there is often a short timespan within which there is no
-	entry in the checksums file yet, even if they come from the same host.
-	As you are always working with very young files, I'm surprised it
-	doesn't happen more often to you.
-
-	But in principle you are right, CPAN.pm should try to get checksums file
-	from the same host because the likelihood is higher to get an uptpdate
-	checksums file.
 
 	* Watch the Module::Build space for updates to the question of calling
 	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)

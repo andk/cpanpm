@@ -1,0 +1,47 @@
+Index: CPAN.pm
+===================================================================
+--- CPAN.pm	(revision 1219)
++++ CPAN.pm	(working copy)
+@@ -72,6 +72,7 @@
+             $Have_warned
+             $META
+             $Signal
++            $SQLite
+             $Suppress_readline
+             $VERSION
+             $autoload_recursion
+@@ -147,6 +148,14 @@
+     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
+     CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+ 
++    if ($CPAN::Config->{use_sqlite}) {
++	unless ($CPAN::META->has_inst("CPAN::SQLite")) {
++	    die qq{Must install CPAN::SQLite for use_sqlite};
++	}
++	require CPAN::SQLite::META;
++	$CPAN::SQLite = CPAN::SQLite::META->new($CPAN::META);
++    }
++
+     my $oprompt = shift || CPAN::Prompt->new;
+     my $prompt = $oprompt;
+     my $commandline = shift || "";
+@@ -929,8 +938,9 @@
+     ### Carp::croak "exists called without class argument" unless $class;
+     $id ||= "";
+     $id =~ s/:+/::/g if $class eq "CPAN::Module";
+-    exists $META->{readonly}{$class}{$id} or
+-        exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
++    return $CPAN::Config->{use_sqlite} ? $CPAN::SQLite->set($class, $id) :
++      (exists $META->{readonly}{$class}{$id} or
++       exists $META->{readwrite}{$class}{$id}); # unsafe meta access, ok
+ }
+ 
+ #-> sub CPAN::delete ;
+@@ -3821,6 +3831,7 @@
+ 
+ #-> sub CPAN::Index::reload ;
+ sub reload {
++    return if $CPAN::Config->{use_sqlite};
+     my($self,$force) = @_;
+     my $time = time;
+ 
