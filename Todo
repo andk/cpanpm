@@ -44,6 +44,11 @@
 
 	in an endless loop looks good.
 
+	Now todo: improve the statistics with above mentioned fields and with
+	nosuccess data and actually honour the $file argument to
+	_recommend_url_for() when a CHECKSUMS file is requested. Maybe make the
+	randomness a selectable feature?
+
 2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
