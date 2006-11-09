@@ -1,5 +1,10 @@
 2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Mail::Send problem persists that Test::Reporter's mails do not arrive
+	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
+	case I must disable installation of Mail::Send somehow or debug.
+	Test::Reporter has got a wish item via RT already some weeks ago.
+
 	* Bug: 'o conf init urllist' it offered me lots of URLs without trailing
 	slash, e.g. ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPAN but then
 	some other code appended authors/ without inserting the slash:
