@@ -1,0 +1,5 @@
+--- 
+comment: "currently does not work for me waiting for tuits for a bugreport"
+match:
+  distribution: "^MARKOV/MailTools-1.74.tar.gz"
+disabled: 1
