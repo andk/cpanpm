@@ -408,7 +408,7 @@ sub _yaml_dumpfile {
                                   );
         }
     } else {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot dump to '$to_local_file'\n");
+        $CPAN::Frontend->myprint("Note (usually harmless): '$yaml_module' not installed, not dumping to '$to_local_file'\n");
     }
 }
 
