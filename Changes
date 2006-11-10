@@ -10,6 +10,8 @@
 	* new config parameter 'randomize_urllist' brings some randomness into
 	the URL selection
 
+	* if yaml_module not YAML and not available, fall back to YAML
+
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_59
