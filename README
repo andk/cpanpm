@@ -232,6 +232,17 @@ DESCRIPTION
     within @INC. The name of the bundle file is based on the current date
     and a counter.
 
+  hosts
+    This commands provides a statistical overview over recent download
+    activities. The data for this is collected in the YAML file
+    "FTPstats.yml" in your "cpan_home" directory. If no YAML module is
+    configured or YAML not installed, then no stats are provided.
+
+  mkmyconfig
+    mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
+    directory so that you can save your own preferences instead of the
+    system wide ones.
+
   recompile
     recompile() is a very special command in that it takes no argument and
     runs the make/test/install cycle with brute force over all installed
@@ -260,11 +271,6 @@ DESCRIPTION
     The "upgrade" command first runs an "r" command with the given arguments
     and then installs the newest versions of all modules that were listed by
     that.
-
-  mkmyconfig
-    mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
-    directory so that you can save your own preferences instead of the
-    system wide ones.
 
   The four "CPAN::*" Classes: Author, Bundle, Module, Distribution
     Although it may be considered internal, the class hierarchy does matter
@@ -1097,10 +1103,10 @@ CONFIGURATION
     backtickcwd
       Calls the external command cwd.
 
-  Note on urllist parameter's format
+  Note on the format of the urllist parameter
     urllist parameters are URLs according to RFC 1738. We do a little
     guessing if your URL is not compliant, but if you have problems with
-    file URLs, please try the correct format. Either:
+    "file" URLs, please try the correct format. Either:
 
         file://localhost/whatever/ftp/pub/CPAN/
 
@@ -1128,6 +1134,16 @@ CONFIGURATION
     a new site at runtime it may happen that the previously preferred site
     will be tried another time. This means that if you want to disallow a
     site for the next transfer, it must be explicitly removed from urllist.
+
+  Maintaining the urllist parameter
+    If you have YAML.pm (or some other YAML module configured in
+    "yaml_module") installed, CPAN.pm collects a few statistical data about
+    recent downloads. You can view the statistics with the "hosts" command
+    or inspect them directly by looking into the "FTPstats.yml" file in your
+    "cpan_home" directory.
+
+    It's recommended to set the "randomize_urllist" parameter to get some
+    randomness into the URL selection.
 
   prefs_dir for avoiding interactive questions (ALPHA)
     (Note: This feature has been introduced in CPAN.pm 1.8854 and is still

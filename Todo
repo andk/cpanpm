@@ -1,66 +1,9 @@
-2006-11-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Buglet: unshift of the recommended URL is not correct because then we
-	have it twice in the array FIXED
-
-	* Todo: write a hosts command that sums up what is in FTPstats. Offer
-	randomness in the download selection.
-
-2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* Bug: somebody truncates the FTPstats file when YAML is not installed.
-	Hopefully fixed in SVK rev. 1242
-
-	* To: Florian Scharinger <florian@epcc.ed.ac.uk>
-Cc: perl-qa@perl.org
-Subject: Re: CPAN::Shell->install() downloads dependencies, but doesn't add them to @INC for tests
-From: andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig)
-Gcc: nnml:sent
---text follows this line--
->>>>> On Wed, 08 Nov 2006 18:13:26 +0000, Florian Scharinger <florian@epcc.ed.ac.uk> said:
-
-  > Hi perl-qa,
-  > I'm trying to download missing Perl test modules automatically during
-  > build time of my project, by using:
-
-  >  use CPAN;
-  >  CPAN::Shell->install("Test::Exception");
-
-  > Test::Exception has dependencies, which the CPAN shell detects correctly:
-
-  > ---- Unsatisfied dependencies detected during
-  > [A/AD/ADIE/Test-Exception-0.24.tar.gz] -----
-  >     Test::Builder
-  >     Sub::Uplevel
-  >     Test::Builder::Tester
-
-  > The dependencies are downloaded and built, however, when then running
-  > the tests for Test::Exception it doesn't include the path to the just
-  > downloaded modules:
-
-	ANSWERED.
+2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
 	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
 	case I must disable installation of Mail::Send somehow or debug.
 	Test::Reporter has got a wish item via RT already some weeks ago.
-
-	* Bug: 'o conf init urllist' it offered me lots of URLs without trailing
-	slash, e.g. ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPAN but then
-	some other code appended authors/ without inserting the slash:
-
-cpan> reload index
-Fetching with LWP:
-  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
-LWP failed with code[404] message[Can't chdir to CPANauthors]
-Fetching with Net::FTP:
-  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
-  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
-Fetching with Net::FTP
-  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz.gz
-  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
-
-	FIXED in SVK rev. 1240.
 
 	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
 
@@ -107,76 +50,12 @@ Adam K
 
 	Reported as #22893. See also File::Which.
 
-2006-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* randy kobes patches SQLite
 
-	* randy kobes sent two patches--Thanks Randy, I'm swamped with work ATM
-
-	* imacat writes in #22749:
-
-	> I found that CPAN is NOT downloading CHECKSUMS alone with the
-  > package file (*.tar.gz) from the SAME source.  This morning when I was
-  > updating the newly-updated DBI-1.53, it cannot match CHECKSUMS with
-  > DBI-1.53.tar.gz since they came from 2 different sources, and each has
-  > its own mirror schedule.  The package file DBI-1.53.tar.gz came from a
-  > mirror that has it, but CHECKSUMS came from another that doesn't have it
-  > yet.  Shouldn't they be downloaded from the same mirror source?
-
-	[the protocol shows how the fourth host succeeds for
-	TIMB/DBI-1.53.tar.gz but CPAN.pm then fetches the CHECKSUMS file from
-	the first]
-
-	For young files there is often a short timespan within which there is no
-	entry in the checksums file yet, even if they come from the same host.
-	As you are always working with very young files, I'm surprised it
-	doesn't happen more often to you.
-
-	But in principle you are right, CPAN.pm should try to get checksums file
-	from the same host because the likelihood is higher to get an uptpdate
-	checksums file.
-
-	sub _ftp_statistics
-	sub _new_stats
-	sub _add_to_statistics
-	sub _recommend_url_for
-
-	And then fill the stats hashref in each of the download methods
-	individually:
-
-	method, hosts tried with successmode, time finished, file size,
-	timestamp!
-
-	First working version with crappy stats (no nosuccess reflection) now
-	tested with a couple of European sites in urllist and running
-
-	!unlink "/home/k/.cpan/sources/authors/id/N/NW/NWCLARK/Acme-Meta-0.02.tar.gz"
-	force test Acme::Meta
-
-	in an endless loop looks good.
-
-	Now todo: improve the statistics with above mentioned fields and with
-	nosuccess data and actually honour the $file argument to
-	_recommend_url_for() when a CHECKSUMS file is requested. Maybe make the
-	randomness a selectable feature?
-
-	BTW: if we make the TTLs setable, maybe we should make the TTL for
+	* if we make the TTLs setable, maybe we should make the TTL for
 	CHECKSUMS file too. In any case we have the problem of imacat also when
 	the TTL of the local copy of the CHECKSUMS file has not yet been
 	reached!
-
-2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
-	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
-	combined with long strings. Would like to see if bleadperl also fails.
-
-	Its parent is https://rt.cpan.org/Ticket/Display.html?id=22134
-	
-	I've put my findings in there. FIXED.
-
-	* ALERT! A test in YAML turned red with blead??? It turns out that my
-	YAML crashes bugs-rt when the URI module is installed and passes all
-	tests when the URI module is not installed. The second test in bugs-rt.t
-	has "skip_unless_modules: URI". So it's an older bug that I just did not
-	see upto now. Bugreport to P5P written.
 
 	* Bug that has to do with install_tested or build_dir_reuse or degraded
 	shell mode or some use of ^C at the wrong moment:
@@ -214,45 +93,7 @@ Adam K
 	At least I get the impression this extreme case happens only on ^C, but
 	some other methods of dieing will certainly exist as well.
 
-	* Da fällt mir ein, ich habs kürzlich anders gelöst, wenn du das nächste
-  > mal testest, probier mal diese Lösung (mit AnyEvent, sinngemäß gehts
-  > auch mit Coro):
-
-  >    BEGIN { $ENV{PERL_RL} = "gnu" } use Term::ReadLine;
-
-  >    my $rl = new Term::ReadLine "cfshell";
-
-  >    my $w = AnyEvent->io (fh => $rl->IN, poll => 'r', cb => sub { $rl->callback_read_char });
-
-  >    $rl->callback_handler_install ("$ARGV[0]> ", sub {
-  >       $rl->add_history ($_[0]);
-  >    }
-
-  > Allein das $ENV...= läßt mich grausen, aber irgendjemand hat halt
-  > entschieden, daß zwei völlig API-inkompatible module nicht getrennt
-  > ladbar sein dürfen.
-
-  > Ach ja, zum zwischendurch was ausgeben mache ich:
-
-  >    $rl->crlf;
-  >    print ...
-  >    $rl->forced_update_display;
-
-  > und beim exit muss man:
-
-  >    $rl->crlf;
-  >    $rl->deprep_terminal;
-
-  > machen.
-
-  > -- 
-  >                 The choice of a
-  >       -----==-     _GNU_
-  >       ----==-- _       generation     Marc Lehmann
-  >       ---==---(_)__  __ ____  __      pcg@goof.com
-  >       --==---/ / _ \/ // /\ \/ /      http://schmorp.de/
-  >       -=====/_/_//_/\_,_/ /_/\_\      XX11-RIPE
-
+	* Coro. See also notes below, search for anyevent	
 
 	* Observing in a shell in degraded mode: it wrote a new Metadata file.
 
@@ -262,12 +103,8 @@ Adam K
 	
 	Noting that the DH test runs forever again because GMP comes too late.
 
-2006-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
-
 	* "shall I try to run in degraded mode" should not come a second time
 	within the same session. Currently it can happen.
-
-2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Watch the Module::Build space for updates to the question of calling
 	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
@@ -372,8 +209,6 @@ Continue installing YAML::Syck? [y]
 
 	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
 	CONTAINSMODS is empty because Gabor has a distro in the bundle.
-
-	* Faszinating: Coro/eg/readline
 
 	* Now I know the first bug in install_tested: it re-tests already
 	installed modules.
@@ -505,6 +340,179 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+2006-11-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Buglet: unshift of the recommended URL is not correct because then we
+	have it twice in the array FIXED
+
+	* Todo: write a hosts command that sums up what is in FTPstats. Offer
+	randomness in the download selection. DONE
+
+2006-11-08  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: somebody truncates the FTPstats file when YAML is not installed.
+	Hopefully fixed in SVK rev. 1242
+
+	* To: Florian Scharinger <florian@epcc.ed.ac.uk>
+Cc: perl-qa@perl.org
+Subject: Re: CPAN::Shell->install() downloads dependencies, but doesn't add them to @INC for tests
+From: andreas.koenig.gmwojprw@franz.ak.mind.de (Andreas J. Koenig)
+Gcc: nnml:sent
+--text follows this line--
+>>>>> On Wed, 08 Nov 2006 18:13:26 +0000, Florian Scharinger <florian@epcc.ed.ac.uk> said:
+
+  > Hi perl-qa,
+  > I'm trying to download missing Perl test modules automatically during
+  > build time of my project, by using:
+
+  >  use CPAN;
+  >  CPAN::Shell->install("Test::Exception");
+
+  > Test::Exception has dependencies, which the CPAN shell detects correctly:
+
+  > ---- Unsatisfied dependencies detected during
+  > [A/AD/ADIE/Test-Exception-0.24.tar.gz] -----
+  >     Test::Builder
+  >     Sub::Uplevel
+  >     Test::Builder::Tester
+
+  > The dependencies are downloaded and built, however, when then running
+  > the tests for Test::Exception it doesn't include the path to the just
+  > downloaded modules:
+
+	ANSWERED.
+
+	* Bug: 'o conf init urllist' it offered me lots of URLs without trailing
+	slash, e.g. ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPAN but then
+	some other code appended authors/ without inserting the slash:
+
+cpan> reload index
+Fetching with LWP:
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
+LWP failed with code[404] message[Can't chdir to CPANauthors]
+Fetching with Net::FTP:
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz
+  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
+Fetching with Net::FTP
+  ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/CPANauthors/01mailrc.txt.gz.gz
+  Couldn't cwd pub/Mirrors/CPANauthors: Failed to change directory.
+
+	FIXED in SVK rev. 1240.
+
+2006-11-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* randy kobes sent two patches--Thanks Randy, I'm swamped with work ATM
+
+	* imacat writes in #22749:
+
+	> I found that CPAN is NOT downloading CHECKSUMS alone with the
+  > package file (*.tar.gz) from the SAME source.  This morning when I was
+  > updating the newly-updated DBI-1.53, it cannot match CHECKSUMS with
+  > DBI-1.53.tar.gz since they came from 2 different sources, and each has
+  > its own mirror schedule.  The package file DBI-1.53.tar.gz came from a
+  > mirror that has it, but CHECKSUMS came from another that doesn't have it
+  > yet.  Shouldn't they be downloaded from the same mirror source?
+
+	[the protocol shows how the fourth host succeeds for
+	TIMB/DBI-1.53.tar.gz but CPAN.pm then fetches the CHECKSUMS file from
+	the first]
+
+	For young files there is often a short timespan within which there is no
+	entry in the checksums file yet, even if they come from the same host.
+	As you are always working with very young files, I'm surprised it
+	doesn't happen more often to you.
+
+	But in principle you are right, CPAN.pm should try to get checksums file
+	from the same host because the likelihood is higher to get an uptpdate
+	checksums file.
+
+	sub _ftp_statistics
+	sub _new_stats
+	sub _add_to_statistics
+	sub _recommend_url_for
+
+	And then fill the stats hashref in each of the download methods
+	individually:
+
+	method, hosts tried with successmode, time finished, file size,
+	timestamp!
+
+	First working version with crappy stats (no nosuccess reflection) now
+	tested with a couple of European sites in urllist and running
+
+	!unlink "/home/k/.cpan/sources/authors/id/N/NW/NWCLARK/Acme-Meta-0.02.tar.gz"
+	force test Acme::Meta
+
+	in an endless loop looks good.
+
+	Now todo: improve the statistics with above mentioned fields and with
+	nosuccess data and actually honour the $file argument to
+	_recommend_url_for() when a CHECKSUMS file is requested. Maybe make the
+	randomness a selectable feature?
+
+	FIXED
+	
+2006-11-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* https://rt.cpan.org/Ticket/Attachment/250710/107655/ is a bug in YAML
+	combined with long strings. Would like to see if bleadperl also fails.
+
+	Its parent is https://rt.cpan.org/Ticket/Display.html?id=22134
+	
+	I've put my findings in there. FIXED.
+
+	* ALERT! A test in YAML turned red with blead??? It turns out that my
+	YAML crashes bugs-rt when the URI module is installed and passes all
+	tests when the URI module is not installed. The second test in bugs-rt.t
+	has "skip_unless_modules: URI". So it's an older bug that I just did not
+	see upto now. Bugreport to P5P written.
+
+	* Da fällt mir ein, ich habs kürzlich anders gelöst, wenn du das nächste
+  > mal testest, probier mal diese Lösung (mit AnyEvent, sinngemäß gehts
+  > auch mit Coro):
+
+  >    BEGIN { $ENV{PERL_RL} = "gnu" } use Term::ReadLine;
+
+  >    my $rl = new Term::ReadLine "cfshell";
+
+  >    my $w = AnyEvent->io (fh => $rl->IN, poll => 'r', cb => sub { $rl->callback_read_char });
+
+  >    $rl->callback_handler_install ("$ARGV[0]> ", sub {
+  >       $rl->add_history ($_[0]);
+  >    }
+
+  > Allein das $ENV...= läßt mich grausen, aber irgendjemand hat halt
+  > entschieden, daß zwei völlig API-inkompatible module nicht getrennt
+  > ladbar sein dürfen.
+
+  > Ach ja, zum zwischendurch was ausgeben mache ich:
+
+  >    $rl->crlf;
+  >    print ...
+  >    $rl->forced_update_display;
+
+  > und beim exit muss man:
+
+  >    $rl->crlf;
+  >    $rl->deprep_terminal;
+
+  > machen.
+
+  > -- 
+  >                 The choice of a
+  >       -----==-     _GNU_
+  >       ----==-- _       generation     Marc Lehmann
+  >       ---==---(_)__  __ ____  __      pcg@goof.com
+  >       --==---/ / _ \/ // /\ \/ /      http://schmorp.de/
+  >       -=====/_/_//_/\_,_/ /_/\_\      XX11-RIPE
+
+
+2006-11-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Faszinating: Coro/eg/readline
 
 2006-11-02  Andreas J Koenig  <akoenig@*c*nm*b*l*.com>
 

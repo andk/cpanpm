@@ -1,6 +1,8 @@
 2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.88_61 (in preparation)
+	* release 1.88_61
+
+	* This release is dedicated to imacat.
 
 	* address #22749: always download CHECKSUMS from the same host as the
 	package file (Thanks to imacat for the report)
