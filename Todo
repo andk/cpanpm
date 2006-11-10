@@ -1,5 +1,8 @@
 2006-11-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Buglet: unshift of the recommended URL is not correct because then we
+	have it twice in the array FIXED
+
 	* Todo: write a hosts command that sums up what is in FTPstats. Offer
 	randomness in the download selection.
 

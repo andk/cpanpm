@@ -440,6 +440,7 @@ use strict;
                                     cvs_import
                                     dump
                                     force
+                                    hosts
                                     install
                                     install_tested
                                     look
@@ -1704,6 +1705,70 @@ sub paintdots_onreload {
     };
 }
 
+#-> sub CPAN::Shell::hosts ;
+sub hosts {
+    my($self) = @_;
+    my $fullstats = CPAN::FTP->_ftp_statistics();
+    my $history = $fullstats->{history} || [];
+    my %S; # statistics
+    while (my $last = pop @$history) {
+        my $attempts = $last->{attempts} or next;
+        my $start;
+        if (@$attempts) {
+            $start = $attempts->[-1]{start};
+            if ($#$attempts > 0) {
+                for my $i (0..$#$attempts-1) {
+                    my $url = $attempts->[$i]{url};
+                    $S{no}{$url}++;
+                }
+            }
+        } else {
+            $start = $last->{start};
+        }
+        $S{start} = $start;
+        $S{end} ||= $last->{end};
+        my $dltime = $last->{end} - $start;
+        my $dlsize = $last->{filesize};
+        my $url = $last->{thesiteurl}->text;
+        my $s = $S{ok}{$url} ||= {};
+        $s->{n}++;
+        $s->{dlsize} ||= 0;
+        $s->{dlsize} += $dlsize/1024;
+        $s->{dltime} ||= 0;
+        $s->{dltime} += $dltime;
+    }
+    my $res;
+    for my $url (keys %{$S{ok}}) {
+        next if $S{ok}{$url}{dltime} == 0; # div by zero
+        push @{$res->{ok}}, [@{$S{ok}{$url}}{qw(n dlsize dltime)},
+                             $S{ok}{$url}{dlsize}/$S{ok}{$url}{dltime},
+                             $url,
+                            ];
+    }
+    for my $url (keys %{$S{no}}) {
+        push @{$res->{no}}, [$S{no}{$url},
+                             $url,
+                            ];
+    }
+    my $R = ""; # report
+    $R .= sprintf "Interval start: %s\n", scalar(localtime $S{start}) || "unknown";
+    $R .= sprintf "Interval end  : %s\n", scalar(localtime $S{end}) || "unknown";
+    if ($res->{ok} && @{$res->{ok}}) {
+        $R .= sprintf "\nSuccessful downloads:
+   N        kB  secs       kB/s url\n";
+        for (sort { $b->[3] <=> $a->[3] } @{$res->{ok}}) {
+            $R .= sprintf "%4d %9d %5d %10.1f %s\n", @$_;
+        }
+    }
+    if ($res->{no} && @{$res->{no}}) {
+        $R .= sprintf "\nUnsuccessful downloads:\n";
+        for (sort { $b->[0] <=> $a->[0] } @{$res->{no}}) {
+            $R .= sprintf "%4d %s\n", @$_;
+        }
+    }
+    $CPAN::Frontend->myprint($R);
+}
+
 #-> sub CPAN::Shell::reload ;
 sub reload {
     my($self,$command,@arg) = @_;
@@ -2963,7 +3028,7 @@ sub _recommend_url_for {
             return $last->{thesiteurl};
         }
     }
-    return (); # XXX introduce some randomness!
+    ### return (); # XXX introduce some randomness!
     $urllist->[int rand scalar @$urllist];
 }
 
@@ -3193,7 +3258,10 @@ sub localize {
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
-        unshift @urllist, $self->_recommend_url_for($file);
+        for (my $recommend = $self->_recommend_url_for($file)) {
+            @urllist = grep { $_ ne $recommend } @urllist;
+            unshift @urllist, $recommend;
+        }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
 	$ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
 	if ($ret) {
@@ -8666,6 +8734,19 @@ a list of all modules that are both available from CPAN and currently
 installed within @INC. The name of the bundle file is based on the
 current date and a counter.
 
+=head2 hosts
+
+This commands provides a statistical overview over recent download
+activities. The data for this is collected in the YAML file
+C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
+configured or YAML not installed, then no stats are provided.
+
+=head2 mkmyconfig
+
+mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
+directory so that you can save your own preferences instead of the
+system wide ones.
+
 =head2 recompile
 
 recompile() is a very special command in that it takes no argument and
@@ -8697,12 +8778,6 @@ every step that might have failed before.
 The C<upgrade> command first runs an C<r> command with the given
 arguments and then installs the newest versions of all modules that
 were listed by that.
-
-=head2 mkmyconfig
-
-mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
-directory so that you can save your own preferences instead of the
-system wide ones.
 
 =head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
@@ -9670,11 +9745,11 @@ Calls the external command cwd.
 
 =back
 
-=head2 Note on urllist parameter's format
+=head2 Note on the format of the urllist parameter
 
 urllist parameters are URLs according to RFC 1738. We do a little
 guessing if your URL is not compliant, but if you have problems with
-file URLs, please try the correct format. Either:
+C<file> URLs, please try the correct format. Either:
 
     file://localhost/whatever/ftp/pub/CPAN/
 
@@ -9704,6 +9779,14 @@ add a new site at runtime it may happen that the previously preferred
 site will be tried another time. This means that if you want to disallow
 a site for the next transfer, it must be explicitly removed from
 urllist.
+
+=head2 Maintaining the urllist parameter
+
+If you have C<yaml_module> configured and that named module or YAML.pm
+itself installed, CPAN.pm collects a few statistical data about recent
+downloads. You can view the statistics with the C<hosts> command or
+inspect them directly by looking into the C<FTPstats.yml> file in your
+C<cpan_home> directory.
 
 =head2 prefs_dir for avoiding interactive questions (ALPHA)
 
