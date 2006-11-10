@@ -1613,8 +1613,10 @@ sub o {
 	    $CPAN::Frontend->myprint("\n");
 	} else {
             if (CPAN::HandleConfig->edit(@o_what)) {
-                $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
-                                         "make the config permanent!\n\n");
+                unless ($o_what[0] eq "init") {
+                    $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
+                                             "make the config permanent!\n\n");
+                }
             } else {
                 $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
                                          qq{items\n\n});
@@ -1718,7 +1720,7 @@ sub hosts {
             $start = $attempts->[-1]{start};
             if ($#$attempts > 0) {
                 for my $i (0..$#$attempts-1) {
-                    my $url = $attempts->[$i]{url};
+                    my $url = $attempts->[$i]{url} or next;
                     $S{no}{$url}++;
                 }
             }
@@ -1751,8 +1753,8 @@ sub hosts {
                             ];
     }
     my $R = ""; # report
-    $R .= sprintf "Interval start: %s\n", scalar(localtime $S{start}) || "unknown";
-    $R .= sprintf "Interval end  : %s\n", scalar(localtime $S{end}) || "unknown";
+    $R .= sprintf "Log starts: %s\n", scalar(localtime $S{start}) || "unknown";
+    $R .= sprintf "Log ends  : %s\n", scalar(localtime $S{end}) || "unknown";
     if ($res->{ok} && @{$res->{ok}}) {
         $R .= sprintf "\nSuccessful downloads:
    N        kB  secs       kB/s url\n";
@@ -3028,8 +3030,14 @@ sub _recommend_url_for {
             return $last->{thesiteurl};
         }
     }
-    ### return (); # XXX introduce some randomness!
-    $urllist->[int rand scalar @$urllist];
+    if ($CPAN::Config->{randomize_urllist}
+        &&
+        rand(1) < $CPAN::Config->{randomize_urllist}
+       ) {
+        $urllist->[int rand scalar @$urllist];
+    } else {
+        return ();
+    }
 }
 
 sub _get_urllist {
@@ -3258,7 +3266,7 @@ sub localize {
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
-        for (my $recommend = $self->_recommend_url_for($file)) {
+        if (my $recommend = $self->_recommend_url_for($file)) {
             @urllist = grep { $_ ne $recommend } @urllist;
             unshift @urllist, $recommend;
         }
@@ -9782,11 +9790,14 @@ urllist.
 
 =head2 Maintaining the urllist parameter
 
-If you have C<yaml_module> configured and that named module or YAML.pm
-itself installed, CPAN.pm collects a few statistical data about recent
-downloads. You can view the statistics with the C<hosts> command or
-inspect them directly by looking into the C<FTPstats.yml> file in your
-C<cpan_home> directory.
+If you have YAML.pm (or some other YAML module configured in
+C<yaml_module>) installed, CPAN.pm collects a few statistical data
+about recent downloads. You can view the statistics with the C<hosts>
+command or inspect them directly by looking into the C<FTPstats.yml>
+file in your C<cpan_home> directory.
+
+It's recommended to set the C<randomize_urllist> parameter to get some
+randomness into the URL selection.
 
 =head2 prefs_dir for avoiding interactive questions (ALPHA)
 

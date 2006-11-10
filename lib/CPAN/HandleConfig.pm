@@ -66,6 +66,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "prefs_dir",
      "proxy_pass",
      "proxy_user",
+     "randomize_urllist",
      "scan_cache",
      "shell",
      "show_upload_date",

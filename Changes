@@ -1,6 +1,18 @@
+2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_61 (in preparation)
+
+	* address #22749: always download CHECKSUMS from the same host as the
+	package file (Thanks to imacat for the report)
+
+	* new command 'hosts' to display some recent download statistics
+
+	* new config parameter 'randomize_urllist' brings some randomness into
+	the URL selection
+
 2006-11-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.88_59 (in preparation)
+	* release 1.88_59
 
 	* Note: the build_dir has got a major reworking with regard to how
 	individual directories below it are being named. The names are now

@@ -62,7 +62,7 @@ sub init {
         # case WORD... => all arguments must be valid
         for my $arg (@{$args{args}}) {
             unless (exists $CPAN::HandleConfig::keys{$arg}) {
-                $CPAN::Frontend->mywarn("'$arg' is not a valid configuration variable");
+                $CPAN::Frontend->mywarn("'$arg' is not a valid configuration variable\n");
                 return;
             }
         }
@@ -567,6 +567,9 @@ Shall we use it as the general CPAN build and cache directory?
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
             conf_sites();
+        }
+        if ("randomize_urllist" =~ $matcher) {
+            my_dflt_prompt(randomize_urllist => 0, $matcher);
         }
     } elsif ($fastread) {
         $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".
@@ -1426,6 +1429,18 @@ player, YAML::Tiny, is not yet sufficiently similar to the other two.
 },
 
 yaml_module => qq{Which YAML implementation would you prefer?},
+
+randomize_urllist_intro => qq{
+
+CPAN.pm can introduce some randomness when using hosts for download
+that are configured in the urllist parameter. Enter a value between 0
+and 1 to indicate how often you want to let CPAN.pm try a random host
+from the urllist. A value of one means 'use always a random host
+first', zero means 'use always the urllist in the order configured'.
+
+},
+
+randomize_urllist => "Randomize parameter",
 
 );
 
