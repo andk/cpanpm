@@ -8,6 +8,7 @@ distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
+distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DSA.yml
 distroprefs/BTROTT.Feed-Find.yml
@@ -106,6 +107,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
+t/CPAN/authors/id/A/AN/ANDK/patches/CHECKSUMS
 t/CPAN/authors/id/A/AN/CHECKSUMS
 t/CPAN/authors/id/A/CHECKSUMS
 t/CPAN/authors/id/CHECKSUMS

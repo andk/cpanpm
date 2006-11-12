@@ -4,20 +4,22 @@
 
 =head1 DESCRIPTION
 
-The files in this directory are YAML files that specify how CPAN.pm
-shall treat distributions that you want or need to treat differently
-from the normal mantra of
+Distributions on the CPAN usually behave according to what we call the
+CPAN mantra. Well since the event of Module::Build we have two mantras:
 
-    perl Makefile.PL
-    make
-    make test
-    make install
+    perl Makefile.PL     perl Build.PL
+    make                 ./Build
+    make test            ./Build test
+    make install         ./Build install
 
-Some modules try to get some data from the user interactively thus
-disturbing the installation of large bundles like Phalanx100 or
-modules like Plagger.
+But some modules cannot be built with this mantra. They try to get
+some extra data from the user via environment, extra arguments or
+interactively thus disturbing the installation of large bundles like
+Phalanx100 or modules like Plagger.
 
-CPAN.pm can use these YAML files to either
+The distroprefs system of C<CPAN.pm> addresses this problem by
+allowing the user to specify extra informations and recipes in YAML
+files to either
 
 =over
 
@@ -32,13 +34,11 @@ set environment variables
 =item
 
 instantiate an Expect object that reads from the console, waits for
-some regular expression and enters some answers
+some regular expressions and enters some answers
 
 =item
 
-temporarily override assorted CPAN.pm configuration variables
-(supported are: build_requires_install_policy, make,
-make_install_make_command, prefer_installer, test_report)
+temporarily override assorted C<CPAN.pm> configuration variables
 
 =item
 
@@ -46,123 +46,32 @@ disable the installation of an object altogether
 
 =back
 
-See the YAML files that come with the CPAN.pm distribution in the
+See the YAML files that come with the C<CPAN.pm> distribution in the
 C<distroprefs/> directory for examples.
-
-=head1 EXAMPLE FILES
-
-CPAN.pm comes with a collection of example YAML files. Note that these
-are really just examples and should not be used without care because
-they cannot fit everybody's purpose. After all the authors of the
-packages that ask questions had a need to ask, so you should watch
-their questions and adjust the examples to your environment and your
-needs. You have beend warned:-)
 
 =head1 FILENAMES
 
-The YAML files themselves must have the .yml extension, all other
+The YAML files themselves must have the C<.yml> extension, all other
 files are ignored. The containing directory can be specified in
-CPAN.pm in the prefs_dir config variable. Try 'o conf init /prefs/' in
-the CPAN shell.
+C<CPAN.pm> in the C<prefs_dir> config variable. Try C<o conf init
+prefs_dir> in the CPAN shell to set and activate the distroprefs
+system.
 
-The names of the files can be picked freely, CPAN.pm always reads all
-files (in alphabetical order) and takes the key "match" as a hashref
-containing one or more of the keys C<distribution>, C<modules>, or
-C<perl>. The corresponding values are interpreted as regular
-expressions. The C<distribution> related one will be matched against
-the canonical distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
-The C<module> related one will be matched against all modules
-contained in the distribution until one module matches and the C<perl>
-related one will be matched against C<$^X>. If more than one
-restriction of C<module>, C<distribution>, and C<perl> is specified,
-the results of the separately computed match values are ANDed. If the
-final result is true, then the hashref represented by the YAML file is
-returned as the preference structure for the current distribution.
+Every YAML file may contain arbitrary documents according to the YAML
+specification and every single document is treated as an entity that
+can specify the treatment of a single distribution.
 
-=head1 MAINTAINANCE
-
-Authors are changing their packages and introduce new dialogs, change
-the wording, change the order of questions, remove questions,
-introduce new options, update their autoinstaller etc. So you have to
-adjust your prefs from time to time. While CPAN.pm will probably
-contain some newer prefs files with every release, it will never be a
-reliable data source for a large amount of prefs file and more
-importantly will not always match your requirements.
-
-So if you decide to use distroprefs do not expect that you can have
-them without some maintainance overhead.
-
-=head1 TRICKS
-
-=head2 Repetitions
-
-Distros using older versions of Module::AutoInstall often do not
-support the --defaultdeps argument. So you probably have to use
-
-  pl:
-    expect:
-      - "Auto-install"
-      - "y\n"
-
-When you watch them you probably notice that they ask one question.
-Don't rely on that number. Next time you install that module it may
-ask 2 or more questions: because it calculates the number of questions
-from what you have installed at the moment. So better be prepared for
-more questions and repeat the above pattern once or twice.
-
-Don't hesitate to report this as a bug to the module author that is
-using Module::AutoInstall. They have to update the copy of
-Module::AutoInstall that comes with their package. It will not be
-sufficient that you update Module::AutoInstall.
-
-=head2 Exceptions
-
-You have a Bundle to install and notice that the Bundle has one module
-that you do NOT want for some reason? Add something like
-
-  make: 
-    args:
-      - nosuchtarget
-
-and you force this target to fail quickly.
-
-=head2 Fun (not!)
-
-Module::AutoInstall often doesn't get it right to find out under which
-circumstances it was invoked. Setting the environment variable
-PERL5_CPANPLUS_IS_RUNNING to 1 or setting PERL_AUTOINSTALL to --skip
-seems to help. Best to try both. I do not understand what's up there.
-If you know, please fix. If you don't, maybe try what I'm doing in
-MIYAGAWA.Plagger.yml.
-
-=head1 PATCHES
-
-My procedure when I encounter a broken package:
-
-    look DISTRO
-    cd ..
-    rsync -va DISTRODIR/ DISTRODIR.orig/
-    # fix the distro in DISTRODIR
-    diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
-    gzip DISTRODIR-ANDK-01.patch
-
-I then upload the resulting patch to my CPAN patches/ directory and
-write a YAML file into my prefs_dir/ directory that contains roughly
-
-    --- 
-    comment: "This patch fixes ..."
-    match:
-      distribution: "^DISTRO$"
-
-    patches:
-      - ANDK/patches/DISTRODIR-ANDK-01.patch
-
-That's all. From then I can install that distro for any perl version
-on that machine.
+The names of the files can be picked freely, C<CPAN.pm> always reads
+all files (in alphabetical order) and takes the key C<match> (see
+below in LANGUAGE SPECS) as a hashref containing match criteria that
+determine if the current distribution matches the YAML document or
+not.
 
 =head1 BLUEPRINT
 
-The following example contains all supported keywords and structures:
+The following example contains all supported keywords and structures
+with the exception of C<expect-in-any-order> which can be used instead
+of C<expect>.
 
   --- 
   comment: "Demo"
@@ -213,7 +122,139 @@ The following example contains all supported keywords and structures:
     - "ABCDE/Fedcba-3.14-ABCDE-01.patch"
 
 
-=head1 FEEDBACK
+=head1 LANGUAGE SPECS
+
+Every YAML document represents a single hash reference. The valid keys
+in this hash are C<comment>, C<match>, C<disabled>, C<cpanconfig>,
+C<pl>, C<make>, C<test>, C<install>, C<patches>. The meanings of these
+keywords is as follows:
+
+=over
+
+=item comment
+
+A comment
+
+=item match
+
+A hashref with one or more of the keys C<distribution>, C<modules>, or
+C<perl> that specify if a document is targeted at a specific CPAN
+distribution.
+
+The corresponding values are interpreted as regular expressions. The
+C<distribution> related one will be matched against the canonical
+distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
+
+The C<module> related one will be matched against I<all> modules
+contained in the distribution until one module matches.
+
+The C<perl> related one will be matched against C<$^X>.
+
+If more than one restriction of C<module>, C<distribution>, and
+C<perl> is specified, the results of the separately computed match
+values must all match. If this is the case then the hashref
+represented by the YAML document is returned as the preference
+structure for the current distribution.
+
+=item disabled
+
+Specifies that this distribution shall not be processed at all.
+
+=item cpanconfig
+
+Temporarily override assorted C<CPAN.pm> configuration variables.
+
+Supported are: C<build_requires_install_policy>, C<make>,
+C<make_install_make_command>, C<prefer_installer>, C<test_report>
+
+=item pl
+
+Processing instructions for the C<perl Makefile.PL> or C<perl
+Build.PL> phase of the CPAN mantra. See below under I<Processiong
+Instructions>.
+
+=item make
+
+Processing instructions for the C<make> or C<./Build> phase of the
+CPAN mantra. See below under I<Processiong Instructions>.
+
+=item test
+
+Processing instructions for the C<make test> or C<./Build test> phase
+of the CPAN mantra. See below under I<Processiong Instructions>.
+
+=item install
+
+Processing instructions for the C<make install> or C<./Build install>
+phase of the CPAN mantra. See below under I<Processiong Instructions>.
+
+=item patches
+
+Patches on CPAN or on the local disk XXX
+
+=back
+
+=head2 Processing Instructions
+
+=over
+
+=item env
+
+Environment variables to be set during the command
+
+=item args
+
+Arguments to be added to the command line
+
+=item expect
+
+A reference to an array that contains XXX
+
+=item expect-in-any-order
+
+Like C<expect> but the order of the questions asked by the
+distribution software is not deterministic. Note that when C<CPAN.pm>
+gives an answer, it removes the according pair from the array, so if
+you want to answer the question C<Do you really mean that> several
+times, then it must be included in the array that often.
+
+=back
+
+=head1 PATCHES
+
+My procedure when I encounter a broken package:
+
+    look DISTRO
+    cd ..
+    rsync -va DISTRODIR/ DISTRODIR.orig/
+    # fix the distro in DISTRODIR
+    diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
+    gzip DISTRODIR-ANDK-01.patch
+
+I then upload the resulting patch to my CPAN patches/ directory and
+write a YAML file into my prefs_dir/ directory that contains roughly
+
+    ---
+    comment: "This patch fixes ..."
+    match:
+      distribution: "^DISTRO$"
+
+    patches:
+      - ANDK/patches/DISTRODIR-ANDK-01.patch
+
+That's all. From then I can install that distro for any perl version
+on that machine.
+
+=head1 EXAMPLE FILES
+
+C<CPAN.pm> comes with a collection of example YAML files. Note that these
+are really just examples and should not be used without care because
+they cannot fit everybody's purpose. After all the authors of the
+packages that ask questions had a need to ask, so you should watch
+their questions and adjust the examples to your environment and your
+needs. You have beend warned:-)
+
+=head1 BUGS
 
 Please report interesting improvements you apply to these files. Any
 additions and corrections are welcome. Also, please be aware that
@@ -221,9 +262,12 @@ there are many areas of this system that need further attention and
 are not yet working as one would expect or hope.
 
 Please use the
-http://rt.cpan.org/Dist/Display.html?Status=Active&Queue=CPAN address
-to report any bugs and wished. Thank you!
+L<http://rt.cpan.org/Dist/Display.html?Status=Active&Queue=CPAN>
+address to report any bugs and wishes. Thank you!
 
-Enjoy,
--- 
-andreas
+=cut
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 4
+# End:

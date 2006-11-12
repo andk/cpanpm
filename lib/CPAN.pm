@@ -1728,6 +1728,7 @@ sub hosts {
         } else {
             $start = $last->{start};
         }
+        next unless $last->{thesiteurl}; # C-C? bad filenames?
         $S{start} = $start;
         $S{end} ||= $last->{end};
         my $dltime = $last->{end} - $start;
@@ -1758,9 +1759,9 @@ sub hosts {
     $R .= sprintf "Log ends  : %s\n", scalar(localtime $S{end}) || "unknown";
     if ($res->{ok} && @{$res->{ok}}) {
         $R .= sprintf "\nSuccessful downloads:
-   N        kB  secs       kB/s url\n";
+   N       kB  secs      kB/s url\n";
         for (sort { $b->[3] <=> $a->[3] } @{$res->{ok}}) {
-            $R .= sprintf "%4d %9d %5d %10.1f %s\n", @$_;
+            $R .= sprintf "%4d %8d %5d %9.1f %s\n", @$_;
         }
     }
     if ($res->{no} && @{$res->{no}}) {
@@ -5481,7 +5482,7 @@ sub patch {
         local $ENV{PATCH_GET} = 0; # shall replace -g0 which is not
                                    # supported everywhere (and then,
                                    # not ever necessary there)
-        my $args = "-p1 -N --fuzz=3";
+        my $stdpatchargs = "-N --fuzz=3";
         my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
         $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
         for my $patch (@$patches) {
@@ -5498,9 +5499,11 @@ sub patch {
             }
             $CPAN::Frontend->myprint("  $patch\n");
             my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
+            my $thispatchargs = join " ", $stdpatchargs, $self->_patch_p_parameter($readfh);
+            $readfh = CPAN::Tarzip->TIEHANDLE($patch);
             my $writefh = FileHandle->new;
-            unless (open $writefh, "|$patchbin $args") {
-                my $fail = "Could not fork '$patchbin $args'";
+            unless (open $writefh, "|$patchbin $thispatchargs") {
+                my $fail = "Could not fork '$patchbin $thispatchargs'";
                 $CPAN::Frontend->mywarn("$fail; cannot continue\n");
                 $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
                 delete $self->{build_dir};
@@ -5520,6 +5523,19 @@ sub patch {
         $self->{patched}++;
     }
     return 1;
+}
+
+sub _patch_p_parameter {
+    my($self,$fh) = @_;
+    my($cnt_files,$cnt_p0files);
+    local($_);
+    while ($_ = $fh->READLINE) {
+        next unless /^[\*\+]{3}\s(\S+)/;
+        my $file = $1;
+        $cnt_files++;
+        $cnt_p0files++ if -f $file;
+    }
+    return $cnt_files==$cnt_p0files ? "-p0" : "-p1";
 }
 
 #-> sub CPAN::Distribution::_edge_cases
@@ -6372,8 +6388,8 @@ is part of the perl-%s distribution. To install that, you need to run
                 return;
             }
 	} else {
-            if (my $expect = $self->_prefs_with_expect("pl")) {
-                $ret = $self->_run_via_expect($system,$expect);
+            if (my $expect_model = $self->_prefs_with_expect("pl")) {
+                $ret = $self->_run_via_expect($system,$expect_model);
                 if (! defined $ret
                     && $self->{writemakefile}
                     && $self->{writemakefile}->failed) {
@@ -6444,9 +6460,9 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $env->{$e};
         }
     }
-    my $expect = $self->_prefs_with_expect("make");
+    my $expect_model = $self->_prefs_with_expect("make");
     my $want_expect = 0;
-    if ( $expect && @$expect ) {
+    if ( $expect_model && @{$expect_model->{talk}} ) {
         my $can_expect = $CPAN::META->has_inst("Expect");
         if ($can_expect) {
             $want_expect = 1;
@@ -6457,7 +6473,7 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     my $system_ok;
     if ($want_expect) {
-        $system_ok = $self->_run_via_expect($system,$expect) == 0;
+        $system_ok = $self->_run_via_expect($system,$expect_model) == 0;
     } else {
         $system_ok = system($system) == 0;
     }
@@ -6475,52 +6491,109 @@ is part of the perl-%s distribution. To install that, you need to run
 
 # CPAN::Distribution::_run_via_expect
 sub _run_via_expect {
-    my($self,$system,$expect) = @_;
-    CPAN->debug("system[$system]expect[$expect]") if $CPAN::DEBUG;
+    my($self,$system,$expect_model) = @_;
+    CPAN->debug("system[$system]expect_model[$expect_model]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst("Expect")) {
-        my $expo = Expect->new;
+        my $expo = Expect->new;  # expo Expect object;
         $expo->spawn($system);
-        my $ran_into_timeout;
-      EXPECT: for (my $i = 0; $i <= $#$expect; $i+=2) {
-            my($next,$send) = @$expect[$i,$i+1];
-            my($timeout,$re);
-            if (ref $next) {
-                $timeout = $next->{timeout};
-                $re = $next->{expect};
-            } else {
-                $timeout = 15;
-                $re = $next;
-            }
-            CPAN->debug("timeout[$timeout]re[$re]") if $CPAN::DEBUG;
-            my $regex = eval "qr{$re}";
-            $expo->expect($timeout,
-                          [ eof => sub {
-                                my $but = $expo->clear_accum;
-                                $CPAN::Frontend->mywarn("EOF (maybe harmless) system[$system]
-expected[$regex]\nbut[$but]\n\n");
-                                last EXPECT;
-                            } ],
-                          [ timeout => sub {
-                                my $but = $expo->clear_accum;
-                                $CPAN::Frontend->mywarn("TIMEOUT system[$system]
-expected[$regex]\nbut[$but]\n\n");
-                                $ran_into_timeout++;
-                            } ],
-                          -re => $regex);
-            if ($ran_into_timeout){
-                # note that the caller expects 0 for success
-                $self->{writemakefile} =
-                    CPAN::Distrostatus->new("NO timeout during expect dialog");
-                return;
-            }
-            $expo->send($send);
+        my $expecta = $expect_model->{talk};
+        if ($expect_model->{mode} eq "expect") {
+            return $self->_run_via_expect_deterministic($expo,$expecta);
+        } elsif ($expect_model->{mode} eq "expect-in-any-order") {
+            return $self->_run_via_expect_anyorder($expo,$expecta);
+        } else {
+            die "Panic: Illegal expect mode: $expect_model->{mode}";
         }
-        $expo->soft_close;
-        return $expo->exitstatus();
     } else {
         $CPAN::Frontend->mywarn("Expect not installed, falling back to system()\n");
         return system($system);
     }
+}
+
+sub _run_via_expect_anyorder {
+    my($self,$expo,$expecta) = @_;
+    my $timeout = 3; # currently unsettable
+    my @expectacopy = @$expecta; # we trash it!
+    my $but = "";
+  EXPECT: while () {
+        my($eof,$ran_into_timeout);
+        my @match = $expo->expect($timeout,
+                                  [ eof => sub {
+                                        $eof++;
+                                    } ],
+                                  [ timeout => sub {
+                                        $ran_into_timeout++;
+                                    } ],
+                                  -re => eval"qr{.}",
+                                 );
+        if ($match[2]) {
+            $but .= $match[2];
+        }
+        $but .= $expo->clear_accum;
+        if ($eof) {
+            $expo->soft_close;
+            return $expo->exitstatus();
+        } elsif ($ran_into_timeout) {
+            # warn "DEBUG: they are asking a question, but[$but]";
+            for (my $i = 0; $i <= $#expectacopy; $i+=2) {
+                my($next,$send) = @expectacopy[$i,$i+1];
+                my $regex = eval "qr{$next}";
+                # warn "DEBUG: will compare with regex[$regex].";
+                if ($but =~ /$regex/) {
+                    # warn "DEBUG: will send send[$send]";
+                    $expo->send($send);
+                    splice @expectacopy, $i, 2; # never allow reusing an QA pair
+                    next EXPECT;
+                }
+            }
+            my $why = "could not answer a question during the dialog";
+            $CPAN::Frontend->mywarn("Failing: $why\n");
+            $self->{writemakefile} =
+                CPAN::Distrostatus->new("NO $why");
+            return;
+        }
+    }
+}
+
+sub _run_via_expect_deterministic {
+    my($self,$expo,$expecta) = @_;
+    my $ran_into_timeout;
+  EXPECT: for (my $i = 0; $i <= $#$expecta; $i+=2) {
+        my($next,$send) = @$expecta[$i,$i+1];
+        my($timeout,$re);
+        if (ref $next) {
+            $timeout = $next->{timeout};
+            $re = $next->{expect};
+        } else {
+            $timeout = 15;
+            $re = $next;
+        }
+        CPAN->debug("timeout[$timeout]re[$re]") if $CPAN::DEBUG;
+        my $regex = eval "qr{$re}";
+        $expo->expect($timeout,
+                      [ eof => sub {
+                            my $but = $expo->clear_accum;
+                            $CPAN::Frontend->mywarn("EOF (maybe harmless)
+expected[$regex]\nbut[$but]\n\n");
+                            last EXPECT;
+                        } ],
+                      [ timeout => sub {
+                            my $but = $expo->clear_accum;
+                            $CPAN::Frontend->mywarn("TIMEOUT
+expected[$regex]\nbut[$but]\n\n");
+                            $ran_into_timeout++;
+                        } ],
+                      -re => $regex);
+        if ($ran_into_timeout){
+            # note that the caller expects 0 for success
+            $self->{writemakefile} =
+                CPAN::Distrostatus->new("NO timeout during expect dialog");
+            return;
+        }
+        $expo->send($send);
+    }
+    $expo->soft_close;
+    return $expo->exitstatus();
 }
 
 # CPAN::Distribution::_find_prefs
@@ -7072,9 +7145,9 @@ sub test {
             $ENV{$e} = $env->{$e};
         }
     }
-    my $expect = $self->_prefs_with_expect("test");
+    my $expect_model = $self->_prefs_with_expect("test");
     my $want_expect = 0;
-    if ( $expect && @$expect ) {
+    if ( $expect_model && @{$expect_model->{talk}} ) {
         my $can_expect = $CPAN::META->has_inst("Expect");
         if ($can_expect) {
             $want_expect = 1;
@@ -7125,7 +7198,7 @@ sub test {
                                     "not supported when distroprefs specify ".
                                     "an interactive test\n");
         }
-        $tests_ok = $self->_run_via_expect($system,$expect) == 0;
+        $tests_ok = $self->_run_via_expect($system,$expect_model) == 0;
     } elsif ( $ready_to_report ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
@@ -7173,8 +7246,19 @@ sub test {
 sub _prefs_with_expect {
     my($self,$where) = @_;
     return unless my $prefs = $self->prefs;
-    return unless my $where = $prefs->{$where};
-    $where->{expect} || $where->{"expect-in-any-order"};
+    return unless my $where_prefs = $prefs->{$where};
+    if ($where_prefs->{expect}) {
+        return {
+                mode => "expect",
+                talk => $where_prefs->{expect},
+               };
+    } elsif ($where_prefs->{"expect-in-any-order"}) {
+        return {
+                mode => "expect-in-any-order",
+                talk => $where_prefs->{"expect-in-any-order"},
+               };
+    }
+    return;
 }
 
 #-> sub CPAN::Distribution::clean ;

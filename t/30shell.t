@@ -93,6 +93,10 @@ cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
     "t/dot-cpan/Bundle/CpanTestDummies.pm: $!";
 mkpath _d"t/dot-cpan/prefs";
+cp _f"distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml",
+    _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml" or die
+    "Could not cp distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml to ".
+    "t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml: $!";
 
 use Cwd;
 my $cwd = Cwd::cwd;
@@ -111,6 +115,7 @@ patches:
 EOF
 END {
     unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
+    unlink _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
 }
 
 sub read_myconfig () {
@@ -129,14 +134,15 @@ my @prgs;
     @prgs = split /########.*/, $data;
 }
 my @modules = qw(
+                 Archive::Zip
+                 Data::Dumper
                  Digest::SHA
+                 Expect
+                 Module::Build
+                 Term::ANSIColor
                  Term::ReadKey
                  Term::ReadLine
                  Text::Glob
-                 Module::Build
-                 Archive::Zip
-                 Data::Dumper
-                 Term::ANSIColor
                  YAML
                 );
 my @programs = qw(
@@ -174,10 +180,6 @@ $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
     =
     $HAVE->{"Term::ReadLine::Perl"}
     || $HAVE->{"Term::ReadLine::Gnu"};
-$HAVE->{"YAML&&patch"}
-    =
-    $HAVE->{"YAML"}
-    && $HAVE->{"patch"};
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
@@ -1070,11 +1072,16 @@ __END__
 ########
 #P:force get CPAN::Test::Dummy::Perl5::Build::Fails
 #E:D i s t r o[\s\S]+?TestDistroPrefsFile.yml\[1[\s\S]+?patch
-#R:YAML&&patch
+#R:YAML patch
+########
+#P:test ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
+#E:D i s t r o[\s\S]+?test -- OK
+#T:30
+#R:Expect YAML
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
 #E:test -- OK
-#R:YAML&&patch
+#R:YAML patch
 ########
 #P:u /--/
 #E:No modules found for

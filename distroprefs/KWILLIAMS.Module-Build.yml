@@ -1,0 +1,6 @@
+--- 
+comment: "only needed for bleadperls around 24700"
+match:
+  distribution: "^KWILLIAMS/Module-Build-0.2805"
+patches:
+  - ANDK/patches/Module-Build-0.2805-JPEACOCK-01.patch.gz

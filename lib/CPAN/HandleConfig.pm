@@ -122,7 +122,9 @@ sub edit {
         unless (exists $keys{$o}) {
             $CPAN::Frontend->mywarn("Warning: unknown configuration variable '$o'\n");
         }
-	if ($o =~ /list$/) {
+        # one day I used randomize_urllist for a boolean, so we must
+        # list them explicitly --ak
+	if ($o =~ /^(wait_list|urllist|dontload_list)$/) {
 	    $func = shift @args;
 	    $func ||= "";
             CPAN->debug("func[$func]args[@args]") if $CPAN::DEBUG;

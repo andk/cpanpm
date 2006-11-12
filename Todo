@@ -1,113 +1,57 @@
 2006-11-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Bug: When I tried to report MSCHWERN/B-Generate-1.06_2.tar.gz, it
-	failed but did not try all 43 hosts.
+	* BUG: randomize_urllist cannot be set on the shell commandline: because
+	it ends in "list", it becomes always an array:))
 
-Trying with "/usr/bin/lynx -source" to get
-    http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
-Error while trying to rename '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz.tmp13806' to '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz': No such file or directory
- at lib/CPAN.pm line 267
-        CPAN::shell() called at -e line 1
+	FIXED
 
-	Lynx again!
+	* Todo: guess the patch option -p0 or -p1
 
-	Try
-	/usr/bin/lynx -source http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
+	* distroprefs with artificial intelligence: find out how to write a
+	distropref with so much AI that it handles several different dialogues.
+	I just realized that YAML::Syck talked me into a different dialogue on
+	some older bleadperl that had YAML 0.60 installed:
 
-	They send an error page that looks different than usual
+*** WARNING ***
 
-	Fixed in SVK rev. 1298
+This release breaks compatibility with versions earlier than version 0.60 of
+YAML::Syck and YAML.pm when serializing blessed references.
 
-2006-11-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+See the COMPATIBILITY file for more information.
 
-	* Todo: offer the choice between (readline) Gnu and Perl and Coro
+*** Pre-0.60 version of YAML.pm (0.53) detected.
+Continue installing YAML::Syck? [y]
 
-	* So what does Randy's patch do?
+	We would like to answer to this question yes if it comes. Or we would
+	like to upgrade YAML first.
 
-	Disable {read,write}_metadata_cache
-	Disable rd_{modlist,modpacks,authindex}
-	sub sqlite_reload {
-	On 'reload index' it runs its own sqlite_reload
-	And 'exists' is patched.
-	No patch to all_objects?
+	One would think that Expect collects data and compares them to a pool of
+	regular expressions each of which has an associated answer. As soon as
+	one expression matches, its answer is given and it is taken out of the
+	pool. On EOF do not even complain. Very similar to what we do now. Is it
+	even worth to keep the current interface? Yes, because it has the
+	potential to break. Because Expect itself does not provide it. We must
+	write some code in between:
 
-	How to use?
+	Variant 1: match on /./, look at the whole collected string, do the
+	match loop. On success do as we do now, on failure continue as we do
+	now. On timeout do like we do now. On EOF exit the loop silently. As
+	test write a distro that asks 12 questions in random order and dies if
+	the wrong answer is given.
 
-	o conf use_sqlite 1
+	Variant 2: match on /./ until timeout is reached. Now do your own
+	matching. On success do as we do now, on failure give up. One question
+	that we cannot answer is too much. There is no timeout error, just a "no
+	prepared regex matches the question". On EOF exit the loop silently.
 
-% make run
-/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
-CPAN: File::HomeDir loaded ok (v0.58)
-CPAN: Term::ANSIColor loaded ok (v1.11)
+	Variant 2 is much better.
 
-cpan shell -- CPAN exploration and modules installation (v1.8861)
-ReadLine support enabled
+	Today I wrote CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz for that.
 
-cpan[1]> o conf use_sqlite 1
-Warning: unknown configuration variable 'use_sqlite'
-    use_sqlite         [1]
-Please use 'o conf commit' to make the config permanent!
+	DONE
 
-
-cpan[2]> m CPAN             
-CPAN: YAML::Syck loaded ok (v0.71)
-Going to read /home/k/.cpan/build/
-............................................................................DONE
-Found 593 old builds, restored the state of 343
-Updating database file ...
-Can't exec "cpandb": No such file or directory at lib/CPAN.pm line 4152.
-system cpandb --update failed: -1 at lib/CPAN.pm line 4152.
- at lib/CPAN.pm line 276
-        CPAN::shell() called at -e line 1
-
-	OK, let's patch the path to $^X in and retry:
-
-% make run
-/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
-CPAN: File::HomeDir loaded ok (v0.58)
-CPAN: Term::ANSIColor loaded ok (v1.11)
-
-cpan shell -- CPAN exploration and modules installation (v1.8861)
-ReadLine support enabled
-
-cpan[1]> o conf use_sqlite 1
-Warning: unknown configuration variable 'use_sqlite'
-    use_sqlite         [1]
-Please use 'o conf commit' to make the config permanent!
-
-
-cpan[2]> m CPAN
-CPAN: YAML::Syck loaded ok (v0.71)
-Going to read /home/k/.cpan/build/
-............................................................................DONE
-Found 593 old builds, restored the state of 343
-Updating database file ...
-Done!
-Can't call method "set" on an undefined value at lib/CPAN.pm line 962.
- at lib/CPAN.pm line 276
-        CPAN::shell() called at -e line 1
-
-
-	Hmmm. So Randy wants to have use_sqlite to be set before we enter the
-	shell and he wants it only within the shell. This is pretty likely
-	wrong.
-
-	Trying to set use_sqlite earlier with a tiny patch to Makefile.PL.
-	Doesn't work because CPAN::SQLite loads MyConfig again according to the
-	debugger:
-
-	$ = require '/home/k/.cpan/CPAN/MyConfig.pm' called from file `/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/lib/site_perl/5.9.5/CPAN/SQLite.pm' line 50
-
-	So we lose the switch again. Back to the drawing board.
-
-	Either I need a way to use CPAN::SQLite without having it guess CPAN.pm
-	internals all over the place. Or Randy needs a CPAN.pm that has API
-	calls for all the CPAN.pm internals. I cannot allow a plugin that tries
-	to reload the Config file and overwriting the Internals that I have
-	currently set. This is happening and makes it hard to predict what will
-	happen next.
-
-2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+	* Todo: offer the choice between (readline) Gnu and Perl and Coro. See
+	my trials in the bin/ directory (SVN only)
 
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
 	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
@@ -185,45 +129,6 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	* write a patch for Test::Reporter so you can choose the mail sending
 	module? Reported 2005-07:
 	http://rt.cpan.org/Ticket/Display.html?id=13836
-
-	* distroprefs with artificial intelligence: find out how to write a
-	distropref with so much AI that it handles several different dialogues.
-	I just realized that YAML::Syck talked me into a different dialogue on
-	some older bleadperl that had YAML 0.60 installed:
-
-*** WARNING ***
-
-This release breaks compatibility with versions earlier than version 0.60 of
-YAML::Syck and YAML.pm when serializing blessed references.
-
-See the COMPATIBILITY file for more information.
-
-*** Pre-0.60 version of YAML.pm (0.53) detected.
-Continue installing YAML::Syck? [y]
-
-	We would like to answer to this question yes if it comes. Or we would
-	like to upgrade YAML first.
-
-	One would think that Expect collects data and compares them to a pool of
-	regular expressions each of which has an associated answer. As soon as
-	one expression matches, its answer is given and it is taken out of the
-	pool. On EOF do not even complain. Very similar to what we do now. Is it
-	even worth to keep the current interface? Yes, because it has the
-	potential to break. Because Expect itself does not provide it. We must
-	write some code in between:
-
-	Variant 1: match on /./, look at the whole collected string, do the
-	match loop. On success do as we do now, on failure continue as we do
-	now. On timeout do like we do now. On EOF exit the loop silently. As
-	test write a distro that asks 12 questions in random order and dies if
-	the wrong answer is given.
-
-	Variant 2: match on /./ until timeout is reached. Now do your own
-	matching. On success do as we do now, on failure give up. One question
-	that we cannot answer is too much. There is no timeout error, just a "no
-	prepared regex matches the question". On EOF exit the loop silently.
-
-	Variant 2 is much better.
 
 	* Randy Kobes needs an API to find out where the index files are
 	located. And the whole SQLite needs to be integrated. First question is
@@ -415,6 +320,113 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+2006-11-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* So what does Randy's patch do?
+
+	Disable {read,write}_metadata_cache
+	Disable rd_{modlist,modpacks,authindex}
+	sub sqlite_reload {
+	On 'reload index' it runs its own sqlite_reload
+	And 'exists' is patched.
+	No patch to all_objects?
+
+	How to use?
+
+	o conf use_sqlite 1
+
+% make run
+/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
+CPAN: File::HomeDir loaded ok (v0.58)
+CPAN: Term::ANSIColor loaded ok (v1.11)
+
+cpan shell -- CPAN exploration and modules installation (v1.8861)
+ReadLine support enabled
+
+cpan[1]> o conf use_sqlite 1
+Warning: unknown configuration variable 'use_sqlite'
+    use_sqlite         [1]
+Please use 'o conf commit' to make the config permanent!
+
+
+cpan[2]> m CPAN             
+CPAN: YAML::Syck loaded ok (v0.71)
+Going to read /home/k/.cpan/build/
+............................................................................DONE
+Found 593 old builds, restored the state of 343
+Updating database file ...
+Can't exec "cpandb": No such file or directory at lib/CPAN.pm line 4152.
+system cpandb --update failed: -1 at lib/CPAN.pm line 4152.
+ at lib/CPAN.pm line 276
+        CPAN::shell() called at -e line 1
+
+	OK, let's patch the path to $^X in and retry:
+
+% make run
+/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
+CPAN: File::HomeDir loaded ok (v0.58)
+CPAN: Term::ANSIColor loaded ok (v1.11)
+
+cpan shell -- CPAN exploration and modules installation (v1.8861)
+ReadLine support enabled
+
+cpan[1]> o conf use_sqlite 1
+Warning: unknown configuration variable 'use_sqlite'
+    use_sqlite         [1]
+Please use 'o conf commit' to make the config permanent!
+
+
+cpan[2]> m CPAN
+CPAN: YAML::Syck loaded ok (v0.71)
+Going to read /home/k/.cpan/build/
+............................................................................DONE
+Found 593 old builds, restored the state of 343
+Updating database file ...
+Done!
+Can't call method "set" on an undefined value at lib/CPAN.pm line 962.
+ at lib/CPAN.pm line 276
+        CPAN::shell() called at -e line 1
+
+
+	Hmmm. So Randy wants to have use_sqlite to be set before we enter the
+	shell and he wants it only within the shell. This is pretty likely
+	wrong.
+
+	Trying to set use_sqlite earlier with a tiny patch to Makefile.PL.
+	Doesn't work because CPAN::SQLite loads MyConfig again according to the
+	debugger:
+
+	$ = require '/home/k/.cpan/CPAN/MyConfig.pm' called from file `/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/lib/site_perl/5.9.5/CPAN/SQLite.pm' line 50
+
+	So we lose the switch again. Back to the drawing board.
+
+	Either I need a way to use CPAN::SQLite without having it guess CPAN.pm
+	internals all over the place. Or Randy needs a CPAN.pm that has API
+	calls for all the CPAN.pm internals. I cannot allow a plugin that tries
+	to reload the Config file and overwriting the Internals that I have
+	currently set. This is happening and makes it hard to predict what will
+	happen next.
+
+	FIXED by Randy
+
+	* Bug: When I tried to report MSCHWERN/B-Generate-1.06_2.tar.gz, it
+	failed but did not try all 43 hosts.
+
+Trying with "/usr/bin/lynx -source" to get
+    http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
+Error while trying to rename '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz.tmp13806' to '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz': No such file or directory
+ at lib/CPAN.pm line 267
+        CPAN::shell() called at -e line 1
+
+	Lynx again!
+
+	Try
+	/usr/bin/lynx -source http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
+
+	They send an error page that looks different than usual
+
+	Fixed in SVK rev. 1298
 
 	* degraded mode problems: I did an 'o conf commit' in degraded mode and
 	blew away some config variables. We need a global that disallows commit
