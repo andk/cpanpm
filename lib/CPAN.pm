@@ -9815,7 +9815,8 @@ about recent downloads. You can view the statistics with the C<hosts>
 command or inspect them directly by looking into the C<FTPstats.yml>
 file in your C<cpan_home> directory.
 
-It's recommended to set the C<randomize_urllist> parameter to get some
+To get some interesting statistics it is recommended to set the
+C<randomize_urllist> parameter that introduces some amount of
 randomness into the URL selection.
 
 =head2 prefs_dir for avoiding interactive questions (ALPHA)

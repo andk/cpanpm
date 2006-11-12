@@ -1446,10 +1446,12 @@ yaml_module => qq{Which YAML implementation would you prefer?},
 randomize_urllist_intro => qq{
 
 CPAN.pm can introduce some randomness when using hosts for download
-that are configured in the urllist parameter. Enter a value between 0
-and 1 to indicate how often you want to let CPAN.pm try a random host
-from the urllist. A value of one means 'use always a random host
-first', zero means 'use always the urllist in the order configured'.
+that are configured in the urllist parameter. Enter a numeric value
+between 0 and 1 to indicate how often you want to let CPAN.pm try a
+random host from the urllist. A value of one specifies to always use a
+random host as the first try. A value of zero means no randomness at
+all. Anything in between specifies how often, on average, a random
+host should be tried first.
 
 },
 
