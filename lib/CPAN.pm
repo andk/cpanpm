@@ -2361,6 +2361,7 @@ sub expand {
     $self->expand_by_method($class,$methods,@args);
 }
 
+#-> sub CPAN::Shell::expand_by_method ;
 sub expand_by_method {
     my $self = shift;
     my($class,$methods,@args) = @_;
@@ -2519,6 +2520,7 @@ installed. To activate colorized output, please install Term::ANSIColor.\n\n";
 }
 
 
+#-> sub CPAN::Shell::print_ornamented ;
 sub print_ornamented {
     my($self,$what,$ornament) = @_;
     return unless defined $what;
@@ -2552,6 +2554,8 @@ Please choose a different color (Hint: try 'o conf init color.*')\n";
     }
 }
 
+#-> sub CPAN::Shell::myprint ;
+
 # where is myprint/mywarn/Frontend/etc. documented? We need guidelines
 # where to use what! I think, we send everything to STDOUT and use
 # print for normal/good news and warn for news that need more
@@ -2562,18 +2566,21 @@ sub myprint {
     $self->print_ornamented($what, $CPAN::Config->{colorize_print}||'bold blue on_white');
 }
 
+#-> sub CPAN::Shell::myexit ;
 sub myexit {
     my($self,$what) = @_;
     $self->myprint($what);
     exit;
 }
 
+#-> sub CPAN::Shell::mywarn ;
 sub mywarn {
     my($self,$what) = @_;
     $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red on_white');
 }
 
 # only to be used for shell commands
+#-> sub CPAN::Shell::mydie ;
 sub mydie {
     my($self,$what) = @_;
     $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red on_white');
@@ -2586,7 +2593,7 @@ sub mydie {
     die "\n";
 }
 
-# sub CPAN::Shell::colorable_makemaker_prompt
+# sub CPAN::Shell::colorable_makemaker_prompt ;
 sub colorable_makemaker_prompt {
     my($foo,$bar) = @_;
     if (CPAN::Shell->colorize_output) {
@@ -2602,6 +2609,7 @@ sub colorable_makemaker_prompt {
 }
 
 # use this only for unrecoverable errors!
+#-> sub CPAN::Shell::unrecoverable_error ;
 sub unrecoverable_error {
     my($self,$what) = @_;
     my @lines = split /\n/, $what;
@@ -2625,11 +2633,13 @@ sub unrecoverable_error {
     $self->mydie(join "", @lines);
 }
 
+#-> sub CPAN::Shell::mysleep ;
 sub mysleep {
     my($self, $sleep) = @_;
     sleep $sleep;
 }
 
+#-> sub CPAN::Shell::setup_output ;
 sub setup_output {
     return if -t STDOUT;
     my $odef = select STDERR;
@@ -8857,7 +8867,7 @@ functions in the calling package (C<install(...)>).  Before calling low-level
 commands it makes sense to initialize components of CPAN you need, e.g.:
 
   CPAN::HandleConfig->load;
-  CPAN::Index::setup_output;
+  CPAN::Shell::setup_output;
   CPAN::Index->reload;
 
 high-level commands do such initializations automatically.
