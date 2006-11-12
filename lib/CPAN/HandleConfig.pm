@@ -216,11 +216,11 @@ sub prettyprint {
 sub commit {
     my($self,@args) = @_;
     CPAN->debug("args[@args]") if $CPAN::DEBUG;
-    if ($CPAN::RUN_DEGRADED {
+    if ($CPAN::RUN_DEGRADED) {
                              $CPAN::Frontend->mydie(
                                                     "'o conf commit' disabled in ".
                                                     "degraded mode. Maybe try\n".
-                                                    " !undef $CPAN::RUN_DEGRADED\n"
+                                                    " !undef \$CPAN::RUN_DEGRADED\n"
                                                    );
     }
     my $configpm;
@@ -319,11 +319,11 @@ sub neatvalue {
 
 sub defaults {
     my($self) = @_;
-    if ($CPAN::RUN_DEGRADED {
+    if ($CPAN::RUN_DEGRADED) {
                              $CPAN::Frontend->mydie(
                                                     "'o conf defaults' disabled in ".
                                                     "degraded mode. Maybe try\n".
-                                                    " !undef $CPAN::RUN_DEGRADED\n"
+                                                    " !undef \$CPAN::RUN_DEGRADED\n"
                                                    );
     }
     my $done;
