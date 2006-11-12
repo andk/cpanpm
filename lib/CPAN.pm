@@ -721,8 +721,9 @@ sub checklock {
                                            "reports other host $otherhost and other ".
                                            "process $otherpid.\n".
                                            "Cannot proceed.\n"));
-	}
-	elsif (defined $otherpid && $otherpid) {
+	} elsif ($RUN_DEGRADED) {
+            $CPAN::Frontend->mywarn("Running in degraded mode (experimental)\n");
+        } elsif (defined $otherpid && $otherpid) {
 	    return if $$ == $otherpid; # should never happen
 	    $CPAN::Frontend->mywarn(
 				    qq{
