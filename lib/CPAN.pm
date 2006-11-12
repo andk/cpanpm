@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_61';
+$CPAN::VERSION = '1.88_62';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -6369,7 +6369,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 return;
             }
 	} else {
-            if (my $expect = $self->prefs->{pl}{expect}) {
+            if (my $expect = $self->_prefs_with_expect("pl")) {
                 $ret = $self->_run_via_expect($system,$expect);
                 if (! defined $ret
                     && $self->{writemakefile}
@@ -6441,7 +6441,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $env->{$e};
         }
     }
-    my $expect = $self->prefs->{make}{expect};
+    my $expect = $self->_prefs_with_expect("make");
     my $want_expect = 0;
     if ( $expect && @$expect ) {
         my $can_expect = $CPAN::META->has_inst("Expect");
@@ -7069,7 +7069,7 @@ sub test {
             $ENV{$e} = $env->{$e};
         }
     }
-    my $expect = $self->prefs->{test}{expect};
+    my $expect = $self->_prefs_with_expect("test");
     my $want_expect = 0;
     if ( $expect && @$expect ) {
         my $can_expect = $CPAN::META->has_inst("Expect");
@@ -7165,6 +7165,13 @@ sub test {
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
     $self->store_persistent_state;
+}
+
+sub _prefs_with_expect {
+    my($self,$where) = @_;
+    return unless my $prefs = $self->prefs;
+    return unless my $where = $prefs->{$where};
+    $where->{expect} || $where->{"expect-in-any-order"};
 }
 
 #-> sub CPAN::Distribution::clean ;

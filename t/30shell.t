@@ -1,5 +1,7 @@
 use strict;
 
+# there's POD at the very end of this file
+
 use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
 BEGIN {
     $|++;
@@ -1119,8 +1121,9 @@ C<30shell.coverage> collects results from Devel::Cover
 
 =head2 How this script works
 
-In the following I want to provide an overview about how this
-testscript works.
+The heart of the testing mechanism is t/30shell.t which is based on
+Expect and as such is able to test a shell session. The following
+provides an overview about how this testscript works.
 
 After the __END__ token you find small groups of lines like the
 following:
@@ -1164,27 +1167,23 @@ to sync state between reader and writer.
 
 =head2 How to add new pseudo distributions
 
-The heart of the testing mechanism is shell.t which is based on Expect
-and as such is able to test a shell session. To make reproducable
-tests we need a shell session that is based on a clone of a
-miniaturized CPAN site. This site lives under t/CPAN/{authors,modules}.
+To make reproducable tests we need a shell session that is based on a
+clone of a miniaturized CPAN site. This site lives under
+t/CPAN/{authors,modules}.
 
 The first distribution in the fake CPAN site was
 CPAN-Test-Dummy-Perl5-Make-1.01.tar.gz in the
 ./CPAN/authors/id/A/AN/ANDK/ directory which was a clone of
 PITA::Test::Dummy::Perl5::Make.
 
-This document describes which distros we need and how they can be
-added.
-
 We need distros based on the following (and more) criteria:
 
- Testing:        success/failure
- Installer:      EU:MM/M:B/M:I
- YAML:           with/without
- SIGNATURE:      with/without
- Zipping:        tar.gz/tar.bz2/zip
- Requires:       requires/build_requires
+ Testing:        success, failure
+ Installer:      EU:MM, M:B, M:I
+ YAML:           with YAML, with YAML::Syck, without
+ SIGNATURE:      with, without
+ Zipping:        tar.gz, tar.bz2, zip
+ Requires:       requires, build_requires
 
 Any new distro must be separately available on CPAN so that our
 CHECKSUMS files can be the real (signed) ones and we need not
@@ -1194,9 +1193,15 @@ To add a new distro, the following steps must be taken:
 
 (1) Collect the source
 
-- svn mkdir the author's directory if it doesn't exist yet
+- svn mkdir the author's directory if it doesn't exist yet; e.g.
 
-- svn add (or svn cp) the whole source code under the author's homedir
+  svk mkdir t/CPAN/authors/id/A/AN/ANDK
+  cd t/CPAN/authors/id/A/AN/ANDK
+
+- svn add (or svn cp) the whole source code under the author's
+  homedir; e.g.
+
+  svk cp CPAN-Test-Dummy-Perl5-Make-CircDepeOne CPAN-Test-Dummy-Perl5-Make-Expect
 
 - add the source code directory with a trailing slash to ../MANIFEST.SKIP
 

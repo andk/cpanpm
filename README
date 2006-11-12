@@ -333,7 +333,14 @@ DESCRIPTION
 PROGRAMMER'S INTERFACE
     If you do not enter the shell, the available shell commands are both
     available as methods ("CPAN::Shell->install(...)") and as functions in
-    the calling package ("install(...)").
+    the calling package ("install(...)"). Before calling low-level commands
+    it makes sense to initialize components of CPAN you need, e.g.:
+
+      CPAN::HandleConfig->load;
+      CPAN::Shell::setup_output;
+      CPAN::Index->reload;
+
+    High-level commands do such initializations automatically.
 
     There's currently only one class that has a stable interface -
     CPAN::Shell. All commands that are available in the CPAN shell are
@@ -1143,8 +1150,9 @@ CONFIGURATION
     or inspect them directly by looking into the "FTPstats.yml" file in your
     "cpan_home" directory.
 
-    It's recommended to set the "randomize_urllist" parameter to get some
-    randomness into the URL selection.
+    To get some interesting statistics it is recommended to set the
+    "randomize_urllist" parameter that introduces some amount of randomness
+    into the URL selection.
 
   prefs_dir for avoiding interactive questions (ALPHA)
     (Note: This feature has been introduced in CPAN.pm 1.8854 and is still
