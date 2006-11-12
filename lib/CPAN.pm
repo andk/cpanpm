@@ -58,7 +58,7 @@ $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
 
-
+# our globals are getting a mess
 use vars qw(
             $AUTOLOAD
             $Be_Silent
@@ -71,6 +71,7 @@ use vars qw(
             $HAS_USABLE
             $Have_warned
             $META
+            $RUN_DEGRADED
             $Signal
             $Suppress_readline
             $VERSION
@@ -590,7 +591,6 @@ use vars qw(
 $COLOR_REGISTERED ||= 0;
 
 {
-    # $GLOBAL_AUTOLOAD_RECURSION = 12;
     $autoload_recursion   ||= 0;
 
     #-> sub CPAN::Shell::AUTOLOAD ;
@@ -701,7 +701,6 @@ sub all_objects {
 sub checklock {
     my($self) = @_;
     my $lockfile = File::Spec->catfile($CPAN::Config->{cpan_home},".lock");
-    my $run_degraded = 0;
     if (-f $lockfile && -M _ > 0) {
 	my $fh = FileHandle->new($lockfile) or
             $CPAN::Frontend->mydie("Could not open lockfile '$lockfile': $!");
@@ -738,7 +737,7 @@ There seems to be running another CPAN process (pid $otherpid).  Contacting...
                 if ($ans =~ /^y/i) {
                     $CPAN::Frontend->mywarn("Running in degraded mode (experimental).
 Please report if something unexpected happens\n");
-                    $run_degraded = 1;
+                    $RUN_DEGRADED = 1;
                     for ($CPAN::Config) {
                         $_->{build_dir_reuse} = 0;
                         $_->{commandnumber_in_prompt} = 0;
@@ -814,7 +813,8 @@ Please make sure the directory exists and is writable.
             sleep 1;
         }
     }
-    if (!$run_degraded && !$self->{LOCKFH}) {
+    # locking
+    if (!$RUN_DEGRADED && !$self->{LOCKFH}) {
         my $fh;
         unless ($fh = FileHandle->new("+>>$lockfile")) {
             if ($! =~ /Permission/) {

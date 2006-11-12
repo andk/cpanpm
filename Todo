@@ -1,3 +1,12 @@
+2006-11-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* degraded mode problems: I did an 'o conf commit' in degraded mode and
+	blew away some config variables. We need a global that disallows commit
+	from degraded shells. It would also disallow 'defaults' because that
+	would restore the other config variables.
+
+	DONE. But MAYBE we want to tie $CPAN::Config?
+
 2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
