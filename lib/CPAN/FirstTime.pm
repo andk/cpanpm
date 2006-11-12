@@ -172,8 +172,21 @@ Shall we use it as the general CPAN build and cache directory?
 
             $default = $cpan_home;
             my $loop = 0;
-            while ($ans = prompt("CPAN build and cache directory?",$default)) {
-                unless (File::Spec->file_name_is_absolute($ans)) {
+            my $last_ans;
+          PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
+                if (File::Spec->file_name_is_absolute($ans)) {
+                    my @cpan_home = split /[\/\\]/, $ans;
+                  DIR: for my $dir (@cpan_home) {
+                        if ($dir =~ /^~/ and (!$last_ans or $ans ne $last_ans)) {
+                            $CPAN::Frontend
+                                ->mywarn("Warning: a tilde in the path will be ".
+                                         "taken as a literal tilde. Please ".
+                                         "confirm again if you want to keep it\n");
+                            $last_ans = $default = $ans;
+                            next PROMPT;
+                        }
+                    }
+                } else {
                     require Cwd;
                     my $cwd = Cwd::cwd();
                     my $absans = File::Spec->catdir($cwd,$ans);
