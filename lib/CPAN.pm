@@ -8853,7 +8853,14 @@ module or not.
 
 If you do not enter the shell, the available shell commands are both
 available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
-functions in the calling package (C<install(...)>).
+functions in the calling package (C<install(...)>).  Before calling low-level
+commands it makes sense to initialize components of CPAN you need, e.g.:
+
+  CPAN::HandleConfig->load;
+  CPAN::Index::setup_output;
+  CPAN::Index->reload;
+
+high-level commands do such initializations automatically.
 
 There's currently only one class that has a stable interface -
 CPAN::Shell. All commands that are available in the CPAN shell are
