@@ -87,13 +87,6 @@ Can't call method "set" on an undefined value at lib/CPAN.pm line 962.
 	currently set. This is happening and makes it hard to predict what will
 	happen next.
 
-	* degraded mode problems: I did an 'o conf commit' in degraded mode and
-	blew away some config variables. We need a global that disallows commit
-	from degraded shells. It would also disallow 'defaults' because that
-	would restore the other config variables.
-
-	DONE. But MAYBE we want to tie $CPAN::Config?
-
 2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Mail::Send problem persists that Test::Reporter's mails do not arrive
@@ -114,43 +107,6 @@ Caught SIGINT, trying to continue
 cpan> hosts
 Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 
-
-	* Bug: ~ expansion missing or warning demanded
-
-	From: Adam Kennedy <cpan@ali.as>
-Subject: Re: Trouble installing module: "LWP not available"
-To: cpan-discuss@perl.org
-Date: Wed, 08 Nov 2006 16:55:21 +1100
-
-Andreas
-
-Speaking of bad configs, I think I might be a good idea to start
-adding some basic error checks.
-
-Yesterday I got caught by the various paths not allowing the use of
-tilde ~. Instead of my homedir, it installed to a directory called,
-literally, "~".
-
-Apart from being a little annoying, fixing it required I make the
-scariest command I've ever done on a production system.
-
-rm -rf "~"
-
-:/
-
-Adam K
-
-	DONE in SVK rev. 1290
-
-
-	* Bug: Still in the code: $pid = open README, "which $binary|" in
-	_check_binary().
-
-	Reported as #22893. See also File::Which.
-
-	
-
-	* randy kobes patches SQLite
 
 	* if we make the TTLs setable, maybe we should make the TTL for
 	CHECKSUMS file too. In any case we have the problem of imacat also when
@@ -202,11 +158,6 @@ Adam K
 	*should* it do?
 	
 	Noting that the DH test runs forever again because GMP comes too late.
-
-	* "shall I try to run in degraded mode" should not come a second time
-	within the same session. Currently it can happen.
-
-	FIXED in SVK rev. 1292
 
 	* Watch the Module::Build space for updates to the question of calling
 	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
@@ -444,6 +395,53 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* degraded mode problems: I did an 'o conf commit' in degraded mode and
+	blew away some config variables. We need a global that disallows commit
+	from degraded shells. It would also disallow 'defaults' because that
+	would restore the other config variables.
+
+	DONE. But MAYBE we want to tie $CPAN::Config?
+
+	* Bug: ~ expansion missing or warning demanded
+
+	From: Adam Kennedy <cpan@ali.as>
+Subject: Re: Trouble installing module: "LWP not available"
+To: cpan-discuss@perl.org
+Date: Wed, 08 Nov 2006 16:55:21 +1100
+
+Andreas
+
+Speaking of bad configs, I think I might be a good idea to start
+adding some basic error checks.
+
+Yesterday I got caught by the various paths not allowing the use of
+tilde ~. Instead of my homedir, it installed to a directory called,
+literally, "~".
+
+Apart from being a little annoying, fixing it required I make the
+scariest command I've ever done on a production system.
+
+rm -rf "~"
+
+:/
+
+Adam K
+
+	DONE in SVK rev. 1290
+
+
+	* Bug: Still in the code: $pid = open README, "which $binary|" in
+	_check_binary().
+
+	Reported as #22893. See also File::Which.
+
+	FIXED in rev.1294
+
+	* "shall I try to run in degraded mode" should not come a second time
+	within the same session. Currently it can happen.
+
+	FIXED in SVK rev. 1292
 
 2006-11-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
