@@ -189,7 +189,7 @@ sub prettyprint {
   if (ref $v) {
     my(@report);
     if (ref $v eq "ARRAY") {
-      @report = map {"\t[$_]\n"} @$v;
+      @report = map {"\t$_ \[$v->[$_]]\n"} 0..$#$v;
     } else {
       @report = map { sprintf("\t%-18s => %s\n",
                               map { "[$_]" } $_,
