@@ -3562,8 +3562,11 @@ Trying with "$funkyftp$src_switch" to get
           if ($f eq "lynx") {
               # lynx returns 0 when it fails somewhere
               if (-s $asl_ungz) {
-                  my $content = do { local *FH; open FH, $asl_ungz or die; local $/; <FH> };
-                  if ($content =~ /^<.*<title>[45]/si) {
+                  my $content = do { local *FH;
+                                     open FH, $asl_ungz or die;
+                                     local $/;
+                                     <FH> };
+                  if ($content =~ /^<.*(<title>[45]|Error [45])/si) {
                       $CPAN::Frontend->mywarn(qq{
 No success, the file that lynx has has downloaded looks like an error message:
 $content

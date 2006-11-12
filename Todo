@@ -1,3 +1,23 @@
+2006-11-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: When I tried to report MSCHWERN/B-Generate-1.06_2.tar.gz, it
+	failed but did not try all 43 hosts.
+
+Trying with "/usr/bin/lynx -source" to get
+    http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
+Error while trying to rename '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz.tmp13806' to '/home/k/.cpan/sources/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz': No such file or directory
+ at lib/CPAN.pm line 267
+        CPAN::shell() called at -e line 1
+
+	Lynx again!
+
+	Try
+	/usr/bin/lynx -source http://mirror.eunet.fi/CPAN/authors/id/M/MS/MSCHWERN/B-Generate-1.06_2.tar.gz
+
+	They send an error page that looks different than usual
+
+	Fixed in SVK rev. 1297
+
 2006-11-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: offer the choice between (readline) Gnu and Perl and Coro
