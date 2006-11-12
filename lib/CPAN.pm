@@ -7436,13 +7436,20 @@ sub _check_binary {
     $CPAN::Frontend->myprint(qq{ + _check_binary($binary)\n})
       if $CPAN::DEBUG;
 
-    local *README;
-    $pid = open README, "which $binary|"
-      or $CPAN::Frontend->mydie(qq{Could not fork 'which $binary': $!});
-    while (<README>) {
-	$out .= $_;
+    if ($CPAN::META->has_inst("File::Which")) {
+        return File::Which::which($binary);
+    } else {
+        local *README;
+        $pid = open README, "which $binary|"
+            or $CPAN::Frontend->mywarn(qq{Could not fork 'which $binary': $!\n});
+        return unless $pid;
+        while (<README>) {
+            $out .= $_;
+        }
+        close README
+            or $CPAN::Frontend->mywarn("Could not run 'which $binary': $!\n")
+                and return;
     }
-    close README or die "Could not run 'which $binary': $!";
 
     $CPAN::Frontend->myprint(qq{   + $out \n})
       if $CPAN::DEBUG && $out;

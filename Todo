@@ -140,11 +140,15 @@ rm -rf "~"
 
 Adam K
 
+	DONE in SVK rev. 1290
+
 
 	* Bug: Still in the code: $pid = open README, "which $binary|" in
 	_check_binary().
 
 	Reported as #22893. See also File::Which.
+
+	
 
 	* randy kobes patches SQLite
 
@@ -166,7 +170,7 @@ Adam K
 
 	Are we in trouble?
 
-	Maybe we must rethink how 'force test' works. I should not 'force get',
+	Maybe we must rethink how 'force test' works. It should not 'force get',
 	and 'force make', it should just test and not refuse to do it.
 
 	Or we must compute the COMMANDID better than we do during reanimate and
@@ -177,11 +181,11 @@ Adam K
 	does not know who put it there and so should not be able to discard the
 	distro object. Hmmm.
 
-	Remember, we hat the notest pragma! Maybe we can let install_tested
+	Remember, we have the notest pragma! Maybe we can let install_tested
 	support both the force and the notest pragma and are through?
 
 	But no, even 'notest install ...' does not succeed because we need
-	force, not notest, but notest propagates down until we restart with get.
+	force, not notest, but force propagates down until we restart with get.
 	This is, of course a last resort, but it's no fun:-(
 
 	SHOWSTOPPER ALERT!
@@ -201,6 +205,8 @@ Adam K
 
 	* "shall I try to run in degraded mode" should not come a second time
 	within the same session. Currently it can happen.
+
+	FIXED in SVK rev. 1292
 
 	* Watch the Module::Build space for updates to the question of calling
 	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
@@ -262,6 +268,8 @@ Continue installing YAML::Syck? [y]
 	Seems to be Apache-Session-1.81/Session/Generate/ModUniqueId.pm and
 	Apache-Session-1.81/Session/Generate/ModUsertrack.pm
 
+	SO OK, nothing to worry.
+
 	* The Net::SSH::Perl test 03-packet still runs forever even with
 	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
 	Report sent. But can we patch it? Maybe not as long as Math::Pari and
@@ -275,7 +283,7 @@ Continue installing YAML::Syck? [y]
 	* The first thing that I encounter when I start testing instead of
 	installing things is that test doesn't stop when the installed version
 	is higher than or equal to the CPAN version. Ilya invented for that
-	test_uptodate
+	test_uptodate??
 
 	* CPAN::Checksums -> Data::Compare -> File::Find::Rule ->
 	Number::Compare
