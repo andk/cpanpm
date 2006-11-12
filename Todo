@@ -1,5 +1,92 @@
 2006-11-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Todo: offer the choice between (readline) Gnu and Perl and Coro
+
+	* So what does Randy's patch do?
+
+	Disable {read,write}_metadata_cache
+	Disable rd_{modlist,modpacks,authindex}
+	sub sqlite_reload {
+	On 'reload index' it runs its own sqlite_reload
+	And 'exists' is patched.
+	No patch to all_objects?
+
+	How to use?
+
+	o conf use_sqlite 1
+
+% make run
+/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
+CPAN: File::HomeDir loaded ok (v0.58)
+CPAN: Term::ANSIColor loaded ok (v1.11)
+
+cpan shell -- CPAN exploration and modules installation (v1.8861)
+ReadLine support enabled
+
+cpan[1]> o conf use_sqlite 1
+Warning: unknown configuration variable 'use_sqlite'
+    use_sqlite         [1]
+Please use 'o conf commit' to make the config permanent!
+
+
+cpan[2]> m CPAN             
+CPAN: YAML::Syck loaded ok (v0.71)
+Going to read /home/k/.cpan/build/
+............................................................................DONE
+Found 593 old builds, restored the state of 343
+Updating database file ...
+Can't exec "cpandb": No such file or directory at lib/CPAN.pm line 4152.
+system cpandb --update failed: -1 at lib/CPAN.pm line 4152.
+ at lib/CPAN.pm line 276
+        CPAN::shell() called at -e line 1
+
+	OK, let's patch the path to $^X in and retry:
+
+% make run
+/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/bin/perl -Ilib -MCPAN -eshell
+CPAN: File::HomeDir loaded ok (v0.58)
+CPAN: Term::ANSIColor loaded ok (v1.11)
+
+cpan shell -- CPAN exploration and modules installation (v1.8861)
+ReadLine support enabled
+
+cpan[1]> o conf use_sqlite 1
+Warning: unknown configuration variable 'use_sqlite'
+    use_sqlite         [1]
+Please use 'o conf commit' to make the config permanent!
+
+
+cpan[2]> m CPAN
+CPAN: YAML::Syck loaded ok (v0.71)
+Going to read /home/k/.cpan/build/
+............................................................................DONE
+Found 593 old builds, restored the state of 343
+Updating database file ...
+Done!
+Can't call method "set" on an undefined value at lib/CPAN.pm line 962.
+ at lib/CPAN.pm line 276
+        CPAN::shell() called at -e line 1
+
+
+	Hmmm. So Randy wants to have use_sqlite to be set before we enter the
+	shell and he wants it only within the shell. This is pretty likely
+	wrong.
+
+	Trying to set use_sqlite earlier with a tiny patch to Makefile.PL.
+	Doesn't work because CPAN::SQLite loads MyConfig again according to the
+	debugger:
+
+	$ = require '/home/k/.cpan/CPAN/MyConfig.pm' called from file `/home/src/perl/repoperls/installed-perls/perl/peHlG5S/perl-5.8.0@29243/lib/site_perl/5.9.5/CPAN/SQLite.pm' line 50
+
+	So we lose the switch again. Back to the drawing board.
+
+	Either I need a way to use CPAN::SQLite without having it guess CPAN.pm
+	internals all over the place. Or Randy needs a CPAN.pm that has API
+	calls for all the CPAN.pm internals. I cannot allow a plugin that tries
+	to reload the Config file and overwriting the Internals that I have
+	currently set. This is happening and makes it hard to predict what will
+	happen next.
+
 	* degraded mode problems: I did an 'o conf commit' in degraded mode and
 	blew away some config variables. We need a global that disallows commit
 	from degraded shells. It would also disallow 'defaults' because that
