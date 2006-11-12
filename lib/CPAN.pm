@@ -8878,7 +8878,7 @@ commands it makes sense to initialize components of CPAN you need, e.g.:
   CPAN::Shell::setup_output;
   CPAN::Index->reload;
 
-high-level commands do such initializations automatically.
+High-level commands do such initializations automatically.
 
 There's currently only one class that has a stable interface -
 CPAN::Shell. All commands that are available in the CPAN shell are
