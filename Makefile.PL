@@ -202,6 +202,7 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		SVN::Notify::Config \
 		SVN::Notify::Mirror \
 		Term::ReadLine::Gnu \
+		CPAN::DistnameInfo \
 
 }
 }
@@ -264,6 +265,9 @@ termreadkeyinstall:
 
 run :
 	$(PERL) -Ilib -MCPAN -eshell
+
+run-with-sqlite :
+	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; shell'
 
 testrun_very_offline : rm_mirrored_by run_emu_offline
 
