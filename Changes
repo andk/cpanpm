@@ -1,3 +1,29 @@
+2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_62
+
+	* bugfix in randomize_urllist introduced in 1.88_61: setting the value
+	with C<o conf randomize_urllist> was broken
+
+	* disallow C<o conf {commit,defaults}> in degraded mode
+
+	* more programming tips in the manpage from Ilya Zakharevich
+
+	* sanity check on path names with tilde suggested by Adam Kennedy
+
+	* change the prettyprint of arrays to accommodate the user of splice
+
+	* introduce C<expect-in-any-order> to distroprefs
+
+	* add a new testdistro CPAN-Test-Dummy-Perl5-Make-Expect
+
+	* make the 00.README in the distroprefs directory more like a manpage
+	for later inclusion into the CPAN.pm manpage
+
+	* determine if a patch needs -p0 or -p1
+
+	* fix downloads with lynx when the other end sends an unusual error page
+
 2006-11-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_61
