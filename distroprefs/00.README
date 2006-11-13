@@ -4,6 +4,10 @@
 
 =head1 DESCRIPTION
 
+(Note: distroprefs specifications are still considered alpha. This
+manpage will be integrated into the manpage of C<CPAN.pm> as soon as
+the content is regarded as mature)
+
 Distributions on the CPAN usually behave according to what we call the
 CPAN mantra. Well since the event of Module::Build we have two mantras:
 
@@ -190,7 +194,10 @@ phase of the CPAN mantra. See below under I<Processiong Instructions>.
 
 =item patches
 
-Patches on CPAN or on the local disk XXX
+An array of patches on CPAN or on the local disk to be applied in
+order via the external patch program. If the value for the C<-p>
+parameter is C<0> or C<1> is determined by reading the patch
+beforehand.
 
 =back
 
@@ -208,15 +215,20 @@ Arguments to be added to the command line
 
 =item expect
 
-A reference to an array that contains XXX
+A reference to an array that contains alternating questions and
+answers. Questions are regular expressions and answers are literal
+strings. The Expect module will then watch the stream coming from the
+execution of the external program (C<perl Makefile.PL>, C<perl
+Build.PL>, C<make>, etc.) and as soon as the stream matches the
+regular expression, it will inject the according answer.
 
 =item expect-in-any-order
 
 Like C<expect> but the order of the questions asked by the
 distribution software is not deterministic. Note that when C<CPAN.pm>
 gives an answer, it removes the according pair from the array, so if
-you want to answer the question C<Do you really mean that> several
-times, then it must be included in the array that often.
+you want to answer the question C<Do you really want to do that>
+several times, then it must be included in the array that often.
 
 =back
 
