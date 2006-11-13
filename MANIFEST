@@ -5,6 +5,7 @@ Changes.old
 distroprefs/00.README
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
+distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
@@ -38,6 +39,7 @@ distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
+distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/MARKOV.MailTools.yml
