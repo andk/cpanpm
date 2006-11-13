@@ -1732,7 +1732,7 @@ sub hosts {
         $S{start} = $start;
         $S{end} ||= $last->{end};
         my $dltime = $last->{end} - $start;
-        my $dlsize = $last->{filesize};
+        my $dlsize = $last->{filesize} || 0;
         my $url = $last->{thesiteurl}->text;
         my $s = $S{ok}{$url} ||= {};
         $s->{n}++;
