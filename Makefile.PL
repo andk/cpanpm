@@ -25,7 +25,7 @@ my $version_from;
 our $SVN_RELEASE = 0;
 if (-d ".svn") {
   $SVN_RELEASE = 1;
-} elsif ($ARGV[0] =~ /setversion/) {
+} elsif ($ARGV[0] && $ARGV[0] =~ /setversion/) {
   warn "!!!making SVK based release, take care!!!";
   @ARGV = ();
   sleep 2;
