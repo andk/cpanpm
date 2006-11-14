@@ -2198,8 +2198,9 @@ sub failed {
                             "make_clean",
                            ) {
             next unless exists $d->{$nosayer};
+            next unless defined $d->{$nosayer};
             next unless (
-                         $d->{$nosayer}->can("failed") ?
+                         UNIVERSAL::can($d->{$nosayer},"failed") ?
                          $d->{$nosayer}->failed :
                          $d->{$nosayer} =~ /^NO/
                         );
