@@ -1,3 +1,84 @@
+2006-11-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Randy says:
+
+	The only data CPAN::SQLite really needs from CPAN.pm is:
+	- a location to store the database file; for this,
+	it's presently using $CPAN::Config->{cpan_home},
+	which I believe is the same location as Metadata;
+	- the name of the database file; in this I've been
+	using a new config entry $CPAN::Config->{sqlite_dbname},
+	or 'cpandb-sqlite', as a default;
+	- the location (directory) beneath which the CPAN
+	indices are kept; I've been using
+	$CPAN::Config->{keep_source_where}, assuming
+	it's a simple directory.
+	
+	The guessing for this in CPAN::SQLite comes when it's
+	not being run under CPAN.pm.
+	
+	As for CPAN::SQLite providing data to CPAN.pm,
+	that's being done solely in CPAN::SQLite::META,
+	and it uses
+	  $CPAN::META->instance($class => $id)->set(%data);
+	for everything, except for CONTAINSMODS, where
+	it uses
+	  $d = $CPAN::META->instance($class => $id);
+	  $d->{CONTAINSMODS} = \%list_of_mods;
+	
+	* Catalyst would be another candidate for a large dependency list.
+
+	* Guessing of -p0/-p1 for patch maybe wrong if the patch tries to create
+	a new file against, say, /dev/null.
+
+	* Expect structure. We can leave expect as it is but expect-in-any-order
+	needs a way to set the timeout. The structure must change, I fear.
+
+	* Would be nice: integrate the config variable name into the init
+	dialogs such that one has a chance to learn their names over time.
+
+	* Would be nice: 'o conf /check/' to list all variables matching a regex.
+
+	* This looks silly:
+
+	cpan[15]> o conf commit
+commit: wrote '/home/k/.cpan/CPAN/MyConfig.pm'
+Please use 'o conf commit' to make the config permanent!
+
+	* SQL-Translator-0.07 has a broken signature
+	(reported 9 months ago at
+	https://rt.cpan.org/Ticket/Display.html?id=16852). When trying to
+	install CLACO/Handel-0.99_15 I see this warning running by quite often
+	instead of only once and testing of it again and again. And the same for
+	Email-Valid and DBIx-Class-Validation.
+
+	Why?
+
+  CLACO/Handel-0.99_15.tar.gz
+  /usr/bin/make test -- NOT OK
+Failed during this command:
+  LYOKATO/FormValidator-Simple-0.19.tar.gz     : make_test NO
+  MIYAGAWA/Email-Valid-Loose-0.05.tar.gz       : make_test NO
+  CLACO/DBIx-Class-Validation-0.01001.tar.gz   : make_test NO
+  DROLSKY/DateTime-Format-MySQL-0.04.tar.gz    : make_test NO
+  RICKM/DateTime-Format-Strptime-1.0700.tar.gz : make_test NO
+  CLACO/DBIx-Class-UUIDColumns-0.01000.tar.gz  : make_test NO one dependency not OK (SQL::Translator)
+  RJBS/Email-Valid-0.176.tar.gz                : make_test NO
+  DROLSKY/DateTime-Format-Builder-0.7807.tar.gz: make_test NO
+  KCLARK/SQL-Translator-0.07.tar.gz            : signature_verify NO
+  CLACO/Handel-0.99_15.tar.gz                  : make_test NO
+
+	Besides the need to find out why the tests are repeated so often, it may
+	be a good idea to support check_sigs via distroprefs.
+
+	* I realize that it's quite pointless to try downloading with "fancy"
+	when there is Net::FTP installed. OTOH, *sometimes* it may be clueful. I
+	should explain in a FAQ that it makes sense to disable the externel
+	programs once one has Net::FTP and LWP. The problem only appears if you
+	have many hosts in the urllist and try to download a fresh file: here
+	you want to try only with one method and cycle through the hosts
+	quickly.
+
 2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Randy Kobes needs an API to find out where the index files are
