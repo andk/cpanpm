@@ -1,5 +1,13 @@
 2006-11-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Integrate freshness into hosts stats. (#17353)
+
+	* Integrate hosts into $META like authors, distributions, and modules?
+	If we're cautious, this might turn into an automatic optimization.
+
+	If Coro does index downloads for us, we do not have to fear slow
+	connections and can gather better data.
+
 	* Allow dd or st files instead of yml in distroprefs for bootstrapping
 	purpose.
 
@@ -52,6 +60,8 @@
 	cpan[15]> o conf commit
 commit: wrote '/home/k/.cpan/CPAN/MyConfig.pm'
 Please use 'o conf commit' to make the config permanent!
+
+	FIXED
 
 	* SQL-Translator-0.07 has a broken signature
 	(reported 9 months ago at
