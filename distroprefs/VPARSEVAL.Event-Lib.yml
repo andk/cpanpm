@@ -1,0 +1,6 @@
+--- 
+comment: "See http://rt.cpan.org/Ticket/Display.html?id=XXX"
+match:
+  distribution: "^VPARSEVAL/Event-Lib-1.00"
+patches:
+  - ANDK/patches/Event-Lib-1.00-ANDK-01.patch.gz

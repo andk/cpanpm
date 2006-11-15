@@ -203,6 +203,7 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		SVN::Notify::Mirror \
 		Term::ReadLine::Gnu \
 		CPAN::DistnameInfo \
+		Event::Lib \
 
 }
 }
