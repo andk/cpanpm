@@ -8561,7 +8561,8 @@ sub inst_version {
     local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
     my $have;
 
-    $have = MM->parse_version($parsefile) || "undef";
+    $have = MM->parse_version($parsefile);
+    $have = "undef" unless defined $have && length $have;
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
     $have =~ s/ $//; # trailing whitespace happens all the time
 
