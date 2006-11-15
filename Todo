@@ -1,4 +1,12 @@
+2006-11-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Allow dd or st files instead of yml in distroprefs for bootstrapping
+	purpose.
+
 2006-11-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: avoid ->can everywhere and replace with UNIVERSAL::can. See
+	Adriano Rodrigues' bugreport.
 
 	* Randy says:
 

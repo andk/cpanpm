@@ -2205,7 +2205,7 @@ sub failed {
                          $d->{$nosayer} =~ /^NO/
                         );
             next NAY if $only_id && $only_id != (
-                                                 $d->{$nosayer}->can("commandid")
+                                                 UNIVERSAL::can($d->{$nosayer},"commandid")
                                                  ?
                                                  $d->{$nosayer}->commandid
                                                  :
@@ -2221,7 +2221,7 @@ sub failed {
         #                  "  %-45s: %s %s\n",
         push @failed,
             (
-             $d->{$failed}->can("failed") ?
+             UNIVERSAL::can($d->{$failed},"failed") ?
              [
               $d->{$failed}->commandid,
               $id,
@@ -2357,7 +2357,6 @@ sub expand {
     my $class = "CPAN::$type";
     my $methods = ['id'];
     for my $meth (qw(name)) {
-        next if $] < 5.00303; # no "can"
         next unless $class->can($meth);
         push @$methods, $meth;
     }
@@ -2757,7 +2756,7 @@ to find objects with matching identifiers.
                     exists $obj->{install}
                     &&
                     (
-                     $obj->{install}->can("failed") ?
+                     UNIVERSAL::can($obj->{install},"failed") ?
                      $obj->{install}->failed :
                      $obj->{install} =~ /^NO/
                     )
@@ -5202,7 +5201,7 @@ sub get {
 	    "Is already unwrapped into directory $self->{build_dir}";
 
         exists $self->{unwrapped} and (
-                                       $self->{unwrapped}->can("failed") ?
+                                       UNIVERSAL::can($self->{unwrapped},"failed") ?
                                        $self->{unwrapped}->failed :
                                        $self->{unwrapped} =~ /^NO/
                                       )
@@ -6238,7 +6237,7 @@ is part of the perl-%s distribution. To install that, you need to run
 
         if (!$self->{unwrapped}
             || (
-                $self->{unwrapped}->can("failed") ?
+                UNIVERSAL::can($self->{unwrapped},"failed") ?
                 $self->{unwrapped}->failed :
                 $self->{unwrapped} =~ /^NO/
                )) {
@@ -6246,22 +6245,23 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
         unless ($self->{force_update}) {
-            exists $self->{signature_verify} and (
-                         $self->{signature_verify}->can("failed") ?
-                         $self->{signature_verify}->failed :
-                         $self->{signature_verify} =~ /^NO/
-                        )
+            exists $self->{signature_verify} and
+                (
+                 UNIVERSAL::can($self->{signature_verify},"failed") ?
+                 $self->{signature_verify}->failed :
+                 $self->{signature_verify} =~ /^NO/
+                )
                 and push @e, "Did not pass the signature test.";
         }
 
         if (exists $self->{writemakefile} &&
             (
-             $self->{writemakefile}->can("failed") ?
+             UNIVERSAL::can($self->{writemakefile},"failed") ?
              $self->{writemakefile}->failed :
              $self->{writemakefile} =~ /^NO/
             )) {
             # XXX maybe a retry would be in order?
-            my $err = $self->{writemakefile}->can("text") ?
+            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
                 $self->{writemakefile}->text :
                     $self->{writemakefile};
             $err =~ s/^NO\s*//;
@@ -7078,7 +7078,7 @@ sub test {
 
 	exists $self->{make} and
 	    (
-             $self->{make}->can("failed") ?
+             UNIVERSAL::can($self->{make},"failed") ?
              $self->{make}->failed :
              $self->{make} =~ /^NO/
             ) and push @e, "Can't test without successful make";
@@ -7096,7 +7096,7 @@ sub test {
                 exists $self->{make_test}
                 &&
                 !(
-                  $self->{make_test}->can("failed") ?
+                  UNIVERSAL::can($self->{make_test},"failed") ?
                   $self->{make_test}->failed :
                   $self->{make_test} =~ /^NO/
                  )
@@ -7359,7 +7359,7 @@ sub install {
 
 	exists $self->{make} and
 	    (
-             $self->{make}->can("failed") ?
+             UNIVERSAL::can($self->{make},"failed") ?
              $self->{make}->failed :
              $self->{make} =~ /^NO/
             ) and
@@ -7372,7 +7372,7 @@ sub install {
 
         if (exists $self->{make_test} and
 	    (
-             $self->{make_test}->can("failed") ?
+             UNIVERSAL::can($self->{make_test},"failed") ?
              $self->{make_test}->failed :
              $self->{make_test} =~ /^NO/
             )){
@@ -7384,10 +7384,10 @@ sub install {
                     "won't install without force"
             }
         }
-	if (exists $self->{'install'}) {
-            if ($self->{'install'}->can("text") ?
-                $self->{'install'}->text eq "YES" :
-                $self->{'install'} =~ /^YES/
+	if (exists $self->{install}) {
+            if (UNIVERSAL::can($self->{install},"text") ?
+                $self->{install}->text eq "YES" :
+                $self->{install} =~ /^YES/
                ) {
                 push @e, "Already done";
             } else {
@@ -7956,7 +7956,7 @@ Going to $meth that.
         } else {
           my $success;
           $success = $obj->can("uptodate") ? $obj->uptodate : 0;
-          $success ||= $obj->{'install'} && $obj->{'install'} eq "YES";
+          $success ||= $obj->{install} && $obj->{install} eq "YES";
           if ($success) {
             delete $self->{install_failed}{$s};
           } else {
@@ -7994,7 +7994,7 @@ during recursive bundle calls: " unless $report_propagated++;
 	    $CPAN::Frontend->myprint(Text::Wrap::fill("  ","  ",$paragraph));
 	    $CPAN::Frontend->myprint("\n");
 	} else {
-	    $self->{'install'} = 'YES';
+	    $self->{install} = 'YES';
 	}
     }
 }
@@ -8425,7 +8425,7 @@ sub rematein {
                     exists $pack->{install}
                     &&
                     (
-                     $pack->{install}->can("failed") ?
+                     UNIVERSAL::can($pack->{install},"failed") ?
                      $pack->{install}->failed :
                      $pack->{install} =~ /^NO/
                     )

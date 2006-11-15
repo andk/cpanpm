@@ -334,7 +334,9 @@ testdistros: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip \
         t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 
-# sorry, unix centric
+# sorry, unix centric (and only makes sense on a working copy of the
+# repository; else 'make test TEST_FILES=t/30shell.t TEST_VERBOSE=1'
+# will do)
 testshell-with-protocol: testdistros
 	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
 	$(MAKE) test TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
