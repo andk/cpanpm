@@ -5528,7 +5528,8 @@ sub patch {
 
 sub _patch_p_parameter {
     my($self,$fh) = @_;
-    my($cnt_files,$cnt_p0files);
+    my $cnt_files   = 0;
+    my $cnt_p0files = 0;
     local($_);
     while ($_ = $fh->READLINE) {
         next unless /^[\*\+]{3}\s(\S+)/;
