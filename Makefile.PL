@@ -204,6 +204,7 @@ MEGA_COLLECTION = Bundle::CPANxxl \
 		Term::ReadLine::Gnu \
 		CPAN::DistnameInfo \
 		Event::Lib \
+		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
 
 }
 }

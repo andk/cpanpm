@@ -1,3 +1,31 @@
+2006-11-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* I just added the decicive line to Makefile.PL so that I can
+	conveniently start messing around with CPAN::SQLite support:
+
+	/home/src/perl/cpan-sql-stuff/CPAN-SQLite/.   # (!)
+
+	% make run-with-sqlite
+/home/src/perl/repoperls/installed-perls/perl/pDtzfB5/perl-5.8.0@29285/bin/perl -I$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$CPAN::Config->{use_sqlite}++; shell'
+CPAN: Term::ANSIColor loaded ok (v1.11)
+
+cpan shell -- CPAN exploration and modules installation (v1.8862)
+ReadLine support enabled
+
+cpan[1]> d MSCHILLI/Log-Log4perl-1.07.tar.gz                
+CPAN: YAML::Syck loaded ok (v0.71)
+Going to read /home/k/.cpan/build/
+............................................................................DONE
+Found 593 old builds, restored the state of 337
+Updating database file ...
+Can't exec "cpandb": No such file or directory at /home/src/perl/repoperls/installed-perls/perl/pDtzfB5/perl-5.8.0@29285/lib/site_perl/5.9.5/CPAN/SQLite/META.pm line 179.
+system cpandb --update failed: -1 at /home/src/perl/repoperls/installed-perls/perl/pDtzfB5/perl-5.8.0@29285/lib/site_perl/5.9.5/CPAN/SQLite/META.pm line 179.
+ at lib/CPAN.pm line 276
+        CPAN::shell() called at -e line 1
+
+
+	Uh. Patch rkobes-cpan3.diff backed out. Now I probably know where to start.
+
 2006-11-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Integrate freshness into hosts stats. (#17353)
