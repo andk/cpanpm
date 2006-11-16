@@ -7166,8 +7166,8 @@ sub test {
         if ($can_report) {
             $want_report = 1;
         } else {
-            $CPAN::Frontend->mywarn->("CPAN::Reporter not installed, falling back to ".
-                                      "testing without\n");
+            $CPAN::Frontend->mywarn("CPAN::Reporter not installed, falling back to ".
+                                    "testing without\n");
         }
     }
     my $ready_to_report = $want_report;
