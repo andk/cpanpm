@@ -1,5 +1,12 @@
 2006-11-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* make _get_urllist a public method for Randy.
+
+	* Write manpage for CPAN::HandleConfig, esp load().
+
+	* I realize that CPAN::FTP::localize is undocumented and is what Randy
+	wants.
+
 	* why is reuse_old_builddir (sp?) turned off in degraded mode?
 
 	* Observed that the E of DONE is in the second line during "03". Take
