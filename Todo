@@ -1,3 +1,17 @@
+2006-11-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* why is reuse_old_builddir (sp?) turned off in degraded mode?
+
+	* Observed that the E of DONE is in the second line during "03". Take
+	the algorithm in reanimate_build_dir() around line 4175 in all three
+	index files. It's easier to read and workd even for @items < 76. DONE
+
+	* display the commandid during the failed command -- just for a while. I
+	want to see how big the holes are and if they look plausible. -- They
+	have all the same number! FIXED
+
+	* Bug: ~/.cpan/sources/modules is full with backup files
+
 2006-11-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* I just added the decicive line to Makefile.PL so that I can
@@ -810,9 +824,9 @@ Fetching with Net::FTP
 	I want to share the build_dir first because this is currently the most
 	dangerous spot. I suppose we can have it by using File::Temp for the
 	individual build_dir. We would have to turn off build_dir_reuse for the
-	second process. Nobody would ever overwrite a build_dir. Some guys would
-	remove old directories and this would do no harm. Should be done in rev.
-	1183.
+	second process (Update 2006-11-17: Why?). Nobody would ever overwrite a
+	build_dir. Some guys would remove old directories and this would do no
+	harm. Should be done in rev. 1183.
 
 	Even if the second uses the same perl as the first one, we could coexist
 	because many commands scan the INC repeatedly. Things we do not scan

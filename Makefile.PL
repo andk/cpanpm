@@ -269,7 +269,7 @@ run :
 	$(PERL) -Ilib -MCPAN -eshell
 
 run-with-sqlite :
-	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; shell'
+	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; $$CPAN::Config->{sqlite_dbname}="/home/k/.cpan/cpandb-sqlite"; $$CPAN::Config->{keep_source_where}="/home/ftp/pub/CPAN"; shell'
 
 testrun_very_offline : rm_mirrored_by run_emu_offline
 

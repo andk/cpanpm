@@ -740,10 +740,11 @@ There seems to be running another CPAN process (pid $otherpid).  Contacting...
 Please report if something unexpected happens\n");
                     $RUN_DEGRADED = 1;
                     for ($CPAN::Config) {
-                        $_->{build_dir_reuse} = 0;
-                        $_->{commandnumber_in_prompt} = 0;
-                        $_->{histfile} = "";
-                        $_->{cache_metadata} = 0;
+                        # XXX
+                        # $_->{build_dir_reuse} = 0; # 2006-11-17 akoenig Why was that?
+                        $_->{commandnumber_in_prompt} = 0; # visibility
+                        $_->{histfile} = "";               # who should win otherwise?
+                        $_->{cache_metadata} = 0;          # better would be a lock?
                     }
                 } else {
                     $CPAN::Frontend->mydie("
@@ -2236,14 +2237,31 @@ sub failed {
              ]
             );
     }
-    my $scope = $only_id ? "command" : "session";
+    my $scope;
+    if ($only_id) {
+        $scope = "this command";
+    } elsif ($CPAN::Index::HAVE_REANIMATED) {
+        $scope = "this or a previous session";
+        # it might be nice to have a section for previous session and
+        # a second for this
+    } else {
+        $scope = "this session";
+    }
     if (@failed) {
-        my $print = join "",
-            map { sprintf "  %-45s: %s %s\n", @$_[1,2,3] }
-                sort { $a->[0] <=> $b->[0] } @failed;
-        $CPAN::Frontend->myprint("Failed during this $scope:\n$print");
+        my $print;
+        my $debug = 0;
+        if ($debug) {
+            $print = join "",
+                map { sprintf "%5d %-45s: %s %s\n", @$_ }
+                    sort { $a->[0] <=> $b->[0] } @failed;
+        } else {
+            $print = join "",
+                map { sprintf " %-45s: %s %s\n", @$_[1..3] }
+                    sort { $a->[0] <=> $b->[0] } @failed;
+        }
+        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
     } elsif (!$only_id || !$silent) {
-        $CPAN::Frontend->myprint("Nothing failed in this $scope\n");
+        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
     }
 }
 
@@ -4141,7 +4159,10 @@ sub reanimate_build_dir {
     my $painted = 0;
     my $restored = 0;
     $CPAN::Frontend->myprint("Going to read $CPAN::Config->{build_dir}/\n");
-    my @candidates = grep {/\.yml$/} readdir $dh;
+    my @candidates = map { $_->[0] }
+        sort { $b->[1] <=> $a->[1] }
+            map { [ $_, -M File::Spec->catfile($d,$_) ] }
+                grep {/\.yml$/} readdir $dh;
   DISTRO: for $dirent (@candidates) {
         my $c = CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))->[0];
         if ($c && CPAN->_perl_fingerprint($c->{perl})) {
@@ -4150,10 +4171,7 @@ sub reanimate_build_dir {
                 if ($c->{distribution}{$k}
                     && ref $c->{distribution}{$k}
                     && UNIVERSAL::isa($c->{distribution}{$k},"CPAN::Distrostatus")) {
-                    # the correct algorithm would be a
-                    # two-pass and we would subtract the
-                    # maximum of all old commands minus 2
-                    $c->{distribution}{$k}{COMMANDID} -= scalar @candidates - 2 ;
+                    $c->{distribution}{$k}{COMMANDID} = $i - @candidates;
                 }
             }
 
@@ -4213,8 +4231,7 @@ sub rd_authindex {
     local($_);
     push @lines, split /\012/ while <FH>;
     my $i = 0;
-    my $modulus = int($#lines/75) || 1;
-    CPAN->debug(sprintf "modulus[%d]lines[%s]", $modulus, scalar @lines) if $CPAN::DEBUG;
+    my $painted = 0;
     foreach (@lines) {
 	my($userid,$fullname,$email) =
 	    m/alias\s+(\S+)\s+\"([^\"\<]*)\s+\<(.*)\>\"/;
@@ -4225,7 +4242,11 @@ sub rd_authindex {
         } else {
             CPAN->debug(sprintf "line[%s]", $_) if $CPAN::DEBUG;
         }
-        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
+        $i++;
+        while (($painted/76) < ($i/@lines)) {
+            $CPAN::Frontend->myprint(".");
+            $painted++;
+        }
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");
@@ -4341,7 +4362,7 @@ happen.\a
     CPAN->debug("secondtime[$secondtime]") if $CPAN::DEBUG;
     my(%exists);
     my $i = 0;
-    my $modulus = int($#lines/75) || 1;
+    my $painted = 0;
     foreach (@lines) {
         # before 1.56 we split into 3 and discarded the rest. From
         # 1.57 we assign remaining text to $comment thus allowing to
@@ -4430,7 +4451,11 @@ happen.\a
                 $exists{$name} = undef;
             }
         }
-        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
+        $i++;
+        while (($painted/76) < ($i/@lines)) {
+            $CPAN::Frontend->myprint(".");
+            $painted++;
+        }
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");
@@ -4480,14 +4505,18 @@ sub rd_modlist {
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
     my $i = 0;
-    my $until = keys(%$ret) - 1;
-    my $modulus = int($until/75) || 1;
+    my $until = keys(%$ret);
+    my $painted = 0;
     CPAN->debug(sprintf "until[%d]", $until) if $CPAN::DEBUG;
     for (keys %$ret) {
 	my $obj = $CPAN::META->instance("CPAN::Module",$_);
         delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
 	$obj->set(%{$ret->{$_}});
-        $CPAN::Frontend->myprint(".") unless $i++ % $modulus;
+        $i++;
+        while (($painted/76) < ($i/$until)) {
+            $CPAN::Frontend->myprint(".");
+            $painted++;
+        }
 	return if $CPAN::Signal;
     }
     $CPAN::Frontend->myprint("DONE\n");
