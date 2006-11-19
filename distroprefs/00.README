@@ -76,7 +76,21 @@ not.
 If neither your configured C<yaml_module> nor YAML.pm is installed
 CPAN.pm falls back to using Data::Dumper and Storable and looks for
 files with the extensions C<.dd> or C<.st> in the C<prefs_dir>
-directory.
+directory. These files are expected to contain one or more hashrefs.
+For Data::Dumper generated files, this is expected to be done with by
+defining C<$VAR1>, C<$VAR2>, etc. The YAML shell would produce these
+with the command
+
+    ysh < somefile.yml > somefile.dd
+
+For Storable files the rule is that they must be constructed such that
+C<Storable::retrieve(file)> returns an array reference and the array
+elements represent one distropref object each. The conversion from
+YAML would look like so:
+
+    perl -MYAML=LoadFile -MStorable=nstore -e '
+        @y=LoadFile(shift);
+        nstore(\@y, shift)' somefile.yml somefile.st
 
 In bootstrapping situations it is usually sufficient to translate only
 a few YAML files to Data::Dumper for the crucial modules like

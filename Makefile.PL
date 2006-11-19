@@ -10,6 +10,17 @@ use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 use vars qw($VERSION);
+use vars qw(@DD_PREFS @ST_PREFS);
+
+@DD_PREFS = qw(TIMB.DBI
+              );
+
+@ST_PREFS = qw(ILYAZ.Term-ReadLine-Perl
+               INGY.YAML
+               RGIERSIG.Expect
+               ABW.Template-Toolkit
+              );
+
 
 my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
 $VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
@@ -151,11 +162,19 @@ WriteMakefile(
                 AUTHOR         => 'Andreas Koenig <andreas.koenig.gmwojprw@franz.ak.mind.de>') : (),
               ),
               dist => {
-                       DIST_DEFAULT => (
-                                        'verify-no-subdir '.
-                                        'Makefile no_CR META.yml setversion README '.
-                                        'testdistros all chlog tardist'
-                                       ),
+                       DIST_DEFAULT => join(" ", # note: order matters!
+                                            "verify-no-subdir",
+                                            "dd-prefs",
+                                            "Makefile",
+                                            "no_CR",
+                                            "META.yml",
+                                            "setversion",
+                                            "README",
+                                            "testdistros",
+                                            "all",
+                                            "chlog",
+                                            "tardist",
+                                           ),
                        COMPRESS => 'gzip -9',
                       },
              );
@@ -182,7 +201,8 @@ ALL_PERLS = /usr/bin/perl \
             /usr/local/perl-5.6.2/bin/perl
 
 # not sorted because order matters
-MEGA_COLLECTION = Bundle::CPANxxl \
+MEGA_COLLECTION = Expect \
+		Bundle::CPANxxl \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Plagger Bundle::Phalanx100 \
@@ -539,6 +559,28 @@ chlog :: chlog-svkstyle
 
 ChangeLog : ChangeLogShort.svk
 	mv ChangeLogShort.svk ChangeLog
+
+foreign-prefs : dd-prefs st-prefs
+
+};
+  }
+
+  for my $base (@main::DD_PREFS) {
+    push @m, qq{
+dd-prefs :: distroprefs/$base.dd
+
+distroprefs/$base.dd :
+	ysh < distroprefs/$base.yml > distroprefs/$base.dd
+
+};
+  }
+
+  for my $base (@main::ST_PREFS) {
+    push @m, qq{
+st-prefs :: distroprefs/$base.st
+
+distroprefs/$base.st : Makefile
+	\$(PERL) -MYAML=LoadFile -MStorable=nstore -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); nstore(\\\@y, "\$\$x.st")' distroprefs/$base
 
 };
   }

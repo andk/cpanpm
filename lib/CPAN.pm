@@ -6695,11 +6695,8 @@ sub _find_prefs {
                         push @distropref, ${"VAR".$i};
                         $i++;
                     }
-                    # $CPAN::Frontend->mywarn("FIXME(dd:$_)");
-                    # next DIRENT;
                 } elsif ($thisexte eq "st") {
-                    $CPAN::Frontend->mywarn("FIXME: Storable not yet supported (skipping distropref file '$_')");
-                    next DIRENT;
+                    @distropref = @{scalar Storable::retrieve($abs)};
                 }
                 # $DB::single=1;
               ELEMENT: for my $y (0..$#distropref) {
