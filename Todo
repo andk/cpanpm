@@ -1,3 +1,38 @@
+2006-11-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: write a Makefile target for the 3 *.dd files in distroprefs
+
+	* Todo: Storable support for distroprefs
+
+2006-11-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Since I fixed the bootstrapping problem of YAML/Expect/ReadLine by
+	allowing fallback dd files, I thought that now I would be able to run
+	binary searches more often for broken (or unexpectedly fixed) modules.
+	My first victim should be DateTime::Format::Strptime. But binary search
+	converged towards 2794[123] and it was so obvious from mere watching
+	that this turning point was not the Strptime problem but some other
+	Params::Validate related problem. P:V 0.86 broke at 27942 and so
+	DateTime could not be built and Date::Time::Locale could not be built
+	and Strptime could also not pass its tests.
+
+	At some point in time later P:V worked again and so we have this
+	eclipse: at 27942 the still working Strptime disappeared in the shadow
+	of P:V and when P:V started to work again, Strptime was broken (or was
+	it not?). If it broke we cannot see where it broke unless we start
+	another higher level view that throws extra patches around.
+
+	The good news is that we can determine the duration of the eclipse of
+	P:V: it broke at 27942 and reappeared between 28156 and 28181 (closer
+	examination pending).
+
+	Very nice: Strptime worked with 28181 and so we can run another binary
+	search between 28181 and 29312. Breakage at 28325 and report sent to P5P
+
+	* kwalify schema language: http://rubyforge.org/frs/?group_id=815&release_id=5513
+
+	Yaml mode: http://svn.clouder.jp/repos/public/yaml-mode/trunk
+
 2006-11-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* make _get_urllist a public method for Randy.
@@ -7,7 +42,8 @@
 	* I realize that CPAN::FTP::localize is undocumented and is what Randy
 	wants.
 
-	* why is reuse_old_builddir (sp?) turned off in degraded mode?
+	* why is reuse_old_builddir (sp?) turned off in degraded mode? I think
+	there is no good reason. FIXED
 
 	* Observed that the E of DONE is in the second line during "03". Take
 	the algorithm in reanimate_build_dir() around line 4175 in all three
@@ -17,7 +53,7 @@
 	want to see how big the holes are and if they look plausible. -- They
 	have all the same number! FIXED
 
-	* Bug: ~/.cpan/sources/modules is full with backup files
+	* Bug: ~/.cpan/sources/modules is full with backup files FIXED in 1360
 
 2006-11-16  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

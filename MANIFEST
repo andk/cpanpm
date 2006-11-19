@@ -60,7 +60,6 @@ distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
-distroprefs/VPARSEVAL.Event-Lib.yml
 distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
 inc/Test/More.pm

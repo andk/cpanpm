@@ -1,0 +1,9 @@
+$VAR1 = {
+         match => {
+                   module => "^Expect\$",
+                   distribution => "-1\\.20\\.tar\\.gz",
+                  },
+         patches => [
+                     "ANDK/Expect-1.20-ANDK-01.patch",
+                    ],
+};

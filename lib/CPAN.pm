@@ -6639,32 +6639,84 @@ sub _find_prefs {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
     my $yaml_module = CPAN->_yaml_module;
+    my @extensions;
     if ($CPAN::META->has_inst($yaml_module)) {
+        push @extensions, "yml";
+    } else {
+        my @fallbacks;
+        if ($CPAN::META->has_inst("Data::Dumper")) {
+            push @extensions, "dd";
+            push @fallbacks, "Data::Dumper";
+        }
+        if ($CPAN::META->has_inst("Storable")) {
+            push @extensions, "st";
+            push @fallbacks, "Storable";
+        }
+        if (@fallbacks) {
+            local $" = " and ";
+            unless ($self->{have_complained_about_missing_yaml}++) {
+                $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back ".
+                                        "to @fallbacks to read prefs '$prefs_dir'\n");
+            }
+        } else {
+            unless ($self->{have_complained_about_missing_yaml}++) {
+                $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot ".
+                                        "read prefs '$prefs_dir'\n");
+            }
+        }
+    }
+    if (@extensions) {
         my $dh = DirHandle->new($prefs_dir)
             or die Carp::croak("Couldn't open '$prefs_dir': $!");
       DIRENT: for (sort $dh->read) {
             next if $_ eq "." || $_ eq "..";
-            next unless /\.yml$/;
+            my $exte = join "|", @extensions;
+            next unless /\.($exte)$/;
+            my $thisexte = $1;
             my $abs = File::Spec->catfile($prefs_dir, $_);
             if (-f $abs) {
                 CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
-                my @yaml = @{CPAN->_yaml_loadfile($abs)};
+                my @distropref;
+                if ($thisexte eq "yml") {
+                    @distropref = @{CPAN->_yaml_loadfile($abs)};
+                } elsif ($thisexte eq "dd") {
+                    package CPAN::Eval;
+                    no strict;
+                    open FH, "<$abs" or $CPAN::Frontend->mydie("Could not open '$abs': $!");
+                    local $/;
+                    my $eval = <FH>;
+                    close FH;
+                    eval $eval;
+                    if ($@) {
+                        $CPAN::Frontend->mydie("Error in distroprefs file $_\: $@");
+                    }
+                    my $i = 1;
+                    while (${"VAR".$i}) {
+                        push @distropref, ${"VAR".$i};
+                        $i++;
+                    }
+                    # $CPAN::Frontend->mywarn("FIXME(dd:$_)");
+                    # next DIRENT;
+                } elsif ($thisexte eq "st") {
+                    $CPAN::Frontend->mywarn("FIXME: Storable not yet supported (skipping distropref file '$_')");
+                    next DIRENT;
+                }
                 # $DB::single=1;
-              ELEMENT: for my $y (0..$#yaml) {
-                    my $yaml = $yaml[$y];
-                    my $match = $yaml->{match};
+              ELEMENT: for my $y (0..$#distropref) {
+                    my $distropref = $distropref[$y];
+                    my $match = $distropref->{match};
                     unless ($match) {
                         CPAN->debug("no 'match' in abs[$abs], skipping");
                         next ELEMENT;
                     }
                     my $ok = 1;
                     for my $sub_attribute (keys %$match) {
-                        my $qr = eval "qr{$yaml->{match}{$sub_attribute}}";
+                        my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
                             my $okm = 0;
-                            CPAN->debug(sprintf "abs[%s]yaml[%d]", $abs, scalar @yaml) if $CPAN::DEBUG;
+                            CPAN->debug(sprintf "abs[%s]distropref[%d]", $abs, scalar @distropref) if $CPAN::DEBUG;
                             my @modules = $self->containsmods;
-                            CPAN->debug(sprintf "abs[%s]yaml[%d]modules[%s]", $abs, scalar @yaml, join(",",@modules)) if $CPAN::DEBUG;
+                            CPAN->debug(sprintf "abs[%s]distropref[%d]modules[%s]", $abs, scalar @distropref, join(",",@modules)) if $CPAN::DEBUG;
                           MODULE: for my $module (@modules) {
                                 $okm ||= $module =~ /$qr/;
                                 last MODULE if $okm;
@@ -6677,16 +6729,16 @@ sub _find_prefs {
                             my $okp = $^X =~ /$qr/;
                             $ok &&= $okp;
                         } else {
-                            $CPAN::Frontend->mydie("Nonconforming YAML file '$abs': ".
+                            $CPAN::Frontend->mydie("Nonconforming .$thisexte file '$abs': ".
                                                    "unknown sub_attribut '$sub_attribute'. ".
                                                    "Please ".
                                                    "remove, cannot continue.");
                         }
                     }
-                    CPAN->debug(sprintf "abs[%s]yaml[%d]ok[%d]", $abs, scalar @yaml, $ok) if $CPAN::DEBUG;
+                    CPAN->debug(sprintf "abs[%s]distropref[%d]ok[%d]", $abs, scalar @distropref, $ok) if $CPAN::DEBUG;
                     if ($ok) {
                         return {
-                                prefs => $yaml,
+                                prefs => $distropref,
                                 prefs_file => $abs,
                                 prefs_file_doc => $y,
                                };
@@ -6694,10 +6746,6 @@ sub _find_prefs {
 
                 }
             }
-        }
-    } else {
-        unless ($self->{have_complained_about_missing_yaml}++) {
-            $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot read prefs '$prefs_dir'\n");
         }
     }
     return;

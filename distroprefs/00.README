@@ -71,6 +71,17 @@ below in LANGUAGE SPECS) as a hashref containing match criteria that
 determine if the current distribution matches the YAML document or
 not.
 
+=head2 Fallback Data::Dumper and Storable
+
+If neither your configured C<yaml_module> nor YAML.pm is installed
+CPAN.pm falls back to using Data::Dumper and Storable and looks for
+files with the extensions C<.dd> or C<.st> in the C<prefs_dir>
+directory.
+
+In bootstrapping situations it is usually sufficient to translate only
+a few YAML files to Data::Dumper for the crucial modules like
+C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>.
+
 =head1 BLUEPRINT
 
 The following example contains all supported keywords and structures
