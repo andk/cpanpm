@@ -3328,6 +3328,7 @@ sub localize {
     }
     $self->_add_to_statistics($stats);
     if ($ret) {
+        unlink "$aslocal.bak$$";
         return $ret;
     }
     unless ($CPAN::Signal) {
