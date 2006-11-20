@@ -4,9 +4,10 @@
 	CPAN/SQLite.pm.
 
 	* Todo: the order of lines in the "failed" command or "failed" report
-	section is, I believe, random. Need a timestamp for finer granular
-	sorting. That would make the listing much more useful because the first
-	is the most important, all others may be followup errors.
+	section is, given identical command ID, I believe, random. Need a
+	timestamp for finer granular sorting. That would make the listing much
+	more useful because the first is the most important, all others may be
+	followup errors.
 
 2006-11-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

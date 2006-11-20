@@ -224,7 +224,7 @@ MEGA_COLLECTION = Expect \
 		Term::ReadLine::Gnu \
 		CPAN::DistnameInfo \
 		Event::Lib \
-		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		/home/src/perl/srezic/Kwalify/.
 
 }
