@@ -1,8 +1,18 @@
+2006-11-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Randy sent rkobes-cpan4.diff which should fit to cvs rev. 1.21 of
+	CPAN/SQLite.pm.
+
+	* Todo: the order of lines in the "failed" command or "failed" report
+	section is, I believe, random. Need a timestamp for finer granular
+	sorting. That would make the listing much more useful because the first
+	is the most important, all others may be followup errors.
+
 2006-11-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* Todo: write a Makefile target for the 3 *.dd files in distroprefs
+	* Todo: write a Makefile target for the 3 *.dd files in distroprefs DONE
 
-	* Todo: Storable support for distroprefs
+	* Todo: Storable support for distroprefs DONE
 
 2006-11-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -32,6 +42,16 @@
 	* kwalify schema language: http://rubyforge.org/frs/?group_id=815&release_id=5513
 
 	Yaml mode: http://svn.clouder.jp/repos/public/yaml-mode/trunk
+
+	cvs -d :pserver:anonymous@srezic.cvs.sourceforge.net:/cvsroot/srezic co Kwalify
+
+	/home/src/perl/srezic/Kwalify/.
+
+	Todo: integrate schemacheck into a test and put Kwalify into the Bundle
+
+	for f in distroprefs/*.yml; do
+	  /home/src/perl/repoperls/installed-perls/perl/pSI5eZY/perl-5.8.0@29319/bin/pkwalify -f cpan_distroprefs_schema.yml $f 
+	done
 
 2006-11-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -94,7 +114,7 @@ system cpandb --update failed: -1 at /home/src/perl/repoperls/installed-perls/pe
 	connections and can gather better data.
 
 	* Allow dd or st files instead of yml in distroprefs for bootstrapping
-	purpose.
+	purpose. DONE
 
 2006-11-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

@@ -1,0 +1,100 @@
+Index: CPAN.pm
+===================================================================
+--- CPAN.pm	(revision 1285)
++++ CPAN.pm	(working copy)
+@@ -73,6 +73,7 @@
+             $META
+             $RUN_DEGRADED
+             $Signal
++            $SQLite
+             $Suppress_readline
+             $VERSION
+             $autoload_recursion
+@@ -637,6 +638,15 @@
+ 
+ $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
+ 
++CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
++if ($CPAN::Config->{use_sqlite}) {
++    unless ($CPAN::META->has_inst("CPAN::SQLite")) {
++	die qq{Must install CPAN::SQLite for use_sqlite};
++    }
++    require CPAN::SQLite::META;
++    $CPAN::SQLite ||= CPAN::SQLite::META->new($CPAN::META);
++}
++
+ # from here on only subs.
+ ################################################################################
+ 
+@@ -952,8 +962,11 @@
+     ### Carp::croak "exists called without class argument" unless $class;
+     $id ||= "";
+     $id =~ s/:+/::/g if $class eq "CPAN::Module";
+-    exists $META->{readonly}{$class}{$id} or
+-        exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
++    return $CPAN::Config->{use_sqlite} ? 
++      (exists $META->{readonly}{$class}{$id} or
++       $CPAN::SQLite->set($class, $id) ) :
++	 (exists $META->{readonly}{$class}{$id} or
++	  exists $META->{readwrite}{$class}{$id}); # unsafe meta access, ok
+ }
+ 
+ #-> sub CPAN::delete ;
+@@ -2400,6 +2413,8 @@
+                     defined $command ? $command : "UNDEFINED",
+                    ) if $CPAN::DEBUG;
+ 	if (defined $regex) {
++	    $CPAN::SQLite->search($class, $regex)
++	      if $CPAN::Config->{use_sqlite};
+             for $obj (
+                       $CPAN::META->all_objects($class)
+                      ) {
+@@ -4140,6 +4155,8 @@
+     if ($CPAN::Config->{build_dir_reuse}) {
+         $self->reanimate_build_dir;
+     }
++    $CPAN::SQLite->reload(time => $time, force => $force)
++      if ($CPAN::Config->{use_sqlite} and not $LAST_TIME);
+     $LAST_TIME = $time;
+     $CPAN::META->{PROTOCOL} = PROTOCOL;
+ }
+@@ -4223,6 +4240,7 @@
+ sub rd_authindex {
+     my($cl, $index_target) = @_;
+     my @lines;
++    return if $CPAN::Config->{use_sqlite};
+     return unless defined $index_target;
+     $CPAN::Frontend->myprint("Going to read $index_target\n");
+     local(*FH);
+@@ -4262,6 +4280,7 @@
+ #-> sub CPAN::Index::rd_modpacks ;
+ sub rd_modpacks {
+     my($self, $index_target) = @_;
++    return if $CPAN::Config->{use_sqlite};
+     return unless defined $index_target;
+     $CPAN::Frontend->myprint("Going to read $index_target\n");
+     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
+@@ -4474,6 +4493,7 @@
+ #-> sub CPAN::Index::rd_modlist ;
+ sub rd_modlist {
+     my($cl,$index_target) = @_;
++    return if $CPAN::Config->{use_sqlite};
+     return unless defined $index_target;
+     $CPAN::Frontend->myprint("Going to read $index_target\n");
+     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
+@@ -4525,6 +4545,7 @@
+ #-> sub CPAN::Index::write_metadata_cache ;
+ sub write_metadata_cache {
+     my($self) = @_;
++    return if $CPAN::Config->{use_sqlite};
+     return unless $CPAN::Config->{'cache_metadata'};
+     return unless $CPAN::META->has_usable("Storable");
+     my $cache;
+@@ -4544,6 +4565,7 @@
+ #-> sub CPAN::Index::read_metadata_cache ;
+ sub read_metadata_cache {
+     my($self) = @_;
++    return if $CPAN::Config->{use_sqlite};
+     return unless $CPAN::Config->{'cache_metadata'};
+     return unless $CPAN::META->has_usable("Storable");
+     my $metadata_file = File::Spec->catfile($CPAN::Config->{cpan_home},"Metadata");
