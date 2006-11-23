@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^MIYAGAWA/XML-Atom-"
+  distribution: "^MIYAGAWA/XML-Atom-0.23"
 pl: 
   expect: 
     - "Auto-install"
@@ -9,3 +9,10 @@ pl:
     - "y\n"
     - "Auto-install"
     - "y\n"
+    - "Auto-install"
+    - "y\n"
+    - "Auto-install"
+    - "y\n"
+patches:
+    - "ANDK/patches/XML-Atom-0.23-ANDK-01.patch.gz"
+    - "ANDK/patches/XML-Atom-0.23-SMPETERS-01.patch.gz"
