@@ -1,3 +1,175 @@
+2006-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* I just wrote in a mail to Sendu Bala:
+
+  > On a tangentially related note, are there any plans to make CPAN do
+  > anything useful with the 'recommends'/'optional_features' information
+  > in a META.yml file?
+
+No. I never considered this a job for CPAN.pm. If I had the time,
+inclination and fu to write talk-me-through-optional-features
+software, I'd write it independently from CPAN.pm.
+
+I think of CPAN.pm as the glue between the user and the CPAN mantras.
+CPAN.pm 1.89 will allow the users to store their preferences about
+optional things in any CPAN package, no matter how the packages
+themselves manage them. If you play with 1.88_62 see the 00.README in
+the distroprefs directory. But it's no
+talk-me-through-optional-features software.
+
+Or if you prefer a drawing:
+
+     +----------+        +----------------+         +----------+
+     |          |        |    mantras     |         |          |
+     |          |        |perl Makefile.PL|         |          |
+     |   user   |        |make            |         |  module  |
+     |          |        |make test       |         |          |
+     |          |        |make install    |         |          |
+     +----------+  ^^^^  +----------------+  ^^^^   +----------+
+                   ||||                      ||||   
+                    |||                       |||   
+                     ||Gap filled              ||Gap for
+                      |by CPAN.pm               |options software
+
+
+	* hosts statistics: the host with the most unsuccessful downloads is
+	which? Of course the one that lead the urllist. That doesn't prove
+	anything.
+
+	* document build_requires and when you talk about prerequisites, name
+	the option names explicitly.
+
+	* answer Sendu Bala two mails, one private, one on cpan-workers
+
+2006-11-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* From a mail I sent to Slaven about Tk:
+
+Mit 20002 bekomme ich t/regexp.t     2   512    21    2  10-11
+Mit 29332             t/regexp.t     0    11    21   36  4-21
+
+Letzteres entspricht wohl Deinem Coredump.
+
+Noch sehe ich keine wirklich saubere Strategie fuer binsearch. Die
+bereits frueher angewendete mit 'notest install' zuerst und dann
+nochmaligem test von regexp.t scheint die einfachste im Moment. Den
+habe ich auch grade eben gestartet.
+
+Sauber waere wohl, wenn man 'make test' dazu bringen koennte, nur
+schlicht und einfach ein einziges Skript aufzurufen. --> Todo
+
+	* perl rt 40957 might be fun to binarysearch
+
+	* After all the prereq hassles with XML::Atom I finally could install it
+	for perl 20002 after many manual interventions but without overrule
+	(except when we call the 1.61003 decision as an overrule)
+
+	After the same hassles under 29332 I see the test failure
+
+t/02-content...........NOK 23/32                                             
+#   Failed test at t/02-content.t line 62.
+#          got: 'xml'
+#     expected: 'base64'
+# Looks like you failed 1 test of 32.
+t/02-content...........dubious                                               
+        Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 23
+        Failed 1/32 tests, 96.88% okay
+
+	This means that if I just got the proper prerequisites I'd have run a
+	binarysearch in no time.
+
+*** Module::AutoInstall version 1.030
+*** Checking for Perl dependencies...
+[Core Features]
+- MIME::Base64             ...loaded. (3.07_0100)
+- URI                      ...missing.
+- Class::Data::Inheritable ...missing.
+==> Auto-install the 2 mandatory module(s) from CPAN? [y] y
+[Faster XML parsing with libxml]
+- XML::LibXML              ...missing. (would need 1.54)
+==> Auto-install the 1 optional module(s) from CPAN? [y] y
+[Pure perl XML parsing with XML::XPath]
+- XML::XPath               ...missing.
+==> Auto-install the 1 optional module(s) from CPAN? [n] y
+[Client/Server for Atom API]
+- LWP                      ...missing.
+- LWP::Authen::Wsse        ...missing.
+- Digest::SHA1             ...missing.
+- DateTime                 ...missing.
+==> Auto-install the 4 optional module(s) from CPAN? [y] y
+[Feed and API Auto-discovery]
+- HTML::Parser             ...missing.
+==> Auto-install the 1 optional module(s) from CPAN? [y] y
+CPAN: File::HomeDir loaded ok
+*** Dependencies will be installed the next time you type 'make'.
+    (You may need to do that as the 'root' user.)
+*** Module::AutoInstall configuration finished.
+
+	Next step is to document what is wrong with the prereqs and present the
+	findings to author.
+
+	1. Test fails on XML::XPath.         requires bug
+	2. Ditto on LWP::UserAgent           requires bug
+	3. Ditto on Digest::SHA1             requires bug
+	4. Ditto on DateTime                 requires bug
+	5. Ditto on XML::LibXML not so obviously!) requires bug
+
+	XML::XPath
+	LWP::UserAgent
+	Digest::SHA1
+	DateTime
+	XML::LibXML
+	
+	It may be the case that the author thought that a user that says no to
+	an optional feature will accept failing tests. But I'd expect that if I
+	say no to a feature then this feature is not tested at all. And I'd
+	argue this is important because a user can usually not reliably
+	differentiate proprely between failing tests due to bugs and failing
+	tests due to missing prereqs. No bug on Module::AutoInstall side.
+
+	Now our manual binary search stands at 27069(ok) and 29332(not ok) and
+	our patch seems to be clear: add the above 5 modules to requires and not
+	as optional modules.
+
+	Done and it worked with 28618.
+
+	* Need a way to specify a different distribution for a module. Say, we
+	realize that the officially current XML::LibXML 1.62 is broken but some
+	PAJAS/XML-LibXML-1.61003.tar.gz still works. I think, I'd like
+
+	  ->{goto} = "PAJAS/XML-LibXML-1.61003.tar.gz"
+
+	* Need a way to specify notest from distroprefs. When we know Strptime
+	doesn't pass a test but we know that the problem is harmless or can be
+	ignored for some reason. I think, I'd like ->{test}{skip} = 1
+
+	* Todo: LWP::Authen::Wsse is an optional prereq of XML::Atom but did not
+	get installed. Need to find out how to signal to AutoInstall that I want
+	all recommendations installed. Ahh, I find that XML::Atom not only uses
+	AutoInstall but also Module::Build and that writes a _build/prereq file
+	and I could read that. I would then find that 'recommends' hashref and I
+	could then start installing what I find there.
+
+	But how do I know that the user wants that the recommendations be
+	installed?
+
+	While watching what Module::Install is doing and trying out variations I
+	get the impression that I have no chance to do the right thing. If the
+	user says, he wants the recommendations, they still do not end up in
+	META.yml or _build/prereqs or where else should I look?
+
+	After the user has said that he wants everything, we see
+
+Checking prerequisites...
+ * Optional prerequisite LWP::Authen::Wsse is not installed
+ * Optional prerequisite XML::LibXML is not installed
+ * Optional prerequisite DateTime is not installed
+
+	But nobody builds or installs them. I find them nowhere in the build
+	directory stored away. And yet, when I test XML::Atom, it requires it
+	magically and I have to install them manually.
+
 2006-11-20  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Randy sent rkobes-cpan4.diff which should fit to cvs rev. 1.21 of

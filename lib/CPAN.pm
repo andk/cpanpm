@@ -561,6 +561,7 @@ sub new {
            TEXT => $arg,
            FAILED => substr($arg,0,2) eq "NO",
            COMMANDID => $CPAN::CurrentCommandId,
+           TIME => time,
           }, $class;
 }
 sub commandid { shift->{COMMANDID} }
@@ -2228,12 +2229,14 @@ sub failed {
               $id,
               $failed,
               $d->{$failed}->text,
+              $d->{$failed}{TIME}||0,
              ] :
              [
               1,
               $id,
               $failed,
               $d->{$failed},
+              0,
              ]
             );
     }
@@ -2257,7 +2260,11 @@ sub failed {
         } else {
             $print = join "",
                 map { sprintf " %-45s: %s %s\n", @$_[1..3] }
-                    sort { $a->[0] <=> $b->[0] } @failed;
+                    sort {
+                        $a->[0] <=> $b->[0]
+                            ||
+                                $a->[4] <=> $b->[4]
+                       } @failed;
         }
         $CPAN::Frontend->myprint("Failed during $scope:\n$print");
     } elsif (!$only_id || !$silent) {
@@ -6500,7 +6507,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $want_expect = 1;
         } else {
             $CPAN::Frontend->mywarn("Expect not installed, falling back to ".
-                                    "system\n");
+                                    "system()\n");
         }
     }
     my $system_ok;
@@ -6983,6 +6990,9 @@ sub read_yaml {
     return unless -f $yaml;
     eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
     if ($@) {
+        $CPAN::Frontend->mywarn("Warning (probably harmless): Could not read ".
+                                "'$yaml'. Falling back to other ".
+                                "methods to determine prerequisites\n");
         return; # if we die, then we cannot read YAML's own META.yml
     }
     if (not exists $self->{yaml_content}{dynamic_config}
@@ -6998,11 +7008,16 @@ sub read_yaml {
 #-> sub CPAN::Distribution::prereq_pm ;
 sub prereq_pm {
     my($self) = @_;
-    return $self->{prereq_pm} if
-        exists $self->{prereq_pm_detected} && $self->{prereq_pm_detected};
+    $self->{prereq_pm_detected} ||= 0;
+    CPAN->debug("prereq_pm_detected[$self->{prereq_pm_detected}]") if $CPAN::DEBUG;
+    return $self->{prereq_pm} if $self->{prereq_pm_detected};
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
         || $self->{modulebuild};
+    CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
+                $self->{writemakefile}||"",
+                $self->{modulebuild}||"",
+               ) if $CPAN::DEBUG;
     my($req,$breq);
     if (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
         $req =  $yaml->{requires} || {};
@@ -7046,6 +7061,7 @@ sub prereq_pm {
         if (-f $makefile
             and
             $fh = FileHandle->new("<$makefile\0")) {
+            CPAN->debug("Getting prereq from Makefile") if $CPAN::DEBUG;
             local($/) = "\n";
             while (<$fh>) {
                 last if /MakeMaker post_initialize section/;
@@ -7067,34 +7083,28 @@ sub prereq_pm {
                 }
                 last;
             }
-        } elsif (-f "Build") {
-            if ($CPAN::META->has_inst("Module::Build")) {
-                eval {
-                    $req  = Module::Build->current->requires();
-                    $breq = Module::Build->current->build_requires();
-                };
-                # this failed for example for HTML::Mason and for
-                # Error.pm because they are subclassing Module::Build
-                # in their Build.PL in such a way that Module::Build
-                # cannot read the _build directory. We DO need a dump
-                # command for that.
+        }
+    }
+    unless ($req || $breq) {
+        my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
+        my $buildfile = File::Spec->catfile($build_dir,"Build");
+        if (-f $buildfile) {
+            CPAN->debug("Found '$buildfile'") if $CPAN::DEBUG;
+            my $build_prereqs = File::Spec->catfile($build_dir,"_build","prereqs");
+            if (-f $build_prereqs) {
+                CPAN->debug("Getting prerequisites from '$build_prereqs'") if $CPAN::DEBUG;
+                my $content = do { local *FH;
+                                   open FH, $build_prereqs
+                                       or $CPAN::Frontend->mydie("Could not open ".
+                                                                 "'$build_prereqs': $!");
+                                   local $/;
+                                   <FH>;
+                               };
+                my $bphash = eval $content;
                 if ($@) {
-                    $CPAN::Frontend
-                        ->mywarn(
-                                 sprintf("Warning: while trying to determine ".
-                                         "prerequisites for %s with the help of ".
-                                         "Module::Build the following error ".
-                                         "occurred: '%s'\n\nFalling back to META.yml ".
-                                         "for prerequisites\n",
-                                         $self->id,
-                                         $@
-                                        ));
-                    my $build_dir = $self->{build_dir};
-                    my $yaml = File::Spec->catfile($build_dir,"META.yml");
-                    if ($yaml = CPAN->_yaml_loadfile($yaml)->[0]) {
-                        $req =  $yaml->{requires} || {};
-                        $breq =  $yaml->{build_requires} || {};
-                    }
+                } else {
+                    $req  = $bphash->{requires} || +{};
+                    $breq = $bphash->{build_requires} || +{};
                 }
             }
         }
@@ -7111,8 +7121,10 @@ sub prereq_pm {
         $req->{"Module::Build"} = 0;
         delete $self->{writemakefile};
     }
-    $self->{prereq_pm_detected}++;
-    return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
+    if ($req || $breq) {
+        $self->{prereq_pm_detected}++;
+        return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
+    }
 }
 
 #-> sub CPAN::Distribution::test ;
