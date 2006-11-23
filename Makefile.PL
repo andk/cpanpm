@@ -13,6 +13,7 @@ use vars qw($VERSION);
 use vars qw(@DD_PREFS @ST_PREFS);
 
 @DD_PREFS = qw(TIMB.DBI
+               GBARR.libnet
               );
 
 @ST_PREFS = qw(ILYAZ.Term-ReadLine-Perl
