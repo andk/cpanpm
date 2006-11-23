@@ -1,3 +1,66 @@
+2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Trying to get a binary search running for XML-Feed-0.12. I need to go
+	before 20000 where I haven't been for quite a while and nothing works.
+
+	I need to break a circular dependency ExtUtils::CBuilder => File::Spec
+	=> PathTools => ExtUtils::CBuilder
+
+	I'm hung at the moment with 19096: it cannot build
+	Scalar-List-Utils-1.18 because it fails during perl Makefile.PL:
+
+	Can't call method "load" on an undefined value at inc/Module/Install.pm line 180
+
+	I have tried to install Module::Install myself but this did not help.
+
+	Removing the whole inc directory does not help either. When I improve
+	the code at line 180, it just gets reverted magically. This is what I
+	tried to insert:
+
+		my $obj = eval { $self->load($method) };
+        if ($@) {
+          my $err = $@;
+          require Carp;
+          confess $err;
+        }
+        $obj or return;
+
+	Running in the debugger fails also because it fails at compile time.
+
+	Giving up on 19096, trying 19523.
+
+	Same thing but I realise that I can skip Scalar-List-Utils. Now I need
+	to install LWP with notest. And XML::Atom fails because 'Undefined
+	subroutine &utf8::is_utf8 called at t/18-unicode.t line 17.' Use notest
+	again. And XML-Feed's test still fails with
+
+t/01-parse............NOK 44/72                                              
+#   Failed test at t/01-parse.t line 59.
+#                   'Hello!...'
+#     doesn't match '(?-xism:<p>Hello!</p>)'
+t/01-parse............NOK 45/72                                              
+#   Failed test at t/01-parse.t line 60.
+#          got: undef
+#     expected: 'Hello!...'
+# Looks like you failed 2 tests of 72.
+t/01-parse............dubious                                                
+        Test returned status 2 (wstat 512, 0x200)
+DIED. FAILED tests 44-45
+        Failed 2/72 tests, 97.22% okay
+
+	Trying 19096 again. This time XML::Atom cannot write a Build file with
+	the same Module::Install bug as above. Giving up.
+
+	Maybe investigate within the maint branch?
+
+	* I'm conviced now that we need more force flavors and that force shall
+	be limited in scope
+
+	force get shall re-fetch
+	force make shall not re-fetch but run make again
+	force test shall not make again but try to test again
+	force install shall not test again but try to install
+
 2006-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* I just wrote in a mail to Sendu Bala:

@@ -1,3 +1,20 @@
+2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_63
+
+	* bugfix: delete backups during downloading of new index files
+
+	* address #22584: do not set VERSION to "undef" when 0
+
+	* bugfix: repair all risky ->can with UNIVERSAL::can; thanks to Adriano
+	Rodrigues for the report!
+
+	* support for fallback Data::Dumper and Storable files in the prefs_dir
+	directory when YAML is not available
+
+	* the failed command now prints its rows sorted by command (as before)
+	and then by time.
+
 2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_62

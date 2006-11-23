@@ -94,7 +94,10 @@ YAML would look like so:
 
 In bootstrapping situations it is usually sufficient to translate only
 a few YAML files to Data::Dumper for the crucial modules like
-C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>.
+C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>. If you prefer Storable
+over Data::Dumper, remember to pull out a Storable version that writes
+an older format than all the other Storable versions that will need to
+read them.
 
 =head1 BLUEPRINT
 

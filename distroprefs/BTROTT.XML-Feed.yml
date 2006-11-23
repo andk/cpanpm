@@ -2,7 +2,9 @@
 match:
   distribution: "^BTROTT/XML-Feed-0"
 pl: 
-  expect: 
+  expect-in-any-order:
+    - "Auto-install"
+    - "y\n"
     - "Auto-install"
     - "y\n"
     - "Auto-install"

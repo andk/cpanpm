@@ -6703,7 +6703,14 @@ sub _find_prefs {
                         $i++;
                     }
                 } elsif ($thisexte eq "st") {
-                    @distropref = @{scalar Storable::retrieve($abs)};
+                    # eval because Storable is never forward compatible
+                    eval { @distropref = @{scalar Storable::retrieve($abs)}; };
+                    if ($@) {
+                        $CPAN::Frontend->mywarn("Error reading distroprefs file ".
+                                                "$_, skipping\: $@");
+                        $CPAN::Frontend->mysleep(4);
+                        next DIRENT;
+                    }
                 }
                 # $DB::single=1;
               ELEMENT: for my $y (0..$#distropref) {
