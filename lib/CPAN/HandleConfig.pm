@@ -85,6 +85,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 my %prefssupport = map { $_ => 1 }
     (
      "build_requires_install_policy",
+     "check_sigs",
      "make",
      "make_install_make_command",
      "prefer_installer",
@@ -623,7 +624,8 @@ sub cpl {
 sub prefs_lookup {
     my($self,$distro,$what) = @_;
     if ($prefssupport{$what}) {
-        return $distro->prefs->{cpanconfig}{$what} || $CPAN::Config->{$what};
+        my $ccw = $distro->prefs->{cpanconfig}{$what};
+        return defined $ccw ? $ccw : $CPAN::Config->{$what};
     } else {
         warn "Warning: $what no yet officially supported for distroprefs, doing a normal lookup";
         return $CPAN::Config->{$what};

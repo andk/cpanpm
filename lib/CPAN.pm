@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_62';
+$CPAN::VERSION = '1.88_63';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1071,7 +1071,9 @@ sub has_inst {
             $CPAN::Frontend->mysleep(2);
         }
     } elsif ($mod eq "Module::Signature"){
-        if (not $CPAN::Config->{check_sigs}) {
+        my $check_sigs = CPAN::HandleConfig->prefs_lookup($self,
+                                                          q{check_sigs});
+        if (not $check_sigs) {
             # they do not want us:-(
         } elsif (not $Have_warned->{"Module::Signature"}++) {
 	    # No point in complaining unless the user can
@@ -5537,6 +5539,7 @@ sub patch {
             $CPAN::Frontend->myprint("  $patch\n");
             my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
             my $thispatchargs = join " ", $stdpatchargs, $self->_patch_p_parameter($readfh);
+            CPAN->debug("thispatchargs[$thispatchargs]") if $CPAN::DEBUG;
             $readfh = CPAN::Tarzip->TIEHANDLE($patch);
             my $writefh = FileHandle->new;
             unless (open $writefh, "|$patchbin $thispatchargs") {
@@ -5572,7 +5575,9 @@ sub _patch_p_parameter {
         my $file = $1;
         $cnt_files++;
         $cnt_p0files++ if -f $file;
+        CPAN->debug("file[$file]cnt_files[$cnt_files]cnt_p0files[$cnt_p0files]") if $CPAN::DEBUG;
     }
+    return "-p1" unless $cnt_files;
     return $cnt_files==$cnt_p0files ? "-p0" : "-p1";
 }
 
@@ -5696,7 +5701,9 @@ WriteMakefile(
 #-> CPAN::Distribution::_signature_business
 sub _signature_business {
     my($self) = @_;
-    if ($CPAN::Config->{check_sigs}) {
+    my $check_sigs = CPAN::HandleConfig->prefs_lookup($self,
+                                                      q{check_sigs});
+    if ($check_sigs) {
         if ($CPAN::META->has_inst("Module::Signature")) {
             if (-f "SIGNATURE") {
                 $self->debug("Module::Signature is installed, verifying") if $CPAN::DEBUG;
@@ -5999,7 +6006,9 @@ sub CHECKSUM_check_file {
 
     $sloppy ||= 0;
     $self->debug("chk_file[$chk_file]sloppy[$sloppy]") if $CPAN::DEBUG;
-    if ($CPAN::Config->{check_sigs}) {
+    my $check_sigs = CPAN::HandleConfig->prefs_lookup($self,
+                                                      q{check_sigs});
+    if ($check_sigs) {
         if ($CPAN::META->has_inst("Module::Signature")) {
             $self->debug("Module::Signature is installed, verifying");
             $self->SIG_check_file($chk_file);
