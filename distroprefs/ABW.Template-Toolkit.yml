@@ -9,7 +9,7 @@ pl:
     - "Do you want to build the XS Stash module"
     - "n\n"
     - "Do you want to install these components"
-    - "\n"
+    - "n\n"
     - "Installation directory"
     - "\n"
     - "URL base for TT2 images"

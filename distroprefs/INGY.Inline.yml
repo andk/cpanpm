@@ -4,4 +4,4 @@ match:
 pl: 
   expect:
     - "Do you want to install Inline::C"
-    - "\n"
+    - "y\n"
