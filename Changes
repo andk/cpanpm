@@ -15,6 +15,10 @@
 	* the failed command now prints its rows sorted by command (as before)
 	and then by time.
 
+	* the prereq check under the Module::Build installer is now performed by
+	reading the _build/prereqs file instead of calling Module::Build
+	directly. (Suggested by Ken Williams)
+
 2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_62
