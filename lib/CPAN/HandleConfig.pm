@@ -623,11 +623,17 @@ sub cpl {
 
 sub prefs_lookup {
     my($self,$distro,$what) = @_;
+
     if ($prefssupport{$what}) {
-        my $ccw = $distro->prefs->{cpanconfig}{$what};
-        return defined $ccw ? $ccw : $CPAN::Config->{$what};
+        return $CPAN::Config->{$what} unless
+            $distro
+                and $distro->prefs
+                    and $distro->prefs->{cpanconfig}
+                        and defined $distro->prefs->{cpanconfig}{$what};
+        return $distro->prefs->{cpanconfig}{$what};
     } else {
-        warn "Warning: $what no yet officially supported for distroprefs, doing a normal lookup";
+        $CPAN::Frontend->mywarn("Warning: $what no yet officially ".
+                                "supported for distroprefs, doing a normal lookup");
         return $CPAN::Config->{$what};
     }
 }

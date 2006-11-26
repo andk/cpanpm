@@ -409,7 +409,12 @@ sub _yaml_dumpfile {
                                   );
         }
     } else {
-        $CPAN::Frontend->myprint("Note (usually harmless): '$yaml_module' not installed, not dumping to '$to_local_file'\n");
+        if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
+            # I think this case does not justify a warning at all
+        } else {
+            $CPAN::Frontend->myprint("Note (usually harmless): '$yaml_module' ".
+                                     "not installed, not dumping to '$to_local_file'\n");
+        }
     }
 }
 
@@ -1071,8 +1076,8 @@ sub has_inst {
             $CPAN::Frontend->mysleep(2);
         }
     } elsif ($mod eq "Module::Signature"){
-        my $check_sigs = CPAN::HandleConfig->prefs_lookup($self,
-                                                          q{check_sigs});
+        # NOT prefs_lookup, we are not a distro
+        my $check_sigs = $CPAN::Config->{check_sigs};
         if (not $check_sigs) {
             # they do not want us:-(
         } elsif (not $Have_warned->{"Module::Signature"}++) {
@@ -3416,7 +3421,7 @@ sub hosteasy {
 	    # Maybe mirror has compressed it?
 	    if (-f "$l.gz") {
 		$self->debug("found compressed $l.gz") if $CPAN::DEBUG;
-		CPAN::Tarzip->new("$l.gz")->gunzip($aslocal);
+		eval { CPAN::Tarzip->new("$l.gz")->gunzip($aslocal) };
 		if ( -f $aslocal) {
 		    $ThesiteURL = $ro_url;
 		    return $aslocal;
@@ -3449,11 +3454,11 @@ sub hosteasy {
   $gzurl
 ");
                 $res = $Ua->mirror($gzurl, "$aslocal.gz");
-                if ($res->is_success &&
-                    CPAN::Tarzip->new("$aslocal.gz")->gunzip($aslocal)
-                   ) {
-                    $ThesiteURL = $ro_url;
-                    return $aslocal;
+                if ($res->is_success) {
+                    if (eval {CPAN::Tarzip->new("$aslocal.gz")->gunzip($aslocal)}) {
+                        $ThesiteURL = $ro_url;
+                        return $aslocal;
+                    }
                 }
             } else {
                 $CPAN::Frontend->myprint(sprintf(
@@ -3493,7 +3498,7 @@ sub hosteasy {
                                            $dir,
                                            "$getfile.gz",
                                            $gz) &&
-			CPAN::Tarzip->new($gz)->gunzip($aslocal)
+			eval{CPAN::Tarzip->new($gz)->gunzip($aslocal)}
 		       ){
 			$ThesiteURL = $ro_url;
 			return $aslocal;
@@ -3615,11 +3620,11 @@ No success, the file that lynx has has downloaded is an empty file.
 	      # Looks good
 	    } elsif ($asl_ungz ne $aslocal) {
 	      # test gzip integrity
-	      if (CPAN::Tarzip->new($asl_ungz)->gtest) {
+	      if (eval{CPAN::Tarzip->new($asl_ungz)->gtest}) {
                   # e.g. foo.tar is gzipped --> foo.tar.gz
                   rename $asl_ungz, $aslocal;
 	      } else {
-                  CPAN::Tarzip->new($asl_gz)->gzip($asl_ungz);
+                  eval{CPAN::Tarzip->new($asl_gz)->gzip($asl_ungz)};
 	      }
 	    }
 	    $ThesiteURL = $ro_url;
@@ -3642,15 +3647,15 @@ Trying with "$funkyftp$src_switch" to get
 		-s $asl_gz
 	       ) {
 	      # test gzip integrity
-              my $ct = CPAN::Tarzip->new($asl_gz);
-	      if ($ct->gtest) {
-                  $ct->gunzip($aslocal);
-	      } else {
-                  # somebody uncompressed file for us?
-                  rename $asl_ungz, $aslocal;
-	      }
-	      $ThesiteURL = $ro_url;
-	      return $aslocal;
+                my $ct = eval{CPAN::Tarzip->new($asl_gz)};
+                if ($ct && $ct->gtest) {
+                    $ct->gunzip($aslocal);
+                } else {
+                    # somebody uncompressed file for us?
+                    rename $asl_ungz, $aslocal;
+                }
+                $ThesiteURL = $ro_url;
+                return $aslocal;
 	    } else {
 	      unlink $asl_gz if -f $asl_gz;
 	    }
@@ -4947,7 +4952,7 @@ sub dir_listing {
                                            "$lc_want.gz",1);
             if ($lc_file) {
                 $lc_file =~ s{\.gz(?!\n)\Z}{}; #};
-                CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file);
+                eval{CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file)};
             } else {
                 return;
             }
@@ -5318,9 +5323,14 @@ EOF
     #
     # Unpack the goods
     #
-    my $ct = CPAN::Tarzip->new($local_file);
+    my $ct = eval{CPAN::Tarzip->new($local_file)};
+    unless ($ct) {
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO");
+        delete $self->{build_dir};
+        return;
+    }
     if ($local_file =~ /(\.tar\.(bz2|gz|Z)|\.tgz)(?!\n)\Z/i){
-        $self->{was_uncompressed}++ unless $ct->gtest();
+        $self->{was_uncompressed}++ unless eval{$ct->gtest()};
 	$self->untar_me($ct);
     } elsif ( $local_file =~ /\.zip(?!\n)\Z/i ) {
 	$self->unzip_me($ct);
@@ -5778,7 +5788,7 @@ sub handle_singlefile {
 
     my $to = File::Basename::basename($local_file);
     if ($to =~ s/\.(gz|Z)(?!\n)\Z//) {
-        if (CPAN::Tarzip->new($local_file)->gunzip($to)) {
+        if (eval{CPAN::Tarzip->new($local_file)->gunzip($to)}) {
             $self->{unwrapped} = CPAN::Distrostatus->new("YES");
         } else {
             $self->{unwrapped} = CPAN::Distrostatus->new("NO -- uncompressing failed");
@@ -5958,7 +5968,7 @@ sub verifyCHECKSUM {
 				       "$lc_want.gz",1);
 	if ($lc_file) {
 	    $lc_file =~ s/\.gz(?!\n)\Z//;
-	    CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file);
+	    eval{CPAN::Tarzip->new("$lc_file.gz")->gunzip($lc_file)};
 	} else {
 	    return;
 	}
