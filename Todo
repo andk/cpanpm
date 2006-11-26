@@ -218,8 +218,6 @@ habe ich auch grade eben gestartet.
 Sauber waere wohl, wenn man 'make test' dazu bringen koennte, nur
 schlicht und einfach ein einziges Skript aufzurufen. --> Todo
 
-	* perl rt 40957 might be fun to binarysearch
-
 	* After all the prereq hassles with XML::Atom I finally could install it
 	for perl 20002 after many manual interventions but without overrule
 	(except when we call the 1.61003 decision as an overrule)

@@ -5229,6 +5229,16 @@ sub called_for {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
+    if (my $goto = $self->prefs->{goto}) {
+        $CPAN::Frontend->mywarn
+            (sprintf(
+                     "delegating to '%s' as specified in prefs file '%s' doc %d\n",
+                     $goto,
+                     $self->{prefs_file},
+                     $self->{prefs_file_doc},
+                    ));
+        return $self->goto($goto);
+    }
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -6247,6 +6257,9 @@ sub perl {
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
+    if (my $goto = $self->prefs->{goto}) {
+        return $self->goto($goto);
+    }
     my $make = $self->{modulebuild} ? "Build" : "make";
     # Emergency brake if they said install Pippi and get newest perl
     if ($self->isa_perl) {
@@ -7160,6 +7173,9 @@ sub prereq_pm {
 #-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
+    if (my $goto = $self->prefs->{goto}) {
+        return $self->goto($goto);
+    }
     $self->make;
     if ($CPAN::Signal){
       delete $self->{force_update};
@@ -7458,8 +7474,18 @@ sub clean {
 }
 
 #-> sub CPAN::Distribution::install ;
+sub goto {
+    my($self,$goto) = @_;
+    my($method) = (caller(1))[3];
+    CPAN->instance("CPAN::Distribution",$goto)->$method;
+}
+
+#-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
+    if (my $goto = $self->prefs->{goto}) {
+        return $self->goto($goto);
+    }
     $self->test;
     if ($CPAN::Signal){
       delete $self->{force_update};

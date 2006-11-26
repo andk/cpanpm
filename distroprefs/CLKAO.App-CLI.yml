@@ -1,5 +1,0 @@
----
-match:
-  distribution: "CLKAO/App-CLI-0.06"
-patches:
-  - "ANDK/patches/App-CLI-0.06-SMPETERS-01.patch.gz"

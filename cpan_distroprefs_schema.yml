@@ -49,6 +49,8 @@ mapping:
     enum:
       - 0
       - 1
+  goto:
+    type: text
   cpanconfig:
     type: map
     mapping:

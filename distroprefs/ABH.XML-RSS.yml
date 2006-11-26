@@ -1,0 +1,4 @@
+---
+match:
+  distribution: "^ABH/XML-RSS-1.20\."
+goto: "ABH/XML-RSS-1.12.tar.gz"
