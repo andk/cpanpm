@@ -1769,14 +1769,18 @@ sub hosts {
     if ($res->{ok} && @{$res->{ok}}) {
         $R .= sprintf "\nSuccessful downloads:
    N       kB  secs      kB/s url\n";
+        my $i = 20;
         for (sort { $b->[3] <=> $a->[3] } @{$res->{ok}}) {
             $R .= sprintf "%4d %8d %5d %9.1f %s\n", @$_;
+            last if --$i<=0;
         }
     }
     if ($res->{no} && @{$res->{no}}) {
         $R .= sprintf "\nUnsuccessful downloads:\n";
+        my $i = 20;
         for (sort { $b->[0] <=> $a->[0] } @{$res->{no}}) {
             $R .= sprintf "%4d %s\n", @$_;
+            last if --$i<=0;
         }
     }
     $CPAN::Frontend->myprint($R);
