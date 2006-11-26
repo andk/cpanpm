@@ -73,6 +73,7 @@ use vars qw(
             $META
             $RUN_DEGRADED
             $Signal
+            $SQLite
             $Suppress_readline
             $VERSION
             $autoload_recursion
@@ -416,6 +417,16 @@ sub _yaml_dumpfile {
                                      "not installed, not dumping to '$to_local_file'\n");
         }
     }
+}
+
+sub _init_sqlite {
+    unless ($CPAN::META->has_inst("CPAN::SQLite")
+            &&
+            $CPAN::META->has_inst("CPAN::SQLite::META")
+           ) {
+        $CPAN::Frontend->mydie(qq{SQLite not installed, cannot work with CPAN::SQLite});
+    }
+    $CPAN::SQLite ||= CPAN::SQLite::META->new($CPAN::META);
 }
 
 package CPAN::CacheMgr;
@@ -958,8 +969,14 @@ sub exists {
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
     $id =~ s/:+/::/g if $class eq "CPAN::Module";
-    exists $META->{readonly}{$class}{$id} or
-        exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
+    if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
+        CPAN::_init_sqlite;
+        return exists $META->{readonly}{$class}{$id} or
+            $CPAN::SQLite->set($class, $id);
+    } else {
+        return exists $META->{readonly}{$class}{$id} or
+            exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
+    }
 }
 
 #-> sub CPAN::delete ;
@@ -2424,6 +2441,10 @@ sub expand_by_method {
                     defined $command ? $command : "UNDEFINED",
                    ) if $CPAN::DEBUG;
 	if (defined $regex) {
+            if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
+                CPAN::_init_sqlite;
+                $CPAN::SQLite->search($class, $regex);
+            }
             for $obj (
                       $CPAN::META->all_objects($class)
                      ) {
@@ -4164,6 +4185,11 @@ sub reload {
     }
     if ($CPAN::Config->{build_dir_reuse}) {
         $self->reanimate_build_dir;
+    }
+    if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
+        CPAN::_init_sqlite;
+        $CPAN::SQLite->reload(time => $time, force => $force)
+            if not $LAST_TIME;
     }
     $LAST_TIME = $time;
     $CPAN::META->{PROTOCOL} = PROTOCOL;
