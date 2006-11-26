@@ -1,3 +1,43 @@
+2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* 23315 rings a bell now.....
+
+	* Slaven reports bug: there is a yml file in dot directories named
+	"..yml"
+
+2006-11-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Jifty 0.61123_01 is out and the tests fail on Module::Refresh missing
+	and Test::Base as far as I can see.
+
+	Kwalify is out.
+
+	Jifty says what it would like to have:
+
+- App::CLI                       ...missing. (would need 0.03)
+- Email::Send                    ...missing. (would need 1.99_01)
+- HTML::Mason                    ...missing. (would need 1.3101)
+- HTML::Mason::Plugin            ...missing.
+- HTTP::Server::Simple           ...missing. (would need 0.20)
+- HTTP::Server::Simple::Recorder ...missing.
+- XML::Simple                    ...missing.
+- Module::Install::Admin         ...missing. (would need 0.50)
+- Test::HTTP::Server::Simple     ...missing. (would need 0.02)
+- Test::WWW::Mechanize           ...missing. (would need 1.04)
+- Class::Accessor::Named         ...missing.
+- Devel::Cover                   ...missing.
+- Module::Install::Admin         ...missing. (would need 0.50)
+- PAR::Dist::FromCPAN            ...missing.
+
+	Now that I have Module::Refresh and Test::Base Jifty fails tests due to
+	HTML::Mason.
+
+	* But when we have four different force flavors, we will demand a
+	superforce that works like the force now does and sets all "lower" ones?
+
+	* Todo: distroprefs mechanism is still inefficient in that it scans too
+	often the whole distro_dir.
+
 2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Trying to get a binary search running for XML-Feed-0.12. I need to go
@@ -52,6 +92,62 @@ DIED. FAILED tests 44-45
 	the same Module::Install bug as above. Giving up.
 
 	Maybe investigate within the maint branch?
+
+	Yes! This shows us an interesting fact: under 29163 we see the same
+	failure. Under my /usr/local/perl-5.8.8/ we do not see it. 27048 which
+	is closest to 27040 (which would be 5.8.8 exactly).
+
+	Same failure. So it's very likely a module dependency. Some recent
+	module upgrade probably. my 5.8.8 installation might still have the old
+	one and updating breaks? The successfully testing 5.8.8 says
+
+  CPAN.pm: Going to build B/BT/BTROTT/XML-Feed-0.12.tar.gz
+
+*** Module::AutoInstall version 1.02
+*** Checking for Perl dependencies...
+[Core Features]
+- LWP                      ...loaded. (5.805)
+- HTML::TokeParser         ...loaded. (2.35)
+- Test::More               ...loaded. (0.62)
+- Class::ErrorHandler      ...loaded. (0.01)
+- Feed::Find               ...loaded. (0.06)
+- URI::Fetch               ...loaded. (0.08)
+- XML::RSS                 ...loaded. (1.10 >= 1.01)
+- XML::Atom                ...loaded. (0.23 >= 0.08)
+- DateTime                 ...loaded. (0.35)
+- DateTime::Format::Mail   ...loaded. (0.30)
+- DateTime::Format::W3CDTF ...loaded. (0.04)
+- List::Util               ...loaded. (1.18)
+*** Module::AutoInstall configuration finished.
+Checking whether your kit is complete...
+Looks good
+
+
+	The failing one under 27048 says
+
+*** Module::AutoInstall version 1.020
+*** Checking for Perl dependencies...
+[Core Features]
+- LWP                      ...loaded. (5.805)
+- HTML::TokeParser         ...loaded. (2.350)
+- Test::More               ...loaded. (0.620)
+- Class::ErrorHandler      ...loaded. (0.010)
+- Feed::Find               ...loaded. (0.060)
+- URI::Fetch               ...loaded. (0.080)
+- XML::RSS                 ...loaded. (1.200 >= 1.01)
+- XML::Atom                ...loaded. (0.230 >= 0.08)
+- DateTime                 ...loaded. (0.350)
+- DateTime::Format::Mail   ...loaded. (0.300)
+- DateTime::Format::W3CDTF ...loaded. (0.040)
+- List::Util               ...loaded. (1.180)
+*** Module::AutoInstall configuration finished.
+Checking whether your kit is complete...
+Looks good
+
+	Yes, and when I downgrade XML::RSS to 1.1, then the test failure goes
+	away.
+
+	Bingo. Another case for "goto".
 
 	* I'm conviced now that we need more force flavors and that force shall
 	be limited in scope
