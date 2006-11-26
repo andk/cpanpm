@@ -205,6 +205,7 @@ ALL_PERLS = /usr/bin/perl \
 # not sorted because order matters
 MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
+		Font::TTF \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Plagger Bundle::Phalanx100 \
@@ -250,7 +251,7 @@ README: lib/CPAN.pm Makefile
 chlog-svkstyle :: chlog-svk-short
 
 chlog-svk-short : ChangeLogShort.svk
-ChangeLogShort.svk : 
+ChangeLogShort.svk : Makefile.PL
 	-LC_ALL=$(LC_ALL_noexport) svk log -v //local/cpanpm > $@
 
 chlog-svk-long : ChangeLogLong.svk
