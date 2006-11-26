@@ -2,9 +2,13 @@
 
 	* release 1.88_63
 
-	* bugfix: delete backups during downloading of new index files
+	* address #23315: there were still some uncought exceptions in
+	CPAN::Tarzip that broke megainstalls by Steve Peters; now hopefully all
+	fixed
 
 	* address #22584: do not set VERSION to "undef" when 0
+
+	* bugfix: delete backups during downloading of new index files
 
 	* bugfix: repair all risky ->can with UNIVERSAL::can; thanks to Adriano
 	Rodrigues for the report!
@@ -18,6 +22,13 @@
 	* the prereq check under the Module::Build installer is now performed by
 	reading the _build/prereqs file instead of calling Module::Build
 	directly. (Suggested by Ken Williams)
+
+	* new support for cpanconfig/check_sigs in distroprefs to temporarily
+	switch signature checking on or off. See distroprefs/00.README for
+	details
+
+	* new keyword "goto" in distroprefs to nominate a delegate distro. See
+	distroprefs/00.README for details
 
 2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

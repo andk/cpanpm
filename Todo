@@ -1,10 +1,58 @@
 2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* priorities: bugfixing; SQLite; Kwalify;
+
+	redesigning the force pragma: biggie; see showstopper alert
+
+	distroprefs left over: single ersatzcommand for the test mantras: we
+	currently can change the make command and the arguments at the end but
+	the word test is always on the command line and this looks silly. But
+	maybe not worth a new keyword. But I've also proposed ->{test}{skip}, so
+	the two can be folded perhaps? ---- On the bycicle it occurred to me: we
+	add "commandline" to each of get/make/test/install and then the user can
+	even say "cd .... && cvs up" or "perl -e 1". I like it.
+
+	11-17 lists a few things for documentation.
+
+	restructure the expect keyword family
+
+	TTL stuff
+
+	make up your mind about install_tested.
+
+	* Why did I get no problem with Module::Pluggable before but now do?
+	Hmm. Installing on naked 29367 gives no errors. Installing on
+	module-rich 29376 gives one test failure:
+
+t/02works_taint............NOK 3/5                                           
+#   Failed test 'is deeply'
+#   at t/02works_taint.t line 20.
+#     Structures begin differing at:
+#          $got->[0] = 'Module::Pluggable::Fast'
+#     $expected->[0] = 'Module::Pluggable::Object'
+t/02works_taint............NOK 5/5                                           
+#   Failed test 'is deeply class'
+#   at t/02works_taint.t line 29.
+#     Structures begin differing at:
+#          $got->[0] = 'Module::Pluggable::Fast'
+#     $expected->[0] = 'Module::Pluggable::Object'
+# Looks like you failed 2 tests of 5.
+t/02works_taint............dubious                                           
+        Test returned status 2 (wstat 512, 0x200)
+DIED. FAILED tests 3, 5
+        Failed 2/5 tests, 60.00% okay
+
+	Aha, seems to be a broken test.
+	http://rt.cpan.org/Ticket/Display.html?id=23607
+
+	* Now I have changed Plagger YAML file to answer y to all optional
+	features and now it installs even Spamassassin.
+
 	* 23315 rings a bell now..... eliminated many Tarzip exceptions by
 	protecting with eval rev. 1386
 
 	* Slaven reports bug: there is a yml file in dot directories named
-	"..yml"
+	"..yml" FIXED in svk rev. 1390
 
 2006-11-24  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -298,6 +346,8 @@ CPAN: File::HomeDir loaded ok
 
 	  ->{goto} = "PAJAS/XML-LibXML-1.61003.tar.gz"
 
+	DONE
+
 	* Need a way to specify notest from distroprefs. When we know Strptime
 	doesn't pass a test but we know that the problem is harmless or can be
 	ignored for some reason. I think, I'd like ->{test}{skip} = 1
@@ -450,7 +500,7 @@ system cpandb --update failed: -1 at /home/src/perl/repoperls/installed-perls/pe
 2006-11-14  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: avoid ->can everywhere and replace with UNIVERSAL::can. See
-	Adriano Rodrigues' bugreport.
+	Adriano Rodrigues' bugreport. DONE
 
 	* Randy says:
 
@@ -1848,6 +1898,9 @@ drwxr-xr-x  35 k k     8192 Oct 15 21:19 perl-p-5.8.0@29023/
 	No XML::SAX::ExpatXS
 
 	Finished installing prereqs, all tests except Mysql pass which is OK.
+	(mysql fails for me only because my mysql has no password and you cannot
+	specify on the commandline that it has no passwd. You can only specify A
+	password but it must not be empty)
 
 	make install is OK.
 
