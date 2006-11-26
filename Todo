@@ -1,6 +1,7 @@
 2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* 23315 rings a bell now.....
+	* 23315 rings a bell now..... eliminated many Tarzip exceptions by
+	protecting with eval rev. 1386
 
 	* Slaven reports bug: there is a yml file in dot directories named
 	"..yml"
@@ -36,7 +37,8 @@
 	superforce that works like the force now does and sets all "lower" ones?
 
 	* Todo: distroprefs mechanism is still inefficient in that it scans too
-	often the whole distro_dir.
+	often the whole distro_dir. (But it's super to have that while
+	developing new rules)
 
 2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -178,17 +180,16 @@ talk-me-through-optional-features software.
 
 Or if you prefer a drawing:
 
-     +----------+        +----------------+         +----------+
-     |          |        |    mantras     |         |          |
-     |          |        |perl Makefile.PL|         |          |
-     |   user   |        |make            |         |  module  |
-     |          |        |make test       |         |          |
-     |          |        |make install    |         |          |
-     +----------+  ^^^^  +----------------+  ^^^^   +----------+
-                   ||||                      ||||   
-                    |||                       |||   
-                     ||Gap filled              ||Gap for
-                      |by CPAN.pm               |options software
+     +----------+       +----------------+       +----------+
+     |          |       |    mantras     |       |          |
+     |          |       |perl Makefile.PL|       |          |
+     |   user   |       |make            |       |  module  |
+     |          |       |make test       |       |          |
+     |          |       |make install    |       |          |
+     +----------+  ^^^  +----------------+  ^^^  +----------+
+                   |||                      |||   
+                    ||Gap filled             ||Gap for
+                     |by CPAN.pm              |options software
 
 
 	* hosts statistics: the host with the most unsuccessful downloads is
