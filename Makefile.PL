@@ -12,14 +12,15 @@ my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 use vars qw($VERSION);
 use vars qw(@DD_PREFS @ST_PREFS);
 
-@DD_PREFS = qw(TIMB.DBI
+@DD_PREFS = qw(
                GBARR.libnet
-              );
-
-@ST_PREFS = qw(ILYAZ.Term-ReadLine-Perl
+               ILYAZ.Term-ReadLine-Perl
                INGY.YAML
                RGIERSIG.Expect
                ABW.Template-Toolkit
+              );
+
+@ST_PREFS = qw(
               );
 
 
@@ -564,6 +565,10 @@ ChangeLog : ChangeLogShort.svk
 
 foreign-prefs : dd-prefs st-prefs
 
+dd-prefs ::
+
+st-prefs ::
+
 };
   }
 
@@ -582,7 +587,7 @@ distroprefs/$base.dd :
 st-prefs :: distroprefs/$base.st
 
 distroprefs/$base.st : Makefile
-	\$(PERL) -MYAML=LoadFile -MStorable=nstore -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); nstore(\\\@y, "\$\$x.st")' distroprefs/$base
+	\$(PERL) -MYAML::Syck=LoadFile -MStorable=nstore -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); nstore(\\\@y, "\$\$x.st")' distroprefs/$base
 
 };
   }
