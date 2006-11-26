@@ -196,8 +196,9 @@ Specifies that this distribution shall not be processed at all.
 
 Temporarily override assorted C<CPAN.pm> configuration variables.
 
-Supported are: C<build_requires_install_policy>, C<make>,
-C<make_install_make_command>, C<prefer_installer>, C<test_report>
+Supported are: C<build_requires_install_policy>, C<check_sigs>,
+C<make>, C<make_install_make_command>, C<prefer_installer>,
+C<test_report>
 
 =item pl
 
