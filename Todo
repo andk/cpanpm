@@ -1,3 +1,29 @@
+2006-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* CPAN::SQLite has the dependency on LWP::Simple missing
+
+	* bug:
+
+	force get /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+
+	goes through all of urllist and tries to download
+	ftp://cpan.mirrors.skynet.be/pub/CPAN/authors/id//home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+	etc.
+
+	And after that we cannot work with the
+	/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. directory anymore, somehow
+	the internal state has lost the connection to the real directory.
+
+	* observed a strange behaviour: trying
+
+	test /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+
+	early, immediately after Bundle::CPANxxl. Dependency on SQLite is
+	recognized, recursive dependency on DBI is recognized, but SQLite does
+	not build a SQLite.xsi which seems to indicate that it did not find DBI.
+
+	install helps, so we are still unfriendly to testers?
+
 2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* priorities: bugfixing; SQLite; Kwalify;
