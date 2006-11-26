@@ -1,6 +1,7 @@
 2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* release 1.88_63
+	* release 1.88_63: nothing major, only bugfixes and tiny new features.
+	Still a lot to do for 1.89.
 
 	* address #23315: there were still some uncought exceptions in
 	CPAN::Tarzip that broke megainstalls by Steve Peters; now hopefully all
@@ -17,7 +18,7 @@
 	directory when YAML is not available
 
 	* the failed command now prints its rows sorted by command (as before)
-	and then by time.
+	but within one command by time.
 
 	* the prereq check under the Module::Build installer is now performed by
 	reading the _build/prereqs file instead of calling Module::Build
@@ -25,10 +26,11 @@
 
 	* new support for cpanconfig/check_sigs in distroprefs to temporarily
 	switch signature checking on or off. See distroprefs/00.README for
-	details
+	details and distroprefs/JESSE.HTTP-Server-Simple.yml for an example
 
 	* new keyword "goto" in distroprefs to nominate a delegate distro. See
-	distroprefs/00.README for details
+	distroprefs/00.README for details and distroprefs/ABH.XML-RSS.yml for an
+	example
 
 2006-11-13  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
