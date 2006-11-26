@@ -1341,6 +1341,12 @@ sub disk_usage {
 sub force_clean_cache {
     my($self,$dir) = @_;
     return unless -e $dir;
+    unless (File::Basename::dirname($dir) eq $CPAN::Config->{build_dir}) {
+        $CPAN::Frontend->mywarn("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
+                                "will not remove\n");
+        $CPAN::Frontend->mysleep(5);
+        return;
+    }
     $self->debug("have to rmtree $dir, will free $self->{SIZE}{$dir}")
 	if $CPAN::DEBUG;
     File::Path::rmtree($dir);
@@ -5498,7 +5504,13 @@ EOF
 #-> CPAN::Distribution::store_persistent_state
 sub store_persistent_state {
     my($self) = @_;
-    my $file = sprintf "%s.yml", $self->{build_dir};
+    my $dir = $self->{build_dir};
+    unless (File::Basename::dirname($dir) eq $CPAN::Config->{build_dir}) {
+        $CPAN::Frontend->mywarn("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
+                                "will not store persistent state\n");
+        return;
+    }
+    my $file = sprintf "%s.yml", $dir;
     CPAN->_yaml_dumpfile(
                          $file,
                          {
