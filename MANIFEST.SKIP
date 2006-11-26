@@ -22,6 +22,7 @@
 ^distroprefs/ttt.nodbi.yml
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
+^distroprefs/.*\.dd$
 ^eg/
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm@
