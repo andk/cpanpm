@@ -206,6 +206,7 @@ ALL_PERLS = /usr/bin/perl \
 MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
 		Font::TTF \
+		CDB_File \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Plagger Bundle::Phalanx100 \

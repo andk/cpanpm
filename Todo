@@ -1,3 +1,8 @@
+2006-11-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: if some other processes have deleted my build_dir while I was
+	running, heck maybe I can do that even myself, react accordingly
+
 2006-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* CPAN::SQLite has the dependency on LWP::Simple missing
