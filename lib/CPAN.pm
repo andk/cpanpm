@@ -419,12 +419,13 @@ sub _yaml_dumpfile {
     }
 }
 
-sub _init_sqlite {
+sub _init_sqlite ($) {
     unless ($CPAN::META->has_inst("CPAN::SQLite")
             &&
             $CPAN::META->has_inst("CPAN::SQLite::META")
            ) {
-        $CPAN::Frontend->mydie(qq{SQLite not installed, cannot work with CPAN::SQLite});
+        $CPAN::Frontend->mywarn(qq{SQLite not installed, cannot work with CPAN::SQLite});
+        return;
     }
     $CPAN::SQLite ||= CPAN::SQLite::META->new($CPAN::META);
 }
@@ -969,8 +970,7 @@ sub exists {
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
     $id =~ s/:+/::/g if $class eq "CPAN::Module";
-    if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
-        CPAN::_init_sqlite;
+    if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
         return exists $META->{readonly}{$class}{$id} or
             $CPAN::SQLite->set($class, $id);
     } else {
@@ -2441,8 +2441,7 @@ sub expand_by_method {
                     defined $command ? $command : "UNDEFINED",
                    ) if $CPAN::DEBUG;
 	if (defined $regex) {
-            if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
-                CPAN::_init_sqlite;
+            if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
                 $CPAN::SQLite->search($class, $regex);
             }
             for $obj (
@@ -3041,9 +3040,12 @@ sub _ftp_statistics {
     my $sleep = 1;
     while (!flock $fh, $locktype|LOCK_NB) {
         if ($sleep>3) {
-            die;
+            $CPAN::Frontend->mywarn("Waiting for a read lock on '$file'\n");
         }
-        $CPAN::Frontend->mysleep($sleep++);
+        $CPAN::Frontend->mysleep($sleep);
+        if ($sleep <= 3) {
+            $sleep+=0.33;
+        }
     }
     my $stats = CPAN->_yaml_loadfile($file);
     if ($locktype == LOCK_SH) {
@@ -4186,8 +4188,7 @@ sub reload {
     if ($CPAN::Config->{build_dir_reuse}) {
         $self->reanimate_build_dir;
     }
-    if ($CPAN::Config->{use_sqlite}) { # not yet officially supported
-        CPAN::_init_sqlite;
+    if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
         $CPAN::SQLite->reload(time => $time, force => $force)
             if not $LAST_TIME;
     }
