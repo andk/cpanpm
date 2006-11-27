@@ -1,5 +1,22 @@
 2006-11-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Broken: 30shell.t. Recently something changed this:
+
+# NEXT: m /_NEXISTE_/
+# EXPECT: Contact Author J. Cpantest Hietaniemi(?s:.*?cpan[^>]*?>)
+# GOT: m /_NEXISTE_/
+# Module    _NEXISTE_              (Contact Author J. Cpantest Hietaniemi <nospam@nospam>)
+# Module    _NEXISTE_::_NEXISTE_   (Contact Author J. Cpantest Hietaniemi <nospam@nospam>)
+# 2 items found
+
+	to this:
+
+# Module    _NEXISTE_              (N/A)
+# Module    _NEXISTE_::_NEXISTE_   (N/A)
+# 2 items found
+
+	Who was it? First time I need a binary search on my own code:)
+
 	* Todo: if some other processes have deleted my build_dir while I was
 	running, heck maybe I can do that even myself, react accordingly
 
