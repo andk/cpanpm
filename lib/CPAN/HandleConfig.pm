@@ -632,7 +632,7 @@ sub prefs_lookup {
                         and defined $distro->prefs->{cpanconfig}{$what};
         return $distro->prefs->{cpanconfig}{$what};
     } else {
-        $CPAN::Frontend->mywarn("Warning: $what no yet officially ".
+        $CPAN::Frontend->mywarn("Warning: $what not yet officially ".
                                 "supported for distroprefs, doing a normal lookup");
         return $CPAN::Config->{$what};
     }
