@@ -419,7 +419,7 @@ sub _yaml_dumpfile {
     }
 }
 
-sub _init_sqlite ($) {
+sub _init_sqlite () {
     unless ($CPAN::META->has_inst("CPAN::SQLite")
             &&
             $CPAN::META->has_inst("CPAN::SQLite::META")
