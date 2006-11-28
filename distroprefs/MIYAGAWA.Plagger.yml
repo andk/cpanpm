@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^MIYAGAWA/Plagger-0.7.15"
+  distribution: "^MIYAGAWA/Plagger-"
 pl:
   expect-in-any-order:
     - "Auto-install"
