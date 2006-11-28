@@ -213,7 +213,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $timeout = 20;
+my $timeout = 30;
 
 my @system = (
               $^X,
@@ -883,6 +883,7 @@ __END__
 ########
 #P:ls ANDK
 #E:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy[\d\D]*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump
+#T:45
 ########
 #P:ls ANDK/CPAN*
 #E:Text::Glob\s+loaded\s+ok[\d\D]*?CPAN-Test-Dummy

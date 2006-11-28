@@ -971,11 +971,11 @@ sub exists {
     $id ||= "";
     $id =~ s/:+/::/g if $class eq "CPAN::Module";
     if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
-        return exists $META->{readonly}{$class}{$id} or
-            $CPAN::SQLite->set($class, $id);
+        return (exists $META->{readonly}{$class}{$id} or
+                $CPAN::SQLite->set($class, $id));
     } else {
-        return exists $META->{readonly}{$class}{$id} or
-            exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
+        return (exists $META->{readonly}{$class}{$id} or
+                exists $META->{readwrite}{$class}{$id}); # unsafe meta access, ok
     }
 }
 
