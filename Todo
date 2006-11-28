@@ -1,3 +1,45 @@
+2006-11-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Observing what autoinstall does:
+
+/home/src/perl/repoperls/installed-perls/perl/p6siswe/perl-5.8.0@29397/bin/perl 
+"-Iinc" Makefile.PL --config= --installdeps=File::Find::Rule,0,UNIVERSAL::requir
+e,0.1,Template::Provider::Encoding,0.04,Text::Tags,0,DateTime::Format::Mail,0,Da
+teTime::Format::W3CDTF,0,DateTime::Format::Strptime,0,Cache::Cache,1.04,Module::
+Pluggable::Fast,0,HTML::ResolveLink,0,MIME::Types,1.16,XML::Feed,0.12,XML::Atom,
+0.23,Term::Encoding,0,Encode::Detect,1,HTTP::Cookies::Mozilla,0,XML::Liberal,0.1
+4,XML::RSS::Liberal,0,HTML::TreeBuilder::XPath,0,HTML::FormatText,0,DateTime::Fo
+rmat::Japanese,0,HTML::Scrubber,0,XML::Feed,0.09,XML::Atom,0.20,Net::SMTP::TLS,0
+,Mail::Address,0,HTML::Scrubber,0,Time::Duration::Parse,0,WebService::Bloglines,
+0.11,Cache::FastMmap,0,POE::Component::Client::HTTP,0,Xango,1.04,DateTime::Forma
+t::Epoch,0,WWW::Mixi,0.48,SVN::Core,0,SVN::Client,0,WebService::YouTube,0,WWW::B
+abelfish,0,Text::Emoticon,0,HTML::ResolveLink,0,Email::Address,0,Lingua::ZH::Han
+Detect,0,Text::Language::Guess,0,IP::Country,0,Text::Hatena,0,Hatena::Keyword,0,
+Image::Info,0,Text::Markdown,0,Regexp::Common::profanity_us,0,HTML::ResolveLink,
+0.02,Text::Kakasi,0,Mail::SpamAssassin,0,URI::Find,0,URI::Find,0,Audio::Beep,0,P
+OE::Component::IRC,0,POE::Component::IKC::Client,0,Net::NetSend,0,Text::CSV_PP,0
+,Net::Delicious,0,Mail::IMAPClient,0,Template::Plugin::JavaScript,0,Net::Movable
+Type,0,PDF::FromHTML,0,Palm::PalmDoc,0,Text::WrapI18N,0,Data::Serializer,0,Data:
+:ICal,0,Search::Estraier,0,File::Grep,0,KinoSearch,0,DBIx::Class::Schema,0,XML::
+FOAF,0,Config::INI::Simple,0,HTML::TreeBuilder::XPath,0,Lingua::EN::Summarize,0,
+Text::Original,0,Lingua::JA::Summarize::Extract,0
+CPAN: File::HomeDir loaded ok (v0.58)
+
+	Yes, this goes really into recursion. Since I have "reuse" turned on,
+	the damage is limited but if I had it not on, it would be a lot of
+	expensive noops.
+
+	The question is simply: how can I prevent autoinstall from going into
+	recursion? I want it to do its detective work and return it to me. Ahhh,
+	it does so! It writes them in traditional style into the Makefile. All I
+	need to prevent is that this target (the "installdeps" target) is run
+	during 'make'. Or that it is being run but does nothing. Or whatever
+	that does not repeat what I have already done.
+
+	* Observing that expect-in-any-order is much slower than expect (of
+	course) and that one could safe minutes for Plagger if a timeout were
+	set to 0.1 or so.
+
 2006-11-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Broken: 30shell.t. Recently something changed this:
@@ -285,9 +327,9 @@ Looks good
 	* I'm conviced now that we need more force flavors and that force shall
 	be limited in scope
 
-	force get shall re-fetch
-	force make shall not re-fetch but run make again
-	force test shall not make again but try to test again
+	force get     shall re-fetch
+	force make    shall not re-fetch   but run make again
+	force test    shall not make again but try to test again
 	force install shall not test again but try to install
 
 2006-11-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
@@ -351,7 +393,7 @@ schlicht und einfach ein einziges Skript aufzurufen. --> Todo
 
 	* After all the prereq hassles with XML::Atom I finally could install it
 	for perl 20002 after many manual interventions but without overrule
-	(except when we call the 1.61003 decision as an overrule)
+	(except when we call the XML::LibXML=1.61003 decision as an overrule)
 
 	After the same hassles under 29332 I see the test failure
 
