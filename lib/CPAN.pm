@@ -3103,6 +3103,7 @@ sub _recommend_url_for {
         my $history = $fullstats->{history} || [];
         while (my $last = pop @$history) {
             last if $last->{end} - time > 3600; # only young results are interesting
+            next unless $last->{file}; # dirname of nothing dies!
             next unless $file eq File::Basename::dirname($last->{file});
             return $last->{thesiteurl};
         }

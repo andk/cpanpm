@@ -17,6 +17,41 @@
 
 	Who was it? First time I need a binary search on my own code:)
 
+	Standing at HEAD: fail as above
+
+	Switching back to 1310: fails with Looks like you planned 227 tests but
+	only ran 163.
+
+	Running forward with a quick obvious fix: Looks like you planned 227
+	tests but only ran 159.
+
+	Switching to 1300: Looks like you planned 227 tests but only ran 163.
+
+	1290: completely broken
+	To 1291: Looks like you planned 227 tests but only ran 159.
+
+	To 1281: All tests successful
+
+	1286: ok
+
+	88 ok
+
+	89 ok
+
+	91 ok ???
+
+	1300 ok ???
+
+	1310 ok ???
+
+	Obviously a timing related bug. The ls command seems expensive. Maybe
+	perl is slower or the sqlite patch made CPAN.pm slower. Setting the
+	default timeout to 30 and ripping out the sqlite patch brings us test ok
+	again. Putting back in the sqlite stuff with the small obvious fix in
+	the exists method brings test ok again. Setting timout back to 20 again
+	and just increasing the timout for the 'ls ANDK' command to 30 brings
+	test ok again. All of the successes in the SVN directory.
+
 	* Todo: if some other processes have deleted my build_dir while I was
 	running, heck maybe I can do that even myself, react accordingly
 
