@@ -11,7 +11,7 @@
 
 	* Batch jobs without a lock should not be allowed to cleanup the cache
 	directory. And then document the lock policy and that there are lockless
-	batch runs.
+	batch runs. DONE
 
 2006-11-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -22,7 +22,15 @@
 
 	Yes. On the second try DBD::SQLite builds perfectly well. So one must
 	make sure that they are installed in this order. Maybe this is normal
-	for DBDs? I have never noticed this before. Hrm.
+	for DBDs? I have never noticed this before. Hrm. This would be a case
+	for re-running perl Makefile.PL after building the prereqs.
+
+	If we had 'commandline', we would write
+
+make:
+	commandline: "make; $PERL Makefile.PL; make"
+
+	Or something like that. Will test as soon as we have 'commandline'.
 
 	* Observing what autoinstall does:
 
