@@ -1256,6 +1256,7 @@ sub cachesize {
 #-> sub CPAN::CacheMgr::tidyup ;
 sub tidyup {
   my($self) = @_;
+  return unless $CPAN::META->{LOCK};
   return unless -d $self->{ID};
   while ($self->{DU} > $self->{'MAX'} ) {
     my($toremove) = shift @{$self->{FIFO}};
@@ -8996,17 +8997,13 @@ running shell session.
 
 =item Lockfile
 
-Interactive sessions maintain a lockfile, per default C<~/.cpan/.lock>
-(but the directory can be configured via the C<cpan_home> config
-variable). The shell is a bit picky if you try to start another CPAN
-session. It dies immediately if there is a lockfile and the lock seems
-to belong to a running process. In case you want to run a second shell
-session, it is probably safest to maintain another directory, say
-C<~/.cpan-for-X/> and a C<~/.cpan-for-X/CPAN/MyConfig.pm> that
-contains the configuration options. Then you can start the second
-shell with
+Interactive sessions maintain a lockfile, per default C<~/.cpan/.lock>.
+Batch jobs can run without a lockfile and do not disturb each other.
 
-  perl -I ~/.cpan-for-X -MCPAN::MyConfig -MCPAN -e shell
+The shell offers to run in I<degraded mode> when another process is
+holding the lockfile. This is an experimental feature that is not yet
+tested very well. This second shell then does not write the history
+file, does not use the metadata file and has a different prompt.
 
 =item Signals
 
