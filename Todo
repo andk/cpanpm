@@ -78,7 +78,7 @@ CPAN: File::HomeDir loaded ok (v0.58)
 
 # NEXT: m /_NEXISTE_/
 # EXPECT: Contact Author J. Cpantest Hietaniemi(?s:.*?cpan[^>]*?>)
-# GOT: m /_NEXISTE_/
+# GOT: m /_NEXISTE_/
 # Module    _NEXISTE_              (Contact Author J. Cpantest Hietaniemi <nospam@nospam>)
 # Module    _NEXISTE_::_NEXISTE_   (Contact Author J. Cpantest Hietaniemi <nospam@nospam>)
 # 2 items found
