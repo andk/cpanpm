@@ -1,6 +1,6 @@
 --- 
 match:
-  module: "^Module::Install$"
+  distribution: "^AUDREYT/Module-Install-0.64"
 pl:
   env:
     PERL_AUTOINSTALL: --skip
