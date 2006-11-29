@@ -7,3 +7,5 @@ pl:
 make:
   env:
     PERL_AUTOINSTALL: --skip    
+patches:
+  - "ANDK/patches/Module-Install-0.64-ANDK-01.patch"
