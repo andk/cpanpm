@@ -44,6 +44,7 @@ distroprefs/JESSE.Data-ICal.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty.yml
 distroprefs/JJORE.Carp-Clan.yml
+distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
@@ -70,6 +71,7 @@ distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
+distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
 inc/Test/More.pm

@@ -193,16 +193,13 @@ DESCRIPTION
       shell session.
 
     Lockfile
-      Interactive sessions maintain a lockfile, per default "~/.cpan/.lock"
-      (but the directory can be configured via the "cpan_home" config
-      variable). The shell is a bit picky if you try to start another CPAN
-      session. It dies immediately if there is a lockfile and the lock seems
-      to belong to a running process. In case you want to run a second shell
-      session, it is probably safest to maintain another directory, say
-      "~/.cpan-for-X/" and a "~/.cpan-for-X/CPAN/MyConfig.pm" that contains
-      the configuration options. Then you can start the second shell with
+      Interactive sessions maintain a lockfile, per default "~/.cpan/.lock".
+      Batch jobs can run without a lockfile and do not disturb each other.
 
-        perl -I ~/.cpan-for-X -MCPAN::MyConfig -MCPAN -e shell
+      The shell offers to run in *degraded mode* when another process is
+      holding the lockfile. This is an experimental feature that is not yet
+      tested very well. This second shell then does not write the history
+      file, does not use the metadata file and has a different prompt.
 
     Signals
       CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
@@ -1214,6 +1211,8 @@ EXPORT
 ENVIRONMENT
     When the CPAN shell enters a subshell via the look command, it sets the
     environment CPAN_SHELL_LEVEL to 1 or increments it if it is already set.
+
+    When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING.
 
     When the config variable ftp_passive is set, all downloads will be run
     with the environment variable FTP_PASSIVE set to this value. This is in
