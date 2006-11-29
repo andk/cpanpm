@@ -18,13 +18,13 @@
 	FTPstats has no associated file
 
 	* the failed command now prints its rows sorted by command (as before)
-	but within one command by time.
+	but within each command by time.
 
 	* the prereq check under the Module::Build installer is now performed by
 	reading the _build/prereqs file instead of calling Module::Build
 	directly. (Suggested by Ken Williams)
 
-	* cleanup of the chache directory is now disabled for batch jobs;
+	* cleanup of the cache directory is now disabled for batch jobs;
 	documentation is updated about the lock file the shell is holding
 
 	* now setting the environment variable PERL5_CPAN_IS_RUNNING; tentative
