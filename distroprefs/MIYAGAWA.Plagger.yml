@@ -1,6 +1,9 @@
 --- 
+comment: "expect-in-any-order is too slow but works; expect alone reaches default timeout"
 match:
   distribution: "^MIYAGAWA/Plagger-"
+patches:
+  - "/home/k/sources/CPAN/SVK/trunk/patches/Module-AutoInstall.patch"
 pl:
   expect-in-any-order:
     - "Auto-install"

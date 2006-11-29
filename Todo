@@ -1,4 +1,28 @@
+2006-11-29  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* DBD::mysql: I'm sure there is just a defined() somewhere missing in
+	the Makefile.PL
+
+	* Need to patch Module::AutoInstall and test antirecursion with an
+	environment variable. Errr, I need to patch the inc/ directory of
+	Plagger then. Done and patch for now in the patches directory.
+
+	Remember that there's also a rant in 00.README
+
+	* Batch jobs without a lock should not be allowed to cleanup the cache
+	directory. And then document the lock policy and that there are lockless
+	batch runs.
+
 2006-11-28  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* DBD::SQLite again: With bleadperl 29398 and current CPAN.pm I tried to
+	install /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. but again it failed
+	because DBD::SQLite did not write its SQLite.xsi file. I fear there's
+	something being (not) done in the Makefile.PL instead of during make.
+
+	Yes. On the second try DBD::SQLite builds perfectly well. So one must
+	make sure that they are installed in this order. Maybe this is normal
+	for DBDs? I have never noticed this before. Hrm.
 
 	* Observing what autoinstall does:
 

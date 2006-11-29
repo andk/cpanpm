@@ -41,6 +41,7 @@ BEGIN {
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
+$ENV{PERL5_CPAN_IS_RUNNING}=1;
 
 END { $CPAN::End++; &cleanup; }
 
@@ -10173,6 +10174,8 @@ one-liners.
 When the CPAN shell enters a subshell via the look command, it sets
 the environment CPAN_SHELL_LEVEL to 1 or increments it if it is
 already set.
+
+When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING.
 
 When the config variable ftp_passive is set, all downloads will be run
 with the environment variable FTP_PASSIVE set to this value. This is
