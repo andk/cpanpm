@@ -1360,7 +1360,8 @@ sub disk_usage {
 sub force_clean_cache {
     my($self,$dir) = @_;
     return unless -e $dir;
-    unless (File::Basename::dirname($dir) eq $CPAN::Config->{build_dir}) {
+    unless (File::Spec->canonpath(File::Basename::dirname($dir))
+	    eq File::Spec->canonpath($CPAN::Config->{build_dir})) {
         $CPAN::Frontend->mywarn("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
                                 "will not remove\n");
         $CPAN::Frontend->mysleep(5);
@@ -5535,7 +5536,8 @@ EOF
 sub store_persistent_state {
     my($self) = @_;
     my $dir = $self->{build_dir};
-    unless (File::Basename::dirname($dir) eq $CPAN::Config->{build_dir}) {
+    unless (File::Spec->canonpath(File::Basename::dirname($dir))
+	    eq File::Spec->canonpath($CPAN::Config->{build_dir})) {
         $CPAN::Frontend->mywarn("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
                                 "will not store persistent state\n");
         return;
