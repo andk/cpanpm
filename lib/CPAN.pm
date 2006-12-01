@@ -6800,6 +6800,7 @@ sub _find_prefs {
                 # $DB::single=1;
               ELEMENT: for my $y (0..$#distropref) {
                     my $distropref = $distropref[$y];
+                    $self->_validate_distropref($distropref,$abs,$y);
                     my $match = $distropref->{match};
                     unless ($match) {
                         CPAN->debug("no 'match' in abs[$abs], skipping");
@@ -6845,6 +6846,98 @@ sub _find_prefs {
         }
     }
     return;
+}
+
+{
+    my %vcache = ();
+
+    my $schema_yaml = <<'YAML';
+--- 
+type: map
+mapping:
+  comment:
+    type: text
+  match:
+    type: map
+    mapping:
+      distribution:
+        type: text
+      module:
+        type: text
+      perl:
+        type: text
+  cpan_config:
+    type: map
+    mapping:
+      prefer_installer:
+        type: text
+        enum:
+          - EUMM
+          - MB
+  install:
+    &args_env_expect
+    type: map
+    mapping:
+      args:
+        type: seq
+        sequence:
+          - type: text
+      env:
+        type: map
+        mapping:
+          =:
+            type: text
+      expect:
+        type: seq
+        sequence:
+          - type: text
+  make: *args_env_expect
+  pl:   *args_env_expect
+  test: *args_env_expect
+  patches:
+    type: seq
+    sequence:
+      - type: text
+  disabled:
+    type: int
+    enum:
+      - 0
+      - 1
+  goto:
+    type: text
+  cpanconfig:
+    type: map
+    mapping:
+      =:
+        type: text
+YAML
+
+    my $schema_data;
+
+    # CPAN::Distribution::_validate_distropref
+    sub _validate_distropref {
+        my($self,$distropref,$abs,$y) = @_;
+        my $yaml_module = CPAN->_yaml_module;
+        if (
+            $CPAN::META->has_inst($yaml_module)
+            &&
+            $CPAN::META->has_inst("Kwalify")
+           ) {
+            my $load = UNIVERSAL::can($yaml_module,"Load");
+            $schema_data = $load->($schema_yaml);
+        }
+        if ($schema_data) {
+            my $mtime = (stat $abs)[9];
+            for my $k (keys %{$vcache{$abs}}) {
+                delete $vcache{$abs}{$k} unless $k eq $mtime;
+            }
+            return if $vcache{$abs}{$mtime}{$y}++;
+            eval { Kwalify::validate($schema_data, $distropref) };
+            if ($@) {
+                $CPAN::Frontend->mywarn("validation of distropref '$abs'[$y] failed: $@");
+            }
+        }
+    }
 }
 
 # CPAN::Distribution::prefs
