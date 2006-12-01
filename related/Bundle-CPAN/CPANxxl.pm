@@ -1,7 +1,7 @@
 package Bundle::CPANxxl;
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.2';
+$VERSION = '0.3';
 
 1;
 
@@ -31,6 +31,8 @@ Module::Signature
 
 CPAN::Reporter
 
+Kwalify
+
 =head1 DESCRIPTION
 
 This bundle includes Bundle::CPAN plus what I consider indispensible
@@ -38,6 +40,9 @@ but not everybody can compile, namely Expect and Module::Signature.
 
 I've taken the liberty to also add YAML::Syck because of its speed
 advantage.
+
+Kwalify verified that the files in the prefs_dir/ directory are
+written according to the specs.
 
 Last not least every full installation of CPAN needs the
 CPAN::Reporter. I put it into this xxl bundle because it may be a bit

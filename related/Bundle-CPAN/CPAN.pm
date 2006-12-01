@@ -1,7 +1,7 @@
 package Bundle::CPAN;
 use strict;
 use vars qw($VERSION);
-$VERSION = '1.854'; # use 3 digits to minimize confusion with the
+$VERSION = '1.855'; # use 3 digits to minimize confusion with the
                     # other CPAN.pm
 
 1;
