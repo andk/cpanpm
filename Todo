@@ -1,5 +1,7 @@
 2006-12-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Release the two new bundles
+
 	* XML::Twig's tests fail and when looking around one eventually finds
 	http://xmltwig.com/ where there is a 3.27 version. No repository access.
 	Looks like another case for 'we want "get URL"'. Or theoretically
