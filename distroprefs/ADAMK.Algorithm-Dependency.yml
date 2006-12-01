@@ -1,8 +1,12 @@
 ---
 match:
-  distribution: "^JESSE/Data-ICal-"
-pl: 
-  expect-in-any-order:
+  distribution: "^ADAMK/Algorithm-Dependency-"
+pl:
+  expect:
+    - "Auto-install"
+    - "y\n"
+    - "Auto-install"
+    - "y\n"
     - "Auto-install"
     - "y\n"
     - "Auto-install"

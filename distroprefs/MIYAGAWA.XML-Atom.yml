@@ -18,7 +18,7 @@ patches:
     - "ANDK/patches/XML-Atom-0.23-SMPETERS-01.patch.gz"
 --- 
 match:
-  distribution: "^MIYAGAWA/XML-Atom-0.24"
+  distribution: "^MIYAGAWA/XML-Atom-\d"
 pl: 
   expect: 
     - "Auto-install"
