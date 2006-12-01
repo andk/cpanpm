@@ -7619,6 +7619,7 @@ sub clean {
 sub goto {
     my($self,$goto) = @_;
     my($method) = (caller(1))[3];
+    $goto = $self->normalize($goto);
     CPAN->instance("CPAN::Distribution",$goto)->$method;
 }
 

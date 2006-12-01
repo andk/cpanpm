@@ -1,5 +1,14 @@
 2006-12-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug: while trying a goto in KCLARK.SQL-Translator.yml that should
+	point to JROBINSON/SQL-Translator-0.08_04.tar.gz nothing works as
+	expected. CPAN tries to download pub/CPAN/authors/id/JROBINSON (without
+	the J/JR/). All other 4 gotos still seem to work.
+
+	Is this because it is from today or because JR has 9 letters?
+
+	Testing JROBINSON/SQL-Translator-0.08_04.tar.gz directly is no problem.
+	
 	* Release the two new bundles
 
 	* XML::Twig's tests fail and when looking around one eventually finds
@@ -198,32 +207,6 @@ make:
 	dialogs such that one has a chance to learn their names over time.
 
 	* Would be nice: 'o conf /check/' to list all variables matching a regex.
-
-	* SQL-Translator-0.07 has a broken signature
-	(reported 9 months ago at
-	https://rt.cpan.org/Ticket/Display.html?id=16852). When trying to
-	install CLACO/Handel-0.99_15 I see this warning running by quite often
-	instead of only once and testing of it again and again. And the same for
-	Email-Valid and DBIx-Class-Validation.
-
-	Why?
-
-  CLACO/Handel-0.99_15.tar.gz
-  /usr/bin/make test -- NOT OK
-Failed during this command:
-  LYOKATO/FormValidator-Simple-0.19.tar.gz     : make_test NO
-  MIYAGAWA/Email-Valid-Loose-0.05.tar.gz       : make_test NO
-  CLACO/DBIx-Class-Validation-0.01001.tar.gz   : make_test NO
-  DROLSKY/DateTime-Format-MySQL-0.04.tar.gz    : make_test NO
-  RICKM/DateTime-Format-Strptime-1.0700.tar.gz : make_test NO
-  CLACO/DBIx-Class-UUIDColumns-0.01000.tar.gz  : make_test NO one dependency not OK (SQL::Translator)
-  RJBS/Email-Valid-0.176.tar.gz                : make_test NO
-  DROLSKY/DateTime-Format-Builder-0.7807.tar.gz: make_test NO
-  KCLARK/SQL-Translator-0.07.tar.gz            : signature_verify NO
-  CLACO/Handel-0.99_15.tar.gz                  : make_test NO
-
-	Besides the need to find out why the tests are repeated so often, it may
-	be a good idea to support check_sigs via distroprefs.
 
 	* I realize that it's quite pointless to try downloading with "fancy"
 	when there is Net::FTP installed. OTOH, *sometimes* it may be clueful. I
@@ -497,6 +480,34 @@ need the middle man.
 	* hr ================ no todos below this line ================ /hr
 
 	* hr ================ no todos below this line ================ /hr
+
+	* SQL-Translator-0.07 has a broken signature
+	(reported 9 months ago at
+	https://rt.cpan.org/Ticket/Display.html?id=16852). When trying to
+	install CLACO/Handel-0.99_15 I see this warning running by quite often
+	instead of only once and testing of it again and again. And the same for
+	Email-Valid and DBIx-Class-Validation.
+
+	Why?
+
+  CLACO/Handel-0.99_15.tar.gz
+  /usr/bin/make test -- NOT OK
+Failed during this command:
+  LYOKATO/FormValidator-Simple-0.19.tar.gz     : make_test NO
+  MIYAGAWA/Email-Valid-Loose-0.05.tar.gz       : make_test NO
+  CLACO/DBIx-Class-Validation-0.01001.tar.gz   : make_test NO
+  DROLSKY/DateTime-Format-MySQL-0.04.tar.gz    : make_test NO
+  RICKM/DateTime-Format-Strptime-1.0700.tar.gz : make_test NO
+  CLACO/DBIx-Class-UUIDColumns-0.01000.tar.gz  : make_test NO one dependency not OK (SQL::Translator)
+  RJBS/Email-Valid-0.176.tar.gz                : make_test NO
+  DROLSKY/DateTime-Format-Builder-0.7807.tar.gz: make_test NO
+  KCLARK/SQL-Translator-0.07.tar.gz            : signature_verify NO
+  CLACO/Handel-0.99_15.tar.gz                  : make_test NO
+
+	Besides the need to find out why the tests are repeated so often, it may
+	be a good idea to support check_sigs via distroprefs.
+
+	DONE
 
 	* receiving file list ...
 14484 files to consider
