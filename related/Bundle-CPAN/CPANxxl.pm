@@ -41,7 +41,7 @@ but not everybody can compile, namely Expect and Module::Signature.
 I've taken the liberty to also add YAML::Syck because of its speed
 advantage.
 
-Kwalify verified that the files in the prefs_dir/ directory are
+Kwalify verifies that the files in the prefs_dir/ directory are
 written according to the specs.
 
 Last not least every full installation of CPAN needs the
