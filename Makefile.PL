@@ -205,6 +205,10 @@ ALL_PERLS = /usr/bin/perl \
 # not sorted because order matters
 MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
+		CPAN::DistnameInfo \
+		DBI \
+		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
+		Kwalify \
 		Font::TTF \
 		CDB_File \
 		Math::BigInt::GMP \
@@ -226,10 +230,7 @@ MEGA_COLLECTION = Expect \
 		SVN::Notify::Config \
 		SVN::Notify::Mirror \
 		Term::ReadLine::Gnu \
-		CPAN::DistnameInfo \
 		Event::Lib \
-		Kwalify \
-		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
 
 }
 }
@@ -294,7 +295,7 @@ run :
 	$(PERL) -Ilib -MCPAN -eshell
 
 run-with-sqlite :
-	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; $$CPAN::Config->{sqlite_dbname}="/home/k/.cpan/cpandb-sqlite"; shell'
+	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; $$CPAN::Config->{sqlite_dbname}="cpandb-sqlite"; shell'
 
 testrun_very_offline : rm_mirrored_by run_emu_offline
 

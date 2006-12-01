@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_63';
+$CPAN::VERSION = '1.88_64';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -4278,8 +4278,9 @@ sub reload_x {
 #-> sub CPAN::Index::rd_authindex ;
 sub rd_authindex {
     my($cl, $index_target) = @_;
-    my @lines;
     return unless defined $index_target;
+    return if $CPAN::Config->{use_sqlite};
+    my @lines;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     local(*FH);
     tie *FH, 'CPAN::Tarzip', $index_target;
@@ -4319,6 +4320,7 @@ sub userid {
 sub rd_modpacks {
     my($self, $index_target) = @_;
     return unless defined $index_target;
+    return if $CPAN::Config->{use_sqlite};
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -4531,6 +4533,7 @@ happen.\a
 sub rd_modlist {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
+    return if $CPAN::Config->{use_sqlite};
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -4582,6 +4585,7 @@ sub rd_modlist {
 sub write_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
+    return if $CPAN::Config->{use_sqlite};
     return unless $CPAN::META->has_usable("Storable");
     my $cache;
     foreach my $k (qw(CPAN::Bundle CPAN::Author CPAN::Module
@@ -4601,6 +4605,7 @@ sub write_metadata_cache {
 sub read_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
+    return if $CPAN::Config->{use_sqlite};
     return unless $CPAN::META->has_usable("Storable");
     my $metadata_file = File::Spec->catfile($CPAN::Config->{cpan_home},"Metadata");
     return unless -r $metadata_file and -f $metadata_file;
