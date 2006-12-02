@@ -213,7 +213,9 @@ MEGA_COLLECTION = Expect \
 		CDB_File \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
-		Plagger Bundle::Phalanx100 \
+		Data::Dump \
+		Plagger \
+		Bundle::Phalanx100 \
 		Jifty \
 		Coro \
 		Getopt::Euclid \
