@@ -7209,7 +7209,8 @@ sub prereq_pm {
         $breq =  $yaml->{build_requires} || {};
         undef $req unless ref $req eq "HASH" && %$req;
         if ($req) {
-            if ($yaml->{generated_by} =~ /ExtUtils::MakeMaker version ([\d\._]+)/) {
+            if ($yaml->{generated_by}
+                $yaml->{generated_by} =~ /ExtUtils::MakeMaker version ([\d\._]+)/) {
                 my $eummv = do { local $^W = 0; $1+0; };
                 if ($eummv < 6.2501) {
                     # thanks to Slaven for digging that out: MM before
