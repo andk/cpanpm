@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "DMAKI/DateTime-(Util-Astro-0.06|Event-Lunar-0.04)"
+cpanconfig:
+  check_sigs: 0

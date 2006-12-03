@@ -1,3 +1,13 @@
+2006-12-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46
+
+	Module Morphing. Module Taming. Module Killing. Talkback. cpan DOT
+	(bring your own)! Persistent or Permanent Shell? Upgrade. Test Now,
+	Install Later. Configure Your Pick. Color. Kovaric.
+
+	Wasn't that Kolaric? Oops. My memory betrayed me.
+
 2006-12-01  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Bug: while trying a goto in KCLARK.SQL-Translator.yml that should
