@@ -1,6 +1,33 @@
 2006-12-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* find a way to treat kwalify such that the schema is documented and can
+	be accessed directly. And such that not only YAML::Syck can read it.
+	Current solution confuses YAML.
+
+	After some rewriting of CPAN::Kwalify I'm stuck with this:
+
+% /home/src/perl/repoperls/installed-perls/*/*/perl-*@29438/bin/perl -e '
+use Kwalify; use File::Slurp qw(slurp);
+my($schema,$data) = map { eval slurp $_ } @ARGV;    
+Kwalify::validate( $schema, $data );
+' ./lib/CPAN/Kwalify/distroprefs.dd ./distroprefs/RGIERSIG.Expect.dd  
+[/make] Expected subschema (a hash)
+
+	While this succeeds:
+
+% /home/src/perl/repoperls/installed-perls/*/*/perl-*@29438/bin/perl -e '
+use Kwalify; use YAML::Syck;
+my($schema,$data) = map { YAML::Syck::LoadFile($_) } @ARGV;
+Kwalify::validate( $schema, $data );
+' ./lib/CPAN/Kwalify/distroprefs.yml ./distroprefs/RGIERSIG.Expect.yml
+
+	The solution is to use $Purity=1 for Data::Dumper transformations as
+	described in the Data::Dumper manpage. Thanks to Slaven for digging it
+	out for me.
+	
 	* priorities today: force, expect, commandline
+
+	backtrack: kwalify in separate package
 
 	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46
 
@@ -94,8 +121,8 @@ make:
 	Without the force it works nicely and says:
 
 	Is already unwrapped into directory /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
-
 	
+	FIXED in SVK rev. 1487
 
 2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

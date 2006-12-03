@@ -13,11 +13,12 @@ use vars qw($VERSION);
 use vars qw(@DD_PREFS @ST_PREFS);
 
 @DD_PREFS = qw(
-               GBARR.libnet
-               ILYAZ.Term-ReadLine-Perl
-               INGY.YAML
-               RGIERSIG.Expect
-               ABW.Template-Toolkit
+               distroprefs/GBARR.libnet
+               distroprefs/ILYAZ.Term-ReadLine-Perl
+               distroprefs/INGY.YAML
+               distroprefs/RGIERSIG.Expect
+               distroprefs/ABW.Template-Toolkit
+               lib/CPAN/Kwalify/distroprefs
               );
 
 @ST_PREFS = qw(
@@ -579,20 +580,21 @@ st-prefs ::
 
   for my $base (@main::DD_PREFS) {
     push @m, qq{
-dd-prefs :: distroprefs/$base.dd
+dd-prefs :: $base.dd
 
-distroprefs/$base.dd :
-	ysh < distroprefs/$base.yml > distroprefs/$base.dd
+$base.dd : Makefile
+	echo "SKIPPING ysh -MYAML::Syck < $base.yml > $base.dd.new && mv $base.dd.new $base.dd"
+	\$(PERL) -MYAML::Syck=LoadFile -MData::Dumper -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); print Data::Dumper->new(\\\@y)->Indent(1)->Useqq(1)->Purity(1)->Dump' $base > $base.dd.new && mv $base.dd.new $base.dd
 
 };
   }
 
   for my $base (@main::ST_PREFS) {
     push @m, qq{
-st-prefs :: distroprefs/$base.st
+st-prefs :: $base.st
 
-distroprefs/$base.st : Makefile
-	\$(PERL) -MYAML::Syck=LoadFile -MStorable=nstore -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); nstore(\\\@y, "\$\$x.st")' distroprefs/$base
+$base.st : Makefile
+	\$(PERL) -MYAML::Syck=LoadFile -MStorable=nstore -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); nstore(\\\@y, "\$\$x.st")' $base
 
 };
   }

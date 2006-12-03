@@ -333,7 +333,7 @@ sub defaults {
     for my $config (qw(CPAN/MyConfig.pm CPAN/Config.pm)) {
         if ($INC{$config}) {
             CPAN->debug("INC{'$config'}[$INC{$config}]") if $CPAN::DEBUG;
-            CPAN::Shell->reload_this($config,{force => 1});
+            CPAN::Shell->_reload_this($config,{reloforce => 1});
             $CPAN::Frontend->myprint("'$INC{$config}' reread\n");
             last;
         }

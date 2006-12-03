@@ -6,6 +6,7 @@ cpan_distroprefs_schema.yml
 distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.yml
+distroprefs/ADAMK.Algorithm-Dependency.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
@@ -26,6 +27,7 @@ distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
+distroprefs/DMAKI.DateTime-Util-Astro.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/FDALY.Test-Deep.yml
@@ -48,6 +50,7 @@ distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
+distroprefs/KCLARK.SQL-Translator.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LEAKIN.File-Rsync.yml
@@ -61,11 +64,13 @@ distroprefs/MLEHMANN.Coro.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
+distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
+distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWERN.UNIVERSAL-require.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
@@ -80,6 +85,9 @@ lib/CPAN/Admin.pm
 lib/CPAN/Debug.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/HandleConfig.pm
+lib/CPAN/Kwalify.pm
+lib/CPAN/Kwalify/distroprefs.dd
+lib/CPAN/Kwalify/distroprefs.yml
 lib/CPAN/Nox.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm

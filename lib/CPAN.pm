@@ -94,6 +94,7 @@ use vars qw(
              cvs_import
              expand
              force
+             fforce
              get
              install
              install_tested
@@ -268,7 +269,7 @@ ReadLine support %s
                 require Carp;
                 Carp::cluck($@);
             }
-            if ($command =~ /^(make|test|install|force|notest|clean|report|upgrade)$/) {
+            if ($command =~ /^(make|test|install|ff?orce|notest|clean|report|upgrade)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
             soft_chdir_with_alternatives(\@cwd);
@@ -459,6 +460,7 @@ use strict;
                                     cvs_import
                                     dump
                                     force
+                                    fforce
                                     hosts
                                     install
                                     install_tested
@@ -1266,7 +1268,7 @@ sub tidyup {
 				     $self->{DU}, $self->{'MAX'})
 			    );
     return if $CPAN::Signal;
-    $self->force_clean_cache($toremove);
+    $self->_clean_cache($toremove);
     return if $CPAN::Signal;
   }
 }
@@ -1356,8 +1358,8 @@ sub disk_usage {
     $self->{DU};
 }
 
-#-> sub CPAN::CacheMgr::force_clean_cache ;
-sub force_clean_cache {
+#-> sub CPAN::CacheMgr::_clean_cache ;
+sub _clean_cache {
     my($self,$dir) = @_;
     return unless -e $dir;
     unless (File::Spec->canonpath(File::Basename::dirname($dir))
@@ -1823,13 +1825,14 @@ sub reload {
         my $failed;
         my @relo = (
                     "CPAN.pm",
-                    "CPAN/HandleConfig.pm",
-                    "CPAN/FirstTime.pm",
-                    "CPAN/Tarzip.pm",
                     "CPAN/Debug.pm",
-                    "CPAN/Version.pm",
+                    "CPAN/FirstTime.pm",
+                    "CPAN/HandleConfig.pm",
+                    "CPAN/Kwalify.pm",
                     "CPAN/Queue.pm",
                     "CPAN/Reporter.pm",
+                    "CPAN/Tarzip.pm",
+                    "CPAN/Version.pm",
                    );
       MFILE: for my $f (@relo) {
             next unless exists $INC{$f};
@@ -1838,7 +1841,7 @@ sub reload {
             $p =~ s|/|::|g;
             $CPAN::Frontend->myprint("($p");
             local($SIG{__WARN__}) = paintdots_onreload(\$redef);
-            $self->reload_this($f) or $failed++;
+            $self->_reload_this($f) or $failed++;
             my $v = eval "$p\::->VERSION";
             $CPAN::Frontend->myprint("v$v)");
         }
@@ -1857,8 +1860,8 @@ index    re-reads the index files\n});
 }
 
 # reload means only load again what we have loaded before
-#-> sub CPAN::Shell::reload_this ;
-sub reload_this {
+#-> sub CPAN::Shell::_reload_this ;
+sub _reload_this {
     my($self,$f,$args) = @_;
     CPAN->debug("f[$f]") if $CPAN::DEBUG;
     return 1 unless $INC{$f}; # we never loaded this, so we do not
@@ -1892,7 +1895,7 @@ sub reload_this {
     $reload->{$f} ||= $^T;
     my $must_reload = $mtime > $reload->{$f};
     $args ||= {};
-    $must_reload ||= $args->{force};
+    $must_reload ||= $args->{reloforce};
     if ($must_reload) {
         my $fh = FileHandle->new($file) or
             $CPAN::Frontend->mydie("Could not open $file: $!");
@@ -1964,7 +1967,7 @@ sub recompile {
                             # don't do it twice
 	$cpan_file = $module->cpan_file;
 	my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
-	$pack->force;
+	$pack->force; # 
 	$dist{$cpan_file}++;
     }
     for $cpan_file (sort keys %dist) {
@@ -6724,6 +6727,22 @@ expected[$regex]\nbut[$but]\n\n");
     return $expo->exitstatus();
 }
 
+sub _validate_distropref {
+    my($self,@args) = @_;
+    if (
+        $CPAN::META->has_inst("CPAN::Kwalify")
+        &&
+        $CPAN::META->has_inst("Kwalify")
+       ) {
+        eval {CPAN::Kwalify::_validate("distroprefs",@args);};
+        if ($@) {
+            $CPAN::Frontend->mywarn($@);
+        }
+    } else {
+        CPAN->debug("not validating '@args'") if $CPAN::DEBUG;
+    }
+}
+
 # CPAN::Distribution::_find_prefs
 sub _find_prefs {
     my($self) = @_;
@@ -6850,98 +6869,6 @@ sub _find_prefs {
         }
     }
     return;
-}
-
-{
-    my %vcache = ();
-
-    my $schema_yaml = <<'YAML';
---- 
-type: map
-mapping:
-  comment:
-    type: text
-  match:
-    type: map
-    mapping:
-      distribution:
-        type: text
-      module:
-        type: text
-      perl:
-        type: text
-  cpan_config:
-    type: map
-    mapping:
-      prefer_installer:
-        type: text
-        enum:
-          - EUMM
-          - MB
-  install:
-    &args_env_expect
-    type: map
-    mapping:
-      args:
-        type: seq
-        sequence:
-          - type: text
-      env:
-        type: map
-        mapping:
-          =:
-            type: text
-      expect:
-        type: seq
-        sequence:
-          - type: text
-  make: *args_env_expect
-  pl:   *args_env_expect
-  test: *args_env_expect
-  patches:
-    type: seq
-    sequence:
-      - type: text
-  disabled:
-    type: int
-    enum:
-      - 0
-      - 1
-  goto:
-    type: text
-  cpanconfig:
-    type: map
-    mapping:
-      =:
-        type: text
-YAML
-
-    my $schema_data;
-
-    # CPAN::Distribution::_validate_distropref
-    sub _validate_distropref {
-        my($self,$distropref,$abs,$y) = @_;
-        my $yaml_module = CPAN->_yaml_module;
-        if (
-            $CPAN::META->has_inst($yaml_module)
-            &&
-            $CPAN::META->has_inst("Kwalify")
-           ) {
-            my $load = UNIVERSAL::can($yaml_module,"Load");
-            $schema_data = $load->($schema_yaml);
-        }
-        if ($schema_data) {
-            my $mtime = (stat $abs)[9];
-            for my $k (keys %{$vcache{$abs}}) {
-                delete $vcache{$abs}{$k} unless $k eq $mtime;
-            }
-            return if $vcache{$abs}{$mtime}{$y}++;
-            eval { Kwalify::validate($schema_data, $distropref) };
-            if ($@) {
-                $CPAN::Frontend->mywarn("validation of distropref '$abs'[$y] failed: $@");
-            }
-        }
-    }
 }
 
 # CPAN::Distribution::prefs
@@ -9398,12 +9325,12 @@ objects may be bundles, modules or distributions.
 
 =item CPAN::Bundle::force($method,@args)
 
-Forces CPAN to perform a task that normally would have failed. Force
-takes as arguments a method name to be called and any number of
-additional arguments that should be passed to the called method. The
-internals of the object get the needed changes so that CPAN.pm does
-not refuse to take the action. The C<force> is passed recursively to
-all contained objects.
+Forces CPAN to perform a task that it normally would have refused to
+do. Force takes as arguments a method name to be called and any number
+of additional arguments that should be passed to the called method.
+The internals of the object get the needed changes so that CPAN.pm
+does not refuse to take the action. The C<force> is passed recursively
+to all contained objects.
 
 =item CPAN::Bundle::get()
 
@@ -10683,10 +10610,12 @@ See L<http://www.perl.com/perl/misc/Artistic.html>
 =head1 TRANSLATIONS
 
 Kawai,Takanori provides a Japanese translation of this manpage at
-http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
+http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm
 
 =head1 SEE ALSO
 
 cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
 
 =cut
+
+

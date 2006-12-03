@@ -1,8 +1,11 @@
 $VAR1 = {
-         match => {
-                   module => "^Term::ReadLine::Perl\$",
-                  },
-         test => {
-                  expect => ["Enter arithmetic or Perl expression", "\n"],
-                 },
-        };
+  "test" => {
+    "expect" => [
+      "Enter arithmetic or Perl expression",
+      "\n"
+    ]
+  },
+  "match" => {
+    "module" => "^Term::ReadLine::Perl\$"
+  }
+};
