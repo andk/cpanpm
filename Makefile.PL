@@ -234,6 +234,7 @@ MEGA_COLLECTION = Expect \
 		SVN::Notify::Mirror \
 		Term::ReadLine::Gnu \
 		Event::Lib \
+		Math::Approx::Symbolic \
 
 }
 }

@@ -94,7 +94,6 @@ use vars qw(
              cvs_import
              expand
              force
-             fforce
              get
              install
              install_tested
@@ -460,7 +459,6 @@ use strict;
                                     cvs_import
                                     dump
                                     force
-                                    fforce
                                     hosts
                                     install
                                     install_tested
@@ -1448,7 +1446,7 @@ Upgrade
  upgrade  WORDs or /REGEXP/ or NONE    upgrade some/matching/all modules
 
 Pragmas
- force  CMD    try hard to do command  fforce CMD    try harder
+ force  CMD    try hard to do command
  notest CMD    skip testing
 
 Other

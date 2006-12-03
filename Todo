@@ -1,3 +1,11 @@
+2006-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Maybe I should undo the too far going changes I did in the preparation
+	for a better force implementation and make a _64? Force could delay the
+	next release considerably.
+
+	OK, the three occurrences of fforce are gone. What else?
+
 2006-12-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* find a way to treat kwalify such that the schema is documented and can
