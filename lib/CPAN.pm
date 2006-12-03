@@ -1446,8 +1446,8 @@ Upgrade
  upgrade  WORDs or /REGEXP/ or NONE    upgrade some/matching/all modules
 
 Pragmas
- force COMMAND    unconditionally do command
- notest COMMAND   skip testing
+ force  CMD    try hard to do command  fforce CMD    try harder
+ notest CMD    skip testing
 
 Other
  h,?           display this menu       ! perl-code   eval a perl command
@@ -6219,7 +6219,7 @@ sub eq_CHECKSUM {
 #-> sub CPAN::Distribution::force ;
 sub force {
   my($self, $method) = @_;
-  for my $att (qw(
+ ATTRIBUTE: for my $att (qw(
                   CHECKSUM_STATUS
                   archived
                   badtestcnt
@@ -6239,8 +6239,12 @@ sub force {
                   writemakefile
                   yaml_content
  )) {
-    delete $self->{$att};
-    CPAN->debug(sprintf "att[%s]", $att) if $CPAN::DEBUG;
+      if ($self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
+          # cannot be undone for local distros
+          next ATTRIBUTE;
+      }
+      delete $self->{$att};
+      CPAN->debug(sprintf "att[%s]", $att) if $CPAN::DEBUG;
   }
   if ($method && $method =~ /make|test|install/) {
     $self->{"force_update"}++; # name should probably have been force_install

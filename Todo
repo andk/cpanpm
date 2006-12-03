@@ -1,5 +1,7 @@
 2006-12-02  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* priorities today: force, expect, commandline
+
 	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46
 
 	Module Morphing. Module Taming. Module Killing. Talkback. cpan DOT
@@ -88,6 +90,12 @@ make:
 	And after that we cannot work with the
 	/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. directory anymore, somehow
 	the internal state has lost the connection to the real directory.
+
+	Without the force it works nicely and says:
+
+	Is already unwrapped into directory /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+
+	
 
 2006-11-25  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
