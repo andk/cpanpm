@@ -1,3 +1,22 @@
+2006-12-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Bug: Goto does not work as it should for XML::RSS. Currently I see
+	that XML::Feed is tested before XML::RSS is installed. First X:F has the
+	prereq to X:R, so X:R is processed. It has a prereq of Test::Manifest
+	which is processed and installed. Then comes X:R again but it says:
+
+  /usr/bin/make  -- OK
+Running make test
+  Delayed until after prerequisites
+Running make install
+  Delayed until after prerequisites
+
+	And then immediately comes X:F's test and fails. X:R is dropped from the
+	queue somehow.
+
+	And undelay and goto do not know each other. Because goto does not jump
+	on the queue, I suppose.
+
 2006-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Maybe I should undo the too far going changes I did in the preparation
