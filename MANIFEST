@@ -2,7 +2,6 @@ ChangeLog
 ChangeLog.old
 Changes
 Changes.old
-cpan_distroprefs_schema.yml
 distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.yml
