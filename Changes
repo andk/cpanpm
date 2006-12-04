@@ -1,3 +1,21 @@
+2006-12-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_64
+
+	* more of Randy Kobes' patches for CPAN::SQLite applied. Things start
+	working.
+
+	* CPAN::Kwalify as a bridge to Kwalify.pm verifies all distroprefs to be
+	syntactically correct
+
+	* address #23742: fix unini warning
+
+	* another patch from Randy Kobes to canonize directory names
+
+	* bugfix: force install o a local dot distro w di weird things
+
+	* bugfix: goto did not normalize the distro name
+
 2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_63: nothing major, only bugfixes and tiny new features.

@@ -453,12 +453,12 @@ PROGRAMMER'S INTERFACE
         objects may be bundles, modules or distributions.
 
     CPAN::Bundle::force($method,@args)
-        Forces CPAN to perform a task that normally would have failed. Force
-        takes as arguments a method name to be called and any number of
-        additional arguments that should be passed to the called method. The
-        internals of the object get the needed changes so that CPAN.pm does
-        not refuse to take the action. The "force" is passed recursively to
-        all contained objects.
+        Forces CPAN to perform a task that it normally would have refused to
+        do. Force takes as arguments a method name to be called and any
+        number of additional arguments that should be passed to the called
+        method. The internals of the object get the needed changes so that
+        CPAN.pm does not refuse to take the action. The "force" is passed
+        recursively to all contained objects.
 
     CPAN::Bundle::get()
         Recursively runs the "get" method on all items contained in the
@@ -1566,7 +1566,7 @@ LICENSE
 
 TRANSLATIONS
     Kawai,Takanori provides a Japanese translation of this manpage at
-    http://member.nifty.ne.jp/hippo2000/perltips/CPAN.htm
+    http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm
 
 SEE ALSO
     cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
