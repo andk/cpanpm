@@ -28,7 +28,7 @@ patches:
 --- 
 comment: "or just to accept defaults in future releases..."
 match:
-  distribution: "^MLEHMANN/Coro-2"
+  distribution: "^MLEHMANN/Coro-"
 pl:
   env:
     PERL_MM_USE_DEFAULT: 1
