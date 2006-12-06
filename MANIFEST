@@ -4,6 +4,7 @@ Changes
 Changes.old
 distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
+distroprefs/ABW.Template-Toolkit.dd
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ADAMK.Algorithm-Dependency.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
@@ -32,13 +33,16 @@ distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/GAAS.libwww.yml
 distroprefs/GBARR.Authen-SASL.yml
+distroprefs/GBARR.libnet.dd
 distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GEOFF.Apache-Test.yml
 distroprefs/GIULIENK.Audio-Beep.yml
 distroprefs/ILYAZ.Math-Pari.yml
+distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
+distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/JCRISTY.PerlMagick.yml
 distroprefs/JESSE.Data-ICal.yml
@@ -66,6 +70,7 @@ distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/RCAPUTO.POE.yml
+distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
