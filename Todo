@@ -1,5 +1,32 @@
+2006-12-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* http://rt.cpan.org/Ticket/Display.html?id=23588
+
+	Not fixed with XML::RSS 1.21! Now re-reported as
+
+	http://rt.cpan.org/Ticket/Display.html?id=23822
+
+2006-12-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* With all the care that goes inot the distroprefs directory, we always
+	will fail on some distros that ask questions and hang forever. It's time
+	to rethink a global way out of modules that hang in an IO operation.
+
+	* Todo: make the distropref schema even easier accessible like with a
+	manpage.
+
 2006-12-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
+	* Bug reported by Sendu Bala: it can really happen that CPAN.pm deletes
+	a build_dir while the owner is still in the queue.
+
+	testshell-with-protocol cannot reproduce by setting build_cache to 0.1,
+	not even with 0.001, and not even with 0.
+
+	Recall: during the first "get" the cachemgr is introduced. It is global
+	and gets never replaced and so should never be called again for
+	scan_cache.
+	
 	* Bug: Goto does not work as it should for XML::RSS. Currently I see
 	that XML::Feed is tested before XML::RSS is installed. First X:F has the
 	prereq to X:R, so X:R is processed. It has a prereq of Test::Manifest
@@ -17,7 +44,14 @@ Running make install
 	And undelay and goto do not know each other. Because goto does not jump
 	on the queue, I suppose.
 
+	FIXED in SVK rev. 1508
+
 	* Bug: The current Makefile has an implicit dependency on YAML::Syck
+
+	This was a bug in MANIFEST.SKIP which excluded the .dd files in
+	distroprefs/
+
+	FIXED in SVK rev. 1506
 
 2006-12-03  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
