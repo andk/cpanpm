@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_64';
+$CPAN::VERSION = '1.88_65';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -2718,7 +2718,7 @@ sub setup_output {
 }
 
 #-> sub CPAN::Shell::rematein ;
-# RE-adme||MA-ke||TE-st||IN-stall
+# RE-adme||MA-ke||TE-st||IN-stall : nearly everything runs through here
 sub rematein {
     my $self = shift;
     my($meth,@some) = @_;
@@ -7545,12 +7545,21 @@ sub clean {
     $self->store_persistent_state;
 }
 
-#-> sub CPAN::Distribution::install ;
+#-> sub CPAN::Distribution::goto ;
 sub goto {
     my($self,$goto) = @_;
-    my($method) = (caller(1))[3];
     $goto = $self->normalize($goto);
-    CPAN->instance("CPAN::Distribution",$goto)->$method;
+
+    # XXX directly installing does not work if we have dependencies:
+
+    # my($method) = (caller(1))[3];
+    # CPAN->instance("CPAN::Distribution",$goto)->$method;
+
+    # opening a new shell command seems like it could break many things
+
+    CPAN::Queue->delete($self->id);
+    CPAN::Queue->jumpqueue([$goto,$self->{reqtype}]);
+
 }
 
 #-> sub CPAN::Distribution::install ;
