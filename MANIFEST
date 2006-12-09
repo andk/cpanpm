@@ -55,6 +55,7 @@ distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
+distroprefs/KROW.DBIx-Password.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LEAKIN.File-Rsync.yml
