@@ -1,3 +1,15 @@
+2006-12-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* release 1.88_65
+
+	* fixed an implicit dependency on YAML::Syck in the Makefile
+
+	* distropref-goto: use the queue because after the goto new dependencies
+	can be needed
+
+	* fix dependency checking after make test: it did not work well together
+	with a distropref-goto
+
 2006-12-04  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_64
