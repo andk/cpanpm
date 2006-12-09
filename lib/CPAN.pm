@@ -5437,7 +5437,11 @@ EOF
         for $f (@dirents) { # is already without "." and ".."
             my $from = File::Spec->catdir($from_dir,$f);
             my $to = File::Spec->catdir($packagedir,$f);
-            File::Copy::move($from,$to) or Carp::confess("Couldn't move $from to $to: $!");
+            unless (File::Copy::move($from,$to)) {
+                my $err = $!;
+                $from = File::Spec->rel2abs($from);
+                Carp::confess("Couldn't move $from to $to: $err");
+            }
         }
     } else { # older code below, still better than nothing when there is no File::Temp
         my($distdir);
@@ -6567,7 +6571,7 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     if ($self->{modulebuild}) {
         unless (-f "Build") {
-            my $cwd = Cwd::cwd;
+            my $cwd = CPAN::anycwd();
             $CPAN::Frontend->mywarn("Alert: no Build file available for 'make $self->{id}'".
                                     " in cwd[$cwd]. Danger, Will Robinson!");
             $CPAN::Frontend->mysleep(5);
@@ -7415,25 +7419,43 @@ sub test {
     if ( $tests_ok ) {
         {
             my @prereq;
+
+            # this first implementation upto 1.88_64 seems to be
+            # wrong. It determines the single distro that matches
+            # according to CPAN's uptodateness table. But we should
+            # only make sure that the minimum requirements are met.
+
+####            for my $m (keys %{$self->{sponsored_mods}}) {
+####                my $m_obj = CPAN::Shell->expand("Module",$m);
+####                my $d_obj = $m_obj->distribution;
+####                if ($d_obj) {
+####                    if (!$d_obj->{make_test}
+####                        ||
+####                        $d_obj->{make_test}->failed){
+####                        #$m_obj->dump;
+####                        push @prereq, $m;
+####                    }
+####                }
+####            }
+
             for my $m (keys %{$self->{sponsored_mods}}) {
                 my $m_obj = CPAN::Shell->expand("Module",$m);
-                my $d_obj = $m_obj->distribution;
-                if ($d_obj) {
-                    if (!$d_obj->{make_test}
-                        ||
-                        $d_obj->{make_test}->failed){
-                        #$m_obj->dump;
-                        push @prereq, $m;
-                    }
+                my $inst_version = $m_obj->inst_version;
+                if ($inst_version &&
+                    !CPAN::Version->vlt($inst_version,$self->{PREREQ_PM}{$m})
+                   ) {
+                    CPAN->debug("m[$m] good enough inst_version[$inst_version]");
+                } else {
+                    push @prereq, $m;
                 }
             }
             if (@prereq){
                 my $cnt = @prereq;
                 my $which = join ",", @prereq;
-                my $verb = $cnt == 1 ? "one dependency not OK ($which)" :
+                my $but = $cnt == 1 ? "one dependency not OK ($which)" :
                     "$cnt dependencies missing ($which)";
-                $CPAN::Frontend->mywarn("Tests succeeded but $verb\n");
-                $self->{make_test} = CPAN::Distrostatus->new("NO $verb");
+                $CPAN::Frontend->mywarn("Tests succeeded but $but\n");
+                $self->{make_test} = CPAN::Distrostatus->new("NO $but");
                 $self->store_persistent_state;
                 return;
             }
@@ -7500,7 +7522,7 @@ sub clean {
     my $system;
     if ($self->{modulebuild}) {
         unless (-f "Build") {
-            my $cwd = Cwd::cwd;
+            my $cwd = CPAN::anycwd();
             $CPAN::Frontend->mywarn("Alert: no Build file available for 'clean $self->{id}".
                                     " in cwd[$cwd]. Danger, Will Robinson!");
             $CPAN::Frontend->mysleep(5);
@@ -7550,15 +7572,15 @@ sub goto {
     my($self,$goto) = @_;
     $goto = $self->normalize($goto);
 
-    # XXX directly installing does not work if we have dependencies:
-
-    # my($method) = (caller(1))[3];
-    # CPAN->instance("CPAN::Distribution",$goto)->$method;
-
-    # opening a new shell command seems like it could break many things
+    # inject into the queue
 
     CPAN::Queue->delete($self->id);
     CPAN::Queue->jumpqueue([$goto,$self->{reqtype}]);
+
+    # and run where we left off
+
+    my($method) = (caller(1))[3];
+    CPAN->instance("CPAN::Distribution",$goto)->$method;
 
 }
 

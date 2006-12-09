@@ -1,3 +1,32 @@
+2006-12-07  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Another problem with goto is that if people say upgrade, the newer
+	version will be tried again, will goto the other and then the same
+	version as the installed one will be built and installed again. Probably
+	too rare a case to worry about. Goto is always a temporary solution.
+
+	* XML::Feed and XML::RSS cooperation continues to exhibit bugs: 
+
+	t/05-atom10-link......ok
+	t/06-atom10...........ok
+	t/07-atom10-create....ok
+	All tests successful.
+	Files=7, Tests=171,  9 wallclock secs ( 7.08 cusr +  0.42 csys =  7.50 CPU)
+	  BTROTT/XML-Feed-0.12.tar.gz
+	Tests succeeded but one dependency not OK (XML::RSS)
+	Running Build install
+	  make test had returned bad status, won't install without force
+
+	So although XML::RSS was installed successfully, it is not uptodate. But
+	it's goodenough for XML::Feed which demands version 1.01. We have 1.12
+	and CPAN has 1.21 but 1.21 is disabled now with a goto.
+
+	Maybe we check for uptodateness in the wrong place?
+
+	No, we checked if the newest distro completed its tests.
+
+	FIXED in SVK rev. 
+
 2006-12-06  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* http://rt.cpan.org/Ticket/Display.html?id=23588
@@ -8,7 +37,7 @@
 
 2006-12-05  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* With all the care that goes inot the distroprefs directory, we always
+	* With all the care that goes into the distroprefs directory, we always
 	will fail on some distros that ask questions and hang forever. It's time
 	to rethink a global way out of modules that hang in an IO operation.
 
@@ -26,6 +55,11 @@
 	Recall: during the first "get" the cachemgr is introduced. It is global
 	and gets never replaced and so should never be called again for
 	scan_cache.
+
+	I ask Sendu to explaint he circumstances and he brings an example where
+	somebody calls CPAN.pm recursively. No, I don't consider this a bug. and
+	besides, it won't happen in 1.89 anymore *although* I do not consider it
+	a bug.
 	
 	* Bug: Goto does not work as it should for XML::RSS. Currently I see
 	that XML::Feed is tested before XML::RSS is installed. First X:F has the

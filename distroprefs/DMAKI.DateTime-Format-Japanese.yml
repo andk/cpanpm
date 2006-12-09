@@ -1,0 +1,7 @@
+---
+match:
+  distribution: "^DMAKI/DateTime-Format-Japanese-"
+pl:
+  expect:
+    - "Install DateTime::Fromat::Japanese::Traditional"
+    - "y\n"    
