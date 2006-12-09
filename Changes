@@ -2,7 +2,8 @@
 
 	* release 1.88_65
 
-	* make CPAN::SQLite configurable
+	* make CPAN::SQLite configurable and tweak a few places to help SQLite
+	bootstrapping.
 
 	* fixed an implicit dependency on YAML::Syck in the Makefile
 
@@ -26,7 +27,7 @@
 
 	* another patch from Randy Kobes to canonize directory names
 
-	* bugfix: force install o a local dot distro w di weird things
+	* bugfix: force install of a local dot distro was doing weird things
 
 	* bugfix: goto did not normalize the distro name
 

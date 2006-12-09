@@ -425,10 +425,15 @@ sub _init_sqlite () {
             &&
             $CPAN::META->has_inst("CPAN::SQLite::META")
            ) {
-        $CPAN::Frontend->mywarn(qq{SQLite not installed, cannot work with CPAN::SQLite});
+        $CPAN::Frontend->mywarn(qq{SQLite not installed, cannot work with CPAN::SQLite})
+            unless $Have_warned->{"CPAN::SQLite"}++;
         return;
     }
     $CPAN::SQLite ||= CPAN::SQLite::META->new($CPAN::META);
+}
+
+sub _sqlite_running {
+    ($CPAN::Config->{use_sqlite} && _init_sqlite()) ? 1 : 0;
 }
 
 package CPAN::CacheMgr;
@@ -971,7 +976,7 @@ sub exists {
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
     $id =~ s/:+/::/g if $class eq "CPAN::Module";
-    if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
+    if (CPAN::_sqlite_running) {
         return (exists $META->{readonly}{$class}{$id} or
                 $CPAN::SQLite->set($class, $id));
     } else {
@@ -2445,7 +2450,7 @@ sub expand_by_method {
                     defined $command ? $command : "UNDEFINED",
                    ) if $CPAN::DEBUG;
 	if (defined $regex) {
-            if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
+            if (CPAN::_sqlite_running) {
                 $CPAN::SQLite->search($class, $regex);
             }
             for $obj (
@@ -4193,7 +4198,7 @@ sub reload {
     if ($CPAN::Config->{build_dir_reuse}) {
         $self->reanimate_build_dir;
     }
-    if ($CPAN::Config->{use_sqlite} && CPAN::_init_sqlite) { # not yet officially supported
+    if (CPAN::_sqlite_running) {
         $CPAN::SQLite->reload(time => $time, force => $force)
             if not $LAST_TIME;
     }
@@ -4280,7 +4285,7 @@ sub reload_x {
 sub rd_authindex {
     my($cl, $index_target) = @_;
     return unless defined $index_target;
-    return if $CPAN::Config->{use_sqlite};
+    return if CPAN::_sqlite_running;
     my @lines;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     local(*FH);
@@ -4321,7 +4326,7 @@ sub userid {
 sub rd_modpacks {
     my($self, $index_target) = @_;
     return unless defined $index_target;
-    return if $CPAN::Config->{use_sqlite};
+    return if CPAN::_sqlite_running;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -4534,7 +4539,7 @@ happen.\a
 sub rd_modlist {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
-    return if $CPAN::Config->{use_sqlite};
+    return if CPAN::_sqlite_running;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -4586,7 +4591,7 @@ sub rd_modlist {
 sub write_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
-    return if $CPAN::Config->{use_sqlite};
+    return if CPAN::_sqlite_running;
     return unless $CPAN::META->has_usable("Storable");
     my $cache;
     foreach my $k (qw(CPAN::Bundle CPAN::Author CPAN::Module
@@ -4606,7 +4611,7 @@ sub write_metadata_cache {
 sub read_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
-    return if $CPAN::Config->{use_sqlite};
+    return if CPAN::_sqlite_running;
     return unless $CPAN::META->has_usable("Storable");
     my $metadata_file = File::Spec->catfile($CPAN::Config->{cpan_home},"Metadata");
     return unless -r $metadata_file and -f $metadata_file;
@@ -7001,7 +7006,13 @@ of modules we are processing right now?", "yes");
         # color them as dirty
         for my $p (@prereq) {
             # warn "calling color_cmd_tmps(0,1)";
-            CPAN::Shell->expandany($p)->color_cmd_tmps(0,1);
+            my $any = CPAN::Shell->expandany($p);
+            if ($any) {
+                $any->color_cmd_tmps(0,1);
+            } else {
+                $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$p'\n");
+                $CPAN::Frontend->mysleep(2);
+            }
         }
         # queue them and re-queue yourself
         CPAN::Queue->jumpqueue([$id,$self->{reqtype}],
@@ -9288,12 +9299,6 @@ tricks:
 =back
 
 =head2 Methods in the other Classes
-
-The programming interface for the classes CPAN::Module,
-CPAN::Distribution, CPAN::Bundle, and CPAN::Author is still considered
-beta and partially even alpha. In the following paragraphs only those
-methods are documented that have proven useful over a longer time and
-thus are unlikely to change.
 
 =over 4
 
