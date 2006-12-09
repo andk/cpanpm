@@ -264,6 +264,10 @@ Shall we use it as the general CPAN build and cache directory?
     #
 
     my_yn_prompt(cache_metadata => 1, $matcher);
+    my_yn_prompt(use_sqlite => 0, $matcher);
+    if ($CPAN::Config->{use_sqlite}) {
+        my_dflt_prompt(sqlite_dbname => "cpansql.db", $matcher); # 8.3
+    }
 
     #
     #= Do we follow PREREQ_PM?
@@ -1064,9 +1068,23 @@ To considerably speed up the initial CPAN shell startup, it is
 possible to use Storable to create a cache of metadata. If Storable
 is not available, the normal index mechanism will be used.
 
+Note: this mechanism is not used when use_sqlite is turned on.
+
 },
 
 cache_metadata => qq{Cache metadata (yes/no)?},
+
+use_sqlite_intro => qq{
+
+CPAN::SQLite is a layer between the index files that are downloaded
+from the CPAN and CPAN.pm that speeds up metadata queries and reduces
+memory consumption of CPAN.pm considereably.
+
+},
+
+use_sqlite => qq{Use CPAN::SQLite if available? (yes/no)?},
+
+sqlite_dbname => qq{SQLite shall use which filename?},
 
 term_is_latin_intro => qq{
 

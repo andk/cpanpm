@@ -235,6 +235,8 @@ MEGA_COLLECTION = Expect \
 		Term::ReadLine::Gnu \
 		Event::Lib \
 		Math::Approx::Symbolic \
+		Devel::Size \
+		Bundle::Slash \
 
 }
 }

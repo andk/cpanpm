@@ -10034,6 +10034,7 @@ defined:
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   shell              your favorite shell
   show_upload_date   boolean if commands should try to determine upload date
+  sqlite_dbname      filename of the sqlite DB
   tar                location of external program tar
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
@@ -10041,6 +10042,7 @@ defined:
   test_report        email test reports (if CPAN::Reporter is installed)
   unzip              location of external program unzip
   urllist	     arrayref to nearby CPAN sites (or equivalent locations)
+  use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
   username           your username if you CPAN server wants one
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
   wget               path to external prg

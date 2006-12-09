@@ -2,10 +2,12 @@
 
 	* release 1.88_65
 
+	* make CPAN::SQLite configurable
+
 	* fixed an implicit dependency on YAML::Syck in the Makefile
 
 	* distropref-goto: use the queue because after the goto new dependencies
-	can be needed
+	may be needed
 
 	* fix dependency checking after make test: it did not work well together
 	with a distropref-goto
