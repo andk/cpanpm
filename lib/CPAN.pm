@@ -7420,24 +7420,6 @@ sub test {
         {
             my @prereq;
 
-            # this first implementation upto 1.88_64 seems to be
-            # wrong. It determines the single distro that matches
-            # according to CPAN's uptodateness table. But we should
-            # only make sure that the minimum requirements are met.
-
-####            for my $m (keys %{$self->{sponsored_mods}}) {
-####                my $m_obj = CPAN::Shell->expand("Module",$m);
-####                my $d_obj = $m_obj->distribution;
-####                if ($d_obj) {
-####                    if (!$d_obj->{make_test}
-####                        ||
-####                        $d_obj->{make_test}->failed){
-####                        #$m_obj->dump;
-####                        push @prereq, $m;
-####                    }
-####                }
-####            }
-
             for my $m (keys %{$self->{sponsored_mods}}) {
                 my $m_obj = CPAN::Shell->expand("Module",$m);
                 my $inst_version = $m_obj->inst_version;
