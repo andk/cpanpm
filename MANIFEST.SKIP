@@ -1,6 +1,7 @@
 ,v$
 \.orig$
 \.rej$
+\.out$
 \.svn
 \bRCS/
 ^CPAN-.+/.+

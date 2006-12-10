@@ -29,6 +29,7 @@ distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
+distroprefs/DMAKI.Xango.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/FDALY.Test-Deep.yml
