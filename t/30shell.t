@@ -347,15 +347,15 @@ TUPL: for my $i (0..$#prgs){
                       $test_timeout || $timeout,
                       [ eof => sub {
                             my $got = $expo->clear_accum;
-                            diag "EOF on i[$i]prog[$prog]
+                            mydiag "EOF on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
                             exit;
                         } ],
                       [ timeout => sub {
                             my $got = $expo->clear_accum;
-                            diag "timed out on i[$i]prog[$prog]
+                            mydiag "timed out on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
-                            diag sprintf(
+                            mydiag sprintf(
                                          "and perl says that [[[%s]]] %s match [[[%s]]]!",
                                          $got,
                                          $got=~/$expected/ ? "DOES" : "doesN'T",
@@ -370,7 +370,7 @@ expected[$expected]\ngot[$got]\n\n";
         my $ok = 1;
         if ($notexpected) {
             if ($got =~ /$notexpected/) {
-                diag sprintf "found offending [[[%s]]] in [[[%s]]]", $notexpected, $got;
+                mydiag sprintf "found offending [[[%s]]] in [[[%s]]]", $notexpected, $got;
                 $ok = 0;
             }
         }
@@ -899,6 +899,7 @@ __END__
 #P:test CPAN::Test::Dummy::Perl5::Build
 #E:test\s+--\s+OK
 #R:Module::Build
+#T:60
 ########
 #P:test CPAN::Test::Dummy::Perl5::Make::Zip
 #E:test\s+--\s+OK
@@ -1055,8 +1056,9 @@ __END__
 #E:build_requires_install_policy
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build
-#E:is up to date|SAW MAKE[\s\S]+?SAW MAKE[\s\S]+?SAW MBUILD
+#E:is up to date|SAW MAKE[\s\S]+?SAW MAKE[\s\S]+?Tests succeeded but one dependency not OK
 #N: "is up to date" is for when they have it installed in INC
+#N: and the one dependency is Zip which we peudo-installed so it is lost now
 #R:Module::Build
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails

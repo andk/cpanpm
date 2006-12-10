@@ -2848,7 +2848,7 @@ to find objects with matching identifiers.
 		$obj->$pragma($meth);
 	    }
         }
-        if ($obj->can('called_for')) {
+        if (UNIVERSAL::can($obj, 'called_for')) {
             $obj->called_for($s);
         }
         CPAN->debug(qq{pragma[@pragma]meth[$meth]}.
@@ -7433,11 +7433,15 @@ sub test {
 
             for my $m (keys %{$self->{sponsored_mods}}) {
                 my $m_obj = CPAN::Shell->expand("Module",$m);
-                my $inst_version = $m_obj->inst_version;
-                if ($inst_version &&
-                    !CPAN::Version->vlt($inst_version,$self->{PREREQ_PM}{$m})
+                # XXX we need available_version which reflects
+                # $ENV{PERL5LIB} so that already tested but not yet
+                # installed modules are counted.
+                my $available_version = $m_obj->available_version;
+                if ($available_version &&
+                    !CPAN::Version->vlt($available_version,$self->{PREREQ_PM}{$m})
                    ) {
-                    CPAN->debug("m[$m] good enough inst_version[$inst_version]");
+                    CPAN->debug("m[$m] good enough available_version[$available_version]")
+                        if $CPAN::DEBUG;
                 } else {
                     push @prereq, $m;
                 }
@@ -8763,13 +8767,29 @@ sub clean  { shift->rematein('clean') }
 #-> sub CPAN::Module::inst_file ;
 sub inst_file {
     my($self) = @_;
+    $self->_file_in_path([@INC]);
+}
+
+#-> sub CPAN::Module::available_file ;
+sub available_file {
+    my($self) = @_;
+    my $sep = $Config::Config{path_sep};
+    my $perllib = $ENV{PERL5LIB};
+    $perllib = $ENV{PERLLIB} unless defined $perllib;
+    my @perllib = split(/$sep/,$perllib) if defined $perllib;
+    $self->_file_in_path([@perllib,@INC]);
+}
+
+#-> sub CPAN::Module::file_in_path ;
+sub _file_in_path {
+    my($self,$path) = @_;
     my($dir,@packpath);
     @packpath = split /::/, $self->{ID};
     $packpath[-1] .= ".pm";
     if (@packpath == 1 && $packpath[0] eq "readline.pm") {
         unshift @packpath, "Term", "ReadLine"; # historical reasons
     }
-    foreach $dir (@INC) {
+    foreach $dir (@$path) {
 	my $pmfile = File::Spec->catfile($dir,@packpath);
 	if (-f $pmfile){
 	    return $pmfile;
@@ -8798,33 +8818,25 @@ sub xs_file {
 sub inst_version {
     my($self) = @_;
     my $parsefile = $self->inst_file or return;
-    local($^W) = 0 if $] < 5.00303 && $ExtUtils::MakeMaker::VERSION < 5.38;
-    my $have;
+    my $have = $self->parse_version($parsefile);
+    $have;
+}
 
-    $have = MM->parse_version($parsefile);
+#-> sub CPAN::Module::inst_version ;
+sub available_version {
+    my($self) = @_;
+    my $parsefile = $self->available_file or return;
+    my $have = $self->parse_version($parsefile);
+    $have;
+}
+
+#-> sub CPAN::Module::parse_version ;
+sub parse_version {
+    my($self,$parsefile) = @_;
+    my $have = MM->parse_version($parsefile);
     $have = "undef" unless defined $have && length $have;
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
     $have =~ s/ $//; # trailing whitespace happens all the time
-
-    # My thoughts about why %vd processing should happen here
-
-    # Alt1 maintain it as string with leading v:
-    # read index files     do nothing
-    # compare it           use utility for compare
-    # print it             do nothing
-
-    # Alt2 maintain it as what it is
-    # read index files     convert
-    # compare it           use utility because there's still a ">" vs "gt" issue
-    # print it             use CPAN::Version for print
-
-    # Seems cleaner to hold it in memory as a string starting with a "v"
-
-    # If the author of this module made a mistake and wrote a quoted
-    # "v1.13" instead of v1.13, we simply leave it at that with the
-    # effect that *we* will treat it like a v-tring while the rest of
-    # perl won't. Seems sensible when we consider that any action we
-    # could take now would just add complexity.
 
     $have = CPAN::Version->readable($have);
 
@@ -9648,6 +9660,13 @@ Runs a get on the distribution associated with this module.
 Returns the filename of the module found in @INC. The first file found
 is reported just like perl itself stops searching @INC when it finds a
 module.
+
+=item CPAN::Module::available_file()
+
+Returns the filename of the module found in PERL5LIB or @INC. The
+first file found is reported. The advantage of this method over
+C<inst_file> is that modules that have been tested but not yet
+installed are included because PERL5LIB keeps track of tested modules.
 
 =item CPAN::Module::inst_version()
 
