@@ -2855,7 +2855,22 @@ to find objects with matching identifiers.
                     qq{ID[$obj->{ID}]}) if $CPAN::DEBUG;
 
         push @qcopy, $obj;
-        if ($obj->$meth()){
+        if (! UNIVERSAL::can($obj,$meth)) {
+            # Must never happen
+            my $serialized = "";
+            if (0) {
+            } elsif ($CPAN::META->has_inst("YAML::Syck")) {
+                $serialized = YAML::Syck::Dump($obj);
+            } elsif ($CPAN::META->has_inst("YAML")) {
+                $serialized = YAML::Dump($obj);
+            } elsif ($CPAN::META->has_inst("Data::Dumper")) {
+                $serialized = Data::Dumper::Dumper($obj);
+            } else {
+                require overload;
+                $serialized = overload::StrVal($obj);
+            }
+            $CPAN::Frontend->mydie("Panic: obj[$serialized] cannot meth[$meth]");
+        } elsif ($obj->$meth()){
             CPAN::Queue->delete($s);
         } else {
             CPAN->debug("failed");
@@ -9670,7 +9685,11 @@ installed are included because PERL5LIB keeps track of tested modules.
 
 =item CPAN::Module::inst_version()
 
-Returns the version number of the module in readable format.
+Returns the version number of the installed module in readable format.
+
+=item CPAN::Module::available_version()
+
+Returns the version number of the available module in readable format.
 
 =item CPAN::Module::install()
 

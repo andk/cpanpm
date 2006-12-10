@@ -1,3 +1,21 @@
+2006-12-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Buglets with sqlite: does not correctly deal with SVN::Core and
+	Bundle::Pause. Things not on CPAN.
+
+	* From an Email from Ingy to Steffen Mueller:
+
+The idea is to make things a lot easier for a lot more people to be
+involved. Well that's part of the plan anyway. Mostly I intend Kwiki to
+be downloadable and installable via subversion rather than cpan.
+
+While I don't intend to completely abandon cpan, I also am not so
+interested in keeping cpan up to date. Really it should be automated
+somehow. Anyway, all this is to say that if you want to shepard Kwiki on
+cpan, you are most welcome to.
+
+	An argument for "commandline" but maybe for even more.
+
 2006-12-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* On 1367 broke 30shell.t and up to 1372 it was not fixed. The failure
