@@ -3,6 +3,18 @@
 	* Buglets with sqlite: does not correctly deal with SVN::Core and
 	Bundle::Pause. Things not on CPAN.
 
+	Something else coming from megainstall and some debugging code has been
+	added to produce inspection evidence:
+
+[0m[1;31mPanic: obj[--- 
+reqtype: r
+] cannot meth[install][0m
+
+	So we somehow produce an empty object that has nothing but reqtype set.
+	I saw this for the first time with SQLLite. Today, with megainstall,
+	when I turn SQLite off, the bug does not happen. But the bug might be in
+	CPAN.pm as well, we must trace it back to the origin of this weird hash.
+
 	* From an Email from Ingy to Steffen Mueller:
 
 The idea is to make things a lot easier for a lot more people to be
