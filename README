@@ -417,12 +417,6 @@ PROGRAMMER'S INTERFACE
         CPAN::Shell->r;
 
   Methods in the other Classes
-    The programming interface for the classes CPAN::Module,
-    CPAN::Distribution, CPAN::Bundle, and CPAN::Author is still considered
-    beta and partially even alpha. In the following paragraphs only those
-    methods are documented that have proven useful over a longer time and
-    thus are unlikely to change.
-
     CPAN::Author::as_glimpse()
         Returns a one-line description of the author
 
@@ -725,8 +719,20 @@ PROGRAMMER'S INTERFACE
         found is reported just like perl itself stops searching @INC when it
         finds a module.
 
+    CPAN::Module::available_file()
+        Returns the filename of the module found in PERL5LIB or @INC. The
+        first file found is reported. The advantage of this method over
+        "inst_file" is that modules that have been tested but not yet
+        installed are included because PERL5LIB keeps track of tested
+        modules.
+
     CPAN::Module::inst_version()
-        Returns the version number of the module in readable format.
+        Returns the version number of the installed module in readable
+        format.
+
+    CPAN::Module::available_version()
+        Returns the version number of the available module in readable
+        format.
 
     CPAN::Module::install()
         Runs an "install" on the distribution associated with this module.
@@ -1059,6 +1065,7 @@ CONFIGURATION
       scan_cache         controls scanning of cache ('atstart' or 'never')
       shell              your favorite shell
       show_upload_date   boolean if commands should try to determine upload date
+      sqlite_dbname      filename of the sqlite DB
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
@@ -1066,6 +1073,7 @@ CONFIGURATION
       test_report        email test reports (if CPAN::Reporter is installed)
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
+      use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
       username           your username if you CPAN server wants one
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
       wget               path to external prg
