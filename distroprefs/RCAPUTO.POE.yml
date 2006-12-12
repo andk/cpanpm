@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^RCAPUTO/POE-"
+  distribution: "^RCAPUTO/POE-\d"
 pl: 
   expect:
     - "Would you like to skip the network tests"
