@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_65';
+$CPAN::VERSION = '1.88_66';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -433,7 +433,7 @@ sub _init_sqlite () {
 }
 
 sub _sqlite_running {
-    ($CPAN::Config->{use_sqlite} && _init_sqlite()) ? 1 : 0;
+    $CPAN::Config->{use_sqlite} && _init_sqlite();
 }
 
 package CPAN::CacheMgr;
@@ -1265,11 +1265,13 @@ sub tidyup {
   return unless -d $self->{ID};
   while ($self->{DU} > $self->{'MAX'} ) {
     my($toremove) = shift @{$self->{FIFO}};
-    $CPAN::Frontend->myprint(sprintf(
-				     "Deleting from cache".
-				     ": $toremove (%.1f>%.1f MB)\n",
-				     $self->{DU}, $self->{'MAX'})
-			    );
+    unless ($toremove =~ /\.yml$/) {
+        $CPAN::Frontend->myprint(sprintf(
+                                         "Deleting from cache".
+                                         ": $toremove (%.1f>%.1f MB)\n",
+                                         $self->{DU}, $self->{'MAX'})
+                                );
+    }
     return if $CPAN::Signal;
     $self->_clean_cache($toremove);
     return if $CPAN::Signal;
@@ -2818,8 +2820,11 @@ to find objects with matching identifiers.
         my $reqtype = $q->reqtype || "";
         $obj = CPAN::Shell->expandany($s);
         $obj->{reqtype} ||= "";
-        CPAN->debug("obj-reqtype[$obj->{reqtype}]".
-                    "q-reqtype[$reqtype]") if $CPAN::DEBUG;
+        {
+            local $CPAN::DEBUG = 1024; # Shell
+            CPAN->debug("s[$s]obj-reqtype[$obj->{reqtype}]".
+                        "q-reqtype[$reqtype]") if $CPAN::DEBUG;
+        }
         if ($obj->{reqtype}) {
             if ($obj->{reqtype} eq "b" && $reqtype =~ /^[rc]$/) {
                 $obj->{reqtype} = $reqtype;
@@ -10077,7 +10082,6 @@ defined:
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   shell              your favorite shell
   show_upload_date   boolean if commands should try to determine upload date
-  sqlite_dbname      filename of the sqlite DB
   tar                location of external program tar
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)

@@ -70,7 +70,6 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "scan_cache",
      "shell",
      "show_upload_date",
-     "sqlite_dbname",
      "tar",
      "term_is_latin",
      "term_ornaments",

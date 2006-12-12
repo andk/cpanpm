@@ -1,3 +1,12 @@
+2006-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* Todo: enable batch jobs to trigger cleanup of the build directory.
+	Methods: scan_cache, tidyup, Variable: scan_cache. LOCK.
+
+2006-12-11  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* #23887 has a patch.
+
 2006-12-10  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Buglets with sqlite: does not correctly deal with SVN::Core and
@@ -6,9 +15,9 @@
 	Something else coming from megainstall and some debugging code has been
 	added to produce inspection evidence:
 
-[0m[1;31mPanic: obj[--- 
+Panic: obj[--- 
 reqtype: r
-] cannot meth[install][0m
+] cannot meth[install]
 
 	So we somehow produce an empty object that has nothing but reqtype set.
 	I saw this for the first time with SQLLite. Today, with megainstall,

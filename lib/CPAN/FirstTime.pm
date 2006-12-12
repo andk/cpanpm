@@ -2,7 +2,7 @@
 package CPAN::Mirrored::By;
 use strict;
 
-sub new { 
+sub new {
     my($self,@arg) = @_;
     bless [@arg], $self;
 }
@@ -265,9 +265,6 @@ Shall we use it as the general CPAN build and cache directory?
 
     my_yn_prompt(cache_metadata => 1, $matcher);
     my_yn_prompt(use_sqlite => 0, $matcher);
-    if ($CPAN::Config->{use_sqlite}) {
-        my_dflt_prompt(sqlite_dbname => "cpansql.db", $matcher); # 8.3
-    }
 
     #
     #= Do we follow PREREQ_PM?
@@ -1084,8 +1081,6 @@ memory consumption of CPAN.pm considereably.
 },
 
 use_sqlite => qq{Use CPAN::SQLite if available? (yes/no)?},
-
-sqlite_dbname => qq{SQLite shall use which filename?},
 
 term_is_latin_intro => qq{
 
