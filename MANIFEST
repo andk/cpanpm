@@ -30,6 +30,7 @@ distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
 distroprefs/DMAKI.Xango.yml
+distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/FDALY.Test-Deep.yml
@@ -73,6 +74,7 @@ distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/RCAPUTO.POE.yml
+distroprefs/RDF.Clone.yml
 distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RJBS.Data-UUID.yml
