@@ -4,3 +4,8 @@ match:
   distribution: "^\QTIMB/DBI-1.52.tar.gz\E$"
 patches:
   - ANDK/patches/DBI-1.52-SMPETERS-01.patch
+--- 
+match:
+  distribution: "^\QTIMB/DBI-1.53.tar.gz\E$"
+patches:
+  - ANDK/patches/DBI-1.53-NWCLARK-01.patch.gz
