@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^RDF/Clone-0\.22\.tar\.gz$"
+patches:
+  - "ANDK/patches/Clone-0.22-NWCLARK-01.patch.gz"
