@@ -1,3 +1,7 @@
+2006-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* #23933 !
+
 2006-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: enable batch jobs to trigger cleanup of the build directory.
@@ -23,6 +27,19 @@ reqtype: r
 	I saw this for the first time with SQLLite. Today, with megainstall,
 	when I turn SQLite off, the bug does not happen. But the bug might be in
 	CPAN.pm as well, we must trace it back to the origin of this weird hash.
+
+	Update 2006-12-12: it is happening with SVN::Client
+
+	The bug was hidden for a few days when DBI was broken but came back when
+	DBI got a patch from  Nicholas.
+
+	I think I just fixed it in exists. But still I find
+
+Use of uninitialized value $fullid in substitution (s///) at /home/src/perl/repoperls/installed-perls/perl/ph5rQVg/perl-5.8.0@29559/lib/site_perl/5.9.5/CPAN/SQLite/Util.pm line 178.
+Use of uninitialized value $fullid in concatenation (.) or string at /home/src/perl/repoperls/installed-perls/perl/ph5rQVg/perl-5.8.0@29559/lib/site_perl/5.9.5/CPAN/SQLite/Util.pm line 179.
+
+	in the logfile.
+
 
 	* From an Email from Ingy to Steffen Mueller:
 

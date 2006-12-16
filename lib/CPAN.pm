@@ -425,7 +425,7 @@ sub _init_sqlite () {
             &&
             $CPAN::META->has_inst("CPAN::SQLite::META")
            ) {
-        $CPAN::Frontend->mywarn(qq{SQLite not installed, cannot work with CPAN::SQLite})
+        $CPAN::Frontend->mywarn(qq{CPAN::SQLite not installed, cannot work with it\n})
             unless $Have_warned->{"CPAN::SQLite"}++;
         return;
     }
@@ -976,13 +976,14 @@ sub exists {
     ### Carp::croak "exists called without class argument" unless $class;
     $id ||= "";
     $id =~ s/:+/::/g if $class eq "CPAN::Module";
+    my $exists;
     if (CPAN::_sqlite_running) {
-        return (exists $META->{readonly}{$class}{$id} or
-                $CPAN::SQLite->set($class, $id));
+        $exists = (exists $META->{readonly}{$class}{$id} or
+                   $CPAN::SQLite->set($class, $id));
     } else {
-        return (exists $META->{readonly}{$class}{$id} or
-                exists $META->{readwrite}{$class}{$id}); # unsafe meta access, ok
+        $exists =  exists $META->{readonly}{$class}{$id};
     }
+    $exists ||= exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
 }
 
 #-> sub CPAN::delete ;
@@ -2821,7 +2822,11 @@ to find objects with matching identifiers.
         $obj = CPAN::Shell->expandany($s);
         $obj->{reqtype} ||= "";
         {
-            local $CPAN::DEBUG = 1024; # Shell
+            # force debugging because CPAN::SQLite somehow delivers us
+            # an empty object;
+
+            # local $CPAN::DEBUG = 1024; # Shell; probably fixed now
+
             CPAN->debug("s[$s]obj-reqtype[$obj->{reqtype}]".
                         "q-reqtype[$reqtype]") if $CPAN::DEBUG;
         }
@@ -3067,13 +3072,17 @@ sub _ftp_statistics {
     my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
     open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
     my $sleep = 1;
+    my $waitstart;
     while (!flock $fh, $locktype|LOCK_NB) {
+        $waitstart ||= localtime();
         if ($sleep>3) {
-            $CPAN::Frontend->mywarn("Waiting for a read lock on '$file'\n");
+            $CPAN::Frontend->mywarn("Waiting for a read lock on '$file' (since $waitstart)\n");
         }
         $CPAN::Frontend->mysleep($sleep);
         if ($sleep <= 3) {
             $sleep+=0.33;
+        } elsif ($sleep <=6) {
+            $sleep+=0.11;
         }
     }
     my $stats = CPAN->_yaml_loadfile($file);
