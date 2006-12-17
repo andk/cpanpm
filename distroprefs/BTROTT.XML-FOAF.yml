@@ -2,7 +2,7 @@
 match:
   distribution: "^BTROTT/XML-FOAF-"
 pl: 
-  expect-in-any-order:
+  expect:
     - "Auto-install"
     - "y\n"
     - "Auto-install"

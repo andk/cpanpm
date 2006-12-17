@@ -102,8 +102,8 @@ read them.
 =head1 BLUEPRINT
 
 The following example contains all supported keywords and structures
-with the exception of C<expect-in-any-order> which can be used instead
-of C<expect>.
+with the exception of C<eexpect> which can be used instead of
+C<expect>.
 
   --- 
   comment: "Demo"
@@ -248,22 +248,44 @@ Environment variables to be set during the command
 
 Arguments to be added to the command line
 
-=item expect [array]
+=item eexpect [hash]
 
-A reference to an array that contains alternating questions and
-answers. Questions are regular expressions and answers are literal
+Extended C<expect>. This is a hash reference with three allowed keys,
+C<mode>, C<timeout>, and C<talk>.
+
+C<mode> may have the values C<deterministic> for the case where all
+questions come in the order written down and C<anyorder> for the case
+where the questions may come in any order. The default mode is
+C<deterministic>.
+
+C<timeout> denotes a timeout in seconds. Floating point timeouts are
+OK. In the case of a C<mode=deterministic> the timeout denotes the
+timeout per question, in the case of C<mode=anyorder> it denotes the
+timeout per byte received from the stream or questions.
+
+C<talk> is a reference to an array that contains alternating questions
+and answers. Questions are regular expressions and answers are literal
 strings. The Expect module will then watch the stream coming from the
 execution of the external program (C<perl Makefile.PL>, C<perl
-Build.PL>, C<make>, etc.) and as soon as the stream matches the
-regular expression, it will inject the according answer.
+Build.PL>, C<make>, etc.).
 
-=item expect-in-any-order [array]
+In the case of C<mode=deterministic> the CPAN.pm will inject the
+according answer as soon as the stream matches the regular expression.
+In the case of C<mode=anyorder> the CPAN.pm will answer a question as
+soon as the timeout is reached for the next byte in the input stream.
+In the latter case it removes the according question/answer pair from
+the array, so if you want to answer the question C<Do you really want
+to do that> several times, then it must be included in the array at
+least as often as you want this answer to be given.
 
-Like C<expect> but the order of the questions asked by the
-distribution software is not deterministic. Note that when C<CPAN.pm>
-gives an answer, it removes the according pair from the array, so if
-you want to answer the question C<Do you really want to do that>
-several times, then it must be included in the array that often.
+=item expect [array]
+
+C<< expect: <array> >> is a short notation for
+
+  eexpect:
+    mode: deterministic
+    timeout: 15
+    talk: <array>
 
 =back
 

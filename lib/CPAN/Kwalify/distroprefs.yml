@@ -37,6 +37,20 @@ mapping:
         type: seq
         sequence:
           - type: text
+      eexpect:
+        type: map
+        mapping:
+          mode:
+            type: text
+            enum:
+              - deterministic
+              - anyorder
+          timeout:
+            type: number
+          talk:
+            type: seq
+            sequence:
+              - type: text
   make: *args_env_expect
   pl:   *args_env_expect
   test: *args_env_expect

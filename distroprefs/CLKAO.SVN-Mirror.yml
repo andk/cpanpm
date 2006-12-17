@@ -1,5 +1,4 @@
 ---
-comment: "I hate AutoInstall"
 match:
   distribution: "^CLKAO/SVN-Mirror-"
 pl: 

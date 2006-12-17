@@ -4,9 +4,12 @@ match:
 pl:
   env:
     PERL_AUTOINSTALL: --skip
-  expect-in-any-order:
-    - "Continue installing YAML::Syck"
-    - "y\n"
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "Continue installing YAML::Syck"
+      - "y\n"
 make:
   env:
     PERL_AUTOINSTALL: --skip    

@@ -2,7 +2,7 @@
 match:
   module: "^URI::Fetch$"
 pl: 
-  expect-in-any-order:
+  expect:
     - "Auto-install"
     - "y\n"
     - "Auto-install"

@@ -199,7 +199,6 @@ sub shell {
 	select $odef;
     }
 
-    # no strict; # I do not recall why no strict was here (2000-09-03)
     $META->checklock();
     my @cwd = grep { defined $_ and length $_ }
         CPAN::anycwd(),
@@ -421,19 +420,29 @@ sub _yaml_dumpfile {
 }
 
 sub _init_sqlite () {
-    unless ($CPAN::META->has_inst("CPAN::SQLite")
-            &&
-            $CPAN::META->has_inst("CPAN::SQLite::META")
-           ) {
+    unless ($CPAN::META->has_inst("CPAN::SQLite")) {
         $CPAN::Frontend->mywarn(qq{CPAN::SQLite not installed, cannot work with it\n})
             unless $Have_warned->{"CPAN::SQLite"}++;
         return;
     }
+    require CPAN::SQLite::META; # not needed since CVS version of 2006-12-17
     $CPAN::SQLite ||= CPAN::SQLite::META->new($CPAN::META);
 }
 
-sub _sqlite_running {
-    $CPAN::Config->{use_sqlite} && _init_sqlite();
+{
+    my $negative_cache = {};
+    sub _sqlite_running {
+        if ($negative_cache->{time} && time < $negative_cache->{time} + 60) {
+            # need to cache the result, otherwise too slow
+            return $negative_cache->{fact};
+        } else {
+            $negative_cache = {}; # reset
+        }
+        my $ret = $CPAN::Config->{use_sqlite} && ($CPAN::SQLite || _init_sqlite());
+        return $ret if $ret; # fast anyway
+        $negative_cache->{time} = time;
+        return $negative_cache->{fact} = $ret;
+    }
 }
 
 package CPAN::CacheMgr;
@@ -2236,7 +2245,7 @@ sub failed {
     my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
-      NAY: for my $nosayer (
+      NAY: for my $nosayer ( # order matters!
                             "unwrapped",
                             "writemakefile",
                             "signature_verify",
@@ -5326,23 +5335,28 @@ sub get {
   EXCUSE: {
 	my @e;
         if ($self->prefs->{disabled}) {
-            push @e, sprintf(
-                             "disabled via prefs file '%s' doc %d",
-                             $self->{prefs_file},
-                             $self->{prefs_file_doc},
-                            );
+            my $why = sprintf(
+                              "Disabled via prefs file '%s' doc %d",
+                              $self->{prefs_file},
+                              $self->{prefs_file_doc},
+                             );
+            push @e, $why;
+            $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $why");
+            # note: not intended to be persistent but at least visible
+            # during this session
+        } else {
+            exists $self->{build_dir} and push @e,
+                "Is already unwrapped into directory $self->{build_dir}";
+
+            exists $self->{unwrapped} and (
+                                           UNIVERSAL::can($self->{unwrapped},"failed") ?
+                                           $self->{unwrapped}->failed :
+                                           $self->{unwrapped} =~ /^NO/
+                                          )
+                and push @e, "Unwrapping had some problem, won't try again without force";
         }
-	exists $self->{build_dir} and push @e,
-	    "Is already unwrapped into directory $self->{build_dir}";
 
-        exists $self->{unwrapped} and (
-                                       UNIVERSAL::can($self->{unwrapped},"failed") ?
-                                       $self->{unwrapped}->failed :
-                                       $self->{unwrapped} =~ /^NO/
-                                      )
-            and push @e, "Unwrapping had some problem, won't try again without force";
-
-	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+	$CPAN::Frontend->mywarn(join "", map {"$_\n"} @e) and return if @e;
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
@@ -6258,32 +6272,46 @@ sub eq_CHECKSUM {
 #-> sub CPAN::Distribution::force ;
 sub force {
   my($self, $method) = @_;
- ATTRIBUTE: for my $att (qw(
-                  CHECKSUM_STATUS
-                  archived
-                  badtestcnt
-                  build_dir
-                  install
-                  localfile
-                  make
-                  make_test
-                  modulebuild
-                  prefs
-                  prefs_file
-                  prereq_pm
-                  prereq_pm_detected
-                  reqtype
-                  signature_verify
-                  unwrapped
-                  writemakefile
-                  yaml_content
- )) {
-      if ($self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
-          # cannot be undone for local distros
-          next ATTRIBUTE;
+  my %phase_map = (
+                   get => [
+                           "unwrapped",
+                           "build_dir",
+                           "archived",
+                           "localfile",
+                           "CHECKSUM_STATUS",
+                           "signature_verify",
+                           "prefs",
+                           "prefs_file",
+                           "prefs_file_doc",
+                          ],
+                   make => [
+                            "writemakefile",
+                            "make",
+                            "modulebuild",
+                            "prereq_pm",
+                            "prereq_pm_detected",
+                           ],
+                   test => [
+                            "badtestcnt",
+                            "make_test",
+                           ],
+                   install => [
+                               "install",
+                              ],
+                   unknown => [
+                               "reqtype",
+                               "yaml_content",
+                              ],
+                  );
+ PHASE: for my $phase (qw(get make test install unknown)) { # tentative
+    ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
+          if ($phase eq "get" && $self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
+              # cannot be undone for local distros
+              next ATTRIBUTE;
+          }
+          delete $self->{$att};
+          CPAN->debug(sprintf "phase[%s]att[%s]", $phase, $att) if $CPAN::DEBUG;
       }
-      delete $self->{$att};
-      CPAN->debug(sprintf "att[%s]", $att) if $CPAN::DEBUG;
   }
   if ($method && $method =~ /make|test|install/) {
     $self->{"force_update"}++; # name should probably have been force_install
@@ -6663,11 +6691,11 @@ sub _run_via_expect {
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;  # expo Expect object;
         $expo->spawn($system);
-        my $expecta = $expect_model->{talk};
-        if ($expect_model->{mode} eq "expect") {
-            return $self->_run_via_expect_deterministic($expo,$expecta);
-        } elsif ($expect_model->{mode} eq "expect-in-any-order") {
-            return $self->_run_via_expect_anyorder($expo,$expecta);
+        $expect_model->{mode} ||= "deterministic";
+        if ($expect_model->{mode} eq "deterministic") {
+            return $self->_run_via_expect_deterministic($expo,$expect_model);
+        } elsif ($expect_model->{mode} eq "anyorder") {
+            return $self->_run_via_expect_anyorder($expo,$expect_model);
         } else {
             die "Panic: Illegal expect mode: $expect_model->{mode}";
         }
@@ -6678,9 +6706,9 @@ sub _run_via_expect {
 }
 
 sub _run_via_expect_anyorder {
-    my($self,$expo,$expecta) = @_;
-    my $timeout = 3; # currently unsettable
-    my @expectacopy = @$expecta; # we trash it!
+    my($self,$expo,$expect_model) = @_;
+    my $timeout = $expect_model->{timeout} || 5;
+    my @expectacopy = @{$expect_model->{talk}}; # we trash it!
     my $but = "";
   EXPECT: while () {
         my($eof,$ran_into_timeout);
@@ -6723,18 +6751,12 @@ sub _run_via_expect_anyorder {
 }
 
 sub _run_via_expect_deterministic {
-    my($self,$expo,$expecta) = @_;
+    my($self,$expo,$expect_model) = @_;
     my $ran_into_timeout;
+    my $timeout = $expect_model->{timeout} || 15; # currently unsettable
+    my $expecta = $expect_model->{talk};
   EXPECT: for (my $i = 0; $i <= $#$expecta; $i+=2) {
-        my($next,$send) = @$expecta[$i,$i+1];
-        my($timeout,$re);
-        if (ref $next) {
-            $timeout = $next->{timeout};
-            $re = $next->{expect};
-        } else {
-            $timeout = 15;
-            $re = $next;
-        }
+        my($re,$send) = @$expecta[$i,$i+1];
         CPAN->debug("timeout[$timeout]re[$re]") if $CPAN::DEBUG;
         my $regex = eval "qr{$re}";
         $expo->expect($timeout,
@@ -7504,14 +7526,12 @@ sub _prefs_with_expect {
     return unless my $where_prefs = $prefs->{$where};
     if ($where_prefs->{expect}) {
         return {
-                mode => "expect",
+                mode => "deterministic",
+                timeout => 15,
                 talk => $where_prefs->{expect},
                };
-    } elsif ($where_prefs->{"expect-in-any-order"}) {
-        return {
-                mode => "expect-in-any-order",
-                talk => $where_prefs->{"expect-in-any-order"},
-               };
+    } elsif ($where_prefs->{"eexpect"}) {
+        return $where_prefs->{"eexpect"};
     }
     return;
 }

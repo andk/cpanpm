@@ -33,13 +33,3 @@ comment: "Prohibit working with 2.14"
 match:
   distribution: "^ABW/Template-Toolkit-2.14"
 disabled: 1
----
-comment: "2 alternative ways to disable"
-match:
-  distribution: "^ABW/Template-Toolkit-2.14"
-cpanconfig:
-  make: "false"
-pl:
-  expect:
-    - timeout: 1
-      expect: "expect the unexpectable to trigger a timeout"

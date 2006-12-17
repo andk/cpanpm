@@ -9,12 +9,15 @@ pl:
     - Belle
     - de
     - jour
-  expect-in-any-order:
-    - "6\*8"
-    - "48\n"
-    - "3\*2"
-    - "6\n"
-    - "3\*7"
-    - "21\n"
-    - "Unicode Codepoint of Won, hexadecimal"
-    - "20A9\n"
+  eexpect:
+    mode: anyorder
+    timeout: 2
+    talk:
+      - "6\*8"
+      - "48\n"
+      - "3\*2"
+      - "6\n"
+      - "3\*7"
+      - "21\n"
+      - "Unicode Codepoint of Won, hexadecimal"
+      - "20A9\n"
