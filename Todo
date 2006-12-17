@@ -1,6 +1,377 @@
 2006-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	*  (make): 
+	* See recent bugreport on modules against pause indexer and version
+	objects and consider how it affects us here.
+
+	* Todo: enable batch jobs to trigger cleanup of the build directory.
+	Methods: scan_cache, tidyup, Variable: scan_cache. LOCK.
+
+	No, only checklock needs to be made something official. Maybe rename to
+	get_lock then.
+
+	* #23887 has a patch. DUPLICATE of 23933.
+
+	* From an Email from Ingy to Steffen Mueller:
+
+The idea is to make things a lot easier for a lot more people to be
+involved. Well that's part of the plan anyway. Mostly I intend Kwiki to
+be downloadable and installable via subversion rather than cpan.
+
+While I don't intend to completely abandon cpan, I also am not so
+interested in keeping cpan up to date. Really it should be automated
+somehow. Anyway, all this is to say that if you want to shepard Kwiki on
+cpan, you are most welcome to.
+
+	An argument for "commandline" but maybe for even more.
+
+	* Despite all the care that goes into the distroprefs directory, we
+	always will fail on some distros that ask questions and hang forever.
+	It's time to rethink a global way out of modules that hang in an IO
+	operation.
+
+	* priorities today: force, commandline
+
+	* DBD::mysql: I'm sure there is just a defined() somewhere missing in
+	the Makefile.PL
+
+	* DBD::SQLite again: With bleadperl 29398 and current CPAN.pm I tried to
+	install /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. but again it failed
+	because DBD::SQLite did not write its SQLite.xsi file. I fear there's
+	something being (not) done in the Makefile.PL instead of during make.
+
+	Yes. On the second try DBD::SQLite builds perfectly well. So one must
+	make sure that they are installed in this order. Maybe this is normal
+	for DBDs? I have never noticed this before. Hrm. This would be a case
+	for re-running perl Makefile.PL after building the prereqs.
+
+	If we had 'commandline', we would write
+
+make:
+	commandline: "make; $PERL Makefile.PL; make"
+
+	Or something like that. Will test as soon as we have 'commandline'.
+
+	* priorities: bugfixing; SQLite; Kwalify;
+
+	redesigning the force pragma: biggie; see showstopper alert
+
+	distroprefs left over: single ersatzcommand for the test mantras: we
+	currently can change the make command and the arguments at the end but
+	the word test is always on the command line and this looks silly. But
+	maybe not worth a new keyword. But I've also proposed ->{test}{skip}, so
+	the two can be folded perhaps? ---- On the bycicle it occurred to me: we
+	add "commandline" to each of get/make/test/install and then the user can
+	even say "cd .... && cvs up" or "perl -e 1". I like it.
+
+	11-17 lists a few things for documentation.
+
+	TTL stuff
+
+	make up your mind about install_tested.
+
+	* I'm convinced now that we need more force flavors and that force shall
+	be limited in scope
+
+	force get     shall re-fetch
+	force make    shall not re-fetch   but run make again
+	force test    shall not make again but try to test again
+	force install shall not test again but try to install
+
+	* But when we have four different force flavors, we will demand a
+	superforce that works like the force now does and sets all "lower" ones?
+
+	* Todo: when fixing force note that the documentation about force is in
+	three places: CPAN::{Bundle,Distribution,Module}::force.
+
+	* Todo: distroprefs mechanism is still inefficient in that it scans too
+	often the whole distro_dir. (But it's super to have that while
+	developing new rules)
+
+	* document build_requires and when you talk about prerequisites, name
+	the option names explicitly.
+
+	* make _get_urllist a public method for Randy.
+
+	* Write manpage for CPAN::HandleConfig, esp load().
+
+	* I realize that CPAN::FTP::localize is undocumented and is what Randy
+	wants.
+
+	* Integrate hosts into $META like authors, distributions, and modules?
+	If we're cautious, this might turn into an automatic optimization.
+
+	If Coro does index downloads for us, we do not have to fear slow
+	connections and can gather better data.
+
+	* Catalyst would be another candidate for a large dependency list.
+
+	* Guessing of -p0/-p1 for patch maybe wrong if the patch tries to create
+	a new file against, say, /dev/null.
+
+	* Would be nice: integrate the config variable name into the init
+	dialogs such that one has a chance to learn their names over time.
+
+	* Would be nice: 'o conf /check/' to list all variables matching a regex.
+
+	* Bug that has to do with install_tested or build_dir_reuse or degraded
+	shell mode or some use of ^C at the wrong moment:
+
+  PEREINAR/File-Which-0.05.tar.gz              : install NO
+
+	But File::Which is installed. Maybe in a concurrent shell. When I ask
+	for 'install File::Which' I get 'is up to date' and nothing gets
+	repaired. When I ask for 'install PEREINAR/File-Which-0.05.tar.gz' then
+	the thing gets tested but not installed because 'Already tried without
+	success'.
+
+	Are we in trouble?
+
+	Maybe we must rethink how 'force test' works. It should not 'force get',
+	and 'force make', it should just test and not refuse to do it.
+
+	Or we must compute the COMMANDID better than we do during reanimate and
+	treat negative COMAMNDIDs with more rigor in some constellations?
+
+	The thing is that the module object for File::Which knows about the
+	correct distro object but it gets the installed version from @INC and
+	does not know who put it there and so should not be able to discard the
+	distro object. Hmmm.
+
+	Remember, we have the notest pragma! Maybe we can let install_tested
+	support both the force and the notest pragma and are through?
+
+	But no, even 'notest install ...' does not succeed because we need
+	force, not notest, but force propagates down until we restart with get.
+	This is, of course a last resort, but it's no fun:-(
+
+	SHOWSTOPPER ALERT!
+
+	At least I get the impression this extreme case happens only on ^C, but
+	some other methods of dieing will certainly exist as well.
+
+	* Todo: offer the choice between (readline) Gnu and Perl and Coro. See
+	my trials in the bin/ directory (SVN only). Possibly this is done via
+	envariables? Then we only should document it.
+
+	* Mail::Send problem persists that Test::Reporter's mails do not arrive
+	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
+	case I must disable installation of Mail::Send somehow or debug.
+	Test::Reporter has got a wish item via RT already some weeks ago.
+
+	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
+
+	LWP failed with code[500] message[read timeout]
+Trying to get away with old file:
+6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
+Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
+  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
+.
+Caught SIGINT, trying to continue
+	
+cpan> hosts
+Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
+
+
+	* if we make the TTLs setable, maybe we should make the TTL for
+	CHECKSUMS file too. In any case we have the problem of imacat also when
+	the TTL of the local copy of the CHECKSUMS file has not yet been
+	reached!
+
+	* Coro. See also notes below, search for anyevent	
+
+	* Observing in a shell in degraded mode: it wrote a new Metadata file.
+
+	* Observing how install_tested behaves: within the same session it
+	installs without retesting. In a new session it does retest. What
+	*should* it do?
+	
+	Noting that the DH test runs forever again because GMP comes too late.
+
+	* Watch the Module::Build space for updates to the question of calling
+	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
+
+	* write a patch for Test::Reporter so you can choose the mail sending
+	module? Reported 2005-07:
+	http://rt.cpan.org/Ticket/Display.html?id=13836
+
+	* Investigate if I want Math::Bigint::GMP in the core. Think of
+	Crypt::DH and the horrible test timings when Math::Bigint::GMP is not
+	installed
+
+	* find out why upgrade always upgrades
+	Apache::Session::Generate::ModUniqueId and ...::ModUserTrack.
+
+	Seems to be Apache-Session-1.81/Session/Generate/ModUniqueId.pm and
+	Apache-Session-1.81/Session/Generate/ModUsertrack.pm
+
+	SO OK, nothing to worry.
+
+	* The Net::SSH::Perl test 03-packet still runs forever even with
+	Math::Bigint::GMP. Maybe this is completely unrelated? Yes! No load!
+	Report sent. But can we patch it? Maybe not as long as Math::Pari and
+	Crypt::Random are prereqs and fail themselves.
+
+	* In Crypt::DH rewrite the test so that TEST_VERBOSE tells us timings
+	and Math::BigInt internals. No need! It's Math::Bigint again. Test is
+	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
+	not enough. But can we patch it?
+
+	* The first thing that I encounter when I start testing instead of
+	installing things is that test doesn't stop when the installed version
+	is higher than or equal to the CPAN version. Ilya invented for that
+	test_uptodate??
+
+	* CPAN::Checksums -> Data::Compare -> File::Find::Rule ->
+	Number::Compare
+	
+	* I wanted to watch some scenarios with persistent data. Especially with
+	modules that work and that are being tested again and again with prereqs
+	and without or within bundles and if they are retested or not, installed
+	or not with persistence and within the same session.
+
+	Write a megatest?
+
+	* Study "pip" by Adam K (in Module-Plan-Base) and CPAN::Mini::Tested and
+	CPAN::Mini::Phalanx100 and also see what we can do for
+	Module::ThirdParty
+
+	* replace 03 index file with YAML.
+
+	* Provide an API or documentation how to find out the CPAN::Config
+	variables.
+
+	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
+	CONTAINSMODS is empty because Gabor has a distro in the bundle.
+
+	* Now I know the first bug in install_tested: it re-tests already
+	installed modules.
+
+	* One thing we do not support yet in distroprefs is adding dependencies
+	without patching. Shall we?
+
+	* Todo: clean up "XXX" in the code
+
+	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
+	FOO', we should only check for the authors database, etc.
+
+	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	get rid of the term_is_latin variable. Test output with locales.
+
+	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	remember details. Hint: DBM::Deep promises significant memory savings
+	and in that branch we tried to see how it can be made to work for us.
+
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
+	#21791 has its bugreport. I don't like that most of the subroutines are
+	thrown into CPAN::Distribution either. OTOH, we have commands that have
+	no central role within CPAN. One can always refuse to use them. Hrm.
+	HTML::Display!
+
+	* E5: (again and again) verify that the CPAN.pm-using modules continue
+	to work:
+
+	DMUEY/AltaVista-BabelFish
+	MSCHILLI/CPAN-Unwind
+	ULPFR/CPAN-WAIT
+	RJRAY/Devel-Modlist
+	SMUELLER/PAR-Dist-FromCPAN
+	DAGOLDEN/Perl-Dist
+	CRAKRJACK/Test-CPANpm
+
+	* E5 watch RT for open tickets. This todo can never be closed.
+
+	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
+	CPAN.pm is covered
+
+	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
+	the future of locking, the future of DBM::Deep, protocol changes. Not
+	sure what to test.
+
+	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
+	about a very old bug in Archive::Tar that is most probably fixed. Turn
+	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
+	It is slow but everything should just plain work. When we're confident
+	that everything works, we could offer a tar_policy option that has
+	options "ext" and "mod", for external programs vs. modules, default to
+	"ext"?
+
+	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
+	the beginning of the path gets ./sh as his shell from FirstTime. If we
+	encounter . in the path we should rather ignore it. But first we must
+	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
+	Schulze. This has nothing to do with -I. but only with the shell and
+	$ENV{PATH} and as we do not know which shell it was it seems we cannot
+	test for the problem.
+
+	* H1 These days developer TELS posted to perl5-porters that his newest
+	release is available at
+
+	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	Suddenly it dawned on me that I want to support
+
+	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	What am I missing?
+
+	The other commands dealing with files would have to learn a bit.
+
+	d http://      # fails as before with "No objects of...."
+
+	               # alt: does a HEAD and tells user that the URL can e reached
+
+	ls http://     # lists nothing
+
+	               # alt: says that ls doesn't support URLs
+
+	get http://    # this is probably all we need to implement. Maybe a new
+	               # class needed that does as_string and as_glimpse as well?
+
+	And maybe a pragma that turns this feature on? So that 'get http://...'
+	never works but 'force get http://...' does? Alt: config variable to
+	turn feature on, then a separate module that implements it.
+
+	Brian likes the idea
+
+From: brian d foy <brian.d.foy@gmail.com>
+Subject: Re: Welcome new user LOCAL
+To: modules@perl.org
+Date: Mon, 18 Sep 2006 14:52:48 -0500
+Organization: Perl Authors Upload Server
+Reply-To: modules@perl.org
+
+In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
+<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
+
+> My spontaneous idea was to support the command
+> 
+>     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+
+oh, very interesting, especially if I already have the file:
+
+   cpan> get file:///....
+
+This makes CPAN::Mini::Inject a bit less useful because I no longer
+need the middle man.
+
+
+	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
+	and jarkko
+
+	* M2 feature request by Juergen Christoffel: have time stamps on the
+	history and a history command to see them
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* Bug in T:B:
 
 	Text::Balanced            v1.99.1_1      1.98  DCONWAY/Text-Balanced-1.98.tar.gz
 
@@ -324,10 +695,19 @@ make:
 	course) and that one could safe minutes for Plagger if a timeout were
 	set to 0.1 or so.
 
+	Update 2006-12-17 akoenig : low global timeout value does not work
+	because the first question has a few seconds to wait for whatever. So
+	one would really need tiemouts per question and in the case of anyorder
+	one would have toi calculate the current maximum for the timeout and
+	while this would be doable it would be overspecification, too much to
+	learn for the user with too little gain to be made. REJECTED
+
 2006-11-27  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Todo: if some other processes have deleted my build_dir while I was
 	running, heck maybe I can do that even myself, react accordingly
+
+	DONE.
 
 2006-11-26  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
@@ -365,7 +745,7 @@ make:
 
 	11-17 lists a few things for documentation.
 
-	restructure the expect keyword family
+	restructure the expect keyword family DONE
 
 	TTL stuff
 
@@ -382,7 +762,7 @@ make:
 
 2006-11-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* I'm conviced now that we need more force flavors and that force shall
+	* I'm convinced now that we need more force flavors and that force shall
 	be limited in scope
 
 	force get     shall re-fetch
@@ -407,6 +787,8 @@ make:
 2006-11-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* kwalify schema language: http://rubyforge.org/frs/?group_id=815&release_id=5513
+
+	Docs: http://www.kuwata-lab.com/kwalify/users-guide.01.html
 
 	Yaml mode: http://svn.clouder.jp/repos/public/yaml-mode/trunk
 
