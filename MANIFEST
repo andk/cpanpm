@@ -68,6 +68,8 @@ distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MLEHMANN.Coro.yml
+distroprefs/MSERGEANT.DBD-SQLite.yml
+distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml

@@ -2,10 +2,16 @@
 
 	* release 1.88_66
 
+	* bugfix: protect FTPstats.yml from being truncated
+
+	* bugfix: now really remove the dependency on YAML::Syck in the Makefile
+
 	* distroprefs: deprecate expect-in-any-order and replace with eexpect
 
 	* distroprefs: attach a Distrostatus object to disabled distros in
 	$self->{unwrapped}
+
+	* distroprefs: new keyword 'commandline'
 
 	* sqlite: deprecate config variable sqlite_dbname
 
