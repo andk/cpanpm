@@ -3,13 +3,9 @@ comment: "expect for the first time with unpredictable order of questions"
 match:
   distribution: "^ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-"
 pl:
-  commandline: "$PERL -le 'print q{Hello COMMANDLINE,}'; $PERL Makefile.PL"
+  commandline: "$PERL -le 'print q{Hello COMMANDLINE,}'; $PERL Makefile.PL Belle de jour"
   env:
     PERL_TEST_DUMMY_PERL5_MAKE_EXPECT: 'Oui, je suis Catherine Deneuve'
-  args:
-    - Belle
-    - de
-    - jour
   eexpect:
     mode: anyorder
     timeout: 2

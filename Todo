@@ -14,18 +14,19 @@
 	arrayref and later comes to the conclusion that he may write the first
 	record.
 
+	Most probably fixed now. The code that truncated did not check if we
+	were really able to write afterwards.
+
 2006-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* See recent bugreport on modules against pause indexer and version
-	objects and consider how it affects us here.
+	objects and consider how it affects us here. SEEMS OK.
 
 	* Todo: enable batch jobs to trigger cleanup of the build directory.
 	Methods: scan_cache, tidyup, Variable: scan_cache. LOCK.
 
 	No, only checklock needs to be made something official. Maybe rename to
 	get_lock then.
-
-	* #23887 has a patch. DUPLICATE of 23933.
 
 	* From an Email from Ingy to Steffen Mueller:
 
@@ -415,7 +416,7 @@ Going to read /home/ftp/pub/CPAN/authors/01mailrc.txt.gz
 
 2006-12-15  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	* #23933 ! ANSWERED
+	* #23887 has a patch. DUPLICATE of 23933. #23933 ! ANSWERED
 
 2006-12-12  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
