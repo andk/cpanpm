@@ -55,6 +55,9 @@ $VAR1 = {
             }
           ],
           "type" => "seq"
+        },
+        "commandline" => {
+          "type" => "text"
         }
       },
       "type" => "map"
