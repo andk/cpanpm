@@ -1,3 +1,11 @@
+2006-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* autosave variable?
+
+	* Bug: still the dependency on YAML::Syck in the Makefile
+
+	* Bug: hosts statistics was cut off before Dec. 17.
+
 2006-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* See recent bugreport on modules against pause indexer and version

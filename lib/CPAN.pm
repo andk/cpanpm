@@ -3105,6 +3105,7 @@ sub _ftp_statistics {
     return $stats->[0];
 }
 
+#-> sub CPAN::FTP::_mytime
 sub _mytime () {
     if (CPAN->has_inst("Time::HiRes")) {
         return Time::HiRes::time();
@@ -3113,6 +3114,7 @@ sub _mytime () {
     }
 }
 
+#-> sub CPAN::FTP::_new_stats
 sub _new_stats {
     my($self,$file) = @_;
     my $ret = {
@@ -3123,6 +3125,7 @@ sub _new_stats {
     $ret;
 }
 
+#-> sub CPAN::FTP::_add_to_statistics
 sub _add_to_statistics {
     my($self,$stats) = @_;
     $stats->{thesiteurl} = $ThesiteURL;
@@ -3133,15 +3136,25 @@ sub _add_to_statistics {
     }
     my $fh = FileHandle->new;
     my $fullstats = $self->_ftp_statistics($fh);
+    my @debug = scalar @{$fullstats->{history}};
     push @{$fullstats->{history}}, $stats;
     my $time = time;
     shift @{$fullstats->{history}}
         while $time - $fullstats->{history}[0]{start} > 30*86400; # one month too much?
+    push @debug, scalar @{$fullstats->{history}};
+    push @debug, scalar localtime($fullstats->{history}[0]{start});
+    {
+        local $CPAN::DEBUG = 512;
+        CPAN->debug(sprintf("DEBUG history: before[%d]after[%d]oldest[%s]",
+                            @debug,
+                           )) if $CPAN::DEBUG;
+    }
     CPAN->_yaml_dumpfile($fh,$fullstats);
 }
 
 # if file is CHECKSUMS, suggest the place where we got the file to be
 # checked from, maybe only for young files?
+#-> sub CPAN::FTP::_recommend_url_for
 sub _recommend_url_for {
     my($self, $file) = @_;
     my $urllist = $self->_get_urllist;
@@ -3165,6 +3178,7 @@ sub _recommend_url_for {
     }
 }
 
+#-> sub CPAN::FTP::_get_urllist
 sub _get_urllist {
     my($self) = @_;
     $CPAN::Config->{urllist} ||= [];
@@ -7126,7 +7140,7 @@ sub unsat_prereq {
                     }
                 } elsif ($rq =~ m|<=?\s*|) {
                     # 2005-12: no user
-                    $CPAN::Frontend->mywarn("Downgrading not supported (rq[$rq])");
+                    $CPAN::Frontend->mywarn("Downgrading not supported (rq[$rq])\n");
                     $ok++;
                     next RQ;
                 }
