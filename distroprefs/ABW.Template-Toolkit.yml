@@ -1,5 +1,10 @@
 --- 
-comment: "The patch is a reaction to http://rt.cpan.org/Ticket/Display.html?id=20807 ; for the options you would probably prefer setting TT_* commandline args"
+comment: |
+
+  The patch is a reaction to
+  http://rt.cpan.org/Ticket/Display.html?id=20807 ; for the options
+  you would probably prefer setting TT_* commandline args
+
 match:
   distribution: "^ABW/Template-Toolkit-2.15"
 pl: 

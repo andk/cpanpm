@@ -1,0 +1,10 @@
+---
+comment: |
+
+  Because the Makefile.PL depends on having DBI installed we want to
+  let them build DBI and then rerun perl Makefile.PL and then make"
+
+match:
+  distribution: "^MSERGEANT/DBD-SQLite-1\.13\.tar\.gz"
+make:
+  commandline: "$PERL Makefile.PL; make"

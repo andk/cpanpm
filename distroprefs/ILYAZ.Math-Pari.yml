@@ -1,5 +1,4 @@
 --- 
-comment: "This patch has been authorized by Ilya in an email and fixes compilation under the LONG_SHORTER_THAN_IV condition"
 match:
   distribution: "^ILYAZ/modules/Math-Pari-2.010709"
 pl: 

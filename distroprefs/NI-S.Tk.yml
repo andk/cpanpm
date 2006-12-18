@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^NI-S/Tk-804\.027\.tar\.gz$"
+patches:
+  - "SREZIC/patches/Tk-804.027-p4.patch.gz"

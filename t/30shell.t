@@ -1078,7 +1078,7 @@ __END__
 #R:YAML patch
 ########
 #P:test ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
-#E:D i s t r o[\s\S]+?test -- OK
+#E:COMMANDLINE[\s\S]+?D i s t r o[\s\S]+?test -- OK
 #T:30
 #R:Expect YAML
 ########

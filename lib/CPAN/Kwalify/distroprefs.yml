@@ -28,6 +28,8 @@ mapping:
         type: seq
         sequence:
           - type: text
+      commandline:
+        type: text
       env:
         type: map
         mapping:

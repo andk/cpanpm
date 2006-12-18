@@ -133,6 +133,8 @@ C<expect>.
 
     expect: []
 
+    commendline: "echo SKIPPING make"
+
   test: 
     args: []
 
@@ -167,6 +169,34 @@ keywords is as follows:
 
 A comment
 
+=item cpanconfig [hash]
+
+Temporarily override assorted C<CPAN.pm> configuration variables.
+
+Supported are: C<build_requires_install_policy>, C<check_sigs>,
+C<make>, C<make_install_make_command>, C<prefer_installer>,
+C<test_report>
+
+=item disabled [boolean]
+
+Specifies that this distribution shall not be processed at all.
+
+=item goto [string]
+
+The canonical name of a delegate distribution that shall be installed
+instead. Useful when a new version that, although it tests OK itself,
+breaks something else.
+
+=item install [hash]
+
+Processing instructions for the C<make install> or C<./Build install>
+phase of the CPAN mantra. See below under I<Processiong Instructions>.
+
+=item make [hash]
+
+Processing instructions for the C<make> or C<./Build> phase of the
+CPAN mantra. See below under I<Processiong Instructions>.
+
 =item match [hash]
 
 A hashref with one or more of the keys C<distribution>, C<modules>, or
@@ -188,45 +218,6 @@ values must all match. If this is the case then the hashref
 represented by the YAML document is returned as the preference
 structure for the current distribution.
 
-=item disabled [boolean]
-
-Specifies that this distribution shall not be processed at all.
-
-=item goto [string]
-
-The canonical name of a delegate distribution that shall be installed
-instead. Useful when a new version that, although it tests OK itself,
-breaks something else.
-
-=item cpanconfig [hash]
-
-Temporarily override assorted C<CPAN.pm> configuration variables.
-
-Supported are: C<build_requires_install_policy>, C<check_sigs>,
-C<make>, C<make_install_make_command>, C<prefer_installer>,
-C<test_report>
-
-=item pl [hash]
-
-Processing instructions for the C<perl Makefile.PL> or C<perl
-Build.PL> phase of the CPAN mantra. See below under I<Processiong
-Instructions>.
-
-=item make [hash]
-
-Processing instructions for the C<make> or C<./Build> phase of the
-CPAN mantra. See below under I<Processiong Instructions>.
-
-=item test [hash]
-
-Processing instructions for the C<make test> or C<./Build test> phase
-of the CPAN mantra. See below under I<Processiong Instructions>.
-
-=item install [hash]
-
-Processing instructions for the C<make install> or C<./Build install>
-phase of the CPAN mantra. See below under I<Processiong Instructions>.
-
 =item patches [array]
 
 An array of patches on CPAN or on the local disk to be applied in
@@ -234,19 +225,32 @@ order via the external patch program. If the value for the C<-p>
 parameter is C<0> or C<1> is determined by reading the patch
 beforehand.
 
+=item pl [hash]
+
+Processing instructions for the C<perl Makefile.PL> or C<perl
+Build.PL> phase of the CPAN mantra. See below under I<Processiong
+Instructions>.
+
+=item test [hash]
+
+Processing instructions for the C<make test> or C<./Build test> phase
+of the CPAN mantra. See below under I<Processiong Instructions>.
+
 =back
 
 =head2 Processing Instructions
 
 =over
 
-=item env [hash]
-
-Environment variables to be set during the command
-
 =item args [array]
 
 Arguments to be added to the command line
+
+=item commandline
+
+A full commandline that will be executed as it stands by a system
+call. During the execution the environment variable PERL will is set
+to $^X.
 
 =item eexpect [hash]
 
@@ -278,6 +282,10 @@ the array, so if you want to answer the question C<Do you really want
 to do that> several times, then it must be included in the array at
 least as often as you want this answer to be given.
 
+=item env [hash]
+
+Environment variables to be set during the command
+
 =item expect [array]
 
 C<< expect: <array> >> is a short notation for
@@ -289,7 +297,7 @@ C<< expect: <array> >> is a short notation for
 
 =back
 
-=head1 PATCHES
+=head1 DEALING WITH PATCHES
 
 My procedure when I encounter a broken package:
 

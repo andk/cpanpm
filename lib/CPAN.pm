@@ -3095,13 +3095,6 @@ sub _ftp_statistics {
         }
     }
     my $stats = CPAN->_yaml_loadfile($file);
-    if ($locktype == LOCK_SH) {
-    } else {
-        seek $fh, 0, 0;
-        if (@$stats){ # no yaml no write
-            truncate $fh, 0;
-        }
-    }
     return $stats->[0];
 }
 
@@ -3128,28 +3121,34 @@ sub _new_stats {
 #-> sub CPAN::FTP::_add_to_statistics
 sub _add_to_statistics {
     my($self,$stats) = @_;
-    $stats->{thesiteurl} = $ThesiteURL;
-    if (CPAN->has_inst("Time::HiRes")) {
-        $stats->{end} = Time::HiRes::time();
-    } else {
-        $stats->{end} = time;
+    my $yaml_module = $self->CPAN::_yaml_module;
+    if ($CPAN::META->has_inst($yaml_module)) {
+        $stats->{thesiteurl} = $ThesiteURL;
+        if (CPAN->has_inst("Time::HiRes")) {
+            $stats->{end} = Time::HiRes::time();
+        } else {
+            $stats->{end} = time;
+        }
+        my $fh = FileHandle->new;
+        my $fullstats = $self->_ftp_statistics($fh);
+        $fullstats->{history} ||= [];
+        my @debug = scalar @{$fullstats->{history}};
+        push @{$fullstats->{history}}, $stats;
+        my $time = time;
+        shift @{$fullstats->{history}}
+            while $time - $fullstats->{history}[0]{start} > 30*86400; # one month too much?
+        push @debug, scalar @{$fullstats->{history}};
+        push @debug, scalar localtime($fullstats->{history}[0]{start});
+        {
+            # local $CPAN::DEBUG = 512;
+            CPAN->debug(sprintf("DEBUG history: before[%d]after[%d]oldest[%s]",
+                                @debug,
+                               )) if $CPAN::DEBUG;
+        }
+        seek $fh, 0, 0;
+        truncate $fh, 0;
+        CPAN->_yaml_dumpfile($fh,$fullstats);
     }
-    my $fh = FileHandle->new;
-    my $fullstats = $self->_ftp_statistics($fh);
-    my @debug = scalar @{$fullstats->{history}};
-    push @{$fullstats->{history}}, $stats;
-    my $time = time;
-    shift @{$fullstats->{history}}
-        while $time - $fullstats->{history}[0]{start} > 30*86400; # one month too much?
-    push @debug, scalar @{$fullstats->{history}};
-    push @debug, scalar localtime($fullstats->{history}[0]{start});
-    {
-        local $CPAN::DEBUG = 512;
-        CPAN->debug(sprintf("DEBUG history: before[%d]after[%d]oldest[%s]",
-                            @debug,
-                           )) if $CPAN::DEBUG;
-    }
-    CPAN->_yaml_dumpfile($fh,$fullstats);
 }
 
 # if file is CHECKSUMS, suggest the place where we got the file to be
@@ -6511,8 +6510,17 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
     }
 
+    my %env;
+    while (my($k,$v) = each %ENV) {
+        next unless defined $v;
+        $env{$k} = $v;
+    }
+    local %ENV = %env;
     my $system;
-    if ($self->{'configure'}) {
+    if (my $commandline = $self->prefs->{pl}{commandline}) {
+        $system = $commandline;
+        $ENV{PERL} = $^X;
+    } elsif ($self->{'configure'}) {
         $system = $self->{'configure'};
     } elsif ($self->{modulebuild}) {
 	my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
@@ -6531,12 +6539,6 @@ is part of the perl-%s distribution. To install that, you need to run
                           $makepl_arg ? " $makepl_arg" : "",
                          );
     }
-    my %env;
-    while (my($k,$v) = each %ENV) {
-        next unless defined $v;
-        $env{$k} = $v;
-    }
-    local %ENV = %env;
     if (my $env = $self->prefs->{pl}{env}) {
         for my $e (keys %$env) {
             $ENV{$e} = $env->{$e};
@@ -6645,22 +6647,27 @@ is part of the perl-%s distribution. To install that, you need to run
       delete $self->{force_update};
       return;
     }
-    if ($self->{modulebuild}) {
-        unless (-f "Build") {
-            my $cwd = CPAN::anycwd();
-            $CPAN::Frontend->mywarn("Alert: no Build file available for 'make $self->{id}'".
-                                    " in cwd[$cwd]. Danger, Will Robinson!");
-            $CPAN::Frontend->mysleep(5);
-        }
-        $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
+    if (my $commandline = $self->prefs->{make}{commandline}) {
+        $system = $commandline;
+        $ENV{PERL} = $^X;
     } else {
-        $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
+        if ($self->{modulebuild}) {
+            unless (-f "Build") {
+                my $cwd = CPAN::anycwd();
+                $CPAN::Frontend->mywarn("Alert: no Build file available for 'make $self->{id}'".
+                                        " in cwd[$cwd]. Danger, Will Robinson!");
+                $CPAN::Frontend->mysleep(5);
+            }
+            $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
+        } else {
+            $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
+        }
+        my $make_arg = $self->make_x_arg("make");
+        $system = sprintf("%s%s",
+                          $system,
+                          $make_arg ? " $make_arg" : "",
+                         );
     }
-    my $make_arg = $self->make_x_arg("make");
-    $system = sprintf("%s%s",
-                      $system,
-                      $make_arg ? " $make_arg" : "",
-                     );
     if (my $env = $self->prefs->{make}{env}) { # overriding the local
                                                # ENV of PL, not the
                                                # outer ENV, but
@@ -7415,7 +7422,10 @@ sub test {
     }
 
     my $system;
-    if ($self->{modulebuild}) {
+    if (my $commandline = $self->prefs->{test}{commandline}) {
+        $system = $commandline;
+        $ENV{PERL} = $^X;
+    } elsif ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
     } else {
         $system = join " ", $self->_make_command(), "test";
@@ -7719,7 +7729,10 @@ sub install {
     }
 
     my $system;
-    if ($self->{modulebuild}) {
+    if (my $commandline = $self->prefs->{install}{commandline}) {
+        $system = $commandline;
+        $ENV{PERL} = $^X;
+    } elsif ($self->{modulebuild}) {
         my($mbuild_install_build_command) =
             exists $CPAN::HandleConfig::keys{mbuild_install_build_command} &&
                 $CPAN::Config->{mbuild_install_build_command} ?
