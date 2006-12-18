@@ -888,6 +888,7 @@ __END__
 #P:ls ANDK/CPAN*
 #E:Text::Glob\s+loaded\s+ok[\d\D]*?CPAN-Test-Dummy
 #R:Text::Glob
+#T:60
 ########
 #P:force ls ANDK/CPAN*
 #E:CPAN-Test-Dummy
@@ -1078,7 +1079,7 @@ __END__
 #R:YAML patch
 ########
 #P:test ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
-#E:COMMANDLINE[\s\S]+?D i s t r o[\s\S]+?test -- OK
+#E:D i s t r o[\s\S]+?COMMANDLINE[\s\S]+?test -- OK
 #T:30
 #R:Expect YAML
 ########
