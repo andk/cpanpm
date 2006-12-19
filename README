@@ -1065,6 +1065,7 @@ CONFIGURATION
       scan_cache         controls scanning of cache ('atstart' or 'never')
       shell              your favorite shell
       show_upload_date   boolean if commands should try to determine upload date
+      sqlite_dbname      filename of the sqlite DB
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)

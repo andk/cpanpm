@@ -16,6 +16,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 # A2: svn diff -r 985:986 # where andk added yaml_module
 %keys = map { $_ => undef }
     (
+     "applypatch",
      "build_cache",
      "build_dir",
      "build_dir_reuse",

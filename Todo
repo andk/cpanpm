@@ -1,3 +1,8 @@
+2006-12-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* integrate applypatch such that we determine where it lives and if a
+	patch is written for applypatch we use it. DONE
+
 2006-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Hackaton in Munich?
@@ -15,7 +20,8 @@
 	record.
 
 	Most probably fixed now. The code that truncated did not check if we
-	were really able to write afterwards.
+	were really able to write afterwards. (Log starts: Mon Dec 18 14:19:10
+	2006)
 
 2006-12-17  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 

@@ -159,9 +159,7 @@ C<expect>.
 =head1 LANGUAGE SPECS
 
 Every YAML document represents a single hash reference. The valid keys
-in this hash are C<comment>, C<match>, C<disabled>, C<cpanconfig>,
-C<pl>, C<make>, C<test>, C<install>, C<patches>. The meanings of these
-keywords is as follows:
+in this hash are as follows:
 
 =over
 
@@ -175,7 +173,8 @@ Temporarily override assorted C<CPAN.pm> configuration variables.
 
 Supported are: C<build_requires_install_policy>, C<check_sigs>,
 C<make>, C<make_install_make_command>, C<prefer_installer>,
-C<test_report>
+C<test_report>. Please report as a bug when you need another one
+supported.
 
 =item disabled [boolean]
 
@@ -224,6 +223,12 @@ An array of patches on CPAN or on the local disk to be applied in
 order via the external patch program. If the value for the C<-p>
 parameter is C<0> or C<1> is determined by reading the patch
 beforehand.
+
+Note: if the C<applypatch> program is installed and C<CPAN::Config>
+knows about it B<and> a patch is written by the C<makepatch> program,
+then C<CPAN.pm> lets C<applypatch> apply the patch. Both C<makepatch>
+and C<applypatch> are available from CPAN in the C<JV/makepatch-*>
+distribution.
 
 =item pl [hash]
 

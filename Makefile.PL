@@ -20,6 +20,7 @@ use vars qw(@DD_PREFS @ST_PREFS);
                distroprefs/INGY.YAML
                distroprefs/RGIERSIG.Expect
                distroprefs/ABW.Template-Toolkit
+               distroprefs/MSERGEANT.CDB_File
                lib/CPAN/Kwalify/distroprefs
               );
 
@@ -209,7 +210,6 @@ ALL_PERLS = /usr/bin/perl \
 MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
 		CPAN::DistnameInfo \
-		DBI \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		Kwalify \
 		Font::TTF \

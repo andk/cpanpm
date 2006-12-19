@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_66';
+$CPAN::VERSION = '1.88_67';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -5677,12 +5677,21 @@ sub patch {
             }
             $CPAN::Frontend->myprint("  $patch\n");
             my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
-            my $thispatchargs = join " ", $stdpatchargs, $self->_patch_p_parameter($readfh);
-            CPAN->debug("thispatchargs[$thispatchargs]") if $CPAN::DEBUG;
-            $readfh = CPAN::Tarzip->TIEHANDLE($patch);
+
+            my $pcommand;
+            my $ppp = $self->_patch_p_parameter($readfh);
+            if ($ppp eq "applypatch") {
+                $pcommand = "$CPAN::Config->{applypatch} -verbose";
+            } else {
+                my $thispatchargs = join " ", $stdpatchargs, $ppp;
+                $pcommand = "$patchbin $thispatchargs";
+            }
+
+            $readfh = CPAN::Tarzip->TIEHANDLE($patch); # open again
             my $writefh = FileHandle->new;
-            unless (open $writefh, "|$patchbin $thispatchargs") {
-                my $fail = "Could not fork '$patchbin $thispatchargs'";
+            $CPAN::Frontend->myprint("  $pcommand\n");
+            unless (open $writefh, "|$pcommand") {
+                my $fail = "Could not fork '$pcommand'";
                 $CPAN::Frontend->mywarn("$fail; cannot continue\n");
                 $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
                 delete $self->{build_dir};
@@ -5710,11 +5719,19 @@ sub _patch_p_parameter {
     my $cnt_p0files = 0;
     local($_);
     while ($_ = $fh->READLINE) {
+        if (
+            $CPAN::Config->{applypatch}
+            &&
+            /\#\#\#\# ApplyPatch data follows \#\#\#\#/
+           ) {
+            return "applypatch"
+        }
         next unless /^[\*\+]{3}\s(\S+)/;
         my $file = $1;
         $cnt_files++;
         $cnt_p0files++ if -f $file;
-        CPAN->debug("file[$file]cnt_files[$cnt_files]cnt_p0files[$cnt_p0files]") if $CPAN::DEBUG;
+        CPAN->debug("file[$file]cnt_files[$cnt_files]cnt_p0files[$cnt_p0files]")
+            if $CPAN::DEBUG;
     }
     return "-p1" unless $cnt_files;
     return $cnt_files==$cnt_p0files ? "-p0" : "-p1";
@@ -10064,6 +10081,7 @@ where WORD is any valid config variable or a regular expression.
 Currently the following keys in the hash reference $CPAN::Config are
 defined:
 
+  applypatch         path to external prg
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
   build_dir_reuse    boolean if distros in build_dir are persistent
@@ -10275,8 +10293,8 @@ is to apply patches from the local disk or from CPAN.
 
 CPAN.pm comes with a couple of such YAML files. The structure is
 currently not documented because in flux. Please see the distroprefs
-directory of the CPAN distribution for examples and follow the README
-in there.
+directory of the CPAN distribution for examples and follow the
+C<00.README> file in there.
 
 Please note that setting the environment variable PERL_MM_USE_DEFAULT
 to a true value can also get you a long way if you want to always pick
