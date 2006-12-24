@@ -1,7 +1,11 @@
 --- 
 match:
   distribution: "^CHAMAS/Crypt-SSLeay-"
-pl: 
+goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
+---
+match:
+  distribution: "^DLAND/Crypt-SSLeay-"
+pl:
   expect:
     - "Which OpenSSL build path"
     - "\n"

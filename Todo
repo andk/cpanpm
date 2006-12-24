@@ -1,3 +1,18 @@
+2006-12-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	*  Intermittent test failure on DateTime-Util-Calc:
+
+20061203T2111.out:#   Failed test '0.901330 == 0.901330'
+20061211T0716.out:#   Failed test '0.609380 == 0.609380'
+20061212T2316.out:#   Failed test '0.592640 == 0.592640'
+20061217T2212.out:#   Failed test '0.788770 == 0.788770'
+20061219T0016.out:#   Failed test '0.154410 == 0.154410'
+20061219T0530.out:#   Failed test '0.342450 == 0.342450'
+20061219T2245.out:#   Failed test '0.874790 == 0.874790'
+20061220T2321.out:#   Failed test '0.840630 == 0.840630'
+
+	Reported as http://rt.cpan.org/Ticket/Display.html?id=24028
+
 2006-12-19  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* integrate applypatch such that we determine where it lives and if a
