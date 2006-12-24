@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^DMAKI/DateTime-Util-Calc-0\.11\.tar\.gz$"
+patches:
+  - "ANDK/patches/DateTime-Util-Calc-0.11-ANDK-01.patch.gz"
