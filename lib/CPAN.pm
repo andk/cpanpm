@@ -7528,10 +7528,16 @@ sub test {
                 # $ENV{PERL5LIB} so that already tested but not yet
                 # installed modules are counted.
                 my $available_version = $m_obj->available_version;
+                my $available_file = $m_obj->available_file;
                 if ($available_version &&
                     !CPAN::Version->vlt($available_version,$self->{PREREQ_PM}{$m})
                    ) {
                     CPAN->debug("m[$m] good enough available_version[$available_version]")
+                        if $CPAN::DEBUG;
+                } elsif ($self->{PREREQ_PM}{$m} == 0
+                         && $available_file) {
+                    # lex Class::Accessor::Chained::Fast which has no $VERSION
+                    CPAN->debug("m[$m] have available_file[$available_file]")
                         if $CPAN::DEBUG;
                 } else {
                     push @prereq, $m;
