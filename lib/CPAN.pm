@@ -6347,9 +6347,14 @@ sub force {
       $methodmatch = 1 if $phase eq $method;
       next unless $methodmatch;
     ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
-          if ($phase eq "get" && $self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
-              # cannot be undone for local distros
-              next ATTRIBUTE;
+          if ($phase eq "get") {
+              if ($self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
+                  # cannot be undone for local distros
+                  next ATTRIBUTE;
+              }
+              if ($att eq "build_dir") {
+                  delete $CPAN::META->{is_tested}{$self->{build_dir}};
+              }
           }
           delete $self->{$att};
           CPAN->debug(sprintf "phase[%s]att[%s]", $phase, $att) if $CPAN::DEBUG;

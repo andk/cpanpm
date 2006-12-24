@@ -5,6 +5,8 @@
 	the is_tested hash/set/database and survives in the paths prepended to
 	PERL5LIB
 
+	Fixed in SVK rev. 1589
+
 2006-12-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* document the major change to the force pragma and find tests that
