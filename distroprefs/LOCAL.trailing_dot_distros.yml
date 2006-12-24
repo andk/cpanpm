@@ -14,4 +14,7 @@ pl:
 match:
   distribution: "/home/src/perl/tk/SVN/\.$"
 pl:
-  commandline: "cd /home/src/perl/tk/SVN && svn up && $PERL Makefile.PL XFT=1"
+  commandline: "svn up && $PERL Makefile.PL XFT=1"
+test:
+  env:
+    BATCH: 1
