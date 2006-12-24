@@ -1425,11 +1425,20 @@ sub scan_cache {
 			     sprintf("Scanning cache %s for sizes\n",
 				     $self->{ID}));
     my $e;
-    for $e ($self->entries($self->{ID})) {
-	next if $e eq ".." || $e eq ".";
+    my @entries = grep { !/^\.\.?$/ } $self->entries($self->{ID});
+    my $i = 0;
+    my $painted = 0;
+    for $e (@entries) {
+	# next if $e eq ".." || $e eq ".";
 	$self->disk_usage($e);
+        $i++;
+        while (($painted/76) < ($i/@entries)) {
+            $CPAN::Frontend->myprint(".");
+            $painted++;
+        }
 	return if $CPAN::Signal;
     }
+    $CPAN::Frontend->myprint("DONE\n");
     $self->tidyup;
 }
 
@@ -4288,6 +4297,7 @@ sub reanimate_build_dir {
             #exists; but then we do not work with metadata
             #turned off.
             $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
+            delete $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}{badtestcnt};
             $restored++;
         }
         $i++;
@@ -5255,10 +5265,8 @@ sub color_cmd_tmps {
     if ($color==0) {
         delete $self->{sponsored_mods};
 
-        # I doubt this can be kept. Nobody tells us that a test was
-        # successful. Or we must document better where badtestcnt is
-        # needed
-
+        # command is over now, so we'll test this guy again if they
+        # want and if we failed
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
@@ -6498,7 +6506,7 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
 	defined $self->{make} and push @e,
-            "Has already been processed";
+            "Has already been made";
 
         if (exists $self->{later} and length($self->{later})) {
             if ($self->unsat_prereq) {
@@ -7414,7 +7422,7 @@ sub test {
                   $self->{make_test} =~ /^NO/
                  )
                ) {
-                push @e, "Already tested successfully";
+                push @e, "Has already been tested successfully";
             }
         } elsif (!@e) {
             push @e, "Has no own directory";
@@ -7563,7 +7571,7 @@ sub test {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_tested($self->{'build_dir'});
         $self->{make_test} = CPAN::Distrostatus->new("YES");
-        # delete $self->{badtestcnt};
+        delete $self->{badtestcnt};
     } else {
         $self->{make_test} = CPAN::Distrostatus->new("NO");
         $self->{badtestcnt}++;
@@ -8112,11 +8120,10 @@ sub color_cmd_tmps {
         CPAN->debug("c[$c]obj[$obj]") if $CPAN::DEBUG;
         $obj->color_cmd_tmps($depth+1,$color,[@$ancestors, $self->id]);
     }
-    if ($color==0) {
-        # I doubt this can be kept.
-
-        delete $self->{badtestcnt};
-    }
+    # never reached code?
+    #if ($color==0) {
+      #delete $self->{badtestcnt};
+    #}
     $self->{incommandcolor} = $color;
 }
 
@@ -8367,7 +8374,7 @@ sub make    { shift->rematein('make',@_); }
 #-> sub CPAN::Bundle::test ;
 sub test    {
     my $self = shift;
-    $self->{badtestcnt} ||= 0;
+    # $self->{badtestcnt} ||= 0;
     $self->rematein('test',@_);
 }
 #-> sub CPAN::Bundle::install ;
@@ -8451,11 +8458,10 @@ sub color_cmd_tmps {
     if ( my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file) ) {
         $dist->color_cmd_tmps($depth+1,$color,[@$ancestors, $self->id]);
     }
-    if ($color==0) {
-        # I doubt this can be kept.
-
-        delete $self->{badtestcnt};
-    }
+    # unreached code?
+    # if ($color==0) {
+    #    delete $self->{badtestcnt};
+    # }
     $self->{incommandcolor} = $color;
 }
 
@@ -8819,7 +8825,7 @@ sub make    { shift->rematein('make') }
 #-> sub CPAN::Module::test ;
 sub test   {
     my $self = shift;
-    $self->{badtestcnt} ||= 0;
+    # $self->{badtestcnt} ||= 0;
     $self->rematein('test',@_);
 }
 #-> sub CPAN::Module::uptodate ;

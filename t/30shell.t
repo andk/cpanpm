@@ -1007,15 +1007,15 @@ __END__
 #e:'notest' => 1,
 ########
 #P:dump Bundle::CpanTestDummies
-#E:\}
+#E:\},.*?CPAN::Bundle.*?;
 #R:Module::Build
 ########
 #P:dump CPAN::Test::Dummy::Perl5::Build::Fails
-#E:\}
+#E:\},.*?CPAN::Module.*?;
 #R:Module::Build
 ########
 #P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
-#E:\}
+#E:\},.*?CPAN::Distribution.*?;
 #R:Module::Build
 ########
 #P:test Bundle::CpanTestDummies
@@ -1033,7 +1033,7 @@ __END__
 #E:prereq_pm\s+build_requires:\S+requires:\S+
 ########
 #P:notest make Bundle::CpanTestDummies
-#E:Has already been processed
+#E:Has already been made
 ########
 #P:clean Bundle::CpanTestDummies
 #E:Failed during this command

@@ -1,6 +1,80 @@
+2006-12-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* After misguided downgrade:
+
+WebService::Bloglines          0.06      0.12  MIYAGAWA/WebService-Bloglines-0.12.tar.gz
+
+	After upgrade back to 0.12:
+
+WebService::Bloglines::Subscriptions      0.02      0.06  MIYAGAWA/WebService-Bloglines-0.06.tar.gz
+
+	Similar case for YSAS and SWF::Builder::Shape. For both I use "reset
+	version" on PAUSE directly. FIXED.
+
+	* Todo: disable concurrent writes via SQLite or disable SQLite for the
+	degraded second. See mails from Randy from today
+
+2006-12-22  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
+
+	* badtestcnt is buggy. color_command_temps(0) deletes it and the next
+	command then will behave differently. Trying to stop deleting it I
+	experience
+
+	make-test-20061222T223413:
+	    fails                              none
+	    does delete badtc for distros?       no
+	    test 199 sharp?                      no
+
+	make-test-20061222T222907:
+	    fails                              none
+	    does delete badtc for distros?      yes
+	    test 199 sharp?                     yes
+
+	make-test-20061222T221432
+	    fails                               199
+	    does delete badtc for distros?       no
+	    test 199 sharp?                     yes
+
+	Working over the expected regular expressions seems necessary because
+	some of them match too early and it becomes impossible to determine
+	which test really fails.
+
+	So now we have
+
+	make-test-20061223T160632
+	    fails:                              199
+	    does delete badtc for distros?       no
+	    test199 sharp?                      yes
+
+	Apparently we once decided that badtestcnt shall be kept until a command
+	is finished. To prevent repeating the same test within one command. And
+	when the command finishes, in the very last moment, we would remove the
+	badtestcnt so that the next command would test the same distro again.
+	Because we hope that a failing test can turn into success due to
+	external factors. From thie point of view So badtestcnt is programmed
+	correctly.
+
+	But I had changed strategy when persistence entered the game. I wanted
+	to not repeat failed tests at all to speed things up, didn't I? And what
+	did I encounter?
+
+	Needs to be specified in full length first. Do we want to repeat testing?
+
+	            command     session     restored_state
+	Distro
+	  OK          no          no          no
+	  FAIL        no          yes         yes
+	Module/Bundle
+	  OK/FAIL     pass everything through to underlying distros
+
+	The problem is, I think, that when we store state, we quite often get
+	"badtestcnt" in the state because we store it before the command is
+	finished. So if we simply delete badtestcnt when we restore state, we
+	should be pretty much out of the danger zone.
+
 2006-12-21  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
-	*  Intermittent test failure on DateTime-Util-Calc:
+	* Intermittent test failure on DateTime-Util-Calc:
 
 20061203T2111.out:#   Failed test '0.901330 == 0.901330'
 20061211T0716.out:#   Failed test '0.609380 == 0.609380'
