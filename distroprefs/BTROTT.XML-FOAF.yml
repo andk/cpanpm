@@ -9,3 +9,5 @@ pl:
     - "y\n"
     - "Auto-install"
     - "y\n"
+patches:
+  - "ANDK/patches/XML-FOAF-0.03-ANDK-01.patch.gz"
