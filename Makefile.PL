@@ -159,7 +159,9 @@ WriteMakefile(
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
-              clean        => { FILES => "lib/CPAN/Config.pm" },
+              clean        => {
+                               FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml",
+                              },
               @sign,
               ($] >= 5.005 ?
                (
@@ -212,6 +214,7 @@ MEGA_COLLECTION = Expect \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		Kwalify \
 		Font::TTF \
+		/home/src/perl/tk/SVN/. \
 		CDB_File \
 		Math::BigInt::GMP \
 		IPC::ShareLite \

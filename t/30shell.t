@@ -114,6 +114,7 @@ patches:
   - "$cwd/t/CPAN/TestPatch.txt"
 EOF
 END {
+    unlink _f"t/dot-cpan/prefs/FTPstats.yml";
     unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
     unlink _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
 }
@@ -213,7 +214,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $timeout = 30;
+my $timeout = 45;
 
 my @system = (
               $^X,
