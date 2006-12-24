@@ -1207,8 +1207,8 @@ sub savehist {
 
 #-> sub CPAN::is_tested
 sub is_tested {
-    my($self,$what) = @_;
-    $self->{is_tested}{$what} = 1;
+    my($self,$what,$when) = @_;
+    $self->{is_tested}{$what} = $when;
 }
 
 #-> sub CPAN::is_installed
@@ -1234,16 +1234,24 @@ sub set_perl5lib {
     push @env, $env if defined $env and length $env;
     #my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
     #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
-    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort keys %{$self->{is_tested}};
-    if (@dirs < 15) {
-        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for $for\n");
-    } else {
-        my @d = map {s/^\Q$CPAN::Config->{'build_dir'}/%BUILDDIR%/; $_ }
-            sort keys %{$self->{is_tested}};
+
+    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort
+        { ($self->{is_tested}{$b}||0) <=> ($self->{is_tested}{$a}||0) }
+            keys %{$self->{is_tested}};
+    if (@dirs < 12) {
+        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
+    } elsif (@dirs < 24) {
+        my @d = map {s/^\Q$CPAN::Config->{'build_dir'}\E/%BUILDDIR%/; $_} @dirs;
         $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of ".
                                  "@d to PERL5LIB; ".
                                  "%BUILDDIR%=$CPAN::Config->{'build_dir'} ".
-                                 "for $for\n"
+                                 "for '$for'\n"
+                                );
+    } else {
+        my $cnt = keys %{$self->{is_tested}};
+        $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib of ".
+                                 "$cnt build dirs to PERL5LIB; ".
+                                 "for '$for'\n"
                                 );
     }
 
@@ -4296,8 +4304,20 @@ sub reanimate_build_dir {
             #we tried to restore only if element already
             #exists; but then we do not work with metadata
             #turned off.
-            $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key} = $c->{distribution};
-            delete $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}{badtestcnt};
+            my $do
+                = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
+                    = $c->{distribution};
+            delete $do->{badtestcnt};
+            if ($do->{make_test}
+                && !$do->{make_test}->failed
+                && (
+                    !$do->{make_install}
+                    ||
+                    $do->{make_install}->failed
+                   )
+               ) {
+                $CPAN::META->is_tested($do->{'build_dir'},$do->{make_test}{TIME});
+            }
             $restored++;
         }
         $i++;
@@ -5369,9 +5389,17 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            exists $self->{build_dir} and push @e,
-                "Is already unwrapped into directory $self->{build_dir}";
+            if (exists $self->{build_dir}) {
+                # this deserves print, not warn:
+                $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
+                                         "$self->{build_dir}\n"
+                                        );
+                return;
+            }
 
+            # although we talk about 'force' we shall not test on
+            # force directly. New model of force tries to refrain from
+            # direct checking of force.
             exists $self->{unwrapped} and (
                                            UNIVERSAL::can($self->{unwrapped},"failed") ?
                                            $self->{unwrapped}->failed :
@@ -6363,7 +6391,7 @@ sub force {
       }
   }
   if ($method && $method =~ /make|test|install/) {
-    $self->{"force_update"}++; # name should probably have been force_install
+    $self->{force_update}++; # name should probably have been force_install
   }
 }
 
@@ -6384,7 +6412,7 @@ sub unnotest {
 #-> sub CPAN::Distribution::unforce ;
 sub unforce {
   my($self) = @_;
-  delete $self->{'force_update'};
+  delete $self->{force_update};
 }
 
 #-> sub CPAN::Distribution::isa_perl ;
@@ -7576,8 +7604,8 @@ sub test {
         }
 
         $CPAN::Frontend->myprint("  $system -- OK\n");
-        $CPAN::META->is_tested($self->{'build_dir'});
         $self->{make_test} = CPAN::Distrostatus->new("YES");
+        $CPAN::META->is_tested($self->{'build_dir'},$self->{make_test}{TIME});
         # probably impossible to need the next line because badtestcnt
         # has a lifespan of one command
         delete $self->{badtestcnt};
@@ -7839,7 +7867,7 @@ sub install {
     if ( $close_ok ) {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_installed($self->{build_dir});
-        return $self->{install} = CPAN::Distrostatus->new("YES");
+        $self->{install} = CPAN::Distrostatus->new("YES");
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
@@ -8748,7 +8776,7 @@ sub cpan_version {
 #-> sub CPAN::Module::force ;
 sub force {
     my($self) = @_;
-    $self->{'force_update'}++;
+    $self->{force_update}++;
 }
 
 sub notest {
@@ -8779,7 +8807,7 @@ sub rematein {
     }
     my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
-    $pack->force($meth) if exists $self->{'force_update'};
+    $pack->force($meth) if exists $self->{force_update};
     $pack->notest($meth) if exists $self->{'notest'};
 
     $pack->{reqtype} ||= "";
@@ -8810,9 +8838,9 @@ sub rematein {
 	$pack->$meth();
     };
     my $err = $@;
-    $pack->unforce if $pack->can("unforce") && exists $self->{'force_update'};
+    $pack->unforce if $pack->can("unforce") && exists $self->{force_update};
     $pack->unnotest if $pack->can("unnotest") && exists $self->{'notest'};
-    delete $self->{'force_update'};
+    delete $self->{force_update};
     delete $self->{'notest'};
     if ($err) {
 	die $err;
@@ -8865,7 +8893,7 @@ sub install {
     my($doit) = 0;
     if ($self->uptodate
 	&&
-	not exists $self->{'force_update'}
+	not exists $self->{force_update}
        ) {
 	$CPAN::Frontend->myprint(sprintf("%s is up to date (%s).\n",
                                          $self->id,
