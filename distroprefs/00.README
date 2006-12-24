@@ -19,7 +19,7 @@ CPAN mantra. Well since the event of Module::Build we have two mantras:
 But some modules cannot be built with this mantra. They try to get
 some extra data from the user via environment, extra arguments or
 interactively thus disturbing the installation of large bundles like
-Phalanx100 or modules like Plagger.
+Phalanx100 or modules with many dependencies like Plagger.
 
 The distroprefs system of C<CPAN.pm> addresses this problem by
 allowing the user to specify extra informations and recipes in YAML

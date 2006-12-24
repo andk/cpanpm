@@ -242,6 +242,7 @@ MEGA_COLLECTION = Expect \
 		Devel::Size \
 		Bundle::Slash \
 		Locale::Maketext::Gettext \
+		Devel::Cover \
 
 }
 }

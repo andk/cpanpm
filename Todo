@@ -1,3 +1,22 @@
+2006-12-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Buglet: if I do a 'force get thing' then I get a new build_dir for the
+	thing. If I had done a 'test thing' before then the old build_dir is in
+	the is_tested hash/set/database and survives in the paths prepended to
+	PERL5LIB
+
+2006-12-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* document the major change to the force pragma and find tests that
+	enforce that
+
+	* document how test repete is supposed to work and find tests that
+	enforce that
+
+	* Remember to see after the Devel::Cover module
+
+	http://rt.cpan.org/Ticket/Display.html?id=24067
+
 2006-12-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* After misguided downgrade:
