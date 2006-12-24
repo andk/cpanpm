@@ -5254,6 +5254,11 @@ sub color_cmd_tmps {
     }
     if ($color==0) {
         delete $self->{sponsored_mods};
+
+        # I doubt this can be kept. Nobody tells us that a test was
+        # successful. Or we must document better where badtestcnt is
+        # needed
+
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
@@ -6493,7 +6498,7 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
 	defined $self->{make} and push @e,
-            "Has already been processed within this session";
+            "Has already been processed";
 
         if (exists $self->{later} and length($self->{later})) {
             if ($self->unsat_prereq) {
@@ -7558,6 +7563,7 @@ sub test {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_tested($self->{'build_dir'});
         $self->{make_test} = CPAN::Distrostatus->new("YES");
+        # delete $self->{badtestcnt};
     } else {
         $self->{make_test} = CPAN::Distrostatus->new("NO");
         $self->{badtestcnt}++;
@@ -8107,6 +8113,8 @@ sub color_cmd_tmps {
         $obj->color_cmd_tmps($depth+1,$color,[@$ancestors, $self->id]);
     }
     if ($color==0) {
+        # I doubt this can be kept.
+
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
@@ -8444,6 +8452,8 @@ sub color_cmd_tmps {
         $dist->color_cmd_tmps($depth+1,$color,[@$ancestors, $self->id]);
     }
     if ($color==0) {
+        # I doubt this can be kept.
+
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
