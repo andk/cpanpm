@@ -214,7 +214,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
 my $t = File::Spec->catfile($cwd,"t");
-my $timeout = 45;
+my $timeout = 30;
 
 my @system = (
               $^X,

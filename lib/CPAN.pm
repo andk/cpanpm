@@ -5265,8 +5265,10 @@ sub color_cmd_tmps {
     if ($color==0) {
         delete $self->{sponsored_mods};
 
-        # command is over now, so we'll test this guy again if they
-        # want and if we failed
+        # as we are at the end of a command, we'll give up this
+        # reminder of a broken test. Other commands may test this guy
+        # again. Maybe 'badtestcnt' should be renamed to
+        # 'makte_test_failed_within_command'?
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
@@ -7576,6 +7578,8 @@ sub test {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_tested($self->{'build_dir'});
         $self->{make_test} = CPAN::Distrostatus->new("YES");
+        # probably impossible to need the next line because badtestcnt
+        # has a lifespan of one command
         delete $self->{badtestcnt};
     } else {
         $self->{make_test} = CPAN::Distrostatus->new("NO");

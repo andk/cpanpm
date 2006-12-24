@@ -255,7 +255,7 @@ Arguments to be added to the command line
 
 A full commandline that will be executed as it stands by a system
 call. During the execution the environment variable PERL will is set
-to $^X. If commandline is specified, the content of C<args> is not
+to $^X. If C<commandline> is specified, the content of C<args> is not
 used.
 
 =item eexpect [hash]
