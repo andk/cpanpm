@@ -20,7 +20,6 @@ use vars qw(@DD_PREFS @ST_PREFS);
                distroprefs/INGY.YAML
                distroprefs/RGIERSIG.Expect
                distroprefs/ABW.Template-Toolkit
-               distroprefs/MSERGEANT.CDB_File
                lib/CPAN/Kwalify/distroprefs
               );
 

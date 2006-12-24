@@ -10,4 +10,8 @@ match:
   distribution: "/CPAN-SQLite/\.$"
 pl:
   commandline: "cvs -q up -dP; $PERL Makefile.PL"
-
+---
+match:
+  distribution: "/home/src/perl/tk/SVN/\.$"
+pl:
+  commandline: "cd /home/src/perl/tk/SVN && svn up && $PERL Makefile.PL XFT=1"
