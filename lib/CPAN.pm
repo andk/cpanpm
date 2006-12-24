@@ -6329,7 +6329,10 @@ sub force {
                                "yaml_content",
                               ],
                   );
- PHASE: for my $phase (qw(get make test install unknown)) { # tentative
+  my $methodmatch = 0;
+ PHASE: for my $phase (qw(unknown get make test install)) { # order matters
+      $methodmatch = 1 if $phase eq $method;
+      next unless $methodmatch;
     ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
           if ($phase eq "get" && $self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
               # cannot be undone for local distros
