@@ -9,6 +9,9 @@
 
 	* autosave variable?
 
+	We must consider "commit" messages; scalars, arrays and hashes; The
+	global $CPAN::CONFIG_DIRTY;
+
 	* Bug: still the dependency on YAML::Syck in the Makefile DONE in SVK
 	rev. 1560
 

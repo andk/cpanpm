@@ -125,13 +125,21 @@ sub edit {
         unless (exists $keys{$o}) {
             $CPAN::Frontend->mywarn("Warning: unknown configuration variable '$o'\n");
         }
+        my $changed;
+
+
         # one day I used randomize_urllist for a boolean, so we must
         # list them explicitly --ak
-	if ($o =~ /^(wait_list|urllist|dontload_list)$/) {
+	if (0) {
+        } elsif ($o =~ /^(wait_list|urllist|dontload_list)$/) {
+
+            #
+            # ARRAYS
+            #
+
 	    $func = shift @args;
 	    $func ||= "";
             CPAN->debug("func[$func]args[@args]") if $CPAN::DEBUG;
-            my $changed;
 	    # Let's avoid eval, it's easier to comprehend without.
 	    if ($func eq "push") {
 		push @{$CPAN::Config->{$o}}, @args;
@@ -157,7 +165,6 @@ sub edit {
                 $self->prettyprint($o);
 	    }
             if ($changed) {
-                $CPAN::CONFIG_DIRTY = 1;
                 if ($o eq "urllist") {
                     # reset the cached values
                     undef $CPAN::FTP::Thesite;
@@ -167,24 +174,38 @@ sub edit {
                     $CPAN::META->{dontload_hash} = {};
                 }
             }
-            return $changed;
         } elsif ($o =~ /_hash$/) {
+
+            #
+            # HASHES
+            #
+
             if (@args==1 && $args[0] eq ""){
                 @args = ();
             } elsif (@args % 2) {
                 push @args, "";
             }
             $CPAN::Config->{$o} = { @args };
-            $CPAN::CONFIG_DIRTY = 1;
+            $changed = 1;
         } else {
+
+            #
+            # SCALARS
+            #
+
             if (defined $args[0]){
                 $CPAN::CONFIG_DIRTY = 1;
                 $CPAN::Config->{$o} = $args[0];
+                $changed = 1;
             }
 	    $self->prettyprint($o)
                 if exists $keys{$o} or defined $CPAN::Config->{$o};
-            return 1;
 	}
+        if ($changed) {
+            $CPAN::CONFIG_DIRTY = 1;
+            $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
+                                     "make the config permanent!\n\n");
+        }
     }
 }
 

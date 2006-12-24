@@ -1666,10 +1666,6 @@ sub o {
 	    $CPAN::Frontend->myprint("\n");
 	} else {
             if (CPAN::HandleConfig->edit(@o_what)) {
-                unless ($o_what[0] =~ /^(init|commit|defaults)$/) {
-                    $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
-                                             "make the config permanent!\n\n");
-                }
             } else {
                 $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
                                          qq{items\n\n});
