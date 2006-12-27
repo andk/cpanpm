@@ -778,6 +778,7 @@ Please report if something unexpected happens\n");
                         $_->{commandnumber_in_prompt} = 0; # visibility
                         $_->{histfile} = "";               # who should win otherwise?
                         $_->{cache_metadata} = 0;          # better would be a lock?
+                        $_->{use_sqlite} = 0;              # better would be a write lock!
                     }
                 } else {
                     $CPAN::Frontend->mydie("
@@ -4264,7 +4265,7 @@ sub reload {
     }
     if (CPAN::_sqlite_running) {
         $CPAN::SQLite->reload(time => $time, force => $force)
-            if not $LAST_TIME;
+            if $CPAN::META->{LOCK} and not $LAST_TIME;
     }
     $LAST_TIME = $time;
     $CPAN::META->{PROTOCOL} = PROTOCOL;
@@ -9343,10 +9344,11 @@ CPAN::Module, the second by an object of class CPAN::Distribution.
 =head2 Integrating local directories
 
 Distribution objects are normally distributions from the CPAN, but
-there is a slightly degenerate case for Distribution objects, too,
-normally only needed by developers. If a distribution object ends with
-a dot or is a dot by itself, then it represents a local directory and
-all actions such as C<make>, C<test>, and C<install> are applied
+there is a slightly degenerate case for Distribution objects, too, of
+projects held on the local disk. These distribution objects have the
+same name as the local directory and end with a dot. A dot by itself
+is also allowed for the current directory at the time CPAN.pm was
+used. All actions such as C<make>, C<test>, and C<install> are applied
 directly to that directory. This gives the command C<cpan .> an
 interesting touch: while the normal mantra of installing a CPAN module
 without CPAN.pm is one of
@@ -9362,6 +9364,9 @@ of the two mantras is appropriate, fetches and installs all
 prerequisites, cares for them recursively and finally finishes the
 installation of the module in the current directory, be it a CPAN
 module or not.
+
+The typical usage case is for private modules or working copies of
+projects from remote repositories on the local disk.
 
 =head1 PROGRAMMER'S INTERFACE
 
