@@ -29,6 +29,7 @@ distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
+distroprefs/DMAKI.DateTime-Util-Calc.yml
 distroprefs/DMAKI.Xango.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DURIST.WWW-Babelfish.yml
@@ -68,6 +69,7 @@ distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MLEHMANN.Coro.yml
+distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
@@ -121,6 +123,7 @@ t/11mirroredby.t
 t/12cpan.t
 t/30shell.coverage
 t/30shell.t
+t/31sessions.t
 t/50pod.t
 t/51pod.t
 t/52podcover.t
