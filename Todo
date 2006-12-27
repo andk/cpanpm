@@ -1,10 +1,23 @@
+2006-12-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Paul Johnson has already fixed #24067 in his repository. Unfortunately
+	he sends me a link to svnweb instead of the repository itself. Svnweb
+	itself neither gives machine readable output nor does it provide a link
+	to the repository.
+
 2006-12-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* I don't know how to prevent SQLite dieing due to locked database.
+	Because it happens such that a batch process reads the database and an
+	interactive process tries to write the database. The latter does not
+	know about the other. Both know nothing about each other beforehand.
+	Then they clash and I cannot find out.
 
 	* Are the dot directories documented? Where? Is chdir mentioned there?
 
 	Yes, it was documented in the section "Integrating local directories"
 	and I rewrote it a bit, it sounded too boring. It still sounds boring
-	and leads me too the idea to support
+	and leads me to the idea to support
 
 	get:
 	  commandline:
@@ -14,7 +27,17 @@
 2006-12-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* somebody sending a Tk window during a test just waiting to be clicked
-	away? Who is it? Tk itself? Maybe this was just a single revision.
+	away? Who is it? Tk itself? Maybe this was just a single revision? NO,
+	it is Term::ReadLine::Gnu in t/callback.t. Wow, it compiles, apparently.
+	But does it pass the tests? Can we disable this batch-unfriendly test?
+
+	We cannot disable it without patching.
+
+	We must click the window away and after that we still have tests failing.
+
+	This looks ugly to me. I have Expect and can answer interactive
+	questions but I have no robot to click a window away. For now I'll put
+	T:R:Gnu before Tk in the megainstall. Needs a better solution.
 
 	* Todo: create a second shell test, say 31force.t that starts from
 	scratch and studies the variants without having to wait for many minutes
@@ -28,9 +51,10 @@
 	study the differences tomorrow or in the late evening.
 
 	Later... looks good. But crazy that we find both DBD::mysql 4.00 and
-	3.0008 in the failed departement. And the second anomaly that
-	.../svn/tk/. succeeded at 17:28 but not at 11:45. Not much for 5100 diff
-	chunks.
+	3.0008 in the failed departement (Update 2006-12-26 akoenig : reported
+	as http://rt.cpan.org/Ticket/Display.html?id=24096). And the second
+	anomaly that .../svn/tk/. succeeded at 17:28 but not at 11:45. Not much
+	for 5100 diff chunks.
 
 	* maybe have a is_tested command?
 

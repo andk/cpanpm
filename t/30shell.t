@@ -1120,10 +1120,10 @@ S for status
 N for notes (just for the test writer, otherwise invisible)
 
 
-The script starts a CPAN shell and feed it the chunks such that the P
-line is injected, the output of the shell is parsed and compared to
-the expression in the E line. With T the timeout can be changed (the
-default is rather low, maybe 10 seconds, see the code for details).
+The script starts a CPAN shell and feeds it with chunks. The P line is
+injected and the output of the shell is parsed and compared to the
+expression in the E line. With T the timeout can be changed (the
+default is rather low, maybe 30 seconds, see the code for details).
 The expression in R is used to filter tests. The keyword in S may be
 one of C<run> to run this test, C<skip> to skip it, and C<quit> to
 stop testing immediately when this test is reached.
