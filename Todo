@@ -7,8 +7,10 @@
 
 	Couldn't chdir to /home/k/.cpan/build/Term-ReadLine-Gnu-1.16-MacKnJ at lib/CPAN.pm line 8839
 
-	Stupid use of croak(), we want die and want to fix it when it happens
-	again.
+	Stupid use of croak(), we want die or confess and want to fix it when it
+	happens again.
+
+	Turned into confess in SVK rev. 1632
 
 	* document the major change to the force pragma and find tests that
 	enforce that
