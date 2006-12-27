@@ -2,6 +2,10 @@
 
 =pod
 
+prg. seems to be broken by Devel::Cover 0.59
+
+
+
 The coverage analysis of CPAN.pm is difficult to read because the
 methods do not contain the package name.
 

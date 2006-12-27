@@ -1,4 +1,36 @@
-=pod
+2006-12-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* with 0.59 and 29563:
+
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	File                           stmt   bran   cond    sub    pod   time  total
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	blib/lib/CPAN/FirstTime.pm      n/a    n/a    n/a    n/a    n/a    n/a    n/a
+	lib/CPAN.pm                    17.6    8.3    7.1   38.3    n/a   74.8   14.5
+	lib/CPAN/Admin.pm              12.9    0.0    0.0   62.5  100.0    0.2   12.3
+	lib/CPAN/Debug.pm              61.8   50.0    0.0  100.0    0.0    2.0   56.1
+	lib/CPAN/HandleConfig.pm       17.7    8.1    0.0   42.9    7.1    2.4   12.7
+	lib/CPAN/Kwalify.pm            18.0    0.0    0.0   60.0    n/a    0.1   15.4
+	lib/CPAN/Nox.pm               100.0   50.0    n/a  100.0    n/a    0.3   95.0
+	lib/CPAN/Queue.pm              10.5    0.0    0.0   18.2    0.0    0.3    8.2
+	lib/CPAN/Tarzip.pm             32.8   14.0   13.3   71.4    0.0    1.8   26.7
+	lib/CPAN/Version.pm            86.4   56.2   81.8  100.0    0.0   18.2   74.8
+	Total                          19.2    9.1    8.0   42.1    5.4  100.0   15.9
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+
+	* Devel::Cover 0.59 broke the coverage level I had already achieved by
+	50 percent from 74% to 37%. 0.58 was fine for me at that time but then
+	D:C broke completely in bleadperl 28771 and I forgot about it. Paul J
+	has since fixed the 28771 related failure in his SVN repository and is
+	now reporting another problem with an endless loop.
+
+	I seem to see the endless loop in bleadperl@29622 but not with 28771 and
+	I can probably do binary search manually without the usual procedure.
+	29220 OK, 496 OK, 563 OK, 596 NOT, 579 NOT, 66 OK, 73 NOT, 68 OK, 70 NOT
+
+	* Switching to ChangeLog format today. All notes below have been written
+	between Februar and October 2006.
 
 Notes about coverage. The target in the Makefile is called
 C<testcover>.
@@ -281,5 +313,14 @@ I'd *guess* that it has to do with lib and blib and the fact that 37
 is exactly the half of 74 seems to indicate a cut in half in the wrong
 place. For now I'm happy with 0.58
 
-=cut
 
+
+
+
+
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "30shell.coverage"
+	tab-width: 2
+	left-margin: 2
+	End:
