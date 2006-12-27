@@ -18,8 +18,10 @@ BEGIN {
     }
 }
 
-use Config;
 use CPAN::FirstTime ();
+use Config;
+use Cwd;
+use File::Copy qw(cp);
 use File::Spec ();
 
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
@@ -28,6 +30,12 @@ use File::Path qw(rmtree mkpath);
 rmtree _d"t/dot-cpan/sources";
 rmtree _d"t/dot-cpan/build";
 mkpath _d"t/dot-cpan/build";
+rmtree _d"t/dot-cpan/prefs";
+unlink _f"t/dot-cpan/Metadata";
+unlink _f"t/dot-cpan/.lock";
+mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
+mkpath _d"t/dot-cpan/Bundle";
+mkpath _d"t/dot-cpan/prefs";
 {
     local *FH;
     open *FH, (">"._f"t/dot-cpan/build/Something-From-Builddir-0.00.yml") or die;
@@ -70,12 +78,7 @@ perl:
 time: 1
 EOF
 }
-rmtree _d"t/dot-cpan/prefs";
-unlink _f"t/dot-cpan/Metadata";
-unlink _f"t/dot-cpan/.lock";
-mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
 
-use File::Copy qw(cp);
 cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd",
     _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
     or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd ".
@@ -87,18 +90,15 @@ cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
     or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
-mkpath _d"t/dot-cpan/Bundle";
 cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
     "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
     "t/dot-cpan/Bundle/CpanTestDummies.pm: $!";
-mkpath _d"t/dot-cpan/prefs";
 cp _f"distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml",
     _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml" or die
     "Could not cp distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml to ".
     "t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml: $!";
 
-use Cwd;
 my $cwd = Cwd::cwd;
 
 open FH, (">" . _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
@@ -190,19 +190,33 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
     my %ociv;
     @ociv{@ociv_tests} = ();
     my $keys = %CPAN::HandleConfig::keys; # to keep warnings silent
+    # kwnt => "key words not tested"
     my @kwnt = sort grep { not exists $ociv{$_} }
         grep { ! m/
                    ^(?:
                    urllist
-                   |inhibit_startup_message
-                   |username
-                   |password
-                   |proxy_(?:user|pass)
-                   |.*_list
                    |.*_hash
+                   |.*_list
+                   |applypatch
+                   |build_dir_reuse
+                   |build_requires_install_policy
+                   |colorize_output
+                   |colorize_print
+                   |colorize_warn
+                   |commands_quote
+                   |inhibit_startup_message
+                   |password
+                   |patch
+                   |prefs_dir
+                   |proxy_(?:user|pass)
+                   |randomize_urllist
+                   |use_sqlite
+                   |username
+                   |yaml_module
                   )$/x }
             keys %CPAN::HandleConfig::keys;
-    my $test_tuning = 0;
+    my $test_tuning = 0; # from time to time we set it to 1 to find
+                         # untested config variables
     if ($test_tuning) {
         ok(@kwnt==0,"key words not tested[@kwnt]");
         die if @kwnt;
