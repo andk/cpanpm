@@ -355,13 +355,15 @@ howto-release:
 META.yml: metafile
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 
-testcover: testdistros
+install-devel-cover:
+	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.") unless CPAN::Shell->expand("Module","Devel::Cover")->uptodate'
+
+testcover: testdistros install-devel-cover
 	:>SIGNATURE
 	$(PERL) -MDevel::Cover -e 0
 	`dirname $(PERL)`/cover -delete
 	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
 	`dirname $(PERL)`/cover
-	$(PERL) bin/post-prc-coverage.pl cover_db/blib-lib-CPAN-pm--subroutine.html
 
 testdistros: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz \
