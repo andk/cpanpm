@@ -73,6 +73,23 @@ sub test_name {
     ($comment||"") . ($prog ? " (testing command '$prog')" : "[empty RET]")
 }
 
+sub run_shell_cmd_lit ($) {
+    my $cwd = shift;
+    my $t = File::Spec->catfile($cwd,"t");
+    my @system = (
+                  $^X,
+                  "-I$t",                 # get this test's own MyConfig
+                  "-Mblib",
+                  "-MCPAN::MyConfig",
+                  "-MCPAN",
+                  ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
+                  # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
+                  "-e",
+                  # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
+                  "\@CPAN::Defaultsites = (); shell",
+                 );
+}
+
 1;
 
 # Local Variables:

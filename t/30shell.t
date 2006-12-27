@@ -27,13 +27,18 @@ use local_utils;
 local_utils::prepare_dot_cpan();
 
 BEGIN {
-    *_f = \&local_utils::_f;
-    *_d = \&local_utils::_d;
-    *read_myconfig = \&local_utils::read_myconfig;
-    *mydiag = \&local_utils::mydiag;
-    *mreq = \&local_utils::mreq;
-    *splitchunk = \&local_utils::splitchunk;
-    *test_name = \&local_utils::test_name;
+    for my $x ("_f",
+               "_d",
+               "read_myconfig",
+               "mydiag",
+               "mreq",
+               "splitchunk",
+               "test_name",
+               "run_shell_cmd_lit",
+              ) {
+        no strict "refs";
+        *$x = \&{"local_utils\::$x"};
+    }
 }
 END {
     local_utils::cleanup_dot_cpan();
@@ -206,21 +211,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
-my $t = File::Spec->catfile($cwd,"t");
 my $timeout = 30;
-
-my @system = (
-              $^X,
-              "-I$t",                 # get this test's own MyConfig
-              "-Mblib",
-              "-MCPAN::MyConfig",
-              "-MCPAN",
-              ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
-              # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
-              "-e",
-              # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
-              "\@CPAN::Defaultsites = (); shell",
-             );
 
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
@@ -233,11 +224,11 @@ my $expo;
 if ($RUN_EXPECT) {
     $expo = Expect->new;
     $ENV{LANG} = "C";
-    $expo->spawn(@system);
+    $expo->spawn(run_shell_cmd_lit($cwd));
     $expo->log_stdout(0);
     $expo->notransfer(1);
 } else {
-    my $system = join(" ", map { "\"$_\"" } @system)." > test.out";
+    my $system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
     warn "# DEBUG: system[$system]";
     open SYSTEM, "| $system" or die;
 }
