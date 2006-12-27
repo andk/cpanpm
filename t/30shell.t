@@ -18,24 +18,27 @@ BEGIN {
     }
 }
 
-use CPAN::FirstTime ();
-use Config;
-use Cwd;
 use File::Copy qw(cp);
-use File::Spec ();
-
-sub _f ($) {File::Spec->catfile(split /\//, shift);}
-sub _d ($) {File::Spec->catdir(split /\//, shift);}
 use File::Path qw(rmtree mkpath);
-rmtree _d"t/dot-cpan/sources";
-rmtree _d"t/dot-cpan/build";
-mkpath _d"t/dot-cpan/build";
-rmtree _d"t/dot-cpan/prefs";
-unlink _f"t/dot-cpan/Metadata";
-unlink _f"t/dot-cpan/.lock";
-mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
-mkpath _d"t/dot-cpan/Bundle";
-mkpath _d"t/dot-cpan/prefs";
+
+use lib "t";
+use local_utils;
+
+local_utils::prepare_dot_cpan();
+
+BEGIN {
+    *_f = \&local_utils::_f;
+    *_d = \&local_utils::_d;
+    *read_myconfig = \&local_utils::read_myconfig;
+    *mydiag = \&local_utils::mydiag;
+    *mreq = \&local_utils::mreq;
+    *splitchunk = \&local_utils::splitchunk;
+    *test_name = \&local_utils::test_name;
+}
+END {
+    local_utils::cleanup_dot_cpan();
+}
+
 {
     local *FH;
     open *FH, (">"._f"t/dot-cpan/build/Something-From-Builddir-0.00.yml") or die;
@@ -83,13 +86,6 @@ cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd",
     _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
     or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd ".
     "over t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
-END {
-    unlink _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS";
-}
-cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
-    or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
-cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
-    or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
 cp _f"t/CPAN/CpanTestDummies-1.55.pm",
     _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
     "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
@@ -113,18 +109,6 @@ match:
 patches:
   - "$cwd/t/CPAN/TestPatch.txt"
 EOF
-END {
-    unlink _f"t/dot-cpan/prefs/FTPstats.yml";
-    unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
-    unlink _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
-}
-
-sub read_myconfig () {
-    local *FH;
-    open *FH, _f"t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
-    local $/;
-    eval <FH>;
-}
 
 my @prgs;
 {
@@ -159,11 +143,6 @@ plan tests => (
                # + scalar @modules
               );
 
-sub mreq ($) {
-    my $m = shift;
-    eval "require $m; 1";
-}
-
 {
     my $m;
     for $m (@modules) {
@@ -172,7 +151,7 @@ sub mreq ($) {
 }
 {
     my $p;
-    my(@path) = split /$Config{path_sep}/, $ENV{PATH};
+    my(@path) = split /$Config::Config{path_sep}/, $ENV{PATH};
     for my $p (@programs) {
         $HAVE->{$p}++ if CPAN::FirstTime::find_exe($p,\@path);
     }
@@ -243,17 +222,6 @@ my @system = (
               "\@CPAN::Defaultsites = (); shell",
              );
 
-# shamelessly stolen from Test::Builder
-sub mydiag {
-    my(@msgs) = @_;
-    my $msg = join '', map { defined($_) ? $_ : 'undef' } @msgs;
-    # Escape each line with a #.
-    $msg =~ s/^/# /gm;
-    # Stick a newline on the end if it needs it.
-    $msg .= "\n" unless $msg =~ /\n\Z/;
-    print $msg;
-}
-
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
     $RUN_EXPECT = 0;
@@ -272,22 +240,6 @@ if ($RUN_EXPECT) {
     my $system = join(" ", map { "\"$_\"" } @system)." > test.out";
     warn "# DEBUG: system[$system]";
     open SYSTEM, "| $system" or die;
-}
-
-sub splitchunk ($) {
-    my $ch = shift;
-    my @s = split /(^\#[A-Za-z]:)/m, $ch;
-    shift @s; # leading empty string
-    for (my $i = 0; $i < @s; $i+=2) {
-        $s[$i] =~ s/\#//;
-        $s[$i] =~ s/://;
-    }
-    @s;
-}
-
-sub test_name {
-    my($prog,$comment) = @_;
-    ($comment||"") . ($prog ? " (testing command '$prog')" : "[empty RET]")
 }
 
 my $skip_the_rest;
@@ -435,7 +387,6 @@ if ($RUN_EXPECT) {
 
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
-rmtree _d"t/dot-cpan";
 
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__

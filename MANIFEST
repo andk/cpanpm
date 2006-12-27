@@ -150,4 +150,5 @@ t/CPAN/modules/03modlist.data
 t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
 t/CPAN/TestPatch.txt
+t/local_utils.pm
 Todo
