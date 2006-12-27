@@ -1242,10 +1242,10 @@ sub set_perl5lib {
     if (@dirs < 12) {
         $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
     } elsif (@dirs < 24) {
-        my @d = map {s/^\Q$CPAN::Config->{'build_dir'}\E/%BUILDDIR%/; $_} @dirs;
+        my @d = map {s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/; $_} @dirs;
         $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of ".
                                  "@d to PERL5LIB; ".
-                                 "%BUILDDIR%=$CPAN::Config->{'build_dir'} ".
+                                 "%BUILDDIR%=$CPAN::Config->{build_dir} ".
                                  "for '$for'\n"
                                 );
     } else {
@@ -1408,7 +1408,7 @@ sub new {
     my($debug,$t2);
     $debug = "";
     my $self = {
-		ID => $CPAN::Config->{'build_dir'},
+		ID => $CPAN::Config->{build_dir},
 		MAX => $CPAN::Config->{'build_cache'},
 		SCAN => $CPAN::Config->{'scan_cache'} || 'atstart',
 		DU => 0
@@ -4317,7 +4317,7 @@ sub reanimate_build_dir {
                     $do->{make_install}->failed
                    )
                ) {
-                $CPAN::META->is_tested($do->{'build_dir'},$do->{make_test}{TIME});
+                $CPAN::META->is_tested($do->{build_dir},$do->{make_test}{TIME});
             }
             $restored++;
         }
@@ -5596,7 +5596,7 @@ EOF
         return;
     }
 
-    $self->{'build_dir'} = $packagedir;
+    $self->{build_dir} = $packagedir;
     $self->safe_chdir($builddir);
     File::Path::rmtree("tmp-$$");
 
@@ -6567,7 +6567,8 @@ is part of the perl-%s distribution. To install that, you need to run
     $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
     my $builddir = $self->dir or
         $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-    chdir $builddir or Carp::croak("Couldn't chdir $builddir: $!");
+    chdir $builddir or
+        Carp::confess("Couldn't chdir to $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
@@ -7466,9 +7467,9 @@ sub test {
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
-    chdir $self->{'build_dir'} or
-	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
-    $self->debug("Changed directory to $self->{'build_dir'}")
+    chdir $self->{build_dir} or
+	Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
+    $self->debug("Changed directory to $self->{build_dir}")
 	if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
@@ -7606,7 +7607,7 @@ sub test {
 
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $self->{make_test} = CPAN::Distrostatus->new("YES");
-        $CPAN::META->is_tested($self->{'build_dir'},$self->{make_test}{TIME});
+        $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
         # probably impossible to need the next line because badtestcnt
         # has a lifespan of one command
         delete $self->{badtestcnt};
@@ -7654,9 +7655,9 @@ sub clean {
             push @e, "make clean already called once";
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
-    chdir $self->{'build_dir'} or
-	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
-    $self->debug("Changed directory to $self->{'build_dir'}") if $CPAN::DEBUG;
+    chdir $self->{build_dir} or
+	Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
+    $self->debug("Changed directory to $self->{build_dir}") if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_clean($self);
@@ -7792,9 +7793,9 @@ sub install {
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
     }
-    chdir $self->{'build_dir'} or
-	Carp::croak("Couldn't chdir to $self->{'build_dir'}");
-    $self->debug("Changed directory to $self->{'build_dir'}")
+    chdir $self->{build_dir} or
+	Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
+    $self->debug("Changed directory to $self->{build_dir}")
 	if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
@@ -7905,7 +7906,7 @@ sub introduce_myself {
 
 #-> sub CPAN::Distribution::dir ;
 sub dir {
-    shift->{'build_dir'};
+    shift->{build_dir};
 }
 
 #-> sub CPAN::Distribution::perldoc ;
@@ -8202,7 +8203,7 @@ sub contains {
         @me = split /::/, $self->id;
         $me[-1] .= ".pm";
         $me = File::Spec->catfile(@me);
-        $from = $self->find_bundle_file($dist->{'build_dir'},join('/',@me));
+        $from = $self->find_bundle_file($dist->{build_dir},join('/',@me));
         $to = File::Spec->catfile($todir,$me);
         File::Path::mkpath(File::Basename::dirname($to));
         File::Copy::copy($from, $to)
