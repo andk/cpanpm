@@ -211,9 +211,11 @@ ALL_PERLS = /usr/bin/perl \
 MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
 		CPAN::DistnameInfo \
+		/home/src/perl/devel-cover/SVN/. \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		Kwalify \
 		Font::TTF \
+		Term::ReadLine::Gnu \
 		/home/src/perl/tk/SVN/. \
 		CDB_File \
 		Math::BigInt::GMP \
@@ -236,13 +238,11 @@ MEGA_COLLECTION = Expect \
 		SVN::Mirror \
 		SVN::Notify::Config \
 		SVN::Notify::Mirror \
-		Term::ReadLine::Gnu \
 		Event::Lib \
 		Math::Approx::Symbolic \
 		Devel::Size \
 		Bundle::Slash \
 		Locale::Maketext::Gettext \
-		Devel::Cover \
 
 }
 }
