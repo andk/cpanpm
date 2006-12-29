@@ -355,10 +355,13 @@ howto-release:
 META.yml: metafile
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
 
-install-devel-cover:
+install-devel-cover-unless-uptodate:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.") unless CPAN::Shell->expand("Module","Devel::Cover")->uptodate'
 
-testcover: testdistros install-devel-cover
+install-devel-cover-unconditionally:
+	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.")'
+
+testcover: testdistros install-devel-cover-unconditionally
 	:>SIGNATURE
 	$(PERL) -MDevel::Cover -e 0
 	`dirname $(PERL)`/cover -delete

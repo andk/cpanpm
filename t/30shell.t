@@ -211,10 +211,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
-my $timeout = 30;
-if ($INC{"Devel/Cover.pm"}) {
-    $timeout*=3;
-}
+my $default_timeout = 30;
 
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
@@ -304,8 +301,12 @@ TUPL: for my $i (0..$#prgs){
         if ($notexpected) {
             mydiag "NOTEXPECT: $notexpected";
         }
+        my $this_timeout = $test_timeout || $default_timeout;
+        if ($INC{"Devel/Cover.pm"}) {
+            $this_timeout*=300;
+        }
         $expo->expect(
-                      $test_timeout || $timeout,
+                      $this_timeout,
                       [ eof => sub {
                             my $got = $expo->clear_accum;
                             mydiag "EOF on i[$i]prog[$prog]
