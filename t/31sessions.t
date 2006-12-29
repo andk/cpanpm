@@ -37,6 +37,8 @@ END {
 }
 my $cwd = Cwd::cwd;
 
+my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
+
 our @SESSIONS =
     (
      {
@@ -77,8 +79,22 @@ our @SESSIONS =
        "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
        "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load....FAILED",
+       "o conf dontload_list push YAML" => ".",
+       "o conf dontload_list push YAML::Syck" => ".",
+       "o conf commit" => "commit: wrote",
       ]
      },
+     {
+      name => "without_yaml",
+      pairs =>
+      [
+       "get CPAN::Test::Dummy::Perl5::Make" => "(?sx:cannot.parse.*?FTPstats.*
+                     CPAN-Test-Dummy-Perl5-Make-1.\\d+/lib/CPAN/Test/Dummy/Perl5/Make.pm.*
+                     will.not.store.persistent.state)",
+       "make CPAN::Test::Dummy::Perl5::Make" => "Falling back to other methods to determine prerequisites",
+       "test CPAN::Test::Dummy::Perl5::Make" => "All tests successful",
+      ]
+     }
     );
 
 my $cnt;
@@ -92,8 +108,8 @@ my $prompt_re = "cpan> ";
 plan tests => $cnt;
 
 for my $session (@SESSIONS) {
-    my $system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
-    warn "# DEBUG: system[$system]";
+    my $system = $session->{system} || $default_system;
+    warn "# DEBUG: name[$session->{name}]system[$system]";
     open SYSTEM, "| $system" or die;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];

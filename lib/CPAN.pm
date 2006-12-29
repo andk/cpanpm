@@ -354,7 +354,7 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
-sub _yaml_module {
+sub _yaml_module () {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if (
         $yaml_module ne "YAML"
@@ -371,57 +371,50 @@ sub _yaml_module {
 sub _yaml_loadfile {
     my($self,$local_file) = @_;
     return +[] unless -s $local_file;
-    my $yaml_module = $self->_yaml_module;
+    my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         my $code = UNIVERSAL::can($yaml_module, "LoadFile");
         my @yaml;
         eval { @yaml = $code->($local_file); };
         if ($@) {
-            $CPAN::Frontend->mydie("Alert: While trying to parse YAML file\n".
-                                   "  $local_file\n".
-                                   "with $yaml_module the following error was encountered:\n".
-                                   "  $@\n"
-                                  );
+            # this shall not be done by the frontend
+            die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
         }
         return \@yaml;
     } else {
-        $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot parse '$local_file'\n");
+        # this shall not be done by the frontend
+        die CPAN::Exception::yaml_not_installed->new($yaml_module, $local_file, "parse");
     }
     return +[];
 }
 
 # CPAN::_yaml_dumpfile
 sub _yaml_dumpfile {
-    my($self,$to_local_file,@what) = @_;
-    my $yaml_module = $self->_yaml_module;
+    my($self,$local_file,@what) = @_;
+    my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
-        if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
+        if (UNIVERSAL::isa($local_file, "FileHandle")) {
             my $code = UNIVERSAL::can($yaml_module, "Dump");
-            eval { print $to_local_file $code->(@what) };
+            eval { print $local_file $code->(@what) };
         } else {
             my $code = UNIVERSAL::can($yaml_module, "DumpFile");
-            eval { $code->($to_local_file,@what); };
+            eval { $code->($local_file,@what); };
         }
         if ($@) {
-            $CPAN::Frontend->mydie("Alert: While trying to dump YAML file\n".
-                                   "  $to_local_file\n".
-                                   "with $yaml_module the following error was encountered:\n".
-                                   "  $@\n"
-                                  );
+            die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"dump",$@);
         }
     } else {
-        if (UNIVERSAL::isa($to_local_file, "FileHandle")) {
+        if (UNIVERSAL::isa($local_file, "FileHandle")) {
             # I think this case does not justify a warning at all
         } else {
-            $CPAN::Frontend->myprint("Note (usually harmless): '$yaml_module' ".
-                                     "not installed, not dumping to '$to_local_file'\n");
+            die CPAN::Exception::yaml_not_installed->new($yaml_module, $local_file, "dump");
         }
     }
 }
 
 sub _init_sqlite () {
     unless ($CPAN::META->has_inst("CPAN::SQLite")) {
-        $CPAN::Frontend->mywarn(qq{CPAN::SQLite not installed, cannot work with it\n})
+        $CPAN::Frontend->mywarn(qq{CPAN::SQLite not installed, trying to work without\n})
             unless $Have_warned->{"CPAN::SQLite"}++;
         return;
     }
@@ -542,6 +535,40 @@ sub as_string {
     "\nRecursive dependency detected:\n    " .
         join("\n => ", @{$self->{deps}}) .
             ".\nCannot continue.\n";
+}
+
+package CPAN::Exception::yaml_not_installed;
+use strict;
+use overload '""' => "as_string";
+
+sub new {
+    my($class,$module,$file,$during) = @_;
+    bless { module => $module, file => $file, during => $during }, $class;
+}
+
+sub as_string {
+    my($self) = shift;
+    "'$self->{module}' not installed, cannot $self->{during} '$self->{file}'\n";
+}
+
+package CPAN::Exception::yaml_process_error;
+use strict;
+use overload '""' => "as_string";
+
+sub new {
+    my($class,$module,$file,$during,$error) = shift;
+    bless { module => $module,
+            file => $file,
+            during => $during,
+            error => $error }, $class;
+}
+
+sub as_string {
+    my($self) = shift;
+    "Alert: While trying to $self->{during} YAML file\n".
+        "  $self->{file}\n".
+            "with '$self->{module}' the following error was encountered:\n".
+                "  $self->{error}\n";
 }
 
 package CPAN::Prompt; use overload '""' => "as_string";
@@ -3108,7 +3135,19 @@ sub _ftp_statistics {
             $sleep+=0.11;
         }
     }
-    my $stats = CPAN->_yaml_loadfile($file);
+    my $stats = eval { CPAN->_yaml_loadfile($file); };
+    if ($@) {
+        if (ref $@) {
+            if (ref $@ eq "CPAN::Exception::yaml_not_installed") {
+                $CPAN::Frontend->myprint("Warning (usually harmless): $@");
+                return;
+            } elsif (ref $@ eq "CPAN::Exception::yaml_process_error") {
+                $CPAN::Frontend->mydie($@);
+            }
+        } else {
+            $CPAN::Frontend->mydie($@);
+        }
+    }
     return $stats->[0];
 }
 
@@ -3135,7 +3174,7 @@ sub _new_stats {
 #-> sub CPAN::FTP::_add_to_statistics
 sub _add_to_statistics {
     my($self,$stats) = @_;
-    my $yaml_module = $self->CPAN::_yaml_module;
+    my $yaml_module = CPAN::_yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         $stats->{thesiteurl} = $ThesiteURL;
         if (CPAN->has_inst("Time::HiRes")) {
@@ -3161,6 +3200,7 @@ sub _add_to_statistics {
         }
         seek $fh, 0, 0;
         truncate $fh, 0;
+        # need no eval because if this fails, it is serious
         CPAN->_yaml_dumpfile($fh,$fullstats);
     }
 }
@@ -4291,7 +4331,9 @@ sub reanimate_build_dir {
             map { [ $_, -M File::Spec->catfile($d,$_) ] }
                 grep {/\.yml$/} readdir $dh;
   DISTRO: for $dirent (@candidates) {
-        my $c = CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))->[0];
+        my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
+        die $@ if $@;
+        my $c = $y->[0];
         if ($c && CPAN->_perl_fingerprint($c->{perl})) {
             my $key = $c->{distribution}{ID};
             for my $k (keys %{$c->{distribution}}) {
@@ -5654,14 +5696,20 @@ sub store_persistent_state {
         return;
     }
     my $file = sprintf "%s.yml", $dir;
-    CPAN->_yaml_dumpfile(
-                         $file,
-                         {
-                          time => time,
-                          perl => CPAN::_perl_fingerprint,
-                          distribution => $self,
-                         }
-                        );
+    my $yaml_module = CPAN::_yaml_module;
+    if ($CPAN::META->has_inst($yaml_module)) {
+        CPAN->_yaml_dumpfile(
+                             $file,
+                             {
+                              time => time,
+                              perl => CPAN::_perl_fingerprint,
+                              distribution => $self,
+                             }
+                            );
+    } else {
+        $CPAN::Frontend->myprint("Warning (usually harmless): '$yaml_module' not installed, ".
+                                "will not store persistent state\n");
+    }
 }
 
 #-> CPAN::Distribution::patch
@@ -6383,7 +6431,10 @@ sub force {
                   # cannot be undone for local distros
                   next ATTRIBUTE;
               }
-              if ($att eq "build_dir") {
+              if ($att eq "build_dir"
+                  && $self->{build_dir}
+                  && $CPAN::META->{is_tested}
+                 ) {
                   delete $CPAN::META->{is_tested}{$self->{build_dir}};
               }
           }
@@ -6898,7 +6949,7 @@ sub _find_prefs {
     if ($@) {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
-    my $yaml_module = CPAN->_yaml_module;
+    my $yaml_module = CPAN::_yaml_module;
     my @extensions;
     if ($CPAN::META->has_inst($yaml_module)) {
         push @extensions, "yml";
@@ -6938,6 +6989,7 @@ sub _find_prefs {
                 CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @distropref;
                 if ($thisexte eq "yml") {
+                    # need no eval because if we have no YAML we do not try to read *.yml
                     @distropref = @{CPAN->_yaml_loadfile($abs)};
                 } elsif ($thisexte eq "dd") {
                     package CPAN::Eval;
@@ -7257,10 +7309,12 @@ sub read_yaml {
     return unless -f $yaml;
     eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
     if ($@) {
-        $CPAN::Frontend->mywarn("Warning (probably harmless): Could not read ".
+        $CPAN::Frontend->mywarn("Could not read ".
                                 "'$yaml'. Falling back to other ".
                                 "methods to determine prerequisites\n");
-        return; # if we die, then we cannot read YAML's own META.yml
+        return $self->{yaml_content} = undef; # if we die, then we
+                                              # cannot read YAML's own
+                                              # META.yml
     }
     if (not exists $self->{yaml_content}{dynamic_config}
         or $self->{yaml_content}{dynamic_config}
