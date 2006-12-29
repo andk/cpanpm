@@ -6551,6 +6551,8 @@ is part of the perl-%s distribution. To install that, you need to run
       delete $self->{force_update};
       return;
     }
+    my $builddir = $self->dir or
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
   EXCUSE: {
         my @e;
         if (!$self->{archived} || $self->{archived} eq "NO") {
@@ -6610,16 +6612,16 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $builddir) {
+            push @e, "Couldn't chdir to '$builddir': $!";
+        }
+	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
     if ($CPAN::Signal){
       delete $self->{force_update};
       return;
     }
     $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-    chdir $builddir or
-        Carp::confess("Couldn't chdir to $builddir: $!");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
@@ -7518,11 +7520,12 @@ sub test {
         } elsif (!@e) {
             push @e, "Has no own directory";
         }
-
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $self->{build_dir}) {
+            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
+        }
+	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
-    chdir $self->{build_dir} or
-	Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
     $self->debug("Changed directory to $self->{build_dir}")
 	if $CPAN::DEBUG;
 
@@ -7846,9 +7849,11 @@ sub install {
             push @e, $self->{later};
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $self->{build_dir}) {
+            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
+        }
+	$CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
-    chdir $self->{build_dir} or
-	Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
     $self->debug("Changed directory to $self->{build_dir}")
 	if $CPAN::DEBUG;
 

@@ -1,3 +1,38 @@
+2006-12-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Between 29627 and 29637 we have a mjor breakage in perl. Perl builds
+	fine but fails many tests. The first test that fails is io/open.t and it
+	has not changed. It's something about my($f) and local($f) but I have
+	not one liner yet that demonstrates it. make regen in any case does not
+	help.
+
+	Ahhh, here it is:
+
+	eval {open my $f, '<', '/etc/hosts';};
+  open local $f, '<', '/etc/passwd';
+
+	This is silent in 27 and barks with 35 and 37:
+
+	Can't localize lexical variable $f at tests/my-local.pl line 3.
+
+	Now binary search runs..... 28 ok, 29 not ok.
+
+	Jarkko reports these:
+
+> Linux:
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43396    29609
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43381    29604
+> 																														     
+> AIX:																												     
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43428    29609
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43395    29604
+> 																														     
+> OpenBSD:																										     
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43414    29609
+> http://www.nntp.perl.org/group/perl.daily-build.reports/43374    29599
+
+	That's something different. So I reported the 29er to p5p.
+
 2006-12-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug in SQLite: if I type "install TAB" I only get completion for the
@@ -21,6 +56,8 @@ DBD::mysql      IO::Poll        Socket          Test::More      fields
 	No. The tricky way that CPAN.pm is using to load modules is not suited
 	for T:W:M. I have tried it and I see YAML gets loaded without
 	hesitation. But I recall we have dontload_list. Very nice.
+
+	IMPROVED in SVK rev. 1639
 
 	* concurrency: the most critical point at the moment seems to be the
 	cleanup of the build directory and another process trying to access one
