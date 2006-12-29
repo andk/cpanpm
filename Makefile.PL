@@ -217,6 +217,7 @@ MEGA_COLLECTION = Expect \
 		Font::TTF \
 		Term::ReadLine::Gnu \
 		/home/src/perl/tk/SVN/. \
+		Tk::Tree \
 		CDB_File \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
@@ -243,6 +244,7 @@ MEGA_COLLECTION = Expect \
 		Devel::Size \
 		Bundle::Slash \
 		Locale::Maketext::Gettext \
+		Test::Without::Module \
 
 }
 }

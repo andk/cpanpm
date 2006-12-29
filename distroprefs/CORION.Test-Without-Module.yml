@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^CORION/Test-Without-Module-0.06\.tar\.gz$"
+patches:
+  - "ANDK/patches/Test-Without-Module-0.06-ANDK-01.patch.gz"
