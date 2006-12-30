@@ -1,5 +1,7 @@
 2006-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: bring fforce, document force and fforce.
+
 	* New bug in testcover:
 
 	t/31sessions.......ok 24/0Don't know which tests failed: got 26 ok, expected 0
