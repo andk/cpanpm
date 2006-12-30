@@ -4171,6 +4171,9 @@ sub cpl {
 #-> sub CPAN::Complete::cplx ;
 sub cplx {
     my($class, $word) = @_;
+    if (CPAN::_sqlite_running) {
+        $CPAN::SQLite->search($class, "^\Q$word\E");
+    }
     sort grep /^\Q$word\E/, map { $_->id } $CPAN::META->all_objects($class);
 }
 
@@ -4305,7 +4308,7 @@ sub reload {
     }
     if (CPAN::_sqlite_running) {
         $CPAN::SQLite->reload(time => $time, force => $force)
-            if $CPAN::META->{LOCK} and not $LAST_TIME;
+            if not $LAST_TIME;
     }
     $LAST_TIME = $time;
     $CPAN::META->{PROTOCOL} = PROTOCOL;

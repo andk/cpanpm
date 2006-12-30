@@ -1,0 +1,23 @@
+Index: CPAN.pm
+===================================================================
+--- CPAN.pm	(revision 1432)
++++ CPAN.pm	(working copy)
+@@ -4171,6 +4171,9 @@
+     # realized, it wasn't sorted anymore. Now (rev 1.301 / v 1.55) I
+     # make it sorted again. Maybe sort was dropped when GNU-readline
+     # support came in? The RCS file is difficult to read on that:-(
++    if (CPAN::_sqlite_running) {
++        $CPAN::SQLite->search($class, "^\Q$word\E");
++    }
+     sort grep /^\Q$word\E/, map { $_->id } $CPAN::META->all_objects($class);
+ }
+ 
+@@ -4305,7 +4308,7 @@
+     }
+     if (CPAN::_sqlite_running) {
+         $CPAN::SQLite->reload(time => $time, force => $force)
+-            if $CPAN::META->{LOCK} and not $LAST_TIME;
++            if not $LAST_TIME;
+     }
+     $LAST_TIME = $time;
+     $CPAN::META->{PROTOCOL} = PROTOCOL;

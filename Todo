@@ -6,22 +6,6 @@
 
 	FIXED
 
----------------------------- ------ ------ ------ ------ ------ ------ ------
-File                           stmt   bran   cond    sub    pod   time  total
----------------------------- ------ ------ ------ ------ ------ ------ ------
-lib/CPAN.pm                    40.5   26.9   22.6   54.3    n/a   99.6   35.0
-lib/CPAN/Admin.pm              12.9    0.0    0.0   62.5  100.0    0.0   12.3
-lib/CPAN/Debug.pm              61.8   56.2    0.0  100.0    0.0    0.1   57.9
-lib/CPAN/FirstTime.pm           8.8    1.4    0.0   53.3    n/a    0.0    6.1
-lib/CPAN/HandleConfig.pm       49.6   33.1   15.1   61.9    7.1    0.1   38.4
-lib/CPAN/Kwalify.pm            18.0    0.0    0.0   60.0    n/a    0.0   15.4
-lib/CPAN/Nox.pm               100.0   50.0    n/a  100.0    n/a    0.0   95.0
-lib/CPAN/Queue.pm              33.3   11.1    0.0   54.5    0.0    0.0   27.6
-lib/CPAN/Tarzip.pm             53.1   29.8   33.3   85.7    0.0    0.1   44.9
-lib/CPAN/Version.pm            86.4   56.2   81.8  100.0    0.0    0.1   74.8
-Total                          38.5   25.0   18.7   57.3    5.4  100.0   32.8
----------------------------- ------ ------ ------ ------ ------ ------ ------
-
 	* Todo: bring back fforce. It was the SVK revision 1496 that
 	extinguished it. And the subroutine itself was missing altogether. And
 	1487 and 1490 introduced it.
