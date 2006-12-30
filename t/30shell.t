@@ -24,6 +24,7 @@ use File::Path qw(rmtree mkpath);
 use lib "t";
 use local_utils;
 
+local_utils::cleanup_dot_cpan();
 local_utils::prepare_dot_cpan();
 
 BEGIN {
@@ -39,9 +40,6 @@ BEGIN {
         no strict "refs";
         *$x = \&{"local_utils\::$x"};
     }
-}
-END {
-    local_utils::cleanup_dot_cpan();
 }
 
 {
@@ -303,7 +301,7 @@ TUPL: for my $i (0..$#prgs){
         }
         my $this_timeout = $test_timeout || $default_timeout;
         if ($INC{"Devel/Cover.pm"}) {
-            $this_timeout*=300;
+            $this_timeout*=30;
         }
         $expo->expect(
                       $this_timeout,
@@ -382,6 +380,10 @@ if ($RUN_EXPECT) {
 
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
+
+#END {
+    local_utils::cleanup_dot_cpan();
+#}
 
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__
@@ -825,9 +827,15 @@ __END__
 #P:b
 #E:(?s:Bundle::Snapshot\S+\s+\(N/A\))
 ########
+#P:o debug all
+#E:CPAN[\s\S]+?CacheMgr[\s\S]+?FirstTime
+########
 #P:b Bundle::CpanTestDummies
 #E:\sCONTAINS.+?CPAN::Test::Dummy::Perl5::Make.+?CPAN::Test::Dummy::Perl5::Make::Zip
 #R:Archive::Zip
+########
+#P:o debug 0
+#E:turned off
 ########
 #P:install ANDK/NotInChecksums-0.000.tar.gz
 #E:(?s:awry.*?yes)
@@ -855,16 +863,22 @@ __END__
 #E:CPAN-Test-Dummy
 #R:Text::Glob
 ########
+#P:o debug all
+#E:CPAN[\s\S]+?CacheMgr[\s\S]+?FirstTime
+########
 #P:test CPAN::Test::Dummy::Perl5::Make
 #E:test\s+--\s+OK
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build
-#E:test\s+--\s+OK
+#E:\s\sANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz[\s\S]*?test\s+--\s+OK
 #R:Module::Build
-#T:60
+#T:75
+########
+#P:o debug 0
+#E:turned off
 ########
 #P:test CPAN::Test::Dummy::Perl5::Make::Zip
-#E:test\s+--\s+OK
+#E:Has already been tested successfully
 #R:Archive::Zip
 ########
 #P:failed

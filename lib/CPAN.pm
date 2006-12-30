@@ -265,7 +265,7 @@ ReadLine support %s
 	    eval { CPAN::Shell->$command(@line) };
 	    if ($@){
                 require Carp;
-                Carp::cluck($@);
+                Carp::cluck("Catching error: '$@'");
             }
             if ($command =~ /^(make|test|install|ff?orce|notest|clean|report|upgrade)$/) {
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
@@ -1236,6 +1236,10 @@ sub savehist {
 #-> sub CPAN::is_tested
 sub is_tested {
     my($self,$what,$when) = @_;
+    unless ($what) {
+        Carp::cluck("DEBUG: empty what");
+        return;
+    }
     $self->{is_tested}{$what} = $when;
 }
 
@@ -4167,10 +4171,6 @@ sub cpl {
 #-> sub CPAN::Complete::cplx ;
 sub cplx {
     my($class, $word) = @_;
-    # I believed for many years that this was sorted, today I
-    # realized, it wasn't sorted anymore. Now (rev 1.301 / v 1.55) I
-    # make it sorted again. Maybe sort was dropped when GNU-readline
-    # support came in? The RCS file is difficult to read on that:-(
     sort grep /^\Q$word\E/, map { $_->id } $CPAN::META->all_objects($class);
 }
 
@@ -4352,6 +4352,7 @@ sub reanimate_build_dir {
                     = $c->{distribution};
             delete $do->{badtestcnt};
             if ($do->{make_test}
+                && $do->{build_dir}
                 && !$do->{make_test}->failed
                 && (
                     !$do->{make_install}
@@ -5402,6 +5403,7 @@ sub called_for {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         $CPAN::Frontend->mywarn
             (sprintf(
@@ -5421,6 +5423,7 @@ sub get {
 
   EXCUSE: {
 	my @e;
+        $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
         if ($self->prefs->{disabled}) {
             my $why = sprintf(
                               "Disabled via prefs file '%s' doc %d",
@@ -5616,7 +5619,7 @@ EOF
                                 )) if $CPAN::DEBUG;
         } else {
             my $userid = $self->cpan_userid;
-            CPAN->debug("userid[$userid]");
+            CPAN->debug("userid[$userid]") if $CPAN::DEBUG;
             if (!$userid or $userid eq "N/A") {
                 $userid = "anon";
             }
@@ -5731,10 +5734,14 @@ sub try_download {
 #-> CPAN::Distribution::patch
 sub patch {
     my($self) = @_;
-    if (my $patches = $self->prefs->{patches}) {
+    $self->debug("checking patches id[$self->{ID}]") if $CPAN::DEBUG;
+    my $patches = $self->prefs->{patches};
+    $patches ||= "";
+    $self->debug("patches[$patches]") if $CPAN::DEBUG;
+    if ($patches) {
         return unless @$patches;
         $self->safe_chdir($self->{build_dir});
-        CPAN->debug("patches[$patches]");
+        CPAN->debug("patches[$patches]") if $CPAN::DEBUG;
         my $patchbin = $CPAN::Config->{patch};
         unless ($patchbin && length $patchbin) {
             $CPAN::Frontend->mydie("No external patch command configured\n\n".
@@ -6254,10 +6261,10 @@ sub CHECKSUM_check_file {
                                                       q{check_sigs});
     if ($check_sigs) {
         if ($CPAN::META->has_inst("Module::Signature")) {
-            $self->debug("Module::Signature is installed, verifying");
+            $self->debug("Module::Signature is installed, verifying") if $CPAN::DEBUG;
             $self->SIG_check_file($chk_file);
         } else {
-            $self->debug("Module::Signature is NOT installed");
+            $self->debug("Module::Signature is NOT installed") if $CPAN::DEBUG;
         }
     }
 
@@ -6551,8 +6558,8 @@ is part of the perl-%s distribution. To install that, you need to run
       delete $self->{force_update};
       return;
     }
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+
+    my $builddir;
   EXCUSE: {
         my @e;
         if (!$self->{archived} || $self->{archived} eq "NO") {
@@ -6612,6 +6619,8 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        $builddir = $self->dir or
+            $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
         unless (chdir $builddir) {
             push @e, "Couldn't chdir to '$builddir': $!";
         }
@@ -6981,18 +6990,20 @@ sub _find_prefs {
     if (@extensions) {
         my $dh = DirHandle->new($prefs_dir)
             or die Carp::croak("Couldn't open '$prefs_dir': $!");
-      DIRENT: for (sort $dh->read) {
-            next if $_ eq "." || $_ eq "..";
+      DIRENT: for my $dirent (sort $dh->read) {
+            next if $dirent eq "." || $dirent eq "..";
             my $exte = join "|", @extensions;
-            next unless /\.($exte)$/;
+            next unless $dirent =~ /\.($exte)$/;
             my $thisexte = $1;
-            my $abs = File::Spec->catfile($prefs_dir, $_);
+            my $abs = File::Spec->catfile($prefs_dir, $dirent);
             if (-f $abs) {
                 CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @distropref;
                 if ($thisexte eq "yml") {
                     # need no eval because if we have no YAML we do not try to read *.yml
+                    CPAN->debug(sprintf "before yaml load abs[%s]", $abs) if $CPAN::DEBUG;
                     @distropref = @{CPAN->_yaml_loadfile($abs)};
+                    CPAN->debug(sprintf "after yaml load abs[%s]", $abs) if $CPAN::DEBUG;
                 } elsif ($thisexte eq "dd") {
                     package CPAN::Eval;
                     no strict;
@@ -7020,12 +7031,13 @@ sub _find_prefs {
                     }
                 }
                 # $DB::single=1;
+                CPAN->debug(sprintf "#distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
               ELEMENT: for my $y (0..$#distropref) {
                     my $distropref = $distropref[$y];
                     $self->_validate_distropref($distropref,$abs,$y);
                     my $match = $distropref->{match};
                     unless ($match) {
-                        CPAN->debug("no 'match' in abs[$abs], skipping");
+                        CPAN->debug("no 'match' in abs[$abs], skipping") if $CPAN::DEBUG;
                         next ELEMENT;
                     }
                     my $ok = 1;
@@ -7033,9 +7045,9 @@ sub _find_prefs {
                         my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
                             my $okm = 0;
-                            CPAN->debug(sprintf "abs[%s]distropref[%d]", $abs, scalar @distropref) if $CPAN::DEBUG;
+                            CPAN->debug(sprintf "distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
                             my @modules = $self->containsmods;
-                            CPAN->debug(sprintf "abs[%s]distropref[%d]modules[%s]", $abs, scalar @distropref, join(",",@modules)) if $CPAN::DEBUG;
+                            CPAN->debug(sprintf "modules[%s]", join(",",@modules)) if $CPAN::DEBUG;
                           MODULE: for my $module (@modules) {
                                 $okm ||= $module =~ /$qr/;
                                 last MODULE if $okm;
@@ -7054,7 +7066,7 @@ sub _find_prefs {
                                                    "remove, cannot continue.");
                         }
                     }
-                    CPAN->debug(sprintf "abs[%s]distropref[%d]ok[%d]", $abs, scalar @distropref, $ok) if $CPAN::DEBUG;
+                    CPAN->debug(sprintf "ok[%d]", $ok) if $CPAN::DEBUG;
                     if ($ok) {
                         return {
                                 prefs => $distropref,
@@ -7066,6 +7078,7 @@ sub _find_prefs {
                 }
             }
         }
+        $dh->close;
     }
     return;
 }
@@ -7079,6 +7092,8 @@ sub prefs {
     if ($CPAN::Config->{prefs_dir}) {
         CPAN->debug("prefs_dir[$CPAN::Config->{prefs_dir}]") if $CPAN::DEBUG;
         my $prefs = $self->_find_prefs();
+        $prefs ||= ""; # avoid warning next line
+        CPAN->debug("prefs[$prefs]") if $CPAN::DEBUG;
         if ($prefs) {
             for my $x (qw(prefs prefs_file prefs_file_doc)) {
                 $self->{$x} = $prefs->{$x};
@@ -8255,8 +8270,9 @@ sub contains {
         }
         my $dist = $CPAN::META->instance('CPAN::Distribution',
                                          $self->cpan_file);
+        $self->debug("before get id[$dist->{ID}]") if $CPAN::DEBUG;
         $dist->get;
-        $self->debug("id[$dist->{ID}]") if $CPAN::DEBUG;
+        $self->debug("after get id[$dist->{ID}]") if $CPAN::DEBUG;
         my($todir) = $CPAN::Config->{'cpan_home'};
         my(@me,$from,$to,$me);
         @me = split /::/, $self->id;

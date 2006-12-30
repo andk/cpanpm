@@ -1,3 +1,17 @@
+$|=1;
+BEGIN {
+    unshift @INC, './lib';
+    require CPAN;
+    CPAN::HandleConfig->load;
+    my $yaml_module = CPAN::_yaml_module();
+    if ($CPAN::META->has_inst($yaml_module)) {
+        print "DEBUG: yaml_module[$yaml_module] loadable\n";
+    } else {
+        print "1..0 # Skip: no yaml module installed\n";
+        eval "require POSIX; 1" and POSIX::_exit(0);
+    }
+}
+
 use strict;
 use Test::More;
 
@@ -14,12 +28,12 @@ Do we want to repeat testing?
 	Module/Bundle
 	  OK/FAIL     pass everything through to underlying distros
 
-
 =cut
 
 use lib "t";
 use local_utils;
 
+local_utils::cleanup_dot_cpan();
 local_utils::prepare_dot_cpan();
 
 BEGIN {
@@ -104,7 +118,7 @@ for my $session (@SESSIONS) {
     }
 }
 my $prompt_re = "cpan> ";
-
+print "DEBUG: cnt[$cnt]\n";
 plan tests => $cnt;
 
 for my $session (@SESSIONS) {
