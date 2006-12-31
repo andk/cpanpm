@@ -22,7 +22,6 @@ distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BTROTT.XML-FOAF.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
-distroprefs/CHAMAS.Crypt-SSLeay.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
