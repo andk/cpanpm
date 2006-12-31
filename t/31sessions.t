@@ -75,6 +75,7 @@ our @SESSIONS =
        "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
        "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
+       "force get CPAN::Test::Dummy::Perl5::Build::Fails" => "Checksum for .*/CPAN-Test-Dummy-Perl5-Build-Fails-1.03.tar.gz ok",
        "o conf build_dir_reuse 1" => "build_dir_reuse",
        "o conf commit" => "commit: wrote",
       ]

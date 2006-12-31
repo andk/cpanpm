@@ -94,6 +94,7 @@ use vars qw(
              cvs_import
              expand
              force
+             fforce
              get
              install
              install_tested
@@ -466,6 +467,7 @@ use strict;
                                     cvs_import
                                     dump
                                     force
+                                    fforce
                                     hosts
                                     install
                                     install_tested
@@ -1512,7 +1514,7 @@ Upgrade
  upgrade  WORDs or /REGEXP/ or NONE    upgrade some/matching/all modules
 
 Pragmas
- force  CMD    try hard to do command
+ force  CMD    try hard to do command  fforce CMD    try harder
  notest CMD    skip testing
 
 Other
@@ -2785,7 +2787,7 @@ sub rematein {
     my $self = shift;
     my($meth,@some) = @_;
     my @pragma;
-    while($meth =~ /^(force|notest)$/) {
+    while($meth =~ /^(ff?orce|notest)$/) {
 	push @pragma, $meth;
 	$meth = shift @some or
             $CPAN::Frontend->mydie("Pragma $pragma[-1] used without method: ".
@@ -2970,6 +2972,7 @@ sub recent {
                         cvs_import
                         dump
                         force
+                        fforce
                         get
                         install
                         look
@@ -6397,9 +6400,15 @@ sub eq_CHECKSUM {
 
 # "Force get forgets previous error conditions"
 
+#-> sub CPAN::Distribution::fforce ;
+sub fforce {
+  my($self, $method) = @_;
+  $self->force($method,1);
+}
+
 #-> sub CPAN::Distribution::force ;
 sub force {
-  my($self, $method) = @_;
+  my($self, $method,$fforce) = @_;
   my %phase_map = (
                    get => [
                            "unwrapped",
@@ -6433,7 +6442,7 @@ sub force {
                   );
   my $methodmatch = 0;
  PHASE: for my $phase (qw(unknown get make test install)) { # order matters
-      $methodmatch = 1 if $phase eq $method;
+      $methodmatch = 1 if $fforce || $phase eq $method;
       next unless $methodmatch;
     ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
           if ($phase eq "get") {
@@ -6453,7 +6462,7 @@ sub force {
       }
   }
   if ($method && $method =~ /make|test|install/) {
-    $self->{force_update}++; # name should probably have been force_install
+    $self->{force_update} = 1; # name should probably have been force_install
   }
 }
 
@@ -6993,12 +7002,12 @@ sub _find_prefs {
     if (@extensions) {
         my $dh = DirHandle->new($prefs_dir)
             or die Carp::croak("Couldn't open '$prefs_dir': $!");
-      DIRENT: for my $dirent (sort $dh->read) {
-            next if $dirent eq "." || $dirent eq "..";
+      DIRENT: for (sort $dh->read) {
+            next if $_ eq "." || $_ eq "..";
             my $exte = join "|", @extensions;
-            next unless $dirent =~ /\.($exte)$/;
+            next unless /\.($exte)$/;
             my $thisexte = $1;
-            my $abs = File::Spec->catfile($prefs_dir, $dirent);
+            my $abs = File::Spec->catfile($prefs_dir, $_);
             if (-f $abs) {
                 CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @distropref;
@@ -8481,6 +8490,8 @@ sub xs_file {
 }
 
 #-> sub CPAN::Bundle::force ;
+sub fforce   { shift->rematein('fforce',@_); }
+#-> sub CPAN::Bundle::force ;
 sub force   { shift->rematein('force',@_); }
 #-> sub CPAN::Bundle::notest ;
 sub notest  { shift->rematein('notest',@_); }
@@ -8856,7 +8867,13 @@ sub cpan_version {
 #-> sub CPAN::Module::force ;
 sub force {
     my($self) = @_;
-    $self->{force_update}++;
+    $self->{force_update} = 1;
+}
+
+#-> sub CPAN::Module::fforce ;
+sub fforce {
+    my($self) = @_;
+    $self->{force_update} = 2;
 }
 
 sub notest {
@@ -8887,7 +8904,13 @@ sub rematein {
     }
     my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
     $pack->called_for($self->id);
-    $pack->force($meth) if exists $self->{force_update};
+    if (exists $self->{force_update}){
+        if ($self->{force_update} == 2) {
+            $pack->fforce($meth);
+        } else {
+            $pack->force($meth);
+        }
+    }
     $pack->notest($meth) if exists $self->{'notest'};
 
     $pack->{reqtype} ||= "";
@@ -9122,24 +9145,6 @@ Batch mode:
   $do = CPAN::Shell->expand("Distribution",
                             $distro);            # same thing
 
-=head1 STATUS
-
-This module and its competitor, the CPANPLUS module, are both much
-cooler than the other.
-
-=head1 COMPATIBILITY
-
-CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
-newer versions. It is getting more and more difficult to get the
-minimal prerequisites working on older perls. It is close to
-impossible to get the whole Bundle::CPAN working there. If you're in
-the position to have only these old versions, be advised that CPAN is
-designed to work fine without the Bundle::CPAN installed.
-
-To get things going, note that GBARR/Scalar-List-Utils-1.18.tar.gz is
-compatible with ancient perls and that File::Temp is listed as a
-prerequisite but CPAN has reasonable workarounds if it is missing.
-
 =head1 DESCRIPTION
 
 The CPAN module is designed to automate the make and install of perl
@@ -9147,7 +9152,7 @@ modules and extensions. It includes some primitive searching
 capabilities and knows how to use Net::FTP or LWP (or some external
 download clients) to fetch the raw data from the net.
 
-Modules are fetched from one or more of the mirrored CPAN
+Distributions are fetched from one or more of the mirrored CPAN
 (Comprehensive Perl Archive Network) sites and unpacked in a dedicated
 directory.
 
@@ -9155,12 +9160,11 @@ The CPAN module also supports the concept of named and versioned
 I<bundles> of modules. Bundles simplify the handling of sets of
 related modules. See Bundles below.
 
-The package contains a session manager and a cache manager. There is
-no status retained between sessions. The session manager keeps track
-of what has been fetched, built and installed in the current
-session. The cache manager keeps track of the disk space occupied by
-the make processes and deletes excess space according to a simple FIFO
-mechanism.
+The package contains a session manager and a cache manager. The
+session manager keeps track of what has been fetched, built and
+installed in the current session. The cache manager keeps track of the
+disk space occupied by the make processes and deletes excess space
+according to a simple FIFO mechanism.
 
 All methods provided are accessible in a programmer style and in an
 interactive shell style.
@@ -9171,12 +9175,12 @@ The interactive mode is entered by running
 
     perl -MCPAN -e shell
 
-which puts you into a readline interface. You will have the most fun if
-you install Term::ReadKey and Term::ReadLine to enjoy both history and
-command completion.
+which puts you into a readline interface. If Term::ReadKey and either
+Term::ReadLine::Perl or Term::ReadLine::Gnu are installed it supports
+both history and command completion.
 
-Once you are on the command line, type 'h' and the rest should be
-self-explanatory.
+Once you are on the command line, type 'h' to get a one page help
+screen and the rest should be self-explanatory.
 
 The function call C<shell> takes two optional arguments, one is the
 prompt, the second is the default initial command line (the latter
@@ -9205,7 +9209,7 @@ displayed with the rather verbose method C<as_string>, but if we find
 more than one, we display each object with the terse method
 C<as_glimpse>.
 
-=item make, test, install, clean  modules or distributions
+=item get, make, test, install, clean  modules or distributions
 
 These commands take any number of arguments and investigate what is
 necessary to perform the action. If the argument is a distribution
@@ -9214,6 +9218,9 @@ a module, CPAN determines the distribution file in which this module
 is included and processes that, following any dependencies named in
 the module's META.yml or Makefile.PL (this behavior is controlled by
 the configuration parameter C<prerequisites_policy>.)
+
+C<get> downloads a distribution file and untars or unzips it, C<make>
+builds it, C<test> runs the test suite, and C<install> installs it.
 
 Any C<make> or C<test> are run unconditionally. An
 
@@ -9229,21 +9236,15 @@ the module doesn't need to be updated.
 
 CPAN also keeps track of what it has done within the current session
 and doesn't try to build a package a second time regardless if it
-succeeded or not. The C<force> pragma may precede another command
-(currently: C<make>, C<test>, or C<install>) and executes the
-command from scratch and tries to continue in case of some errors.
+succeeded or not. It does not repeat a test run if the test
+has been run successfully before. Same for install runs.
 
-Example:
+The C<force> pragma may precede another command (currently: C<get>,
+C<make>, C<test>, or C<install>) and executes the command from scratch
+and tries to continue in case of some errors. See the section below on
+The C<force> and the C<fforce> pragma.
 
-    cpan> install OpenGL
-    OpenGL is up to date.
-    cpan> force install OpenGL
-    Running make
-    OpenGL-0.4/
-    OpenGL-0.4/COPYRIGHT
-    [...]
-
-The C<notest> pragma may be set to skip the test part in the build
+The C<notest> pragma may be used to skip the test part in the build
 process.
 
 Example:
@@ -9256,14 +9257,13 @@ A C<clean> command results in a
 
 being executed within the distribution file's working directory.
 
-=item get, readme, perldoc, look module or distribution
+=item readme, perldoc, look module or distribution
 
-C<get> downloads a distribution file without further action. C<readme>
-displays the README file of the associated distribution. C<Look> gets
-and untars (if not yet done) the distribution file, changes to the
-appropriate directory and opens a subshell process in that directory.
-C<perldoc> displays the pod documentation of the module in html or
-plain text format.
+C<readme> displays the README file of the associated distribution.
+C<Look> gets and untars (if not yet done) the distribution file,
+changes to the appropriate directory and opens a subshell process in
+that directory. C<perldoc> displays the pod documentation of the
+module in html or plain text format.
 
 =item ls author
 
@@ -9292,6 +9292,45 @@ regarded as a bug and may be changed in future versions.
 The C<failed> command reports all distributions that failed on one of
 C<make>, C<test> or C<install> for some reason in the currently
 running shell session.
+
+=item Persistence between sessions
+
+If the C<YAML> or the c<YAML::Syck> module is installed a record of
+the internal state of all modules is written to disk after each step.
+The files contain a signature of the currently running perl version
+for later perusal.
+
+If the configurations variable C<build_dir_reuse> is set to a true
+value, then CPAN.pm reads the collected YAML files. If the stored
+signature matches the currently running perl the stored state is
+loaded into memory such that effectively persistence between sessions
+is established.
+
+=item The C<force> and the C<fforce> pragma
+
+To speed things up in complex installation scenarios, CPAN.pm keeps
+track of what it has already done and refuses to do some things a
+second time. A C<get>, a C<make>, and an C<install> are not repeated.
+A C<test> is only repeated if the previous test was unsuccessful. The
+diagnostic message when CPAN.pm refuses to do something a second time
+is one of I<Has already been >C<unwrapped|made|tested successfully> or
+something similar. Another situation where CPAN refuses to act is an
+C<install> if the according C<test> was not successful.
+
+In all these cases, the user can override the goatish behaviour by
+prepending the command with the word force, for example:
+
+  cpan> force get Foo
+  cpan> force make AUTHOR/Bar-3.14.tar.gz
+  cpan> force test Baz
+  cpan> force install Acme::Meta
+
+Each I<forced> command is executed with the according part of its
+memory erased.
+
+The C<fforce> pragma is a variant that emulates a C<force get> which
+erases the entire memory followed by the action specified, effectively
+restarting the whole get/make/test/install procedure from scratch.
 
 =item Lockfile
 
@@ -9669,11 +9708,11 @@ Returns the directory into which this distribution has been unpacked.
 
 =item CPAN::Distribution::force($method,@args)
 
-Forces CPAN to perform a task that normally would have failed. Force
-takes as arguments a method name to be called and any number of
-additional arguments that should be passed to the called method. The
-internals of the object get the needed changes so that CPAN.pm does
-not refuse to take the action.
+Forces CPAN to perform a task that it normally would have refused to
+do. Force takes as arguments a method name to be called and any number
+of additional arguments that should be passed to the called method.
+The internals of the object get the needed changes so that CPAN.pm
+does not refuse to take the action.
 
 =item CPAN::Distribution::get()
 
@@ -9880,11 +9919,11 @@ Where the 'DSLIP' characters have the following meanings:
 
 =item CPAN::Module::force($method,@args)
 
-Forces CPAN to perform a task that normally would have failed. Force
-takes as arguments a method name to be called and any number of
-additional arguments that should be passed to the called method. The
-internals of the object get the needed changes so that CPAN.pm does
-not refuse to take the action.
+Forces CPAN to perform a task that it normally would have refused to
+do. Force takes as arguments a method name to be called and any number
+of additional arguments that should be passed to the called method.
+The internals of the object get the needed changes so that CPAN.pm
+does not refuse to take the action.
 
 =item CPAN::Module::get()
 
@@ -10779,31 +10818,11 @@ Use the force pragma like so
 
   force install Foo::Bar
 
-This does a bit more than really needed because it untars the
-distribution again and runs make and test and only then install.
-
-Or, if you find this is too fast and you would prefer to do smaller
-steps, say
-
-  force get Foo::Bar
-
-first and then continue as always. C<Force get> I<forgets> previous
-error conditions.
-
 Or you can use
 
   look Foo::Bar
 
 and then 'make install' directly in the subshell.
-
-Or you leave the CPAN shell and start it again.
-
-For the really curious, by accessing internals directly, you I<could>
-
-  !delete CPAN::Shell->expandany("Foo::Bar")->distribution->{install}
-
-but this is neither guaranteed to work in the future nor is it a
-decent command.
 
 =item 12)
 
@@ -10856,6 +10875,34 @@ Henk P. Penning maintains a site that collects data about CPAN sites:
 
 =back
 
+=head1 COMPATIBILITY
+
+=head2 OLD PERL VERSIONS
+
+CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
+newer versions. It is getting more and more difficult to get the
+minimal prerequisites working on older perls. It is close to
+impossible to get the whole Bundle::CPAN working there. If you're in
+the position to have only these old versions, be advised that CPAN is
+designed to work fine without the Bundle::CPAN installed.
+
+To get things going, note that GBARR/Scalar-List-Utils-1.18.tar.gz is
+compatible with ancient perls and that File::Temp is listed as a
+prerequisite but CPAN has reasonable workarounds if it is missing.
+
+=head2 CPANPLUS
+
+This module and its competitor, the CPANPLUS module, are both much
+cooler than the other. CPAN.pm is older. CPANPLUS was designed to be
+more modular but it was never tried to make it compatible with CPAN.pm.
+
+=head1 SECURITY ADVICE
+
+This software enables you to upgrade software on your computer and so
+is inherently dangerous because the newly installed software may
+contain bugs and may alter the way your computer works or even make it
+unusable. Please consider backing up your data before every upgrade.
+
 =head1 BUGS
 
 Please report bugs via http://rt.cpan.org/
@@ -10864,13 +10911,6 @@ Before submitting a bug, please make sure that the traditional method
 of building a Perl module package from a shell by following the
 installation instructions of that package still works in your
 environment.
-
-=head1 SECURITY ADVICE
-
-This software enables you to upgrade software on your computer and so
-is inherently dangerous because the newly installed software may
-contain bugs and may alter the way your computer works or even make it
-unusable. Please consider backing up your data before every upgrade.
 
 =head1 AUTHOR
 

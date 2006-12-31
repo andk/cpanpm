@@ -1,6 +1,14 @@
+2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Why do I always see
+
+Prepending /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/arch /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/lib /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/arch /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/lib /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/arch /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/lib to PERL5LIB for 'make'
+	
+	* Todo: verify that CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1 still works
+
 2006-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: bring fforce, document force and fforce.
+	* Todo: bring fforce, document force and fforce. DONE in SVK rev. 1650
 
 	* New bug in testcover:
 
@@ -63,6 +71,22 @@
 
 	My impression is that the four lines in the chunk after 6981 are
 	responsible where I replaced $_ with $dirent. We'll see.
+
+	Update 2006-12-31: No, this change alone does not bring the bug back.
+
+	What about svn up -r 1432? Is the nightmare reproducable at all? Yes.
+	With bleadperl@29642 and devel-cover SVN rev. 190 and CPAN.pm SVN rev.
+	1432 and the command
+
+	HARNESS_PERL_SWITCHES=-MDevel::Cover make test TEST_FILES=t/30shell.t TEST_VERBOSE=1
+
+	I can see the bug again: after test 154 I see this output:
+
+	ok 154 -  (testing command 'b')
+# NEXT: b Bundle::CpanTestDummies
+# EXPECT: \sCONTAINS.+?CPAN::Test::Dummy::Perl5::Make.+?CPAN::Test::Dummy::Perl5::Make::Zip(?s:.*?cpan[^>]*?>)
+
+	and then the process grows to 2.9 GB.
 
 2006-12-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

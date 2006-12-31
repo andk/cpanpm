@@ -363,12 +363,15 @@ install-devel-cover-unless-uptodate:
 install-devel-cover-unconditionally:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.")'
 
-testcover: testdistros install-devel-cover-unconditionally
+testcover: testdistros install-devel-cover-unless-uptodate
 	:>SIGNATURE
 	$(PERL) -MDevel::Cover -e 0
 	`dirname $(PERL)`/cover -delete
 	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test
 	`dirname $(PERL)`/cover
+
+man:
+	$(PERL)doc -F lib/CPAN.pm
 
 testdistros: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz \
