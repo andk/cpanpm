@@ -6557,6 +6557,7 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
       }
     }
+    $DB::single = 1;
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     $self->get;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -6966,7 +6967,7 @@ sub _validate_distropref {
 sub _find_prefs {
     my($self) = @_;
     my $distroid = $self->pretty_id;
-    CPAN->debug("distroid[$distroid]") if $CPAN::DEBUG;
+    #CPAN->debug("distroid[$distroid]") if $CPAN::DEBUG;
     my $prefs_dir = $CPAN::Config->{prefs_dir};
     eval { File::Path::mkpath($prefs_dir); };
     if ($@) {
@@ -7009,13 +7010,13 @@ sub _find_prefs {
             my $thisexte = $1;
             my $abs = File::Spec->catfile($prefs_dir, $_);
             if (-f $abs) {
-                CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
+                #CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @distropref;
                 if ($thisexte eq "yml") {
                     # need no eval because if we have no YAML we do not try to read *.yml
-                    CPAN->debug(sprintf "before yaml load abs[%s]", $abs) if $CPAN::DEBUG;
+                    #CPAN->debug(sprintf "before yaml load abs[%s]", $abs) if $CPAN::DEBUG;
                     @distropref = @{CPAN->_yaml_loadfile($abs)};
-                    CPAN->debug(sprintf "after yaml load abs[%s]", $abs) if $CPAN::DEBUG;
+                    #CPAN->debug(sprintf "after yaml load abs[%s]", $abs) if $CPAN::DEBUG;
                 } elsif ($thisexte eq "dd") {
                     package CPAN::Eval;
                     no strict;
@@ -7043,13 +7044,13 @@ sub _find_prefs {
                     }
                 }
                 # $DB::single=1;
-                CPAN->debug(sprintf "#distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
+                #CPAN->debug(sprintf "#distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
               ELEMENT: for my $y (0..$#distropref) {
                     my $distropref = $distropref[$y];
                     $self->_validate_distropref($distropref,$abs,$y);
                     my $match = $distropref->{match};
                     unless ($match) {
-                        CPAN->debug("no 'match' in abs[$abs], skipping") if $CPAN::DEBUG;
+                        #CPAN->debug("no 'match' in abs[$abs], skipping") if $CPAN::DEBUG;
                         next ELEMENT;
                     }
                     my $ok = 1;
@@ -7057,9 +7058,9 @@ sub _find_prefs {
                         my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
                             my $okm = 0;
-                            CPAN->debug(sprintf "distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
+                            #CPAN->debug(sprintf "distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
                             my @modules = $self->containsmods;
-                            CPAN->debug(sprintf "modules[%s]", join(",",@modules)) if $CPAN::DEBUG;
+                            #CPAN->debug(sprintf "modules[%s]", join(",",@modules)) if $CPAN::DEBUG;
                           MODULE: for my $module (@modules) {
                                 $okm ||= $module =~ /$qr/;
                                 last MODULE if $okm;
@@ -7078,7 +7079,7 @@ sub _find_prefs {
                                                    "remove, cannot continue.");
                         }
                     }
-                    CPAN->debug(sprintf "ok[%d]", $ok) if $CPAN::DEBUG;
+                    #CPAN->debug(sprintf "ok[%d]", $ok) if $CPAN::DEBUG;
                     if ($ok) {
                         return {
                                 prefs => $distropref,
@@ -7810,7 +7811,7 @@ sub goto {
 
     my($method) = (caller(1))[3];
     CPAN->instance("CPAN::Distribution",$goto)->$method;
-
+    CPAN::Queue->delete_first($goto);
 }
 
 #-> sub CPAN::Distribution::install ;

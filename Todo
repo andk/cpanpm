@@ -4,6 +4,21 @@
 
 Prepending /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/arch /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/lib /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/arch /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/lib /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/arch /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/lib to PERL5LIB for 'make'
 	
+	Graphics::ColorNames   is a goto and a Module::Build
+	HTML::Tidy             is a goto
+	YAML::Syck             nothing special visible, maybe an artefact
+	                       because it is involved in writing and reading
+	                       status information?
+
+	There must a bug in the goto implementation.
+
+	Yes, the bug is visible when doing a manual install of
+	Graphics::ColorNames in that the test is run twice. A part of the reason
+	seems to be that the distro stays on the queue when we have finished
+	installing it. The solution might be to remove it within the goto method.
+
+	DONE in SVK rev. 1652
+
 	* Todo: verify that CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1 still works
 
 2006-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -169,17 +184,6 @@ DBD::mysql      IO::Poll        Socket          Test::More      fields
 	enforce that
 
 2006-12-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
-
-	* Why do I always see
-
-Prepending /home/k/.cpan/build/Crypt-SSLeay-0.52_02-6xuymm/blib/arch /home/k/.cpan/build/Crypt-SSLeay-0.52_02-6xuymm/blib/lib /home/k/.cpan/build/Graphics-ColorNames-2.0_04-GsEXKg/blib/arch /home/k/.cpan/build/Graphics-ColorNames-2.0_04-GsEXKg/blib/lib /home/k/.cpan/build/HTML-Tidy-1.07_01-3Lz9Op/blib/arch /home/k/.cpan/build/HTML-Tidy-1.07_01-3Lz9Op/blib/lib /home/k/.cpan/build/YAML-Syck-0.72-jBlEKz/blib/arch /home/k/.cpan/build/YAML-Syck-0.72-jBlEKz/blib/lib to PERL5LIB for 'test'
-
-	Crypt::SSLeay          is a goto and a developer version
-	Graphics::ColorNames   developer version
-	HTML::Tidy             developer version
-	YAML::Syck             nothing special visible, maybe an artefact
-	                       because it is involved in writing and reading
-	                       status information?
 
 	* Paul Johnson has already fixed #24067 in his repository. Unfortunately
 	he sends me a link to svnweb instead of the repository itself. Svnweb

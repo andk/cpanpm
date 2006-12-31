@@ -183,8 +183,9 @@ Specifies that this distribution shall not be processed at all.
 =item goto [string]
 
 The canonical name of a delegate distribution that shall be installed
-instead. Useful when a new version that, although it tests OK itself,
-breaks something else.
+instead. Useful when a new version, although it tests OK itself,
+breaks something else or a developer release or a fork is already
+uploaded that is better than the last released version.
 
 =item install [hash]
 
