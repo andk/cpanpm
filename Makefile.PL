@@ -396,6 +396,13 @@ testshell-with-protocol: testdistros
 		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
 	ls -lt protocols | head
 
+testshell-with-protocol-without-expect: testdistros
+	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
+	CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1 $(MAKE) test \
+		TEST_FILES=t/30shell.t TEST_VERBOSE=1 | \
+		tee protocols/make-test-`date +%Y%m%dT%H%M%S`
+	ls -lt protocols | head
+
 testshell-with-protocol-twice: testdistros
 	$(PERL) -e 'for ("protocols"){-d $$_ or mkdir $$_, 0755}'
 	$(PERL) -p -i~ -e 's/colorize_output\D+\d/colorize_output=>0/' t/CPAN/TestConfig.pm

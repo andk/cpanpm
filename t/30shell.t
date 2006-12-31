@@ -208,7 +208,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 }
 
 my $prompt = "cpan>";
-my $prompt_re = "cpan[^>]*?>"; # note: replicated in DATA!
+my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
 my $default_timeout = 30;
 
 $|=1;
@@ -346,6 +346,7 @@ if ($RUN_EXPECT) {
     $expo->soft_close;
 } else {
     close SYSTEM or die "Could not close SYSTEM filehandle: $!";
+    mydiag "Finished test script, going to interprete it.";
     open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
     local $/;
     my $biggot = <SYSTEM>;
@@ -360,7 +361,7 @@ if ($RUN_EXPECT) {
             mydiag "NOTEXPECT: $notexpected";
         }
         my $ok = 1;
-        if ($biggot =~ /(\G.*?$expected)/sgc) {
+        if ($biggot =~ /(\G(?s:.*?)$expected)/gc) {
             my $got = $1;
             mydiag "GOT: $got\n";
             $pos = pos $biggot;
@@ -372,6 +373,7 @@ if ($RUN_EXPECT) {
             }
         } else {
             mydiag "FAILED at pos[$pos] in test.out";
+            last;
             $ok = 0;
         }
         ok($ok, test_name($prog,$comment));
@@ -388,7 +390,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__
 ########
-#E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*?>)
+#E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*>)
 ########
 #P:o conf init urllist
 #E:(MIRR).+?y\]

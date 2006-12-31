@@ -24,7 +24,18 @@ Prepending /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/arch /home
 
 	FIXED in SVK rev. 1653
 
-	* Todo: verify that CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1 still works
+	* Todo: verify that CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1 still works.
+
+	It's incredible slow. Maybe the $prompt_re is inefficient? No, the
+	problem is that the more tests we have, the longer is the string that
+	needs testing. The output must be split on the prompt and then tested
+	one piece at a time. This is a hard job because we do not know where to
+	split. 31sessions.t seems better, let's move there and go away from
+	30shell.t. For now we can short circuit after the first fail. This still
+	is extremely slow.
+
+	Found it. There was a /.../s in the wrong position, it modified the
+	$expected regex. FIXED in rev 1654.
 
 2006-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
