@@ -4357,13 +4357,14 @@ sub reanimate_build_dir {
                 = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
                     = $c->{distribution};
             delete $do->{badtestcnt};
+            # $DB::single = 1;
             if ($do->{make_test}
                 && $do->{build_dir}
                 && !$do->{make_test}->failed
                 && (
-                    !$do->{make_install}
+                    !$do->{install}
                     ||
-                    $do->{make_install}->failed
+                    $do->{install}->failed
                    )
                ) {
                 $CPAN::META->is_tested($do->{build_dir},$do->{make_test}{TIME});
@@ -6557,7 +6558,6 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
       }
     }
-    $DB::single = 1;
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     $self->get;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -7983,6 +7983,7 @@ sub install {
         }
     }
     delete $self->{force_update};
+    # $DB::single = 1;
     $self->store_persistent_state;
 }
 
