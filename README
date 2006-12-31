@@ -35,40 +35,25 @@ SYNOPSIS
       $do = CPAN::Shell->expand("Distribution",
                                 $distro);            # same thing
 
-STATUS
-    This module and its competitor, the CPANPLUS module, are both much
-    cooler than the other.
-
-COMPATIBILITY
-    CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
-    newer versions. It is getting more and more difficult to get the minimal
-    prerequisites working on older perls. It is close to impossible to get
-    the whole Bundle::CPAN working there. If you're in the position to have
-    only these old versions, be advised that CPAN is designed to work fine
-    without the Bundle::CPAN installed.
-
-    To get things going, note that GBARR/Scalar-List-Utils-1.18.tar.gz is
-    compatible with ancient perls and that File::Temp is listed as a
-    prerequisite but CPAN has reasonable workarounds if it is missing.
-
 DESCRIPTION
     The CPAN module is designed to automate the make and install of perl
     modules and extensions. It includes some primitive searching
     capabilities and knows how to use Net::FTP or LWP (or some external
     download clients) to fetch the raw data from the net.
 
-    Modules are fetched from one or more of the mirrored CPAN (Comprehensive
-    Perl Archive Network) sites and unpacked in a dedicated directory.
+    Distributions are fetched from one or more of the mirrored CPAN
+    (Comprehensive Perl Archive Network) sites and unpacked in a dedicated
+    directory.
 
     The CPAN module also supports the concept of named and versioned
     *bundles* of modules. Bundles simplify the handling of sets of related
     modules. See Bundles below.
 
-    The package contains a session manager and a cache manager. There is no
-    status retained between sessions. The session manager keeps track of
-    what has been fetched, built and installed in the current session. The
-    cache manager keeps track of the disk space occupied by the make
-    processes and deletes excess space according to a simple FIFO mechanism.
+    The package contains a session manager and a cache manager. The session
+    manager keeps track of what has been fetched, built and installed in the
+    current session. The cache manager keeps track of the disk space
+    occupied by the make processes and deletes excess space according to a
+    simple FIFO mechanism.
 
     All methods provided are accessible in a programmer style and in an
     interactive shell style.
@@ -78,12 +63,12 @@ DESCRIPTION
 
         perl -MCPAN -e shell
 
-    which puts you into a readline interface. You will have the most fun if
-    you install Term::ReadKey and Term::ReadLine to enjoy both history and
-    command completion.
+    which puts you into a readline interface. If Term::ReadKey and either
+    Term::ReadLine::Perl or Term::ReadLine::Gnu are installed it supports
+    both history and command completion.
 
-    Once you are on the command line, type 'h' and the rest should be
-    self-explanatory.
+    Once you are on the command line, type 'h' to get a one page help screen
+    and the rest should be self-explanatory.
 
     The function call "shell" takes two optional arguments, one is the
     prompt, the second is the default initial command line (the latter only
@@ -109,7 +94,7 @@ DESCRIPTION
       more than one, we display each object with the terse method
       "as_glimpse".
 
-    make, test, install, clean modules or distributions
+    get, make, test, install, clean modules or distributions
       These commands take any number of arguments and investigate what is
       necessary to perform the action. If the argument is a distribution
       file name (recognized by embedded slashes), it is processed. If it is
@@ -117,6 +102,9 @@ DESCRIPTION
       is included and processes that, following any dependencies named in
       the module's META.yml or Makefile.PL (this behavior is controlled by
       the configuration parameter "prerequisites_policy".)
+
+      "get" downloads a distribution file and untars or unzips it, "make"
+      builds it, "test" runs the test suite, and "install" installs it.
 
       Any "make" or "test" are run unconditionally. An
 
@@ -132,21 +120,15 @@ DESCRIPTION
 
       CPAN also keeps track of what it has done within the current session
       and doesn't try to build a package a second time regardless if it
-      succeeded or not. The "force" pragma may precede another command
-      (currently: "make", "test", or "install") and executes the command
-      from scratch and tries to continue in case of some errors.
+      succeeded or not. It does not repeat a test run if the test has been
+      run successfully before. Same for install runs.
 
-      Example:
+      The "force" pragma may precede another command (currently: "get",
+      "make", "test", or "install") and executes the command from scratch
+      and tries to continue in case of some errors. See the section below on
+      The "force" and the "fforce" pragma.
 
-          cpan> install OpenGL
-          OpenGL is up to date.
-          cpan> force install OpenGL
-          Running make
-          OpenGL-0.4/
-          OpenGL-0.4/COPYRIGHT
-          [...]
-
-      The "notest" pragma may be set to skip the test part in the build
+      The "notest" pragma may be used to skip the test part in the build
       process.
 
       Example:
@@ -159,13 +141,12 @@ DESCRIPTION
 
       being executed within the distribution file's working directory.
 
-    get, readme, perldoc, look module or distribution
-      "get" downloads a distribution file without further action. "readme"
-      displays the README file of the associated distribution. "Look" gets
-      and untars (if not yet done) the distribution file, changes to the
-      appropriate directory and opens a subshell process in that directory.
-      "perldoc" displays the pod documentation of the module in html or
-      plain text format.
+    readme, perldoc, look module or distribution
+      "readme" displays the README file of the associated distribution.
+      "Look" gets and untars (if not yet done) the distribution file,
+      changes to the appropriate directory and opens a subshell process in
+      that directory. "perldoc" displays the pod documentation of the module
+      in html or plain text format.
 
     ls author
     ls globbing_expression
@@ -191,6 +172,43 @@ DESCRIPTION
       The "failed" command reports all distributions that failed on one of
       "make", "test" or "install" for some reason in the currently running
       shell session.
+
+    Persistence between sessions
+      If the "YAML" or the c<YAML::Syck> module is installed a record of the
+      internal state of all modules is written to disk after each step. The
+      files contain a signature of the currently running perl version for
+      later perusal.
+
+      If the configurations variable "build_dir_reuse" is set to a true
+      value, then CPAN.pm reads the collected YAML files. If the stored
+      signature matches the currently running perl the stored state is
+      loaded into memory such that effectively persistence between sessions
+      is established.
+
+    The "force" and the "fforce" pragma
+      To speed things up in complex installation scenarios, CPAN.pm keeps
+      track of what it has already done and refuses to do some things a
+      second time. A "get", a "make", and an "install" are not repeated. A
+      "test" is only repeated if the previous test was unsuccessful. The
+      diagnostic message when CPAN.pm refuses to do something a second time
+      is one of *Has already been *"unwrapped|made|tested successfully" or
+      something similar. Another situation where CPAN refuses to act is an
+      "install" if the according "test" was not successful.
+
+      In all these cases, the user can override the goatish behaviour by
+      prepending the command with the word force, for example:
+
+        cpan> force get Foo
+        cpan> force make AUTHOR/Bar-3.14.tar.gz
+        cpan> force test Baz
+        cpan> force install Acme::Meta
+
+      Each *forced* command is executed with the according part of its
+      memory erased.
+
+      The "fforce" pragma is a variant that emulates a "force get" which
+      erases the entire memory followed by the action specified, effectively
+      restarting the whole get/make/test/install procedure from scratch.
 
     Lockfile
       Interactive sessions maintain a lockfile, per default "~/.cpan/.lock".
@@ -309,12 +327,13 @@ DESCRIPTION
 
   Integrating local directories
     Distribution objects are normally distributions from the CPAN, but there
-    is a slightly degenerate case for Distribution objects, too, normally
-    only needed by developers. If a distribution object ends with a dot or
-    is a dot by itself, then it represents a local directory and all actions
-    such as "make", "test", and "install" are applied directly to that
-    directory. This gives the command "cpan ." an interesting touch: while
-    the normal mantra of installing a CPAN module without CPAN.pm is one of
+    is a slightly degenerate case for Distribution objects, too, of projects
+    held on the local disk. These distribution objects have the same name as
+    the local directory and end with a dot. A dot by itself is also allowed
+    for the current directory at the time CPAN.pm was used. All actions such
+    as "make", "test", and "install" are applied directly to that directory.
+    This gives the command "cpan ." an interesting touch: while the normal
+    mantra of installing a CPAN module without CPAN.pm is one of
 
         perl Makefile.PL                 perl Build.PL
                ( go and get prerequisites )
@@ -326,6 +345,9 @@ DESCRIPTION
     the two mantras is appropriate, fetches and installs all prerequisites,
     cares for them recursively and finally finishes the installation of the
     module in the current directory, be it a CPAN module or not.
+
+    The typical usage case is for private modules or working copies of
+    projects from remote repositories on the local disk.
 
 PROGRAMMER'S INTERFACE
     If you do not enter the shell, the available shell commands are both
@@ -518,11 +540,11 @@ PROGRAMMER'S INTERFACE
         unpacked.
 
     CPAN::Distribution::force($method,@args)
-        Forces CPAN to perform a task that normally would have failed. Force
-        takes as arguments a method name to be called and any number of
-        additional arguments that should be passed to the called method. The
-        internals of the object get the needed changes so that CPAN.pm does
-        not refuse to take the action.
+        Forces CPAN to perform a task that it normally would have refused to
+        do. Force takes as arguments a method name to be called and any
+        number of additional arguments that should be passed to the called
+        method. The internals of the object get the needed changes so that
+        CPAN.pm does not refuse to take the action.
 
     CPAN::Distribution::get()
         Downloads the distribution from CPAN and unpacks it. Does nothing if
@@ -705,11 +727,11 @@ PROGRAMMER'S INTERFACE
             n   - no license at all
 
     CPAN::Module::force($method,@args)
-        Forces CPAN to perform a task that normally would have failed. Force
-        takes as arguments a method name to be called and any number of
-        additional arguments that should be passed to the called method. The
-        internals of the object get the needed changes so that CPAN.pm does
-        not refuse to take the action.
+        Forces CPAN to perform a task that it normally would have refused to
+        do. Force takes as arguments a method name to be called and any
+        number of additional arguments that should be passed to the called
+        method. The internals of the object get the needed changes so that
+        CPAN.pm does not refuse to take the action.
 
     CPAN::Module::get()
         Runs a get on the distribution associated with this module.
@@ -991,6 +1013,7 @@ CONFIGURATION
     Currently the following keys in the hash reference $CPAN::Config are
     defined:
 
+      applypatch         path to external prg
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
       build_dir_reuse    boolean if distros in build_dir are persistent
@@ -1065,7 +1088,6 @@ CONFIGURATION
       scan_cache         controls scanning of cache ('atstart' or 'never')
       shell              your favorite shell
       show_upload_date   boolean if commands should try to determine upload date
-      sqlite_dbname      filename of the sqlite DB
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
@@ -1179,8 +1201,8 @@ CONFIGURATION
 
     CPAN.pm comes with a couple of such YAML files. The structure is
     currently not documented because in flux. Please see the distroprefs
-    directory of the CPAN distribution for examples and follow the README in
-    there.
+    directory of the CPAN distribution for examples and follow the
+    "00.README" file in there.
 
     Please note that setting the environment variable PERL_MM_USE_DEFAULT to
     a true value can also get you a long way if you want to always pick the
@@ -1479,31 +1501,11 @@ FAQ
 
           force install Foo::Bar
 
-        This does a bit more than really needed because it untars the
-        distribution again and runs make and test and only then install.
-
-        Or, if you find this is too fast and you would prefer to do smaller
-        steps, say
-
-          force get Foo::Bar
-
-        first and then continue as always. "Force get" *forgets* previous
-        error conditions.
-
         Or you can use
 
           look Foo::Bar
 
         and then 'make install' directly in the subshell.
-
-        Or you leave the CPAN shell and start it again.
-
-        For the really curious, by accessing internals directly, you *could*
-
-          !delete CPAN::Shell->expandany("Foo::Bar")->distribution->{install}
-
-        but this is neither guaranteed to work in the future nor is it a
-        decent command.
 
     12) How do I install a "DEVELOPER RELEASE" of a module?
 
@@ -1549,6 +1551,30 @@ FAQ
 
           http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
 
+COMPATIBILITY
+  OLD PERL VERSIONS
+    CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
+    newer versions. It is getting more and more difficult to get the minimal
+    prerequisites working on older perls. It is close to impossible to get
+    the whole Bundle::CPAN working there. If you're in the position to have
+    only these old versions, be advised that CPAN is designed to work fine
+    without the Bundle::CPAN installed.
+
+    To get things going, note that GBARR/Scalar-List-Utils-1.18.tar.gz is
+    compatible with ancient perls and that File::Temp is listed as a
+    prerequisite but CPAN has reasonable workarounds if it is missing.
+
+  CPANPLUS
+    This module and its competitor, the CPANPLUS module, are both much
+    cooler than the other. CPAN.pm is older. CPANPLUS was designed to be
+    more modular but it was never tried to make it compatible with CPAN.pm.
+
+SECURITY ADVICE
+    This software enables you to upgrade software on your computer and so is
+    inherently dangerous because the newly installed software may contain
+    bugs and may alter the way your computer works or even make it unusable.
+    Please consider backing up your data before every upgrade.
+
 BUGS
     Please report bugs via http://rt.cpan.org/
 
@@ -1556,12 +1582,6 @@ BUGS
     building a Perl module package from a shell by following the
     installation instructions of that package still works in your
     environment.
-
-SECURITY ADVICE
-    This software enables you to upgrade software on your computer and so is
-    inherently dangerous because the newly installed software may contain
-    bugs and may alter the way your computer works or even make it unusable.
-    Please consider backing up your data before every upgrade.
 
 AUTHOR
     Andreas Koenig "<andk@cpan.org>"
