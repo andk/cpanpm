@@ -1,5 +1,10 @@
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: autosave/autocommit
+
+	* Bug: The FTPstats file has been cleared once again. Current start time
+	'Fri Dec 29 08:35:22 2006'. Needs better protection.
+
 	* Why do I always see
 
 Prepending /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/arch /home/k/.cpan/build/Graphics-ColorNames-2.0_04-fxepKY/blib/lib /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/arch /home/k/.cpan/build/HTML-Tidy-1.07_01-wuI8Hl/blib/lib /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/arch /home/k/.cpan/build/YAML-Syck-0.72-BMlTTF/blib/lib to PERL5LIB for 'make'
@@ -402,11 +407,6 @@ WebService::Bloglines::Subscriptions      0.02      0.06  MIYAGAWA/WebService-Bl
 2006-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* Hackaton in Munich?
-
-	* autosave variable?
-
-	We must consider "commit" messages; scalars, arrays and hashes; The
-	global $CPAN::CONFIG_DIRTY;
 
 	* Bug: still the dependency on YAML::Syck in the Makefile DONE in SVK
 	rev. 1560

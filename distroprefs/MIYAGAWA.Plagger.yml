@@ -7,7 +7,7 @@ patches:
 pl:
   eexpect:
     mode: deterministic
-    timeout: 5
+    timeout: 15
     talk:
       - "Auto-install"
       - "y\n"

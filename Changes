@@ -1,3 +1,39 @@
+2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_67
+
+	* Redesigned 'force' pragma: only force at the level of the given
+	command ('force test' only forces test, 'force make' only make etc.)
+
+	* new fforce pragma ("fortissimo") that forces at 'get' level and then
+	continues to the given command
+
+	* persistence via 'build_dir_reuse' improved
+
+	* documentation and tests for the new force pragmas and for session
+	persistence
+
+	* support for 'applypatch' via distroprefs
+
+	* improved SQLite support for TAB completion courtesy Randy Kobes
+
+	* lots of new and updated distroprefs files
+
+	* Devel::Cover working again
+
+	* address #24114 (Steve Peters): do not fail due to missing YAML
+
+	* bugfix: handle gracefully when a build dir disappears
+
+	* bugfix: improve dependency checking if a module has no version at all
+
+	* bugfix: when a "goto" object is installed remove it from the queue
+
+	* bugfix: prevent restoring of is_tested state for YAML::Syck as soon as
+	it has installed itself
+
+	* bugfix: test suite runnable again without Expect
+
 2006-12-18  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.88_66
