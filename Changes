@@ -8,7 +8,8 @@
 	* new fforce pragma ("fortissimo") that forces at 'get' level and then
 	continues to the given command
 
-	* persistence via 'build_dir_reuse' improved
+	* persistence via 'build_dir_reuse' improved: also maintain the
+	is_tested record between sessions
 
 	* documentation and tests for the new force pragmas and for session
 	persistence
@@ -28,9 +29,6 @@
 	* bugfix: improve dependency checking if a module has no version at all
 
 	* bugfix: when a "goto" object is installed remove it from the queue
-
-	* bugfix: prevent restoring of is_tested state for YAML::Syck as soon as
-	it has installed itself
 
 	* bugfix: test suite runnable again without Expect
 
