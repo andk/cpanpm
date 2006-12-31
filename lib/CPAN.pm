@@ -2515,7 +2515,7 @@ sub expand_by_method {
             for $obj (
                       $CPAN::META->all_objects($class)
                      ) {
-                unless ($obj->id){
+                unless ($obj && $obj->can("id") && $obj->id){
                     # BUG, we got an empty object somewhere
                     require Data::Dumper;
                     CPAN->debug(sprintf(
