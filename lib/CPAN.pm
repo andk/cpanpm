@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_67';
+$CPAN::VERSION = '1.88_68';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1319,8 +1319,7 @@ sub tidyup {
     my($toremove) = shift @{$self->{FIFO}};
     unless ($toremove =~ /\.yml$/) {
         $CPAN::Frontend->myprint(sprintf(
-                                         "Deleting from cache".
-                                         ": $toremove (%.1f>%.1f MB)\n",
+                                         "DEL: $toremove (%.1f>%.1f MB)\n",
                                          $self->{DU}, $self->{'MAX'})
                                 );
     }

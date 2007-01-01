@@ -26,6 +26,7 @@ distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
+distroprefs/DLAND.Crypt-SSLeay.yml
 distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
 distroprefs/DMAKI.DateTime-Util-Calc.yml
@@ -34,6 +35,7 @@ distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/FDALY.Test-Deep.yml
+distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/GAAS.libwww.yml
 distroprefs/GBARR.Authen-SASL.yml
 distroprefs/GBARR.libnet.dd

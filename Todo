@@ -1,8 +1,36 @@
 2007-01-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Class::MethodMaker
+
+lib/Class/MethodMaker.xs: In function 'XS_Class__MethodMaker_set_sub_name':
+lib/Class/MethodMaker.xs:12: error: invalid lvalue in assignment
+lib/Class/MethodMaker.xs:13: error: invalid lvalue in assignment
+
+Module id = Class::MethodMaker
+    DESCRIPTION  Create generic class methods
+    CPAN_USERID  FLUFFY (Martyn J. Pearce <fluffy@cpan.org>)
+    CPAN_VERSION 2.08
+    CPAN_FILE    F/FL/FLUFFY/Class-MethodMaker-2.08.tar.gz
+    UPLOAD_DATE  2005-11-26
+    DSLIP_STATUS MdpOp (mature,developer,perl,object-oriented,Standard-Perl)
+    MANPAGE      Class::MethodMaker - Create generic methods for OO Perl
+    INST_FILE    (not installed)
+
+	Given that https://rt.cpan.org/Ticket/Display.html?id=16241 is 12 months
+	old, it seems abandoned.
+
+	http://rt.cpan.org/Ticket/Display.html?id=22413
+	http://aspn.activestate.com/ASPN/Mail/Message/perl5-porters/3342382
+
+	The stupid thing is that there is a signature.t test and when we use
+	distropref/patch to fix MethodMaker.xs, then the signature test breaks.
+	Patching SIGNATURE does not help either because the file is signed. The
+	solution is to patch 0-signature.t too and let it skip all tests.
+
 	* Bug: The FTPstats file has been cleared once again. 1167639627.93624.
 	Only 20 minutes ago. This must have happened when I killed the sluggish
-	process. Now I made the writing of the FTPstats file atomic. In SVK rev. 
+	process. Now I made the writing of the FTPstats file atomic. In SVK rev.
+	1672
 
 	* It seems that blead@20002 has difficulties with YAML or YAML::Syck.
 	The binary search that I have running crawls and strace shows a lot of

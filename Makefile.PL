@@ -245,6 +245,7 @@ MEGA_COLLECTION = Expect \
 		Bundle::Slash \
 		Locale::Maketext::Gettext \
 		Test::Without::Module \
+		Class::MethodMaker \
 
 }
 }
