@@ -3205,10 +3205,11 @@ sub _add_to_statistics {
                                 @debug,
                                )) if $CPAN::DEBUG;
         }
-        seek $fh, 0, 0;
-        truncate $fh, 0;
         # need no eval because if this fails, it is serious
-        CPAN->_yaml_dumpfile($fh,$fullstats);
+        my $sfile = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
+        CPAN->_yaml_dumpfile("$sfile.$$",$fullstats);
+        rename "$sfile.$$", $sfile
+            or $CPAN::Frontend->mydie("Could not rename '$sfile.$$' to '$sfile': $!\n");
     }
 }
 
@@ -9634,7 +9635,8 @@ do. Force takes as arguments a method name to be called and any number
 of additional arguments that should be passed to the called method.
 The internals of the object get the needed changes so that CPAN.pm
 does not refuse to take the action. The C<force> is passed recursively
-to all contained objects.
+to all contained objects. See also the section above on the C<force>
+and the C<fforce> pragma.
 
 =item CPAN::Bundle::get()
 
@@ -9714,7 +9716,8 @@ Forces CPAN to perform a task that it normally would have refused to
 do. Force takes as arguments a method name to be called and any number
 of additional arguments that should be passed to the called method.
 The internals of the object get the needed changes so that CPAN.pm
-does not refuse to take the action.
+does not refuse to take the action. See also the section above on the
+C<force> and the C<fforce> pragma.
 
 =item CPAN::Distribution::get()
 
@@ -9925,7 +9928,8 @@ Forces CPAN to perform a task that it normally would have refused to
 do. Force takes as arguments a method name to be called and any number
 of additional arguments that should be passed to the called method.
 The internals of the object get the needed changes so that CPAN.pm
-does not refuse to take the action.
+does not refuse to take the action. See also the section above on the
+C<force> and the C<fforce> pragma.
 
 =item CPAN::Module::get()
 

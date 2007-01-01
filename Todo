@@ -1,9 +1,33 @@
+2007-01-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: The FTPstats file has been cleared once again. 1167639627.93624.
+	Only 20 minutes ago. This must have happened when I killed the sluggish
+	process. Now I made the writing of the FTPstats file atomic. In SVK rev. 
+
+	* It seems that blead@20002 has difficulties with YAML or YAML::Syck.
+	The binary search that I have running crawls and strace shows a lot of
+	mremap activities and reading of FTPstats (maybe too often?) and long
+	phases of no system calls at all. I kill the process and start again.
+	Speed now seems normal. New zlib modules get installed. Some fail. There
+	are many of them, all with 2.002 as version number--slightly confusing.
+	Now CPAN::Injects demands prereqs. Compress::Bzip2 fails with "No rule
+	to make target 'Makefile'". File-Find-Rule demands Number::Compare, gets
+	it, finishes its own build and the tests and gets installed. Now for
+	Data::Compare. It seems to get sluggish. CPAN::Checksums can't get
+	installed because of missing Compress::Bzip2. Now somebody wants
+	IPC::Run3 and we slowly seem to get it. I believe it is CPAN.pm which is
+	losing too much time with some nonsense.
+
+	* Somebody drops a daemon from a test running forever:
+
+k         5124  0.0  0.3  10520  5480 pts/4    S+    2006   0:01 /home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/bin/perl -Iblib/lib -Iblib/arch -I/home/k/.cpan/build/Crypt-SSLeay-0.52_02-VRo93m/blib/arch -I/home/k/.cpan/build/Crypt-SSLeay-0.52_02-VRo93m/blib/lib -I/home/k/.cpan/build/Graphics-ColorNames-2.0_04-nIVSeN/blib/arch -I/home/k/.cpan/build/Graphics-ColorNames-2.0_04-nIVSeN/blib/lib -I/home/k/.cpan/build/HTML-Tidy-1.07_01-GrI8Xl/blib/arch -I/home/k/.cpan/build/HTML-Tidy-1.07_01-GrI8Xl/blib/lib -I/home/k/.cpan/build/YAML-Syck-0.72-Xm2HtK/blib/arch -I/home/k/.cpan/build/YAML-Syck-0.72-Xm2HtK/blib/lib -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/5.9.5 -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/site_perl/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/site_perl/5.9.5 -I. examples/sslecho.pl 1212 examples/cert.pem examples/key.pem
+
+
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: autosave/autocommit
+	* new PAUSE and own key!
 
-	* Bug: The FTPstats file has been cleared once again. Current start time
-	'Fri Dec 29 08:35:22 2006'. Needs better protection.
+	* Todo: autosave/autocommit
 
 	* Why do I always see
 
@@ -361,7 +385,7 @@ WebService::Bloglines::Subscriptions      0.02      0.06  MIYAGAWA/WebService-Bl
 	when the command finishes, in the very last moment, we would remove the
 	badtestcnt so that the next command would test the same distro again.
 	Because we hope that a failing test can turn into success due to
-	external factors. From thie point of view So badtestcnt is programmed
+	external factors. From this point of view badtestcnt is programmed
 	correctly.
 
 	But I had changed strategy when persistence entered the game. I wanted
@@ -456,7 +480,7 @@ cpan, you are most welcome to.
 	* priorities today: force, commandline (DONE)
 
 	* DBD::mysql: I'm sure there is just a defined() somewhere missing in
-	the Makefile.PL
+	the Makefile.PL. Seems to be FIXED by 4.00.
 
 	* DBD::SQLite again: With bleadperl 29398 and current CPAN.pm I tried to
 	install /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. but again it failed
