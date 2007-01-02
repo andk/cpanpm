@@ -1,3 +1,15 @@
+2007-01-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* parrot is a bit of a mess, it seems. Why is CONTAINSMODS so tiny?
+
+	At least I would expect
+
+	CONTAINSMODS Inline::Parrot Inline::Parrot::parrot Parrot::Config Parrot::Embed Parrot::Interpreter Parrot::Test::Cardinal Perl::Critic::Policy::CodeLayout::UseParrotCoda SmartLink
+
+	But *really* I'd expect several pages of output. But what I initially encountered was
+
+	CONTAINSMODS Inline::Parrot Inline::Parrot::parrot
+
 2007-01-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Is it possible that Tk gets installed twice per megainstall?
@@ -50,9 +62,32 @@ Module id = Class::MethodMaker
 
 	* Somebody drops a daemon from a test running forever:
 
-k         5124  0.0  0.3  10520  5480 pts/4    S+    2006   0:01 /home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/bin/perl -Iblib/lib -Iblib/arch -I/home/k/.cpan/build/Crypt-SSLeay-0.52_02-VRo93m/blib/arch -I/home/k/.cpan/build/Crypt-SSLeay-0.52_02-VRo93m/blib/lib -I/home/k/.cpan/build/Graphics-ColorNames-2.0_04-nIVSeN/blib/arch -I/home/k/.cpan/build/Graphics-ColorNames-2.0_04-nIVSeN/blib/lib -I/home/k/.cpan/build/HTML-Tidy-1.07_01-GrI8Xl/blib/arch -I/home/k/.cpan/build/HTML-Tidy-1.07_01-GrI8Xl/blib/lib -I/home/k/.cpan/build/YAML-Syck-0.72-Xm2HtK/blib/arch -I/home/k/.cpan/build/YAML-Syck-0.72-Xm2HtK/blib/lib -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/5.9.5 -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/site_perl/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pLBoF3l/perl-5.8.0@29622/lib/site_perl/5.9.5 -I. examples/sslecho.pl 1212 examples/cert.pem examples/key.pem
+k        18692  0.0  0.0   2956  1328 pts/4    S+   Jan01   0:00 sh -c /home/src/perl/repoperls/installed-perls/perl/prOxRQY/perl-5.8.0@29651/bin/perl -Iblib/lib -Iblib/arch -I/home/src/perl/repoperls/installed-perls/perl/prOxRQY/perl-5.8.0@29651/lib/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/prOxRQY/perl-5.8.0@29651/lib/5.9.5 -I/home/src/perl/repoperls/installed-perls/perl/prOxRQY/perl-5.8.0@29651/lib/site_perl/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/prOxRQY/perl-5.8.0@29651/lib/site_perl/5.9.5 -I. examples/sslecho.pl 1212 examples/cert.pem examples/key.pem >>sslecho.log 2>&1
+
+	lsof -p 18692
+lsof: WARNING: can't stat() ext3 file system /dev/.static/dev
+      Output information may be incomplete.
+COMMAND   PID USER   FD   TYPE DEVICE    SIZE     NODE NAME
+sh      18692    k  cwd    DIR    9,1       0 11390681 /home/k/.cpan/build/Net_SSLeay.pm-1.30-KYd1Uh (deleted)
+
+	cpan[4]> m Net::SSLeay
+Module id = Net::SSLeay
+    DESCRIPTION  Secure Socket Layer (based on OpenSSL)
+    CPAN_USERID  FLORA (Florian Ragwitz <rafl@debian.org>)
+    CPAN_VERSION 1.30
+    CPAN_FILE    F/FL/FLORA/Net_SSLeay.pm-1.30.tar.gz
+    UPLOAD_DATE  2005-12-26
+    DSLIP_STATUS Rmcfr (released,mailing-list,C,functions,restricted_distribution)
+    MANPAGE      Net::SSLeay - Perl extension for using OpenSSL
+    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/pSJpiak/perl-5.8.0@29656/lib/site_perl/5.9.5/i686-linux-64int/Net/SSLeay.pm
+    INST_VERSION 1.30
 
 
+	The queue in RT is called "Net_SSLeay.pm"
+
+	The report is http://rt.cpan.org/Ticket/Display.html?id=24180
+
+	
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* new PAUSE and own key!
