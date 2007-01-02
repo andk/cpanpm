@@ -112,6 +112,7 @@ MANIFEST.SKIP
 META.yml
 PAUSE2003.pub
 PAUSE2005.pub
+PAUSE2007.pub
 README
 scripts/cpan
 SIGNATURE			Public-key signature (added by MakeMaker)

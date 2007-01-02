@@ -1,5 +1,7 @@
 2007-01-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Is it possible that Tk gets installed twice per megainstall?
+
 	* Class::MethodMaker
 
 lib/Class/MethodMaker.xs: In function 'XS_Class__MethodMaker_set_sub_name':
