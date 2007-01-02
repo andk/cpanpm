@@ -264,7 +264,7 @@ ReadLine support %s
 	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
-	    if ($@){
+	    if ($@ && "$@" =~ /\S/){
                 require Carp;
                 Carp::cluck("Catching error: '$@'");
             }
@@ -1581,11 +1581,13 @@ sub globls {
             $pathglob = $2;
             $author = CPAN::Shell->expand_by_method('CPAN::Author',
                                                     ['id'],
-                                                    $a2) or die "No author found for $a2";
+                                                    $a2)
+                or $CPAN::Frontend->mydie("No author found for $a2\n");
         } else {
             $author = CPAN::Shell->expand_by_method('CPAN::Author',
                                                     ['id'],
-                                                    $a) or die "No author found for $a";
+                                                    $a)
+                or $CPAN::Frontend->mydie("No author found for $a\n");
         }
         if ($silent) {
             my $alpha = substr $author->id, 0, 1;
