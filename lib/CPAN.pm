@@ -5365,9 +5365,13 @@ sub containsmods {
     my $mod_id = $mod->{ID} or next;
     # warn "mod_file[$mod_file] dist_id[$dist_id] mod_id[$mod_id]";
     # sleep 1;
+    if ($CPAN::Signal) {
+        delete $self->{CONTAINSMODS};
+        return;
+    }
     $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
   }
-  keys %{$self->{CONTAINSMODS}};
+  keys %{$self->{CONTAINSMODS}||{}};
 }
 
 #-> sub CPAN::Distribution::upload_date ;

@@ -10,6 +10,24 @@
 
 	CONTAINSMODS Inline::Parrot Inline::Parrot::parrot
 
+	Instead, I find quite a lot in
+
+cpan[3]> d LTOETSCH/parrot-0.4.5.tar.gz
+CPAN: LWP::UserAgent loaded ok (v2.033)
+CPAN: Time::HiRes loaded ok (v1.9704)
+CPAN: URI::URL loaded ok (v5.03)
+Distribution id = L/LT/LTOETSCH/parrot-0.4.5.tar.gz
+    CPAN_USERID  LTOETSCH (Leopold Totsch <lt@toetsch.at>)
+    CONTAINSMODS Parrot::BuildUtil Parrot::Configure Parrot::Configure::Step::Base Parrot::Docs::Directory Parrot::Docs::File Parrot::Docs::Group Parrot::Docs::Item Parrot::Docs::POD2HTML Parrot::Docs::Section Parrot::Docs::Section::BigNum Parrot::Docs::Section::C Parrot::Docs::Section::Compilers Parrot::Docs::Section::Config Parrot::Docs::Section::Docs Parrot::Docs::Section::DynaPMCs Parrot::Docs::Section::EditorPlugins Parrot::Docs::Section::Examples Parrot::Docs::Section::IMCC Parrot::Docs::Section::Info Parrot::Docs::Section::Languages Parrot::Docs::Section::Libs Parrot::Docs::Section::Ops Parrot::Docs::Section::PMCs Parrot::Docs::Section::Parrot Parrot::Docs::Section::Perl Parrot::Docs::Section::Tests Parrot::Docs::Section::Tools Parrot::IO::Directory Parrot::IO::File Parrot::IO::Path Parrot::Op Parrot::OpTrans Parrot::OpTrans::C Parrot::OpTrans::CGoto Parrot::OpTrans::CPrederef Parrot::PIR::Formatter Parrot::Pmc2c Parrot::Pmc2c::Library Parrot::Revision Parrot::Test Parrot::Test::APL Parrot::Test::Harness Parrot::Test::PGE Parrot::Test::Perl6 Parrot::Test::Punie Parrot::Test::Python Parrot::Vtable
+    UPLOAD_DATE  2006-06-19
+
+	We have two bugs here. Only one is at CPAN.pm level.
+
+	Oops, now I understand it: I had used ^C to break out of the slow loop.
+	No wonder that I get less members.
+
+	PROTECTED in rev. 1682
+
 2007-01-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Is it possible that Tk gets installed twice per megainstall?
