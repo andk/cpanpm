@@ -17,6 +17,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 %keys = map { $_ => undef }
     (
      "applypatch",
+     "auto_commit",
      "build_cache",
      "build_dir",
      "build_dir_reuse",
@@ -202,9 +203,13 @@ sub edit {
                 if exists $keys{$o} or defined $CPAN::Config->{$o};
 	}
         if ($changed) {
-            $CPAN::CONFIG_DIRTY = 1;
-            $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
-                                     "make the config permanent!\n\n");
+            if ($CPAN::Config->{auto_commit}) {
+                $self->commit;
+            } else {
+                $CPAN::CONFIG_DIRTY = 1;
+                $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
+                                         "make the config permanent!\n\n");
+            }
         }
     }
 }

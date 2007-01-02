@@ -242,6 +242,12 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
+    #= Config: auto_commit
+    #
+
+    my_yn_prompt(auto_commit => 0, $matcher);
+
+    #
     #= Cache size, Index expire
     #
 
@@ -514,7 +520,7 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
-    #= the CPAN shell itself
+    #= the CPAN shell itself (prompt, color)
     #
 
     my_yn_prompt(commandnumber_in_prompt => 1, $matcher);
@@ -605,7 +611,7 @@ Shall we use it as the general CPAN build and cache directory?
     $CPAN::Config->{inhibit_startup_message} = 0;
 
     $CPAN::Frontend->myprint("\n\n");
-    if ($matcher) {
+    if ($matcher && !$CPAN::Config->{auto_commit}) {
         $CPAN::Frontend->myprint("Please remember to call 'o conf commit' to ".
                                  "make the config permanent!\n\n");
     } else {
@@ -1478,7 +1484,18 @@ host should be tried first.
 
 randomize_urllist => "Randomize parameter",
 
-);
+auto_commit_intro => qq{
+
+Normally CPAN.pm keeps config variables in memory and changes need to
+be saved in a separate 'o conf commit' command to make them permanent
+between sessions. If you set the 'auto_commit' option to true, changes
+to a config variable are always automatically committed to disk.
+
+},
+
+auto_commit => qq{Always commit changes to config variables to disk?},
+
+              );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"
   if (@prompts % 2);

@@ -10274,6 +10274,7 @@ Currently the following keys in the hash reference $CPAN::Config are
 defined:
 
   applypatch         path to external prg
+  auto_commit        commit all changes to config variables to disk
   build_cache        size of cache for directories to build modules
   build_dir          locally accessible directory to build modules
   build_dir_reuse    boolean if distros in build_dir are persistent
