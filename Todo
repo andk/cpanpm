@@ -1,5 +1,8 @@
 2007-01-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* maybe have a is_tested command? The SVK revision 1694 is just a trial,
+	probably needs a rollback
+
 	* Port auto_commit to 1.8803
 
 2007-01-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -48,8 +51,6 @@
 
 	What was the name again of the environment variable for automated
 	testing?
-
-	* maybe have a is_tested command?
 
 	* Remember to see after the Devel::Cover module. 0.60 fails tests and
 	maybe needs a binary search again.

@@ -1253,6 +1253,13 @@ sub is_installed {
     delete $self->{is_tested}{$what};
 }
 
+sub _list_sorted_descending_is_tested {
+    my($self) = @_;
+    sort
+        { ($self->{is_tested}{$b}||0) <=> ($self->{is_tested}{$a}||0) }
+            keys %{$self->{is_tested}}
+}
+
 #-> sub CPAN::set_perl5lib
 sub set_perl5lib {
     my($self,$for) = @_;
@@ -1269,9 +1276,7 @@ sub set_perl5lib {
     #my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
     #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
 
-    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort
-        { ($self->{is_tested}{$b}||0) <=> ($self->{is_tested}{$a}||0) }
-            keys %{$self->{is_tested}};
+    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} $self->_list_sorted_descending_is_tested;
     if (@dirs < 12) {
         $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
     } elsif (@dirs < 24) {
@@ -2406,6 +2411,15 @@ sub status {
                     Devel::Size::total_size($CPAN::META->{$k}{$k2})/1024,
                           scalar keys %{$CPAN::META->{$k}{$k2}};
         }
+    }
+}
+
+# experimental (must run after failed or similar)
+#-> sub CPAN::Shell::is_tested
+sub _is_tested {
+    my($self) = @_;
+    for my $b (reverse $CPAN::META->_list_sorted_descending_is_tested) {
+        $CPAN::Frontend->myprint(sprintf "%s %s\n", scalar(localtime $CPAN::META->{is_tested}{$b}), $b);
     }
 }
 
