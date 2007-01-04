@@ -525,7 +525,7 @@ Shall we use it as the general CPAN build and cache directory?
 
     my_yn_prompt(commandnumber_in_prompt => 1, $matcher);
     my_yn_prompt(term_ornaments => 1, $matcher);
-    if ("colorize_output colorize_print colorize_warn" =~ $matcher) {
+    if ("colorize_output colorize_print colorize_warn colorize_debug" =~ $matcher) {
         my_yn_prompt(colorize_output => 0, $matcher);
         if ($CPAN::Config->{colorize_output}) {
             if ($CPAN::META->has_inst("Term::ANSIColor")) {
@@ -535,14 +535,16 @@ Shall we use it as the general CPAN build and cache directory?
                 print "                   on_black on_red  green ellow ".
                     "on_blue genta on_cyan white\n";
 
-                for my $FG ("","bold","black","bold black","red","bold red","green",
-                            "bold green","yellow","bold yellow","blue","bold blue",
-                            "magenta","bold magenta",
-                            "cyan","bold cyan","white","bold white"){
+                for my $FG ("", "bold",
+                            map {$_,"bold $_"} "black","red","green",
+                            "yellow","blue",
+                            "magenta",
+                            "cyan","white"){
                     printf "%12s ", $FG;
-                    for my $BG ("",map {"on_$_"} qw(black     red   green  yellow
-                                                    blue magenta    cyan   white)){
-                        print $FG||$BG ? Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
+                    for my $BG ("",map {"on_$_"} qw(black red green yellow
+                                                    blue magenta cyan white)){
+                        print $FG||$BG ?
+                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
                     }
                     print "\n";
                 }
@@ -551,6 +553,7 @@ Shall we use it as the general CPAN build and cache directory?
             for my $tuple (
                            ["colorize_print", "bold blue on_white"],
                            ["colorize_warn", "bold red on_white"],
+                           ["colorize_debug", "black on_cyan"],
                           ) {
                 my_dflt_prompt($tuple->[0] => $tuple->[1], $matcher);
                 if ($CPAN::META->has_inst("Term::ANSIColor")) {
@@ -1450,13 +1453,15 @@ colorize_output => qq{
 
 When you have Term::ANSIColor installed, you can turn on colorized
 output to have some visual differences between normal CPAN.pm output,
-warnings, and the output of the modules being installed. Set your
-favorite colors after some experimenting with the Term::ANSIColor
-module. Do you want to turn on colored output?},
+warnings, debugging output, and the output of the modules being
+installed. Set your favorite colors after some experimenting with the
+Term::ANSIColor module. Do you want to turn on colored output?},
 
 colorize_print => qq{Color for normal output?},
 
 colorize_warn => qq{Color for warnings?},
+
+colorize_debug => qq{Color for debugging messages?},
 
 build_requires_install_policy_intro => qq{
 

@@ -25,6 +25,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "bzip2",
      "cache_metadata",
      "check_sigs",
+     "colorize_debug",
      "colorize_output",
      "colorize_print",
      "colorize_warn",

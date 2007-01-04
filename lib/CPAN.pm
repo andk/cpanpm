@@ -2672,7 +2672,7 @@ sub print_ornamented {
     if ($self->colorize_output) {
         if ( $CPAN::DEBUG && $swhat =~ /^Debug\(/ ) {
             # if you want to have this configurable, please file a bugreport
-            $ornament = "black on_cyan";
+            $ornament = $CPAN::Config->{colorize_debug} || "black on_cyan";
         }
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
         if ($@) {
@@ -10288,6 +10288,7 @@ defined:
                      quote on Windows, single tick everywhere else;
                      can be set to space to disable quoting
   check_sigs         if signatures should be verified
+  colorize_debug     Term::ANSIColor attributes for debugging output
   colorize_output    boolean if Term::ANSIColor should colorize output
   colorize_print     Term::ANSIColor attributes for normal output
   colorize_warn      Term::ANSIColor attributes for warnings
