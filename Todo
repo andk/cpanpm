@@ -9,6 +9,269 @@
 	make test did not succeed for me on the SVN version. Must retry with
 	0.60 proper. Same thing. Must try other perls.
 
+	* concurrency: the most critical point at the moment seems to be the
+	cleanup of the build directory and another process trying to access one
+	of the directories with chdir to build_dir. This dies without a
+	Distrostatus in
+
+	Couldn't chdir to /home/k/.cpan/build/Term-ReadLine-Gnu-1.16-MacKnJ at lib/CPAN.pm line 8839
+
+	Stupid use of croak(), we want die or confess and want to fix it when it
+	happens again.
+
+	Turned into confess in SVK rev. 1632
+
+	* Are the dot directories documented? Where? Is chdir mentioned there?
+
+	Yes, it was documented in the section "Integrating local directories"
+	and I rewrote it a bit, it sounded too boring. It still sounds boring
+	and leads me to the idea to support
+
+	get:
+	  commandline:
+
+	I'll have to think some more about it. (Also consider Ingy's move to
+	prefer SVN over CPAN)
+
+	* somebody sending a Tk window during a test just waiting to be clicked
+	away? Who is it? Tk itself? Maybe this was just a single revision? NO,
+	it is Term::ReadLine::Gnu in t/callback.t. Wow, it compiles, apparently.
+	But does it pass the tests? Can we disable this batch-unfriendly test?
+
+	We cannot disable it without patching.
+
+	We must click the window away and after that we still have tests failing.
+
+	This looks ugly to me. I have Expect and can answer interactive
+	questions but I have no robot to click a window away. For now I'll put
+	T:R:Gnu before Tk in the megainstall. Needs a better solution.
+
+	What was the name again of the environment variable for automated
+	testing?
+
+	* maybe have a is_tested command?
+
+	* Remember to see after the Devel::Cover module. 0.60 fails tests and
+	maybe needs a binary search again.
+
+	* Hackaton in Munich? Slides for Munich!
+
+	* Watch hosts statistics.
+
+	* Todo: enable batch jobs to trigger cleanup of the build directory.
+	Methods: scan_cache, tidyup, Variable: scan_cache. LOCK.
+
+	No, only checklock needs to be made something official. Maybe rename to
+	get_lock then.
+
+	* Despite all the care that goes into the distroprefs directory, we
+	always will fail on some distros that ask questions and hang forever.
+	It's time to rethink a global way out of modules that hang in an IO
+	operation.
+
+	* 11-17 lists a few things for documentation.
+
+	* TTL stuff
+
+	* make up your mind about install_tested.
+
+	* Todo: distroprefs mechanism is still inefficient in that it scans too
+	often the whole distro_dir. (But it's super to have that while
+	developing new rules)
+
+	* document build_requires and when you talk about prerequisites, name
+	the option names explicitly.
+
+	* make _get_urllist a public method for Randy.
+
+	* Write manpage for CPAN::HandleConfig, esp load().
+
+	* I realize that CPAN::FTP::localize is undocumented and is what Randy
+	wants.
+
+	* Integrate hosts into $META like authors, distributions, and modules?
+	If we're cautious, this might turn into an automatic optimization.
+
+	If Coro does index downloads for us, we do not have to fear slow
+	connections and can gather better data.
+
+	* Catalyst would be another candidate for a large dependency list.
+
+	* Guessing of -p0/-p1 for patch maybe wrong if the patch tries to create
+	a new file against, say, /dev/null.
+
+	* Would be nice: integrate the config variable name into the init
+	dialogs such that one has a chance to learn their names over time.
+
+	* Would be nice: 'o conf /check/' to list all variables matching a regex.
+
+	* Todo: offer the choice between (readline) Gnu and Perl and Coro. See
+	my trials in the bin/ directory (SVN only). Possibly this is done via
+	envariables? Then we only should document it.
+
+	* Mail::Send problem persists that Test::Reporter's mails do not arrive
+	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
+	case I must disable installation of Mail::Send somehow or debug.
+	Test::Reporter has got a wish item via RT already some weeks ago.
+
+	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
+
+	LWP failed with code[500] message[read timeout]
+Trying to get away with old file:
+6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
+Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
+  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
+.
+Caught SIGINT, trying to continue
+	
+cpan> hosts
+Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
+
+
+	* if we make the TTLs setable, maybe we should make the TTL for
+	CHECKSUMS file too. In any case we have the problem of imacat also when
+	the TTL of the local copy of the CHECKSUMS file has not yet been
+	reached!
+
+	* Coro. See also notes below, search for anyevent	
+
+	* Watch the Module::Build space for updates to the question of calling
+	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
+
+	* write a patch for Test::Reporter so you can choose the mail sending
+	module? Reported 2005-07:
+	http://rt.cpan.org/Ticket/Display.html?id=13836
+
+	* The first thing that I encounter when I start testing instead of
+	installing things is that test doesn't stop when the installed version
+	is higher than or equal to the CPAN version. Ilya invented for that
+	test_uptodate??
+
+	* replace 03 index file with YAML.
+
+	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
+	CONTAINSMODS is empty because Gabor has a distro in the bundle.
+
+	* Todo: clean up "XXX" in the code
+
+	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
+	FOO', we should only check for the authors database, etc.
+
+	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
+	get rid of the term_is_latin variable. Test output with locales.
+
+	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
+	remember details. Hint: DBM::Deep promises significant memory savings
+	and in that branch we tried to see how it can be made to work for us.
+
+	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
+	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
+
+	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
+	#21791 has its bugreport. I don't like that most of the subroutines are
+	thrown into CPAN::Distribution either. OTOH, we have commands that have
+	no central role within CPAN. One can always refuse to use them. Hrm.
+	HTML::Display!
+
+	* E5: (again and again) verify that the CPAN.pm-using modules continue
+	to work:
+
+	DMUEY/AltaVista-BabelFish
+	MSCHILLI/CPAN-Unwind
+	ULPFR/CPAN-WAIT
+	RJRAY/Devel-Modlist
+	SMUELLER/PAR-Dist-FromCPAN
+	DAGOLDEN/Perl-Dist
+	CRAKRJACK/Test-CPANpm
+
+	* E5 watch RT for open tickets. This todo can never be closed.
+
+	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
+	CPAN.pm is covered
+
+	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
+	the future of locking, the future of DBM::Deep, protocol changes. Not
+	sure what to test.
+
+	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
+	about a very old bug in Archive::Tar that is most probably fixed. Turn
+	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
+	It is slow but everything should just plain work. When we're confident
+	that everything works, we could offer a tar_policy option that has
+	options "ext" and "mod", for external programs vs. modules, default to
+	"ext"?
+
+	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
+	the beginning of the path gets ./sh as his shell from FirstTime. If we
+	encounter . in the path we should rather ignore it. But first we must
+	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
+	Schulze. This has nothing to do with -I. but only with the shell and
+	$ENV{PATH} and as we do not know which shell it was it seems we cannot
+	test for the problem.
+
+	* H1 These days developer TELS posted to perl5-porters that his newest
+	release is available at
+
+	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	Suddenly it dawned on me that I want to support
+
+	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+	What am I missing?
+
+	The other commands dealing with files would have to learn a bit.
+
+	d http://      # fails as before with "No objects of...."
+
+	               # alt: does a HEAD and tells user that the URL can e reached
+
+	ls http://     # lists nothing
+
+	               # alt: says that ls doesn't support URLs
+
+	get http://    # this is probably all we need to implement. Maybe a new
+	               # class needed that does as_string and as_glimpse as well?
+
+	And maybe a pragma that turns this feature on? So that 'get http://...'
+	never works but 'force get http://...' does? Alt: config variable to
+	turn feature on, then a separate module that implements it.
+
+	Brian likes the idea
+
+From: brian d foy <brian.d.foy@gmail.com>
+Subject: Re: Welcome new user LOCAL
+To: modules@perl.org
+Date: Mon, 18 Sep 2006 14:52:48 -0500
+Organization: Perl Authors Upload Server
+Reply-To: modules@perl.org
+
+In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
+<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
+
+> My spontaneous idea was to support the command
+> 
+>     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
+
+oh, very interesting, especially if I already have the file:
+
+   cpan> get file:///....
+
+This makes CPAN::Mini::Inject a bit less useful because I no longer
+need the middle man.
+
+	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
+	and jarkko
+
+	* M2 feature request by Juergen Christoffel: have time stamps on the
+	history and a history command to see them
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
 2007-01-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* parrot is a bit of a mess, it seems. Why is CONTAINSMODS so tiny?
@@ -83,8 +346,8 @@ Module id = Class::MethodMaker
 
 	* Bug: The FTPstats file has been cleared once again. 1167639627.93624.
 	Only 20 minutes ago. This must have happened when I killed the sluggish
-	process. Now I made the writing of the FTPstats file atomic. In SVK rev.
-	1672
+	process. Now I made the writing of the FTPstats file atomic. FIXED in
+	SVK rev. 1672
 
 	* It seems that blead@20002 has difficulties with YAML or YAML::Syck.
 	The binary search that I have running crawls and strace shows a lot of
@@ -133,7 +396,7 @@ Module id = Net::SSLeay
 
 	* new PAUSE and own key!
 
-	* Todo: autosave/autocommit
+	* Todo: autosave/autocommit DONE
 
 	* Why do I always see
 
@@ -318,18 +581,6 @@ DBD::mysql      IO::Poll        Socket          Test::More      fields
 
 	IMPROVED in SVK rev. 1639 and added tests in 31sessions.t since then.
 
-	* concurrency: the most critical point at the moment seems to be the
-	cleanup of the build directory and another process trying to access one
-	of the directories with chdir to build_dir. This dies without a
-	Distrostatus in
-
-	Couldn't chdir to /home/k/.cpan/build/Term-ReadLine-Gnu-1.16-MacKnJ at lib/CPAN.pm line 8839
-
-	Stupid use of croak(), we want die or confess and want to fix it when it
-	happens again.
-
-	Turned into confess in SVK rev. 1632
-
 	* document the major change to the force pragma and find tests that
 	enforce that
 
@@ -355,34 +606,9 @@ DBD::mysql      IO::Poll        Socket          Test::More      fields
 	know about the other. Both know nothing about each other beforehand.
 	Then they clash and I cannot find out.
 
-	* Are the dot directories documented? Where? Is chdir mentioned there?
-
-	Yes, it was documented in the section "Integrating local directories"
-	and I rewrote it a bit, it sounded too boring. It still sounds boring
-	and leads me to the idea to support
-
-	get:
-	  commandline:
-
-	I'll have to think some more about it.
+	FIXED (at least improved) by Randy
 
 2006-12-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
-
-	* somebody sending a Tk window during a test just waiting to be clicked
-	away? Who is it? Tk itself? Maybe this was just a single revision? NO,
-	it is Term::ReadLine::Gnu in t/callback.t. Wow, it compiles, apparently.
-	But does it pass the tests? Can we disable this batch-unfriendly test?
-
-	We cannot disable it without patching.
-
-	We must click the window away and after that we still have tests failing.
-
-	This looks ugly to me. I have Expect and can answer interactive
-	questions but I have no robot to click a window away. For now I'll put
-	T:R:Gnu before Tk in the megainstall. Needs a better solution.
-
-	What was the name again of the environment variable for automated
-	testing?
 
 	* Todo: create a second shell test, say 31force.t that starts from
 	scratch and studies the variants without having to wait for many minutes
@@ -400,8 +626,6 @@ DBD::mysql      IO::Poll        Socket          Test::More      fields
 	as http://rt.cpan.org/Ticket/Display.html?id=24096). And the second
 	anomaly that .../svn/tk/. succeeded at 17:28 but not at 11:45. Not much
 	for 5100 diff chunks.
-
-	* maybe have a is_tested command?
 
 	* Rethinking once again 'force test'. Right now I see "Has already been
 	tested successfully" within one session but not when I start a session.
@@ -557,12 +781,6 @@ WebService::Bloglines::Subscriptions      0.02      0.06  MIYAGAWA/WebService-Bl
 	* See recent bugreport on modules against pause indexer and version
 	objects and consider how it affects us here. SEEMS OK.
 
-	* Todo: enable batch jobs to trigger cleanup of the build directory.
-	Methods: scan_cache, tidyup, Variable: scan_cache. LOCK.
-
-	No, only checklock needs to be made something official. Maybe rename to
-	get_lock then.
-
 	* From an Email from Ingy to Steffen Mueller:
 
 The idea is to make things a lot easier for a lot more people to be
@@ -577,11 +795,6 @@ cpan, you are most welcome to.
 	An argument for "commandline" but maybe for even more.
 
 	Commandline is DONE.
-
-	* Despite all the care that goes into the distroprefs directory, we
-	always will fail on some distros that ask questions and hang forever.
-	It's time to rethink a global way out of modules that hang in an IO
-	operation.
 
 	* priorities today: force, commandline (DONE)
 
@@ -619,12 +832,6 @@ make:
 	add "commandline" to each of get/make/test/install and then the user can
 	even say "cvs up" or "perl -e 1". I like it.
 
-	11-17 lists a few things for documentation.
-
-	TTL stuff
-
-	make up your mind about install_tested.
-
 	* I'm convinced now that we need more force flavors and that force shall
 	be limited in scope
 
@@ -638,36 +845,6 @@ make:
 
 	* Todo: when fixing force note that the documentation about force is in
 	three places: CPAN::{Bundle,Distribution,Module}::force.
-
-	* Todo: distroprefs mechanism is still inefficient in that it scans too
-	often the whole distro_dir. (But it's super to have that while
-	developing new rules)
-
-	* document build_requires and when you talk about prerequisites, name
-	the option names explicitly.
-
-	* make _get_urllist a public method for Randy.
-
-	* Write manpage for CPAN::HandleConfig, esp load().
-
-	* I realize that CPAN::FTP::localize is undocumented and is what Randy
-	wants.
-
-	* Integrate hosts into $META like authors, distributions, and modules?
-	If we're cautious, this might turn into an automatic optimization.
-
-	If Coro does index downloads for us, we do not have to fear slow
-	connections and can gather better data.
-
-	* Catalyst would be another candidate for a large dependency list.
-
-	* Guessing of -p0/-p1 for patch maybe wrong if the patch tries to create
-	a new file against, say, /dev/null.
-
-	* Would be nice: integrate the config variable name into the init
-	dialogs such that one has a chance to learn their names over time.
-
-	* Would be nice: 'o conf /check/' to list all variables matching a regex.
 
 	* Bug that has to do with install_tested or build_dir_reuse or degraded
 	shell mode or some use of ^C at the wrong moment:
@@ -705,36 +882,6 @@ make:
 	At least I get the impression this extreme case happens only on ^C, but
 	some other methods of dieing will certainly exist as well.
 
-	* Todo: offer the choice between (readline) Gnu and Perl and Coro. See
-	my trials in the bin/ directory (SVN only). Possibly this is done via
-	envariables? Then we only should document it.
-
-	* Mail::Send problem persists that Test::Reporter's mails do not arrive
-	when sent with Mail::Send but do when sent with Net::SMTP (IIRC). In any
-	case I must disable installation of Mail::Send somehow or debug.
-	Test::Reporter has got a wish item via RT already some weeks ago.
-
-	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
-
-	LWP failed with code[500] message[read timeout]
-Trying to get away with old file:
-6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
-Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
-  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
-.
-Caught SIGINT, trying to continue
-	
-cpan> hosts
-Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
-
-
-	* if we make the TTLs setable, maybe we should make the TTL for
-	CHECKSUMS file too. In any case we have the problem of imacat also when
-	the TTL of the local copy of the CHECKSUMS file has not yet been
-	reached!
-
-	* Coro. See also notes below, search for anyevent	
-
 	* Observing in a shell in degraded mode: it wrote a new Metadata file.
 
 	* Observing how install_tested behaves: within the same session it
@@ -742,13 +889,6 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	*should* it do?
 	
 	Noting that the DH test runs forever again because GMP comes too late.
-
-	* Watch the Module::Build space for updates to the question of calling
-	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
-
-	* write a patch for Test::Reporter so you can choose the mail sending
-	module? Reported 2005-07:
-	http://rt.cpan.org/Ticket/Display.html?id=13836
 
 	* Investigate if I want Math::Bigint::GMP in the core. Think of
 	Crypt::DH and the horrible test timings when Math::Bigint::GMP is not
@@ -772,11 +912,6 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	really quick with Math::Bigint::GMP installed. Note that Math::GMP is
 	not enough. But can we patch it?
 
-	* The first thing that I encounter when I start testing instead of
-	installing things is that test doesn't stop when the installed version
-	is higher than or equal to the CPAN version. Ilya invented for that
-	test_uptodate??
-
 	* CPAN::Checksums -> Data::Compare -> File::Find::Rule ->
 	Number::Compare
 	
@@ -791,139 +926,14 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	CPAN::Mini::Phalanx100 and also see what we can do for
 	Module::ThirdParty
 
-	* replace 03 index file with YAML.
-
 	* Provide an API or documentation how to find out the CPAN::Config
 	variables.
-
-	* Looks like a bug to me what I find in Bundle-SZABGAB-0.01.yml:
-	CONTAINSMODS is empty because Gabor has a distro in the bundle.
 
 	* Now I know the first bug in install_tested: it re-tests already
 	installed modules.
 
 	* One thing we do not support yet in distroprefs is adding dependencies
 	without patching. Shall we?
-
-	* Todo: clean up "XXX" in the code
-
-	* M2 (Wishlist) separate the TTLs for 01,02,03. If somebody asks 'a
-	FOO', we should only check for the authors database, etc.
-
-	* E1 Todo: use 00whois.xml instead of mailrc, and follow the UTF-8 HOWTO to
-	get rid of the term_is_latin variable. Test output with locales.
-
-	* H4 branch 1.87-dbmdeep-hackery revive? It was very broken but I do not
-	remember details. Hint: DBM::Deep promises significant memory savings
-	and in that branch we tried to see how it can be made to work for us.
-
-	* M3 RT 17353: Flag outdated CPAN sites and move them to the end of the
-	list when they have reached 291 hours. (Note: $CPAN/authors/02STAMP)
-
-	* E1: revisit rev 158:159, the introduction of "recent" and "perldoc".
-	#21791 has its bugreport. I don't like that most of the subroutines are
-	thrown into CPAN::Distribution either. OTOH, we have commands that have
-	no central role within CPAN. One can always refuse to use them. Hrm.
-	HTML::Display!
-
-	* E5: (again and again) verify that the CPAN.pm-using modules continue
-	to work:
-
-	DMUEY/AltaVista-BabelFish
-	MSCHILLI/CPAN-Unwind
-	ULPFR/CPAN-WAIT
-	RJRAY/Devel-Modlist
-	SMUELLER/PAR-Dist-FromCPAN
-	DAGOLDEN/Perl-Dist
-	CRAKRJACK/Test-CPANpm
-
-	* E5 watch RT for open tickets. This todo can never be closed.
-
-	* E1 Todo: continue to close the Pod::Coverage gap. Currently only
-	CPAN.pm is covered
-
-	* E3 Todo: write a test for dot-cpan/Metadata usage. Hmmm. Important for
-	the future of locking, the future of DBM::Deep, protocol changes. Not
-	sure what to test.
-
-	* M3 Todo: investigate what BUGHUNTING in Tarzip means "today": it's
-	about a very old bug in Archive::Tar that is most probably fixed. Turn
-	bughunting on with the command C< !print$CPAN::Tarzip::BUGHUNTING=1 >.
-	It is slow but everything should just plain work. When we're confident
-	that everything works, we could offer a tar_policy option that has
-	options "ext" and "mod", for external programs vs. modules, default to
-	"ext"?
-
-	* M3 Reopened Bug: it seems that a user who is in /bin and has "." in
-	the beginning of the path gets ./sh as his shell from FirstTime. If we
-	encounter . in the path we should rather ignore it. But first we must
-	verify the behaviour. Reported by Slaven Rezic on behalf of Tino
-	Schulze. This has nothing to do with -I. but only with the shell and
-	$ENV{PATH} and as we do not know which shell it was it seems we cannot
-	test for the problem.
-
-	* H1 These days developer TELS posted to perl5-porters that his newest
-	release is available at
-
-	    http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-	Suddenly it dawned on me that I want to support
-
-	    install http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-	What am I missing?
-
-	The other commands dealing with files would have to learn a bit.
-
-	d http://      # fails as before with "No objects of...."
-
-	               # alt: does a HEAD and tells user that the URL can e reached
-
-	ls http://     # lists nothing
-
-	               # alt: says that ls doesn't support URLs
-
-	get http://    # this is probably all we need to implement. Maybe a new
-	               # class needed that does as_string and as_glimpse as well?
-
-	And maybe a pragma that turns this feature on? So that 'get http://...'
-	never works but 'force get http://...' does? Alt: config variable to
-	turn feature on, then a separate module that implements it.
-
-	Brian likes the idea
-
-From: brian d foy <brian.d.foy@gmail.com>
-Subject: Re: Welcome new user LOCAL
-To: modules@perl.org
-Date: Mon, 18 Sep 2006 14:52:48 -0500
-Organization: Perl Authors Upload Server
-Reply-To: modules@perl.org
-
-In article <877j0361hl.fsf@k75.linux.bogus>, (Andreas J. Koenig)
-<andreas.koenig.gmwojprw@franz.ak.mind.de> wrote:
-
-> My spontaneous idea was to support the command
-> 
->     cpan> get http://bloodgate.com/perl/packages/devel/Math-BigInt-1.78.tar.gz
-
-oh, very interesting, especially if I already have the file:
-
-   cpan> get file:///....
-
-This makes CPAN::Mini::Inject a bit less useful because I no longer
-need the middle man.
-
-	* Make the "new -> ." symlink in scripts/ as outlined in a mail to kurt
-	and jarkko
-
-	* M2 feature request by Juergen Christoffel: have time stamps on the
-	history and a history command to see them
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
-
-	* hr ================ no todos below this line ================ /hr
 
 	* Bug in T:B:
 
