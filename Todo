@@ -32,6 +32,8 @@ Distribution id = L/LT/LTOETSCH/parrot-0.4.5.tar.gz
 
 	* Is it possible that Tk gets installed twice per megainstall?
 
+	Not in megainstall.20070102T1831.out
+
 	* Class::MethodMaker
 
 lib/Class/MethodMaker.xs: In function 'XS_Class__MethodMaker_set_sub_name':
@@ -58,6 +60,8 @@ Module id = Class::MethodMaker
 	distropref/patch to fix MethodMaker.xs, then the signature test breaks.
 	Patching SIGNATURE does not help either because the file is signed. The
 	solution is to patch 0-signature.t too and let it skip all tests.
+
+	FINI.
 
 	* Bug: The FTPstats file has been cleared once again. 1167639627.93624.
 	Only 20 minutes ago. This must have happened when I killed the sluggish
@@ -105,6 +109,7 @@ Module id = Net::SSLeay
 
 	The report is http://rt.cpan.org/Ticket/Display.html?id=24180
 
+	FINI.
 	
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
