@@ -528,6 +528,26 @@ Shall we use it as the general CPAN build and cache directory?
     if ("colorize_output colorize_print colorize_warn" =~ $matcher) {
         my_yn_prompt(colorize_output => 0, $matcher);
         if ($CPAN::Config->{colorize_output}) {
+            if ($CPAN::META->has_inst("Term::ANSIColor")) {
+                my $T="gYw";
+                print "                                      on_  on_y ".
+                    "        on_ma           on_\n"; 
+                print "                   on_black on_red  green ellow ".
+                    "on_blue genta on_cyan white\n";
+
+                for my $FG ("","bold","black","bold black","red","bold red","green",
+                            "bold green","yellow","bold yellow","blue","bold blue",
+                            "magenta","bold magenta",
+                            "cyan","bold cyan","white","bold white"){
+                    printf "%12s ", $FG;
+                    for my $BG ("",map {"on_$_"} qw(black     red   green  yellow
+                                                    blue magenta    cyan   white)){
+                        print $FG||$BG ? Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
+                    }
+                    print "\n";
+                }
+                print "\n";
+            }
             for my $tuple (
                            ["colorize_print", "bold blue on_white"],
                            ["colorize_warn", "bold red on_white"],

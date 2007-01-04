@@ -1,3 +1,14 @@
+2007-01-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Port auto_commit to 1.8803
+
+2007-01-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Paul Johnson has put out Devel::Cover 0.60
+
+	make test did not succeed for me on the SVN version. Must retry with
+	0.60 proper. Same thing. Must try other perls.
+
 2007-01-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* parrot is a bit of a mess, it seems. Why is CONTAINSMODS so tiny?
@@ -33,6 +44,13 @@ Distribution id = L/LT/LTOETSCH/parrot-0.4.5.tar.gz
 	* Is it possible that Tk gets installed twice per megainstall?
 
 	Not in megainstall.20070102T1831.out
+
+	But in megainstall.20070103T0336.out I see that 'NI-S/Tk-804.027.tar.gz'
+	has 'make_test NO'. Looking at its YAML I see it is 'CALLED_FOR:
+	Tk::HList'. So is Tk::HList lost in SVN?
+
+	But this is again a case where browseentry failed and NOTHING got
+	installed. Bug is reported, do not pay attention to more than one bug:)
 
 	* Class::MethodMaker
 
