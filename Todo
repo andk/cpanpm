@@ -1,7 +1,31 @@
+2007-01-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* is match/module compatible with SQLite? Is match/module the single
+	cause for the slowness I encounter today? Is just 29679 broken? It
+	cannot build PadWalker or it's just slow? Yes, it's only 29679. Something
+	between YAML and the core. 78 and 80 are OK.
+
+	I can add YAML to dont_load_list for 79, then build YAML::Syck and all
+	goes well.
+	
+	* bug: force get on a dot distro removes {archived} which confuses make
+
+	* distcc/ccache: I should use it for Tk
+
+	* Xvfb for testing Tk: Slaven writes
+
+        Xvfb -fp /usr/X11R6/lib/X11/fonts/misc -ac :121 &
+        env DISPLAY=:121 make test
+
+	Also needed for POE which opens Tk windows.
+
 2007-01-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* maybe have a is_tested command? The SVK revision 1694 is just a trial,
-	probably needs a rollback
+	probably needs a rollback. The problems come from concurrency. We
+	currently are not supporting modules tested by a different process that
+	runs simultaneously. So we should test it with a perl that has already
+	finished megainstall.
 
 	* Port auto_commit to 1.8803
 
@@ -3196,7 +3220,7 @@ Looks good
 	with local bundles! (DONE[it did already])). For local distros one does
 	not need patching (and if you do, you know what you're doing).
 
-	(4) mark_tested_ok is similar to distcc and could probably be
+	(4) mark_tested_ok is similar to distcc/ccache and could probably be
 	implemented as such. The time consuming step on perl distros is 'make
 	test' and that makes it very complicated. One would need a checksum of
 	perl AND all used modules during the test. Like for example File::Slurp
@@ -3209,7 +3233,7 @@ Looks good
 
 	For now, distroprefs give you a different 'make' command for a
 	permanently-known-to-be-tested module, that might be just 'true' on UNIX
-	or something to do with distcc-like solution.
+	or something to do with distcc/ccache-like solution.
 
 	That might be annoying if one works with different perls and want to
 	have different modules marked as tested_ok. Maybe we need to add "perl"

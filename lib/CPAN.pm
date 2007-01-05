@@ -2122,16 +2122,39 @@ sub report {
                                 # re-run (as documented)
 }
 
+# experimental (compare with _is_tested)
 #-> sub CPAN::Shell::install_tested
 sub install_tested {
     my($self,@some) = @_;
-    $CPAN::Frontend->mywarn("install_tested() requires no arguments.\n"),
+    $CPAN::Frontend->mywarn("install_tested() must not be called with arguments.\n"),
         return if @some;
     CPAN::Index->reload;
 
-    for my $d (%{$CPAN::META->{readwrite}{'CPAN::Distribution'}}) {
-        my $do = CPAN::Shell->expandany($d);
-        next unless $do->{build_dir};
+    for my $b (reverse $CPAN::META->_list_sorted_descending_is_tested) {
+        my $yaml = "$b.yml";
+        unless (-f $yaml){
+            $CPAN::Frontend->mywarn("No YAML file for $b available, skipping\n");
+            next;
+        }
+        my $yaml_content = CPAN::_yaml_loadfile($yaml);
+        my $id = $yaml_content->[0]{ID};
+        unless ($id){
+            $CPAN::Frontend->mywarn("No ID found in '$yaml', skipping\n");
+            next;
+        }
+        my $do = CPAN::Shell->expandany($id);
+        unless ($do){
+            $CPAN::Frontend->mywarn("Could not expand ID '$id', skipping\n");
+            next;
+        }
+        unless ($do->{build_dir}) {
+            $CPAN::Frontend->mywarn("Distro '$id' has no build_dir, skipping\n");
+            next;
+        }
+        unless ($do->{build_dir} eq $b) {
+            $CPAN::Frontend->mywarn("Distro '$id' has build_dir '$do->{build_dir}' but expected '$b', skipping\n");
+            next;
+        }
         push @some, $do;
     }
 
@@ -2142,15 +2165,15 @@ sub install_tested {
     $CPAN::Frontend->mywarn("No distributions tested with this build of perl found.\n"),
         return unless @some;
 
-    @some = grep { not $_->uptodate } @some;
-    $CPAN::Frontend->mywarn("No non-uptodate distributions tested with this build of perl found.\n"),
-        return unless @some;
+    # @some = grep { not $_->uptodate } @some;
+    # $CPAN::Frontend->mywarn("No non-uptodate distributions tested with this build of perl found.\n"),
+    #     return unless @some;
 
     CPAN->debug("some[@some]");
     for my $d (@some) {
         my $id = $d->can("pretty_id") ? $d->pretty_id : $d->id;
         $CPAN::Frontend->myprint("install_tested: Running for $id\n");
-        $CPAN::Frontend->sleep(1);
+        $CPAN::Frontend->mysleep(1);
         $self->install($d);
     }
 }
@@ -2414,12 +2437,20 @@ sub status {
     }
 }
 
-# experimental (must run after failed or similar)
+# experimental (must run after failed or similar [I think])
+# intended as a preparation ot install_tested
 #-> sub CPAN::Shell::is_tested
 sub _is_tested {
     my($self) = @_;
     for my $b (reverse $CPAN::META->_list_sorted_descending_is_tested) {
-        $CPAN::Frontend->myprint(sprintf "%s %s\n", scalar(localtime $CPAN::META->{is_tested}{$b}), $b);
+        my $time;
+        if ($CPAN::META->{is_tested}{$b}) {
+            $time = scalar(localtime $CPAN::META->{is_tested}{$b});
+        } else {
+            $time = scalar localtime;
+            $time =~ s/\S/?/g;
+        }
+        $CPAN::Frontend->myprint(sprintf "%s %s\n", $time, $b);
     }
 }
 
@@ -6467,7 +6498,8 @@ sub force {
       next unless $methodmatch;
     ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
           if ($phase eq "get") {
-              if ($self->id =~ /\.$/ && $att =~ /(unwrapped|build_dir)/ ) {
+              if (substr($self->id,-1,1) eq "."
+                  && $att =~ /(unwrapped|build_dir|archived)/ ) {
                   # cannot be undone for local distros
                   next ATTRIBUTE;
               }
