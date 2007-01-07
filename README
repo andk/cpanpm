@@ -474,7 +474,8 @@ PROGRAMMER'S INTERFACE
         number of additional arguments that should be passed to the called
         method. The internals of the object get the needed changes so that
         CPAN.pm does not refuse to take the action. The "force" is passed
-        recursively to all contained objects.
+        recursively to all contained objects. See also the section above on
+        the "force" and the "fforce" pragma.
 
     CPAN::Bundle::get()
         Recursively runs the "get" method on all items contained in the
@@ -544,7 +545,8 @@ PROGRAMMER'S INTERFACE
         do. Force takes as arguments a method name to be called and any
         number of additional arguments that should be passed to the called
         method. The internals of the object get the needed changes so that
-        CPAN.pm does not refuse to take the action.
+        CPAN.pm does not refuse to take the action. See also the section
+        above on the "force" and the "fforce" pragma.
 
     CPAN::Distribution::get()
         Downloads the distribution from CPAN and unpacks it. Does nothing if
@@ -731,7 +733,8 @@ PROGRAMMER'S INTERFACE
         do. Force takes as arguments a method name to be called and any
         number of additional arguments that should be passed to the called
         method. The internals of the object get the needed changes so that
-        CPAN.pm does not refuse to take the action.
+        CPAN.pm does not refuse to take the action. See also the section
+        above on the "force" and the "fforce" pragma.
 
     CPAN::Module::get()
         Runs a get on the distribution associated with this module.
@@ -917,12 +920,21 @@ UTILITIES
 
   Basic Utilities for Programmers
     has_inst($module)
-      Returns true if the module is installed. See the source for details.
+      Returns true if the module is installed. Used to load all modules into
+      the running CPAN.pm which are considered optional. The config variable
+      "dontload_list" can be used to intercept the "has_inst()" call such
+      that an optional module is not loaded despite being available. For
+      example the following command will prevent that "YAML.pm" is being
+      loaded:
+
+          cpan> o conf dontload_list push YAML
+
+      See the source for details.
 
     has_usable($module)
-      Returns true if the module is installed and several and is in a usable
-      state. Only useful for a handful of modules that are used internally.
-      See the source for details.
+      Returns true if the module is installed and is in a usable state. Only
+      useful for a handful of modules that are used internally. See the
+      source for details.
 
     instance($module)
       The constructor for all the singletons used to represent modules,
@@ -1014,6 +1026,7 @@ CONFIGURATION
     defined:
 
       applypatch         path to external prg
+      auto_commit        commit all changes to config variables to disk
       build_cache        size of cache for directories to build modules
       build_dir          locally accessible directory to build modules
       build_dir_reuse    boolean if distros in build_dir are persistent
@@ -1027,6 +1040,7 @@ CONFIGURATION
                          quote on Windows, single tick everywhere else;
                          can be set to space to disable quoting
       check_sigs         if signatures should be verified
+      colorize_debug     Term::ANSIColor attributes for debugging output
       colorize_output    boolean if Term::ANSIColor should colorize output
       colorize_print     Term::ANSIColor attributes for normal output
       colorize_warn      Term::ANSIColor attributes for warnings
