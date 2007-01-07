@@ -214,11 +214,11 @@ MEGA_COLLECTION = Expect \
 		Devel::Cover \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		Kwalify \
+		Coro \
 		Font::TTF \
-		Term::ReadLine::Gnu \
 		/home/src/perl/tk/SVN/. \
 		Tk::Tree \
-		CDB_File \
+		PadWalker \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Data::Dump \
@@ -226,12 +226,10 @@ MEGA_COLLECTION = Expect \
 		Plagger \
 		Bundle::Phalanx100 \
 		Jifty \
-		Coro \
 		Getopt::Euclid \
 		DBIx::Class \
 		IPC::PubSub \
 		Bundle::Pause \
-		PadWalker \
 		Graph::Easy \
 		Module::Plan::Base \
 		Cache::Memcached \
@@ -254,6 +252,8 @@ MEGA_COLLECTION = Expect \
 		Number::Format \
 		Template::Plugin::Number::Format \
 		Test::JSON \
+		Term::ReadLine::Gnu \
+		CDB_File \
 
 }
 }
