@@ -91,7 +91,8 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 	* Release the bundles that are already rewritten for a while
 
 	* Speed things up by reading distroprefs less often or otherwise find
-	out who is so slow here.
+	out who is so slow here. What happens between 'Running make for
+	<distro>' and 'Checksum for <distro> ok'? Time is spent in get().
 
 	* Todo: make auto_commit a mandatory attribute. DONE in rev 1706
 

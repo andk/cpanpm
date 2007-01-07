@@ -3251,8 +3251,14 @@ sub _add_to_statistics {
         push @debug, scalar @{$fullstats->{history}} if $sdebug;
         push @debug, time if $sdebug;
         push @{$fullstats->{history}}, $stats;
-        shift @{$fullstats->{history}}
-            while $time - $fullstats->{history}[0]{start} > 30*86400; # one month too much?
+        # arbitrary hardcoded constants until somebody demands to have
+        # them settable
+        while (
+               @{$fullstats->{history}} > 10_000
+               || $time - $fullstats->{history}[0]{start} > 30*86400  # one month
+              ) {
+            shift @{$fullstats->{history}}
+        }
         push @debug, scalar @{$fullstats->{history}} if $sdebug;
         push @debug, time if $sdebug;
         push @debug, scalar localtime($fullstats->{history}[0]{start}) if $sdebug;
@@ -6643,7 +6649,6 @@ is part of the perl-%s distribution. To install that, you need to run
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
-
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -7027,6 +7032,7 @@ expected[$regex]\nbut[$but]\n\n");
     return $expo->exitstatus();
 }
 
+#-> CPAN::Distribution::_validate_distropref
 sub _validate_distropref {
     my($self,@args) = @_;
     if (
@@ -7043,7 +7049,7 @@ sub _validate_distropref {
     }
 }
 
-# CPAN::Distribution::_find_prefs
+#-> CPAN::Distribution::_find_prefs
 sub _find_prefs {
     my($self) = @_;
     my $distroid = $self->pretty_id;
