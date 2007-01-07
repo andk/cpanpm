@@ -1200,6 +1200,7 @@ sub cleanup {
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
+  close $META->{LOCKFH};
   unlink $META->{LOCK};
   # require Carp;
   # Carp::cluck("DEBUGGING");
