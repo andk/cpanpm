@@ -1,5 +1,5 @@
 --- 
 match:
-  module: "^Test::Deep$"
+  distribution: "^FDALY/Test-Deep-\d"
 cpanconfig:
   build_requires_install_policy: "yes"

@@ -1,7 +1,6 @@
 --- 
 match:
-  distribution: "^BTROTT"
-  module: "^Convert::PEM$"
+  distribution: "^BTROTT/Convert-PEM-\d"
 pl: 
   expect: 
     - "Auto-install"

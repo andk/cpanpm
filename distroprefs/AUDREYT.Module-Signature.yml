@@ -1,7 +1,7 @@
 --- 
 match:
-  module: "^Module::Signature$"
-pl: 
+  distribution: "^AUDREYT/Module-Signature-0"
+pl:
   expect:
     - "Import PAUSE"
     - "y\n"

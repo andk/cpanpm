@@ -1,7 +1,7 @@
 --- 
 match:
-  module: "^XML::Twig$"
-pl: 
+  distribution: "^MIROD/XML-Twig-"
+pl:
   expect:
     - "Do you want to install 'xml_pp'"
     - "y\n"

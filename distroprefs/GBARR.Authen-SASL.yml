@@ -1,5 +1,5 @@
 --- 
 match:
-  module: "^Authen::SASL$"
+  distribution: "^GBARR/Authen-SASL-\d"
 pl: 
   args: ["--defaultdeps"]

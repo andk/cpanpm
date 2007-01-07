@@ -1,6 +1,6 @@
 --- 
 match:
-  module: "^URI::Fetch$"
+  distribution: "^BTROTT/URI-Fetch-\d"
 pl: 
   expect:
     - "Auto-install"

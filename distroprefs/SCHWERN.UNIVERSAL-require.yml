@@ -1,8 +1,0 @@
---- 
-comment: "This patch fixes the 'require' test for bleadperl"
-match:
-  module: "^UNIVERSAL::require$"
-  distribution: "-0.10\.tar\.gz"
-
-patches:
-  - ANDK/UNIVERSAL-require-0.10-ANDK-01.patch

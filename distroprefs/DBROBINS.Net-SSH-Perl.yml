@@ -1,7 +1,7 @@
 --- 
 comment: "On bleadperl one test currently hangs, so I disable building it entirely"
 match:
-  module: "^Net::SSH::Perl$"
+  distribution: "^DBROBINS/Net-SSH-Perl-\d"
 pl: 
   env: 
     PERL_MM_USE_DEFAULT: 1

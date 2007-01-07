@@ -1,6 +1,6 @@
 --- 
 match:
-  module: "^Apache::Test$"
+  distribution: "^PGOLLUCCI/Apache-Test-\d"
 pl: 
   args: 
     - -httpd
