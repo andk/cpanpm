@@ -3254,7 +3254,7 @@ sub _add_to_statistics {
         # arbitrary hardcoded constants until somebody demands to have
         # them settable
         while (
-               @{$fullstats->{history}} > 10_000
+               @{$fullstats->{history}} > 9999
                || $time - $fullstats->{history}[0]{start} > 30*86400  # one month
               ) {
             shift @{$fullstats->{history}}

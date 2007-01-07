@@ -1,3 +1,27 @@
+2007-01-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_68
+
+	* two bugfix patches from Randy Kobes for Win32
+
+	* include new PAUSE2007.pub key
+
+	* bugfix: make FTPstats writing atomic
+
+	* new mandatory config variable 'auto_commit' to always save changed
+	variabled immediately to disk
+
+	* address 22069: display a colortable before asking questions about
+	colors
+
+	* new config variable colorize_debug to colorize debugging output
+
+	* bugfix: prepending to PERL5LIB contained the BUILDDIR literally
+
+	* bugfix: when determining unsatisfied prereqs, honour is_tested area
+
+	* improve documentation about has_inst and dontload_list
+
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_67
