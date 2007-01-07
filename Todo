@@ -57,7 +57,7 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 	the is_tested area but in the unsatisfied part and I find the spot where
 	inst_{file,version} was used instead of available_{file,version}
 
-	FIXED in svk rev 1699 or so.
+	FIXED in svk rev 1703.
 
 2007-01-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -73,7 +73,7 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 	loop between DateTime-0.35, DateTime-Format-Builder, Class-Factury-Util,
 	DateTime, Params-Validate. And is_tested grows and grows and grows.
 
-	FIXED in rev 1699 or so.
+	FIXED in rev 1703.
 
 	* blead@28810 did not compile YAML 0.62? Did we know that? That was
 	September. Is something more broken than just bleadperl? In any case I'm
@@ -93,7 +93,7 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 	* Speed things up by reading distroprefs less often or otherwise find
 	out who is so slow here.
 
-	* Todo: make auto_commit a mandatory attribute.
+	* Todo: make auto_commit a mandatory attribute. DONE in rev 1706
 
 	* XML::Twig 3.28 is out and fails with 29705
 

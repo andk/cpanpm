@@ -558,9 +558,12 @@ $configpm initialized.
     CPAN::FirstTime::init($configpm, %args);
 }
 
+
+# returns mandatory but missing entries in the Config
 sub missing_config_data {
     my(@miss);
     for (
+         "auto_commit",
          "build_cache",
          "build_dir",
          "cache_metadata",
