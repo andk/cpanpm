@@ -1,3 +1,290 @@
+2007-01-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: I say 'force test JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz'
+
+	and I see (with the usual noise around) in essence:
+
+----    Unsatisfied dependencies detected during    ----
+---- JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz ----
+    DateTime::Format::Builder [requires]
+Running test for module 'DateTime::Format::Builder'
+----    Unsatisfied dependencies detected during   ----
+---- DROLSKY/DateTime-Format-Builder-0.7807.tar.gz ----
+    Class::Factory::Util [requires]
+    Params::Validate [requires]
+    DateTime::Format::Strptime [requires]
+Running test for module 'Class::Factory::Util'
+  DROLSKY/Class-Factory-Util-1.6.tar.gz
+  /usr/bin/make test -- OK
+  DROLSKY/Params-Validate-0.86.tar.gz
+  /usr/bin/make test -- OK
+----   Unsatisfied dependencies detected during   ----
+---- RICKM/DateTime-Format-Strptime-1.0700.tar.gz ----
+    DateTime::TimeZone [requires]
+    DateTime::Locale [requires]
+    Params::Validate [requires]
+---- Unsatisfied dependencies detected during ----
+----   DROLSKY/DateTime-TimeZone-0.57.tar.gz  ----
+    Class::Singleton [requires]
+    Params::Validate [requires]
+  ABW/Class-Singleton-1.03.tar.gz
+  /usr/bin/make test -- OK
+  DROLSKY/DateTime-TimeZone-0.57.tar.gz
+  ./Build test -- OK
+---- Unsatisfied dependencies detected during ----
+----    DROLSKY/DateTime-Locale-0.33.tar.gz   ----
+    Params::Validate [requires]
+  DROLSKY/DateTime-Locale-0.33.tar.gz
+  ./Build test -- OK
+  RICKM/DateTime-Format-Strptime-1.0700.tar.gz
+  /usr/bin/make test -- OK
+  DROLSKY/DateTime-Format-Builder-0.7807.tar.gz
+  ./Build test -- OK
+
+	and after that: nothing. So the one we try to test does not get tested
+	but all prerequisites run their tests.
+
+cpan[12]> _is_tested
+Sun Jan  7 08:05:21 2007 /home/k/.cpan/build/Class-Factory-Util-1.6-UVh2sJ
+Sun Jan  7 08:05:23 2007 /home/k/.cpan/build/Params-Validate-0.86-kpMMto
+Sun Jan  7 08:05:26 2007 /home/k/.cpan/build/Class-Singleton-1.03-HaqjYP
+Sun Jan  7 08:05:50 2007 /home/k/.cpan/build/DateTime-TimeZone-0.57-Cg2NcL
+Sun Jan  7 08:06:12 2007 /home/k/.cpan/build/DateTime-Locale-0.33-dSVn8d
+Sun Jan  7 08:06:18 2007 /home/k/.cpan/build/DateTime-Format-Strptime-1.0700-6B7q6N
+Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcgLN
+
+	This _is_tested command is wonderful. It show me that the bug is not in
+	the is_tested area but in the unsatisfied part and I find the spot where
+	inst_{file,version} was used instead of available_{file,version}
+
+	FIXED in svk rev 1699 or so.
+
+2007-01-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	*  JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz
+
+	broke between 20061212T0332 (29527) and 20061213T1101 (29542)
+
+	But when I visit 29527 I see many prerequisites were missing. Including
+	Params::Validate.
+
+	Installing YAML::Syck and then using 'fforce test
+	JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz' brings me an endless
+	loop between DateTime-0.35, DateTime-Format-Builder, Class-Factury-Util,
+	DateTime, Params-Validate. And is_tested grows and grows and grows.
+
+	FIXED in rev 1699 or so.
+
+	* blead@28810 did not compile YAML 0.62? Did we know that? That was
+	September. Is something more broken than just bleadperl? In any case I'm
+	surprised that 28810 has had no YAML.pm. So I should simply run through
+	whole cache and see at which time I started to build Bundle::CPAN on all
+	bleads. Do not forget, we're now using ccache:
+
+	       CCACHE_DISABLE
+              If  you  set the environment variable CCACHE_DISABLE then ccache
+              will just call the  real  compiler,  bypassing  the  cache  com-
+              pletely.
+
+	No, the 'dont_load_list' is preventing YAML to be loaded at the moment.
+
+	* Release the bundles that are already rewritten for a while
+
+	* Speed things up by reading distroprefs less often or otherwise find
+	out who is so slow here.
+
+	* Todo: make auto_commit a mandatory attribute.
+
+	* XML::Twig 3.28 is out and fails with 29705
+
+t/test_3_27.t               82    3  8-10
+t/test_mark.t  255 65280    48    4  47-48
+
+	% make test TEST_FILES="t/test_3_27.t t/test_mark.t " TEST_VERBOSE=1
+[...]
+ok 6
+ok 7
+not ok 8
+trigger on e1[@#a]/b: expected 'b1b1', got 'b1'
+Use of uninitialized value $got in string eq at t/tools.pm line 18.
+not ok 9
+Use of uninitialized value $got in concatenation (.) or string at t/tools.pm line 29.
+trigger on e1[@#a]: expected 'e1-1', got ''
+not ok 10
+trigger on e1[!@#a]: expected 'e1-2', got 'e1-1e1-2'
+ok 11
+ok 12
+[...]
+t/test_mark....Assertion rx->sublen >= (s - rx->subbeg) + i failed: file "regcomp.c", line 4695 at /home/k/.cpan/build/XML-Twig-3.28-4ey2uH/blib/lib/XML/Twig.pm line 6385, <DATA> line 24.
+1..48
+[...]
+ok 45
+ok 46
+dubious 
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 47-48
+        Failed 2/48 tests, 95.83% okay
+
+
+	Binary search is harder than ever because of different things in
+	different blead versions.
+
+	This happens with 28210:
+
+t/test_wrapped......................ok                                       
+t/test_xml_split....................xml_split compilation: 
+t/test_xml_split....................NOK 1/18xml_merge compilation:           
+t/test_xml_split....................ok 3/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58.
+xml_merge  t/test_xml_split.xml: false
+t/test_xml_split....................NOK 4/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 1.
+xml_merge -i t/test_xml_split.xml: false
+t/test_xml_split....................NOK 6/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 2.
+xml_merge  t/test_xml_split.xml: false
+t/test_xml_split....................NOK 8/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 3.
+xml_merge -i t/test_xml_split.xml: false
+t/test_xml_split....................NOK 10/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 4.
+xml_merge  t/test_xml_split.xml: false
+t/test_xml_split....................NOK 12/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 5.
+xml_merge -i t/test_xml_split.xml: false
+t/test_xml_split....................NOK 14/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 6.
+xml_merge  t/test_xml_split_entities.xml: false
+t/test_xml_split....................NOK 16/18Can't exec "/perl": No such file or directory at t/test_xml_split.t line 58, <FHSLURP> chunk 7.
+xml_merge  t/test_xml_split_entities.xml: false
+t/test_xml_split....................FAILED tests 1-2, 4, 6, 8, 10, 12, 14, 16, 18
+        Failed 10/18 tests, 44.44% okay
+t/test_xpath_cond...................ok                                       
+
+
+	This happens with 28362 and 28498:
+
+t/test_erase........................ok                                       
+t/test_errors.......................dubious                                  
+        Test returned status 0 (wstat 11, 0xb)
+DIED. FAILED tests 4-110
+        Failed 107/110 tests, 2.73% okay
+t/test_even_more_coverage...........ok                                       
+t/zz_dump_config....................ok                                       
+Failed Test     Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/test_errors.t    0    11   110  214  4-110
+Failed 1/88 test scripts. 107/2143 subtests failed.
+Files=88, Tests=2143, 93 wallclock secs (41.47 cusr +  2.21 csys = 43.68 CPU)
+Failed 1/88 test programs. 107/2143 subtests failed.
+
+	
+	28810 already has the first of the failures above (and only those):
+
+t/test_3_27.t               82    3  8-10
+
+	29010 and 29220 have
+
+t/test_3_27.t                     82    3  8-10
+t/test_additional.t    0    11   647   16  640-647
+
+	which means it's yet another variant!
+
+	29411 then has already the same behaviour as 29705.
+
+	* Watch Paul Johnson's
+	
+	http://pjcj.sytes.net/cover/cpancover-5.9.5/
+
+	I tested the not-availables with 29703
+
+	Carp-Assert-0.18                       superceded by 0.20 which wfm
+	Catalyst-Engine-Apache-1.07            not tested
+	Catalyst-View-TT-0.24                  not tested
+	DateTime-Locale-0.32                   wfm
+	File-Modified-0.07                     wfm
+	IO-Pager-0.06                          wfm
+	Image-Size-3.01                        wfm
+	Object-Signature-1.05                  wfm
+	PerlIO-eol-0.14                        wfm
+	Template-Plugin-Number-Format-1.01     does not specify dependency on Number::Format
+	                                       but if Number::Format installed, wfm
+	Template-Timer-0.04                    fails for me too but fails with 5.8.8 too
+	Test-JSON-0.02                         wfm
+
+	* Some instability in recent bleads wrt YAML. As soon as YAML is loaded
+	perl gets slow and CPAN cannot install Text::Glob, the first module to
+	be installed after YAML according to current dependencies.
+
+	Yesterday I resolved it by putting YAML on the dont_load_list. Today I
+	would prefer to find some indications towards a possible reason. The
+	program hangs while parsing or writing FTPstats.yml such that no other
+	program can use CPAN.pm because it waits for the lock.
+
+	(Note: 29704 has arrived while I'm investigating)
+
+% gdb -p 17086
+GNU gdb 6.4.90-debian
+Copyright (C) 2006 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "i486-linux-gnu".
+Attaching to process 17086
+Reading symbols from /home/src/perl/repoperls/installed-perls/perl/pU42elH/perl-5.8.0@29672/bin/perl...done.
+Using host libthread_db library "/lib/tls/i686/cmov/libthread_db.so.1".
+Reading symbols from /lib/tls/i686/cmov/libnsl.so.1...done.
+Loaded symbols for /lib/tls/i686/cmov/libnsl.so.1
+[...]
+Reading symbols from /home/src/perl/repoperls/installed-perls/perl/pU42elH/perl-5.8.0@29672/lib/5.9.5/i686-linux-64int/auto/B/B.so...done.
+Loaded symbols for /home/src/perl/repoperls/installed-perls/perl/pU42elH/perl-5.8.0@29672/lib/5.9.5/i686-linux-64int/auto/B/B.so
+Failed to read a valid object file image from memory.
+0x08179c8b in Perl_leave_scope (base=497) at scope.c:627
+627             switch (SSPOPINT) {
+(gdb) bt
+#0  0x08179c8b in Perl_leave_scope (base=497) at scope.c:627
+#1  0x08177214 in Perl_pop_scope () at scope.c:99
+#2  0x0818ddf8 in Perl_pp_return () at pp_ctl.c:2077
+#3  0x080bd3eb in Perl_runops_debug () at dump.c:1875
+#4  0x080ef6cc in S_run_body (oldscope=1) at perl.c:2398
+#5  0x080eecfe in perl_run (my_perl=0x82d9008) at perl.c:2323
+#6  0x0805e791 in main (argc=2, argv=0xbfd69b34, env=0xbfd69b40)
+    at perlmain.c:113
+(gdb) 
+
+	By stepping with "n" I reach the seemingly endless loop:
+
+1855            PERL_ASYNC_CHECK();
+(gdb) 
+1856            if (PL_debug) {
+(gdb) 
+1875        } while ((PL_op = CALL_FPTR(PL_op->op_ppaddr)(aTHX)));
+(gdb) 
+1855            PERL_ASYNC_CHECK();
+
+	This is with 29672. I just retried to load YAML again and the hosts
+	command did succeed, but it was slow (several minutes for 10000
+	downloads)
+
+	* Spreadsheet::ParseExcel broken recently. Also seems to affect
+	Module::Plan::Lite. But binary search points to 29672 which cannot be to
+	blame. I'd rather believe it's an instability in blead:
+
+Date: Fri, 5 Jan 2007 18:14:08 +0000
+From: Dave Mitchell <davem@iabyn.com>
+To: Rafael Garcia-Suarez <rgarciasuarez@gmail.com>
+Cc: p5p <perl5-porters@perl.org>
+Subject: Re: New release ?
+Message-ID: <20070105181407.GF17695@iabyn.com>
+
+On Fri, Jan 05, 2007 at 06:20:05PM +0100, Rafael Garcia-Suarez wrote:
+> - have we still a leak on /(?{die})/ ? (Dave)
+
+yes, not done yet (but fix should be trivial)
+
+In the meantime I seem to have left the parser in an unstable state -
+needs more work.
+
+-- 
+Justice is when you get what you deserve.
+Law is when you get what you pay for.
+
+
+
 2007-01-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* is match/module compatible with SQLite? Is match/module the single
