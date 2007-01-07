@@ -1,0 +1,13 @@
+---
+comment: |
+
+  the ANDK-01 patch enables the user to disable the interactive Tk
+  test by setting AUTOMATED_TESTING
+
+match:
+  distribution: "^HAYASHI/Term-ReadLine-Gnu-\d"
+patches:
+  - "ANDK/patches/Term-ReadLine-Gnu-1.16-ANDK-01.patch.gz"
+test:
+  env:
+    AUTOMATED_TESTING: 1

@@ -43,6 +43,7 @@ distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GEOFF.Apache-Test.yml
 distroprefs/GIULIENK.Audio-Beep.yml
+distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
@@ -56,6 +57,7 @@ distroprefs/JESSE.Jifty.yml
 distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
+distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml

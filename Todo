@@ -364,6 +364,12 @@ Law is when you get what you pay for.
 	What was the name again of the environment variable for automated
 	testing?
 
+	David Golden once (2006-09-25 on perl-qa) stated 'AUTOMATED_TESTING --
+	used by many authors to toggle tests for non-interactive situations', so
+	it may be a de-facto standard. A long thread at the beginning of October
+	more or less backed this proposal to signal unattended testing.
+
+
 	* Remember to see after the Devel::Cover module. 0.60 fails tests and
 	maybe needs a binary search again.
 
