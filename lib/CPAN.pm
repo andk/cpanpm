@@ -6543,7 +6543,7 @@ sub force {
           }
           delete $self->{$att};
           if ($ldebug || $CPAN::DEBUG) {
-              local $CPAN::DEBUG = 16; # Distribution
+              # local $CPAN::DEBUG = 16; # Distribution
               CPAN->debug(sprintf "id[%s]phase[%s]att[%s]", $self->id, $phase, $att);
           }
       }
@@ -6884,10 +6884,11 @@ is part of the perl-%s distribution. To install that, you need to run
                                         " in cwd[$cwd]. Danger, Will Robinson!");
                 $CPAN::Frontend->mysleep(5);
             }
-            $system = sprintf "%s %s", $self->_build_command(), $CPAN::Config->{mbuild_arg};
+            $system = join " ", $self->_build_command(), $CPAN::Config->{mbuild_arg};
         } else {
-            $system = join " ", $self->_make_command(), $CPAN::Config->{make_arg};
+            $system = join " ", $self->_make_command(),  $CPAN::Config->{make_arg};
         }
+        $system =~ s/\s+$//;
         my $make_arg = $self->make_x_arg("make");
         $system = sprintf("%s%s",
                           $system,
@@ -7747,6 +7748,7 @@ sub test {
         {
             my @prereq;
 
+            # local $CPAN::DEBUG = 16; # Distribution
             for my $m (keys %{$self->{sponsored_mods}}) {
                 my $m_obj = CPAN::Shell->expand("Module",$m);
                 # XXX we need available_version which reflects
@@ -7755,12 +7757,17 @@ sub test {
                 my $available_version = $m_obj->available_version;
                 my $available_file = $m_obj->available_file;
                 if ($available_version &&
-                    !CPAN::Version->vlt($available_version,$self->{PREREQ_PM}{$m})
+                    !CPAN::Version->vlt($available_version,$self->{prereq_pm}{$m})
                    ) {
                     CPAN->debug("m[$m] good enough available_version[$available_version]")
                         if $CPAN::DEBUG;
-                } elsif ($self->{PREREQ_PM}{$m} == 0
-                         && $available_file) {
+                } elsif ($available_file
+                         && (
+                             !$self->{prereq_pm}{$m}
+                             ||
+                             $self->{prereq_pm}{$m} == 0
+                            )
+                        ) {
                     # lex Class::Accessor::Chained::Fast which has no $VERSION
                     CPAN->debug("m[$m] have available_file[$available_file]")
                         if $CPAN::DEBUG;

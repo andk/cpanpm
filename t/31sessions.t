@@ -1,7 +1,11 @@
 $|=1;
 BEGIN {
-    unshift @INC, './lib';
+    unshift @INC, './lib', './t';
     require CPAN;
+    require local_utils;
+
+    local_utils::cleanup_dot_cpan();
+    local_utils::prepare_dot_cpan();
     CPAN::HandleConfig->load;
     my $yaml_module = CPAN::_yaml_module();
     if ($CPAN::META->has_inst($yaml_module)) {
@@ -29,12 +33,6 @@ Do we want to repeat testing?
 	  OK/FAIL     pass everything through to underlying distros
 
 =cut
-
-use lib "t";
-use local_utils;
-
-local_utils::cleanup_dot_cpan();
-local_utils::prepare_dot_cpan();
 
 BEGIN {
     for my $x (
@@ -109,7 +107,24 @@ our @SESSIONS =
        "make CPAN::Test::Dummy::Perl5::Make" => "Falling back to other methods to determine prerequisites",
        "test CPAN::Test::Dummy::Perl5::Make" => "All tests successful",
       ]
-     }
+     },
+     {
+      name => "focussing test",
+      pairs =>
+      [
+       "dump \$::x=4*6+1" => "= 25;",
+       "test CPAN::Test::Dummy::Perl5::Make::CircDepeOne" =>
+       "(?xs:
+  Running.test.for.module.+CPAN::Test::Dummy::Perl5::Make::CircDepeOne.+
+  CPAN::Test::Dummy::Perl5::Make::CircDepeThree.+\\[requires\\].+
+  CPAN::Test::Dummy::Perl5::Make::CircDepeTwo.+\\[requires\\].+
+  CPAN::Test::Dummy::Perl5::Make::CircDepeOne.+\\[requires\\].+
+  t/00_load\\.\\.\\.\\.ok.+
+  succeeded.but.one.dependency.not.OK.+
+  Recursive.dependency.detected
+)",
+      ],
+     },
     );
 
 my $cnt;

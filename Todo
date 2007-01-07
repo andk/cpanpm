@@ -369,6 +369,7 @@ Law is when you get what you pay for.
 	it may be a de-facto standard. A long thread at the beginning of October
 	more or less backed this proposal to signal unattended testing.
 
+	ADDRESSED in rev. 1708
 
 	* Remember to see after the Devel::Cover module. 0.60 fails tests and
 	maybe needs a binary search again.

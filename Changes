@@ -9,7 +9,7 @@
 	* bugfix: make FTPstats writing atomic
 
 	* new mandatory config variable 'auto_commit' to always save changed
-	variabled immediately to disk
+	variables immediately to disk
 
 	* address 22069: display a colortable before asking questions about
 	colors
@@ -21,6 +21,8 @@
 	* bugfix: when determining unsatisfied prereqs, honour is_tested area
 
 	* improve documentation about has_inst and dontload_list
+
+	* several distropref files finetuned
 
 2006-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
