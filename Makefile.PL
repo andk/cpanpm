@@ -222,6 +222,7 @@ MEGA_COLLECTION = Expect \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Data::Dump \
+		Cache::File \
 		Plagger \
 		Bundle::Phalanx100 \
 		Jifty \
@@ -246,6 +247,13 @@ MEGA_COLLECTION = Expect \
 		Locale::Maketext::Gettext \
 		Test::Without::Module \
 		Class::MethodMaker \
+		Class::C3 \
+		IO::Pager \
+		Object::Signature \
+		PerlIO::eol \
+		Number::Format \
+		Template::Plugin::Number::Format \
+		Test::JSON \
 
 }
 }
