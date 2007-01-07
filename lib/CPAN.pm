@@ -3245,6 +3245,7 @@ sub _add_to_statistics {
         my @debug;
         @debug = $time if $sdebug;
         my $fullstats = $self->_ftp_statistics($fh);
+        close $fh;
         $fullstats->{history} ||= [];
         push @debug, scalar @{$fullstats->{history}} if $sdebug;
         push @debug, time if $sdebug;
@@ -3265,6 +3266,8 @@ sub _add_to_statistics {
                                 @debug,
                                ));
         }
+        # Win32 cannot rename a file to an existing filename
+        unlink($sfile) if ($^O eq 'MSWin32');
         rename "$sfile.$$", $sfile
             or $CPAN::Frontend->mydie("Could not rename '$sfile.$$' to '$sfile': $!\n");
     }
