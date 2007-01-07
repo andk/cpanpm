@@ -6,6 +6,6 @@ $VAR1 = {
     ]
   },
   "match" => {
-    "module" => "^Term::ReadLine::Perl\$"
+    "distribution" => "^ILYAZ/modules/Term-ReadLine-Perl-\\d"
   }
 };
