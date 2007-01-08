@@ -155,6 +155,7 @@ plan tests => (
 {
     my $p;
     my(@path) = split /$Config::Config{path_sep}/, $ENV{PATH};
+    require CPAN::FirstTime;
     for my $p (@programs) {
         $HAVE->{$p}++ if CPAN::FirstTime::find_exe($p,\@path);
     }
