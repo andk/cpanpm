@@ -6,6 +6,7 @@ $CPAN::Config = {
                                 'make_install_make_command' => q[make],
                                 'mbuild_install_build_command' => q[./Build],
                                ),
+                 '7yYQS7' => 'vGcVJQ', # verifies that we really loaded this file
                  'auto_commit' => 0,
                  'build_cache' => q[100],
                  'build_dir' => qq[$cwd/t/dot-cpan/build],

@@ -1,11 +1,13 @@
 $|=1;
 BEGIN {
     unshift @INC, './lib', './t';
-    require CPAN;
+    
     require local_utils;
-
     local_utils::cleanup_dot_cpan();
     local_utils::prepare_dot_cpan();
+    require CPAN::MyConfig;
+    require CPAN;
+
     CPAN::HandleConfig->load;
     my $yaml_module = CPAN::_yaml_module();
     if ($CPAN::META->has_inst($yaml_module)) {
@@ -135,7 +137,10 @@ for my $session (@SESSIONS) {
 }
 my $prompt_re = "cpan> ";
 print "DEBUG: cnt[$cnt]\n";
-plan tests => $cnt;
+plan tests => $cnt
+    + 1 # the MyConfig verification
+    ;
+is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
 
 for my $session (@SESSIONS) {
     my $system = $session->{system} || $default_system;

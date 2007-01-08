@@ -1,3 +1,9 @@
+2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_69
+
+	* fix a broken test (which tested with the wrong MyConfig.pm)
+
 2007-01-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_68

@@ -219,6 +219,7 @@ MEGA_COLLECTION = Expect \
 		/home/src/perl/tk/SVN/. \
 		Tk::Tree \
 		PadWalker \
+		Data::Float \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Data::Dump \

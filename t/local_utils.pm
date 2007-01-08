@@ -1,6 +1,5 @@
 package local_utils;
 
-use CPAN::FirstTime ();
 use Config;
 use Cwd;
 use File::Copy qw(cp);
