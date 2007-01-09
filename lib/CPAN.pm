@@ -2141,8 +2141,8 @@ sub install_tested {
             $CPAN::Frontend->mywarn("No YAML file for $b available, skipping\n");
             next;
         }
-        my $yaml_content = CPAN::_yaml_loadfile($yaml);
-        my $id = $yaml_content->[0]{ID};
+        my $yaml_content = CPAN->_yaml_loadfile($yaml);
+        my $id = $yaml_content->[0]{distribution}{ID};
         unless ($id){
             $CPAN::Frontend->mywarn("No ID found in '$yaml', skipping\n");
             next;

@@ -1,3 +1,23 @@
+2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: distroprefs mechanism is still inefficient in that it scans too
+	often the whole distro_dir. (But it's super to have that while
+	developing new rules). And it's a drag especially when people have only
+	YAML and no YAML::Syck because they were not told or have no compiler or
+	whatsoever. Or revisit the caching mechanism for the YAMLs and count the
+	actual YAML activities.
+
+	Also, reduce the default max counter for FTPstats to 1000 or 14 days or
+	so and make it settable.
+
+	* The speed factor that I wrote about a few times recently is due to the
+	YAML::Syck being 100 times faster than YAML. Whenever for some reason
+	YAML::Syck is missing, the whole CPAN.pm feels like running on a 386
+	whatever we are doing, because we now have too many tasks delegated to
+	YAML format. What to do?
+
+	* 00.README into the manpage now?
+
 2007-01-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: I say 'force test JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz'
@@ -297,8 +317,9 @@ Law is when you get what you pay for.
 	goes well.
 	
 	* bug: force get on a dot distro removes {archived} which confuses make
+	FIXED
 
-	* distcc/ccache: I should use it for Tk
+	* distcc/ccache: I should use it for Tk. USING IT
 
 	* Xvfb for testing Tk: Slaven writes
 
@@ -394,10 +415,6 @@ Law is when you get what you pay for.
 	* TTL stuff
 
 	* make up your mind about install_tested.
-
-	* Todo: distroprefs mechanism is still inefficient in that it scans too
-	often the whole distro_dir. (But it's super to have that while
-	developing new rules)
 
 	* document build_requires and when you talk about prerequisites, name
 	the option names explicitly.
