@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_69';
+$CPAN::VERSION = '1.88_71';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1327,8 +1327,11 @@ sub tidyup {
     my($toremove) = shift @{$self->{FIFO}};
     unless ($toremove =~ /\.yml$/) {
         $CPAN::Frontend->myprint(sprintf(
-                                         "DEL: $toremove (%.1f>%.1f MB)\n",
-                                         $self->{DU}, $self->{'MAX'})
+                                         "DEL(%.1f>%.1fMB): %s \n",
+                                         $self->{DU},
+                                         $self->{MAX},
+                                         $toremove,
+                                        )
                                 );
     }
     return if $CPAN::Signal;
@@ -2442,11 +2445,11 @@ sub status {
     }
 }
 
-# experimental (must run after failed or similar [I think])
-# intended as a preparation ot install_tested
+# experimental; intended as a preparation of install_tested
 #-> sub CPAN::Shell::is_tested
 sub _is_tested {
     my($self) = @_;
+    CPAN::Index->reload;
     for my $b (reverse $CPAN::META->_list_sorted_descending_is_tested) {
         my $time;
         if ($CPAN::META->{is_tested}{$b}) {
