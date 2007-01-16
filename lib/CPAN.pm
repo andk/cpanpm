@@ -376,14 +376,28 @@ sub _yaml_loadfile {
     return +[] unless -s $local_file;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
-        my $code = UNIVERSAL::can($yaml_module, "LoadFile");
-        my @yaml;
-        eval { @yaml = $code->($local_file); };
-        if ($@) {
-            # this shall not be done by the frontend
-            die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+        my $code;
+        if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
+            my @yaml;
+            eval { @yaml = $code->($local_file); };
+            if ($@) {
+                # this shall not be done by the frontend
+                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+            }
+            return \@yaml;
+        } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
+            local *FH;
+            open FH, $local_file or die "Could not open '$local_file': $!";
+            local $/;
+            my $ystream = <FH>;
+            my @yaml;
+            eval { @yaml = $code->($ystream); };
+            if ($@) {
+                # this shall not be done by the frontend
+                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+            }
+            return \@yaml;
         }
-        return \@yaml;
     } else {
         # this shall not be done by the frontend
         die CPAN::Exception::yaml_not_installed->new($yaml_module, $local_file, "parse");
@@ -396,12 +410,16 @@ sub _yaml_dumpfile {
     my($self,$local_file,@what) = @_;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
+        my $code;
         if (UNIVERSAL::isa($local_file, "FileHandle")) {
-            my $code = UNIVERSAL::can($yaml_module, "Dump");
+            $code = UNIVERSAL::can($yaml_module, "Dump");
             eval { print $local_file $code->(@what) };
-        } else {
-            my $code = UNIVERSAL::can($yaml_module, "DumpFile");
+        } elsif ($code = UNIVERSAL::can($yaml_module, "DumpFile")) {
             eval { $code->($local_file,@what); };
+        } elsif ($code = UNIVERSAL::can($yaml_module, "Dump")) {
+            local *FH;
+            open FH, ">$local_file" or die "Could not open '$local_file': $!";
+            print FH $code->(@what);
         }
         if ($@) {
             die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"dump",$@);
@@ -1850,7 +1868,7 @@ sub hosts {
         $S{end} ||= $last->{end};
         my $dltime = $last->{end} - $start;
         my $dlsize = $last->{filesize} || 0;
-        my $url = $last->{thesiteurl}->text;
+        my $url = ref $last->{thesiteurl} ? $last->{thesiteurl}->text : $last->{thesiteurl};
         my $s = $S{ok}{$url} ||= {};
         $s->{n}++;
         $s->{dlsize} ||= 0;
@@ -7457,15 +7475,24 @@ sub unsat_prereq {
 
             # next; # this is the next that must go away
 
-            # The following "next" is fine and the error message
-            # explains well what is going on. Imagine the DBI fails
-            # and consequently DBD::SQLite fails and now we are
-            # processing CPAN::SQLite. Then we have no "next" for
+            # The following "next NEED" are fine and the error message
+            # explains well what is going on. For example when the DBI
+            # fails and consequently DBD::SQLite fails and now we are
+            # processing CPAN::SQLite. Then we must have a "next" for
             # DBD::SQLite. How can we get it and how can we identify
             # all other cases we must identify?
 
             my $do = $nmo->distribution;
-          NOSAYER: for my $nosayer (qw(make_test make unwrapped)) {
+            next NEED unless $do; # not on CPAN
+          NOSAYER: for my $nosayer (
+                                    "unwrapped",
+                                    "writemakefile",
+                                    "signature_verify",
+                                    "make",
+                                    "make_test",
+                                    "install",
+                                    "make_clean",
+                                   ) {
                 if (
                     $do->{$nosayer}
                     &&(UNIVERSAL::can($do->{$nosayer},"failed") ?
@@ -7480,9 +7507,9 @@ sub unsat_prereq {
                     }
                     $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                             "'$need_module => $need_version' ".
-                                            "for '$self->{ID}' failed the '$nosayer' ".
-                                            "action when ".
-                                            "processing '$do->{ID}'. Continuing, ".
+                                            "for '$self->{ID}' failed when ".
+                                            "processing '$do->{ID}' with ".
+                                            "'$nosayer => $do->{$nosayer}'. Continuing, ".
                                             "but chances to succeed are limited.\n"
                                            );
                     next NEED;

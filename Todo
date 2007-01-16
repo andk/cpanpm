@@ -1,3 +1,9 @@
+2007-01-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* See the two fails on CPAN testers for 1.88_69!
+
+	* Look into YAML::Tiny
+
 2007-01-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* learn something new every day: less -R preserves the ANSI color

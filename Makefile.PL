@@ -212,12 +212,10 @@ MEGA_COLLECTION = Expect \
 		Bundle::CPANxxl \
 		CPAN::DistnameInfo \
 		Devel::Cover \
-		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		Kwalify \
 		Coro \
 		Font::TTF \
-		/home/src/perl/tk/SVN/. \
-		Tk::Tree \
+		YAML::Tiny \
 		PadWalker \
 		Data::Float \
 		Math::BigInt::GMP \
@@ -225,11 +223,14 @@ MEGA_COLLECTION = Expect \
 		Data::Dump \
 		Cache::File \
 		Plagger \
-		Bundle::Phalanx100 \
 		Jifty \
 		Getopt::Euclid \
 		DBIx::Class \
 		IPC::PubSub \
+		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
+		/home/src/perl/tk/SVN/. \
+		Tk::Tree \
+		Bundle::Phalanx100 \
 		Bundle::Pause \
 		Graph::Easy \
 		Module::Plan::Base \
