@@ -520,6 +520,10 @@ package CPAN::Exception::RecursiveDependency;
 use strict;
 use overload '""' => "as_string";
 
+# a module sees its distribution (no version)
+# a distribution sees its prereqs (which are module names) (usually with versions)
+# a bundle sees its module names and/or its distributions (no version)
+
 sub new {
     my($class) = shift;
     my($deps) = shift;
@@ -1907,6 +1911,7 @@ sub reload {
                     "CPAN/Kwalify.pm",
                     "CPAN/Queue.pm",
                     "CPAN/Reporter.pm",
+                    "CPAN/SQLite.pm",
                     "CPAN/Tarzip.pm",
                     "CPAN/Version.pm",
                    );
@@ -3257,7 +3262,7 @@ sub _add_to_statistics {
         # arbitrary hardcoded constants until somebody demands to have
         # them settable
         while (
-               @{$fullstats->{history}} > 9999
+               @{$fullstats->{history}} > 999
                || $time - $fullstats->{history}[0]{start} > 30*86400  # one month
               ) {
             shift @{$fullstats->{history}}
@@ -5410,7 +5415,7 @@ sub color_cmd_tmps {
         # as we are at the end of a command, we'll give up this
         # reminder of a broken test. Other commands may test this guy
         # again. Maybe 'badtestcnt' should be renamed to
-        # 'makte_test_failed_within_command'?
+        # 'make_test_failed_within_command'?
         delete $self->{badtestcnt};
     }
     $self->{incommandcolor} = $color;
@@ -7356,7 +7361,7 @@ sub unsat_prereq {
 
             # if they have not specified a version, we accept any installed one
             if (not defined $need_version or
-                $need_version eq "0" or
+                $need_version == 0 or
                 $need_version eq "undef") {
                 next if defined $available_file;
             }
@@ -7415,6 +7420,19 @@ sub unsat_prereq {
             # We have already sponsored it and for some reason it's still
             # not available. So we do nothing. Or what should we do?
             # if we push it again, we have a potential infinite loop
+
+            # The following "next" is problematic. We must be able to
+            # deal with modules that come again and again as a prereq
+            # and have themselves prereqs and the queue becomes long
+            # but finally we would find the correct order. The
+            # RecursiveDependency check should trigger a die when it's
+            # becoming too weird. Unfortunately it's not as easy as
+            # just removing this next. If we hit a recursion here,
+            # then the other recusiveDependency checker cannot kick in.
+
+            # XXX BUG described in Todo under "5.8.9 cannot install
+            # Compress::Zlib"
+
             next;
         }
         my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "r" : "b";
@@ -7601,6 +7619,10 @@ sub test {
 
     $CPAN::Frontend->myprint("Running $make test\n");
     if (my @prereq = $self->unsat_prereq){
+        if ( $CPAN::DEBUG ) {
+            require Data::Dumper;
+            CPAN->debug(sprintf "unsat_prereq[%s]", Data::Dumper::Dumper(\@prereq));
+        }
         unless ($prereq[0][0] eq "perl") {
             return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
         }
@@ -7620,8 +7642,11 @@ sub test {
             ) and push @e, "Can't test without successful make";
 
         $self->{badtestcnt} ||= 0;
-        $self->{badtestcnt} > 0 and
+        if ($self->{badtestcnt} > 0) {
+            require Data::Dumper;
+            CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
             push @e, "Won't repeat unsuccessful test during this command";
+        }
 
         exists $self->{later} and length($self->{later}) and
             push @e, $self->{later};
@@ -8525,62 +8550,6 @@ Going to $meth that.
 	my $obj = $CPAN::META->instance($type,$s);
         $obj->{reqtype} = $self->{reqtype};
 	$obj->$meth();
-        if ($obj->isa('CPAN::Bundle')
-            &&
-            exists $obj->{install_failed}
-            &&
-            ref($obj->{install_failed}) eq "HASH"
-           ) {
-          for (keys %{$obj->{install_failed}}) {
-            $self->{install_failed}{$_} = undef; # propagate faiure up
-                                                 # to me in a
-                                                 # recursive call
-            $fail{$s} = 1; # the bundle itself may have succeeded but
-                           # not all children
-          }
-        } else {
-          my $success;
-          $success = $obj->can("uptodate") ? $obj->uptodate : 0;
-          $success ||= $obj->{install} && $obj->{install} eq "YES";
-          if ($success) {
-            delete $self->{install_failed}{$s};
-          } else {
-            $fail{$s} = 1;
-          }
-        }
-    }
-
-    # recap with less noise
-    if ( $meth eq "install" ) {
-	if (%fail) {
-	    require Text::Wrap;
-	    my $raw = sprintf(qq{Bundle summary:
-The following items in bundle %s had installation problems:},
-			      $self->id
-			     );
-	    $CPAN::Frontend->myprint(Text::Wrap::fill("","",$raw));
-	    $CPAN::Frontend->myprint("\n");
-	    my $paragraph = "";
-            my %reported;
-	    for $s ($self->contains) {
-              if ($fail{$s}){
-		$paragraph .= "$s ";
-                $self->{install_failed}{$s} = undef;
-                $reported{$s} = undef;
-              }
-	    }
-            my $report_propagated;
-            for $s (sort keys %{$self->{install_failed}}) {
-              next if exists $reported{$s};
-              $paragraph .= "and the following items had problems
-during recursive bundle calls: " unless $report_propagated++;
-              $paragraph .= "$s ";
-            }
-	    $CPAN::Frontend->myprint(Text::Wrap::fill("  ","  ",$paragraph));
-	    $CPAN::Frontend->myprint("\n");
-	} else {
-	    $self->{install} = 'YES';
-	}
     }
 }
 

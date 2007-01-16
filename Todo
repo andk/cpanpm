@@ -1,3 +1,123 @@
+2007-01-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Feature: On recursive dependency please dump the required version.
+
+	* Bug: recursive dependency ExtUtils::CBuilder <-> File::Spec
+
+	CPAN.pm gave me this puzzle today when trying to build on top of 5.8.9-tobe
+
+  Recursive dependency detected:
+      ExtUtils::CBuilder
+   => K/KW/KWILLIAMS/ExtUtils-CBuilder-0.18.tar.gz
+   => File::Spec
+   => K/KW/KWILLIAMS/PathTools-3.24.tar.gz
+   => ExtUtils::CBuilder.
+  Cannot continue.
+
+	But File::Spec 3.12 is installed, so the recursive dependency should be
+	breakable.
+
+	AND the dump command should not fail under recursive dependency.
+
+	Interstingly, the problem went away without special intervention. I
+	remember now that I have seen it before and that it disappeared. Hrm.
+
+	* Bug: 5.8.9 cannot install Compress::Zlib 2.003
+
+	----      PMQS/Compress-Zlib-2.003.tar.gz     ---- (0)
+    IO::Compress::Gzip::Constants [requires]
+    IO::Uncompress::Base [requires]
+    IO::Compress::Base [requires]
+    IO::Uncompress::Gunzip [requires]
+    IO::Compress::Gzip [requires]
+    Compress::Raw::Zlib [requires]
+    IO::Compress::Base::Common [requires]
+
+	[[[
+    IO::Compress::Gzip::Constants PMQS/IO-Compress-Zlib-2.003.tar.gz (1)
+    IO::Uncompress::Base          PMQS/IO-Compress-Base-2.003.tar.gz (2)
+    IO::Compress::Base            PMQS/IO-Compress-Base-2.003.tar.gz (2)
+    IO::Uncompress::Gunzip        PMQS/IO-Compress-Zlib-2.003.tar.gz (1)
+    IO::Compress::Gzip            PMQS/IO-Compress-Zlib-2.003.tar.gz (1)
+	  Compress::Raw::Zlib           PMQS/Compress-Raw-Zlib-2.003.tar.gz (3)
+    IO::Compress::Base::Common    PMQS/IO-Compress-Base-2.003.tar.gz (2)
+
+  (1)
+----    PMQS/IO-Compress-Zlib-2.003.tar.gz    ----
+    IO::Uncompress::Base [requires] (2)
+    IO::Compress::Base [requires]   (2)
+    Compress::Raw::Zlib [requires]  (3)
+
+	(2) PMQS/IO-Compress-Base-2.003.tar.gz (OK: 44923)
+
+	(3) PMQS/Compress-Raw-Zlib-2.003.tar.gz (OK: 45150)
+
+	(1) PMQS/IO-Compress-Zlib-2.003.tar.gz (OK: 45329)
+	
+	(0 in 45401) Won't repeat unsuccessful test during this command
+	
+	]]]
+
+
+43878:	[0mmake[1]: Entering directory `/home/k/.cpan/build/Compress-Zlib-2.003-z0UL8v'
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/maint-5.8/prPS0AD/perl-5.8.0@29726/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/000prereq.....
+#     Failed test (t/000prereq.t at line 46)
+#     Tried to use 'Compress::Raw::Zlib'.
+#     Error:  Can't locate Compress/Raw/Zlib.pm in @INC (@INC contains: t t/compress /home/k/.cpan/build/Compress-Zlib-2.003-z0UL8v/blib/lib /home/k/.cpan/build/Compress-Zlib-2.003-z0UL8v/blib/arch /home/src/perl/repoperls/installed-perls/maint-5.8/prPS0AD/perl-5.8.0@29726/lib/5.8.8/i686-linux-64int /home/src/perl/repoperls/installed-perls/maint-5.8/prPS0AD/perl-5.8.0@29726/lib/5.8.8 /home/src/perl/repoperls/installed-perls/maint-5.8/prPS0AD/perl-5.8.0@29726/lib/site_perl/5.8.8/i686-linux-64int /home/src/perl/repoperls/installed-perls/maint-5.8/prPS0AD/perl-5.8.0@29726/lib/site_perl/5.8.8 .) at (eval 3) line 2.
+
+	Why does it try testing C-Z too early? Could we convince CPAN.pm to
+	retry testing in 45401? Dump its state at both points in time?
+
+	Update 2007-01-11 akoenig : Found a "next" at the end of unsat_prereq
+	that skipped already sponsored modules. Removed it because it looks as
+	if it were responsible for the above bug. After that the infinite
+	recursion problem between CBuilder and File::Spec dominated the next run
+	and the normal recursion detection mechanism did not help to break the
+	loop. To put the bad to the ugly it turned out that the recursion
+	between CBuilder and File::Path is a wrong recursion in that the
+	available version of File::Spec in 5.8.9 is 1.12 and CBuilder does not
+	specify a version number, so is really satisfied with 1.12 but somebody
+	else seems to require 1.19 and so CPAN.pm is hunting for that without a
+	real reason. So we have a big bug here and no time to fix it.
+
+	See also the "next WHAT" in CPAN::Queue::jumpqueue. If we keep it, we
+	keep the queue at 100 instances of File-Spec-XXX.tar.gz without growing.
+	If we remove it, the queue grows. Both cases are infinite loops, so
+	probably better to remove it.
+
+2007-01-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Watch the Module::Build space for updates to the question of calling
+	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
+
+	* Slaven tells me that he can confirm the Term::ReadLine::Gnu behaviour
+	in the t/callback.t test that I find so annoying for 5.9.5(debugging)
+	but not for 5.8.8. I.e. with 5.8.8 the window gets closed automatically
+	while with 5.9.5 it stays.
+
+	This would normally be solved with a binary search but as always with
+	big distros there are risks. Tk under randomly picked 21846 segfaults
+	during make test. Same for 23300.
+
+	25302 dies quickly with
+
+	/home/src/perl/repoperls/installed-perls/perl/pq4nEoU/perl-5.8.0@25302/bin/perl: symbol lookup error: /home/src/perl/tk/SVN/blib/arch/auto/Tk/Event/Event.so: undefined symbol: Perl_newXS_flags
+
+	28810 dies quickly with
+
+	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pPOaCtI/perl-5.8.0@28810/lib/5.9.4/i686-linux-64int/DynaLoader.pm line 224.
+Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+Compilation failed in require at (eval 3) line 3.
+
+	and 29411 similarly with
+
+	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pXADjKY/perl-5.8.0@29411/lib/5.9.5/i686-linux-64int/DynaLoader.pm line 226.
+Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+
+
 2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: distroprefs mechanism is still inefficient in that it scans too
@@ -108,7 +228,7 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 
 	No, the 'dont_load_list' is preventing YAML to be loaded at the moment.
 
-	* Release the bundles that are already rewritten for a while
+	* Release the bundles that are already rewritten for a while DONE
 
 	* Speed things up by reading distroprefs less often or otherwise find
 	out who is so slow here. What happens between 'Running make for
@@ -471,9 +591,6 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	reached!
 
 	* Coro. See also notes below, search for anyevent	
-
-	* Watch the Module::Build space for updates to the question of calling
-	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
 
 	* write a patch for Test::Reporter so you can choose the mail sending
 	module? Reported 2005-07:

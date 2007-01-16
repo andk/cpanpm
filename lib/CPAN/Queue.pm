@@ -121,7 +121,7 @@ sub jumpqueue {
                                      # processing now; more are OK if
                                      # user typed it several times
                     $CPAN::Frontend->mywarn(
-qq{Object [$what] queued more than 100 times, ignoring}
+qq{Warning: Object [$what] queued $jumped times, ignoring!\n}
 				 );
                     next WHAT;
                 }
