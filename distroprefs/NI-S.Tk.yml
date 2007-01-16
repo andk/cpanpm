@@ -1,6 +1,7 @@
 ---
 match:
   distribution: "^NI-S/Tk-804\.027\.tar\.gz$"
+disabled: 1
 comment: |
 
   The patches from the Tk-804.027-p*.patch.gz family require the

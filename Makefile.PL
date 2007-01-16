@@ -309,7 +309,10 @@ checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
 
 megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw($(MEGA_COLLECTION)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(qw($(MEGA_COLLECTION)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+
+depefails:
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
 
 # nohup needed by my zsh
 termreadkeyinstall: logs/.exists

@@ -121,8 +121,6 @@ our @SESSIONS =
   CPAN::Test::Dummy::Perl5::Make::CircDepeThree.+\\[requires\\].+
   CPAN::Test::Dummy::Perl5::Make::CircDepeTwo.+\\[requires\\].+
   CPAN::Test::Dummy::Perl5::Make::CircDepeOne.+\\[requires\\].+
-  t/00_load\\.\\.\\.\\.ok.+
-  succeeded.but.one.dependency.not.OK.+
   Recursive.dependency.detected
 )",
       ],

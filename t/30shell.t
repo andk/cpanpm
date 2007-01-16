@@ -1034,12 +1034,6 @@ __END__
 #P:o conf build_requires_install_policy no
 #E:build_requires_install_policy
 ########
-#P:install CPAN::Test::Dummy::Perl5::Build
-#E:is up to date|SAW MAKE[\s\S]+?SAW MAKE[\s\S]+?Tests succeeded but one dependency not OK
-#N: "is up to date" is for when they have it installed in INC
-#N: and the one dependency is Zip which we peudo-installed so it is lost now
-#R:Module::Build
-########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #N: "is up to date" is for when they have it installed in INC
@@ -1047,7 +1041,7 @@ __END__
 #T:60
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
-#E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue.[\s\S]+?Failed during this command
+#E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue\.
 #T:60
 ########
 #P:o conf defaults

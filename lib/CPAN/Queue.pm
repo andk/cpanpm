@@ -117,13 +117,15 @@ sub jumpqueue {
             # CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
             if ($All[$i]{qmod} eq $what){
                 $jumped++;
-                if ($jumped > 100) { # one's OK if e.g. just
-                                     # processing now; more are OK if
-                                     # user typed it several times
+                if ($jumped > 25) { # one's OK if e.g. just processing
+                                    # now; more are OK if user typed
+                                    # it several times
+                    my $sleep = sprintf "%.1f", $jumped/10;
                     $CPAN::Frontend->mywarn(
-qq{Warning: Object [$what] queued $jumped times, ignoring!\n}
+qq{Warning: Object [$what] queued $jumped times, sleeping $sleep secs!\n}
 				 );
-                    next WHAT;
+                    $CPAN::Frontend->mysleep($sleep);
+                    # next WHAT;
                 }
             }
         }

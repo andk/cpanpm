@@ -1,3 +1,87 @@
+2007-01-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* learn something new every day: less -R preserves the ANSI color
+	sequences. Best way to analyse the captured output.
+
+	* maint@29776 breaks DBI, need to check with 29802. Failure mailed to
+	P5P
+
+2007-01-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* And the next new bug: again an endless loop between PDF::FromHTML and
+	XML::Twig. I'm not sure in which state CPAN.pm was when this run
+	started, so I rerun from scratch with 29779 and stop the usual loop.
+
+	No, the bug is there. The distro of PDF::FromHTML is the next on the
+	loop and it depends on XML::Twig. The latter fails its tests but
+	nonetheless re-queing is done. Instead of simply continuing with normal
+	business because we do not need to requeue. What a mess.
+
+	OK, sure, by removing the "next" for sponsored modules we gave the
+	option that things get requeued that have failed. Should also have an
+	easy fix.
+	
+	Tomorrow: megainstall with maintperl@29776, blead@297{79,80}, etc.
+
+	(aside: the stupid thing about dot distros is that they are being
+	needlessly rerun)
+
+	Maybe write a failed_within_this_command() method?
+
+	Is it true that batch jobs scan for sizes and then do not delete
+	anything from build_dir? It seems so. My first 'make run' after a while
+	faces 3.3 GB and in all batch jobs I saw the dot painting "for sizes".
+
+	(The last successful testshell protocol I have with Expect on is
+	make-test-20061230T172249.)
+
+	30shell fails and it is again hard to find the offending test. Another
+	proof that new tests must go into 31sessions.t. But 31session does not
+	finish. Easily reproducable by trying to install
+	CPAN::Test::Dummy::Perl5::Make::CircDepeOne
+
+	It seems that the recursion detection is now broken. We reach the limit
+	of 100 in CPAN::Queue which should never be reached. If I say ^C there,
+	then I see a seemingly endless loop of "Has already been...". Somehow we
+	seem to bypass the color_cmd_tmps.
+
+	It seems that everybody who puts something onto the queue is responsible
+	for calling color_cmd_tmps? How silly if true :-( But it seems that we
+	*are* calling color_cmd_tmps before jumpqueue in follow_prereqs. Yes,
+	but we call it with $color=1 and this has already been called before we
+	had the prereqs and so it returns early. We probably must call it with
+	$color=2? How obfuscated if true :-( Yes, and by calling with $color=2
+	and preventing an early return of all color_cmd_tmps when $color==2 I
+	start to pass on 31sessions.t. Recursion detection is now even faster,
+	we do not even arrive at testing which I consider a good thing.
+
+	But it comes at a price. The disadvantage is that it is a die() and the
+	usual "Failed during this command" gets lost. So what do we want?
+
+	The result in older versions was:
+
+Recursive dependency detected:
+    CPAN::Test::Dummy::Perl5::Make::CircDepeOne
+ => A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne-1.00.tar.gz
+ => CPAN::Test::Dummy::Perl5::Make::CircDepeThree
+ => A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeThree-1.00.tar.gz
+ => CPAN::Test::Dummy::Perl5::Make::CircDepeTwo
+ => A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeTwo-1.00.tar.gz
+ => CPAN::Test::Dummy::Perl5::Make::CircDepeOne.
+Cannot continue.
+Failed during this command:
+ ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeTwo-1.00.tar.gz: make_test NO one dependency not OK (CPAN::Test::Dummy::Perl5::Make::CircDepeOne)
+ ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeThree-1.00.tar.gz: make_test NO one dependency not OK (CPAN::Test::Dummy::Perl5::Make::CircDepeTwo)
+ ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeOne-1.00.tar.gz: make_test NO one dependency not OK (CPAN::Test::Dummy::Perl5::Make::CircDepeThree)
+
+	Looking at that again it appears not a very clever answer because the
+	"Failed" summary does not talk about the recursion detection. I think I
+	prefer the die().
+
+	On the other hand we need to help people in this situation and 'look
+	Foo' should not fail because of recursion. This is easily fixable: we
+	simply call color_cmd_tmps only for "make|test|install".
+
 2007-01-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Hunting bugs. The first reliable way to produce the needless loop

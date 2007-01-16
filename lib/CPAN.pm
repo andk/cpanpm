@@ -64,13 +64,13 @@ use vars qw(
             $AUTOLOAD
             $Be_Silent
             $CONFIG_DIRTY
-            $DEBUG
             $Defaultdocs
             $Defaultrecent
             $Frontend
             $GOTOSHELL
             $HAS_USABLE
             $Have_warned
+            $MAX_RECURSION
             $META
             $RUN_DEGRADED
             $Signal
@@ -82,6 +82,8 @@ use vars qw(
             @Defaultsites
             @EXPORT
            );
+
+$MAX_RECURSION = 32;
 
 @CPAN::ISA = qw(CPAN::Debug Exporter);
 
@@ -2827,6 +2829,7 @@ sub unrecoverable_error {
 #-> sub CPAN::Shell::mysleep ;
 sub mysleep {
     my($self, $sleep) = @_;
+    use Time::HiRes qw(sleep);
     sleep $sleep;
 }
 
@@ -2869,6 +2872,8 @@ sub rematein {
     # enter the queue but not its copy. How do they get a sensible
     # test_count?
 
+    my $needs_recursion_protection = "make|test|install";
+
     # construct the queue
     my($s,@s,@qcopy);
   STHING: foreach $s (@some) {
@@ -2895,7 +2900,10 @@ sub rematein {
 	}
 	if (0) {
         } elsif (ref $obj) {
-            $obj->color_cmd_tmps(0,1);
+            if ($meth =~ /^($needs_recursion_protection)$/) {
+                # silly for look or dump
+                $obj->color_cmd_tmps(0,1);
+            }
             CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
@@ -3010,8 +3018,10 @@ to find objects with matching identifiers.
         }
 	CPAN::Queue->delete_first($s);
     }
-    for my $obj (@qcopy) {
-        $obj->color_cmd_tmps(0,0);
+    if ($meth =~ /^($needs_recursion_protection)$/) {
+        for my $obj (@qcopy) {
+            $obj->color_cmd_tmps(0,0);
+        }
     }
 }
 
@@ -5380,7 +5390,11 @@ sub pretty_id {
     substr($id,5);
 }
 
-# mark as dirty/clean
+# mark as dirty/clean for the sake of recursion detection. $color=1
+# means "in use", $color=0 means "not in use anymore". $color=2 means
+# we have determined prereqs now and thus insist on passing this
+# through (at least) once again.
+
 #-> sub CPAN::Distribution::color_cmd_tmps ;
 sub color_cmd_tmps {
     my($self) = shift;
@@ -5390,8 +5404,9 @@ sub color_cmd_tmps {
     # a distribution needs to recurse into its prereq_pms
 
     return if exists $self->{incommandcolor}
+        && $color==1
         && $self->{incommandcolor}==$color;
-    if ($depth>=100){
+    if ($depth>=$CPAN::MAX_RECURSION){
         $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
@@ -7290,6 +7305,7 @@ sub follow_prereqs {
                c => "commandline",
               );
     my($filler1,$filler2,$filler3,$filler4);
+    # $DB::single=1;
     my $unsat = "Unsatisfied dependencies detected during";
     my $w = length($unsat) > length($pretty_id) ? length($unsat) : length($pretty_id);
     {
@@ -7329,7 +7345,7 @@ of modules we are processing right now?", "yes");
             # warn "calling color_cmd_tmps(0,1)";
             my $any = CPAN::Shell->expandany($p);
             if ($any) {
-                $any->color_cmd_tmps(0,1);
+                $any->color_cmd_tmps(0,2);
             } else {
                 $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$p'\n");
                 $CPAN::Frontend->mysleep(2);
@@ -7354,12 +7370,12 @@ sub unsat_prereq {
     my @merged = %merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
-        my($available_version,$available_file);
+        my($available_version,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
             $available_file = $^X;
         } else {
-            my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
+            $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
             next if $nmo->uptodate;
             $available_file = $nmo->available_file;
 
@@ -7422,27 +7438,62 @@ sub unsat_prereq {
         }
         if ($self->{sponsored_mods}{$need_module}++){
             # We have already sponsored it and for some reason it's still
-            # not available. So we do nothing. Or what should we do?
+            # not available. So we do ... what??
+
             # if we push it again, we have a potential infinite loop
 
-            # The following "next" is problematic. We must be able to
-            # deal with modules that come again and again as a prereq
-            # and have themselves prereqs and the queue becomes long
-            # but finally we would find the correct order. The
-            # RecursiveDependency check should trigger a die when it's
-            # becoming too weird. Unfortunately it's not as easy as
-            # just removing this next. If we hit a recursion here,
-            # then the other recusiveDependency checker cannot kick in.
+            # The following "next" was a very problematic construct.
+            # It helped a lot but broke some day and must be replaced.
 
-            # XXX BUG described in Todo under "5.8.9 cannot install
-            # Compress::Zlib"
+            # We must be able to deal with modules that come again and
+            # again as a prereq and have themselves prereqs and the
+            # queue becomes long but finally we would find the correct
+            # order. The RecursiveDependency check should trigger a
+            # die when it's becoming too weird. Unfortunately removing
+            # this next breaks many other things.
 
-            # next;
+            # The bug that brought this up is described in Todo under
+            # "5.8.9 cannot install Compress::Zlib"
+
+            # next; # this is the next that must go away
+
+            # The following "next" is fine and the error message
+            # explains well what is going on. Imagine the DBI fails
+            # and consequently DBD::SQLite fails and now we are
+            # processing CPAN::SQLite. Then we have no "next" for
+            # DBD::SQLite. How can we get it and how can we identify
+            # all other cases we must identify?
+
+            my $do = $nmo->distribution;
+          NOSAYER: for my $nosayer (qw(make_test make unwrapped)) {
+                if (
+                    $do->{$nosayer}
+                    &&(UNIVERSAL::can($do->{$nosayer},"failed") ?
+                       $do->{$nosayer}->failed :
+                       $do->{$nosayer} =~ /^NO/)
+                   ) {
+                    if ($nosayer eq "make_test"
+                        &&
+                        $do->{make_test}{COMMANDID} != $CPAN::CurrentCommandId
+                       ) {
+                        next NOSAYER;
+                    }
+                    $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                            "'$need_module => $need_version' ".
+                                            "for '$self->{ID}' failed the '$nosayer' ".
+                                            "action when ".
+                                            "processing '$do->{ID}'. Continuing, ".
+                                            "but chances to succeed are limited.\n"
+                                           );
+                    next NEED;
+                }
+            }
         }
         my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "r" : "b";
         push @need, [$need_module,$needed_as];
     }
-    CPAN->debug("returning unsat_prereqs[@need]") if $CPAN::DEBUG;
+    my @unfolded = map { "[".join(",",@$_)."]" } @need;
+    CPAN->debug("returning from unsat_prereq[@unfolded]") if $CPAN::DEBUG;
     @need;
 }
 
@@ -7477,7 +7528,7 @@ sub read_yaml {
 sub prereq_pm {
     my($self) = @_;
     $self->{prereq_pm_detected} ||= 0;
-    CPAN->debug("prereq_pm_detected[$self->{prereq_pm_detected}]") if $CPAN::DEBUG;
+    CPAN->debug("ID[$self->{ID}]prereq_pm_detected[$self->{prereq_pm_detected}]") if $CPAN::DEBUG;
     return $self->{prereq_pm} if $self->{prereq_pm_detected};
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
@@ -7623,15 +7674,17 @@ sub test {
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
     $CPAN::Frontend->myprint("Running $make test\n");
-    if (my @prereq = $self->unsat_prereq){
-        if ( $CPAN::DEBUG ) {
-            require Data::Dumper;
-            CPAN->debug(sprintf "unsat_prereq[%s]", Data::Dumper::Dumper(\@prereq));
-        }
-        unless ($prereq[0][0] eq "perl") {
-            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
-        }
-    }
+
+#    if (my @prereq = $self->unsat_prereq){
+#        if ( $CPAN::DEBUG ) {
+#            require Data::Dumper;
+#            CPAN->debug(sprintf "unsat_prereq[%s]", Data::Dumper::Dumper(\@prereq));
+#        }
+#        unless ($prereq[0][0] eq "perl") {
+#            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+#        }
+#    }
+
   EXCUSE: {
 	my @e;
         unless (exists $self->{make} or exists $self->{later}) {
@@ -7950,7 +8003,10 @@ sub install {
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-    $self->test;
+    $DB::single=1;
+    unless ($self->{badtestcnt}) {
+        $self->test;
+    }
     if ($CPAN::Signal){
       delete $self->{force_update};
       return;
@@ -8366,8 +8422,9 @@ sub color_cmd_tmps {
     # to recurse into its prereq_pms, a bundle needs to recurse into its modules
 
     return if exists $self->{incommandcolor}
+        && $color==1
         && $self->{incommandcolor}==$color;
-    if ($depth>=100){
+    if ($depth>=$CPAN::MAX_RECURSION){
         $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
@@ -8652,9 +8709,10 @@ sub color_cmd_tmps {
     # a module needs to recurse to its cpan_file
 
     return if exists $self->{incommandcolor}
+        && $color==1
         && $self->{incommandcolor}==$color;
     return if $depth>=1 && $self->uptodate;
-    if ($depth>=100){
+    if ($depth>=$CPAN::MAX_RECURSION){
         $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
