@@ -5753,8 +5753,10 @@ EOF
     my $prefer_installer = "eumm"; # eumm|mb
     if (-f File::Spec->catfile($packagedir,"Build.PL")) {
         if ($mpl_exists) { # they *can* choose
-            $prefer_installer = CPAN::HandleConfig->prefs_lookup($self,
-                                                                 q{prefer_installer});
+            if ($CPAN::META->has_inst("Module::Build")) {
+                $prefer_installer = CPAN::HandleConfig->prefs_lookup($self,
+                                                                     q{prefer_installer});
+            }
         } else {
             $prefer_installer = "mb";
         }
@@ -7349,6 +7351,8 @@ sub unsat_prereq {
     my $prereq_pm = $self->prereq_pm or return;
     my(@need);
     my %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
+    my @merged = %merged;
+    CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
         my($available_version,$available_file);
         if ($need_module eq "perl") {
@@ -7433,11 +7437,12 @@ sub unsat_prereq {
             # XXX BUG described in Todo under "5.8.9 cannot install
             # Compress::Zlib"
 
-            next;
+            # next;
         }
         my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "r" : "b";
         push @need, [$need_module,$needed_as];
     }
+    CPAN->debug("returning unsat_prereqs[@need]") if $CPAN::DEBUG;
     @need;
 }
 

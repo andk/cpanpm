@@ -1,3 +1,35 @@
+2007-01-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Hunting bugs. The first reliable way to produce the needless loop
+	CBuilder<->File::Spec was to install a fresh maintperl@19726 and make
+	mega_install on top. It takes a while. I need a quicker way better yet a
+	testcase.
+
+	The next best program which still runs for a long time is
+
+	/home/src/perl/repoperls/installed-perls/*/p*/perl-5*@29726/bin/perl -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$CPAN::DEBUG|=16;$CPAN::DEBUG|=32;$CPAN::DEBUG|=32768;install(qw(Expect Bundle::CPANxxl))' >& ttt.out
+
+	Unfortunately this reproduces it only once. Fortunately I now understand
+	the problem: CBuilder comes with a perfectly well suited Build.PL and
+	with a Makefile.PL. My prefer_installer says "MB". But when MB is not
+	yet installed, this must not be taken seriously. The bug is that CPAN.pm
+	actually tries to execute the Build.PL and fails and then refuses to
+	retry. This should have an easy fix in get() and now I believe, a
+	testcase for this might be a bit too hard given that Module::Build will
+	be in the core soon.
+
+	I think I fixed it.
+
+	Now I'm curious how this influences the Zlib bug. The endless loop
+	problem was, after all, a completely separate bug, uniq to the situation
+	described above. So I can remove the "next" in the sponsored_modules
+	loop and expect that it delays the testing of Compress::Zlib?
+
+	I seem to see a new bug now: CPAN::Reporter builds, tests, installs and
+	immediately tests again. --> another investigation necessary
+
+	But yes, the other bug is now also fixed by removing the "next" hack.
+
 2007-01-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Feature: On recursive dependency please dump the required version.
@@ -84,7 +116,7 @@ t/000prereq.....
 	See also the "next WHAT" in CPAN::Queue::jumpqueue. If we keep it, we
 	keep the queue at 100 instances of File-Spec-XXX.tar.gz without growing.
 	If we remove it, the queue grows. Both cases are infinite loops, so
-	probably better to remove it.
+	neither better than the other.
 
 2007-01-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
