@@ -1,8 +1,40 @@
 2007-01-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* DBIx::Class has DBD::SQLite as build_requires. Thus it is being built,
+	not installed and CPAN::SQLite does not demand it as prerequisite
+	because it finds it (?) but then the install_driver fails during the
+	tests. Weird.
+
+	As a first alternative I try to install DBD::SQLite explicitly
+	immediately before CPAN::SQLite.
+
 	* See the two fails on CPAN testers for 1.88_69!
 
-	* Look into YAML::Tiny
+	They are both MSWin32 and 397036 is 5.8.5 and fails
+
+t/31sessions.......dubious
+	Test returned status 5 (wstat 1280, 0x500)
+DIED. FAILED tests 10-11, 14, 22, 26
+	Failed 5/30 tests, 83.33% okay
+
+	Output impossible to read
+
+	398304 is 5.8.8 and fails
+
+t/31sessions.......# DEBUG: name[first]system["C:\strawberry-perl\perl\bin\perl.exe" "-IC:\strawberry-perl\.cpanplus\5.8.8\build\CPAN-1.88_69\t" "-Mblib" "-MCPAN::MyConfig" "-MCPAN" "-e" "@CPAN::Defaultsites = (); shell" > test.out] at t/31sessions.t line 147.
+
+#   Failed test 'command[dump $::x=4*6+1]'
+#   at t/31sessions.t line 162.
+#                   'Lockfile removed.
+# '
+#     doesn't match '/= 25;/'
+Use of uninitialized value in pattern match (m//) at t/31sessions.t line 162.
+
+
+	It seems there is no output at all to parse.
+
+	* Look into YAML::Tiny; doesn't seem to work. We need a better catch on
+	the problem it is causing: currently I do not see where it is failing.
 
 2007-01-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -10,7 +42,7 @@
 	sequences. Best way to analyse the captured output.
 
 	* maint@29776 breaks DBI, need to check with 29802. Failure mailed to
-	P5P
+	P5P. Fixed by Nicholas.
 
 2007-01-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

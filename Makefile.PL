@@ -227,6 +227,7 @@ MEGA_COLLECTION = Expect \
 		Getopt::Euclid \
 		DBIx::Class \
 		IPC::PubSub \
+		DBD::SQLite \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		/home/src/perl/tk/SVN/. \
 		Tk::Tree \
