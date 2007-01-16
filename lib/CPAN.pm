@@ -8707,17 +8707,22 @@ sub as_glimpse {
 sub dslip_status {
     my($self) = @_;
     my($stat);
+    # development status
     @{$stat->{D}}{qw,i c a b R M S,}     = qw,idea
                                               pre-alpha alpha beta released
                                               mature standard,;
+    # support level
     @{$stat->{S}}{qw,m d u n a,}         = qw,mailing-list
                                               developer comp.lang.perl.*
                                               none abandoned,;
+    # language
     @{$stat->{L}}{qw,p c + o h,}         = qw,perl C C++ other hybrid,;
+    # interface
     @{$stat->{I}}{qw,f r O p h n,}       = qw,functions
                                               references+ties
                                               object-oriented pragma
                                               hybrid none,;
+    # public licence
     @{$stat->{P}}{qw,p g l b a o d r n,} = qw,Standard-Perl
                                               GPL LGPL
                                               BSD Artistic
