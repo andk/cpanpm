@@ -1,5 +1,5 @@
 ---
 match:
-  distribution: "^DROLSKY/Params-Validate-0\.86\.tar\.gz$"
+  distribution: "^DROLSKY/Params-Validate-0\.87\.tar\.gz$"
 patches:
   - "ANDK/patches/Params-Validate-0.86-NWCLARK-01.patch.gz"
