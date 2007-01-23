@@ -1,3 +1,14 @@
+2007-01-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* fix a bug that only fired when prefer_installer was set to MB but
+	Module::Build was not yet installed
+
+	* fix a serious dependency resolution bug triggered by the new
+	family of Compress::Zlib module distributions
+
+	* limit recursion detection to those commands that need it and let
+	others, like 'look', continue to work
+
 2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_69

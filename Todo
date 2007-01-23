@@ -1,3 +1,60 @@
+2007-01-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Today Ken confirmed that _build/prereqs is safe to rely on. Thanks!
+
+	* Todo before 71: write a Changes file. Declare YAML::Tiny not
+	supported; support is_tested and install_tested and document them;
+	integrate the distroprefs README into the manpage; speed up distroprefs
+	parsing wit a cache;
+
+	It would be nice t understand the failures that were reported through
+	testers and the one I saw on my dev05 box and the ones I saw on OSX but
+	it will again be a developer release after all, so maybe these will have
+	to wait.
+	
+	* Today I tried 1.88_69 on OSX wit 5.8.6 as it comes preinstalled.
+	File::HomeDir has issues and I could not use CPAN::Reporter to write a
+	report because it said there was no config file. Will have to revisit
+	this.
+
+	* For several days I have kept Kwalify out with dontload_list. Today I
+	opened the door again and let 29923 work through megainstall.
+
+2007-01-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* We need a speedup of the distroprefs stuff. Currently we're going
+	through readdir and YAML::Load thousand times per module. We should
+	probably cache the whole directory structure once per command and delete
+	it from re-used build_dirs.
+
+2007-01-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Today I have a segv with 29895 when running CPAN.pm. It may be
+	relevant that I erroneously left YAML::Tiny configured? I reconfigured
+	to prefer YAML::Syck and ... the SEGV remains. Configuring limit
+	coredumpsize 100m now. The SEGV seems to bring the box to its knees and
+	the logfile of the first run of 29895 says 'Out of memory'. And the core
+	file is indeed 100m and has no stack. Setting coredumpsize to 1000m now.
+	The problem comes immediately after loading Kwalify 1.13
+
+	29887 was the last before 895 and its logfile is large. It came to the
+	place where it loaded YAML::Tiny and from there is broke but not with a
+	SEGV. So something between 29887 and 29895 is evil. How ironic that most
+	of these patches are related to CPAN.pm!
+
+	The newest core file is 1000M large, gdb needs a long time to load it
+	and again says "No stack" when I say 'bt'.
+
+	Next idea is to 'o conf dontload_list push Kwalify'. Now we get a step
+	further. CPAN tries to install Archive::Zip, then becomes very slow,
+	grows to 55M and then starts scanning build_dir for sizes. From that
+	point it succeeds in building and installing, just a bit slow it seems,
+	but this may be just the normal distroprefs slowness. Bundle::CPANxxl is
+	installed now and megainstall is running. After a while I discover that
+	I made a typo for yaml_module and said YAML::Sync. Of course this leads
+	to slowness. Interesting mistake though, we might want to guard against
+	it. 'make megainstall' finishes just as we're used to.
+
 2007-01-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* DBIx::Class has DBD::SQLite as build_requires. Thus it is being built,
