@@ -1,4 +1,5 @@
 ---
+comment: "http://rt.cpan.org/Ticket/Display.html?id=24458"
 match:
   distribution: "^DROLSKY/Params-Validate-0\.87\.tar\.gz$"
 patches:
