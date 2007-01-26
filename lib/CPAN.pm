@@ -100,6 +100,7 @@ $MAX_RECURSION = 32;
              get
              install
              install_tested
+             is_tested
              make
              mkmyconfig
              notest
@@ -491,6 +492,7 @@ use strict;
                                     hosts
                                     install
                                     install_tested
+                                    is_tested
                                     look
                                     ls
                                     make
@@ -2170,7 +2172,7 @@ sub report {
                                 # re-run (as documented)
 }
 
-# experimental (compare with _is_tested)
+# compare with is_tested
 #-> sub CPAN::Shell::install_tested
 sub install_tested {
     my($self,@some) = @_;
@@ -2485,9 +2487,9 @@ sub status {
     }
 }
 
-# experimental; intended as a preparation of install_tested
+# compare with install_tested
 #-> sub CPAN::Shell::is_tested
-sub _is_tested {
+sub is_tested {
     my($self) = @_;
     CPAN::Index->reload;
     for my $b (reverse $CPAN::META->_list_sorted_descending_is_tested) {
@@ -9918,12 +9920,22 @@ its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
 
+=item CPAN::Distribution::install_tested()
+
+Install all the distributions that have been tested sucessfully but
+not yet installed. See also C<is_tested>.
+
 =item CPAN::Distribution::isa_perl()
 
 Returns 1 if this distribution file seems to be a perl distribution.
 Normally this is derived from the file name only, but the index from
 CPAN can contain a hint to achieve a return value of true for other
 filenames too.
+
+=item CPAN::Distribution::is_tested()
+
+List all the distributions that have been tested sucessfully but not
+yet installed. See also C<install_tested>.
 
 =item CPAN::Distribution::look()
 
