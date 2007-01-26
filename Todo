@@ -63,8 +63,9 @@ Running make install
 
 	* Todo before 71: write a Changes file. Declare YAML::Tiny not supported
 	DONE; support is_tested and install_tested and document them (DONE SVK
-	rev 1763); integrate the distroprefs README into the manpage; speed up
-	distroprefs parsing with a cache DONE in SVK rev. 1764;
+	rev 1763); integrate the distroprefs README into the manpage (DONE SVK
+	rev. 1766); speed up distroprefs parsing with a cache DONE in SVK rev.
+	1764;
 
 	It would be nice to understand the failures that were reported through
 	testers and the one I saw on my dev05 box and the ones I saw on OSX but

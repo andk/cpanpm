@@ -9682,6 +9682,638 @@ module or not.
 The typical usage case is for private modules or working copies of
 projects from remote repositories on the local disk.
 
+=head1 CONFIGURATION
+
+When the CPAN module is used for the first time, a configuration
+dialog tries to determine a couple of site specific options. The
+result of the dialog is stored in a hash reference C< $CPAN::Config >
+in a file CPAN/Config.pm.
+
+The default values defined in the CPAN/Config.pm file can be
+overridden in a user specific file: CPAN/MyConfig.pm. Such a file is
+best placed in $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is
+added to the search path of the CPAN module before the use() or
+require() statements. The mkmyconfig command writes this file for you.
+
+The C<o conf> command has various bells and whistles:
+
+=over
+
+=item completion support
+
+If you have a ReadLine module installed, you can hit TAB at any point
+of the commandline and C<o conf> will offer you completion for the
+built-in subcommands and/or config variable names.
+
+=item displaying some help: o conf help
+
+Displays a short help
+
+=item displaying current values: o conf [KEY]
+
+Displays the current value(s) for this config variable. Without KEY
+displays all subcommands and config variables.
+
+Example:
+
+  o conf shell
+
+=item changing of scalar values: o conf KEY VALUE
+
+Sets the config variable KEY to VALUE. The empty string can be
+specified as usual in shells, with C<''> or C<"">
+
+Example:
+
+  o conf wget /usr/bin/wget
+
+=item changing of list values: o conf KEY SHIFT|UNSHIFT|PUSH|POP|SPLICE|LIST
+
+If a config variable name ends with C<list>, it is a list. C<o conf
+KEY shift> removes the first element of the list, C<o conf KEY pop>
+removes the last element of the list. C<o conf KEYS unshift LIST>
+prepends a list of values to the list, C<o conf KEYS push LIST>
+appends a list of valued to the list.
+
+Likewise, C<o conf KEY splice LIST> passes the LIST to the according
+splice command.
+
+Finally, any other list of arguments is taken as a new list value for
+the KEY variable discarding the previous value.
+
+Examples:
+
+  o conf urllist unshift http://cpan.dev.local/CPAN
+  o conf urllist splice 3 1
+  o conf urllist http://cpan1.local http://cpan2.local ftp://ftp.perl.org
+
+=item interactive editing: o conf init [MATCH|LIST]
+
+Runs an interactive configuration dialog for matching variables.
+Without argument runs the dialog over all supported config variables.
+To specify a MATCH the argument must be enclosed by slashes.
+
+Examples:
+
+  o conf init ftp_passive ftp_proxy
+  o conf init /color/
+
+=item reverting to saved: o conf defaults
+
+Reverts all config variables to the state in the saved config file.
+
+=item saving the config: o conf commit
+
+Saves all config variables to the current config file (CPAN/Config.pm
+or CPAN/MyConfig.pm that was loaded at start).
+
+=back
+
+The configuration dialog can be started any time later again by
+issuing the command C< o conf init > in the CPAN shell. A subset of
+the configuration dialog can be run by issuing C<o conf init WORD>
+where WORD is any valid config variable or a regular expression.
+
+=head2 Config Variables
+
+Currently the following keys in the hash reference $CPAN::Config are
+defined:
+
+  applypatch         path to external prg
+  auto_commit        commit all changes to config variables to disk
+  build_cache        size of cache for directories to build modules
+  build_dir          locally accessible directory to build modules
+  build_dir_reuse    boolean if distros in build_dir are persistent
+  build_requires_install_policy
+                     to install or not to install: when a module is
+                     only needed for building. yes|no|ask/yes|ask/no
+  bzip2              path to external prg
+  cache_metadata     use serializer to cache metadata
+  commands_quote     prefered character to use for quoting external
+                     commands when running them. Defaults to double
+                     quote on Windows, single tick everywhere else;
+                     can be set to space to disable quoting
+  check_sigs         if signatures should be verified
+  colorize_debug     Term::ANSIColor attributes for debugging output
+  colorize_output    boolean if Term::ANSIColor should colorize output
+  colorize_print     Term::ANSIColor attributes for normal output
+  colorize_warn      Term::ANSIColor attributes for warnings
+  commandnumber_in_prompt
+                     boolean if you want to see current command number
+  cpan_home          local directory reserved for this package
+  curl               path to external prg
+  dontload_hash      DEPRECATED
+  dontload_list      arrayref: modules in the list will not be
+                     loaded by the CPAN::has_inst() routine
+  ftp                path to external prg
+  ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
+  ftp_proxy          proxy host for ftp requests
+  getcwd             see below
+  gpg                path to external prg
+  gzip		     location of external program gzip
+  histfile           file to maintain history between sessions
+  histsize           maximum number of lines to keep in histfile
+  http_proxy         proxy host for http requests
+  inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
+                     after this many seconds inactivity. Set to 0 to
+                     never break.
+  index_expire       after this many days refetch index files
+  inhibit_startup_message
+                     if true, does not print the startup message
+  keep_source_where  directory in which to keep the source (if we do)
+  lynx               path to external prg
+  make               location of external make program
+  make_arg	     arguments that should always be passed to 'make'
+  make_install_make_command
+                     the make command for running 'make install', for
+                     example 'sudo make'
+  make_install_arg   same as make_arg for 'make install'
+  makepl_arg	     arguments passed to 'perl Makefile.PL'
+  mbuild_arg	     arguments passed to './Build'
+  mbuild_install_arg arguments passed to './Build install'
+  mbuild_install_build_command
+                     command to use instead of './Build' when we are
+                     in the install stage, for example 'sudo ./Build'
+  mbuildpl_arg       arguments passed to 'perl Build.PL'
+  ncftp              path to external prg
+  ncftpget           path to external prg
+  no_proxy           don't proxy to these hosts/domains (comma separated list)
+  pager              location of external program more (or any pager)
+  password           your password if you CPAN server wants one
+  patch              path to external prg
+  prefer_installer   legal values are MB and EUMM: if a module comes
+                     with both a Makefile.PL and a Build.PL, use the
+                     former (EUMM) or the latter (MB); if the module
+                     comes with only one of the two, that one will be
+                     used in any case
+  prerequisites_policy
+                     what to do if you are missing module prerequisites
+                     ('follow' automatically, 'ask' me, or 'ignore')
+  prefs_dir          local directory to store per-distro build options
+  proxy_user         username for accessing an authenticating proxy
+  proxy_pass         password for accessing an authenticating proxy
+  randomize_urllist  add some randomness to the sequence of the urllist
+  scan_cache	     controls scanning of cache ('atstart' or 'never')
+  shell              your favorite shell
+  show_upload_date   boolean if commands should try to determine upload date
+  tar                location of external program tar
+  term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
+                     (and nonsense for characters outside latin range)
+  term_ornaments     boolean to turn ReadLine ornamenting on/off
+  test_report        email test reports (if CPAN::Reporter is installed)
+  unzip              location of external program unzip
+  urllist	     arrayref to nearby CPAN sites (or equivalent locations)
+  use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
+  username           your username if you CPAN server wants one
+  wait_list          arrayref to a wait server to try (See CPAN::WAIT)
+  wget               path to external prg
+  yaml_module        which module to use to read/write YAML files
+
+You can set and query each of these options interactively in the cpan
+shell with the command set defined within the C<o conf> command:
+
+=over 2
+
+=item C<o conf E<lt>scalar optionE<gt>>
+
+prints the current value of the I<scalar option>
+
+=item C<o conf E<lt>scalar optionE<gt> E<lt>valueE<gt>>
+
+Sets the value of the I<scalar option> to I<value>
+
+=item C<o conf E<lt>list optionE<gt>>
+
+prints the current value of the I<list option> in MakeMaker's
+neatvalue format.
+
+=item C<o conf E<lt>list optionE<gt> [shift|pop]>
+
+shifts or pops the array in the I<list option> variable
+
+=item C<o conf E<lt>list optionE<gt> [unshift|push|splice] E<lt>listE<gt>>
+
+works like the corresponding perl commands.
+
+=back
+
+=head2 CPAN::anycwd($path): Note on config variable getcwd
+
+CPAN.pm changes the current working directory often and needs to
+determine its own current working directory. Per default it uses
+Cwd::cwd but if this doesn't work on your system for some reason,
+alternatives can be configured according to the following table:
+
+=over 4
+
+=item cwd
+
+Calls Cwd::cwd
+
+=item getcwd
+
+Calls Cwd::getcwd
+
+=item fastcwd
+
+Calls Cwd::fastcwd
+
+=item backtickcwd
+
+Calls the external command cwd.
+
+=back
+
+=head2 Note on the format of the urllist parameter
+
+urllist parameters are URLs according to RFC 1738. We do a little
+guessing if your URL is not compliant, but if you have problems with
+C<file> URLs, please try the correct format. Either:
+
+    file://localhost/whatever/ftp/pub/CPAN/
+
+or
+
+    file:///home/ftp/pub/CPAN/
+
+=head2 The urllist parameter has CD-ROM support
+
+The C<urllist> parameter of the configuration table contains a list of
+URLs that are to be used for downloading. If the list contains any
+C<file> URLs, CPAN always tries to get files from there first. This
+feature is disabled for index files. So the recommendation for the
+owner of a CD-ROM with CPAN contents is: include your local, possibly
+outdated CD-ROM as a C<file> URL at the end of urllist, e.g.
+
+  o conf urllist push file://localhost/CDROM/CPAN
+
+CPAN.pm will then fetch the index files from one of the CPAN sites
+that come at the beginning of urllist. It will later check for each
+module if there is a local copy of the most recent version.
+
+Another peculiarity of urllist is that the site that we could
+successfully fetch the last file from automatically gets a preference
+token and is tried as the first site for the next request. So if you
+add a new site at runtime it may happen that the previously preferred
+site will be tried another time. This means that if you want to disallow
+a site for the next transfer, it must be explicitly removed from
+urllist.
+
+=head2 Maintaining the urllist parameter
+
+If you have YAML.pm (or some other YAML module configured in
+C<yaml_module>) installed, CPAN.pm collects a few statistical data
+about recent downloads. You can view the statistics with the C<hosts>
+command or inspect them directly by looking into the C<FTPstats.yml>
+file in your C<cpan_home> directory.
+
+To get some interesting statistics it is recommended to set the
+C<randomize_urllist> parameter that introduces some amount of
+randomness into the URL selection.
+
+=head2 Configuration for individual distributions (I<Distroprefs>)
+
+(B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
+still considered beta quality)
+
+Distributions on the CPAN usually behave according to what we call the
+CPAN mantra. Or since the event of Module::Build we should talk about
+two mantras:
+
+    perl Makefile.PL     perl Build.PL
+    make                 ./Build
+    make test            ./Build test
+    make install         ./Build install
+
+But some modules cannot be built with this mantra. They try to get
+some extra data from the user via the environment, extra arguments or
+interactively thus disturbing the installation of large bundles like
+Phalanx100 or modules with many dependencies like Plagger.
+
+The distroprefs system of C<CPAN.pm> addresses this problem by
+allowing the user to specify extra informations and recipes in YAML
+files to either
+
+=over
+
+=item
+
+pass additional arguments to one of the four commands,
+
+=item
+
+set environment variables
+
+=item
+
+instantiate an Expect object that reads from the console, waits for
+some regular expressions and enters some answers
+
+=item
+
+temporarily override assorted C<CPAN.pm> configuration variables
+
+=item
+
+disable the installation of an object altogether
+
+=back
+
+See the YAML and Data::Dumper files that come with the C<CPAN.pm>
+distribution in the C<distroprefs/> directory for examples.
+
+=head2 Filenames
+
+The YAML files themselves must have the C<.yml> extension, all other
+files are ignored (for two exceptions see I<Fallback Data::Dumper and
+Storable> below). The containing directory can be specified in
+C<CPAN.pm> in the C<prefs_dir> config variable. Try C<o conf init
+prefs_dir> in the CPAN shell to set and activate the distroprefs
+system.
+
+Every YAML file may contain arbitrary documents according to the YAML
+specification and every single document is treated as an entity that
+can specify the treatment of a single distribution.
+
+The names of the files can be picked freely, C<CPAN.pm> always reads
+all files (in alphabetical order) and takes the key C<match> (see
+below in I<Language Specs>) as a hashref containing match criteria
+that determine if the current distribution matches the YAML document
+or not.
+
+=head2 Fallback Data::Dumper and Storable
+
+If neither your configured C<yaml_module> nor YAML.pm is installed
+CPAN.pm falls back to using Data::Dumper and Storable and looks for
+files with the extensions C<.dd> or C<.st> in the C<prefs_dir>
+directory. These files are expected to contain one or more hashrefs.
+For Data::Dumper generated files, this is expected to be done with by
+defining C<$VAR1>, C<$VAR2>, etc. The YAML shell would produce these
+with the command
+
+    ysh < somefile.yml > somefile.dd
+
+For Storable files the rule is that they must be constructed such that
+C<Storable::retrieve(file)> returns an array reference and the array
+elements represent one distropref object each. The conversion from
+YAML would look like so:
+
+    perl -MYAML=LoadFile -MStorable=nstore -e '
+        @y=LoadFile(shift);
+        nstore(\@y, shift)' somefile.yml somefile.st
+
+In bootstrapping situations it is usually sufficient to translate only
+a few YAML files to Data::Dumper for the crucial modules like
+C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>. If you prefer Storable
+over Data::Dumper, remember to pull out a Storable version that writes
+an older format than all the other Storable versions that will need to
+read them.
+
+=head2 Blueprint
+
+The following example contains all supported keywords and structures
+with the exception of C<eexpect> which can be used instead of
+C<expect>.
+
+  ---
+  comment: "Demo"
+  match:
+    module: "Dancing::Queen"
+    distribution: "^CHACHACHA/Dancing-"
+    perl: "/usr/local/cariba-perl/bin/perl"
+  disabled: 1
+  cpanconfig:
+    make: gmake
+  pl:
+    args:
+      - "--somearg=specialcase"
+
+    env: {}
+
+    expect:
+      - "Which is your favorite fruit"
+      - "apple\n"
+
+  make:
+    args:
+      - all
+      - extra-all
+
+    env: {}
+
+    expect: []
+
+    commendline: "echo SKIPPING make"
+
+  test:
+    args: []
+
+    env: {}
+
+    expect: []
+
+  install:
+    args: []
+
+    env:
+      WANT_TO_INSTALL: YES
+
+    expect:
+      - "Do you really want to install"
+      - "y\n"
+
+  patches:
+    - "ABCDE/Fedcba-3.14-ABCDE-01.patch"
+
+
+=head2 Language Specs
+
+Every YAML document represents a single hash reference. The valid keys
+in this hash are as follows:
+
+=over
+
+=item comment [scalar]
+
+A comment
+
+=item cpanconfig [hash]
+
+Temporarily override assorted C<CPAN.pm> configuration variables.
+
+Supported are: C<build_requires_install_policy>, C<check_sigs>,
+C<make>, C<make_install_make_command>, C<prefer_installer>,
+C<test_report>. Please report as a bug when you need another one
+supported.
+
+=item disabled [boolean]
+
+Specifies that this distribution shall not be processed at all.
+
+=item goto [string]
+
+The canonical name of a delegate distribution that shall be installed
+instead. Useful when a new version, although it tests OK itself,
+breaks something else or a developer release or a fork is already
+uploaded that is better than the last released version.
+
+=item install [hash]
+
+Processing instructions for the C<make install> or C<./Build install>
+phase of the CPAN mantra. See below under I<Processiong Instructions>.
+
+=item make [hash]
+
+Processing instructions for the C<make> or C<./Build> phase of the
+CPAN mantra. See below under I<Processiong Instructions>.
+
+=item match [hash]
+
+A hashref with one or more of the keys C<distribution>, C<modules>, or
+C<perl> that specify if a document is targeted at a specific CPAN
+distribution.
+
+The corresponding values are interpreted as regular expressions. The
+C<distribution> related one will be matched against the canonical
+distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
+
+The C<module> related one will be matched against I<all> modules
+contained in the distribution until one module matches.
+
+The C<perl> related one will be matched against C<$^X>.
+
+If more than one restriction of C<module>, C<distribution>, and
+C<perl> is specified, the results of the separately computed match
+values must all match. If this is the case then the hashref
+represented by the YAML document is returned as the preference
+structure for the current distribution.
+
+=item patches [array]
+
+An array of patches on CPAN or on the local disk to be applied in
+order via the external patch program. If the value for the C<-p>
+parameter is C<0> or C<1> is determined by reading the patch
+beforehand.
+
+Note: if the C<applypatch> program is installed and C<CPAN::Config>
+knows about it B<and> a patch is written by the C<makepatch> program,
+then C<CPAN.pm> lets C<applypatch> apply the patch. Both C<makepatch>
+and C<applypatch> are available from CPAN in the C<JV/makepatch-*>
+distribution.
+
+=item pl [hash]
+
+Processing instructions for the C<perl Makefile.PL> or C<perl
+Build.PL> phase of the CPAN mantra. See below under I<Processiong
+Instructions>.
+
+=item test [hash]
+
+Processing instructions for the C<make test> or C<./Build test> phase
+of the CPAN mantra. See below under I<Processiong Instructions>.
+
+=back
+
+=head2 Processing Instructions
+
+=over
+
+=item args [array]
+
+Arguments to be added to the command line
+
+=item commandline
+
+A full commandline that will be executed as it stands by a system
+call. During the execution the environment variable PERL will is set
+to $^X. If C<commandline> is specified, the content of C<args> is not
+used.
+
+=item eexpect [hash]
+
+Extended C<expect>. This is a hash reference with three allowed keys,
+C<mode>, C<timeout>, and C<talk>.
+
+C<mode> may have the values C<deterministic> for the case where all
+questions come in the order written down and C<anyorder> for the case
+where the questions may come in any order. The default mode is
+C<deterministic>.
+
+C<timeout> denotes a timeout in seconds. Floating point timeouts are
+OK. In the case of a C<mode=deterministic> the timeout denotes the
+timeout per question, in the case of C<mode=anyorder> it denotes the
+timeout per byte received from the stream or questions.
+
+C<talk> is a reference to an array that contains alternating questions
+and answers. Questions are regular expressions and answers are literal
+strings. The Expect module will then watch the stream coming from the
+execution of the external program (C<perl Makefile.PL>, C<perl
+Build.PL>, C<make>, etc.).
+
+In the case of C<mode=deterministic> the CPAN.pm will inject the
+according answer as soon as the stream matches the regular expression.
+In the case of C<mode=anyorder> the CPAN.pm will answer a question as
+soon as the timeout is reached for the next byte in the input stream.
+In the latter case it removes the according question/answer pair from
+the array, so if you want to answer the question C<Do you really want
+to do that> several times, then it must be included in the array at
+least as often as you want this answer to be given.
+
+=item env [hash]
+
+Environment variables to be set during the command
+
+=item expect [array]
+
+C<< expect: <array> >> is a short notation for
+
+  eexpect:
+    mode: deterministic
+    timeout: 15
+    talk: <array>
+
+=back
+
+=head2 Schema verification with C<Kwalify>
+
+If you have the C<Kwalify> module installed (which is part of the
+Bundle::CPANxxl), then all your distroprefs files are checked for
+syntactical correctness.
+
+=head2 Dealing With Patches
+
+My procedure when I encounter a broken package:
+
+    look DISTRO
+    cd ..
+    rsync -va DISTRODIR/ DISTRODIR.orig/
+    # fix the distro in DISTRODIR
+    diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
+    gzip DISTRODIR-ANDK-01.patch
+
+I then upload the resulting patch to my CPAN patches/ directory and
+write a YAML file into my prefs_dir/ directory that contains roughly
+
+    ---
+    comment: "This patch fixes ..."
+    match:
+      distribution: "^DISTRO$"
+
+    patches:
+      - ANDK/patches/DISTRODIR-ANDK-01.patch
+
+That's all. From then I can install that distro for any perl version
+on that machine.
+
+=head2 Example Distroprefs Files
+
+C<CPAN.pm> comes with a collection of example YAML files. Note that these
+are really just examples and should not be used without care because
+they cannot fit everybody's purpose. After all the authors of the
+packages that ask questions had a need to ask, so you should watch
+their questions and adjust the examples to your environment and your
+needs. You have beend warned:-)
+
 =head1 PROGRAMMER'S INTERFACE
 
 If you do not enter the shell, the available shell commands are both
@@ -10382,326 +11014,6 @@ distributions, authors and bundles. If the object already exists, this
 method returns the object, otherwise it calls the constructor.
 
 =back
-
-=head1 CONFIGURATION
-
-When the CPAN module is used for the first time, a configuration
-dialog tries to determine a couple of site specific options. The
-result of the dialog is stored in a hash reference C< $CPAN::Config >
-in a file CPAN/Config.pm.
-
-The default values defined in the CPAN/Config.pm file can be
-overridden in a user specific file: CPAN/MyConfig.pm. Such a file is
-best placed in $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is
-added to the search path of the CPAN module before the use() or
-require() statements. The mkmyconfig command writes this file for you.
-
-The C<o conf> command has various bells and whistles:
-
-=over
-
-=item completion support
-
-If you have a ReadLine module installed, you can hit TAB at any point
-of the commandline and C<o conf> will offer you completion for the
-built-in subcommands and/or config variable names.
-
-=item displaying some help: o conf help
-
-Displays a short help
-
-=item displaying current values: o conf [KEY]
-
-Displays the current value(s) for this config variable. Without KEY
-displays all subcommands and config variables.
-
-Example:
-
-  o conf shell
-
-=item changing of scalar values: o conf KEY VALUE
-
-Sets the config variable KEY to VALUE. The empty string can be
-specified as usual in shells, with C<''> or C<"">
-
-Example:
-
-  o conf wget /usr/bin/wget
-
-=item changing of list values: o conf KEY SHIFT|UNSHIFT|PUSH|POP|SPLICE|LIST
-
-If a config variable name ends with C<list>, it is a list. C<o conf
-KEY shift> removes the first element of the list, C<o conf KEY pop>
-removes the last element of the list. C<o conf KEYS unshift LIST>
-prepends a list of values to the list, C<o conf KEYS push LIST>
-appends a list of valued to the list.
-
-Likewise, C<o conf KEY splice LIST> passes the LIST to the according
-splice command.
-
-Finally, any other list of arguments is taken as a new list value for
-the KEY variable discarding the previous value.
-
-Examples:
-
-  o conf urllist unshift http://cpan.dev.local/CPAN
-  o conf urllist splice 3 1
-  o conf urllist http://cpan1.local http://cpan2.local ftp://ftp.perl.org
-
-=item interactive editing: o conf init [MATCH|LIST]
-
-Runs an interactive configuration dialog for matching variables.
-Without argument runs the dialog over all supported config variables.
-To specify a MATCH the argument must be enclosed by slashes.
-
-Examples:
-
-  o conf init ftp_passive ftp_proxy
-  o conf init /color/
-
-=item reverting to saved: o conf defaults
-
-Reverts all config variables to the state in the saved config file.
-
-=item saving the config: o conf commit
-
-Saves all config variables to the current config file (CPAN/Config.pm
-or CPAN/MyConfig.pm that was loaded at start).
-
-=back
-
-The configuration dialog can be started any time later again by
-issuing the command C< o conf init > in the CPAN shell. A subset of
-the configuration dialog can be run by issuing C<o conf init WORD>
-where WORD is any valid config variable or a regular expression.
-
-=head2 Config Variables
-
-Currently the following keys in the hash reference $CPAN::Config are
-defined:
-
-  applypatch         path to external prg
-  auto_commit        commit all changes to config variables to disk
-  build_cache        size of cache for directories to build modules
-  build_dir          locally accessible directory to build modules
-  build_dir_reuse    boolean if distros in build_dir are persistent
-  build_requires_install_policy
-                     to install or not to install: when a module is
-                     only needed for building. yes|no|ask/yes|ask/no
-  bzip2              path to external prg
-  cache_metadata     use serializer to cache metadata
-  commands_quote     prefered character to use for quoting external
-                     commands when running them. Defaults to double
-                     quote on Windows, single tick everywhere else;
-                     can be set to space to disable quoting
-  check_sigs         if signatures should be verified
-  colorize_debug     Term::ANSIColor attributes for debugging output
-  colorize_output    boolean if Term::ANSIColor should colorize output
-  colorize_print     Term::ANSIColor attributes for normal output
-  colorize_warn      Term::ANSIColor attributes for warnings
-  commandnumber_in_prompt
-                     boolean if you want to see current command number
-  cpan_home          local directory reserved for this package
-  curl               path to external prg
-  dontload_hash      DEPRECATED
-  dontload_list      arrayref: modules in the list will not be
-                     loaded by the CPAN::has_inst() routine
-  ftp                path to external prg
-  ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
-  ftp_proxy          proxy host for ftp requests
-  getcwd             see below
-  gpg                path to external prg
-  gzip		     location of external program gzip
-  histfile           file to maintain history between sessions
-  histsize           maximum number of lines to keep in histfile
-  http_proxy         proxy host for http requests
-  inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
-                     after this many seconds inactivity. Set to 0 to
-                     never break.
-  index_expire       after this many days refetch index files
-  inhibit_startup_message
-                     if true, does not print the startup message
-  keep_source_where  directory in which to keep the source (if we do)
-  lynx               path to external prg
-  make               location of external make program
-  make_arg	     arguments that should always be passed to 'make'
-  make_install_make_command
-                     the make command for running 'make install', for
-                     example 'sudo make'
-  make_install_arg   same as make_arg for 'make install'
-  makepl_arg	     arguments passed to 'perl Makefile.PL'
-  mbuild_arg	     arguments passed to './Build'
-  mbuild_install_arg arguments passed to './Build install'
-  mbuild_install_build_command
-                     command to use instead of './Build' when we are
-                     in the install stage, for example 'sudo ./Build'
-  mbuildpl_arg       arguments passed to 'perl Build.PL'
-  ncftp              path to external prg
-  ncftpget           path to external prg
-  no_proxy           don't proxy to these hosts/domains (comma separated list)
-  pager              location of external program more (or any pager)
-  password           your password if you CPAN server wants one
-  patch              path to external prg
-  prefer_installer   legal values are MB and EUMM: if a module comes
-                     with both a Makefile.PL and a Build.PL, use the
-                     former (EUMM) or the latter (MB); if the module
-                     comes with only one of the two, that one will be
-                     used in any case
-  prerequisites_policy
-                     what to do if you are missing module prerequisites
-                     ('follow' automatically, 'ask' me, or 'ignore')
-  prefs_dir          local directory to store per-distro build options
-  proxy_user         username for accessing an authenticating proxy
-  proxy_pass         password for accessing an authenticating proxy
-  randomize_urllist  add some randomness to the sequence of the urllist
-  scan_cache	     controls scanning of cache ('atstart' or 'never')
-  shell              your favorite shell
-  show_upload_date   boolean if commands should try to determine upload date
-  tar                location of external program tar
-  term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
-                     (and nonsense for characters outside latin range)
-  term_ornaments     boolean to turn ReadLine ornamenting on/off
-  test_report        email test reports (if CPAN::Reporter is installed)
-  unzip              location of external program unzip
-  urllist	     arrayref to nearby CPAN sites (or equivalent locations)
-  use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
-  username           your username if you CPAN server wants one
-  wait_list          arrayref to a wait server to try (See CPAN::WAIT)
-  wget               path to external prg
-  yaml_module        which module to use to read/write YAML files
-
-You can set and query each of these options interactively in the cpan
-shell with the command set defined within the C<o conf> command:
-
-=over 2
-
-=item C<o conf E<lt>scalar optionE<gt>>
-
-prints the current value of the I<scalar option>
-
-=item C<o conf E<lt>scalar optionE<gt> E<lt>valueE<gt>>
-
-Sets the value of the I<scalar option> to I<value>
-
-=item C<o conf E<lt>list optionE<gt>>
-
-prints the current value of the I<list option> in MakeMaker's
-neatvalue format.
-
-=item C<o conf E<lt>list optionE<gt> [shift|pop]>
-
-shifts or pops the array in the I<list option> variable
-
-=item C<o conf E<lt>list optionE<gt> [unshift|push|splice] E<lt>listE<gt>>
-
-works like the corresponding perl commands.
-
-=back
-
-=head2 CPAN::anycwd($path): Note on config variable getcwd
-
-CPAN.pm changes the current working directory often and needs to
-determine its own current working directory. Per default it uses
-Cwd::cwd but if this doesn't work on your system for some reason,
-alternatives can be configured according to the following table:
-
-=over 2
-
-=item cwd
-
-Calls Cwd::cwd
-
-=item getcwd
-
-Calls Cwd::getcwd
-
-=item fastcwd
-
-Calls Cwd::fastcwd
-
-=item backtickcwd
-
-Calls the external command cwd.
-
-=back
-
-=head2 Note on the format of the urllist parameter
-
-urllist parameters are URLs according to RFC 1738. We do a little
-guessing if your URL is not compliant, but if you have problems with
-C<file> URLs, please try the correct format. Either:
-
-    file://localhost/whatever/ftp/pub/CPAN/
-
-or
-
-    file:///home/ftp/pub/CPAN/
-
-=head2 The urllist parameter has CD-ROM support
-
-The C<urllist> parameter of the configuration table contains a list of
-URLs that are to be used for downloading. If the list contains any
-C<file> URLs, CPAN always tries to get files from there first. This
-feature is disabled for index files. So the recommendation for the
-owner of a CD-ROM with CPAN contents is: include your local, possibly
-outdated CD-ROM as a C<file> URL at the end of urllist, e.g.
-
-  o conf urllist push file://localhost/CDROM/CPAN
-
-CPAN.pm will then fetch the index files from one of the CPAN sites
-that come at the beginning of urllist. It will later check for each
-module if there is a local copy of the most recent version.
-
-Another peculiarity of urllist is that the site that we could
-successfully fetch the last file from automatically gets a preference
-token and is tried as the first site for the next request. So if you
-add a new site at runtime it may happen that the previously preferred
-site will be tried another time. This means that if you want to disallow
-a site for the next transfer, it must be explicitly removed from
-urllist.
-
-=head2 Maintaining the urllist parameter
-
-If you have YAML.pm (or some other YAML module configured in
-C<yaml_module>) installed, CPAN.pm collects a few statistical data
-about recent downloads. You can view the statistics with the C<hosts>
-command or inspect them directly by looking into the C<FTPstats.yml>
-file in your C<cpan_home> directory.
-
-To get some interesting statistics it is recommended to set the
-C<randomize_urllist> parameter that introduces some amount of
-randomness into the URL selection.
-
-=head2 prefs_dir for avoiding interactive questions (ALPHA)
-
-(B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
-still considered experimental and may still be changed)
-
-The files in the directory specified in C<prefs_dir> are YAML files
-that specify how CPAN.pm shall treat distributions that deviate from
-the normal non-interactive model of building and installing CPAN
-modules.
-
-Some modules try to get some data from the user interactively thus
-disturbing the installation of large bundles like Phalanx100 or
-modules like Plagger.
-
-CPAN.pm can use YAML files to either pass additional arguments to one
-of the four commands, set environment variables or instantiate an
-Expect object that reads from the console and enters answers on your
-behalf (latter option requires Expect.pm installed). A further option
-is to apply patches from the local disk or from CPAN.
-
-CPAN.pm comes with a couple of such YAML files. The structure is
-currently not documented because in flux. Please see the distroprefs
-directory of the CPAN distribution for examples and follow the
-C<00.README> file in there.
-
-Please note that setting the environment variable PERL_MM_USE_DEFAULT
-to a true value can also get you a long way if you want to always pick
-the default answers. But this only works if the author of a package
-used the prompt function provided by ExtUtils::MakeMaker and if the
-defaults are OK for you.
 
 =head1 SECURITY
 
