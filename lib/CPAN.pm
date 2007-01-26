@@ -1463,7 +1463,22 @@ sub _clean_cache {
     $self->debug("have to rmtree $dir, will free $self->{SIZE}{$dir}")
 	if $CPAN::DEBUG;
     File::Path::rmtree($dir);
-    unlink "$dir.yml"; # may fail
+    my $id_deleted = 0;
+    if ($dir !~ /\.yml$/ && -f "$dir.yml") {
+        my $yaml_module = CPAN::_yaml_module;
+        if ($CPAN::META->has_inst($yaml_module)) {
+            my($peek_yaml) = CPAN->_yaml_loadfile("$dir.yml");
+            if (my $id = $peek_yaml->[0]{distribution}{ID}) {
+                $CPAN::META->delete("CPAN::Distribution", $id);
+                # $CPAN::Frontend->mywarn (" +++\n");
+                $id_deleted++;
+            }
+        }
+        unlink "$dir.yml"; # may fail
+        unless ($id_deleted) {
+            CPAN->debug("no distro found associated with '$dir'");
+        }
+    }
     $self->{DU} -= $self->{SIZE}{$dir};
     delete $self->{SIZE}{$dir};
 }

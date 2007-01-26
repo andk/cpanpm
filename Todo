@@ -1,11 +1,64 @@
 2007-01-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Today Ken confirmed that _build/prereqs is safe to rely on. Thanks!
+	* Today I also saw an uninstallable IO::AIO 2.32: the AIO.pm file was
+	not found within blib although it was there in blib/lib/IO/IO/AIO.pm.
+	Who is playing a false game? Diff between 3.31 and 2.32 shows:
+
++    PM           => {
++                   'AIO.pm'            => '$(INST_LIBDIR)/IO/AIO.pm',
++                    },
+
+	Bug fixed and reported to Marc:
+
+--- Makefile.PL~	2007-01-22 16:58:24.000000000 +0100
++++ Makefile.PL	2007-01-23 08:04:38.000000000 +0100
+@@ -61,7 +61,7 @@
+     VERSION_FROM => "AIO.pm",
+     LIBS         => ['-lpthread -lrt', '-lpthread', '-lpthreads', ''],
+     PM           => {
+-    		    'AIO.pm'		=> '$(INST_LIBDIR)/IO/AIO.pm',
++    		    'AIO.pm'		=> '$(INST_LIBDIR)/AIO.pm',
+                     },
+     clean        => { FILES => "autoconf/config.h autoconf/config.log autoconf/config.status" },
+ });
+
+
+	* Today I saw this:
+
+cpan[15]> install Coro
+Running install for module 'Coro'
+Running make for M/ML/MLEHMANN/Coro-3.41.tar.gz
+  Has already been unwrapped into directory /home/k/.cpan/build/Coro-3.41-xlIZvI
+  Has already been made
+Running make test
+  Couldn't chdir to '/home/k/.cpan/build/Coro-3.41-xlIZvI': No such file or directory
+Running make install
+  make test had returned bad status, won't install without force
+
+	This was already somewhere in my Todo list: give up objects in memory
+	that cannot fulfil some promise or at least offer the solution which is
+
+	fforce install Coro # but no, this is not an appropriate suggestion
+
+	Or remove the objects from memory while CacheMgr is running. Or both! If
+	we delete it ourselves, the deletion from memory is appropriate
+
+  --DONE in ~ SVK rev. 1760 --
+
+	but if somebody else deletes it we must offer a better solution than the
+	above breakage.
+
+	Suggest "maybe try 'force get $ID' to clean up the object in memory" or
+	something like that.
+
+	
+	* Today Ken confirmed that _build/prereqs is safe to rely on. Good news,
+	Thanks Ken!
 
 	* Todo before 71: write a Changes file. Declare YAML::Tiny not
 	supported; support is_tested and install_tested and document them;
 	integrate the distroprefs README into the manpage; speed up distroprefs
-	parsing wit a cache;
+	parsing with a cache;
 
 	It would be nice t understand the failures that were reported through
 	testers and the one I saw on my dev05 box and the ones I saw on OSX but
