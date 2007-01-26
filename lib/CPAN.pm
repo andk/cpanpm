@@ -4253,7 +4253,7 @@ sub cpl {
     $pos ||= 0;
     CPAN->debug("word [$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
     $line =~ s/^\s*//;
-    if ($line =~ s/^(force\s*)//) {
+    if ($line =~ s/^((?:notest|f?force)\s*)//) {
 	$pos -= length($1);
     }
     my @return;

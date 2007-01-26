@@ -1,3 +1,7 @@
+2007-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* bug: 'fforce instTAB' doesn't do completion.
+
 2007-01-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Today I also saw an uninstallable IO::AIO 2.32: the AIO.pm file was
@@ -107,6 +111,8 @@ Running make install
 	I made a typo for yaml_module and said YAML::Sync. Of course this leads
 	to slowness. Interesting mistake though, we might want to guard against
 	it. 'make megainstall' finishes just as we're used to.
+
+	FirstTime warns on misspelled module names since SVK rev. 1761.
 
 2007-01-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
