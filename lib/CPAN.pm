@@ -7250,6 +7250,13 @@ sub _find_prefs {
 # CPAN::Distribution::prefs
 sub prefs {
     my($self) = @_;
+    if (exists $self->{negative_prefs_cache}
+        &&
+        $self->{negative_prefs_cache} != $CPAN::CurrentCommandId
+       ) {
+        delete $self->{negative_prefs_cache};
+        delete $self->{prefs};
+    }
     if (exists $self->{prefs}) {
         return $self->{prefs}; # XXX comment out during debugging
     }
@@ -7279,7 +7286,8 @@ $filler2 $bs $filler2
             return $self->{prefs};
         }
     }
-    return +{};
+    $self->{negative_prefs_cache} = $CPAN::CurrentCommandId;
+    return $self->{prefs} = +{};
 }
 
 # CPAN::Distribution::make_x_arg
