@@ -318,6 +318,11 @@ Shall we use it as the general CPAN build and cache directory?
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
         my_dflt_prompt(yaml_module => "YAML", $matcher);
+        unless ($CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
+            $CPAN::Frontend->mywarn
+                ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
+            $CPAN::Frontend->mysleep(3);
+        }
     }
 
     #
@@ -1489,7 +1494,7 @@ At the time of this writing there are two competing YAML modules,
 YAML.pm and YAML::Syck. The latter is faster but needs a C compiler
 installed on your system. There may be more alternative YAML
 conforming modules but at the time of writing a potential third
-player, YAML::Tiny, is not yet sufficiently similar to the other two.
+player, YAML::Tiny, seemed not powerful enough to work with CPAN.pm.
 
 },
 
