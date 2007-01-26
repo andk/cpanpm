@@ -231,6 +231,7 @@ MEGA_COLLECTION = Expect \
 		/home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 		/home/src/perl/tk/SVN/. \
 		Tk::Tree \
+		Tk::Pod \
 		Bundle::Phalanx100 \
 		Bundle::Pause \
 		Graph::Easy \

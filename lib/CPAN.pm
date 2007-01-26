@@ -9305,11 +9305,13 @@ CPAN - query, download and build perl modules from CPAN sites
 
 Interactive mode:
 
-  perl -MCPAN -e shell;
+  perl -MCPAN -e shell
 
-Batch mode:
+--or--
 
-  use CPAN;
+  cpan
+
+Basic commands:
 
   # Modules:
 
@@ -9338,14 +9340,13 @@ Batch mode:
 
 =head1 DESCRIPTION
 
-The CPAN module is designed to automate the make and install of perl
-modules and extensions. It includes some primitive searching
-capabilities and knows how to use Net::FTP or LWP (or some external
-download clients) to fetch the raw data from the net.
+The CPAN module automates or at least simplifies the make and install
+of perl modules and extensions. It includes some primitive searching
+capabilities and knows how to use Net::FTP or LWP or some external
+download clients to fetch the distributions from the net.
 
-Distributions are fetched from one or more of the mirrored CPAN
-(Comprehensive Perl Archive Network) sites and unpacked in a dedicated
-directory.
+These are fetched from one or more of the mirrored CPAN (Comprehensive
+Perl Archive Network) sites and unpacked in a dedicated directory.
 
 The CPAN module also supports the concept of named and versioned
 I<bundles> of modules. Bundles simplify the handling of sets of
@@ -9366,11 +9367,15 @@ The interactive mode is entered by running
 
     perl -MCPAN -e shell
 
-which puts you into a readline interface. If Term::ReadKey and either
-Term::ReadLine::Perl or Term::ReadLine::Gnu are installed it supports
-both history and command completion.
+or
 
-Once you are on the command line, type 'h' to get a one page help
+    cpan
+
+which puts you into a readline interface. If C<Term::ReadKey> and
+either C<Term::ReadLine::Perl> or C<Term::ReadLine::Gnu> are installed
+it supports both history and command completion.
+
+Once you are on the command line, type C<h> to get a one page help
 screen and the rest should be self-explanatory.
 
 The function call C<shell> takes two optional arguments, one is the
@@ -9400,7 +9405,7 @@ displayed with the rather verbose method C<as_string>, but if we find
 more than one, we display each object with the terse method
 C<as_glimpse>.
 
-=item get, make, test, install, clean  modules or distributions
+=item C<get>, C<make>, C<test>, C<install>, C<clean> modules or distributions
 
 These commands take any number of arguments and investigate what is
 necessary to perform the action. If the argument is a distribution
@@ -9433,7 +9438,7 @@ has been run successfully before. Same for install runs.
 The C<force> pragma may precede another command (currently: C<get>,
 C<make>, C<test>, or C<install>) and executes the command from scratch
 and tries to continue in case of some errors. See the section below on
-The C<force> and the C<fforce> pragma.
+the C<force> and the C<fforce> pragma.
 
 The C<notest> pragma may be used to skip the test part in the build
 process.
@@ -9448,7 +9453,7 @@ A C<clean> command results in a
 
 being executed within the distribution file's working directory.
 
-=item readme, perldoc, look module or distribution
+=item C<readme>, C<perldoc>, C<look> module or distribution
 
 C<readme> displays the README file of the associated distribution.
 C<Look> gets and untars (if not yet done) the distribution file,
@@ -9456,9 +9461,9 @@ changes to the appropriate directory and opens a subshell process in
 that directory. C<perldoc> displays the pod documentation of the
 module in html or plain text format.
 
-=item ls author
+=item C<ls> author
 
-=item ls globbing_expression
+=item C<ls> globbing_expression
 
 The first form lists all distribution files in and below an author's
 CPAN directory as they are stored in the CHECKUMS files distributed on
@@ -9478,7 +9483,7 @@ Note that globbing only lists directories explicitly asked for, for
 example FOO/* will not list FOO/bar/Acme-Sthg-n.nn.tar.gz. This may be
 regarded as a bug and may be changed in future versions.
 
-=item failed
+=item C<failed>
 
 The C<failed> command reports all distributions that failed on one of
 C<make>, C<test> or C<install> for some reason in the currently
@@ -10632,7 +10637,7 @@ or
 
     file:///home/ftp/pub/CPAN/
 
-=head2 urllist parameter has CD-ROM support
+=head2 The urllist parameter has CD-ROM support
 
 The C<urllist> parameter of the configuration table contains a list of
 URLs that are to be used for downloading. If the list contains any
