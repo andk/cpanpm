@@ -1,4 +1,15 @@
-2007-01-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* integrate the distroprefs README into the manpage
+
+	* introduce negative distroprefs caching for the current command
+
+	* new commands C<is_tested> and C<install_tested> (inspired by Ilya
+	Zakharevich)
+
+	* fix completion bug with notest and fforce pragma
+
+	* delete distro objects in memory that are cleaned up by the CacheMgr
 
 	* fix a bug that only fired when prefer_installer was set to MB but
 	Module::Build was not yet installed
