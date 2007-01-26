@@ -1,3 +1,24 @@
+2007-01-26  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* document build_requires and when you talk about prerequisites, name
+	the option names explicitly.
+
+	* note/explain the improved behaviour on recursion detection in the
+	Changes file. DONE.
+
+	* Bug: batch jobs scan for sizes although they never delete anything. So
+	either teach them to delete under certain conditions or do not scan for
+	sizes.
+
+	* Today I found a bug in Tk::Pod when trying with bleadperl:
+
+	/..../tkpod -I lib CPAN
+
+	Need to have a closer look some day.
+
+	A test script also failed but I installed it with 'force notest install
+	Tk::Pod' because I had more interest in getting _71 out.
+
 2007-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* bug: 'fforce instTAB' doesn't do completion.
@@ -55,8 +76,8 @@ Running make install
 	above breakage.
 
 	Suggest "maybe try 'force get $ID' to clean up the object in memory" or
-	something like that.
-
+	something like that. Or "to reset everything" or "to start with a fresh
+	distro"... Nothing seems really good and correct.
 	
 	* Today Ken confirmed that _build/prereqs is safe to rely on. Good news,
 	Thanks Ken!
@@ -71,6 +92,8 @@ Running make install
 	testers and the one I saw on my dev05 box and the ones I saw on OSX but
 	it will again be a developer release after all, so maybe these will have
 	to wait.
+
+	The test failure on dev05 iis not reproducable. OSX?
 	
 	* Today I tried 1.88_69 on OSX wit 5.8.6 as it comes preinstalled.
 	File::HomeDir has issues and I could not use CPAN::Reporter to write a
@@ -78,14 +101,16 @@ Running make install
 	this.
 
 	* For several days I have kept Kwalify out with dontload_list. Today I
-	opened the door again and let 29923 work through megainstall.
+	opened the door again and let 29923 work through megainstall. All's
+	well.
 
 2007-01-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* We need a speedup of the distroprefs stuff. Currently we're going
 	through readdir and YAML::Load thousand times per module. We should
 	probably cache the whole directory structure once per command and delete
-	it from re-used build_dirs.
+	it from re-used build_dirs. Done with negative per-command distroprefs
+	cache.
 
 2007-01-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -363,6 +388,8 @@ t/000prereq.....
 
 	* Watch the Module::Build space for updates to the question of calling
 	M:B methods or parsing _build/*. Ken seemed to argue for the file (?)
+
+	FINI
 
 	* Slaven tells me that he can confirm the Term::ReadLine::Gnu behaviour
 	in the t/callback.t test that I find so annoying for 5.9.5(debugging)
@@ -808,9 +835,6 @@ Law is when you get what you pay for.
 	* TTL stuff
 
 	* make up your mind about install_tested.
-
-	* document build_requires and when you talk about prerequisites, name
-	the option names explicitly.
 
 	* make _get_urllist a public method for Randy.
 

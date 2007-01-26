@@ -18,7 +18,9 @@
 	family of Compress::Zlib module distributions
 
 	* limit recursion detection to those commands that need it and let
-	others, like 'look', continue to work
+	others, like 'look', continue to work; at the same time make recursion
+	detection a serious error that throws an exception and does not try to
+	continue to execute
 
 2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
