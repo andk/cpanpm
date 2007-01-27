@@ -1,5 +1,9 @@
 2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* release 1.88_71: this does not yet qualify as a release candidate for
+	1.89 because it incorporates a major bugfix; but otherwise I think this
+	is feature complete for a release
+
 	* document treatment of requires and build_requires declarations
 
 	* integrate the distroprefs README into the manpage

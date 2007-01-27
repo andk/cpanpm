@@ -174,6 +174,8 @@ Running make install
 	to wait.
 
 	The test failure on dev05 is not reproducable. OSX?
+
+	OSX passes all tests with my first _71 test build.
 	
 	* Today I tried 1.88_69 on OSX wit 5.8.6 as it comes preinstalled.
 	File::HomeDir has issues and I could not use CPAN::Reporter to write a
@@ -189,7 +191,7 @@ Running make install
 	* We need a speedup of the distroprefs stuff. Currently we're going
 	through readdir and YAML::Load thousand times per module. We should
 	probably cache the whole directory structure once per command and delete
-	it from re-used build_dirs. Done with negative per-command distroprefs
+	it from re-used build_dirs. DONE with negative per-command distroprefs
 	cache.
 
 2007-01-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
