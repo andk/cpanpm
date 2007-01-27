@@ -10298,31 +10298,6 @@ If you have the C<Kwalify> module installed (which is part of the
 Bundle::CPANxxl), then all your distroprefs files are checked for
 syntactical correctness.
 
-=head2 Dealing With Patches
-
-My procedure when I encounter a broken package:
-
-    look DISTRO
-    cd ..
-    rsync -va DISTRODIR/ DISTRODIR.orig/
-    # fix the distro in DISTRODIR
-    diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
-    gzip DISTRODIR-ANDK-01.patch
-
-I then upload the resulting patch to my CPAN patches/ directory and
-write a YAML file into my prefs_dir/ directory that contains roughly
-
-    ---
-    comment: "This patch fixes ..."
-    match:
-      distribution: "^DISTRO$"
-
-    patches:
-      - ANDK/patches/DISTRODIR-ANDK-01.patch
-
-That's all. From then I can install that distro for any perl version
-on that machine.
-
 =head2 Example Distroprefs Files
 
 C<CPAN.pm> comes with a collection of example YAML files. Note that these
