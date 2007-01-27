@@ -85,7 +85,7 @@ Sat Jan 27 06:08:36 2007 /home/k/.cpan/build/Cache-Simple-TimedExpiry-0.27-rznB3
 
 	* Bug: batch jobs scan for sizes although they never delete anything. So
 	either teach them to delete under certain conditions or do not scan for
-	sizes.
+	sizes. LATER
 
 	* Today I found a bug in Tk::Pod when trying with bleadperl:
 
@@ -95,6 +95,9 @@ Sat Jan 27 06:08:36 2007 /home/k/.cpan/build/Cache-Simple-TimedExpiry-0.27-rznB3
 
 	A test script also failed but I installed it with 'force notest install
 	Tk::Pod' because I had more interest in getting _71 out.
+
+	Sent a patch to Slaven today which commented out an else in line 190 or
+	so.
 
 2007-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -154,7 +157,7 @@ Running make install
 
 	Suggest "maybe try 'force get $ID' to clean up the object in memory" or
 	something like that. Or "to reset everything" or "to start with a fresh
-	distro"... Nothing seems really good and correct.
+	distro"... Nothing seems really good and correct. LATER
 	
 	* Today Ken confirmed that _build/prereqs is safe to rely on. Good news,
 	Thanks Ken!
@@ -170,7 +173,7 @@ Running make install
 	it will again be a developer release after all, so maybe these will have
 	to wait.
 
-	The test failure on dev05 iis not reproducable. OSX?
+	The test failure on dev05 is not reproducable. OSX?
 	
 	* Today I tried 1.88_69 on OSX wit 5.8.6 as it comes preinstalled.
 	File::HomeDir has issues and I could not use CPAN::Reporter to write a
