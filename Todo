@@ -1,3 +1,46 @@
+2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* yesterday I built maintperl 29988 and somehow megainstall failed with
+	Jifty-DBI asking auto-install questions. I suppose the question was
+	asked by a different perl and an old CPAN because I do have a Jifty-DBI
+	distropref file that should prevent questions asking.
+
+	NO! The malfunctioning started exactly at 23:40 when the disk also
+	started failing. So I suppose we can simply restart a megainstall on
+	29988 now.
+
+	No. Still hanging. No signs of being the wrong perl. Trying with 'make run'.
+
+______________________ D i s t r o P r e f s ______________________
+                      AUDREYT.Jifty-DBI.yml[0]                      
+Running make for A/AU/AUDREYT/Jifty-DBI-0.32.tar.gz
+  Has already been unwrapped into directory /home/k/.cpan/build/Jifty-DBI-0.32-LUlvH7
+  '/home/src/perl/repoperls/installed-perls/maint-5.8/pLUMXwK/perl-5.8.0@29988/bin/perl Makefile.PL' returned status 2, won't make
+
+	'fforce make ...' first scans the build_dir for sizes which takes a
+	while, maybe the resync of the RAID is slowing it down. After that the
+	distroprefs mechanics answer the auto-install question(s).
+
+	But 'test Jifty::DBI' fails some tests. It tests many dependencies, so
+	let's look at the summary:
+
+  AUDREYT/Jifty-DBI-0.32.tar.gz
+  /usr/bin/make test -- NOT OK
+Failed during this command:
+ JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz: make_test NO
+ AUDREYT/Jifty-DBI-0.32.tar.gz                : make_test NO
+
+cpan[4]> is_tested 
+Sat Jan 27 06:08:02 2007 /home/k/.cpan/build/FreezeThaw-0.43-MyeZXx
+Sat Jan 27 06:08:07 2007 /home/k/.cpan/build/DBIx-DBSchema-0.31-Wrf6R4
+Sat Jan 27 06:08:17 2007 /home/k/.cpan/build/Lingua-EN-Inflect-1.89-8UYDiB
+Sat Jan 27 06:08:36 2007 /home/k/.cpan/build/Cache-Simple-TimedExpiry-0.27-rznB3I
+
+	Ahja, just the normal autoinstall misbehaviour. Because something
+	failed, it tries to go into recursion. My normal patch
+	ANDK/Module-AutoInstall-in-inc-ANDK-01.patch seems to take the
+	appropriate amount of care for that.
+
 2007-01-26  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* document build_requires and when you talk about prerequisites, name
