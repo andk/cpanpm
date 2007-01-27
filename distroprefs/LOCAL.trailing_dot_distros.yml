@@ -15,7 +15,7 @@ comment: "Xvfb :121 must be started by somebody else"
 match:
   distribution: "^/home/src/perl/tk/SVN/\.$"
 pl:
-  commandline: "svn up && $PERL Makefile.PL XFT=1"
+  commandline: "make clean; svn up && $PERL Makefile.PL XFT=1"
 test:
   env:
     BATCH: 1
