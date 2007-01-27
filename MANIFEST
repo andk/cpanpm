@@ -56,6 +56,7 @@ distroprefs/JCRISTY.PerlMagick.yml
 distroprefs/JESSE.Data-ICal.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty.yml
+distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
