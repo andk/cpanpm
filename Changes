@@ -1,4 +1,6 @@
-2007-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* document treatment of requires and build_requires declarations
 
 	* integrate the distroprefs README into the manpage
 

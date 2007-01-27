@@ -1,5 +1,39 @@
 2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* what's going on with JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz?
+
+	rt.cpan.org has the solution in ticket 24335. Patch by Aaron Crane (=ARC)
+
+	Aaron's patch cannot be copy and pasted because of some whitespace
+	problems. So I try to apply it manually.
+
+	======================Dealing With Patches==================
+
+	My procedure when I encounter a broken package:
+
+    look DISTRO
+    cd ..
+    rsync -va DISTRODIR/ DISTRODIR.orig/
+    # fix the distro in DISTRODIR
+    diff -urp DISTRODIR.orig DISTRODIR > DISTRODIR-ANDK-01.patch
+    gzip DISTRODIR-ANDK-01.patch
+
+	I then upload the resulting patch to my CPAN patches/ directory and
+	write a YAML file into my prefs_dir/ directory that contains roughly
+
+    ---
+    comment: "This patch fixes ..."
+    match:
+      distribution: "^DISTRO$"
+
+    patches:
+      - ANDK/patches/DISTRODIR-ANDK-01.patch
+
+	That's all. From then I can install that distro for any perl version on
+	that machine.
+
+	Uploaded to CPAN and a new distropref file is made.
+	
 	* yesterday I built maintperl 29988 and somehow megainstall failed with
 	Jifty-DBI asking auto-install questions. I suppose the question was
 	asked by a different perl and an old CPAN because I do have a Jifty-DBI
