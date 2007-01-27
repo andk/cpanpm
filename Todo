@@ -44,7 +44,7 @@ Sat Jan 27 06:08:36 2007 /home/k/.cpan/build/Cache-Simple-TimedExpiry-0.27-rznB3
 2007-01-26  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* document build_requires and when you talk about prerequisites, name
-	the option names explicitly.
+	the option names explicitly. DONE
 
 	* note/explain the improved behaviour on recursion detection in the
 	Changes file. DONE.

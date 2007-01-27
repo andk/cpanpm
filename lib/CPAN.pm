@@ -9747,17 +9747,6 @@ Examples:
   o conf urllist splice 3 1
   o conf urllist http://cpan1.local http://cpan2.local ftp://ftp.perl.org
 
-=item interactive editing: o conf init [MATCH|LIST]
-
-Runs an interactive configuration dialog for matching variables.
-Without argument runs the dialog over all supported config variables.
-To specify a MATCH the argument must be enclosed by slashes.
-
-Examples:
-
-  o conf init ftp_passive ftp_proxy
-  o conf init /color/
-
 =item reverting to saved: o conf defaults
 
 Reverts all config variables to the state in the saved config file.
@@ -9785,7 +9774,7 @@ defined:
   build_dir          locally accessible directory to build modules
   build_dir_reuse    boolean if distros in build_dir are persistent
   build_requires_install_policy
-                     to install or not to install: when a module is
+                     to install or not to install when a module is
                      only needed for building. yes|no|ask/yes|ask/no
   bzip2              path to external prg
   cache_metadata     use serializer to cache metadata
@@ -9870,7 +9859,7 @@ defined:
   yaml_module        which module to use to read/write YAML files
 
 You can set and query each of these options interactively in the cpan
-shell with the command set defined within the C<o conf> command:
+shell with the C<o conf> or the C<o conf init> command as specified below.
 
 =over 2
 
@@ -9894,6 +9883,20 @@ shifts or pops the array in the I<list option> variable
 =item C<o conf E<lt>list optionE<gt> [unshift|push|splice] E<lt>listE<gt>>
 
 works like the corresponding perl commands.
+
+=item interactive editing: o conf init [MATCH|LIST]
+
+Runs an interactive configuration dialog for matching variables.
+Without argument runs the dialog over all supported config variables.
+To specify a MATCH the argument must be enclosed by slashes.
+
+Examples:
+
+  o conf init ftp_passive ftp_proxy
+  o conf init /color/
+
+Note: this method of setting config variables often provides more
+explanation about the functioning of a variable than the manpage.
 
 =back
 
@@ -9970,6 +9973,21 @@ file in your C<cpan_home> directory.
 To get some interesting statistics it is recommended to set the
 C<randomize_urllist> parameter that introduces some amount of
 randomness into the URL selection.
+
+=head2 The C<requires> and C<build_requires> dependency declarations
+
+Since CPAN.pm version 1.88_51 modules declared as C<build_requires> by
+a distribution are treated differently depending on the config
+variable C<build_requires_install_policy>. By setting
+C<build_requires_install_policy> to C<no> such a module is not being
+installed. It is only built and tested and then kept in the list of
+tested but uninstalled modules. As such it is available during the
+build of the dependent module by integrating the path to the
+C<blib/arch> and C<blib/lib> directories in the environment variable
+PERL5LIB. If C<build_requires_install_policy> is set ti C<yes>, then
+both modules declared as C<requires> and those declared as
+C<build_requires> are treated alike. By setting to C<ask/yes> or
+C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 
 =head2 Configuration for individual distributions (I<Distroprefs>)
 
@@ -10619,10 +10637,13 @@ attributes are optional.
 =item CPAN::Distribution::prereq_pm()
 
 Returns the hash reference that has been announced by a distribution
-as the merge of the C<requires> element and the C<build_requires>
-element of the META.yml or the C<PREREQ_PM> hash in the
-C<Makefile.PL>. Note: works only after an attempt has been made to
-C<make> the distribution. Returns undef otherwise.
+as the the C<requires> and C<build_requires> elements. These can be
+declared either by the C<META.yml> (if authoritative) or can be
+deposited after the run of C<Build.PL> in the file C<./_build/prereqs>
+or after the run of C<Makfile.PL> written as the C<PREREQ_PM> hash in
+a comment in the produced C<Makefile>. I<Note>: this method only works
+after an attempt has been made to C<make> the distribution. Returns
+undef otherwise.
 
 =item CPAN::Distribution::readme()
 
