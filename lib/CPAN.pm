@@ -7566,6 +7566,7 @@ sub read_yaml {
                                               # cannot read YAML's own
                                               # META.yml
     }
+    # not "authoritative"
     if (not exists $self->{yaml_content}{dynamic_config}
         or $self->{yaml_content}{dynamic_config}
        ) {
