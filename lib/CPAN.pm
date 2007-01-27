@@ -7888,7 +7888,7 @@ sub test {
 
             # local $CPAN::DEBUG = 16; # Distribution
             for my $m (keys %{$self->{sponsored_mods}}) {
-                my $m_obj = CPAN::Shell->expand("Module",$m);
+                my $m_obj = CPAN::Shell->expand("Module",$m) or next;
                 # XXX we need available_version which reflects
                 # $ENV{PERL5LIB} so that already tested but not yet
                 # installed modules are counted.
