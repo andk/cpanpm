@@ -10,6 +10,7 @@ distroprefs/ADAMK.Algorithm-Dependency.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
+distroprefs/AUDREYT.Jifty-DBI.yml
 distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
@@ -22,6 +23,7 @@ distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BTROTT.XML-FOAF.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
+distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
