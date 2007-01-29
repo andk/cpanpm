@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_71';
+$CPAN::VERSION = '1.88_72';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1515,6 +1515,7 @@ sub scan_cache {
     return if $self->{SCAN} eq 'never';
     $CPAN::Frontend->mydie("Unknown scan_cache argument: $self->{SCAN}")
 	unless $self->{SCAN} eq 'atstart';
+    return unless $CPAN::META->{LOCK};
     $CPAN::Frontend->myprint(
 			     sprintf("Scanning cache %s for sizes\n",
 				     $self->{ID}));
