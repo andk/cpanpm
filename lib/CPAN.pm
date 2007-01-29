@@ -7812,6 +7812,11 @@ sub test {
     } else {
         $system = join " ", $self->_make_command(), "test";
     }
+    my $make_test_arg = $self->make_x_arg("test");
+    $system = sprintf("%s%s",
+                      $system,
+                      $make_test_arg ? " $make_test_arg" : "",
+                     );
     my($tests_ok);
     my %env;
     while (my($k,$v) = each %ENV) {

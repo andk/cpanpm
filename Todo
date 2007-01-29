@@ -1,8 +1,31 @@
 2007-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* hunting XML::Twig/bleadperl test failures again. I started this once
+	on 2007-01-06 and yesterday I let a binary search run against 3.29.
+	28202 broke 3.29 but only with a test failure that later disappeared
+	again, so this result is not interesting. I need a temporary patch that
+	disables the testfile t/test_xml_split.t completely. Ah, this is quite
+	easy with test/args distroprefs.
+
+	* if somebody else deletes a build_dir, we must offer a better solution
+	than breakage 'can't chdir...'
+
+	Suggest "maybe try 'force get $ID' to clean up the object in memory" or
+	something like that. Or "to reset everything" or "to start with a fresh
+	distro"... Nothing seems really good and correct. LATER
+		* Bug: batch jobs scan for sizes although they never delete anything. So
+	either teach them to delete under certain conditions or do not scan for
+	sizes.
+
 	* Bug: "faileTAB" does not do completion
 
+	Fixed in SVK rev. 1806
+
 	*  NEELY/Data-Serializer-0.36.tar.gz            : make_test NO
+
+	This distro appeared these days on the make_test-NO scene. But when I
+	look closer, it turns out that it fails with the pretty old bleadperl
+	22491.
 
 2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -88,10 +111,6 @@ Sat Jan 27 06:08:36 2007 /home/k/.cpan/build/Cache-Simple-TimedExpiry-0.27-rznB3
 
 	* note/explain the improved behaviour on recursion detection in the
 	Changes file. DONE.
-
-	* Bug: batch jobs scan for sizes although they never delete anything. So
-	either teach them to delete under certain conditions or do not scan for
-	sizes. LATER
 
 	* Today I found a bug in Tk::Pod when trying with bleadperl:
 
