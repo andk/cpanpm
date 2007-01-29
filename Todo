@@ -1,3 +1,9 @@
+2007-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: "faileTAB" does not do completion
+
+	*  NEELY/Data-Serializer-0.36.tar.gz            : make_test NO
+
 2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* what's going on with JHOBLITT/DateTime-Format-ISO8601-0.0403.tar.gz?

@@ -487,6 +487,7 @@ use strict;
                                     clean
                                     cvs_import
                                     dump
+                                    failed
                                     force
                                     fforce
                                     hosts
