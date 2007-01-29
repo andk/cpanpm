@@ -1,5 +1,19 @@
 2007-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46
+
+Distroprefs: Module morphing, taming, killing, obedience, etc.
+CPAN::Reporter: Talkback.
+CPAN::SQLite: use less memory.
+dot distros: cpan DOT (bring your own)
+Persistent Shell. build_dir_reuse
+Permanent Shell. reload seems reliable now
+Upgrade.
+Test Now, Install Later. Is_tested, install_tested
+Interactive Configuration of single items.
+Color.
+Bundle::CPANxxl - what is in there? sequence matters.
+
 	* TTL stuff
 
 	* retry to run under Devel::Cover and actually read the results.
@@ -39,11 +53,31 @@ DIED. FAILED test 1
 	individually (except the offending one). And it turns out that this
 	functionality was missing in CPAN.pm. FIXED in SVK rev. 1807
 
-	With             28202 the test test_xml_split started failing
-	Somewhere before 28319          test_xml_split stopped failing
-	With             28319 the test test_errors    started failing
-	Somewhere before 28785          test_errors    stopped failing
-  With             28785 the test test_3_27	     started failing
+	With              28202           the test test_xml_split  started failing
+	Somewhere before  28319                    test_xml_split  stopped failing
+	With              28319           the test test_errors     started failing
+	Somewhere before  28785                    test_errors     stopped failing
+  With              28785           the test test_3_27	     started failing
+	Somewhere between 29274 and 29285 the test test_mark       started failing
+
+	274 did not fail the mark test
+
+	275 had problems to build XML::Parser, but why? Or better yet, why did
+	274 have no problems building XML::Parser 2.34? I just retried, and yes,
+	274 can build XML::Parser. 29275 seems to have a syntax error in
+	/home/src/perl/repoperls/installed-perls/perl/poKEUxZ/perl-5.8.0@29275/lib/5.9.5/utf8_heavy.pl.
+	Yes, it is very annoying, the syntax error is there and cannot be
+	explained by anything but a disk drive error (and I had RAID break three
+	times these days). It is a rotten build and must be removed.
+
+	278 cannot be built due to two failing tests. We will ignore the failing
+	tests ../ext/Time/HiRes/t/HiRes.t ../lib/perl5db.t for now. OK, it does
+	not fail the mark test, just the 3_27.
+
+	279 fails the mark test. Ready to write to P5P. And I must correct the
+	temporarily manipulated test/args distroprefs file.
+	
+	285 failed the mark test
 
 	29010 and 29220 have at least test_3_27.t and test_additional.t failing
 
