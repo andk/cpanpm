@@ -3288,6 +3288,7 @@ sub _new_stats {
 sub _add_to_statistics {
     my($self,$stats) = @_;
     my $yaml_module = CPAN::_yaml_module;
+    $self->debug("yaml_module[$yaml_module]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         $stats->{thesiteurl} = $ThesiteURL;
         if (CPAN->has_inst("Time::HiRes")) {
@@ -3618,7 +3619,9 @@ sub localize {
     if ($ret) {
         $stats->{filesize} = -s $ret;
     }
+    $self->debug("before _add_to_statistics") if $CPAN::DEBUG;
     $self->_add_to_statistics($stats);
+    $self->debug("after _add_to_statistics") if $CPAN::DEBUG;
     if ($ret) {
         unlink "$aslocal.bak$$";
         return $ret;
