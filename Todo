@@ -1,5 +1,25 @@
 2007-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Spreadsheet-ParseExcel-0.28 is broken for quite some time now.
+
+	https://rt.cpan.org/Ticket/Display.html?id=24267 is about missing
+	prerequisites. This explains two test failures but not the third:
+
+t/examples/warning......
+#   Failed test 'stderr is empty when running warning.pl'
+#   at t/examples/warning.t line 10.
+#          got: 'Character in 'c' format wrapped in pack at /home/k/.cpan/build/Spreadsheet-ParseExcel-0.28-ddCmVr/blib/lib/Spreadsheet/ParseExcel.pm line 1744.
+# Character in 'c' format wrapped in pack at /home/k/.cpan/build/Spreadsheet-ParseExcel-0.28-ddCmVr/blib/lib/Spreadsheet/ParseExcel.pm line 1748.
+# '
+#     expected: ''
+# Looks like you failed 1 test of 2.
+dubious
+	Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 1
+	Failed 1/2 tests, 50.00% okay
+
+	https://rt.cpan.org/Ticket/Display.html?id=7376 has something about it.
+
 	* hunting XML::Twig/bleadperl test failures again. I started this once
 	on 2007-01-06 and yesterday I let a binary search run against 3.29.
 	28202 broke 3.29 but only with a test failure that later disappeared
@@ -7,13 +27,58 @@
 	disables the testfile t/test_xml_split.t completely. Ah, this is quite
 	easy with test/args distroprefs.
 
+	Testing a temporary MIROD.XML-Twig.yml file that lists all test scripts
+	individually (except the offending one). And it turns out that this
+	functionality was missing in CPAN.pm. FIXED in SVK rev. 1807
+
+	In 28202 test test_xml_split started failing
+	Somewhere before 28321 test_xml_split stopped failing
+	With 28319 the test test_errors started failing
+
+  
+	28810 had test_3_27	
+
+	* Slaven tells me that he can confirm the Term::ReadLine::Gnu behaviour
+	in the t/callback.t test that I find so annoying for 5.9.5(debugging)
+	but not for 5.8.8. I.e. with 5.8.8 the window gets closed automatically
+	while with 5.9.5 it stays.
+
+	This would normally be solved with a binary search but as always with
+	big distros there are risks. Tk under randomly picked 21846 segfaults
+	during make test. Same for 23300.
+
+	25302 dies quickly with
+
+	/home/src/perl/repoperls/installed-perls/perl/pq4nEoU/perl-5.8.0@25302/bin/perl: symbol lookup error: /home/src/perl/tk/SVN/blib/arch/auto/Tk/Event/Event.so: undefined symbol: Perl_newXS_flags
+
+	28810 dies quickly with
+
+	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pPOaCtI/perl-5.8.0@28810/lib/5.9.4/i686-linux-64int/DynaLoader.pm line 224.
+Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+Compilation failed in require at (eval 3) line 3.
+
+	and 29411 similarly with
+
+	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pXADjKY/perl-5.8.0@29411/lib/5.9.5/i686-linux-64int/DynaLoader.pm line 226.
+Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
+
+
+	* Speed things up by reading distroprefs less often or otherwise find
+	out who is so slow here. What happens between 'Running make for
+	<distro>' and 'Checksum for <distro> ok'? Time is spent in get(). Even
+	though we now do negative caching of distroprefs for the time of one
+	command, the get() is still slower for some reason.
+
 	* if somebody else deletes a build_dir, we must offer a better solution
 	than breakage 'can't chdir...'
 
 	Suggest "maybe try 'force get $ID' to clean up the object in memory" or
 	something like that. Or "to reset everything" or "to start with a fresh
 	distro"... Nothing seems really good and correct. LATER
-		* Bug: batch jobs scan for sizes although they never delete anything. So
+
+	* Bug: batch jobs scan for sizes although they never delete anything. So
 	either teach them to delete under certain conditions or do not scan for
 	sizes.
 
@@ -498,33 +563,6 @@ t/000prereq.....
 
 	FINI
 
-	* Slaven tells me that he can confirm the Term::ReadLine::Gnu behaviour
-	in the t/callback.t test that I find so annoying for 5.9.5(debugging)
-	but not for 5.8.8. I.e. with 5.8.8 the window gets closed automatically
-	while with 5.9.5 it stays.
-
-	This would normally be solved with a binary search but as always with
-	big distros there are risks. Tk under randomly picked 21846 segfaults
-	during make test. Same for 23300.
-
-	25302 dies quickly with
-
-	/home/src/perl/repoperls/installed-perls/perl/pq4nEoU/perl-5.8.0@25302/bin/perl: symbol lookup error: /home/src/perl/tk/SVN/blib/arch/auto/Tk/Event/Event.so: undefined symbol: Perl_newXS_flags
-
-	28810 dies quickly with
-
-	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pPOaCtI/perl-5.8.0@28810/lib/5.9.4/i686-linux-64int/DynaLoader.pm line 224.
-Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
-BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
-Compilation failed in require at (eval 3) line 3.
-
-	and 29411 similarly with
-
-	Strange: could not load Tk library: Assertion (svtype)((_svi)->sv_flags & 0xff) >= SVt_PV failed: file "Event.xs", line 33 at /home/src/perl/repoperls/installed-perls/perl/pXADjKY/perl-5.8.0@29411/lib/5.9.5/i686-linux-64int/DynaLoader.pm line 226.
-Compilation failed in require at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
-BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 13.
-
-
 2007-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: distroprefs mechanism is still inefficient in that it scans too
@@ -543,7 +581,7 @@ BEGIN failed--compilation aborted at /home/src/perl/tk/SVN/blib/lib/Tk.pm line 1
 	whatever we are doing, because we now have too many tasks delegated to
 	YAML format. What to do?
 
-	* 00.README into the manpage now?
+	* 00.README into the manpage now? DONE
 
 2007-01-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -636,10 +674,6 @@ Sun Jan  7 08:06:31 2007 /home/k/.cpan/build/DateTime-Format-Builder-0.7807-VYcg
 	No, the 'dont_load_list' is preventing YAML to be loaded at the moment.
 
 	* Release the bundles that are already rewritten for a while DONE
-
-	* Speed things up by reading distroprefs less often or otherwise find
-	out who is so slow here. What happens between 'Running make for
-	<distro>' and 'Checksum for <distro> ok'? Time is spent in get().
 
 	* Todo: make auto_commit a mandatory attribute. DONE in rev 1706
 
