@@ -1,0 +1,6 @@
+---
+comment: "http://rt.cpan.org/Ticket/Display.html?id=24672"
+match:
+  distribution: "TELS/math/Math-BigInt-GMP-1.19.tar.gz"
+patches:
+  - "ANDK/patches/Math-BigInt-GMP-1.19-ANDK-01.patch.gz"

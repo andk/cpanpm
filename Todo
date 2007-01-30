@@ -1,3 +1,61 @@
+2007-01-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* DMAKI/DateTime-Util-Calc-0.11.tar.gz hangs, but I do not see why.
+
+  /usr/bin/patch -N --fuzz=3 -p1
+patching file t/04-bigfloat.t
+Prepending /home/k/.cpan/build/DBD-SQLite-1.13-PQHMS0/blib/arch /home/k/.cpan/build/DBD-SQLite-1.13-PQHMS0/blib/lib to PERL5LIB for 'make'
+
+  CPAN.pm: Going to build D/DM/DMAKI/DateTime-Util-Calc-0.11.tar.gz
+
+
+	So I start to believe that Module::Install (or who?) does not set $|. ps
+	shows:
+
+k        11717  0.0  0.3   7704  5488 pts/3    S+   00:52   0:00 /home/src/perl/repoperls/installed-perls/perl/peBfNb9/perl-5.8.0@30067/bin/perl Build.PL
+
+	% lsof -p 11717|grep cwd
+perl    11717    k  cwd    DIR    9,1    4096 11323846 /home/k/.cpan/build/DateTime-Util-Calc-0.11-oDcgJK
+
+	By killing all jobs involved in this, I can find out more:
+
+>06:31:09 k@k75:/home/src/perl/repoperls% kill 3391 3392 1458 1459 11717
+>06:32:02 k@k75:/home/src/perl/repoperls% cd /home/k/.cpan/build/DateTime-Util-Calc-0.11-oDcgJK
+>06:32:12 k@k75:~/.cpan/build/DateTime-Util-Calc-0.11-oDcgJK% /home/src/perl/repoperls/installed-perls/perl/peBfNb9/perl-5.8.0@30067/bin/perl Build.PL
+
+================================================================================
++  You don't seem to have neither Math::BigInt::GMP and Math::BigInt::Pari
++
++  Many astronomical calculations require the arbitrary-precision math
++  libraries like GMP. Without it you might see occasional overflows
++  which will result in an incorrect calculation. It is recommended that
++  you install either one of the module (If both are installed, GMP will
++  be used)
++
++  To install GMP, you will be required to have installed GMP library from
++  http://www.swox.com/gmp/ prior to installing the Perl module
++
++  To install Pari, you will be required to have installed Pari from
++  http://www.parigp-home.de/ prior to installing the Perl module.
++
++  Proceed with installation without Math::BigInt::GMP or Math::BigInt::Pari? [n] 
+
+	Why did I never before see this?
+
+	Because Math::BigInt::GMP fails! See
+	http://rt.cpan.org/Ticket/Display.html?id=24672
+
+	Whatever the answer, this must go into distroprefs. DONE for both TELS
+	and DMAKI.
+
+	In the Build.PL I see:
+
+	    my $proceed = Module::Build->y_n($message, "n");
+
+	Looks to me that Module::Build should set $| within y_n? Yes? No?
+
+	Missing $| reported to module build mailing list just now.
+
 2007-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46

@@ -3,3 +3,11 @@ match:
   distribution: "^DMAKI/DateTime-Util-Calc-0\.11\.tar\.gz$"
 patches:
   - "ANDK/patches/DateTime-Util-Calc-0.11-ANDK-01.patch.gz"
+pl:
+  eexpect:
+    mode: anyorder
+    talk:
+      - "Upgrade DateTime::Util::Calc\?"
+      - "y\n"
+      - "Proceed with installation without Math::BigInt::GMP or Math::BigInt::Pari\?"
+      - "y\n"
