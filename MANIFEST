@@ -94,6 +94,7 @@ distroprefs/RJBS.Email-Send.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
+distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
