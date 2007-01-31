@@ -1165,7 +1165,7 @@ sub has_inst {
 	$CPAN::Frontend->mysleep(3);
     } elsif ($mod eq "Digest::SHA"){
         if ($Have_warned->{"Digest::SHA"}++) {
-            $CPAN::Frontend->myprint(qq{CPAN: checksum security checks disabled}.
+            $CPAN::Frontend->myprint(qq{CPAN: checksum security checks disabled }.
                                      qq{because Digest::SHA not installed.\n});
         } else {
             $CPAN::Frontend->mywarn(qq{
