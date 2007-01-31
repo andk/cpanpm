@@ -1091,6 +1091,16 @@ sub has_usable {
                                         }
                                     },
                                   ],
+               'Archive::Tar' => [
+                                  sub {require Archive::Tar;
+                                       unless (Archive::Tar::->VERSION >= 1.00) {
+                                            for ("Will not use Archive::Tar, need 1.00\n") {
+                                                $CPAN::Frontend->mywarn($_);
+                                                die $_;
+                                            }
+                                       }
+                                  },
+                                 ],
               };
     if ($usable->{$mod}) {
         for my $c (0..$#{$usable->{$mod}}) {

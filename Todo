@@ -1,5 +1,9 @@
 2007-01-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* http://rt.cpan.org/Ticket/Display.html?id=24673
+
+	Maybe needs a binary search?
+
 	* DMAKI/DateTime-Util-Calc-0.11.tar.gz hangs, but I do not see why.
 
   /usr/bin/patch -N --fuzz=3 -p1
