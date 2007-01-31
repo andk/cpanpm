@@ -25,6 +25,8 @@ pl:
     - "\n"
     - "."
     - "\n"
+patches:
+  - ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz
 ---
 comment: |
 
