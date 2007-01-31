@@ -1,3 +1,18 @@
+2007-01-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_72: quick small fixes
+
+	* fix completion for the two commands "failed" and "fforce"
+
+	* fix support for test/args in distroprefs
+
+	* stop scanning build_dir for sizes without lock because we are not
+	cleaning up anyway
+
+	* disable broken Archive::Tar 0.23
+
+	* mitigate a too sharp test in 31sessions.t
+
 2007-01-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_71: this does not yet qualify as a release candidate for
