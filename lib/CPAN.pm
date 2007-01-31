@@ -182,14 +182,7 @@ sub shell {
                 $CPAN::Frontend->mywarn("Terminal does not support AddHistory.\n");
                 last;
             }
-            my($fh) = FileHandle->new;
-            open $fh, "<$histfile" or last;
-            local $/ = "\n";
-            while (<$fh>) {
-                chomp;
-                $term->AddHistory($_);
-            }
-            close $fh;
+            $META->readhist($term,$histfile);
         }}
         for ($CPAN::Config->{term_ornaments}) { # alias
             local $Term::ReadLine::termcap_nowarn = 1;
@@ -1245,6 +1238,19 @@ sub cleanup {
       $CPAN::Frontend->mywarn("Warning: Configuration not saved.\n");
   }
   $CPAN::Frontend->myprint("Lockfile removed.\n");
+}
+
+#-> sub CPAN::readhist
+sub readhist {
+    my($self,$term,$histfile) = @_;
+    my($fh) = FileHandle->new;
+    open $fh, "<$histfile" or last;
+    local $/ = "\n";
+    while (<$fh>) {
+        chomp;
+        $term->AddHistory($_);
+    }
+    close $fh;
 }
 
 #-> sub CPAN::savehist

@@ -16,6 +16,7 @@ my $trustme = { trustme => [ qw{
                                 is_tested
                                 new
                                 new
+                                readhist
                                 savehist
                                 set_perl5lib
                                 soft_chdir_with_alternatives
