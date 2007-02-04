@@ -208,7 +208,7 @@ ALL_PERLS = /usr/bin/perl \
             /usr/local/perl-5.6.2/bin/perl
 
 # not sorted because order matters
-MEGA_COLLECTION = Expect \
+MEGA_INSTALL = Expect \
 		Bundle::CPANxxl \
 		CPAN::DistnameInfo \
 		Devel::Cover \
@@ -217,7 +217,11 @@ MEGA_COLLECTION = Expect \
 		Font::TTF \
 		YAML::Tiny \
 		PadWalker \
+		SOAP::Lite \
 		Data::Float \
+		bigint \
+		Math::BigInt::FastCalc \
+		Math::BigRat \
 		Math::BigInt::GMP \
 		IPC::ShareLite \
 		Data::Dump \
@@ -258,6 +262,8 @@ MEGA_COLLECTION = Expect \
 		Test::JSON \
 		Term::ReadLine::Gnu \
 		CDB_File \
+		Catalyst \
+		Module::Info \
 
 }
 }
@@ -312,7 +318,7 @@ checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
 
 megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(qw($(MEGA_COLLECTION)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 depefails:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
