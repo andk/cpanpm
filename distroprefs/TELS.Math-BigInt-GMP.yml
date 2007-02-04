@@ -4,3 +4,15 @@ match:
   distribution: "TELS/math/Math-BigInt-GMP-1.19.tar.gz"
 patches:
   - "ANDK/patches/Math-BigInt-GMP-1.19-ANDK-01.patch.gz"
+---
+comment: |
+
+  Later I discovered that he uses PREREQ_FATAL everywhere and found
+  this patchfree solution that SHOULD work but DOESN'T. A MakeMaker
+  bug, reported in http://rt.cpan.org/Ticket/Display.html?id=24774
+
+match:
+  distribution: "^TELS/math/"
+pl:
+  args:
+    - "PREREQ_FATAL=0"

@@ -1,8 +1,282 @@
+2007-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* IAMCAL/XML-Parser-Lite-Tree-0.03.tar.gz fails when called early,
+	succeeds when called late?
+
+	Yes, this is the case. Because X:P:L:T depend on XML::Parser::Lite.
+	PAUSE has indexed BYRNE/SOAP/SOAP-Lite-0.60a.tar.gz for that, but I have
+	disabled the installation of this distro, so we fail quickly with a
+	missing dependency.
+
+	But during megainstall somebody installs X:P:L 0.65_3 and solves the
+	problem for X:P:L:T. So who is it? With locate I find this:
+
+	% ls -l /home/ftp/pub/PAUSE/authors/id/H/HE/HEX/XML-Parser-Lite-0.66.tar.gz
+-rw-rw-r-- 1 root root 4388 Jan 31 13:53 /home/ftp/pub/PAUSE/authors/id/H/HE/HEX/XML-Parser-Lite-0.66.tar.gz
+
+	But when going through the logfile, I find that SOAP-Lite-0.69 has
+	installed it. Is my logfile the only one who knows who installed what?
+	What a sad story. It's getting even worse when we realize that nobody
+	discovers who overwrote which previous version!
+	
+	I must ask HEX if this is all as intended. DONE.
+
+	We should also institutionalize a place where FAILED reports of the
+	PAUSE indexer are directed to. We receive 3 every day and nobody cares
+	about them, not even the authors.
+
+	I also need to understand how I can speed up Gnus on large, rarely
+	visited mailboxes. It is extremely slow on my pause mailbox and I cannot
+	simply catchup on that as I do with the lookslikespam mailbox.
+
+	And how do I deal with the X:P:L:T dependency in exactly this situation?
+	It's not a goto. We need to patch up the dependency: instead of X:P:L it
+	would have to be BYRNE/SOAP-Lite-0.69.tar.gz for now. But this would
+	have to be removed as soon as HEX gets the index entry. Well, I think we
+	have to pass on this one. Pity.
+
+	And we have a similar issue with Flickr::API which also depends on
+	XML::Parser::Lite (but which still fails tests, even if we resolve the
+	X:P:L dependency).
+
+	I think it's best described as a pseudo dependency. It depends on a
+	thing that is contained in another but this other thing hides this (with
+	the underscore in the version number).
+
+	As was the case before we had distroprefs, externally known dependencies
+	are best handled by bundle files. My "bundle file" here is the
+	MEGA_INSTALL macro in my Makefile.PL. I simply add SOAP::Lite _before_
+	Plagger.
+
+2007-02-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Feature request by self: introduce a lex TELS that ignores a failing
+	Makefile.PL, declares the META.yml as authoritative (for lack of
+	alternatives), and reruns the Makefile.PL; we should count how often we
+	reran it and give it a final death shot after the second time.
+
+	This solution should fit together with a refined model of the toolchain
+	as recently pointed out by Adam Kennedy who said:
+
+1. Configure Dependency
+2. Build Dependency
+3. Test Dependency
+4. Install Dependency
+5. Run-Time Dependency
+
+For the current CPAN case, we can consider "requires" to cover
+Run-Time Dependency, and "build_requires" to cover all other 4.
+
+Since the Configure Dependency is required to be installed before
+configuring, that means that we have to do build_requires before
+running our configure script.
+
+	And Schwern recently also said something in this direction.... Where did
+	he post something? On P5P:
+
+From: Michael G Schwern <schwern@gmail.com>
+Subject: Re: $VERSION string of ExtUtils::MM_Unix
+To: John Peacock <jpeacock@rowman.com>
+CC: schwern@pobox.com, perl5-porters@perl.org, rgarciasuarez@gmail.com
+Date: Sun, 14 Jan 2007 22:46:35 -0800
+Reply-To: schwern@pobox.com
+
+John Peacock wrote:
+>> I'd say to send the patch, but I don't see the utility when C<$VERSION =
+>> '1.23_01'; \n $VERSION = eval $VERSION> works fine and is a lot simpler to
+>> maintain.  I remain open to convincing.
+> 
+> But Damian suggested C<use version; $VERSION = qv('1.2.3');>, which EU::MM isn't
+> completely prepared to deal with.  Now that PAUSE has a way to reset the latest
+> release, module authors can switch from numeric to extended versions (SVK just
+> did that with v2.0.0).  Can EU::MM handle comparing those without version.pm around?
+
+Ah ha, that's a horse of a different color.  This, I presume, is the VERSION_FROM problem?  Distribution Foo's Makefile.PL says "VERSION_FROM => 'lib/Foo.pm'" which says C<use version; our $VERSION = qv'1.2.3';>.  Even if Foo depends on version.pm the CPAN shells try to run the Makefile.PL before it resolves dependencies (something I'd like to change).
+
+Ok, that's convincing.  Send it on.
+
+
+
+	Even though I believe this is too complex to be solved in a one day
+	timeframe, I'm tempted.
+
+	* How come that I did get the impression that PREREQ_FATAL=0 fixes all
+	the TELS distros that set PREREQ_FATAL to 1? Just tried with blead@30104
+	and it does not help. At least not with TELS/math/bignum-0.18.tar.gz.
+
+	So maybe I tried them out in the "right" order? Yes, this must have been
+	the case. The "right" order seems to be: Math::BigInt, Math::BigRat.
+
+	This means that we discovered a bug in MakeMaker (a
+	non-commandline-overrideable parameter) and we need 4 patches for TELS.
+
+	This is about the MakeMaker bug: http://rt.cpan.org/Ticket/Display.html?id=24774
+
+	I'll first ask Tels himself before I go this route. [time passes] As
+	expected, Tels is not ready to remove PREREQ_FATAL from his modules.
+
+	* Feature request by self: "o conf init ~"
+
+	Should only try to talk about uninitialized or undefined config
+	variables. (?)
+
+	* TELS has given all new Math modules the PREREQ_FATAL parameter. Trying
+	now to counteract with PREREQ_FATAL=0. Yes, the commandline wins, so
+	this gives a new distropref file. Update 2007-02-04: I was wrong.
+
+	But with three big* packages upgraded DateTime::Util::Astro::Sun still fails.
+
+	So when did Astro install successfully for the last time?
+
+	for p in `~k/sources/Perl-Repository-APC/SVN/scripts/binsearchaperl --show-cache` ; do $p -e 'print $^X, $"'; $p tests/has-DateTime-Util-Astro.pl ; done | tee show-astro.out
+
+	ergibt als letztes:
+	
+	/home/src/perl/repoperls/installed-perls/perl/pGoZsz3/perl-5.8.0@30044/bin/perl 0.040
+
+	and this was:
+
+	-rwxr-xr-x 2 k k 3850309 Jan 28 03:48 /home/src/perl/repoperls/installed-perls/perl/pGoZsz3/perl-5.8.0@30044/bin/perl*
+
+	Running CPAN.pm with 30044:
+
+	cpan[2]> r /big/
+
+Package namespace         installed    latest  in CPAN file
+Math::BigFloat                 1.51      1.53  TELS/math/Math-BigInt-1.79.tar.gz
+Math::BigInt::FastCalc      0.10_01      0.11  TELS/math/Math-BigInt-FastCalc-0.11.tar.gz
+Math::BigInt::GMP              1.18      1.19  TELS/math/Math-BigInt-GMP-1.19.tar.gz
+Math::BigRat                   0.15      0.16  TELS/math/Math-BigRat-0.16.tar.gz
+bigint                         0.07      0.08  TELS/math/bignum-0.18.tar.gz
+
+cpan[4]> ls TELS/math/*
+  172453 2007-01-28 TELS/math/Math-BigInt-1.78.tar.gz
+  172135 2007-02-02 TELS/math/Math-BigInt-1.79.tar.gz
+   41007 2007-02-02 TELS/math/Math-BigInt-FastCalc-0.11.tar.gz
+   37602 2007-01-28 TELS/math/Math-BigInt-GMP-1.19.tar.gz
+   34907 2007-01-28 TELS/math/Math-BigRat-0.16.tar.gz
+   15933 2007-01-28 TELS/math/bignum-0.18.tar.gz
+
+	I could prove for both bleadperl@30044 and maintperl@29832 that the
+	failure is caused by an upgrade to Math-BigInt-1.79. Report written to
+	Tels and DMAKI.
+
+	SUMMARIZED at http://rt.cpan.org/Ticket/Display.html?id=24779
+
+2007-02-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Tels has quickly released three more distros but
+	DateTime::Util::Astro::Sun still fails. No time to investigate.
+
+	* Yves has posted a patch that should fix the XML::Twig failures but the
+	pumpkin has not yet reacted. Update 2007-02-04: Steve Peters has
+	integrated it, problem solved. YAY!
+
+	* what's the problem with Math::BigInt?
+
+	bleadperl has 1.77, TELS has released 1.78. Running the tests for 1.78
+	produces lots of warnings. DateTime::Util::Astro::Sun produces lots of
+	failures with it but also when I downgrade to 1.77. Giving up for now.
+
+2007-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Summary of the facts, also posted to Ken:
+
+(1) perl is bleadperl @30080 (verified again with 30087)
+(2) Module::Build is 0.2806
+(3) distro is DMAKI/DateTime-Util-Calc-0.11.tar.gz
+(4) Math::BigInt::GMP and Math::Pari must NOT be installed, so that y_n() is triggered
+(5) I call 'perl Build.PL > /tmp/ttt' and it hangs forever and /tmp/ttt remains empty
+
+	Continuing with experiments.
+
+	Downgrading Module::Build to 0.2805 and the bug stays.
+	Downgrading Module::Build to 0.2804 and the bug stays.
+	Downgrading Module::Build to 0.2610 and the bug goes away.
+	0.2801 not ok
+	0.2612 ok
+	0.27_09 ok
+	0.27_10 ok
+	0.28 not ok
+
+	Studying the diff between 27_10 and 28:
+
++                  repository => 'http://svn.perl.org/modules/Module-Build/'
+
+	Taking note of the repository for refined binary search. But watch out:
+
+	trunk/tags/branches!
+
+-0.27_11  Tue Mar 28 22:50:50 CST 2006
++0.28  Thu Apr 27 22:25:00 CDT 2006
+
+	Where is 27_11?
+
+	5978 is a test, 5977 talks about prompt and y_n, 5871...
+
+	0.28     was 5994
+	0.27_10  was 5850
+
+	5870 died on that Build.PL
+	5871 works correctly
+	5976 works wrong
+	5931 works wrong
+	5919 works wrong
+	5904 works correctly
+
+	The diff between the two is interesting:
+
++sub _is_unattended {
++  my $self = shift;
++  return $ENV{PERL_MM_USE_DEFAULT} || ( !$self->_is_interactive && eof STDIN );
++}
++
+
+	Sure, this hangs. REPORTED on the mailing list.
+	
+	* D/DM/DMAKI/DateTime-Util-Calc-0.11.tar.gz again. Ken wrote me to say
+	that Module::Build does set $|, so I do the following:
+
+2007-02-01 07:27  cd ~/.cpan/build/DateTime-Util-Calc-0.11-Or71Ir
+2007-02-01 07:53  mv /home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/lib/site_perl/5.9.5/i686-linux-64int/Math/BigInt/GMP.pm
+2007-02-01 07:53  /home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/bin/perl Build.PL >| /tmp/p8FWT5N.out2 2>&1
+
+	This "hangs" and the file /tmp/p8FWT5N.out2 contains ONLY the following lines:
+
+Math::BigInt::FastCalc is missing method '_from_oct' at /home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/lib/site_perl/5.9.5/DateTime/Util/Calc.pm line 9
+Cannot load outdated Math::BigInt::FastCalc v0.10_01, please upgrade at /home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/lib/site_perl/5.9.5/DateTime/Util/Calc.pm line 9
+
+	So I must repeat this in the debugger to find out who is waiting for what.
+
+	I reach line 501:
+
+  DB<4> 
+Module::Build::Base::prompt(/home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/lib/5.9.5/Module/Build/Base.pm:501):
+501:      local $|=1;
+DB<4> 
+Module::Build::Base::prompt(/home/src/perl/repoperls/installed-perls/perl/p8FWT5N/perl-5.8.0@30080/lib/5.9.5/Module/Build/Base.pm:502):
+502:      print "$mess $dispdef";
+DB<4> x $|
+0  1
+
+  So this seems correct.
+  
+	I change lines 501 and 502 to read:
+
+  local $|=1;{my $s = fileno select;warn "Going to print message to selected filehandle[$s]. \$|[$|]";}
+  print "$mess $dispdef";warn "Have printed message to selected filehandle";
+
+	With that I retry and am quite surprised that again the output file
+	looks like the first time.
+
+	For my testing it seems better to not redirect STDERR but only STDOUT,
+	so we can just look with 'ls -l' to see that the file is empty.
+
 2007-01-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* http://rt.cpan.org/Ticket/Display.html?id=24673
+	* http://rt.cpan.org/Ticket/Display.html?id=24673 Template fails.
 
-	Maybe needs a binary search?
+	Maybe needs a binary search? DONE and REPORTED.
 
 	* DMAKI/DateTime-Util-Calc-0.11.tar.gz hangs, but I do not see why.
 

@@ -10657,7 +10657,8 @@ through the pager specified in C<$CPAN::Config->{pager}>.
 Returns the content of the META.yml of this distro as a hashref. Note:
 works only after an attempt has been made to C<make> the distribution.
 Returns undef otherwise. Also returns undef if the content of META.yml
-is dynamic.
+is not authoritative. (The rules about what exactly makes the content
+authoritative are still in flux.)
 
 =item CPAN::Distribution::test()
 
