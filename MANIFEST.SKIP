@@ -24,6 +24,7 @@
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
 ^eg/
+^gpw9-cpan-talk\.pod$
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm@
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup

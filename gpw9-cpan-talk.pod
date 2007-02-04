@@ -1,0 +1,5 @@
+=head1 C<diff -h CPAN.pm -r 1.8x 1.9x>
+
+Dank SVN kann ich die Änderungen in CPAN.pm in diesem einen Jahr seit
+dem letzten Workshop in Bochum leicht sichtbar machen:
+
