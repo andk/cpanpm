@@ -33,6 +33,7 @@ distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
 distroprefs/DMAKI.DateTime-Util-Calc.yml
 distroprefs/DMAKI.Xango.yml
+distroprefs/DMAKI.XML-RSS-Liberal.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
@@ -75,6 +76,7 @@ distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MLEHMANN.Coro.yml
+distroprefs/MRAMBERG.Catalyst-Runtime.yml
 distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
 distroprefs/MSERGEANT.DBIx-AnyDBD.yml
