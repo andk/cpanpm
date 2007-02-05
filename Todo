@@ -1,3 +1,67 @@
+2007-02-05  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* Important things I forgot in the talk paper:
+
+	force/fforce
+	auto_commit
+	patch/applypatch support with example
+	Devel::Cover statistics??? -- not really interesting
+	eexpect example
+	commandline example
+	goto example
+	maybe mention Kwalify in the distroprefs section
+	degraded mode
+	add distribution name to every OK/NOT OK; also inspired by Ilya.
+	mention 'cpan .'
+	mention yaml_module and YAML::Syck earlier
+	build_requires_install_policy
+	scripts installation
+
+	Screenshot of the hosts command
+
+cpan[1]> hosts
+CPAN: YAML loaded ok (v0.62)
+Log starts: Thu Jan  4 16:26:35 2007
+Log ends  : Fri Feb  2 17:14:48 2007
+
+Successful downloads:
+   N       kB  secs      kB/s url
+   1      504     1     360.3 ftp://ftp.kulnet.kuleuven.ac.be/pub/mirror/CPAN/
+   1      501     1     254.7 ftp://ftp.rediris.es/mirror/CPAN/
+   2      898     3     252.3 ftp://dl.iskon.hr/pub/CPAN/
+   1      125     0     226.4 http://cpan.serveroffice.at/
+   2      164     0     218.5 http://cpan.interprovide.de/
+   1      501     2     182.8 ftp://cpan.mirrors.skynet.be/pub/CPAN/
+   2       72     0     175.1 http://www.planet-elektronik.de/CPAN/
+   1      218     1     167.4 ftp://cpan.provocation.net/
+   2      309     2     130.9 ftp://ftp.cs.uu.nl/mirror/CPAN/
+   1      126     1     119.0 http://cpan.blic.net/
+   4      201     1     111.8 http://cpan.org.ua/
+   2       43     0     105.6 http://www.chemmedia.de/mirrors/CPAN/
+   1      121     1     104.0 ftp://cpan.mirrors.easynet.fr/pub/ftp.cpan.org/
+   2      133     1      99.0 http://cpan.univ-paris.com/
+   5      555     8      69.3 ftp://ftp.litnet.lt/pub/CPAN/
+   2      203     3      59.3 ftp://ftp.flirble.org/pub/CPAN/
+   1       88     1      58.6 ftp://ftp.cpan.nl/pub/CPAN/
+   2       56     1      56.2 ftp://ftp.cs.tu-berlin.de/pub/lang/perl/CPAN/
+   1       34     0      56.0 http://cpan.panu.it/
+   1      125     2      55.9 ftp://no-more.kiev.ua/pub/CPAN/
+
+Unsuccessful downloads:
+   2 http://cpan.univ-paris.com/
+   2 http://www.chemmedia.de/mirrors/CPAN/
+   2 http://cpan.interprovide.de/
+   2 ftp://ftp.uit.no/pub/languages/perl/cpan/
+   2 ftp://gnu.kookel.org/ftp/CPAN/
+   2 ftp://ftp.telepac.pt/pub/cpan/
+   2 http://cpan.mirror.rokscom.nl/
+   2 ftp://ftp.du.se/pub/CPAN/
+   1 http://kvin.lv/pub/CPAN/
+   1 http://cpan.enstimac.fr/
+   1 http://cpan.org.ua/
+   1 http://cpan.panu.it/
+
+
 2007-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Got another mail from T. Need to close the issue. Better a WONTFIX
