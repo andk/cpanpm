@@ -1786,7 +1786,7 @@ sub o {
                 CPAN::HandleConfig->prettyprint($k);
 	    }
 	    $CPAN::Frontend->myprint("\n");
-	} else {
+        } else {
             if (CPAN::HandleConfig->edit(@o_what)) {
             } else {
                 $CPAN::Frontend->myprint(qq{Type 'o conf' to view all configuration }.
@@ -2790,7 +2790,7 @@ sub print_ornamented {
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
         if ($@) {
             print "Term::ANSIColor rejects color[$ornament]: $@\n
-Please choose a different color (Hint: try 'o conf init color.*')\n";
+Please choose a different color (Hint: try 'o conf init /color/')\n";
         }
         print $color_on,
             $swhat,

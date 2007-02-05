@@ -1,5 +1,8 @@
 2007-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Got another mail from T. Need to close the issue. Better a WONTFIX
+	than scenes like those we had on P5P at the end of the 90ies.
+
 	* IAMCAL/XML-Parser-Lite-Tree-0.03.tar.gz fails when called early,
 	succeeds when called late?
 
@@ -119,6 +122,10 @@ Ok, that's convincing.  Send it on.
 
 	Should only try to talk about uninitialized or undefined config
 	variables. (?)
+
+	Tried it and it was much more work than expected, giving up. For a
+	future reference, see the lines around C< $matcher eq "~" > in
+	FirstTime.pm
 
 	* TELS has given all new Math modules the PREREQ_FATAL parameter. Trying
 	now to counteract with PREREQ_FATAL=0. Yes, the commandline wins, so
@@ -338,17 +345,18 @@ perl    11717    k  cwd    DIR    9,1    4096 11323846 /home/k/.cpan/build/DateT
 
 	* My talk proposal http://www.perl-workshop.de/auth/my/edittalk?id=46
 
-Distroprefs: Module morphing, taming, killing, obedience, etc.
-CPAN::Reporter: Talkback.
-CPAN::SQLite: use less memory.
-dot distros: cpan DOT (bring your own)
-Persistent Shell. build_dir_reuse
-Permanent Shell. reload seems reliable now
-Upgrade.
-Test Now, Install Later. Is_tested, install_tested
-Interactive Configuration of single items.
-Color.
+-Distroprefs: Module morphing, taming, killing, obedience, etc.
+-CPAN::Reporter: Talkback.
+-CPAN::SQLite: use less memory.
+-dot distros: cpan DOT (bring your own)
+-Persistent Shell. build_dir_reuse
+-Permanent Shell. reload seems reliable now
+-Upgrade.
+-Test Now, Install Later. Is_tested, install_tested
+-Interactive Configuration of single items.
+-Color.
 Bundle::CPANxxl - what is in there? sequence matters.
+-hosts stats
 
 	* TTL stuff
 

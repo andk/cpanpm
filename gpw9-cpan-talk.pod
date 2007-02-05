@@ -1,5 +1,304 @@
 =head1 C<diff -h CPAN.pm -r 1.8x 1.9x>
 
-Dank SVN kann ich die Änderungen in CPAN.pm in diesem einen Jahr seit
-dem letzten Workshop in Bochum leicht sichtbar machen:
+Die Änderungen in CPAN.pm in diesem einen Jahr seit dem letzten
+Workshop in Bochum mit Hilfe von Subversion sichtbar gemacht:
 
+    % svn diff https://pause.perl.org:5460/svn/cpanpm/tags/1.87 https://pause.perl.org:5460/svn/cpanpm/trunk|wc
+      35871  159837 1345665
+
+Können das alle lesen? Das diff, das svn ausgibt, wenn man den Code
+vor einem Jahr und heute vergleicht, gibt 35 Tausend Zeilen. Ja, das
+ist vielfach nur Codegehampel, ein bisschen was raufgeschoben, ein
+bisschen was ausgelagert, umgelagert, unnötiger Code gelöscht, alter,
+funktionierender Code durch Bugs ersetzt, etc., aber eins steht
+trotzdem fest: es hat sich was getan und davon will ich erzählen.
+
+=head1 CPAN::Reporter
+
+Das erste herausragende Ereignis für CPAN.pm war, daß David Golden das
+CPAN::Reporter Modul beigesteuert hat, das es nun ermöglicht aus CPAN
+heraus direkt Reports über einzelne Distributionen zu testers.cpan.org
+zu schicken.
+
+  cpan> report Flickr::API
+
+Dieser Befehl schreibt einen umfangreichen Report über die
+Testergebnisse des Moduls an testers.cpan.org, schickt optional auch
+ein CC an den Autor, und erlaubt es optional auch, den Report noch zu
+editieren, bevor er abgeschickt wird.
+
+Um mit CPAN::Reporter zu arbeiten, reicht es CPAN::Reporter zu
+installieren und einige, wenige Configurationsparameter zu setzen.
+
+  cpan> install CPAN::Reporter
+  cpan> o conf init /report/
+
+Man kann CPAN::Reporter auch so konfigurieren, dass er immer Reports
+abschickt, daß er fragt, bevor er Reports abschickt, oder daß er
+Reports nur im Fehlerfall abschickt. Mir persönlich ist der separate
+Befehl C<report> am angenehmsten.
+
+=head1 CPAN::SQLite
+
+Seit mehreren Jahren war eine der Problemzonen von CPAN.pm, daß es
+sehr viel Memory verbraucht. Erst vor wenigen Wochen kam Randy Kobes
+mit dem Vorschlag, die wesentlichsten Metadaten nur sekundär im Memory
+zu halten, primär aber in einer SQLite Datenbank. Er schrieb das Modul
+CPAN::SQLite mit dem Ergebnis, daß man nun CPAN.pm statt in 80 MB
+Memory auch in 20 MB Memory laufen lassen kann.
+
+Um mit CPAN::SQLite zu arbeiten, reicht es CPAN::SQLite zu
+installieren und einen einzigen Konfigurationsparameter zu setzen:
+
+  cpan> install RKOBES/CPAN-SQLite-0.1_04.tar.gz
+  cpan> o conf init use_sqlite
+
+=head1 Interaktive Konfiguration einzelner Variabler
+
+Der gesamte Konfigurationsapparat war bereits vor mehr als einem Jahr
+von Jim Cromie grundlegend umgeschrieben, man hat nur recht wenig
+davon bemerkt. In diesem Jahr ist es endlich gelungen, etwas von dem
+ganzen reformierten Mechanismus an den Benutzer weiterzugeben.
+
+Bis zum letzten Jar war es immer nur möglich, den gesamten
+Konfigurationsdialog auf einmal durchzugehen, indem man
+
+  cpan> o conf init
+
+eingegeben hat. Jetzt endlich akzeptiert C<o conf init> ein weiteres
+Argument, das ein Variablenname oder ein regulärer Ausdruck sein kann,
+etwa:
+
+  cpan> o conf init use_sqlite
+
+oder
+
+  cpan> o conf init /report/
+
+Damit kann man direkt in den Dialog fur eine oder mehrere
+Konfigurationsvariable eintreten und kann sich die restlichen
+Variablen sparen.
+
+=head1 Ist alles so bunt hier
+
+Vier neue Konfigurationsvariable stehen fuer die farbliche Gestaltung
+des Outputs der CPAN shell zur Verfügung
+
+=over *
+
+=item für den normalen Output
+
+=item für Warnungen und
+
+=item für Debugging Output
+
+=item und zum Ein/Ausschalten von Farbe überhaupt
+
+=back
+
+Man aktiviert und konfiguriert alle vier am besten mit einem Befehl:
+
+  cpan> o conf init /color/
+
+Manche mögen auch die Fontbehandlung nicht, die Term::ReadLine::Perl
+per default dem Prompt antut. Dafür gibt es eine separate
+Konfigurationsvariable:
+
+  cpan> o conf init term_ornaments
+
+=head1 Neuer Befehl: upgrade
+
+Martin Sluka gebührt der Dank für ein Feature Request, das er beim
+letzten Perl Workshop geäussert hat: der Befehl, alle installierten
+Module auf einmal auf den neuesten Stand zu bringen. Der neue Befehl
+heißt C<upgrade> und tut das gleiche, was auch der C<r> Befehl tut: er
+listet zuerst alle Module, für die es eine neuere Version auf CPAN
+gibt und installiert sie dann.
+
+=head1 Distroprefs: Nicht ärgern lassen durch lästige Installationen
+
+Der größte Brocken im neuen CPAN.pm sind die Distroprefs. Ein System
+zum Steuern von Installationen, die vom normalen CPAN Mantra
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+beziehungsweise, für die Module::Build Hemisphäre
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+
+abweichen. Hier herrscht ja bekanntlich Anarchie, und jeder Autor, der
+irgendetwas an seinem Modul konfigurierbar machen möchte, macht das
+auf seine eigene Art und Weise.
+
+Distroprefs machen damit Schluss, weil für praktisch alle Hindernisse,
+die Autoren sich so ausgedacht haben, eine Gegenmaßnahme konfiguriert
+werden kann, die dann von CPAN.pm ausgeführt wird. CPAN.pm setzt dann
+eben Environment Variable und Befehlszeilenargumente oder
+Konfigurationsvariable oder es beantwortet Fragen selbsttätig.
+
+Ja, wir können sogar Module automatisch lokal patchen, sofern ein
+Patch lokal oder auf CPAN vorhanden ist. Oder wir können auch die
+Installation von Modulen komplett verhindern.
+
+Hier ist ein einfaches Beispiel einer Distribution, die normalerweise
+immer sieben Fragen stellt, ob es dieses oder jenes Programm
+installieren soll.
+
+  ---
+  comment: "The -n asks no questions, takes default values"
+  match:
+    distribution: "^GAAS/libwww-perl-"
+  pl:
+    args:
+      - -n
+
+Die Syntax ist YAML. Es gibt einen optionalen C<comment>, der in
+diesem Fall erklärt, was dieses Schnippsel tut. Wir haben eine
+Variable C<match>, die ein Prüfkriterium festlegt, das gegen jede
+get/make/test/install Aktivität abgeprüft wird. In diesem Fall geht es
+um die libwww Distribution von Gisle Aas, egal welche Version. Der
+Befehl an CPAN.pm ist schließlich, dass er in der C<pl> Phase ein
+Argument übergeben soll, nämlich C<-n>.
+
+Man aktiviert Distroprefs mit
+
+  cpan> o conf init prefs_dir
+
+Für nützliche Beispiele sieht man sich im C<distroprefs/> Directory
+der CPAN.pm Distribution um. Dort findet man auch ein Beispiel, bei
+dem die Frage des Autors tatsächlich beantwortet wird:
+
+  ---
+  match:
+    distribution: "^LEAKIN/File-Rsync-"
+  make:
+    expect:
+      - "Path to rsync "
+      - "/usr/bin/rsync\n"
+
+Man sieht hier, der Autor fragt nicht in der C<pl> Phase, sondern erst
+in der C<make> Phase. Er fragt nach einem Pfad, den man bestätigen
+oder eingeben kann. Hier muß das Modul Expect installiert sein, damit
+es die Frage lesen und beantworten kann.
+
+Liegt diese Distroprefs Datei erst einmal im C<prefs_dir> Verzeichnis,
+wird CPAN.pm immer wieder bei der Installation dieses Moduls die Frage
+für uns beantworten.
+
+Letztes Beispiel: eine Environment Variable während das Tests:
+
+  ---
+  match:
+    distribution: "^SREZIC/Tk-Autoscroll-"
+  test:
+    env:
+      BATCH: 1
+
+Mit den circa 100 Distroprefs Dateien, die der CPAN.pm Distribution
+beigelegt sind, baue ich nun seit einigen Wochen regelmäßig
+vollautomatisch und unbeaufsichtigt ca. 430 Distributionen mit ca.
+3000 Modulen.
+
+=head1 Permanent Shell
+
+Das gehört eigentlich ins Kapitel Bugfixes. Der Befehl C<reload cpan>
+hat früher manchmal eine Endlosschleife losgetreten, die mit C<^C>
+nicht zu unterbrechen war. Das dürfte nun auch endgültig gefixt sein,
+das heißt die CPAN Shell upgraden, während man die Shell benutzt, ist
+jetzt verläßlich und es gibt keinen Grund mehr, die CPAN shell jemals
+zu verlassen.
+
+=head1 Sicheres C<build_dir> Directory
+
+Eine Schwachstelle der CPAN Shell war immer, daß das C<build_dir>
+Directory, in dem die Module alle gebaut werden, von konkurrierenden
+Prozessen gleichzeitig genutzt wurde. Damit bestand das Risiko, daß
+sich zwei Prozesse gegenseitig stören können. Das ist nun gefixt,
+indem diese Directories von File::Temp eingerichtet werden und damit
+automatisch garantiert dem laufenden Prozess alleine gehören.
+
+=head1 Neue Befehle C<is_tested> und C<install_tested>
+
+Die Idee stammt von Ilya Zakharevich, der die CPAN Shell immer etwas
+anders benutzt hat als die meisten von uns. Er installiert Module
+nicht, sondern er testet sie nur. Ja, irgendwann installiert er sie
+schon, aber das kann Wochen dauern, bis eben soundsoviele Fehler
+beseitigt sind. Um sich den Überblick zu verschaffen, welche Module
+bereits erfolgreich getestet sind, gibt es jetzt den Befehl
+C<is_tested>. Und um alle diese getesteten Module auf einmal zu
+installieren, gibt es C<install_tested>.
+
+=head1 Persistent shell
+
+Wer keine permanent offene CPAN shell mag und trotzdem auf die bereits
+gebauten und/oder getesteten Module aus früheren Sessions
+zurückgreifen möchte, der wird viellicht die Konfigurationsvariable
+C<build_dir_reuse> praktisch finden. Wenn die gesetzt ist, wird beim
+Start der CPAN shell das C<build_dir> Directory durchsucht und alle
+Module, die von dem laufenden Perl selbst bereits gebaut, getestet,
+oder installiert wurden, werden so ins Memory geladen, wie sie bei
+der letzten Session verlassen wurden.
+
+=head1 Neue Spalte beim C<m> Befehl
+
+Der Output des C<m> Befehls wurde um eine Spalte ergänzt,
+eine Schnellanzeige, ob ein Modul installiert ist und ob es auf dem
+neuesten Stand ist.
+
+=head1 Dot Distros: bring your own
+
+Immer mehr Modul Autoren verfügen über ein Repository, zu dem sie die
+Welt lesend zugreifen lassen können. Oft sind wir an diesem direkten
+Zugriff interessiert, ganz besonders, wenn es unsere eigenen
+Repositories sind. Für all diese Fälle hat CPAN eine neue Syntax:
+
+  cpan> install /home/src/working-copies/CPAN-SQLite/.
+
+Ein Argument, das zum einen (wegen der Slashes) wie eine Distribution
+aussieht, aber mit einem Punkt aufhört, wird als Lokales Directory
+behandelt. Das heisst, CPAN.pm wechselt in dieses Verzeichnis und
+macht sein übliches Programm. Ideal auch für firmeninterne Module.
+
+=head1 Hosts Statistik
+
+Der neue Befehl C<hosts> gibt eine kurze kleine Statistik über die
+letzten Downloads aus. Im Moment ist das nur ein kleines Spielzeug,
+das einem helfen kann, gute Download Hosts zu finden. Insbesondere,
+wenn man eine lange C<urllist> konfiguriert und zusätzlich die
+Konfigurationsvariable C<randomize_urllist> setzt. Dann erhält man
+nach einigen Tagen oder Wochen ganz interessante Einblicke.
+
+=head1 Bundle::CPANxxl
+
+Dieses Bundle enhält das traditionelle Bundle::CPAN und darüber hinaus
+alles, was zum Laufen der neuen Features benötigt wird, insbesondere
+Expect und Module::Signature. Ich habe da auch YAML::Syck mit
+aufgenommen, weil es bis zu hundert mal schneller ist als YAML.pm.
+Kwalify ist ein Modul von Slaven Rezic, das Perl Datenstrukturen auf
+syntaktische Korrektheit (ein Schema) abprüft. Slaven hat auch das
+Schema für die Distroprefs Dateien beigesteuert und wenn Kwalify
+installiert ist, werden alle lokalen Distroprefs Dateien entsprechend
+geprüft. Schließlich ist natürlich CPAN::Reporter enthalten.
+
+=head1 Ausblick
+
+Die TODO Liste ist während des letzten Jahres ununterbrochen länger
+statt kürzer geworden. Die wichtigsten Dinge, die ich im kommenden
+Jahr erwarte, sind die Verfeinerung der Dependency Resolution in zwei
+oder mehr Phasen, so dass auch Dependencies abgehandelt werden, die
+bereits vor dem Makefile.PL Aufruf benötigt werden. Ein anderer Wunsch
+sind für mich Coroutines, die es ermöglichen würden, daß Indexe im
+Hintergrund geladen werden. Überhaupt brauchen die verschiedenen
+Indexe verschiedene Cachezeiten. Vielleicht sollte man die Hosts
+Statistik intelligenter machen, so dass automatisch nur die besten
+Hosts zum Downloaden verwendet werden.
+
+
+
+=cut

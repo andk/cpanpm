@@ -58,6 +58,13 @@ sub init {
             $CPAN::Frontend->mysleep(2);
         }
     } elsif (0 == length $matcher) {
+    } elsif (0 && $matcher eq "~") { # extremely buggy, but a nice idea
+        my @unconfigured = grep { not exists $CPAN::Config->{$_}
+                                      or not defined $CPAN::Config->{$_}
+                                          or not length $CPAN::Config->{$_}
+                                  } keys %$CPAN::Config;
+        $matcher = "\\b(".join("|", @unconfigured).")\\b";
+        $CPAN::Frontend->mywarn("matcher[$matcher]");
     } else {
         # case WORD... => all arguments must be valid
         for my $arg (@{$args{args}}) {

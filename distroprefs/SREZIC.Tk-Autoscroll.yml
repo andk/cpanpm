@@ -1,32 +1,6 @@
 --- 
 match:
   distribution: "^SREZIC/Tk-Autoscroll-"
-pl: 
-  args: []
-
-  env: {}
-
-  expect: []
-
-make: 
-  args: []
-
-  env: {}
-
-  expect: []
-
 test: 
-  args: []
-
   env:
     BATCH: 1
-
-  expect: []
-
-install: 
-  args: []
-
-  env: {}
-
-  expect: []
-
