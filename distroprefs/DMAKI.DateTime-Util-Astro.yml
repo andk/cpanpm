@@ -1,5 +1,15 @@
 ---
 match:
-  distribution: "DMAKI/DateTime-(Util-Astro-0.06|Event-Lunar-0.04)"
-cpanconfig:
-  check_sigs: 0
+  distribution: "DMAKI/DateTime-(Util-Astro-0.0|Event-Lunar-0.04)"
+pl:
+  env:
+    PERL_AUTOINSTALL: --skip
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "Auto-install"
+      - "y\n"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
