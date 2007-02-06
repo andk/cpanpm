@@ -2996,6 +2996,15 @@ to find objects with matching identifiers.
         my $s = $q->as_string;
         my $reqtype = $q->reqtype || "";
         $obj = CPAN::Shell->expandany($s);
+        unless ($obj) {
+            # don't know how this can happen, maybe we should panic,
+            # but maybe we get a solution from the first user who hits
+            # this unfortunate exception?
+            $CPAN::Frontend->mywarn("Warning: Could not expand string '$s' ".
+                                    "to an object. Skipping.");
+            $CPAN::Frontend->mysleep(5);
+            next;
+        }
         $obj->{reqtype} ||= "";
         {
             # force debugging because CPAN::SQLite somehow delivers us
