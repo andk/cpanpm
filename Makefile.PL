@@ -217,6 +217,7 @@ MEGA_INSTALL = Expect \
 		Font::TTF \
 		YAML::Tiny \
 		PadWalker \
+		LWP::UserAgent \
 		SOAP::Lite \
 		Data::Float \
 		bigint \
