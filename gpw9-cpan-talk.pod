@@ -53,6 +53,10 @@ installieren und einen einzigen Konfigurationsparameter zu setzen:
   cpan> install RKOBES/CPAN-SQLite-0.1_04.tar.gz
   cpan> o conf init use_sqlite
 
+Randy hat noch viel weitreichendere Pläne mit CPAN::SQLite als nur
+Memory einzusparen, insbesodere verbesserte Suchoptionen, aber die
+sind zur Zeit nur im Planungsstadium.
+
 =head1 Interaktive Konfiguration einzelner Variabler
 
 Der gesamte Konfigurationsapparat war bereits vor mehr als einem Jahr
@@ -191,7 +195,7 @@ Liegt diese Distroprefs Datei erst einmal im C<prefs_dir> Verzeichnis,
 wird CPAN.pm immer wieder bei der Installation dieses Moduls die Frage
 für uns beantworten.
 
-Letztes Beispiel: eine Environment Variable während das Tests:
+Noch ein Beispiel: eine Environment Variable während das Tests:
 
   ---
   match:
@@ -200,12 +204,16 @@ Letztes Beispiel: eine Environment Variable während das Tests:
     env:
       BATCH: 1
 
+Der Test dieses Moduls öffnet normalerweise ein Tk Fenster, das der
+Benutzer schliessen muss, bevor es weitergeht. Durch das Setzen der
+Environment Variable BATCH, wird dieser Test übersprungen.
+
 Mit den circa 100 Distroprefs Dateien, die der CPAN.pm Distribution
 beigelegt sind, baue ich nun seit einigen Wochen regelmäßig
 vollautomatisch und unbeaufsichtigt ca. 430 Distributionen mit ca.
 3000 Modulen.
 
-=head1 Permanent Shell
+=head1 Permanente Shell
 
 Das gehört eigentlich ins Kapitel Bugfixes. Der Befehl C<reload cpan>
 hat früher manchmal eine Endlosschleife losgetreten, die mit C<^C>
@@ -234,7 +242,7 @@ bereits erfolgreich getestet sind, gibt es jetzt den Befehl
 C<is_tested>. Und um alle diese getesteten Module auf einmal zu
 installieren, gibt es C<install_tested>.
 
-=head1 Persistent shell
+=head1 Persistente Shell
 
 Wer keine permanent offene CPAN shell mag und trotzdem auf die bereits
 gebauten und/oder getesteten Module aus früheren Sessions
