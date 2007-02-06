@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "DMAKI/DateTime-(Util-Astro-0.0|Event-Lunar-0.04)"
+  distribution: "DMAKI/DateTime-(Util-Astro-0|Event-Lunar-0)"
 pl:
   env:
     PERL_AUTOINSTALL: --skip
