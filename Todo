@@ -1,14 +1,58 @@
+2007-02-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: I have a tar ball of an already installed bleadperl@28095. When I
+	run upgrade with that perl on dev05, then it runs into:
+
+  JPEACOCK/version-0.69.tar.gz
+  ./Build test -- NOT OK
+Warning (usually harmless): 'YAML' not installed, will not store persistent state
+Running Build install
+  make test had returned bad status, won't install without force
+
+Recursive dependency detected:
+    Archive::Tar
+ => K/KA/KANE/Archive-Tar-1.30.tar.gz
+ => File::Spec
+ => K/KW/KWILLIAMS/PathTools-3.24.tar.gz
+ => Module::Build
+ => K/KW/KWILLIAMS/Module-Build-0.2806.tar.gz
+ => File::Spec.
+Cannot continue.
+Failed during this command:
+ RKOBES/ExtUtils-Command-1.13.tar.gz          : make_test NO Test::Harness too old
+ RKOBES/ExtUtils-Manifest-1.51.tar.gz         : make_test NO Test::Harness too old
+ KWILLIAMS/ExtUtils-ParseXS-2.18.tar.gz       : make_test NO Test::Harness too old
+ KWILLIAMS/PathTools-3.24.tar.gz              : make_test NO Test::Harness too old
+ KWILLIAMS/Module-Build-0.2806.tar.gz         : make_test NO Test::Harness too old
+ JPEACOCK/version-0.69.tar.gz                 : make_test NO
+
+	As so often, we are missing the required version numbers in the
+	dependency graph, so I must ask CPAN.pm manually.
+
+    Archive::Tar
+ => K/KA/KANE/Archive-Tar-1.30.tar.gz
+ => File::Spec                                        # 0.82 but 3.18 is installed
+ => K/KW/KWILLIAMS/PathTools-3.24.tar.gz
+ => Module::Build
+ => K/KW/KWILLIAMS/Module-Build-0.2806.tar.gz
+ => File::Spec.
+
+	Aha. This demonstrates that the recursive dependency detector calculates
+	wrong. It does not seem to take into account the minimum required
+	version number. Maybe this is all due to the Test::Harness anomaly?
+
+	Can I shorten the path? Trying on k75. If I only ask for 'install
+	Archive::Tar', what happens? It gets installed. Same for File::Spec.
+	Same for Module::Build. Grrr. And when I say 'upgrade', then it does
+	indeed upgrade?
+
 2007-02-05  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* Important things I forgot in the talk paper:
 
 	force/fforce
 	auto_commit
-	patch/applypatch support with example
 	Devel::Cover statistics??? -- not really interesting
-	eexpect example
-	-commandline example -- no, too intimidating
-	goto example
 	maybe mention Kwalify in the distroprefs section
 	degraded mode
 	add distribution name to every OK/NOT OK; also inspired by Ilya.
@@ -17,6 +61,10 @@
 	build_requires_install_policy
 	scripts installation
 	-Randy status report
+	- patch/applypatch support with example
+	eexpect example -- no, no good example found
+	- goto example
+	-commandline example -- no, too intimidating
 
 	Screenshot of the hosts command
 

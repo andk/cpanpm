@@ -208,9 +208,52 @@ Der Test dieses Moduls öffnet normalerweise ein Tk Fenster, das der
 Benutzer schliessen muss, bevor es weitergeht. Durch das Setzen der
 Environment Variable BATCH, wird dieser Test übersprungen.
 
+Das nächste Beispiel zeigt eine großzügige Kombination mehrerer
+distroprefs features:
+
+  ---
+  match:
+    distribution: "^AUDREYT/Module-Install-0.64"
+  pl:
+    env:
+      PERL_AUTOINSTALL: --skip
+  make:
+    env:
+      PERL_AUTOINSTALL: --skip
+  patches:
+    - "ANDK/patches/Module-Install-0.64-ANDK-01.patch"
+
+Diese distroprefs Struktur setzt eine in zwei Phasen die
+Environmentvariable C<PERL_AUTOINSTALL> auf C<--skip>. Darüber hinaus
+patcht sie die Distribution. Mancher wird fragen, warum nicht den
+Patch auf RT hinterlegen? Das kann man ja zusätzlich machen. Es gibt
+einfach Situationen, in denen ein Autor über Monate hinweg Patches auf
+RT ignoriert. Mit Distroprefs sind wir Herr der Lage: der Patch ist
+öffentlich, wir können ihn vollautomatisch integrieren, wir können
+einen Link darauf in RT hinterlegen, wir sind nicht auf die
+unmittelbare und sofortige Kooperation durch den Autor angewiesen.
+
+Das folgende Beispiel ist historisch, weil ich kein aktuelles
+vergleichbares Beispiel gefunden habe:
+
+  ---
+  match:
+    distribution: "^CHAMAS/Crypt-SSLeay-"
+  goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
+
+Hier haben wir den Fall, daß sich ein neuer Autor anschickt, ein Modul
+zu übernehmen, aber bevor er es tut, startet er einen Testballon. Die
+Crypt::SSLeay war eine Weile, sagen wir I<vernachlässigt>. Ein anderer
+Maintainer war bereit in die Bresche zu springen. Bevor er jedoch ein
+eigenes Release machen konnte, wollte er ein wenig experimentieren und
+einem interessierten Kreis ein paar Developer Releases vorstellen.
+C<goto> erlaubt eine solche Situation zu unterstützen. Im vorliegenden
+Fall führte jeder Installationsversuch für Crypt::SSLeay zur
+sofortigen Installtion des Developer-Releases von David Landgren.
+
 Mit den circa 100 Distroprefs Dateien, die der CPAN.pm Distribution
 beigelegt sind, baue ich nun seit einigen Wochen regelmäßig
-vollautomatisch und unbeaufsichtigt ca. 430 Distributionen mit ca.
+vollautomatisch und unbeaufsichtigt ca. 480 Distributionen mit ca.
 3000 Modulen.
 
 =head1 Permanente Shell
