@@ -7,7 +7,7 @@
 	patch/applypatch support with example
 	Devel::Cover statistics??? -- not really interesting
 	eexpect example
-	commandline example
+	-commandline example -- no, too intimidating
 	goto example
 	maybe mention Kwalify in the distroprefs section
 	degraded mode
@@ -16,6 +16,7 @@
 	mention yaml_module and YAML::Syck earlier
 	build_requires_install_policy
 	scripts installation
+	-Randy status report
 
 	Screenshot of the hosts command
 
