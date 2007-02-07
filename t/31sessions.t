@@ -161,6 +161,7 @@ for my $session (@SESSIONS) {
         my($command) = $session->{pairs}[2*$i];
         my($expect) = $session->{pairs}[2*$i+1];
         my($actual) = $chunks[$i];
+        $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
         like($actual,"/$expect/","command[$command]");
     }
 }

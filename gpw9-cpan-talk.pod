@@ -88,7 +88,7 @@ Variablen sparen.
 Vier neue Konfigurationsvariable stehen fuer die farbliche Gestaltung
 des Outputs der CPAN shell zur Verfügung
 
-=over *
+=over
 
 =item für den normalen Output
 
