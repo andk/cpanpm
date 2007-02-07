@@ -1,3 +1,9 @@
+2007-02-07  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* Feature request by self (again?): when dieing due to recursion
+	detection, please list the demanded version number behind each module
+	name. Adjust the test in 30shell.t.
+
 2007-02-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug in patchaperlup: the 5.8.0/ directory is breaking concurrency.
