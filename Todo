@@ -1,7 +1,15 @@
+2007-02-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug in patchaperlup: the 5.8.0/ directory is breaking concurrency.
+	When a process untars a perl before the other one has moved to the
+	File::Temp directory, it seems to overwrite something. Binary searches
+	and the normal megainstall loop must not run at the same time!
+
 2007-02-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Bug: I have a tar ball of an already installed bleadperl@28095. When I
-	run upgrade with that perl on dev05, then it runs into:
+	* Bug: I have a tar ball of an already installed bleadperl@28095 with a
+	certain mix of outdated modules. When I run upgrade with that perl on
+	dev05, then it runs into:
 
   JPEACOCK/version-0.69.tar.gz
   ./Build test -- NOT OK
@@ -44,7 +52,27 @@ Failed during this command:
 	Can I shorten the path? Trying on k75. If I only ask for 'install
 	Archive::Tar', what happens? It gets installed. Same for File::Spec.
 	Same for Module::Build. Grrr. And when I say 'upgrade', then it does
-	indeed upgrade?
+	indeed upgrade? Because Expect is not installed we must answer the
+	libnet question after a while (which surprises me because it is in
+	DD_PREFS) and shortly after that we are facing the same output as
+	described above.
+
+	Can this situation then be reproduced after leaving CPAN.pm? Or do we
+	have to start from the beginning? 'install version' just fails due to
+	'qv.al' and such. The upgrade command now does not reproduce the above
+	situation.
+
+	Seems to be FIXED in SVK rev. 1865 or so. There was (1) a variable
+	confusion: s/depth/color/ around line 8802 and (2) the need to pull the
+	desired version number out again within color_cmp_tmps and to compare
+	with what we have available at the moment. (3) we needed a way to
+	withdraw quickly when we only set all commandcolors to 0. Not sure if we
+	couldn't withdraw much quicker though: isn't recursion detection after
+	the command has finished completely bogus? No, it is necessary because
+	if we run into recursion it is no fun and we must break it.
+
+	BTW, it's incredible how long it takes to upgrade 28095: more than 30
+	minutes.
 
 2007-02-05  Andreas J Koenig  <akoenig@iconmobile.com>
 

@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_72';
+$CPAN::VERSION = '1.88_73';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -8799,7 +8799,38 @@ sub color_cmd_tmps {
     return if exists $self->{incommandcolor}
         && $color==1
         && $self->{incommandcolor}==$color;
-    return if $depth>=1 && $self->uptodate;
+    return if $color==0 && !$self->{incommandcolor};
+    if ($color>=1) {
+        if ( $self->uptodate ) {
+            $self->{incommandcolor} = $color;
+            return;
+        } elsif (my $have_version = $self->available_version) {
+            # maybe what we have is good enough
+            if (@$ancestors) {
+                my $who_asked_for_me = $ancestors->[-1];
+                my $obj = $self->expandany($who_asked_for_me);
+                if (0) {
+                } elsif ($obj->isa("CPAN::Bundle")) {
+                    # bundles cannot specify a minimum version
+                    return;
+                } elsif ($obj->isa("CPAN::Distribution")) {
+                    if (my $prereq_pm = $obj->prereq_pm) {
+                        for my $k (keys %$prereq_pm) {
+                            if (my $want_version = $prereq_pm->{$k}{$self->id}) {
+                                if (CPAN::Version->vcmp($have_version,$want_version) >= 0) {
+                                    $self->{incommandcolor} = $color;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        $self->{incommandcolor} = $color; # set me before recursion,
+                                          # so we can break it
+    }
     if ($depth>=$CPAN::MAX_RECURSION){
         $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
