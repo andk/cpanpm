@@ -8808,7 +8808,7 @@ sub color_cmd_tmps {
             # maybe what we have is good enough
             if (@$ancestors) {
                 my $who_asked_for_me = $ancestors->[-1];
-                my $obj = $self->expandany($who_asked_for_me);
+                my $obj = CPAN::Shell->expandany($who_asked_for_me);
                 if (0) {
                 } elsif ($obj->isa("CPAN::Bundle")) {
                     # bundles cannot specify a minimum version
