@@ -223,7 +223,7 @@ distroprefs features:
   patches:
     - "ANDK/patches/Module-Install-0.64-ANDK-01.patch"
 
-Diese distroprefs Struktur setzt eine in zwei Phasen die
+Diese distroprefs Struktur setzt in zwei Phasen die
 Environmentvariable C<PERL_AUTOINSTALL> auf C<--skip>. Darüber hinaus
 patcht sie die Distribution. Mancher wird fragen, warum nicht den
 Patch auf RT hinterlegen? Das kann man ja zusätzlich machen. Es gibt
