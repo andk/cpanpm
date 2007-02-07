@@ -1,7 +1,7 @@
 $|=1;
 BEGIN {
     unshift @INC, './lib', './t';
-    
+
     require local_utils;
     local_utils::cleanup_dot_cpan();
     local_utils::prepare_dot_cpan();
@@ -13,6 +13,7 @@ BEGIN {
     if ($CPAN::META->has_inst($yaml_module)) {
         print "DEBUG: yaml_module[$yaml_module] loadable\n";
     } else {
+        $|=1;
         print "1..0 # Skip: no yaml module installed\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
     }
