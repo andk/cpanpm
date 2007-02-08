@@ -1,3 +1,50 @@
+2007-02-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 30176 is maintperl ATM, and 30177 is blead. megainstall for maint is
+	running, megainstall for 77 ditto, already for a longer time.
+	
+	* CPAN::Inject fails with 5.8.9-tobe. I tend to believe this happens
+	because 5.8.9 has 1.7602 and C:I needs 1.87. Now what is intimidating is
+	that when I run under 1.88_73, then CPAN.pm refuses to install CPAN
+	saying that it is up to date. While the installed CPAN.pm is outdated,
+	the used CPAN.pm is really uptodate. Aha! force install at its best.
+
+	* Feature request by self: The bad performance of YAML.pm seems to be a
+	showstopper. YAML.pm needs to be banned or disabling of YAML operations
+	should be disable-able, don't know exactly how.
+
+	* ----Program----
+eval q{use DBIx::Class 0.07005};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pBEyrHy/perl-5.8.0@29025/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pgLprwz/perl-5.8.0@29026/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	t/76joins.......................NOK 6/53
+#   Failed test 'join 6 (HASH reference for ON statement dies) ok'
+#   at t/76joins.t line 110.
+#                   'HASH reference arguments are not supported in JOINS - try using "..." instead' at t/76joins.t line 109
+# '
+#     doesn't match '(?-xism:^HASH\ reference\ arguments\ are\ not\ supported\ in\ JOINS\ \-\ try\ using\ \\\"\.\.\.\"\ instead)'
+t/76joins.......................ok 29/53# Looks like you failed 1 test of 53.  
+t/76joins.......................dubious
+        Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 6
+        Failed 1/53 tests, 98.11% okay
+
+
+	https://rt.cpan.org/Ticket/Display.html?id=24349
+
+	Binary search points to 29026.
+
+
 2007-02-07  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* Feature request by self (again?): when dieing due to recursion
