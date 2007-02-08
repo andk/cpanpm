@@ -62,6 +62,7 @@ distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
+distroprefs/JROBINSON.DBIx-Class.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
@@ -96,6 +97,7 @@ distroprefs/RJBS.Email-Send.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
+distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
