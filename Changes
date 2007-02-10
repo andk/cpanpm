@@ -4,7 +4,9 @@
 
 	* Win32 fix for 31sessions.t by Randy Kobes
 
-	* fix a serious bug in the recursion detection logic
+	* fix recursion detection logic: when we have the module and it
+	satisfies the minimum required, do not take its recursive dependencies
+	into account.
 
 	* couple of distroprefs files
 
