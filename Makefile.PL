@@ -319,7 +319,7 @@ checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
 
 megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 depefails:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
@@ -642,6 +642,9 @@ dd-prefs :: $base.dd
 	\$(PERL) -MYAML::Syck=LoadFile -MData::Dumper -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); print Data::Dumper->new(\\\@y)->Indent(1)->Useqq(1)->Purity(1)->Dump' $base > $base.dd.new && mv $base.dd.new $base.dd
 
 };
+    } elsif (0) {
+      # we should only say this on author's machine:
+      warn "Warning (usually harmless): have no YAML::Syck, cannot write rules for foreign prefs"
     }
   }
 
