@@ -1,8 +1,36 @@
+2007-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Unicode/Map.pm, Spreadsheet/WriteExcel.pm, Jcode.pm are all undeclared
+	prereqs of Spreadsheet ParseExcel and prevent binary search. RT is down.
+	RT is up again and I added this observation to
+	http://rt.cpan.org/Ticket/Display.html?id=24693
+
+	* Musing: when we some day optimize for the best CPAN mirror we shall
+	learn from bittorrent and consider that the index file problem is
+	separated from the rest of CPAN. And that we can fetch older files from
+	everywhere but younger files only from hosts being fresh enough.
+
+	* Next biggies: mod_perl, Subversion
+
+	* Bug in APC: the tempdirs that end up in the chache are mode 0700
+	instead of 0755. Fixed in APC revision 230
+
+	* Bug in patchaperlup:
+
+Not in MANIFEST: wince/README.perlce.withCR
+Not in MANIFEST: wince/registry.bat.withCR
+ALERT: Going to remove apparent testfile(s): lib/Text/Balanced/t/00.load.t lib/Text/Balanced/t/pod-coverage.t
+Maybe this MANIFEST is broken?
+Proceed? (y|n) [y] 
+
+	Fixed in APC revision 229
+
+2007-02-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Look after TT 2.17 [...] Not needed, Andy has released 2.18 today YAY!
+
 2007-02-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* 30176 is maintperl ATM, and 30177 is blead. megainstall for maint is
-	running, megainstall for 77 ditto, already for a longer time.
-	
 	* CPAN::Inject fails with 5.8.9-tobe. I tend to believe this happens
 	because 5.8.9 has 1.7602 and C:I needs 1.87. Now what is intimidating is
 	that when I run under 1.88_73, then CPAN.pm refuses to install CPAN
@@ -11,7 +39,7 @@
 
 	* Feature request by self: The bad performance of YAML.pm seems to be a
 	showstopper. YAML.pm needs to be banned or disabling of YAML operations
-	should be disable-able, don't know exactly how.
+	should be possible, don't know exactly how.
 
 	* ----Program----
 eval q{use DBIx::Class 0.07005};
@@ -57,6 +85,8 @@ DIED. FAILED test 6
 	When a process untars a perl before the other one has moved to the
 	File::Temp directory, it seems to overwrite something. Binary searches
 	and the normal megainstall loop must not run at the same time!
+
+	Fixed in APC revision 231
 
 2007-02-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -134,18 +164,18 @@ Failed during this command:
 	force/fforce
 	auto_commit
 	Devel::Cover statistics??? -- not really interesting
-	maybe mention Kwalify in the distroprefs section
+	-	maybe mention Kwalify in the distroprefs section
 	degraded mode
 	add distribution name to every OK/NOT OK; also inspired by Ilya.
 	mention 'cpan .'
 	mention yaml_module and YAML::Syck earlier
 	build_requires_install_policy
 	scripts installation
-	-Randy status report
+	- Randy status report
 	- patch/applypatch support with example
 	eexpect example -- no, no good example found
 	- goto example
-	-commandline example -- no, too intimidating
+	- commandline example -- no, too intimidating
 
 	Screenshot of the hosts command
 
