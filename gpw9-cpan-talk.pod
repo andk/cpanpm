@@ -478,7 +478,7 @@ aussieht, aber mit einem Punkt aufhört, wird als lokales Directory
 behandelt. Das heisst, CPAN.pm wechselt in dieses Verzeichnis und
 macht sein übliches Programm. Ideal auch für firmeninterne Module.
 
-In diese Verzeichnisse braucht man natürlich mitunter weitere
+Für diese Verzeichnisse braucht man natürlich mitunter weitere
 Distroprefs Parameter. Zum Beispiel C<pl/commandline>:
 
   ---
