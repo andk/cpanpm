@@ -729,10 +729,11 @@ sub _perl_fingerprint {
     if (defined $dll) {
         $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
     }
+    my $mtime_perl = (-f $^X ? (stat(_))[9] : '-1');
     my $this_fingerprint = {
                             '$^X' => $^X,
                             sitearchexp => $Config::Config{sitearchexp},
-                            'mtime_$^X' => (stat $^X)[9],
+                            'mtime_$^X' => $mtime_perl,
                             'mtime_dll' => $mtime_dll,
                            };
     if ($other_fingerprint) {
