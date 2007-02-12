@@ -17,7 +17,7 @@ trotzdem fest: es hat sich was getan und davon will ich erzählen.
 
 =head1 CPAN::Reporter
 
-Das erste herausragende Ereignis für CPAN.pm war, daß David Golden das
+Das erste herausragende Ereignis für CPAN.pm war, dass David Golden das
 CPAN::Reporter Modul beigesteuert hat, das es nun ermöglicht, aus CPAN
 heraus direkt Reports über einzelne Distributionen zu testers.cpan.org
 zu schicken.
@@ -36,17 +36,17 @@ installieren und einige, wenige Configurationsparameter zu setzen.
   cpan> o conf init /report/
 
 Man kann CPAN::Reporter auch so konfigurieren, dass er immer Reports
-abschickt, daß er fragt, bevor er Reports abschickt, oder daß er
+abschickt, dass er fragt, bevor er Reports abschickt, oder dass er
 Reports nur im Fehlerfall abschickt. Mir persönlich ist der separate
 Befehl C<report> am angenehmsten.
 
 =head1 CPAN::SQLite
 
-Seit mehreren Jahren war eine der Problemzonen von CPAN.pm, daß es
+Seit mehreren Jahren war eine der Problemzonen von CPAN.pm, dass es
 sehr viel Memory verbraucht. Erst vor wenigen Wochen kam Randy Kobes
 mit dem Vorschlag, die wesentlichsten Metadaten nur sekundär im Memory
 zu halten, primär aber in einer SQLite Datenbank. Er schrieb das Modul
-CPAN::SQLite mit dem Ergebnis, daß man nun CPAN.pm statt in 80 MB
+CPAN::SQLite mit dem Ergebnis, dass man nun CPAN.pm statt in 80 MB
 Memory auch in 20 MB Memory laufen lassen kann.
 
 Um mit CPAN::SQLite zu arbeiten, reicht es CPAN::SQLite zu
@@ -244,7 +244,7 @@ vergleichbares Beispiel gefunden habe:
     distribution: "^CHAMAS/Crypt-SSLeay-"
   goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
 
-Hier haben wir den Fall, daß sich ein neuer Autor anschickt, ein Modul
+Hier haben wir den Fall, dass sich ein neuer Autor anschickt, ein Modul
 zu übernehmen, aber bevor er es tut, startet er einen Testballon. Die
 Crypt::SSLeay Distribution war eine Weile, sagen wir
 I<vernachlässigt>. Ein anderer Maintainer war bereit, in die Bresche
@@ -279,7 +279,7 @@ bestimmter Module zu verhindern:
 Nach meiner Erfahrung kann man grade Image::Magick nie erfolgreich vom
 CPAN weg installieren. Hingegen kommt mit der imagemagick Distribution
 immer das richtige, funktionierende Image::Magick Perlmodul mit. Da
-möchte ich verhindern, daß überhaupt jemals ein Versuch unternommen
+möchte ich verhindern, dass überhaupt jemals ein Versuch unternommen
 wird, Image::Magick vom CPAN her zu installieren.
 
 Ein ähnlicher Fall sind Module, die mit fallenden Versionsnummern
@@ -304,7 +304,7 @@ Das hier kennen sicher all Anwesenden:
 
 Richtig, das kommt von der libnet Distribution. Wir schreiben immer
 wieder alle brav unser C<n> und RET und leiden nicht sonderlich
-darunter. Außer daß wir eben nicht schlafen dürfen währen libnet
+darunter. Außer dass wir eben nicht schlafen dürfen währen libnet
 installiert wird. Also schreiben wir uns jetzt eine Distropref Datei:
 
   ---
@@ -360,7 +360,7 @@ und für Inline
 
 und so weiter, und so weiter.
 
-Fairerweise muß man sagen, daß das Setzen der (unterdokumentierten)
+Fairerweise muß man sagen, dass das Setzen der (unterdokumentierten)
 Environment Variable PERL_MM_USE_DEFAULT auch viele Fragen erledigt.
 Wenn diese Variable gesetzt ist, fragen weder MakeMaker noch
 Module::Build noch eine Frage, sondern nehmen immer den Defaultwert.
@@ -429,12 +429,45 @@ zu verlassen.
 
 =head1 Sicheres C<build_dir> Directory
 
-Eine Schwachstelle der CPAN Shell war immer, daß das C<build_dir>
-Directory, in dem die Module alle gebaut werden, von konkurrierenden
-Prozessen gleichzeitig genutzt wurde. Damit bestand das Risiko, daß
-sich zwei Prozesse gegenseitig stören können. Das ist nun gefixt,
-indem diese Directories von File::Temp eingerichtet werden und damit
-automatisch garantiert dem laufenden Prozess alleine gehören.
+Wenn wir schon bei Bugfixes sind: eine Schwachstelle der CPAN Shell
+war immer, dass das C<build_dir> Directory, in dem die Module alle
+gebaut werden, von konkurrierenden Prozessen gleichzeitig genutzt
+wurde. Damit bestand das Risiko, dass sich zwei Prozesse gegenseitig
+stören können. Das ist nun gefixt, indem diese Directories von
+File::Temp eingerichtet werden und damit automatisch garantiert dem
+laufenden Prozess alleine gehören.
+
+Aus diesem Grund gibt es jetzt auch die Möglichkeit, die CPAN shell in
+mehreren Terminals zu starten. Die zweite und alle weiteren Instanzen
+laufen in einem I<degraded mode>, das heißt, sie dürfen keine History
+schreiben und keinen Metadata Cache und nicht CPAN::SQLite benutzen,
+denn das sind alles Dinge, die noch nicht mit konkurrierenden
+Zugriffen umgehen können, aber ansonsten funktionieren sie wie die
+erste.
+
+=head1 Incompatibles C<force>, neues C<fforce>
+
+Bisher hat es ein C<force> Pragma gegeben, das man wie folgt verwendet
+hat:
+
+  cpan> force install Tk::Pod
+
+Also angenommen, Tk::Pod würde einen Test nicht bestehen, wir wüßten
+aber aus zuverlässiger Quelle, dass der Fehler eine Lapalie ist. Dann
+würde CPAN.pm beim normalen
+
+  cpan> install Tk::Pod
+
+die Intallation verweigern, mit C<force> aber gewähren. Bisher hatte
+das C<force> Pragma aber ein nicht sehr intuitives Verhalten: es fing
+wieder von vorne mit dem Download an, und ging durch C<make> und
+C<make test> durch.
+
+Das neue C<force> Pragma macht das nun besser: es wiederholt nicht
+unnötig Schritte, die schon erledigt sind.
+
+Wer das alte Verhalten braucht, benutzt nun C<fforce>, also ein etwas
+lauteres C<force>.
 
 =head1 Neue Befehle C<is_tested> und C<install_tested>
 
@@ -502,6 +535,39 @@ wobei C< $PERL > das aktuell verwendete perl darstellt. Und beim
 späteren Test werden die zwei Environment Variablen BATCH und DISPLAY
 gesetzt.
 
+=head1 Neue Konfigurationsvariable C<auto_commit>
+
+Sollen Konfigurationsvariable, die während einer Session geändert
+werden, sofort auf die Festplatte in die Konfigurationsdatei
+geschrieben werden oder nicht?
+
+Die Frage hat leider CPAN.pm in der Vergangenheit nicht einheitlich
+beantwortet: mal ja, mal nein. Damit ist nun Schluss, jeder User kann
+selbst entscheiden, ob er lieber explizit
+
+  cpan> o conf commit
+
+sagen möchte und damit die Chance hat, Variable auszuprobieren, ohne
+zukünftige Sessions darauf festzulegen, oder ob er C<auto_commit> auf
+einen wahren Wert setzt und damit jede Änderung sofort in die
+Konfigurationsdatei geschrieben wird.
+
+=head1 Neue Konfigurationsvariable C<build_requires_install_policy>
+
+Module::Build kennt zwei verschiedene Arten von Prerequisites: normale
+C<requires>, die sich auf die Laufzeit beziehen, und
+C<build_requires>, die sich nur auf den Prozess des Zusammenbauens der
+Module beziehen. Letztere wären zum Beispiel alle Test-Module.
+
+Als Endbenutzer eines Moduls kann man nun das Interesse haben, die
+Anzahl der installierten Module klein zu halten, also die
+C<build_requires> nicht zu installieren. Oder man kann der Ansicht
+sein, dass es ohnehin immer wieder die gleichen C<build_requires>
+sind, die man doch recht häufig braucht und deshalb immer gleich
+mitinstalliert. Oder man möchte sich von Fall zu Fall entscheiden und
+gefragt werden. All das kann man mit der Konfigurationsvariable
+C<build_requires_install_policy> einstellen.
+
 =head1 Hosts Statistik
 
 Der neue Befehl C<hosts> gibt eine kurze kleine Statistik über die
@@ -530,7 +596,7 @@ die ich im kommenden Jahr erwarte, sind die Verfeinerung der
 Dependency Resolution in zwei oder mehr Phasen, so dass auch
 Dependencies abgehandelt werden, die bereits vor dem Makefile.PL
 Aufruf benötigt werden. Ein anderer Wunsch sind für mich Coroutines,
-die es ermöglichen würden, daß Indexe im Hintergrund geladen werden.
+die es ermöglichen würden, dass Indexe im Hintergrund geladen werden.
 Überhaupt brauchen die verschiedenen Indexe verschiedene Cachezeiten.
 Vielleicht sollte man die Hosts Statistik intelligenter machen, so
 dass automatisch nur die besten Hosts zum Downloaden verwendet werden.

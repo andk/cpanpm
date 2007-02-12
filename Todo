@@ -1,3 +1,8 @@
+2007-02-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug report/feature request from David Cantrell via David Golden:
+	report shall only report on what-I-say, but not on the prerequisites.
+
 2007-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Unicode/Map.pm, Spreadsheet/WriteExcel.pm, Jcode.pm are all undeclared
@@ -159,21 +164,21 @@ Failed during this command:
 
 2007-02-05  Andreas J Koenig  <akoenig@iconmobile.com>
 
-	* Important things I forgot in the talk paper:
+	* Important things I forgot in the talk paper (minus means already written):
 
-	force/fforce
-	auto_commit
-	Devel::Cover statistics??? -- not really interesting
-	-	maybe mention Kwalify in the distroprefs section
-	degraded mode
+	-degraded mode
 	add distribution name to every OK/NOT OK; also inspired by Ilya.
 	mention 'cpan .'
 	mention yaml_module and YAML::Syck earlier
 	build_requires_install_policy
 	scripts installation
+	Devel::Cover statistics??? -- not really interesting
+	eexpect example -- no, no good example found
+	- force/fforce
+	- auto_commit
+	-	maybe mention Kwalify in the distroprefs section
 	- Randy status report
 	- patch/applypatch support with example
-	eexpect example -- no, no good example found
 	- goto example
 	- commandline example -- no, too intimidating
 
@@ -5067,7 +5072,7 @@ Distribution id = K/KW/KWILLIAMS/PathTools-3.22.tar.gz
           args
           expect
 	cpanconfig:
-    build_requires_install_policy                 FDALY.Test-Deep.01.yml
+    build_requires_install_policy                 FDALY.Test-Deep.01.yml (???)
 
 
 2006-10-09  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
