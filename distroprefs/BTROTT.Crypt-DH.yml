@@ -1,0 +1,5 @@
+---
+comment: "Math::BigInt seems to take infinite to compute this test to an end. Only if Math::BigInt::GMP is installed, this test is computed in the fractions of a second."
+match:
+  distribution: "^BTROTT/Crypt-DH-"
+disabled: 1
