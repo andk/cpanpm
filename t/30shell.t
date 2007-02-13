@@ -876,7 +876,7 @@ __END__
 #P:test CPAN::Test::Dummy::Perl5::Build
 #E:\s\sANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz[\s\S]*?test\s+--\s+OK
 #R:Module::Build
-#T:75
+#T:90
 ########
 #P:o debug 0
 #E:turned off

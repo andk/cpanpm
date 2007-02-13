@@ -1,4 +1,4 @@
-2007-02-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-02-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_73: quick small fixes, stable release candidate I
 
@@ -7,6 +7,9 @@
 	* fix recursion detection logic: when we have the module and it
 	satisfies the minimum required, do not take its recursive dependencies
 	into account.
+
+	* fix bug in getting PREREQ_PM out of Makefile when a value in PREREQ_PM
+	is undef (uncovered by Template::Plugin::Format::Number)
 
 	* couple of distroprefs files
 

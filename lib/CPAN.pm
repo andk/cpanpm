@@ -7677,13 +7677,17 @@ sub prereq_pm {
 
                 #  Regexp modified by A.Speer to remember actual version of file
                 #  PREREQ_PM hash key wants, then add to
-                while ( $p =~ m/(?:\s)([\w\:]+)=>q\[(.*?)\],?/g ){
+                while ( $p =~ m/(?:\s)([\w\:]+)=>(q\[.*?\]|undef),?/g ){
                     # In case a prereq is mentioned twice, complain.
                     if ( defined $req->{$1} ) {
                         warn "Warning: PREREQ_PM mentions $1 more than once, ".
                             "last mention wins";
                     }
-                    $req->{$1} = $2;
+                    my($m,$n) = ($1,$2);
+                    if ($n =~ /^q\[(.*?)\]$/) {
+                        $n = $1;
+                    }
+                    $req->{$m} = $n;
                 }
                 last;
             }
