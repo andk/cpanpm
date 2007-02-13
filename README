@@ -1174,7 +1174,8 @@ PROGRAMMER'S INTERFACE
         Returns the content of the META.yml of this distro as a hashref.
         Note: works only after an attempt has been made to "make" the
         distribution. Returns undef otherwise. Also returns undef if the
-        content of META.yml is dynamic.
+        content of META.yml is not authoritative. (The rules about what
+        exactly makes the content authoritative are still in flux.)
 
     CPAN::Distribution::test()
         Changes to the directory where the distribution has been unpacked
