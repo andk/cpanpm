@@ -4,6 +4,9 @@
 
 	* Win32 fix for 31sessions.t by Randy Kobes
 
+	* flush non-archival files when the mirror changes (thanks for the
+	suggestion to Adam Kennedy)
+
 	* fix recursion detection logic: when we have the module and it
 	satisfies the minimum required, do not take its recursive dependencies
 	into account.

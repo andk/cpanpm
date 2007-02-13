@@ -171,6 +171,7 @@ sub edit {
                     # reset the cached values
                     undef $CPAN::FTP::Thesite;
                     undef $CPAN::FTP::Themethod;
+                    $CPAN::Index::LAST_TIME = 0;
                 } elsif ($o eq "dontload_list") {
                     # empty it, it will be built up again
                     $CPAN::META->{dontload_hash} = {};

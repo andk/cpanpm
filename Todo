@@ -1,11 +1,30 @@
 2007-02-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* From Adam K:
+
+ > Ahhh, yes...'reload index' was the key for me.  Unfortunately, I had a
+> very stale mirror (ibiblio.org) as my first site.  I then repopulated
+> my cpan site list based on info from http://www.cs.uu.nl/people/henkp/
+> mirmon/cpan.html and thought my index would get updated automatically.
+
+Andreas
+
+This is the issue I was talking about before, with regards to mirror
+changes.
+
+We should probably always flush non-archival files when the mirror changes.
+
+	FIXED in SVK rev. 1903
+
+	* Todo: write one of the CircDepe distros new to include version
+	number(s) in prerequisites, especially undef.
+
 	* Bug: Template-Plugin-Number-Format-1.01 declares prerequisite
 	Number::Format with version undef (real undef, not the String undef) and
 	it does not get installed before the tests happen. I need a random perl
 	that has neither T:P:N:F nor Template nor N:F.
 
-for p in `binsearchaperl --show-cache --bounds 25000-99999 --apcdir /home/src/perl/repoperls/APC --prefix /home/src/perl/repoperls/installed-perls` ; do
+for p in `binsearchaperl --show-cache --bounds 30000-99999 --apcdir /home/src/perl/repoperls/APC --prefix /home/src/perl/repoperls/installed-perls` ; do
   $p -e 'for my $p (qw(Template::Plugin::Number::Format Number::Format Template)){
     eval qq{require $p};
     print $@ ? "-" : "+";
