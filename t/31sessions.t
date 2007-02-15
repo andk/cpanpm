@@ -11,7 +11,7 @@ BEGIN {
     CPAN::HandleConfig->load;
     my $yaml_module = CPAN::_yaml_module();
     if ($CPAN::META->has_inst($yaml_module)) {
-        print "DEBUG: yaml_module[$yaml_module] loadable\n";
+        print "# DEBUG: yaml_module[$yaml_module] loadable\n";
     } else {
         $|=1;
         print "1..0 # Skip: no yaml module installed\n";
@@ -52,6 +52,7 @@ END {
 }
 my $cwd = Cwd::cwd;
 
+my $VERBOSE = 0;
 my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
 
 our @SESSIONS =
@@ -63,6 +64,8 @@ our @SESSIONS =
        "dump \$::x=4*6+1" => "= 25;",
        "dump \$::x=40*6+1" => "= 241;",
        "dump \$::x=40*60+1" => "= 2401;",
+       "o conf init\nyes" => "commit",
+       "o conf patch ' '" => ".", # prevent that C:T:D:P:B:Fails succeeds by patching
        "test CPAN::Test::Dummy::Perl5::Make" => "t/00_load\.+ok",
        "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
        "make CPAN::Test::Dummy::Perl5::Make" => "(?sx:Has.already.been.unwrapped.*
@@ -71,8 +74,8 @@ our @SESSIONS =
                                                   Has.already.been.made.*
                                                   Has.already.been.tested.successfully)",
        "force test CPAN::Test::Dummy::Perl5::Make" => "t/00_load\.+ok",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load....FAILED",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load....FAILED",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
        "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
        "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
@@ -93,9 +96,8 @@ our @SESSIONS =
                                                   Has.already.been.made.*
                                                   Has.already.been.tested.successfully)",
        "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
-       "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
-                                                  Has.already.been.made)",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load....FAILED",
+       "make CPAN::Test::Dummy::Perl5::Build::Fails" => "Has.already.been.unwrapped",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
        "o conf dontload_list push YAML" => ".",
        "o conf dontload_list push YAML::Syck" => ".",
        "o conf commit" => "commit: wrote",
@@ -138,8 +140,8 @@ for my $session (@SESSIONS) {
         $cnt++;
     }
 }
-my $prompt_re = "cpan> ";
-print "DEBUG: cnt[$cnt]\n";
+my $prompt_re = "\\ncpan(?:[^>]*)> ";
+print "# DEBUG: cnt[$cnt]prompt_re[$prompt_re]\n";
 plan tests => $cnt
     + 1 # the MyConfig verification
     ;
@@ -158,11 +160,13 @@ for my $session (@SESSIONS) {
     my $content = do {local *FH; open FH, "test.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
     shift @chunks;
+    warn sprintf "# DEBUG: pairs[%d]chunks[%d]", scalar @{$session->{pairs}}, scalar @chunks;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
         my($expect) = $session->{pairs}[2*$i+1];
         my($actual) = $chunks[$i];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
+        diag("command[$command]expect[$expect]actual[$actual]") if $VERBOSE;
         like($actual,"/$expect/","command[$command]");
     }
 }
