@@ -270,6 +270,7 @@ MEGA_INSTALL = Devel::Cover \
 		String::Similarity \
 		Test::Deep \
 		Alzabo \
+		Module::Build::Convert \
 
 }
 }
