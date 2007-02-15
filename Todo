@@ -1,5 +1,29 @@
 2007-02-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* My tests usually are run with perls that are pretty well equipped with
+	modules. I should always test with a minimum perl installation. We need
+	to provide one. Let's nominate a funny number. 30123.
+
+	31sessions test succeeds with this.
+
+	BUT if I remove Archive::Tar and Compress::Zlib, then it fails. Wonderful.
+
+	FIXED around SVK rev. 1913
+
+	* Today with 30254 I observed HTML::Mason test failure, but only once:
+
+t/10-cache....................
+#   Failed test 'cache_self_expire_in'
+#   at /home/k/.cpan/build/HTML-Mason-1.35-ecRYhh/blib/lib/HTML/Mason/Tests.pm line 593.
+# Looks like you failed 1 test of 20.
+dubious
+	Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 6
+	Failed 1/20 tests, 95.00% okay
+
+	When I started abinary search this same perl succeeded with all tests.
+	Go figure.
+
 	* From Adam K:
 
  > Ahhh, yes...'reload index' was the key for me.  Unfortunately, I had a
@@ -210,7 +234,7 @@ Failed during this command:
 	add distribution name to every OK/NOT OK; also inspired by Ilya.
 	mention 'cpan .'
 	mention yaml_module and YAML::Syck earlier
-	build_requires_install_policy
+	-build_requires_install_policy
 	scripts installation
 	Devel::Cover statistics??? -- not really interesting
 	eexpect example -- no, no good example found
