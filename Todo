@@ -1,3 +1,20 @@
+2007-02-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* I'm guilty to not have mentioned Devel::Size when we were talking
+	about releasing 5.10. It's gone broke when? 29544: Eliminate PVBM
+
+	We need something like this which is from a patch by Nicholas for
+	Clone.xs:
+
++#if PERL_VERSION <= 8
+       case SVt_PVBM:   /* 8 */
++#endif
+
+	FIXED in http://rt.cpan.org/Ticket/Display.html?id=24982 and distroprefs.
+
+	* I just discovered that CPAN::Reporter does not work with 5.8.0 because
+	IO::CaptureOutput does not either.
+
 2007-02-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* My tests usually are run with perls that are pretty well equipped with
@@ -21,7 +38,7 @@ dubious
 DIED. FAILED test 6
 	Failed 1/20 tests, 95.00% okay
 
-	When I started abinary search this same perl succeeded with all tests.
+	When I started a binary search this same perl succeeded with all tests.
 	Go figure.
 
 	* From Adam K:
@@ -66,6 +83,14 @@ done
 	report shall only report on what-I-say, but not on the prerequisites.
 
 	I have answered and I am not yet sure I want to go down that route.
+
+	This muddies the waters. If we only report on things on the commandline,
+	we can probably not get 'report Bundle::Spd' od 'Bundle::CPANxxl' to
+	work properly? Well, maybe we can. We just have to try. And when? Before
+	the release?
+
+	I'd also need input from David because I could easily break his
+	intentions.
 
 2007-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -233,7 +258,7 @@ Failed during this command:
 	-degraded mode
 	add distribution name to every OK/NOT OK; also inspired by Ilya.
 	mention 'cpan .'
-	mention yaml_module and YAML::Syck earlier
+	-mention yaml_module and YAML::Syck earlier
 	-build_requires_install_policy
 	scripts installation
 	Devel::Cover statistics??? -- not really interesting
