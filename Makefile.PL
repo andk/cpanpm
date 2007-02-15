@@ -202,10 +202,12 @@ LC_ALL_noexport=en_GB.utf8
 
 ALL_PERLS = /usr/bin/perl \
 	    /usr/local/bin/perl \
-	    /usr/local/perl-5.8.0/bin/perl \
             /usr/local/perl-5.004_05/bin/perl \
             /usr/local/perl-5.005_04/bin/perl \
-            /usr/local/perl-5.6.2/bin/perl
+            /usr/local/perl-5.6.2/bin/perl \
+	    /usr/local/perl-5.8.0/bin/perl \
+	    /usr/local/perl-5.8.4/bin/perl \
+
 
 # not sorted because order matters
 MEGA_BASE = Bundle::CPANxxl \
@@ -267,6 +269,7 @@ MEGA_INSTALL = Devel::Cover \
 		Module::Info \
 		String::Similarity \
 		Test::Deep \
+		Alzabo \
 
 }
 }
