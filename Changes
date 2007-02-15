@@ -1,3 +1,11 @@
+2007-02-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_74: stable release candidate II
+
+	* fix t/31sessions.t to run without Archive::Tar installed
+
+	* updated and new prefs files
+
 2007-02-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_73: quick small fixes, stable release candidate I
