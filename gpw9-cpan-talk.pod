@@ -122,6 +122,14 @@ auch der C<r> Befehl tut: er listet zuerst alle Module, für die es
 eine neuere Version auf CPAN gibt. Nur eben unmittelbar danach
 installiert er sie dann.
 
+=head1 Bessere visuelle Navigation
+
+Die Zeile vor jedem C<OK> bzw. C<NOT OK> sagt nun immer, um welche
+Distribution es sicht handelt. Eine unglaublich einfache Lösung des
+ewigen Rauf- und Runterscroll-Problems. Vorgeschlagen 2003 von Ilya
+Zakharevich in einem Patch, dem irgendwie damals nicht die richtige
+Aufmerksamkeit zuteil wurde.
+
 =head1 Distroprefs: Nicht ärgern lassen durch lästige Installationen
 
 Der größte Brocken im neuen CPAN.pm sind die Distroprefs. Ein System
@@ -578,6 +586,20 @@ Festplatte. Und immer wenn ich in cpan sage C<install
 wobei C< $PERL > das aktuell verwendete perl darstellt. Und beim
 späteren Test werden die zwei Environment Variablen BATCH und DISPLAY
 gesetzt.
+
+=head1 Dot Distros: C< cpan . >
+
+Ein sehr angenehmer weiterer Effekt der neuen Regel, dass ein trailing
+Dot einen lokalen Pfad darstellt, ergibt sich aus der Kombination des
+C<cpan> Skripts mit einem alleinstehenden Dot für das aktuelle
+Directory. Das spielt das ganze CPAN Mantra durch, bringt alle
+Prerequisites bei und installiert ein beliebiges Modul, das es auf
+CPAN nicht geben muß.
+
+Mir gefällt diese simple Option besser als Lösungen wie C<pip> oder
+C<CPAN::Mini::Inject>. Vielleicht kann man daraus noch mehr machen,
+aber fürs erste ist das ein ganz netter Einstieg in die Öffnung für
+Module außerhalb von CPAN.
 
 =head1 Neue Konfigurationsvariable C<auto_commit>
 
