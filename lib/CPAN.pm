@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_75';
+$CPAN::VERSION = '1.88_76';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -9646,6 +9646,9 @@ current date and a counter.
 
 =head2 hosts
 
+Note: this feature is still in alpha state and may change in future
+versions of CPAN.pm
+
 This commands provides a statistical overview over recent download
 activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
@@ -9729,6 +9732,9 @@ The first example will be driven by an object of the class
 CPAN::Module, the second by an object of class CPAN::Distribution.
 
 =head2 Integrating local directories
+
+Note: this feature is still in alpha state and may change in future
+versions of CPAN.pm
 
 Distribution objects are normally distributions from the CPAN, but
 there is a slightly degenerate case for Distribution objects, too, of
