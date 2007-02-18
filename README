@@ -1708,10 +1708,14 @@ FAQ
 
           o conf makepl_arg "LIB=~/myperl/lib \
                             INSTALLMAN1DIR=~/myperl/man/man1 \
-                            INSTALLMAN3DIR=~/myperl/man/man3"
+                            INSTALLMAN3DIR=~/myperl/man/man3 \
+                            INSTALLSCRIPT=~/myperl/bin \
+                            INSTALLBIN=~/myperl/bin"
+
+        and then (oh joy) the equivalent command for Module::Build.
 
         You can make this setting permanent like all "o conf" settings with
-        "o conf commit".
+        "o conf commit" or by setting "auto_commit" beforehand.
 
         You will have to add ~/myperl/man to the MANPATH environment
         variable and also tell your perl programs to look into ~/myperl/lib,
