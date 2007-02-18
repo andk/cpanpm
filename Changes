@@ -1,3 +1,10 @@
+2007-02-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_75: stable release candidate III
+
+	* make t/31sessions.t more verbose in order to determine the problem it
+	has on testers machines
+
 2007-02-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_74: stable release candidate II
