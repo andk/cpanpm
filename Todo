@@ -576,11 +576,11 @@ Failed during this command:
 	* Important things I forgot in the talk paper (minus means already written):
 
 	-degraded mode
-	add distribution name to every OK/NOT OK; also inspired by Ilya.
-	mention 'cpan .'
+	-add distribution name to every OK/NOT OK; also inspired by Ilya.
+	-mention 'cpan .', compare with pip and Inject stuff
 	-mention yaml_module and YAML::Syck earlier
 	-build_requires_install_policy
-	scripts installation
+	-scripts installation
 	Devel::Cover statistics??? -- not really interesting
 	eexpect example -- no, no good example found
 	- force/fforce

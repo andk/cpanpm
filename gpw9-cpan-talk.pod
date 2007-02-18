@@ -130,6 +130,16 @@ ewigen Rauf- und Runterscroll-Problems. Vorgeschlagen 2003 von Ilya
 Zakharevich in einem Patch, dem irgendwie damals nicht die richtige
 Aufmerksamkeit zuteil wurde.
 
+=head1 Bessere Unterstützung bei der Installation von Scripten
+
+Hier ist nicht die Rede von Skripten, die in einem Tarball zusammen
+mit einem Modul eingepackt sind. Es gibt auch einige Skripte auf CPAN,
+die nur einfach als Textdateien abgelegt wurden und in einem Baum von
+HTML Dateien unter http://cpan.org/scripts/index.html indexiert sind.
+
+Für die hat sich Slaven ein wenig geniale Dwimmery ausgedacht, wie man
+sie so komfortabel installieren kann wie Module.
+
 =head1 Distroprefs: Nicht ärgern lassen durch lästige Installationen
 
 Der größte Brocken im neuen CPAN.pm sind die Distroprefs. Ein System
