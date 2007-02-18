@@ -271,6 +271,7 @@ MEGA_INSTALL = Devel::Cover \
 		Test::Deep \
 		Alzabo \
 		Module::Build::Convert \
+		Devel::Hide \
 
 }
 }
