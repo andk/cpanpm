@@ -1,3 +1,323 @@
+2007-02-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* I'm quite helpless with the 5 reports from chris.
+
+	Apparently the output is from the command N-1 while the shell believes
+	to test the command N.
+
+	So the reason could be that the shell asks one more question to chris
+	than to me.
+
+	I have tried
+
+	cpanplus with bleadperl on k75
+	cpanplus with 5.8.8 on k75
+	cpan with 5.8.6 on k78
+	cpan with 5.8.8 on dev05
+	cpan with 5.8.8 on playground
+	cpan 1.7601 with 5.8.7 on k66
+
+	Ahh, the last one has lots of errors
+
+	* last night Convert::PEM with 30342 went into an endless loop and
+	filled the disk. Convert-PEM-0.07-Dlxs3I/ is left over, I had to remove
+	the logfile but let's try if report can reconstruct. Of course not,
+	because the yml file could not be written. Report starts in a new
+	directory and succeeds within seconds. Visiting the left over directory
+	from the nightly run also brings no evidence: tests run OK within
+	seconds. Oh well.
+
+2007-02-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* testers has 5 nearly identical FAILS results on 1.88_74, all made with
+	CPANPLUS 0.076, all from chris. The failure goes like this:
+
+#   Failed test 'command[test CPAN::Test::Dummy::Perl5::Make]'
+#   at t/31sessions.t line 170.
+#                   '    patch              [ ]
+# Please use 'o conf commit' to make the config permanent!
+# 
+# '
+#     doesn't match '/t/00_load.+ok/'
+
+
+	and I cannot imagine how this can happen.
+
+	So I find myself using CPANPLUS for the very first time since ages.
+
+	I type 'f Verilog::Languange' and CPANPLUS does not seem to answer ever.
+	Oh well, after about two minutes it says
+
+    1 Verilog-Perl                                       2.361    WSNYDER   
+    2 Verilog-Perl                                       2.371    WSNYDER   
+
+	Cool feature.
+
+	I do the same for CPAN and they answer
+
+    1 CPAN                                               1.87     ANDK
+    2 CPAN                                               1.8869   ANDK
+    3 CPAN                                               1.8866   ANDK
+    4 CPAN                                               1.8872   ANDK
+    5 CPAN                                               1.8867   ANDK
+    6 CPAN                                               1.8864   ANDK
+    7 CPAN                                               1.8871   ANDK
+    8 CPAN                                               1.88     ANDK
+    9 CPAN                                               1.8865   ANDK
+   10 CPAN                                               1.8873   ANDK
+   11 CPAN                                               1.8874   ANDK
+   12 CPAN                                               1.8868   ANDK
+   13 CPAN                                               1.8801   ANDK
+   14 CPAN                                               1.8802   ANDK
+
+	What a strange sorting! And where are the underscores? And when I say 'i
+	11' they say
+
+Installing CPAN
+*** Install log written to:
+  /home/k/.cpanplus/install-logs/CPAN-1171719784.log
+
+Module 'CPAN' installed successfully
+No errors installing all modules
+
+	This action took less than a second and I must open that logfile to find
+	out that CPAN is already up to date (without version information). And
+	above that I do have 1.8873 installed, not 1.8874 so why they do not
+	install 1.8874 is not clear.
+
+	But I can test 1.8874 ok and now I have again no idea why the 5 FAILS on
+	testers.
+	
+	* Macbook compiles bleadperl@30032 with a horrible amount of test failures
+
+Failed Test                               Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+../ext/Encode/t/Aliases.t                    2   512    ??   ??  ??
+../ext/Encode/t/CJKT.t                     255 65280    60  120  1-60
+../ext/Encode/t/Encode.t                     2   512    ??   ??  ??
+../ext/Encode/t/Encoder.t                  255 65280   516 1032  1-516
+../ext/Encode/t/Unicode.t                  255 65280    37   74  1-37
+../ext/Encode/t/at-cn.t                    255 65280    29   58  1-29
+../ext/Encode/t/at-tw.t                    255 65280    17   34  1-17
+../ext/Encode/t/enc_data.t                   2   512    ??   ??  ??
+../ext/Encode/t/enc_eucjp.t                  2   512    ??   ??  ??
+../ext/Encode/t/enc_module.t                 2   512    ??   ??  ??
+../ext/Encode/t/enc_utf8.t                   2   512    ??   ??  ??
+../ext/Encode/t/encoding.t                   2   512    ??   ??  ??
+../ext/Encode/t/fallback.t                 255 65280    44   88  1-44
+../ext/Encode/t/from_to.t                  255 65280     3    6  1-3
+../ext/Encode/t/grow.t                       2   512    ??   ??  ??
+../ext/Encode/t/gsm0338.t                  255 65280    21   42  1-21
+../ext/Encode/t/guess.t                      2   512    ??   ??  ??
+../ext/Encode/t/jperl.t                    255 65280    15   30  1-15
+../ext/Encode/t/mime-header.t              255 65280    11   21  1-11
+../ext/Encode/t/mime_header_iso2022jp.t    255 65280    14   28  1-14
+../ext/Encode/t/perlio.t                   255 65280    38   76  1-38
+../ext/Encode/t/utf8strict.t                 2   512    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/01_load.t     255 65280     8   12  1-2 4-8
+../ext/Hash/Util/FieldHash/t/02_function.  255 65280    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/03_class.t    255 65280     7   14  1-7
+../ext/Hash/Util/FieldHash/t/04_thread.t   255 65280    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/05_perlhook.  255 65280    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/10_hash.t     255 65280    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/11_hashassig  255 65280    ??   ??  ??
+../ext/Hash/Util/FieldHash/t/12_hashwarn.  255 65280    ??   ??  ??
+../ext/Hash/Util/t/Util.t                  255 65280   227  430  1-227
+../ext/PerlIO/encoding/t/nolooping.t       255 65280     1    2  1
+../ext/Storable/t/downgrade.t              255 65280   169  325  7-169
+../ext/Storable/t/restrict.t                 2   512    ??   ??  ??
+../ext/Sys/Syslog/t/syslog.t                 4  1024   159    4  129-132
+../lib/Pod/Simple/t/corpustest.t                        43   15  3 5 7 9 11 17
+                                                                 19 21 23 25 28
+                                                                 36 38 40 42
+../lib/base/t/fields-base.t                255 65280    29   20  20-29
+../lib/base/t/fields.t                     255 65280    16   22  6-16
+../lib/encoding/warnings/t/4-lexical.t                   3    1  2
+comp/utf.t                                   2   512    15   30  1-15
+io/layers.t                                             37   13  6 9-11 13 21
+                                                                 23-24 33-37
+run/fresh_perl.t                                        94    1  94
+uni/chomp.t                                  2   512    ??   ??  ??
+uni/chr.t                                  255 65280     6   12  1-6
+uni/greek.t                                  2   512    ??   ??  ??
+uni/latin2.t                                 2   512    ??   ??  ??
+uni/tr_7jis.t                              255 65280     6   12  1-6
+uni/tr_eucjp.t                             255 65280     6   12  1-6
+uni/tr_sjis.t                              255 65280     6   12  1-6
+uni/tr_utf8.t                              255 65280     8   16  1-8
+79 tests and 530 subtests skipped.
+Failed 50/1366 test scripts. 1312/172604 subtests failed.
+Files=1366, Tests=172604, 647 wallclock secs (357.74 cusr + 65.52 csys = 423.26 
+CPU)
+Failed 50/1366 test programs. 1312/172604 subtests failed.
+
+
+	* Todo: mark hosts command and dot directories as alpha code in the
+	documentation.
+
+	* Bug: Watch the upload date between the two runs of 'm'
+
+cpan[4]> m Verilog::Language
+Module id = Verilog::Language
+    DESCRIPTION  Language support, number parsing, etc
+    CPAN_USERID  WSNYDER (Wilson Snyder <wsnyder@wsnyder.org>)
+    CPAN_VERSION 2.371
+    CPAN_FILE    W/WS/WSNYDER/Verilog-Perl-2.371.tar.gz
+    DSLIP_STATUS Rdpfp (released,developer,perl,functions,Standard-Perl)
+    INST_FILE    (not installed)
+
+cpan[5]> m Verilog::Language
+Module id = Verilog::Language
+    DESCRIPTION  Language support, number parsing, etc
+    CPAN_USERID  WSNYDER (Wilson Snyder <wsnyder@wsnyder.org>)
+    CPAN_VERSION 2.371
+    CPAN_FILE    W/WS/WSNYDER/Verilog-Perl-2.371.tar.gz
+    UPLOAD_DATE  2007-01-23
+    DSLIP_STATUS Rdpfp (released,developer,perl,functions,Standard-Perl)
+    INST_FILE    (not installed)
+
+	1.8802 does not seem to have this bug. Ah, but I cannot reproduce it now
+	with 1.88_74 either, so it's not always there. Turning off
+	cache_metadata does not bring it back.
+
+	I must keep an eye on this but it is no showstopper.
+
+	* Verilog-Perl a.k.a. Verilog::Language broke on patch 30044. The
+	failure mode is that the modules themselves compile fine but the output
+	of the compiled program 'vppp' differs from the expected one.
+
+	    UPLOAD_DATE  2007-01-23
+
+	Suspiciously young and the patch 30044 appeared on 27th.
+
+   91807 2006-10-02 WSNYDER/Verilog-Perl-2.361.tar.gz
+   93591 2007-01-23 WSNYDER/Verilog-Perl-2.371.tar.gz
+
+	I repeat the binary search with nailed down version demand on
+	Verilog::Language 2.371 to make sure that the first run was not trapped
+	into a difference between the two versions. ... No, it's not a version
+	trap.
+
+	So I made my own 30333 where the sense of the ifdef is turned around to
+	say the opposite. It seems to me this is the way it was intended. But no
+	success. Even backing out 30044 does not help.
+
+	Now I removed the whole installed 30333, reinstalled it with the backed
+	out 30044 patch. (recompiled but not recompiled from scratch). As my
+	first module I try Verilog and it fails.
+
+	Now I recompile from scratch. 'make clobber' and start with ./Configure.
+	30044 is backed out. No, Verilog remains broken.
+
+	This is impossible. Let me see 30043 again. Yes, it passes all tests.
+
+	And when I now patch perl.h with 30044 straight forward and compile perl
+	again and install it and then fforce test Verilog::Language? Then it too
+	passes all tests!
+
+	Does ./installperl not overwrite perl.h??? It does overwrite it.
+
+	CCACHE to blame? No CCACHE_DISABLE makes no difference.
+
+	Something within Verilog must be broken too. It's a preprocessor. It may
+	parse header files and draw conclusions.
+
+	Let me repeat:
+
+	30043: ok
+	30044: not ok
+	30333: not ok
+
+	Apply diff 43:44 to 30043: still ok
+	apply diff 44:43 to 30333: still not ok
+
+	So *something* between perl and Verilog does not notice the perl.h
+	change and remains in the state it had on the very first compile. Maybe
+	this something even survives make clobber.
+
+	"regen" or some such?
+
+	apply diff 44:43 to 30333 and regen: still not ok
+
+	Remove the old 30044 and build one with buildaperl from scratch, no
+	extra patching:
+
+	30044: ok
+
+	!!!!! something must have gone wrong when building 30044 the first time,
+	so the binary search went wrong too and I was hunting the wrong diff for
+	many hours.
+
+	Maybe there is still a race condition in binsearchaperl?
+
+	Remember: if a binary search brings a result that raises doubts, remove
+	both perls from installed-perls and their build directory as well and
+	rerun the binary search.
+
+	This is even true if there is NO race condition within binsearchaperl.
+	It's always possible that some third party installed something that
+	disturbs the binary search, like say Carp.pm
+
+	So I start the next binsearch since 30044 now is OK and it diagnoses
+	3006{4,7} as the threshold and I decide immediately to remove 30067 to
+	run the next binsearch. And it jumped only forward and decided now it
+	would be between 3007[26]. It's very clear now that it is not bleadperl
+	but some other module that is used by vppp.
+
+	LATER. I must delay further analysis because this can take a long time.
+
+
+2007-02-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Talk: convert a megainstall file to HTML with <pre> and <span
+	class="XXX"> and many anchors so that we can jump directly into it. Then
+	make HTML slides that jump into that file and into the distroprefs files
+	which may need converting too for best lettersize.
+
+	Interestingly, when I do this, rendering of the resulting HTML file is
+	too much work for my firefox on linux/Dell/500 MHz. The MacBook is
+	several orders of magnitude faster but still a bit painful.
+
+	* in the talk, compare dot distros with pip and Inject.
+
+	* read CPAN::Inject and CPAN::Mini::Inject manpages
+
+	straightforward and modest. No index support, so only distribution
+	support.
+
+	* read pip manpage:
+
+	Wow: http://svn.phase-n.com/svn/cpan/trunk/pip invitation to write
+	directly to it. But nobody gives me the clue howto follow this
+	invitation. It *is* subversion. Ah, two levels higher we have the
+	paragraph
+
+	    To access the repositories above via Subversion, browse to the
+	    location in the repository you want via your web browser and then
+	    use that URL with your favorite Subversion client tool. You may
+	    asked to enter your username and password for access to any
+	    restricted repositories.
+
+	Indeed, I can do
+
+	    % svn co http://svn.phase-n.com/svn/cpan/trunk/pip/ ./
+
+	and when I want to check in, it asks me for username and password. But
+	it speaks only http, so no way to use that seriously. No contact address
+	on that page either except for a link to the Michael.Sinz homepage.
+
+	Typos: "is available is", "guarentee"
+
+	Missing example of a p5i file in the manpage.
+
+	Ahh, now I understand how it works. Authentication does not go via pause
+	(I watched the logfile while logging in with wrong password) but every
+	author must get a password from adam directly. So that's OK. It's just
+	misleading to say
+
+	    Write access to the repository is made available automatically to
+	    any published CPAN author, and to most other volunteers on request.
+	
 2007-02-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* I'm guilty to not have mentioned Devel::Size when we were talking

@@ -17,6 +17,13 @@ BEGIN {
         print "1..0 # Skip: no yaml module installed\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
     }
+    if ($CPAN::META->has_inst("Module::Build")) {
+        print "# DEBUG: Module::Build loadable\n";
+    } else {
+        $|=1;
+        print "1..0 # Skip: Module::Build not installed\n";
+        eval "require POSIX; 1" and POSIX::_exit(0);
+    }
 }
 
 use strict;
@@ -64,7 +71,7 @@ our @SESSIONS =
        "dump \$::x=4*6+1" => "= 25;",
        "dump \$::x=40*6+1" => "= 241;",
        "dump \$::x=40*60+1" => "= 2401;",
-       "o conf init\nyes" => "commit",
+       "o conf init\nyes" => "commit: wrote",
        "o conf patch ' '" => ".", # prevent that C:T:D:P:B:Fails succeeds by patching
        "test CPAN::Test::Dummy::Perl5::Make" => "t/00_load\.+ok",
        "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
@@ -167,7 +174,12 @@ for my $session (@SESSIONS) {
         my($actual) = $chunks[$i];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
         diag("command[$command]expect[$expect]actual[$actual]") if $VERBOSE;
-        like($actual,"/$expect/","command[$command]");
+        unless (like($actual,"/$expect/","command[$command]")) {
+            require Dumpvalue;
+            my $dumper = Dumpvalue->new();
+            my $i0 = $i > 4 ? $i-5 : 0;
+            warn join "", "# ", map { "[".$dumper->stringify($_)."]" } @chunks[$i0..$i];
+        }
     }
 }
 
