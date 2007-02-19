@@ -118,7 +118,8 @@ our @SESSIONS =
        # does not come under some currently unknown circumstance
 
        "get CPAN::Test::Dummy::Perl5::Make" => "(?sx:
-                     CPAN-Test-Dummy-Perl5-Make-1.\\d+/lib/CPAN/Test/Dummy/Perl5/Make.pm.*
+                     not.installed,.falling.back.*
+                     not.installed,.cannot.parse.*
                      will.not.store.persistent.state)",
        "make CPAN::Test::Dummy::Perl5::Make" => "Falling back to other methods to determine prerequisites",
        "test CPAN::Test::Dummy::Perl5::Make" => "All tests successful",

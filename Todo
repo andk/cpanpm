@@ -1,5 +1,7 @@
 2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Chris has tested _76: twice OK, once NOT on 31sessions/28th test.
+
 	* Chris has tested _75 and I can see that his shell says the unexpected
 
 	'Unknown shell command \'yes\'. Type ? for help.
