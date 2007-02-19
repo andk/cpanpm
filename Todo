@@ -1,3 +1,18 @@
+2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Chris has tested _75 and I can see that his shell says the unexpected
+
+	'Unknown shell command \'yes\'. Type ? for help.
+'
+	But the "yes" gets eaten earlier too
+
+	Would you like me to configure as much as possible automatically? [yes] yes
+
+	How can it happen that the yes is both consumed and still left over on
+	the input?
+
+	Now I have it! He must have set PERL_MM_USE_DEFAULT!!!!!!!!!
+
 2007-02-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* I'm quite helpless with the 5 reports from chris.
@@ -17,7 +32,7 @@
 	cpan with 5.8.8 on playground
 	cpan 1.7601 with 5.8.7 on k66
 
-	Ahh, the last one has lots of errors
+	Ahh, the last one has lots of errors. But not the one that chris has.
 
 	* last night Convert::PEM with 30342 went into an endless loop and
 	filled the disk. Convert-PEM-0.07-Dlxs3I/ is left over, I had to remove

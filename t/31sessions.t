@@ -71,7 +71,7 @@ our @SESSIONS =
        "dump \$::x=4*6+1" => "= 25;",
        "dump \$::x=40*6+1" => "= 241;",
        "dump \$::x=40*60+1" => "= 2401;",
-       "o conf init\nyes" => "commit: wrote",
+       "o conf init" => "commit: wrote",
        "o conf patch ' '" => ".", # prevent that C:T:D:P:B:Fails succeeds by patching
        "test CPAN::Test::Dummy::Perl5::Make" => "t/00_load\.+ok",
        "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
@@ -153,6 +153,7 @@ plan tests => $cnt
     + 1 # the MyConfig verification
     ;
 is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
+$ENV{PERL_MM_USE_DEFAULT} = 1;
 
 for my $session (@SESSIONS) {
     my $system = $session->{system} || $default_system;
@@ -166,12 +167,12 @@ for my $session (@SESSIONS) {
     close SYSTEM or mydiag "error while running '$system' on '$session->{name}'";
     my $content = do {local *FH; open FH, "test.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
-    shift @chunks;
+    # shift @chunks;
     warn sprintf "# DEBUG: pairs[%d]chunks[%d]", scalar @{$session->{pairs}}, scalar @chunks;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
         my($expect) = $session->{pairs}[2*$i+1];
-        my($actual) = $chunks[$i];
+        my($actual) = $chunks[$i+1];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
         diag("command[$command]expect[$expect]actual[$actual]") if $VERBOSE;
         unless (like($actual,"/$expect/","command[$command]")) {

@@ -453,7 +453,7 @@ Mit den circa 100 Distroprefs Dateien, die der CPAN.pm Distribution
 beigelegt sind, baue ich nun seit einigen Wochen regelmäßig
 vollautomatisch und unbeaufsichtigt ca. 480 Distributionen mit ca.
 3000 Modulen in einer Endlosschleife mit dem jeweils aktuellen
-Bleadperl. Das dauert jeweils so um die 4 Stunden.
+Bleadperl. Das dauert jeweils so um die 3-4 Stunden.
 
 Ich kann nur alle ermutigen, sich solche Distroprefs Dateien
 anzulegen. Die Lernkurve ist im Grunde nicht steil, für die meisten

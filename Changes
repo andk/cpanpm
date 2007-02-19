@@ -1,3 +1,10 @@
+2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_76: stable release candidate IV
+
+	* In t/31sessions.t set PERL_MM_USE_DEFAULT to emulate testers behaviour
+	and have the same results for testers and everybody else.
+
 2007-02-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_75: stable release candidate III
