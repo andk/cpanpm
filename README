@@ -253,6 +253,9 @@ DESCRIPTION
     and a counter.
 
   hosts
+    Note: this feature is still in alpha state and may change in future
+    versions of CPAN.pm
+
     This commands provides a statistical overview over recent download
     activities. The data for this is collected in the YAML file
     "FTPstats.yml" in your "cpan_home" directory. If no YAML module is
@@ -331,6 +334,9 @@ DESCRIPTION
     the second by an object of class CPAN::Distribution.
 
   Integrating local directories
+    Note: this feature is still in alpha state and may change in future
+    versions of CPAN.pm
+
     Distribution objects are normally distributions from the CPAN, but there
     is a slightly degenerate case for Distribution objects, too, of projects
     held on the local disk. These distribution objects have the same name as
