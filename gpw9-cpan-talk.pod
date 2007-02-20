@@ -52,11 +52,11 @@ Memory auch in 20 MB Memory laufen lassen kann.
 Um mit CPAN::SQLite zu arbeiten, reicht es CPAN::SQLite zu
 installieren und einen einzigen Konfigurationsparameter zu setzen:
 
-  cpan> install RKOBES/CPAN-SQLite-0.1_04.tar.gz
+  cpan> install CPAN::SQLite
   cpan> o conf init use_sqlite
 
 Randy hat noch viel weitreichendere Pläne mit CPAN::SQLite als nur
-Memory einzusparen, insbesodere verbesserte Suchoptionen, aber die
+Memory einzusparen, insbesondere verbesserte Suchoptionen, aber die
 sind zur Zeit nur im Planungsstadium.
 
 =head1 Interaktive Konfiguration einzelner Variabler
