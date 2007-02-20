@@ -66,6 +66,7 @@ use vars qw(
             $CONFIG_DIRTY
             $Defaultdocs
             $Defaultrecent
+            $Echo_readline
             $Frontend
             $GOTOSHELL
             $HAS_USABLE
@@ -222,8 +223,15 @@ ReadLine support %s
     my $last_term_ornaments;
   SHELLCOMMAND: while () {
 	if ($Suppress_readline) {
+            if ($Echo_readline) {
+                $|=1;
+            }
 	    print $prompt;
 	    last SHELLCOMMAND unless defined ($_ = <> );
+            if ($Echo_readline) {
+                # backdoor: I could not find a way to record sessions
+                print $_;
+            }
 	    chomp;
 	} else {
 	    last SHELLCOMMAND unless

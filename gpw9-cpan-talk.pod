@@ -66,7 +66,7 @@ von Jim Cromie grundlegend umgeschrieben, man hat nur recht wenig
 davon bemerkt. In diesem Jahr ist es endlich gelungen, etwas von dem
 ganzen reformierten Mechanismus an den Benutzer weiterzugeben.
 
-Bis zum letzten Jar war es immer nur möglich, den gesamten
+Bis zum letzten Jahr war es immer nur möglich, den gesamten
 Konfigurationsdialog auf einmal durchzugehen, indem man
 
   cpan> o conf init

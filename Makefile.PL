@@ -345,6 +345,9 @@ logs/.exists :
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
+record-session :
+	$(PERL) -Ilib -MCPAN -e '$$CPAN::Suppress_readline=$$CPAN::Echo_readline=1;shell' | tee ttt.out
+
 run-with-sqlite :
 	$(PERL) -I$$HOME/.cpan -Ilib -MCPAN::SQLite -MCPAN::MyConfig -MCPAN -e '$$CPAN::Config->{use_sqlite}++; $$CPAN::Config->{sqlite_dbname}="cpandb-sqlite"; shell'
 
