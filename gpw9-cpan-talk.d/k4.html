@@ -1,0 +1,33 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+</head>
+<body bgcolor="#ffffff">
+<font size="6">
+<hr />
+<a href="k5.html"><img src="rightarrow.gif" align="right" border="0"></a>
+<a href="k0.html"><img src="uparrow.gif" align="right" border="0"></a><a href="k3.html"><img src="leftarrow.gif" align="right" border="0"></a><h1><a name="interaktive_konfiguration_einzelner_variabler">Interaktive Konfiguration einzelner Variabler</a></h1>
+<p>Der gesamte Konfigurationsapparat war bereits vor mehr als einem Jahr
+von Jim Cromie grundlegend umgeschrieben, man hat nur recht wenig
+davon bemerkt. In diesem Jahr ist es endlich gelungen, etwas von dem
+ganzen reformierten Mechanismus an den Benutzer weiterzugeben.</p>
+<p>Bis zum letzten Jar war es immer nur möglich, den gesamten
+Konfigurationsdialog auf einmal durchzugehen, indem man</p>
+<pre>
+  cpan&gt; o conf init</pre>
+<p>eingegeben hat. Jetzt endlich akzeptiert <code>o conf init</code> ein weiteres
+Argument, das ein Variablenname oder ein regulärer Ausdruck sein kann,
+etwa:</p>
+<pre>
+  cpan&gt; o conf init use_sqlite</pre>
+<p>oder</p>
+<pre>
+  cpan&gt; o conf init /report/</pre>
+<p>Damit kann man direkt in den Dialog fur eine oder mehrere
+Konfigurationsvariable eintreten und kann sich die restlichen
+Variablen sparen.</p>
+<p>
+</p>
+<hr />
+</font></body></html>

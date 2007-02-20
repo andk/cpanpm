@@ -1,0 +1,26 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+</head>
+<body bgcolor="#ffffff">
+<font size="6">
+<hr />
+<a href="k21.html"><img src="rightarrow.gif" align="right" border="0"></a>
+<a href="k0.html"><img src="uparrow.gif" align="right" border="0"></a><a href="k19.html"><img src="leftarrow.gif" align="right" border="0"></a><h1><a name="neue_konfigurationsvariable_build_requires_install_policy">Neue Konfigurationsvariable <code>build_requires_install_policy</code></a></h1>
+<p>Module::Build kennt zwei verschiedene Arten von Prerequisites: normale
+<code>requires</code>, die sich auf die Laufzeit beziehen, und
+<code>build_requires</code>, die sich nur auf den Prozess des Zusammenbauens der
+Module beziehen. Letztere wären zum Beispiel alle Test-Module.</p>
+<p>Als Endbenutzer eines Moduls kann man nun das Interesse haben, die
+Anzahl der installierten Module klein zu halten, also die
+<code>build_requires</code> nicht zu installieren. Oder man kann der Ansicht
+sein, dass es ohnehin immer wieder die gleichen <code>build_requires</code>
+sind, die man doch recht häufig braucht und deshalb immer gleich
+mitinstalliert. Oder man möchte sich von Fall zu Fall entscheiden und
+gefragt werden. All das kann man mit der Konfigurationsvariable
+<code>build_requires_install_policy</code> einstellen.</p>
+<p>
+</p>
+<hr />
+</font></body></html>

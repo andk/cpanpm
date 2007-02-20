@@ -1,0 +1,45 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+</head>
+<body bgcolor="#ffffff">
+<font size="6">
+<hr />
+<a href="k18.html"><img src="rightarrow.gif" align="right" border="0"></a>
+<a href="k0.html"><img src="uparrow.gif" align="right" border="0"></a><a href="k16.html"><img src="leftarrow.gif" align="right" border="0"></a><h1><a name="dot_distros__bring_your_own">Dot Distros: bring your own</a></h1>
+<p>Immer mehr Autoren verfügen über ein Repository, zu dem sie die
+Welt lesend zugreifen lassen können. Oft sind wir an diesem direkten
+Zugriff interessiert, ganz besonders, wenn es unsere eigenen
+Repositories sind. Für all diese Fälle hat CPAN eine neue Syntax:</p>
+<pre>
+  cpan&gt; install /home/src/working-copies/CPAN-SQLite/.</pre>
+<p>Ein Argument, das zum einen (wegen der Slashes) wie eine Distribution
+aussieht, aber mit einem Punkt aufhört, wird als lokales Directory
+behandelt. Das heisst, CPAN.pm wechselt in dieses Verzeichnis und
+macht sein übliches Programm. Ideal auch für firmeninterne Module.</p>
+<p>Für diese Verzeichnisse braucht man natürlich mitunter weitere
+Distroprefs Parameter. Zum Beispiel <code>pl/commandline</code>:</p>
+<pre>
+  ---
+  comment: &quot;Xvfb :121 must be started by somebody else&quot;
+  match:
+    distribution: &quot;^/home/src/perl/tk/SVN/\.$&quot;
+  pl:
+    commandline: &quot;make clean; svn up &amp;&amp; $PERL Makefile.PL XFT=1&quot;
+  test:
+    env:
+      BATCH: 1
+      DISPLAY: &quot;:121&quot;</pre>
+<p>Hier sieht man eine Working Copy eines Repository auf meiner lokalen
+Festplatte. Und immer wenn ich in cpan sage <code>install
+/home/src/perl/tk/SVN/.</code>, dann führt CPAN.pm für mich aus</p>
+<pre>
+    make clean; svn up &amp;&amp; $PERL Makefile.PL XFT=1</pre>
+<p>wobei <code> $PERL </code> das aktuell verwendete perl darstellt. Und beim
+späteren Test werden die zwei Environment Variablen BATCH und DISPLAY
+gesetzt.</p>
+<p>
+</p>
+<hr />
+</font></body></html>

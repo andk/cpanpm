@@ -1,0 +1,26 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+</head>
+<body bgcolor="#ffffff">
+<font size="6">
+<hr />
+<a href="k20.html"><img src="rightarrow.gif" align="right" border="0"></a>
+<a href="k0.html"><img src="uparrow.gif" align="right" border="0"></a><a href="k18.html"><img src="leftarrow.gif" align="right" border="0"></a><h1><a name="neue_konfigurationsvariable_auto_commit">Neue Konfigurationsvariable <code>auto_commit</code></a></h1>
+<p>Sollen Konfigurationsvariable, die während einer Session geändert
+werden, sofort auf die Festplatte in die Konfigurationsdatei
+geschrieben werden oder nicht?</p>
+<p>Die Frage hat leider CPAN.pm in der Vergangenheit nicht einheitlich
+beantwortet: mal ja, mal nein. Damit ist nun Schluss, jeder User kann
+selbst entscheiden, ob er lieber explizit</p>
+<pre>
+  cpan&gt; o conf commit</pre>
+<p>sagen möchte und damit die Chance hat, Variable auszuprobieren, ohne
+zukünftige Sessions darauf festzulegen, oder ob er <code>auto_commit</code> auf
+einen wahren Wert setzt und damit jede Änderung sofort in die
+Konfigurationsdatei geschrieben wird.</p>
+<p>
+</p>
+<hr />
+</font></body></html>
