@@ -1,3 +1,12 @@
+2007-02-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* scripts installation broken. Tried it with pingomatic and keepcool.
+
+	* when was notest introduced? In 1.80, December 2005. New features by
+	Slaven this year are: 'cpan .', scripts, 'perl -I. -MCPAN' now works.
+
+	* consider different sorting of directory listings. suggested by Slaven.
+
 2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Chris has tested _76: twice OK, once NOT on 31sessions/28th test.

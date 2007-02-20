@@ -272,6 +272,9 @@ MEGA_INSTALL = Devel::Cover \
 		Alzabo \
 		Module::Build::Convert \
 		Devel::Hide \
+		Lucene \
+		ANDK/keepcool-0.344 \
+		SREZIC/pingomatic-1.013 \
 
 }
 }

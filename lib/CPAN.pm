@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_77';
+$CPAN::VERSION = '1.88_78';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -1421,17 +1421,21 @@ sub disk_usage {
     return if $CPAN::Signal;
     my($Du) = 0;
     if (-e $dir) {
-        unless (-x $dir) {
-            unless (chmod 0755, $dir) {
-                $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
-                                        "permission to change the permission; cannot ".
-                                        "estimate disk usage of '$dir'\n");
-                $CPAN::Frontend->mysleep(5);
-                return;
+        if (-d $dir) {
+            unless (-x $dir) {
+                unless (chmod 0755, $dir) {
+                    $CPAN::Frontend->mywarn("I have neither the -x permission nor the ".
+                                            "permission to change the permission; cannot ".
+                                            "estimate disk usage of '$dir'\n");
+                    $CPAN::Frontend->mysleep(5);
+                    return;
+                }
             }
+        } elsif (-f $dir) {
+            # nothing to say, no matter what the permissions
         }
     } else {
-        $CPAN::Frontend->mywarn("Directory '$dir' has gone. Cannot continue.\n");
+        $CPAN::Frontend->mywarn("File or directory '$dir' has gone, ignoring\n");
         return;
     }
     find(
@@ -6206,8 +6210,11 @@ sub handle_singlefile {
             $self->{unwrapped} = CPAN::Distrostatus->new("NO -- uncompressing failed");
         }
     } else {
-        File::Copy::cp($local_file,".");
-        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- copying failed");
+        if (File::Copy::cp($local_file,".")) {
+            $self->{unwrapped} = CPAN::Distrostatus->new("YES");
+        } else {
+            $self->{unwrapped} = CPAN::Distrostatus->new("NO -- copying failed");
+        }
     }
     return $to;
 }
