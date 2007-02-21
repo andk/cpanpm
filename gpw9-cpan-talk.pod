@@ -322,7 +322,7 @@ Das hier kennen sicher all Anwesenden:
 
 Richtig, das kommt von der libnet Distribution. Wir schreiben immer
 wieder alle brav unser C<n> und RET und leiden nicht sonderlich
-darunter. Außer dass wir eben nicht schlafen dürfen währen libnet
+darunter. Außer dass wir eben nicht schlafen dürfen während libnet
 installiert wird. Also schreiben wir uns jetzt eine Distropref Datei:
 
   ---
