@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+  </head>
+  <body bgcolor="#ffffff">
+    <div style="font-size: 24">
+      <hr />
+      <a href="k910.html"><img src="rightarrow.gif" align="right" border="0" alt="next"/></a>
+      <a href="k0.html"><img src="uparrow.gif" align="right" border="0" alt="content"/></a><a href="k908.html"><img src="leftarrow.gif" align="right" border="0" alt="previous"/></a><h1><a name="distroprefs__nicht___rgern_lassen_durch_l__stige_installationen">Distroprefs: <code>disable</code></a></h1>
+      <ul>
+<li>Für hilfreich halte ich auch die Möglichkeit, die Installation
+bestimmter Module zu verhindern:
+<pre>
+  --- 
+  comment: &quot;Usually only works with current source which comes with PerlMagick anyway&quot;
+  match:
+    distribution: &quot;^JCRISTY/PerlMagick-&quot;
+  disabled: 1</pre>
+</li>
+<li> Erfahrungsgemäß ist die imagemagick Distribution
+immer besser.</li>
+<li>Ein ähnlicher Fall sind Module mit fallenden Versionsnummern (KASEI/Class-Accessor-0.25/0.27)
+<pre>
+  ---
+  comment: &quot;Since installing 0.25 after 0.27 would be a downgrade&quot;
+  match:
+    distribution: &quot;^KASEI/Class-Accessor-0.25&quot;
+  disabled: 1</pre>
+</li>
+      </ul>
+<p>
+</p>
+<hr />
+</div></body></html>
+<!--
+ Local Variables:
+ mode: nxml
+ coding: utf-8
+ End:
+-->
+
