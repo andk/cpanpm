@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+  </head>
+  <body bgcolor="#ffffff">
+    <div style="font-size: 24">
+      <hr />
+      <a href="k18.html"><img src="rightarrow.gif" align="right" border="0" alt="next"/></a>
+      <a href="k0.html"><img src="uparrow.gif" align="right" border="0" alt="content"/></a><a href="k17.html"><img src="leftarrow.gif" align="right" border="0" alt="previous"/></a><h1><a name="dot_distros__bring_your_own">Dot Distros &amp; Distroprefs</a></h1>
+      <ul>
+        <li> <code>pl/commandline</code>:
+<pre>
+  ---
+  comment: &quot;Xvfb :121 must be started by somebody else&quot;
+  match:
+    distribution: &quot;^/home/src/perl/tk/SVN/\.$&quot;
+  pl:
+    commandline: &quot;make clean; svn up &amp;&amp; $PERL Makefile.PL XFT=1&quot;
+  test:
+    env:
+      BATCH: 1
+      DISPLAY: &quot;:121&quot;</pre>
+        </li>
+      </ul>
+<p>
+</p>
+<hr />
+</div></body></html>
+<!--
+ Local Variables:
+ mode: nxml
+ coding: utf-8
+ End:
+-->
+
