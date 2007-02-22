@@ -10,5 +10,10 @@ s!\e\[1;31m(.*?)\e\[0m!<span style="color: red">$1</span>!sg;
 #s!\n!<br/>\n!g;
 s!\r\n!\n!g;
 s!.+\r!!g;
+<<<<<<< .mine
+s|^|<html><head><title>title</title></head><body><div style="font-size: 24"><pre>|;
+s|\z|</pre></div></body></html>\n|;
+=======
 s|^|<html><head><title>title</title></head><body><font size="6"><pre>|;
 s|\z|</pre></font></body></html>\n|;
+>>>>>>> .r1606

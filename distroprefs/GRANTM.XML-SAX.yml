@@ -1,0 +1,7 @@
+--- 
+match:
+  distribution: "^GRANTM/XML-SAX-0.15.tar.gz"
+pl: 
+  expect:
+    - "Do you want XML::SAX to alter ParserDetails.ini"
+    - "y\n"
