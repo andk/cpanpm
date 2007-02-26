@@ -1,3 +1,9 @@
+2007-02-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* supposedly a bug: Slaven found both cpanconfig and cpan_config
+
+	* todo: document match/perlconfig
+
 2007-02-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* jochen stenzel asked me for a comparison of CPAN::Site and dot
