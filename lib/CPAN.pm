@@ -7250,7 +7250,7 @@ sub _find_prefs {
                     my $ok = 1;
                     # do not take the order of C<keys %$match> because
                     # "module" is by far the slowest
-                    for my $sub_attribute (qw(distribution perl module)) {
+                    for my $sub_attribute (qw(distribution perl perlconfig module)) {
                         next unless exists $match->{$sub_attribute};
                         my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
@@ -7269,6 +7269,14 @@ sub _find_prefs {
                         } elsif ($sub_attribute eq "perl") {
                             my $okp = $^X =~ /$qr/;
                             $ok &&= $okp;
+			} elsif ($sub_attribute eq "perlconfig") {
+			    for my $perlconfigkey (keys %{$match->{perlconfig}}) {
+				my $perlconfigval = $match->{perlconfig}->{$perlconfigkey};
+				# XXX should probably warn if Config does not exist
+				my $okpc = $Config::Config{$perlconfigkey} =~ /$perlconfigval/;
+				$ok &&= $okpc;
+				last if $ok == 0;
+			    }
                         } else {
                             $CPAN::Frontend->mydie("Nonconforming .$thisexte file '$abs': ".
                                                    "unknown sub_attribut '$sub_attribute'. ".

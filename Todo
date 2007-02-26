@@ -6,18 +6,18 @@
 
 	My current favorite is to have all distros that are not on CPAN in a
 	repository, check the repository out on the local disk, ideally always
-	in the in the same path/location. Then write a Bundle file that contains
-	all "root" directories of these non-distros and install the
-	Bundle. (Note to self: ned to write detailed instructions how to do all
-	that). The advantage of this is that nobody needs to make releases, all
-	code is checked out at any point in time and is current. If one needs to
-	make sure that the software is in a stable state, this can be achieved
-	with the options provided by the revision control software. The
-	disadvantage of this method is that CPAN.pm knows nothing about the
-	state of the distros, it just installs them and does not keep a record
-	that it did so and cannot determine if there is a newer version. If you
-	install the Bundle again immediately after you have installed, it just
-	starts from the beginning again (rinse, repeat).
+	in the same path/location. Then write a Bundle file that contains all
+	"root" directories of these non-distros and install the Bundle. (Note to
+	self: need to write detailed instructions how to do all that). The
+	advantage of this is that nobody needs to make releases, all code is
+	checked out at any point in time and is current. If one needs to make
+	sure that the software is in a stable state, this can be achieved with
+	the options provided by the revision control software. The disadvantage
+	of this method is that CPAN.pm knows nothing about the state of the
+	distros, it just installs them and does not keep a record that it did so
+	and cannot determine if there is a newer version. If you install the
+	Bundle again immediately after you have installed, it just starts from
+	the beginning again (rinse, repeat).
 
 	I must try if 'cpan .' also works for a Bundle. I do not think it does.
 
@@ -35,8 +35,8 @@
 	distros/tarballs into the author "LOCAL" directory. Simple quick
 	solution but no integration into an index at all, so the same
 	disadvantage as the dot distros (rinse,repeat) but with the additional
-	disadvantage that somebody must make releases, tar them together and
-	then CPAN.pm has to unroll them again.
+	(of course very minor) disadvantage that somebody must make releases,
+	tar them together and then CPAN.pm has to unroll them again.
 
 2007-02-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

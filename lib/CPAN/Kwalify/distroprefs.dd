@@ -78,6 +78,14 @@ $VAR1 = {
     "install" => {},
     "match" => {
       "mapping" => {
+        "perlconfig" => {
+          "mapping" => {
+            "=" => {
+              "type" => "text"
+            }
+          },
+          "type" => "map"
+        },
         "perl" => {
           "type" => "text"
         },

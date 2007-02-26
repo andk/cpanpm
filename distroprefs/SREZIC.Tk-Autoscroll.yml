@@ -4,3 +4,4 @@ match:
 test: 
   env:
     BATCH: 1
+    DISPLAY: ":121"

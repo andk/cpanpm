@@ -12,6 +12,11 @@ mapping:
         type: text
       perl:
         type: text
+      perlconfig:
+        type: map
+        mapping:
+          =:
+            type: text
   cpan_config:
     type: map
     mapping:

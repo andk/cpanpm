@@ -6,3 +6,4 @@ test:
     - TEST_VERBOSE=1
   env:
     BATCH: 1
+    DISPLAY: ":121"
