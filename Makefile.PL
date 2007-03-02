@@ -275,6 +275,9 @@ MEGA_INSTALL = Devel::Cover \
 		Lucene \
 		ANDK/keepcool-0.344 \
 		SREZIC/pingomatic-1.013 \
+		XML::Compile \
+		Bundle::Perl6 \
+		Config::JSON \
 
 }
 }
