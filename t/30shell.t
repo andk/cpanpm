@@ -2,7 +2,7 @@ use strict;
 
 # there's POD at the very end of this file
 
-use vars qw($HAVE_EXPECT $RUN_EXPECT $HAVE);
+use vars qw($RUN_EXPECT $HAVE);
 BEGIN {
     $|++;
     #chdir 't' if -d 't';
@@ -14,8 +14,6 @@ BEGIN {
             print "1..0 # Skip: no Expect, maybe try env CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1\n";
             eval "require POSIX; 1" and POSIX::_exit(0);
         }
-    } else {
-        $HAVE_EXPECT = 1;
     }
 }
 
