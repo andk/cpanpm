@@ -1,8 +1,63 @@
+2007-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* New FAILS from testers: Jost on Sun sees only 4 OKs in 30shell on
+	solaris and a dubious. Slaven saw one test in 31sessions failing.
+
+	The Slaven thing can be averted by taking out a pece of the "Expected"
+	regexp. DONE
+
+	For the failure on sun I need a different strategy. Something that gives
+	more feedback.
+
+t/30shell..........dubious
+	Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 5-230
+	Failed 226/230 tests, 1.74% okay
+
+
+	* off topic: Richard's talk about debuger brings me the idea to patch it
+	to support saving of terminal history. I started implementing it and
+	then lost track of my changes. Now in k75:/home/src/perl/perl5db/
+
+	* bring the FirstTime dialogs into POD and back
+
+	* somebody reports that RT does recursion
+
+	* wishlist Mark Overmeer: less output
+
+	* http://www.youtube.com/watch?v=daJ1Hs_y738 screencast hint from
+	Juergen Christoffel
+
+2007-03-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* XML::Simple failed a test today. When I came and tested it again, it
+	succeeded. Fortunately the tests spit out helpful diagnostics. Looks
+	like XML::SAX must be installed? No, this seems not the problem. So
+	maybe a intermittant failure.
+
+t/3_Storable......
+no element found at line 1, column 0, byte 0 at /home/src/perl/repoperls/installed-perls/perl/pvDPEkV/perl-5.8.0@30435/lib/site_perl/5.9.5/i686-linux-64int/XML/Parser.pm line 187
+# Looks like you planned 23 tests but only ran 13.
+# Looks like your test died just after 13.
+dubious
+	Test returned status 255 (wstat 65280, 0xff00)
+
+	* http://rt.cpan.org//Ticket/Display.html?id=25223
+
+	contact brian
+
+2007-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Perl::Repository::APC needs a doc patch that it doesn't work on case
+	insensitive file systems.
+
+	* Tcl needs some attention to compile?
+
 2007-02-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* supposedly a bug: Slaven found both cpanconfig and cpan_config
+	* supposedly a bug: Slaven found both cpanconfig and cpan_config FIXED
 
-	* todo: document match/perlconfig
+	* todo: document match/perlconfig DONE
 
 2007-02-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
@@ -46,12 +101,13 @@
 
 2007-02-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* scripts installation broken. Tried it with pingomatic and keepcool.
+	* scripts installation broken. Tried it with pingomatic and keepcool. FIXED
 
 	* when was notest introduced? In 1.80, December 2005. New features by
 	Slaven this year are: 'cpan .', scripts, 'perl -I. -MCPAN' now works.
 
 	* consider different sorting of directory listings. suggested by Slaven.
+	REJECT
 
 2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

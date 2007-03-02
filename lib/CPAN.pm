@@ -3014,8 +3014,9 @@ to find objects with matching identifiers.
             # but maybe we get a solution from the first user who hits
             # this unfortunate exception?
             $CPAN::Frontend->mywarn("Warning: Could not expand string '$s' ".
-                                    "to an object. Skipping.");
+                                    "to an object. Skipping.\n");
             $CPAN::Frontend->mysleep(5);
+            CPAN::Queue->delete_first($s);
             next;
         }
         $obj->{reqtype} ||= "";
@@ -10201,6 +10202,8 @@ C<expect>.
     module: "Dancing::Queen"
     distribution: "^CHACHACHA/Dancing-"
     perl: "/usr/local/cariba-perl/bin/perl"
+    perlconfig:
+      archname: "freebsd"
   disabled: 1
   cpanconfig:
     make: gmake
@@ -10289,9 +10292,9 @@ CPAN mantra. See below under I<Processiong Instructions>.
 
 =item match [hash]
 
-A hashref with one or more of the keys C<distribution>, C<modules>, or
-C<perl> that specify if a document is targeted at a specific CPAN
-distribution.
+A hashref with one or more of the keys C<distribution>, C<modules>,
+C<perl>, and C<perlconfig> that specify if a document is targeted at a
+specific CPAN distribution or installation.
 
 The corresponding values are interpreted as regular expressions. The
 C<distribution> related one will be matched against the canonical
@@ -10301,6 +10304,10 @@ The C<module> related one will be matched against I<all> modules
 contained in the distribution until one module matches.
 
 The C<perl> related one will be matched against C<$^X>.
+
+The value associated with C<perlconfig> is itself a hashref that is
+matched against corresponding values in the C<%Config::Config> hash
+living in the C< Config.pm > module.
 
 If more than one restriction of C<module>, C<distribution>, and
 C<perl> is specified, the results of the separately computed match
