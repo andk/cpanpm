@@ -1,0 +1,8 @@
+--- 
+comment: "illustration of the match/perlconfig keyword provided by Slaven Rezic"
+match:
+  distribution: "^VKON/Tcl-Tk-"
+  perlconfig:
+    archname: -freebsd-
+pl:
+  args: ["--tclsh", "tclsh8.4"]
