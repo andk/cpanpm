@@ -114,12 +114,11 @@ our @SESSIONS =
       name => "without_yaml",
       pairs =>
       [
-       # Note: I ad C<cannot.parse.*?FTPstats.*> also here but this
-       # does not come under some currently unknown circumstance
+       # Note: I had C<cannot.parse.*> also here (for FTPstats) but
+       # this does not come under some currently unknown circumstances
 
        "get CPAN::Test::Dummy::Perl5::Make" => "(?sx:
                      not.installed,.falling.back.*
-                     not.installed,.cannot.parse.*
                      will.not.store.persistent.state)",
        "make CPAN::Test::Dummy::Perl5::Make" => "Falling back to other methods to determine prerequisites",
        "test CPAN::Test::Dummy::Perl5::Make" => "All tests successful",
