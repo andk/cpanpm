@@ -280,6 +280,7 @@ MEGA_INSTALL = Devel::Cover \
 		Bundle::Perl6 \
 		Config::JSON \
 		PAR \
+		Bundle::RT \
 
 }
 }
