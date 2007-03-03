@@ -1,9 +1,18 @@
+2007-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* my internet access is broken at the moment. when it is back need to
+	answer two posts by Eric Wilhelm
+
+	* possible bug: when a distroprefs file has "match" but no valid keyword
+	under match/, then it seems that it matches always instead of being
+	rejected as invalid.
+
 2007-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* New FAILS from testers: Jost on Sun sees only 4 OKs in 30shell on
 	solaris and a dubious. Slaven saw one test in 31sessions failing.
 
-	The Slaven thing can be averted by taking out a pece of the "Expected"
+	The Slaven thing can be averted by taking out a piece of the "Expected"
 	regexp. DONE
 
 	For the failure on sun I need a different strategy. Something that gives
@@ -14,9 +23,8 @@ t/30shell..........dubious
 DIED. FAILED tests 5-230
 	Failed 226/230 tests, 1.74% okay
 
-
-	* off topic: Richard's talk about debuger brings me the idea to patch it
-	to support saving of terminal history. I started implementing it and
+	* off topic: Richard's talk about debugger brings me the idea to patch
+	it to support saving of terminal history. I started implementing it and
 	then lost track of my changes. Now in k75:/home/src/perl/perl5db/
 
 	* bring the FirstTime dialogs into POD and back

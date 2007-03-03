@@ -244,6 +244,7 @@ MEGA_INSTALL = Devel::Cover \
 		Graph::Easy \
 		Module::Plan::Base \
 		Cache::Memcached \
+		Cache::Memcached::XS \
 		File::Rsync \
 		Net::SSH \
 		SVN::Mirror \
@@ -278,6 +279,7 @@ MEGA_INSTALL = Devel::Cover \
 		XML::Compile \
 		Bundle::Perl6 \
 		Config::JSON \
+		PAR \
 
 }
 }

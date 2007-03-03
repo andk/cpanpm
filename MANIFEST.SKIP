@@ -23,6 +23,7 @@
 ^distroprefs/ttt.nodbi.yml
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
+^distroprefs/BRIANSKI.XML-Comma.yml
 ^eg/
 ^gpw9-cpan-talk\.pod$
 ^lib/CPAN/Config\.pm
