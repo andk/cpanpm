@@ -1,5 +1,8 @@
 2007-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* whats missing for this release? cpan -r bug report; Jost's sun-solaris
+	test; can we have RT and Tcl in megainstall; 
+
 	* my internet access is broken at the moment. When it is back I need to
 	answer two posts by Eric Wilhelm.
 

@@ -55,6 +55,7 @@
 ^t/dot-cpan/.lock
 ^t/dot-cpan/Bundle/CpanTestDummies.pm
 ^t/dot-cpan/Bundle/Snap
+^t/dot-cpan/FTPstats.yml
 ^t/dot-cpan/Metadata
 ^t/dot-cpan/build
 ^t/dot-cpan/histfile
