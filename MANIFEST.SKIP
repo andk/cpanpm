@@ -25,7 +25,7 @@
 ^distroprefs/ttt.nomailsend.yml
 ^distroprefs/BRIANSKI.XML-Comma.yml
 ^eg/
-^gpw9-cpan-talk\.pod$
+^gpw9-cpan-talk\.
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm@
 ^lib/CPAN\.pm\.wrong_idea_for_cleanup

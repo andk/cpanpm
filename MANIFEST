@@ -49,6 +49,7 @@ distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GEOFF.Apache-Test.yml
 distroprefs/GIULIENK.Audio-Beep.yml
+distroprefs/GRANTM.XML-SAX.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.dd
@@ -100,11 +101,13 @@ distroprefs/RJBS.Email-Send.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
+distroprefs/SMUELLER.PAR.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
+distroprefs/VKON.Tcl-Tk.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
