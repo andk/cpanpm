@@ -1,11 +1,16 @@
 2007-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* my internet access is broken at the moment. when it is back need to
-	answer two posts by Eric Wilhelm
+	* my internet access is broken at the moment. When it is back I need to
+	answer two posts by Eric Wilhelm.
 
 	* possible bug: when a distroprefs file has "match" but no valid keyword
 	under match/, then it seems that it matches always instead of being
-	rejected as invalid.
+	rejected as invalid. We must make the one of the match subthingies
+	mandatory. Need to study
+	http://www.kuwata-lab.com/kwalify/users-guide.01.html for that when my
+	internet is back.
+
+	FIXED in svk rev. 2002 or so.
 
 2007-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -29,7 +34,10 @@ DIED. FAILED tests 5-230
 
 	* bring the FirstTime dialogs into POD and back
 
-	* somebody reports that RT does recursion
+	* somebody reports that RT does recursion. But what is the driving
+	module for RT? RSPIER/Bundle-RT-0.030601.tar.gz ? No, this will only
+	tell CPAN to install "most of RT's dependent modules". Not RT itself.
+	--> this needs a bugreport.
 
 	* wishlist Mark Overmeer: less output
 

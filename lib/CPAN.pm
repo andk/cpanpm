@@ -7251,8 +7251,10 @@ sub _find_prefs {
                     my $ok = 1;
                     # do not take the order of C<keys %$match> because
                     # "module" is by far the slowest
+                    my $saw_valid_subkeys = 0;
                     for my $sub_attribute (qw(distribution perl perlconfig module)) {
                         next unless exists $match->{$sub_attribute};
+                        $saw_valid_subkeys++;
                         my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
                             my $okm = 0;
@@ -7285,6 +7287,12 @@ sub _find_prefs {
                                                    "remove, cannot continue.");
                         }
                         last if $ok == 0; # short circuit
+                    }
+                    unless ($saw_valid_subkeys) {
+                        $CPAN::Frontend->mydie("Nonconforming .$thisexte file '$abs': ".
+                                               "missing match/* subattribute. ".
+                                               "Please ".
+                                               "remove, cannot continue.");
                     }
                     #CPAN->debug(sprintf "ok[%d]", $ok) if $CPAN::DEBUG;
                     if ($ok) {
