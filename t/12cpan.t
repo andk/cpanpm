@@ -77,7 +77,13 @@ require CPAN::HandleConfig;
 }
 {
     eval { require Kwalify };
-    unless ($@) {
+    my $this_block_count;
+    BEGIN { $count += $this_block_count = 2; }
+    if ($@) {
+        for (1..$this_block_count) {
+            ok(1);
+        }
+    } else {
         require CPAN::Kwalify;
         my $data = {
                     "match" => {
@@ -100,7 +106,6 @@ require CPAN::HandleConfig;
                              barth => '1984',
                             },
                    };
-        BEGIN { $count += 2; }
         eval {CPAN::Kwalify::_validate("distroprefs",
                                        $data,
                                        _f("t/12cpan.t"),
