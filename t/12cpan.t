@@ -9,6 +9,7 @@ BEGIN {
     }
 }
 my $count;
+use strict;
 use Test::More;
 use File::Spec;
 sub _f ($) {
@@ -72,6 +73,46 @@ require CPAN::HandleConfig;
         my $y = CPAN::HandleConfig->neatvalue($x);
         my $z = eval $y;
         is_deeply($z,$x,"s[$_]");
+    }
+}
+{
+    eval { require Kwalify };
+    unless ($@) {
+        require CPAN::Kwalify;
+        my $data = {
+                    "match" => {
+                                "distribution" => "^(ABW|ADAMK)/Template-Toolkit-2.16"
+                               },
+                    "pl" => {
+                             "args" => [
+                                        "TT_EXTRAS=no"
+                                       ],
+                             "expect" => [
+                                          "Do you want to build the XS Stash module",
+                                          "n\n",
+                                          "Do you want to install these components",
+                                          "n\n",
+                                          "Installation directory",
+                                          "\n",
+                                          "URL base for TT2 images",
+                                          "\n",
+                                         ],
+                             barth => '1984',
+                            },
+                   };
+        BEGIN { $count += 2; }
+        eval {CPAN::Kwalify::_validate("distroprefs",
+                                       $data,
+                                       _f("t/12cpan.t"),
+                                       0)};
+        ok($@,"no kwalify [$@]");
+        delete $data->{pl}{barth};
+        CPAN::Kwalify::_clear_cache();
+        eval {CPAN::Kwalify::_validate("distroprefs",
+                                       $data,
+                                       _f("t/12cpan.t"),
+                                       0)};
+        ok(!$@,"kwalify ok");
     }
 }
 
