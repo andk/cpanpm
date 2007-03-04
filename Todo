@@ -1,7 +1,38 @@
+2007-03-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* off topic: replace "falling" with "decreasing" where appropriate
+
 2007-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* whats missing for this release? cpan -r bug report; Jost's sun-solaris
-	test; can we have RT and Tcl in megainstall; 
+	* just sent a report about Exporter::Simple. Debugging shows that it was
+	sent with Net::SMTP. Same for XML::Compile. Neither arrived at testers.
+	Maybe I had a different smtp host then? I do not remember to ever have
+	changed it.
+
+	smtp_server=localhost
+
+	We should try	mx.develooper.com ?
+
+	Tried that with Attribute::Util. Debugging says tat it was sending to
+	develooper.
+
+	Or maybe I shouldn't have changed my email address?
+
+	Changing back to andreas.koenig.gmwojprw@franz.ak.mind.de and reporting
+	about UNIVERSAL::exports.
+
+	YES, this was it. So I need to turn the clock back: I have not reported
+	anything for quite a while:(
+
+	* whats missing for this release?
+
+	cpan -r bug report      # mail to brian is on the way
+
+	Jost's sun-solaris test # no idea what to do
+
+	can we have RT          # Bundle::RT is in
+
+	and Tcl in megainstall  # DONE
 
 	* my internet access is broken at the moment. When it is back I need to
 	answer two posts by Eric Wilhelm.
