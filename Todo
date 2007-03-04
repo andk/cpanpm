@@ -1,5 +1,23 @@
 2007-03-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Strange failures with bleadperl @30458:
+
+ ADAMK/Test-ClassAPI-1.03.tar.gz              : make_test NO
+ ADAMK/File-Flat-1.00.tar.gz                  : make_test NO
+ ADAMK/Test-Inline-2.201.tar.gz               : make_test NO
+ RUZ/DBIx-SearchBuilder-1.47.tar.gz           : make_test NO
+ JESSE/Class-ReturnValue-0.53.tar.gz          : make_test NO one dependency not OK (Test::Inline)
+ ADAMK/Algorithm-Dependency-1.102.tar.gz      : make_test NO one dependency not OK (Test::ClassAPI)
+
+	when I tried all these, they worked fine.
+
+	It seems that ADAMK/Test-ClassAPI-1.03 is depending on Params::Util but
+	not declaring it? Yes, that's it. Already reported as
+	http://rt.cpan.org/Ticket/Display.html?id=25009
+
+	* Todo(???): introduce --notest and --force, etc. I'm not fond of it but
+	Slaven has observed that two users expected it would work that way.
+
 	* 29026 broke Text::Template
 
 t/09-error.........Illegal value `WLUNCH' for TYPE parameter at t/09-error.t line 41

@@ -7,6 +7,7 @@ distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.dd
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ADAMK.Algorithm-Dependency.yml
+distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
