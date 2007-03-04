@@ -1,5 +1,16 @@
 2007-03-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* 29026 broke Text::Template
+
+t/09-error.........Illegal value `WLUNCH' for TYPE parameter at t/09-error.t line 41
+t/09-error.........FAILED test 3
+        Failed 1/5 tests, 80.00% okay
+
+	It's a \Q\` matter and shall be treated as a bug in user code, I suppose.
+
+	https://rt.cpan.org/Ticket/Display.html?id=23620 and a new distroprefs
+	file. I only looked into RT too late:(
+
 	* off topic: replace "falling" with "decreasing" where appropriate
 
 2007-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>

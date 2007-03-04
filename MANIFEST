@@ -80,6 +80,7 @@ distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
+distroprefs/MJD.Text-Template.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MRAMBERG.Catalyst-Runtime.yml
 distroprefs/MSERGEANT.CDB_File.yml
@@ -109,6 +110,7 @@ distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
+distroprefs/VKON.Tcl.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
