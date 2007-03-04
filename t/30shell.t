@@ -17,6 +17,11 @@ BEGIN {
     }
 }
 
+# all tests try to answer questions. If somebody sets
+# PERL_MM_USE_DEFAULT to true just to prevent blocking when I ask
+# questions, they break these tests.
+$ENV{PERL_MM_USE_DEFAULT} = 0;
+
 use File::Copy qw(cp);
 use File::Path qw(rmtree mkpath);
 
