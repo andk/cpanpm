@@ -346,7 +346,7 @@ if ($RUN_EXPECT) {
     $expo->soft_close;
 } else {
     close SYSTEM or die "Could not close SYSTEM filehandle: $!";
-    mydiag "Finished test script, going to interprete it.";
+    mydiag "Finished running test script, going to read its output.";
     open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
     local $/;
     my $biggot = <SYSTEM>;
