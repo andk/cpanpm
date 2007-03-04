@@ -281,6 +281,8 @@ MEGA_INSTALL = Devel::Cover \
 		Config::JSON \
 		PAR \
 		Bundle::RT \
+		CPAN::YACSmoke \
+		Tcl \
 
 }
 }
