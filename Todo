@@ -49,7 +49,7 @@ t/09-error.........FAILED test 3
 
 	We should try	mx.develooper.com ?
 
-	Tried that with Attribute::Util. Debugging says tat it was sending to
+	Tried that with Attribute::Util. Debugging says that it was sending to
 	develooper.
 
 	Or maybe I shouldn't have changed my email address?
