@@ -718,6 +718,8 @@ CONFIGURATION
         module: "Dancing::Queen"
         distribution: "^CHACHACHA/Dancing-"
         perl: "/usr/local/cariba-perl/bin/perl"
+        perlconfig:
+          archname: "freebsd"
       disabled: 1
       cpanconfig:
         make: gmake
@@ -796,9 +798,9 @@ CONFIGURATION
         CPAN mantra. See below under *Processiong Instructions*.
 
     match [hash]
-        A hashref with one or more of the keys "distribution", "modules", or
-        "perl" that specify if a document is targeted at a specific CPAN
-        distribution.
+        A hashref with one or more of the keys "distribution", "modules",
+        "perl", and "perlconfig" that specify if a document is targeted at a
+        specific CPAN distribution or installation.
 
         The corresponding values are interpreted as regular expressions. The
         "distribution" related one will be matched against the canonical
@@ -808,6 +810,10 @@ CONFIGURATION
         contained in the distribution until one module matches.
 
         The "perl" related one will be matched against $^X.
+
+        The value associated with "perlconfig" is itself a hashref that is
+        matched against corresponding values in the %Config::Config hash
+        living in the " Config.pm " module.
 
         If more than one restriction of "module", "distribution", and "perl"
         is specified, the results of the separately computed match values
