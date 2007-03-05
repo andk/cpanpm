@@ -63,18 +63,6 @@ $VAR1 = {
       "type" => "map"
     },
     "make" => {},
-    "cpan_config" => {
-      "mapping" => {
-        "prefer_installer" => {
-          "enum" => [
-            "EUMM",
-            "MB"
-          ],
-          "type" => "text"
-        }
-      },
-      "type" => "map"
-    },
     "install" => {},
     "match" => {
       "mapping" => {

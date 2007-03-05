@@ -42,6 +42,7 @@ no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
 $ENV{PERL5_CPAN_IS_RUNNING}=1;
+$ENV{PERL5_CPANPLUS_IS_RUNNING}=1; # https://rt.cpan.org/Ticket/Display.html?id=23735
 
 END { $CPAN::End++; &cleanup; }
 
@@ -5722,10 +5723,6 @@ EOF
     } else {
         $self->{was_uncompressed}++ unless $ct->gtest();
 	$local_file = $self->handle_singlefile($local_file);
-#    } else {
-#	$self->{archived} = "NO";
-#        $self->safe_chdir($sub_wd);
-#        return;
     }
 
     # we are still in the tmp directory!
@@ -5859,6 +5856,11 @@ EOF
     return unless $self->patch;
     if (lc($prefer_installer) eq "mb") {
         $self->{modulebuild} = 1;
+    } elsif ($self->{archived} eq "patch") {
+        # not an edge case, nothing to install for sure
+        my $why = "A patch file cannot be installed";
+        $CPAN::Frontend->mywarn("Refusing to handle this file: $why\n");
+        $self->{writemakefile} = CPAN::Distrostatus->new("NO $why");
     } elsif (! $mpl_exists) {
         $self->_edge_cases($mpl,$packagedir,$local_file);
     }
@@ -6207,6 +6209,8 @@ sub handle_singlefile {
 
     if ( $local_file =~ /\.pm(\.(gz|Z))?(?!\n)\Z/ ){
 	$self->{archived} = "pm";
+    } elsif ( $local_file =~ /\.patch(\.(gz|bz2))?(?!\n)\Z/ ) {
+	$self->{archived} = "patch";
     } else {
 	$self->{archived} = "maybe_pl";
     }

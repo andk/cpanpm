@@ -285,6 +285,9 @@ MEGA_INSTALL = Devel::Cover \
 		Tcl \
 		Filter::Util::Call \
 		Compress::LZF \
+		POE::Component::CPAN::YACSmoke \
+		Test::YAML::Meta \
+		Module::Install \
 
 }
 }
