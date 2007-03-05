@@ -34,7 +34,7 @@ use Text::Wrap ();
 BEGIN {
     if (File::Spec->can("rel2abs")) {
         for my $inc (@INC) {
-            $inc = File::Spec->rel2abs($inc);
+            $inc = File::Spec->rel2abs($inc) unless ref $inc;
         }
     }
 }

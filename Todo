@@ -1,5 +1,12 @@
 2007-03-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* blead@30460:
+
+ext/Time/HiRes/t/HiRes......................................FAILED at test 35
+[...]
+../ext/Time/HiRes/t/HiRes.t: overall time allowed for tests (90s) exceeded!
+ok
+
 	* Strange failures with bleadperl @30458:
 
  ADAMK/Test-ClassAPI-1.03.tar.gz              : make_test NO

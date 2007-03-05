@@ -283,6 +283,8 @@ MEGA_INSTALL = Devel::Cover \
 		Bundle::RT \
 		CPAN::YACSmoke \
 		Tcl \
+		Filter::Util::Call \
+		Compress::LZF \
 
 }
 }
