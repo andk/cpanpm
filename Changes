@@ -1,3 +1,35 @@
+2007-03-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_78: stable release candidate VI
+
+	* set PERL5_CPANPLUS_IS_RUNNING (desparately; see RT#23735)
+
+	* prevent installation attempts for files named *.patch (inspired by
+	David Cantrell)
+
+	* allow refs in @INC by Nicholas Clark
+
+	* applied a patch by Slaven Rezic to support match/perlconfig in
+	distroprefs covering %Config::Config
+
+	* hint the Win32 users how to install nmake with YVES' download script
+
+	* catch typos in distroprefs that are not yet caught by kwalify
+
+	* several new and updated distroprefs files
+
+	* integrate brian d foy's cpan script from his 1.53 release
+
+	* address RT#25223 (JDHEDDEN) small fix to the cpan script
+
+	* fix installation of scripts which was broken
+
+2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_77: stable release candidate V
+
+	* another tweak to t/31sessions.t necessary after a cpantesters report
+
 2007-02-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_76: stable release candidate IV
