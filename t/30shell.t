@@ -10,10 +10,14 @@ BEGIN {
     eval { require Expect };
     if ($@) {
         unless ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
-            $|=1;
             print "1..0 # Skip: no Expect, maybe try env CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1\n";
             eval "require POSIX; 1" and POSIX::_exit(0);
         }
+    }
+    eval { require YAML };
+    if ($YAML::VERSION && $YAML::VERSION < 0.60) {
+        print "1..0 # Skip: YAML too old for this test\n";
+        eval "require POSIX; 1" and POSIX::_exit(0);
     }
 }
 

@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.88_78';
+$CPAN::VERSION = '1.88_79';
 $CPAN::VERSION = eval $CPAN::VERSION;
 
 use CPAN::HandleConfig;
@@ -369,6 +369,19 @@ sub _yaml_module () {
        ) {
         # $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back to 'YAML'\n");
         $yaml_module = "YAML";
+    }
+    if ($yaml_module eq "YAML"
+        &&
+        $CPAN::META->has_inst($yaml_module)
+        &&
+        $YAML::VERSION < 0.60
+        &&
+        !$Have_warned->{"YAML"}++
+       ) {
+        $CPAN::Frontend->mywarn("Warning: YAML version '$YAML::VERSION' is too low, please upgrade!\n".
+                                "I'll continue but problems are *very* likely to happen.\n"
+                               );
+        $CPAN::Frontend->mysleep(5);
     }
     return $yaml_module;
 }

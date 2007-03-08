@@ -1,3 +1,18 @@
+2007-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* David Cantrell reports that YAML must be > 0.39 if we want to use it.
+
+2007-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Oh Joy of having authors who carefully track the dependencies between
+	their packages. bignum currently depends on Math::BigInt 1.79. But
+	current version is 1.80. But Math-BigIng-1.80 depends on bignum 0.19. So
+	if I have 1.77 I must first install 1.79, then I can install bignum and
+	only then I can install BigInt 1.80.
+
+	I'm sure some people will call it a bug that CPAN.pm is not able to
+	install the old version 1.79 as a dependency of 1.80.
+
 2007-03-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* blead@30460:

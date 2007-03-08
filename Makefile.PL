@@ -288,6 +288,7 @@ MEGA_INSTALL = Devel::Cover \
 		POE::Component::CPAN::YACSmoke \
 		Test::YAML::Meta \
 		Module::Install \
+		App::Ack \
 
 }
 }
