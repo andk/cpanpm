@@ -596,6 +596,9 @@ sub new {
             $deps[$i]{display_as} = "$x (have: $have; $want_type$want)";
         } elsif ($xo->isa("CPAN::Distribution")) {
             $xo->{make} = CPAN::Distrostatus->new("NO cannot resolve circular dependency");
+            $xo->store_persistent_state; # otherwise I will not reach
+                                         # all involved parties for
+                                         # the next session
             $deps[$i]{display_as} = $xo->pretty_id;
         }
     }
@@ -3017,7 +3020,7 @@ sub rematein {
                 if ($@){
                     if (ref $@
                         and $@->isa("CPAN::Exception::RecursiveDependency")) {
-                        $CPAN::Frontend->mywarn(sprintf "DEBUG: in rematein for object[%s]error[%s])", $obj->id, $@);
+                        $CPAN::Frontend->mywarn($@);
                     } else {
                         if (0) {
                             require Carp;
@@ -7021,7 +7024,6 @@ is part of the perl-%s distribution. To install that, you need to run
                     ->new("NO '$system' returned status $ret");
                 $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
                 $self->store_persistent_state;
-                $self->store_persistent_state;
                 return;
             }
 	}
@@ -7052,7 +7054,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 # signal success to the queuerunner
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
-                $CPAN::Frontend->mywarn(sprintf "DEBUG: in 'Distribution::make' for object[%s]error[%s]", $self->id, $@);
+                $CPAN::Frontend->mywarn($@);
                 return;
             }
         }
