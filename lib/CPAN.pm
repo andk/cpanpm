@@ -6870,7 +6870,7 @@ is part of the perl-%s distribution. To install that, you need to run
 	if (defined $self->{make}) {
             if ($self->{make}->failed) {
                 if ($self->{force_update}) {
-                    $CPAN::Frontend->myprint("Trying an already failed 'make' because force in effect.\n");
+                    # Trying an already failed 'make' (unless somebody else blocks)
                 } else {
                     # introduced for turning recursion detection into a distrostatus
                     $CPAN::Frontend->mywarn("Could not make: ".substr($self->{make},3)."\n");
