@@ -1,3 +1,110 @@
+2007-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Jost sent me the test output with TEST_VERBOSE and it was sooo
+	frustrating:
+
+PERL_DL_NONLAZY=1 /usr/local/perl-5.8.8/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(1, 'blib/lib', 'blib/arch')" t/30shell.t
+t/30shell....1..230
+ok 1 - histsize is 100 before testing
+ok 2 - Another dummy test
+ok 3 - RUN_EXPECT[1]
+ok 4 - empty test %h=()
+# PRESSING RETURN
+# EXPECT: (?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*>)
+# Looks like you planned 230 tests but only ran 4.
+# EOF on i[1]prog[]
+# expected[(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*>)]
+# got[]
+# 
+dubious
+	Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 5-230
+	Failed 226/230 tests, 1.74% okay
+Failed Test Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/30shell.t  255 65280   230  452  5-230
+Failed 1/1 test scripts. 226/230 subtests failed.
+
+
+2007-03-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: when I ^C a job, then it seems that some "force" is kept around
+	for the next command. We must clear all modules, distros and bundles
+	from 'force' bits when we let a Signal interrupt us. I'm not actually
+	sure this is what happened but I have the impression that it is possible.
+
+	Or maybe we have a different bug. This is the command:
+
+	fforce test DMAKI/DateTime-Calendar-Japanese-0.05.tar.gz
+
+	requires DMAKI/DateTime-Calendar-Japanese-0.05.tar.gz
+
+	This in turn
+
+	  DateTime::Util::Astro::Moon [requires]
+    DateTime::Util::Calc [requires]
+    DateTime::Util::Astro::Common [requires]
+    DateTime::Event::SolarTerm [requires]
+
+	DMAKI/DateTime-Util-Astro-0.08.tar.gz is the first one and it complains
+	about Calc missing.
+
+	DMAKI/DateTime-Util-Calc-0.13.tar.gz then complains about nothing, runs
+	tests that fail for some reason. So we come back to Astro. This fails
+	tests apparently because Calc is missing.
+
+	So then we come to Calc again because it was on the list above. We fail
+	the tests again, but I frankly do not understand why they are run at
+	all. Normally we do not run a test twice within a single command.
+
+	Then comes Astro again because of DateTime::Util::Astro::Common and
+	fails again tests.
+
+	Then we reach the last one on the list, SolarTerm. This again depends on
+	Calc, so we build Calc again, fail, test SolarTerm, fail and ***finish***.
+
+	So now my impression is that the setting of $xo->{make} might cause bad
+	things to happen because we are not paying attention to the status of
+	make/test/install before that, no? No, it's the fforce that make things
+	so ugly. Because all parties inherit the fforce, they need to retest so
+	often. So probably no bug at all, just ugly.
+	
+	* Bug: 
+
+Recursive dependency detected:
+    DMAKI/DateTime-Calendar-Japanese-0.05.tar.gz
+ => DateTime::Calendar::Chinese (have: ; requires: 0.02)
+ => DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
+ => DateTime::Util::Astro::Moon (have: ; requires: >= 0.04)
+ => DMAKI/DateTime-Util-Astro-0.08.tar.gz
+ => Math::BigInt (have: 1.77; unknown status)
+ => TELS/math/Math-BigInt-1.80.tar.gz
+ => bignum (have: 0.17; requires: 0.19)
+ => TELS/math/bignum-0.19.tar.gz
+ => Math::BigInt (have: 1.77; requires: 1.79).
+Cannot resolve.
+
+	All involved parties get the stigma of circular dependency. That seems
+	wrong. Only Math::BigInt and bignum should get it.
+
+	OK, I fixed this but now D:Event:SolarTerm, D:U:Calc, D:U:Astro,
+	D:Event:Lunar somehow fall into a spiral of unresolvable dependecies and
+	are never redeemed from it. No? Maybe I was just impatient.
+
+	* HTML::CalendarMonth is failing but the error output is really large. I
+	just tried to report() it and must check later if the mail actually
+	arrived. --- It seems this report never arrives.
+
+	* There was a mail from David Cantrell about a failure on OpenBSD which
+	I could not imagine any reason for.
+
+2007-03-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Continue discussing the perlmonks bug with P5P. Only Schwern has
+	answered and we need a resolution. Either document as it is at the
+	moment or change it and then document it. I tend to the former because
+	it is consistent.
+	
 2007-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* David Golden sends me a link to perlmonks

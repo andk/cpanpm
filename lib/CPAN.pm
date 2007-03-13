@@ -565,26 +565,35 @@ use overload '""' => "as_string";
 sub new {
     my($class) = shift;
     my($deps) = shift;
-    my @deps;
-    my %seen;
-    for my $dep (@$deps) {
+    my (@deps,%seen,$loop_starts_with);
+  DCHAIN: for my $dep (@$deps) {
         push @deps, {name => $dep, display_as => $dep};
-        last if $seen{$dep}++;
+        if ($seen{$dep}++){
+            $loop_starts_with = $dep;
+            last DCHAIN;
+        }
     }
+    my $in_loop = 0;
     for my $i (0..$#deps) {
         my $x = $deps[$i]{name};
+        $in_loop ||= $x eq $loop_starts_with;
         my $xo = CPAN::Shell->expandany($x);
         if ($xo->isa("CPAN::Module")) {
-            my $have = $xo->inst_version;
+            my $have = $xo->inst_version || "N/A";
             my($want,$d,$want_type);
             if ($i>0 and $d = $deps[$i-1]{name}) {
                 my $do = CPAN::Shell->expandany($d);
-                if ($want = $do->{prereq_pm}{requires}{$x}) {
+                $want = $do->{prereq_pm}{requires}{$x};
+                if (defined $want) {
                     $want_type = "requires: ";
-                } elsif ($want = $do->{prereq_pm}{build_requires}{$x}) {
-                    $want_type = "build_requires: ";
                 } else {
-                    $want_type = "unknown status";
+                    $want = $do->{prereq_pm}{build_requires}{$x};
+                    if (defined $want) {
+                        $want_type = "build_requires: ";
+                    } else {
+                        $want_type = "unknown status";
+                        $want = "???";
+                    }
                 }
             } else {
                 $want = $xo->cpan_version;
@@ -595,11 +604,15 @@ sub new {
             $deps[$i]{want} = $want;
             $deps[$i]{display_as} = "$x (have: $have; $want_type$want)";
         } elsif ($xo->isa("CPAN::Distribution")) {
-            $xo->{make} = CPAN::Distrostatus->new("NO cannot resolve circular dependency");
+            $deps[$i]{display_as} = $xo->pretty_id;
+            if ($in_loop) {
+                $xo->{make} = CPAN::Distrostatus->new("NO cannot resolve circular dependency");
+            } else {
+                $xo->{make} = CPAN::Distrostatus->new("NO one dependency ($loop_starts_with) is a circular dependency");
+            }
             $xo->store_persistent_state; # otherwise I will not reach
                                          # all involved parties for
                                          # the next session
-            $deps[$i]{display_as} = $xo->pretty_id;
         }
     }
     bless { deps => \@deps }, $class;
@@ -7569,10 +7582,13 @@ sub unsat_prereq {
             $available_file = $nmo->available_file;
 
             # if they have not specified a version, we accept any installed one
-            if (not defined $need_version or
-                $need_version == 0 or
-                $need_version eq "undef") {
-                next if defined $available_file;
+            if (defined $available_file
+                and ( # a few quick shortcurcuits
+                     not defined $need_version
+                     or $need_version eq '0'    # "==" would trigger warning when not numeric
+                     or $need_version eq "undef"
+                    )) {
+                next NEED;
             }
 
             $available_version = $nmo->available_version;
