@@ -567,17 +567,19 @@ sub new {
     my($deps) = shift;
     my @deps;
     my %seen;
+    # require Carp; Carp::cluck("HERE");
+
     for my $dep (@$deps) {
-        push @deps, $dep;
+        push @deps, {name => $dep, display_as => $dep};
         last if $seen{$dep}++;
     }
     for my $i (0..$#deps) {
-        my $x = $deps[$i];
+        my $x = $deps[$i]{name};
         my $mo = CPAN::Shell->expandany($x);
         if ($mo->isa("CPAN::Module")) {
             my $have = $mo->inst_version;
             my($want,$d,$want_type);
-            if ($i>0 and $d = $deps[$i-1]) {
+            if ($i>0 and $d = $deps[$i-1]{name}) {
                 my $do = CPAN::Shell->expandany($d);
                 if ($want = $do->{prereq_pm}{requires}{$x}) {
                     $want_type = "requires: ";
@@ -590,7 +592,10 @@ sub new {
                 $want = $mo->cpan_version;
                 $want_type = "want: ";
             }
-            $deps[$i] .= " (have: $have; $want_type$want)";
+            $deps[$i]{have} = $have;
+            $deps[$i]{want_type} = $want_type;
+            $deps[$i]{want} = $want;
+            $deps[$i]{display_as} .= "$x (have: $have; $want_type$want)";
         }
     }
     bless { deps => \@deps }, $class;
@@ -599,8 +604,8 @@ sub new {
 sub as_string {
     my($self) = shift;
     my $ret = "\nRecursive dependency detected:\n    ";
-    $ret .= join("\n => ", @{$self->{deps}});
-    $ret .= ".\nCannot continue.\n";
+    $ret .= join("\n => ", map {$_->{display_as}} @{$self->{deps}});
+    $ret .= ".\nCannot resolve.\n";
     $ret;
 }
 
@@ -3005,7 +3010,15 @@ sub rematein {
         } elsif (ref $obj) {
             if ($meth =~ /^($needs_recursion_protection)$/) {
                 # silly for look or dump
-                $obj->color_cmd_tmps(0,1);
+                eval {  $obj->color_cmd_tmps(0,1); };
+                if ($@
+                    and ref $@
+                    and $@->isa("CPAN::Exception::RecursiveDependency")) {
+                    $obj->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
+                    $CPAN::Frontend->mywarn($@);
+                } else {
+                    die;
+                }
             }
             CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
@@ -5524,7 +5537,7 @@ sub color_cmd_tmps {
         && $color==1
         && $self->{incommandcolor}==$color;
     if ($depth>=$CPAN::MAX_RECURSION){
-        $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
+        die(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
     my $prereq_pm = $self->prereq_pm;
@@ -6847,8 +6860,15 @@ is part of the perl-%s distribution. To install that, you need to run
             push @e, $err;
         }
 
-	defined $self->{make} and push @e,
-            "Has already been made";
+	if (defined $self->{make}) {
+            if ($self->{make}->failed) {
+                # introduced for turning recursion detection into a distrostatus
+                $CPAN::Frontend->mywarn("  make: $self->{make}\n");
+                return;
+            } else {
+                push @e, "Has already been made";
+            }
+        }
 
         if (exists $self->{later} and length($self->{later})) {
             if ($self->unsat_prereq) {
@@ -7014,7 +7034,15 @@ is part of the perl-%s distribution. To install that, you need to run
             $self->store_persistent_state;
             return;
         } else {
-            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+            my $follo = eval { $self->follow_prereqs(@prereq); };
+            # signal success to the queuerunner
+            if ($follo){
+                return 1;
+            } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
+                $self->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
+                $self->mywarn($@);
+                return;
+            }
         }
     }
     if ($CPAN::Signal){
@@ -8591,7 +8619,7 @@ sub color_cmd_tmps {
         && $color==1
         && $self->{incommandcolor}==$color;
     if ($depth>=$CPAN::MAX_RECURSION){
-        $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
+        die(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
 
@@ -8910,7 +8938,7 @@ sub color_cmd_tmps {
                                           # so we can break it
     }
     if ($depth>=$CPAN::MAX_RECURSION){
-        $CPAN::Frontend->mydie(CPAN::Exception::RecursiveDependency->new($ancestors));
+        die(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
 
