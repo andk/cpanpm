@@ -567,17 +567,15 @@ sub new {
     my($deps) = shift;
     my @deps;
     my %seen;
-    # require Carp; Carp::cluck("HERE");
-
     for my $dep (@$deps) {
         push @deps, {name => $dep, display_as => $dep};
         last if $seen{$dep}++;
     }
     for my $i (0..$#deps) {
         my $x = $deps[$i]{name};
-        my $mo = CPAN::Shell->expandany($x);
-        if ($mo->isa("CPAN::Module")) {
-            my $have = $mo->inst_version;
+        my $xo = CPAN::Shell->expandany($x);
+        if ($xo->isa("CPAN::Module")) {
+            my $have = $xo->inst_version;
             my($want,$d,$want_type);
             if ($i>0 and $d = $deps[$i-1]{name}) {
                 my $do = CPAN::Shell->expandany($d);
@@ -589,13 +587,16 @@ sub new {
                     $want_type = "unknown status";
                 }
             } else {
-                $want = $mo->cpan_version;
+                $want = $xo->cpan_version;
                 $want_type = "want: ";
             }
             $deps[$i]{have} = $have;
             $deps[$i]{want_type} = $want_type;
             $deps[$i]{want} = $want;
             $deps[$i]{display_as} = "$x (have: $have; $want_type$want)";
+        } elsif ($xo->isa("CPAN::Distribution")) {
+            $xo->{make} = CPAN::Distrostatus->new("NO cannot resolve circular dependency");
+            $deps[$i]{display_as} = $xo->pretty_id;
         }
     }
     bless { deps => \@deps }, $class;
@@ -3009,13 +3010,14 @@ sub rematein {
 	if (0) {
         } elsif (ref $obj) {
             if ($meth =~ /^($needs_recursion_protection)$/) {
-                # silly for look or dump
+                # it would be silly to check for recursion for look or dump
+                # (we are in CPAN::Shell::rematein)
+                CPAN->debug("Going to test against recursion") if $CPAN::DEBUG;
                 eval {  $obj->color_cmd_tmps(0,1); };
                 if ($@){
                     if (ref $@
                         and $@->isa("CPAN::Exception::RecursiveDependency")) {
-                        $obj->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
-                        $CPAN::Frontend->mywarn($@);
+                        $CPAN::Frontend->mywarn(sprintf "DEBUG: in rematein for object[%s]error[%s])", $obj->id, $@);
                     } else {
                         if (0) {
                             require Carp;
@@ -6867,9 +6869,14 @@ is part of the perl-%s distribution. To install that, you need to run
 
 	if (defined $self->{make}) {
             if ($self->{make}->failed) {
-                # introduced for turning recursion detection into a distrostatus
-                $CPAN::Frontend->mywarn("  make: $self->{make}\n");
-                return;
+                if ($self->{force_update}) {
+                    $CPAN::Frontend->myprint("Trying an already failed 'make' because force in effect.\n");
+                } else {
+                    # introduced for turning recursion detection into a distrostatus
+                    $CPAN::Frontend->mywarn("Could not make: ".substr($self->{make},3)."\n");
+                    $self->store_persistent_state;
+                    return;
+                }
             } else {
                 push @e, "Has already been made";
             }
@@ -7039,13 +7046,13 @@ is part of the perl-%s distribution. To install that, you need to run
             $self->store_persistent_state;
             return;
         } else {
-            my $follo = eval { $self->follow_prereqs(@prereq); };
-            # signal success to the queuerunner
-            if ($follo){
+            my $follow = eval { $self->follow_prereqs(@prereq); };
+            if (0) {
+            } elsif ($follow){
+                # signal success to the queuerunner
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
-                $self->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
-                $CPAN::Frontend->mywarn($@);
+                $CPAN::Frontend->mywarn(sprintf "DEBUG: in 'Distribution::make' for object[%s]error[%s]", $self->id, $@);
                 return;
             }
         }
