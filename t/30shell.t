@@ -1021,6 +1021,7 @@ __END__
 #E:\}.*?CPAN::Distribution
 ########
 #P:d ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
+#R:Module::Build
 #E:prereq_pm\s+build_requires:\S+requires:\S+
 ########
 #P:notest make Bundle::CpanTestDummies
