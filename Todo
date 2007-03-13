@@ -1,5 +1,28 @@
 2007-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* David Golden sends me a link to perlmonks
+	http://perlmonks.org/?node_id=603402
+
+	It's about 1.8802. This guy does a
+
+	setenv PERL5LIB /home/me/build/perl-addons/inst/usr/local/lib/perl5:/home/me/build/perl-addons/inst/usr/local/lib/perl5/site_perl
+
+	and sets for the './Build install' command?
+    Your choice:  [] --destdir /home/me/build/perl-addons/inst
+
+	and for 'make install' command?
+    Your choice:  [] DESTDIR=/home/me/build/perl-addons/inst
+
+	When he installs Params::Validate, it indeed gets installed into that
+	directory but when he asks 
+
+	! use Params::Validate; print "$Params::Validate::VERSION\n"
+
+	he gets an error
+
+	When he quits the shell and enters it again and repeats the command, it
+	is OK.
+
 	* David Cantrell reports that YAML must be > 0.39 if we want to use it.
 
 2007-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>

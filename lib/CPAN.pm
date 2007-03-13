@@ -571,14 +571,37 @@ sub new {
         push @deps, $dep;
         last if $seen{$dep}++;
     }
+    for my $i (0..$#deps) {
+        my $x = $deps[$i];
+        my $mo = CPAN::Shell->expandany($x);
+        if ($mo->isa("CPAN::Module")) {
+            my $have = $mo->inst_version;
+            my($want,$d,$want_type);
+            if ($i>0 and $d = $deps[$i-1]) {
+                my $do = CPAN::Shell->expandany($d);
+                if ($want = $do->{prereq_pm}{requires}{$x}) {
+                    $want_type = "requires: ";
+                } elsif ($want = $do->{prereq_pm}{build_requires}{$x}) {
+                    $want_type = "build_requires: ";
+                } else {
+                    $want_type = "unknown status";
+                }
+            } else {
+                $want = $mo->cpan_version;
+                $want_type = "want: ";
+            }
+            $deps[$i] .= " (have: $have; $want_type$want)";
+        }
+    }
     bless { deps => \@deps }, $class;
 }
 
 sub as_string {
     my($self) = shift;
-    "\nRecursive dependency detected:\n    " .
-        join("\n => ", @{$self->{deps}}) .
-            ".\nCannot continue.\n";
+    my $ret = "\nRecursive dependency detected:\n    ";
+    $ret .= join("\n => ", @{$self->{deps}});
+    $ret .= ".\nCannot continue.\n";
+    $ret;
 }
 
 package CPAN::Exception::yaml_not_installed;
