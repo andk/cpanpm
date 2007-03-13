@@ -577,7 +577,7 @@ sub new {
     for my $i (0..$#deps) {
         my $x = $deps[$i]{name};
         $in_loop ||= $x eq $loop_starts_with;
-        my $xo = CPAN::Shell->expandany($x);
+        my $xo = CPAN::Shell->expandany($x) or next;
         if ($xo->isa("CPAN::Module")) {
             my $have = $xo->inst_version || "N/A";
             my($want,$d,$want_type);
