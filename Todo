@@ -1,3 +1,13 @@
+2007-03-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Do you want to build wxWidgets? [yes] y
+Which archive type? [tar.gz] tar.gz
+Do you want to include OpenGL support [no] n
+Creating new 'Build' script for 'Alien-wxWidgets' version '0.28'
+MBARBON/Alien-wxWidgets-0.28.tar.gz requires perl '5.6'; you have only 5.009005; giving up
+
+	Looks like a bug in Alien::wxWidgets but somehow I feel guilty.
+
 2007-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Jost sent me the test output with TEST_VERBOSE and it was sooo

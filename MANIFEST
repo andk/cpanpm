@@ -78,6 +78,7 @@ distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/MARKOV.MailTools.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
+distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml

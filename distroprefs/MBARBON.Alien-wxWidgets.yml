@@ -1,0 +1,11 @@
+---
+match:
+  distribution: "MBARBON/Alien-wxWidgets-0.28.tar.gz"
+pl:
+  expect:
+    - "Do you want to build wxWidgets"
+    - "y\n"
+    - "Which archive type"
+    - "tar.gz\n"
+    - "Do you want to include OpenGL support"
+    - "n\n"

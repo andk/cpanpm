@@ -293,6 +293,7 @@ MEGA_INSTALL = Devel::Cover \
 		Time::HiRes::Value \
 		String::Expand \
 		Config::XPath \
+		Alien::wxWidgets \
 
 }
 }
