@@ -150,6 +150,8 @@ plan tests => (
                scalar @prgs
                + 2                     # 2 histsize tests
                + 1                     # 1 RUN_EXPECT feedback
+               + 1                     # run_..._cmd feedback
+               + 1                     # spawn/open
                + 1                     # 1 count keys for 'o conf init variable'
                # + scalar @modules
               );
@@ -226,18 +228,22 @@ if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
 } else {
     $RUN_EXPECT = 1;
 }
-ok(1,"RUN_EXPECT[$RUN_EXPECT]");
+ok(1,"RUN_EXPECT[$RUN_EXPECT]\$^X[$^X]");
 my $expo;
+my @run_shell_cmd_lit = run_shell_cmd_lit($cwd);
+ok(scalar @run_shell_cmd_lit,"@run_shell_cmd_lit");
 if ($RUN_EXPECT) {
     $expo = Expect->new;
     $ENV{LANG} = "C";
-    $expo->spawn(run_shell_cmd_lit($cwd));
+    my $spawned = $expo->spawn(@run_shell_cmd_lit);
+    ok($spawned, "could at least spawn a process and \$! is[$!]");
     $expo->log_stdout(0);
     $expo->notransfer(1);
 } else {
-    my $system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
+    my $system = join(" ", map { "\"$_\"" } @run_shell_cmd_lit)." > test.out";
     warn "# DEBUG: system[$system]";
-    open SYSTEM, "| $system" or die;
+    my $opened = open SYSTEM, "| $system";
+    ok($opened, "Could at least open a process pipe and $! is [$!]");
 }
 
 my $skip_the_rest;
@@ -1049,7 +1055,7 @@ __END__
 #T:60
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
-#E:is up to date|Recursive dependency detected[\s\S]+?Cannot continue\.
+#E:is up to date|circular dependency
 #T:60
 ########
 #P:o conf defaults
