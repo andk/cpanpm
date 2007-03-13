@@ -595,7 +595,7 @@ sub new {
             $deps[$i]{have} = $have;
             $deps[$i]{want_type} = $want_type;
             $deps[$i]{want} = $want;
-            $deps[$i]{display_as} .= "$x (have: $have; $want_type$want)";
+            $deps[$i]{display_as} = "$x (have: $have; $want_type$want)";
         }
     }
     bless { deps => \@deps }, $class;
@@ -3011,13 +3011,18 @@ sub rematein {
             if ($meth =~ /^($needs_recursion_protection)$/) {
                 # silly for look or dump
                 eval {  $obj->color_cmd_tmps(0,1); };
-                if ($@
-                    and ref $@
-                    and $@->isa("CPAN::Exception::RecursiveDependency")) {
-                    $obj->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
-                    $CPAN::Frontend->mywarn($@);
-                } else {
-                    die;
+                if ($@){
+                    if (ref $@
+                        and $@->isa("CPAN::Exception::RecursiveDependency")) {
+                        $obj->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
+                        $CPAN::Frontend->mywarn($@);
+                    } else {
+                        if (0) {
+                            require Carp;
+                            Carp::confess(sprintf "DEBUG: \$\@[%s]ref[%s]", $@, ref $@);
+                        }
+                        die;
+                    }
                 }
             }
             CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
@@ -7040,7 +7045,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $self->{make} = CPAN::Distrostatus->new("NO subject to a circular dependency");
-                $self->mywarn($@);
+                $CPAN::Frontend->mywarn($@);
                 return;
             }
         }
