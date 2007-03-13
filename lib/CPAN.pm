@@ -5631,7 +5631,7 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            if (exists $self->{build_dir}) {
+            if (exists $self->{build_dir} && -d $self->{build_dir}) {
                 # this deserves print, not warn:
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
