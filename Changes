@@ -1,3 +1,18 @@
+2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.88_79: stable release candidate VII
+
+	* make the failure mode on circular depencies just as the other failure
+	modes and let the rest of the modules continue; also improve diagnostics
+	for circular dependencies
+
+	* clean up a few places where STDERR leaked from underneath; others seem
+	unfixable so a few are left over
+
+	* protect better against lost build directories
+
+	* warn when YAML is too old and skip the 30shell test
+
 2007-03-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_78: stable release candidate VI
