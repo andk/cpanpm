@@ -294,6 +294,7 @@ MEGA_INSTALL = Devel::Cover \
 		String::Expand \
 		Config::XPath \
 		Alien::wxWidgets \
+		Moose \
 
 }
 }

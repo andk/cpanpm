@@ -11,14 +11,14 @@ BEGIN {
     CPAN::HandleConfig->load;
     my $yaml_module = CPAN::_yaml_module();
     if ($CPAN::META->has_inst($yaml_module)) {
-        print "# DEBUG: yaml_module[$yaml_module] loadable\n";
+        print "# yaml_module[$yaml_module] loadable\n";
     } else {
         $|=1;
         print "1..0 # Skip: no yaml module installed\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
     }
     if ($CPAN::META->has_inst("Module::Build")) {
-        print "# DEBUG: Module::Build loadable\n";
+        print "# Module::Build loadable\n";
     } else {
         $|=1;
         print "1..0 # Skip: Module::Build not installed\n";
@@ -60,7 +60,9 @@ END {
 my $cwd = Cwd::cwd;
 
 my $VERBOSE = 0;
+#  2>&1 is no solution. I intertwingled them, I missed a few "ok"
 my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
+
 
 our @SESSIONS =
     (
@@ -148,7 +150,7 @@ for my $session (@SESSIONS) {
     }
 }
 my $prompt_re = "\\ncpan(?:[^>]*)> ";
-print "# DEBUG: cnt[$cnt]prompt_re[$prompt_re]\n";
+print "# cnt[$cnt]prompt_re[$prompt_re]\n";
 plan tests => $cnt
     + 1 # the MyConfig verification
     ;
@@ -157,7 +159,7 @@ $ENV{PERL_MM_USE_DEFAULT} = 1;
 
 for my $session (@SESSIONS) {
     my $system = $session->{system} || $default_system;
-    warn "# DEBUG: name[$session->{name}]system[$system]";
+    # warn "# DEBUG: name[$session->{name}]system[$system]";
     open SYSTEM, "| $system" or die;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
@@ -168,7 +170,7 @@ for my $session (@SESSIONS) {
     my $content = do {local *FH; open FH, "test.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
     # shift @chunks;
-    warn sprintf "# DEBUG: pairs[%d]chunks[%d]", scalar @{$session->{pairs}}, scalar @chunks;
+    # warn sprintf "# DEBUG: pairs[%d]chunks[%d]", scalar @{$session->{pairs}}, scalar @chunks;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
         my($expect) = $session->{pairs}[2*$i+1];

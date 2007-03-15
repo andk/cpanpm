@@ -1,3 +1,35 @@
+2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* clean 31sessions.t output and run 30shell without Expect and clean
+	that stderr thing too.
+
+	This doesn't seem to be possible to do reliably. As soon as I let STDOUT
+	and STDERR be joint with 2>&1 some tests fail. I think I'd prefer to
+	have the Test:: stuff refrain from using STDERR alltogether and as long
+	as they don't (or can't?) I'll let some STDERR escape.
+
+	And this?
+
+make[1]: Entering directory `/home/k/.cpan/build/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02-8r8dgG'
+make[1]: *** No rule to make target `clean'.  Stop.
+
+	Ah, if {writemakefile} failed, do not try 'make clean'! DONE
+
+2007-03-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Class::MOP needs a binary search because test t/030method.t fails in
+	blead but not in 22000. But a naive binary search discovers breakage in
+	t/081_meta_package_extension.t on patch 26370. But we certainly can
+	ignore that because this test works again nowadays. So I need a
+	distropref to limit tests.
+
+	Learn something new about Module::Build:
+
+	    ./Build test --test_files t/mytest.t
+
+	After a few hours of binary searching suddenly this 030 bug has
+	disappeared. Need to revisit later....
+
 2007-03-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Do you want to build wxWidgets? [yes] y
@@ -6,7 +38,8 @@ Do you want to include OpenGL support [no] n
 Creating new 'Build' script for 'Alien-wxWidgets' version '0.28'
 MBARBON/Alien-wxWidgets-0.28.tar.gz requires perl '5.6'; you have only 5.009005; giving up
 
-	Looks like a bug in Alien::wxWidgets but somehow I feel guilty.
+	Looks like a bug in Alien::wxWidgets but somehow I feel guilty. Reported
+	via RT.
 
 2007-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -34,6 +67,9 @@ Failed Test Stat Wstat Total Fail  List of Failed
 -------------------------------------------------------------------------------
 t/30shell.t  255 65280   230  452  5-230
 Failed 1/1 test scripts. 226/230 subtests failed.
+
+	I see no way short of incrementall improve diagnostics there and hope
+	that the next release shows us more. DONE.
 
 
 2007-03-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -78,6 +114,8 @@ Failed 1/1 test scripts. 226/230 subtests failed.
 	make/test/install before that, no? No, it's the fforce that make things
 	so ugly. Because all parties inherit the fforce, they need to retest so
 	often. So probably no bug at all, just ugly.
+
+	CLOSED.
 	
 	* Bug: 
 
@@ -101,12 +139,16 @@ Cannot resolve.
 	D:Event:Lunar somehow fall into a spiral of unresolvable dependecies and
 	are never redeemed from it. No? Maybe I was just impatient.
 
+	FIXED.
+
 	* HTML::CalendarMonth is failing but the error output is really large. I
 	just tried to report() it and must check later if the mail actually
 	arrived. --- It seems this report never arrives.
 
 	* There was a mail from David Cantrell about a failure on OpenBSD which
 	I could not imagine any reason for.
+
+	ANSWERED.
 
 2007-03-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

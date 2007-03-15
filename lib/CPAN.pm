@@ -3434,7 +3434,7 @@ sub _add_to_statistics {
         # need no eval because if this fails, it is serious
         my $sfile = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
         CPAN->_yaml_dumpfile("$sfile.$$",$fullstats);
-        if ( $sdebug||$CPAN::DEBUG ) {
+        if ( $sdebug ) {
             local $CPAN::DEBUG = 512; # FTP
             push @debug, time;
             CPAN->debug(sprintf("DEBUG history: before_read[%d]before[%d]at[%d]".
@@ -8139,6 +8139,12 @@ sub clean {
     }
     unless (exists $self->{build_dir}) {
         $CPAN::Frontend->mywarn("Distribution has no own directory, nothing to do.\n");
+        return 1;
+    }
+    if (exists $self->{writemakefile}
+        and $self->{writemakefile}->failed
+       ) {
+        $CPAN::Frontend->mywarn("No Makefile, don't know how to 'make clean'\n");
         return 1;
     }
   EXCUSE: {

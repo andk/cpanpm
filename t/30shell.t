@@ -241,7 +241,7 @@ if ($RUN_EXPECT) {
     $expo->notransfer(1);
 } else {
     my $system = join(" ", map { "\"$_\"" } @run_shell_cmd_lit)." > test.out";
-    warn "# DEBUG: system[$system]";
+    # warn "# DEBUG: system[$system]";
     my $opened = open SYSTEM, "| $system";
     ok($opened, "Could at least open a process pipe and $! is [$!]");
 }
@@ -1028,7 +1028,7 @@ __END__
 #E:Has already been made
 ########
 #P:clean Bundle::CpanTestDummies
-#E:Failed during this command
+#E:No Makefile
 ########
 #P:clean Bundle::CpanTestDummies
 #E:make clean already called once
