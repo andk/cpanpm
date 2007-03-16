@@ -17,7 +17,7 @@ make[1]: *** No rule to make target `clean'.  Stop.
 
 2007-03-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Class::MOP needs a binary search because test t/030method.t fails in
+	* Class::MOP needs a binary search because test t/003methods.t fails in
 	blead but not in 22000. But a naive binary search discovers breakage in
 	t/081_meta_package_extension.t on patch 26370. But we certainly can
 	ignore that because this test works again nowadays. So I need a
@@ -27,9 +27,51 @@ make[1]: *** No rule to make target `clean'.  Stop.
 
 	    ./Build test --test_files t/mytest.t
 
-	After a few hours of binary searching suddenly this 030 bug has
-	disappeared. Need to revisit later....
+	So now binary search again without the 081 test:
 
+----Program----
+eval {require Class::MOP};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pL9BuO7/perl-5.8.0@26486/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pHxMchK/perl-5.8.0@26487/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Change 26487 by nicholas@nicholas-saigo on 2005/12/26 12:31:01
+
+	Rework constant.pm to take advantage of the space savings of proxy
+	constant subroutines whenever it can.
+
+% ./Build test --verbose --test_files t/003_methods.t                                                                                                [CPANSHELL]
+t/003_methods....1..64
+ok 1 - use Class::MOP;
+ok 2 - use Class::MOP::Class;
+ok 3 - ... our method is not yet blessed
+not ok 4 - ... we added the method successfully
+
+#   Failed test '... we added the method successfully'
+#   at t/003_methods.t line 65.
+# died: Not a GLOB reference at /home/k/.cpan/build/Class-MOP-0.37-SpVpcK/blib/lib/Class/MOP/Package.pm line 197.
+Not a GLOB reference at /home/k/.cpan/build/Class-MOP-0.37-SpVpcK/blib/lib/Class/MOP/Package.pm line 197.
+# Looks like you planned 64 tests but only ran 4.
+# Looks like you failed 1 test of 4 run.
+# Looks like your test died just after 4.
+dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 4-64
+        Failed 61/64 tests, 4.69% okay
+Failed Test     Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/003_methods.t  255 65280    64  121  4-64
+
+	REPORT sent to P5P.
+	
 2007-03-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Do you want to build wxWidgets? [yes] y
