@@ -11611,7 +11611,7 @@ ExtUtils::MakeMaker focused Makefile.PL?
 
 http://search.cpan.org/search?query=Module::Build::Convert
 
-http://accognoscere.org/papers/perl-module-build-convert/module-build-convert.html
+http://www.refcnt.org/papers/module-build-convert
 
 =item 15)
 
