@@ -1297,7 +1297,7 @@ Your choice: },
 make_arg => qq{Parameters for the 'make' command?
 Typical frequently used setting:
 
-    -j3              # dual processor system
+    -j3              # dual processor system (on GNU make)
 
 Your choice: },
 
