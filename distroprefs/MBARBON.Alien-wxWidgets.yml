@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "MBARBON/Alien-wxWidgets-0.28.tar.gz"
+  distribution: "MBARBON/Alien-wxWidgets-\d"
 pl:
   expect:
     - "Do you want to build wxWidgets"
