@@ -6889,7 +6889,9 @@ is part of the perl-%s distribution. To install that, you need to run
                     # Trying an already failed 'make' (unless somebody else blocks)
                 } else {
                     # introduced for turning recursion detection into a distrostatus
-                    $CPAN::Frontend->mywarn("Could not make: ".substr($self->{make},3)."\n");
+                    my $error = length $self->{make}>3
+                        ? substr($self->{make},3) : "Unknown error";
+                    $CPAN::Frontend->mywarn("Could not make: $error\n");
                     $self->store_persistent_state;
                     return;
                 }
