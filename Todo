@@ -1,3 +1,34 @@
+2007-03-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* For the Todo from David Golden: On installation of a distribution,
+	check %INC for modules in that distribution. If found, warn the user and
+	suggest that they call "reload cpan" at the prompt.
+
+	Very good idea.
+
+	* Todo: fix wxWidgets to not download 20 MB every time I try to build
+	it.
+
+	* Todo: investigate a bug in Cache.pm. Cache-2.04 failed today but it
+	does not fail when I want to report the bug. The error message in the
+	logfile was:
+
+t/file...........
+#   Failed test 'Cache::Tester::test_expiry: entry with 1 sec timeout added'
+#   at /home/k/.cpan/build/Cache-2.04-L1wXv8/blib/lib/Cache/Tester.pm line 449.
+# Looks like you failed 1 test of 84.
+dubious
+	Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 37
+	Failed 1/84 tests, 98.81% okay
+
+2007-03-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Alien::wxWidgets uses C< use Fatal qw(mkdir); > and uncovers that
+	bleadperl forgot Fatal.pm when the _ prototype was introduced.
+
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/2cae4476fda4c645/94fa909e7ae230a8#94fa909e7ae230a8
+
 2007-03-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Retrying now with 5.6.2 from my k account. Worked.
