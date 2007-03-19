@@ -1,3 +1,30 @@
+2007-03-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Retrying now with 5.6.2 from my k account. Worked.
+
+	* Just sent a report for 5.8.3 from my k account and it arrived immediately.
+
+	* report about 5.00504? I forgot that CPAN::Reporter does not run there.
+	Lots of prereqs broken on 5.005
+
+	* Report from OSX:
+
+Sending test report with 'pass' to cpan-testers@perl.org
+postdrop: warning: unable to look up public/pickup: No such file or directory
+
+	* Report for 5.6.2, where did it get lost? Mail::Send is NOT installed
+	(which is good). Net::SMTP is 2.29. 2.30 does not compile because it is
+	calling utf8::encode. Will have to retry later.
+
+	* Why is he not sending?
+
+cpan[5]> report ANDK/CPAN-1.88_79.tar.gz
+[...]
+Test report not sent
+
+	I think I had 'send_report' set to 'no'. Retrying after setting it to
+	ask/no. Yes, this time it sent a report for 5.9.5 and it arrived.
+
 2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* clean 31sessions.t output and run 30shell without Expect and clean
