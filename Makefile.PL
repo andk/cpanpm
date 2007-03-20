@@ -220,7 +220,6 @@ MEGA_BASE = \
 
 MEGA_INSTALL = \
  ANDK/keepcool-0.344 \
- Alien::wxWidgets \
  Alzabo \
  App::Ack \
  Bundle::Pause \

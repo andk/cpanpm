@@ -1,3 +1,18 @@
+2007-03-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: screencast into the distro.
+
+	http://kubasik.net/blog/2006/12/04/finally-howto-screencast-on-linux/
+
+	http://ubuntu.wordpress.com/2006/06/08/how-to-create-a-screencast-in-ubuntu/
+
+	I think I do not like these tools. They may be good for a YouTube video
+	but for inclusion in the distro I want a text file that can be replayed,
+	not a video. Tk, wx or curses. But maybe with sound. And of course,
+	things that need just-in-time-explanation like "Watch now what happens
+	when I hit TAB" or "see the result in slow motion now". It's probably
+	much harder to produce such a beast than one would think on first sight.
+
 2007-03-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* For the Todo from David Golden: On installation of a distribution,
@@ -7,7 +22,7 @@
 	Very good idea.
 
 	* Todo: fix wxWidgets to not download 20 MB every time I try to build
-	it.
+	it. [...] Oh well, I removed wxWidgets from MEGA instead.
 
 	* Todo: investigate a bug in Cache.pm. Cache-2.04 failed today but it
 	does not fail when I want to report the bug. The error message in the
@@ -255,7 +270,7 @@ Cannot resolve.
 	* Continue discussing the perlmonks bug with P5P. Only Schwern has
 	answered and we need a resolution. Either document as it is at the
 	moment or change it and then document it. I tend to the former because
-	it is consistent.
+	it is consistent. DONE
 	
 2007-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -437,6 +452,8 @@ $VAR10 = '/home/k/sources/CPAN/SVK/trunk';
 
 	* David Cantrell reports that YAML must be > 0.39 if we want to use it.
 
+	FIXED
+
 2007-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Oh Joy of having authors who carefully track the dependencies between
@@ -551,6 +568,9 @@ DIED. FAILED tests 5-230
 	* off topic: Richard's talk about debugger brings me the idea to patch
 	it to support saving of terminal history. I started implementing it and
 	then lost track of my changes. Now in k75:/home/src/perl/perl5db/
+
+	Patch sent in but Richard would like to get the default behaviour being
+	to write the histfile.
 
 	* bring the FirstTime dialogs into POD and back
 
