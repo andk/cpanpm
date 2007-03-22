@@ -246,6 +246,7 @@ MEGA_INSTALL = \
  Devel::Cover \
  Devel::Hide \
  Devel::Size \
+ Devel::Trace \
  Devel::ebug \
  Event::Lib \
  File::Rsync \

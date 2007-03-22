@@ -28,10 +28,10 @@ Lockfile removed.
 	their versions near the old and the new borderline. As we have no idea
 	which modules to watch we will have to use autobundle.
 
-	28094 succeeds, 95 fails. The patch 28095 is empty (?!). The modules in
-	the old (failing) 28095 are documented in Snapshot_2007_03_21_00.pm The
-	first succeeding perl above 28094 is which? 28100 and its snapshot is
-	Snapshot_2007_03_21_01.pm
+	28094 succeeds, 95 fails. The patch 28095 is empty (!; see 28097 for
+	some kind of explanation). The modules in the old (failing) 28095 are
+	documented in Snapshot_2007_03_21_00.pm The first succeeding perl above
+	28094 is which? 28100 and its snapshot is Snapshot_2007_03_21_01.pm
 
 	And the first that then fails again is 28101 and I have now to change
 	one module after the other to find out which has a bug. The snapshot of
@@ -39,74 +39,57 @@ Lockfile removed.
 
 	Upgrading ExtUtils::MakeMaker from 6.30_02 to 6.32: no success.
 
-	Very strange thing. gcc 4.0.3 vs. 4.1.2? Some negative dependency on
-	XML::Parser or XML::Twig? There is nothing referring to XML in Zoidberg.
+	100 ok: Zoidberg-0.96-GO1tIS 	ExtUtils::Install	1.39
+	101 fail: Zoidberg-0.96-wZKukQ 	ExtUtils::Install	1.41
 
-	Maybe this gives a hint: with 28101 during make test already:
+	Stepwise upgrading of ExtUtils::Install:
 
-% ./Build test    [CPANSHELL]
-/home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/bin/perl b/zoid.PL
-/home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/bin/perl b/test.PL
-Copying bin/zoid -> blib/script/zoid
-/home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/bin/perl b/Config.PL
-Could not write to file: blib/lib/Zoidberg.pm at b/Config.PL line 42.
+   54015 2006-04-09 YVES/ExtUtils-Install-1.38.tar.gz
+   65192 2006-04-14 YVES/ExtUtils-Install-1.39.tar.gz
+   66620 2006-04-15 YVES/ExtUtils-Install-1.39_01.tar.gz
+   56020 2006-04-30 YVES/ExtUtils-Install-1.40.tar.gz
+   56582 2006-07-02 YVES/ExtUtils-Install-1.41.tar.gz
+   57600 2007-02-02 YVES/ExtUtils-Install-1.41_01.tar.gz
+   57628 2007-02-03 YVES/ExtUtils-Install-1.41_02.tar.gz
+   58146 2007-02-11 YVES/ExtUtils-Install-1.41_03.tar.gz
 
-	With 28100:
+	
+	1.39    ok
+	1.39_01 not ok
+	1.40    not ok
+	1.41    not ok
+	1.41_01 fails its tests
+	1.41_02 not ok
+	1.41_03 not ok
 
-/home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/bin/perl b/zoid.PL
-/home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/bin/perl b/test.PL
-Copying bin/zoid -> blib/script/zoid
-/home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/bin/perl b/Config.PL
-Could not write to file: blib/lib/Zoidberg.pm at b/Config.PL line 42.
+	[(Sidetrack: Up/downgrading to 1.39_01 does not work. When I go to the
+	~/.cpan/build/ExtUtils-Install-1.39_01 and call './Build install' then I
+	see just this:
 
-	No difference.
+Reading skip patterns from 'INSTALL.SKIP'.
+Writing /home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/lib/site_perl/5.9.4/i686-linux-64int/auto/ExtUtils/Install/.packlist
 
-	Now again 100 during 'make install':
+	I have to remove the INSTALL.SKIP file to install it. After that the
+	installation finishes and I get 1.39_01.)]
 
-Warning: You do not have permissions to install into /etc at /home/src/perl/repo
-perls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/lib/5.9.4/ExtUtils/Install.p
-m line 388.
+  Downgrading to 1.39 makes it "work" again. When it comes by zoidrc it says:
 
-	But after that warning it installs nonetheless.
+Skipping /etc/zoidrc (unchanged)
 
-	Now again 101 during 'make install':
+	Apparently I have this zoidrc since Feb 12 or somebody set the timestamp
+	to that. The file belongs to me, so I would be able to overwrite it. The
+	failure to install it is a bug in ExtUtils::Install since 1.39_01.
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-ERROR: Can't create '/etc'
-Do not have write permissions on '/etc'
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- at /home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/lib/site_perl/5.9.4/Module/Build/Base.pm line 2696
+	http://rt.cpan.org/Ticket/Display.html?id=25627
 
-	And 101:
-
-cpan[4]> m Module::Build::Base
-Module id = Module::Build::Base
-    CPAN_USERID  KWILLIAMS (Ken Williams <ken@mathforum.org>)
-    CPAN_VERSION undef
-    CPAN_FILE    K/KW/KWILLIAMS/Module-Build-0.2806.tar.gz
-    UPLOAD_DATE  2006-12-16
-    MANPAGE      Module::Build::Base - Default methods for Module::Build
-    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/lib/site_perl/5.9.4/Module/Build/Base.pm
-    INST_VERSION undef
-
-	And 100:
-
-cpan[2]> m Module::Build::Base
-Module id = Module::Build::Base
-    CPAN_USERID  KWILLIAMS (Ken Williams <ken@mathforum.org>)
-    CPAN_VERSION undef
-    CPAN_FILE    K/KW/KWILLIAMS/Module-Build-0.2806.tar.gz
-    UPLOAD_DATE  2006-12-16
-    MANPAGE      Module::Build::Base - Default methods for Module::Build
-    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/lib/site_perl/5.9.4/Module/Build/Base.pm
-    INST_VERSION undef
-
-
-	% md5sum /home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/lib/site_perl/5.9.4/Module/Build/Base.pm /home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/lib/site_perl/5.9.4/Module/Build/Base.pm
-bc2d559dc959db151bd0e656bd57cb85  /home/src/perl/repoperls/installed-perls/perl/pbN6H8H/perl-5.8.0@28100/lib/site_perl/5.9.4/Module/Build/Base.pm
-bc2d559dc959db151bd0e656bd57cb85  /home/src/perl/repoperls/installed-perls/perl/plXXmnP/perl-5.8.0@28101/lib/site_perl/5.9.4/Module/Build/Base.pm
-
-	They are REALLY identical. I must run them individually through the debugger.
+	What's noteworthy is that there seems to be no viable workaround short
+	of patching Zoidberg. I cannot find a way to skip the installation step
+	of etc/zoidrc. Not with "appdir", not with "distroprefs/*/commandline"
+	where I tried to remove some files in the right moment, not with
+	"||true" on the commandline because etc/zoidrc comes before the modules.
+	Only thing is to disable all ExtUtils::Install after 1.39 and allow 1.39
+	and downgrade everywhere. But here my love to Zoidberg is not strong
+	enough and I decide to wait for a new release of ExtUtils::Install.
 
 2007-03-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
