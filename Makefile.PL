@@ -248,6 +248,7 @@ MEGA_INSTALL = \
  Devel::Size \
  Devel::Trace \
  Devel::ebug \
+ Devel::ebug::HTTP \
  Event::Lib \
  File::Rsync \
  Filter::Util::Call \
