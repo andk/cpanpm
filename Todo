@@ -1,3 +1,12 @@
+2007-03-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Maybe add a depends keyword to distroprefs because the number of
+	missing dependency declarations in modules does not decrease despite all
+	the bug reports we have sent out.
+
+	* As soon as we support bz2 we must have an implicit dependency on
+	packages Compress::Bzip2 whenever we want to untar such a thing.
+
 2007-03-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* I just discovered Term::ReadLine::Zoid by Jaap Karssenberg (PARDUS).

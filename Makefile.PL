@@ -232,6 +232,7 @@ MEGA_INSTALL = \
  Cache::File \
  Cache::Memcached \
  Cache::Memcached::XS \
+ Carp::Always \
  Catalyst \
  Class::C3 \
  Class::MethodMaker \
@@ -240,6 +241,7 @@ MEGA_INSTALL = \
  Config::XPath \
  Coro \
  DBIx::Class \
+ DBIx::Perlish \
  Data::Dump \
  Data::Float \
  Devel::Command \
@@ -254,11 +256,14 @@ MEGA_INSTALL = \
  Filter::Util::Call \
  Font::TTF \
  Getopt::Euclid \
+ Getopt::Mixed \
  Graph::Easy \
  IO::Async::Buffer \
  IO::Pager \
  IPC::PubSub \
  IPC::ShareLite \
+ Image::Pngslimmer \
+ JSON::XS \
  Jifty \
  LWP::UserAgent \
  Locale::Maketext::Gettext \
@@ -273,24 +278,32 @@ MEGA_INSTALL = \
  Module::Plan::Base \
  Moose \
  Net::SSH \
+ Net::Twitter \
  Number::Format \
  Object::Signature \
+ Object::Tiny \
  PAR \
  POE::Component::CPAN::YACSmoke \
  PadWalker \
+ Params::Smart \
+ Parse::BACKPAN::Packages \
  PerlIO::eol \
+ Perlbal \
  Petal \
  Petal::Utils \
  Plagger \
  Pugs::Compiler::Perl6 \
  Pugs::Compiler::Rule \
+ Quantum-Superpositions \
  SOAP::Lite \
  SREZIC/pingomatic-1.013 \
  SVN::Mirror \
  SVN::Notify::Config \
  SVN::Notify::Mirror \
+ Scalar::Defer \
  String::Expand \
  String::Similarity \
+ Taint::Util \
  Tcl \
  Template::Plugin::Number::Format \
  Term::ReadLine::Gnu \
@@ -300,12 +313,18 @@ MEGA_INSTALL = \
  Test::JSON \
  Test::Without::Module \
  Test::YAML::Meta \
+ Tie::Cycle \
+ Tie::DxHash \
  Time::HiRes::Value \
  Tk::Pod \
  Tk::Tree \
+ Voting::Condorcet::RankedPairs \
  XML::Compile \
  YAML::Tiny \
+ Yahoo::Search \
  bignum \
+ mixin \
+
 
 }
 }
