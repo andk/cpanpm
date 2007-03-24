@@ -240,13 +240,17 @@ MEGA_INSTALL = \
  Config::JSON \
  Config::XPath \
  Coro \
+ Daemon::Generic \
+ Crypt::OpenPGP \
  DBIx::Class \
  DBIx::Perlish \
+ DBIx::Simple \
  Data::Dump \
  Data::Float \
  Devel::Command \
  Devel::Cover \
  Devel::Hide \
+ Devel::Required \
  Devel::Size \
  Devel::Trace \
  Devel::ebug \
@@ -313,6 +317,7 @@ MEGA_INSTALL = \
  Test::JSON \
  Test::Without::Module \
  Test::YAML::Meta \
+ Tie::Cache::LRU \
  Tie::Cycle \
  Tie::DxHash \
  Time::HiRes::Value \

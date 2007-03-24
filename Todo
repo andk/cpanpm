@@ -1,5 +1,7 @@
 2007-03-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* rt.cpan.org #25627 is awaiting further thoughts.
+
 	* Maybe add a depends keyword to distroprefs because the number of
 	missing dependency declarations in modules does not decrease despite all
 	the bug reports we have sent out.

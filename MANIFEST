@@ -19,6 +19,7 @@ distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DH.yml
 distroprefs/BTROTT.Crypt-DSA.yml
+distroprefs/BTROTT.Crypt-OpenPGP.yml
 distroprefs/BTROTT.Feed-Find.yml
 distroprefs/BTROTT.URI-Fetch.yml
 distroprefs/BTROTT.XML-Feed.yml
