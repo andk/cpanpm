@@ -1,3 +1,29 @@
+2007-03-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.90 -- on hold, on hold!
+
+	* new distroprefs subsystem to store preferences on a per-distro bases
+	independently of the support provided by the individual distribution
+
+	* Support for CPAN::SQLite to gain significant memory savings and speedup
+
+	* colorized output
+
+	* new commands upgrade, is_tested, install_tested
+
+	* improved visual navigaion
+
+	* improved installation support for scripts without tarball
+
+	* improved config management of internal variables
+
+	* serialization of internal data into YAML, switchable between YAML and
+	YAML::Syck
+
+	* optional persistence between sessions
+
+	* reworked force pragma and new fforce pragma
+
 2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.88_79: stable release candidate VII

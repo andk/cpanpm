@@ -4595,7 +4595,9 @@ sub reanimate_build_dir {
             my $do
                 = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
                     = $c->{distribution};
-            delete $do->{badtestcnt};
+            for my $skipper (qw(badtestcnt notest force fforce)) {
+                delete $do->{$skipper};
+            }
             # $DB::single = 1;
             if ($do->{make_test}
                 && $do->{build_dir}
@@ -6740,7 +6742,7 @@ sub force {
 #-> sub CPAN::Distribution::notest ;
 sub notest {
   my($self, $method) = @_;
-  # warn "XDEBUG: set notest for $self $method";
+  # $CPAN::Frontend->mywarn("XDEBUG: set notest for $self $method");
   $self->{"notest"}++; # name should probably have been force_install
 }
 
@@ -6748,7 +6750,7 @@ sub notest {
 sub unnotest {
   my($self) = @_;
   # warn "XDEBUG: deleting notest";
-  delete $self->{'notest'};
+  delete $self->{notest};
 }
 
 #-> sub CPAN::Distribution::unforce ;
@@ -9278,10 +9280,11 @@ sub fforce {
     $self->{force_update} = 2;
 }
 
+#-> sub CPAN::Module::notest ;
 sub notest {
     my($self) = @_;
-    # warn "XDEBUG: set notest for Module";
-    $self->{'notest'}++;
+    # $CPAN::Frontend->mywarn("XDEBUG: set notest for Module");
+    $self->{notest}++;
 }
 
 #-> sub CPAN::Module::rematein ;
@@ -9313,7 +9316,7 @@ sub rematein {
             $pack->force($meth);
         }
     }
-    $pack->notest($meth) if exists $self->{'notest'};
+    $pack->notest($meth) if exists $self->{notest} && $self->{notest};
 
     $pack->{reqtype} ||= "";
     CPAN->debug("dist-reqtype[$pack->{reqtype}]".
@@ -9344,9 +9347,9 @@ sub rematein {
     };
     my $err = $@;
     $pack->unforce if $pack->can("unforce") && exists $self->{force_update};
-    $pack->unnotest if $pack->can("unnotest") && exists $self->{'notest'};
+    $pack->unnotest if $pack->can("unnotest") && exists $self->{notest};
     delete $self->{force_update};
-    delete $self->{'notest'};
+    delete $self->{notest};
     if ($err) {
 	die $err;
     }

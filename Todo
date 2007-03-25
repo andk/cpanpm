@@ -1,3 +1,50 @@
+2007-03-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: the notest pragma seems to be sticky. I encounter today that I
+	cannot test Module::Build with the error message:
+
+Skipping test because of notest pragma
+
+	I do not know who sets it. Even after 'fforce get' it is set.
+
+	After removing all Module-Build*.yml files in the build directory the
+	problem goes away. Apparently we restore the pragma from a previous
+	session... UHHH. Bug!
+
+	Fixed in SVK rev. 2112 or so.
+
+	* Todo: XUL::Node is some POE stuff and asks two questions
+
+	* rxvt-unicode current version is @ 8.2, debian's is @ 7.9
+
+	* Todo: post a working patch against Danag-Socket based on Dan Kogai's
+	posting
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-12/msg00187.html
+
+	* Nice to have: an overview over the neuralgic patches up to 5.10 that
+	broke XS modules with both links to patches, versions of the modules
+	before and after the fix, error messages, etc. This would help people
+	who have a broken XS module to find the quickest fix.
+
+	* Bug: we scan the cache for sizes, then sort by date, then delete. We
+	should first sort by date, then scan for sizes, then start to remove
+	without scanning as soon as we know we are above the limit.
+
+2007-03-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* screencast still in idea stage: Slaven suggests to write an abstract
+	widget as described in Tk::mega. This shall then use a text widget and
+	only implement a few things like add_character, delay, add_line. Each
+	shall then be passed through to the text widget. If our needs cannot be
+	fulfilled by the text widget, we can still switch later to a canvas
+	implementation.
+
+	Further methods needed to make TAB behaviour visible. Both on capture
+	and on output tricky. Does screen capture the TAB with its built-in? No.
+
+	It's a drag. It turns me off. It seems the only software that does it
+	right might be xterm itself? Ask Marc if rxvt can do it?
+
 2007-03-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* rt.cpan.org #25627 is awaiting further thoughts.
@@ -120,12 +167,6 @@ Skipping /etc/zoidrc (unchanged)
 	things that need just-in-time-explanation like "Watch now what happens
 	when I hit TAB" or "see the result in slow motion now". It's probably
 	much harder to produce such a beast than one would think on first sight.
-
-	Slaven suggests to write an abstract widget as described in Tk::mega.
-	This shall then use a text widget and only implement a few things like
-	add_character, delay, add_line. Each shall then be passed through to the
-	text widget. If our needs cannot be fulfilled by the text widget, we can
-	still switch later to a canvas implementation.
 
 2007-03-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
