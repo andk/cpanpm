@@ -4595,7 +4595,7 @@ sub reanimate_build_dir {
             my $do
                 = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
                     = $c->{distribution};
-            for my $skipper (qw(badtestcnt notest force fforce)) {
+            for my $skipper (qw(badtestcnt notest force_update)) {
                 delete $do->{$skipper};
             }
             # $DB::single = 1;
