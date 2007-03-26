@@ -1,0 +1,32 @@
+---
+comment: |
+
+  Just a skeleton, I did not finish this prefs file because I cannot
+  use Mailtools on my system for unknown reasons. But as Mail-Box
+  depends on Mailtools I cannot run the tests.
+
+match:
+  distribution: "^MARKOV/Mail-Box-2\.070\.tar.gz"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip    
+pl:
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip    
+  eexpect:
+    mode: anyorder
+    talk:
+      - "Do you want to install Mail::Box::Parser::C"
+      - "n\n"
+      - "Do you want to install Mail::Transport::Dbx"
+      - "n\n"
+      - "Do you want to install Mail::IMAPClient"
+      - "n\n"
+      - "Do you want to install Mail::Internet"
+      - "n\n"
+      - "Do you want to install MIME::Entity"
+      - "n\n"
+      - "Do you want to run the.+tests"
+      - "n\n"

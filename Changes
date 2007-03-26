@@ -1,28 +1,35 @@
-2007-03-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* release 1.90 -- on hold, on hold!
+	* release 1.90 -- still on hold, still on hold!
 
-	* new distroprefs subsystem to store preferences on a per-distro bases
-	independently of the support provided by the individual distribution
+	* enhanced integration of CPAN::Reporter
+
+	* distroprefs subsystem to store preferences on a per-distro basis
+	independently of the support provided by the individual distributions
 
 	* Support for CPAN::SQLite to gain significant memory savings and speedup
 
-	* colorized output
-
 	* new commands upgrade, is_tested, install_tested
 
-	* improved visual navigaion
+	* improved visual navigation by colorized output and improved diagnostic
+	messages
 
 	* improved installation support for scripts without tarball
 
 	* improved config management of internal variables
 
-	* serialization of internal data into YAML, switchable between YAML and
-	YAML::Syck
+	* much more serialization of internal data into YAML, switchable between
+	YAML and YAML::Syck
 
 	* optional persistence between sessions
 
+	* support for pseudo "dot" distros
+	
 	* reworked force pragma and new fforce pragma
+
+	* new configuration variables auto_commit, build_requires_install_policy
+
+	* new optional Bundle::CPANxxl bringing all optional supporting modules
 
 2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
