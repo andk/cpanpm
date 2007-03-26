@@ -1,0 +1,12 @@
+---
+match:
+  distribution: "^LBROCARD/Devel-ebug-HTTP-\d"
+pl:
+  env:
+    PERL_AUTOINSTALL: --skip
+  expect:
+    - "Auto-install"
+    - "y\n"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
