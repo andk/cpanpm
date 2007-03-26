@@ -16,6 +16,7 @@ distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
+distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DH.yml
 distroprefs/BTROTT.Crypt-DSA.yml
@@ -78,6 +79,7 @@ distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LBROCARD.Devel-ebug-HTTP.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
+distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.MailTools.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
