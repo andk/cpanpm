@@ -1,4 +1,5 @@
 ---
+comment: "this matches many more distributions than I have tested, but the parameters are pretty harmless in any environment"
 match:
   distribution: "^SMUELLER/PAR-"
 pl:

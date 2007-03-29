@@ -1,4 +1,4 @@
-2007-03-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-03-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Nice to have: an overview over the neuralgic patches up to 5.10 that
 	broke XS modules with both links to patches, versions of the modules
@@ -26,11 +26,6 @@
 	just tried to report() it and must check later if the mail actually
 	arrived. --- It seems this report never arrives.
 
-	* David Golden sent me this link to perlmonks
-	http://perlmonks.org/?node_id=603402 and we have since fixed the
-	documentation in perlrun or so. Need to come back to monks and report
-	this success.
-	
 	* Todo(???): introduce --notest and --force, etc. I'm not fond of it but
 	Slaven has observed that two users expected it would work that way.
 
@@ -59,12 +54,8 @@
 
 	contact brian
 
-	* Perl::Repository::APC needs a doc patch that it doesn't work on case
-	insensitive file systems.
-
-	* Verilog-Perl a.k.a. Verilog::Language broke some day but not on perl
-	but on some other module most probably. I spent a long time
-	investigating and still no good plan how to identify the problem.
+	* offtopic: Perl::Repository::APC needs a doc patch that it doesn't work
+	on case insensitive file systems.
 
 	* Todo: write one of the CircDepe distros new to include version
 	number(s) in prerequisites, especially undef.
@@ -75,7 +66,7 @@
 	I have answered and I am not yet sure I want to go down that route.
 
 	This muddies the waters. If we only report on things on the commandline,
-	we can probably not get 'report Bundle::Spd' od 'Bundle::CPANxxl' to
+	we can probably not get 'report Bundle::Spd' or 'Bundle::CPANxxl' to
 	work properly? Well, maybe we can. We just have to try. And when? Before
 	the release?
 
@@ -186,19 +177,7 @@
 	case I must disable installation of Mail::Send somehow or debug.
 	Test::Reporter has got a wish item via RT already some weeks ago.
 
-	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
-
-	LWP failed with code[500] message[read timeout]
-Trying to get away with old file:
-6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
-Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
-  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
-.
-Caught SIGINT, trying to continue
-	
-cpan> hosts
-Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
-
+	http://rt.cpan.org/Ticket/Display.html?id=13836
 
 	* if we make the TTLs setable, maybe we should make the TTL for
 	CHECKSUMS file too. In any case we have the problem of imacat also when
@@ -206,10 +185,6 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	reached!
 
 	* Coro. See also notes below, search for anyevent	
-
-	* write a patch for Test::Reporter so you can choose the mail sending
-	module? Reported 2005-07:
-	http://rt.cpan.org/Ticket/Display.html?id=13836
 
 	* The first thing that I encounter when I start testing instead of
 	installing things is that test doesn't stop when the installed version
@@ -252,6 +227,8 @@ Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
 	SMUELLER/PAR-Dist-FromCPAN
 	DAGOLDEN/Perl-Dist
 	CRAKRJACK/Test-CPANpm
+
+	DONE (added most of them to MEGA_INSTALL)
 
 	* E5 watch RT for open tickets. This todo can never be closed.
 
@@ -341,6 +318,72 @@ need the middle man.
 
 	* hr ================ no todos below this line ================ /hr
 
+2007-03-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: Uuuuuh, pressing ^C and then trying an illegal command, ugliness:
+
+	LWP failed with code[500] message[read timeout]
+Trying to get away with old file:
+6114541  500 -rw-rw-r--  1 1000     1000       504953 Nov  8 08:02 /home/k/.cpan/sources/modules/02packages.details.txt.gz
+Going to read /home/k/.cpan/sources/modules/02packages.details.txt.gz
+  Database was generated on Tue, 07 Nov 2006 12:25:12 GMT
+.
+Caught SIGINT, trying to continue
+	
+cpan> hosts
+Refusing to autoload 'hosts' while signal pending at lib/CPAN.pm line 590.
+
+	Seems to be FIXED
+
+	* Verilog-Perl a.k.a. Verilog::Language broke some day but not on perl
+	but on some other module most probably. I spent a long time
+	investigating and still no good plan how to identify the problem.
+	There's quite a bit to read further down on 2007-02-17.
+
+	2007-03-28 akoenig: 2007-01-27/28 the tests started failing.
+
+	grep -1 WSNYDER/Verilog-Perl logs/megainstall.20070*.out|grep 'make test'
+
+logs/megainstall.20070127T1700.out-  /usr/bin/make test -- OK
+logs/megainstall.20070127T2309.out-  /usr/bin/make test -- OK
+logs/megainstall.20070128T0351.out-  /usr/bin/make test -- NOT OK
+
+	all tests before that were OK, all tests after failed.
+
+logs/megainstall.20070127T2309.out:ESC[1;44m  WSNYDER/Verilog-Perl-2.371.tar.gz
+logs/megainstall.20070127T2309.out-ESC[0mESC[1;44m  /usr/bin/make test -- OK
+--
+logs/megainstall.20070128T0351.out:ESC[1;44m  WSNYDER/Verilog-Perl-2.371.tar.gz
+logs/megainstall.20070128T0351.out-ESC[0mESC[1;31m  /usr/bin/make test -- NOT OK
+
+	Now this: back in February I proved it is not perl. Now I proved, it is
+	something based on date, not perl version. So something else was updated
+	that evening, either a distro or a distroprefs file.
+
+% diff -u =(grep 'CPAN.pm: Going to' logs/megainstall.20070127T2309.out | sort) =(grep 'CPAN.pm: Going to' logs/megainstall.20070128T0351.out | sort)
+--- /tmp/zshkEon7w      2007-03-28 08:09:44.000000000 +0200
++++ /tmp/zsheCNzmI      2007-03-28 08:09:44.000000000 +0200
+@@ -321,6 +321,7 @@
+   CPAN.pm: Going to build J/JR/JROBINSON/DBIx-Class-0.07005.tar.gz
+   CPAN.pm: Going to build J/JR/JROGERS/Net-Telnet-3.03.tar.gz
+   CPAN.pm: Going to build J/JU/JURL/DBD-ODBC-1.13.tar.gz
++  CPAN.pm: Going to build J/JV/JV/Getopt-Long-2.36.tar.gz
+   CPAN.pm: Going to build J/JW/JWIED/Net-Daemon-0.39.tar.gz
+   CPAN.pm: Going to build J/JW/JWIED/PlRPC-0.2018.tar.gz
+   CPAN.pm: Going to build K/KA/KANE/CPANPLUS-0.076.tar.gz
+
+	It is GetOpt-Long-2.36!
+
+	Now I wrote a bug report and RT answers with an internal server error.
+	Bug report lost? Fortunately no:
+
+	https://rt.cpan.org/Ticket/Display.html?id=25900
+
+	* David Golden sent me this link to perlmonks
+	http://perlmonks.org/?node_id=603402 and we have since fixed the
+	documentation in perlrun or so. Need to come back to monks and report
+	this success. DONE.
+	
 2007-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: shuffle the Todo list so that it is useable again

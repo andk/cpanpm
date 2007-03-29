@@ -23,7 +23,8 @@
 
 	* optional persistence between sessions
 
-	* support for pseudo "dot" distros
+	* support for pseudo "dot" distros (local directories having nothing to
+	do with CPAN)
 	
 	* reworked force pragma and new fforce pragma
 

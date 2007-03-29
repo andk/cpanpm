@@ -220,6 +220,7 @@ MEGA_BASE = \
 
 MEGA_INSTALL = \
  ANDK/keepcool-0.344 \
+ AltaVista::BabelFish \
  Alzabo \
  App::Ack \
  Bundle::Pause \
@@ -228,6 +229,7 @@ MEGA_INSTALL = \
  Bundle::RT \
  Bundle::Slash \
  CDB_File \
+ CPAN::Unwind \
  CPAN::YACSmoke \
  Cache::File \
  Cache::Memcached \
@@ -240,6 +242,7 @@ MEGA_INSTALL = \
  Config::JSON \
  Config::XPath \
  Coro \
+ Curses \
  Daemon::Generic \
  Crypt::OpenPGP \
  DBIx::Class \
@@ -250,12 +253,14 @@ MEGA_INSTALL = \
  Devel::Command \
  Devel::Cover \
  Devel::Hide \
+ Devel::Modlist \
  Devel::Required \
  Devel::Size \
  Devel::Trace \
  Devel::ebug \
  Devel::ebug::HTTP \
  Event::Lib \
+ ExtUtils::ModuleMaker \
  File::Rsync \
  Filter::Util::Call \
  Font::TTF \
@@ -287,10 +292,14 @@ MEGA_INSTALL = \
  Object::Signature \
  Object::Tiny \
  PAR \
+ PAR::Dist::FromCPAN \
+ PAR::Packer \
+ PDL \
  POE::Component::CPAN::YACSmoke \
  PadWalker \
  Params::Smart \
  Parse::BACKPAN::Packages \
+ Perl::Dist \
  PerlIO::eol \
  Perlbal \
  Petal \
