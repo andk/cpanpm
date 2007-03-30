@@ -3,7 +3,9 @@
 	* Perlbal failing with maintperl, bleadperl (very different failure
 	modes). 2 reports sent (as k), check which arrived!
 
-	And 5.8.8 failed the first time but succeeded the second time.
+	And 5.8.8 failed the first time but succeeded the second time. Binary
+	search impossible because sometimes it hangs. Too fragile: hanging test
+	45 for example. Maybe the prerequisites not tight enough?
 
 2007-03-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
