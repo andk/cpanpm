@@ -6228,12 +6228,14 @@ sub _signature_business {
                                            );
 
                     my $wrap =
-                        sprintf(qq{I'd recommend removing %s. Its signature
-is invalid. Maybe you have configured your 'urllist' with
-a bad URL. Please check this array with 'o conf urllist', and
-retry. For more information, try opening a subshell with
+                        sprintf(qq{I'd recommend removing %s. Some error occured    }.
+                                qq{while checking its signature, so it could        }.
+                                qq{be invalid. Maybe you have configured            }.
+                                qq{your 'urllist' with a bad URL. Please check this }.
+                                qq{array with 'o conf urllist' and retry. Or        }.
+                                qq{examine the distribution in a subshell. Try
   look %s
-and there run
+and run
   cpansign -v
 },
                                 $self->{localfile},
