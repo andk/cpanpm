@@ -2,7 +2,7 @@
 use strict;
 package CPAN;
 $CPAN::VERSION = '1.90';
-$CPAN::VERSION = eval $CPAN::VERSION;
+$CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
 use CPAN::Version;
