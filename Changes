@@ -1263,9 +1263,17 @@
 	* improved help menu (Thanks to David Golden for the suggestion)
 
 
-	Local Variables:
+	xxxal Variables:
 	mode: change-log
 	change-log-default-name: "Changes"
 	tab-width: 2
 	left-margin: 2
 	End:
+
+
+This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
+
+Local variables:
+mode: outline
+paragraph-separate: "[ 	\f\n]*$"
+end:

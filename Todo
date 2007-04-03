@@ -1,3 +1,30 @@
+2007-04-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Try out outline mode for Changes file
+
+	* The "Prepending" bug: Prepending /home/k/.cpan/build/XML-LibXML-1.62-yZpjGO/blib/arch /home/k/.cpan/build/XML-LibXML-1.62-yZpjGO/blib/lib /home/k/.cpan/build/Apache-Session-1.82-idoFjK/blib/arch /home/k/.cpan/build/Apache-Session-1.82-idoFjK/blib/lib /home/k/.cpan/build/mod_perl-1.30-YPYnZK/blib/arch /home/k/.cpan/build/mod_perl-1.30-YPYnZK/blib/lib to PERL5LIB for 'test'
+
+	This gathering is always around more or less of the same modules. And
+	today (megainstall.20070403T0058.out) I did not run a parallel shell
+	session, so the problem builds up from some other forces. It started
+	with mod_perl, then Apache-Session joined the club and then XML::LibXML.
+
+	YAY, mod_perl is a real problem: installation fails because the apache
+	part wants to install its deputies into /usr/local where I have no
+	permissions. Need to revisit the parameters I can influence.
+
+	So next problem child is Apache-Session. I find no line in the output
+	(yet?) that would explain the problem but a suspect it's simply due to
+	the mod_perl dependency. Nope. Only declared prereqs are
+
+    requires: 
+      File::Temp: 0
+      Test::Deep: 0.082
+      Test::Exception: 0.15
+      Test::More: 0.47
+
+	???
+
 2007-04-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug or what?
