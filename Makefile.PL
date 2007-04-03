@@ -307,7 +307,7 @@ MEGA_INSTALL = \
  Plagger \
  Pugs::Compiler::Perl6 \
  Pugs::Compiler::Rule \
- Quantum-Superpositions \
+ Quantum::Superpositions \
  SOAP::Lite \
  SREZIC/pingomatic-1.013 \
  SVN::Mirror \
