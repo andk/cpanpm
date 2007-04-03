@@ -645,7 +645,7 @@ use strict;
 use overload '""' => "as_string";
 
 sub new {
-    my($class,$module,$file,$during,$error) = shift;
+    my($class,$module,$file,$during,$error) = @_;
     bless { module => $module,
             file => $file,
             during => $during,
@@ -1579,9 +1579,18 @@ sub _clean_cache {
     if ($dir !~ /\.yml$/ && -f "$dir.yml") {
         my $yaml_module = CPAN::_yaml_module;
         if ($CPAN::META->has_inst($yaml_module)) {
-            my($peek_yaml) = CPAN->_yaml_loadfile("$dir.yml");
-            if (my $id = $peek_yaml->[0]{distribution}{ID}) {
+            my($peek_yaml) = eval { CPAN->_yaml_loadfile("$dir.yml"); };
+            if ($@) {
+                $CPAN::Frontend->mywarn("(parse error on '$dir.yml' removing anyway)");
+                unlink "$dir.yml" or
+                    $CPAN::Frontend->mywarn("(Could not unlink '$dir.yml': $!)");
+                return;
+            } elsif (my $id = $peek_yaml->[0]{distribution}{ID}) {
                 $CPAN::META->delete("CPAN::Distribution", $id);
+
+                # XXX we should restore the state NOW, otherise this
+                # distro does not exist until we read an index. BUG ALERT(?)
+
                 # $CPAN::Frontend->mywarn (" +++\n");
                 $id_deleted++;
             }
