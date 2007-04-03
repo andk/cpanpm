@@ -1,5 +1,7 @@
 2007-04-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Try newer apache for mod_perl (Current is 1.3.37!)
+
 	* Try out outline mode for Changes file
 
 	* The "Prepending" bug: Prepending /home/k/.cpan/build/XML-LibXML-1.62-yZpjGO/blib/arch /home/k/.cpan/build/XML-LibXML-1.62-yZpjGO/blib/lib /home/k/.cpan/build/Apache-Session-1.82-idoFjK/blib/arch /home/k/.cpan/build/Apache-Session-1.82-idoFjK/blib/lib /home/k/.cpan/build/mod_perl-1.30-YPYnZK/blib/arch /home/k/.cpan/build/mod_perl-1.30-YPYnZK/blib/lib to PERL5LIB for 'test'
