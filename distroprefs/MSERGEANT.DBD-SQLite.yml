@@ -2,9 +2,9 @@
 comment: |
 
   Because the Makefile.PL depends on having DBI installed we want to
-  let them build DBI and then rerun perl Makefile.PL and then make"
+  let them build DBI and then rerun perl Makefile.PL and then make.
 
-  It's a crazy example that I do not really like. I prefer resolving
+  It is a crazy example that I do not really like. I prefer resolving
   such a thing with a build_requires or similar mechanism and see it
   as a Todo item that such hacks are not needed in the future.
 
