@@ -9,7 +9,7 @@ test:
 match:
   distribution: "/CPAN-SQLite/\.$"
 pl:
-  commandline: "cvs -q up -dP; $PERL Makefile.PL"
+  commandline: "make clean; cvs -q up -dP; $PERL Makefile.PL"
 ---
 comment: "Xvfb :121 must be started by somebody else"
 match:

@@ -654,10 +654,31 @@ sub new {
 
 sub as_string {
     my($self) = shift;
-    "Alert: While trying to $self->{during} YAML file\n".
-        "  $self->{file}\n".
-            "with '$self->{module}' the following error was encountered:\n".
-                "  $self->{error}\n";
+    if ($self->{during}) {
+        if ($self->{file}) {
+            if ($self->{module}) {
+                if ($self->{error}) {
+                    return "Alert: While trying to '$self->{during}' YAML file\n".
+                        " '$self->{file}'\n".
+                            "with '$self->{module}' the following error was encountered:\n".
+                                "  $self->{error}\n";
+                } else {
+                    return "Alert: While trying to '$self->{during}' YAML file\n".
+                        " '$self->{file}'\n".
+                            "with '$self->{module}' some unknown error was encountered\n";
+                }
+            } else {
+                return "Alert: While trying to '$self->{during}' YAML file\n".
+                    " '$self->{file}'\n".
+                        "some unknown error was encountered\n";
+            }
+        } else {
+            return "Alert: While trying to '$self->{during}' some YAML file\n".
+                    "some unknown error was encountered\n";
+        }
+    } else {
+        return "Alert: unknown error encountered\n";
+    }
 }
 
 package CPAN::Prompt; use overload '""' => "as_string";
@@ -4575,9 +4596,13 @@ sub reanimate_build_dir {
         sort { $b->[1] <=> $a->[1] }
             map { [ $_, -M File::Spec->catfile($d,$_) ] }
                 grep {/\.yml$/} readdir $dh;
-  DISTRO: for $dirent (@candidates) {
+  DISTRO: for $i (0..$#candidates) {
+        my $dirent = $candidates[$i];
         my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
-        die $@ if $@;
+        if ($@) {
+            warn "Error while parsing file '$dirent'; error: '$@'";
+            next DISTRO;
+        }
         my $c = $y->[0];
         if ($c && CPAN->_perl_fingerprint($c->{perl})) {
             my $key = $c->{distribution}{ID};

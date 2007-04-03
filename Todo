@@ -1,4 +1,365 @@
+2007-04-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug or what?
+
+% make run
+/home/src/perl/repoperls/installed-perls/perl/p3VGl7t/perl-5.8.0@30827/bin/perl -Ilib -MCPAN -eshell
+CPAN: Term::ANSIColor loaded ok (v1.11_01)
+Terminal does not support AddHistory.
+
+cpan shell -- CPAN exploration and modules installation (v1.90)
+ReadLine support available (try 'install Bundle::CPAN')
+
+cpan[1]> m HTTP::Body
+CPAN: Storable loaded ok (v2.16)
+Going to read /home/k/.cpan/Metadata
+  Database was generated on Mon, 02 Apr 2007 05:09:49 GMT
+CPAN: YAML::Syck loaded ok (v0.84)
+Going to read /home/k/.cpan/build/
+......................................................Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Use of uninitialized value in concatenation (.) or string at lib/CPAN.pm line 657.
+Catching error: 'Alert: While trying to  YAML file
+  
+with '' the following error was encountered:
+  
+' at lib/CPAN.pm line 274
+        CPAN::shell() called at -e line 1
+
+	Same for 30824. But when I repeat the 'm' command after that, it works.
+
+	There must be a yaml file that breaks something. Needs further investigation.
+
+	The broken YAML file is ~/.cpan/build/DBD-SQLite-1.13-Hqur1h.yml which
+	fails at line 30/31:
+
+ 29   prefs:
+ 30     comment: '\nBecause the Makefile.PL depends on having DBI installed we w    ant to\nlet them build DBI and then rerun perl Makefile.PL and then make"\n\    nIt\'s a crazy example that I do not really like. I prefer resolving\nsuch a     thing with a build_requires or similar mechanism and see it\nas a Todo item     that such hacks are not needed in the future.\n'
+ 31     install: {}
+ 32 
+
+	YAML::LoadFile isn't accepting this a valid YAML either. So who wrote
+	it? It was written by YAML::Syck 0.84.
+
+	https://rt.cpan.org/Ticket/Display.html?id=26057
+
+2007-04-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* The HTTP::Body failing test is interesting. It's a loop over 11 cases
+	with 5 tests on each. We get one "ok" and the next line in the code is
+	an is_deeply() which consumes memory until exhausted.
+
+	Replacing YAML with YAML::Syck resolves the problem. But running the
+	program in the debugger with YAML also resolves it.
+
+	https://rt.cpan.org/Ticket/Display.html?id=25927
+
+	Also posted to P5P.
+
+	* Much worse, I just discover that the last run of megainstall hangs and
+	it is not obvious where.
+
+	It has to do with Jifty and lsof says it has
+	/home/k/.cpan/build/Jifty-0.70117-rnNlvG/t/Mapper as the CWD.
+
+	The last lines in the output file are
+
+		 Calling 'column' within a schema class is deprecated:
+
+				package Jifty::Model::Session::Schema;
+				column session_id => ...;        # NOT VALID
+
+		 Please write this instead:
+
+				package Jifty::Model::Session;
+				use Jifty::DBI::Schema;
+				use Jifty::Record schema {
+						column session_id => ...;    # VALID
+				};
+
+		 Sorry for the inconvenience.
+
+		*********************************************************
+		 at /home/k/.cpan/build/Jifty-0.70117-rnNlvG/blib/lib/Jifty/Model/Session.pm line 20
+
+		#   Failed test 'use Jifty::Test::WWW::Mechanize;'
+		#   at t/Mapper/t/01-raw-api.t line 16.
+		#     Tried to use 'Jifty::Test::WWW::Mechanize'.
+		#     Error:  Base class package "Test::WWW::Mechanize" is empty.
+		#     (Perhaps you need to 'use' the module which defines that package first.)
+		#  at /home/k/.cpan/build/Jifty-0.70117-rnNlvG/blib/lib/Jifty/Test/WWW/Mechanize.pm line 5
+		# BEGIN failed--compilation aborted at t/Mapper/t/01-raw-api.t line 16.
+		# Compilation failed in require at (eval 1124) line 2.
+		# BEGIN failed--compilation aborted at (eval 1124) line 2.
+		Can't locate object method "new" via package "Jifty::Test::WWW::Mechanize" at t/Mapper/t/01-raw-api.t line 21.
+		# Looks like you planned 32 tests but only ran 2.
+		# Looks like you failed 1 test of 2 run.
+
+
+	I kill the hanging test and hope to remember this problem next time
+	around.
+
+	And the major Todo here is to give an alert when such things happen.
+
+	* Apache resurrected!
+
+	But I see a bug or two:
+
+cpan[5]> m mod_perl
+Module id = mod_perl
+    CPAN_USERID  GOZER (Philippe M. Chiasson <gozer@cpan.org>)
+    CPAN_VERSION 1.30
+    CPAN_FILE    G/GO/GOZER/mod_perl-1.30.tar.gz
+    MANPAGE      mod_perl - Embed a Perl interpreter in the Apache HTTP server
+    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/pK4VYj9/perl-5.8.0@30806/lib/site_perl/5.9.5/i686-linux-64int/mod_perl.pm
+    INST_VERSION 1.30
+
+
+cpan[6]> m mod_perl
+Module id = mod_perl
+    CPAN_USERID  GOZER (Philippe M. Chiasson <gozer@cpan.org>)
+    CPAN_VERSION 1.30
+    CPAN_FILE    G/GO/GOZER/mod_perl-1.30.tar.gz
+    MANPAGE      mod_perl - Embed a Perl interpreter in the Apache HTTP server
+    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/pK4VYj9/perl-5.8.0@30806/lib/site_perl/5.9.5/i686-linux-64int/mod_perl.pm
+    INST_VERSION 1.30
+
+
+cpan[7]> d GOZER/mod_perl-1.30.tar.gz
+No objects of type Distribution found for argument GOZER/mod_perl-1.30.tar.gz
+
+
+	Note that the last upload date does not appear.
+
+	And when I scroll back I see a potentially third one:
+
+Running make for D/DM/DMUEY/AltaVista-BabelFish-v42.0.2.tar.gz
+Prepending /home/k/.cpan/build/mod_perl-1.30-gG7ERZ/blib/arch /home/k/.cpan/build/mod_perl-1.30-gG7ERZ/blib/lib to PERL5LIB for 'get'
+
+	And later:
+
+DEL(528.9>100.0MB): /home/k/.cpan/build/mod_perl-1.30-wAaavP 
+DEL(257.3>100.0MB): /home/k/.cpan/build/mod_perl-1.30-gG7ERZ 
+
+	These are now removed so are no good witnesses. Leaving the shell and
+	re-entering?
+
+cpan[2]> m mod_perl
+Module id = mod_perl
+    CPAN_USERID  GOZER (Philippe M. Chiasson <gozer@cpan.org>)
+    CPAN_VERSION 1.30
+    CPAN_FILE    G/GO/GOZER/mod_perl-1.30.tar.gz
+    UPLOAD_DATE  2007-03-30
+    MANPAGE      mod_perl - Embed a Perl interpreter in the Apache HTTP server
+    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/pK4VYj9/perl-5.8.0@30806/lib/site_perl/5.9.5/i686-linux-64int/mod_perl.pm
+    INST_VERSION 1.30
+
+
+cpan[3]> d GOZER/mod_perl-1.30.tar.gz      
+Distribution id = G/GO/GOZER/mod_perl-1.30.tar.gz
+    CPAN_USERID  GOZER (Philippe M. Chiasson <gozer@cpan.org>)
+    CONTAINSMODS Apache Apache::Connection Apache::Constants Apache::Constants::Exports Apache::Debug Apache::ExtUtils Apache::FakeRequest Apache::File Apache::Include Apache::Leak Apache::Log Apache::ModuleConfig Apache::Opcode Apache::Options Apache::PerlRun Apache::PerlRunXS Apache::PerlSections Apache::RedirectLogFix Apache::Registry Apache::RegistryBB Apache::RegistryLoader Apache::RegistryNG Apache::Resource Apache::SIG Apache::Server Apache::SizeLimit Apache::StatINC Apache::Status Apache::Symbol Apache::Symdump Apache::Table Apache::URI Apache::Util Apache::fork Apache::httpd_conf Apache::src Apache::testold mod_perl
+    UPLOAD_DATE  2007-03-30
+
+	Interesting. This must be the same bug as described below for
+	DMAKI/DateTime-Util-Astro-0.08.tar.gz et.al. Something gets installed
+	properly, its state gets reanimated twice, and some data get lost during
+	this step. Not sufficient to write a recipe how to reproduce.
+
+2007-03-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Tcl-0.91
+
+	When was Tcl updated last time?      2006-11-13
+
+	When was Tcl added to megainstall?   SVK rev. 2016 on 2007-03-04
+
+	When did Tcl start failing?          20070330T2346 (@30791)
+
+	What is the failure saying?          t/call.........Tcl_InitNotifier: unable to ...
+	                                     start notifier thread...dubious...and many ...
+	                                     such messages
+
+	Binary search says?                  First try against 30402 says that 30402 also fails
+
+	Do we have a counter example?        20070305T0316 (@30463)
+
+	What the latest counterexample?      megainstall.20070329T1818.out.term (@30777)
+
+	cmp autobundle 30777/30791?          Snapshot_2007_03_31_0[01].pm too many differences.
+	                                     I blame the extra tests I did for 30777
+
+	cmp autobundle 30776/30806?          Snapshot_2007_04_01_0[01].pm also many differences.
+
+	Are there google results on the
+	error message "Tcl_InitNotifier:
+	unable to start notifier thread"?    Plenty.
+
+	I suppose my box upgrade on 0328 triggered some tcl breakage and I can
+	ignore the issue from bleadperl's viewing angle.
+
+	* Spreadsheet-ParseExcel-0.29
+
+	http://rt.cpan.org/Ticket/Display.html?id=24693
+
+	* Getopt ArgvFile 1.10
+
+	No update since 2005. It seems to me the test now fails due to CPAN.pm's
+	renaming of the root directories.
+
+	http://rt.cpan.org/Ticket/Display.html?id=26001
+
+	* AltaVista::BabelFish 42.0.1
+
+	tests OK but CPAN.pm complains about an unfulfilled dependency,
+	IO::Redirect. CPAN.pm does no know about IO::Redirect. Ticket in RT
+	written.
+
+	http://rt.cpan.org/Ticket/Display.html?id=26000
+
+	* Net::Twitter 1.04
+
+	testers has a pass, no fails. No bugreports in RT. It fails because
+	JSON::Any fails. And JSON::Any fails because of a POD bug uncovered by
+	Test::Pod or some such. Uh, oh!
+
+	http://rt.cpan.org/Ticket/Display.html?id=25991
+
+	* Devel::ebug 0.47
+
+	Nothing blead related in RT. Tests ok with 30804. On retry installs
+	successfully also with 30791. The error in the logfile is a YAML thing.
+
+	NEEDS FURTHER WATCHING
+
+	* Template::Timer 0.04, don't know where it comes from.
+
+	It's been uploaded in 2005 and does profiling on TT. Catalyst-View-TT
+	may have brought that in but who brought us that? Need to look into RT
+	which is down at the moment. There is one bugreport about strange
+	behaviour with 5.9.2 but no followup. Here it fails with 20002 too and
+	with 16904.
+
+	Cannot imagine what the problem is. Maybe som TT internal thing and
+	older versions of Template did something differently.
+
+	http://rt.cpan.org/Ticket/Display.html?id=26002
+
+	* HTTP::Body 0.9 broken too.
+
+	Ahh, this is the already reported YAML bug.
+
+	* CPAN-SQLite from CVS broken too:
+
+	20070326T0114 perl        30754
+	20070326T0933 perl        30756
+	20070326T1512 perl        30759
+	20070326T2046 perl        30763 B
+	20070327T0157 perl        30769 B
+	20070327T0954 perl        30771 B
+	20070327T1451 perl        30773 B
+	20070327T2003 perl        30774 B
+	20070328T1247 perl        30775 B
+	20070329T0833 maint-5.8   30765
+	20070329T1122 perl        30776 B
+	20070330T0409 perl        30777 B
+	20070330T2244 perl        30777 B
+	20070330T2346 perl        30791 B
+
+	A single 'make clean' helped and is now in the LOCAL distroprefs file.
+
+	* Why is this in last night's megainstall (megainstall.20070330T2346.out):
+
+  CPAN.pm: Going to build P/PE/PEVANS/Time-HiRes-Value-0.03.tar.gz
+
+Checking whether your kit is complete...
+Looks good
+
+Checking prerequisites...
+Looks good
+
+Creating new 'Build' script for 'Time-HiRes-Value' version '0.03'
+Copying lib/Time/HiRes/Value.pm -> blib/lib/Time/HiRes/Value.pm
+Manifying blib/lib/Time/HiRes/Value.pm -> blib/libdoc/Time::HiRes::Value.3
+  PEVANS/Time-HiRes-Value-0.03.tar.gz
+  ./Build -- OK
+  Prepending /home/k/.cpan/build/DateTime-Util-Astro-0.08-yKjgxA/blib/arch /home/k/.cpan/build/DateTime-Util-Astro-0.08-yKjgxA/blib/lib /home/k/.cpan/build/mod_perl-1.30-eynhXg/blib/arch /home/k/.cpan/build/mod_perl-1.30-eynhXg/blib/lib /home/k/.cpan/build/Bit-Vector-6.4-SYePdn/blib/arch /home/k/.cpan/build/Bit-Vector-6.4-SYePdn/blib/lib /home/k/.cpan/build/Text-Autoformat-1.13-w2ad5G/blib/arch /home/k/.cpan/build/Text-Autoformat-1.13-w2ad5G/blib/lib to PERL5LIB for 'test'
+
+	It seems to indicate that some modules were built and tested
+	successfully and await installation. But why did they not get installed?
+
+	I can see elsewhere in the logfile:
+
+  DMAKI/DateTime-Util-Astro-0.08.tar.gz
+  make install UNINST=1 -- OK
+
+  STBEY/Bit-Vector-6.4.tar.gz
+  make install UNINST=1 -- OK
+
+  DCONWAY/Text-Autoformat-1.13.tar.gz
+  make install UNINST=1 -- OK
+
+	So apparently three times the unsetting of the is_tested flag did not
+	work. Do we have a new bug in perl or is it our own bug?
+
+	Going back to February 22, I see the same thing for
+	DateTime-Util-Astro-0.08-BsMTev XML-LibXML-1.62-Zi4hvt
+	Apache-Session-1.82-3jaGeJ Bit-Vector-6.4-nHiJ0u
+
+	This was less noisy in January, started in February, so I suppose our
+	own bug:(
+
 2007-03-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Perlbal fails all over since we have it in megainstall at
+	20070323T0231.
+
+	Why are there some logfiles without a broken Perlbal?
+
+	B for broken:
+
+	B 20070323T0231 perl        30700
+	  20070323T0727 maint-5.8   30701 gpg failure? terminated?
+	B 20070323T1315 perl        30714
+	B 20070323T1935 perl        30726
+	B 20070323T2327 maint-5.8   30723
+	B 20070324T0326 perl        30740
+	B 20070324T1335 maint-5.8   30743
+	B 20070324T1813 perl        30745
+	B 20070325T0041 perl        30750
+	B 20070326T0114 perl        30754
+	B 20070326T0933 perl        30756
+	B 20070326T1512 perl        30759
+	B 20070326T2046 perl        30763
+	B 20070327T0157 perl        30769
+	B 20070327T0954 perl        30771
+	B 20070327T1451 perl        30773
+	B 20070327T2003 perl        30774
+	B 20070328T1247 perl        30775
+	B 20070329T0833 maint-5.8   30765
+	B 20070329T1122 perl        30776
+	  20070329T1818 perl        30777 gpg failure? terminated?
+	B 20070330T0409 perl        30777
+	  20070330T2219 perl        30777 terminated somehow
+	B 20070330T2244 perl        30777
+	B 20070330T2346 perl        30791
+	  20070331T0514 perl        30804 still running
+
+	The two gpg failures/terminated questions are suspicious. I rename them
+	to .out.term so they do not lead to confusion.
 
 	* Perlbal failing with maintperl, bleadperl (very different failure
 	modes). 2 reports sent (as k), check which arrived!
@@ -187,6 +548,8 @@
 	Test::Reporter has got a wish item via RT already some weeks ago.
 
 	http://rt.cpan.org/Ticket/Display.html?id=13836
+
+	http://code.google.com/p/test-reporter/
 
 	* if we make the TTLs setable, maybe we should make the TTL for
 	CHECKSUMS file too. In any case we have the problem of imacat also when
