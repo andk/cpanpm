@@ -1,3 +1,8 @@
+2007-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* with yesterday's fix DMAKI/DateTime-Util-Astro-0.08.tar.gz runs into
+	an endless installation loop:-(
+
 2007-04-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Prepending /home/k/.cpan/build/Text-Autoformat-1.13-tM9mak/blib/arch /home/k/.cpan/build/Text-Autoformat-1.13-tM9mak/blib/lib /home/k/.cpan/build/DateTime-Util-Astro-0.08-YLAScV/blib/arch /home/k/.cpan/build/DateTime-Util-Astro-0.08-YLAScV/blib/lib to PERL5LIB for 'make'
