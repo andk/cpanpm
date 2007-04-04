@@ -7969,9 +7969,7 @@ sub test {
             push @e, $self->{later};
 
         if (exists $self->{build_dir}) {
-            if ($CPAN::META->{is_tested}{$self->{build_dir}}
-                &&
-                exists $self->{make_test}
+            if (exists $self->{make_test}
                 &&
                 !(
                   UNIVERSAL::can($self->{make_test},"failed") ?
