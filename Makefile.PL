@@ -334,6 +334,7 @@ MEGA_INSTALL = \
  Tk::Tree \
  Voting::Condorcet::RankedPairs \
  XML::Compile \
+ X500::DN \
  YAML::Tiny \
  Yahoo::Search \
  bignum \
