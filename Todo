@@ -1,5 +1,34 @@
 2007-04-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Prepending /home/k/.cpan/build/Text-Autoformat-1.13-tM9mak/blib/arch /home/k/.cpan/build/Text-Autoformat-1.13-tM9mak/blib/lib /home/k/.cpan/build/DateTime-Util-Astro-0.08-YLAScV/blib/arch /home/k/.cpan/build/DateTime-Util-Astro-0.08-YLAScV/blib/lib to PERL5LIB for 'make'
+
+	Now I got it. If for whatever reason we have another "test" after an
+	"install", we enter is_tested again but do not leave it because install
+	is "already done".
+
+	What's the fix? Either do not enter again or always leave even when
+	"already done". The former is not easy or even impossible because we
+	never know that a distribution is already installed. We only know it for
+	modules. So the second solution is the better.
+
+	* CPANPLUS 0.78?
+
+Recursive dependency detected:
+    CPANPLUS (have: N/A; want: 0.78)
+ => KANE/CPANPLUS-0.78.tar.gz
+ => CPANPLUS::Shell::Default (have: N/A; requires: 0.0)
+ => KANE/CPANPLUS-0.78.tar.gz.
+Cannot resolve.
+
+	Need to relax the dependency check for self?
+
+	http://rt.cpan.org/Ticket/Display.html?id=26077
+
+	* YAML::Tiny 1.04?
+
+	Now that YAML::Syck is broken, YAML::Tiny tests also fail. It seems
+	because they compare Syck with Tiny.
+
 	* Try newer apache for mod_perl (Current is 1.3.37!)
 
 	* Try out outline mode for Changes file
@@ -80,7 +109,7 @@ with '' the following error was encountered:
  31     install: {}
  32 
 
-	YAML::LoadFile isn't accepting this a valid YAML either. So who wrote
+	YAML::LoadFile isn't accepting this as valid YAML either. So who wrote
 	it? It was written by YAML::Syck 0.84.
 
 	https://rt.cpan.org/Ticket/Display.html?id=26057

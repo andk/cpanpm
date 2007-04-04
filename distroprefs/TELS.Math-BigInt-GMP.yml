@@ -8,7 +8,7 @@ patches:
 comment: |
 
   Later I discovered that he uses PREREQ_FATAL everywhere and found
-  this patchfree solution that SHOULD work but DOESN'T. A MakeMaker
+  this patchfree solution that SHOULD work but DOES NOT. A MakeMaker
   bug, reported in http://rt.cpan.org/Ticket/Display.html?id=24774
 
 match:
