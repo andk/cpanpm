@@ -8323,6 +8323,7 @@ sub install {
                 $self->{install} =~ /^YES/
                ) {
                 push @e, "Already done";
+                $CPAN::META->is_installed($self->{build_dir});
             } else {
                 # comment in Todo on 2006-02-11; maybe retry?
                 push @e, "Already tried without success";
