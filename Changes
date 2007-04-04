@@ -1,6 +1,8 @@
-2007-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* release 1.90 -- still on hold, still on hold!
+	* release 1.90
+
+	* Changes against 1.88:
 
 	* enhanced integration of CPAN::Reporter
 
@@ -31,6 +33,19 @@
 	* new configuration variables auto_commit, build_requires_install_policy
 
 	* new optional Bundle::CPANxxl bringing all optional supporting modules
+
+	* Changes against 1.88_79:
+
+	* workaround YAML::Syck 0.84 bug
+
+	* bugfix: remove from the is_tested set what reaches "install already done"
+
+	* improve diagnostics when gpg fails
+
+	* bugfix persistence: do not restore pragmas
+
+	* do the eval $VERSION tango for $CPAN::VERSION only when needed
+	(allowing "1.90" with a trailing zero)
 
 2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -1263,17 +1278,9 @@
 	* improved help menu (Thanks to David Golden for the suggestion)
 
 
-	xxxal Variables:
+	Local Variables:
 	mode: change-log
 	change-log-default-name: "Changes"
 	tab-width: 2
 	left-margin: 2
 	End:
-
-
-This uses outline mode in Emacs.  See C-h m [M-x describe-mode].
-
-Local variables:
-mode: outline
-paragraph-separate: "[ 	\f\n]*$"
-end:
