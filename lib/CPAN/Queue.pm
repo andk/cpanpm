@@ -153,6 +153,10 @@ sub exists {
 sub delete {
   my($self,$mod) = @_;
   @All = grep { $_->{qmod} ne $mod } @All;
+  CPAN->debug(sprintf("after delete mod[%s] All[%s]",
+                      $mod,
+                      join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
+                     )) if $CPAN::DEBUG;
 }
 
 # CPAN::Queue::nullify_queue ;

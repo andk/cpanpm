@@ -3185,7 +3185,7 @@ to find objects with matching identifiers.
         } elsif ($obj->$meth()){
             CPAN::Queue->delete($s);
         } else {
-            CPAN->debug("failed");
+            CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
 
         $obj->undelay;
@@ -7957,7 +7957,6 @@ sub test {
              $self->{make}->failed :
              $self->{make} =~ /^NO/
             ) and push @e, "Can't test without successful make";
-
         $self->{badtestcnt} ||= 0;
         if ($self->{badtestcnt} > 0) {
             require Data::Dumper;
@@ -7969,15 +7968,22 @@ sub test {
             push @e, $self->{later};
 
         if (exists $self->{build_dir}) {
-            if (exists $self->{make_test}
-                &&
-                !(
-                  UNIVERSAL::can($self->{make_test},"failed") ?
-                  $self->{make_test}->failed :
-                  $self->{make_test} =~ /^NO/
-                 )
-               ) {
-                push @e, "Has already been tested successfully";
+            if (exists $self->{make_test}) {
+                if (
+                    UNIVERSAL::can($self->{make_test},"failed") ?
+                    $self->{make_test}->failed :
+                    $self->{make_test} =~ /^NO/
+                   ) {
+                    if (
+                        UNIVERSAL::can($self->{make_test},"commandid")
+                        &&
+                        $self->{make_test}->commandid == $CPAN::CurrentCommandId
+                       ) {
+                        push @e, "Has already been tested within this command";
+                    }
+                } else {
+                    push @e, "Has already been tested successfully";
+                }
             }
         } elsif (!@e) {
             push @e, "Has no own directory";
@@ -8320,8 +8326,9 @@ sub install {
                 $self->{install}->text eq "YES" :
                 $self->{install} =~ /^YES/
                ) {
-                push @e, "Already done";
+                $CPAN::Frontend->myprint("  Already done\n");
                 $CPAN::META->is_installed($self->{build_dir});
+                return 1;
             } else {
                 # comment in Todo on 2006-02-11; maybe retry?
                 push @e, "Already tried without success";

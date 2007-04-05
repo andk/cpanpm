@@ -1,5 +1,7 @@
 --- 
+comment: "disabled because Math::BigIng::GMP is broken for a while now and so the tests take too long"
 match:
   distribution: "^BTROTT/Crypt-DSA-\d"
 pl: 
   args: ["--defaultdeps"]
+disabled: 1
