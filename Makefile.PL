@@ -214,8 +214,8 @@ MEGA_BASE = \
  Bundle::CPANxxl \
  CPAN::DistnameInfo \
  DBD::SQLite \
- /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
  /home/src/perl/tk/SVN/. \
+ /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
 
 
 MEGA_INSTALL = \
@@ -261,12 +261,14 @@ MEGA_INSTALL = \
  Devel::ebug::HTTP \
  Event::Lib \
  ExtUtils::ModuleMaker \
+ FLV::Info \
  File::Rsync \
  Filter::Util::Call \
  Font::TTF \
  Getopt::Euclid \
  Getopt::Mixed \
  Graph::Easy \
+ HTML::Template::Compiled \
  IO::Async::Buffer \
  IO::Pager \
  IPC::PubSub \
@@ -393,9 +395,12 @@ release ::
 checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
 
+# 16=Distribution; 1024=Shell; 32768=Queue
+# $$CPAN::DEBUG|=16;$$CPAN::DEBUG|=1024;$$CPAN::DEBUG|=32768;
 megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG=0;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
+# 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
 

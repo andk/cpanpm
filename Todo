@@ -1,3 +1,71 @@
+2007-04-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* looping in installation: Dist-DCC
+	(DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz) install() calls test which
+	calls make. This encounters 4 prereq (DES, DEC, DUAM, DUAC). The first
+	two of those have already failed tests but we continue anyway. The other
+	two are re-queued, the "later" flag on D is set. So we leave
+	make/test/install early due to the later flag. As soon as we hav left
+	the first position of the queue, the later flag is cleared. DUAM quickly
+	decides that it is already installed. DUAC ditto. Dist-DCC is now again
+	the first on the queue. It calls install/test/make again. Look, the
+	later flag is cleared already, so nothing prevents us from looping
+	through.
+
+	So the bug seems to be that we rely on the module installation of DUAM
+	and DUAC to recognisably either fail or succeed. But DUAM and DUAC seem
+	to be not installed and installed at the same time. The Moon.pm and
+	Common.pm files are found, their versions are considered "undef". But
+	the distro they are in, Dist-DUA-0.08 considers itself already
+	installed. What has happened to it? Indeed I can see that Dist-DUA-0.08
+	has been installed. Why do we not recognize their installed version?
+
+    $VERSION = $DateTime::Util::Astro::VERSION;
+
+	So this is the root cause. The PAUSE indexer somehow determined 0.04
+	being the version. One bug must have happened over there. But we should
+	not run into a loop just because of this.
+
+	Until recently we broke out of this loop because we set and consulted
+	is_tested. But this left us in the is_tested state leading to the
+	"Prepending" bug.
+
+	As we now (correctly) reserved the is_tested/is_installed stuff
+	exclusively for the task of prepending to PERL5LIB, we now need
+	something similar for finer control over prereq menagement than "later"
+	and undelay provide.
+
+	I do not want to use "later" for this because it already does something
+	OK and needs a short lifespan. (For the record: leave test and install
+	early when we discover that we have to deal with prereqs first).
+
+	But now the first thing I need is a recipe how to reproduce the loop
+	bug: new bleadperl + Bundle::CPANxxl. install
+	DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz triggers many installs and
+	soon fails nicely with
+
+  DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
+  ./Build test -- NOT OK
+Running Build install
+  make test had returned bad status, won't install without force
+Failed during this command:
+ DMAKI/DateTime-Util-Astro-0.08.tar.gz        : make_test NO
+ DMAKI/DateTime-Util-Astro-0.09.tar.gz        : make_test NO
+ DMAKI/DateTime-Event-Lunar-0.05.tar.gz       : make_test NO
+ DMAKI/DateTime-Event-SolarTerm-0.04.tar.gz   : make_test NO
+ DMAKI/DateTime-Event-Chinese-0.04.tar.gz     : make_test NO
+ DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz  : make_test NO
+
+	So mayby with the advent of DMAKI/DateTime-Util-Astro-0.09.tar.gz the
+	loop is gone? Looking into the distro I find the 
+
+	$VERSION = $DateTime::Util::Astro::VERSION;
+
+	dictum in all files, so the saga continues. Maybe I can reproduce the
+	bug if I disable 0.09? No. If instead I "goto(0.08)" and turn
+	build_dir_reuse off? No. If I manually set the $VERSION of DUAC and DUAM
+	to undef? No.
+
 2007-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* with yesterday's fix DMAKI/DateTime-Util-Astro-0.08.tar.gz runs into

@@ -207,7 +207,7 @@ sub shell {
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
     my $rl_avail = $Suppress_readline ? "suppressed" :
 	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
-	    "available (try 'install Bundle::CPAN')";
+	    "available (maybe install Bundle::CPAN or Bundle::CPANxxl?)";
 
     unless ($CPAN::Config->{'inhibit_startup_message'}){
         $CPAN::Frontend->myprint(
@@ -3181,9 +3181,11 @@ to find objects with matching identifiers.
                 require overload;
                 $serialized = overload::StrVal($obj);
             }
+            CPAN->debug("Going to panic. meth[$meth]s[$s]") if $CPAN::DEBUG;
             $CPAN::Frontend->mydie("Panic: obj[$serialized] cannot meth[$meth]");
         } elsif ($obj->$meth()){
             CPAN::Queue->delete($s);
+            CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
         } else {
             CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
@@ -5731,7 +5733,7 @@ sub get {
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
                                         );
-                return;
+                return 1;
             }
 
             # although we talk about 'force' we shall not test on
@@ -6938,17 +6940,9 @@ is part of the perl-%s distribution. To install that, you need to run
             }
         }
 
-        if (exists $self->{later} and length($self->{later})) {
+        if ($self->{later}) { # see also undelay
             if ($self->unsat_prereq) {
                 push @e, $self->{later};
-# RT ticket 18438 raises doubts if the deletion of {later} is valid.
-# YAML-0.53 triggered the later hodge-podge here, but my margin notes
-# are not sufficient to be sure if we really must/may do the delete
-# here. SO I accept the suggested patch for now. If we trigger a bug
-# again, I must go into deep contemplation about the {later} flag.
-
-#            } else {
-#                delete $self->{later};
             }
         }
 
@@ -7946,7 +7940,9 @@ sub test {
 
   EXCUSE: {
 	my @e;
-        unless (exists $self->{make} or exists $self->{later}) {
+        if ($self->{make} or $self->{later}) {
+            # go ahead
+        } else {
             push @e,
                 "Make had some problems, won't test";
         }
@@ -7964,8 +7960,7 @@ sub test {
             push @e, "Won't repeat unsuccessful test during this command";
         }
 
-        exists $self->{later} and length($self->{later}) and
-            push @e, $self->{later};
+        push @e, $self->{later} if $self->{later};
 
         if (exists $self->{build_dir}) {
             if (exists $self->{make_test}) {
@@ -8277,7 +8272,7 @@ sub install {
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-    $DB::single=1;
+    # $DB::single=1;
     unless ($self->{badtestcnt}) {
         $self->test;
     }
@@ -8289,7 +8284,9 @@ sub install {
     $CPAN::Frontend->myprint("Running $make install\n");
   EXCUSE: {
 	my @e;
-	unless (exists $self->{make} or exists $self->{later}) {
+	if ($self->{make} or $self->{later}) {
+            # go ahead
+        } else {
             push @e,
                 "Make had some problems, won't install";
         }
@@ -8335,8 +8332,7 @@ sub install {
             }
         }
 
-        exists $self->{later} and length($self->{later}) and
-            push @e, $self->{later};
+        push @e, $self->{later} if $self->{later};
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
         unless (chdir $self->{build_dir}) {
@@ -8678,6 +8674,7 @@ sub look {
     $CPAN::Frontend->myprint($self->as_string);
 }
 
+#-> CPAN::Bundle::undelay
 sub undelay {
     my $self = shift;
     delete $self->{later};
@@ -9384,7 +9381,7 @@ sub rematein {
             $pack->{reqtype} = $self->{reqtype};
         }
 
-    eval {
+    my $success = eval {
 	$pack->$meth();
     };
     my $err = $@;
@@ -9395,6 +9392,7 @@ sub rematein {
     if ($err) {
 	die $err;
     }
+    return $success;
 }
 
 #-> sub CPAN::Module::perldoc ;
