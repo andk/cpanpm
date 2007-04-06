@@ -4655,8 +4655,9 @@ sub reanimate_build_dir {
         }
     }
     $CPAN::Frontend->myprint(sprintf(
-                                     "DONE\nFound %s old builds, restored the state of %s\n",
+                                     "DONE\nFound %s old build%s, restored the state of %s\n",
                                      @candidates ? sprintf("%d",scalar @candidates) : "no",
+                                     @candidates==1 ? "" : "s",
                                      $restored || "none",
                                     ));
 }
