@@ -66,6 +66,15 @@ Failed during this command:
 	build_dir_reuse off? No. If I manually set the $VERSION of DUAC and DUAM
 	to undef? No.
 
+	My current blead@30849 can reproduce the bug. Backup. On that perl
+	installation it is enough to
+
+	  install DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
+
+	to enter the loop.
+
+	
+
 2007-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* with yesterday's fix DMAKI/DateTime-Util-Astro-0.08.tar.gz runs into

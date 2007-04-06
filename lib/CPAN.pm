@@ -7683,7 +7683,8 @@ sub unsat_prereq {
             # if we push it again, we have a potential infinite loop
 
             # The following "next" was a very problematic construct.
-            # It helped a lot but broke some day and must be replaced.
+            # It helped a lot but broke some day and had to be
+            # replaced.
 
             # We must be able to deal with modules that come again and
             # again as a prereq and have themselves prereqs and the
@@ -7695,7 +7696,7 @@ sub unsat_prereq {
             # The bug that brought this up is described in Todo under
             # "5.8.9 cannot install Compress::Zlib"
 
-            # next; # this is the next that must go away
+            # next; # this is the next that had to go away
 
             # The following "next NEED" are fine and the error message
             # explains well what is going on. For example when the DBI
@@ -7715,26 +7716,39 @@ sub unsat_prereq {
                                     "install",
                                     "make_clean",
                                    ) {
-                if (
-                    $do->{$nosayer}
-                    &&(UNIVERSAL::can($do->{$nosayer},"failed") ?
-                       $do->{$nosayer}->failed :
-                       $do->{$nosayer} =~ /^NO/)
-                   ) {
-                    if ($nosayer eq "make_test"
-                        &&
-                        $do->{make_test}{COMMANDID} != $CPAN::CurrentCommandId
-                       ) {
-                        next NOSAYER;
+                if ($do->{$nosayer}) {
+                    if (UNIVERSAL::can($do->{$nosayer},"failed") ?
+                        $do->{$nosayer}->failed :
+                        $do->{$nosayer} =~ /^NO/) {
+                        if ($nosayer eq "make_test"
+                            &&
+                            $do->{make_test}{COMMANDID} != $CPAN::CurrentCommandId
+                           ) {
+                            next NOSAYER;
+                        }
+                        $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                                "'$need_module => $need_version' ".
+                                                "for '$self->{ID}' failed when ".
+                                                "processing '$do->{ID}' with ".
+                                                "'$nosayer => $do->{$nosayer}'. Continuing, ".
+                                                "but chances to succeed are limited.\n"
+                                               );
+                        next NEED;
+                    } else { # the other guy succeeded
+                        if ($nosayer eq "install") {
+                            # we had this with
+                            # DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
+                            # 2007-03
+                            $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                                    "'$need_module => $need_version' ".
+                                                    "for '$self->{ID}' already installed ".
+                                                    "but installation looks suspicious. ".
+                                                    "Skipping another installation attempt, ".
+                                                    "to prevent looping endlessly.\n"
+                                                   );
+                            next NEED;
+                        }
                     }
-                    $CPAN::Frontend->mywarn("Warning: Prerequisite ".
-                                            "'$need_module => $need_version' ".
-                                            "for '$self->{ID}' failed when ".
-                                            "processing '$do->{ID}' with ".
-                                            "'$nosayer => $do->{$nosayer}'. Continuing, ".
-                                            "but chances to succeed are limited.\n"
-                                           );
-                    next NEED;
                 }
             }
         }
