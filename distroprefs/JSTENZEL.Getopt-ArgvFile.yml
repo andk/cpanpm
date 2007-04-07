@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^JSTENZEL/Getopt-ArgvFile-\d"
+patches:
+  - "ANDK/patches/Getopt-ArgvFile-1.10-ANDK-01.patch.gz"

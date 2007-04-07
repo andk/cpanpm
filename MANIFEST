@@ -71,6 +71,7 @@ distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/JROBINSON.DBIx-Class.yml
+distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
