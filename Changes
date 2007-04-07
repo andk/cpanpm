@@ -1,4 +1,4 @@
-2007-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-04-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.90
 
@@ -46,6 +46,10 @@
 
 	* do the eval $VERSION tango for $CPAN::VERSION only when needed
 	(allowing "1.90" with a trailing zero)
+
+	* bugfix: if a dependency has been installed successfully but did not
+	install the expected module, issue a warning and do not install again to
+	prevent endless loops.
 
 2007-03-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
