@@ -1,3 +1,33 @@
+2007-04-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: my first trial to use "cpan ." with class-mop failed. It did not
+	try the Build.PL but used the Makefile.PL directly. Trying again with
+	full path gave the same ugly result:
+
+Running make for /home/src/perl/class-mop/SVN/.
+Prepending /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/arch /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/lib to PERL5LIB for 'get'
+  Has already been unwrapped into directory /home/src/perl/class-mop/SVN/.
+Prepending /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/arch /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/lib to PERL5LIB for 'make'
+
+  CPAN.pm: Going to build /home/src/perl/class-mop/SVN/.
+
+Can't open perl script "Makefile.PL": No such file or directory
+Warning: No success on command[/home/src/perl/repoperls/installed-perls/perl/pqoGi7b/perl-5.8.0@30869/bin/perl Makefile.PL]
+Directory '/home/src/perl/class-mop/SVN/.' not below /home/k/.cpan/build, will not store persistent state
+Prepending /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/arch /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/lib to PERL5LIB for 'test'
+Running make test
+  Make had some problems, won't test
+CPAN: Module::Build loaded ok (v0.2807)
+Failed during this command:
+ /home/src/perl/class-mop/SVN/.               : writemakefile NO '/home/src/perl/repoperls/installed-perls/perl/pqoGi7b/perl-5.8.0@30869/bin/perl Makefile.PL' returned status 512
+
+	First culprit is the 'return 1;' in line 5730.
+
+	* Nice to have: serialization needs to be able to deal with JSON et.al.
+	too.
+
+	* LWP::UserAgent usage is not centralized, several spots of copy&paste.
+
 2007-04-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Nice to have: an overview over the neuralgic patches up to 5.10 that
