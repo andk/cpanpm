@@ -2931,9 +2931,9 @@ sub mywarn {
 #-> sub CPAN::Shell::mydie ;
 sub mydie {
     my($self,$what) = @_;
-    $self->print_ornamented($what, $CPAN::Config->{colorize_warn}||'bold red on_white');
+    $self->mywarn($what);
 
-    # If it is the shell, we want that the following die to be silent,
+    # If it is the shell, we want the following die to be silent,
     # but if it is not the shell, we would need a 'die $what'. We need
     # to take care that only shell commands use mydie. Is this
     # possible?
@@ -5470,14 +5470,24 @@ sub cpan_comment {
     $ro->{CPAN_COMMENT}
 }
 
-# CPAN::Distribution::undelay
+#-> CPAN::Distribution::undelay
 sub undelay {
     my $self = shift;
     delete $self->{later};
 }
 
+#-> CPAN::Distribution::is_dot_dist
+sub is_dot_dist {
+    my($self) = @_;
+    return (
+            substr($self->id,-1,1) eq "."
+            ||
+            $self->author->id eq "LOCAL"
+           );
+}
+
 # add the A/AN/ stuff
-# CPAN::Distribution::normalize
+#-> CPAN::Distribution::normalize
 sub normalize {
     my($self,$s) = @_;
     $s = $self->id unless defined $s;
@@ -5722,7 +5732,9 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            if (exists $self->{build_dir} && -d $self->{build_dir}) {
+            if (exists $self->{build_dir} && -d $self->{build_dir}
+                && ($self->{modulebuild}||$self->{writemakefile})
+               ) {
                 # this deserves print, not warn:
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
@@ -5745,10 +5757,25 @@ sub get {
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
-    #
-    # Get the file on local disk
-    #
+    my $local_file = $self->get_file_onto_local_disk;
+    return if $CPAN::Signal;
+    $self->check_integrity;
+    return if $CPAN::Signal;
+    my $packagedir = $self->run_preps_on_packagedir($local_file);
+    $packagedir ||= $self->{build_dir};
 
+    if ($CPAN::Signal){
+        $self->safe_chdir($sub_wd);
+        return;
+    }
+    return $self->run_MM_or_MB($local_file,$packagedir);
+}
+
+#-> CPAN::Distribution::get_file_onto_local_disk
+sub get_file_onto_local_disk {
+    my($self) = @_;
+
+    return if $self->is_dot_dist;
     my($local_file);
     my($local_wanted) =
         File::Spec->catfile(
@@ -5772,22 +5799,27 @@ sub get {
 
     $self->debug("local_wanted[$local_wanted]local_file[$local_file]") if $CPAN::DEBUG;
     $self->{localfile} = $local_file;
-    return if $CPAN::Signal;
+}
 
-    #
-    # Check integrity
-    #
+
+#-> CPAN::Distribution::check_integrity
+sub check_integrity {
+    my($self) = @_;
+
+    return if $self->is_dot_dist;
     if ($CPAN::META->has_inst("Digest::SHA")) {
 	$self->debug("Digest::SHA is installed, verifying");
 	$self->verifyCHECKSUM;
     } else {
 	$self->debug("Digest::SHA is NOT installed");
     }
-    return if $CPAN::Signal;
+}
 
-    #
-    # Create a clean room and go there
-    #
+#-> CPAN::Distribution::run_preps_on_packagedir
+sub run_preps_on_packagedir {
+    my($self,$local_file) = @_;
+    return if $self->is_dot_dist;
+
     $CPAN::META->{cachemgr} ||= CPAN::CacheMgr->new(); # unsafe meta access, ok
     my $builddir = $CPAN::META->{cachemgr}->dir; # unsafe meta access, ok
     $self->safe_chdir($builddir);
@@ -5805,7 +5837,6 @@ and fix the problem, then retry.
 EOF
     }
     if ($CPAN::Signal){
-        $self->safe_chdir($sub_wd);
         return;
     }
     $self->safe_chdir("tmp-$$");
@@ -5919,11 +5950,6 @@ EOF
             }
         }
     }
-    if ($CPAN::Signal){
-        $self->safe_chdir($sub_wd);
-        return;
-    }
-
     $self->{build_dir} = $packagedir;
     $self->safe_chdir($builddir);
     File::Path::rmtree("tmp-$$");
@@ -5931,9 +5957,13 @@ EOF
     $self->safe_chdir($packagedir);
     $self->_signature_business();
     $self->safe_chdir($builddir);
-    return if $CPAN::Signal;
 
+    $packagedir;
+}
 
+#-> sub CPAN::Distribution::run_MM_or_MB
+sub run_MM_or_MB {
+    my($self,$local_file,$packagedir) = @_;
     my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
@@ -5974,7 +6004,6 @@ EOF
        ) {
         $self->store_persistent_state;
     }
-
     return $self;
 }
 
@@ -8066,11 +8095,7 @@ sub test {
     }
     my $ready_to_report = $want_report;
     if ($ready_to_report
-        && (
-            substr($self->id,-1,1) eq "."
-            ||
-            $self->author->id eq "LOCAL"
-           )
+        && $self->is_dot_dist
        ) {
         $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
                                 "for local directories\n");

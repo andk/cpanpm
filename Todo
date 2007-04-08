@@ -21,7 +21,8 @@ CPAN: Module::Build loaded ok (v0.2807)
 Failed during this command:
  /home/src/perl/class-mop/SVN/.               : writemakefile NO '/home/src/perl/repoperls/installed-perls/perl/pqoGi7b/perl-5.8.0@30869/bin/perl Makefile.PL' returned status 512
 
-	First culprit is the 'return 1;' in line 5730.
+	First culprit is the 'return 1;' in line 5730.... FIXED in SVK rev. 2187
+	or so.
 
 	* Nice to have: serialization needs to be able to deal with JSON et.al.
 	too.
