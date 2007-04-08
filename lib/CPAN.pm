@@ -3077,7 +3077,7 @@ sub rematein {
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
 	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
-            if ($meth =~ /^(dump|ls)$/) {
+            if ($meth =~ /^(dump|ls|reports)$/) {
                 $obj->$meth();
             } else {
                 $CPAN::Frontend->mywarn(
@@ -3231,6 +3231,7 @@ sub recent {
                         notest
                         perldoc
                         readme
+                        reports
                         test
                        )) {
         *$command = sub { shift->rematein($command, @_); };
@@ -3664,20 +3665,6 @@ sub localize {
                     if $var = $CPAN::Config->{ftp_proxy} || $ENV{ftp_proxy};
                 $Ua->proxy('http', $var)
                     if $var = $CPAN::Config->{http_proxy} || $ENV{http_proxy};
-
-
-# >>>>> On Wed, 13 Dec 2000 09:21:34 -0500, "Robison, Jonathon (J.M.)" <jrobiso2@visteon.com> said:
-# 
-#  > I note that although CPAN.pm can use proxies, it doesn't seem equipped to
-#  > use ones that require basic autorization.
-#  
-#  > Example of when I use it manually in my own stuff:
-#  
-#  > $ua->proxy(['http','ftp'], http://my.proxy.server:83');
-#  > $req->proxy_authorization_basic("username","password");
-#  > $res = $ua->request($req);
-# 
-
                 $Ua->no_proxy($var)
                     if $var = $CPAN::Config->{no_proxy} || $ENV{no_proxy};
             }
@@ -5465,6 +5452,12 @@ sub dir_listing {
         }
     }
     @result;
+}
+
+#-> sub CPAN::Author::reports
+sub reports {
+    $CPAN::Frontend->mywarn("reports on authors not implemented.
+Please file a bugreport if you need this.\n");
 }
 
 package CPAN::Distribution;
@@ -8681,6 +8674,89 @@ sub _build_command {
     return "./Build";
 }
 
+#-> sub CPAN::Distribution::reports
+sub reports {
+    my($self) = @_;
+    my $pathname = $self->id;
+    $CPAN::Frontend->myprint("Distribution: $pathname\n");
+
+    unless ($CPAN::META->has_inst("CPAN::DistnameInfo")) {
+        $CPAN::Frontend->mydie("CPAN::DistnameInfo not installed; cannot continue");
+    }
+    unless ($CPAN::META->has_usable("LWP")) {
+        $CPAN::Frontend->mydie("LWP not installed; cannot continue");
+    }
+    unless ($CPAN::META->has_inst("File::Temp")) {
+        $CPAN::Frontend->mydie("File::Temp not installed; cannot continue");
+    }
+
+    my $d = CPAN::DistnameInfo->new($pathname);
+
+    my $dist      = $d->dist;      # "CPAN-DistnameInfo"
+    my $version   = $d->version;   # "0.02"
+    my $maturity  = $d->maturity;  # "released"
+    my $filename  = $d->filename;  # "CPAN-DistnameInfo-0.02.tar.gz"
+    my $cpanid    = $d->cpanid;    # "GBARR"
+    my $distvname = $d->distvname; # "CPAN-DistnameInfo-0.02"
+
+    my $url = sprintf "http://cpantesters.perl.org/show/%s.yaml", $dist;
+
+    CPAN::LWP::UserAgent->config;
+    my $Ua;
+    eval { $Ua = CPAN::LWP::UserAgent->new; };
+    if ($@) {
+        $CPAN::Frontend->mydie("CPAN::LWP::UserAgent->new dies with $@\n");
+    }
+    $CPAN::Frontend->myprint("Fetching '$url'...");
+    my $resp = $Ua->get($url);
+    unless ($resp->is_success) {
+        $CPAN::Frontend->mydie(sprintf "Could not download '%s': %s\n", $url, $resp->code);
+    }
+    $CPAN::Frontend->myprint("DONE\n\n");
+    my $yaml = $resp->content;
+    # was fuer ein Umweg!
+    my $fh = File::Temp->new(
+                             template => 'cpan_reports_XXXX',
+                             suffix => '.yaml',
+                             unlink => 0,
+                            );
+    my $tfilename = $fh->filename;
+    print $fh $yaml;
+    close $fh or die $!;
+    my $unserialized = CPAN->_yaml_loadfile($tfilename)->[0];
+    my %other_versions;
+    my $this_version_seen;
+    for my $rep (@$unserialized) {
+        my $rversion = $rep->{version};
+        if ($rversion eq $version){
+            unless ($this_version_seen++) {
+                $CPAN::Frontend->myprint ("$rep->{version}:\n");
+            }
+            $CPAN::Frontend->myprint
+                (sprintf("%1s%1s%-4s %s on %s %s (%s)\n",
+                         $rep->{archname} eq $Config::Config{archname}?"*":"",
+                         $rep->{action}eq"PASS"?"+":$rep->{action}eq"FAIL"?"-":"",
+                         $rep->{action},
+                         $rep->{perl},
+                         ucfirst $rep->{osname},
+                         $rep->{osvers},
+                         $rep->{archname},
+                        ));
+        } else {
+            $other_versions{$rep->{version}}++;
+        }
+    }
+    unless ($this_version_seen) {
+        $CPAN::Frontend->myprint("No reports found for version '$version'
+Reports for other versions:\n");
+        for my $v (sort keys %other_versions) {
+            $CPAN::Frontend->myprint(" $v\: $other_versions{$v}\n");
+        }
+    }
+    $url =~ s/\.yaml/.html/;
+    $CPAN::Frontend->myprint("See $url for details\n");
+}
+
 package CPAN::Bundle;
 use strict;
 
@@ -8959,26 +9035,27 @@ package CPAN::Module;
 use strict;
 
 # Accessors
-# sub CPAN::Module::userid
+#-> sub CPAN::Module::userid
 sub userid {
     my $self = shift;
     my $ro = $self->ro;
     return unless $ro;
     return $ro->{userid} || $ro->{CPAN_USERID};
 }
-# sub CPAN::Module::description
+#-> sub CPAN::Module::description
 sub description {
     my $self = shift;
     my $ro = $self->ro or return "";
     $ro->{description}
 }
 
+#-> sub CPAN::Module::distribution
 sub distribution {
     my($self) = @_;
     CPAN::Shell->expand("Distribution",$self->cpan_file);
 }
 
-# sub CPAN::Module::undelay
+#-> sub CPAN::Module::undelay
 sub undelay {
     my $self = shift;
     delete $self->{later};
@@ -9243,6 +9320,7 @@ sub as_string {
     join "", @m, "\n";
 }
 
+#-> sub CPAN::Module::manpage_headline
 sub manpage_headline {
   my($self,$local_file) = @_;
   my(@local_file) = $local_file;
@@ -9556,6 +9634,12 @@ sub parse_version {
 
     $have =~ s/\s*//g; # stringify to float around floating point issues
     $have; # no stringify needed, \s* above matches always
+}
+
+#-> sub CPAN::Module::reports
+sub reports {
+    my($self) = @_;
+    $self->distribution->reports;
 }
 
 package CPAN;
@@ -10906,6 +10990,11 @@ undef otherwise.
 Downloads the README file associated with a distribution and runs it
 through the pager specified in C<$CPAN::Config->{pager}>.
 
+=item CPAN::Distribution::reports()
+
+Downloads report data for this distribution from cpantesters.perl.org
+and displays a subset of them.
+
 =item CPAN::Distribution::read_yaml()
 
 Returns the content of the META.yml of this distro as a hashref. Note:
@@ -11097,6 +11186,10 @@ Runs a C<perldoc> on this module.
 =item CPAN::Module::readme()
 
 Runs a C<readme> on the distribution associated with this module.
+
+=item CPAN::Module::reports()
+
+Calls the reports() method on the associated distribution object.
 
 =item CPAN::Module::test()
 
