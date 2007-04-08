@@ -252,6 +252,7 @@ MEGA_INSTALL = \
  Data::Float \
  Devel::Command \
  Devel::Cover \
+ Devel::FastProf \
  Devel::Hide \
  Devel::Modlist \
  Devel::Required \
@@ -316,6 +317,7 @@ MEGA_INSTALL = \
  SVN::Notify::Config \
  SVN::Notify::Mirror \
  Scalar::Defer \
+ Smart::Comments \
  String::Expand \
  String::Similarity \
  Taint::Util \
