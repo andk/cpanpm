@@ -5,8 +5,8 @@ pl:
   args:
     - EVERYTHING=1
     - USE_APACI=1
-    - APACHE_PREFIX=/home/src/www/apache/apachebin/1.3.33
+    - APACHE_PREFIX=/home/src/www/apache/apachebin/1.3.37
     - APACI_ARGS=--enable-module=info,--enable-module=status
-    - APACHE_SRC=/home/src/www/apache/apache/apache_1.3.33/src
-    - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_1.3.33/src
+    - APACHE_SRC=/home/src/www/apache/apache/apache_1.3.37/src
+    - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_1.3.37/src
     - DO_HTTPD=1
