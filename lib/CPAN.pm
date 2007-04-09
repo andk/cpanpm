@@ -5757,11 +5757,11 @@ sub get {
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
-    my $local_file = $self->get_file_onto_local_disk;
+    $self->get_file_onto_local_disk;
     return if $CPAN::Signal;
     $self->check_integrity;
     return if $CPAN::Signal;
-    my $packagedir = $self->run_preps_on_packagedir($local_file);
+    my($packagedir,$local_file) = $self->run_preps_on_packagedir;
     $packagedir ||= $self->{build_dir};
 
     if ($CPAN::Signal){
@@ -5817,7 +5817,7 @@ sub check_integrity {
 
 #-> CPAN::Distribution::run_preps_on_packagedir
 sub run_preps_on_packagedir {
-    my($self,$local_file) = @_;
+    my($self) = @_;
     return if $self->is_dot_dist;
 
     $CPAN::META->{cachemgr} ||= CPAN::CacheMgr->new(); # unsafe meta access, ok
@@ -5844,6 +5844,7 @@ EOF
     #
     # Unpack the goods
     #
+    my $local_file = $self->{localfile};
     my $ct = eval{CPAN::Tarzip->new($local_file)};
     unless ($ct) {
         $self->{unwrapped} = CPAN::Distrostatus->new("NO");
@@ -5958,7 +5959,7 @@ EOF
     $self->_signature_business();
     $self->safe_chdir($builddir);
 
-    $packagedir;
+    return($packagedir,$local_file);
 }
 
 #-> sub CPAN::Distribution::run_MM_or_MB
@@ -6191,7 +6192,7 @@ We\'ll try to build it with that Makefile then.
             my $fh = FileHandle->new;
             my $script_file = File::Spec->catfile($packagedir,$local_file);
             $fh->open($script_file)
-                or Carp::croak("Could not open $script_file: $!");
+                or Carp::croak("Could not open script '$script_file': $!");
             local $/ = "\n";
             # name parsen und prereq
             my($state) = "poddir";

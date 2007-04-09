@@ -1,3 +1,8 @@
+2007-04-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Need tests for dit distros and scripts. megainstall tests both but is
+	too slow and we had no dot distro running on MB.
+
 2007-04-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: my first trial to use "cpan ." with class-mop failed. It did not
