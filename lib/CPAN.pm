@@ -2984,8 +2984,11 @@ sub unrecoverable_error {
 #-> sub CPAN::Shell::mysleep ;
 sub mysleep {
     my($self, $sleep) = @_;
-    use Time::HiRes qw(sleep);
-    sleep $sleep;
+    if (CPAN->has_inst("Time::HiRes")) {
+        Time::HiRes::sleep($sleep);
+    } else {
+        sleep($sleep < 1 ? 1 : int($sleep + 0.5));
+    }
 }
 
 #-> sub CPAN::Shell::setup_output ;
