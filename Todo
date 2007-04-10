@@ -1,3 +1,9 @@
+2007-04-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* t/op/pat....................................................FAILED at test 1658
+
+	this is with bleadperl @ 30881
+
 2007-04-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Need tests for dit distros and scripts. megainstall tests both but is
