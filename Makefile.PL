@@ -303,6 +303,7 @@ MEGA_INSTALL = \
  Params::Smart \
  Parse::BACKPAN::Packages \
  Perl::Dist \
+ Perl::Version \
  PerlIO::eol \
  Perlbal \
  Petal \

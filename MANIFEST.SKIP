@@ -20,6 +20,7 @@
 ^blibdirs
 ^cover_db/
 ^cp-to-perl.pl
+^cpan_reports_
 ^distroprefs/ttt.nodbi.yml
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
