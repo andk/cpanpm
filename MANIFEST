@@ -92,6 +92,7 @@ distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MJD.Devel-Trace.yml
 distroprefs/MJD.Text-Template.yml
 distroprefs/MLEHMANN.Coro.yml
+distroprefs/MLEHMANN.PApp.yml
 distroprefs/MRAMBERG.Catalyst-Runtime.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MSERGEANT.CDB_File.yml

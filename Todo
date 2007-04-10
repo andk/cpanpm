@@ -6,14 +6,14 @@
 
 2007-04-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Need tests for dit distros and scripts. megainstall tests both but is
+	* Need tests for dot distros and scripts. megainstall tests both but is
 	too slow and we had no dot distro running on MB.
 
 2007-04-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: my first trial to use "cpan ." with class-mop failed. It did not
-	try the Build.PL but used the Makefile.PL directly. Trying again with
-	full path gave the same ugly result:
+	try the Build.PL but compleined about the inexistent Makefile.PL. Trying
+	again with full path gave the same ugly result:
 
 Running make for /home/src/perl/class-mop/SVN/.
 Prepending /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/arch /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/lib to PERL5LIB for 'get'

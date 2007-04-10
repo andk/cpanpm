@@ -294,6 +294,7 @@ MEGA_INSTALL = \
  Number::Format \
  Object::Signature \
  Object::Tiny \
+ PApp \
  PAR \
  PAR::Dist::FromCPAN \
  PAR::Packer \
@@ -302,6 +303,7 @@ MEGA_INSTALL = \
  PadWalker \
  Params::Smart \
  Parse::BACKPAN::Packages \
+ Perl6::Attributes \
  Perl::Dist \
  Perl::Version \
  PerlIO::eol \
@@ -335,6 +337,7 @@ MEGA_INSTALL = \
  Tie::Cycle \
  Tie::DxHash \
  Time::HiRes::Value \
+ Time::UTC \
  Tk::Pod \
  Tk::Tree \
  Voting::Condorcet::RankedPairs \
