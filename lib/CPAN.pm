@@ -8748,8 +8748,9 @@ sub reports {
                             );
     my $tfilename = $fh->filename;
     print $fh $yaml;
-    close $fh or die $!;
+    close $fh or $CPAN::Frontend->mydie("Could not close '$tfilename': $!");
     my $unserialized = CPAN->_yaml_loadfile($tfilename)->[0];
+    unlink $tfilename or $CPAN::Frontend->mydie("Could not unlink '$tfilename': $!");
     my %other_versions;
     my $this_version_seen;
     for my $rep (@$unserialized) {
