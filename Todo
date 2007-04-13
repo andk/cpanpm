@@ -1,5 +1,48 @@
 2007-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Nick denies 30900's responsibility. Something else must be it because
+	he sees the crazy loop going back to 30000. So I must gather facts now.
+	Questions?
+
+	MIME-tools is a distribution, not a module. Which module represents
+	MIME-tools? -- MIME::Body
+	
+	Which perls between 30000 and 30900 have MIME::Body installed? -- 30383,
+	30384, 30388, 30391, 30392, 30393, 30394, 30399, 30402, 30405, 30408,
+	30413, 30414, 30415, 30418, 30419, 30420, 30884, 30888, 30898
+
+	Which logfiles have been written for those versions? --
+	30383=>20070223T2127, 30384=>20070224T1000, 30388=>20070224T1500,
+	30391=>20070224T1957, 30392=>20070225T0045, 30393=>20070225T0524,
+	30394=>20070225T1622, 30399=>20070225T2121, 30402=>20070226T0344,
+	30405=>20070226T0904, 30408=>20070226T1412, 30413=>20070226T1902,
+	30414=>20070227T0414, 30415=>20070227T1355, 30418=>20070227T1856,
+	30419=>20070227T2342, 30420=>20070228T0417, 30884=>20070410T1050,
+	30888=>20070410T1614, 30898=>20070410T2143
+
+	The large gap after 30420 jumps into my eyes. What was the next logfile
+	after that? And for which patch? -- 20070228T1244 for 30428
+
+	And the last before 30844? -- 20070409T1809 for 30875
+
+	Did the tests in the succeeding runs really succeed on Entity.t or did
+	they probably skip it? -- All of above cited successful tests were
+	reported as "....ok" for Entity.t. All others complained "Can't locate
+	Mail/Internet.pm in @INC". I should point out that I had banned
+	Mail::Internet from being installed most of the time.
+
+	So which versions of MIME::Body and Mail::Internet did gain the cited
+	successes above? -- MIME::Body was always 5.42. For Mail::Internet it
+	was from 30383 up to 30420 the module version 1.74 and from 30884 up to
+	30898 it was 1.76.
+
+	Would you mind installing Mail::Internet and MIME::Body for 30428 and
+	report? -- For Mail::Internet CPAN.pm chose MARKOV/MailTools-1.76.tar.gz
+	to install and it succeeded. For MIME::Body it chose
+	DSKOLL/MIME-tools-5.420.tar.gz and it succeeded.
+
+	Would you do the same for 30875? -- I did with the same result.
+
 	* Algorithm::Partition comes with a test "99-kwalitee".
 
 use Test::More;
@@ -10,9 +53,9 @@ plan( skip_all => 'Test::Kwalitee not installed; skipping' ) if $@;
 
 	Ha, what a gem I haven't noticed yet!
 
-	* Mail::Send has a new release and I test if I just used it to report
-	its own test with 30898 and another one for Continuity. We'll have to
-	check for success later.
+	* Mail::Send has a new release and I just used it to report its own test
+	with 30898 and another one for Continuity. We'll have to check for
+	success later. -- No success.
 
 	* make test on DSKOLL/MIME-tools-5.420.tar.gz goes into a fast endless
 	loop today with blead@30900. We have already 30902 but it seems
@@ -79,9 +122,9 @@ Warning: Use of "require" without parentheses is ambiguous at (eval 5936858) lin
 
 	Snapshot_2007_04_11_0[01].pm
 
-	A version difference is only on Tk::Tree, impossible that it has an
+	Yhe only version difference is in Tk::Tree, impossible that it has an
 	influence.
-	
+
 
 2007-04-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -96,9 +139,10 @@ Warning: Use of "require" without parentheses is ambiguous at (eval 5936858) lin
 
 2007-04-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Bug: my first trial to use "cpan ." with class-mop failed. It did not
-	try the Build.PL but compleined about the inexistent Makefile.PL. Trying
-	again with full path gave the same ugly result:
+	* Bug: my first trial (after the release of 1.90) to use "cpan ." with
+	class-mop failed. It did not try the Build.PL but compleined about the
+	inexistent Makefile.PL. Trying again with full path gave the same ugly
+	result:
 
 Running make for /home/src/perl/class-mop/SVN/.
 Prepending /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/arch /home/k/.cpan/build/Test-Without-Module-0.09-4HOjGl/blib/lib to PERL5LIB for 'get'
@@ -147,7 +191,14 @@ Failed during this command:
 	check %INC for modules in that distribution. If found, warn the user and
 	suggest that they call "reload cpan" at the prompt.
 
-	Very good idea.
+	Very good idea. But I had to answer:
+
+But it will need some refinement because the
+'reload cpan' command only checks for a static list of modules. It's
+in my Todo file now and will be dealt with after 1.90.
+
+	Maybe we just reload whatever we have loaded at the moment? Dangerous?
+	How to render the process that is now already quite loud?
 
 	* HTML::CalendarMonth is failing but the error output is really large. I
 	just tried to report() it and must check later if the mail actually

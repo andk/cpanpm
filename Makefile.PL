@@ -245,18 +245,26 @@ MEGA_INSTALL = \
  Coro \
  Curses \
  Daemon::Generic \
+ DateTime::Format::Natural \
  Crypt::OpenPGP \
  DBIx::Class \
  DBIx::Perlish \
  DBIx::Simple \
+ DJabberd \
  Data::Dump \
  Data::Float \
+ Devel::CallTrace \
  Devel::Command \
  Devel::Cover \
+ Devel::Dependencies \
  Devel::FastProf \
  Devel::Hide \
  Devel::Modlist \
+ Devel::Monitor \
  Devel::Required \
+ Devel::SmallProf \
+ Devel::TraceMethods \
+ Devel::TraceUse \
  Devel::Size \
  Devel::Trace \
  Devel::ebug \
@@ -267,6 +275,7 @@ MEGA_INSTALL = \
  File::Rsync \
  Filter::Util::Call \
  Font::TTF \
+ GIS::Distance \
  Getopt::Euclid \
  Getopt::Mixed \
  Graph::Easy \
@@ -289,8 +298,10 @@ MEGA_INSTALL = \
  Module::Info \
  Module::Install \
  Module::Plan::Base \
+ Module::Release \
  Moose \
  Net::SSH \
+ Net::SSL::ExpireDate \
  Net::Twitter \
  Number::Format \
  Object::Signature \

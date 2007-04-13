@@ -41,6 +41,7 @@ distroprefs/DMAKI.Xango.yml
 distroprefs/DMAKI.XML-RSS-Liberal.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.Params-Validate.yml
+distroprefs/DSKOLL.MIME-tools.yml
 distroprefs/DSUGAL.Devel-Size.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
@@ -56,6 +57,7 @@ distroprefs/GIULIENK.Audio-Beep.yml
 distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
+distroprefs/HIROSE.Net-SSL-ExpireDate.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml

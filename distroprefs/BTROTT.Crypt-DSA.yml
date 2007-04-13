@@ -1,5 +1,9 @@
 --- 
-comment: "disabled because Math::BigIng::GMP is broken for a while now and so the tests take too long"
+comment: |
+
+  disabled because the tests take too long. Last time verified with
+  Math::BigInt 1.82 and Crypt-DSA-0.14.
+
 match:
   distribution: "^BTROTT/Crypt-DSA-\d"
 pl: 
