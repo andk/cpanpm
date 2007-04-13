@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^SREZIC/Tk-Pod-"
+  distribution: "^SREZIC/Tk-(Pod|FontDialog)-"
 test: 
   args:
     - TEST_VERBOSE=1

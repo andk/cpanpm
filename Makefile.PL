@@ -241,6 +241,7 @@ MEGA_INSTALL = \
  Compress::LZF \
  Config::JSON \
  Config::XPath \
+ Continuity \
  Coro \
  Curses \
  Daemon::Generic \
@@ -326,11 +327,13 @@ MEGA_INSTALL = \
  Taint::Util \
  Tcl \
  Template::Plugin::Number::Format \
+ Term::Menu \
  Term::ReadLine::Gnu \
  Term::Size \
  Term::Size::Perl \
  Test::Deep \
  Test::JSON \
+ Test::Kwalitee \
  Test::Without::Module \
  Test::YAML::Meta \
  Tie::Cache::LRU \
@@ -338,6 +341,7 @@ MEGA_INSTALL = \
  Tie::DxHash \
  Time::HiRes::Value \
  Time::UTC \
+ Tk::FontDialog \
  Tk::Pod \
  Tk::Tree \
  Voting::Condorcet::RankedPairs \

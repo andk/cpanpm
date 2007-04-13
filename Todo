@@ -1,3 +1,88 @@
+2007-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Algorithm::Partition comes with a test "99-kwalitee".
+
+use Test::More;
+
+eval { require Test::Kwalitee; Test::Kwalitee->import };
+
+plan( skip_all => 'Test::Kwalitee not installed; skipping' ) if $@;
+
+	Ha, what a gem I haven't noticed yet!
+
+	* Mail::Send has a new release and I test if I just used it to report
+	its own test with 30898 and another one for Continuity. We'll have to
+	check for success later.
+
+	* make test on DSKOLL/MIME-tools-5.420.tar.gz goes into a fast endless
+	loop today with blead@30900. We have already 30902 but it seems
+	unrelated.
+
+t/Entity............Use of uninitialized value within %INC in pattern match (m//
+) at /home/src/perl/repoperls/installed-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/
+site_perl/5.9.5/Mail/Field.pm line 114.
+Use of uninitialized value in concatenation (.) or string at /home/src/perl/repo
+perls/installed-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Fie
+ld.pm line 114.
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
+led-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Field.pm line 9
+1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 482) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 483) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 484) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 485) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 486) line 1.
+[...]
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
+led-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Field.pm line 9
+1.
+[...]
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
+led-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Field.pm line 9
+1.
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
+led-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Field.pm line 9
+1.
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
+led-perls/perl/p7R8oCc/perl-5.8.0@30900/lib/site_perl/5.9.5/Mail/Field.pm line 9
+1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 740) line 1.
+Bareword found where operator expected at (eval 740) line 1, near "200::lvchange
+"
+        (Missing operator before ::lvchange?)
+Warning: Use of "require" without parentheses is ambiguous at (eval 741) line 1.
+Bareword found where operator expected at (eval 741) line 1, near "200::lvm"
+        (Missing operator before ::lvm?)
+Warning: Use of "require" without parentheses is ambiguous at (eval 742) line 1.
+Bareword found where operator expected at (eval 742) line 1, near "200::vgcfgres
+tore"
+        (Missing operator before ::vgcfgrestore?)
+Warning: Use of "require" without parentheses is ambiguous at (eval 743) line 1.
+Bareword found where operator expected at (eval 743) line 1, near "200::lvcreate
+"
+        (Missing operator before ::lvcreate?)
+[...about 6 million lines of "closedir attempted" and "require without parsntheses"...]
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936852) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936853) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936854) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936855) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936856) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936857) line 1.
+Warning: Use of "require" without parentheses is ambiguous at (eval 5936858) line 1.
+
+	The last perl before 30900 was 30898 which installed MIME-tools just
+	fine.
+
+	I built an autobundle snapshot from 30900 and another from 30898. Of
+	course the latter is much bigger because it was not stopped by an
+	endless loop. So the diff is unbalanced.
+
+	Snapshot_2007_04_11_0[01].pm
+
+	A version difference is only on Tk::Tree, impossible that it has an
+	influence.
+	
+
 2007-04-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* t/op/pat....................................................FAILED at test 1658

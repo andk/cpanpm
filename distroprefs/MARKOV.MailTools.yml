@@ -1,5 +1,5 @@
 --- 
-comment: "currently does not work for me waiting for tuits for a bugreport"
+comment: "currently does not work for me for cpantesters; waiting for tuits for a bugreport"
 match:
-  distribution: "^MARKOV/MailTools-1.74.tar.gz"
+  distribution: "^MARKOV/MailTools-\d"
 disabled: 1
