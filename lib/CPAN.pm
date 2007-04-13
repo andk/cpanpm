@@ -520,6 +520,7 @@ use strict;
                                     recompile
                                     reload
                                     report
+                                    reports
                                     scripts
                                     test
                                     upgrade
