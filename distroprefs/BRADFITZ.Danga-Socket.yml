@@ -1,6 +1,6 @@
 ---
 comment: "https://rt.cpan.org/Ticket/Update.html?Action=Respond&id=20668"
 match:
-  distribution: "BRADFITZ/Danga-Socket-1.56.tar.gz"
+  distribution: "BRADFITZ/Danga-Socket-1.5[67].tar.gz"
 patches:
   - "ANDK/patches/Danga-Socket-1.56-ANDK-01.patch.gz"
