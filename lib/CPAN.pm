@@ -1456,13 +1456,11 @@ sub tidyup {
   my($self) = @_;
   return unless $CPAN::META->{LOCK};
   return unless -d $self->{ID};
-  while ($self->{DU} > $self->{'MAX'} ) {
+  while ($self->{DU} > $self->{MAX} ) {
     my($toremove) = shift @{$self->{FIFO}};
     unless ($toremove =~ /\.yml$/) {
         $CPAN::Frontend->myprint(sprintf(
-                                         "DEL(%.1f>%.1fMB): %s \n",
-                                         $self->{DU},
-                                         $self->{MAX},
+                                         "DEL: %s \n",
                                          $toremove,
                                         )
                                 );
@@ -1500,12 +1498,12 @@ sub entries {
 	}
     }
     chdir $cwd or Carp::croak("Can't chdir to $cwd: $!");
-    sort { -M $b <=> -M $a} @entries;
+    sort { -M $a <=> -M $b} @entries;
 }
 
 #-> sub CPAN::CacheMgr::disk_usage ;
 sub disk_usage {
-    my($self,$dir) = @_;
+    my($self,$dir,$fast) = @_;
     return if exists $self->{SIZE}{$dir};
     return if $CPAN::Signal;
     my($Du) = 0;
@@ -1527,8 +1525,11 @@ sub disk_usage {
         $CPAN::Frontend->mywarn("File or directory '$dir' has gone, ignoring\n");
         return;
     }
-    find(
-         sub {
+    if ($fast) {
+        $Du = 1; # placeholder
+    } else {
+        find(
+             sub {
            $File::Find::prune++ if $CPAN::Signal;
            return if -l $_;
            if ($^O eq 'MacOS') {
@@ -1553,10 +1554,11 @@ sub disk_usage {
            }
          },
          $dir
-        );
+            );
+    }
     return if $CPAN::Signal;
     $self->{SIZE}{$dir} = $Du/1024/1024;
-    push @{$self->{FIFO}}, $dir;
+    unshift @{$self->{FIFO}}, $dir;
     $self->debug("measured $dir is $Du") if $CPAN::DEBUG;
     $self->{DU} += $Du/1024/1024;
     $self->{DU};
@@ -1639,15 +1641,20 @@ sub scan_cache {
 			     sprintf("Scanning cache %s for sizes\n",
 				     $self->{ID}));
     my $e;
-    my @entries = grep { !/^\.\.?$/ } $self->entries($self->{ID});
+    my @entries = $self->entries($self->{ID});
     my $i = 0;
     my $painted = 0;
     for $e (@entries) {
-	# next if $e eq ".." || $e eq ".";
-	$self->disk_usage($e);
+        my $symbol = ".";
+        if ($self->{DU} > $self->{MAX}) {
+            $symbol = "-";
+            $self->disk_usage($e,1);
+        } else {
+            $self->disk_usage($e);
+        }
         $i++;
         while (($painted/76) < ($i/@entries)) {
-            $CPAN::Frontend->myprint(".");
+            $CPAN::Frontend->myprint($symbol);
             $painted++;
         }
 	return if $CPAN::Signal;
