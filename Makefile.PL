@@ -345,6 +345,7 @@ MEGA_INSTALL = \
  String::Expand \
  String::Similarity \
  Taint::Util \
+ Task::CVSMonitor \
  Tcl \
  Template::Plugin::Number::Format \
  Term::Menu \

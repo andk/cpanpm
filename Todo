@@ -1,6 +1,100 @@
+2007-04-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Most urgent tasks?
+
+	Report Text::Hatena
+
+	Report Locale::TextDomain
+
+	Write a bug report about Coro::Event and its interaction with CPAN.pm or
+	find out how to fix it and write a patch. Turn off distroprefs or work
+	without CPAN.pm to make things more obvious. Look:
+
+	cpan[2]> m Coro::Event      
+Module id = Coro::Event
+    CPAN_USERID  MLEHMANN (Marc Lehmann <pcg@goof.com>)
+    CPAN_VERSION 2.1
+    CPAN_FILE    M/ML/MLEHMANN/Coro-3.6.tar.gz
+    UPLOAD_DATE  2007-04-14
+    MANPAGE      Coro::Event - do events the coro-way
+    INST_FILE    (not installed)
+
+
+	Analyse the endless loop in "fforce test Task::Smoke". Maybe the fforce
+	is to blame?
+
+	FirstTime manpage?
+
+	Implement configure_requires? (testcase RPM::XML)
+
+	Implement a depends/requires keyword for distroprefs? (Testcase
+	Spreadsheet ParseExcel)
+
+	Speedup the cleanup? DONE [...time passes...] But I do not like the new
+	version. I want to see how long it takes/will take. svk rev. 2216 seems
+	to provide that.
+
+	Implement 30shell.t in a way that always emits useful output after a
+	failure?
+
+	Find an opinion on MIME-tools.
+
+	* Bug? "fforce test Task::Smoke" goes into an endless loop.
+	Test-TAP-Model and Task-Smoke play ping pong. All other prreqs are
+	satisfied quickly and prepended to PERL5LIB but these two stay active
+
+  drwx------   6 k k   4096 Apr 16 06:58 Task-Smoke-0.15-5ksBtB
+  -rw-rw-r--   1 k k   1424 Apr 16 06:58 Task-Smoke-0.15-5ksBtB.yml
+  -rw-rw-r--   1 k k   1532 Apr 16 06:58 Test-TAP-Model-0.09-wUFmP9.yml
+  drwx------   5 k k   4096 Apr 16 06:58 Test-TAP-Model-0.09-wUFmP9
+  drwx------   6 k k   4096 Apr 16 06:58 Task-Smoke-0.15-QOiZ85
+  -rw-rw-r--   1 k k   1424 Apr 16 06:58 Task-Smoke-0.15-QOiZ85.yml
+  -rw-rw-r--   1 k k   1532 Apr 16 06:58 Test-TAP-Model-0.09-H3Lqy0.yml
+  drwx------   5 k k   4096 Apr 16 06:58 Test-TAP-Model-0.09-H3Lqy0
+  drwx------   6 k k   4096 Apr 16 06:58 Task-Smoke-0.15-6lDDuP
+  -rw-rw-r--   1 k k   1424 Apr 16 06:58 Task-Smoke-0.15-6lDDuP.yml
+  -rw-rw-r--   1 k k   1532 Apr 16 06:58 Test-TAP-Model-0.09-48ClDJ.yml
+  drwx------   5 k k   4096 Apr 16 06:58 Test-TAP-Model-0.09-48ClDJ
+  drwx------   6 k k   4096 Apr 16 06:57 Task-Smoke-0.15-V3h8gK
+  -rw-rw-r--   1 k k   1424 Apr 16 06:57 Task-Smoke-0.15-V3h8gK.yml
+  -rw-rw-r--   1 k k   1532 Apr 16 06:57 Test-TAP-Model-0.09-MI4CP5.yml
+  drwx------   5 k k   4096 Apr 16 06:57 Test-TAP-Model-0.09-MI4CP5
+  drwx------   6 k k   4096 Apr 16 06:57 Task-Smoke-0.15-0rmHRt
+  -rw-rw-r--   1 k k   1424 Apr 16 06:57 Task-Smoke-0.15-0rmHRt.yml
+  -rw-rw-r--   1 k k   1532 Apr 16 06:57 Test-TAP-Model-0.09-A0HeR8.yml
+  drwx------   5 k k   4096 Apr 16 06:57 Test-TAP-Model-0.09-A0HeR8
+  drwx------   6 k k   4096 Apr 16 06:57 Task-Smoke-0.15-BpPXIa
+
+	After I interrupt the endless loop and say "install Task::Smoke" all is
+	well quickly. Let's page back what was prepended to PERL5LIB?
+
+---- Unsatisfied dependencies detected during ----
+----        GAAL/Task-Smoke-0.15.tar.gz       ----
+    Test::TAP::Model [requires]
+Prepending /home/k/.cpan/build/Test-TAP-HTMLMatrix-0.08-t1Tza8/blib/arch /home/k/.cpan/build/Test-TAP-HTMLMatrix-0.08-t1Tza8/blib/lib /home/k/.cpan/build/Method-Alias-1.03-Xgby0k/blib/arch /home/k/.cpan/build/Method-Alias-1.03-Xgby0k/blib/lib /home/k/.cpan/build/Best-0.11-T3AKJn/blib/arch /home/k/.cpan/build/Best-0.11-T3AKJn/blib/lib to PERL5LIB for 'test'
+Running Build test
+  Delayed until after prerequisites
+Running test for module 'Test::TAP::Model'
+Running make for N/NU/NUFFIN/Test-TAP-Model-0.09.tar.gz
+Prepending /home/k/.cpan/build/Test-TAP-HTMLMatrix-0.08-t1Tza8/blib/arch /home/k/.cpan/build/Test-TAP-HTMLMatrix-0.08-t1Tza8/blib/lib /home/k/.cpan/build/Method-Alias-1.03-Xgby0k/blib/arch /home/k/.cpan/build/Method-Alias-1.03-Xgby0k/blib/lib /home/k/.cpan/build/Best-0.11-T3AKJn/blib/arch /home/k/.cpan/build/Best-0.11-T3AKJn/blib/lib to PERL5LIB for 'get'
+Signature for /home/ftp/pub/CPAN/authors/id/N/NU/NUFFIN/CHECKSUMS ok
+Checksum for /home/ftp/pub/CPAN/authors/id/N/NU/NUFFIN/Test-TAP-Model-0.09.tar.gz ok
+
+
+2007-04-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: write a script that finds the distros in my local installation
+	that have no reports on cpantesters yet. I suppose YACSmoke could do
+	that.
+
+	* Close to 700 now:
+
+	"Found 1238 old builds, restored the state of 691"
+
 2007-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Offtopic: Marc's patch for pack 'C'.
+	* Offtopic: Marc's patch for pack 'C' applied on top of 30952. Path:
+	installed-perls/perl/pFvwf7I/perl-5.8.0@30952
 
 	* Coro: in the logfile for 30943 I see that Coro did not build and did
 	not install Coro::Event. Consequently, Continuity failed its tests. What
@@ -72,25 +166,37 @@ N/A
 	Nothing obvious. So let's study the test itself.
 
 	It's about how the Austrians say to the month February. Why on earth is
-	16904 able to dig that word "Feber" out of the locale system but 16905 not?
+	16904 able to dig that word "Feber" out of the locale system but 16905
+	not? The files that contain "Feber" are specifically being delivered by
+	Locale::TextDomain, so seem not dependent on my Linux version or the
+	state of my locale installations.
 
+	https://rt.cpan.org/Dist/Display.html?Queue=libintl-perl  is empty.
+
+	So if I cannot find a negative module dependency, it's something in
+	perl?
+
+	Wow: my 16904 was compiled on Gentoo! But comparing the configs does not
+	reveal anything yet.
+
+	Maybe it helps to run the same program in two debuggers step by step?
+
+	One day has passed and when I retry today in a fresh directory, then
+	both 16904 and 16905 succeed on this test while 30952 fails. Heisenbug?
+
+	I'll start with a new binary search. Apparently I did something wrong
+	yesterday. I realize comments in the test output that escaped me
+	yesterday. The new test script filters those comments out
+	(t04find_domain_bug.t).
+
+	With this I'm told that 29052 succeeds but 29053 fails with an Assertion
+	failure. I rerun with new boundary and now the assertion failure did not
+	go away up to 29543 and 29544 was then failing on the
+	04find_domain_bug.t.
+
+	So this seems more logical and proves yesterday's recherche was bogus,
+	most probably not a Heisenbug.
 	
-	* Most urgent Todos:
-
-	FirstTime manpage?
-
-	Implement configure_requires? (testcase RPM::XML)
-
-	Implement a depends/requires keyword for distroprefs? (Testcase
-	Spreadsheet ParseExcel)
-
-	Speedup the cleanup? DONE [...time passes... But I do not like the new
-	version. I want to see how long it takes/will take. svk rev. 2216 seems
-	to provide that.
-
-	Implement 30shell.t in a way that always emits useful output after a
-	failure?
-
 2007-04-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Devel::ebug again. failed with 30943 but on retry success. The logfile
