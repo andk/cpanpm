@@ -112,7 +112,7 @@ require CPAN::HandleConfig;
                                        0)};
         ok($@,"no kwalify [$@]");
         delete $data->{pl}{barth};
-        CPAN::Kwalify::_clear_cache();
+        CPAN::Kwalify::_clean_cache();
         eval {CPAN::Kwalify::_validate("distroprefs",
                                        $data,
                                        _f("t/12cpan.t"),
