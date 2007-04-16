@@ -1,11 +1,92 @@
 2007-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Offtopic: Marc's patch for pack 'C'.
+
+	* Coro: in the logfile for 30943 I see that Coro did not build and did
+	not install Coro::Event. Consequently, Continuity failed its tests. What
+	might be the reason? On later retry, Coro built and installed both Coro
+	and Coro::Event. Seeing the prereqs NOW, they contain
+
+                                                  'AnyEvent' => '2.51',
+                                                  'Event' => '1.06',
+                                                  'IO::AIO' => '2.3',
+                                                  'Scalar::Util' => '0'
+
+	And here is the relevant output of Marc's Makefile.PL:
+
+Warning: prerequisite AnyEvent 2.51 not found.
+Warning: prerequisite Event 1.06 not found.
+Warning: prerequisite IO::AIO 2.3 not found.
+
+*** Event not found, not build Event support.
+
+	This seems like a bug to me. He should ask if Event support is wanted
+	and if yes, make Event a prerequisite. At least from my point of view he
+	should do so.
+
+	It has already lead to a wrong bugreport by chris on cpantesters.
+
+	And I have now written to Marc (with CC cpantesters) if he would change
+	things accordingly). Miscommunication happened and so I need to give up:-(
+
 	* Locale::TextDomain needs a binary search. Yay, the first one for a
 	long time that goes back before 20000. We are compiling perls in the
-	[16904,17122] interval!
+	[16904,17122] interval! Ouch: 16916, 16951, 16953, 16991, 17022, 17058,
+	17075 do not want to be compiled!
 
-	* First Todo: FirstTime manpage? Implement configure_requires? Implement
-	a depends keyword for distroprefs? Speedup the cleanup?
+	This needs more attention. Yes, it's DB_File that fails nowadays with
+	these old perls. And we always used -Ui_db. For binsearchaperl the full
+	argument then is
+
+	--config="-Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel -Ui_db"
+
+----Program----
+eval {require Locale::TextDomain};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pm3UiPL/perl-5.7.3@16904/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pN2DxS9/perl-5.7.3@16905/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Change 16905 by jhi@alpha on 2002/05/30 20:26:32
+
+	Subject: [PATCH perl@16893] lib/blib.t tweak for VMS
+	From: "Craig A. Berry" <craigberry@mac.com>
+	Date: Thu, 30 May 2002 16:22:40 -0500
+	Message-Id: <a05111703b91c44a6865f@[172.16.52.1]>
+
+	Impossible. This patches a test file in core perl, this cannot have
+	consequences on user code.
+
+	So it's likely to depend on a module.
+
+	diff -u =(sort /home/k/.cpan/Bundle/Snapshot_2007_04_14_00.pm) =(sort /home/k/.cpan/Bundle/Snapshot_2007_04_14_01.pm) | less
+
+
+	Nothing obvious. So let's study the test itself.
+
+	It's about how the Austrians say to the month February. Why on earth is
+	16904 able to dig that word "Feber" out of the locale system but 16905 not?
+
+	
+	* Most urgent Todos:
+
+	FirstTime manpage?
+
+	Implement configure_requires? (testcase RPM::XML)
+
+	Implement a depends/requires keyword for distroprefs? (Testcase
+	Spreadsheet ParseExcel)
+
+	Speedup the cleanup? DONE [...time passes... But I do not like the new
+	version. I want to see how long it takes/will take. svk rev. 2216 seems
+	to provide that.
 
 	Implement 30shell.t in a way that always emits useful output after a
 	failure?
