@@ -1456,19 +1456,16 @@ sub tidyup {
   my($self) = @_;
   return unless $CPAN::META->{LOCK};
   return unless -d $self->{ID};
-  my @num_to_remove = grep { !/\.yml$/ && $self->{SIZE}{$_}==1 }  @{$self->{FIFO}};
-  my $current = 0;
-  while ($self->{DU} > $self->{MAX} ) {
-    my($toremove) = shift @{$self->{FIFO}};
-    unless ($toremove =~ /\.yml$/) {
-        $CPAN::Frontend->myprint(sprintf(
-                                         "DEL(%d/%d): %s \n",
-                                         ++$current,
-                                         scalar @num_to_remove,
-                                         $toremove,
-                                        )
-                                );
-    }
+  my @toremove = grep { $self->{SIZE}{$_}==0 } @{$self->{FIFO}};
+  for my $current (0..$#toremove) {
+    my $toremove = $toremove[$current];
+    $CPAN::Frontend->myprint(sprintf(
+                                     "DEL(%d/%d): %s \n",
+                                     $current+1,
+                                     scalar @toremove,
+                                     $toremove,
+                                    )
+                            );
     return if $CPAN::Signal;
     $self->_clean_cache($toremove);
     return if $CPAN::Signal;
@@ -1530,7 +1527,7 @@ sub disk_usage {
         return;
     }
     if ($fast) {
-        $Du = 1024**2; # placeholder
+        $Du = 0; # placeholder
     } else {
         find(
              sub {
