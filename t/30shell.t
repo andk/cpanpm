@@ -896,7 +896,7 @@ __END__
 ########
 #P:test CPAN::Test::Dummy::Perl5::Make::Zip
 #E:Has already been tested successfully
-#R:Archive::Zip
+#R:Archive::Zip Module::Build
 ########
 #P:failed
 #E:Nothing
@@ -1072,7 +1072,7 @@ __END__
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
 #E:test -- OK
-#R:YAML patch
+#R:YAML patch Module::Build
 ########
 #P:u /--/
 #E:No modules found for
