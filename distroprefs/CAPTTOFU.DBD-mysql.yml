@@ -1,5 +1,11 @@
 --- 
-comment: "the Bundle::DBD::mysql includes Mysql which isn't in 4.00 anymore"
+comment: |
+
+  the Bundle::DBD::mysql includes Mysql which isn't in 4.00 anymore
+
+  and a random password is down there because some DBD::mysql versions
+  did not understand the --testpassword option with an empty password
+
 match:
   distribution: "^CAPTTOFU/DBD-mysql-3\.\d+.tar.gz$"
 disabled: 1
@@ -13,4 +19,4 @@ pl:
     - --testport=3306
     - --testsocket=/var/run/mysqld/mysqld.sock
     - --testuser=root
-#    - --testpassword=
+    - --testpassword=rfjNq4g

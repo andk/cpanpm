@@ -220,6 +220,7 @@ MEGA_BASE = \
 
 MEGA_INSTALL = \
  ANDK/keepcool-0.344 \
+ Algorithm::Partition \
  AltaVista::BabelFish \
  Alzabo \
  App::Ack \
@@ -229,6 +230,7 @@ MEGA_INSTALL = \
  Bundle::RT \
  Bundle::Slash \
  CDB_File \
+ CGI::Ajax \
  CPAN::Unwind \
  CPAN::YACSmoke \
  Cache::File \
@@ -243,16 +245,19 @@ MEGA_INSTALL = \
  Config::XPath \
  Continuity \
  Coro \
+ Crypt::OpenPGP \
  Curses \
+ DBIx::Class \
+ DBIx::Timeout \
  Daemon::Generic \
  DateTime::Format::Natural \
- Crypt::OpenPGP \
- DBIx::Class \
  DBIx::Perlish \
  DBIx::Simple \
  DJabberd \
  Data::Dump \
+ Data::Entropy \
  Data::Float \
+ Data::Random \
  Devel::CallTrace \
  Devel::Command \
  Devel::Cover \
@@ -261,6 +266,7 @@ MEGA_INSTALL = \
  Devel::Hide \
  Devel::Modlist \
  Devel::Monitor \
+ Devel::Profile \
  Devel::Required \
  Devel::SmallProf \
  Devel::TraceMethods \
@@ -269,6 +275,7 @@ MEGA_INSTALL = \
  Devel::Trace \
  Devel::ebug \
  Devel::ebug::HTTP \
+ Event::ExecFlow \
  Event::Lib \
  ExtUtils::ModuleMaker \
  FLV::Info \
@@ -279,6 +286,7 @@ MEGA_INSTALL = \
  Getopt::Euclid \
  Getopt::Mixed \
  Graph::Easy \
+ HTML::PopupTreeSelect::Dynamic \
  HTML::Template::Compiled \
  IO::Async::Buffer \
  IO::Pager \
@@ -316,6 +324,7 @@ MEGA_INSTALL = \
  Params::Smart \
  Parse::BACKPAN::Packages \
  Perl6::Attributes \
+ Perl6::Perldoc \
  Perl::Dist \
  Perl::Version \
  PerlIO::eol \
@@ -356,6 +365,8 @@ MEGA_INSTALL = \
  Tk::Pod \
  Tk::Tree \
  Voting::Condorcet::RankedPairs \
+ WWW::Live365 \
+ WWW::Monitor \
  XML::Compile \
  X500::DN \
  YAML::Tiny \

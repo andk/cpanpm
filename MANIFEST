@@ -127,6 +127,7 @@ distroprefs/TIMB.DBI.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
+distroprefs/YARON.WWW-Monitor.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/YVES.Data-Dump-Streamer.yml
 distroprefs/ZEV.Test-Dependencies.yml

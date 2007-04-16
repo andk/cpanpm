@@ -1,3 +1,138 @@
+2007-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Locale::TextDomain needs a binary search. Yay, the first one for a
+	long time that goes back before 20000. We are compiling perls in the
+	[16904,17122] interval!
+
+	* First Todo: FirstTime manpage? Implement configure_requires? Implement
+	a depends keyword for distroprefs? Speedup the cleanup?
+
+	Implement 30shell.t in a way that always emits useful output after a
+	failure?
+
+2007-04-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Devel::ebug again. failed with 30943 but on retry success. The logfile
+	reports
+
+t/return.........YAML Error: Invalid characters in stream. This parser only supports printable ASCII
+   Code: YAML_PARSE_ERR_BAD_CHARS
+   Line: 0
+   Document: 0
+ at /home/src/perl/repoperls/installed-perls/perl/pCufuHQ/perl-5.8.0@30943/lib/site_perl/5.9.5/YAML.pm line 33
+# Looks like your test died before it could output anything.
+dubious
+	Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 1-13
+	Failed 13/13 tests, 0.00% okay
+	[...]
+t/return.t   255 65280    13   26  1-13
+
+	Remember that "20070330T2346 perl 30791" already had a problem. But it
+	was not in the same test. It was
+
+t/break_point....YAML Error: Invalid characters in stream. This parser only supports printable ASCII
+   Code: YAML_PARSE_ERR_BAD_CHARS
+   Line: 0
+   Document: 0
+ at /home/src/perl/repoperls/installed-perls/perl/p6oBwLf/perl-5.8.0@30791/lib/site_perl/5.9.5/YAML.pm line 33
+# Looks like you planned 27 tests but only ran 15.
+# Looks like your test died just after 15.
+dubious
+	Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 16-27
+	Failed 12/27 tests, 55.56% okay
+
+
+	Eeek.
+
+	* 30941 is a suspicious patch file. It mixes perl and maint-5.8 branches
+	in one patch and contains an "edit" without a diff following. As a
+	consequence I get a "maint" and a "perl" versions of 30941 which seems
+	pretty uniq afair. Need to further investigate.
+
+	* Hatena::Keyword seems to need a binary search: maint@30874 is "OK",
+	blead isn't. But the search cannot start with 20002 because prereq Jcode
+	fails there. Need to add Cache::File to the prep script because it is an
+	undecl prereq (already reported as
+	https://rt.cpan.org/Ticket/Display.html?id=23684). blead@23963 is fine
+	with Jcode and H:K. The error message hints at LWP::Protocol. We should
+	verify that this is not a "dependent" failure.
+
+----Program----
+eval q{use Hatena::Keyword 0.04};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pZ7WhmN/perl-5.8.0@23963/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p35sQ2r/perl-5.8.0@23964/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	But take care, this 23964 failed on all of 00-load, 01-methods and
+	02-caching.t (every time with "Can't locate RPC/XML.pm"). So this binary
+	search was worthless. I think we must now find out when XML::RPC started
+	working again. Please do not confuse XML::RPC and RCP::XML! But it's
+	strange anyway because both modules run and install well under 23964.
+	Now, when I retry the very first binarysearch, it says both 23983 and
+	30943 fail. Cool. So we need 23964 against 23983? Yes, on retry, 23964
+	succeeds and 23983 fails. And the new binary point of balance is
+	2396[45]! When I now apply this balance point against 99999 via
+	RPC::XML, then ***lots*** of compiling, testing, and installing is being
+	done. And we "jump" to what? 29099/29100, such a wide jump! But it has
+	to do with LWP that RPC::XML does not even build. Apparently is LWP an
+	undeclared configure_requires (which is not even implemented yet). When
+	I add LWP to the prep-RPC-XML.pl script? Then both 23965 and 30943 work
+	and there is no binary search. But if I now add both LWP and RPC::XML,
+	in that order, to the prep-Hatena-Keyword.pl? 23965 succeeds and 30943
+	fails and binary search starts. When we reach [24003,24023] it needs to
+	build perls.
+
+----Program----
+eval q{use Hatena::Keyword 0.04};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pQ3Kc3b/perl-5.8.0@24009/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../puKzj8b/perl-5.8.0@24010/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
+	Change 24010 by rgs@bloom on 2005/03/08 17:53:50
+
+	Subject: Encoding neutral unpack
+	From: perl5-porters@ton.iguana.be (Ton Hospel)
+	Date: Sun, 6 Mar 2005 18:29:38 +0000 (UTC)
+	Message-Id: <d0fi6i$k06$1@post.home.lunix>
+
+t/01-methods......1..25
+[...]
+ok 23
+Content-Length header value was wrong, fixed at /home/src/perl/repoperls/installed-perls/perl/puKzj8b/perl-5.8.0@24010/lib/site_perl/5.9.2/LWP/Protocol/http.pm line 189, <DATA> line 855.
+
+#   Failed test at t/01-methods.t line 49.
+# Looks like you failed 1 test of 25.
+ok 24
+not ok 25
+dubious
+        Test returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 25
+        Failed 1/25 tests, 96.00% okay
+
+
+	When I run this test in the debugger with 24010 (first remove the -T on
+	the shebang), many tests fail.	
+
+
 2007-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Nick denies 30900's responsibility. Something else must be it because
