@@ -1468,7 +1468,6 @@ sub tidyup {
                                          $toremove,
                                         )
                                 );
-        sleep 2;
     }
     return if $CPAN::Signal;
     $self->_clean_cache($toremove);
