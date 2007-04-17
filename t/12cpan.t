@@ -21,6 +21,7 @@ cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
 unshift @INC, "t";
 require CPAN::MyConfig;
 require CPAN;
+require CPAN::Kwalify;
 require CPAN::HandleConfig;
 {
     eval {CPAN::rtlpr()};
@@ -76,7 +77,6 @@ require CPAN::HandleConfig;
     }
 }
 {
-    eval { require Kwalify };
     my $this_block_count;
     BEGIN { $count += $this_block_count = 2; }
     if ($@) {
@@ -84,7 +84,6 @@ require CPAN::HandleConfig;
             ok(1);
         }
     } else {
-        require CPAN::Kwalify;
         my $data = {
                     "match" => {
                                 "distribution" => "^(ABW|ADAMK)/Template-Toolkit-2.16"
@@ -112,7 +111,7 @@ require CPAN::HandleConfig;
                                        0)};
         ok($@,"no kwalify [$@]");
         delete $data->{pl}{barth};
-        CPAN::Kwalify::_clean_cache();
+        CPAN::Kwalify::_clear_cache();
         eval {CPAN::Kwalify::_validate("distroprefs",
                                        $data,
                                        _f("t/12cpan.t"),
