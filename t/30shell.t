@@ -826,7 +826,7 @@ __END__
 #P:o conf ftp ""
 ########
 #P:m Fcntl
-#E:Found \d old builds?, restored the state of \d[\s\S]+?Defines fcntl
+#E:Found \d old builds?, restored the state of (?:\d|none)[\s\S]+?Defines fcntl
 #R:YAML
 ########
 #P:a JHI
