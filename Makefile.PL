@@ -229,8 +229,10 @@ MEGA_INSTALL = \
  Bundle::Phalanx100 \
  Bundle::RT \
  Bundle::Slash \
+ Business::OnlinePayment \
  CDB_File \
  CGI::Ajax \
+ CGI::Application \
  CPAN::Unwind \
  CPAN::YACSmoke \
  Cache::File \
@@ -239,17 +241,21 @@ MEGA_INSTALL = \
  Carp::Always \
  Catalyst \
  Class::C3 \
+ Class::Fields \
  Class::MethodMaker \
  Compress::LZF \
+ Config::Any \
  Config::JSON \
  Config::XPath \
  Continuity \
+ Convert::BinHex \
  Coro \
  Crypt::OpenPGP \
  Curses \
  DBIx::Class \
  DBIx::Timeout \
  Daemon::Generic \
+ Data::Visitor \
  DateTime::Format::Natural \
  DBIx::Perlish \
  DBIx::Simple \
@@ -279,14 +285,17 @@ MEGA_INSTALL = \
  Event::Lib \
  ExtUtils::ModuleMaker \
  FLV::Info \
+ File::NCopy \
  File::Rsync \
  Filter::Util::Call \
  Font::TTF \
+ GSSAPI \
  GIS::Distance \
  Getopt::Euclid \
  Getopt::Mixed \
  Graph::Easy \
  HTML::PopupTreeSelect::Dynamic \
+ HTML::Selector::XPath \
  HTML::Template::Compiled \
  IO::Async::Buffer \
  IO::Pager \
@@ -295,6 +304,7 @@ MEGA_INSTALL = \
  Image::Pngslimmer \
  JSON::XS \
  Jifty \
+ Kwiki \
  LWP::UserAgent \
  Locale::Maketext::Gettext \
  Lucene \
@@ -308,6 +318,7 @@ MEGA_INSTALL = \
  Module::Plan::Base \
  Module::Release \
  Moose \
+ Net::Domain::TLD \
  Net::SSH \
  Net::SSL::ExpireDate \
  Net::Twitter \
@@ -342,6 +353,8 @@ MEGA_INSTALL = \
  SVN::Notify::Mirror \
  Scalar::Defer \
  Smart::Comments \
+ Socket6 \
+ Spoon \
  String::Expand \
  String::Similarity \
  Taint::Util \
@@ -355,8 +368,10 @@ MEGA_INSTALL = \
  Test::Deep \
  Test::JSON \
  Test::Kwalitee \
+ Test::MockObject \
  Test::Without::Module \
  Test::YAML::Meta \
+ Text::CSV_XS \
  Tie::Cache::LRU \
  Tie::Cycle \
  Tie::DxHash \
@@ -368,6 +383,7 @@ MEGA_INSTALL = \
  Voting::Condorcet::RankedPairs \
  WWW::Live365 \
  WWW::Monitor \
+ XML::Checker::Parser \
  XML::Compile \
  X500::DN \
  YAML::Tiny \
