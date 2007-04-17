@@ -79,6 +79,7 @@ require CPAN::HandleConfig;
 {
     my $this_block_count;
     BEGIN { $count += $this_block_count = 2; }
+    eval { require Kwalify };
     if ($@) {
         for (1..$this_block_count) {
             ok(1);
