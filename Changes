@@ -1,3 +1,22 @@
+2007-04-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91
+
+	* new command C<reports> shows the reports sent to cpantesters
+
+	* bugfix: dot distros did not work with Module::Build
+
+	* several new and updated distroprefs
+
+	* bugfixes in testscripts (spotted by Slaven Rezic, Nigel Horne)
+
+	* bugfix: Time::HiRes not a prereq anymore (Joshua ben Jore)
+
+	* speedup of the cleanup process in the build directory: do not compute
+	the size of directories to be deleted
+
+	* bugfix: scripts installation was broken
+
 2007-04-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.90
