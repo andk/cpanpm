@@ -1182,6 +1182,10 @@ PROGRAMMER'S INTERFACE
         Downloads the README file associated with a distribution and runs it
         through the pager specified in "$CPAN::Config-"{pager}>.
 
+    CPAN::Distribution::reports()
+        Downloads report data for this distribution from
+        cpantesters.perl.org and displays a subset of them.
+
     CPAN::Distribution::read_yaml()
         Returns the content of the META.yml of this distro as a hashref.
         Note: works only after an attempt has been made to "make" the
@@ -1349,6 +1353,9 @@ PROGRAMMER'S INTERFACE
 
     CPAN::Module::readme()
         Runs a "readme" on the distribution associated with this module.
+
+    CPAN::Module::reports()
+        Calls the reports() method on the associated distribution object.
 
     CPAN::Module::test()
         Runs a "test" on the distribution associated with this module.
