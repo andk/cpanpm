@@ -1028,7 +1028,7 @@ __END__
 #E:Has already been made
 ########
 #P:clean Bundle::CpanTestDummies
-#E:No Makefile
+#E:Running clean[\S\s]+Running clean[\S\s]+Running clean
 ########
 #P:clean Bundle::CpanTestDummies
 #E:make clean already called once
