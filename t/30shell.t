@@ -1056,7 +1056,7 @@ __END__
 #T:60
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
-#E:is up to date|circular dependency
+#E:is up to date|Recursive dependency
 #T:60
 ########
 #P:o conf defaults
