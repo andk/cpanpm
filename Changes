@@ -1,4 +1,4 @@
-2007-04-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-04-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91
 
@@ -16,6 +16,9 @@
 	the size of directories to be deleted
 
 	* bugfix: scripts installation was broken
+
+	* bugfix: do not drop unknown config variables for the sake of forward
+	compatibility
 
 2007-04-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

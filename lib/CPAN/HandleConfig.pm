@@ -298,8 +298,8 @@ EOF
     $fh->print(qq[$msg\$CPAN::Config = \{\n]);
     foreach (sort keys %$CPAN::Config) {
         unless (exists $keys{$_}) {
-            $CPAN::Frontend->mywarn("Dropping unknown config variable '$_'\n");
-            delete $CPAN::Config->{$_};
+            # do not drop them: forward compatibility!
+            $CPAN::Frontend->mywarn("Unknown config variable '$_'\n");
             next;
         }
 	$fh->print(
