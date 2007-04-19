@@ -1,0 +1,7 @@
+---
+match:
+  distribution: "^BINGOS/POE-Component-CPAN-YACSmoke-\d"
+pl:
+  expect:
+    - "Do you want to enable optional Proc::Killfam support"
+    - "y\n"

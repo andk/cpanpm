@@ -1,4 +1,12 @@
+2007-04-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* bug: megainstall contains Bundle::PAUSE which is not published. Should
+	be.
+
 2007-04-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* see thread "echo die > Makefile.PL" on module-authors. Fortunately,
+	Joshua argues well.
 
 	* Slaven sent me dependency statistics on freebsd ports of perl modules.
 	I have checked the 208 top lines (20+ references) of 1200. I found

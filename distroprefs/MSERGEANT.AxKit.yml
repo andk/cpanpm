@@ -1,6 +1,6 @@
---- 
+---
 match:
-  distribution: "^BTROTT/XML-FOAF-"
+  distribution: "^MSERGEANT/AxKit-\d"
 pl: 
   expect:
     - "Auto-install"
@@ -14,5 +14,3 @@ pl:
 make:
   env:
     PERL_AUTOINSTALL: --skip    
-patches:
-  - "ANDK/patches/XML-FOAF-0.03-ANDK-01.patch.gz"

@@ -17,7 +17,9 @@ distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
+distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
+distroprefs/BRICAS.Catalyst-Plugin-ConfigLoader.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DH.yml
 distroprefs/BTROTT.Crypt-DSA.yml
@@ -28,7 +30,9 @@ distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BTROTT.XML-FOAF.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
+distroprefs/CFRANKS.HTML-Widget.yml
 distroprefs/CLKAO.App-CLI.yml
+distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
@@ -98,6 +102,7 @@ distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MRAMBERG.Catalyst-Runtime.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
+distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
 distroprefs/MSERGEANT.DBIx-AnyDBD.yml
@@ -114,10 +119,12 @@ distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
+distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
+distroprefs/SMUELLER.Math-Approx-Symbolic.yml
 distroprefs/SMUELLER.PAR.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
@@ -125,6 +132,7 @@ distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/STEVAN.Class-MOP.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
+distroprefs/TSCH.Cairo.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml

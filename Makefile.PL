@@ -220,175 +220,467 @@ MEGA_BASE = \
 
 MEGA_INSTALL = \
  ANDK/keepcool-0.344 \
+ Algorithm::Annotate \
+ Algorithm::C3 \
  Algorithm::Partition \
  AltaVista::BabelFish \
  Alzabo \
  App::Ack \
+ App::CLI \
+ Array::Iterator \
+ Authen::Simple \
+ AxKit \
+ BFD \
+ Bit::Vector::Minimal \
  Bundle::Pause \
  Bundle::Perl6 \
  Bundle::Phalanx100 \
  Bundle::RT \
  Bundle::Slash \
+ Business::CreditCard \
  Business::OnlinePayment \
  CDB_File \
  CGI::Ajax \
  CGI::Application \
+ CGI::Application::Plugin::AutoRunmode \
+ CGI::Application::Plugin::DevPopup \
+ CGI::Application::Plugin::Forward \
+ CGI::Session \
+ CGI::Untaint \
  CPAN::Unwind \
  CPAN::YACSmoke \
+ CSS \
+ Cache::FastMmap \
  Cache::File \
  Cache::Memcached \
  Cache::Memcached::XS \
+ Cache::Simple::TimedExpiry \
+ Cairo \
  Carp::Always \
+ Carp::Assert::More \
  Catalyst \
+ Catalyst::Action::RenderView \
+ Catalyst::Devel \
+ Catalyst::Manual \
+ Catalyst::Plugin::Authentication \
+ Catalyst::Plugin::Authorization::Roles \
+ Catalyst::Plugin::ConfigLoader \
+ Catalyst::Plugin::FormValidator \
+ Catalyst::Plugin::Session \
+ Catalyst::Plugin::Static::Simple \
+ Catalyst::View::TT \
+ Class::Base \
  Class::C3 \
+ Class::DBI::AbstractSearch \
+ Class::DBI::AsForm \
+ Class::DBI::Pager \
+ Class::DBI::Plugin::Type \
+ Class::Data::Accessor \
+ Class::Date \
+ Class::Factory \
  Class::Fields \
+ Class::Gomor \
+ Class::InsideOut \
+ Class::Loader \
+ Class::MakeMethods \
  Class::MethodMaker \
+ Class::Multimethods \
+ Class::Multimethods::Pure \
+ Class::Observable \
+ Class::ReturnValue \
+ Class::Std \
+ Class::Trait \
+ Class::Virtual \
+ Class::XPath \
  Compress::LZF \
  Config::Any \
+ Config::General \
+ Config::IniFiles \
  Config::JSON \
+ Config::Simple \
+ Config::Std \
  Config::XPath \
  Continuity \
+ Convert::ASCII::Armour \
  Convert::BinHex \
+ Convert::PEM \
+ Convert::TNEF \
  Coro \
+ Crypt::Blowfish \
+ Crypt::CipherSaber \
+ Crypt::DES \
+ Crypt::DH \
+ Crypt::DSA \
+ Crypt::IDEA \
  Crypt::OpenPGP \
+ Crypt::OpenSSL::Bignum \
+ Crypt::OpenSSL::RSA \
+ Crypt::OpenSSL::Random \
+ Crypt::PasswdMD5 \
+ Crypt::Primes \
+ Crypt::RSA \
+ Crypt::Random \
+ Crypt::Rijndael \
  Curses \
+ DBD::Mock \
+ DBD::Pg \
  DBIx::Class \
- DBIx::Timeout \
- Daemon::Generic \
- Data::Visitor \
- DateTime::Format::Natural \
+ DBIx::DBSchema \
  DBIx::Perlish \
+ DBIx::SearchBuilder \
  DBIx::Simple \
+ DBIx::Timeout \
  DJabberd \
+ Daemon::Generic \
+ Data::Bind \
+ Data::Buffer \
  Data::Dump \
+ Data::Dump::Streamer \
  Data::Entropy \
  Data::Float \
+ Data::FormValidator \
+ Data::HexDump \
+ Data::Hierarchy \
+ Data::OptList \
+ Data::Properties \
  Data::Random \
+ Data::TreeDumper \
+ Data::Visitor \
+ Date::Leapyear \
+ Date::Simple \
+ DateTime::Calendar::Julian \
+ DateTime::Event::Recurrence \
+ DateTime::Format::Builder \
+ DateTime::Format::Mail \
+ DateTime::Format::MySQL \
+ DateTime::Format::Natural \
+ DateTime::Format::W3CDTF \
+ DateTime::Set \
  Devel::CallTrace \
+ Devel::Caller \
  Devel::Command \
  Devel::Cover \
  Devel::Dependencies \
  Devel::FastProf \
  Devel::Hide \
+ Devel::LexAlias \
  Devel::Modlist \
  Devel::Monitor \
  Devel::Profile \
  Devel::Required \
+ Devel::Size \
  Devel::SmallProf \
+ Devel::Trace \
  Devel::TraceMethods \
  Devel::TraceUse \
- Devel::Size \
- Devel::Trace \
  Devel::ebug \
  Devel::ebug::HTTP \
+ Digest::BubbleBabble \
+ Digest::MD2 \
+ Email::Address \
+ Email::Date \
+ Email::Find \
+ Email::Folder \
+ Email::FolderType \
+ Email::FolderType::Net \
+ Email::LocalDelivery \
+ Email::MIME \
+ Email::MIME::ContentType \
+ Email::MIME::Encodings \
+ Email::MIME::Modifier \
+ Email::MessageID \
+ Email::Simple::Creator \
+ Encode::compat \
  Event::ExecFlow \
  Event::Lib \
+ Exporter::Lite \
+ ExtUtils::Depends \
+ ExtUtils::F77 \
  ExtUtils::ModuleMaker \
+ ExtUtils::PkgConfig \
  FLV::Info \
+ File::BaseDir \
+ File::Fetch \
  File::NCopy \
+ File::NFSLock \
+ File::Path::Expand \
  File::Rsync \
+ FileHandle::Unget \
  Filter::Util::Call \
+ Flickr::API \
  Font::TTF \
- GSSAPI \
+ GD::Graph \
  GIS::Distance \
+ GSSAPI \
+ Geography::Countries \
+ Getopt::ArgvFile \
  Getopt::Euclid \
  Getopt::Mixed \
+ Graph \
  Graph::Easy \
+ GraphViz \
+ Gtk \
+ Gtk2 \
+ HTML::Clean \
+ HTML::Entities::Numbered \
+ HTML::FillInForm \
+ HTML::FromText \
+ HTML::Mason \
  HTML::PopupTreeSelect::Dynamic \
+ HTML::Prototype \
+ HTML::Scrubber \
  HTML::Selector::XPath \
+ HTML::StickyQuery \
+ HTML::TableExtract \
  HTML::Template::Compiled \
+ HTML::Tidy \
+ HTML::TokeParser::Simple \
+ HTML::Widget \
+ HTML::WikiConverter \
+ HTTP::BrowserDetect \
+ HTTP::Server::Simple \
+ HTTP::Server::Simple::Mason \
+ Heap \
  IO::Async::Buffer \
+ IO::Digest \
+ IO::Interface \
+ IO::LockedFile \
+ IO::Multiplex \
  IO::Pager \
+ IO::Tee \
+ IPC::Mmap \
  IPC::PubSub \
  IPC::ShareLite \
  Image::Pngslimmer \
+ Imager \
+ Imager::Graph \
+ Iterator \
  JSON::XS \
  Jifty \
  Kwiki \
+ LWP::Authen::Wsse \
  LWP::UserAgent \
+ Lingua::EN::Inflect::Number \
+ Lingua::StopWords \
+ Lingua::ZH::TaBE \
+ List::MoreUtils \
+ Locale::Maketext::Fuzzy \
  Locale::Maketext::Gettext \
+ Locale::Maketext::Lexicon \
+ Log::Agent \
+ Log::Message \
+ Log::Message::Simple \
  Lucene \
+ MKDoc::XML \
+ MP3::Info \
+ Mail::Audit \
+ Mail::IMAPClient \
+ Mail::RFC822::Address \
+ Mail::Transport::Dbx \
  Math::Approx::Symbolic \
+ Math::Base85 \
  Math::BigInt::FastCalc \
  Math::BigInt::GMP \
  Math::BigRat \
+ Math::GMP \
+ Math::Geometry::Planar::GPC \
+ Math::Geometry::Planar::Offset \
+ Math::Pari \
+ Math::Round::Var \
+ Math::Symbolic \
+ Math::SymbolicX::ParserExtensionFactory \
+ Math::Vec \
  Module::Build::Convert \
+ Module::Compile \
+ Module::Find \
  Module::Info \
  Module::Install \
+ Module::Loaded \
  Module::Plan::Base \
+ Module::Pluggable::Fast \
+ Module::Refresh \
  Module::Release \
+ Module::Versions::Report \
  Moose \
+ Net::CIDR \
+ Net::Daemon \
  Net::Domain::TLD \
+ Net::IMAP::Simple \
+ Net::IPv4Addr \
+ Net::IPv6Addr \
+ Net::Libdnet \
+ Net::Netmask \
+ Net::Packet \
+ Net::Pcap \
+ Net::SNMP \
  Net::SSH \
  Net::SSL::ExpireDate \
+ Net::Server \
  Net::Twitter \
+ Net::Write \
+ Net::XMPP \
+ NetAddr::IP \
+ News::Article \
  Number::Format \
+ OLE::Storage_Lite \
+ Object::Accessor \
+ Object::Realize::Later \
  Object::Signature \
  Object::Tiny \
- PApp \
  PAR \
  PAR::Dist::FromCPAN \
  PAR::Packer \
+ PApp \
  PDL \
+ PGP::Sign \
+ POE::API::Peek \
  POE::Component::CPAN::YACSmoke \
+ POE::Component::Client::DNS \
+ POE::Component::Client::Ident \
+ POE::Component::Client::Keepalive \
+ POE::Component::IRC \
+ POE::Component::SSLify \
+ POE::Filter::IRCD \
+ PPI \
+ Package::Constants \
  PadWalker \
  Params::Smart \
  Parse::BACKPAN::Packages \
+ Parse::Yapp \
  Perl6::Attributes \
+ Perl6::Export \
+ Perl6::Form \
  Perl6::Perldoc \
  Perl::Dist \
  Perl::Version \
  PerlIO::eol \
+ PerlIO::via::dynamic \
+ PerlIO::via::symlink \
  Perlbal \
  Petal \
  Petal::Utils \
  Plagger \
+ Proc::ProcessTable \
  Pugs::Compiler::Perl6 \
  Pugs::Compiler::Rule \
  Quantum::Superpositions \
+ RDF::Core \
+ RPC::XML \
+ Regexp::Shellish \
+ ResourcePool \
+ Return::Value \
+ Roman \
+ Rose::Object \
  SOAP::Lite \
+ SQL::Abstract::Limit \
+ SQL::ReservedWords \
+ SQL::Statement \
  SREZIC/pingomatic-1.013 \
  SVN::Mirror \
  SVN::Notify::Config \
  SVN::Notify::Mirror \
  Scalar::Defer \
+ Set::Infinite \
  Smart::Comments \
  Socket6 \
  Spoon \
+ Spreadsheet::ParseExcel \
+ Spreadsheet::WriteExcel \
+ String::CRC32 \
  String::Expand \
  String::Similarity \
+ Sub::Exporter \
+ Sub::Install \
+ Sub::Name \
+ Sub::Override \
+ Sys::SigAction \
  Taint::Util \
  Task::CVSMonitor \
  Tcl \
+ Template::Extract \
+ Template::Plugin::Class \
  Template::Plugin::Number::Format \
+ Template::Timer \
  Term::Menu \
  Term::ReadLine::Gnu \
  Term::Size \
  Term::Size::Perl \
+ Term::UI \
  Test::Deep \
+ Test::Differences \
+ Test::HTTP::Server::Simple \
  Test::JSON \
  Test::Kwalitee \
+ Test::LongString \
+ Test::MockModule \
  Test::MockObject \
+ Test::SubCalls \
+ Test::WWW::Mechanize \
  Test::Without::Module \
  Test::YAML::Meta \
+ Text::Aligner \
+ Text::Autoformat \
  Text::CSV_XS \
+ Text::Quoted \
+ Text::Reform \
+ Text::Shellwords \
+ Text::Table \
+ Text::TabularDisplay \
+ Text::Template \
+ Text::WikiFormat \
+ Text::Wrapper \
+ Text::vFile::asData \
+ Tie::Array::Sorted \
  Tie::Cache::LRU \
  Tie::Cycle \
  Tie::DxHash \
+ Tie::EncryptedHash \
  Time::HiRes::Value \
+ Time::Piece \
  Time::UTC \
  Tk::FontDialog \
  Tk::Pod \
+ Tk::TableMatrix \
  Tk::Tree \
+ UNIVERSAL::isa \
+ URI::Find \
+ Unicode::Map \
+ Unicode::Map8 \
+ Unicode::MapUTF8 \
+ Unix::Syslog \
+ User \
+ User::Identity \
  Voting::Condorcet::RankedPairs \
  WWW::Live365 \
  WWW::Monitor \
+ WWW::Scraper::ISBN::Record \
+ WWW::Search \
+ Want \
+ Workflow \
+ X500::DN \
+ XML::Atom \
+ XML::AutoWriter \
  XML::Checker::Parser \
  XML::Compile \
- X500::DN \
+ XML::Elemental \
+ XML::Filter::XInclude \
+ XML::Handler::YAWriter \
+ XML::Node \
+ XML::NodeFilter \
+ XML::Parser::Lite::Tree \
+ XML::RSS \
+ XML::RSS::LibXML \
+ XML::Sablotron \
+ XML::SimpleObject \
+ XML::Stream \
+ XML::Twig \
+ XML::Validator::Schema \
+ XML::XPathEngine \
  YAML::Tiny \
  Yahoo::Search \
  bignum \
+ capitalization \
+ gettext \
  mixin \
 
 

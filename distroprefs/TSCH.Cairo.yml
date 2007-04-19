@@ -1,0 +1,7 @@
+--- 
+match:
+  distribution: "^TSCH/Cairo-\d"
+pl: 
+  expect:
+    - "Install ExtUtils::PkgConfig"
+    - "y\n"

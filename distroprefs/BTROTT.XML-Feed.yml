@@ -2,6 +2,8 @@
 match:
   distribution: "^BTROTT/XML-Feed-0"
 pl: 
+  env:
+    PERL_AUTOINSTALL: --skip    
   eexpect:
     mode: deterministic
     timeout: 5
@@ -12,3 +14,6 @@ pl:
       - "y\n"
       - "Auto-install"
       - "y\n"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
