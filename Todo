@@ -1,6 +1,39 @@
+2007-04-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* http://bricas.vox.com/
+
+	* it seems like maybe a recent upgrade of XML::LibXML broke XML::Atom?
+	Where is the script that quickly confirms/denies this hypothesis?
+
+	* "Found 1659 old builds, restored the state of 880"
+
+	So we did not reach 1000 yet.
+
+	* Test::WWW::Mechanize has many PASSes _and_ FAILs.
+
+	* I have removed from megainstall: PGP::Sign because it does not set $|;
+	and Djabberd because it seemed to hang in the test even when it could
+	write to /tmp/djabberd/
+
+	* 5.6.2 fails one kwalify test in 12cpan.t for non obvious reason.
+
+2007-04-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Crypt::OpenPGP needs a fix in the distroprefs file. What was the
+	problem? During XML-FOAF the usual recursion into installing OpenPGP
+	seemed to happen. Yes, I had PERL_AUTOINSTALL set, now added
+	PERL_EXTUTILS_AUTOINSTALL.
+
+	As long as this was missing, we had to kill the recursively acting
+	installer three times: during make, make test, and make install.
+
+	DONE.
+
+	* 1.91 is out.
+
 2007-04-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* bug: megainstall contains Bundle::PAUSE which is not published. Should
+	* bug: megainstall contains Bundle::Pause which is not published. Should
 	be.
 
 2007-04-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -12,7 +45,7 @@
 	I have checked the 208 top lines (20+ references) of 1200. I found
 	IO::Socket::INET6 hanging and added a few others to megainstall.
 
-	* reports should have a counter of open issues on rt.cpan.org. Current
+	* reports command should display open issues on rt.cpan.org. Current
 	value to look up is
 
 	http://rt.cpan.org/Public/Dist/Display.html?Name=Template-Timer

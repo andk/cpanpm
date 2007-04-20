@@ -250,6 +250,7 @@ MEGA_INSTALL = \
  CPAN::Unwind \
  CPAN::YACSmoke \
  CSS \
+ CSS::SAC \
  Cache::FastMmap \
  Cache::File \
  Cache::Memcached \
@@ -324,13 +325,14 @@ MEGA_INSTALL = \
  Curses \
  DBD::Mock \
  DBD::Pg \
+ DBI::Shell \
  DBIx::Class \
+ DBIx::Class::Indexed \
  DBIx::DBSchema \
  DBIx::Perlish \
  DBIx::SearchBuilder \
  DBIx::Simple \
  DBIx::Timeout \
- DJabberd \
  Daemon::Generic \
  Data::Bind \
  Data::Buffer \
@@ -438,6 +440,7 @@ MEGA_INSTALL = \
  HTML::Widget \
  HTML::WikiConverter \
  HTTP::BrowserDetect \
+ HTTP::Response::Encoding \
  HTTP::Server::Simple \
  HTTP::Server::Simple::Mason \
  Heap \
@@ -486,6 +489,7 @@ MEGA_INSTALL = \
  Math::Geometry::Planar::GPC \
  Math::Geometry::Planar::Offset \
  Math::Pari \
+ Math::Polynom \
  Math::Round::Var \
  Math::Symbolic \
  Math::SymbolicX::ParserExtensionFactory \
@@ -532,7 +536,6 @@ MEGA_INSTALL = \
  PAR::Packer \
  PApp \
  PDL \
- PGP::Sign \
  POE::API::Peek \
  POE::Component::CPAN::YACSmoke \
  POE::Component::Client::DNS \
@@ -653,6 +656,7 @@ MEGA_INSTALL = \
  Voting::Condorcet::RankedPairs \
  WWW::Live365 \
  WWW::Monitor \
+ WWW::OpenSearch \
  WWW::Scraper::ISBN::Record \
  WWW::Search \
  Want \
