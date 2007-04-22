@@ -1,3 +1,17 @@
+2007-04-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* bugfix: give all File::Temp using spots a tmpdir (bugged by Slaven Rezic)
+
+	* test fix: demand more YAML fu to run the kwalify test in 12cpan.t
+
+	* bugfix: work around a 5.8.0 overload bug (Slaven Rezic)
+
+	* cosmetics: turn on sorting for Data::Dumper conversions
+
+	* several new distropref files
+
+	* test fix: on failure use diag(STDERR) instead of mydiag (STDOUT)
+
 2007-04-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91
