@@ -328,7 +328,7 @@ expected[$expected]\ngot[$got]\n\n";
                         } ],
                       [ timeout => sub {
                             my $got = $expo->clear_accum;
-                            mydiag "timed out on i[$i]prog[$prog]
+                            diag "timed out on i[$i]prog[$prog]
 expected[$expected]\ngot[$got]\n\n";
                             mydiag sprintf(
                                          "and perl says that [[[%s]]] %s match [[[%s]]]!",
@@ -387,7 +387,9 @@ if ($RUN_EXPECT) {
                 }
             }
         } else {
-            mydiag "FAILED at pos[$pos] in test.out";
+            my $pos = pos $biggot;
+            my $got = substr($biggot,$pos,1024);
+            diag "FAILED at pos[$pos]prog[$prog]\nexpected[$expected]\ngot[$got]";
             last;
             $ok = 0;
         }
