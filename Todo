@@ -1,5 +1,9 @@
 2007-04-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Found 1948 old builds, restored the state of 939
+
+	But 160 fails.
+
 	* XML::Comma 1.98:
 
 	STORE_ERROR -- make id error: DB_CONNECTION_ERROR -- DBI connect('comma:localhost;mysql_local_infile=1','comma',...) failed: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2) at .test/lib//XML/Comma/SQL/DBH_User.pm line 135 at t/multi_store_doctype.t line 36 at t/multi_store_doctype.t line 36

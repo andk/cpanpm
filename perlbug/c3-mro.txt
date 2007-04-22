@@ -1,0 +1,8 @@
+Patch 30980 last week broke the two modules Params::Util and Graph.
+
+I have posted the fact to P5P on 2007-04-21.
+
+So far no reply.
+
+Todo: write a test case that fails without needing Params::Util or
+Graph.
