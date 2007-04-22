@@ -79,8 +79,10 @@ require CPAN::HandleConfig;
 {
     my $this_block_count;
     BEGIN { $count += $this_block_count = 2; }
-    eval { require Kwalify };
-    if ($@) {
+    eval { require Kwalify; require YAML; }; # most of the kwalify
+                                             # stuff does not work
+                                             # without yaml
+    if ($@ || (($YAML::VERSION||0) < 0.62)) {
         for (1..$this_block_count) {
             ok(1);
         }
