@@ -1,0 +1,15 @@
+---
+match:
+  distribution: "^BRIANSKI/XML-Comma-"
+pl:
+  expect:
+    - "XML::Comma comma_root"
+    - "/usr/local/comma\n"
+    - "mysql user"
+    - "comma\n"
+    - "mysql password"
+    - "comma\n"
+    - "mysql database name"
+    - "comma\n"
+    - "mysql host"
+    - "localhost\n"

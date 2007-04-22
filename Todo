@@ -1,3 +1,26 @@
+2007-04-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* XML::Comma 1.98:
+
+	STORE_ERROR -- make id error: DB_CONNECTION_ERROR -- DBI connect('comma:localhost;mysql_local_infile=1','comma',...) failed: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2) at .test/lib//XML/Comma/SQL/DBH_User.pm line 135 at t/multi_store_doctype.t line 36 at t/multi_store_doctype.t line 36
+# Looks like you planned 29 tests but only ran 1.
+
+	Who believes that the socket must be under /tmp/?
+
+	editing bin/comma-create-config.pl doesn't help. It seems that there was
+	a DBI or DBD::mysql change at some point in time. Or all my DBD::mysqls
+	were build wrongly?
+
+	Maybe, for sure the connect string must now be:
+
+	DBI->connect("DBI:mysql:database=comma;host=localhost;mysql_socket=/var/run/mysqld/mysqld.sock;mysql_local_infile=1","comma","comma")
+
+	and XML::Comma does not allow to configure that interactively.
+
+	* What's the problem with Module-Release? I started watching it on
+	20070413 and got only fails since.
+	http://rt.cpan.org/Ticket/Display.html?id=26539
+
 2007-04-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Found 2269 old builds, restored the state of 932
@@ -149,7 +172,8 @@ Module id = Coro::Event
 	Implement configure_requires? (testcase RPM::XML)
 
 	Implement a depends/requires keyword for distroprefs? (Testcase
-	Spreadsheet ParseExcel)
+	Spreadsheet ParseExcel or XML-Filter-XInclude which does not declare
+	XML::SAX::Writer as dependency)
 
 	Speedup the cleanup? DONE [...time passes...] But I do not like the new
 	version. I want to see how long it takes/will take. svk rev. 2216 seems
