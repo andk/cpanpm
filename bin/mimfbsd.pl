@@ -15,9 +15,9 @@ while (<DATA>) {
   next if $hits >= 20;
   $dist_heart =~ s/-/::/g;
   my $do = CPAN::Shell->expand("Module", $dist_heart) or next;
-  next if $do->inst_file;
-  print " $dist_heart \\\n";
-  last if $i++>300
+  next if $do->inst_file || $do->{build_dir};
+  printf "%4d %s\n", $hits, $dist_heart;
+  # last if $i++>80;
 }
 
 
