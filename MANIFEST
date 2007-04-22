@@ -11,6 +11,7 @@ distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ANDYA.Perl-Version.yml
+distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
 distroprefs/AUDREYT.Jifty-DBI.yml
 distroprefs/AUDREYT.Module-Install.yml
@@ -28,6 +29,7 @@ distroprefs/BTROTT.Feed-Find.yml
 distroprefs/BTROTT.URI-Fetch.yml
 distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BTROTT.XML-FOAF.yml
+distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CFRANKS.HTML-Widget.yml
@@ -76,6 +78,7 @@ distroprefs/JESSE.Jifty.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
+distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/JROBINSON.DBIx-Class.yml
@@ -89,6 +92,7 @@ distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LBROCARD.Devel-ebug-HTTP.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
+distroprefs/LYOKATO.FormValidator-Simple.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.MailTools.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
@@ -109,6 +113,7 @@ distroprefs/MSERGEANT.DBIx-AnyDBD.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/OLAF.Net-DNS.yml
+distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.TAPx-Parser.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
