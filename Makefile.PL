@@ -223,6 +223,7 @@ MEGA_INSTALL = \
  Algorithm::Annotate \
  Algorithm::C3 \
  Algorithm::Partition \
+ Algorithm::Permute \
  AltaVista::BabelFish \
  Alzabo \
  App::Ack \
@@ -230,6 +231,7 @@ MEGA_INSTALL = \
  Array::Iterator \
  Authen::Simple \
  AxKit \
+ B::Deobfuscate \
  BFD \
  Bit::Vector::Minimal \
  Bundle::Pause \
@@ -270,6 +272,8 @@ MEGA_INSTALL = \
  Catalyst::Plugin::Session \
  Catalyst::Plugin::Static::Simple \
  Catalyst::View::TT \
+ Chatbot::Eliza \
+ Class::AutoClass \
  Class::Base \
  Class::C3 \
  Class::DBI::AbstractSearch \
@@ -287,9 +291,12 @@ MEGA_INSTALL = \
  Class::MethodMaker \
  Class::Multimethods \
  Class::Multimethods::Pure \
+ Class::NamedParms \
  Class::Observable \
+ Class::ParmList \
  Class::ReturnValue \
  Class::Std \
+ Class::Throwable \
  Class::Trait \
  Class::Virtual \
  Class::XPath \
@@ -303,6 +310,7 @@ MEGA_INSTALL = \
  Config::XPath \
  Continuity \
  Convert::ASCII::Armour \
+ Convert::Bencode \
  Convert::BinHex \
  Convert::PEM \
  Convert::TNEF \
@@ -343,13 +351,16 @@ MEGA_INSTALL = \
  Data::FormValidator \
  Data::HexDump \
  Data::Hierarchy \
+ Data::Lazy \
  Data::OptList \
  Data::Properties \
  Data::Random \
  Data::TreeDumper \
+ Data::Types \
  Data::Visitor \
  Date::Leapyear \
  Date::Simple \
+ Data::TreeDumper \
  DateTime::Calendar::Julian \
  DateTime::Event::Recurrence \
  DateTime::Format::Builder \
@@ -407,11 +418,16 @@ MEGA_INSTALL = \
  File::NFSLock \
  File::Path::Expand \
  File::Rsync \
+ File::ShareDir \
  FileHandle::Unget \
+ Filesys::Df \
+ Filesys::Virtual \
  Filter::Util::Call \
  Flickr::API \
  Font::TTF \
+ FormValidator::Simple \
  GD::Graph \
+ GD::SVG \
  GIS::Distance \
  GSSAPI \
  Geography::Countries \
@@ -420,6 +436,7 @@ MEGA_INSTALL = \
  Getopt::Mixed \
  Graph \
  Graph::Easy \
+ Graph::SocialMap \
  GraphViz \
  Gtk \
  Gtk2 \
@@ -432,6 +449,7 @@ MEGA_INSTALL = \
  HTML::Prototype \
  HTML::Scrubber \
  HTML::Selector::XPath \
+ HTML::SimpleParse \
  HTML::StickyQuery \
  HTML::TableExtract \
  HTML::Template::Compiled \
@@ -443,7 +461,9 @@ MEGA_INSTALL = \
  HTTP::Response::Encoding \
  HTTP::Server::Simple \
  HTTP::Server::Simple::Mason \
+ Hash::AsObject \
  Heap \
+ Heap::Simple \
  IO::Async::Buffer \
  IO::Digest \
  IO::Interface \
@@ -463,6 +483,7 @@ MEGA_INSTALL = \
  Kwiki \
  LWP::Authen::Wsse \
  LWP::UserAgent \
+ Lexical::Persistence \
  Lingua::EN::Inflect::Number \
  Lingua::StopWords \
  Lingua::ZH::TaBE \
@@ -489,6 +510,7 @@ MEGA_INSTALL = \
  Math::Geometry::Planar::GPC \
  Math::Geometry::Planar::Offset \
  Math::Pari \
+ Math::Polygon \
  Math::Polynom \
  Math::Round::Var \
  Math::Symbolic \
@@ -526,14 +548,17 @@ MEGA_INSTALL = \
  NetAddr::IP \
  News::Article \
  Number::Format \
+ Number::WithError \
  OLE::Storage_Lite \
  Object::Accessor \
  Object::Realize::Later \
  Object::Signature \
  Object::Tiny \
+ OpenOffice::OODoc \
  PAR \
  PAR::Dist::FromCPAN \
  PAR::Packer \
+ Params::CallbackRequest \
  PApp \
  PDL \
  POE::API::Peek \
@@ -563,16 +588,22 @@ MEGA_INSTALL = \
  Petal \
  Petal::Utils \
  Plagger \
+ Pod::POM \
+ Pod::Xhtml \
  Proc::ProcessTable \
+ ProgressMonitor::AbstractConfiguration \
  Pugs::Compiler::Perl6 \
  Pugs::Compiler::Rule \
  Quantum::Superpositions \
  RDF::Core \
+ RDF::Simple \
  RPC::XML \
+ Regexp::Log \
  Regexp::Shellish \
  ResourcePool \
  Return::Value \
  Roman \
+ Rose::DateTime \
  Rose::Object \
  SOAP::Lite \
  SQL::Abstract::Limit \
@@ -583,14 +614,18 @@ MEGA_INSTALL = \
  SVN::Notify::Config \
  SVN::Notify::Mirror \
  Scalar::Defer \
+ Set::ConsistentHash \
  Set::Infinite \
  Smart::Comments \
  Socket6 \
  Spoon \
  Spreadsheet::ParseExcel \
  Spreadsheet::WriteExcel \
+ String::Approx \
  String::CRC32 \
+ String::Diff \
  String::Expand \
+ String::ShellQuote \
  String::Similarity \
  Sub::Exporter \
  Sub::Install \
@@ -600,15 +635,19 @@ MEGA_INSTALL = \
  Taint::Util \
  Task::CVSMonitor \
  Tcl \
+ TeX::Encode \
  Template::Extract \
  Template::Plugin::Class \
  Template::Plugin::Number::Format \
  Template::Timer \
  Term::Menu \
+ Term::ProgressBar \
+ Term::Prompt \
  Term::ReadLine::Gnu \
  Term::Size \
  Term::Size::Perl \
  Term::UI \
+ Test::Class \
  Test::Deep \
  Test::Differences \
  Test::HTTP::Server::Simple \
@@ -624,12 +663,15 @@ MEGA_INSTALL = \
  Text::Aligner \
  Text::Autoformat \
  Text::CSV_XS \
+ Text::LevenshteinXS \
+ Text::Ngram \
  Text::Quoted \
  Text::Reform \
  Text::Shellwords \
  Text::Table \
  Text::TabularDisplay \
  Text::Template \
+ Text::VimColor \
  Text::WikiFormat \
  Text::Wrapper \
  Text::vFile::asData \
@@ -647,6 +689,9 @@ MEGA_INSTALL = \
  Tk::Tree \
  UNIVERSAL::isa \
  URI::Find \
+ URI::Template \
+ URI::imap \
+ URI::imaps \
  Unicode::Map \
  Unicode::Map8 \
  Unicode::MapUTF8 \
@@ -659,6 +704,7 @@ MEGA_INSTALL = \
  WWW::OpenSearch \
  WWW::Scraper::ISBN::Record \
  WWW::Search \
+ WWW::Shorten \
  Want \
  Workflow \
  X500::DN \
@@ -666,6 +712,7 @@ MEGA_INSTALL = \
  XML::AutoWriter \
  XML::Checker::Parser \
  XML::Compile \
+ XML::DOM::XPath \
  XML::Elemental \
  XML::Filter::XInclude \
  XML::Handler::YAWriter \
@@ -677,6 +724,7 @@ MEGA_INSTALL = \
  XML::Sablotron \
  XML::SimpleObject \
  XML::Stream \
+ XML::Tiny \
  XML::Twig \
  XML::Validator::Schema \
  XML::XPathEngine \

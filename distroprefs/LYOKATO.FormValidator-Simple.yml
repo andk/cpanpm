@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^ADAMK/Algorithm-Dependency-"
+  distribution: "^LYOKATO/FormValidator-Simple-\d"
 pl:
   expect:
     - "Auto-install"
@@ -14,15 +14,10 @@ pl:
     - "Auto-install"
     - "y\n"
   env:
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
     PERL_AUTOINSTALL: --skip    
 make:
   env:
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
     PERL_AUTOINSTALL: --skip    
 test:
   env:
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
     PERL_AUTOINSTALL: --skip    
-patches:
-  - "ANDK/Module-AutoInstall-in-inc-ANDK-01.patch"
