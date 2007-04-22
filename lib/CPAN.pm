@@ -4636,7 +4636,10 @@ sub reanimate_build_dir {
             # $DB::single = 1;
             if ($do->{make_test}
                 && $do->{build_dir}
-                && !$do->{make_test}->failed
+                && !(UNIVERSAL::can($do->{make_test},"failed") ?
+                     $do->{make_test}->failed :
+                     $do->{make_test} =~ /^YES/
+                    )
                 && (
                     !$do->{install}
                     ||
