@@ -1,4 +1,69 @@
+2007-04-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Found 2269 old builds, restored the state of 932
+
+	* r command spits out:
+
+GD::Graph::Data            1.21.2.2      1.21  BWARFIELD/GDGraph-1.4307.tar.gz
+GD::Graph::axestype       1.44.2.14      1.44  MVERB/GDGraph-1.43.tar.gz
+GD::Graph::pie             1.20.2.4      1.20  BWARFIELD/GDGraph-1.4306.tar.gz
+
+	Is already reported on RT.
+
+	* Regression in blead!
+
+t/05_typelike....No such class: 'ARRAY'! at /home/src/perl/repoperls/installed-p
+erls/perl/pRQK8my/perl-5.8.0@30999/lib/5.9.5/overload.pm line 99.
+# Looks like you planned 29 tests but only ran 8.
+# Looks like your test died just after 8.
+dubious 
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 9-29
+        Failed 21/29 tests, 27.59% okay
+
+	I first noticed it with Params::Util. 
+
+	20070419T1942 was the first one to fail, so it happened between
+
+	20070419T1622 perl        30979
+	20070419T1942 perl        30985
+
+	Only 8 tests out of my 880 distributions fail with this regression:
+
+	Params::Util, Graph (3 tests), 
+
+	Then Algorithm::Dependency tries again to test Params::Util 4 times. Why
+	4 times?
+
+	First time during make because I forgot to set PERL_AUTOINSTALL=--skip.
+	It seems to choose CPANPLUS to do the job, maybe because I have set
+	CPANPLUS_IS_RUNNING? CPANPLUS then runs make test on Params::Util twice.
+	Then CPANPLUS gives up with
+
+*** Params::Util installation cancelled.
+*** Module::AutoInstall installation finished.
+
+	Then CPAN.pm reaches 'make test' and Module::Autoinstall or something is
+	called again from the Makefile and CPANPLUS runs the test on
+	Params::Util twice again just to reach the same conclusion.
+
+	The regression in blead is reported to P5P. The thing with
+	Module::Install has no place where it should be directed. Rantbox?
+
+	* The kwalify test also fails on 5.8.0 with YAML 0.39. Which YAML has my
+	5.6.2? None, only YAML::Syck 0.84 which was a regression. Trying to
+	compile 0.85 fails already during its own tests on 5.6.2. 0.82 ditto. So
+	is it time to install 0.85 with force? Yes, but with this the test in
+	12cpan still fails. Maybe I should ask the question the other way round.
+	If we downgrade YAML to 0.39, can we then reproduce the bug with 5.9.5?
+	Trying with blead@31000: make test OK; make run + install
+	INGY/YAML-0.39.tar.gz OK; make test OK.
+
 2007-04-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* off topic:
+	http://www.oreillynet.com/pub/a/databases/2007/04/12/building-a-data-warehouse-with-mysql-and-perl.html
+	(sam tragar)
 
 	* http://bricas.vox.com/
 
@@ -91,9 +156,12 @@ Module id = Coro::Event
 	to provide that.
 
 	Implement 30shell.t in a way that always emits useful output after a
-	failure?
+	failure? DONE in SVK rev. 2255
 
-	Find an opinion on MIME-tools.
+	Find an opinion on MIME-tools. It seems that nobody cares. It's about
+	undef in %INC. I think it can stay as it is and we must educate
+	ourselves how %INC works now. But if it is not even in perldelta.pod?
+	Discussion on P5P was 11/12.4.
 
 	* Bug? "fforce test Task::Smoke" goes into an endless loop.
 	Test-TAP-Model and Task-Smoke play ping pong. All other prreqs are
