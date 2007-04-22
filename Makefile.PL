@@ -1115,7 +1115,7 @@ dd-prefs :: $base.dd
 
     if ($HAVE_YAML_SYCK) {
       push @m, qq{$base.dd : Makefile
-	\$(PERL) -MYAML::Syck=LoadFile -MData::Dumper -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); print Data::Dumper->new(\\\@y)->Indent(1)->Useqq(1)->Purity(1)->Dump' $base > $base.dd.new && mv $base.dd.new $base.dd
+	\$(PERL) -MYAML::Syck=LoadFile -MData::Dumper -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); print Data::Dumper->new(\\\@y)->Indent(1)->Useqq(1)->Purity(1)->Sortkeys(1)->Dump' $base > $base.dd.new && mv $base.dd.new $base.dd
 
 };
     } elsif (0) {
