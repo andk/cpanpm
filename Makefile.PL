@@ -401,6 +401,7 @@ MEGA_INSTALL = \
  Email::MIME::ContentType \
  Email::MIME::Encodings \
  Email::MIME::Modifier \
+ Email::MIME::XPath \
  Email::MessageID \
  Email::Simple::Creator \
  Encode::compat \
@@ -576,6 +577,7 @@ MEGA_INSTALL = \
  Parse::BACKPAN::Packages \
  Parse::Yapp \
  Perl6::Attributes \
+ Perl6::Caller \
  Perl6::Export \
  Perl6::Form \
  Perl6::Perldoc \
@@ -711,6 +713,7 @@ MEGA_INSTALL = \
  XML::Atom \
  XML::AutoWriter \
  XML::Checker::Parser \
+ XML::Comma \
  XML::Compile \
  XML::DOM::XPath \
  XML::Elemental \
