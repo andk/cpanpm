@@ -32,15 +32,18 @@ $VAR1 = {
 };
 $VAR2 = {
   "comment" => "2.17 had more test failures for me than 2.16",
+  "goto" => "ADAMK/Template-Toolkit-2.16.tar.gz",
   "match" => {
     "distribution" => "^(ABW|ADAMK)/Template-Toolkit-2.17"
-  },
-  "goto" => "ADAMK/Template-Toolkit-2.16.tar.gz"
+  }
 };
 $VAR3 = {
   "match" => {
     "distribution" => "^(ABW|ADAMK)/Template-Toolkit-2.16"
   },
+  "patches" => [
+    "ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz"
+  ],
   "pl" => {
     "args" => [
       "TT_EXTRAS=no"
@@ -67,16 +70,16 @@ $VAR3 = {
       ".",
       "\n"
     ]
-  },
-  "patches" => [
-    "ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz"
-  ]
+  }
 };
 $VAR4 = {
   "comment" => "\nThe patch is a reaction to\nhttp://rt.cpan.org/Ticket/Display.html?id=20807 ; for the options\nyou would probably prefer setting TT_* commandline args\n",
   "match" => {
     "distribution" => "^ABW/Template-Toolkit-2.15"
   },
+  "patches" => [
+    "ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz"
+  ],
   "pl" => {
     "args" => [
       "TT_EXTRAS=no"
@@ -103,14 +106,11 @@ $VAR4 = {
       ".",
       "\n"
     ]
-  },
-  "patches" => [
-    "ANDK/patches/Template-Toolkit-2.15-ANDK-01.patch.gz"
-  ]
+  }
 };
 $VAR5 = {
-  "disabled" => 1,
   "comment" => "Prohibit working with 2.14",
+  "disabled" => 1,
   "match" => {
     "distribution" => "^ABW/Template-Toolkit-2.14"
   }
