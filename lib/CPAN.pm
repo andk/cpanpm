@@ -7158,7 +7158,7 @@ is part of the perl-%s distribution. To install that, you need to run
             unless (-f "Build") {
                 my $cwd = CPAN::anycwd();
                 $CPAN::Frontend->mywarn("Alert: no Build file available for 'make $self->{id}'".
-                                        " in cwd[$cwd]. Danger, Will Robinson!");
+                                        " in cwd[$cwd]. Danger, Will Robinson!\n");
                 $CPAN::Frontend->mysleep(5);
             }
             $system = join " ", $self->_build_command(), $CPAN::Config->{mbuild_arg};
