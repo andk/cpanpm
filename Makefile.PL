@@ -563,6 +563,7 @@ MEGA_INSTALL = \
  Params::CallbackRequest \
  PApp \
  PDL \
+ PGP::Sign \
  POE::API::Peek \
  POE::Component::CPAN::YACSmoke \
  POE::Component::Client::DNS \
@@ -622,7 +623,7 @@ MEGA_INSTALL = \
  Smart::Comments \
  Socket6 \
  Spoon \
- Spreadsheet::ParseExcel \
+ Spreadsheet::Read \
  Spreadsheet::WriteExcel \
  String::Approx \
  String::CRC32 \
@@ -738,7 +739,6 @@ MEGA_INSTALL = \
  Yahoo::Search \
  bignum \
  capitalization \
- gettext \
  mixin \
 
 
@@ -797,7 +797,7 @@ checkout ::
 # 16=Distribution; 1024=Shell; 32768=Queue
 # $$CPAN::DEBUG|=16;$$CPAN::DEBUG|=1024;$$CPAN::DEBUG|=32768;
 megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' >> logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
@@ -805,7 +805,7 @@ depefails:
 
 # nohup needed by my zsh
 termreadkeyinstall: logs/.exists
-	nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/rk.`date +%Y%m%dT%H%M`.out 2>&1
+	nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 logs/.exists :
 	mkdir -p logs
