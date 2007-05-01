@@ -7113,8 +7113,7 @@ is part of the perl-%s distribution. To install that, you need to run
                     ->new("NO '$system' returned status $ret");
                 $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
                 $self->store_persistent_state;
-                $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
-                return;
+                return $self->goodbye("$system -- NOT OK\n");
             }
 	}
 	if (-f "Makefile" || -f "Build") {
@@ -7136,8 +7135,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
             $self->{make} = CPAN::Distrostatus->new("NO $need");
             $self->store_persistent_state;
-            $CPAN::Frontend->mywarn("  [prereq] -- NOT OK\n");
-            return;
+            return $self->goodbye("[prereq] -- NOT OK\n");
         } else {
             my $follow = eval { $self->follow_prereqs(@prereq); };
             if (0) {
@@ -7146,8 +7144,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $CPAN::Frontend->mywarn($@);
-                $CPAN::Frontend->mywarn("  [depend] -- NOT OK\n");
-                return;
+                return $self->goodbye("[depend] -- NOT OK\n");
             }
         }
     }
@@ -7214,7 +7211,14 @@ is part of the perl-%s distribution. To install that, you need to run
     $self->store_persistent_state;
 }
 
-# CPAN::Distribution::_run_via_expect
+# CPAN::Distribution::goodbye ;
+sub goodbye {
+    my($self,$goodbye) = @_;
+    my $id = $self->pretty_id;
+    $CPAN::Frontend->mywarn("  $id\n  $goodbye");
+}
+
+# CPAN::Distribution::_run_via_expect ;
 sub _run_via_expect {
     my($self,$system,$expect_model) = @_;
     CPAN->debug("system[$system]expect_model[$expect_model]") if $CPAN::DEBUG;
