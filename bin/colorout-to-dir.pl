@@ -1,9 +1,13 @@
 #!/usr/bin/perl -0777 -nl
 
 use strict;
-use YAML::Syck;
+use Dumpvalue;
+use Encode qw(decode);
+use Encode::Detect ();
 use File::Path qw(mkpath);
 use List::MoreUtils qw(uniq);
+use YAML::Syck;
+
 our($perl_path) = m|(/home\S+/installed-perls/(?:.*?)/p.*?/perl-5.*?@(?:\d+))|;
 our $outdir = $ARGV;
 $outdir =~ s/.out$/.d/ or die;
@@ -13,18 +17,22 @@ sub mystore ($$$){
   my($shortdistro,$log,$ok) = @_;
   my $outfile = $shortdistro;
   $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)?$!.xml!;
+  $outfile =~ s|$|.xml| unless $outfile =~ /\.xml$/;
   $outfile =~ s|/|!|g;
   $outfile =~ s|^|$outdir/|;
   my($time) = $outdir =~ /(\d{8}T\d{4})/;
-  open my $fh, ">", $outfile or die;
+  open my $fh, ">:utf8", $outfile or die;
   for ($time,$perl_path,$shortdistro,$ok) {
     s!\&!\&amp;!g;
     s!"!&quot;!g;
     s!<!&lt;!g;
     s!>!&gt;!g;
   }
+  my $ulog = decode("Detect",$log);
+  my $dumper = Dumpvalue->new(unctrl => "unctrl");
+  $ulog =~ s/([\x00-\x09\x0b\x0c\x0e-\x1f])/ $dumper->stringify($1) /ge;
   print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok">};
-  print $fh $log;
+  print $fh $ulog;
   print $fh "</distro>\n";
   close $fh or die;
 }
@@ -95,7 +103,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
         my $ok  = $2;
         my @distros_under = uniq $log =~ /^  CPAN\.pm: Going to build (.*)/mg;
         if (@distros_under == 1) {
-          # warn sprintf "FOUND: %s (%d)\n", $d, length($log);
+          warn sprintf "FOUND: %s (%d)\n", $d, length($log);
           mystore($shortdistro,$log,$ok);
         } elsif (length $_ == 0) { # exhausted
           push @residua, $log;
@@ -196,12 +204,22 @@ BUG3
 encoding not clear on AWRIGLEY/HTML-Summary-0.017 and illegal
 codepoint 27
 
-I cannot force test scripts to declare the encoding they send me. I
-must live with the fact that I do not know it. Nonetheless I'm
-expected to present it verbatim on a webpage.
+This test is obviously writing test output in multiple encodings. It's
+certainly not our goal to detect each test's encoding. But we need
+legal output.
 
+So I must do something to unctrl the control characters and to detect
+the encoding when we have high bits set. And if detect does not
+succeed, I think I can without further considerations pretend latin-1.
 
+Before I do that I need a list of broken XML files.
 
+    find logs -name "*.xml" -exec make mega-validate MEGA_XML={} \; >& mega-validate.out
+
+BUG4
+
+residuum still reveals bad "return"s in CPAN.pm that leave us no clue
+where to cut the log.
 
 
 =cut
