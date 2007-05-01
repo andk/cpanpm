@@ -1,0 +1,11 @@
+---
+comment: |
+
+   PREREQ_FATAL must die (http://rt.cpan.org/Ticket/Display.html?id=24774)
+   so configure_requires must resolve
+
+match:
+  distribution: "^TSCH/Gtk2-\d"
+pl:
+  args:
+    - "PREREQ_FATAL=0"

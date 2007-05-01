@@ -1,15 +1,21 @@
 ---
+comment: "Tickets in RT: 26540, 26792"
 match:
   distribution: "^BRIANSKI/XML-Comma-"
 pl:
-  expect:
-    - "XML::Comma comma_root"
-    - "/usr/local/comma\n"
-    - "mysql user"
-    - "comma\n"
-    - "mysql password"
-    - "comma\n"
-    - "mysql database name"
-    - "comma\n"
-    - "mysql host"
-    - "localhost\n"
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "XML::Comma comma_root"
+      - "/usr/local/comma\n"
+      - "mysql host"
+      - "localhost\n"
+      - "mysql database name"
+      - "comma\n"
+      - "mysql user"
+      - "comma\n"
+      - "mysql password"
+      - "comma\n"
+      - "extra DSN parameters"
+      - "mysql_socket=/var/run/mysqld/mysqld.sock\n"
