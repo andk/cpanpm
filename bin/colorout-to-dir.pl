@@ -54,7 +54,7 @@ we expect the data for exactly this distro. $1 is again the distro.
 
 =cut
 
-our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
+our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)+/;
 {
   my %N;
   my %S;
@@ -71,10 +71,10 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
           (\G[\s\S]+)
           (
           <span[^<>]+>
-          Running[ ](?:make|Build)[ ]for[ ]\Q$d\E\n
+          Running[ ](?:install|make|Build)[ ]for[ ]\Q$d\E\n
           [\s\S]+\n
           ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]\Q$d\E\n
-          [\s\S]*\n
+          [\s\S]+\n
           ^$HTMLSPANSTUFF[ ]{2}(?:\Q$shortdistro\E)\n
           $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
           <\/span>
@@ -97,7 +97,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
         s/
           (
           <span[^<>]+>
-          Running[ ](?:make|Build)[ ]for[ ]\Q$d\E\n
+          Running[ ](?:install|make|Build)[ ]for[ ]\Q$d\E\n
           [\s\S]+\n
           ^$HTMLSPANSTUFF[ ]{2}(?:\Q$shortdistro\E)\n
           $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
@@ -143,6 +143,48 @@ we keep the original distroname for inside. We could write
   </distro>
 
 and of course, we must escape properly.
+
+BUGS:
+
+BUG1
+
+we should recognize when a distro reaches "delayed until after
+prerequisites", write this first piece into the splitted logfile and
+append the other part.
+
+
+  </span><span style="color: blue">Running install for module 'Archive::Zip'
+  </span><span style="color: blue">Running make for A/AD/ADAMK/Archive-Zip-1.18.tar.gz
+  </span><span style="color: blue">Checksum for /home/k/.cpan/sources/authors/id/A/AD/ADAMK/Archive-Zip-1.18.tar.gz ok
+  </span>Archive-Zip-1.18/
+  Archive-Zip-1.18/t/
+  [...]
+  <span style="color: blue">
+    CPAN.pm: Going to build A/AD/ADAMK/Archive-Zip-1.18.tar.gz
+
+  </span>Warning: prerequisite File::Which 0.05 not found.
+  Checking if your kit is complete...
+  Looks good
+  Writing Makefile for Archive::Zip
+  <span style="color: blue">---- Unsatisfied dependencies detected during ----
+  ----       ADAMK/Archive-Zip-1.18.tar.gz      ----
+      File::Which [requires]
+  </span><span style="color: blue">Running make test
+  </span><span style="color: blue">  Delayed until after prerequisites
+  </span><span style="color: blue">Running make install
+  </span><span style="color: blue">  Delayed until after prerequisites
+
+
+BUG2
+
+When we reached megainstall.20070406T1526.out this program started to
+become extremely slow. 11 hourse between the two timestamps:
+
+  -rw-rw-r--   1 sand sand  5060 Apr 28 16:54 DMAKI!DateTime-Util-Calc-0.13
+  -rw-rw-r--   1 sand sand  3566 Apr 29 04:05 DMAKI!DateTime-Util-Astro-0.08
+
+Ah, this was an endless loop in CPAN.pm and DateTime-Util-Astro was
+built again and again.
 
 
 =cut
