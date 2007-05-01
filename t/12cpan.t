@@ -82,7 +82,7 @@ require CPAN::HandleConfig;
     eval { require Kwalify; require YAML; }; # most of the kwalify
                                              # stuff does not work
                                              # without yaml
-    if ($@ || (($YAML::VERSION||0) < 0.62)) {
+    if ($@ || (($YAML::VERSION||$YAML::VERSION||0) < 0.62)) { # silence 5.005_04
         for (1..$this_block_count) {
             ok(1);
         }

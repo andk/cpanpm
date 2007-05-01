@@ -1,5 +1,7 @@
 2007-05-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: Devel::Symdump fails recur test with 5.00504.
+
 	* Todo: Jesse Vincent #26840
 
 2007-04-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>

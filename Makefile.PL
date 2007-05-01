@@ -761,7 +761,10 @@ mega-validate: bin/colorout-to-dir.rng
 
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 verify-no-subdir:
-	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|distroprefs|eg|gpw9-cpan-talk.d|inc|lib|logs|patches|perlbug|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
+	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db| \
+		distroprefs|eg|gpw9-cpan-talk.d|inc|lib|logs|patches|perlbug| \
+		protocols|related|release-lib|scripts|t|talks)\z/x \
+		&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
 
 setversion:
 	$(PERL) Makefile.PL --setversion
