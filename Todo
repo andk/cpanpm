@@ -1,5 +1,9 @@
 2007-05-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* UTF-8 HOWTO by Bruno Haible. Markus Kuhn wrote
+	http://www.cl.cam.ac.uk/~mgk25/unicode.html which is a FAQ. The latter
+	contains 'How should the UTF-8 mode be activated?'
+
 	* Todo: Devel::Symdump fails recur test with 5.00504.
 
 	* Todo: Jesse Vincent #26840
