@@ -1,3 +1,32 @@
+2007-04-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Jifty again. Same recipe as last time, still no clue.
+
+	* Here broke Tk and Regexp-Assemble:
+
+20070422T1717 perl        31019
+20070423T1448 perl        31029
+
+	Slaven determined 31027. In addition a binary search is running in case
+	we need it again.
+
+----Program----
+eval {require Regexp::Assemble};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../phti9p4/perl-5.8.0@31025/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pgwvrPP/perl-5.8.0@31027/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 31025 and 31027
+(but 31026 could not successfully be used to build perl)
+
+
 2007-04-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Jifty hangs again in the middle of its tests. The last lines in the
