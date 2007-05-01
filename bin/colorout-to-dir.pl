@@ -37,12 +37,12 @@ we expect the data for exactly this distro. $1 is again the distro.
 
 =cut
 
-BEGIN { our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/; }
+our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
 my $outdir = $ARGV;
 $outdir =~ s/.out$/.d/ or die;
 mkpath $outdir;
-
-for my $i (0,1) {
+{
+  my %N;
   my %S;
   my @distros = uniq map { $S{$_}++; $_ } /^  CPAN\.pm: Going to build (.*)/mg;
   while (my $d = pop @distros) {
@@ -52,7 +52,6 @@ for my $i (0,1) {
     }
     my $shortdistro = $d;
     $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
-    our $HTMLSPANSTUFF;
     if (
         s/
           (\G[\s\S]+)
@@ -78,6 +77,36 @@ for my $i (0,1) {
       close $fh or die;
     } else {
       warn "not found: $d ($S{$d})";
+      $N{$d}++;
+    }
+  }
+  pos($_) = 0;
+  map {$N{$_}++} />Running \S+ for ([A-Z]\/.*)/mg;
+  for my $d (keys %N) {
+    my $shortdistro = $d;
+    $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
+    if (
+        s/
+          (
+          <span[^<>]+>
+          Running[ ](?:make|Build)[ ]for[ ]$d\n
+          [\s\S]+\n
+          ^$HTMLSPANSTUFF[ ]{2}($shortdistro)\n
+          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+(NOT\s)?OK\n
+          <\/span>
+         )//mx
+       ) {
+      my $log = $1;
+      warn sprintf "FINALLY FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
+      my $outfile = $shortdistro;
+      $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
+      $outfile =~ s|/|!|g;
+      $outfile =~ s|^|$outdir/|;
+      open my $fh, ">", $outfile or die;
+      print $fh $log;
+      close $fh or die;
+    } else {
+      warn "AGAIN NOT FOUND: $d ($S{$d})";
     }
   }
 }
