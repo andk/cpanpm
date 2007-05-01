@@ -2,6 +2,7 @@
 
 use strict;
 use File::Path qw(mkpath);
+use List::MoreUtils qw(uniq);
 
 # the first part is a duplication of colorterm-to-html.pl which I
 # wrote for my Munich talk:
@@ -27,13 +28,6 @@ and between the first and second occurrence there are the dependencies.
 
 $1 is the distro.
 
-=cut
-
-my @distros = /^  CPAN\.pm: Going to build (.*)/mg;
-my %S; map { $S{$_}++; "$S{$_}: $_\n" } @distros;
-
-=pod
-
 From the second occurrence (or if there is only one, from the first)
 until the consecutive two lines
 
@@ -47,29 +41,47 @@ BEGIN { our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/; }
 my $outdir = $ARGV;
 $outdir =~ s/.out$/.d/ or die;
 mkpath $outdir;
-for my $d (@distros) {
-  pos($_) = 0;
-  if ($S{$d} == 2) {
-    m/^  CPAN\.pm: Going to build $d/gc;
-    warn sprintf "FOUND FIRSTMATCH %s at %d", $d, pos $_;
-  }
-  my $shortdistro = $d;
-  $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
-  our $HTMLSPANSTUFF;
-  if (s/(\G[\s\S]+)(<span[^<>]+>Running make for $d\n[\s\S]+\n^  CPAN\.pm: Going to build $d\n[\s\S]*\n^$HTMLSPANSTUFF {2}($shortdistro)\n$HTMLSPANSTUFF {2}.+\s+--\s+(NOT\s)?OK\n<\/span>)/$1/m) {
-    my $log = $2;
-    warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
-    my $outfile = $shortdistro;
-    $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
-    $outfile =~ s|/|!|g;
-    $outfile =~ s|^|$outdir/|;
-    open my $fh, ">", $outfile or die;
-    print $fh $log;
-    close $fh or die;
-  } else {
-    warn "not found: $d ($S{$d})";
+
+for my $i (0,1) {
+  my %S;
+  my @distros = uniq map { $S{$_}++; $_ } /^  CPAN\.pm: Going to build (.*)/mg;
+  while (my $d = pop @distros) {
+    if ($S{$d} == 2) {
+      m/^  CPAN\.pm: Going to build $d/gc;
+      warn sprintf "FOUND FIRSTMATCH %s at %d", $d, pos $_;
+    }
+    my $shortdistro = $d;
+    $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
+    our $HTMLSPANSTUFF;
+    if (
+        s/
+          (\G[\s\S]+)
+          (
+          <span[^<>]+>
+          Running[ ](make|Build)[ ]for[ ]$d\n
+          [\s\S]+\n
+          ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]$d\n
+          [\s\S]*\n
+          ^$HTMLSPANSTUFF[ ]{2}($shortdistro)\n
+          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+(NOT\s)?OK\n
+          <\/span>
+         )/$1/mx
+       ) {
+      my $log = $2;
+      warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
+      my $outfile = $shortdistro;
+      $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
+      $outfile =~ s|/|!|g;
+      $outfile =~ s|^|$outdir/|;
+      open my $fh, ">", $outfile or die;
+      print $fh $log;
+      close $fh or die;
+    } else {
+      warn "not found: $d ($S{$d})";
+    }
   }
 }
+
 open my $rfh, ">", "$outdir/residuum.txt" or die;
 print $rfh $_;
 close $rfh or die;
