@@ -2,6 +2,16 @@ ChangeLog
 ChangeLog.old
 Changes
 Changes.old
+MANIFEST
+MANIFEST.SKIP
+META.yml
+Makefile.PL
+PAUSE2003.pub
+PAUSE2005.pub
+PAUSE2007.pub
+README
+SIGNATURE			Public-key signature (added by MakeMaker)
+Todo
 distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.dd
@@ -28,8 +38,8 @@ distroprefs/BTROTT.Crypt-DSA.yml
 distroprefs/BTROTT.Crypt-OpenPGP.yml
 distroprefs/BTROTT.Feed-Find.yml
 distroprefs/BTROTT.URI-Fetch.yml
-distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BTROTT.XML-FOAF.yml
+distroprefs/BTROTT.XML-Feed.yml
 distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
@@ -44,8 +54,8 @@ distroprefs/DLAND.Crypt-SSLeay.yml
 distroprefs/DMAKI.DateTime-Format-Japanese.yml
 distroprefs/DMAKI.DateTime-Util-Astro.yml
 distroprefs/DMAKI.DateTime-Util-Calc.yml
-distroprefs/DMAKI.Xango.yml
 distroprefs/DMAKI.XML-RSS-Liberal.yml
+distroprefs/DMAKI.Xango.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DSKOLL.MIME-tools.yml
@@ -66,6 +76,7 @@ distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HIROSE.Net-SSL-ExpireDate.yml
+distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
@@ -139,6 +150,7 @@ distroprefs/STEVAN.Class-MOP.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/TSCH.Cairo.yml
+distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
@@ -160,16 +172,8 @@ lib/CPAN/Nox.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
-Makefile.PL
-MANIFEST
-MANIFEST.SKIP
-META.yml
-PAUSE2003.pub
-PAUSE2005.pub
-PAUSE2007.pub
-README
+megainstall.txt
 scripts/cpan
-SIGNATURE			Public-key signature (added by MakeMaker)
 t/00signature.t
 t/01loadme.t
 t/02nox.t
@@ -184,6 +188,10 @@ t/50pod.t
 t/51pod.t
 t/52podcover.t
 t/60credentials.t
+t/CPAN/CpanTestDummies-1.55.pm
+t/CPAN/TestConfig.pm
+t/CPAN/TestMirroredBy
+t/CPAN/TestPatch.txt
 t/CPAN/authors/01mailrc.txt
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd
@@ -203,11 +211,6 @@ t/CPAN/authors/id/A/AN/ANDK/patches/CHECKSUMS
 t/CPAN/authors/id/A/AN/CHECKSUMS
 t/CPAN/authors/id/A/CHECKSUMS
 t/CPAN/authors/id/CHECKSUMS
-t/CPAN/CpanTestDummies-1.55.pm
 t/CPAN/modules/02packages.details.txt
 t/CPAN/modules/03modlist.data
-t/CPAN/TestConfig.pm
-t/CPAN/TestMirroredBy
-t/CPAN/TestPatch.txt
 t/local_utils.pm
-Todo
