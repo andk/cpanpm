@@ -5744,7 +5744,7 @@ sub get {
                               $self->{prefs_file_doc},
                              );
             push @e, $why;
-            $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $why");
+            $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
@@ -7216,6 +7216,7 @@ sub goodbye {
     my($self,$goodbye) = @_;
     my $id = $self->pretty_id;
     $CPAN::Frontend->mywarn("  $id\n  $goodbye");
+    return;
 }
 
 # CPAN::Distribution::_run_via_expect ;
