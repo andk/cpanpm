@@ -8321,7 +8321,7 @@ sub goto {
     # and run where we left off
 
     my($method) = (caller(1))[3];
-    CPAN->instance("CPAN::Distribution",$goto)->$method;
+    CPAN->instance("CPAN::Distribution",$goto)->$method();
     CPAN::Queue->delete_first($goto);
 }
 
