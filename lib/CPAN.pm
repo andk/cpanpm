@@ -6964,7 +6964,9 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
 	if (defined $self->{make}) {
-            if ($self->{make}->failed) {
+            if (UNIVERSAL::can($self->{make},"failed") ?
+                $self->{make}->failed :
+                $self->{make} =~ /^NO/) {
                 if ($self->{force_update}) {
                     # Trying an already failed 'make' (unless somebody else blocks)
                 } else {
