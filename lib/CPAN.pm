@@ -7113,6 +7113,7 @@ is part of the perl-%s distribution. To install that, you need to run
                     ->new("NO '$system' returned status $ret");
                 $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
                 $self->store_persistent_state;
+                $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
                 return;
             }
 	}
@@ -7135,6 +7136,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
             $self->{make} = CPAN::Distrostatus->new("NO $need");
             $self->store_persistent_state;
+            $CPAN::Frontend->mywarn("  [prereq] -- NOT OK\n");
             return;
         } else {
             my $follow = eval { $self->follow_prereqs(@prereq); };
@@ -7144,6 +7146,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $CPAN::Frontend->mywarn($@);
+                $CPAN::Frontend->mywarn("  [depend] -- NOT OK\n");
                 return;
             }
         }
