@@ -1,6 +1,7 @@
 #!/usr/bin/perl -0777 -nl
 
 use strict;
+use File::Path qw(mkpath);
 
 # the first part is a duplication of colorterm-to-html.pl which I
 # wrote for my Munich talk:
@@ -14,9 +15,6 @@ s!\e\[1;31(?:;\d+)?m(.*?)\e\[0m!<span style="color: red">$1</span>!sg;
 #s!\n!<br/>\n!g;
 s!\r\n!\n!g;
 s!.+\r!!g;
-
-
-
 
 =pod
 
@@ -46,6 +44,9 @@ we expect the data for exactly this distro. $1 is again the distro.
 =cut
 
 BEGIN { our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/; }
+my $outdir = $ARGV;
+$outdir =~ s/.out$/.d/ or die;
+mkpath $outdir;
 for my $d (@distros) {
   pos($_) = 0;
   if ($S{$d} == 2) {
@@ -55,12 +56,24 @@ for my $d (@distros) {
   my $shortdistro = $d;
   $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
   our $HTMLSPANSTUFF;
-  if (s/(\G[\s\S]+)(^  CPAN\.pm: Going to build $d\n[\s\S]*\n^$HTMLSPANSTUFF {2}($shortdistro)\n$HTMLSPANSTUFF {2}.+\s+--\s+(NOT\s)?OK\n)/$1/m) {
-    warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($2);
+  if (s/(\G[\s\S]+)(<span[^<>]+>\n^  CPAN\.pm: Going to build $d\n[\s\S]*\n^$HTMLSPANSTUFF {2}($shortdistro)\n$HTMLSPANSTUFF {2}.+\s+--\s+(NOT\s)?OK\n<\/span>)/$1/m) {
+    my $log = $2;
+    warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
+    my $outfile = $shortdistro;
+    $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
+    $outfile =~ s|/|!|g;
+    $outfile =~ s|^|$outdir/|;
+    open my $fh, ">", $outfile or die;
+    print $fh $log;
+    close $fh or die;
   } else {
     warn "not found: $d ($S{$d})";
   }
 }
+open my $rfh, ">", "$outdir/residuum.txt" or die;
+print $rfh $_;
+close $rfh or die;
+
 
 =pod
 
