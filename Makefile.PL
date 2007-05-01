@@ -234,6 +234,7 @@ MEGA_INSTALL = \
  B::Deobfuscate \
  BFD \
  Bit::Vector::Minimal \
+ BitTorrent \
  Bundle::Pause \
  Bundle::Perl6 \
  Bundle::Phalanx100 \
@@ -636,6 +637,7 @@ MEGA_INSTALL = \
  Sys::SigAction \
  Taint::Util \
  Task::CVSMonitor \
+ Task::Smoke \
  Tcl \
  TeX::Encode \
  Template::Extract \
@@ -677,6 +679,7 @@ MEGA_INSTALL = \
  Text::WikiFormat \
  Text::Wrapper \
  Text::vFile::asData \
+ Text::xSV \
  Tie::Array::Sorted \
  Tie::Cache::LRU \
  Tie::Cycle \
