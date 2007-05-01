@@ -56,7 +56,7 @@ for my $d (@distros) {
   my $shortdistro = $d;
   $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
   our $HTMLSPANSTUFF;
-  if (s/(\G[\s\S]+)(<span[^<>]+>\n^  CPAN\.pm: Going to build $d\n[\s\S]*\n^$HTMLSPANSTUFF {2}($shortdistro)\n$HTMLSPANSTUFF {2}.+\s+--\s+(NOT\s)?OK\n<\/span>)/$1/m) {
+  if (s/(\G[\s\S]+)(<span[^<>]+>Running make for $d\n[\s\S]+\n^  CPAN\.pm: Going to build $d\n[\s\S]*\n^$HTMLSPANSTUFF {2}($shortdistro)\n$HTMLSPANSTUFF {2}.+\s+--\s+(NOT\s)?OK\n<\/span>)/$1/m) {
     my $log = $2;
     warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
     my $outfile = $shortdistro;
