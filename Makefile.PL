@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w -*- mode: cperl -*-
 use strict;
+use vars qw( $VERSION @DD_PREFS @ST_PREFS );
 BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
@@ -11,8 +12,6 @@ my $HAVE_YAML_SYCK = !$@;
 use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
-use vars qw($VERSION);
-use vars qw(@DD_PREFS @ST_PREFS);
 
 @DD_PREFS = qw(
                distroprefs/GBARR.libnet
@@ -38,9 +37,9 @@ my $version_from;
   warn "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nYou should get a new one\n"
         if $ExtUtils::MakeMaker::VERSION < 6.0;
 }
-our $SVN_RELEASE = 0;
+$main::SVN_RELEASE = 0;
 if (-d ".svn") {
-  $SVN_RELEASE = 1;
+  $main::SVN_RELEASE = 1;
 } elsif ($ARGV[0] && $ARGV[0] =~ /setversion/) {
   warn "!!!making SVK based release, take care!!!";
   @ARGV = ();
@@ -429,6 +428,7 @@ MEGA_INSTALL = \
  Font::TTF \
  FormValidator::Simple \
  GD::Graph \
+ GD::SecurityImage \
  GD::SVG \
  GIS::Distance \
  GSSAPI \
@@ -592,7 +592,7 @@ MEGA_INSTALL = \
  Petal \
  Petal::Utils \
  Plagger \
- Pod::POM \
+ Pod::POM::Web \
  Pod::Xhtml \
  Proc::ProcessTable \
  ProgressMonitor::AbstractConfiguration \
@@ -742,6 +742,8 @@ MEGA_INSTALL = \
  mixin \
 
 
+# define a random one
+MEGA_XML=logs/megainstall.20070412T1450.d/RJRAY!RPC-XML-0.59.xml
 }
 }
 
@@ -749,6 +751,14 @@ sub postamble {
   return "" unless $HAVE_MAKE; # dmake has unknown issues with my Makefile
   my @m;
   push @m, q{
+.SUFFIXES: .rnc .rng
+
+.rnc.rng:
+	trang -I rnc -O rng $*.rnc $*.rng
+
+mega-validate: bin/colorout-to-dir.rng
+	xmllint -relaxng bin/colorout-to-dir.rng -noout $(MEGA_XML)
+
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^(CPAN|DIST|bin|blib|cover_db|distroprefs|eg|gpw9-cpan-talk.d|inc|lib|logs|patches|perlbug|protocols|related|release-lib|scripts|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
@@ -796,16 +806,16 @@ checkout ::
 
 # 16=Distribution; 1024=Shell; 32768=Queue
 # $$CPAN::DEBUG|=16;$$CPAN::DEBUG|=1024;$$CPAN::DEBUG|=32768;
-megainstall: termreadkeyinstall logs/.exists
-	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' >> logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
+megainstall: logs/.exists
+	for DATE in `date +%Y%m%dT%H%M`; do \
+		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
+		$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} qw($(MEGA_INSTALL)));CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
+		$(PERL) bin/colorout-to-dir.pl logs/megainstall.$$DATE.out; \
+	done
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
-
-# nohup needed by my zsh
-termreadkeyinstall: logs/.exists
-	nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.`date +%Y%m%dT%H%M`.out 2>&1
 
 logs/.exists :
 	mkdir -p logs
@@ -1090,7 +1100,7 @@ no_CR : ChangeLog META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
 };
-  if ($SVN_RELEASE) {
+  if ($main::SVN_RELEASE) {
     push @m, qq{
 chlog :: chlog-svn chlog-trad
 
