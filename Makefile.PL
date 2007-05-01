@@ -289,8 +289,7 @@ megainstall: logs/.exists
 		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
 		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load; \
 			open FH, "megainstall.txt" or die; chomp(@MEGA = <FH>); \
-			install(qw($(MEGA_BASE)), map {$$_->[0]} \
-			sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
+			install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 			CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
 		$(PERL) bin/colorout-to-dir.pl logs/megainstall.$$DATE.out; \
 	done
