@@ -1,0 +1,14 @@
+default namespace = ""
+
+start =
+  element distro {
+    attribute distro { text },
+    attribute ok { text },
+    attribute perl { text },
+    attribute time { xsd:NMTOKEN },
+    (text
+     | element span {
+         attribute style { text },
+         text
+       })+
+  }

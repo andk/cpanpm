@@ -1,3 +1,32 @@
+2007-05-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: Jesse Vincent #26840
+
+2007-04-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Locale::TextDomain: I realize now that the results are mixed. One NOT
+	OK between 4 or 5 OKs. So there's something very fishy going on.
+
+	* Theoretical prereq bug needs testing: "test" must ask for "available"
+	modules (which includes the part coming from PERL5LIB), but "install"
+	must ask for "installed" modules (but this only for requires, not for
+	build_requires).
+ 
+	* Bug: patch(1) does not understand --fuzz everywhere as reported by MAREKR
+	in https://rt.cpan.org/Ticket/Display.html?id=26664
+
+	* http://use.perl.org/comments.pl?threshold=0&mode=nested&commentsort=0&op=Change&sid=35312
+
+	Barbie asks for getting CPAN.pm support into CPAN::YACSmoke
+
+	* parrot should be advised on a group account on pause.
+
+2007-04-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Interesting ticket: https://rt.cpan.org/Ticket/Display.html?id=26727
+
+	about redrawing the current line after something has moved the cursor.
+
 2007-04-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Jifty again. Same recipe as last time, still no clue.
@@ -26,6 +55,7 @@ N/A
 Need a perl between 31025 and 31027
 (but 31026 could not successfully be used to build perl)
 
+	REPORTED to P5P
 
 2007-04-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -326,9 +356,9 @@ DIED. FAILED tests 9-29
 
 	* Most urgent tasks?
 
-	Report Text::Hatena
+	Report Text::Hatena (JKONDO/Text-Hatena-0.20.tar.gz)
 
-	Report Locale::TextDomain
+	Report Locale::TextDomain (GUIDO/libintl-perl-1.16.tar.gz)
 
 	Write a bug report about Coro::Event and its interaction with CPAN.pm or
 	find out how to fix it and write a patch. Turn off distroprefs or work
