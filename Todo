@@ -1,3 +1,149 @@
+2007-04-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Jifty hangs again in the middle of its tests. The last lines in the
+	output file ()megainstall.20070426T1003.out) are:
+
+#   Failed test 'use Jifty::Test::WWW::Mechanize;'
+#   at t/Continuations/t/04-before-blocks.t line 18.
+#     Tried to use 'Jifty::Test::WWW::Mechanize'.
+#     Error:  Base class package "Test::WWW::Mechanize" is empty.
+#     (Perhaps you need to 'use' the module which defines that package first.)
+#  at /home/sand/.cpan/build/Jifty-0.70422-sTB0F8/blib/lib/Jifty/Test/WWW/Mechan
+ize.pm line 5
+# BEGIN failed--compilation aborted at t/Continuations/t/04-before-blocks.t line
+ 18.
+# Compilation failed in require at (eval 928) line 2.
+# BEGIN failed--compilation aborted at (eval 928) line 2.
+Can't locate object method "new" via package "Jifty::Test::WWW::Mechanize" at t/
+Continuations/t/04-before-blocks.t line 22.
+# Looks like you planned 9 tests but only ran 2.
+# Looks like you failed 1 test of 2 run.
+
+
+
+	See further below for a similar example on 2007-04-01. I must now kill
+	the hanging jobs and then see how the logfile continues. Maybe it gives
+	me a clue?
+
+	OR NO! much better I first try to input something in the interactive
+	window. I enter RET twice and "y\n" 7 times. Nothing.
+
+	I find the job that hange by stepping down the pid->ppid chain (pstree
+	did not show me these processes). 29902 is my megainstall:
+
+% ps -o user,pid,ppid -a | grep 29902
+sand     29902 29901
+sand     29654 29902
+% ps -o user,pid,ppid -a | grep 29654
+sand     29654 29902
+sand     29818 29654
+% ps -o user,pid,ppid -a | grep 29818
+sand     29818 29654
+sand     29886 29818
+% ps -o user,pid,ppid -a | grep 29886
+sand     29886 29818
+% ps auxww|grep 29886
+sand     29886  0.0  0.0      0     0 pts/5    Z+   12:38   0:03 [perl] <defunct>
+
+	Oh it's a zombie! Neither kill nor kill -9 do anything useful. So the
+	parent is to kill?
+
+% ps auxww|grep 29818
+sand     29818  0.0  0.3   9080  4900 pts/5    S+   12:36   0:00 /home/src/perl/repoperls/installed-perls/perl/pJHvqE3/perl-5.8.0@31080/bin/perl -MExtUtils::Command::MM -e test_harness(0, 'inc', 'blib/lib', 'blib/arch') t/00-load.t t/01-dependencies.t t/01-test-mechanize.t t/01-test-web.t t/01-version_checks.t t/02-connect.t t/03-form-protocol.t t/03-is_passing-no_plan.t t/03-is_passing.t t/03-test-mailbox.t t/04-test_file.t t/05-dispatcher.t t/06-forms.t t/07-limit-actions.t t/08-client.t t/09-url.t t/10-i18n.t t/11-config-files.t t/12-param-schema.t t/99-pod-coverage.t t/99-pod.t t/DateTime.t t/Continuations/t/00-prototype.t t/Continuations/t/01-raw-api.t t/Continuations/t/02-api.t t/Continuations/t/03-gc.t t/Continuations/t/04-before-blocks.t t/Mapper/t/00-prototype.t t/Mapper/t/01-raw-api.t t/Mapper/t/02-api.t t/TestApp-Plugin-PasswordAuth/t/00-model-User.t t/TestApp-Plugin-PasswordAuth/t/01-tokengen.t t/TestApp-Plugin-PasswordAuth/t/11-current_user.t t/TestApp-Plugin-PasswordAuth/t/12-signup.t t/TestApp-Plugin-REST/t/00-model-User.t t/TestApp-Plugin-REST/t/00-prototype.t t/TestApp-Plugin-REST/t/01-config.t t/TestApp-Plugin-REST/t/02-basic-use.t t/TestApp/t/00-model-User.t t/TestApp/t/00-prototype.t t/TestApp/t/01-config.t t/TestApp/t/02-dispatch-show-rule-in-wrong-ruleset.t t/TestApp/t/02-dispatch.t t/TestApp/t/03-static.t t/TestApp/t/04-sessions.t t/TestApp/t/05-editactions-Cachable.t t/TestApp/t/05-editactions-Record.t t/TestApp/t/06-validation.t t/TestApp/t/07-sandboxing.t t/TestApp/t/08-notifications.t t/TestApp/t/09-redirect.t t/TestApp/t/10-compress.t t/TestApp/t/11-current_user.t t/TestApp/t/12-search.t t/TestApp/t/13-page-regions.t t/TestApp/t/14-template-paths.t t/TestApp/t/15-template-subclass.t t/TestApp/t/i18n-standalone.t t/TestApp/t/instance_id.t t/TestApp/t/regex_meta_in_path_info.t t/TestApp/t/upgrade.t
+
+	Now I killed it. The output leads to the end of Jifty's tests:
+
+make[3]: *** [test_dynamic] Beendet
+make[3]: Leaving directory `/home/sand/.cpan/build/Jifty-0.70422-sTB0F8'
+  JESSE/Jifty-0.70422.tar.gz
+  /usr/bin/make test -- NOT OK
+
+	
+	
+	
+	
+
+
+	* my emacs could not send this email with a insufficient error message:
+
+From: andreas.koenig.7os6VVqR@franz.ak.mind.de (Andreas J. Koenig)
+To: andreas.koenig.gmwojprw@franz.ak.mind.de
+Cc: cpan-testers@perl.org, FERREIRA@cpan.org
+Subject: Re: FAIL Term-Size-Unix-0.203 i686-linux-64int 2.6.18-4-k7
+References: <200704260541.l3Q5fqb0015972@franz.ak.mind.de>
+X-Draft-From: ("cpan-testers" 116264)
+Gcc: nnml:sent
+Date: Thu, 26 Apr 2007 08:10:41 +0200
+In-Reply-To: <200704260541.l3Q5fqb0015972@franz.ak.mind.de> (andreas koenig
+	gmwojprw's message of "Thu, 26 Apr 2007 07:41:52 +0200")
+Message-ID: <87fy6nis2m.fsf@k75.linux.bogus>
+User-Agent: Gnus/5.110006 (No Gnus v0.6) Emacs/21.4 (gnu/linux)
+--text follows this line--
+>>>>> On Thu, 26 Apr 2007 07:41:52 +0200, andreas.koenig.gmwojprw@franz.ak.mind.de said:
+
+  > ------------------------------
+  > TESTER COMMENTS
+  > ------------------------------
+
+  > Additional comments from tester: 
+
+It turns out that the test only fails when run under CPAN::Reporter.
+Somehow the IO layer that CPAN::Reporter uses fools Term::Size::Unix
+so that the test fails.
+
+I can reproduce a similar effect by simply running
+
+    make test > /dev/null < /dev/null
+
+The STDERR of this is:
+
+  $ make test > /dev/null < /dev/null
+  # Testing Term::Size::Unix 0.203, Perl 5.009005, /home/src/perl/repoperls/installed-perls/perl/pGHaMwh/perl-5.8.0@31079/bin/perl
+
+  #   Failed test at t/01_basic.t line 7.
+
+  #   Failed test at t/01_basic.t line 10.
+  #     Structures begin differing at:
+  #          $got->[0] = ''
+  #     $expected->[0] = '80'
+
+  #   Failed test at t/01_basic.t line 16.
+  Use of uninitialized value in concatenation (.) or string at t/01_basic.t line 21.
+  # This terminal is x characters,
+  Use of uninitialized value in concatenation (.) or string at t/01_basic.t line 21.
+  #   and x pixels.
+  # Looks like you failed 3 tests of 6.
+  Failed 1/3 test programs. 3/13 subtests failed.
+  make[1]: *** [test_dynamic] Error 255
+
+
+2007-04-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* the logfile is 34MB instead of 11, who is to blame? 20070424T2309 has
+	197018 lines while 20070424T0304 had 151351. There must be one very log
+	line? No. The longest line in each case is 4145. I need the distribution
+	of the lengths and here I discover 44719 lines with the same length, 507
+	bytes.
+
+	It is a database dump or some such with the columns
+
+	|Elt|Got|Elt|Expected|
+
+	with lots of whitespace. This comes out in the middle of the tests of
+	PJCJ/Devel-Cover-0.61.tar.gz. There seems to be a call to eq_or_diff
+	when t/at1.t fails and this spits out >22MB.
+
+	This was between 31046 and 31058.
+
+	This binary search must run at1.t and capture its output and output
+	something like 'length $output < 100000 ? "ok" : "not ok"'.
+
+2007-04-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Found 2481 old builds, restored the state of 968
+
+	maintperl brings more weight because less fails (110)
+
 2007-04-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Found 1948 old builds, restored the state of 939
