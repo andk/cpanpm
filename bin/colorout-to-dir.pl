@@ -71,11 +71,11 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
           (\G[\s\S]+)
           (
           <span[^<>]+>
-          Running[ ](?:make|Build)[ ]for[ ]$d\n
+          Running[ ](?:make|Build)[ ]for[ ]\Q$d\E\n
           [\s\S]+\n
-          ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]$d\n
+          ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]\Q$d\E\n
           [\s\S]*\n
-          ^$HTMLSPANSTUFF[ ]{2}(?:$shortdistro)\n
+          ^$HTMLSPANSTUFF[ ]{2}(?:\Q$shortdistro\E)\n
           $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
           <\/span>
          )/$1/mx
@@ -97,9 +97,9 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
         s/
           (
           <span[^<>]+>
-          Running[ ](?:make|Build)[ ]for[ ]$d\n
+          Running[ ](?:make|Build)[ ]for[ ]\Q$d\E\n
           [\s\S]+\n
-          ^$HTMLSPANSTUFF[ ]{2}(?:$shortdistro)\n
+          ^$HTMLSPANSTUFF[ ]{2}(?:\Q$shortdistro\E)\n
           $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
           <\/span>
          )//mx
