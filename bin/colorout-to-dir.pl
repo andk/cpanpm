@@ -3,10 +3,27 @@
 use strict;
 use File::Path qw(mkpath);
 use List::MoreUtils qw(uniq);
+our($perl_path) = m|(\S+/installed-perls/(?:.*?)/p.*?/perl-5.*?@(?:\d+))|;
+our $outdir = $ARGV;
+$outdir =~ s/.out$/.d/ or die;
+mkpath $outdir;
+
+sub mystore ($$$){
+  my($shortdistro,$log,$ok) = @_;
+  my $outfile = $shortdistro;
+  $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
+  $outfile =~ s|/|!|g;
+  $outfile =~ s|^|$outdir/|;
+  my($time) = $outdir =~ /(\d{8}T\d{4})/;
+  open my $fh, ">", $outfile or die;
+  print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok">};
+  print $fh $log;
+  print $fh "</distro>\n";
+  close $fh or die;
+}
 
 # the first part is a duplication of colorterm-to-html.pl which I
 # wrote for my Munich talk:
-
 s!\&!\&amp;!g;
 s!"!&quot;!g;
 s!<!&lt;!g;
@@ -38,9 +55,6 @@ we expect the data for exactly this distro. $1 is again the distro.
 =cut
 
 our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
-my $outdir = $ARGV;
-$outdir =~ s/.out$/.d/ or die;
-mkpath $outdir;
 {
   my %N;
   my %S;
@@ -48,7 +62,7 @@ mkpath $outdir;
   while (my $d = pop @distros) {
     if ($S{$d} == 2) {
       m/^  CPAN\.pm: Going to build $d/gc;
-      warn sprintf "FOUND FIRSTMATCH %s at %d", $d, pos $_;
+      warn sprintf "FOUND FIRSTMATCH %s at %d\n", $d, pos $_;
     }
     my $shortdistro = $d;
     $shortdistro =~ s!^[A-Z]/[A-Z][A-Z]/!!;
@@ -57,26 +71,20 @@ mkpath $outdir;
           (\G[\s\S]+)
           (
           <span[^<>]+>
-          Running[ ](make|Build)[ ]for[ ]$d\n
+          Running[ ](?:make|Build)[ ]for[ ]$d\n
           [\s\S]+\n
           ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]$d\n
           [\s\S]*\n
-          ^$HTMLSPANSTUFF[ ]{2}($shortdistro)\n
-          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+(NOT\s)?OK\n
+          ^$HTMLSPANSTUFF[ ]{2}(?:$shortdistro)\n
+          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
           <\/span>
          )/$1/mx
        ) {
-      my $log = $2;
-      warn sprintf "FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
-      my $outfile = $shortdistro;
-      $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
-      $outfile =~ s|/|!|g;
-      $outfile =~ s|^|$outdir/|;
-      open my $fh, ">", $outfile or die;
-      print $fh $log;
-      close $fh or die;
+      my($log,$ok) = ($2,$3);
+      warn sprintf "FOUND: %s\n", $d, $S{$d}, length($log);
+      mystore($shortdistro,$log,$ok);
     } else {
-      warn "not found: $d ($S{$d})";
+      warn "NOT found: $d\n";
       $N{$d}++;
     }
   }
@@ -91,22 +99,16 @@ mkpath $outdir;
           <span[^<>]+>
           Running[ ](?:make|Build)[ ]for[ ]$d\n
           [\s\S]+\n
-          ^$HTMLSPANSTUFF[ ]{2}($shortdistro)\n
-          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+(NOT\s)?OK\n
+          ^$HTMLSPANSTUFF[ ]{2}(?:$shortdistro)\n
+          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
           <\/span>
          )//mx
        ) {
-      my $log = $1;
-      warn sprintf "FINALLY FOUND: %s (%d;%d)", $d, $S{$d}, length($log);
-      my $outfile = $shortdistro;
-      $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)$!!;
-      $outfile =~ s|/|!|g;
-      $outfile =~ s|^|$outdir/|;
-      open my $fh, ">", $outfile or die;
-      print $fh $log;
-      close $fh or die;
+      my($log,$ok) = ($1,$2);
+      warn sprintf "FINALLY FOUND: %s\n", $d, $S{$d}, length($log);
+      mystore($shortdistro,$log,$ok);
     } else {
-      warn "AGAIN NOT FOUND: $d ($S{$d})";
+      warn "AGAIN NOT FOUND: $d\n";
     }
   }
 }
