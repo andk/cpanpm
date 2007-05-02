@@ -5736,6 +5736,7 @@ sub get {
 
   EXCUSE: {
 	my @e;
+        my $goodbye_message;
         $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
         if ($self->prefs->{disabled}) {
             my $why = sprintf(
@@ -5745,6 +5746,7 @@ sub get {
                              );
             push @e, $why;
             $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
+            $goodbye_message = "[disabled] -- NA $why";
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
@@ -5768,8 +5770,13 @@ sub get {
                                           )
                 and push @e, "Unwrapping had some problem, won't try again without force";
         }
-
-	$CPAN::Frontend->mywarn(join "", map {"$_\n"} @e) and return if @e;
+        if (@e) {
+            $CPAN::Frontend->mywarn(join "", map {"$_\n"} @e);
+            if ($goodbye_message) {
+                 $self->goodbye($goodbye_message);
+            }
+            return;
+        }
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 

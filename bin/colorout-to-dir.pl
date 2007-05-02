@@ -6,6 +6,7 @@ use Encode qw(decode);
 use Encode::Detect ();
 use File::Path qw(mkpath);
 use List::MoreUtils qw(uniq);
+use Time::HiRes qw(sleep);
 use YAML::Syck;
 
 our($perl_path) = m|(/home\S+/installed-perls/(?:.*?)/p.*?/perl-5.*?@(?:\d+))|;
@@ -35,6 +36,7 @@ sub mystore ($$$){
   print $fh $ulog;
   print $fh "</distro>\n";
   close $fh or die;
+  sleep 1/8;
 }
 
 # the first part is a duplication of colorterm-to-html.pl which I
@@ -95,7 +97,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
           ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]\Q$d\E\n
           [\s\S]+\n
           ^$HTMLSPANSTUFF[ ]{2}(?:\Q$shortdistro\E)\n
-          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK)\n
+          $HTMLSPANSTUFF[ ]{2}.+\s+--\s+((?:NOT\s)?OK|NA)\n
           <\/span>
          )//mx
          ) {

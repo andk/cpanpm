@@ -1,3 +1,10 @@
+2007-05-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Last run had a lot of fails but it seems the first failure was due to
+	a timeout (DBI), the others were just dependency traps. The batch job
+	running colorout-to-dir.pl apparently drew too many ressources. I've
+	added a sleep.
+
 2007-05-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* UTF-8 HOWTO by Bruno Haible. Markus Kuhn wrote
