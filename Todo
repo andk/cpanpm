@@ -1,3 +1,10 @@
+2007-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* disabled modules get no "markup" in the output to split them out of
+	the logfile.
+
+	* 2688{4,6} by Matthias. Complicated materiel.
+
 2007-05-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Last run had a lot of fails but it seems the first failure was due to
