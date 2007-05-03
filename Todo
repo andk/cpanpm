@@ -1,5 +1,7 @@
 2007-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* XML::Validator::Schema fails tests. Binary search points to 29118.
+
 	* disabled modules get no "markup" in the output to split them out of
 	the logfile.
 
