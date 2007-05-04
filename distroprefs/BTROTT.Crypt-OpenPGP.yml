@@ -4,7 +4,7 @@ match:
 pl:
   env:
     PERL_AUTOINSTALL: --skip
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
   expect:
     - "Do you wish to install"
     - "y\n"
@@ -16,5 +16,5 @@ pl:
     - "y\n"
 make:
   env:
-    PERL_AUTOINSTALL: --skip    
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip

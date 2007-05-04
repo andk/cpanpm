@@ -12,6 +12,6 @@ pl:
       - "y\n"
 make:
   env:
-    PERL_AUTOINSTALL: --skip    
+    PERL_AUTOINSTALL: --skip
 patches:
   - "ANDK/Module-AutoInstall-in-inc-ANDK-01.patch"

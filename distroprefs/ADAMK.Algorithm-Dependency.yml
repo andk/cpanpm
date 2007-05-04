@@ -14,12 +14,12 @@ pl:
     - "Auto-install"
     - "y\n"
   env:
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
-    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+    PERL_AUTOINSTALL: --skip
 make:
   env:
-    PERL_EXTUTILS_AUTOINSTALL: --skip    
-    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+    PERL_AUTOINSTALL: --skip
 test:
   env:
     PERL_EXTUTILS_AUTOINSTALL: --skip    
