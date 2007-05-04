@@ -8195,7 +8195,7 @@ sub test {
                 $CPAN::Frontend->mywarn("Tests succeeded but $but\n");
                 $self->{make_test} = CPAN::Distrostatus->new("NO $but");
                 $self->store_persistent_state;
-                return;
+                return $self->goodbye("[dependencies] -- NA");
             }
         }
 
