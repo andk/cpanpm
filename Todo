@@ -1,3 +1,14 @@
+2007-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Net::Libdnet on debian needs to change d to dumb in two spots:
+
+	Libdnet.xs must say include dumbnet.h and Makefile.PL must say -ldumbnet.
+
+	That runs all tests OK. That should be wrapped into a DEFINE.
+
+	* Nothing TODO: Event 1.08 broken in blead. It's just the test suite,
+	not Event itself. It was discussed on P5P.
+
 2007-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* XML::Validator::Schema fails tests. Binary search points to 29118.
