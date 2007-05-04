@@ -2,15 +2,24 @@
 match:
   distribution: "^MSERGEANT/AxKit-\d"
 pl: 
-  expect:
-    - "Auto-install"
-    - "y\n"
-    - "Auto-install"
-    - "y\n"
-    - "Auto-install"
-    - "y\n"
+  eexpect:
+    mode: anyorder
+    timeout: 3
+    talk:
+      - "Do you wish to install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
   env:
     PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
 make:
   env:
     PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
