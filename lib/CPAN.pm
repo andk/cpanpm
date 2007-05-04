@@ -5495,11 +5495,7 @@ sub undelay {
 #-> CPAN::Distribution::is_dot_dist
 sub is_dot_dist {
     my($self) = @_;
-    return (
-            substr($self->id,-1,1) eq "."
-            ||
-            $self->author->id eq "LOCAL"
-           );
+    return substr($self->id,-1,1) eq ".";
 }
 
 # add the A/AN/ stuff
