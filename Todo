@@ -1,11 +1,14 @@
 2007-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* XML::Validator::Schema fails tests. Binary search points to 29118.
+	Repeating the binary search with different starting points
 
 	* disabled modules get no "markup" in the output to split them out of
 	the logfile.
 
-	* 2688{4,6} by Matthias. Complicated materiel.
+	* 2688{4,6} by Matthias. Complicated materiel from a scriptwriter who
+	needs cleanup help for build_dir. Maybe we should make build_dir_reuse
+	mandatory too.
 
 2007-05-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -16,7 +19,7 @@
 
 2007-05-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* UTF-8 HOWTO by Bruno Haible. Markus Kuhn wrote
+	* The UTF-8 HOWTO is by Bruno Haible. Markus Kuhn wrote
 	http://www.cl.cam.ac.uk/~mgk25/unicode.html which is a FAQ. The latter
 	contains 'How should the UTF-8 mode be activated?'
 
@@ -36,6 +39,8 @@
  
 	* Bug: patch(1) does not understand --fuzz everywhere as reported by MAREKR
 	in https://rt.cpan.org/Ticket/Display.html?id=26664
+
+	Need a module or better probing.
 
 	* http://use.perl.org/comments.pl?threshold=0&mode=nested&commentsort=0&op=Change&sid=35312
 
