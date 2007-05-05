@@ -9,3 +9,5 @@ match:
 pl:
   args:
     - "PREREQ_FATAL=0"
+patches:
+  - "/tmp/Gtk2-1.144-ANDK-01.patch"

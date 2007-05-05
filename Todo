@@ -1,5 +1,43 @@
 2007-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Gtk2 has the dependency Extutils::Depends as I discovered today and
+	then Glib.pm. Both not mentioned in the prereq decl or maybe mentioned
+	in the Makefile.PL but PREREQ_FATAL is set and MakeMaker still does not
+	let me override it.
+
+	A small patch now at least lets me install the prereqs and demonstrates
+	nicely that configure_requires is really needed.
+
+	Annoyingly it says
+
+*** can not find package gtk+-2.0 >= 2.0.0
+*** check that it is properly installed and available in PKG_CONFIG_PATH
+ at Makefile.PL line 69
+
+	And I cannot find out which package I have to install on debian and I
+	remember that on previous occasions I did not find out the problem
+	either.
+
+	The message above comes from ExtUtils::PkgConfig. Maybe it is broken?
+
+	Maybe I must remove libgtk 1.2 first?
+
+	Nope. Test program insists:
+
+% /home/src/perl/repoperls/installed-perls/perl/p2VJt9O/perl-5.8.0@31136/bin/perl -le '
+use ExtUtils::PkgConfig; 
+$package ="gtk+-2.0";
+%pkg_info = ExtUtils::PkgConfig->find ($package); 
+'
+*** can not find package gtk+-2.0
+*** check that it is properly installed and available in PKG_CONFIG_PATH
+ at -e line 4
+
+	I put the patch into the patches directory and give up for now.
+
+	* make a release for Adam and send it to him before actually releasing
+	(because I broke pip)
+
 	* Net::Libdnet on debian needs to change d to dumb in two spots:
 
 	Libdnet.xs must say include dumbnet.h and Makefile.PL must say -ldumbnet.

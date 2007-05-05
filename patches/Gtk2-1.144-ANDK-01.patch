@@ -1,0 +1,20 @@
+diff -urp Gtk2-1.144-WjNaDy.orig/Makefile.PL Gtk2-1.144-WjNaDy/Makefile.PL
+--- Gtk2-1.144-WjNaDy.orig/Makefile.PL	2006-12-04 21:00:33.000000000 +0100
++++ Gtk2-1.144-WjNaDy/Makefile.PL	2007-05-04 22:42:40.000000000 +0200
+@@ -51,11 +51,13 @@ unless (eval "use ExtUtils::Depends '$bu
+            . "use Glib::MakeHelper;" # for do_pod_files()
+            . "1") {
+ 	warn "$@\n";
++	eval "sub MY::postamble { return '' }";
+ 	WriteMakefile(
+-		PREREQ_FATAL => 1,
++                NAME         => "Gtk2",
+ 		PREREQ_PM    => \%PREREQ_PM,
+ 	);
+-	exit 1; # not reached
++	warn "Please retry installing Gtk2 after the prerequisites are installed";
++	exit;
+ }
+ 
+ require './CodeGen.pm'; # other modules should 'use Gtk2::CodeGen;' --
+Only in Gtk2-1.144-WjNaDy/: Makefile.PL~
