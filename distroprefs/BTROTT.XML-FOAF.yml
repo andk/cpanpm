@@ -15,6 +15,6 @@ pl:
 make:
   env:
     PERL_EXTUTILS_AUTOINSTALL: --skip
-    PERL_AUTOINSTALL: --skip    
+    PERL_AUTOINSTALL: --skip
 patches:
   - "ANDK/patches/XML-FOAF-0.03-ANDK-01.patch.gz"

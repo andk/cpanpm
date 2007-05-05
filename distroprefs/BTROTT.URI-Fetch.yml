@@ -2,6 +2,9 @@
 match:
   distribution: "^BTROTT/URI-Fetch-\d"
 pl: 
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
   expect:
     - "Auto-install"
     - "y\n"
@@ -13,3 +16,7 @@ pl:
     - "y\n"
     - "Auto-install"
     - "y\n"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip

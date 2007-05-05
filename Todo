@@ -1,3 +1,29 @@
+2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* JSON 1.12 needed a binary search and it ended with
+
+----Program----
+eval q{use JSON 1.12};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pB7ZOd0/perl-5.8.0@27263/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pWOlwj4/perl-5.8.0@27264/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Change 27264 by nicholas@nicholas-saigo on 2006/02/21 19:04:39
+
+	Reorder the SV flags so that SVp_?OK and SVf_?OK occupy 8 contiguous
+	bits (0x0000XX00). This makes perl 3K smaller with -Os on x86 FreeBSD,
+	and might also help on other architectures (eg with 8 contiguous bits,
+	the SvOK() test on ARM won't need an intermediate constant).
+	
+
 2007-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Gtk2 has the dependency Extutils::Depends as I discovered today and
