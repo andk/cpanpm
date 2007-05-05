@@ -18,6 +18,7 @@ distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
+distroprefs/AVIF.Time-Duration.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BRIANSKI.XML-Comma.yml

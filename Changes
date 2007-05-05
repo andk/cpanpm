@@ -1,3 +1,15 @@
+2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* bugfix: a recent bugfix to dot distros broke pip (reported by Adam Kennedy)
+
+	* compatibility with 5.00405 regained
+
+	* test fix: increase the timeouts (success dependency on CPU speed
+	discovered by Slaven Rezic)
+
+	* work in progress: improve the output of CPAN.pm to improve
+	parseablility on failure
+
 2007-04-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9101
