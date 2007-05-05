@@ -6070,81 +6070,99 @@ sub try_download {
                                $local_wanted);
 }
 
-#-> CPAN::Distribution::patch
-sub patch {
-    my($self) = @_;
-    $self->debug("checking patches id[$self->{ID}]") if $CPAN::DEBUG;
-    my $patches = $self->prefs->{patches};
-    $patches ||= "";
-    $self->debug("patches[$patches]") if $CPAN::DEBUG;
-    if ($patches) {
-        return unless @$patches;
-        $self->safe_chdir($self->{build_dir});
-        CPAN->debug("patches[$patches]") if $CPAN::DEBUG;
-        my $patchbin = $CPAN::Config->{patch};
-        unless ($patchbin && length $patchbin) {
-            $CPAN::Frontend->mydie("No external patch command configured\n\n".
-                                   "Please run 'o conf init /patch/'\n\n");
-        }
-        unless (MM->maybe_command($patchbin)) {
-            $CPAN::Frontend->mydie("No external patch command available\n\n".
-                                   "Please run 'o conf init /patch/'\n\n");
-        }
-        $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
-        local $ENV{PATCH_GET} = 0; # shall replace -g0 which is not
-                                   # supported everywhere (and then,
-                                   # not ever necessary there)
-        my $stdpatchargs = "-N --fuzz=3";
-        my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
-        $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
-        for my $patch (@$patches) {
-            unless (-f $patch) {
-                if (my $trydl = $self->try_download($patch)) {
-                    $patch = $trydl;
+{
+    my $stdpatchargs = "";
+    #-> CPAN::Distribution::patch
+    sub patch {
+        my($self) = @_;
+        $self->debug("checking patches id[$self->{ID}]") if $CPAN::DEBUG;
+        my $patches = $self->prefs->{patches};
+        $patches ||= "";
+        $self->debug("patches[$patches]") if $CPAN::DEBUG;
+        if ($patches) {
+            return unless @$patches;
+            $self->safe_chdir($self->{build_dir});
+            CPAN->debug("patches[$patches]") if $CPAN::DEBUG;
+            my $patchbin = $CPAN::Config->{patch};
+            unless ($patchbin && length $patchbin) {
+                $CPAN::Frontend->mydie("No external patch command configured\n\n".
+                                       "Please run 'o conf init /patch/'\n\n");
+            }
+            unless (MM->maybe_command($patchbin)) {
+                $CPAN::Frontend->mydie("No external patch command available\n\n".
+                                       "Please run 'o conf init /patch/'\n\n");
+            }
+            $patchbin = CPAN::HandleConfig->safe_quote($patchbin);
+            local $ENV{PATCH_GET} = 0; # formerly known as -g0
+            unless ($stdpatchargs) {
+                my $system = "$patchbin --version |";
+                local *FH;
+                open FH, $system or die "Could not fork '$system': $!";
+                local $/ = "\n";
+                my $pversion;
+              PARSEVERSION: while (<FH>) {
+                    if (/^patch\s+([\d\.]+)/) {
+                        $pversion = $1;
+                        last PARSEVERSION;
+                    }
+                }
+                if ($pversion) {
+                    $stdpatchargs = "-N --fuzz=3";
                 } else {
-                    my $fail = "Could not find patch '$patch'";
+                    $stdpatchargs = "-N";
+                }
+            }
+            my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
+            $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
+            for my $patch (@$patches) {
+                unless (-f $patch) {
+                    if (my $trydl = $self->try_download($patch)) {
+                        $patch = $trydl;
+                    } else {
+                        my $fail = "Could not find patch '$patch'";
+                        $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                        delete $self->{build_dir};
+                        return;
+                    }
+                }
+                $CPAN::Frontend->myprint("  $patch\n");
+                my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
+
+                my $pcommand;
+                my $ppp = $self->_patch_p_parameter($readfh);
+                if ($ppp eq "applypatch") {
+                    $pcommand = "$CPAN::Config->{applypatch} -verbose";
+                } else {
+                    my $thispatchargs = join " ", $stdpatchargs, $ppp;
+                    $pcommand = "$patchbin $thispatchargs";
+                }
+
+                $readfh = CPAN::Tarzip->TIEHANDLE($patch); # open again
+                my $writefh = FileHandle->new;
+                $CPAN::Frontend->myprint("  $pcommand\n");
+                unless (open $writefh, "|$pcommand") {
+                    my $fail = "Could not fork '$pcommand'";
+                    $CPAN::Frontend->mywarn("$fail; cannot continue\n");
+                    $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
+                    delete $self->{build_dir};
+                    return;
+                }
+                while (my $x = $readfh->READLINE) {
+                    print $writefh $x;
+                }
+                unless (close $writefh) {
+                    my $fail = "Could not apply patch '$patch'";
                     $CPAN::Frontend->mywarn("$fail; cannot continue\n");
                     $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
                     delete $self->{build_dir};
                     return;
                 }
             }
-            $CPAN::Frontend->myprint("  $patch\n");
-            my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
-
-            my $pcommand;
-            my $ppp = $self->_patch_p_parameter($readfh);
-            if ($ppp eq "applypatch") {
-                $pcommand = "$CPAN::Config->{applypatch} -verbose";
-            } else {
-                my $thispatchargs = join " ", $stdpatchargs, $ppp;
-                $pcommand = "$patchbin $thispatchargs";
-            }
-
-            $readfh = CPAN::Tarzip->TIEHANDLE($patch); # open again
-            my $writefh = FileHandle->new;
-            $CPAN::Frontend->myprint("  $pcommand\n");
-            unless (open $writefh, "|$pcommand") {
-                my $fail = "Could not fork '$pcommand'";
-                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
-                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
-                delete $self->{build_dir};
-                return;
-            }
-            while (my $x = $readfh->READLINE) {
-                print $writefh $x;
-            }
-            unless (close $writefh) {
-                my $fail = "Could not apply patch '$patch'";
-                $CPAN::Frontend->mywarn("$fail; cannot continue\n");
-                $self->{unwrapped} = CPAN::Distrostatus->new("NO -- $fail");
-                delete $self->{build_dir};
-                return;
-            }
+            $self->{patched}++;
         }
-        $self->{patched}++;
+        return 1;
     }
-    return 1;
 }
 
 sub _patch_p_parameter {

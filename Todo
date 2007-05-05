@@ -1,7 +1,38 @@
 2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Jarkko's Graph is now consistently failing apparently starting with
-	31105. But there was another interval where it failed!
+	* Jarkko's Graph is now seismograph and consistently failing apparently
+	starting with 31105. But there was another interval where it failed!
+	That interval started with 31079:
+
+----Program----
+eval q{use Graph 0.81};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pnKRDVH/perl-5.8.0@31078/bin/perl----
+N/A
+
+----EOF ($?='0')----
+----Output of .../pGHaMwh/perl-5.8.0@31079/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+	and ended with 31104. But 31105 is an impossible candidate for a
+	breaker. Maybe we must pay attn to the date once more?
+
+20070428T1842 perl          31104    0 OK
+20070429T0705 perl          31105    0 NOT OK
+
+	So what changed between the two perls?
+
+	/home/k/.cpan/Bundle/Snapshot_2007_05_05_0[01].pm
+
+	Heap           0.71   => 0.80
+	Module::Build  0.2807 => 0.2808
+	Math::BaseCalc ???    => 1.011
+
+	Yes, downgrading Heap fixes it. http://rt.cpan.org/Ticket/Display.html?id=26943
 
 	* Locale::TextDomain seems to have been fixed or improved some day (30971) but
 	it still fails occasionally.
