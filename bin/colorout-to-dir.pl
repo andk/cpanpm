@@ -36,20 +36,28 @@ sub mystore ($$$$){
   print $fh $ulog;
   print $fh "</distro>\n";
   close $fh or die;
-  sleep 1/8;
+  sleep 1/4;
 }
 
 # the first part is a duplication of colorterm-to-html.pl which I
 # wrote for my Munich talk:
 s!\&!\&amp;!g;
+sleep 1;
 s!"!&quot;!g;
+sleep 1;
 s!<!&lt;!g;
+sleep 1;
 s!>!&gt;!g;
+sleep 1;
 s!\e\[1;3[45](?:;\d+)?m(.*?)\e\[0m!<span style="color: blue">$1</span>!sg;
+sleep 1;
 s!\e\[1;31(?:;\d+)?m(.*?)\e\[0m!<span style="color: red">$1</span>!sg;
+sleep 1;
 #s!\n!<br/>\n!g;
 s!\r\n!\n!g;
+sleep 1;
 s!.+\r!!g;
+sleep 1;
 
 =pod
 

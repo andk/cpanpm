@@ -1,5 +1,11 @@
 2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Jarkko's Graph is now consistently failing apparently starting with
+	31105. But there was another interval where it failed!
+
+	* Locale::TextDomain seems to have been fixed or improved some day (30971) but
+	it still fails occasionally.
+
 	* JSON 1.12 needed a binary search and it ended with
 
 ----Program----
@@ -656,6 +662,8 @@ N/A
 
 	So this seems more logical and proves yesterday's recherche was bogus,
 	most probably not a Heisenbug.
+
+	Update 2007-05-05 akoenig: Locale::TextDomain succeeded @31148!
 	
 2007-04-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
