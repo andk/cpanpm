@@ -14,8 +14,8 @@ our $outdir = $ARGV;
 $outdir =~ s/.out$/.d/ or die;
 mkpath $outdir;
 
-sub mystore ($$$){
-  my($shortdistro,$log,$ok) = @_;
+sub mystore ($$$$){
+  my($shortdistro,$log,$ok,$seq) = @_;
   my $outfile = $shortdistro;
   $outfile =~ s!\.(tar.gz|tgz|tar.bz2|tbz|zip)?$!.xml!;
   $outfile =~ s|$|.xml| unless $outfile =~ /\.xml$/;
@@ -32,7 +32,7 @@ sub mystore ($$$){
   my $ulog = decode("Detect",$log);
   my $dumper = Dumpvalue->new(unctrl => "unctrl");
   $ulog =~ s/([\x00-\x09\x0b\x0c\x0e-\x1f])/ $dumper->stringify($1) /ge;
-  print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok">};
+  print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok" seq="$seq">};
   print $fh $ulog;
   print $fh "</distro>\n";
   close $fh or die;
@@ -75,8 +75,14 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
 {
   my @logs = ($_);
   my @residua;
+  my %seq;
   while (my $_ = shift @logs) {
     my @distros = uniq /^  CPAN\.pm: Going to build (.*)/mg;
+    unless (keys %seq) {
+      # on the first run we can determine the absolute position within
+      # the file for all distros of that session
+      %seq = map { $distros[$_] => $_+1 } 0..$#distros;
+    }
     warn sprintf(
                  "NEW LOG length %d, unprocessed logs ATM: %d, expected distros here: %d",
                  length($_),
@@ -106,7 +112,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
         my @distros_under = uniq $log =~ /^  CPAN\.pm: Going to build (.*)/mg;
         if (@distros_under == 1) {
           warn sprintf "FOUND: %s (%d)\n", $d, length($log);
-          mystore($shortdistro,$log,$ok);
+          mystore($shortdistro,$log,$ok,$seq{$d});
         } elsif (length $_ == 0) { # exhausted
           push @residua, $log;
         } else {
