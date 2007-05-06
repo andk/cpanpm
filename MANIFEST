@@ -134,6 +134,7 @@ distroprefs/RJBS.Email-Send.yml
 distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
+distroprefs/SCHWERN.Class-Fields.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
 distroprefs/SMUELLER.Math-Approx-Symbolic.yml

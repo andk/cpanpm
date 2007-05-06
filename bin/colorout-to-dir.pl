@@ -84,7 +84,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
   my @logs = ($_);
   my @residua;
   my %seq;
-  while (my $_ = shift @logs) {
+  while ($_ = shift @logs) {
     my @distros = uniq /^  CPAN\.pm: Going to build (.*)/mg;
     unless (keys %seq) {
       # on the first run we can determine the absolute position within
