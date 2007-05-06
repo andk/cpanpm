@@ -4,6 +4,9 @@ comment: |
    PREREQ_FATAL must die (http://rt.cpan.org/Ticket/Display.html?id=24774)
    so configure_requires must resolve
 
+   Note: PREREQ_FATAL=0 does not work yet in MakeMaker but a bug
+   report on RT is pending. (24774)
+
 match:
   distribution: "^TSCH/Gtk2-\d"
 pl:
@@ -11,3 +14,11 @@ pl:
     - "PREREQ_FATAL=0"
 patches:
   - "/tmp/Gtk2-1.144-ANDK-01.patch"
+---
+match:
+  distribution: "^TSCH/Glib-\d"
+pl:
+  args:
+    - "PREREQ_FATAL=0"
+patches:
+  - "/tmp/Glib-1.144-ANDK-01.patch"

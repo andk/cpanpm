@@ -1,16 +1,11 @@
 ---
-comment: "my impression is this is sooooo broken that I will probably not care further"
 match:
-  distribution: "^MSERGEANT/AxKit-\d"
-pl: 
+  distribution: "^BRICAS/WWW-OpenSearch-\d"
+pl:
   eexpect:
     mode: anyorder
-    timeout: 15
+    timeout: 5
     talk:
-      - "Core[\s\S]+Do you wish to install"
-      - "y\n"
-      - "Sablotron XSLT[\s\S]+Auto-install"
-      - "n\n"
       - "Auto-install"
       - "y\n"
       - "Auto-install"

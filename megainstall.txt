@@ -37,6 +37,7 @@ CSS::SAC
 Cache::FastMmap
 Cache::File
 Cache::Memcached
+Cache::Memcached::GetParserXS
 Cache::Memcached::XS
 Cache::Simple::TimedExpiry
 Cairo
@@ -314,6 +315,7 @@ Moose
 Net::CIDR
 Net::Daemon
 Net::Domain::TLD
+Net::FPing
 Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
@@ -364,6 +366,7 @@ Perl6::Caller
 Perl6::Export
 Perl6::Form
 Perl6::Perldoc
+Perl6::Say
 Perl::Dist
 Perl::Version
 PerlIO::eol
@@ -492,6 +495,7 @@ WWW::OpenSearch
 WWW::Scraper::ISBN::Record
 WWW::Search
 WWW::Shorten
+WWW::Slides
 Want
 Workflow
 X500::DN

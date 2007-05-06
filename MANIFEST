@@ -23,6 +23,7 @@ distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BRIANSKI.XML-Comma.yml
 distroprefs/BRICAS.Catalyst-Plugin-ConfigLoader.yml
+distroprefs/BRICAS.WWW-OpenSearch.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DH.yml
 distroprefs/BTROTT.Crypt-DSA.yml

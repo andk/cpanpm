@@ -1,4 +1,7 @@
-2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-05-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* probe for the version of the patch program before using it and adjust
+	the parameters accordingly
 
 	* bugfix: a recent bugfix to dot distros broke pip (reported by Adam Kennedy)
 
