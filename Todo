@@ -1,3 +1,31 @@
+2007-05-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: write a distropref for CPANPLUS with a goto 1.79_01.
+
+2007-05-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* RRWO/CPAN-YACSmoke-0.03.tar.gz also broke recently
+
+20070422T1717 perl          31019  817 OK
+20070423T0905 maint-5.8     31011    0 NOT OK
+20070423T1448 perl          31029  284 NOT OK
+
+	That's a normal dependency on Regexp::Assemble. But why on maint? This
+	was a dependency on the (then) broken CPANPLUS.
+
+	And why do I have no maint result since then? Because CPANPLUS is still
+	recursively dependent on itself.
+
+	* ROBM/Cache-FastMmap-1.14.tar.gz came under the wheels:
+
+20070417T1509 perl          30970  583 OK
+20070418T2250 perl          30977  424 NOT OK
+
+	http://rt.cpan.org/Ticket/Display.html?id=26951
+
+	One should really run the whole megainstall with a random userid to find
+	more of these bugs.
+
 2007-05-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Jarkko's Graph is now seismograph and consistently failing apparently
