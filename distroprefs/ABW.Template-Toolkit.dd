@@ -1,6 +1,7 @@
 $VAR1 = {
+  "comment" => "tested with 2.18 and 2.19",
   "match" => {
-    "distribution" => "^ABW/Template-Toolkit-2.18"
+    "distribution" => "^ABW/Template-Toolkit-2\\."
   },
   "pl" => {
     "args" => [
@@ -12,7 +13,7 @@ $VAR1 = {
       "Do you want to install these components",
       "n\n",
       "Installation directory",
-      "\n",
+      "/usr/local/sand/tt2\n",
       "URL base for TT2 images",
       "\n",
       "Do you want to build the HTML documentation",
