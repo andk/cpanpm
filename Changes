@@ -1,17 +1,19 @@
-2007-05-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* probe for the version of the patch program before using it and adjust
-	the parameters accordingly
+	* release 1.9102 -- tiny bugfixes
+
+	* address #26664: probe for the version of the patch program before
+	using it and adjust the parameters accordingly
 
 	* bugfix: a recent bugfix to dot distros broke pip (reported by Adam Kennedy)
 
 	* compatibility with 5.00405 regained
 
-	* test fix: increase the timeouts (success dependency on CPU speed
-	discovered by Slaven Rezic)
+	* test fix: increase the timeouts (the dependency of test success on CPU
+	speed discovered by Slaven Rezic)
 
 	* work in progress: improve the output of CPAN.pm to improve
-	parseablility on failure
+	human/machine parseablility on several failure modes
 
 2007-04-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

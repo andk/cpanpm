@@ -18,6 +18,9 @@
 	change 30674 (blead 26701)'
 
 	Aha. So this is it and the chapter is not yet closed.
+
+	To run a binary search we probably must exclude the flaky test 15x. And
+	then 45x and 12x turn out to flaky as well.
 	
 	* RMUHLE/classes-0.943.tar.gz needs a binary search
 
