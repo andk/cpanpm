@@ -1,4 +1,86 @@
+2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Perlbal 1.57 maybe needs a binary search although I have mixed success
+	in maintperl. But I have never success on blead with "configuration
+	error". The failure with maint@31100 is always in t/17-webserver-concat
+	and repeating the test several times does not change that. maint@30961
+	exposes the same failure and an additional one in 15-webserver.
+	maint@30765 has the one in 17 only. maint@30588 succeeds. maint@30210
+	again has failure in 15 but not the one in 17. When I repeated the test
+	it succeeded.
+
+	_S_IFMT and S_IFDIR and S_IFREG are involved in the failure in the 17X
+	test.
+
+	http://groups.google.de/group/perl.perl5.porters/msg/d65da80913cff3ff
+
+	where Alex Tourbin post 'fixed Fcntl::S_IFMT() breakage introduced by
+	change 30674 (blead 26701)'
+
+	Aha. So this is it and the chapter is not yet closed.
+	
+	* RMUHLE/classes-0.943.tar.gz needs a binary search
+
+	* EDPRATOMO/Algorithm-Permute-0.06.tar.gz needs a binary search.
+
+cc -c   -DDEBUGGING -fno-strict-aliasing -pipe -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g   -DVERSION=\"0.06\" -DXS_VERSION=\"0.06\" -fPIC "-I/home/src/perl/repoperls/installed-perls/perl/p9xHaBy/perl-5.8.0@31166/lib/5.9.5/i686-linux-64int/CORE"  -DPERL_EXT Permute.c
+Permute.xs: In function 'permute_engine':
+Permute.xs:126: error: 'XPVAV' has no member named 'xav_array'
+Permute.c: In function 'XS_Algorithm__Permute_next':
+Permute.c:245: warning: cast to pointer from integer of different size
+Permute.c: In function 'XS_Algorithm__Permute_DESTROY':
+Permute.c:296: warning: cast to pointer from integer of different size
+Permute.c: In function 'XS_Algorithm__Permute_peek':
+Permute.c:331: warning: cast to pointer from integer of different size
+Permute.c: In function 'XS_Algorithm__Permute_reset':
+Permute.c:367: warning: cast to pointer from integer of different size
+Permute.xs: In function 'XS_Algorithm__Permute_permute':
+Permute.xs:306: error: 'XPVAV' has no member named 'xav_array'
+Permute.xs:347: error: 'XPVAV' has no member named 'xav_array'
+
+	* Template-Timer: I'm already used to seeing it fail. But I just
+	discovered that there were 4 consecutive sessions where it succeeded:
+
+20070430T1340 perl          31107  634 NOT OK
+20070501T0032 perl          31110  760 OK
+20070501T1746 perl          31111  769 OK
+20070502T0515 perl          31113  416 OK
+20070502T1604 perl          31117  431 OK
+20070502T2300 perl          31120  505 NOT OK
+
+	It is not that simple that Template were missing. There is something
+	else going on.
+
+	* Apache-Session started to have a Semaphore problem recently:
+
+20070417T1509 perl          30970  116 OK
+20070417T2056 perl          30971    0 OK
+20070418T2250 perl          30977  145 NOT OK
+
+	The semaphore tells us:
+
+t/99flex...........Permission denied at /home/sand/.cpan/build/Apache-Session-1.82-jeBTMQ/blib/lib/Apache/Session/Lock/Semaphore.pm line 92.
+        (in cleanup) Permission denied at /home/sand/.cpan/build/Apache-Session-1.82-jeBTMQ/blib/lib/Apache/Session/Lock/Semaphore.pm line 92.
+
+	When I run the same test as user k it works.
+
+	The IPC::Semaphore manpage says:
+
+If you get an invalid argument message, that usually means that the system
+is unhappy with the number of semaphores that you requested.  Try decreasing
+the number of semaphores.  The semaphore blocks that this package creates
+are persistent until the system is rebooted, so if you request 8 sempahores
+one time and 16 sempahores the next, it won't work.  Use the system
+commands ipcs and ipcrm to inspect and remove unwanted semphore blocks.
+
+	Let's do that!... Done and now Apache-Session passes all tests and
+	report is written to cpantesters. Phew! Apologies for the bogus report
+	if anybody reads this.
+
 2007-05-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SWF-Builder now probably nailed with
+	http://rt.cpan.org/Ticket/Display.html?id=26971
 
 	* Todo: write a distropref for CPANPLUS with a goto 1.79_01.
 
