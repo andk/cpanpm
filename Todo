@@ -20,9 +20,24 @@
 	Aha. So this is it and the chapter is not yet closed.
 
 	To run a binary search we probably must exclude the flaky test 15x. And
-	then 45x and 12x turn out to flaky as well.
+	then 45x and 12x turn out to be flaky as well.
+
+	Does not work out. The root seems to be older than 20000 and then LWP
+	failures masq the Perlbal failuers. I must come up with a bit phantasy.
 	
 	* RMUHLE/classes-0.943.tar.gz needs a binary search
+
+	It turns out that the test results are only negative when
+	Test::Exception is installed, otherwise they are OK. So to run a binary
+	search one would have to install Test::Exception and uninstall all
+	instances of classes.pm we have at the moment. Hrmmmm.
+
+	Well, when I take 5.8.8 and install Test::Exception and then test
+	classes.pm it succeeds. I removed all installed classes.pm under blead
+	and started a binary search with @22323 as lower boundary. 20002 was
+	unsuited because it took so long to compile zlib stuff and then fail.
+	But 22323 suffers from the same problem. But then, we're through, it is
+	suited for this binary search run.
 
 	* EDPRATOMO/Algorithm-Permute-0.06.tar.gz needs a binary search.
 
@@ -40,6 +55,8 @@ Permute.c:367: warning: cast to pointer from integer of different size
 Permute.xs: In function 'XS_Algorithm__Permute_permute':
 Permute.xs:306: error: 'XPVAV' has no member named 'xav_array'
 Permute.xs:347: error: 'XPVAV' has no member named 'xav_array'
+
+	REPORTED to P5P and author.
 
 	* Template-Timer: I'm already used to seeing it fail. But I just
 	discovered that there were 4 consecutive sessions where it succeeded:

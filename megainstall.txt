@@ -300,6 +300,7 @@ Math::Round::Var
 Math::Symbolic
 Math::SymbolicX::ParserExtensionFactory
 Math::Vec
+Metadata::ByInode
 Module::Build::Convert
 Module::Compile
 Module::Find
@@ -497,6 +498,7 @@ WWW::Search
 WWW::Shorten
 WWW::Slides
 Want
+Web::Scraper
 Workflow
 X500::DN
 XML::Atom
