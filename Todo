@@ -1,3 +1,30 @@
+2007-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* package Module::Install::With;
+
+	needs some cooperation from here
+
+	* YAPPO/String-Diff-0.02 complains
+
+	Can't locate inc/Module/Install.pm in @INC (@INC contains: /home/src/perl
+/repoperls/installed-perls/perl/p9xHaBy/perl-5.8.0@31166/lib/5.9.5/i686-linux-64
+int /home/src/perl/repoperls/installed-perls/perl/p9xHaBy/perl-5.8.0@31166/lib/5
+.9.5 /home/src/perl/repoperls/installed-perls/perl/p9xHaBy/perl-5.8.0@31166/lib/
+site_perl/5.9.5/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/p
+9xHaBy/perl-5.8.0@31166/lib/site_perl/5.9.5 .) at Makefile.PL line 1.
+BEGIN failed--compilation aborted at Makefile.PL line 1.
+
+	It looks like a wrong usage of Module::Install. Sometimes it succeeds.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27048
+
+	* EWILHELM seems to break the EUMM mantra in more distros than only Math-Vec
+
+	http://rt.cpan.org/Ticket/Display.html?id=26925
+
+	I saw the same with Math-Round-Var and so gave him a distropref with a
+	match for his CPAN id.
+
 2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Perlbal 1.57 maybe needs a binary search although I have mixed success
