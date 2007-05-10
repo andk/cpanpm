@@ -1,0 +1,6 @@
+---
+comment: "http://rt.cpan.org/Ticket/Display.html?id=26925"
+match:
+  distribution: "^EWILHELM/"
+cpanconfig:
+  prefer_installer: "MB"

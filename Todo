@@ -14,7 +14,7 @@
 
 	http://groups.google.de/group/perl.perl5.porters/msg/d65da80913cff3ff
 
-	where Alex Tourbin post 'fixed Fcntl::S_IFMT() breakage introduced by
+	where Alex Tourbin posts 'fixed Fcntl::S_IFMT() breakage introduced by
 	change 30674 (blead 26701)'
 
 	Aha. So this is it and the chapter is not yet closed.
@@ -23,7 +23,7 @@
 	then 45x and 12x turn out to be flaky as well.
 
 	Does not work out. The root seems to be older than 20000 and then LWP
-	failures masq the Perlbal failuers. I must come up with a bit phantasy.
+	failures masq the Perlbal failures. I must come up with a bit phantasy.
 	
 	* RMUHLE/classes-0.943.tar.gz needs a binary search
 
@@ -38,6 +38,11 @@
 	unsuited because it took so long to compile zlib stuff and then fail.
 	But 22323 suffers from the same problem. But then, we're through, it is
 	suited for this binary search run.
+
+	REPORTED
+
+	http://groups.google.de/group/perl.perl5.porters/browse_frm/thread/2b25aab152652e00/006a4f9e37f63890?hl=de#006a4f9e37f63890
+	http://rt.cpan.org/Ticket/Display.html?id=27047
 
 	* EDPRATOMO/Algorithm-Permute-0.06.tar.gz needs a binary search.
 
@@ -57,6 +62,9 @@ Permute.xs:306: error: 'XPVAV' has no member named 'xav_array'
 Permute.xs:347: error: 'XPVAV' has no member named 'xav_array'
 
 	REPORTED to P5P and author.
+
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
+	http://rt.cpan.org/Ticket/Display.html?id=27022
 
 	* Template-Timer: I'm already used to seeing it fail. But I just
 	discovered that there were 4 consecutive sessions where it succeeded:
