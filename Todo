@@ -1,13 +1,41 @@
 2007-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Bugreport from Slaven: $SIG{WINCH} must be dealt with. If one changes
+	the windowsize while lwp is fetching something the transfer is being
+	aborted. By setting $SIG{WINCH} to IGNORE this can be avoided.
+
+	* Jifty caused a hang in the test suite again. I solved it the same way
+	as the other times but this time I had to kill an additional ptee
+	process which apparently was still waiting. Frightening.
+
+	* B::Generate seems to be broken.
+
+	* JAW/Devel-Profile-1.05.tar.gz looks like a candidate for a binary search.
+
+	It is OK on maint and fails on blead since 30950 (the earliest I have
+	ATM). But 23023 fails the same way. So we slip into the [22682,22741]
+	interval and binary search starts building new old perls.
+
+	* MCMAHON!Devel-Command-0.08.xml consistently succeeds with maint and
+	fails with blead.
+
+	The test always says: "Your Perl can't be patched by Devel::Command"
+
+	It's about the debugger and Module::Pluggable is involved but the README
+	does not talk about what these perldb extensions are. All manpages also
+	refuse to talk about what they do. They point at each other and talk
+	about how they do it but not what *it* is. Weird.
+
 	* Sam Tregar has not only XML::Validator::Schema in the problem zone but
 	also DBIx-Timeout. The former has got a BBC article on P5P:
 
 	http://groups.google.de/group/perl.perl5.porters/browse_frm/thread/a35e0d07783e6aee/3506f54c43a8b6aa?lnk=gst&q=sam+tregar&rnum=9&hl=de#3506f54c43a8b6aa
 
 	But the latter? It is on my radar since 20070414T2030 and has always
-	failed since. Ah, that's easy, it needs a DSN. For some reason it
+	failed since. Ah, that's easy, it needs a DBI DSN. For some reason it
 	believes that it can connect to mysql.
+
+	Now it got a distropref.
 
 	* package Module::Install::With;
 

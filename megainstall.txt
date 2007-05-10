@@ -228,6 +228,7 @@ HTML::Clean
 HTML::Entities::Numbered
 HTML::FillInForm
 HTML::FromText
+HTML::GMap
 HTML::Mason
 HTML::PopupTreeSelect::Dynamic
 HTML::Prototype
@@ -255,6 +256,7 @@ IO::LockedFile
 IO::Multiplex
 IO::Pager
 IO::Tee
+IPC::Messaging
 IPC::Mmap
 IPC::PubSub
 IPC::ShareLite
@@ -312,6 +314,7 @@ Module::Pluggable::Fast
 Module::Refresh
 Module::Release
 Module::Versions::Report
+MogileFS::Class
 Moose
 Net::CIDR
 Net::Daemon
