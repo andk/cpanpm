@@ -1,5 +1,14 @@
 2007-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Sam Tregar has not only XML::Validator::Schema in the problem zone but
+	also DBIx-Timeout. The former has got a BBC article on P5P:
+
+	http://groups.google.de/group/perl.perl5.porters/browse_frm/thread/a35e0d07783e6aee/3506f54c43a8b6aa?lnk=gst&q=sam+tregar&rnum=9&hl=de#3506f54c43a8b6aa
+
+	But the latter? It is on my radar since 20070414T2030 and has always
+	failed since. Ah, that's easy, it needs a DSN. For some reason it
+	believes that it can connect to mysql.
+
 	* package Module::Install::With;
 
 	needs some cooperation from here
@@ -93,8 +102,9 @@ Permute.xs:347: error: 'XPVAV' has no member named 'xav_array'
 	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
 	http://rt.cpan.org/Ticket/Display.html?id=27022
 
-	* Template-Timer: I'm already used to seeing it fail. But I just
-	discovered that there were 4 consecutive sessions where it succeeded:
+	* PETDANCE/Template-Timer-0.04: I'm already used to seeing it fail. But
+	I just discovered that there were 4 consecutive sessions where it
+	succeeded:
 
 20070430T1340 perl          31107  634 NOT OK
 20070501T0032 perl          31110  760 OK
