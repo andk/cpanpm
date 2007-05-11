@@ -1,3 +1,23 @@
+2007-05-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* JPRIT/Event-1.08.tar.gz broken by bleadperl but not easy to track.
+
+	http://groups.google.de/group/perl.perl5.porters/browse_frm/thread/f17cb95982764f54/afa5337cf7fe5c7d?lnk=gst&q=Josh+Event&rnum=1&hl=de#afa5337cf7fe5c7d
+
+	But where's the patch? This was a week ago.
+
+	* SUNGO/POE-API-Peek-1.0802.tar.gz never works but it has only PASSes on
+	cpantesters. Dependency on Devel::Size.
+
+	* RIZEN/Config-JSON-1.0.3.tar.gz broke on the day we switched user:
+
+20070417T1509 perl        30970  375 OK    
+20070418T2250 perl        30977  443 NOT OK
+
+	Again a predictable filename in /tmp/
+
+	http://rt.cpan.org/Ticket/Display.html?id=27078
+
 2007-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PETDANCE / Test::WWW::Mechanize 1.12 is failing all the time.

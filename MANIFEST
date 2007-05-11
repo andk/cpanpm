@@ -94,6 +94,7 @@ distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
+distroprefs/JPRIT.Event.yml
 distroprefs/JROBINSON.DBIx-Class.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/KANE.CPANPLUS.yml
