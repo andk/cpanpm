@@ -260,6 +260,7 @@ IPC::Messaging
 IPC::Mmap
 IPC::PubSub
 IPC::ShareLite
+Image::ExifTool
 Image::Pngslimmer
 Imager
 Imager::Graph
