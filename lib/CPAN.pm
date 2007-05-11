@@ -7134,7 +7134,7 @@ is part of the perl-%s distribution. To install that, you need to run
                     ->new("NO '$system' returned status $ret");
                 $CPAN::Frontend->mywarn("Warning: No success on command[$system]\n");
                 $self->store_persistent_state;
-                return $self->goodbye("$system -- NOT OK\n");
+                return $self->goodbye("$system -- NOT OK");
             }
 	}
 	if (-f "Makefile" || -f "Build") {
@@ -7156,7 +7156,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
             $self->{make} = CPAN::Distrostatus->new("NO $need");
             $self->store_persistent_state;
-            return $self->goodbye("[prereq] -- NOT OK\n");
+            return $self->goodbye("[prereq] -- NOT OK");
         } else {
             my $follow = eval { $self->follow_prereqs(@prereq); };
             if (0) {
@@ -7165,7 +7165,7 @@ is part of the perl-%s distribution. To install that, you need to run
                 return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $CPAN::Frontend->mywarn($@);
-                return $self->goodbye("[depend] -- NOT OK\n");
+                return $self->goodbye("[depend] -- NOT OK");
             }
         }
     }
@@ -7236,7 +7236,7 @@ is part of the perl-%s distribution. To install that, you need to run
 sub goodbye {
     my($self,$goodbye) = @_;
     my $id = $self->pretty_id;
-    $CPAN::Frontend->mywarn("  $id\n  $goodbye");
+    $CPAN::Frontend->mywarn("  $id\n  $goodbye\n");
     return;
 }
 
