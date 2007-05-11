@@ -109,6 +109,7 @@ distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LYOKATO.FormValidator-Simple.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.MailTools.yml
+distroprefs/MARKSTOS.CGI-Session.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/MIROD.XML-Twig.yml

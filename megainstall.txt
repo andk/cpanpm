@@ -339,6 +339,7 @@ News::Article
 Number::Format
 Number::WithError
 OLE::Storage_Lite
+OOPS
 Object::Accessor
 Object::Realize::Later
 Object::Signature

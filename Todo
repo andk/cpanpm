@@ -1,5 +1,35 @@
 2007-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* PETDANCE / Test::WWW::Mechanize 1.12 is failing all the time.
+
+	There is a cleanup routine that kills the server without further
+	diagnostics. The reason why this cleanup is called prematurely is
+	"Can\'t locate Encode/ConfigLocal.pm in @INC" what I found out by
+	running through the debugger. Called at Encode.pm line 53 !!!
+
+ 50 our %Encoding;
+ 51 our %ExtModule;
+ 52 require Encode::Config;
+ 53 eval { require Encode::ConfigLocal };
+
+	Is this a $^S issue? Yes, as already reported by mark@blackmans.org in
+
+	https://rt.cpan.org/Ticket/Display.html?id=26602
+
+	* top failing module today is MARKSTOS/CGI-Session-4.20. Does not sound
+	familiar. But in fact it failed all runs since 30977, both maint and
+	blead. I have already reported to cpantesters but most reports were
+	PASS. ARRRG, this is the annoying circular data structures problem in
+	JSON::Syck. We seem to have a negative dependency on JSON::Syck. But as
+	we always install it because it comes with YAML::Syck we see the
+	negative report always.
+
+	And now I discover that there is a 4.20_1 since last November. But it
+	fails at the same test.
+
+	* 26664 is reopened by Marek and he asks for a chmod before running
+	patch. I'd think we should chmod selectively.
+
 	* Bugreport from Slaven: $SIG{WINCH} must be dealt with. If one changes
 	the windowsize while lwp is fetching something the transfer is being
 	aborted. By setting $SIG{WINCH} to IGNORE this can be avoided.
@@ -8,13 +38,87 @@
 	as the other times but this time I had to kill an additional ptee
 	process which apparently was still waiting. Frightening.
 
-	* B::Generate seems to be broken.
+	* B::Generate seems to be broken. It was also already broken at 23023
+	which is my first intermediate point to base binary searches on because
+	it is faster than 20002. And the interval [20002,23023] is it.
+
+----Program----
+eval q{use B::Generate 1.06};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pCWADJn/perl-5.8.0@22314/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pXfp3lj/perl-5.8.0@22315/bin/perl----
+N/A
+
+----EOF ($?='0')----
 
 	* JAW/Devel-Profile-1.05.tar.gz looks like a candidate for a binary search.
 
 	It is OK on maint and fails on blead since 30950 (the earliest I have
 	ATM). But 23023 fails the same way. So we slip into the [22682,22741]
 	interval and binary search starts building new old perls.
+
+  CPAN.pm: Going to build J/JA/JAW/Devel-Profile-1.05.tar.gz
+
+Checking if your kit is complete...
+Looks good
+Writing Makefile for Devel::Profile
+cp Profile.pm blib/lib/Devel/Profile.pm
+Manifying blib/man3/Devel::Profile.3
+  JAW/Devel-Profile-1.05.tar.gz
+  /usr/bin/make -- OK
+Running make test
+CPAN::Reporter not installed, falling back to testing without
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/p7UlFTf/perl-5.8.0@22741/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/test1....ok
+t/test2....dubious
+        Test returned status 0 (wstat 11, 0xb)
+t/test3....cannot open prof.out: No such file or directory
+t/test3....dubious
+        Test returned status 2 (wstat 512, 0x200)
+DIED. FAILED tests 1-2
+        Failed 2/2 tests, 0.00% okay
+t/test4....dubious
+        Test returned status 0 (wstat 11, 0xb)
+t/test5....cannot open prof.out: No such file or directory
+t/test5....dubious
+        Test returned status 2 (wstat 512, 0x200)
+DIED. FAILED tests 1-2
+        Failed 2/2 tests, 0.00% okay
+Failed Test Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/test2.t      0    11    ??   ??  ??
+t/test3.t      2   512     2    4  1-2
+t/test4.t      0    11    ??   ??  ??
+t/test5.t      2   512     2    4  1-2
+Failed 4/5 test scripts. 4/5 subtests failed.
+Files=5, Tests=5,  0 wallclock secs ( 0.13 cusr +  0.02 csys =  0.15 CPU)
+Failed 4/5 test programs. 4/5 subtests failed.
+make: *** [test_dynamic] Error 2
+  JAW/Devel-Profile-1.05.tar.gz
+  /usr/bin/make test -- NOT OK
+Running make install
+  make test had returned bad status, won't install without force
+----Program----
+eval q{use Devel::Profile 1.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p4yYZ5s/perl-5.8.0@22739/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p7UlFTf/perl-5.8.0@22741/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 22739 and 22741
+No patch available between 22739 and 22741
+
 
 	* MCMAHON!Devel-Command-0.08.xml consistently succeeds with maint and
 	fails with blead.
