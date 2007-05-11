@@ -125,6 +125,7 @@ distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
 distroprefs/MSERGEANT.DBIx-AnyDBD.yml
+distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/OLAF.Net-DNS.yml
