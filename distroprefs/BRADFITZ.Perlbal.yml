@@ -6,3 +6,5 @@ test:
     PERLBAL_DEBUG: 1
     PERLBAL_DEBUG_OBJ: 1
     PERLBAL_TRACK_STATES: 1
+patches:
+  - "/tmp/Perlbal-1.58-first-tentative-patch-UGLY01.patch"

@@ -76,6 +76,7 @@ Class::Multimethods::Pure
 Class::NamedParms
 Class::Observable
 Class::ParmList
+Class::Rebless
 Class::ReturnValue
 Class::Std
 Class::Throwable
