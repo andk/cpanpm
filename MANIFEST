@@ -23,6 +23,7 @@ distroprefs/AVIF.Time-Duration.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BLBLACK.Class-C3.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
+distroprefs/BRADFITZ.Perlbal.yml
 distroprefs/BRIANSKI.XML-Comma.yml
 distroprefs/BRICAS.Catalyst-Plugin-ConfigLoader.yml
 distroprefs/BRICAS.WWW-OpenSearch.yml

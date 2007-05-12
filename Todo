@@ -1,5 +1,11 @@
 2007-05-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Attacking perlbal from inside. There are three envariables to turn on
+	debugging and I can add code to use them. But where does the server log
+	its problems?
+
+	The code hints at syslog but maybe user sand cannot do that? 
+
 	* Bug: megainstall.20070511T2103.out shows an endless loop for HTML-GMap.
 
 ---- Unsatisfied dependencies detected during ----
@@ -28,7 +34,7 @@ Running make install
   make test had returned bad status, won't install without force
 Running make for P/PC/PCANARAN/HTML-GMap-0.02.tar.gz
 
-	It is a goto problem.
+	It is a goto problem. CGI-Session had a goto but the target then failed.
 
 2007-05-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

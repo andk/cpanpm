@@ -155,6 +155,7 @@ Devel::CallTrace
 Devel::Caller
 Devel::Command
 Devel::Cover
+Devel::Cycle
 Devel::Dependencies
 Devel::FastProf
 Devel::Hide
@@ -459,6 +460,7 @@ Test::YAML::Meta
 Text::Aligner
 Text::Autoformat
 Text::CSV_XS
+Text::Filter
 Text::LevenshteinXS
 Text::Ngram
 Text::Quoted
@@ -528,6 +530,7 @@ XML::Tiny
 XML::Twig
 XML::Validator::Schema
 XML::XPathEngine
+YAML::LibYAML
 YAML::Tiny
 Yahoo::Search
 bignum
