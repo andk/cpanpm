@@ -371,6 +371,7 @@ Perl6::Attributes
 Perl6::Caller
 Perl6::Export
 Perl6::Form
+Perl6::Junction
 Perl6::Perldoc
 Perl6::Say
 Perl::Dist

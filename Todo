@@ -1,4 +1,45 @@
+2007-05-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: megainstall.20070511T2103.out shows an endless loop for HTML-GMap.
+
+---- Unsatisfied dependencies detected during ----
+----      PCANARAN/HTML-GMap-0.02.tar.gz      ----
+    GD::Icons [requires]
+    CGI::Session [requires]
+    Time::Format [requires]
+
+	Then it satisfied GD::Icons and Time::Format and from then it looped
+	with
+
+Running make for P/PC/PCANARAN/HTML-GMap-0.02.tar.gz
+  Has already been unwrapped into directory /home/sand/.cpan/build/HTML-GMap-0.02-1Cclg2
+
+  CPAN.pm: Going to build P/PC/PCANARAN/HTML-GMap-0.02.tar.gz
+
+---- Unsatisfied dependencies detected during ----
+----      PCANARAN/HTML-GMap-0.02.tar.gz      ----
+    CGI::Session [requires]
+Running make test
+  Delayed until after prerequisites
+Running make install
+  Delayed until after prerequisites
+Running install for module 'CGI::Session'
+Running make install
+  make test had returned bad status, won't install without force
+Running make for P/PC/PCANARAN/HTML-GMap-0.02.tar.gz
+
+	It is a goto problem.
+
 2007-05-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Uploaded today:
+
+CFRANKS   Perl6-Junction-1.30000.tar.gz           6k   11 May 2007
+MARKOV    MailTools-1.77.tar.gz                  47k   11 May 2007
+
+	* If I find a way to reproduce the test breakage, Tim asks for:
+
+	DBI_TRACE=4 DBD_GOFER_TRACE=1 DBI_GOFER_TRACE=4 perl -Mblib t/zvg_85gofer.t > zvg_85gofer.log 2>&1
 
 	* JPRIT/Event-1.08.tar.gz broken by bleadperl but not easy to track.
 
