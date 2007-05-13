@@ -86,6 +86,7 @@ Class::XPath
 Compress::LZF
 Config::Any
 Config::General
+Config::INI::Reader
 Config::IniFiles
 Config::JSON
 Config::Simple
@@ -377,6 +378,7 @@ Perl6::Junction
 Perl6::Perldoc
 Perl6::Say
 Perl::Dist
+Perl::MinimumVersion
 Perl::Version
 PerlIO::eol
 PerlIO::via::dynamic
