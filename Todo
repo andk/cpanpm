@@ -1,3 +1,16 @@
+2007-05-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Class::DBI is breathtaking:
+
+% perl bin/show-history.pl TMTM/Class-DBI-v3.0.16.tar.gz | cut -c 38- | sort | uniq -c
+    261 NOT OK
+      2 OK    
+
+	Twice OK!
+
+	* STAS/libapreq-1.33.tar.gz: the Makefile.PL fails when mod_perl isn't
+	installed. Should write a bugreport.
+
 2007-05-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PJCJ/Devel-Cover-0.61.tar.gz:

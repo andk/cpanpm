@@ -15,11 +15,14 @@ B::Deobfuscate
 BFD
 Bit::Vector::Minimal
 BitTorrent
+Bundle::POE::IRC
 Bundle::Pause
 Bundle::Perl6
 Bundle::Phalanx100
 Bundle::RT
 Bundle::Slash
+Bundle::PDF
+Bundle::XML
 Business::CreditCard
 Business::ISBN
 Business::OnlinePayment
