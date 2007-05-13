@@ -21,6 +21,7 @@ Bundle::Phalanx100
 Bundle::RT
 Bundle::Slash
 Business::CreditCard
+Business::ISBN
 Business::OnlinePayment
 CDB_File
 CGI::Ajax
@@ -82,6 +83,7 @@ Class::Std
 Class::Throwable
 Class::Trait
 Class::Virtual
+Class::Workflow
 Class::XPath
 Compress::LZF
 Config::Any
@@ -450,6 +452,7 @@ Term::UI
 Test::Class
 Test::Deep
 Test::Differences
+Test::FormValidator
 Test::HTTP::Server::Simple
 Test::JSON
 Test::Kwalitee
