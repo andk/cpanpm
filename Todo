@@ -1,3 +1,20 @@
+2007-05-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Perl6-Attributes broken by 31200 got a BBC article.
+
+	* Module-Info:
+
+	% perl bin/show-history.pl MBARBON/Module-Info-0.30.tar.gz
+
+20070420T2054 perl        30999  756 OK    
+20070421T0311 perl        31000  286 OK    
+20070421T0807 maint-5.8   30961  377 NOT OK
+20070421T1330 perl        31008  416 NOT OK
+
+	All before that were OK, all after NOT OK. Looks like a version.pm problem.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27114
+
 2007-05-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Class::DBI is breathtaking:

@@ -63,6 +63,8 @@ distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/EWILHELM.Math-Vec.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
+distroprefs/GAAL.Best.yml
+distroprefs/GAAL.Class-Rebless.yml
 distroprefs/GAAL.Task-Smoke.yml
 distroprefs/GAAS.libwww.yml
 distroprefs/GBARR.Authen-SASL.yml
@@ -114,6 +116,7 @@ distroprefs/MARKOV.MailTools.yml
 distroprefs/MARKSTOS.CGI-Session.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
+distroprefs/METZZO.Java.yml
 distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
