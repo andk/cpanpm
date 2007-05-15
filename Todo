@@ -1,4 +1,38 @@
+2007-05-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* http://use.perl.org/~BinGOs/journal/33270
+
+	Bingos explains how to smoke.
+
 2007-05-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: Revisit B::Generate, Devel-Profile, Term-Size-Unix, GAAL/Best,
+	Class-DBI;
+
+	What's up with MetaSyntactic?
+
+	How to deal with the pseudohashes cargo in BRADFITZ universe?
+
+	Watch out for duplicate posts to cpantesters probably due to an older
+	Reporter (0.41 instead of 0.43!). Binary search must always upgrade it.
+
+	Go after users of too old ExtUtils::AutoInstall(?) What speaks against
+	it is that I'm still not happy about Module::Install and an upgrade does
+	not gain us much. But something was broken recently in OpenPGP, right?
+
+----Program----
+eval q{use Best 0.11};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pf18JVi/perl-5.8.0@30979/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p1MWHxg/perl-5.8.0@30980/bin/perl----
+N/A
+
+----EOF ($?='0')----
 
 	* Perl6-Attributes broken by 31200 got a BBC article.
 
