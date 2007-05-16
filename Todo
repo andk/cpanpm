@@ -6,8 +6,8 @@
 
 2007-05-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: Revisit B::Generate, Devel-Profile, Term-Size-Unix, GAAL/Best,
-	Class-DBI;
+	* Todo: Revisit ABERGMAN/B::Generate (DONE), Devel-Profile,
+	Term-Size-Unix, GAAL/Best (DONE), Class-DBI;
 
 	What's up with MetaSyntactic?
 

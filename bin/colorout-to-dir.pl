@@ -13,6 +13,17 @@ our($perl_path) = m|(/home\S+/installed-perls/(?:.*?)/p.*?/perl-5.*?@(?:\d+))|;
 our $outdir = $ARGV;
 $outdir =~ s/.out$/.d/ or die;
 mkpath $outdir;
+my $perl = "$perl_path/bin/perl";
+if (-e $perl) {
+  open my $fh, ">", "$outdir/perl-V.txt" or die "Could not open >$outdir/perl-V.txt: $!";
+  open my $pfh, "-|", $perl, "-V" or die "cannot fork: $!";
+  while (<$pfh>) {
+    print $fh $_;
+  }
+  close $pfh or die "perl died during -V";
+  close $fh or die "could not write '$outdir/perl-V.txt': $!";
+}
+
 
 sub mystore ($$$$){
   my($shortdistro,$log,$ok,$seq) = @_;

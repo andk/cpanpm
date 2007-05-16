@@ -4,8 +4,11 @@
 
 =head1 DESCRIPTION
 
-The content of this directory is explained in the CPAN.pm mapage under
-the section I<Configuration of individual distributions>.
+The content of this directory is explained in the CPAN.pm manpage
+under the section I<Configuration of individual distributions>.
+
+Note: all files here are just examples and may or may not fit your
+purpose. Use with care.
 
 =cut
 
