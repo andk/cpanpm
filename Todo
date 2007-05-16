@@ -1,3 +1,8 @@
+2007-05-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* CBIx::Class also became unstable recently. Something to do with
+	sqlite?
+
 2007-05-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* http://use.perl.org/~BinGOs/journal/33270
@@ -9,12 +14,13 @@
 	* Todo: Revisit ABERGMAN/B::Generate (DONE), Devel-Profile,
 	Term-Size-Unix, GAAL/Best (DONE), Class-DBI;
 
-	What's up with MetaSyntactic?
+	What's up with MetaSyntactic? (DONE)
 
 	How to deal with the pseudohashes cargo in BRADFITZ universe?
 
 	Watch out for duplicate posts to cpantesters probably due to an older
 	Reporter (0.41 instead of 0.43!). Binary search must always upgrade it.
+	(DONE)
 
 	Go after users of too old ExtUtils::AutoInstall(?) What speaks against
 	it is that I'm still not happy about Module::Install and an upgrade does
