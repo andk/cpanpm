@@ -1,12 +1,25 @@
 2007-05-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* install Parrot::Interpreter
+
+	cc -o miniparrot src/main.o \
+    -Wl,-rpath=/home/sand/.cpan/build/parrot-0.4.12-Y2yjot/blib/lib -L/home/sand/.cpan/build/parrot-0.4.12-Y2yjot/blib/lib -lparrot  -lnsl -ldl -lm -lcrypt -lutil -lpthread -lrt -lgmp -lreadline -lncurses -L/usr/local/lib -Wl,-E   src/null_config.o
+Invoking Parrot to generate runtime/parrot/include/config.fpmc --cross your fingers
+./miniparrot config_lib.pasm > runtime/parrot/include/config.fpmc
+miniparrot: src/events.c:270: init_events_first: Assertion `rc == 0' failed.
+/bin/sh: line 1: 20487 Aborted                 ./miniparrot config_lib.pasm >runtime/parrot/include/config.fpmc
+
+	An unlucky but an amazing first time experience. (This was with blead)
+
+	And with maint? Same thing.
+
 	* Pod::Xhtml fails but this seems just a dependency bug.
 
 	http://rt.cpan.org/Ticket/Display.html?id=27165
 
 2007-05-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* CBIx::Class also became unstable recently. Something to do with
+	* DBIx::Class also became unstable recently. Something to do with
 	sqlite?
 
 2007-05-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -46,7 +59,7 @@ N/A
 
 ----EOF ($?='0')----
 
-	* Perl6-Attributes broken by 31200 got a BBC article.
+	* Perl6-Attributes broken by 31200 got a BBC article. Fixed by Davem.
 
 	* Module-Info:
 

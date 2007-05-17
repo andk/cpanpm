@@ -3,5 +3,5 @@ match:
   distribution: "^STAS/libapreq-\d"
 pl:
   args:
-    - "-apxs"
-    - "/home/src/www/apache/apachebin/1.3.37/bin/apxs"
+    - "-httpd"
+    - "/home/src/www/apache/apachebin/1.3.37/bin/httpd"

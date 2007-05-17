@@ -126,6 +126,7 @@ DBI::Shell
 DBIx::Class
 DBIx::Class::Indexed
 DBIx::DBSchema
+DBIx::ORM::Declarative
 DBIx::Perlish
 DBIx::SearchBuilder
 DBIx::Simple
@@ -373,6 +374,7 @@ PPI
 Package::Constants
 PadWalker
 Params::Smart
+Parrot::Interpreter
 Parse::BACKPAN::Packages
 Parse::Yapp
 Perl6::Attributes
@@ -438,6 +440,7 @@ Sub::Override
 Sys::SigAction
 Taint::Util
 Task::CVSMonitor
+Task::Catalyst::Tutorial
 Task::Smoke
 Tcl
 TeX::Encode
