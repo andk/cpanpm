@@ -454,6 +454,7 @@ Term::Prompt
 Term::ReadLine::Gnu
 Term::Size
 Term::Size::Perl
+Term::Spinner
 Term::UI
 Test::Class
 Test::Deep
