@@ -1,3 +1,9 @@
+2007-05-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Pod::Xhtml fails but this seems just a dependency bug.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27165
+
 2007-05-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CBIx::Class also became unstable recently. Something to do with

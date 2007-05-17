@@ -137,6 +137,7 @@ distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.TAPx-Parser.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
+distroprefs/PERIGRIN.JSON-Any.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/RCAPUTO.POE.yml
@@ -157,6 +158,7 @@ distroprefs/SMUELLER.PAR.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
+distroprefs/STAS.libapreq.yml
 distroprefs/STEVAN.Class-MOP.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
