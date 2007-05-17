@@ -159,6 +159,7 @@ distroprefs/SMUELLER.PAR.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
+distroprefs/SRI.Catalyst-Plugin-HTML-Widget.yml
 distroprefs/STAS.libapreq.yml
 distroprefs/STEVAN.Class-MOP.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
