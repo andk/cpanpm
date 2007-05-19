@@ -1,3 +1,92 @@
+2007-05-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Noise during megainstall while smoking 31235:
+
+*** glibc detected *** double free or corruption (!prev): 0x0835f4f8 ***
+*** glibc detected *** free(): invalid next size (normal): 0x08376b30 ***
+*** glibc detected *** realloc(): invalid next size: 0x08365dc8 ***
+*** glibc detected *** double free or corruption (!prev): 0x0835f608 ***
+*** glibc detected *** free(): invalid next size (normal): 0x08376b30 ***
+*** glibc detected *** realloc(): invalid next size: 0x08365dc8 ***
+*** glibc detected *** free(): invalid next size (normal): 0x083759f0 ***
+
+	and the test for FLORA/Net_SSLeay.pm-1.30.tar.gz or something after it
+	hangs. This is the last thing in the logfile before I go kill some job:
+
+All tests completed OK.
+make[4]: Entering directory `/home/sand/.cpan/build/Net_SSLeay.pm-1.30-D3dijc/Net-SSLeay-Handle-0.50'
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/bin/perl "-I../blib/lib" "-I../blib/arch" test.pl
+1..3
+ok 1
+    About to test the following external sites:
+
+    www.cdw.com
+    banking.wellsfargo.com
+    secure.worldgaming.net
+    www.ubs.com
+
+    You have 5 seconds of time to hit Ctrl-C if you do not like this.
+    So far there were no errors in tests.
+    Following tests _will_ fail if you do not have network
+    connectivity (or if the servers are down or have changed).
+
+  testing https://www.cdw.com/ ...
+  14 header and 451 document lines
+  testing https://banking.wellsfargo.com/ ...
+  6 header and 0 document lines
+  testing https://secure.worldgaming.net/ ...
+  8 header and 16 document lines
+  testing https://www.ubs.com/ ...
+  12 header and 340 document lines
+  All sites were successful!
+ok 2
+creating 3 SSL sockets ...
+  reading from www.cdw.com with socket 3
+  14 header and 451 document lines
+  reading from banking.wellsfargo.com with socket 4
+  6 header and 0 document lines
+  reading from secure.worldgaming.net with socket 5
+  8 header and 16 document lines
+  closing socket 3
+  closing socket 4
+  closing socket 5
+  All sites were successful!
+ok 3
+make[4]: Leaving directory `/home/sand/.cpan/build/Net_SSLeay.pm-1.30-D3dijc/Net-SSLeay-Handle-0.50'
+make[3]: Leaving directory `/home/sand/.cpan/build/Net_SSLeay.pm-1.30-D3dijc'
+makewrapper: make ok
+
+
+
+
+	Now I'm gonna kill
+
+sand      4313  0.0  0.5  12612  7868 pts/5    S+   16:39   0:00 /home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/bin/perl -Iblib/lib -Iblib/arch -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/5.9.5 -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/site_perl/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/site_perl/5.9.5 -I. examples/sslecho.pl 1212 examples/cert.pem examples/key.pem
+
+
+	And after having done that I see this in the logfile:
+
+sh: line 1:  4313 Terminated              /home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/bin/perl -Iblib/lib -Iblib/arch -I/home/src/per
+l/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/li
+b/5.9.5 -I/home/src/perl/repoperls/installed-perls/perl/pjIcU5f/perl-5.8.0@31235/lib/site_perl/5.9.5/i686-linux-64int -I/home/src/perl/repoperls/installed-perls
+/perl/pjIcU5f/perl-5.8.0@31235/lib/site_perl/5.9.5 -I. examples/sslecho.pl 1212 examples/cert.pem examples/key.pem >>sslecho.log 2>&1
+ESC[1;34;47mTest result is 'pass'ESC[0mESC[1;34;47m: 'make test' no errorsESC[0mESC[1;34;47m.
+ESC[0mESC[1;34;47mPreparing a test report for Net_SSLeay.pm-1.30
+ESC[0mESC[1;31;47m
+It seems that "PASS Net_SSLeay.pm-1.30 i686-linux-64int 2.6.18-4-k7"
+is a duplicate of a previous report you sent to CPAN Testers.
+
+Test report will not be sent.
+
+ESC[0mESC[1;34;47m  FLORA/Net_SSLeay.pm-1.30.tar.gz
+ESC[0mESC[1;34;47m  /usr/bin/make test -- OK
+ESC[0mESC[1;34;47mRunning make install
+
+
+
+	Time to disable Net_SSLeay completely? Remember, we have already a very
+	old bug report for it. (http://rt.cpan.org/Ticket/Display.html?id=24180)
+
 2007-05-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* install Parrot::Interpreter

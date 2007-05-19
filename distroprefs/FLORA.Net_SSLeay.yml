@@ -1,0 +1,11 @@
+---
+comment: |
+
+  First it was only http://rt.cpan.org/Ticket/Display.html?id=24180
+
+  With 312{35,38} it started to hang completely. Needs more
+  investigation.
+
+match:
+  distribution: "^FLORA/Net_SSLeay.pm-1.30.tar.gz"
+disabled: 1

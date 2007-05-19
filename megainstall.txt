@@ -274,6 +274,7 @@ Image::Pngslimmer
 Imager
 Imager::Graph
 Iterator
+JSON::DWIW
 JSON::XS
 Jifty
 Kwiki
@@ -326,6 +327,7 @@ Module::Release
 Module::Versions::Report
 MogileFS::Class
 Moose
+Moose::Autobox
 Net::CIDR
 Net::Daemon
 Net::Domain::TLD
@@ -549,3 +551,7 @@ Yahoo::Search
 bignum
 capitalization
 mixin
+re::engine::PCRE
+re::engine::POSIX
+re::engine::Plan9
+re::engine::Plugin
