@@ -1,3 +1,10 @@
+2007-05-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* During the test of PJCJ/Devel-Cover-0.61.tar.gz within
+	megainstall.20070519T1331.out I got this 22MB extra output once again.
+	Devel-Cover fails for a very long time already and I'm unsure if I
+	reported this or not.
+
 2007-05-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Noise during megainstall while smoking 31235:

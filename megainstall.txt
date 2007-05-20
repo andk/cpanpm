@@ -125,6 +125,7 @@ DBD::Pg
 DBI::Shell
 DBIx::Class
 DBIx::Class::Indexed
+DBIx::CopyRecord
 DBIx::DBSchema
 DBIx::ORM::Declarative
 DBIx::Perlish
@@ -165,6 +166,7 @@ Devel::Command
 Devel::Cover
 Devel::Cycle
 Devel::Dependencies
+Devel::EvalContext
 Devel::FastProf
 Devel::Hide
 Devel::LexAlias
@@ -424,6 +426,7 @@ SVN::Notify::Mirror
 Scalar::Defer
 Set::ConsistentHash
 Set::Infinite
+Set::IntSpan::Fast
 Smart::Comments
 Socket6
 Spoon
