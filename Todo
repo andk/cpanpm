@@ -1,3 +1,121 @@
+2007-05-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* JPEACOCK/SVN-Notify-Config-0.0907.tar.gz:
+
+20070326T0114 perl        30754    0 OK
+20070326T0933 perl        30756    0 OK
+20070326T1512 perl        30759    0 OK
+20070326T2046 perl        30763    0 OK
+20070327T0157 perl        30769    0 OK
+20070327T0954 perl        30771    0 NOT OK
+20070327T1451 perl        30773    0 NOT OK
+20070327T2003 perl        30774    0 NOT OK
+20070328T1247 perl        30775    0 NOT OK
+20070329T0833 maint-5.8   30765    0 NOT OK
+
+	Must be a module or a debian thing, not a bleadperl change. On Mar 27th
+	I seem to have upgraded the kernel. But the large upgrade was on 28th.
+
+	The snapshot diff tells me
+
+-SVN::Notify 2.64
++SVN::Notify 2.65
+ 
+ SVN::Notify::Alternative 1.0
+ 
+-SVN::Notify::Config 0.0907
+-
+-SVN::Notify::HTML 2.64
++SVN::Notify::HTML 2.65
+ 
+-SVN::Notify::HTML::ColorDiff 2.64
++SVN::Notify::HTML::ColorDiff 2.65
+
+-Time::Duration 1.04
+-
+-Time::Duration::Parse 0.02
+
+
+So this is the failure mode with bleadperl@31244 ATM:
+
+cpan[2]> test  SVN::Notify::Config 
+Running test for module 'SVN::Notify::Config'
+CPAN: CPAN::Kwalify loaded ok (v5.401418)
+CPAN: Kwalify loaded ok (v1.14)
+Running make for J/JP/JPEACOCK/SVN-Notify-Config-0.0907.tar.gz
+  Has already been unwrapped into directory /home/sand/.cpan/build/SVN-Notify-Config-0.0907-Xgs9t8
+  Has already been made
+Running make test
+/home/src/perl/repoperls/installed-perls/perl/peSkxq2/perl-5.8.0@31244/bin/perl Build --makefile_env_macros 1 test
+t/001_basic.....ok                                                           
+t/002_config....ok 2/0                                                       
+#   Failed test 'Failed to produce expected results at rev: 3'
+#   at t/coretests.pm line 116.
+t/002_config....NOK 6/0                                                      
+#   Failed test 'All object properties match at rev: 6'
+#   at t/coretests.pm line 108.
+#     Structures begin differing at:
+#          $got->[0]{PATH} = Does not exist
+#     $expected->[0]{PATH} = '/usr/local/bin:/usr/bin'
+
+#   Failed test 'Failed to produce expected results at rev: 7'
+#   at t/coretests.pm line 116.
+# Looks like you failed 3 tests of 7.
+t/002_config....dubious                                                      
+        Test returned status 3 (wstat 768, 0x300)
+DIED. FAILED tests 3, 6-7
+        Failed 3/7 tests, 57.14% okay
+t/003_config....NOK 9/0                                                      
+#   Failed test 'All object properties match at rev: 9'
+#   at t/coretests.pm line 108.
+#     Structures begin differing at:
+#          $got->[1] = Does not exist
+#     $expected->[1] = SVN::Notify::Dummy=HASH(0x86d4dec)
+t/003_config....NOK 12/0                                                     
+#   Failed test 'All object properties match at rev: 12'
+#   at t/coretests.pm line 108.
+#     Structures begin differing at:
+#          $got->[1] = Does not exist
+#     $expected->[1] = SVN::Notify::Dummy=HASH(0x86d5864)
+# Looks like you failed 2 tests of 12.
+t/003_config....dubious                                                      
+        Test returned status 2 (wstat 512, 0x200)
+DIED. FAILED tests 9, 12
+        Failed 2/12 tests, 83.33% okay
+Failed Test    Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/002_config.t    3   768     7    3  3 6-7
+t/003_config.t    2   512    12    2  9 12
+Failed 2/3 test scripts. 5/20 subtests failed.
+Files=3, Tests=20, 16 wallclock secs ( 9.87 cusr +  0.90 csys = 10.77 CPU)
+Failed 2/3 test programs. 5/20 subtests failed.
+make: *** [test] Error 2
+  JPEACOCK/SVN-Notify-Config-0.0907.tar.gz
+  /usr/bin/make test -- NOT OK
+Failed during this command:
+ JPEACOCK/SVN-Notify-Config-0.0907.tar.gz     : make_test NO
+
+
+	After a downgrade of SVN::Notify to 2.64
+	(DWHEELER/SVN-Notify-2.64.tar.gz) we see:
+
+cpan[6]> test  SVN::Notify::Config              
+Running test for module 'SVN::Notify::Config'
+Running make for J/JP/JPEACOCK/SVN-Notify-Config-0.0907.tar.gz
+  Has already been unwrapped into directory /home/sand/.cpan/build/SVN-Notify-Config-0.0907-Xgs9t8
+  Has already been made
+Running make test
+/home/src/perl/repoperls/installed-perls/perl/peSkxq2/perl-5.8.0@31244/bin/perl Build --makefile_env_macros 1 test
+t/001_basic.....ok                                                           
+t/002_config....ok                                                           
+t/003_config....ok                                                           
+All tests successful.
+Files=3, Tests=20, 25 wallclock secs (10.36 cusr +  0.85 csys = 11.21 CPU)
+  JPEACOCK/SVN-Notify-Config-0.0907.tar.gz
+  /usr/bin/make test -- OK
+
+	http://rt.cpan.org/Ticket/Display.html?id=26209
+
 2007-05-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* During the test of PJCJ/Devel-Cover-0.61.tar.gz within

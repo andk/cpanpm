@@ -528,6 +528,7 @@ Web::Scraper
 Workflow
 X500::DN
 XML::Atom
+XML::Atom::SimpleFeed 
 XML::AutoWriter
 XML::Checker::Parser
 XML::Comma
