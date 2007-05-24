@@ -1,3 +1,16 @@
+2007-05-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Data-Alias started to fail two smokes ago, binary search is running.
+
+	But why do I now see it fail on 30019 too?
+
+	Ahh, because it needs some minimum version too?
+
+Alias.xs:1670: error: 'yy_parser' has no member named 'lex_state'
+
+	I suppose XMATH knows about the need for a new release, 1.05 was
+	released on May 13, so I should not waste everybody's time.	
+
 2007-05-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* JPEACOCK/SVN-Notify-Config-0.0907.tar.gz:
