@@ -1,3 +1,48 @@
+2007-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* CLEISHMAN/Cache-2.04.tar.gz has been tested 293 times and has 7
+	randomly distributed fails.
+
+	https://rt.cpan.org/Ticket/Display.html?id=27280
+
+	* YARON/WWW-Monitor-0.24.tar.gz broken:
+
+20070519T0232 perl        31238 1100 OK    
+20070519T1331 perl        31239  750 OK    
+20070520T0357 perl        31240  641 OK    
+20070520T1139 maint-5.8   31223   62 NOT OK
+20070520T1732 perl        31244  554 NOT OK
+20070521T0310 perl        31246  490 NOT OK
+
+	Dependency on WWW-Mechanize which is not only broken ATM but all
+	releases have been removed from CPAN due a glitch by Andy.
+	PETDANCE/WWW-Mechanize-1.29_01.tar.gz fixes the gap for the moment.
+
+	* Paul Johnson has already noticed that the test t/ainc_sub.t fails. I
+	just need to give the failure of PJCJ/Devel-Cover-0.61.tar.gz a number
+	between
+
+20070306T1150 perl        30482    0 OK
+20070306T1747 perl        30488    0 NOT OK
+
+----Program----
+eval q{use Devel::Cover 0.61};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+#my $output_file = "$^X.devel-cover-test.out";
+#print -s $output_file < 1000000 ? "ok" : "not ok";
+#print "\n";
+
+----Output of .../po3mlZz/perl-5.8.0@30487/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pmmbb0x/perl-5.8.0@30488/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
 2007-05-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Data-Alias started to fail two smokes ago, binary search is running.
@@ -9,7 +54,23 @@
 Alias.xs:1670: error: 'yy_parser' has no member named 'lex_state'
 
 	I suppose XMATH knows about the need for a new release, 1.05 was
-	released on May 13, so I should not waste everybody's time.	
+	released on May 13, so I should not waste everybody's time. But it is
+	funny that he has already been featured in a BBC article with his
+	version 1.03. 31252 is "move PL_tokenbuf into the PL_parser struct"
+
+----Program----
+eval {require Data::Alias};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pjXKm5E/perl-5.8.0@31251/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pPhwDas/perl-5.8.0@31252/bin/perl----
+N/A
+
+----EOF ($?='0')----
 
 2007-05-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -134,7 +195,7 @@ Files=3, Tests=20, 25 wallclock secs (10.36 cusr +  0.85 csys = 11.21 CPU)
 	* During the test of PJCJ/Devel-Cover-0.61.tar.gz within
 	megainstall.20070519T1331.out I got this 22MB extra output once again.
 	Devel-Cover fails for a very long time already and I'm unsure if I
-	reported this or not.
+	have reported this or not.
 
 2007-05-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -240,9 +301,11 @@ miniparrot: src/events.c:270: init_events_first: Assertion `rc == 0' failed.
 
 	And with maint? Same thing.
 
-	* Pod::Xhtml fails but this seems just a dependency bug.
+	* Pod::Xhtml 1.56 fails but this seems just a dependency bug.
 
 	http://rt.cpan.org/Ticket/Display.html?id=27165
+
+	And fixed in 1.57.
 
 2007-05-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -257,7 +320,7 @@ miniparrot: src/events.c:270: init_events_first: Assertion `rc == 0' failed.
 
 2007-05-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: Revisit ABERGMAN/B::Generate (DONE), Devel-Profile,
+	* Todo: Revisit ABERGMAN/B::Generate (DONE), Devel-Profile (DONE),
 	Term-Size-Unix, GAAL/Best (DONE), Class-DBI;
 
 	What's up with MetaSyntactic? (DONE)
@@ -576,6 +639,10 @@ N/A
 ----EOF ($?='0')----
 Need a perl between 22739 and 22741
 No patch available between 22739 and 22741
+
+	Change 22741 by davem@davem-percy on 2004/04/23 20:43:02
+
+	    Include variable names in "Use of uninitialized value" warnings
 
 
 	* MCMAHON!Devel-Command-0.08.xml consistently succeeds with maint and

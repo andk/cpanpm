@@ -1,5 +1,10 @@
 --- 
-comment: "only versions before 1.26 had the dialogue"
+comment: |
+
+    only versions before 1.26 had the dialogue
+
+    note: PETDANCE/WWW-Mechanize-1.29_01.tar.gz
+
 match:
   distribution: "^PETDANCE/WWW-Mechanize-"
 pl: 
