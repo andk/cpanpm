@@ -32,7 +32,7 @@ sub mystore ($$$$){
   }
   my $ulog = decode("Detect",$log);
   my $dumper = Dumpvalue->new(unctrl => "unctrl");
-  $ulog =~ s/([\x00-\x09\x0b\x0c\x0e-\x1f])/ $dumper->stringify($1) /ge;
+  $ulog =~ s/([\x00-\x09\x0b\x0c\x0e-\x1f])/ $dumper->stringify($1,1) /ge;
   print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok" seq="$seq">};
   print $fh $ulog;
   print $fh "</distro>\n";

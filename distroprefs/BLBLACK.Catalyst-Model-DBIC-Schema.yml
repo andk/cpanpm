@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BLBLACK/BLBLACK/Catalyst-Model-DBIC-Schema-\d"
+  distribution: "^BLBLACK/Catalyst-Model-DBIC-Schema-\d"
 pl:
   eexpect:
     mode: anyorder
