@@ -6,7 +6,7 @@ match:
 goto: "DMAKI/DateTime-Util-Astro-0.08.tar.gz"
 ---
 match:
-  distribution: "DMAKI/DateTime-(Util-Astro-0|Event-Lunar-0)"
+  distribution: "DMAKI/DateTime-(Util-Astro-0|Event-(Lunar|Chinese)-0)"
 pl:
   env:
     PERL_AUTOINSTALL: --skip
@@ -14,6 +14,10 @@ pl:
     mode: anyorder
     timeout: 5
     talk:
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
       - "Auto-install"
       - "y\n"
 make:
