@@ -88,6 +88,7 @@ Class::Trait
 Class::Virtual
 Class::Workflow
 Class::XPath
+Code::Splice
 Compress::LZF
 Config::Any
 Config::General
@@ -554,8 +555,10 @@ YAML::Tiny
 Yahoo::Search
 bignum
 capitalization
+interface
 mixin
 re::engine::PCRE
 re::engine::POSIX
 re::engine::Plan9
 re::engine::Plugin
+typesafety

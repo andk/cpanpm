@@ -1,3 +1,22 @@
+2007-05-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+	* Todo: equip all installed perls with current CPAN and CPAN::Reporter
+
+	* B::Generate has already got a BBC article.
+
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/4b2eff569d6bf8f6/72703631005603e3?lnk=gst&q=B%3A%3AGenerate&rnum=4#72703631005603e3
+
+	Now Scott Walters claims to have a working replacement.
+	SWALTERS/B-Generate-1.06_1.tar.gz
+
+	But it doesn't work on bleadperl either.
+
+	The BBC article about ABERGMAN's 1.06 pointed to bleadperl@22315.
+
+	New binary search needs a little help.
+
 2007-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CLEISHMAN/Cache-2.04.tar.gz has been tested 293 times and has 7
