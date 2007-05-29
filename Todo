@@ -1,6 +1,20 @@
-2007-05-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* 
+	* why is DBD::SQLite failing? Since 2007-05-27T11:40, 2007-05-26T14:17
+	was still OK?
+
+-rw-r--r-- 1 root root     288 May 27 00:02 libsqlite3-0.list
+-rw-r--r-- 1 root root     379 May 27 00:02 libsqlite3-dev.list
+
+	So we must find out which parameter DBD::SQLite needs to find the right
+	libsqlite.
+
+libsqlite3-0/testing uptodate 3.3.14-1
+libsqlite3-dev/testing uptodate 3.3.14-1
+
+	The Changes file says it is up to date with 3.3.5!
+
+2007-05-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: equip all installed perls with current CPAN and CPAN::Reporter
 
@@ -15,7 +29,10 @@
 
 	The BBC article about ABERGMAN's 1.06 pointed to bleadperl@22315.
 
-	New binary search needs a little help.
+	New binary search needs a little help to get a proper result. Old CPAN
+	and CPAN::Reporter get in the way. Upgrade. Then continue with Scott's
+	and Schwern's version, verify that 22315 really was the breaker. Speed
+	things up.
 
 2007-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
