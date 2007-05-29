@@ -6,7 +6,31 @@ match:
 goto: "DMAKI/DateTime-Util-Astro-0.08.tar.gz"
 ---
 match:
-  distribution: "DMAKI/DateTime-(Util-Astro-0|Event-(Lunar|Chinese)-0)"
+  distribution: "^DMAKI/DateTime-Format-Japanese-0.03"
+pl:
+  expect:
+    - "Install DateTime::Fromat::Japanese::Traditional"
+    - "y\n"    
+---
+match:
+  distribution: "^DMAKI/DateTime-Util-Calc-0\.1[23]"
+pl:
+  env:
+    PERL_AUTOINSTALL: --skip
+  eexpect:
+    mode: anyorder
+    talk:
+      - "Upgrade DateTime::Util::Calc\?"
+      - "y\n"
+      - "Auto-install"
+      - "n\n"
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
+---
+comment: "all other DateTime modules only need Module::Install support at the moment"
+match:
+  distribution: "DMAKI/DateTime-.*-\d"
 pl:
   env:
     PERL_AUTOINSTALL: --skip

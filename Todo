@@ -1,5 +1,11 @@
 2007-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Test::FormValidator is a candidate for BBC? 23023 failed the same way
+	as current. 20002 also. So no, it is not a candidate, it is simply
+	broken by some dependency and RT shows it and cpantesters has plenty of
+	indicators. This is a case where we need a rule when a module is to be
+	removed from megainstall.
+
 	* why is DBD::SQLite failing? Since 2007-05-27T11:40, 2007-05-26T14:17
 	was still OK?
 
