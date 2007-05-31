@@ -154,6 +154,7 @@ distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
+distroprefs/SCHUBIGER.DateTime-Format.yml
 distroprefs/SCHWERN.Class-Fields.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml

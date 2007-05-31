@@ -1,3 +1,17 @@
+2007-05-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Voting:C:RP either broke between 2007-04-28T18:42 and
+	2007-04-29T07:05. The maint 5.8 result seems to proof that it was not a
+	bleedperl change:
+
+599  	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz  	294  	2007-04-29T07:05  	perl  	31105  	NOT OK
+258 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	295 	2007-04-28T18:42 	perl 	31104 	OK
+588 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	296 	2007-04-27T23:29 	perl 	31103 	OK
+562 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	297 	2007-04-27T17:10 	perl 	31102 	OK
+289 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	293 	2007-04-29T16:01 	maint-5.8 	31100 	NOT OK
+662 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	298 	2007-04-27T04:58 	perl 	31093 	OK
+
+
 2007-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Test::FormValidator is a candidate for BBC? 23023 failed the same way
