@@ -1,4 +1,23 @@
+2007-06-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Archive-Any broken since many months, trivial patch would be possible.
+	Nooo! Let's limit the tests to be run instead!
+
+	* Off topic: [perl #43088] needs a binary search.
+
+	* SADAHIRO/String-Multibyte-1.05.tar.gz needs a binary search.
+
 2007-05-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* AMICHAUER/Unicode-Lite-0.12.tar.gz works with maint not with blead.
+
+	It's a module from 2002-08-29, what can we expect? Still we must find
+	the reason why it started failing. The patch number is 24660. I found it
+	commented in 'This Week on perl5-porters (3-9 October 2005)':
+
+	http://www.nntp.perl.org/group/perl.perl5.summary/2005/10/msg137.html
+
+	There has not been a BBC article about 24660 yet... Now there is.
 
 	* Voting:C:RP either broke between 2007-04-28T18:42 and
 	2007-04-29T07:05. The maint 5.8 result seems to proof that it was not a
@@ -11,6 +30,8 @@
 289 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	293 	2007-04-29T16:01 	maint-5.8 	31100 	NOT OK
 662 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	298 	2007-04-27T04:58 	perl 	31093 	OK
 
+	It's a simple dependency on Graph and that bug is already reported, so
+	nothing to do.
 
 2007-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
