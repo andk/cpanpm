@@ -1,11 +1,52 @@
+2007-06-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* New idea how to quickly locate more candidates for binary searches:
+
+% HEAD http://cpantesters.perl.org/testers.db
+200 OK
+Connection: close
+Date: Sat, 02 Jun 2007 15:25:43 GMT
+Accept-Ranges: bytes
+ETag: "f4022-59f3000-35b66a40"
+Server: Apache/2.0.55 (Unix)
+Content-Length: 94318592
+Content-Type: text/plain; charset=ISO-8859-1
+Last-Modified: Sat, 02 Jun 2007 14:33:05 GMT
+Client-Date: Sat, 02 Jun 2007 15:25:44 GMT
+Client-Peer: 216.52.237.215:80
+Client-Response-Num: 1
+
+	and then with SQLite pick everything that has 5.8.8 OK and 5.9.*
+	something failing.
+
 2007-06-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* metadata::byinode is all rrrrrrred.
 
 	* Archive-Any broken since many months, trivial patch would be possible.
 	Nooo! Let's limit the tests to be run instead!
 
-	* Off topic: [perl #43088] needs a binary search.
+	* Off topic: [perl #43088] needs a binary search. DONE
 
 	* SADAHIRO/String-Multibyte-1.05.tar.gz needs a binary search.
+----Program----
+eval q{use String::Multibyte 1.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pziyPD8/perl-5.8.0@29317/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pZitec4/perl-5.8.0@29318/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 29317 and 29318
+
+	BBC article written:
+
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/86d76ccbfdd0bc82/1fe1c0328a992fd3#1fe1c0328a992fd3
 
 2007-05-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -18,6 +59,12 @@
 	http://www.nntp.perl.org/group/perl.perl5.summary/2005/10/msg137.html
 
 	There has not been a BBC article about 24660 yet... Now there is.
+
+	And Nicholas has posted a fix too.
+
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/ebf004f17dc0b844/c30308d4bac1ddd2#c30308d4bac1ddd2
+
+	http://rt.cpan.org/Ticket/Display.html?id=27378
 
 	* Voting:C:RP either broke between 2007-04-28T18:42 and
 	2007-04-29T07:05. The maint 5.8 result seems to proof that it was not a
@@ -55,9 +102,11 @@ libsqlite3-dev/testing uptodate 3.3.14-1
 
 	The Changes file says it is up to date with 3.3.5!
 
+	https://rt.cpan.org/Ticket/Display.html?id=27324
+
 2007-05-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: equip all installed perls with current CPAN and CPAN::Reporter
+	* Todo: equip all installed perls with current CPAN and CPAN::Reporter DONE
 
 	* B::Generate has already got a BBC article.
 
@@ -831,7 +880,7 @@ Permute.xs: In function 'XS_Algorithm__Permute_permute':
 Permute.xs:306: error: 'XPVAV' has no member named 'xav_array'
 Permute.xs:347: error: 'XPVAV' has no member named 'xav_array'
 
-	REPORTED to P5P and author.
+	REPORTED to P5P and author. BBC article:
 
 	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
 	http://rt.cpan.org/Ticket/Display.html?id=27022
