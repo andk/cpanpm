@@ -5,6 +5,8 @@
 
 	http://rt.cpan.org/Ticket/Display.html?id=26971
 
+	distroprefs/YSAS.SWF-Builder.yml DONE
+
 	* POE 0.9989 fails a tk test under very rare unknown circumstances.
 
 	Only three time (2007-06-06T19:55, 2007-05-29T05:48, 2007-05-26T14:17)
@@ -22,6 +24,8 @@ dubious
 ^ITest returned status 1 (wstat 256, 0x100)
 DIED. FAILED tests 53, 98-99
 ^IFailed 3/99 tests, 96.97% okay
+
+	http://rt.cpan.org/Ticket/Display.html?id=27478
 
 	* MSISK/HTML-TableExtract
 
