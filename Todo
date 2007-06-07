@@ -1,3 +1,145 @@
+2007-06-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SWF::Builder flaky test. Seemingly random results. This RT ticket is
+	now 4 weeks old. Need to patch the distro.
+
+	http://rt.cpan.org/Ticket/Display.html?id=26971
+
+	* POE 0.9989 fails a tk test under very rare unknown circumstances.
+
+	Only three time (2007-06-06T19:55, 2007-05-29T05:48, 2007-05-26T14:17)
+	in 26*6+1 times. The failure is not reproducable. The logfiles show all
+	three times exactly the same:
+
+t/30_loops/50_tk/wheel_run...................
+#   Failed test 'coderef/shutdown close'
+#   at t/30_loops/00_base/wheel_run.pm line 332.
+#          got: 'close'
+#     expected: 'stdout'
+# Looks like you planned 99 tests but only ran 97.
+# Looks like you failed 1 test of 97 run.
+dubious
+^ITest returned status 1 (wstat 256, 0x100)
+DIED. FAILED tests 53, 98-99
+^IFailed 3/99 tests, 96.97% okay
+
+	* MSISK/HTML-TableExtract
+
+	https://rt.cpan.org/Ticket/Display.html?id=20709
+
+	The output looks very similar to HTML::CalendarMonth. It's about the
+	difference between <foo attr=0> and <foo attr="0">.
+
+	I see very randomly looking test results. There must be a correlation to
+	some already installed module.
+
+$ grep -r 'eval.*use ' lib/
+lib/HTML/TableExtract.pm:    eval "use HTML::TreeBuilder";
+lib/HTML/TableExtract.pm:    eval "use HTML::ElementTable 1.17";
+
+	The TreeBuilder is it.
+
+	But this does not answer the HTML::CalendarMonth problem.
+
+	* why does an upgrade install Chart 2.4.1?
+
+2007-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* TANIGUCHI/Unicode-RecursiveDowngrade-0.03.tar.gz is the next candidate.
+	And JUERD/encoding-split-0.01.tar.gz?
+
+	* Todo: Test if we can work with YAML::Tiny.
+	http://svn.ali.as/cpan/concept/cpan-yaml-tiny/
+
+	* WWW::Live365 has very mixed/random test results. Most recent breakage
+	was WWW::Mechanize but this seems to be fixed now, so probably
+	everything OK.
+
+2007-06-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Watch HTML-TreeBuilder-XPath-0.08
+
+	It failed suddenly in current build and has quite a good history of
+	green builds, although not perfect.
+
+	* Binary searches in some regions below 23023 are getting uglier and
+	uglier. I now see test failures in CPAN.pm's 10version.t (Out of
+	memory!) so CPAN.pm does not get installed, we have to use a very old
+	CPAN.pm which cannot install current CPAN::Reporter and cannot run
+	distroprefs. So it asks all the questions that we had so happily
+	eliminated.
+
+	Some time ago I had always used the very current CPAN.pm from the repo
+	for running the binary searches. Maybe I should switch back to that?
+
+	Notest is your friend! First we check if we are below patchlevel 23023.
+	Then we check if we are below 1.8802. If so, we install 1.8802 so that
+	we get at "notest". Then we install current version with the help of
+	notest. Fini. Now it flies again.
+
+	* SADAHIRO/ShiftJIS-X0213-MapUTF-0.30.tar.gz might also be a candidate,
+	or with the same history pattern:
+	SADAHIRO/ShiftJIS-CP932-MapUTF-1.01.tar.gz
+
+	Let's try with
+
+	ShiftJIS::X0213::MapUTF
+
+	This became a BBC article on 2007-06-05
+
+	* Time-HiRes-Value-0.04 has an unreproducable test failure.
+
+make[3]: Entering directory `/home/sand/.cpan/build/Time-HiRes-Value-0.04-GZ0nGl'
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/p4tyIz4/perl-5.8.0@31330/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/01test......ok
+t/02timing....
+#   Failed test at t/02timing.t line 19.
+#          got: ''
+#     expected: '1'
+# Looks like you failed 1 test of 2.
+dubious
+^ITest returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 2
+^IFailed 1/2 tests, 50.00% okay
+Failed Test  Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/02timing.t    1   256     2    1  2
+Failed 1/2 test scripts. 1/52 subtests failed.
+
+	* LBROCARD/Devel-ebug-0.48.tar.gz has intermittent failures, should be
+	reported.
+
+	* SAVA/Encode-IMAPUTF7-1.00.tar.gz candidate for binary search? 23023
+	fails also. 20002 doesn't fail. After many hours we reach the interval
+	between 22774 and 22872 and we need to build new perls again.
+
+	Before we reach the endpoint I already see that the test output has
+	already changed somewhere, so maybe we need more binary searches. The
+	failure @22872 looks so simple:
+
+t/0-test....Modification of a read-only value attempted at /home/sand/.cpan/build/Encode-IMAPUTF7-1.00/blib/lib/Encode/IMAPUTF7.pm line 39.
+# Looks like your test died before it could output anything.
+t/0-test....dubious                                                          
+        Test returned status 255 (wstat 65280, 0xff00)
+
+----Program----
+eval q{use Encode::IMAPUTF7 1.00};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p1d1ohA/perl-5.8.0@22841/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p4U7uLf/perl-5.8.0@22842/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
+	* Net-Write has a negative dependency on Pod::Coverage on bleadperl. The
+	type we saw with File::Slurp and Graph::Easy.
+
 2007-06-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* New idea how to quickly locate more candidates for binary searches:
@@ -770,6 +912,7 @@ No patch available between 22739 and 22741
 
 	    Include variable names in "Use of uninitialized value" warnings
 
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/4b3dafe41b70c5a6/b056a4d7ae5a673a?lnk=gst&q=22741+bbc&rnum=1#b056a4d7ae5a673a
 
 	* MCMAHON!Devel-Command-0.08.xml consistently succeeds with maint and
 	fails with blead.
@@ -1479,8 +1622,9 @@ Module id = Coro::Event
 	Implement configure_requires? (testcase RPM::XML)
 
 	Implement a depends/requires keyword for distroprefs? (Testcase
-	Spreadsheet ParseExcel or XML-Filter-XInclude which does not declare
-	XML::SAX::Writer as dependency)
+	Spreadsheet-ParseExcel (http://rt.cpan.org/Ticket/Display.html?id=24693)
+	or XML-Filter-XInclude
+	(http://rt.cpan.org/Ticket/Display.html?id=27401))
 
 	Speedup the cleanup? DONE [...time passes...] But I do not like the new
 	version. I want to see how long it takes/will take. svk rev. 2216 seems
@@ -2077,8 +2221,8 @@ in my Todo file now and will be dealt with after 1.90.
 	have to pass on this one. Pity.
 
 	And we have a similar issue with Flickr::API which also depends on
-	XML::Parser::Lite (but which still fails tests, even if we resolve the
-	X:P:L dependency).
+	XML::Parser::Lite::Tree (but which still fails tests, even if we resolve
+	the X:P:L dependency).
 
 	I think it's best described as a pseudo dependency. It depends on a
 	thing that is contained in another but this other thing hides this (with
