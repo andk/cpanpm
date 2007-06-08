@@ -288,6 +288,7 @@ Lexical::Persistence
 Lingua::EN::Inflect::Number
 Lingua::StopWords
 Lingua::ZH::TaBE
+List::Compare
 List::MoreUtils
 Locale::Maketext::Fuzzy
 Locale::Maketext::Gettext
@@ -317,6 +318,7 @@ Math::Round::Var
 Math::Symbolic
 Math::SymbolicX::ParserExtensionFactory
 Math::Vec
+Maypole
 Metadata::ByInode
 Module::Build::Convert
 Module::Compile
@@ -418,6 +420,7 @@ Roman
 Rose::DateTime
 Rose::Object
 SOAP::Lite
+SOAP::WSDL
 SQL::Abstract::Limit
 SQL::ReservedWords
 SQL::Statement
@@ -431,6 +434,7 @@ Set::Infinite
 Set::IntSpan::Fast
 Smart::Comments
 Socket6
+Sort::Key::Radix
 Spoon
 Spreadsheet::Read
 Spreadsheet::WriteExcel
@@ -506,6 +510,7 @@ Tk::FontDialog
 Tk::Pod
 Tk::TableMatrix
 Tk::Tree
+Tk::Wizard
 UNIVERSAL::isa
 URI::Find
 URI::Template
