@@ -1,3 +1,8 @@
+2007-06-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* http://rt.cpan.org/Ticket/Display.html?id=27491 Log-Report-0.05
+	because it hangs during the test I cannot put it into megainstall
+
 2007-06-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* SWF::Builder flaky test. Seemingly random results. This RT ticket is
