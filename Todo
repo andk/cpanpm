@@ -147,7 +147,7 @@ N/A
 
 
 	* Net-Write has a negative dependency on Pod::Coverage on bleadperl. The
-	type we saw with File::Slurp and Graph::Easy.
+	type we saw with File::Slurp and Graph::Easy and Tk::Wizard.
 
 2007-06-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
