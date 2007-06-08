@@ -14,9 +14,9 @@
 
 	* POE 0.9989 fails a tk test under very rare unknown circumstances.
 
-	Only three time (2007-06-06T19:55, 2007-05-29T05:48, 2007-05-26T14:17)
-	in 26*6+1 times. The failure is not reproducable. The logfiles show all
-	three times exactly the same:
+	Only three time (2007-06-06T19:55 (31344), 2007-05-29T05:48 (31296),
+	2007-05-26T14:17 (31281)) in 26*6+1 times. The failure is not
+	reproducable. The logfiles show all three times exactly the same:
 
 t/30_loops/50_tk/wheel_run...................
 #   Failed test 'coderef/shutdown close'
