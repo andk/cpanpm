@@ -689,6 +689,7 @@ sub prefs_lookup {
 
     # formerly CPAN::HandleConfig was known as CPAN::Config
     sub AUTOLOAD {
+        my $class = shift; # e.g. in dh-make-perl: CPAN::Config
         my($l) = $AUTOLOAD;
         $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig\n");
         $l =~ s/.*:://;
