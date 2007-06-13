@@ -44,6 +44,7 @@ SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
     $seq = $xml->findvalue("/distro/\@seq") || 0;
     $perl = $xml->findvalue("/distro/\@perl");
     $distro = $xml->findvalue("/distro/\@distro");
+    my $d = Pocpoc::Model::Distro->new(handle => Jifty->handle);
     ($branch,$patchlevel) = $perl =~ m|/installed-perls/(.*?)/p.*?/perl-5.*?@(\d+)|;
     $total++;
     $failed++ unless $ok eq "OK";
@@ -52,6 +53,9 @@ SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
                        perl => $perl,
                        branch => $branch,
                        patchlevel => $patchlevel,
+                      );
+    $d->load_or_create(
+                       name => $distro,
                       );
     if ($i == 0) {
       my $total = $s->total || 0;
@@ -62,10 +66,13 @@ SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
         print "($dirent)";
       }
     }
-    print "+"; # unless $i % 64;
+    print "+";
+    unless ($i % 64){
+      print "($total/$#readdir2)";
+    }
     my $t = Pocpoc::Model::Testrun->new(handle => Jifty->handle);
     $t->load_or_create(
-                       distro => $distro,
+                       distro => $d,
                        testsession => $s,
                       );
     $t->set_seq($seq);

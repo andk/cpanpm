@@ -24,6 +24,7 @@ distroprefs/AVIF.Time-Duration.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BLBLACK.Catalyst-Model-DBIC-Schema.yml
 distroprefs/BLBLACK.Class-C3.yml
+distroprefs/BLBLACK.DBIx-Class.yml
 distroprefs/BLBLACK.Term-Spinner.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
@@ -43,6 +44,7 @@ distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CFRANKS.HTML-Widget.yml
+distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml

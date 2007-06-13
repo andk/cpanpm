@@ -1,3 +1,47 @@
+2007-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* DBIx-Class with 31369
+
+t/cdbi-t/06-hasa.t                1   256    24    1  17
+t/cdbi-t/09-has_many.t            1   256    31    1  31
+t/cdbi-t/12-filter.t            255 65280    50   67  1-2 15-16 18 20-50
+t/cdbi-t/18-has_a.t               2   512    41    2  26-27
+t/cdbi-t/19-set_sql.t           255 65280    17   11  12-17
+t/cdbi-t/22-self_referential.t  255 65280     2    4  1-2
+
+	But sometimes all tests pass because these tests are skipped with the
+	reason given "Class::Trigger and DBIx::ContextualFetch"
+
+	Are these modules specified as prereqs? No. Bug report filed as
+
+	http://rt.cpan.org/Ticket/Display.html?id=27555
+
+2007-06-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* new fails vs gone fails @31356 disappointing:
+
+	[ADEO/Data-Random-0.05.tar.gz, BYRNE/SOAP-Lite-0.69.tar.gz,
+	DBRIAN/XML-SimpleObject-0.53.tar.gz, DMAKI/Class-DBI-Loader-0.32.tar.gz,
+	IAMCAL/Flickr-API-0.08.tar.gz, IAMCAL/XML-Parser-Lite-Tree-0.03.tar.gz,
+	LBROCARD/Test-WWW-Mechanize-Catalyst-0.37.tar.gz,
+	MIYAGAWA/CGI-Untaint-email-0.03.tar.gz,
+	MIYAGAWA/Class-DBI-SQLite-0.11.tar.gz, MKUTTER/SOAP-WSDL-1.23.tar.gz,
+	MTHURN/Tk-Wizard-2.007.tar.gz, PETDANCE/Test-WWW-Mechanize-1.14.tar.gz,
+	PETDANCE/WWW-Mechanize-1.30.tar.gz,
+	SIMON/Class-DBI-Loader-Relationship-1.2.tar.gz,
+	TEEJAY/Maypole-2.111.tar.gz, TMTM/CGI-Untaint-date-1.00.tar.gz,
+	TMTM/Class-DBI-Plugin-RetrieveAll-1.04.tar.gz, TSCH/Glib-1.144.tar.gz,
+	VKON/Tcl-0.95.tar.gz, YARON/WWW-Monitor-0.24.tar.gz]
+
+	[CORION/Test-Without-Module-0.09.tar.gz,
+	MRAMBERG/Catalyst-View-TT-0.25.tar.gz,
+	MSISK/HTML-TableExtract-2.10.tar.gz,
+	PETDANCE/Template-Timer-0.04.tar.gz, STAS/libapreq-1.33.tar.gz,
+	VKON/Tcl-0.91.tar.gz]
+
+	Well, Mech was failing because wikipedia was down;), so it's not
+	reproducable and OK.
+
 2007-06-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* http://rt.cpan.org/Ticket/Display.html?id=27491 Log-Report-0.05
@@ -50,7 +94,8 @@ lib/HTML/TableExtract.pm:    eval "use HTML::ElementTable 1.17";
 
 	But this does not answer the HTML::CalendarMonth problem.
 
-	* why does an upgrade install Chart 2.4.1?
+	* why does an upgrade install Chart 2.4.1? Because 2.4.1 < 2.3? How does
+	this happen?
 
 2007-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -59,6 +104,9 @@ lib/HTML/TableExtract.pm:    eval "use HTML::ElementTable 1.17";
 
 	* Todo: Test if we can work with YAML::Tiny.
 	http://svn.ali.as/cpan/concept/cpan-yaml-tiny/
+
+	No, it fails on many distroprefs files and on FTPstats.yml. This was
+	with 0.12.
 
 	* WWW::Live365 has very mixed/random test results. Most recent breakage
 	was WWW::Mechanize but this seems to be fixed now, so probably
@@ -124,7 +172,7 @@ Failed 1/2 test scripts. 1/52 subtests failed.
 
 	Before we reach the endpoint I already see that the test output has
 	already changed somewhere, so maybe we need more binary searches. The
-	failure @22872 looks so simple:
+	failure @22842 looks so simple:
 
 t/0-test....Modification of a read-only value attempted at /home/sand/.cpan/build/Encode-IMAPUTF7-1.00/blib/lib/Encode/IMAPUTF7.pm line 39.
 # Looks like your test died before it could output anything.
@@ -144,7 +192,6 @@ OK
 N/A
 
 ----EOF ($?='0')----
-
 
 	* Net-Write has a negative dependency on Pod::Coverage on bleadperl. The
 	type we saw with File::Slurp and Graph::Easy and Tk::Wizard.
@@ -221,12 +268,12 @@ Need a perl between 29317 and 29318
 	2007-04-29T07:05. The maint 5.8 result seems to proof that it was not a
 	bleedperl change:
 
-599  	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz  	294  	2007-04-29T07:05  	perl  	31105  	NOT OK
-258 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	295 	2007-04-28T18:42 	perl 	31104 	OK
-588 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	296 	2007-04-27T23:29 	perl 	31103 	OK
-562 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	297 	2007-04-27T17:10 	perl 	31102 	OK
-289 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	293 	2007-04-29T16:01 	maint-5.8 	31100 	NOT OK
-662 	PJF/Voting-Condorcet-RankedPairs-1.01.tar.gz 	298 	2007-04-27T04:58 	perl 	31093 	OK
+599	PJF/Voting-Condorcet-RankedPairs-1.01 294	2007-04-29T07:05 perl      31105 NOT OK
+258	PJF/Voting-Condorcet-RankedPairs-1.01 295 2007-04-28T18:42 perl 	   31104 OK
+588	PJF/Voting-Condorcet-RankedPairs-1.01 296	2007-04-27T23:29 perl 	   31103 OK
+562	PJF/Voting-Condorcet-RankedPairs-1.01 297	2007-04-27T17:10 perl 	   31102 OK
+289	PJF/Voting-Condorcet-RankedPairs-1.01 293	2007-04-29T16:01 maint-5.8 31100 NOT OK
+662	PJF/Voting-Condorcet-RankedPairs-1.01 298	2007-04-27T04:58 perl 	   31093 OK
 
 	It's a simple dependency on Graph and that bug is already reported, so
 	nothing to do.
