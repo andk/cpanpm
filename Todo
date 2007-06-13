@@ -1,5 +1,15 @@
 2007-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* ROODE/Time-Format-1.02.tar.gz intermittant failures.
+
+	Already in RT (22047) for many months. I should probably patch it.
+
+	I've voiced myself in the ticket for now.
+
+	* RUZ/DBIx-SearchBuilder-1.48 intermittant failures.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27557
+
 	* DBIx-Class with 31369
 
 t/cdbi-t/06-hasa.t                1   256    24    1  17
