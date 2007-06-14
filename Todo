@@ -1,3 +1,11 @@
+2007-06-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* AxKit 1.6.2 intermittant failures. In the distropref I wrote once that
+	I won't care further but intermittant success/failure keeps the thing
+	getting in the way. RT for axkit is full of spam and the last resolved
+	bug was two years ago. The mailing list is dead since September 2006. I
+	take it out of megainstall.txt for now.
+
 2007-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ROODE/Time-Format-1.02.tar.gz intermittant failures.

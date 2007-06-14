@@ -10,7 +10,6 @@ App::Ack
 App::CLI
 Array::Iterator
 Authen::Simple
-AxKit
 B::Deobfuscate
 BFD
 Bit::Vector::Minimal
