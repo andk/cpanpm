@@ -1,4 +1,31 @@
+2007-06-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Idea: rewrite the recent command to read and parse
+	http://search.cpan.org/uploads.rdf and return and render a pure ascii
+	list. Write a smoke command which takes a numeric argument and tests the
+	first N items of that list. smoke without arguments smokes the whole
+	list.
+
 2007-06-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Tie-EncryptedHash-1.21
+
+	http://rt.cpan.org/Ticket/Display.html?id=27585
+
+	* Todo: configure_requires is now official in the META docs and needs
+	doing. I'm now sure I want a distropref for personal dependencies. I do
+	not want to intermix them with the three _require types, so I'll
+	probably call it but_first. The implementation will then be very, very
+	close to configure_requires. The point is that this stuff shall kick in
+	very early, before we run Makefile.PL. Update 2007-06-15 akoenig maybe
+	depends is a better keyword than but_first. "But first" comes from
+	hiveminder. We definitely need depends WITH sub keywords
+	{configure_,build_,}requires modelled after the META spec so that we get
+	the full power that is to be implemented anyway.
+
+	* DBIx-Timeout again. I once gave it a dsn but this may have been wrong
+	as there is no dependency on dbd::mysql and so we get random results
+	depending on DBI::mysql being available or not.
 
 	* AxKit 1.6.2 intermittant failures. In the distropref I wrote once that
 	I won't care further but intermittant success/failure keeps the thing

@@ -5981,9 +5981,26 @@ EOF
     return($packagedir,$local_file);
 }
 
-#-> sub CPAN::Distribution::run_MM_or_MB
+#-> sub CPAN::Distribution::satisfy_configure_requires ;
+sub satisfy_configure_requires {
+    my($self,$packagedir) = @_;
+    # read the META.yml of the package and look for configure_requires
+    # read the distroprefs and look for depends/configure_requires
+
+    # all those things put in the queue and requeue yourself and keep
+    # a memo for each of them so we can jump right here next time and
+    # clear the reqs that have been fulfilled and die if something
+    # failed. Think of recursive dependencies too. Note that
+    # configure_requires are really just build_requires only a tiny
+    # bit earlier.
+
+    1; # XXX configure_requires
+}
+
+#-> sub CPAN::Distribution::run_MM_or_MB ;
 sub run_MM_or_MB {
     my($self,$local_file,$packagedir) = @_;
+    $self->satisfy_configure_requires($packagedir) or return;
     my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
