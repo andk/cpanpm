@@ -58,7 +58,7 @@ unless (@CPAN::Defaultsites){
 # $CPAN::iCwd (i for initial) is going to be initialized during find_perl
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
-$CPAN::Defaultrecent ||= "http://search.cpan.org/recent";
+$CPAN::Defaultrecent ||= "http://search.cpan.org/uploads.rdf";
 
 # our globals are getting a mess
 use vars qw(
@@ -3222,9 +3222,12 @@ to find objects with matching identifiers.
 #-> sub CPAN::Shell::recent ;
 sub recent {
   my($self) = @_;
-
-  CPAN::Distribution::_display_url( $self, $CPAN::Defaultrecent );
-  return;
+  if ($CPAN::META->has_inst("XML::RSS")) {
+      
+  } else {
+      # deprecated old version
+      CPAN::Distribution::_display_url( $self, $CPAN::Defaultrecent );
+  }
 }
 
 {
