@@ -58,7 +58,7 @@ unless (@CPAN::Defaultsites){
 # $CPAN::iCwd (i for initial) is going to be initialized during find_perl
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
-$CPAN::Defaultrecent ||= "http://search.cpan.org/uploads.rdf";
+$CPAN::Defaultrecent ||= "http://cpan.uwinnipeg.ca/htdocs/cpan.xml";
 
 # our globals are getting a mess
 use vars qw(
@@ -66,7 +66,6 @@ use vars qw(
             $Be_Silent
             $CONFIG_DIRTY
             $Defaultdocs
-            $Defaultrecent
             $Echo_readline
             $Frontend
             $GOTOSHELL
@@ -112,6 +111,7 @@ $MAX_RECURSION = 32;
              recompile
              report
              shell
+             smoke
              test
              upgrade
 	    );
@@ -273,7 +273,23 @@ ReadLine support %s
                 require Carp;
                 Carp::cluck("Catching error: '$@'");
             }
-            if ($command =~ /^(make|test|install|ff?orce|notest|clean|report|upgrade)$/) {
+            if ($command =~ /^(
+                             # classic commands
+                             make
+                             |test
+                             |install
+                             |clean
+
+                             # pragmas for classic commands
+                             |ff?orce
+                             |notest
+
+                             # compounds
+                             |report
+                             |smoke
+                             |upgrade
+                            )$/x) {
+                # only commands that tell us something about failed distros
                 CPAN::Shell->failed($CPAN::CurrentCommandId,1);
             }
             soft_chdir_with_alternatives(\@cwd);
@@ -522,6 +538,7 @@ use strict;
                                     report
                                     reports
                                     scripts
+                                    smoke
                                     test
                                     upgrade
 );
@@ -3222,12 +3239,55 @@ to find objects with matching identifiers.
 #-> sub CPAN::Shell::recent ;
 sub recent {
   my($self) = @_;
-  if ($CPAN::META->has_inst("XML::RSS")) {
-      
+  if ($CPAN::META->has_inst("XML::LibXML")) {
+      my $url = $CPAN::Defaultrecent;
+      $CPAN::Frontend->myprint("Going to fetch '$url'\n");
+      unless ($CPAN::META->has_usable("LWP")) {
+          $CPAN::Frontend->mydie("LWP not installed; cannot continue");
+      }
+      unless ($CPAN::META->has_inst("File::Temp")) {
+          $CPAN::Frontend->mydie("File::Temp not installed; cannot continue");
+      }
+      CPAN::LWP::UserAgent->config;
+      my $Ua;
+      eval { $Ua = CPAN::LWP::UserAgent->new; };
+      if ($@) {
+          $CPAN::Frontend->mydie("CPAN::LWP::UserAgent->new dies with $@\n");
+      }
+      my $resp = $Ua->get($url);
+      unless ($resp->is_success) {
+          $CPAN::Frontend->mydie(sprintf "Could not download '%s': %s\n", $url, $resp->code);
+      }
+      $CPAN::Frontend->myprint("DONE\n\n");
+      my $xml = XML::LibXML->new->parse_string($resp->content);
+      my @distros;
+      for my $eitem ($xml->findnodes("/rss/channel/item")) {
+          my $distro = $eitem->findvalue("enclosure/\@url");
+          $distro =~ s|.*?/authors/id/./../||;
+          my $size   = $eitem->findvalue("enclosure/\@length");
+          my $desc   = $eitem->findvalue("description");
+          $CPAN::Frontend->myprint("$distro [$size b]\n  $desc\n");
+          push @distros, $distro;
+      }
+      return \@distros;
   } else {
       # deprecated old version
-      CPAN::Distribution::_display_url( $self, $CPAN::Defaultrecent );
+      $CPAN::Frontend->mydie("no XML::LibXML installed, cannot continue");
   }
+}
+
+#-> sub CPAN::Shell::smoke ;
+sub smoke {
+    my($self) = @_;
+    my $distros = $self->recent;
+    for my $distro (@$distros) {
+        $CPAN::Frontend->myprint(sprintf "Going to download and test '$distro'\n");
+        for (0..9) {
+            $CPAN::Frontend->myprint(sprintf "\r%2d", 10-$_);
+            sleep 1;
+        }
+        $self->test($distro);
+    }
 }
 
 {
@@ -10062,6 +10122,16 @@ The C<report> command temporarily turns on the C<test_report> config
 variable, then runs the C<force test> command with the given
 arguments. The C<force> pragma is used to re-run the tests and repeat
 every step that might have failed before.
+
+=head2 smoke ***EXPERIMENTAL COMMAND***
+
+B<*** WARNING: this command downloads and executes software from CPAN to
+*** your computer of completely unknown status. You should never do
+*** this with your normal account and better have a dedicated well
+*** separated and secured machine to do this.>
+
+The C<smoke> command downloads a list of recent uploads to CPAN and
+tests them all.
 
 =head2 upgrade [Module|/Regex/]...
 

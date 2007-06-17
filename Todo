@@ -1,4 +1,10 @@
+2007-06-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Class-DBI is yet to be analysed.
+
 2007-06-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* DANIEL/Crypt-OpenSSL-X509-0.5.tar.gz
 
 	* Idea: rewrite the recent command to read and parse
 	http://search.cpan.org/uploads.rdf and return and render a pure ascii
@@ -8,15 +14,23 @@
 
 	Or could we reuse something from a smoke module?
 
-	Test::Smoke 
+	Test::Smoke                      for perl core tests
 
-	SmokeRunner::Multi
+	SmokeRunner::Multi               for your own code on your own disk
 
-	Task::Smoke
+	Task::Smoke                      Pugs smoking
 
-	CPAN::YACSmoke::Plugin::WebList
+	CPAN::YACSmoke::Plugin::WebList  Uses http://cpan.uwinnipeg.ca/recent
 
-	
+
+	Winnipeg then mentions http://cpan.uwinnipeg.ca/htdocs/cpan.xml but this
+	is several hours behind in time and does not seem to have developer
+	releases.
+
+	But uploads.rdf does not provide the extension ".tar.gz" or whatever
+	should be there. This can be worked around though. Winnipeg has them.
+
+	We need RECENT files on CPAN.
 
 2007-06-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

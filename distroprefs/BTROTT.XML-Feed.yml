@@ -6,7 +6,7 @@ pl:
     PERL_AUTOINSTALL: --skip    
   eexpect:
     mode: deterministic
-    timeout: 5
+    timeout: 15
     talk:
       - "Auto-install"
       - "y\n"
