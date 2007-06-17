@@ -6,6 +6,18 @@
 	first N items of that list. smoke without arguments smokes the whole
 	list.
 
+	Or could we reuse something from a smoke module?
+
+	Test::Smoke 
+
+	SmokeRunner::Multi
+
+	Task::Smoke
+
+	CPAN::YACSmoke::Plugin::WebList
+
+	
+
 2007-06-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Tie-EncryptedHash-1.21

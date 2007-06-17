@@ -68,7 +68,8 @@ SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
     }
     print "+";
     unless ($i % 64){
-      print "($total/$#readdir2)";
+      my $left = @readdir2 - $total;
+      print "($total/$left)";
     }
     my $t = Pocpoc::Model::Testrun->new(handle => Jifty->handle);
     $t->load_or_create(
