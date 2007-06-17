@@ -1,9 +1,23 @@
 2007-06-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* XML::Bare is built with SWIG and fails on blead, so maybe a good
-	candicdate for a binary search.
-
 	* Class-DBI is yet to be analysed.
+
+	The RT queue is full of spam. The last release was in November.
+	cpantesters has a high number of PASSes.
+
+	Stepping through the debugger reveals:
+
+not ok 1 - DBD::SQLite::st fetchrow_array warning: not an error(0) at dbdimp.c line 504 [for Statement "PRAGMA table_info(Movies)"] at /home/src/perl/repoperls/installed-perls/perl/ph7Gryz/perl-5.8.0@31399/lib/site_perl/5.9.5/DBIx/ContextualFetch.pm line 88.
+
+	Has maybe DBD::SQLite broken Class::DBI? Google for 'PRAGMA table_info()'?
+
+	Aha: http://lists.digitalcraftsmen.net/pipermail/classdbi/2007-March/001583.html
+
+	Answer: Check your version of DBD::SQLite. 1.13 and CDBI don't get
+	along. Downgrade to 1.12.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27608
+	http://rt.cpan.org/Ticket/Display.html?id=27609
 
 2007-06-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
