@@ -1,4 +1,49 @@
+2007-06-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SVG-Metadata-0.28 might be a pseudo hash issue.
+
+	* TANIGUCHI/Unicode-RecursiveDowngrade-0.03.tar.gz is the next candidate.
+	And JUERD/encoding-split-0.01.tar.gz?
+
+----Program----
+eval q{use Unicode::RecursiveDowngrade 0.03};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pt5LKrb/perl-5.8.0@24009/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pAnzsYU/perl-5.8.0@24010/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
 2007-06-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* between 200706111347 and 200706111947 GMT something removed
+	Lingua::Stem::It from packages. 
+
+moddump.200706111347GMT.bz2:INSERT INTO `packages` VALUES ('Lingua::Stem::It','0.02','A/AC/ACALPINI/Lingua-Stem-It-0.02.tar.gz','Lingua-Stem-It-0.02/It.pm','1181290186','1181297408','','index');
+moddump.200706111347GMT.bz2:INSERT INTO `perms` VALUES (27133,'Lingua::Stem::It','ACALPINI');
+moddump.200706111347GMT.bz2:INSERT INTO `primeur` VALUES ('Lingua::Stem::It','ACALPINI');
+
+
+moddump.200706111947GMT.bz2:INSERT INTO `perms` VALUES (27133,'Lingua::Stem::It','ACALPINI');
+moddump.200706111947GMT.bz2:INSERT INTO `primeur` VALUES ('Lingua::Stem::It','ACALPINI');
+
+	I find no indication as to why this might have happened. So I schedule
+	it for reindexing and wait if Lingua::Stem starts to PASS again.
+
+	Further investigations reveal that there *was* a
+	A/AC/ACALPINI/Lingua-Stem-it-0.02.tar.gz (note lowercase) which also had
+	contained Lingua::Stem::It and when it was removed from cpan, the
+	indexer threw away the L:S:I record. Nobody reindexed the
+	Lingua-Stem-it-0.02.tar.gz then until I did.
+
+	And then it turned out that this new release broke L:S testsuite:-(
+
+	http://rt.cpan.org/Ticket/Display.html?id=27616
 
 	* Class-DBI is yet to be analysed.
 
@@ -186,9 +231,6 @@ lib/HTML/TableExtract.pm:    eval "use HTML::ElementTable 1.17";
 	this happen?
 
 2007-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
-
-	* TANIGUCHI/Unicode-RecursiveDowngrade-0.03.tar.gz is the next candidate.
-	And JUERD/encoding-split-0.01.tar.gz?
 
 	* Todo: Test if we can work with YAML::Tiny.
 	http://svn.ali.as/cpan/concept/cpan-yaml-tiny/

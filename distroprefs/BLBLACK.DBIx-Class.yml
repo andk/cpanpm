@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^BLBLACK/DBIx-Class-\d"
+  distribution: "^(BLBLACK|MSTROUT)/DBIx-Class-\d"
 pl:
   eexpect:
     mode: anyorder

@@ -10134,7 +10134,7 @@ B<*** WARNING: this command downloads and executes software from CPAN to
 *** separated and secured machine to do this.>
 
 The C<smoke> command downloads a list of recent uploads to CPAN and
-tests them all.
+tests them all. This command currently requires XML::LibXML installed.
 
 =head2 upgrade [Module|/Regex/]...
 
