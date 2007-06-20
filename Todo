@@ -1,3 +1,91 @@
+2007-06-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ZOOLEIKA/SVG-Plot-0.06.tar.gz
+
+	
+
+	* MRAMBERG/Catalyst-Plugin-Unicode-0.3.tar.gz is among the new fails but
+	I don't see a fail report on cpantesters. Ah, he did not include the
+	inc/ directory so need Module::Install installed. Does not build, cannot
+	write a Reporter mail. Already reported by DANIELTWC
+
+	https://rt.cpan.org/Ticket/Display.html?id=27633
+
+	* ARANDAL/parrot-0.4.13.tar.gz does not even finish make:-(
+
+2007-06-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* DBI 1.57 needs a binary search and I cannot compile perls between
+	20373 and 20575. They all fail with
+
+cc -L/usr/local/lib -o miniperl \
+            miniperlmain.o opmini.o libperl.a -lnsl -ldl -lm -lcrypt -lutil -lc 
+libperl.a(mg.o): In function `Perl_magic_set':
+/home/src/perl/repoperls/perl-p-5.8.0@20573/mg.c:2215: undefined reference to `setruid'
+/home/src/perl/repoperls/perl-p-5.8.0@20573/mg.c:2269: undefined reference to `setrgid'
+/home/src/perl/repoperls/perl-p-5.8.0@20573/mg.c:2364: undefined reference to `setproctitle'
+libperl.a(pp_sys.o): In function `Perl_pp_fteread':
+/home/src/perl/repoperls/perl-p-5.8.0@20573/pp_sys.c:2949: undefined reference to `eaccess'
+libperl.a(pp_sys.o): In function `Perl_pp_ftewrite':
+/home/src/perl/repoperls/perl-p-5.8.0@20573/pp_sys.c:2976: undefined reference to `eaccess'
+libperl.a(pp_sys.o): In function `Perl_pp_fteexec':
+/home/src/perl/repoperls/perl-p-5.8.0@20573/pp_sys.c:3003: undefined reference to `eaccess'
+collect2: ld returned 1 exit status
+
+	So we could try to replace mg.c and pp_sys.c with later versions? We
+	could look into our history if we ever had such an encounter -- No.
+
+	So we need to document that because we will have to go into this region
+	again.
+
+	Where were mg.c changes?
+
+	./bin/blame-helper.pl --diffdir APC/5.9.0/diffs --lower 20400 --upper 24009 mg.c
+
+	As expected, I cannot compile 20829 either. As all this is highly
+	unlikely to help we should rather look into config.sh:
+
+	Maybe I should try to add to --config '-Ud_eaccess -Ud_setruid
+	-Ud_setrgid -Ud_setproctitle'? I think I did that before. Because we
+	have the directories already I edit the config.sh to the same effect and
+	run make again. I do this in 20474. Yes this is the way to go.
+
+	Lets write this in perl:
+
+	perl -pi~ -e 's/define/undef/ if /^d_(eaccess|setruid|setrgid|setproctitle)=/' config.sh
+
+----Program----
+eval q{use DBI 1.57};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pCkomOb/perl-5.8.0@20556/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pdIogQu/perl-5.8.0@20559/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Change 20559 by rgs@rgs-home on 2003/08/07 19:59:18
+
+	Subject: Fwd: Re: [PATCH] flags set incorrectly on abandoned lexicals
+	From: Dave Mitchell <davem@fdgroup.com>
+	Date: Thu, 7 Aug 2003 15:53:35 +0100
+	Message-ID: <20030807145335.GF26683@fdgroup.com>
+
+t/86gofer_fail............ok 21/0Unexpected failure: DBD::Gofer::db do failed: A
+ssertion !((sv)->sv_flags & 0x00000100) failed: file "pad.c", line 1411 at /home
+/sand/.cpan/build/DBI-1.57-QQq6PO/blib/lib/DBI/Gofer/Execute.pm line 624. at t/8
+6gofer_fail.t line 129.
+# Looks like your test died just after 22.
+t/86gofer_fail............dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+        after all the subtests completed successfully
+
+	
+
 2007-06-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* SVG-Metadata-0.28 might be a pseudo hash issue.
@@ -16,6 +104,23 @@ OK
 ----EOF ($?='0')----
 ----Output of .../pAnzsYU/perl-5.8.0@24010/bin/perl----
 N/A
+
+----EOF ($?='0')----
+
+----Program----
+# does not define a VERSION, so we must test without
+eval q{use encoding::source 'latin1'};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pfM0pqq/perl-5.8.0@28358/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pDCuNRp/perl-5.8.0@28359/bin/perl----
+binmode() on unopened filehandle STDIN at /home/src/perl/repoperls/installed-perls/perl/pDCuNRp/perl-5.8.0@28359/lib/5.9.4/i686-linux-64int/encoding.pm line 165.
+binmode() on unopened filehandle STDOUT at /home/src/perl/repoperls/installed-perls/perl/pDCuNRp/perl-5.8.0@28359/lib/5.9.4/i686-linux-64int/encoding.pm line 165.
+OK
 
 ----EOF ($?='0')----
 
@@ -229,6 +334,8 @@ lib/HTML/TableExtract.pm:    eval "use HTML::ElementTable 1.17";
 
 	* why does an upgrade install Chart 2.4.1? Because 2.4.1 < 2.3? How does
 	this happen?
+
+	Chart::Mountain               undef  2.004001  CHARTGRP/Chart-2.4.1.tar.gz
 
 2007-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

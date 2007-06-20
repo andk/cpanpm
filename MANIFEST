@@ -84,6 +84,7 @@ distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
 distroprefs/GRODITI.MooseX-Object-Pluggable.yml
 distroprefs/GRUBER.IPC-Messaging.yml
+distroprefs/HANK.Catalyst-Plugin-Form-Processor.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HIROSE.Net-SSL-ExpireDate.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
