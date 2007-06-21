@@ -58,6 +58,7 @@ unless (@CPAN::Defaultsites){
 # $CPAN::iCwd (i for initial) is going to be initialized during find_perl
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
+$CPAN::Defaultrecent ||= "http://search.cpan.org/uploads.rdf";
 $CPAN::Defaultrecent ||= "http://cpan.uwinnipeg.ca/htdocs/cpan.xml";
 
 # our globals are getting a mess
@@ -1801,6 +1802,10 @@ sub globls {
         for my $pragma (@$pragmas) {
             if ($author->can($pragma)) {
                 $author->$pragma();
+            } elsif ($pragma eq "silent") {
+                $silent = 1;
+            } elsif ($pragma eq "tacet") {
+                $silent = 2;
             }
         }
         push @results, $author->ls($pathglob,$silent); # silent if
@@ -3245,9 +3250,6 @@ sub recent {
       unless ($CPAN::META->has_usable("LWP")) {
           $CPAN::Frontend->mydie("LWP not installed; cannot continue");
       }
-      unless ($CPAN::META->has_inst("File::Temp")) {
-          $CPAN::Frontend->mydie("File::Temp not installed; cannot continue");
-      }
       CPAN::LWP::UserAgent->config;
       my $Ua;
       eval { $Ua = CPAN::LWP::UserAgent->new; };
@@ -3266,17 +3268,44 @@ sub recent {
           $CPAN::Frontend->myprint($s);
           return;
       }
-      my $pubdate = $xml->findvalue("/rss/channel/pubDate");
-      $CPAN::Frontend->myprint("    pubDate: $pubdate\n\n");
       my @distros;
-      for my $eitem ($xml->findnodes("/rss/channel/item")) {
-          my $distro = $eitem->findvalue("enclosure/\@url");
-          $distro =~ s|.*?/authors/id/./../||;
-          my $size   = $eitem->findvalue("enclosure/\@length");
-          my $desc   = $eitem->findvalue("description");
-          $desc =~ s/.+? - //;
-          $CPAN::Frontend->myprint("$distro [$size b]\n    $desc\n");
-          push @distros, $distro;
+      if ($url =~ /winnipeg/) {
+          my $pubdate = $xml->findvalue("/rss/channel/pubDate");
+          $CPAN::Frontend->myprint("    pubDate: $pubdate\n\n");
+          for my $eitem ($xml->findnodes("/rss/channel/item")) {
+              my $distro = $eitem->findvalue("enclosure/\@url");
+              $distro =~ s|.*?/authors/id/./../||;
+              my $size   = $eitem->findvalue("enclosure/\@length");
+              my $desc   = $eitem->findvalue("description");
+               $desc =~ s/.+? - //;
+              $CPAN::Frontend->myprint("$distro [$size b]\n    $desc\n");
+              push @distros, $distro;
+          }
+      } elsif ($url =~ /search.*uploads.rdf/) {
+          # xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          # xmlns="http://purl.org/rss/1.0/"
+          # xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+          # xmlns:dc="http://purl.org/dc/elements/1.1/"
+          # xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+          # xmlns:admin="http://webns.net/mvcb/"
+
+
+          my $dc_date = $xml->findvalue("//*[local-name(.) = 'RDF']/*[local-name(.) = 'channel']/*[local-name(.) = 'date']");
+          $CPAN::Frontend->myprint("    dc:date: $dc_date\n\n");
+          for my $eitem ($xml->findnodes("//*[local-name(.) = 'RDF']/*[local-name(.) = 'item']")) {
+              my $distro = $eitem->findvalue("\@rdf:about");
+              $distro =~ s|.*~||;
+              $distro =~ s|/$||;
+              $distro =~ s|([^/]+)|\U$1\E|;
+              my $desc   = $eitem->findvalue("*[local-name(.) = 'description']");
+              if (my @ret = $self->globls("$distro*",["tacet"])) {
+                  @ret = grep {$_->[2] !~ /meta/} @ret;
+                  $distro =~ s|/[^/]+$|/$ret[0][2]|;
+              }
+
+              $CPAN::Frontend->myprint("$distro\n    $desc\n");
+              push @distros, $distro;
+          }
       }
       return \@distros;
   } else {
@@ -5436,9 +5465,11 @@ sub ls {
             $CPAN::Frontend->mydie("Text::Glob not installed, cannot proceed");
         }
     }
-    $CPAN::Frontend->myprint(join "", map {
-        sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
-    } sort { $a->[2] cmp $b->[2] } @dl);
+    unless ($silent >= 2) {
+        $CPAN::Frontend->myprint(join "", map {
+            sprintf("%8d %10s %s/%s\n", $_->[0], $_->[1], $id, $_->[2])
+        } sort { $a->[2] cmp $b->[2] } @dl);
+    }
     @dl;
 }
 
