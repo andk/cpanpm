@@ -2,7 +2,7 @@
 
 	* ZOOLEIKA/SVG-Plot-0.06.tar.gz
 
-	
+	http://rt.cpan.org/Ticket/Display.html?id=27652
 
 	* MRAMBERG/Catalyst-Plugin-Unicode-0.3.tar.gz is among the new fails but
 	I don't see a fail report on cpantesters. Ah, he did not include the
