@@ -9342,9 +9342,9 @@ sub dslip_status {
                                               object-oriented pragma
                                               hybrid none,;
     # public licence
-    @{$stat->{P}}{qw,p g l b a o d r n,} = qw,Standard-Perl
+    @{$stat->{P}}{qw,p g l b a 2 o d r n,} = qw,Standard-Perl
                                               GPL LGPL
-                                              BSD Artistic
+                                              BSD Artistic Artistic_2
                                               open-source
                                               distribution_allowed
                                               restricted_distribution
@@ -11289,6 +11289,7 @@ Where the 'DSLIP' characters have the following meanings:
           "GNU Library General Public License")
     b   - BSD: The BSD License
     a   - Artistic license alone
+    2   - Artistic license 2.0 or later
     o   - open source: appoved by www.opensource.org
     d   - allows distribution without restrictions
     r   - restricted distribtion
