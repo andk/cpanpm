@@ -180,6 +180,7 @@ distroprefs/STEVAN.Class-MOP.yml
 distroprefs/TELS.Graph-Easy.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
+distroprefs/TKEEFER.Gantry.yml
 distroprefs/TSCH.Cairo.yml
 distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
