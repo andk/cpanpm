@@ -192,7 +192,8 @@ not ok 1 - DBD::SQLite::st fetchrow_array warning: not an error(0) at dbdimp.c l
 
 	Winnipeg then mentions http://cpan.uwinnipeg.ca/htdocs/cpan.xml but this
 	is several hours behind in time and does not seem to have developer
-	releases.
+	releases. And it sorts alphabetically per day without a trace of a
+	timestamp.
 
 	But uploads.rdf does not provide the extension ".tar.gz" or whatever
 	should be there. This can be worked around though. Winnipeg has them.

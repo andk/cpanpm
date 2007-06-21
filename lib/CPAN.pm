@@ -3260,6 +3260,12 @@ sub recent {
       }
       $CPAN::Frontend->myprint("DONE\n\n");
       my $xml = XML::LibXML->new->parse_string($resp->content);
+      if (0) {
+          my $s = $xml->serialize(2);
+          $s =~ s/\n\s*\n/\n/g;
+          $CPAN::Frontend->myprint($s);
+          return;
+      }
       my $pubdate = $xml->findvalue("/rss/channel/pubDate");
       $CPAN::Frontend->myprint("    pubDate: $pubdate\n\n");
       my @distros;
