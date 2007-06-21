@@ -1802,10 +1802,6 @@ sub globls {
         for my $pragma (@$pragmas) {
             if ($author->can($pragma)) {
                 $author->$pragma();
-            } elsif ($pragma eq "silent") {
-                $silent = 1;
-            } elsif ($pragma eq "tacet") {
-                $silent = 2;
             }
         }
         push @results, $author->ls($pathglob,$silent); # silent if
@@ -3298,12 +3294,12 @@ sub recent {
               $distro =~ s|/$||;
               $distro =~ s|([^/]+)|\U$1\E|;
               my $desc   = $eitem->findvalue("*[local-name(.) = 'description']");
-              if (my @ret = $self->globls("$distro*",["tacet"])) {
+              if (my @ret = $self->globls("$distro*")) {
                   @ret = grep {$_->[2] !~ /meta/} @ret;
                   $distro =~ s|/[^/]+$|/$ret[0][2]|;
               }
 
-              $CPAN::Frontend->myprint("$distro\n    $desc\n");
+              $CPAN::Frontend->myprint("    $desc\n");
               push @distros, $distro;
           }
       }
