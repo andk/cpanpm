@@ -268,7 +268,6 @@ IO::LockedFile
 IO::Multiplex
 IO::Pager
 IO::Tee
-IPC::Messaging
 IPC::Mmap
 IPC::PubSub
 IPC::ShareLite
@@ -534,7 +533,6 @@ Web::Scraper
 Workflow
 X500::DN
 XML::Atom
-XML::Atom::SimpleFeed 
 XML::AutoWriter
 XML::Checker::Parser
 XML::Comma

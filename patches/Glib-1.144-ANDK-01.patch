@@ -1,0 +1,18 @@
+--- Glib-1.144-aUOjzc.orig/Makefile.PL	2007-01-21 16:36:36.000000000 +0100
++++ Glib-1.144-aUOjzc/Makefile.PL	2007-06-22 05:49:10.000000000 +0200
+@@ -26,12 +26,13 @@ unless (eval "use ExtUtils::Depends '$bu
+            . "use ExtUtils::PkgConfig '$build_reqs{'perl-ExtUtils-PkgConfig'}';"
+            . "1") {
+    warn "$@\n";
++   eval "sub MY::postamble { return '' }";
+    WriteMakefile(
+          NAME         => 'Glib',
+-         PREREQ_FATAL => 1,
+ 	 PREREQ_PM    => \%PREREQ_PM,
+    );
+-   exit 1; # not reached
++   warn "Please retry installing Gtk2 after the prerequisites are installed";
++   exit;
+ }
+ 
+ # client modules may use Glib::MakeHelper -- he's not installed at this
