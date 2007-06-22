@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "CLACO/Data-Currency-0.04002.tar.gz"
+  distribution: "^CLACO/(Data-Currency|DBIx-Class-UUIDColumns|DBIx-Class-Validation)-\d"
 pl:
   eexpect:
     mode: anyorder
