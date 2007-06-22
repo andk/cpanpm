@@ -1,3 +1,10 @@
+2007-06-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Glib: I once put a patch for Glib into /tmp/ and then forgot and then
+	lost the patch. Today I reconstructed what might have been in there so
+	that the distroprefs get useable again. Similarly I had to put the Gtk2
+	patch from patches/ to /tmp/.
+
 2007-06-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ZOOLEIKA/SVG-Plot-0.06.tar.gz

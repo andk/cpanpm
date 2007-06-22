@@ -1,6 +1,6 @@
 ---
 match:
-  distroprefs: "CLACO/Data-Currency-0.04002.tar.gz"
+  distribution: "CLACO/Data-Currency-0.04002.tar.gz"
 pl:
   eexpect:
     mode: anyorder
