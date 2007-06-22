@@ -123,6 +123,7 @@ distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LBROCARD.Devel-ebug-HTTP.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
+distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LYOKATO.FormValidator-Simple.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.MailTools.yml
