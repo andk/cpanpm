@@ -15,7 +15,6 @@ distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
 distroprefs/AUDREYT.Jifty-DBI.yml
-distroprefs/AUDREYT.Module-Install.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
@@ -33,7 +32,6 @@ distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
-distroprefs/CLACO.Data-Currency.yml
 distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
