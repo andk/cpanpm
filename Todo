@@ -1,3 +1,7 @@
+2007-06-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Refactor the distroprefs with one file for all the "standard" MI distros.
+
 2007-06-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Glib: I once put a patch for Glib into /tmp/ and then forgot and then

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^CLACO/(Data-Currency|DBIx-Class-UUIDColumns|DBIx-Class-Validation)-\d"
+  distribution: "^XXX-CLACO/(Data-Currency|DBIx-Class-UUIDColumns|DBIx-Class-Validation)-\d"
 pl:
   eexpect:
     mode: anyorder

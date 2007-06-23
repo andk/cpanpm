@@ -1,7 +1,7 @@
 --- 
 comment: "maybe superceded by ADAMK/Module-Install-0.65 ???"
 match:
-  distribution: "^AUDREYT/Module-Install-0.64"
+  distribution: "XXX^AUDREYT/Module-Install-0.64"
 pl:
   env:
     PERL_AUTOINSTALL: --skip
