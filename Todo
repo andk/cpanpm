@@ -1,6 +1,15 @@
 2007-06-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Refactor the distroprefs with one file for all the "standard" MI distros.
+	* CHROMATIC/Crypt-CipherSaber-1.00.tar.gz had a dropout at 31444 need to
+	look closer
+
+	* Off topic Todo: Devel::Symdump fails recur test with 5.00504.
+
+	* DMAKI/File-Extract-0.06.tar.gz is dependent on Spreadsheet::Read and
+	therefore has mixed results.
+
+	* Refactor the distroprefs with one file for all the "standard" MI
+	distros. DONE but as of 31446 not yet tested.
 
 2007-06-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -1540,8 +1549,6 @@ $package ="gtk+-2.0";
 	* The UTF-8 HOWTO is by Bruno Haible. Markus Kuhn wrote
 	http://www.cl.cam.ac.uk/~mgk25/unicode.html which is a FAQ. The latter
 	contains 'How should the UTF-8 mode be activated?'
-
-	* Todo: Devel::Symdump fails recur test with 5.00504.
 
 	* Todo: Jesse Vincent #26840
 
