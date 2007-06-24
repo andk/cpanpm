@@ -1,45 +1,47 @@
 ---
 match:
-  distribution: "^AGRUNDMA/Catalyst-Plugin-Static-Simple-\d"
-  distribution: "^AVAR/Bot-BB2-\d"
-  distribution: "^BLBLACK/Catalyst-Model-DBIC-Schema-\d"
-  distribution: "^BLBLACK/Class-C3-\d"
-  distribution: "^BLBLACK/DBIx-Class-\d"
-  distribution: "^BLBLACK/Term-Spinner-\d"
-  distribution: "^BRICAS/Catalyst-Plugin-ConfigLoader-\d"
-  distribution: "^BRICAS/WWW-OpenSearch-\d"
-  distribution: "^BTROTT/Crypt-OpenPGP-\d"
-  distribution: "^BTROTT/Feed-Find-"
-  distribution: "^BTROTT/URI-Fetch-\d"
-  distribution: "^BTROTT/XML-Feed-\d"
-  distribution: "^CFRANKS/HTML-Widget-\d"
-  distribution: "^CLACO/Class-Accessor-Grouped-\d"
-  distribution: "^CLACO/DBIx-Class-UUIDColumns-\d"
-  distribution: "^CLACO/DBIx-Class-Validation-\d"
-  distribution: "^CLACO/Data-Currency-\d"
-  distribution: "^DCOPPIT/Benchmark-Timer-\d"
-  distribution: "^DMAKI/XML-RSS-LibXML-\d"
-  distribution: "^DMAKI/XML-RSS-Liberal-"
-  distribution: "^GAAL/Best-\d"
-  distribution: "^GAAL/Class-Rebless-\d"
-  distribution: "^GAAL/Task-Smoke-\d"
-  distribution: "^GRODITI/MooseX-Object-Pluggable-\d"
-  distribution: "^GRUBER/IPC-Messaging-\d"
-  distribution: "^HANK/Catalyst-Plugin-Form-Processor-\d"
-  distribution: "^HIROSE/Net-SSL-ExpireDate-\d"
-  distribution: "^JCAMACHO/Catalyst-Controller-FormBuilder-\d"
-  distribution: "^JROCKWAY/Task-Catalyst-Tutorial-\d"
-  distribution: "^LBROCARD/Devel-ebug-HTTP-\d"
-  distribution: "^LYOKATO/FormValidator-Simple-\d"
-  distribution: "^MRAMBERG/Catalyst-Runtime-"
-  distribution: "^MSTROUT/DBIx-Class-\d"
-  distribution: "^MSTROUT/Devel-REPL-\d"
-  distribution: "^PERIGRIN/JSON-Any-\d"
-  distribution: "^SMUELLER/Math-Approx-Symbolic-"
-  distribution: "^SMUELLER/PAR-"
-  distribution: "^SRI/Catalyst-Plugin-HTML-Widget-\d"
-  distribution: "^TELS/graph/Graph-"
-  distribution: "^YARON/WWW-Monitor-\d"
+  distribution: |
+    ^(?x:AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
+    |AVAR/Bot-BB2-\d
+    |BLBLACK/Catalyst-Model-DBIC-Schema-\d
+    |BLBLACK/Class-C3-\d
+    |BLBLACK/DBIx-Class-\d
+    |BLBLACK/Term-Spinner-\d
+    |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/WWW-OpenSearch-\d
+    |BTROTT/Crypt-OpenPGP-\d
+    |BTROTT/Feed-Find-
+    |BTROTT/URI-Fetch-\d
+    |BTROTT/XML-Feed-\d
+    |CFRANKS/HTML-Widget-\d
+    |CLACO/Class-Accessor-Grouped-\d
+    |CLACO/DBIx-Class-UUIDColumns-\d
+    |CLACO/DBIx-Class-Validation-\d
+    |CLACO/Data-Currency-\d
+    |DCOPPIT/Benchmark-Timer-\d
+    |DMAKI/XML-RSS-LibXML-\d
+    |DMAKI/XML-RSS-Liberal-
+    |GAAL/Best-\d
+    |GAAL/Class-Rebless-\d
+    |GAAL/Task-Smoke-\d
+    |GRODITI/MooseX-Object-Pluggable-\d
+    |GRUBER/IPC-Messaging-\d
+    |HANK/Catalyst-Plugin-Form-Processor-\d
+    |HIROSE/Net-SSL-ExpireDate-\d
+    |JCAMACHO/Catalyst-Controller-FormBuilder-\d
+    |JROCKWAY/Task-Catalyst-Tutorial-\d
+    |LBROCARD/Devel-ebug-HTTP-\d
+    |LYOKATO/FormValidator-Simple-\d
+    |MRAMBERG/Catalyst-Runtime-
+    |MSTROUT/DBIx-Class-\d
+    |MSTROUT/Devel-REPL-\d
+    |PERIGRIN/JSON-Any-\d
+    |SMUELLER/Math-Approx-Symbolic-
+    |SMUELLER/PAR-
+    |SRI/Catalyst-Plugin-HTML-Widget-\d
+    |TELS/graph/Graph-
+    |YARON/WWW-Monitor-\d
+    )|
 pl:
   eexpect:
     mode: anyorder
