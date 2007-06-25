@@ -1,9 +1,74 @@
+2007-06-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* MSCHILLI/CPAN-Unwind-0.04.tar.gz fails because
+	Module::Depends::Intrusive is not available. Module::Depends started to
+	break with 2007-06-22T06:37 This one looks like a real dependency is
+	broken, maybe File::chdir?
+
+  diff -u /home/sand/.cpan/Bundle/Snapshot_2007_06_25_0[01].pm
+
+-File::chdir 0.07
++File::chdir 0.08
+
+  RCLAMP/Module-Depends-0.12.tar.gz
+  /usr/bin/make -- OK
+Running make test
+CPAN: CPAN::Reporter loaded ok (v0.44)
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/depends....Failed to change directory to '/home/sand/.cpan/build/Module-Depends-0.12-hZuYHR/t/no-such-dir' at /home/sand/.cpan/build/Module-Depends-0.12-hZuYHR/blib/lib/Module/Depends.pm line 66
+# Looks like you planned 17 tests but only ran 7.
+# Looks like your test died just after 7.
+dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 8-17
+        Failed 10/17 tests, 41.18% okay
+Failed Test Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/depends.t  255 65280    17   20  8-17
+Failed 1/1 test scripts. 10/17 subtests failed.
+Files=1, Tests=17,  2 wallclock secs ( 0.57 cusr +  0.04 csys =  0.61 CPU)
+
+	Downgrading to DAGOLDEN/File-chdir-0.07.tar.gz fixes the tests:
+
+  RCLAMP/Module-Depends-0.12.tar.gz
+  /usr/bin/make -- OK
+Running make test
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/depends....Subroutine main::build_requires redefined at /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/5.9.5/Exporter.pm line 66.
+ at Makefile.PL line 3
+Subroutine main::include_deps redefined at /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/5.9.5/Exporter.pm line 66.
+ at Makefile.PL line 3
+Subroutine main::requires redefined at /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/5.9.5/Exporter.pm line 66.
+ at Makefile.PL line 3
+ok
+All tests successful.
+Files=1, Tests=17,  3 wallclock secs ( 0.84 cusr +  0.06 csys =  0.90 CPU)
+
+	I have not checked which behaviour I find more appropriate just wanted
+	to let you know.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27721
+
+	* MLEHMANN/AnyEvent-2.52.tar.gz Started dying on 2007-06-21T21:46 with
+	'X connection to localhost:10.0 broken (explicit kill or server
+	shutdown).' But not always.
+
+	* JRED/Event-ExecFlow-0.63.tar.gz?
+
+	Depends on AnyEvent.
+
+	* DBRIAN/XML-SimpleObject-0.53.tar.gz? Does not declare prereq XML::Parser
+
+	http://rt.cpan.org/Ticket/Display.html?id=27109 (six weeks ago)
+
 2007-06-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CHROMATIC/Crypt-CipherSaber-1.00.tar.gz had a dropout at 31444 need to
 	look closer
 
 	* Off topic Todo: Devel::Symdump fails recur test with 5.00504.
+
+	But succeeds in the debugger.
 
 	* DMAKI/File-Extract-0.06.tar.gz is dependent on Spreadsheet::Read and
 	therefore has mixed results.
