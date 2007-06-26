@@ -17,7 +17,7 @@ sub vcmp {
   }
   CPAN->debug("l[$l] r[$r]") if $CPAN::DEBUG;
   for ($l,$r) {
-      next unless tr/.// > 1;
+      next unless tr/.// > 1 || /^v/;
       s/^v?/v/;
       1 while s/\.0+(\d)/.$1/; # remove leading zeroes per group
   }

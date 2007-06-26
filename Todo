@@ -1,3 +1,14 @@
+2007-06-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Forgot to mention the testers Wiki: http://cpantest.grango.org/
+
+	* ZOOLEIKA/RDF-Simple-0.3.tar.gz mixed test results, more FAIL than
+	PASS, all visible on http://cpantesters.perl.org/show/RDF-Simple.html.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27757
+
+	But I must really take a break from bugreporting, a burnt out stomach.
+
 2007-06-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* MSCHILLI/CPAN-Unwind-0.04.tar.gz fails because
