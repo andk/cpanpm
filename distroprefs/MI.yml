@@ -21,6 +21,7 @@ match:
     |DCOPPIT/Benchmark-Timer-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
+    |DSNOPEK/POE-Component-MessageQueue-\d
     |GAAL/Best-\d
     |GAAL/Class-Rebless-\d
     |GAAL/Task-Smoke-\d
