@@ -35,6 +35,7 @@ match:
     |LBROCARD/Devel-ebug-HTTP-\d
     |LYOKATO/FormValidator-Simple-\d
     |MRAMBERG/Catalyst-Runtime-
+    |MRAMBERG/Catalyst-Action-RenderView-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
