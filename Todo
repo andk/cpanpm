@@ -1,6 +1,14 @@
+2007-06-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Just answered Julian Mehnle on module-build and probably even fixed
+	his bug. Not feeling lucky. But the likelihood that this will bomb is
+	quite low because it only changes behaviour for a leading v.
+
 2007-06-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Forgot to mention the testers Wiki: http://cpantest.grango.org/
+
+	Thanks, Barbie.
 
 	* ZOOLEIKA/RDF-Simple-0.3.tar.gz mixed test results, more FAIL than
 	PASS, all visible on http://cpantesters.perl.org/show/RDF-Simple.html.
@@ -268,6 +276,14 @@ not ok 1 - DBD::SQLite::st fetchrow_array warning: not an error(0) at dbdimp.c l
 2007-06-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* DANIEL/Crypt-OpenSSL-X509-0.5.tar.gz
+
+	Can't locate inc/Module/Install.pm in @INC (@INC contains: /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/5.9.5/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/5.9.5 /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/site_perl/5.9.5/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/lib/site_perl/5.9.5 .) at Makefile.PL line 3.
+BEGIN failed--compilation aborted at Makefile.PL line 3.
+Warning: No success on command[/home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/bin/perl Makefile.PL]
+  DANIEL/Crypt-OpenSSL-X509-0.5.tar.gz
+  /home/src/perl/repoperls/installed-perls/perl/pVSGU0p/perl-5.8.0@31443/bin/perl Makefile.PL -- NOT OK
+
+	http://rt.cpan.org/Ticket/Display.html?id=27765
 
 	* Idea: rewrite the recent command to read and parse
 	http://search.cpan.org/uploads.rdf and return and render a pure ascii
