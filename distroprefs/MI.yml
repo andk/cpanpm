@@ -24,6 +24,7 @@ match:
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
+    |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
     |GAAL/Class-Rebless-\d
     |GAAL/Task-Smoke-\d

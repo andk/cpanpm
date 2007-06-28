@@ -14,6 +14,7 @@ B::Deobfuscate
 BFD
 Bit::Vector::Minimal
 BitTorrent
+Bot::CPAN
 Bundle::POE::IRC
 Bundle::Pause
 Bundle::Perl6

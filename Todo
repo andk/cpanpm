@@ -1,5 +1,14 @@
 2007-06-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* FOX/Bot-CPAN WTF:
+
+/home/src/perl/repoperls/installed-perls/perl/pcYW9GU/perl-5.8.0@31475/bin/perl Makefile.PL --config= --installdeps=Class::Phrasebook,0.88,Mail::Internet,1.58,XML::RSS::Parser,0.21,Config::Auto,0.03,Module::CPANTS,0.20030725
+*** Installing dependencies...
+[ERROR] Could not find the 'cpanp-run-perl' in your path--this may be a problem.
+Please locate this program and set your 'perlwrapper' config entry to its path.
+
+	And then there is the 1.7 vs 1.11 issue too.
+
 	* Convert-PEM has a PASS:FAIL ratio of 322:25
 
 t/02-encode.......# Failed test 7 in t/02-encode.t at line 33
