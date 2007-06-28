@@ -1,3 +1,21 @@
+2007-06-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Convert-PEM has a PASS:FAIL ratio of 322:25
+
+t/02-encode.......# Failed test 7 in t/02-encode.t at line 33
+#  t/02-encode.t line 33 is: ok($pem->errstr =~ /^Decryption failed/);
+FAILED test 7
+^IFailed 1/12 tests, 91.67% okay
+t/03-ede3.........ok
+Failed Test   Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/02-encode.t               12    1  7
+Failed 1/4 test scripts. 1/34 subtests failed.
+
+	I have reported this already 14 days ago.
+
+	http://rt.cpan.org/Ticket/Display.html?id=27574
+
 2007-06-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Just answered Julian Mehnle on module-build and probably even fixed

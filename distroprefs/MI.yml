@@ -1,7 +1,8 @@
 ---
 match:
   distribution: |
-    ^(?x:AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
+    ^(?x:^ADAMK/Algorithm-Dependency-\d
+    |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AVAR/Bot-BB2-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
     |BLBLACK/Class-C3-\d
