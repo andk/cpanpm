@@ -22,6 +22,7 @@ match:
     |CLACO/DBIx-Class-Validation-\d
     |CLACO/Data-Currency-\d
     |DCOPPIT/Benchmark-Timer-\d
+    |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
