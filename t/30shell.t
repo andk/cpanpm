@@ -220,7 +220,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
-my $default_timeout = 90;
+my $default_timeout = 120;
 
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
@@ -483,7 +483,7 @@ __END__
 ########
 #P:yesplease
 #E:commit: wrote.+?MyConfig
-#T:120
+#T:180
 ########
 #P:# o debug all
 ########
@@ -871,12 +871,12 @@ __END__
 ########
 #P:ls ANDK
 #E:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy[\d\D]*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump
-#T:120
+#T:180
 ########
 #P:ls ANDK/CPAN*
 #E:Text::Glob\s+loaded\s+ok[\d\D]*?CPAN-Test-Dummy
 #R:Text::Glob
-#T:120
+#T:180
 ########
 #P:force ls ANDK/CPAN*
 #E:CPAN-Test-Dummy
@@ -891,7 +891,7 @@ __END__
 #P:test CPAN::Test::Dummy::Perl5::Build
 #E:\s\sANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz[\s\S]*?test\s+--\s+OK
 #R:Module::Build
-#T:120
+#T:180
 ########
 #P:o debug 0
 #E:turned off
@@ -1014,7 +1014,7 @@ __END__
 #P:test Bundle::CpanTestDummies
 #E:Test-Dummy-Perl5-Build-Fails-.+?make_test\s+NO
 #R:Module::Build
-#T:120
+#T:180
 ########
 #P:get Bundle::CpanTestDummies
 #E:Has already been unwrapped
@@ -1055,11 +1055,11 @@ __END__
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #N: "is up to date" is for when they have it installed in INC
 #R:Module::Build
-#T:120
+#T:180
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
 #E:is up to date|Recursive dependency
-#T:120
+#T:180
 ########
 #P:o conf defaults
 ########
@@ -1069,7 +1069,7 @@ __END__
 ########
 #P:test ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 #E:D i s t r o[\s\S]+?COMMANDLINE[\s\S]+?test -- OK
-#T:120
+#T:180
 #R:Expect YAML
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
