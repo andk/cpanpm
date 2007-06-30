@@ -124,6 +124,7 @@ our @SESSIONS =
                      will.not.store.persistent.state)",
        "make CPAN::Test::Dummy::Perl5::Make" => "Falling back to other methods to determine prerequisites",
        "test CPAN::Test::Dummy::Perl5::Make" => "All tests successful",
+       "clean CPAN::Test::Dummy::Perl5::Make" => "clean.*-- OK",
       ]
      },
      {
