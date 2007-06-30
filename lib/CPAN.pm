@@ -3293,11 +3293,20 @@ sub recent {
               $distro =~ s|.*~||; # remove up to the tilde before the name
               $distro =~ s|/$||; # remove trailing slash
               $distro =~ s|([^/]+)|\U$1\E|; # upcase the name
-              $distro =~ s|/|/*|; # allow it to reside in a subdirectory
+              my $author = uc $1 or die "distro[$distro] without author, cannot continue";
               my $desc   = $eitem->findvalue("*[local-name(.) = 'description']");
-              if (my @ret = $self->globls("$distro*")) {
-                  @ret = grep {$_->[2] !~ /meta/} @ret;
-                  $distro =~ s|/[^/]+$|/$ret[0][2]|;
+              my $i = 0;
+            SUBDIRTEST: while () {
+                  last SUBDIRTEST if ++$i >= 3;
+                  if (my @ret = $self->globls("$distro*")) {
+                      @ret = grep {$_->[2] !~ /meta/} @ret;
+                      @ret = grep {length $_->[2]} @ret;
+                      if (@ret) {
+                          $distro = "$author/$ret[0][2]";
+                          last SUBDIRTEST;
+                      }
+                  }
+                  $distro =~ s|/|/*/|; # allow it to reside in a subdirectory
               }
 
               $CPAN::Frontend->myprint("    $desc\n");
