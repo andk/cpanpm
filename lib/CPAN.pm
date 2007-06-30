@@ -3309,7 +3309,7 @@ sub recent {
                   $distro =~ s|/|/*/|; # allow it to reside in a subdirectory
               }
 
-              $CPAN::Frontend->myprint("    $desc\n");
+              $CPAN::Frontend->myprint("____$desc\n");
               push @distros, $distro;
           }
       }
