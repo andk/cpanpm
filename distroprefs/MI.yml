@@ -8,6 +8,7 @@ match:
     |BLBLACK/Class-C3-\d
     |BLBLACK/DBIx-Class-Schema-Loader-\d
     |BLBLACK/DBIx-Class-\d
+    |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/WWW-OpenSearch-\d

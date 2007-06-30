@@ -1,4 +1,103 @@
+2007-06-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* configure_requires needs dummy test distro that depends on some other
+	dummy test distro. we must test the behaviour if that other distro is
+	available and if it is not available.
+
+	Pick a dummy distro as a blueprint. Make-Expect is a bit too large.
+	Build is not suited because I do not speak M:B well. I take the simple
+	Make thing and I call the new one Make-ConfReq.
+
+	* Devel::EvalContext? We should run it through a binary search together
+	with Data::Alias 1.06. Data::Alias does not like 23023. 26015? No.
+	28005? Ignition found. The binsearch reaches 28927/8 which simply cannot
+	be it. We must look why EvalContext failed. YAML 0.65 is a prereq and it
+	did not compile at that time. In 28928 we have no YAML and so no install
+	happens. But why do we have a YAML with 28927? Maybe some test has been
+	skipped or some such, it does not really matter. 26015 also fails
+	because of YAML. 27422 has YAML and tests OK. For further proceedings we
+	must filter out perls that cannot have a YAML 0.65 for whatever reason.
+	We should probably install YAML with notest. Doing so now.
+
+	Just for the record, the failing test is this one:
+
+t/marshall...........*** glibc detected *** double free or corruption (fasttop): 0x08607110 ***
+dubious
+        Test returned status 0 (wstat 6, 0x6)
+DIED. FAILED tests 1-10
+        Failed 10/10 tests, 0.00% okay
+
+	This does not lead to a convergence either because now I find out that
+	the now fixed Data-Alias 1.06 does not work with some earlier
+	bleadperls. This means I start another binsearch to find this threshold
+	and after that I can limit the other binsearch to the interval that we
+	have a working Data::Alias 1.06 for.
+	
+
+	* Raphael asked me to pay special attention to 31505. New fails
+	according to CPAN::Reporter:
+
+	FAIL re-engine-Plan9-0.09                    first time ever
+	FAIL re-engine-PCRE-0.10                     first time ever
+	FAIL Devel-EvalContext-0.08                  has always failed except for maintperl[1]
+	NA Image-Magick-Thumbnail-PDF-1.10           just a new distro
+
+	[1] so why was it reported then? According to CPAN::Reporter it was
+	always a NA and is now a FAIL. Reason for NA was that Data::Alias was
+	broken and this one got a new release yesterday. So how would
+	Devel::EvalContext fare now with the new Data::Alias? Not good.
+	
+	new fails since 31493:
+
+	AVAR/re-engine-PCRE-0.10.tar.gz                    first time ever
+	AVAR/re-engine-Plan9-0.09.tar.gz                   first time ever
+	JESSE/Jifty-DBI-0.41.tar.gz                        new failure mode[2]
+	LEOCHARRE/Image-Magick-Thumbnail-PDF-1.10.tar.gz   new distro
+	MSERGEANT/XML-Filter-XInclude-1.0.tar.gz           has always been flaky
+	RJBS/Email-Valid-0.179.tar.gz                      for unknown reason not in 31493 at all
+	TELS/graph/Graph-Easy-0.55.tar.gz                  has always been flaky
+	TELS/graph/Graph-Easy-As_svg-0.21.tar.gz           has always been flaky
+
+	[2]in 31493 again OK on a new test and in 505 again NOT OK on a new
+	test; reading diffs in autobundle seems DBIx::DBSchema has a new release
+	0.33 which breaks a test. Downgrading to IVAN/DBIx-DBSchema-0.32.tar.gz
+	fixes the tests. http://rt.cpan.org/Ticket/Display.html?id=27827
+	
+	gone since 31493:
+
+	BRICAS/Catalyst-Plugin-ConfigLoader-0.14.tar.gz
+	CHROMATIC/Test-MockObject-1.07.tar.gz
+	CHROMATIC/Text-WikiFormat-0.78.tar.gz
+	GOMOR/Net-Write-1.00.tar.gz
+	IAMCAL/Flickr-API-0.08.tar.gz
+	IAMCAL/XML-Parser-Lite-Tree-0.03.tar.gz
+	LEOCHARRE/Image-Magick-Thumbnail-PDF-1.09.tar.gz
+	MRAMBERG/Catalyst-Devel-1.02.tar.gz
+	NUFFIN/Data-Visitor-0.07.tar.gz
+	OVID/Class-Trait-0.22.tar.gz
+	POLETTIX/WWW-Slides-0.0.9.tar.gz
+	REDTREE/PDF-API2-Simple-1.1.2.tar.gz
+	STAS/libapreq-1.33.tar.gz
+	TSCH/Glib-1.144.tar.gz
+	XMATH/Data-Alias-1.05.tar.gz
+
+	That's all fair and explicable and not interesting to report.
+	
 2007-06-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 31492 suddenly has several first time failures:
+
+	CHROMATIC/Test-MockObject-1.07.tar.gz           134:1 long errmsg
+	CHROMATIC/Text-WikiFormat-0.78.tar.gz           256:1 long errmsg
+	OVID/Class-Trait-0.22.tar.gz                    132:1 long errmsg
+	NUFFIN/Data-Visitor-0.07.tar.gz                  64:1 dep on MockObject
+	POLETTIX/WWW-Slides-0.0.9.tar.gz                 81:1 dep on MockObject
+	BRICAS/Catalyst-Plugin-ConfigLoader-0.14.tar.gz 132:1 dep on Data::Visitor
+
+	Class::Trait was the first that jumped into my eyes so it is now running
+	a binary search. Waiting for 31487:31492. Waiting for 87:89. No, from
+	reading 88 is is clear that it is an issue with 89 and I can inform
+	Brandon and go to bed.
 
 	* FOX/Bot-CPAN WTF:
 
@@ -7,7 +106,10 @@
 [ERROR] Could not find the 'cpanp-run-perl' in your path--this may be a problem.
 Please locate this program and set your 'perlwrapper' config entry to its path.
 
-	And then there is the 1.7 vs 1.11 issue too.
+	And then there is the 1.7 vs 1.11 issue too. Magically search.cpan.org
+	displays 1.11 but CPAN.pm chooses 1.7.
+
+	And it depends on Mail::Internet. Why?
 
 	* Convert-PEM has a PASS:FAIL ratio of 322:25
 
@@ -350,9 +452,11 @@ Warning: No success on command[/home/src/perl/repoperls/installed-perls/perl/pVS
 	not want to intermix them with the three _require types, so I'll
 	probably call it but_first. The implementation will then be very, very
 	close to configure_requires. The point is that this stuff shall kick in
-	very early, before we run Makefile.PL. Update 2007-06-15 akoenig maybe
-	depends is a better keyword than but_first. "But first" comes from
-	hiveminder. We definitely need depends WITH sub keywords
+	very early, before we run Makefile.PL.
+
+	Update 2007-06-15 akoenig maybe depends is a better keyword than
+	but_first. "But first" comes from hiveminder. We definitely need depends
+	WITH sub keywords
 	{configure_,build_,}requires modelled after the META spec so that we get
 	the full power that is to be implemented anyway.
 

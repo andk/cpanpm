@@ -10,6 +10,5 @@ distribution_type:   module
 requires:     
   'CPAN::Test::Dummy::Perl5::Make': 1.05
 meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
-
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3

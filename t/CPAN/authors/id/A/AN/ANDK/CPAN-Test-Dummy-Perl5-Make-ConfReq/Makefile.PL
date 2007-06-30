@@ -23,7 +23,7 @@ WriteMakefile(
               PL_FILES      => {},
               dist => {
                        DIST_DEFAULT => (
-                                        'Makefile META.yml verify-MakeMaker-6.31 verify-no-subdir all tardist'
+                                        'Makefile verify-MakeMaker-6.31 verify-no-subdir META.yml all tardist'
                                        ),
                       },
 );

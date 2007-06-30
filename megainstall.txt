@@ -424,6 +424,7 @@ SQL::Abstract::Limit
 SQL::ReservedWords
 SQL::Statement
 SREZIC/pingomatic-1.013
+SUPER
 SVN::Mirror
 SVN::Notify::Config
 SVN::Notify::Mirror
