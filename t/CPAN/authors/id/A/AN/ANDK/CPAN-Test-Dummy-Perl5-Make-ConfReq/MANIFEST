@@ -1,7 +1,7 @@
 Changes
-lib/Bundle/CpanTestDummies.pm
-lib/CPAN/Test/Dummy/Perl5/Make.pm
+lib/CPAN/Test/Dummy/Perl5/Make/ConfReq.pm
 Makefile.PL
 MANIFEST
+META.yml
 README
 t/00_load.t
