@@ -1,6 +1,9 @@
 2007-06-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: check out what exactly rsync 3.0 will bring us.
+	* Todo: check out what exactly rsync 3.0 will bring us with the batch
+	mode. It is a way to run many rsync updates simultaneously but not with
+	a database for each pair rather with the same batch jobs for all slaves
+	or so. I do not think this is what I want.
 
 	* configure_requires needs dummy test distro that depends on some other
 	dummy test distro. we must test the behaviour if that other distro is
@@ -33,8 +36,11 @@ DIED. FAILED tests 1-10
 	the now fixed Data-Alias 1.06 does not work with some earlier
 	bleadperls. This means I start another binsearch to find this threshold
 	and after that I can limit the other binsearch to the interval that we
-	have a working Data::Alias 1.06 for.
-	
+	have a working Data::Alias 1.06 for. The threshold is 31252. This is the
+	very first bleadperl that works with Data::Alias 1.06
+
+	And within this short interval 31252-31505 Devel::EvalContext seems to
+	not run.
 
 	* Raphael asked me to pay special attention to 31505. New fails
 	according to CPAN::Reporter:
