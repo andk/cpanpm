@@ -2,6 +2,6 @@ Changes
 lib/CPAN/Test/Dummy/Perl5/Make/ConfReq.pm
 Makefile.PL
 MANIFEST
-META.yml
+mymeta.yml
 README
 t/00_load.t

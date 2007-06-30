@@ -20,11 +20,10 @@ WriteMakefile(
               'dist' => {
                          DIST_DEFAULT => 'Makefile all tardist',
                         },
-              NO_META => 1,
               PL_FILES      => {},
               dist => {
                        DIST_DEFAULT => (
-                                        'Makefile verify-MakeMaker-6.31 verify-no-subdir all tardist'
+                                        'Makefile META.yml verify-MakeMaker-6.31 verify-no-subdir all tardist'
                                        ),
                       },
 );
@@ -36,5 +35,8 @@ verify-MakeMaker-6.31:
 
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^(lib|t)\z/&&-d($$_)}glob"*";die"unexpected dir:$$s"if$$s'
+
+META.yml: metafile
+	$(CP) ./mymeta.yml $(DISTVNAME)/META.yml
 }
 }
