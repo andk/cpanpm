@@ -1,5 +1,7 @@
 2007-06-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: check out what exactly rsync 3.0 will bring us.
+
 	* configure_requires needs dummy test distro that depends on some other
 	dummy test distro. we must test the behaviour if that other distro is
 	available and if it is not available.

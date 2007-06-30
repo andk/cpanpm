@@ -3290,9 +3290,10 @@ sub recent {
           $CPAN::Frontend->myprint("    dc:date: $dc_date\n\n");
           for my $eitem ($xml->findnodes("//*[local-name(.) = 'RDF']/*[local-name(.) = 'item']")) {
               my $distro = $eitem->findvalue("\@rdf:about");
-              $distro =~ s|.*~||;
-              $distro =~ s|/$||;
-              $distro =~ s|([^/]+)|\U$1\E|;
+              $distro =~ s|.*~||; # remove up to the tilde before the name
+              $distro =~ s|/$||; # remove trailing slash
+              $distro =~ s|([^/]+)|\U$1\E|; # upcase the name
+              $distro =~ s|/|/*|; # allow it to reside in a subdirectory
               my $desc   = $eitem->findvalue("*[local-name(.) = 'description']");
               if (my @ret = $self->globls("$distro*")) {
                   @ret = grep {$_->[2] !~ /meta/} @ret;
