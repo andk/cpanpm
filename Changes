@@ -1,3 +1,12 @@
+2007-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91_51:
+
+	* support configure_requires according to the META.yml spec
+
+	* support distroprefs for all three types of dependencies:
+	configure_requires, build_requires, requires
+
 2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9102 -- tiny bugfixes

@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^RJOOP/X500-DN-\d"
+depends:
+  build_requires:
+    Parse::RecDescent: 0

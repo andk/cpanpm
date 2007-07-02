@@ -136,6 +136,7 @@ distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
+distroprefs/RJOOP.X500-DN.yml
 distroprefs/RJRAY.RPC-XML.yml
 distroprefs/RMUHLE.classes.yml
 distroprefs/RRA.PGP-Sign.yml
