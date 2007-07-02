@@ -6,7 +6,6 @@ distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.dd
 distroprefs/ABW.Template-Toolkit.yml
-distroprefs/ADAMK.Algorithm-Dependency.yml
 distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
