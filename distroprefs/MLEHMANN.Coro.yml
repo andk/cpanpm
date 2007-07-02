@@ -26,9 +26,18 @@ pl:
 patches:
   - ANDK/patches/Coro-2.1-ANDK-01.patch.gz
 --- 
-comment: "or just to accept defaults in future releases..."
+comment: |
+
+  or just to accept defaults in future releases...
+
+  The dependency on Event is only given if you want to build
+  Coro::Event.
+
 match:
   distribution: "^MLEHMANN/Coro-"
 pl:
   env:
     PERL_MM_USE_DEFAULT: 1
+depends:
+  configure_requires:
+    Event: 0

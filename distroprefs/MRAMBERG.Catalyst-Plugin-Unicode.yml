@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^MRAMBERG/Catalyst-Plugin-Unicode-\d"
+depends:
+  build_requires:
+    Module::Install: 0
