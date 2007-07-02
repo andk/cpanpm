@@ -7851,14 +7851,20 @@ of modules we are processing right now?", "yes");
 sub unsat_prereq {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
+    my $prefs_depends = $self->prefs->{depends}||{};
     if ($slot eq "configure_requires") {
         my $meta_yml = $self->parse_meta_yml();
-        my $prefs_depends = $self->prefs->{depends};
         %merged = (%{$meta_yml->{configure_requires}||{}},
                    %{$prefs_depends->{configure_requires}||{}});
         $prereq_pm = {}; # all configure_requires are "b"
     } elsif ($slot eq "later") {
-        $prereq_pm = $self->prereq_pm || {};
+        my $prereq_pm_0 = $self->prereq_pm || {};
+        for my $reqtype (qw(requires build_requires)) {
+            $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
+            for my $k (keys %{$prefs_depends->{$reqtype}||{}}) {
+                $prereq_pm->{$reqtype} = $prefs_depends->{$reqtype}{$k};
+            }
+        }
         %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
     } else {
         die "Panic: illegal slot '$slot'";
@@ -10661,6 +10667,10 @@ temporarily override assorted C<CPAN.pm> configuration variables
 
 =item
 
+specify dependencies that the original maintainer forgot to specify
+
+=item
+
 disable the installation of an object altogether
 
 =back
@@ -10773,6 +10783,14 @@ C<expect>.
   patches:
     - "ABCDE/Fedcba-3.14-ABCDE-01.patch"
 
+  depends:
+    configure_requires:
+      LWP: 5.8
+    build_requires:
+      Test::Exception: 0.25
+    requires:
+      Spiffy: 0.30
+
 
 =head2 Language Specs
 
@@ -10793,6 +10811,15 @@ Supported are: C<build_requires_install_policy>, C<check_sigs>,
 C<make>, C<make_install_make_command>, C<prefer_installer>,
 C<test_report>. Please report as a bug when you need another one
 supported.
+
+=item depends [hash] *** EXPERIMENTAL FEATURE ***
+
+All three types, namely C<configure_requires>, C<build_requires>, and
+C<requires> are supported in the way specified in the META.yml
+specification. The current implementation I<merges> the specified
+dependencies with those declared by the package maintainer. In a
+future implementation this may be changed to override the original
+declaration.
 
 =item disabled [boolean]
 

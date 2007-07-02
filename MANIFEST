@@ -118,6 +118,7 @@ distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
 distroprefs/MSERGEANT.DBIx-AnyDBD.yml
+distroprefs/MSERGEANT.XML-Filter-XInclude.yml
 distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MTHURN.Tk-Wizard.yml
 distroprefs/NI-S.Tk.yml
@@ -135,6 +136,8 @@ distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
+distroprefs/RJRAY.RPC-XML.yml
+distroprefs/RMUHLE.classes.yml
 distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
@@ -148,6 +151,7 @@ distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/STAS.libapreq.yml
 distroprefs/STEVAN.Class-MOP.yml
+distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/TKEEFER.Gantry.yml
@@ -156,6 +160,7 @@ distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
+distroprefs/YANICK.XML-XPathScript.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/YSAS.SWF-Builder.yml

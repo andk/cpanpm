@@ -31,7 +31,7 @@ some.
 -- Brandon
 
 
-	* configure_requires needs to rounded off with distroprefs
+	* configure_requires needs to be rounded off with distroprefs
 	depends/configure_requires most prominently because we can test it
 	better if we write some distroprefs that use it.
 
@@ -1782,7 +1782,7 @@ N/A
 
 2007-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Gtk2 has the dependency Extutils::Depends as I discovered today and
+	* Gtk2 has the dependency ExtUtils::Depends as I discovered today and
 	then Glib.pm. Both not mentioned in the prereq decl or maybe mentioned
 	in the Makefile.PL but PREREQ_FATAL is set and MakeMaker still does not
 	let me override it.
@@ -2235,7 +2235,7 @@ Module id = Coro::Event
 
 	FirstTime manpage?
 
-	Implement configure_requires? (testcase RPM::XML)
+	Implement configure_requires? (testcase RPC::XML)
 
 	Implement a depends/requires keyword for distroprefs? (Testcase
 	Spreadsheet-ParseExcel (http://rt.cpan.org/Ticket/Display.html?id=24693)
@@ -2819,7 +2819,7 @@ in my Todo file now and will be dealt with after 1.90.
 	installed it. Is my logfile the only one who knows who installed what?
 	What a sad story. It's getting even worse when we realize that nobody
 	discovers who overwrote which previous version!
-	
+
 	I must ask HEX if this is all as intended. DONE.
 
 	We should also institutionalize a place where FAILED reports of the

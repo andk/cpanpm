@@ -17,6 +17,7 @@ match:
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
     |BTROTT/XML-Feed-\d
+    |CFRANKS/Catalyst-Model-Net-Amazon-\d
     |CFRANKS/HTML-Widget-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
@@ -34,6 +35,7 @@ match:
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |HANK/Catalyst-Plugin-Form-Processor-\d
+    |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
@@ -49,6 +51,7 @@ match:
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |TELS/graph/Graph-
     |YARON/WWW-Monitor-\d
+    |ZIGOROU/Data-ClearSilver-HDF-\d
     )|
 pl:
   eexpect:

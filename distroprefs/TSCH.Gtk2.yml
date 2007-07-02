@@ -4,21 +4,24 @@ comment: |
    PREREQ_FATAL must die (http://rt.cpan.org/Ticket/Display.html?id=24774)
    so configure_requires must resolve
 
-   Note: PREREQ_FATAL=0 does not work yet in MakeMaker but a bug
-   report on RT is pending. (24774)
+   Note: PREREQ_FATAL=0 did not work in MakeMaker up to 6.35 (RT 24774)
 
 match:
   distribution: "^TSCH/Gtk2-\d"
 pl:
   args:
     - "PREREQ_FATAL=0"
-patches:
-  - "/tmp/Gtk2-1.144-ANDK-01.patch"
+depends:
+  configure_requires:
+    ExtUtils::Depends: 0.205
+    ExtUtils::MakeMaker: 6.35
 ---
 match:
   distribution: "^TSCH/Glib-\d"
 pl:
   args:
     - "PREREQ_FATAL=0"
-patches:
-  - "/tmp/Glib-1.144-ANDK-01.patch"
+depends:
+  configure_requires:
+    ExtUtils::Depends: 0.205
+    ExtUtils::MakeMaker: 6.35
