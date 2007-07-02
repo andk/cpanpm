@@ -57,6 +57,7 @@ if ($HAVE_FILE_SPEC) {
         MM->can("signature_target");
     shift @ARGV;
     my $st;
+    local $ENV{LANG} = "C";
     open $st, "svn st -u|" or die;
     my $dirty = 0;
     while (<$st>) {
