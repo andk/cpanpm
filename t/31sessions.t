@@ -67,7 +67,16 @@ my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > tes
 our @SESSIONS =
     (
      {
-      name => "first",
+      name => "configure_requires",
+      pairs =>
+      [
+       "test CPAN::Test::Dummy::Perl5::Make::ConfReq" => "test.*-- OK",
+       "clean CPAN::Test::Dummy::Perl5::Make::ConfReq" => "clean.*-- OK",
+       "clean CPAN::Test::Dummy::Perl5::Make" => "clean.*-- OK",
+      ]
+     },
+     {
+      name => "the historically first",
       pairs =>
       [
        "dump \$::x=4*6+1" => "= 25;",
@@ -113,7 +122,7 @@ our @SESSIONS =
       ]
      },
      {
-      name => "without_yaml",
+      name => "without_yaml", # because we disabled it with dontload_list above
       pairs =>
       [
        # Note: I had C<cannot.parse.*> also here (for FTPstats) but

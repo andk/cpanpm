@@ -126,6 +126,7 @@ DBD::Pg
 DBI::Shell
 DBIx::Class
 DBIx::Class::Indexed
+DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
 DBIx::ORM::Declarative
@@ -259,6 +260,7 @@ HTTP::BrowserDetect
 HTTP::Response::Encoding
 HTTP::Server::Simple
 HTTP::Server::Simple::Mason
+Handel
 Hash::AsObject
 Heap
 Heap::Simple
@@ -423,6 +425,7 @@ SOAP::WSDL
 SQL::Abstract::Limit
 SQL::ReservedWords
 SQL::Statement
+SQL::Translator
 SREZIC/pingomatic-1.013
 SUPER
 SVN::Mirror
@@ -488,6 +491,7 @@ Text::Filter
 Text::LevenshteinXS
 Text::Ngram
 Text::Quoted
+Text::RecordParser
 Text::Reform
 Text::Shellwords
 Text::Table

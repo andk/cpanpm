@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.9103';
+$CPAN::VERSION = '1.91_51';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -5599,6 +5599,7 @@ sub cpan_comment {
 sub undelay {
     my $self = shift;
     delete $self->{later};
+    delete $self->{configure_requires_later};
 }
 
 #-> CPAN::Distribution::is_dot_dist
@@ -5891,12 +5892,13 @@ sub get {
     return if $CPAN::Signal;
     my($packagedir,$local_file) = $self->run_preps_on_packagedir;
     $packagedir ||= $self->{build_dir};
+    $self->{build_dir} = $packagedir;
 
     if ($CPAN::Signal){
         $self->safe_chdir($sub_wd);
         return;
     }
-    return $self->run_MM_or_MB($local_file,$packagedir);
+    return $self->run_MM_or_MB($local_file);
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
@@ -6090,40 +6092,82 @@ EOF
     return($packagedir,$local_file);
 }
 
+#-> sub CPAN::Distribution::parse_meta_yml ;
+sub parse_meta_yml {
+    my($self) = @_;
+    my $build_dir = $self->{build_dir} or die "PANIC: cannot parse yaml without a build_dir";
+    my $yaml = File::Spec->catfile($build_dir,"META.yml");
+    $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
+    return unless -f $yaml;
+    my $early_yaml;
+    eval {
+        require Parse::Metayaml; # hypothetical
+        $early_yaml = Parse::Metayaml::LoadFile($yaml)->[0];
+    };
+    unless ($early_yaml) {
+        eval { $early_yaml = CPAN->_yaml_loadfile($yaml)->[0]; };
+    }
+    unless ($early_yaml) {
+        return;
+    }
+    return $early_yaml;
+}
+
 #-> sub CPAN::Distribution::satisfy_configure_requires ;
 sub satisfy_configure_requires {
-    my($self,$packagedir) = @_;
-    # read the META.yml of the package and look for configure_requires
-    # read the distroprefs and look for depends/configure_requires
-
-    # all those things put in the queue and requeue yourself and keep
-    # a memo for each of them so we can jump right here next time and
-    # clear the reqs that have been fulfilled and die if something
-    # failed. Think of recursive dependencies too. Note that
-    # configure_requires are really just build_requires only a tiny
-    # bit earlier.
-
-    1; # XXX configure_requires
+    my($self) = @_;
+    my $enable_configure_requires = 1;
+    if (!$enable_configure_requires) {
+        return 1;
+        # if we return 1 here, everything is as before we introduced
+        # configure_requires that means, things with
+        # configure_requires simply fail, all others succeed
+    }
+    my @prereq = $self->unsat_prereq("configure_requires") or return 1;
+    if ($self->{configure_requires_later}) {
+        # we must not come here a second time
+        $CPAN::Frontend->mydie("Panic: A prerequisite is not available, please investigate...");
+    }
+    if ($prereq[0][0] eq "perl") {
+        my $need = "requires perl '$prereq[0][1]'";
+        my $id = $self->pretty_id;
+        $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
+        $self->{make} = CPAN::Distrostatus->new("NO $need");
+        $self->store_persistent_state;
+        return $self->goodbye("[prereq] -- NOT OK");
+    } else {
+        my $follow = eval {
+            $self->follow_prereqs("configure_requires_later", @prereq);
+        };
+        if (0) {
+        } elsif ($follow){
+            return;
+        } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
+            $CPAN::Frontend->mywarn($@);
+            return $self->goodbye("[depend] -- NOT OK");
+        }
+    }
+    die "never reached";
 }
 
 #-> sub CPAN::Distribution::run_MM_or_MB ;
 sub run_MM_or_MB {
-    my($self,$local_file,$packagedir) = @_;
-    $self->satisfy_configure_requires($packagedir) or return;
-    my($mpl) = File::Spec->catfile($packagedir,"Makefile.PL");
+    my($self,$local_file) = @_;
+    $self->satisfy_configure_requires() or return;
+    my($mpl) = File::Spec->catfile($self->{build_dir},"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
         # NFS has been reported to have racing problems after the
         # renaming of a directory in some environments.
         # This trick helps.
         $CPAN::Frontend->mysleep(1);
-        my $mpldh = DirHandle->new($packagedir)
-            or Carp::croak("Couldn't opendir $packagedir: $!");
+        my $mpldh = DirHandle->new($self->{build_dir})
+            or Carp::croak("Couldn't opendir $self->{build_dir}: $!");
         $mpl_exists = grep /^Makefile\.PL$/, $mpldh->read;
         $mpldh->close;
     }
     my $prefer_installer = "eumm"; # eumm|mb
-    if (-f File::Spec->catfile($packagedir,"Build.PL")) {
+    if (-f File::Spec->catfile($self->{build_dir},"Build.PL")) {
         if ($mpl_exists) { # they *can* choose
             if ($CPAN::META->has_inst("Module::Build")) {
                 $prefer_installer = CPAN::HandleConfig->prefs_lookup($self,
@@ -6142,7 +6186,7 @@ sub run_MM_or_MB {
         $CPAN::Frontend->mywarn("Refusing to handle this file: $why\n");
         $self->{writemakefile} = CPAN::Distrostatus->new("NO $why");
     } elsif (! $mpl_exists) {
-        $self->_edge_cases($mpl,$packagedir,$local_file);
+        $self->_edge_cases($mpl,$local_file);
     }
     if ($self->{build_dir}
         &&
@@ -6318,16 +6362,17 @@ sub _patch_p_parameter {
 #-> sub CPAN::Distribution::_edge_cases
 # with "configure" or "Makefile" or single file scripts
 sub _edge_cases {
-    my($self,$mpl,$packagedir,$local_file) = @_;
+    my($self,$mpl,$local_file) = @_;
     $self->debug(sprintf("makefilepl[%s]anycwd[%s]",
                          $mpl,
                          CPAN::anycwd(),
                         )) if $CPAN::DEBUG;
-    my($configure) = File::Spec->catfile($packagedir,"Configure");
+    my $build_dir = $self->{build_dir};
+    my($configure) = File::Spec->catfile($build_dir,"Configure");
     if (-f $configure) {
         # do we have anything to do?
         $self->{configure} = $configure;
-    } elsif (-f File::Spec->catfile($packagedir,"Makefile")) {
+    } elsif (-f File::Spec->catfile($build_dir,"Makefile")) {
         $CPAN::Frontend->mywarn(qq{
 Package comes with a Makefile and without a Makefile.PL.
 We\'ll try to build it with that Makefile then.
@@ -6353,7 +6398,7 @@ We\'ll try to build it with that Makefile then.
         my $script = "";
         if ($self->{archived} eq "maybe_pl") {
             my $fh = FileHandle->new;
-            my $script_file = File::Spec->catfile($packagedir,$local_file);
+            my $script_file = File::Spec->catfile($build_dir,$local_file);
             $fh->open($script_file)
                 or Carp::croak("Could not open script '$script_file': $!");
             local $/ = "\n";
@@ -6409,7 +6454,7 @@ $PREREQ_PM
                            },
 ";
             if ($name) {
-                my $to_file = File::Spec->catfile($packagedir, $name);
+                my $to_file = File::Spec->catfile($build_dir, $name);
                 rename $script_file, $to_file
                     or die "Can't rename $script_file to $to_file: $!";
             }
@@ -7057,6 +7102,9 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     $self->get;
+    if ($self->{configure_requires_later}) {
+        return;
+    }
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -7129,9 +7177,12 @@ is part of the perl-%s distribution. To install that, you need to run
             }
         }
 
-        if ($self->{later}) { # see also undelay
-            if ($self->unsat_prereq) {
-                push @e, $self->{later};
+        if ($self->{later} || $self->{configure_requires_later}) { # see also undelay
+            if ($self->unsat_prereq("later")
+                ||
+                $self->unsat_prereq("configure_requires_later")
+               ) {
+                push @e, $self->{later} || $self->{configure_requires_later};
             }
         }
 
@@ -7275,7 +7326,7 @@ is part of the perl-%s distribution. To install that, you need to run
       delete $self->{force_update};
       return;
     }
-    if (my @prereq = $self->unsat_prereq){
+    if (my @prereq = $self->unsat_prereq("later")){
         if ($prereq[0][0] eq "perl") {
             my $need = "requires perl '$prereq[0][1]'";
             my $id = $self->pretty_id;
@@ -7284,7 +7335,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $self->store_persistent_state;
             return $self->goodbye("[prereq] -- NOT OK");
         } else {
-            my $follow = eval { $self->follow_prereqs(@prereq); };
+            my $follow = eval { $self->follow_prereqs("later",@prereq); };
             if (0) {
             } elsif ($follow){
                 # signal success to the queuerunner
@@ -7728,6 +7779,7 @@ sub _make_command {
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
+    my($slot) = shift;
     my(@prereq_tuples) = grep {$_->[0] ne "perl"} @_;
     return unless @prereq_tuples;
     my @prereq = map { $_->[0] } @prereq_tuples;
@@ -7787,19 +7839,31 @@ of modules we are processing right now?", "yes");
         # queue them and re-queue yourself
         CPAN::Queue->jumpqueue([$id,$self->{reqtype}],
                                reverse @prereq_tuples);
-        $self->{later} = "Delayed until after prerequisites";
+        $self->{$slot} = "Delayed until after prerequisites";
         return 1; # signal success to the queuerunner
     }
+    return;
 }
 
 #-> sub CPAN::Distribution::unsat_prereq ;
 # return ([Foo=>1],[Bar=>1.2]) for normal modules
 # return ([perl=>5.008]) if we need a newer perl than we are running under
 sub unsat_prereq {
-    my($self) = @_;
-    my $prereq_pm = $self->prereq_pm or return;
+    my($self,$slot) = @_;
+    my(%merged,$prereq_pm);
+    if ($slot eq "configure_requires") {
+        my $meta_yml = $self->parse_meta_yml();
+        my $prefs_depends = $self->prefs->{depends};
+        %merged = (%{$meta_yml->{configure_requires}||{}},
+                   %{$prefs_depends->{configure_requires}||{}});
+        $prereq_pm = {}; # all configure_requires are "b"
+    } elsif ($slot eq "later") {
+        $prereq_pm = $self->prereq_pm || {};
+        %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
+    } else {
+        die "Panic: illegal slot '$slot'";
+    }
     my(@need);
-    my %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
     my @merged = %merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
@@ -8139,16 +8203,6 @@ sub test {
 
     $CPAN::Frontend->myprint("Running $make test\n");
 
-#    if (my @prereq = $self->unsat_prereq){
-#        if ( $CPAN::DEBUG ) {
-#            require Data::Dumper;
-#            CPAN->debug(sprintf "unsat_prereq[%s]", Data::Dumper::Dumper(\@prereq));
-#        }
-#        unless ($prereq[0][0] eq "perl") {
-#            return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
-#        }
-#    }
-
   EXCUSE: {
 	my @e;
         if ($self->{make} or $self->{later}) {
@@ -8172,6 +8226,7 @@ sub test {
         }
 
         push @e, $self->{later} if $self->{later};
+        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
 
         if (exists $self->{build_dir}) {
             if (exists $self->{make_test}) {
@@ -8540,6 +8595,7 @@ sub install {
         }
 
         push @e, $self->{later} if $self->{later};
+        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
 
 	$CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
         unless (chdir $self->{build_dir}) {

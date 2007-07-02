@@ -2,6 +2,7 @@
 match:
   distribution: |
     ^(?x:^ADAMK/Algorithm-Dependency-\d
+    |ADAMK/PITA-XML-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AVAR/Bot-BB2-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d

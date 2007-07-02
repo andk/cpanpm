@@ -1,3 +1,68 @@
+2007-07-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* MM->parse_version() will now try to load version.pm before checking
+	the $VERSION of a module (MM 6.35)
+
+2007-07-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* From: "Brandon Black" <blblack@gmail.com>
+Subject: Re: Add B::Generate/Padwalker to core?
+To: "Perl 5 Porters" <perl5-porters@perl.org>
+Date: Sun, 1 Jul 2007 16:03:52 -0500
+
+On 7/1/07, Ævar Arnfjörð Bjarmason <avarab@gmail.com> wrote:
+> Telling people who've never bothered with perl before to run cpan -i
+> Some::Module can be quite frightning for them. CPAN ask you a
+> bazillion questions when you first use it (maybe cpanp fixes this?).
+>
+
+5.9.5's default cpan is much better, in that it defaults virtually
+everything intelligently and just asks that you pick a mirror for
+yourself.  I think defaulting to http transports even for the fetch of
+the initial MIRRORED.BY would improve things even more, but that goes
+back to http transports not being available in stock Perl on all
+platforms.  LWP is a solution, but unlikely to make it into core
+anytime soon.  Perhaps if it would at least test for http support (via
+LWP or external stuff like wget/curl) and default to using any
+available http transport instead of ftp if possible for bootstrapping
+mirror lists and module lists, that would improve the situation for
+some.
+
+-- Brandon
+
+
+	* configure_requires needs to rounded off with distroprefs
+	depends/configure_requires most prominently because we can test it
+	better if we write some distroprefs that use it.
+
+	* SQL::Translator has an error message that seems to resemble MRO error
+	messages. Binary search?
+
+	* Handle N/A because
+
+  ! DBIx::Class::Validation                 0.02000 n/a    
+  ! FormValidator::Simple                   0.17    n/a    
+  ! SQL::Translator                         0.08    n/a    
+
+	DBIx::Class::Validation => FormValidator::Simple => Email::Valid!
+	SQL::Translator!
+
+	* NUFFIN/Catalyst-Plugin-Authentication-0.09.tar.gz,
+	NUFFIN/Catalyst-Plugin-Session-0.15.tar.gz,
+	NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.07.tar.gz recursive
+	dependencies
+
+	http://rt.cpan.org/Ticket/Display.html?id=27848
+
+	* report missing dependency in Compress::LZO or LZOp or some such.
+	
+ MFX/Compress-LZO-1.08.tar.gz                 : make NO
+ PMQS/IO-Compress-Lzop-2.005.tar.gz           : make_test NO
+
+	No bug, just liblzo missing on my system.
+
+	* Todo: re-evaluate if Mail::Send now works for cpantesters.
+
 2007-06-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: check out what exactly rsync 3.0 will bring us with the batch
@@ -40,7 +105,10 @@ DIED. FAILED tests 1-10
 	very first bleadperl that works with Data::Alias 1.06
 
 	And within this short interval 31252-31505 Devel::EvalContext seems to
-	not run.
+	not run. Now what would be interesting to know: how long did D:E work
+	with Data::Alias 1.05?
+
+	The first Devel::EvalContext that worked for me was with 27002
 
 	* Raphael asked me to pay special attention to 31505. New fails
 	according to CPAN::Reporter:
@@ -1550,6 +1618,11 @@ BEGIN failed--compilation aborted at Makefile.PL line 1.
 
 	http://groups.google.de/group/perl.perl5.porters/browse_frm/thread/2b25aab152652e00/006a4f9e37f63890?hl=de#006a4f9e37f63890
 	http://rt.cpan.org/Ticket/Display.html?id=27047
+
+	And a separate bug report about the fact the Test::Exception itself is
+	not in the dependencies:
+
+	http://rt.cpan.org/Ticket/Display.html?id=27853
 
 	* EDPRATOMO/Algorithm-Permute-0.06.tar.gz needs a binary search.
 
