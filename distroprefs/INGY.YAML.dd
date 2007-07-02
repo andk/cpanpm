@@ -1,6 +1,6 @@
 $VAR1 = {
   "match" => {
-    "distribution" => "^INGY/YAML-0.62"
+    "distribution" => "^INGY/YAML-0.6\\d"
   },
   "pl" => {
     "expect" => [
