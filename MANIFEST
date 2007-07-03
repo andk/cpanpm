@@ -86,7 +86,7 @@ distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/JPRIT.Event.yml
-distroprefs/JROBINSON.DBIx-Class.yml
+distroprefs/JROBINSON.SQL-Translator.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/KANE.CPANPLUS.yml
 distroprefs/KASEI.Class-Accessor.yml

@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^JROBINSON/SQL-Translator-\d"
+depends:
+  configure_requires:
+    Module::Build::Compat: 0
