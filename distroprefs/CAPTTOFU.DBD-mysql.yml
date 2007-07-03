@@ -1,8 +1,6 @@
 --- 
 comment: |
 
-  the Bundle::DBD::mysql includes Mysql which isn't in 4.00 anymore
-
   and a random password is down there because some DBD::mysql versions
   did not understand the --testpassword option with an empty password
 
@@ -20,3 +18,8 @@ pl:
     - --testsocket=/var/run/mysqld/mysqld.sock
     - --testuser=root
     - --testpassword=rfjNq4g
+depends:
+  configure_requires:
+    DBI: 1.58
+  requires:
+    DBI: 1.58

@@ -2,5 +2,5 @@
 match:
   distribution: "^MSERGEANT/XML-Filter-XInclude-\d"
 depends:
-  build_requires:
+  requires:
     XML::SAX::Writer: 0

@@ -1,3 +1,32 @@
+2007-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* megainstall with yesterday's version was broken: only 688 distros and
+	8 MB logfile. What did the other 550 do?
+
+Looks good
+Writing Makefile for classes
+Can't use string ("0.25") as a HASH ref while "strict refs" in use at lib/CPAN.pm line 7868.
+
+	
+
+	* Known bugs:
+
+	untar happens twice
+
+	To be tested: is the behaviour sane when they say configure_requires:perl:15?
+
+	Use it for DBI/DBD::SQLite!
+
+	Revisit all depends/* distroprefs if they were written with the correct
+	flavor of *requires. E.g. X500::DN/Parse::RecDescent certainly is a
+	"requires" not a "build_requires" but nobody would notice because we
+	install P:R later anyway.
+
+	JROBINSON/SQL-Translator-0.08 has a configure_requires on
+	Module::Build::Compat. I saw this today with blead@23190:
+
+	Can't locate Module/Build/Compat.pm in @INC (@INC contains: /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl .) at Makefile.PL line 4.
+
 2007-07-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* MM->parse_version() will now try to load version.pm before checking

@@ -7862,7 +7862,7 @@ sub unsat_prereq {
         for my $reqtype (qw(requires build_requires)) {
             $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
             for my $k (keys %{$prefs_depends->{$reqtype}||{}}) {
-                $prereq_pm->{$reqtype} = $prefs_depends->{$reqtype}{$k};
+                $prereq_pm->{$reqtype}{$k} = $prefs_depends->{$reqtype}{$k};
             }
         }
         %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});

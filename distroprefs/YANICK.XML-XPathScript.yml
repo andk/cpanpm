@@ -4,3 +4,5 @@ match:
 depends:
   configure_requires:
     XML::LibXML: 0
+  requires:
+    XML::LibXML: 0

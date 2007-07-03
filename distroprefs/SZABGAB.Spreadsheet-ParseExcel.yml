@@ -2,7 +2,7 @@
 match:
   distribution: "^SZABGAB/Spreadsheet-ParseExcel-\d"
 depends:
-  build_requires:
+  requires:
     Spreadsheet::ParseExcel::FmtJapan2: 0
     Spreadsheet::WriteExcel: 0
     Jcode: 0

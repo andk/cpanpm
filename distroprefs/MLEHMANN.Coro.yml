@@ -41,3 +41,5 @@ pl:
 depends:
   configure_requires:
     Event: 0
+  requires:
+    Event: 0

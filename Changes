@@ -7,6 +7,17 @@
 	* support distroprefs for all three types of dependencies:
 	configure_requires, build_requires, requires
 
+	* new experimental commands C<recent> and C<smoke>
+
+	* increase the timeouts for the tests for really slow machines
+
+	* lots of new, updated, and consolidated distroprefs files
+
+	* tiny fix for very rare cases of wrong parsing of degenerate version
+	numbers in CPAN::Version (thanks to Julian Mehnle for the report)
+
+	* support for artistic license "2"
+
 2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9102 -- tiny bugfixes
