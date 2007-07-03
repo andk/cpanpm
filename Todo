@@ -1,5 +1,7 @@
 2007-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Bug: does not seem to uncover recursive dependencies
+
 	* megainstall with yesterday's version was broken: only 688 distros and
 	8 MB logfile. What did the other 550 do?
 
@@ -9,20 +11,18 @@ Can't use string ("0.25") as a HASH ref while "strict refs" in use at lib/CPAN.p
 
 	FIXED
 
-	* Known bugs:
+	* Bug: untar happens twice
 
-	untar happens twice
+	* To be tested: is the behaviour sane when they say configure_requires:perl:15?
 
-	To be tested: is the behaviour sane when they say configure_requires:perl:15?
+	* Use it for DBI/DBD::SQLite! DONE
 
-	Use it for DBI/DBD::SQLite! DONE
-
-	Revisit all depends/* distroprefs if they were written with the correct
+	* Revisit all depends/* distroprefs if they were written with the correct
 	flavor of *requires. E.g. X500::DN/Parse::RecDescent certainly is a
 	"requires" not a "build_requires" but nobody would notice because we
 	install P:R later anyway. DONE
 
-	JROBINSON/SQL-Translator-0.08 has a configure_requires on
+	* JROBINSON/SQL-Translator-0.08 has a configure_requires on
 	Module::Build::Compat. I saw this today with blead@23190:
 
 	Can't locate Module/Build/Compat.pm in @INC (@INC contains: /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl .) at Makefile.PL line 4.
@@ -30,8 +30,8 @@ Can't use string ("0.25") as a HASH ref while "strict refs" in use at lib/CPAN.p
 	But I don't understand it because my script must have tried to install
 	Module::Build for 23190??
 
-	Ahh, I see this is the ugly, ugly version bug that I had some exchange
-	about with John Peacock and which affects some interval in the
+	Ahh, I see this is the ugly, ugly version.pm bug that I had some
+	exchange about with John Peacock and which affects some interval in the
 	23000-25000 area. Have no details at hand but this tells me that I
 	cannot run binary searches for SQL::Translator:-(
 

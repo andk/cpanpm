@@ -5886,13 +5886,16 @@ sub get {
     }
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
-    $self->get_file_onto_local_disk;
-    return if $CPAN::Signal;
-    $self->check_integrity;
-    return if $CPAN::Signal;
-    my($packagedir,$local_file) = $self->run_preps_on_packagedir;
-    $packagedir ||= $self->{build_dir};
-    $self->{build_dir} = $packagedir;
+    my($local_file);
+    unless ($self->{build_dir} && -d $self->{build_dir}) {
+        $self->get_file_onto_local_disk;
+        return if $CPAN::Signal;
+        $self->check_integrity;
+        return if $CPAN::Signal;
+        (my $packagedir,$local_file) = $self->run_preps_on_packagedir;
+        $packagedir ||= $self->{build_dir};
+        $self->{build_dir} = $packagedir;
+    }
 
     if ($CPAN::Signal){
         $self->safe_chdir($sub_wd);
