@@ -27,6 +27,14 @@ Can't use string ("0.25") as a HASH ref while "strict refs" in use at lib/CPAN.p
 
 	Can't locate Module/Build/Compat.pm in @INC (@INC contains: /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl/5.9.2 /home/src/perl/repoperls/installed-perls/perl/pvvpo99/perl-5.8.0@23190/lib/site_perl .) at Makefile.PL line 4.
 
+	But I don't understand it because my script must have tried to install
+	Module::Build for 23190??
+
+	Ahh, I see this is the ugly, ugly version bug that I had some exchange
+	about with John Peacock and which affects some interval in the
+	23000-25000 area. Have no details at hand but this tells me that I
+	cannot run binary searches for SQL::Translator:-(
+
 2007-07-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* MM->parse_version() will now try to load version.pm before checking

@@ -4,3 +4,5 @@ match:
 depends:
   configure_requires:
     Module::Build::Compat: 0
+  build_requires:
+    XML::XPath: 0
