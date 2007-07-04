@@ -8283,7 +8283,9 @@ sub test {
     }
 
     my $system;
-    if (my $commandline = $self->prefs->{test}{commandline}) {
+    my $prefs_test = $self->prefs->{test};
+    if (my $commandline
+        = exists $prefs_test->{commandline} ? $prefs_test->{commandline} : "") {
         $system = $commandline;
         $ENV{PERL} = $^X;
     } elsif ($self->{modulebuild}) {
