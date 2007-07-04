@@ -1,5 +1,10 @@
 2007-07-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Toremember: the big loop must run from a window that can connect to
+	the X server. Or we must bug the authors that they write tests that are
+	not depending on a running window server. Like DISPLAY=:121 ? Does
+	AnyEvent behave with that?
+
 	* Today (@31526) potentially new fails seem to be
 	LGODDARD/Time-Simple-0.052.tar.gz, JONALLEN/a2pdf-1.13.tar.gz, and
 	PCANARAN/HTML-GMap-0.04.tar.gz
