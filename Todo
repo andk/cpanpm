@@ -1,6 +1,38 @@
+2007-07-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Today (@31526) potentially new fails seem to be
+	LGODDARD/Time-Simple-0.052.tar.gz, JONALLEN/a2pdf-1.13.tar.gz, and
+	PCANARAN/HTML-GMap-0.04.tar.gz
+
+	Two autobundle runs compared show several improvements due to "depends"
+	but nothing that hints at Time-Simple. PDF::API2::Simple 1.1.2 hints at
+	a2pdf and nothing hints at HTML-GMap.
+
+	Time-Simple really failed for the first time ever. The failure can be
+	reproduced, even with fforce and with @31515! It has something to do
+	with 23:59:59 vs 22:59:59.
+
+	a2pdf has PASS:FAIL 78:13. I see
+
+	Can't load '/home/src/perl/repoperls/installed-perls/perl/p7mD5hd/perl-5.8.0@31526/lib/5.9.5/i686-linux-64int/auto/Fcntl/Fcntl.so' for module Fcntl: /home/src/perl/repoperls/installed-perls/perl/p7mD5hd/perl-5.8.0@31526/lib/5.9.5/i686-linux-64int/auto/Fcntl/Fcntl.so: undefined symbol: PL_unitcheckav at /home/src/perl/repoperls/installed-perls/perl/p7mD5hd/perl-5.8.0@31526/lib/5.9.5/i686-linux-64int/XSLoader.pm line 64.
+
+	This might be a core change? No, it's reproducable with 31515 which was
+	previously doing fine with this distro.
+
+	HTML-GMap-0.04 has 0:1, it is new in the arena.
+
 2007-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Bug: does not seem to uncover recursive dependencies
+	* Bug: does not seem to uncover recursive dependencies. I speced
+
+match:
+  distribution: "^SZABGAB/Spreadsheet-ParseExcel-\d"
+depends:
+  requires:
+    Spreadsheet::ParseExcel::FmtJapan2: 0
+
+	unknowing that this was a recursive dependency. The throttling strategy
+	in CPAN::Queue kicked in and I had to kill this run.
 
 	* megainstall with yesterday's version was broken: only 688 distros and
 	8 MB logfile. What did the other 550 do?
