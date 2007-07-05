@@ -99,6 +99,7 @@ distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LUKEC.Socialtext-Resting.yml
+distroprefs/LZE.HTML-Menu-TreeView.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.MailTools.yml
 distroprefs/MARKSTOS.CGI-Session.yml
