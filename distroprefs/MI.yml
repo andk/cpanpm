@@ -51,7 +51,10 @@ match:
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |TELS/graph/Graph-
     |YARON/WWW-Monitor-\d
+    |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
+    |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d
+    |ZIGOROU/MozRepl-\d
     )|
 pl:
   eexpect:

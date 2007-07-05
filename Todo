@@ -3,7 +3,10 @@
 	* Module A depends on B. B depends on C but does not declare the
 	dependency. Module C does not exist (anymore). This does not happen, you
 	say? A is Devel::ebug::HTTP, B is Catalyst::Plugin::Static, C is
-	Catalyst::Engine::Test. The bug is known for 12 months.
+	Catalyst::Engine::Test. The bug is known for 12 months. I've reminded
+	MRAMBERG
+
+	http://rt.cpan.org/Ticket/Display.html?id=19351
 
 	* There is something that prevents parsing of the logfiles. residuum.yml
 	was traditionally between 143k and 345k the last two runs were 449k and

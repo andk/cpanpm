@@ -409,6 +409,7 @@ Proc::ProcessTable
 ProgressMonitor::AbstractConfiguration
 Pugs::Compiler::Perl6
 Pugs::Compiler::Rule
+P5NCI
 Quantum::Superpositions
 RDF::Core
 RDF::Simple
