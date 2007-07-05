@@ -1,3 +1,14 @@
+2007-07-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Module A depends on B. B depends on C but does not declare the
+	dependency. Module C does not exist (anymore). This does not happen, you
+	say? A is Devel::ebug::HTTP, B is Catalyst::Plugin::Static, C is
+	Catalyst::Engine::Test. The bug is known for 12 months.
+
+	* There is something that prevents parsing of the logfiles. residuum.yml
+	was traditionally between 143k and 345k the last two runs were 449k and
+	1658k with 30 and 100 modules respectively left over.
+
 2007-07-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Toremember: the big loop must run from a window that can connect to

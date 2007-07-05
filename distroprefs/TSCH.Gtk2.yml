@@ -15,6 +15,7 @@ depends:
   configure_requires:
     ExtUtils::Depends: 0.205
     ExtUtils::MakeMaker: 6.35
+    ExtUtils::PkgConfig: 0
 ---
 match:
   distribution: "^TSCH/Glib-\d"
@@ -25,3 +26,4 @@ depends:
   configure_requires:
     ExtUtils::Depends: 0.205
     ExtUtils::MakeMaker: 6.35
+    ExtUtils::PkgConfig: 0
