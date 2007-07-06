@@ -2922,9 +2922,16 @@ sub print_ornamented {
             print "Term::ANSIColor rejects color[$ornament]: $@\n
 Please choose a different color (Hint: try 'o conf init /color/')\n";
         }
+        # GGOLDBACH/Test-GreaterVersion-0.008 broke wthout this
+        # $trailer construct. We want the newline be the last thing if
+        # there is a newline at the end ensuring that the next line is
+        # empty for other players
+        my $trailer = "";
+        $trailer = $1 if $swhat =~ s/([\r\n]+)\z//;
         print $color_on,
             $swhat,
-                Term::ANSIColor::color("reset");
+                Term::ANSIColor::color("reset"),
+                      $trailer;
     } else {
         print $swhat;
     }
