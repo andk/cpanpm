@@ -51,7 +51,7 @@ sub mystore ($$$$){
 }
 
 sub measure ($) {
-  warn sprintf "[%s]time since last measure[%.4f]\n", shift, time - $start;
+  warn sprintf "[%s] since last measure[%.4f]\n", shift, time - $start;
   sleep 1;
   $start = time;
 }
@@ -84,10 +84,17 @@ measure("CRLF");
   my $i = 0;
  LINE: while (defined($_ = shift @lines)) {
     s!.+?\r!!g;
-    if (m|<span[^<>]+>Running make for ([A-Z]/[A-Z][A-Z]/)([\w-]+/.+)|) {
+    if (/
+         \Q>Running install for module '\E
+         |>\S+\Q is up to date \E\(
+         /x) {
+      next LINE;
+    } elsif (m!<span[^<>]+>Running (?:make|Build) for (.+)!) {
       $DB::single=1;
-      push @shortdistro, $2;
-      push @longdistro, "$1$2";
+      my $d = $1;
+      push @longdistro, $d;
+      $d =~ s|^[A-Z]/[A-Z][A-Z]/||;
+      push @shortdistro, $d;
       $seq{$shortdistro[-1]} ||= [];
     } elsif (m|[ ]{2}\Q$shortdistro[-1]\E|) {
       push @{$seq{$shortdistro[-1]}}, $_;
@@ -115,6 +122,9 @@ measure("CRLF");
       }
       if ($end) {
         $i++;
+        unless ($i % 100){
+          measure($i);
+        }
         my $log = join "", map { "$_\n" } @{$seq{$shortdistro[-1]}};
         mystore($shortdistro[-1],$log,$ok,$i);
         delete $seq{$shortdistro[-1]};
