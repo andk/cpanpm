@@ -1,4 +1,4 @@
-2007-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_51:
 
@@ -16,7 +16,11 @@
 	* tiny fix for very rare cases of wrong parsing of degenerate version
 	numbers in CPAN::Version (thanks to Julian Mehnle for the report)
 
-	* support for artistic license "2"
+	* support for artistic license "2" (Allison Randal)
+
+	* fix color ornamenting to always end before a newline not after it to
+	prevent spurious reset escape sequences at the beginning of the next
+	line (discovered by Gregor Goldbach and Slaven Rezic)
 
 2007-05-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

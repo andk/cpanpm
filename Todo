@@ -1,3 +1,15 @@
+2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time
+	ever. Reproducable?
+
+	* MSCHWERN/Class-Fields-0.202.tar.gz broken by 
+
+Change 31540 by rgs@stcosmo on 2007/07/06 13:58:58
+
+	Upgrade to base and fields 2.12, mostly by Michael G Schwern
+
+
 2007-07-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Encode::Mapper
@@ -16,11 +28,10 @@
 	was traditionally between 143k and 345k the last two runs were 449k and
 	1658k with 30 and 100 modules respectively left over.
 
-	It has to do that I now see the pattern
-
-	Running make for B/BW/BWARFIELD/GDGraph-1.44.tar.gz (just an example)
-	twice and between the first and the second occurrence there are other
-	important facts for other modules, in this case 'Running make for
+	It has to do with the fact that I now see the pattern 'Running make for
+	B/BW/BWARFIELD/GDGraph-1.44.tar.gz' (just an example) twice and between
+	the first and the second occurrence there are other important facts for
+	other modules, in this case 'Running make for
 	Y/YS/YSAS/SWF-File-0.42.tar.gz'. I must find a way to only take the
 	second part of these chunks.
 
