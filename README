@@ -290,6 +290,15 @@ DESCRIPTION
     The "force" pragma is used to re-run the tests and repeat every step
     that might have failed before.
 
+  smoke ***EXPERIMENTAL COMMAND***
+    *** WARNING: this command downloads and executes software from CPAN to
+    *** your computer of completely unknown status. You should never do ***
+    this with your normal account and better have a dedicated well ***
+    separated and secured machine to do this.
+
+    The "smoke" command downloads a list of recent uploads to CPAN and tests
+    them all. This command currently requires XML::LibXML installed.
+
   upgrade [Module|/Regex/]...
     The "upgrade" command first runs an "r" command with the given arguments
     and then installs the newest versions of all modules that were listed by
@@ -660,6 +669,8 @@ CONFIGURATION
 
     *   temporarily override assorted "CPAN.pm" configuration variables
 
+    *   specify dependencies that the original maintainer forgot to specify
+
     *   disable the installation of an object altogether
 
     See the YAML and Data::Dumper files that come with the "CPAN.pm"
@@ -764,6 +775,14 @@ CONFIGURATION
       patches:
         - "ABCDE/Fedcba-3.14-ABCDE-01.patch"
 
+      depends:
+        configure_requires:
+          LWP: 5.8
+        build_requires:
+          Test::Exception: 0.25
+        requires:
+          Spiffy: 0.30
+
   Language Specs
     Every YAML document represents a single hash reference. The valid keys
     in this hash are as follows:
@@ -778,6 +797,14 @@ CONFIGURATION
         "make", "make_install_make_command", "prefer_installer",
         "test_report". Please report as a bug when you need another one
         supported.
+
+    depends [hash] *** EXPERIMENTAL FEATURE ***
+        All three types, namely "configure_requires", "build_requires", and
+        "requires" are supported in the way specified in the META.yml
+        specification. The current implementation *merges* the specified
+        dependencies with those declared by the package maintainer. In a
+        future implementation this may be changed to override the original
+        declaration.
 
     disabled [boolean]
         Specifies that this distribution shall not be processed at all.
@@ -1295,6 +1322,7 @@ PROGRAMMER'S INTERFACE
                   "GNU Library General Public License")
             b   - BSD: The BSD License
             a   - Artistic license alone
+            2   - Artistic license 2.0 or later
             o   - open source: appoved by www.opensource.org
             d   - allows distribution without restrictions
             r   - restricted distribtion
