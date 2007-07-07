@@ -421,6 +421,7 @@ Return::Value
 Roman
 Rose::DateTime
 Rose::Object
+Rubric
 SOAP::Lite
 SOAP::WSDL
 SQL::Abstract::Limit

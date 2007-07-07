@@ -18,9 +18,15 @@ use List::MoreUtils qw(uniq);
 use Time::HiRes qw(sleep time);
 use YAML::Syck;
 
+our $VERIFY_XML = 0;
+if ($VERIFY_XML) {
+  require XML::LibXML;
+  our $p = XML::LibXML->new;
+}
 our $start = time;
 our($perl_path) = m|(/home\S+/installed-perls/(?:.*?)/p.*?/perl-5.*?@(?:\d+))|;
 our $outdir = $ARGV;
+warn "Converting '$outdir'\n";
 $outdir =~ s/.out$/.d/ or die;
 mkpath $outdir;
 my $perl = "$perl_path/bin/perl";
@@ -43,11 +49,16 @@ sub mystore ($$$$){
   my $ulog = decode("Detect",$log);
   my $dumper = Dumpvalue->new(unctrl => "unctrl");
   $ulog =~ s/([\x00-\x09\x0b\x0c\x0e-\x1f])/ $dumper->stringify($1,1) /ge;
-  print $fh qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok" seq="$seq">};
+  $ulog =~ s|^</span>||;
+  $ulog .= q|</span>| if $ulog =~ /<span[^<>]+>[^<]+$/;
+  $ulog = qq{<distro time="$time" perl="$perl_path" distro="$shortdistro" ok="$ok" seq="$seq">$ulog</distro>\n};
+  if ($VERIFY_XML) {
+    our $p;
+    die "cannot parse '$shortdistro': [$ulog]" unless eval { $p->parse_string($ulog); 1 };
+  }
   print $fh $ulog;
-  print $fh "</distro>\n";
   close $fh or die;
-  sleep 1/16;
+  sleep 1/32;
 }
 
 sub measure ($) {
@@ -75,6 +86,7 @@ measure("red");
 s!\r\n!\n!g;
 measure("CRLF");
 
+our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
 {
   my @lines = split /\n/, $_;
   measure("split");

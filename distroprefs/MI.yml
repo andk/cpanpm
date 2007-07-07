@@ -46,6 +46,7 @@ match:
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
+    |RJBS/Rubric-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d
