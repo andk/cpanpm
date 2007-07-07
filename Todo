@@ -1,5 +1,9 @@
 2007-07-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Encode::Mapper
+
+	http://rt.cpan.org/Ticket/Display.html?id=27962
+
 	* Module A depends on B. B depends on C but does not declare the
 	dependency. Module C does not exist (anymore). This does not happen, you
 	say? A is Devel::ebug::HTTP, B is Catalyst::Plugin::Static, C is
@@ -11,6 +15,14 @@
 	* There is something that prevents parsing of the logfiles. residuum.yml
 	was traditionally between 143k and 345k the last two runs were 449k and
 	1658k with 30 and 100 modules respectively left over.
+
+	It has to do that I now see the pattern
+
+	Running make for B/BW/BWARFIELD/GDGraph-1.44.tar.gz (just an example)
+	twice and between the first and the second occurrence there are other
+	important facts for other modules, in this case 'Running make for
+	Y/YS/YSAS/SWF-File-0.42.tar.gz'. I must find a way to only take the
+	second part of these chunks.
 
 2007-07-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

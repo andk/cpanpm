@@ -37,7 +37,7 @@ sub mystore ($$$$){
   print $fh $ulog;
   print $fh "</distro>\n";
   close $fh or die;
-  sleep 1/4;
+  sleep 1/16;
 }
 
 # the first part is a duplication of colorterm-to-html.pl which I
@@ -85,6 +85,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
   my @logs = ($_);
   my @residua;
   my %seq;
+  my $found = 0;
   while ($_ = shift @logs) {
     my @distros = uniq /^  CPAN\.pm: Going to build (.*)/mg;
     unless (keys %seq) {
@@ -99,6 +100,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
                  scalar(@distros),
                 );
     sleep 1;
+    my $cnt = 0;
     while (my $d = pop @distros) {
       # my $d = splice @distros, int(scalar(@distros)/2), 1;
       my $shortdistro = $d;
@@ -107,7 +109,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
           s/
           (
           <span[^<>]+>
-          Running[ ](?:install|make|Build)[ ]for[ ]\Q$d\E\n
+          Running[ ]make[ ]for[ ]\Q$d\E\n
           [\s\S]+\n
           ^[ ][ ]CPAN\.pm:[ ]Going[ ]to[ ]build[ ]\Q$d\E\n
           [\s\S]+\n
@@ -120,10 +122,25 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
         my $ok  = $2;
         my @distros_under = uniq $log =~ /^  CPAN\.pm: Going to build (.*)/mg;
         if (@distros_under == 1) {
-          warn sprintf "FOUND: %s (%d)\n", $d, length($log);
+          warn sprintf "FOUND %d: %s (%d)\n", ++$found, $d, length($log);
           mystore($shortdistro,$log,$ok,$seq{$d});
         } elsif (length $_ == 0) { # exhausted
-          push @residua, $log;
+          if (++$cnt >= 100) { # endless loop detector
+            warn "endless loop?";
+            push @residua, $log;
+          } else {
+            unshift @distros, $d;
+            $_ = $log;
+            warn sprintf("RESHUFFLE. Delaying[%s]uniq distros[%d]",
+                         $d,
+                         scalar @distros_under,
+                        );
+            if (2 == @distros_under) {
+              require Data::Dumper; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . Data::Dumper->new(\@distros_under,[qw()])->Indent(1)->Useqq(1)->Dump; # XXX
+
+            }
+            sleep 1;
+          }
         } else {
           push @logs, $log;
         }
