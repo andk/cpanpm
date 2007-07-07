@@ -72,29 +72,30 @@ sleep 1;
 {
   my @lines = split /\n/, $_;
   my %seq; # $seq{$shortdistro} = [];
-  my $d = "";
-  my $shortdistro = "";
+  my @longdistro;
+  my @shortdistro;
   my $i = 0;
  LINE: while (defined($_ = shift @lines)) {
     if (m|<span[^<>]+>Running make for ([A-Z]/[A-Z][A-Z]/)([\w-]+/.+)|) {
-      $shortdistro = $2;
-      $d = "$1$2";
-      $seq{$shortdistro} ||= [];
-    } elsif (m|[ ]{2}([A-Z][\w-]+[A-Z]/\w+.*)|
-             && $lines[0] =~ /[ ]{2}.+install\s+--\s+((?:NOT\s)?OK|NA)/
+      $DB::single=1;
+      push @shortdistro, $2;
+      push @longdistro, "$1$2";
+      $seq{$shortdistro[-1]} ||= [];
+    } elsif (m|[ ]{2}\Q$shortdistro[-1]\E|
+             && $lines[0] =~ /[ ]{2}.+install.+\s+--\s+((?:NOT\s)?OK|NA)/
             ) {
-      $shortdistro = "XXX";
       my $ok = $1;
       $i++;
-      push @{$seq{$shortdistro}}, $_;
-      push @{$seq{$shortdistro}}, shift @lines;
-      my $log = join "", map { "$_\n" } @{$seq{$shortdistro}};
-      mystore($shortdistro,$log,$ok,$i);
-      delete $seq{$shortdistro};
-      $d = $shortdistro = "";
+      push @{$seq{$shortdistro[-1]}}, $_;
+      push @{$seq{$shortdistro[-1]}}, shift @lines;
+      my $log = join "", map { "$_\n" } @{$seq{$shortdistro[-1]}};
+      mystore($shortdistro[-1],$log,$ok,$i);
+      delete $seq{$shortdistro[-1]};
+      pop @longdistro;
+      pop @shortdistro;
       next LINE;
     }
-    push @{$seq{$shortdistro}}, $_;
+    push @{$seq{$shortdistro[-1]}}, $_;
   } # while @lines
   open my $rfh, ">", "$outdir/residuum.yml" or die;
   print $rfh YAML::Syck::Dump(\%seq);
