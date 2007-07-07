@@ -71,6 +71,7 @@ Class::Date
 Class::Factory
 Class::Fields
 Class::Gomor
+Class::Inner
 Class::InsideOut
 Class::Loader
 Class::MakeMethods
@@ -88,6 +89,7 @@ Class::Trait
 Class::Virtual
 Class::Workflow
 Class::XPath
+Class::constr
 Code::Splice
 Compress::LZF
 Config::Any
@@ -433,6 +435,7 @@ SUPER
 SVN::Mirror
 SVN::Notify::Config
 SVN::Notify::Mirror
+Safe::Hole
 Scalar::Defer
 Set::ConsistentHash
 Set::Infinite
@@ -490,6 +493,7 @@ Text::Aligner
 Text::Autoformat
 Text::CSV_XS
 Text::Filter
+Text::Query
 Text::LevenshteinXS
 Text::Ngram
 Text::Quoted

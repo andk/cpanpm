@@ -1,5 +1,14 @@
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Thanks to Alexandr Ciornii this is my program for the next days:
+
+  Class::constr
+  Safe::Hole
+  Text::Query
+  Readonly::XS
+  Class::Inner
+  Exporter::Simple
+
 	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time
 	ever. Reproducable?
 
