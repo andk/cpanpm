@@ -2391,7 +2391,8 @@ sub _u_r_common {
     my(@args) = @_;
     @args = '/./' unless @args;
     my(@result,$module,%seen,%need,$headerdone,
-       $version_undefs,$version_zeroes);
+       $version_undefs,$version_zeroes,
+       @version_undefs,@version_zeroes);
     $version_undefs = $version_zeroes = 0;
     my $sprintf = "%s%-25s%s %9s %9s  %s\n";
     my @expand = $self->expand('Module',@args);
@@ -2416,8 +2417,10 @@ sub _u_r_common {
 		local($^W) = 0;
 		if ($have eq "undef"){
 		    $version_undefs++;
+		    push @version_undefs, $module->as_glimpse;
 		} elsif ($have == 0){
 		    $version_zeroes++;
+		    push @version_zeroes, $module->as_glimpse;
 		}
 		next MODULE unless CPAN::Version->vgt($latest, $have);
 # to be pedantic we should probably say:
@@ -2492,11 +2495,15 @@ sub _u_r_common {
 	    my $s_has = $version_zeroes > 1 ? "s have" : " has";
 	    $CPAN::Frontend->myprint(qq{$version_zeroes installed module$s_has }.
 		qq{a version number of 0\n});
+	    local $" = "\t";
+	    $CPAN::Frontend->myprint(qq{  they are\n\t@version_zeroes\n});
 	}
 	if ($version_undefs) {
 	    my $s_has = $version_undefs > 1 ? "s have" : " has";
 	    $CPAN::Frontend->myprint(qq{$version_undefs installed module$s_has no }.
 		qq{parseable version number\n});
+	    local $" = "\t";
+	    $CPAN::Frontend->myprint(qq{  they are\n\t@version_undefs\n});
 	}
     }
     @result;
