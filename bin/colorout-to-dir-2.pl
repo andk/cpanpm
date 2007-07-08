@@ -6,6 +6,9 @@
 Second implementations with a state machine. Much shorter and even
 correcter.
 
+It's always an ugly step when going from text processing with console
+escapes to XML processing
+
 =cut
 
 
@@ -99,6 +102,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
     } elsif (m!<span[^<>]+>Running (?:make|Build) for (.+)!) {
       $DB::single=1;
       my $d = $1;
+      $d =~ s|</span>$||;
       push @longdistro, $d;
       $d =~ s|^[A-Z]/[A-Z][A-Z]/||;
       push @shortdistro, $d;
