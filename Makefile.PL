@@ -212,7 +212,7 @@ ALL_PERLS = /usr/bin/perl \
 # not sorted because order matters
 MEGA_BASE = \
  Bundle::CPANxxl \
- YVES/ExtUtils-Install-1.41_04.tar.gz
+ YVES/ExtUtils-Install-1.41_04.tar.gz \
  CPAN::DistnameInfo \
  DBD::SQLite \
  /home/src/perl/tk/SVN/. \
