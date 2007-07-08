@@ -1,9 +1,23 @@
 2007-07-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* new fails BDFOY/Module-Release-1.16.tar.gz,
-	  CHANG-LIU/XML-Node-0.11.tar.gz, LBROCARD/GraphViz-2.02.tar.gz,
-	  MSISK/HTML-TableExtract-2.10.tar.gz, RSOD/IPC-Run-0.80.tar.gz,
-	  STAS/libapreq-1.33.tar.gz
+	* new fails
+
+	BDFOY/Module-Release-1.16.tar.gz       something with pod coverage
+	
+	CHANG-LIU/XML-Node-0.11.tar.gz         new (again) dependency detected, distropref
+	                                       written, bug reported:
+	                                       http://rt.cpan.org/Ticket/Display.html?id=27573
+
+	LBROCARD/GraphViz-2.02.tar.gz          depends on IPC::Run uh, oh!
+
+	MSISK/HTML-TableExtract-2.10.tar.gz    known from #20709
+
+	RSOD/IPC-Run-0.80.tar.gz
+                                         it has failed a few times in the
+																				 past and this failure is not
+																				 reproducable
+	
+  STAS/libapreq-1.33.tar.gz              undecl dependency on mod_perl
 
 	
 
