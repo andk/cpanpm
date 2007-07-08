@@ -1,6 +1,0 @@
----
-match:
-  distribution: "^RJOOP/X500-DN-\d"
-depends:
-  requires:
-    Parse::RecDescent: 0
