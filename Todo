@@ -1,5 +1,12 @@
 2007-07-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* new fails BDFOY/Module-Release-1.16.tar.gz,
+	  CHANG-LIU/XML-Node-0.11.tar.gz, LBROCARD/GraphViz-2.02.tar.gz,
+	  MSISK/HTML-TableExtract-2.10.tar.gz, RSOD/IPC-Run-0.80.tar.gz,
+	  STAS/libapreq-1.33.tar.gz
+
+	
+
 	* Todo: eliminate Bundle::{PDF,Unicode} from megainstall DONE
 
 	* Todo: Revisit RT #25627 about Module::Install / Zoidberg
@@ -17,6 +24,20 @@ has entered CPAN as
    md5: bb1fb98f32ffae1e0292cf06a18071e6
 
 	* Actual binary search runs 
+
+----Program----
+eval q{use Class::Inner 0.1};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../peBx1NV/perl-5.8.0@30979/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pyuz7f1/perl-5.8.0@30980/bin/perl----
+N/A
+
+----EOF ($?='0')----
 
 ----Program----
 eval q{use Readonly; die unless $Readonly::XSokay};
@@ -103,6 +124,28 @@ OK
 N/A
 
 ----EOF ($?='0')----
+
+	With 0.40 we have this test failing:
+
+t/003_methods.......................................NOK 13/66                
+#   Failed test '... Foo->has_method(FOO_CONSTANT) (defined w/ use constant)'
+#   at t/003_methods.t line 89.
+t/003_methods.......................................NOK 25/66                
+#   Failed test 'The object isa Class::MOP::Method'
+#   at t/003_methods.t line 119.
+#     The object isn't defined
+Can't call method "body" on an undefined value at t/003_methods.t line 122.
+# Looks like you planned 66 tests but only ran 25.
+# Looks like you failed 2 tests of 25 run.
+# Looks like your test died just after 25.
+t/003_methods.......................................dubious                  
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 13, 25-66
+        Failed 43/66 tests, 34.85% okay
+	[...]
+	t/003_methods.t  255 65280    66   84  13 25-66
+
+	So apparently NOT 081_meta_package_extension which was failing in March.
 
 
 	* Thanks to Alexandr Ciornii this is my program for the next days:
