@@ -70,14 +70,9 @@ sub measure ($) {
 # the first part is a duplication of colorterm-to-html.pl which I
 # wrote for my Munich talk:
 
-s!\&!\&amp;!g;
-measure("amp");
-s!"!&quot;!g;
-measure("quot");
-s!<!&lt;!g;
-measure("lt");
-s!>!&gt;!g;
-measure("gt");
+my%h=("&"=>"&amp;",q!"!=>"&quot;","<"=>"&lt;",">"=>"&gt;");
+s/([&"<>])/$h{$1}/g;
+measure("&\"<>");
 s!\e\[1;3[45](?:;\d+)?m(.*?)\e\[0m!<span style="color: blue">$1</span>!sg;
 measure("blue");
 s!\e\[1;31(?:;\d+)?m(.*?)\e\[0m!<span style="color: red">$1</span>!sg;
@@ -112,7 +107,7 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
       push @{$seq{$shortdistro[-1]}}, $_;
       my $end = 0;
       my $ok;
-      if ($lines[0] =~ /[ ]{2}.+install.+\s+--\s+((?:NOT\s)?OK|NA)/) {
+      if ($lines[0] =~ /[ ]{2}.+[ ]install[ ].*?--\s+((?:NOT\s)?OK|NA)/) {
         $ok = $1;
         push @{$seq{$shortdistro[-1]}}, shift @lines;
         $end = 1;

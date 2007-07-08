@@ -1,4 +1,95 @@
+2007-07-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: eliminate Bundle::{PDF,Unicode} from megainstall
+
+	* Todo: Revisit RT #25627 about Module::Install / Zoidberg
+
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* The uploaded file
+
+    CPAN-1.91_51.tar.gz
+
+has entered CPAN as
+
+  file: $CPAN/authors/id/A/AN/ANDK/CPAN-1.91_51.tar.gz
+  size: 565458 bytes
+   md5: bb1fb98f32ffae1e0292cf06a18071e6
+
+	* Actual binary search runs 
+
+----Program----
+eval q{use Text::Query 0.07};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pE7UWJ8/perl-5.8.0@25805/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pTYOA8A/perl-5.8.0@25808/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	
+----Program----
+eval q{use Safe::Hole 0.10};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pcms3sA/perl-5.8.0@23023/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pX10SPP/perl-5.8.0@31563/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+
+----Program----
+eval q{use Safe::Hole 0.10};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pcms3sA/perl-5.8.0@23023/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pX10SPP/perl-5.8.0@31563/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+----Program----
+eval q{use Class::constr 2.21};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p8Kq7EW/perl-5.8.0@24659/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pgDJivN/perl-5.8.0@24660/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+----Program----
+eval q{use Class::MOP 0.40};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pG1GE1t/perl-5.8.0@26369/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pyAT2at/perl-5.8.0@26370/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
 
 	* Thanks to Alexandr Ciornii this is my program for the next days:
 
@@ -8,6 +99,7 @@
   Readonly::XS
   Class::Inner
   Exporter::Simple
+
 
 	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time
 	ever. Reproducable?
@@ -94,7 +186,7 @@ Can't use string ("0.25") as a HASH ref while "strict refs" in use at lib/CPAN.p
 
 	FIXED
 
-	* Bug: untar happens twice
+	* Bug: untar happens twice FIXED
 
 	* To be tested: is the behaviour sane when they say configure_requires:perl:15?
 
