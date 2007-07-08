@@ -37,6 +37,9 @@ match:
     |HANK/Catalyst-Plugin-Form-Processor-\d
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d
+    |HOLOWAY/Catalyst-Action-REST-\d
+    |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
+    |JESSE/DBIx-SearchBuilder-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |LBROCARD/Devel-ebug-HTTP-\d
