@@ -20,7 +20,7 @@ $N = scalar @$D;
 print "1..$N\n";
 
 my $has_sort_versions = eval { require Sort::Versions; 1 };
-my $has_versionpm = eval { require version; 1 };
+my $has_versionpm = eval q{ use version 0.7203; 1 };
 my $has_perl_versionpm = eval { require Perl::Version; 1 };
 while (@$D) {
   my($l,$r,$exp) = @{shift @$D};

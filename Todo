@@ -1,6 +1,6 @@
 2007-07-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: eliminate Bundle::{PDF,Unicode} from megainstall
+	* Todo: eliminate Bundle::{PDF,Unicode} from megainstall DONE
 
 	* Todo: Revisit RT #25627 about Module::Install / Zoidberg
 
@@ -17,6 +17,20 @@ has entered CPAN as
    md5: bb1fb98f32ffae1e0292cf06a18071e6
 
 	* Actual binary search runs 
+
+----Program----
+eval q{use Readonly; die unless $Readonly::XSokay};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pbW2H20/perl-5.8.0@23767/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../prc83Ms/perl-5.8.0@23768/bin/perl----
+N/A
+
+----EOF ($?='0')----
 
 ----Program----
 eval q{use Text::Query 0.07};
