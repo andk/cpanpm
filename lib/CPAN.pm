@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.91_51';
+$CPAN::VERSION = '1.91_52';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -3344,6 +3344,7 @@ sub smoke {
             $CPAN::Frontend->myprint(sprintf "\r%2d", 10-$_);
             sleep 1;
         }
+        $CPAN::Frontend->myprint("\r0\n"); # leave the dirty line with a newline
         $self->test($distro);
     }
 }
