@@ -1,5 +1,7 @@
 2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* [09-Jul  60: Steve Peters        ] Help in finding bleadperl test failures
+
 	* Exporter::Simple still has no has- and prep- Script
 
 	Answer:
@@ -164,7 +166,6 @@ DIED. FAILED tests 13, 25-66
 	Readonly::XS         BBCed
 	Class::Inner         BBCed
 	Exporter::Simple     
-
 
 	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time
 	ever. Reproducable?
