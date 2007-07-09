@@ -245,6 +245,12 @@ verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^($(OKDIRS))\z/x&&-d($$_)}glob"*";' \
 		-e 'die"unexpected dir:$$s"if$$s'
 
+kwalify-distroprefs:
+	$(PERL) -MKwalify -MYAML::Syck \
+	  -e 'my $$s = YAML::Syck::LoadFile("lib/CPAN/Kwalify/distroprefs.yml");my $$i=0;my $$notok=0;' \
+	  -e 'for (glob("distroprefs/*.yml")){ printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,YAML::Syck::LoadFile("$$_"))?"OK":("NOT OK ".++$$notok),$$_ };' \
+	  -e 'print $$notok ? "$$notok broken\n" : "All OK\n";'
+
 setversion:
 	$(PERL) Makefile.PL --setversion
 
