@@ -1,0 +1,12 @@
+---
+match:
+  distribution: "^BINGOS/POE-Component-Server-SimpleHTTP-\d"
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 2
+    talk:
+      - "Do you want SSL support"
+      - "n\n"
+      - "Do you want PreFork support"
+      - "y\n"

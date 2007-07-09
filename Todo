@@ -1,3 +1,13 @@
+2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Exporter::Simple still has no has- and prep- Script
+
+	Answer:
+
+	Stevan Little        
+	Alex Vandiver        Another possible BBC candidate
+	Father Chrysostomos  [PATCH] Perl::Repository::APC on Mac OS X
+
 2007-07-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* new fails
@@ -19,11 +29,9 @@
 	
   STAS/libapreq-1.33.tar.gz              undecl dependency on mod_perl
 
-	
-
 	* Todo: eliminate Bundle::{PDF,Unicode} from megainstall DONE
 
-	* Todo: Revisit RT #25627 about Module::Install / Zoidberg
+	* Todo: Revisit RT #25627 about Module::Install / Zoidberg DONE
 
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -96,21 +104,6 @@ OK
 
 ----EOF ($?='0')----
 
-
-----Program----
-eval q{use Safe::Hole 0.10};
-print $@ ? "N/A" : "OK";
-print "\n";
-
-----Output of .../pcms3sA/perl-5.8.0@23023/bin/perl----
-OK
-
-----EOF ($?='0')----
-----Output of .../pX10SPP/perl-5.8.0@31563/bin/perl----
-OK
-
-----EOF ($?='0')----
-
 ----Program----
 eval q{use Class::constr 2.21};
 print $@ ? "N/A" : "OK";
@@ -164,12 +157,13 @@ DIED. FAILED tests 13, 25-66
 
 	* Thanks to Alexandr Ciornii this is my program for the next days:
 
-  Class::constr
-  Safe::Hole
-  Text::Query
-  Readonly::XS
-  Class::Inner
-  Exporter::Simple
+	Class::MOP           BBCed
+	Class::constr        BBCed
+	Safe::Hole           wfm
+	Text::Query          BBCed
+	Readonly::XS         BBCed
+	Class::Inner         BBCed
+	Exporter::Simple     
 
 
 	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time

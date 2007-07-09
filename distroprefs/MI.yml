@@ -28,6 +28,7 @@ match:
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
+    |ELLIOTJS/Task-Perl-Critic-\d
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
     |GAAL/Class-Rebless-\d

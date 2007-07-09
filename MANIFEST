@@ -1,4 +1,3 @@
-#Todo#
 ChangeLog
 ChangeLog.old
 Changes
@@ -20,6 +19,7 @@ distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
+distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BRADFITZ.Perlbal.yml
