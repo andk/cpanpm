@@ -3212,7 +3212,9 @@ to find objects with matching identifiers.
                     qq{ID[$obj->{ID}]}) if $CPAN::DEBUG;
 
         push @qcopy, $obj;
-        if (! UNIVERSAL::can($obj,$meth)) {
+        if ($meth =~ /^(report)$/) { # they came here with a pragma?
+            $self->$meth($obj);
+        } elsif (! UNIVERSAL::can($obj,$meth)) {
             # Must never happen
             my $serialized = "";
             if (0) {
