@@ -3338,11 +3338,19 @@ sub recent {
 sub smoke {
     my($self) = @_;
     my $distros = $self->recent;
-    for my $distro (@$distros) {
+  DISTRO: for my $distro (@$distros) {
         $CPAN::Frontend->myprint(sprintf "Going to download and test '$distro'\n");
-        for (0..9) {
-            $CPAN::Frontend->myprint(sprintf "\r%2d", 10-$_);
-            sleep 1;
+        {
+            my $skip = 0;
+            local $SIG{INT} = sub { $skip = 1 };
+            for (0..9) {
+                $CPAN::Frontend->myprint(sprintf "\r%2d (Hit ^C to skip)", 10-$_);
+                sleep 1;
+                if ($skip) {
+                    $CPAN::Frontend->myprint(" skipped\n");
+                    next DISTRO;
+                }
+            }
         }
         $CPAN::Frontend->myprint("\r  \n"); # leave the dirty line with a newline
         $self->test($distro);
@@ -10260,6 +10268,10 @@ B<*** WARNING: this command downloads and executes software from CPAN to
 
 The C<smoke> command downloads a list of recent uploads to CPAN and
 tests them all. This command currently requires XML::LibXML installed.
+
+B<Note>: This whole command currently is a bit klunky and will
+definitely change in future versions of CPAN.pm but the general
+approach will likely stay.
 
 =head2 upgrade [Module|/Regex/]...
 

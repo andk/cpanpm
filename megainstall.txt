@@ -321,6 +321,7 @@ Getopt::ArgvFile
 Getopt::Euclid
 Getopt::Long
 Getopt::Mixed
+GnuPG::Interface
 Graph
 Graph::Easy
 Graph::Easy::As_svg
