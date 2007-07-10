@@ -3344,7 +3344,7 @@ sub smoke {
             $CPAN::Frontend->myprint(sprintf "\r%2d", 10-$_);
             sleep 1;
         }
-        $CPAN::Frontend->myprint("\r0\n"); # leave the dirty line with a newline
+        $CPAN::Frontend->myprint("\r  \n"); # leave the dirty line with a newline
         $self->test($distro);
     }
 }
