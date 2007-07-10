@@ -2,6 +2,13 @@
 
 	* [09-Jul  60: Steve Peters        ] Help in finding bleadperl test failures
 
+	Steve asks for help with MasonX::Interp::WithCallbacks. But I have to
+	backtrack because this is a case of shadowing. 28840 had issues with a
+	prereq, namely DWHEELER/Params-CallbackRequest-1.17.tar.gz. So now I
+	need two binary searches for that, 23023-28840-31573 to determine where
+	the shadowing starts and where it ends and then continue with the initial
+	request.
+
 	* Exporter::Simple still has no has- and prep- Script
 
 	Answer:
