@@ -5,7 +5,9 @@
 	Change 29023 by stevep@stevep-kirk on 2006/10/15 17:17:32
 	    Upgrade to Time-HiRes-1.93.
 
-	What a crap!
+	What a crap! The reason turns out to be that I have distroprefs files
+	that 1.8855 could not grok and 1.8855 was not forward compatible and
+	very misbehaving visavis unknown parameters.
 
 	* Encode::IBM fails at 'make install' after successful make test
 
@@ -20,11 +22,33 @@
 	URLs. His suggestion means that we shall devide the URLs into http and
 	ftp and shall run:
 
+	easy with file
 	easy with http
 	hard with http
 	easy with ftp
 	hard with ftp
 	hardest (which is ftp only per definition)
+
+	Test it with ftp://AFTP, http://BHTTP, file://CFILE and 'get
+	DDDD/notexist-0.0.tar.gz'
+
+	I see:
+
+Fetching with LWP:
+  file://CFILE/authors/01mailrc.txt.gz
+Fetching with LWP:
+  http://BHTTP/authors/01mailrc.txt.gz
+Trying with "/usr/bin/curl -L -f -s -S --netrc-optional" to get
+    http://BHTTP/authors/01mailrc.txt.gz
+Trying with "/usr/bin/wget -O /home/k/.cpan/sources/authors/01mailrc.txt.tmp14022" to get
+    http://BHTTP/authors/01mailrc.txt.gz
+Trying with "/usr/bin/lynx -source" to get
+    http://BHTTP/authors/01mailrc.txt.gz
+Fetching with LWP:
+  http://www.perl.org/CPAN/authors/01mailrc.txt.gz
+
+	No, this is a new bug. Before we send them to perl.org, we should try
+	the ftp URL.
 
 2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

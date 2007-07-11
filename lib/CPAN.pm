@@ -3850,6 +3850,11 @@ sub localize {
                         dleasy_ftp
                         dlhard_ftp
                         dlhardest
+                        dleasy_http_defaultsites
+                        dlhard_http_defaultsites
+                        dleasy_ftp_defaultsites
+                        dlhard_ftp_defaultsites
+                        dlhardest_defaultsites
                        );
     if ($Themethod) {
 	@levels = ($Themethod, grep {$_ ne $Themethod} @all_levels);
@@ -3865,12 +3870,15 @@ sub localize {
     my $stats = $self->_new_stats($file);
   LEVEL: for $levelno (0..$#levels) {
         my $level = $levels[$levelno];
+        my $defaultsites = $level =~ s/_defaultsites$//;
 	my $method = "host$level";
-	my @host_seq = $level =~ /dleasy/ ?
-	    @reordered : 0..$last;  # reordered has CDROM up front
-        my @urllist = map { $ccurllist->[$_] } @host_seq;
-        for my $u (@CPAN::Defaultsites) {
-            push @urllist, $u unless grep { $_ eq $u } @urllist;
+        my @urllist;
+        if ($defaultsites) {
+            @urllist = @CPAN::Defaultsites;
+        } else {
+            my @host_seq = $level =~ /dleasy/ ?
+                @reordered : 0..$last;  # reordered has file and $Thesiteurl first
+            @urllist = map { $ccurllist->[$_] } @host_seq;
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
@@ -4199,7 +4207,7 @@ Trying with "$funkyftp$src_switch" to get
                                      <FH> };
                   if ($content =~ /^<.*(<title>[45]|Error [45])/si) {
                       $CPAN::Frontend->mywarn(qq{
-No success, the file that lynx has has downloaded looks like an error message:
+No success, the file that lynx has downloaded looks like an error message:
 $content
 });
                       $CPAN::Frontend->mysleep(1);
@@ -4207,7 +4215,7 @@ $content
                   }
               } else {
                   $CPAN::Frontend->myprint(qq{
-No success, the file that lynx has has downloaded is an empty file.
+No success, the file that lynx has downloaded is an empty file.
 });
                   next DLPRG;
               }
