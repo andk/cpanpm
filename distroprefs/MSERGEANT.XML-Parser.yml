@@ -1,5 +1,5 @@
 ---
-comment: "bleadperl 31194(?) broke the test suite"
+comment: "bleadperl 31194 broke the test suite"
 match:
   distribution: "^MSERGEANT/XML-Parser-2.34.tar.gz"
 patches:

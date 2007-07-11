@@ -118,6 +118,9 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
       } elsif ($lines[0] =~ /[ ]{2}.+\s+--\s+((?:NOT\s)?OK|NA)/) {
         $ok = $1;
         push @{$seq{$shortdistro[-1]}}, shift @lines;
+        if ($lines[0] =~ /\bPrepending\b.*\bPERL5LIB\b/) {
+          push @{$seq{$shortdistro[-1]}}, shift @lines;
+        }
         if ($lines[0] =~ />Running.*test/
             && $lines[1] =~ />[ ]{2}/) {
           push @{$seq{$shortdistro[-1]}}, shift @lines;

@@ -1,5 +1,12 @@
 2007-07-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Exporter::Simple now has his test scripts but the binary search points at
+
+	Change 29023 by stevep@stevep-kirk on 2006/10/15 17:17:32
+	    Upgrade to Time-HiRes-1.93.
+
+	What a crap!
+
 	* Encode::IBM fails at 'make install' after successful make test
 
 	http://rt.cpan.org/Ticket/Display.html?id=28090
