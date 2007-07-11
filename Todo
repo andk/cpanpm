@@ -1,3 +1,24 @@
+2007-07-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Encode::IBM fails at 'make install' after successful make test
+
+	http://rt.cpan.org/Ticket/Display.html?id=28090
+
+	* Brandon Black suggests that ftp: URLs shall not be tried before all
+	http URLs have been tried with all external programs we could find.
+
+	We currently do this: the outer loop is about easy/hard/hardest where
+	easy means LWP+Net::FTP, hard has the code for external programs,
+	hardest is about an external "ftp" program. The inner loop iterates over
+	URLs. His suggestion means that we shall devide the URLs into http and
+	ftp and shall run:
+
+	easy with http
+	hard with http
+	easy with ftp
+	hard with ftp
+	hardest (which is ftp only per definition)
+
 2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* [09-Jul  60: Steve Peters        ] Help in finding bleadperl test failures

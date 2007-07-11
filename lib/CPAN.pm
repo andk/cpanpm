@@ -3843,12 +3843,20 @@ sub localize {
     my(@levels);
     $Themethod ||= "";
     $self->debug("Themethod[$Themethod]reordered[@reordered]") if $CPAN::DEBUG;
+    my @all_levels = qw(
+                        dleasy_file
+                        dleasy_http
+                        dlhard_http
+                        dleasy_ftp
+                        dlhard_ftp
+                        dlhardest
+                       );
     if ($Themethod) {
-	@levels = ($Themethod, grep {$_ ne $Themethod} qw/easy hard hardest/);
+	@levels = ($Themethod, grep {$_ ne $Themethod} @all_levels);
     } else {
-	@levels = qw/easy hard hardest/;
+	@levels = @all_levels;
     }
-    @levels = qw/easy/ if $^O eq 'MacOS';
+    @levels = qw/dleasy/ if $^O eq 'MacOS';
     my($levelno);
     local $ENV{FTP_PASSIVE} = 
         exists $CPAN::Config->{ftp_passive} ?
@@ -3858,7 +3866,7 @@ sub localize {
   LEVEL: for $levelno (0..$#levels) {
         my $level = $levels[$levelno];
 	my $method = "host$level";
-	my @host_seq = $level eq "easy" ?
+	my @host_seq = $level =~ /dleasy/ ?
 	    @reordered : 0..$last;  # reordered has CDROM up front
         my @urllist = map { $ccurllist->[$_] } @host_seq;
         for my $u (@CPAN::Defaultsites) {
@@ -3929,6 +3937,37 @@ sub localize {
     return;
 }
 
+sub hostdleasy_file {
+    my $self = shift;
+    my $h = shift;
+    $h = [ grep /^file:/, @$h ];
+    $self->hostdleasy($h, @_);
+}
+sub hostdleasy_http {
+    my $self = shift;
+    my $h = shift;
+    $h = [ grep /^http:/, @$h ];
+    $self->hostdleasy($h, @_);
+}
+sub hostdleasy_ftp  {
+    my $self = shift;
+    my $h = shift;
+    $h = [ grep /^ftp:/, @$h ];
+    $self->hostdleasy($h, @_);
+}
+sub hostdlhard_http {
+    my $self = shift;
+    my $h = shift;
+    $h = [ grep /^http:/, @$h ];
+    $self->hostdlhard($h, @_);
+}
+sub hostdlhard_ftp  {
+    my $self = shift;
+    my $h = shift;
+    $h = [ grep /^ftp:/, @$h ];
+    $self->hostdlhard($h, @_);
+}
+
 sub _set_attempt {
     my($self,$stats,$method,$url) = @_;
     push @{$stats->{attempts}}, {
@@ -3939,11 +3978,11 @@ sub _set_attempt {
 }
 
 # package CPAN::FTP;
-sub hosteasy {
+sub hostdleasy {
     my($self,$host_seq,$file,$aslocal,$stats) = @_;
     my($ro_url);
   HOSTEASY: for $ro_url (@$host_seq) {
-        $self->_set_attempt($stats,"easy",$ro_url);
+        $self->_set_attempt($stats,"dleasy",$ro_url);
 	my $url .= "$ro_url$file";
 	$self->debug("localizing perlish[$url]") if $CPAN::DEBUG;
 	if ($url =~ /^file:/) {
@@ -4074,7 +4113,7 @@ sub hosteasy {
            ){
             ##address #17973: default URLs should not try to override
             ##user-defined URLs just because LWP is not available
-            my $ret = $self->hosthard([$ro_url],$file,$aslocal,$stats);
+            my $ret = $self->hostdlhard([$ro_url],$file,$aslocal,$stats);
             return $ret if $ret;
         }
         return if $CPAN::Signal;
@@ -4082,7 +4121,7 @@ sub hosteasy {
 }
 
 # package CPAN::FTP;
-sub hosthard {
+sub hostdlhard {
   my($self,$host_seq,$file,$aslocal,$stats) = @_;
 
   # Came back if Net::FTP couldn't establish connection (or
@@ -4095,7 +4134,7 @@ sub hosthard {
   my($aslocal_dir) = File::Basename::dirname($aslocal);
   File::Path::mkpath($aslocal_dir);
   HOSTHARD: for $ro_url (@$host_seq) {
-        $self->_set_attempt($stats,"hard",$ro_url);
+        $self->_set_attempt($stats,"dlhard",$ro_url);
 	my $url = "$ro_url$file";
 	my($proto,$host,$dir,$getfile);
 
@@ -4233,7 +4272,7 @@ returned status $estatus (wstat $wstatus)$size
 }
 
 # package CPAN::FTP;
-sub hosthardest {
+sub hostdlhardest {
     my($self,$host_seq,$file,$aslocal,$stats) = @_;
 
     my($ro_url);
@@ -4259,7 +4298,7 @@ config variable with
 });
     $CPAN::Frontend->mysleep(2);
   HOSTHARDEST: for $ro_url (@$host_seq) {
-        $self->_set_attempt($stats,"hardest",$ro_url);
+        $self->_set_attempt($stats,"dlhardest",$ro_url);
 	my $url = "$ro_url$file";
 	$self->debug("localizing ftpwise[$url]") if $CPAN::DEBUG;
 	unless ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {
