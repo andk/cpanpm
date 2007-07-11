@@ -3313,7 +3313,7 @@ sub recent {
               my $desc   = $eitem->findvalue("*[local-name(.) = 'description']");
               my $i = 0;
             SUBDIRTEST: while () {
-                  last SUBDIRTEST if ++$i >= 3;
+                  last SUBDIRTEST if ++$i >= 6; # half a dozen must do!
                   if (my @ret = $self->globls("$distro*")) {
                       @ret = grep {$_->[2] !~ /meta/} @ret;
                       @ret = grep {length $_->[2]} @ret;

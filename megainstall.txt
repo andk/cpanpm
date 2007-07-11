@@ -9,6 +9,7 @@ Algorithm::Partition
 Algorithm::Permute
 Algorithm::Points::MinimumDistance
 AltaVista::BabelFish
+Alter
 Alzabo
 Apache
 Apache::AuthDBI
