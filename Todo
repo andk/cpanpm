@@ -233,7 +233,7 @@ DIED. FAILED tests 13, 25-66
 	Text::Query          BBCed
 	Readonly::XS         BBCed
 	Class::Inner         BBCed
-	Exporter::Simple     
+	Exporter::Simple     2007-07-12 akoenig BBCed
 
 	* SBURKE/Sort-ArbBiLex-4.01.tar.gz breaks with 31544 for the first time
 	ever. Reproducable?

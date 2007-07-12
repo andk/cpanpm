@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use Cwd;
+use File::Spec;
 
 my $WD;
 
@@ -27,14 +28,15 @@ use FindBin ();
 use XML::LibXML;
 
 my $logdir = shift || "$FindBin::Bin/../logs";
-opendir my $dh, "$WD/$logdir" or die "cannot opendir '$logdir': $!";
+$logdir = "$WD/$logdir" unless File::Spec->file_name_is_absolute($logdir);
+opendir my $dh, "$logdir" or die "cannot opendir '$logdir': $!";
 
 my $p = XML::LibXML->new;
 my $i = 0;
 $|=1;
 SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
   next if $dirent =~ /^\./;
-  my $abs = "$WD/$logdir/$dirent";
+  my $abs = "$logdir/$dirent";
   next unless $abs =~ /(?:^|\/)megainstall\.(\d+T\d+)\.d(?:\/|$)/;
   my $starttime = $1;
   opendir my $dh2, $abs or die "cannot opendir: '$abs': $!";
