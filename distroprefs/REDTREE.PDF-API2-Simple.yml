@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^REDTREE/PDF-API2-Simple-\d"
+depends:
+  configure_requires:
+    Module::Install: 0

@@ -111,6 +111,7 @@ distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/METZZO.Java.yml
 distroprefs/MI.yml
 distroprefs/MIROD.XML-Twig.yml
+distroprefs/MIYAGAWA.Net-IDN-Nameprep.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MJD.Devel-Trace.yml
@@ -139,6 +140,7 @@ distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RDF.Clone.yml
+distroprefs/REDTREE.PDF-API2-Simple.yml
 distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
