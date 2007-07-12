@@ -1,3 +1,9 @@
+2007-07-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* HTTP::Server::Simple random test results
+
+	http://rt.cpan.org/Ticket/Display.html?id=28122
+
 2007-07-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Exporter::Simple now has his test scripts but the binary search points at

@@ -469,6 +469,7 @@ Math::Geometry::Planar::Offset
 Math::Pari
 Math::Polygon
 Math::Polynom
+Math::Random
 Math::Round::Var
 Math::Symbolic
 Math::SymbolicX::ParserExtensionFactory
