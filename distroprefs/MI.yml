@@ -51,6 +51,7 @@ match:
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
     |RJBS/Rubric-\d
+    |SARTAK/Carp-REPL-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d

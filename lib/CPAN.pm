@@ -3843,21 +3843,22 @@ sub localize {
     my(@levels);
     $Themethod ||= "";
     $self->debug("Themethod[$Themethod]reordered[@reordered]") if $CPAN::DEBUG;
-    my @all_levels = qw(
-                        dleasy_file
-                        dleasy_http
-                        dlhard_http
-                        dleasy_ftp
-                        dlhard_ftp
-                        dlhardest
-                        dleasy_http_defaultsites
-                        dlhard_http_defaultsites
-                        dleasy_ftp_defaultsites
-                        dlhard_ftp_defaultsites
-                        dlhardest_defaultsites
-                       );
+    my @all_levels = (
+                      ["dleasy",   "file"],
+                      ["dleasy",   "http"],
+                      ["dlhard",   "http"],
+                      ["dleasy",   "ftp"],
+                      ["dlhard",   "ftp"],
+                      ["dlhardest"],
+                      ["dleasy",   "http","defaultsites"],
+                      ["dlhard",   "http","defaultsites"],
+                      ["dleasy",   "ftp", "defaultsites"],
+                      ["dlhard",   "ftp", "defaultsites"],
+                      ["dlhardest","",    "defaultsites"],
+                     );
     if ($Themethod) {
-	@levels = ($Themethod, grep {$_ ne $Themethod} @all_levels);
+	@levels = grep {$_->[0] eq $Themethod} @all_levels;
+        push @levels, grep {$_->[0] ne $Themethod} @all_levels;
     } else {
 	@levels = @all_levels;
     }
@@ -3869,9 +3870,9 @@ sub localize {
     my $ret;
     my $stats = $self->_new_stats($file);
   LEVEL: for $levelno (0..$#levels) {
-        my $level = $levels[$levelno];
-        my $defaultsites = $level =~ s/_defaultsites$//;
-	my $method = "host$level";
+        my $level_tuple = $levels[$levelno];
+        my($level,$scheme,$sitetag) = @$level_tuple;
+        my $defaultsites = $sitetag && $sitetag eq "defaultsites";
         my @urllist;
         if ($defaultsites) {
             @urllist = @CPAN::Defaultsites;
@@ -3887,7 +3888,7 @@ sub localize {
             unshift @urllist, $recommend;
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
-	$ret = $self->$method(\@urllist,$file,$aslocal_tempfile,$stats);
+	$ret = $self->hostdlxxx($level,$scheme,\@urllist,$file,$aslocal_tempfile,$stats);
 	if ($ret) {
             CPAN->debug("ret[$ret]aslocal[$aslocal]") if $CPAN::DEBUG;
             if ($ret eq $aslocal_tempfile) {
@@ -3945,35 +3946,14 @@ sub localize {
     return;
 }
 
-sub hostdleasy_file {
+sub hostdlxxx {
     my $self = shift;
+    my $level = shift;
+    my $scheme = shift;
     my $h = shift;
-    $h = [ grep /^file:/, @$h ];
-    $self->hostdleasy($h, @_);
-}
-sub hostdleasy_http {
-    my $self = shift;
-    my $h = shift;
-    $h = [ grep /^http:/, @$h ];
-    $self->hostdleasy($h, @_);
-}
-sub hostdleasy_ftp  {
-    my $self = shift;
-    my $h = shift;
-    $h = [ grep /^ftp:/, @$h ];
-    $self->hostdleasy($h, @_);
-}
-sub hostdlhard_http {
-    my $self = shift;
-    my $h = shift;
-    $h = [ grep /^http:/, @$h ];
-    $self->hostdlhard($h, @_);
-}
-sub hostdlhard_ftp  {
-    my $self = shift;
-    my $h = shift;
-    $h = [ grep /^ftp:/, @$h ];
-    $self->hostdlhard($h, @_);
+    $h = [ grep /^\Q$scheme\E:/, @$h ] if $scheme;
+    my $method = "host$level";
+    $self->$method($h, @_);
 }
 
 sub _set_attempt {
