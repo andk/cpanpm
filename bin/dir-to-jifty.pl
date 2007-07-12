@@ -2,6 +2,15 @@
 
 use strict;
 use warnings;
+use Cwd;
+
+my $WD;
+
+BEGIN {
+  $WD = Cwd::cwd;
+  chdir "/home/k/sources/pocpoc/SVN" or die "Could not chdir: $!"
+}
+
 use UNIVERSAL::require;
 use Jifty::ClassLoader ();
 BEGIN {
@@ -18,14 +27,14 @@ use FindBin ();
 use XML::LibXML;
 
 my $logdir = shift || "$FindBin::Bin/../logs";
-opendir my $dh, $logdir or die "cannot opendir '$logdir': $!";
+opendir my $dh, "$WD/$logdir" or die "cannot opendir '$logdir': $!";
 
 my $p = XML::LibXML->new;
 my $i = 0;
 $|=1;
 SESSION: for my $dirent (sort { $b cmp $a } readdir $dh) {
   next if $dirent =~ /^\./;
-  my $abs = "$logdir/$dirent";
+  my $abs = "$WD/$logdir/$dirent";
   next unless $abs =~ /(?:^|\/)megainstall\.(\d+T\d+)\.d(?:\/|$)/;
   my $starttime = $1;
   opendir my $dh2, $abs or die "cannot opendir: '$abs': $!";

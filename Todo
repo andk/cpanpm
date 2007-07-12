@@ -48,7 +48,10 @@ Fetching with LWP:
   http://www.perl.org/CPAN/authors/01mailrc.txt.gz
 
 	No, this is a new bug. Before we send them to perl.org, we should try
-	the ftp URL.
+	the ftp URL. So we need 5 steps more for the default URLs for a total of
+	11. Very nice. Seems to work now but needs a rewrite in a less obscure
+	style: tuples instead of strings that get manipulated and maybe a
+	$filter argument to reduce the number of necessary methods.
 
 2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
