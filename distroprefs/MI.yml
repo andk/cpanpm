@@ -48,6 +48,7 @@ match:
     |HIROSE/Net-SSL-ExpireDate-\d
     |HOLOWAY/Catalyst-Action-REST-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
+    |JAYK/Catalyst-Plugin-Authentication-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d

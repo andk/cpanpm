@@ -4,6 +4,25 @@
 	installed 1.000000 ?! I just saw it with 5.8.9-tobe, never with blead,
 	maybe because I never run the r command with blead?
 
+	Retesting with 31599:
+
+cpan[1]> r /intspan/
+CPAN: Storable loaded ok (v2.16)
+Going to read /home/sand/.cpan/Metadata
+  Database was generated on Thu, 12 Jul 2007 20:50:00 GMT
+CPAN: YAML::Syck loaded ok (v0.94)
+Going to read /home/sand/.cpan/build/
+............................................................................DONE
+Found 606 old builds, restored the state of 463
+
+Package namespace         installed    latest  in CPAN file
+Set::IntSpan::Fast             v1.0  1.000000  ANDYA/Set-IntSpan-Fast-v1.0.tar.gz
+1 installed module has a version number of 0
+  they are
+        Module  < Set::IntSpan::Fast     (ANDYA/Set-IntSpan-Fast-v1.0.tar.gz)
+
+	Uhhh, ohhh.
+
 	* Todo: investigate version.pm and Module::Build in the 23000-25000
 	corridor. I recently posted the problem and Schwern made a suggestion I
 	need to test against.

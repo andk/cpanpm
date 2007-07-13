@@ -2418,7 +2418,7 @@ sub _u_r_common {
 		if ($have eq "undef"){
 		    $version_undefs++;
 		    push @version_undefs, $module->as_glimpse;
-		} elsif ($have == 0){
+		} elsif (CPAN::Version->vcmp($have,0)==0){
 		    $version_zeroes++;
 		    push @version_zeroes, $module->as_glimpse;
 		}
