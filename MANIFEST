@@ -110,6 +110,7 @@ distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/METZZO.Java.yml
 distroprefs/MI.yml
+distroprefs/MInoinc.yml
 distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Net-IDN-Nameprep.yml
 distroprefs/MIYAGAWA.Plagger.yml
@@ -119,7 +120,6 @@ distroprefs/MJD.Text-Template.yml
 distroprefs/MLEHMANN.AnyEvent.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.PApp.yml
-distroprefs/MRAMBERG.Catalyst-Plugin-Unicode.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
@@ -141,7 +141,6 @@ distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RDF.Clone.yml
-distroprefs/REDTREE.PDF-API2-Simple.yml
 distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml

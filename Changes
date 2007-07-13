@@ -5,6 +5,17 @@
 	* When accessing the preconfigured default sites, reorder accessmethods
 	in favor of http access (suggested by Brandon Black)
 
+	* neutralize "force" on commands that have no support for it, e.g. turn
+	"force report" into "report" (bugged by Slaven Rezic)
+
+	* let SIGINT during smoke mean SKIP
+
+	* stop using any version.pm in test 10version.t below 0.7203 because it
+	broke on some older bleadperls between 23000 and 25000
+
+	* applied a patch by Jim Cromie to explicitly spit out the unparseable
+	and zero version numbers
+	
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_51:

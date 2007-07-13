@@ -1,4 +1,12 @@
 ---
+comment: |
+
+  Users of Module::Install that share a pattern: we can install all
+  optional dependencies with a couple of simple "y\n". The ENVariables
+  are probably not needed anymore but did help prevent infinite
+  recursion in the past, so I prefer to leave them in place because
+  some of these modules here have quite old versions of MI bundled.
+
 match:
   distribution: |
     ^(?x:^ADAMK/Algorithm-Dependency-\d
