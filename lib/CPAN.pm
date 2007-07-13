@@ -3845,10 +3845,8 @@ sub localize {
     $self->debug("Themethod[$Themethod]reordered[@reordered]") if $CPAN::DEBUG;
     my @all_levels = (
                       ["dleasy",   "file"],
-                      ["dleasy",   "http"],
-                      ["dlhard",   "http"],
-                      ["dleasy",   "ftp"],
-                      ["dlhard",   "ftp"],
+                      ["dleasy"],
+                      ["dlhard"],
                       ["dlhardest"],
                       ["dleasy",   "http","defaultsites"],
                       ["dlhard",   "http","defaultsites"],

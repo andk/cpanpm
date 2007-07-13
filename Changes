@@ -1,3 +1,10 @@
+2007-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91_52:
+
+	* When accessing the preconfigured default sites, reorder accessmethods
+	in favor of http access (suggested by Brandon Black)
+
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_51:

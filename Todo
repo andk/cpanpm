@@ -59,6 +59,8 @@ Fetching with LWP:
 	style: tuples instead of strings that get manipulated and maybe a
 	$filter argument to reduce the number of necessary methods.
 
+	DONE.
+
 2007-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* [09-Jul  60: Steve Peters        ] Help in finding bleadperl test failures
