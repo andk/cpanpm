@@ -82,6 +82,7 @@ sub float2vv {
         $ret .= ".".int($1);
     }
     # warn "n[$n]ret[$ret]";
+    $ret =~ s/(\.0)+/.0/; # v1.0.0 => v1.0
     $ret;
 }
 
