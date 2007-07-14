@@ -2495,15 +2495,29 @@ sub _u_r_common {
 	    my $s_has = $version_zeroes > 1 ? "s have" : " has";
 	    $CPAN::Frontend->myprint(qq{$version_zeroes installed module$s_has }.
 		qq{a version number of 0\n});
-	    local $" = "\t";
-	    $CPAN::Frontend->myprint(qq{  they are\n\t@version_zeroes\n});
+            if ($CPAN::Config->{show_zero_versions}) {
+                local $" = "\t";
+                $CPAN::Frontend->myprint(qq{  they are\n\t@version_zeroes\n});
+                $CPAN::Frontend->myprint(qq{(use 'o conf show_zero_versions 0' }.
+                                         qq{to hide them)\n});
+            } else {
+                $CPAN::Frontend->myprint(qq{(use 'o conf show_zero_versions 1' }.
+                                         qq{to show them)\n});
+            }
 	}
 	if ($version_undefs) {
 	    my $s_has = $version_undefs > 1 ? "s have" : " has";
 	    $CPAN::Frontend->myprint(qq{$version_undefs installed module$s_has no }.
 		qq{parseable version number\n});
-	    local $" = "\t";
-	    $CPAN::Frontend->myprint(qq{  they are\n\t@version_undefs\n});
+            if ($CPAN::Config->{show_unparsable_versions}) {
+                local $" = "\t";
+                $CPAN::Frontend->myprint(qq{  they are\n\t@version_undefs\n});
+                $CPAN::Frontend->myprint(qq{(use 'o conf show_unparsable_versions 0' }.
+                                         qq{to hide them)\n});
+            } else {
+                $CPAN::Frontend->myprint(qq{(use 'o conf show_unparsable_versions 1' }.
+                                         qq{to show them)\n});
+            }
 	}
     }
     @result;

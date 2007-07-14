@@ -130,6 +130,7 @@ distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MTHURN.Tk-Wizard.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
+distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
@@ -139,6 +140,7 @@ distroprefs/OWEN.PDF-Labels.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
+distroprefs/PIERS.sapnwrfc.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RDF.Clone.yml
