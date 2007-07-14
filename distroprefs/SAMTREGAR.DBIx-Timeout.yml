@@ -9,4 +9,5 @@ test:
     DBI_PASS: "comma"
 depends:
   requires:
-    DBD::mysql
+    DBD::mysql: 0
+
