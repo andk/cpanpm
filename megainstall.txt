@@ -883,6 +883,7 @@ XSLoader
 YAML
 YAML::LibYAML
 YAML::Tiny
+Yahoo::Photos
 Yahoo::Search
 bignum
 capitalization
