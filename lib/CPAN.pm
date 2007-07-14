@@ -10287,7 +10287,7 @@ current item.
 B<Note>: This command requires XML::LibXML installed.
 
 B<Note>: This whole command currently is a bit klunky and will
-definitely change in future versions of CPAN.pm but the general
+probably change in future versions of CPAN.pm but the general
 approach will likely stay.
 
 B<Note>: See also L<smoke>
@@ -10326,10 +10326,12 @@ B<*** WARNING: this command downloads and executes software from CPAN to
 *** separated and secured machine to do this.>
 
 The C<smoke> command takes the list of recent uploads to CPAN as
-provided by the C<recent> command and tests them all.
+provided by the C<recent> command and tests them all. While the
+command is running $SIG{INT} is defined to mean that the current item
+shall be skipped.
 
 B<Note>: This whole command currently is a bit klunky and will
-definitely change in future versions of CPAN.pm but the general
+probably change in future versions of CPAN.pm but the general
 approach will likely stay.
 
 B<Note>: See also L<recent>

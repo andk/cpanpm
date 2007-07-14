@@ -1,5 +1,66 @@
 2007-07-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: investigate version.pm and Module::Build in the 23000-25000
+	corridor. I recently posted the problem and Schwern made a suggestion I
+	need to test against.
+
+	* TMOERTEL/Test-LectroTest-0.3500.tar.gz started to fail with 31613 but
+	it had already a fail with 31429. Reproducable? The test takes a very
+	long time, tempting to press ^C. OK, after a couple of minutes, all
+	tests OK.
+
+	This is the FAIL with 31613:
+
+t/gens............
+#   Failed test 'Float(sized=>0,range=>[-400,-200]) dist mean is -300 (z-score = -3.93)'
+#   at t/gens.t line 1149.
+#     '3.92902581170997'
+#         <
+#     '3.89'
+# Looks like you failed 1 test of 248.
+dubious
+^ITest returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 55
+
+	And this with 31429:
+
+t/gens............
+#   Failed test 'String() length under sizing [1..1] dist mean is 0.5 (z-score = -3.98)'
+#   at t/gens.t line 1149.
+#     '3.98295682672687'
+#         <
+#     '3.89'
+# Looks like you failed 1 test of 248.
+dubious
+^ITest returned status 1 (wstat 256, 0x100)
+DIED. FAILED test 174
+
+	(150:2:0:0)
+
+	http://rt.cpan.org/Ticket/Display.html?id=28203
+
+	* Test-Inline-2.204.tar.gz missing depe
+
+	http://rt.cpan.org/Ticket/Display.html?id=28139
+
+	* RJBS/Email-MIME-1.859.tar.gz started to fail between 2007-07-14T05:07
+	and 2007-07-13T08:07 which is between 31600 and 31613.
+
+	The FAIL with 613 is now reproducable. The OK with 600 is not
+	reproducable anymore, some update since then has broken it.
+
+	The last OK before was with 2007-07-12T22:46 (31599). This OK is
+	reproducable.
+
+	So I'll compare autobundle of 599 and 600.
+
+	I see that Email::Simple was updated from 1.999 to 2.001.
+
+	When I install 1.999 on 31613? Then Email-MIME-1.859 passes all tests.
+
+	http://rt.cpan.org/Ticket/Display.html?id=28170 (reported by pmei
+	<petermei@gmail.com>)
+	
 	* Idea: new options how to treat Module::Install. I could peek into the
 	Makefile.PL and guess if it is a Module::Install based one or maybe look
 	at inc/Module/Install.pm. Then what?
@@ -10,10 +71,6 @@
 
 	I suppose he would recommend to set the PERL_MM_USE_DEFAULT variable.
 	That would choose DEFAULT.
-
-	* Todo: investigate version.pm and Module::Build in the 23000-25000
-	corridor. I recently posted the problem and Schwern made a suggestion I
-	need to test against.
 
 	* Todo: complete the show_xxx_version config parameters DONE
 
