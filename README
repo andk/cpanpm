@@ -266,6 +266,20 @@ DESCRIPTION
     directory so that you can save your own preferences instead of the
     system wide ones.
 
+  recent ***EXPERIMENTAL COMMAND***
+    The "recent" command downloads a list of recent uploads to CPAN and
+    displays them *slowly*. While the command is running $SIG{INT} is
+    defined to mean that the loop shall be left after having displayed the
+    current item.
+
+    Note: This command requires XML::LibXML installed.
+
+    Note: This whole command currently is a bit klunky and will probably
+    change in future versions of CPAN.pm but the general approach will
+    likely stay.
+
+    Note: See also smoke
+
   recompile
     recompile() is a very special command in that it takes no argument and
     runs the make/test/install cycle with brute force over all installed
@@ -296,8 +310,15 @@ DESCRIPTION
     this with your normal account and better have a dedicated well ***
     separated and secured machine to do this.
 
-    The "smoke" command downloads a list of recent uploads to CPAN and tests
-    them all. This command currently requires XML::LibXML installed.
+    The "smoke" command takes the list of recent uploads to CPAN as provided
+    by the "recent" command and tests them all. While the command is running
+    $SIG{INT} is defined to mean that the current item shall be skipped.
+
+    Note: This whole command currently is a bit klunky and will probably
+    change in future versions of CPAN.pm but the general approach will
+    likely stay.
+
+    Note: See also recent
 
   upgrade [Module|/Regex/]...
     The "upgrade" command first runs an "r" command with the given arguments
@@ -518,7 +539,10 @@ CONFIGURATION
       randomize_urllist  add some randomness to the sequence of the urllist
       scan_cache         controls scanning of cache ('atstart' or 'never')
       shell              your favorite shell
+      show_unparsable_versions
+                         boolean if r command tells which modules are versionless
       show_upload_date   boolean if commands should try to determine upload date
+      show_zero_versions boolean if r command tells for which modules $version==0
       tar                location of external program tar
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
