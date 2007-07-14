@@ -1,5 +1,10 @@
 2007-07-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* DBIx-Timeout just now got a ticket for a missing dependency and of
+	course a distropref too.
+
+	http://rt.cpan.org/Ticket/Display.html?id=28193
+
 	* Todo: complete the show_xxx_version config parameters
 
 2007-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>

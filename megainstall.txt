@@ -897,5 +897,6 @@ re::engine::PCRE
 re::engine::POSIX
 re::engine::Plan9
 re::engine::Plugin
+re::engine::TRE
 typesafety
 version

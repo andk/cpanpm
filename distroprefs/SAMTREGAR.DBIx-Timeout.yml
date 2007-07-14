@@ -7,3 +7,6 @@ test:
     DBI_DSN: "DBI:mysql:database=comma;mysql_socket=/var/run/mysqld/mysqld.sock"
     DBI_USER: "comma"
     DBI_PASS: "comma"
+depends:
+  requires:
+    DBD::mysql
