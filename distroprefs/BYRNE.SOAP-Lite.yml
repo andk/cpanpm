@@ -11,6 +11,9 @@ pl:
     - "\n"
 patches:
   - "ANDK/SOAP-Lite-0.69-ANDK-01.patch.gz"
+depends:
+  requires:
+    MIME::Parser: 0
 ---
 comment: "This is from 2004-02-26"
 match:
