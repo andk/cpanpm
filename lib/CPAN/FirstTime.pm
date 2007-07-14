@@ -640,6 +640,18 @@ substitute. You can then revisit this dialog with
     }
 
     #
+    #== verbosity at the end of the r command
+    #
+    if (!$matcher
+        or 'show_unparsable_versions' =~ /$matcher/
+        or 'show_zero_versions' =~ /$matcher/
+       ) {
+        $CPAN::Frontend->myprint($prompts{show_unparsable_or_zero_versions_intro});
+        my_yn_prompt(show_unparsable_versions => 0, $matcher);
+        my_yn_prompt(show_zero_versions => 0, $matcher);
+    }
+
+    #
     #= MIRRORED.BY and conf_sites()
     #
 
@@ -1551,6 +1563,18 @@ to a config variable are always automatically committed to disk.
 },
 
 auto_commit => qq{Always commit changes to config variables to disk?},
+
+show_unparsable_or_zero_versions_intro => qq{
+
+During the 'r' command CPAN.pm finds modules without version number or
+with a version number of zero. When the command finishes, it prints a
+short report about this. If you want this report to be very verbose,
+say yes to the following variable(s).
+
+},
+
+show_unparsable_versions => q{Show all individual modules that have no $VERSION?},
+show_zero_versions => q{Show all individual modules that have a $VERSION of zero?},
 
               );
 

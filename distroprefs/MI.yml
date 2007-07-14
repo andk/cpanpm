@@ -58,6 +58,7 @@ match:
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
+    |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
     |SARTAK/Carp-REPL-\d
     |SMUELLER/Math-Approx-Symbolic-

@@ -1,5 +1,25 @@
 2007-07-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Idea: new options how to treat Module::Install. I could peek into the
+	Makefile.PL and guess if it is a Module::Install based one or maybe look
+	at inc/Module/Install.pm. Then what?
+
+	Answer Auto-Install questions with "y", "n", DEFAULT? Make a difference
+	between optional and mandatory? Realize that "n" would not work because
+	for mandatory stuff they then ask. "Really...". Hrmmm. Ask Adam?
+
+	I suppose he would recommend to set the PERL_MM_USE_DEFAULT variable.
+	That would choose DEFAULT.
+
+	* Todo: investigate version.pm and Module::Build in the 23000-25000
+	corridor. I recently posted the problem and Schwern made a suggestion I
+	need to test against.
+
+	* Todo: complete the show_xxx_version config parameters DONE
+
+	* I want to use ^C during recent to mean that I do not want to continue
+	to read this document. DONE
+
 	* Net::FTP::Commom now in RT because of frequent test failures:
 
 	http://rt.cpan.org/Ticket/Display.html?id=28195
@@ -8,8 +28,6 @@
 	course a distropref too.
 
 	http://rt.cpan.org/Ticket/Display.html?id=28193
-
-	* Todo: complete the show_xxx_version config parameters
 
 2007-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -36,9 +54,17 @@ Set::IntSpan::Fast             v1.0  1.000000  ANDYA/Set-IntSpan-Fast-v1.0.tar.g
 
 	Uhhh, ohhh.
 
-	* Todo: investigate version.pm and Module::Build in the 23000-25000
-	corridor. I recently posted the problem and Schwern made a suggestion I
-	need to test against.
+	This was really two bugs: one that we believed that "v1.0" was 0. FIXED now
+
+	The other is that I believe that trailing ".0" should not actually be
+	treated as significant. This mainly because version.pm's numify really
+	translated v1.0 to 1.000000 and has no roundtrip between numify and
+	normal:
+
+	% /home/src/perl/repoperls/installed-perls/*/p*/perl-5.*@31614/bin/perl -Mversion -le 'print version->new(version->new("v1.0")->numify)->normal'
+v1.0.0
+
+	I adjusted CPAN::Version to trim trailing ".0" (but keep one).
 
 2007-07-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -48,14 +74,14 @@ Set::IntSpan::Fast             v1.0  1.000000  ANDYA/Set-IntSpan-Fast-v1.0.tar.g
 
 2007-07-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Exporter::Simple now has his test scripts but the binary search points at
+	* Exporter::Simple now has its test scripts but the binary search points at
 
 	Change 29023 by stevep@stevep-kirk on 2006/10/15 17:17:32
 	    Upgrade to Time-HiRes-1.93.
 
 	What a crap! The reason turns out to be that I have distroprefs files
 	that 1.8855 could not grok and 1.8855 was not forward compatible and
-	very misbehaving visavis unknown parameters.
+	very misbehaving visavis unknown parameters. FINISHED after some days
 
 	* Encode::IBM fails at 'make install' after successful make test
 

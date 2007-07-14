@@ -10571,7 +10571,10 @@ defined:
   randomize_urllist  add some randomness to the sequence of the urllist
   scan_cache	     controls scanning of cache ('atstart' or 'never')
   shell              your favorite shell
+  show_unparsable_versions
+                     boolean if r command tells which modules are versionless
   show_upload_date   boolean if commands should try to determine upload date
+  show_zero_versions boolean if r command tells for which modules $version==0
   tar                location of external program tar
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
