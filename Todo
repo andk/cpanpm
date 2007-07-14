@@ -1,5 +1,9 @@
 2007-07-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Net::FTP::Commom now in RT because of frequent test failures:
+
+	http://rt.cpan.org/Ticket/Display.html?id=28195
+
 	* DBIx-Timeout just now got a ticket for a missing dependency and of
 	course a distropref too.
 

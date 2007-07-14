@@ -3318,7 +3318,9 @@ sub recent {
 
           my $dc_date = $xml->findvalue("//*[local-name(.) = 'RDF']/*[local-name(.) = 'channel']/*[local-name(.) = 'date']");
           $CPAN::Frontend->myprint("    dc:date: $dc_date\n\n");
-          for my $eitem ($xml->findnodes("//*[local-name(.) = 'RDF']/*[local-name(.) = 'item']")) {
+          my $finish_eitem = 0;
+          local $SIG{INT} = sub { $finish_eitem = 1 };
+        EITEM: for my $eitem ($xml->findnodes("//*[local-name(.) = 'RDF']/*[local-name(.) = 'item']")) {
               my $distro = $eitem->findvalue("\@rdf:about");
               $distro =~ s|.*~||; # remove up to the tilde before the name
               $distro =~ s|/$||; # remove trailing slash
@@ -3341,6 +3343,7 @@ sub recent {
 
               $CPAN::Frontend->myprint("____$desc\n");
               push @distros, $distro;
+              last EITEM if $finish_eitem;
           }
       }
       return \@distros;
@@ -10274,6 +10277,21 @@ mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
 directory so that you can save your own preferences instead of the
 system wide ones.
 
+=head2 recent ***EXPERIMENTAL COMMAND***
+
+The C<recent> command downloads a list of recent uploads to CPAN and
+displays them I<slowly>. While the command is running $SIG{INT} is
+defined to mean that the loop shall be left after having displayed the
+current item.
+
+B<Note>: This command requires XML::LibXML installed.
+
+B<Note>: This whole command currently is a bit klunky and will
+definitely change in future versions of CPAN.pm but the general
+approach will likely stay.
+
+B<Note>: See also L<smoke>
+
 =head2 recompile
 
 recompile() is a very special command in that it takes no argument and
@@ -10307,12 +10325,14 @@ B<*** WARNING: this command downloads and executes software from CPAN to
 *** this with your normal account and better have a dedicated well
 *** separated and secured machine to do this.>
 
-The C<smoke> command downloads a list of recent uploads to CPAN and
-tests them all. This command currently requires XML::LibXML installed.
+The C<smoke> command takes the list of recent uploads to CPAN as
+provided by the C<recent> command and tests them all.
 
 B<Note>: This whole command currently is a bit klunky and will
 definitely change in future versions of CPAN.pm but the general
 approach will likely stay.
+
+B<Note>: See also L<recent>
 
 =head2 upgrade [Module|/Regex/]...
 
