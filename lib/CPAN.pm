@@ -6193,7 +6193,7 @@ sub satisfy_configure_requires {
         # configure_requires that means, things with
         # configure_requires simply fail, all others succeed
     }
-    my @prereq = $self->unsat_prereq("configure_requires") or return 1;
+    my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
     if ($self->{configure_requires_later}) {
         # we must not come here a second time
         $CPAN::Frontend->mydie("Panic: A prerequisite is not available, please investigate...");
