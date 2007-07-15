@@ -600,6 +600,7 @@ Plagger
 Pod::Find
 Pod::HtmlPsPdf
 Pod::LaTeX
+Pod::Manual
 Pod::POM::Web
 Pod::ParseUtils
 Pod::Parser

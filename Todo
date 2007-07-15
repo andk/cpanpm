@@ -123,6 +123,8 @@ v1.0.0
 
 	I adjusted CPAN::Version to trim trailing ".0" (but keep one).
 
+	http://rt.cpan.org/Ticket/Display.html?id=28206
+
 2007-07-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* HTTP::Server::Simple random test results
