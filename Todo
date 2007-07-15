@@ -1,3 +1,18 @@
+2007-07-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* off topic: working on Module::Build for "the corridor". Trying to
+	determine the exact boundaries of the corridor. The lower end is not
+	that hard to determine because binarysearch finds its way through the
+	area. But the upper boundary is slow because for some reason questions
+	are being asked by, e.g. 25125. Ah, it is within the corridor. 26003 is
+	outside. First broken perl is 23190, last one is....25414.
+
+	And running make test in SVN rev. 9738 with my fixes:
+
+	% for p in /usr/local/perl-5.6.2/bin/perl /usr/local/perl-5.8.[01378]/bin/perl /usr/local/perl-m-5.8.0@31162/bin/perl /home/src/perl/repoperls/installed-perls/perl/p*/perl-5.*@{23190,24139,25125,25414,31614}/bin/perl ; do
+$p Build.PL&&./Build test || break
+done
+
 2007-07-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: investigate version.pm and Module::Build in the 23000-25000
@@ -5113,7 +5128,7 @@ Module id = Verilog::Language
 
 	Does ./installperl not overwrite perl.h??? It does overwrite it.
 
-	CCACHE to blame? No CCACHE_DISABLE makes no difference.
+	CCACHE to blame? No, CCACHE_DISABLE makes no difference.
 
 	Something within Verilog must be broken too. It's a preprocessor. It may
 	parse header files and draw conclusions.

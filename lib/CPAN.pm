@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.91_52';
+$CPAN::VERSION = '1.91_53';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -7922,7 +7922,7 @@ sub unsat_prereq {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
-    if ($slot eq "configure_requires") {
+    if ($slot eq "configure_requires_later") {
         my $meta_yml = $self->parse_meta_yml();
         %merged = (%{$meta_yml->{configure_requires}||{}},
                    %{$prefs_depends->{configure_requires}||{}});
