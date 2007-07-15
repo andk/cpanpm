@@ -179,7 +179,6 @@ DBIx::CopyRecord
 DBIx::DBSchema
 DBIx::ORM::Declarative
 DBIx::Perlish
-DBIx::ReportBuilder
 DBIx::SearchBuilder
 DBIx::Simple
 DBIx::Timeout
@@ -261,7 +260,7 @@ Encode::JavaScript::UCS
 Encode::MAB2table
 Encode::MIME::Header
 Encode::compat
-Ernno
+Errno
 Error
 Event::ExecFlow
 Event::Lib
@@ -549,7 +548,6 @@ PDF::Extract
 PDF::FDF::Simple
 PDF::FromHTML
 PDF::Labels
-PDF::Maki
 PDF::Report
 PDF::ReportWriter
 PDF::Reuse
@@ -879,7 +877,7 @@ XML::Tiny
 XML::Twig
 XML::Validator::Schema
 XML::XPathEngine
-XML::Xpath
+XML::XPath
 XSLoader
 YAML
 YAML::LibYAML
