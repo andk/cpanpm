@@ -613,7 +613,7 @@ PostScript::Document
 PostScript::EPSF
 PostScript::File
 PostScript::Font
-PostScript::Graph
+PostScript::Graph::Bar
 PostScript::MailLabels
 PostScript::Simple
 PostScript::Simple::Table
