@@ -8602,7 +8602,7 @@ sub goto {
     # 2007-07-16 akoenig : Better than NA would be if we could inherit
     # the status of the $goto distro but given the exceptional nature
     # of 'goto' I feel reluctant to implement it
-    $goodbye_message = "[goto] -- NA $why";
+    my $goodbye_message = "[goto] -- NA $why";
     $self->goodbye($goodbye_message);
 
     # inject into the queue
