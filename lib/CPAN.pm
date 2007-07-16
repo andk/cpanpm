@@ -8593,6 +8593,17 @@ sub clean {
 sub goto {
     my($self,$goto) = @_;
     $goto = $self->normalize($goto);
+    my $why = sprintf(
+                      "Goto '$goto' via prefs file '%s' doc %d",
+                      $self->{prefs_file},
+                      $self->{prefs_file_doc},
+                     );
+    $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
+    # 2007-07-16 akoenig : Better than NA would be if we could inherit
+    # the status of the $goto distro but given the exceptional nature
+    # of 'goto' I feel reluctant to implement it
+    $goodbye_message = "[goto] -- NA $why";
+    $self->goodbye($goodbye_message);
 
     # inject into the queue
 
