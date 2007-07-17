@@ -1,3 +1,13 @@
+2007-07-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* UNIVERSAL::require and Jifty have some broken relationship. Maybe we
+	could run a binary search with a very limited test? The testsuite of
+	UNIVERSAL-require-0.11 has no issues with bleadperl but Jifty uses U:r
+	it in a way that fails since day X. t/00-load.t would do for the binary
+	search. Let's disable CPAN::Reporter and add the test/args:
+	TEST_FILES=t/00-load.t to the distroprefs file. And
+	cpanconfig/test_report: 0.
+
 2007-07-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* off topic: working on Module::Build for "the corridor". Trying to

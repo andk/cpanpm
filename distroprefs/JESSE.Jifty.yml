@@ -1,4 +1,9 @@
 --- 
+comment: |
+
+  Temporarily make the tests very quick to track an issue between
+  UNIVERSAL::require and Jifty
+
 match:
   distribution: "^JESSE/Jifty-"
 pl: 
@@ -10,3 +15,7 @@ make:
     PERL_AUTOINSTALL: --skip    
 cpanconfig:
   check_sigs: 0
+  test_report: 0
+test:
+  args:
+    TEST_FILES=t/00-load.t

@@ -598,7 +598,6 @@ Plagger
 Pod::Find
 Pod::HtmlPsPdf
 Pod::LaTeX
-Pod::Manual
 Pod::POM::Web
 Pod::ParseUtils
 Pod::Parser
@@ -606,6 +605,7 @@ Pod::Pdf
 Pod::PerlPoint
 Pod::Sdf
 Pod::Select
+Pod::XML
 Pod::Xhtml
 PostScript::CDCover
 PostScript::Columns
