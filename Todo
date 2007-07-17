@@ -1,5 +1,17 @@
 2007-07-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* 0 E. [17-Jul 229: David Golden        ] Re: FAIL Module-Mask-0.03 i686-linux 2.4.27-3-686
+	
+	* binarysearch for J/U:r
+
+	23023 YAML::Syck
+	26015 YAML
+	28005 Params::Validate
+	29023 DateTime::Format::Strptime
+	29519 CPAN.pm depends/
+	30019 YAML::Syck
+
+
 	* UNIVERSAL::require and Jifty have some broken relationship. Maybe we
 	could run a binary search with a very limited test? The testsuite of
 	UNIVERSAL-require-0.11 has no issues with bleadperl but Jifty uses U:r
@@ -14,7 +26,7 @@
 
 	t/10schema.t    7  1792   147    7  16 20 27 33 39 45 51
 
-	
+	But Jifty::DBI from SVN works, so we can adjust everything to 
 
 2007-07-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

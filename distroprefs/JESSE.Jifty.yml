@@ -18,4 +18,4 @@ cpanconfig:
   test_report: 0
 test:
   args:
-    - "TEST_FILES=t/00-load.t"
+    - "TEST_FILES=t/10-i18n.t"
