@@ -1,4 +1,10 @@
 ---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=28314
+
+  (Not relevant for maintperl/bleadperl)
+
 match:
   distribution: "^DCONWAY/Parse-RecDescent-1.94"
 patches:
