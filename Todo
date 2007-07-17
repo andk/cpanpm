@@ -8,6 +8,14 @@
 	TEST_FILES=t/00-load.t to the distroprefs file. And
 	cpanconfig/test_report: 0.
 
+	Not possible because Jifty-DBI-0.41 fails with 23023. And PASS 94 : FAIL
+	68 is not encouraging to continue with this test. Since 2007-06-29T20:11
+	I haven't seen a PASS for Jifty::DBI.
+
+	t/10schema.t    7  1792   147    7  16 20 27 33 39 45 51
+
+	
+
 2007-07-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* off topic: working on Module::Build for "the corridor". Trying to
