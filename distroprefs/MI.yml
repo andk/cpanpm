@@ -56,6 +56,7 @@ match:
     |LUKEC/Test-WWW-Selenium-\d
     |LYOKATO/FormValidator-Simple-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MSTROUT/DBIx-Class-\d

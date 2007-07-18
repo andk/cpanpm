@@ -6,9 +6,12 @@
 
 	23023 YAML::Syck
 	26015 YAML, Jifty::DBI
-	28005 Params::Validate, DateTime
+	27939 
+	28005 Params::Validate, DateTime (P:V 0.86 broke at 27942)
+	28513 DateTime::Format::Strptime
 	29023 DateTime::Format::Strptime
-	29519 
+	29527 
+	
 
 	OMG, I see all the UNIVERSAL::require errors and then an "ok" so it gets
 	installed just to prove my testing pointless:-(

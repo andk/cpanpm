@@ -598,6 +598,7 @@ Plagger
 Pod::Find
 Pod::HtmlPsPdf
 Pod::LaTeX
+Pod::Manual
 Pod::POM::Web
 Pod::ParseUtils
 Pod::Parser
@@ -764,6 +765,7 @@ Text::Query
 Text::Quoted
 Text::RecordParser
 Text::Reform
+Text::Restructured
 Text::Roman
 Text::Shellwords
 Text::Table
