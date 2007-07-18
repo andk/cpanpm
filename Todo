@@ -5,10 +5,15 @@
 	* binarysearch for J/U:r
 
 	23023 YAML::Syck
-	26015 YAML
-	28005 Params::Validate
+	26015 YAML, Jifty::DBI
+	28005 Params::Validate, DateTime
 	29023 DateTime::Format::Strptime
-	29519 CPAN.pm depends/
+	29519 
+
+	OMG, I see all the UNIVERSAL::require errors and then an "ok" so it gets
+	installed just to prove my testing pointless:-(
+
+	
 	30019 YAML::Syck
 
 

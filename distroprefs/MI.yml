@@ -30,6 +30,7 @@ match:
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
     |CLACO/Data-Currency-\d
+    |CLKAO/SVK-v\d
     |DCOPPIT/Benchmark-Timer-\d
     |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/XML-RSS-LibXML-\d
@@ -72,6 +73,7 @@ match:
     |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d
     |ZIGOROU/MozRepl-\d
+    |ZIGOROU/Nagios-Plugins-Memcached-\d
     )|
 pl:
   eexpect:
