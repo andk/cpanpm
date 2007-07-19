@@ -75,6 +75,7 @@ match:
     |ZIGOROU/Data-ClearSilver-HDF-\d
     |ZIGOROU/MozRepl-\d
     |ZIGOROU/Nagios-Plugins-Memcached-\d
+    |ZIGOROU/WebService-Reflexa-\d
     )|
 pl:
   eexpect:
