@@ -14,3 +14,5 @@ pl:
 depends:
   configure_requires:
     mod_perl: 1.30
+  requires:
+    mod_perl: 1.30
