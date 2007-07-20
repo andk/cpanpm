@@ -1249,6 +1249,10 @@ sub has_inst {
 	# it tries again. The second require is only a NOOP returning
 	# 1 if we had success, otherwise it's retrying
 
+        my $mtime = (stat $INC{$file})[9];
+        # privileged files loaded by has_inst; Note: we use $mtime
+        # as a proxy for a checksum.
+        $CPAN::Shell::reload->{$file} = $mtime;
         my $v = eval "\$$mod\::VERSION";
         $v = $v ? " (v$v)" : "";
 	$CPAN::Frontend->myprint("CPAN: $mod loaded ok$v\n");
@@ -2157,8 +2161,8 @@ sub _reload_this {
         return;
     }
     my $mtime = (stat $file)[9];
-    $reload->{$f} ||= $^T;
-    my $must_reload = $mtime > $reload->{$f};
+    $reload->{$f} ||= $mtime; # unprivileged files not loaded by has_inst
+    my $must_reload = $mtime != $reload->{$f};
     $args ||= {};
     $must_reload ||= $args->{reloforce};
     if ($must_reload) {
