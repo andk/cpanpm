@@ -6,7 +6,7 @@ comment: |
   depends on Mailtools I cannot run the tests.
 
 match:
-  distribution: "^MARKOV/Mail-Box-2\.070\.tar.gz"
+  distribution: "^MARKOV/Mail-Box-2\.\d"
 make:
   env:
     PERL_AUTOINSTALL: --skip    

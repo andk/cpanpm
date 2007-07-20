@@ -1,7 +1,15 @@
 --- 
-comment: "The -n asks no questions, takes default values"
+comment: |
+
+  The -n asks no questions, takes default values
+
+  The questions about the tests was introduced at 5.806
+
 match:
   distribution: "^GAAS/libwww-perl-"
 pl: 
-  args: 
-    - -n
+  args:
+    - "-n"
+  expect: 
+    - "Do you want to enable these tests"
+    - "\n"
