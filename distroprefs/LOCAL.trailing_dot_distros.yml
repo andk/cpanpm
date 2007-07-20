@@ -25,3 +25,7 @@ match:
   distribution: "^/home/src/perl/devel-cover/SVN/\.$"
 pl:
   commandline: "svn up && $PERL Makefile.PL"
+---
+comment: "remind me to update from time to time"
+match:
+  distribution: "^/home/src/graphics/magick/ImageMagick-6.3.5/PerlMagick/\.$"

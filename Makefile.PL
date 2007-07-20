@@ -216,7 +216,8 @@ MEGA_BASE = \
  CPAN::DistnameInfo \
  DBD::SQLite \
  /home/src/perl/tk/SVN/. \
- /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.
+ /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
+ /home/src/graphics/magick/ImageMagick-6.3.5/PerlMagick/. \
 
 
 # define a random one
