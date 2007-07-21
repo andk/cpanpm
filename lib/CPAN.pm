@@ -7515,6 +7515,7 @@ sub _run_via_expect {
 sub _run_via_expect_anyorder {
     my($self,$expo,$expect_model) = @_;
     my $timeout = $expect_model->{timeout} || 5;
+    my $reuse = $expect_model->{reuse};
     my @expectacopy = @{$expect_model->{talk}}; # we trash it!
     my $but = "";
   EXPECT: while () {
@@ -7544,7 +7545,8 @@ sub _run_via_expect_anyorder {
                 if ($but =~ /$regex/) {
                     # warn "DEBUG: will send send[$send]";
                     $expo->send($send);
-                    splice @expectacopy, $i, 2; # never allow reusing an QA pair
+                    # never allow reusing an QA pair unless they told us
+                    splice @expectacopy, $i, 2 unless $reuse;
                     next EXPECT;
                 }
             }
@@ -11023,8 +11025,8 @@ used.
 
 =item eexpect [hash]
 
-Extended C<expect>. This is a hash reference with three allowed keys,
-C<mode>, C<timeout>, and C<talk>.
+Extended C<expect>. This is a hash reference with four allowed keys,
+C<mode>, C<timeout>, C<reuse>, and C<talk>.
 
 C<mode> may have the values C<deterministic> for the case where all
 questions come in the order written down and C<anyorder> for the case
@@ -11044,12 +11046,17 @@ Build.PL>, C<make>, etc.).
 
 In the case of C<mode=deterministic> the CPAN.pm will inject the
 according answer as soon as the stream matches the regular expression.
-In the case of C<mode=anyorder> the CPAN.pm will answer a question as
-soon as the timeout is reached for the next byte in the input stream.
-In the latter case it removes the according question/answer pair from
-the array, so if you want to answer the question C<Do you really want
-to do that> several times, then it must be included in the array at
-least as often as you want this answer to be given.
+
+In the case of C<mode=anyorder> CPAN.pm will answer a question as soon
+as the timeout is reached for the next byte in the input stream. In
+this mode you can use the C<reuse> parameter to decide what shall
+happen with a question-answer pair after it has been used. In the
+default case (reuse=0) it is removed from the array, so it cannot be
+used again accidentally. In this case, if you want to answer the
+question C<Do you really want to do that> several times, then it must
+be included in the array at least as often as you want this answer to
+be given. Setting the parameter C<reuse> to 1 makes this repetition
+unnecessary.
 
 =item env [hash]
 

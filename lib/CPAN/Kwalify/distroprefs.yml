@@ -57,6 +57,8 @@ mapping:
               - anyorder
           timeout:
             type: number
+          reuse:
+            type: int
           talk:
             type: seq
             sequence:
