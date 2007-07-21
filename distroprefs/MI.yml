@@ -51,6 +51,7 @@ match:
     |JAYK/Catalyst-Plugin-Authentication-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
+    |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LUKEC/Test-WWW-Selenium-\d

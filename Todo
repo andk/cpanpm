@@ -1,3 +1,97 @@
+2007-07-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Idea: new option to cleanup the build_dir not by size but by age.
+
+	* Todo: with the new sendmail configuration I should retry if mailtools
+	work now. Which perl is good for that? Stock 5.8.8 should do and note
+	there is a 2.00_xx! For install I can configure back to using sudo. But
+	all testing should be done by sand because there is the reporter DB. So
+	this time I want to disable prefs? No, k installs, sand tests.
+
+	Yes, even with Test::Reporter 1.27 the mail from Mail::Send seems to
+	have been accepted for delivery (RJBS/Test-BinaryData-0.003.tar.gz). Now
+	with Test::Reporter 1.30 I tried KWILLIAMS/Path-Class-0.16.tar.gz. And
+	finally with MARKOV/MailTools-2.00_01.tar.gz I try
+	JROCKWAY/Directory-Scratch-0.12.tar.gz
+
+	Mails went out through sendmail.
+
+	Mailq is empty. But the mails did not come back to me on the
+	subscription address. Nor to Google
+	http://groups.google.com/group/perl.cpan.testers/topics?lnk=srg
+
+	Let me compare the 3 mails above with the last mail before that. It was
+	about BPAN. A bad one with Mail::Send:
+
+# egrep 'l6L5ZkbD030283' /var/log/mail.info
+Jul 21 07:35:46 k75 sendmail[30283]: l6L5ZkbD030283: from=sand, size=5897, class=0, nrcpts=1, msgid=<200707210535.l6L5ZkbD030283@k75.linux.bogus>, relay=sand@localhost
+Jul 21 07:35:46 k75 sm-mta[30284]: l6L5Zk0d030284: from=<sand@k75.linux.bogus>, size=6121, class=0, nrcpts=1, msgid=<200707210535.l6L5ZkbD030283@k75.linux.bogus>, proto=ESMTP, daemon=MSA, relay=localhost.localdomain [127.0.0.1]
+Jul 21 07:35:46 k75 sendmail[30283]: l6L5ZkbD030283: to=cpan-testers@perl.org, ctladdr=sand (1005/1005), delay=00:00:00, xdelay=00:00:00, mailer=relay, pri=35897, relay=[127.0.0.1] [127.0.0.1], dsn=2.0.0, stat=Sent (l6L5Zk0d030284 Message accepted for delivery)
+Jul 21 07:35:59 k75 sm-mta[30286]: l6L5Zk0d030284: to=<cpan-testers@perl.org>, ctladdr=<sand@k75.linux.bogus> (1005/1005), delay=00:00:13, xdelay=00:00:13, mailer=esmtp, pri=126121, relay=mx.develooper.com. [63.251.223.176], dsn=2.0.0, stat=Sent (Queued! 1184996159 qp 27112 <200707210535.l6L5ZkbD030283@k75.linux.bogus>)
+
+	And a good one with Net::SMTP:
+
+# egrep 'l6L5MQN5027327' /var/log/mail.info
+Jul 21 07:22:26 k75 sm-mta[27327]: l6L5MQN5027327: from=<andreas.koenig.gmwojprw@franz.ak.mind.de>, size=4884, class=0, nrcpts=1, msgid=<200707210522.l6L5MQN5027327@franz.ak.mind.de>, proto=ESMTP, daemon=MTA, relay=localhost.localdomain [127.0.0.1]
+Jul 21 07:22:39 k75 sm-mta[27329]: l6L5MQN5027327: to=<cpan-testers@perl.org>, delay=00:00:13, xdelay=00:00:12, mailer=esmtp, pri=124884, relay=mx.develooper.com. [63.251.223.176], dsn=2.0.0, stat=Sent (Queued! 1184995359 qp 21633 <200707210522.l6L5MQN5027327@franz.ak.mind.de>)
+
+
+	Too obvious. CPAN::Reporter or Test::Reporter is unable to set the from
+	address when switching to Mail::Send.
+
+	Stepping through the debugger. Test::Reporter::_mail_send line 344 sets
+	the From correctly. Later Mail::Send passes itself over to Mail::Mailer
+
+  DB<14> n
+Mail::Send::open(/usr/local/perl-5.8.8/lib/site_perl/5.8.8/Mail/Send.pm:57):
+57:         Mail::Mailer->new(@_)->open($self);
+DB<14> x \@_
+0  ARRAY(0x85b1c74)
+     empty array
+DB<15> x $self
+0  Mail::Send=HASH(0xbe3ac30)
+   'From' => ARRAY(0xbe3c75c)
+      0  'andreas.koenig.gmwojprw@franz.ak.mind.de'
+   'Subject' => ARRAY(0xbe3c7d4)
+      0  'PASS WebService-Mogo2-0.01 i686-linux-64int 2.6.14'
+   'To' => ARRAY(0xbe3a9e4)
+      0  'cpan-testers@perl.org'
+   'X-Reported-Via' => ARRAY(0xbe3be14)
+      0  'Test::Reporter 1.30, via CPAN::Reporter 0.46'
+
+	Aha. I have sendmail installed and despite Mail::Send and Mail::Mailer
+	carefully keep the $sender and $hdr intact, Mail::Mailer::sendmail
+	throws it away because it cannot handle it.
+
+	The documentation of Test::Reporter tells me that I can use
+	$tr->mail_send_args(['smtp']); perhaps. So let's try. With MailTool
+	2.00_01 I must write a bugreport that there is a syntax error.
+	http://rt.cpan.org/Ticket/Display.html?id=28411
+	With current version 1.77 there is a failure:
+
+Sending test report with 'pass' to cpan-testers@perl.org
+        (in cleanup) Undefined subroutine &Mail::Mailer::smtp::close called at /usr/local/perl-5.8.8/lib/site_perl/5.8.8/Mail/Mailer.pm line 204.
+Catching error: 'Undefined subroutine &Mail::Mailer::smtp::close called at /usr/local/perl-5.8.8/lib/site_perl/5.8.8/Mail/Mailer.pm line 133.
+        (in cleanup) Undefined subroutine &Mail::Mailer::smtp::close called at /usr/local/perl-5.8.8/lib/site_perl/5.8.8/Mail/Mailer.pm line 204.
+' at lib/CPAN.pm line 275
+        CPAN::shell() called at -e line 1
+
+	So maybe the mail was sent but it certainly was a die() before the
+	bookkeeping was done:-( No, from the logfile it seems there was no mail
+	sent at all.
+
+	So I try again with 2.00_01 and insert an "or" before the return to fix
+	the syntax. This dies without an error message.
+
+	So I come to the conclusion that I must fix Test::Reporter for me.
+
+	IS this all I need?
+
+  - use constant FAKE_NO_MAIL_SEND => 0;  # for debugging only
+  + use constant FAKE_NO_MAIL_SEND => 1;  # for debugging only
+
+	YES!
+
 2007-07-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: 'fforce get STAS/libapreq-1.33.tar.gz' runs into an endless loop.
