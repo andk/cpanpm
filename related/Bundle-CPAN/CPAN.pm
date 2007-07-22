@@ -22,6 +22,8 @@ Test::Harness -- critical prereq because must be >=2.62
 
 ExtUtils::CBuilder -- some of the things below depend on it without declaring (as of 2006-10)
 
+ExtUtils::MakeMaker
+
 Module::Build
 
 File::Spec -- prereq
