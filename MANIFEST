@@ -131,6 +131,7 @@ distroprefs/MLEHMANN.AnyEvent.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
+distroprefs/MSCHWERN.Test-Simple.yml
 distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
 distroprefs/MSERGEANT.DBD-SQLite.yml
