@@ -3,3 +3,7 @@ match:
   distribution: "^RDF/Clone-0\.22\.tar\.gz$"
 patches:
   - "ANDK/patches/Clone-0.22-NWCLARK-01.patch.gz"
+---
+match:
+  distribution: "^RDF/Clone-0\.25\.tar\.gz$"
+goto: "RDF/Clone-0.24.tar.gz"
