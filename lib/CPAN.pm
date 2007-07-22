@@ -2131,7 +2131,7 @@ index    re-reads the index files\n});
 # reload means only load again what we have loaded before
 #-> sub CPAN::Shell::_reload_this ;
 sub _reload_this {
-    my($self,$f,$args) = @_;
+    my($self,$f) = @_;
     CPAN->debug("f[$f]") if $CPAN::DEBUG;
     return 1 unless $INC{$f}; # we never loaded this, so we do not
                               # reload but say OK
@@ -2161,10 +2161,14 @@ sub _reload_this {
         return;
     }
     my $mtime = (stat $file)[9];
-    $reload->{$f} ||= $mtime; # unprivileged files not loaded by has_inst
+    if ($reload->{$f}) {
+    } elsif ($^T < $mtime) {
+        # since we started the file has changed, force it to be reloaded
+        $reload->{$f} = -1;
+    } else {
+        $reload->{$f} = $mtime;
+    }
     my $must_reload = $mtime != $reload->{$f};
-    $args ||= {};
-    $must_reload ||= $args->{reloforce};
     if ($must_reload) {
         my $fh = FileHandle->new($file) or
             $CPAN::Frontend->mydie("Could not open $file: $!");
@@ -2180,7 +2184,7 @@ sub _reload_this {
             warn $@;
             return;
         }
-        $reload->{$f} = time;
+        $reload->{$f} = $mtime;
     } else {
         $CPAN::Frontend->myprint("__unchanged__");
     }
@@ -4809,7 +4813,7 @@ sub reanimate_build_dir {
             my $do
                 = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
                     = $c->{distribution};
-            for my $skipper (qw(badtestcnt notest force_update)) {
+            for my $skipper (qw(badtestcnt notest force_update sponsored_mods)) {
                 delete $do->{$skipper};
             }
             # $DB::single = 1;
@@ -7251,12 +7255,10 @@ is part of the perl-%s distribution. To install that, you need to run
             }
         }
 
-        if ($self->{later} || $self->{configure_requires_later}) { # see also undelay
-            if ($self->unsat_prereq("later")
-                ||
-                $self->unsat_prereq("configure_requires_later")
-               ) {
-                push @e, $self->{later} || $self->{configure_requires_later};
+        my $later = $self->{later} || $self->{configure_requires_later};
+        if ($later) { # see also undelay
+            if ($later) {
+                push @e, $later;
             }
         }
 
@@ -8018,6 +8020,8 @@ sub unsat_prereq {
         if ($need_module eq "perl") {
             return ["perl", $need_version];
         }
+        $self->{sponsored_mods}{$need_module} ||= 0;
+        CPAN->debug("need_module[$need_module]s/s/n[$self->{sponsored_mods}{$need_module}]") if $CPAN::DEBUG;
         if ($self->{sponsored_mods}{$need_module}++){
             # We have already sponsored it and for some reason it's still
             # not available. So we do ... what??
@@ -8445,6 +8449,7 @@ sub test {
 
             # local $CPAN::DEBUG = 16; # Distribution
             for my $m (keys %{$self->{sponsored_mods}}) {
+                next unless $self->{sponsored_mods}{$m} > 0;
                 my $m_obj = CPAN::Shell->expand("Module",$m) or next;
                 # XXX we need available_version which reflects
                 # $ENV{PERL5LIB} so that already tested but not yet
