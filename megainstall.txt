@@ -59,8 +59,13 @@ CGI::Application::Plugin::Forward
 CGI::Session
 CGI::Untaint
 CPAN
+CPAN::Cache
+CPAN::Dependency
 CPAN::Checksums
+CPAN::IndexPod
+CPAN::Mini
 CPAN::Unwind
+CPAN::Site
 CPAN::YACSmoke
 CSS
 CSS::SAC
@@ -89,9 +94,15 @@ Catalyst::View::TT
 Chart::Math::Axis
 Chatbot::Eliza
 Class::Accessor
+Class::Accessor::Assert
+Class::Accessor::Class
+Class::Accessor::Lvalue
+Class::Accessor::Named
+Class::Accessor::Ref
 Class::AutoClass
 Class::Base
 Class::C3
+Class::C3::XS
 Class::DBI::AbstractSearch
 Class::DBI::AsForm
 Class::DBI::Pager
@@ -102,6 +113,7 @@ Class::Date
 Class::Factory
 Class::Fields
 Class::Gomor
+Class::Implements
 Class::Inner
 Class::InsideOut
 Class::Loader
@@ -239,6 +251,7 @@ Devel::ebug::HTTP
 Digest::BubbleBabble
 Digest::MD2
 Digest::MD5
+Digest::Tiger
 Directory::Scratch
 DocSet
 ETL::Pequel
@@ -316,6 +329,7 @@ GD::SecurityImage
 GD::Text
 GIS::Distance
 GSSAPI
+Games::Bingo
 Geo::ShapeFile
 Geography::Countries
 Getopt::ArgvFile

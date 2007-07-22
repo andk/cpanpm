@@ -34,7 +34,24 @@ Patches 17641, 17642, 17644, 17654, 17655, 17656, 17671, 17672, 17673, 17674, 17
 	was not working then. But when I 'force notest install XML::Twig', then
 	SVG::Metadata passes its tests.
 
-	Next round of binsearch with the fixed 17705.
+	Next round of binsearch with the fixed 17705. And then I had to find out
+	that SVG::Metadata does not declare its dependency on HTML::Entities and
+	had to install that manually into some involved perls and finally I got:
+
+----Program----
+eval q{use SVG::Metadata 0.28};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pjEfwQE/perl-5.8.0@17724/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pg7Kp5D/perl-5.8.0@17725/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
 
 	* Assertion: Environment is being set during perl {Build,Makefile}.PL?
 
