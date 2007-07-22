@@ -239,6 +239,7 @@ Devel::ebug::HTTP
 Digest::BubbleBabble
 Digest::MD2
 Digest::MD5
+Directory::Scratch
 DocSet
 ETL::Pequel
 Email::Address
