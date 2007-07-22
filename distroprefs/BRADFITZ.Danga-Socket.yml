@@ -1,5 +1,10 @@
 ---
-comment: "https://rt.cpan.org/Ticket/Display.html?id=20668"
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=20668
+
+  #17725 removed pseudo hashes from the core
+
 match:
   distribution: "BRADFITZ/Danga-Socket-1.5[67].tar.gz"
 patches:

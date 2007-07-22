@@ -1,5 +1,39 @@
 2007-07-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* SVG-Metadata needs a binary search. I suspect pseudo hashes. Very ugly
+	result:
+
+----Program----
+eval q{use SVG::Metadata 0.28};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p0IId7q/perl-5.8.0@17639/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pINt5Dc/perl-5.8.0@17705/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 17639 and 17705
+(but 17641, 17642, 17644, 17654, 17655, 17656, 17671, 17672, 17673, 17674, 17675, 17676, 17677, 17678, 17679, 17680, 17681, 17682, 17683, 17684, 17685, 17686, 17687, 17688, 17689, 17690, 17691, 17692, 17693, 17694, 17695, 17696, 17697, 17698, 17699, 17700, 17701, 17702, 17703, 17704 could not successfully be used to build perl)
+No useable patch available between 17639 and 17705
+Patches 17641, 17642, 17644, 17654, 17655, 17656, 17671, 17672, 17673, 17674, 17675, 17676, 17677, 17678, 17679, 17680, 17681, 17682, 17683, 17684, 17685, 17686, 17687, 17688, 17689, 17690, 17691, 17692, 17693, 17694, 17695, 17696, 17697, 17698, 17699, 17700, 17701, 17702, 17703, 17704 could not successfully be used to build perl
+
+	pseudo hashes were extinct, when? 17725!
+
+	So it isn't a pseudo hash thing? well, 17705 failed because XML::Twig
+	was not working then. But when I 'force notest install XML::Twig', then
+	SVG::Metadata passes its tests.
+
+	Next round of binsearch with the fixed 17705.
+
+	* Assertion: Environment is being set during perl {Build,Makefile}.PL?
+
+	iow: is set_perl5lib called from within get or its deputies? Yes, in
+	line 7193 within make
+
 	* Idea: new option to cleanup the build_dir not by size but by age.
 
 	* Todo: with the new sendmail configuration I should retry if mailtools
