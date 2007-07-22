@@ -1,3 +1,10 @@
+2007-07-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* jumpqueue takes as arguments short arrayreferences. We must put some
+	aiming_at argument there containing get/make/test/install. Because we
+	will see configure_require dependencies that must be treated accordingly
+	when they only said get or make.
+
 2007-07-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* SVG-Metadata needs a binary search. I suspect pseudo hashes. Very ugly
