@@ -1,4 +1,51 @@
+2007-07-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* CPAN::Unwind: 20070423T0905 saw the first time C<Couldn't get tarball
+	for perl from CPAN at
+	/home/sand/.cpan/build/CPAN-Unwind-0.04-DG5lge/blib/lib/CPAN/Unwind.pm
+	line 173>
+
+	http://rt.cpan.org/Ticket/Display.html?id=28426
+
 2007-07-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Devel::EvalContext-0.08 is chasing me again and I see it working with
+	27002. But Data-Alias-1.0[56] do not compile with e.g. 29487. Is an
+	older Data::Alias at backpan? Where is backpan nowadays?
+
+ftp://ftp.funet.fi/pub/languages/perl/backpan
+http://ftp.funet.fi/pub/languages/perl/backpan
+rsync://nic.funet.fi/backpan
+
+	YES! HERE it is:
+
+	http://ftp.funet.fi/pub/languages/perl/backpan/authors/id/X/XM/XMATH/Data-Alias-1.04.tar.gz
+
+	Here I conclude that I should mirror this directory and put the mirror
+	second in the urllist and put the backpan last in the list.
+
+	Then I need to see under which patchlevel I need to try with 1.04 and
+	rewrite the prep script.
+
+	Patchlevel 28990 does not compile 1.05 nor 1.0[432] but 1.01 OK. And
+	with 1.01 we get Devel::EvalContext OK.
+
+	blead			Data::Alias		Devel::EvalContext
+	27002			1.05 OK				0.08 OK
+	28966			1.05 OK				0.08 OK
+	28990			1.01 OK				0.08 OK
+	29487			1.01 OK				0.08 OK
+	30019			1.03 OK				0.08 OK
+	30646			1.03 OK				0.08 OK
+	30969			1.03 OK				0.08 OK
+	31061			1.04 OK				0.08 OK
+	31157			1.05 OK				0.08 OK
+	31251			1.05 OK				0.08 OK
+	31252			1.06 OK				NOT OK
+
+	http://rt.cpan.org/Ticket/Display.html?id=28425
+
+	It's really not a bleadperl problem.
 
 	* jumpqueue takes as arguments short arrayreferences. We must put some
 	aiming_at argument there containing get/make/test/install. Because we

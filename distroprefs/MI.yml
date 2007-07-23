@@ -59,8 +59,9 @@ match:
     |LYOKATO/FormValidator-Simple-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
-    |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Catalyst-Action-RenderView-\d
+    |MRAMBERG/Catalyst-Plugin-Unicode-\d
+    |MRAMBERG/Catalyst-Runtime-
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
