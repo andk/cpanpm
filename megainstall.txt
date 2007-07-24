@@ -230,6 +230,7 @@ Devel::Caller
 Devel::Command
 Devel::Cover
 Devel::Cycle
+Devel::DProfLB
 Devel::Dependencies
 Devel::EvalContext
 Devel::FastProf
@@ -712,6 +713,7 @@ String::Multibyte
 String::Random
 String::ShellQuote
 String::Similarity
+String::Truncate
 Sub::Exporter
 Sub::Install
 Sub::Name

@@ -1,3 +1,16 @@
+2007-07-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* CPAN::Reporter fails tests around 30688 but afaik not on current
+	bleadperl. Who's to blame?
+
+	* TAP::Parser needs a binary search. 30265 OK, 31008 fails 030-grammar;
+
+	binsearchaperl --bounds 23023-99999 --apcdir /home/src/perl/repoperls/APC --prefix /home/src/perl/repoperls/installed-perls --prog tests/has-TAP-Parser.pl --prep tests/prep-TAP-Parser.pl --verbose -build
+
+	30676 is from Mar 22, 02:53 and works. I fear I must remove it to see if
+	it still works whne freshly compiled.
+
+	
 2007-07-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CPAN::Unwind: 20070423T0905 saw the first time C<Couldn't get tarball

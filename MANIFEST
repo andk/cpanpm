@@ -20,6 +20,7 @@ distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
+distroprefs/avoid.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
