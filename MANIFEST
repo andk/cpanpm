@@ -12,6 +12,7 @@ distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ANDYA.Perl-Version.yml
+distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
 distroprefs/AUDREYT.Jifty-DBI.yml

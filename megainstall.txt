@@ -719,6 +719,7 @@ Sub::Override
 Sub::Uplevel
 Sys::Hostname
 Sys::SigAction
+TAP::Parser
 Taint::Util
 Task::CVSMonitor
 Task::Catalyst::Tutorial
