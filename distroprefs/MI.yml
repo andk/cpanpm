@@ -31,6 +31,7 @@ match:
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
     |CLACO/Data-Currency-\d
+    |CLACO/Finance-Currency-Convert-WebserviceX-\d
     |CLACO/Handel-Storage-RDBO-\d
     |CLACO/Handel-\d
     |CLKAO/SVK-v\d

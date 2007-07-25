@@ -1,3 +1,19 @@
+2007-07-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bugreport
+
+cpan[7]> install Handel
+
+Recursive dependency detected:
+    Handel (have: N/A; want: 1.00003)
+ => CLACO/Handel-1.00003.tar.gz
+ => Handel::Storage::RDBO (have: N/A; requires: 1.00001)
+ => CLACO/Handel-Storage-RDBO-1.00001.tar.gz
+ => Handel (have: N/A; requires: 1.00000).
+Cannot resolve.
+
+	http://rt.cpan.org/Ticket/Display.html?id=28461
+
 2007-07-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CPAN::Reporter fails tests around 30688 but afaik not on current
@@ -8,7 +24,7 @@
 	binsearchaperl --bounds 23023-99999 --apcdir /home/src/perl/repoperls/APC --prefix /home/src/perl/repoperls/installed-perls --prog tests/has-TAP-Parser.pl --prep tests/prep-TAP-Parser.pl --verbose -build
 
 	30676 is from Mar 22, 02:53 and works. I fear I must remove it to see if
-	it still works whne freshly compiled.
+	it still works when freshly compiled.
 
 	
 2007-07-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
