@@ -32,6 +32,7 @@ match:
     |CLACO/DBIx-Class-Validation-\d
     |CLACO/Data-Currency-\d
     |CLACO/Handel-Storage-RDBO-\d
+    |CLACO/Handel-\d
     |CLKAO/SVK-v\d
     |DCOPPIT/Benchmark-Timer-\d
     |DMAKI/Catalyst-Model-FormFu-\d
