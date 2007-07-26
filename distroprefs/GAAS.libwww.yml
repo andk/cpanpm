@@ -1,4 +1,15 @@
 --- 
+match:
+  distribution: "^GAAS/libwww-perl-5.806.tar.gz"
+pl: 
+  args:
+    - "-n"
+  expect: 
+    - "Do you want to enable these tests"
+    - "\n"
+patches:
+  - "/tmp/libwww-perl-5.806-ISHIGAKI-01.patch"
+--- 
 comment: |
 
   The -n asks no questions, takes default values
