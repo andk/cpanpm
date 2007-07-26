@@ -37,6 +37,7 @@ BitTorrent
 Bot::CPAN
 Bundle::Encode
 Bundle::POE::IRC
+Bundle::POE::Simple::TCPIP::Services
 Bundle::Pause
 Bundle::Perl6
 Bundle::PerlPoint
