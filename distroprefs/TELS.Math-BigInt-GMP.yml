@@ -1,16 +1,7 @@
----
-comment: "http://rt.cpan.org/Ticket/Display.html?id=24672"
-match:
-  distribution: "TELS/math/Math-BigInt-GMP-1.19.tar.gz"
-  perl: "XXX --- never matches --- XXX"
-patches:
-  - "ANDK/patches/Math-BigInt-GMP-1.19-ANDK-01.patch.gz"
----
 comment: |
 
-  Later I discovered that he uses PREREQ_FATAL everywhere and found
-  this patchfree solution that SHOULD work but requires MakeMaker 6.33
-  or so. http://rt.cpan.org/Ticket/Display.html?id=24774
+  Requires MakeMaker 6.33 or so.
+  http://rt.cpan.org/Ticket/Display.html?id=24774
 
 match:
   distribution: "^TELS/math/"

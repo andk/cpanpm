@@ -1,14 +1,14 @@
 ---
 comment: |
 
-  Math::BigInt seems to take infinitely long to compute this test to
-  an end. Only if Math::BigInt::GMP is installed, this test is
-  computed in a few seconds. Last time verified with Crypt-DH-0.06 and
-  Math::BigInt 1.86.
-
-  As Math::BigInt::GMP 1.21 fails a test I used 1.20 as a fallback
+  Math::BigInt without GMP takes loooooong to compute this test. I
+  never reached an end because I usually give up after 30 minutes.
+  Only if Math::BigInt::GMP is installed, this test is computed in a
+  second. Last time verified with Crypt-DH-0.06 and Math::BigInt 1.88.
 
 match:
   distribution: "^BTROTT/Crypt-DH-"
   perl: ".../installed-perls/..."
-disabled: 1
+depends:
+  requires:
+    Math::BigInt::GMP: 1.23
