@@ -1,3 +1,14 @@
+2007-07-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* libwww fails now with a different error than a few days ago.
+
+	* make test fails on 30shell! Does it maybe have to do with LWP missing?
+	No. Recent changes to _reload_this() broke it. FIXED.
+
+	* Todo: help x should provide specific help for x
+
+	* Todo: run with CPAN::SQLite
+
 2007-07-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* CPAN::Reporter refresh

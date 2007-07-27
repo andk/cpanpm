@@ -18,6 +18,7 @@ Apache::HeavyCGI
 Apache::Request
 Apache::Session
 Apache::Session::Counted
+Apache::Status::DBI
 App::Ack
 App::CLI
 App::Info::Lib::Iconv

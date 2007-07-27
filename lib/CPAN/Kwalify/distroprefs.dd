@@ -58,6 +58,9 @@ $VAR1 = {
               ],
               "type" => "text"
             },
+            "reuse" => {
+              "type" => "int"
+            },
             "talk" => {
               "sequence" => [
                 {

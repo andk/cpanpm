@@ -474,6 +474,8 @@ __END__
 ########
 #P:o conf defaults
 ########
+#P:o conf urllist
+########
 #P:o conf build_cache
 #E:build_cache
 #S:run
@@ -498,6 +500,8 @@ __END__
 ########
 #P:o conf defaults
 #E:reread
+########
+#P:o conf urllist
 ########
 #P:o conf histsize
 #E:histsize.+?101
@@ -806,6 +810,8 @@ __END__
 #E:
 ########
 #P:o conf defaults
+########
+#P:o conf urllist
 ########
 #P:!print$ENV{HARNESS_PERL_SWITCHES}||"",$/
 #E:
