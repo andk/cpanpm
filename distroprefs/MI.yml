@@ -53,6 +53,7 @@ match:
     |HOLOWAY/Catalyst-Action-REST-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-\d
+    |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JROCKWAY/Directory-Scratch-\d

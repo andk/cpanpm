@@ -4,4 +4,4 @@ match:
   distribution: "^LDS/Crypt-CBC-2.22.tar.gz"
 depends:
   requires:
-    Crypt::IDEA: 0
+    Crypt::IDEA: 1.08

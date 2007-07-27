@@ -1,3 +1,22 @@
+2007-07-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* CPAN::Reporter refresh
+
+----Program----
+eval q{use CPAN::Reporter 0.46};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pYGQKvE/perl-5.8.0@30867/bin/perl----
+N/A
+
+----EOF ($?='0')----
+----Output of .../pCVcKvs/perl-5.8.0@30868/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+
 2007-07-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bugreport
@@ -26,6 +45,7 @@ Cannot resolve.
 	30676 is from Mar 22, 02:53 and works. I fear I must remove it to see if
 	it still works when freshly compiled.
 
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/2968145308e42c67/bd05f62142673f32
 	
 2007-07-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

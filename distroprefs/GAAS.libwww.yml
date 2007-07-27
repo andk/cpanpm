@@ -8,7 +8,7 @@ pl:
     - "Do you want to enable these tests"
     - "\n"
 patches:
-  - "/tmp/libwww-perl-5.806-ISHIGAKI-01.patch"
+  - "ANDK/patches/libwww-perl-5.806-ISHIGAKI-01.patch.gz"
 --- 
 comment: |
 
