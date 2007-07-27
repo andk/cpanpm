@@ -27,7 +27,21 @@ OK
 
 ----EOF ($?='0')----
 
+----Program----
+eval q{use CPAN::Reporter 0.46};
+print $@ ? "N/A" : "OK";
+print "\n";
 
+----Output of .../pKsPB4G/perl-5.8.0@29544/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p7dQLd3/perl-5.8.0@29545/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	
 2007-07-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bugreport

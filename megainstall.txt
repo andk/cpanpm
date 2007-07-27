@@ -372,6 +372,7 @@ HTML::Template::Compiled
 HTML::Tidy
 HTML::TokeParser::Simple
 HTML::TreeBuilder
+HTML::TreeBuilder::XPath
 HTML::Widget
 HTML::WikiConverter
 HTTP::BrowserDetect
