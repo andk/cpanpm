@@ -5,3 +5,4 @@ match:
 depends:
   requires:
     Digest::SHA1: 0
+    LWP::Simple: 0

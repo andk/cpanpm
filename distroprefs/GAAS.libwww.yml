@@ -6,7 +6,7 @@ pl:
     - "-n"
   expect: 
     - "Do you want to enable these tests"
-    - "\n"
+    - "n\n"
 patches:
   - "ANDK/patches/libwww-perl-5.806-ISHIGAKI-01.patch.gz"
 --- 
