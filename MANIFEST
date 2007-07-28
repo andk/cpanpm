@@ -152,6 +152,7 @@ distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.Perl6-Caller.yml
 distroprefs/OVID.TAPx-Parser.yml
 distroprefs/OWEN.PDF-Labels.yml
+distroprefs/PAJAS.XML-LibXML.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml

@@ -270,9 +270,14 @@ ReadLine support %s
 	    $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
 	    my $command = shift @line;
 	    eval { CPAN::Shell->$command(@line) };
-	    if ($@ && "$@" =~ /\S/){
-                require Carp;
-                Carp::cluck("Catching error: '$@'");
+	    if ($@){
+                my $err = "$@";
+                if ($err =~ /\S/) {
+                    require Carp;
+                    require Dumpvalue;
+                    my $dv = Dumpvalue->new();
+                    Carp::cluck(sprintf "Catching error: %s", $dv->stringify($err));
+                }
             }
             if ($command =~ /^(
                              # classic commands

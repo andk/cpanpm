@@ -1,3 +1,8 @@
+2007-07-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* libxml2 upgrade broke XML::LibXML but in a minor way so we can write a
+	distropref that skips one test
+
 2007-07-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* libwww fails now with a different error than a few days ago.
