@@ -75,6 +75,7 @@ distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GEOFF.Apache-Test.yml
 distroprefs/GIULIENK.Audio-Beep.yml
+distroprefs/GOMOR.Net-Write.yml
 distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
@@ -199,6 +200,7 @@ distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm
+lib/CPAN/#Queue.pm#
 lib/CPAN/Admin.pm
 lib/CPAN/Debug.pm
 lib/CPAN/FirstTime.pm
