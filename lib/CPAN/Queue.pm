@@ -69,7 +69,7 @@ package CPAN::Queue;
 use vars qw{ @All $VERSION };
 $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
-# CPAN::Queue::Item::queue ;
+# CPAN::Queue::queue_item ;
 sub queue_item {
   my($class,@attr) = @_;
   my $item = "$class\::Item"->new(@attr);
