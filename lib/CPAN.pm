@@ -4037,6 +4037,7 @@ sub hostdleasy {
 		    return $aslocal;
 		}
 	    }
+            $CPAN::Frontend->mywarn("Could not find '$l'\n");
 	}
 	$self->debug("it was not a file URL") if $CPAN::DEBUG;
         if ($CPAN::META->has_usable('LWP')) {
