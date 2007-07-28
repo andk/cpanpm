@@ -3142,7 +3142,7 @@ sub rematein {
                     }
                 }
             }
-            CPAN::Queue->new(qmod => $obj->id, reqtype => "c");
+            CPAN::Queue->queue_item(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
 	} elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
 	    $obj = $CPAN::META->instance('CPAN::Author',uc($s));
