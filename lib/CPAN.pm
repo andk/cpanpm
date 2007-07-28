@@ -3817,12 +3817,7 @@ sub localize {
     }
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
-    File::Path::mkpath($aslocal_dir);
-    $CPAN::Frontend->mywarn(qq{Warning: You are not allowed to write into }.
-	qq{directory "$aslocal_dir".
-    I\'ll continue, but if you encounter problems, they may be due
-    to insufficient permissions.\n}) unless -w $aslocal_dir;
-
+    $self->mymkpath($aslocal_dir); # too early for file URLs / RT #28438
     # Inheritance is not easier to manage than a few if/else branches
     if ($CPAN::META->has_usable('LWP::UserAgent')) {
  	unless ($Ua) {
@@ -3969,6 +3964,15 @@ sub localize {
 	return $aslocal;
     }
     return;
+}
+
+sub mymkpath {
+    my($self, $aslocal_dir) = @_;
+    File::Path::mkpath($aslocal_dir);
+    $CPAN::Frontend->mywarn(qq{Warning: You are not allowed to write into }.
+	qq{directory "$aslocal_dir".
+    I\'ll continue, but if you encounter problems, they may be due
+    to insufficient permissions.\n}) unless -w $aslocal_dir;
 }
 
 sub hostdlxxx {
