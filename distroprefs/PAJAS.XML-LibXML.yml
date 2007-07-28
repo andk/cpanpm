@@ -3,6 +3,8 @@ comment: |
 
   Recent changes in libxml2 broke the test 03doc so we skip it
 
+  https://rt.cpan.org/Ticket/Display.html?id=27659
+
 match:
   distribution: "^PAJAS/XML-LibXML-1.63.tar.gz"
 test:

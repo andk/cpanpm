@@ -481,6 +481,7 @@ Math::Bezier::Convert
 Math::BigInt::FastCalc
 Math::BigInt::GMP
 Math::BigRat
+Math::Cephes
 Math::GMP
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset

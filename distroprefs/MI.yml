@@ -13,6 +13,7 @@ match:
     |ADAMK/URI-ToDisk-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AVAR/Bot-BB2-\d
+    |AVAR/SMS-Send-IS-Vodafone-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
     |BLBLACK/Class-C3-\d
     |BLBLACK/DBIx-Class-Schema-Loader-\d
@@ -62,6 +63,9 @@ match:
     |LUKEC/Test-WWW-Selenium-\d
     |LYOKATO/FormValidator-Simple-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MITREHC/HoneyClient-Agent-\d
+    |MITREHC/HoneyClient-Manager-\d
+    |MITREHC/HoneyClient-Util-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
@@ -83,6 +87,7 @@ match:
     |ZIGOROU/MozRepl-\d
     |ZIGOROU/Nagios-Plugins-Memcached-\d
     |ZIGOROU/WebService-Reflexa-\d
+    |ZIGOROU/WebService-TRIPIT-Thesaurus-\d
     )|
 pl:
   eexpect:
