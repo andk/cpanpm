@@ -109,17 +109,17 @@ sub jumpqueue {
     my $class = shift;
     my @what = @_;
     CPAN->debug(sprintf("before jumpqueue All[%s] what[%s]",
-                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
-                        join("",map {sprintf " %s\[%s]",$_->[0],$_->[1]} @what)
-                       )) if $CPAN::DEBUG;
-    unless (defined $what[0][1]) {
+                        join("",
+                             map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All, @what
+                            ))) if $CPAN::DEBUG;
+    unless (defined $what[0]{reqtype}) {
         # apparently it was not the Shell that sent us this enquiry,
         # treat it as commandline
-        $what[0][1] = "c";
+        $what[0]{reqtype} = "c";
      }
-    my $inherit_reqtype = $what[0][1] =~ /^(c|r)$/ ? "r" : "b";
+    my $inherit_reqtype = $what[0]{reqtype} =~ /^(c|r)$/ ? "r" : "b";
   WHAT: for my $what_tuple (@what) {
-        my($what,$reqtype) = @$what_tuple;
+        my($what,$reqtype) = @$what_tuple{qw(qmod reqtype)};
         if ($reqtype eq "r"
             &&
             $inherit_reqtype eq "b"

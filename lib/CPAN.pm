@@ -3359,7 +3359,7 @@ sub recent {
       return \@distros;
   } else {
       # deprecated old version
-      $CPAN::Frontend->mydie("no XML::LibXML installed, cannot continue");
+      $CPAN::Frontend->mydie("no XML::LibXML installed, cannot continue\n");
   }
 }
 
@@ -7932,8 +7932,8 @@ of modules we are processing right now?", "yes");
             }
         }
         # queue them and re-queue yourself
-        CPAN::Queue->jumpqueue([$id,$self->{reqtype}],
-                               reverse @prereq_tuples);
+        CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}},
+                               map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @prereq_tuples);
         $self->{$slot} = "Delayed until after prerequisites";
         return 1; # signal success to the queuerunner
     }
@@ -8636,7 +8636,7 @@ sub goto {
     # inject into the queue
 
     CPAN::Queue->delete($self->id);
-    CPAN::Queue->jumpqueue([$goto,$self->{reqtype}]);
+    CPAN::Queue->jumpqueue({qmod => $goto, reqtype => $self->{reqtype}});
 
     # and run where we left off
 

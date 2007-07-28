@@ -200,7 +200,6 @@ distroprefs/ZEV.Test-Dependencies.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm
-lib/CPAN/#Queue.pm#
 lib/CPAN/Admin.pm
 lib/CPAN/Debug.pm
 lib/CPAN/FirstTime.pm
