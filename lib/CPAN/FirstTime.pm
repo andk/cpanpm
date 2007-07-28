@@ -1072,9 +1072,9 @@ First of all, I\'d like to create this directory. Where?
 
 keep_source_where => qq{
 
-Unless you are accessing the CPAN via the filesystem directly CPAN.pm
-needs to keep the source files it downloads somewhere. Please supply a
-directory where the downloaded files are to be kept.},
+Unless you are accessing the CPAN on your filesystem via a file: URL,
+CPAN.pm needs to keep the source files it downloads somewhere. Please
+supply a directory where the downloaded files are to be kept.},
 
 build_cache_intro => qq{
 
