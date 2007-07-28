@@ -4815,7 +4815,14 @@ sub reanimate_build_dir {
             my $do
                 = $CPAN::META->{readwrite}{'CPAN::Distribution'}{$key}
                     = $c->{distribution};
-            for my $skipper (qw(badtestcnt notest force_update sponsored_mods)) {
+            for my $skipper (qw(
+                                badtestcnt
+                                configure_requires_later
+                                force_update
+                                later
+                                notest
+                                sponsored_mods
+                               )) {
                 delete $do->{$skipper};
             }
             # $DB::single = 1;
@@ -6206,7 +6213,10 @@ sub satisfy_configure_requires {
     my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
     if ($self->{configure_requires_later}) {
         # we must not come here a second time
-        $CPAN::Frontend->mydie("Panic: A prerequisite is not available, please investigate...");
+        $CPAN::Frontend->mywarn("Panic: A prerequisite is not available, please investigate...");
+        require Data::Dumper;
+        $CPAN::Frontend->mydie( Data::Dumper->new([$self],
+                                                  [qw(self)])->Indent(1)->Useqq(1)->Dump );
     }
     if ($prereq[0][0] eq "perl") {
         my $need = "requires perl '$prereq[0][1]'";
