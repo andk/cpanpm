@@ -859,6 +859,7 @@ Voting::Condorcet::RankedPairs
 WWW::Live365
 WWW::Monitor
 WWW::OpenSearch
+WWW::REST
 WWW::Scraper::ISBN::Record
 WWW::Search
 WWW::Shorten
