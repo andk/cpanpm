@@ -6,6 +6,7 @@ distroprefs/00.README
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.dd
 distroprefs/ABW.Template-Toolkit.yml
+distroprefs/ACG.Scrabble-Dict.yml
 distroprefs/ADAMK.Chart-Math-Axis.yml
 distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ADAMK.Test-Inline.yml
