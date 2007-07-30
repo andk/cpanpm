@@ -1,0 +1,18 @@
+--- 
+match:
+  distribution: "^CHAMAS/Crypt-SSLeay-"
+goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
+---
+comment: "Wording of the question changed around 0.53_05"
+match:
+  distribution: "^DLAND/Crypt-SSLeay-"
+pl:
+  eexpect:
+    mode: anyorder
+    talk:
+      - "Which OpenSSL build path"
+      - "\n"
+      - "Which SSL install path"
+      - "\n"
+      - "Do you want to run the live tests"
+      - "n\n"

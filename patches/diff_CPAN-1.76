@@ -1,0 +1,795 @@
+--- ./lib/CPAN.pm.orig-x	Thu Jul 31 07:53:06 2003
++++ ./lib/CPAN.pm	Mon Sep 19 17:56:28 2005
+@@ -64,7 +64,7 @@ use vars qw($VERSION @EXPORT $AUTOLOAD $
+ @CPAN::ISA = qw(CPAN::Debug Exporter);
+ 
+ @EXPORT = qw(
+-	     autobundle bundle expand force get cvs_import
++	     autobundle bundle expand force get cvs_import install_tested
+ 	     install make readme recompile shell test clean
+ 	    );
+ 
+@@ -255,11 +255,11 @@ package CPAN::Complete;
+ @CPAN::Complete::COMMANDS = sort qw(
+ 		       ! a b d h i m o q r u autobundle clean dump
+ 		       make test install force readme reload look
+-                       cvs_import ls
++                       cvs_import ls install_tested
+ ) unless @CPAN::Complete::COMMANDS;
+ 
+ package CPAN::Index;
+-use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03);
++use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03 $BUILD_DIRS);
+ @CPAN::Index::ISA = qw(CPAN::Debug);
+ $LAST_TIME ||= 0;
+ $DATE_OF_03 ||= 0;
+@@ -807,6 +807,10 @@ sub cleanup {
+ 	  $subroutine eq '(eval)';
+   }
+   return if $ineval && !$End;
++  if ($CPAN::Index::BUILD_DIRS and $CPAN::Index::BUILD_DIRS->{'*new*'}) {
++    CPAN::Index->write_metadata_cache();
++    $CPAN::Frontend->mywarn("List of tested dirs updated.\n");
++  }
+   return unless defined $META->{LOCK};
+   return unless -f $META->{LOCK};
+   $META->savehist;
+@@ -842,6 +846,7 @@ sub savehist {
+     close $fh;
+ }
+ 
++# Actually, this means: tested, but not installed...
+ sub is_tested {
+     my($self,$what) = @_;
+     $self->{is_tested}{$what} = 1;
+@@ -860,8 +865,14 @@ sub set_perl5lib {
+     $env = $ENV{PERLLIB} unless defined $env;
+     my @env;
+     push @env, $env if defined $env and length $env;
+-    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
+-    $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
++    my @dirs = map {("$_/blib/arch", "$_/blib/lib")} sort keys %{$self->{is_tested}};
++    if (@dirs < 15) {
++       $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
++    } else {
++       my @d = map {s/^\Q$CPAN::Config->{'build_dir'}/%BUILDDIR%/; $_ }
++	 sort keys %{$self->{is_tested}};
++       $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib subdirs of @d to PERL5LIB; %BUILDDIR%=$CPAN::Config->{'build_dir'}.\n");
++    }
+     $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
+ }
+ 
+@@ -1285,8 +1296,8 @@ sub missing_config_data {
+          "pager",
+          "makepl_arg", "make_arg", "make_install_arg", "urllist",
+          "inhibit_startup_message", "ftp_proxy", "http_proxy", "no_proxy",
+-         "prerequisites_policy",
+-         "cache_metadata",
++         "prerequisites_policy", "expire_old_builds",
++         "cache_metadata", "test_uptodate", "install_uptodate"
+         ) {
+ 	push @miss, $_ unless defined $CPAN::Config->{$_};
+     }
+@@ -1374,7 +1385,8 @@ Other
+  h,?           display this menu       ! perl-code   eval a perl command
+  o conf [opt]  set and query options   q             quit the cpan shell
+  reload cpan   load CPAN.pm again      reload index  load newer indices
+- autobundle    Snapshot                force cmd     unconditionally do cmd});
++ autobundle    Snapshot                force cmd     unconditionally do cmd
++ install_tested Only modules tested with this build of perl});
+     }
+ }
+ 
+@@ -1493,13 +1505,14 @@ sub o {
+ 	    $CPAN::Frontend->myprint(":\n");
+ 	    for $k (sort keys %CPAN::Config::can) {
+ 		$v = $CPAN::Config::can{$k};
+-		$CPAN::Frontend->myprint(sprintf "    %-18s %s\n", $k, $v);
++		# use distinctive whitespace to make the commands stand out
++		$CPAN::Frontend->myprint(sprintf "      %-10s %s\n", $k, $v);
+ 	    }
+ 	    $CPAN::Frontend->myprint("\n");
+ 	    for $k (sort keys %$CPAN::Config) {
+                 CPAN::Config->prettyprint($k);
+ 	    }
+-	    $CPAN::Frontend->myprint("\n");
++	    # $CPAN::Frontend->myprint("\n");	# Why second empty line?
+ 	} elsif (!CPAN::Config->edit(@o_what)) {
+ 	    $CPAN::Frontend->myprint(qq{Type 'o conf' to view configuration }.
+                                      qq{edit options\n\n});
+@@ -2046,6 +2059,39 @@ sub rematein {
+     setup_output();
+     CPAN->debug("pragma[$pragma]meth[$meth] some[@some]") if $CPAN::DEBUG;
+ 
++    if ($meth eq 'install_tested') {
++	$CPAN::Frontend->mywarn("install_tested() requires no arguments.\n"),
++	    return if @some;
++	CPAN::Index->reload;
++	@some = sort keys %$CPAN::Index::BUILD_DIRS if $CPAN::Index::BUILD_DIRS;
++	$CPAN::Frontend->mywarn("No tested distributions found.\n"),
++	    return unless @some;
++
++	$CPAN::Frontend->myprint("Checking which distributions were tested " .
++				 "with this version of perl...\n");
++	@some = grep CPAN::Shell->expandany($_)->persistent_tested_ok, @some;
++	$CPAN::Frontend->mywarn("No distributions tested with this build of perl found.\n"),
++	    return unless @some;
++
++	$CPAN::Frontend->myprint("Looking for obsolete distributions...\n");
++	my ($dist, @process, %seen);
++	# as in CPAN::Distribution::cpntainsmods; but do one run only
++	for my $mod ($CPAN::META->all_objects("CPAN::Module")) {
++	    my $mod_file = $mod->cpan_file or next;
++	    $seen{$mod_file}++;
++	}
++	for $dist (@some) {
++	    # my @mods = CPAN::Shell->expandany($dist)->containsmods;
++	    # The commented out check is meaningless; see containsmods().
++	    # @mods = grep CPAN::Shell->expandany($_)->cpan_file ne $dist, @mods;
++	    push(@process, $dist), next if $seen{$dist};
++	    $CPAN::Frontend->mywarn("$dist: all the modules are obsolete...\n");
++	}
++	@some = @process;
++	$CPAN::Frontend->mywarn("All the tested distributions are obsolete.\n"),
++		return unless @some;
++	$meth = 'install';
++    }
+     # Here is the place to set "test_count" on all involved parties to
+     # 0. We then can pass this counter on to the involved
+     # distributions and those can refuse to test if test_count > X. In
+@@ -2168,6 +2214,8 @@ sub clean   { shift->rematein('clean',@_
+ sub look   { shift->rematein('look',@_); }
+ #-> sub CPAN::Shell::cvs_import ;
+ sub cvs_import   { shift->rematein('cvs_import',@_); }
++#-> sub CPAN::Shell::install_tested ;
++sub install_tested   { shift->rematein('install_tested',@_); }
+ 
+ package CPAN::LWP::UserAgent;
+ 
+@@ -3411,6 +3459,11 @@ sub write_metadata_cache {
+     $cache->{last_time} = $LAST_TIME;
+     $cache->{DATE_OF_02} = $DATE_OF_02;
+     $cache->{PROTOCOL} = PROTOCOL;
++    if ($BUILD_DIRS) {
++	$cache->{'CPAN-sitearchexp'} = $Config::Config{sitearchexp};
++	delete $CPAN::Index::BUILD_DIRS->{'*new*'};
++        $cache->{'CPAN-tested-dirs'} = $BUILD_DIRS;
++    }
+     $CPAN::Frontend->myprint("Going to write $metadata_file\n");
+     eval { Storable::nstore($cache, $metadata_file) };
+     $CPAN::Frontend->mywarn($@) if $@; # ?? missing "\n" after $@ in mywarn ??
+@@ -3471,6 +3524,12 @@ sub read_metadata_cache {
+                             # does initialize to some protocol
+     $LAST_TIME = $cache->{last_time};
+     $DATE_OF_02 = $cache->{DATE_OF_02};
++    # Do not trust build directories of different version of Perl:
++    delete $cache->{'CPAN-tested-dirs'}
++	if exists $cache->{'CPAN-sitearchexp'}
++	    and $cache->{'CPAN-sitearchexp'} ne $Config::Config{sitearchexp};
++    $BUILD_DIRS = $cache->{'CPAN-tested-dirs'}
++	if exists $cache->{'CPAN-tested-dirs'};
+     $CPAN::Frontend->myprint("  Database was generated on $DATE_OF_02\n")
+ 	if defined $DATE_OF_02; # An old cache may not contain DATE_OF_02
+     return;
+@@ -3816,6 +3875,12 @@ sub called_for {
+     return $self->{CALLED_FOR};
+ }
+ 
++#-> sub CPAN::Distribution::containsdists
++sub containsdists {
++    my($self) = @_;
++    $self->{ID};
++}
++
+ #-> sub CPAN::Distribution::safe_chdir ;
+ sub safe_chdir {
+     my($self,$todir) = @_;
+@@ -3832,6 +3897,53 @@ sub safe_chdir {
+     }
+ }
+ 
++#-> sub CPAN::Distribution::patch ;
++sub patch {
++    my ($self, $name) = (@_);
++    return unless chdir $self->{build_dir};
++    my $dir = File::Spec->catdir($CPAN::Config->{'cpan_home'}, 'patches');
++    return unless -d $dir;
++    my $file = File::Spec->catfile($dir, "diff_$name");
++    my $gzip;
++    unless (-r $file) {
++	$gzip = $CPAN::Config->{gzip};
++	$file = File::Spec->catfile($dir, "diff_$name.gz");
++	unless (-r $file and $gzip) {
++	    $gzip = $CPAN::Config->{bzip2} || 'bzip2';
++	    $file = File::Spec->catfile($dir, "diff_$name.bz2");
++	    return unless -r $file;
++	}
++    }
++    $CPAN::Frontend->myprint("Found patch in `$file'.\n");
++    my $patch = $Config::Config{gnupatch} || 'patch';
++    my $cmd = "$patch -p1";
++    if ($gzip) {
++	$cmd = "$gzip -dc $file | $cmd";
++    } else {
++	$cmd .= " <$file";
++    }
++    local *PATCH;
++    open PATCH, "$cmd |"
++      or $CPAN::Frontend->myprint("can't open pipe from `$cmd': $!") and return;
++    local *PATCHOUT;
++    my $out = 'cpan.patching';
++    open PATCHOUT, ">$out"
++      or $CPAN::Frontend->myprint("can't open $out: $!") and return;
++    my $old = select PATCHOUT;
++    $| = 1;
++    select $old;
++    while (<PATCH>) {
++	print PATCHOUT $_;
++	chomp;
++	$CPAN::Frontend->myprint($_);		# What to do if interactive?
++    }
++    close PATCHOUT
++      or $CPAN::Frontend->myprint("can't close $out: $!");
++    close PATCH
++      or $CPAN::Frontend->myprint("errors running `$cmd': rc=$?") and return;
++    $CPAN::Frontend->myprint("Patching from `$file' successful");
++}
++
+ #-> sub CPAN::Distribution::get ;
+ sub get {
+     my($self) = @_;
+@@ -3946,6 +4058,7 @@ sub get {
+         my $pragmatic_dir = $userid . '000';
+         $pragmatic_dir =~ s/\W_//g;
+         $pragmatic_dir++ while -d "../$pragmatic_dir";
++	$distdir = $pragmatic_dir;
+         $packagedir = File::Spec->catdir($builddir,$pragmatic_dir);
+         $self->debug("packagedir[$packagedir]") if $CPAN::DEBUG;
+         File::Path::mkpath($packagedir);
+@@ -4023,6 +4136,8 @@ WriteMakefile(NAME => q[$cf]);
+             $fh->close;
+         }
+     }
++    $self->patch($distdir);
++    $self->safe_chdir($builddir);	# Back after patching
+ 
+     return $self;
+ }
+@@ -4359,12 +4474,16 @@ sub force {
+   if ($method && $method eq "install") {
+     $self->{"force_update"}++; # name should probably have been force_install
+   }
++  if ($method && $method eq "test") {
++    $self->{"force_test"}++; # name should probably have been force_install
++  }
+ }
+ 
+ #-> sub CPAN::Distribution::unforce ;
+ sub unforce {
+   my($self) = @_;
+   delete $self->{'force_update'};
++  delete $self->{'force_test'};
+ }
+ 
+ #-> sub CPAN::Distribution::isa_perl ;
+@@ -4492,6 +4611,8 @@ or
+ 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
+ 	my($ret,$pid);
+ 	$@ = "";
++	local $ENV{PERL5LIB} = $ENV{PERL5LIB} || $ENV{PERLLIB} || "";
++	$CPAN::META->set_perl5lib;
+ 	if ($CPAN::Config->{inactivity_timeout}) {
+ 	    eval {
+ 		alarm $CPAN::Config->{inactivity_timeout};
+@@ -4541,19 +4662,23 @@ or
+     }
+     if ($CPAN::Signal){
+       delete $self->{force_update};
++      delete $self->{force_test};
+       return;
+     }
+-    if (my @prereq = $self->unsat_prereq){
++    if (my @prereq = $self->unsat_prereq('make')){
+       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+     }
+     $system = join " ", $CPAN::Config->{'make'}, $CPAN::Config->{make_arg};
++    local $ENV{PERL5LIB} = $ENV{PERL5LIB} || $ENV{PERLLIB} || "";
++    $CPAN::META->set_perl5lib;
+     if (system($system) == 0) {
+ 	 $CPAN::Frontend->myprint("  $system -- OK\n");
+ 	 $self->{'make'} = "YES";
+     } else {
+ 	 $self->{writemakefile} ||= "YES";
+ 	 $self->{'make'} = "NO";
+-	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
++	 # Print ID so that it is close to the failure output:
++	 $CPAN::Frontend->myprint("  $system -- NOT OK\n\t[were making ". $self->id ."]\n");
+     }
+ }
+ 
+@@ -4595,13 +4720,14 @@ of modules we are processing right now?"
+ 
+ #-> sub CPAN::Distribution::unsat_prereq ;
+ sub unsat_prereq {
+-    my($self) = @_;
++    my($self, $for) = @_;
+     my $prereq_pm = $self->prereq_pm or return;
+     my(@need);
+   NEED: while (my($need_module, $need_version) = each %$prereq_pm) {
+         my $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
+         # we were too demanding:
+         next if $nmo->uptodate;
++        next if $nmo->tested_ok and $for ne 'install';
+ 
+         # if they have not specified a version, we accept any installed one
+         if (not defined $need_version or
+@@ -4682,16 +4808,115 @@ sub prereq_pm {
+   return $self->{prereq_pm} = \%p;
+ }
+ 
++#-> sub CPAN::Distribution::persistent_key ;
++sub persistent_key {	# Identify "sameness" of the Perl
++  my @keys = ($Config::Config{sitearchexp}, $^X);
++  push @keys, (-f $^X ? (stat(_))[9] : '--');	# mtime
++  my $dll = eval {OS2::DLLname()};
++  if (defined $dll) {
++    push @keys, $dll;
++    push @keys, (-f $dll ? (stat(_))[9] : '--');	# mtime
++  }
++  join "\n", @keys, '';
++}
++
++#-> sub CPAN::Distribution::persistent_tested_ok ;
++sub persistent_tested_ok {
++  my($self) = @_;
++  return unless $CPAN::Index::BUILD_DIRS and $CPAN::Config->{expire_old_builds};
++  my $dir = $CPAN::Index::BUILD_DIRS->{$self->id};
++  return unless $dir and -d $dir;
++  my $cpan_test_ok = File::Spec->catfile($dir, 'cpantok#');
++  return unless -f $cpan_test_ok;
++  return if $CPAN::Config->{expire_old_builds} > 0
++	    and -M $cpan_test_ok > $CPAN::Config->{expire_old_builds};
++  {   local *T; local $/;
++      open T, $cpan_test_ok and <T> eq $self->persistent_key and close T
++	  or return;
++  }
++  my $date = -M $cpan_test_ok;
++  eval { File::Find::find sub {
++	  -M $_ >= $date
++	    or warn("File `$File::Find::name' newer than $cpan_test_ok: "
++		    . (-M _) . " days vs. $date days\n"),
++	       die 'update'
++	}, $dir ; 1} and return $dir;
++  warn "error scanning $dir: $@" unless $@ =~ /^update\b/;
++  return;
++}
++
++#-> sub CPAN::Distribution::mark_persistent_tested_ok ;
++sub mark_persistent_tested_ok {
++  my($self) = @_;
++  my $dir = $self->{build_dir};
++  return unless -d $dir;
++  my $cpan_test_ok = File::Spec->catfile($dir, 'cpantok#');
++  local *T;
++  open T, "> $cpan_test_ok" or warn("error touching $cpan_test_ok: $!\n"), return;
++  print T $self->persistent_key;		# Something very build-specific
++  close T or warn("error touching $cpan_test_ok: $!\n"), return;
++  $CPAN::Index::BUILD_DIRS ||= {};
++  $CPAN::Index::BUILD_DIRS->{'*new*'} ||= 0;
++  $CPAN::Index::BUILD_DIRS->{'*new*'}++
++    unless exists $CPAN::Index::BUILD_DIRS->{$self->id}
++      and $CPAN::Index::BUILD_DIRS->{$self->id} eq $dir;
++  $CPAN::Index::BUILD_DIRS->{$self->id} = $dir;
++  return 1;
++}
++
++#-> sub CPAN::Distribution::tested_ok ;
++sub tested_ok {
++    my($self) = @_;
++    exists $self->{'make_test'} and $self->{'make_test'} ne 'NO'
++}
++
++#-> sub CPAN::Distribution::mark_tested_ok ;
++sub mark_tested_ok {
++    my($self) = @_;
++    $self->{make} = "YES";
++    $self->{make_test} = "YES";
++    $self->{writemakefile} = "YES";
++    my $c;
++    foreach $c ($self->containsmods) {
++        my $obj = CPAN::Shell->expandany($c);
++        $obj->mark_tested_ok();
++    }
++}
++
+ #-> sub CPAN::Distribution::test ;
+ sub test {
+-    my($self) = @_;
++    my($self, $for) = @_;
++    if ($self->uptodate
++	and not $CPAN::Config->{test_uptodate} =~ /\bdistributions?\b/
++	and not exists $self->{'force_test'}
++	and not exists $self->{'force_update'}
++       ) {
++	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
++	return;
++    }
++    my $tested_dir = $self->persistent_tested_ok;
++    if ($tested_dir and not $self->{'force_update'} and not $self->{'force_test'}) {
++	 $self->{'build_dir'} = $tested_dir;
++	 $CPAN::Frontend->myprint("Skipping test for " . $self->id . ": test was successful in $tested_dir\n");
++	 $CPAN::META->is_tested($self->{'build_dir'});
++	 $self->mark_tested_ok();
++	 chdir $self->{'build_dir'} or
++	    Carp::croak("Couldn't chdir to $self->{'build_dir'}");
++	 $self->debug("Changed directory to $self->{'build_dir'}")
++	    if $CPAN::DEBUG;
++	 if (my @prereq = $self->unsat_prereq($for or 'test')){
++	   return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
++	 }
++	 return;
++    }
+     $self->make;
+     if ($CPAN::Signal){
+       delete $self->{force_update};
++      delete $self->{force_test};
+       return;
+     }
+     $CPAN::Frontend->myprint("Running make test\n");
+-    if (my @prereq = $self->unsat_prereq){
++    if (my @prereq = $self->unsat_prereq($for or 'test')){
+       return 1 if $self->follow_prereqs(@prereq); # signal success to the queuerunner
+     }
+   EXCUSE: {
+@@ -4723,17 +4948,19 @@ sub test {
+         return;
+     }
+ 
+-    local $ENV{PERL5LIB} = $ENV{PERL5LIB} || "";
++    local $ENV{PERL5LIB} = $ENV{PERL5LIB} || $ENV{PERLLIB} || "";
+     $CPAN::META->set_perl5lib;
+     my $system = join " ", $CPAN::Config->{'make'}, "test";
+     if (system($system) == 0) {
+ 	 $CPAN::Frontend->myprint("  $system -- OK\n");
+ 	 $CPAN::META->is_tested($self->{'build_dir'});
+-	 $self->{make_test} = "YES";
++	 $self->mark_tested_ok();
++	 $self->mark_persistent_tested_ok();
+     } else {
+ 	 $self->{make_test} = "NO";
+          $self->{badtestcnt}++;
+-	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
++	 # Print ID so that it is close to the harness report:
++	 $CPAN::Frontend->myprint("  $system -- NOT OK\n\t[were testing ". $self->id ."]\n");
+     }
+ }
+ 
+@@ -4769,6 +4996,7 @@ sub clean {
+       # object's state back to where it is after untarring.
+ 
+       delete $self->{force_update};
++      delete $self->{force_test};
+       delete $self->{install};
+       delete $self->{writemakefile};
+       delete $self->{make};
+@@ -4790,9 +5018,18 @@ make clean did not succeed, marking dire
+ #-> sub CPAN::Distribution::install ;
+ sub install {
+     my($self) = @_;
+-    $self->test;
++    if ($self->uptodate
++	and not $CPAN::Config->{install_uptodate} =~ /\bdistributions?\b/
++	and not exists $self->{'force_test'}
++	and not exists $self->{'force_update'}
++       ) {
++	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
++	return;
++    }
++    $self->test('install');
+     if ($CPAN::Signal){
+       delete $self->{force_update};
++      delete $self->{force_test};
+       return;
+     }
+     $CPAN::Frontend->myprint("Running make install\n");
+@@ -4848,13 +5085,15 @@ sub install {
+ 	 return $self->{'install'} = "YES";
+     } else {
+ 	 $self->{'install'} = "NO";
+-	 $CPAN::Frontend->myprint("  $system -- NOT OK\n");
++	 # Print ID so that it is close to the failure report:
++	 $CPAN::Frontend->myprint("  $system -- NOT OK\n\t[were installing ". $self->id ."]\n");
+ 	 if ($makeout =~ /permission/s && $> > 0) {
+ 	     $CPAN::Frontend->myprint(qq{    You may have to su }.
+ 				      qq{to root to install the package\n});
+ 	 }
+     }
+     delete $self->{force_update};
++    delete $self->{force_test};
+ }
+ 
+ #-> sub CPAN::Distribution::dir ;
+@@ -4977,6 +5216,22 @@ Sorry for the inconvenience.
+     @result;
+ }
+ 
++#-> sub CPAN::Bundle::containsdists
++sub containsdists {
++    my($self) = @_;
++    my($elt, %dists);
++    for $elt ($self->contains) {
++	my $what = CPAN::Shell->expandany($elt);
++	$CPAN::Frontend->mywarn("$self->{ID}: $elt does not point anywhere\n"),
++	    next unless defined $what; 
++	my $dist;
++	for $dist ($what->containsdists) {
++	    $dists{$dist}++;
++	}
++    }
++    keys %dists;
++}
++
+ #-> sub CPAN::Bundle::find_bundle_file
+ sub find_bundle_file {
+     my($self,$where,$what) = @_;
+@@ -5102,6 +5357,8 @@ explicitly a file $s.
+         }
+     }
+ 
++    $self->mark_tested_ok() if $meth eq "test" and not %fail;
++
+     # recap with less noise
+     if ( $meth eq "install" ) {
+ 	if (%fail) {
+@@ -5152,12 +5409,28 @@ sub make    { shift->rematein('make',@_)
+ #-> sub CPAN::Bundle::test ;
+ sub test    {
+     my $self = shift;
++    if ($self->uptodate
++	and not $CPAN::Config->{test_uptodate} =~ /\bbundles?\b/
++	and not exists $self->{'force_test'}
++	and not exists $self->{'force_update'}
++       ) {
++	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
++	return;
++    }
+     $self->{badtestcnt} ||= 0;
+     $self->rematein('test',@_);
+ }
+ #-> sub CPAN::Bundle::install ;
+ sub install {
+   my $self = shift;
++  if ($self->uptodate
++	and not $CPAN::Config->{install_uptodate} =~ /\bbundles?\b/
++	and not exists $self->{'force_test'}
++	and not exists $self->{'force_update'}
++       ) {
++	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
++	return;
++  }
+   $self->rematein('install',@_);
+ }
+ #-> sub CPAN::Bundle::clean ;
+@@ -5170,11 +5443,25 @@ sub uptodate {
+     my $c;
+     foreach $c ($self->contains) {
+         my $obj = CPAN::Shell->expandany($c);
+-        return 0 unless $obj->uptodate;
++	# unrecognized stuff makes it not uptodate
++        return 0 unless defined $obj and $obj->uptodate;
+     }
+     return 1;
+ }
+ 
++#-> sub CPAN::Bundle::mark_tested_ok ;
++sub mark_tested_ok {
++    my($self) = @_;
++    $self->{make_test_all} = "YES";
++}
++
++#-> sub CPAN::Module::tested_ok ;
++sub tested_ok {
++    my($self) = @_;
++    exists $self->{make_test_all} and $self->{make_test_all} eq "YES";
++}
++
++
+ #-> sub CPAN::Bundle::readme ;
+ sub readme  {
+     my($self) = @_;
+@@ -5435,6 +5722,12 @@ sub cpan_file {
+     }
+ }
+ 
++#-> sub CPAN::Module::containsdists
++sub containsdists {
++    my($self) = @_;
++    $self->cpan_file;
++}
++
+ #-> sub CPAN::Module::cpan_version ;
+ sub cpan_version {
+     my $self = shift;
+@@ -5452,6 +5745,7 @@ sub cpan_version {
+ sub force {
+     my($self) = @_;
+     $self->{'force_update'}++;
++    $self->{'force_test'}++;
+ }
+ 
+ #-> sub CPAN::Module::rematein ;
+@@ -5480,6 +5774,7 @@ sub rematein {
+     $pack->$meth();
+     $pack->unforce if $pack->can("unforce") && exists $self->{'force_update'};
+     delete $self->{'force_update'};
++    delete $self->{'force_test'};
+ }
+ 
+ #-> sub CPAN::Module::readme ;
+@@ -5499,7 +5794,15 @@ sub make   {
+ sub test   {
+     my $self = shift;
+     $self->{badtestcnt} ||= 0;
+-    $self->rematein('test',@_);
++    if ($self->uptodate
++	and not ($CPAN::Config->{test_uptodate} =~ /\bmodules?\b/)
++	and not exists $self->{'force_test'}
++	and not exists $self->{'force_update'}
++       ) {
++	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
++    } else {
++	$self->rematein('test',@_);
++    }
+ }
+ #-> sub CPAN::Module::uptodate ;
+ sub uptodate {
+@@ -5522,13 +5825,23 @@ sub uptodate {
+     }
+     return;
+ }
++#-> sub CPAN::Module::mark_tested_ok ;
++sub mark_tested_ok {
++    my($self) = @_;
++    $self->{make_test_dist} = "YES";
++}
++#-> sub CPAN::Module::tested_ok ;
++sub tested_ok {
++    my($self) = @_;
++    exists $self->{make_test_dist} and $self->{make_test_dist} eq "YES";
++}
+ #-> sub CPAN::Module::install ;
+ sub install {
+     my($self) = @_;
+     my($doit) = 0;
+     if ($self->uptodate
+-	&&
+-	not exists $self->{'force_update'}
++	and not $CPAN::Config->{install_uptodate} =~ /\bmodules?\b/
++	and not exists $self->{'force_update'}
+        ) {
+ 	$CPAN::Frontend->myprint( $self->id. " is up to date.\n");
+     } else {
+@@ -5991,7 +6304,7 @@ Batch mode:
+ 
+   use CPAN;
+ 
+-  autobundle, clean, install, make, recompile, test
++  autobundle, clean, install, make, recompile, test, install_tested
+ 
+ =head1 STATUS
+ 
+@@ -6185,6 +6498,11 @@ perl breaks binary compatibility. If one
+ is in turn depending on binary compatibility (so you cannot run CPAN
+ commands), then you should try the CPAN::Nox module for recovery.
+ 
++=head2 install_tested()
++
++Installs all the modules successfully tested with this build of perl.
++[Currently works only with persistent index storage enabled.]
++
+ =head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
+ 
+ Although it may be considered internal, the class hierarchy does matter
+@@ -6228,7 +6546,14 @@ CPAN::Module, the second by an object of
+ 
+ If you do not enter the shell, the available shell commands are both
+ available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
+-functions in the calling package (C<install(...)>).
++functions in the calling package (C<install(...)>).  Before calling low-level
++commands it makes sense to initialize components of CPAN you need, e.g.:
++
++  CPAN::Config->load;
++  CPAN::Index::setup_output;
++  CPAN::Index->reload;
++
++high-level commands do such initializations automatically.
+ 
+ There's currently only one class that has a stable interface -
+ CPAN::Shell. All commands that are available in the CPAN shell are
+@@ -6751,6 +7076,9 @@ defined:
+   cpan_home          local directory reserved for this package
+   dontload_hash      anonymous hash: modules in the keys will not be
+                      loaded by the CPAN::has_inst() routine
++  expire_old_builds  Timeout in days; after this time the module is rebuild
++		     even if it was successfully build, and the build directory
++		     is still present.  -1 means 'never rebuild'.
+   gzip		     location of external program gzip
+   histfile           file to maintain history between sessions
+   histsize           maximum number of lines to keep in histfile
+@@ -6758,6 +7086,8 @@ defined:
+                      many seconds inactivity. Set to 0 to never break.
+   inhibit_startup_message
+                      if true, does not print the startup message
++  install_uptodate   what (of modules/distributions/bundles) to install
++                     even if uptodate
+   keep_source_where  directory in which to keep the source (if we do)
+   make               location of external make program
+   make_arg	     arguments that should always be passed to 'make'
+@@ -6773,6 +7103,8 @@ defined:
+   tar                location of external program tar
+   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
+                      (and nonsense for characters outside latin range)
++  test_uptodate      what (of modules/distributions/bundles) to test
++                     even if uptodate
+   unzip              location of external program unzip
+   urllist	     arrayref to nearby CPAN sites (or equivalent locations)
+   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
+--- ./lib/CPAN/FirstTime.pm.orig-x	Thu May 15 13:43:18 2003
++++ ./lib/CPAN/FirstTime.pm	Mon Sep 19 17:53:58 2005
+@@ -168,7 +168,9 @@ with all the intermediate files\?
+     $CPAN::Config->{build_cache} = $ans;
+ 
+     # XXX This the time when we refetch the index files (in days)
+-    $CPAN::Config->{'index_expire'} = 1;
++    $default = $CPAN::Config->{index_expire} || 1;
++    $ans = prompt("How often should be refetch the listings of CPAN contents (in days)?", $default);
++    $CPAN::Config->{index_expire} = $ans;
+ 
+     print qq{
+ 
+@@ -380,6 +382,45 @@ Your choice: ",$default);
+ Typical frequently used setting:
+ 
+     UNINST=1         to always uninstall potentially conflicting files
++
++Your choice: ",$default);
++
++    #
++    # Should we trust old builds?
++    #
++
++    $default = exists $CPAN::Config->{expire_old_builds} ?
++		exists $CPAN::Config->{expire_old_builds} : -1 ;
++    $CPAN::Config->{expire_old_builds} =
++	prompt("When should we expire old successfully tested builds?
++The value is in days; the value of -1 means 'never rebuild'; the value of 0
++means 'rebuild each time the distribution is tested'.
++
++Your choice: ",$default);
++
++    #
++    # Should we test uptodate modules etc?
++    #
++
++    $default = exists $CPAN::Config->{test_uptodate} ?
++		exists $CPAN::Config->{test_uptodate} : "modules bundles distributions" ;
++    $CPAN::Config->{test_uptodate} =
++	prompt("What kinds of test requests for uptodate modules, bundles, distributions
++should be granted?  The value is a combination of words 'modules', 'bundles',
++'distributions'.
++
++Your choice: ",$default);
++
++    #
++    # Should we install uptodate modules etc?
++    #
++
++    $default = exists $CPAN::Config->{install_uptodate} ?
++		exists $CPAN::Config->{install_uptodate} : "bundles distributions" ;
++    $CPAN::Config->{install_uptodate} =
++	prompt("What kinds of install requests for uptodate modules, bundles, distributions
++should be granted?  The value is a combination of words 'modules', 'bundles',
++'distributions'.
+ 
+ Your choice: ",$default);
+ 

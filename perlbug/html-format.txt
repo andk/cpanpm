@@ -1,0 +1,17 @@
+Recently there was a patch that broke some module by Gisle from which
+there were many dependencies and I had smoke and asked for backing it
+out.
+
+The patch was referenced as 30672 and 30762 (it really was: 30762 AND
+30763) and the module was GAAS/HTML-Parser-3.56.tar.gz. They were
+backed out with 30776.
+
+Nicholas has asked:
+
+> Has anyone (doesn't need to be Yitzchak) yet managed to extract the
+> juicy bits of handler.t to add to the core's substr regression
+> tests?
+
+The thread was during 2007-03-[26..29].
+
+Todo: write a test case that fails without needing HTML::Parser.

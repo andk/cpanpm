@@ -1,0 +1,11 @@
+$VAR1 = {
+  "match" => {
+    "distribution" => "^INGY/YAML-0.6\\d"
+  },
+  "pl" => {
+    "expect" => [
+      "Continue installing",
+      "y\n"
+    ]
+  }
+};

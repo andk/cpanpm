@@ -1,0 +1,16 @@
+--- 
+comment: |
+
+    only versions before 1.26 had the dialogue
+
+    note: PETDANCE/WWW-Mechanize-1.29_01.tar.gz
+
+match:
+  distribution: "^PETDANCE/WWW-Mechanize-"
+pl: 
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "Do you want to install the mech-dump utility"
+      - "y\n"

@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "RMUHLE/classes-0.943.tar.gz"
+depends:
+  build_requires:
+    Test::Exception: 0.25

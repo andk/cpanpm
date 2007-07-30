@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "FHOXH/Test-Reporter-1.30.tar.gz"
+patches:
+  - "/home/sand/CPAN-SVN/patches/Test-Reporter-1.30-ANDK-01.patch.gz"

@@ -1,0 +1,114 @@
+---
+comment: |
+
+  Users of Module::Install that share a pattern: we can install all
+  optional dependencies with a couple of simple "y\n". The ENVariables
+  seem to be needed to prevent infinite recursion under certain
+  unknown circumstances.
+
+match:
+  distribution: |
+    ^(?x:^ADAMK/Algorithm-Dependency-\d
+    |ADAMK/PITA-XML-\d
+    |ADAMK/URI-ToDisk-\d
+    |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
+    |AVAR/Bot-BB2-\d
+    |AVAR/SMS-Send-IS-Vodafone-\d
+    |BLBLACK/Catalyst-Model-DBIC-Schema-\d
+    |BLBLACK/Class-C3-\d
+    |BLBLACK/DBIx-Class-Schema-Loader-\d
+    |BLBLACK/DBIx-Class-\d
+    |BLBLACK/MRO-Compat-\d
+    |BLBLACK/Term-Spinner-\d
+    |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/WWW-OpenSearch-\d
+    |BTROTT/Crypt-OpenPGP-\d
+    |BTROTT/Feed-Find-
+    |BTROTT/URI-Fetch-\d
+    |BTROTT/XML-Feed-\d
+    |CFRANKS/Catalyst-Model-Net-Amazon-\d
+    |CFRANKS/HTML-Widget-\d
+    |CLACO/Class-Accessor-Grouped-\d
+    |CLACO/DBIx-Class-UUIDColumns-\d
+    |CLACO/DBIx-Class-Validation-\d
+    |CLACO/Data-Currency-\d
+    |CLACO/Finance-Currency-Convert-WebserviceX-\d
+    |CLACO/Handel-Storage-RDBO-\d
+    |CLACO/Handel-\d
+    |CLKAO/SVK-v\d
+    |DAXIM/Mediawiki-Blame-\d
+    |DCOPPIT/Benchmark-Timer-\d
+    |DMAKI/Catalyst-Model-FormFu-\d
+    |DMAKI/XML-RSS-LibXML-\d
+    |DMAKI/XML-RSS-Liberal-
+    |DSNOPEK/POE-Component-MessageQueue-\d
+    |ELLIOTJS/Task-Perl-Critic-\d
+    |FOX/Bot-CPAN-\d
+    |GAAL/Best-\d
+    |GAAL/Class-Rebless-\d
+    |GAAL/Task-Smoke-\d
+    |GRODITI/MooseX-Object-Pluggable-\d
+    |GRUBER/IPC-Messaging-\d
+    |HANK/Catalyst-Plugin-Form-Processor-\d
+    |HDP/KSx-IndexManager-\d
+    |HIROSE/Net-SSL-ExpireDate-\d
+    |HOLOWAY/Catalyst-Action-REST-\d
+    |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
+    |JAYK/Catalyst-Plugin-Authentication-\d
+    |JESSE/Class-Accessor-Named-\d
+    |JESSE/DBIx-SearchBuilder-\d
+    |JCAMACHO/Catalyst-Controller-FormBuilder-\d
+    |JROCKWAY/Directory-Scratch-\d
+    |JROCKWAY/Task-Catalyst-Tutorial-\d
+    |LBROCARD/Devel-ebug-HTTP-\d
+    |LUKEC/Test-WWW-Selenium-\d
+    |LYOKATO/FormValidator-Simple-\d
+    |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MITREHC/HoneyClient-Agent-\d
+    |MITREHC/HoneyClient-Manager-\d
+    |MITREHC/HoneyClient-Util-\d
+    |MIZZY/Parse-Apache-ServerStatus-Extended-\d
+    |MRAMBERG/Catalyst-Action-RenderView-\d
+    |MRAMBERG/Catalyst-Plugin-Unicode-\d
+    |MRAMBERG/Catalyst-Runtime-
+    |MSTROUT/DBIx-Class-\d
+    |MSTROUT/Devel-REPL-\d
+    |PERIGRIN/JSON-Any-\d
+    |REDTREE/PDF-API2-Simple-\d
+    |RJBS/Rubric-\d
+    |SARTAK/Carp-REPL-\d
+    |SMUELLER/Math-Approx-Symbolic-
+    |SMUELLER/PAR-
+    |SRI/Catalyst-Plugin-HTML-Widget-\d
+    |TELS/graph/Graph-
+    |YARON/WWW-Monitor-\d
+    |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
+    |ZIGOROU/Catalyst-Model-MozRepl-\d
+    |ZIGOROU/Data-ClearSilver-HDF-\d
+    |ZIGOROU/MozRepl-\d
+    |ZIGOROU/Nagios-Plugins-Memcached-\d
+    |ZIGOROU/WebService-Reflexa-\d
+    |ZIGOROU/WebService-TRIPIT-Thesaurus-\d
+    )|
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 10
+    talk:
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+      - "Auto-install"
+      - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip

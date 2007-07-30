@@ -1,0 +1,10 @@
+---
+comment: |
+
+  things we would like to avoid for some reason
+
+match:
+  distribution: |
+    ^(?x:^SKI/
+    )|
+disabled: 1

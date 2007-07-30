@@ -1,0 +1,10 @@
+---
+match:
+  distribution: "^METZZO/Java-\d"
+test:
+  eexpect:
+    mode: anyorder
+    timeout: 10
+    talk:
+      - "Do you want to continue"
+      - "y\n"

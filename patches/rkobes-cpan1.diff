@@ -1,0 +1,121 @@
+Index: CPAN.pm
+===================================================================
+--- CPAN.pm	(revision 1219)
++++ CPAN.pm	(working copy)
+@@ -72,6 +72,7 @@
+             $Have_warned
+             $META
+             $Signal
++            $SQLite
+             $Suppress_readline
+             $VERSION
+             $autoload_recursion
+@@ -147,6 +148,14 @@
+     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
+     CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+ 
++    if ($CPAN::Config->{use_sqlite}) {
++	unless ($CPAN::META->has_inst("CPAN::SQLite")) {
++	    die qq{Must install CPAN::SQLite for use_sqlite};
++	}
++	require CPAN::SQLite::META;
++	$CPAN::SQLite = CPAN::SQLite::META->new($CPAN::META);
++    }
++
+     my $oprompt = shift || CPAN::Prompt->new;
+     my $prompt = $oprompt;
+     my $commandline = shift || "";
+@@ -929,8 +938,9 @@
+     ### Carp::croak "exists called without class argument" unless $class;
+     $id ||= "";
+     $id =~ s/:+/::/g if $class eq "CPAN::Module";
+-    exists $META->{readonly}{$class}{$id} or
+-        exists $META->{readwrite}{$class}{$id}; # unsafe meta access, ok
++    return $CPAN::Config->{use_sqlite} ? $CPAN::SQLite->set($class, $id) :
++      (exists $META->{readonly}{$class}{$id} or
++       exists $META->{readwrite}{$class}{$id}); # unsafe meta access, ok
+ }
+ 
+ #-> sub CPAN::delete ;
+@@ -2292,6 +2302,8 @@
+                     defined $command ? $command : "UNDEFINED",
+                    ) if $CPAN::DEBUG;
+ 	if (defined $regex) {
++	    $CPAN::SQLite->search($class, $id, $regex)
++	      if $CPAN::Config->{use_sqlite};
+             for $obj (
+                       $CPAN::META->all_objects($class)
+                      ) {
+@@ -3898,8 +3910,32 @@
+     }
+     $LAST_TIME = $time;
+     $CPAN::META->{PROTOCOL} = PROTOCOL;
++    $self->sqlite_reload($force) if $CPAN::Config->{use_sqlite};
+ }
+ 
++#-> sub CPAN::Index::sqlite_reload
++sub sqlite_reload {
++    my($self,$force) = @_;
++    my $db = File::Spec->catfile($CPAN::Config->{cpan_home},
++				 'cpandb-sqlite');
++    my @args = qw(cpandb);
++    if (-f $db) {
++	my $time = time;
++	my $mtime_db = (stat(_))[9];
++	unless ($force) {
++	    return if ($time - $mtime_db < 86400);
++	}
++	$CPAN::Frontend->myprint("Updating database file ...\n");
++	push @args, q{--update};
++    }
++    else {
++	$CPAN::Frontend->myprint("Creating database file ...\n");
++	push @args, q{--setup};
++    }
++    system(@args) == 0 or die qq{system @args failed: $?};
++    $CPAN::Frontend->myprint("Done!\n");
++}
++
+ #-> sub CPAN::Index::reanimate_build_dir ;
+ sub reanimate_build_dir {
+     my($self) = @_;
+@@ -3977,6 +4013,7 @@
+ 
+ #-> sub CPAN::Index::rd_authindex ;
+ sub rd_authindex {
++    return if $CPAN::Config->{use_sqlite};
+     my($cl, $index_target) = @_;
+     my @lines;
+     return unless defined $index_target;
+@@ -4014,6 +4051,7 @@
+ 
+ #-> sub CPAN::Index::rd_modpacks ;
+ sub rd_modpacks {
++    return if $CPAN::Config->{use_sqlite};
+     my($self, $index_target) = @_;
+     return unless defined $index_target;
+     $CPAN::Frontend->myprint("Going to read $index_target\n");
+@@ -4222,6 +4260,7 @@
+ 
+ #-> sub CPAN::Index::rd_modlist ;
+ sub rd_modlist {
++    return if $CPAN::Config->{use_sqlite};
+     my($cl,$index_target) = @_;
+     return unless defined $index_target;
+     $CPAN::Frontend->myprint("Going to read $index_target\n");
+@@ -4269,6 +4308,7 @@
+ 
+ #-> sub CPAN::Index::write_metadata_cache ;
+ sub write_metadata_cache {
++    return if $CPAN::Config->{use_sqlite};
+     my($self) = @_;
+     return unless $CPAN::Config->{'cache_metadata'};
+     return unless $CPAN::META->has_usable("Storable");
+@@ -4288,6 +4328,7 @@
+ 
+ #-> sub CPAN::Index::read_metadata_cache ;
+ sub read_metadata_cache {
++    return if $CPAN::Config->{use_sqlite};
+     my($self) = @_;
+     return unless $CPAN::Config->{'cache_metadata'};
+     return unless $CPAN::META->has_usable("Storable");

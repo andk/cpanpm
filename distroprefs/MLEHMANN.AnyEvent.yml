@@ -1,0 +1,12 @@
+---
+comment: "... for the case somebody uses Tk and somebody has started 'Xvfb :121'"
+match:
+  distribution: "^MLEHMANN/AnyEvent-\d"
+test:
+  env:
+    DISPLAY: ":121"
+depends:
+  configure_requires:
+    Event: 0
+  requires:
+    Event: 0

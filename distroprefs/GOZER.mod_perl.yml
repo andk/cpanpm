@@ -1,0 +1,25 @@
+---
+match:
+  distribution: "^(GOZER)/mod_perl-1"
+pl:
+  args:
+    - EVERYTHING=1
+    - USE_APACI=1
+    - APACHE_PREFIX=/home/src/www/apache/apachebin/1.3.37
+    - APACI_ARGS=--enable-module=info,--enable-module=status
+    - APACHE_SRC=/home/src/www/apache/apache/apache_1.3.37/src
+    - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_1.3.37/src
+    - DO_HTTPD=1
+---
+comment: "out of order --> TODO"
+match:
+  distribution: "^(PGOLLUCCI)/mod_perl-2"
+pl:
+  args:
+    - EVERYTHING=1
+    - USE_APACI=1
+    - APACHE_PREFIX=/home/src/www/apache/apachebin/2.0.xxx
+    - APACI_ARGS=--enable-module=info,--enable-module=status
+    - APACHE_SRC=/home/src/www/apache/apache/apache_2.0.xxx/src
+    - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_2.0.xxx/src
+    - DO_HTTPD=1

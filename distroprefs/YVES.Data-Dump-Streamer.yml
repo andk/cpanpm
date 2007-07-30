@@ -1,0 +1,7 @@
+---
+match:
+  distribution: "YVES/Data-Dump-Streamer-\d"
+pl:
+  expect:
+    - "Would you like me to install the shortcut"
+    - "n\n"

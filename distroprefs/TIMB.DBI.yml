@@ -1,0 +1,11 @@
+--- 
+comment: "The patch by Steve Peters was posted to P5P 2006-10-23"
+match:
+  distribution: "^\QTIMB/DBI-1.52.tar.gz\E$"
+patches:
+  - ANDK/patches/DBI-1.52-SMPETERS-01.patch
+--- 
+match:
+  distribution: "^\QTIMB/DBI-1.53.tar.gz\E$"
+patches:
+  - ANDK/patches/DBI-1.53-NWCLARK-01.patch.gz

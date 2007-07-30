@@ -1,0 +1,154 @@
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/BackendHTTP.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/BackendHTTP.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/BackendHTTP.pm	2007-04-26 22:29:52.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/BackendHTTP.pm	2007-05-12 12:55:12.000000000 +0200
+@@ -50,6 +50,8 @@ use Perlbal::ClientProxy;
+ # of using its slab cache.
+ use constant BACKEND_READ_SIZE => 61449;  # 60k, to fit in a 64k slab
+ 
++use Danga::Socket;
++
+ # keys set here when an endpoint is found to not support persistent
+ # connections and/or the OPTIONS method
+ our %NoVerify; # { "ip:port" => next-verify-time }
+@@ -104,7 +106,7 @@ sub new {
+     # for header reading:
+     $self->init;
+ 
+-    bless $self, ref $class || $class;
++    Danga::Socket::rebless($self, ref $class || $class);
+     $self->watch_write(1);
+     return $self;
+ }
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientHTTP.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientHTTP.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientHTTP.pm	2007-04-26 22:15:16.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientHTTP.pm	2007-05-12 14:00:44.000000000 +0200
+@@ -46,7 +46,7 @@ sub new {
+ sub new_from_base {
+     my $class = shift;
+     my Perlbal::ClientHTTPBase $cb = shift;    # base object
+-    bless $cb, $class;
++    Perlbal::ClientProxy::rebless_with_inheritance($cb, $class);
+     $cb->init;
+ 
+     $cb->watch_read(1);   # enable our reads, so we can get PUT/POST data
+Only in Perlbal-1.58-2kHKPZ/lib/Perlbal: ClientHTTP.pm~
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientHTTPBase.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientHTTPBase.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientHTTPBase.pm	2007-04-26 21:11:22.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientHTTPBase.pm	2007-05-12 12:50:57.000000000 +0200
+@@ -41,6 +41,7 @@ use fields ('service',             # Per
+ use Fcntl ':mode';
+ use Errno qw( EPIPE ECONNRESET );
+ use POSIX ();
++use Danga::Socket;
+ 
+ # ghetto hard-coding.  should let siteadmin define or something.
+ # maybe console/config command:  AddMime <ext> <mime-type>  (apache-style?)
+@@ -79,7 +80,7 @@ sub new {
+ 
+     $self->state('reading_headers');
+ 
+-    bless $self, ref $class || $class;
++    Danga::Socket::rebless($self, ref $class || $class);
+     $self->watch_read(1);
+     return $self;
+ }
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientManage.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientManage.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientManage.pm	2007-04-16 22:57:33.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientManage.pm	2007-05-12 12:48:06.000000000 +0200
+@@ -13,6 +13,7 @@ use fields ('service',
+             'is_http',  # bool: is an HTTP request?
+             'ctx',      # command context
+             );
++use Danga::Socket;
+ 
+ # ClientManage
+ sub new {
+@@ -24,7 +25,7 @@ sub new {
+     $self->{ctx} = Perlbal::CommandContext->new;
+     $self->{ctx}->verbose(1);
+ 
+-    bless $self, ref $class || $class;
++    Danga::Socket::rebless($self, ref $class || $class);
+     $self->watch_read(1);
+     return $self;
+ }
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientProxy.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientProxy.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/ClientProxy.pm	2007-04-16 22:55:27.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/ClientProxy.pm	2007-05-12 14:44:34.000000000 +0200
+@@ -54,6 +54,7 @@ use constant READ_AHEAD_SIZE   =>  32768
+ use Errno qw( EPIPE ENOENT ECONNRESET EAGAIN );
+ use POSIX qw( O_CREAT O_TRUNC O_RDWR O_RDONLY );
+ use Time::HiRes qw( gettimeofday tv_interval );
++use Danga::Socket;
+ 
+ my $udp_sock;
+ 
+@@ -66,17 +67,33 @@ sub new {
+     $self->SUPER::new($service, $sock);       # init base fields
+ 
+     Perlbal::objctor($self);
+-    bless $self, ref $class || $class;
++    rebless_with_inheritance($self, ref $class || $class);
+ 
+     $self->init;
+     $self->watch_read(1);
+     return $self;
+ }
+ 
++sub rebless_with_inheritance ($$){
++     my ($self, $newclass) = @_;
++     my $oldclass = ref $self;
++     require Hash::Util; # caveat; prototype does not work because of this
++     &Hash::Util::unlock_hash(\%$self);
++     bless $self, $newclass;
++     no strict 'refs';
++     my @newfields;
++     for my $isa ($oldclass, @{$oldclass.'::ISA'},$newclass){
++	push @newfields, keys %{$isa.'::FIELDS'};
++     }
++     push @newfields, keys %$self;
++     &Hash::Util::lock_keys(\%$self, @newfields);
++     return $self;
++}
++
+ sub new_from_base {
+     my $class = shift;
+     my Perlbal::ClientHTTPBase $cb = shift;
+-    bless $cb, $class;
++    rebless_with_inheritance($cb, $class);
+     $cb->init;
+     $cb->watch_read(1);
+     $cb->handle_request;
+Only in Perlbal-1.58-2kHKPZ/lib/Perlbal: ClientProxy.pm~
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/Service.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/Service.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/Service.pm	2007-04-16 22:10:09.000000000 +0200
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/Service.pm	2007-05-12 14:46:20.000000000 +0200
+@@ -1315,7 +1315,7 @@ sub return_to_base {
+     my Perlbal::ClientHTTPBase $cb = shift;  # actually a subclass of Perlbal::ClientHTTPBase
+ 
+     $cb->{service} = $self;
+-    bless $cb, "Perlbal::ClientHTTPBase";
++    Perlbal::ClientProxy::rebless_with_inheritance($cb, "Perlbal::ClientHTTPBase");
+ 
+     # the read/watch events are reset by ClientHTTPBase's http_response_sent (our caller)
+ }
+diff -urp Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/TCPListener.pm Perlbal-1.58-2kHKPZ/lib/Perlbal/TCPListener.pm
+--- Perlbal-1.58-2kHKPZ.orig/lib/Perlbal/TCPListener.pm	2006-11-04 00:30:51.000000000 +0100
++++ Perlbal-1.58-2kHKPZ/lib/Perlbal/TCPListener.pm	2007-05-12 12:46:20.000000000 +0200
+@@ -13,6 +13,7 @@ no  warnings qw(deprecated);
+ use base "Perlbal::Socket";
+ use fields qw(service hostport);
+ use Socket qw(IPPROTO_TCP SOL_SOCKET SO_SNDBUF);
++use Danga::Socket;
+ 
+ # TCPListener
+ sub new {
+@@ -48,7 +49,7 @@ sub new {
+     my $self = $class->SUPER::new($sock);
+     $self->{service} = $service;
+     $self->{hostport} = $hostport;
+-    bless $self, ref $class || $class;
++    Danga::Socket::rebless($self, ref $class || $class);
+     $self->watch_read(1);
+     return $self;
+ }

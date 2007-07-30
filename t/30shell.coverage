@@ -1,0 +1,347 @@
+2006-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* with SVK rev. 1645:
+
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	File                           stmt   bran   cond    sub    pod   time  total
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	lib/CPAN.pm                    40.5   26.9   22.6   54.3    n/a   99.6   35.0
+	lib/CPAN/Admin.pm              12.9    0.0    0.0   62.5  100.0    0.0   12.3
+	lib/CPAN/Debug.pm              61.8   56.2    0.0  100.0    0.0    0.1   57.9
+	lib/CPAN/FirstTime.pm           8.8    1.4    0.0   53.3    n/a    0.0    6.1
+	lib/CPAN/HandleConfig.pm       49.6   33.1   15.1   61.9    7.1    0.1   38.4
+	lib/CPAN/Kwalify.pm            18.0    0.0    0.0   60.0    n/a    0.0   15.4
+	lib/CPAN/Nox.pm               100.0   50.0    n/a  100.0    n/a    0.0   95.0
+	lib/CPAN/Queue.pm              33.3   11.1    0.0   54.5    0.0    0.0   27.6
+	lib/CPAN/Tarzip.pm             53.1   29.8   33.3   85.7    0.0    0.1   44.9
+	lib/CPAN/Version.pm            86.4   56.2   81.8  100.0    0.0    0.1   74.8
+	Total                          38.5   25.0   18.7   57.3    5.4  100.0   32.8
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+
+2006-12-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* with 0.59 and 29563:
+
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	File                           stmt   bran   cond    sub    pod   time  total
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+	blib/lib/CPAN/FirstTime.pm      n/a    n/a    n/a    n/a    n/a    n/a    n/a
+	lib/CPAN.pm                    17.6    8.3    7.1   38.3    n/a   74.8   14.5
+	lib/CPAN/Admin.pm              12.9    0.0    0.0   62.5  100.0    0.2   12.3
+	lib/CPAN/Debug.pm              61.8   50.0    0.0  100.0    0.0    2.0   56.1
+	lib/CPAN/HandleConfig.pm       17.7    8.1    0.0   42.9    7.1    2.4   12.7
+	lib/CPAN/Kwalify.pm            18.0    0.0    0.0   60.0    n/a    0.1   15.4
+	lib/CPAN/Nox.pm               100.0   50.0    n/a  100.0    n/a    0.3   95.0
+	lib/CPAN/Queue.pm              10.5    0.0    0.0   18.2    0.0    0.3    8.2
+	lib/CPAN/Tarzip.pm             32.8   14.0   13.3   71.4    0.0    1.8   26.7
+	lib/CPAN/Version.pm            86.4   56.2   81.8  100.0    0.0   18.2   74.8
+	Total                          19.2    9.1    8.0   42.1    5.4  100.0   15.9
+	---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+
+	* Devel::Cover 0.59 broke the coverage level I had already achieved by
+	50 percent from 74% to 37%. 0.58 was fine for me at that time but then
+	D:C broke completely in bleadperl 28771 and I forgot about it. Paul J
+	has since fixed the 28771 related failure in his SVN repository and is
+	now reporting another problem with an endless loop.
+
+	I seem to see the endless loop in bleadperl@29622 but not with 28771 and
+	I can probably do binary search manually without the usual procedure.
+	29220 OK, 496 OK, 563 OK, 596 NOT, 579 NOT, 66 OK, 73 NOT, 68 OK, 70 NOT
+
+	* Switching to ChangeLog format today. All notes below have been written
+	between Februar and October 2006.
+
+Notes about coverage. The target in the Makefile is called
+C<testcover>.
+
+ 2006-02-03 after rev. 517 we have this coverage:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      20.1   10.2    7.9   37.0   37.9   16.7
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.1   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   40.1   44.6
+ blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   21.6   54.6
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm                6.8    0.0    0.0   28.6    0.0    5.2
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.3   78.6
+ Total                                 25.6   13.9   15.5   45.2  100.0   22.0
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+Admin.pm is kind of deprecated, but if we ever would like to test it,
+we would issue C<! use CPAN::Admin> rather late in the testing which
+would activate the override. C<reload cpan> would then switch back.
+
+ After rev. 523:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      26.7   15.6   10.4   42.6    4.2   22.5
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.1   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   61.8   44.6
+ blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   33.4   54.6
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               17.6    6.6    0.0   50.0    0.1   14.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.4   78.6
+ Total                                 31.2   18.5   17.1   50.4  100.0   26.8
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+The time for the CPAN.pm tests is down because we're now using the
+local, test-specific index files. Next thing to do: upload the demo
+distro so that we can add a signed CHECKSUMS file.
+
+ After 525:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      41.0   26.3   21.5   57.8   44.1   35.4
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.1   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   35.8   44.6
+ blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   19.3   54.6
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               36.9   18.9   22.2   71.4    0.4   31.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.3   78.6
+ Total                                 43.1   27.5   24.9   63.0  100.0   37.4
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+All sub values over 50%!
+
+ After 527:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      43.6   28.6   22.2   60.4   44.3   37.8
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   35.7   44.6
+ blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2   19.3   54.6
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               36.9   18.9   22.2   71.4    0.4   31.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.3   78.6
+ Total                                 45.1   29.3   25.4   65.1  100.0   39.3
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+ After 553:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      45.9   30.9   25.3   63.4   79.1   40.2
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3   13.3   44.6
+ blib/lib/CPAN/HandleConfig.pm         61.6   47.5   32.1   88.2    7.2   54.6
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               36.9   18.9   22.2   71.4    0.3   31.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+ Total                                 46.9   31.2   27.5   67.4  100.0   41.1
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+Time goes up now that we have 3 distros and the other values rise only slowly.
+
+ After 590 (bleadperl@27154):
+ ---------------------------- ------ ------ ------ ------ ------ ------ ------
+ File                           stmt   bran   cond    sub    pod   time  total
+ ---------------------------- ------ ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm               50.4   35.4   30.8   69.4   47.7   84.8   44.9
+ blib/lib/CPAN/Admin.pm         12.9    0.0    0.0   62.5    0.0    0.0   11.7
+ blib/lib/CPAN/Debug.pm         63.6   40.0    0.0  100.0    0.0    0.0   53.8
+ blib/lib/CPAN/FirstTime.pm     55.6   33.0   27.8   79.3    n/a    9.7   44.6
+ .../lib/CPAN/HandleConfig.pm   60.6   45.2   32.0   88.2    0.0    5.2   52.2
+ blib/lib/CPAN/Nox.pm          100.0   50.0    n/a  100.0    n/a    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm        46.6   25.5   22.2   78.6    0.0    0.3   39.2
+ blib/lib/CPAN/Version.pm       83.3   54.5   84.0  100.0    0.0    0.0   74.3
+ Total                          50.8   34.9   31.3   72.4   34.8  100.0   44.9
+ ---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+Relevant patches: added the zip and the failearly distro, removing
+unused code, low hanging fruits
+
+ After 597:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      50.9   36.1   32.7   70.7   88.5   45.6
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    7.1   44.6
+ blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    3.9   53.5
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+ Total                                 50.9   35.3   32.6   73.5  100.0   45.4
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+added the BuildOrMake distro
+
+ After 628
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      52.2   37.0   32.8   71.4   89.7   46.6
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                63.6   40.0    0.0  100.0    0.0   55.3
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.4   44.6
+ blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    3.4   53.5
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.0   78.6
+ Total                                 51.9   36.1   32.7   74.0  100.0   46.2
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+added a Bundle to the "Make" testdistro
+
+ After 636
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      53.9   38.0   33.3   73.3   89.8   48.0
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.0   57.9
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.3   44.6
+ blib/lib/CPAN/HandleConfig.pm         60.6   45.2   32.0   88.2    3.4   53.5
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               40.3   20.8   22.2   78.6    0.4   34.8
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.0   78.6
+ Total                                 53.3   36.8   33.0   75.5  100.0   47.2
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+
+2006-02-24: Notes about 5.004_05: t30shell.t segfaults when trying to
+parse the test.out. One would have to look through the test.out output
+and find an alternate method of walking through the results tha works
+for 5.004_05. But it would have to be guesswork to find out what is
+triggering the SEGV.
+
+ After 671
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      17.6    8.4    6.6   34.9   80.7   14.6
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.1   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.5   57.9
+ blib/lib/CPAN/FirstTime.pm            11.2    1.0    0.0   55.2    1.2    7.8
+ blib/lib/CPAN/HandleConfig.pm         11.8    4.0    0.0   42.1    1.5    9.4
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.2   95.0
+ blib/lib/CPAN/Tarzip.pm               30.8   12.3   11.1   64.3    2.7   25.1
+ blib/lib/CPAN/Version.pm              77.1   50.0   80.0   87.5   13.1   72.8
+ Total                                 18.4    8.2    7.0   40.8  100.0   15.2
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+How the break-in in coverage? What's missing that I never checked for?
+
+Apparently the result is now wrong and was correct -- from looking at
+the blib-lib-CPAN-pm--subroutine.html we find that e.g. the whole
+Shell appears as untested. [...time passes...] Removing cover_db/*.old
+and then rerunning the coverage brings it back to the values we had. Or
+maybe just running twice? Hmmm. So this is after 672:
+
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      53.1   37.6   33.4   73.0   89.2   47.4
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.0   57.9
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.6   44.6
+ blib/lib/CPAN/HandleConfig.pm         56.8   42.9   32.0   84.2    3.6   50.8
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               47.8   29.8   33.3   78.6    0.5   42.3
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+ Total                                 52.8   36.8   33.2   75.1  100.0   47.0
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+ After 673:
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ File                                  stmt   bran   cond    sub   time  total
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+ blib/lib/CPAN.pm                      54.0   38.4   33.9   75.7   89.9   48.3
+ blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+ blib/lib/CPAN/Debug.pm                68.2   40.0    0.0  100.0    0.0   57.9
+ blib/lib/CPAN/FirstTime.pm            55.6   33.0   27.8   79.3    6.2   44.6
+ blib/lib/CPAN/HandleConfig.pm         56.8   42.9   32.0   84.2    3.4   50.8
+ blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+ blib/lib/CPAN/Tarzip.pm               47.8   29.8   33.3   78.6    0.4   42.3
+ blib/lib/CPAN/Version.pm              83.3   54.5   84.0  100.0    0.1   78.6
+ Total                                 53.4   37.4   33.5   77.2  100.0   47.6
+ ----------------------------------- ------ ------ ------ ------ ------ ------
+
+Cheap 2.5% added by harvesting make, test, notest, clean on our bundle.
+
+After 790 I again had a bad coverage
+
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+File                           stmt   bran   cond    sub    pod   time  total
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+blib/lib/CPAN/Admin.pm         12.9    0.0    0.0   62.5    0.0    0.1   11.7
+blib/lib/CPAN/FirstTime.pm      9.7    0.8    0.0   53.3    n/a    1.3    6.6
+blib/lib/CPAN/Nox.pm          100.0   50.0    n/a  100.0    n/a    0.2   95.0
+lib/CPAN.pm                    18.8    8.8    7.9   37.1    n/a   69.5   15.5
+lib/CPAN/Debug.pm              68.2   40.0    0.0  100.0    0.0    0.5   56.4
+lib/CPAN/HandleConfig.pm       11.1    3.7    0.0   40.0    7.7    1.7    8.4
+lib/CPAN/Tarzip.pm             29.8   12.3   13.3   64.3    0.0    3.0   24.0
+lib/CPAN/Version.pm            83.3   54.5   84.0  100.0    0.0   23.6   74.3
+Total                          19.0    8.4    7.6   42.4    3.7  100.0   15.6
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+It's like it was after 671: suddenly coverage breaks down. Does
+running twice help? No. After 791:
+
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+File                           stmt   bran   cond    sub    pod   time  total
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+blib/lib/CPAN/Admin.pm         12.9    0.0    0.0   62.5    0.0    0.2   11.7
+blib/lib/CPAN/FirstTime.pm      9.7    0.8    0.0   53.3    n/a    2.3    6.6
+blib/lib/CPAN/Nox.pm          100.0   50.0    n/a  100.0    n/a    0.9   95.0
+lib/CPAN.pm                    18.8    8.8    7.9   37.1    n/a   61.8   15.5
+lib/CPAN/Debug.pm              68.2   40.0    0.0  100.0    0.0    0.9   56.4
+lib/CPAN/HandleConfig.pm       11.1    3.7    0.0   40.0    7.7    2.9    8.4
+lib/CPAN/Tarzip.pm             29.8   12.3   13.3   64.3    0.0    5.4   24.0
+lib/CPAN/Version.pm            83.3   54.5   84.0  100.0    0.0   25.7   74.3
+Total                          19.0    8.4    7.6   42.4    3.7  100.0   15.6
+---------------------------- ------ ------ ------ ------ ------ ------ ------
+
+
+Writing HTML output to /home/k/sources/CPAN/SVN/cover_db/coverage.html ...
+done.
+/home/src/perl/repoperls/installed-perls/perl/pUBNkHZ/perl-5.8.0@28760/bin/perl bin/post-prc-coverage.pl cover_db/blib-lib-CPAN-pm--subroutine.html
+Could not open cover_db/blib-lib-CPAN-pm--subroutine.html: No such file or directory at bin/post-prc-coverage.pl line 45.
+
+
+Does switching to perl 5.8.8 help? No.
+
+Does downgrade from Devel::Cover 0.59 to 0.58 help? YES!
+
+----------------------------------- ------ ------ ------ ------ ------ ------
+File                                  stmt   bran   cond    sub   time  total
+----------------------------------- ------ ------ ------ ------ ------ ------
+blib/lib/CPAN/Admin.pm                12.9    0.0    0.0   62.5    0.0   11.8
+blib/lib/CPAN/FirstTime.pm            63.1   54.4   58.3   83.3    3.5   60.3
+blib/lib/CPAN/Nox.pm                 100.0   50.0    n/a  100.0    0.0   95.0
+lib/CPAN.pm                           52.3   37.3   33.0   74.0   35.0   46.9
+lib/CPAN/Debug.pm                     68.2   40.0    0.0  100.0    0.0   57.9
+lib/CPAN/HandleConfig.pm              51.7   38.8   17.6   80.0   61.3   43.7
+lib/CPAN/Tarzip.pm                    42.0   25.4   40.0   78.6    0.2   37.8
+lib/CPAN/Version.pm                   83.3   54.5   84.0  100.0    0.0   78.6
+Total                                 52.4   38.2   38.3   76.0  100.0   47.6
+----------------------------------- ------ ------ ------ ------ ------ ------
+
+So I should consult the Cover docs, sigh! And maybe compare details?
+I'd *guess* that it has to do with lib and blib and the fact that 37
+is exactly the half of 74 seems to indicate a cut in half in the wrong
+place. For now I'm happy with 0.58
+
+
+
+
+
+
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "30shell.coverage"
+	tab-width: 2
+	left-margin: 2
+	End:

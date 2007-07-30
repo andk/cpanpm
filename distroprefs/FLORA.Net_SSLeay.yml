@@ -1,0 +1,20 @@
+---
+comment: |
+
+  First it was only http://rt.cpan.org/Ticket/Display.html?id=24180
+
+  With 312{35,38} it started to hang completely.
+
+  Patch from https://rt.cpan.org/Ticket/Display.html?id=24180
+
+match:
+  distribution: "^FLORA/Net_SSLeay.pm-1.30.tar.gz"
+patches:
+  - "ANDK/patches/Net_SSLeay.pm-1.30-IMACAT-01.patch.gz"
+---
+match:
+  distribution: "^FLORA/Net-SSLeay-1.31_02.tar.gz"
+pl:
+  expect:
+    - "\QThese tests *will* *fail* if you do not have network connectivity\E"
+    - "n\n"

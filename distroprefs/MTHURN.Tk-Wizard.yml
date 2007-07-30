@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^MTHURN/Tk-Wizard-\d"
+test:
+  env:
+    DISPLAY: ":121"

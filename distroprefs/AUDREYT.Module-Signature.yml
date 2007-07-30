@@ -1,0 +1,7 @@
+--- 
+match:
+  distribution: "^AUDREYT/Module-Signature-0"
+pl:
+  expect:
+    - "Import PAUSE"
+    - "y\n"

@@ -1,0 +1,11 @@
+---
+match:
+  distribution: "^DMAKI/Xango-1.08\."
+pl:
+  eexpect:
+    mode: anyorder
+    talk:
+      - "Install POE::Component::Client::DNS"
+      - "y\n"
+      - "Install POE::Component::Client::HTTP"
+      - "y\n"

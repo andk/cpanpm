@@ -1,0 +1,7 @@
+--- 
+match:
+  distribution: "^TSCH/Cairo-\d"
+depends:
+  configure_requires:
+    ExtUtils::PkgConfig: 0
+    ExtUtils::Depends: 0

@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+  </head>
+  <body bgcolor="#ffffff">
+    <div style="font-size: 24">
+      <hr />
+      <a href="k919.html"><img src="rightarrow.gif" align="right" border="0" alt="next"/></a>
+      <a href="k0.html"><img src="uparrow.gif" align="right" border="0" alt="content"/></a><a href="k917.html"><img src="leftarrow.gif" align="right" border="0" alt="previous"/></a><h1><a name="distroprefs__nicht___rgern_lassen_durch_l__stige_installationen">Distroprefs: <code>cpanconfig</code></a></h1>
+      <ul>
+<li>Ein schon wieder historisches Beispiel</li>
+<li> Jesse Vincent hat bei der Distribution von HTTP::Server::Simple
+0.24 eine ungültige Signature beigelegt</li>
+<li> Bugreport an RT!</li>
+<li> und dann?</li>
+<li> einen Distroprefs File, der diese
+Distribution von der Signatureprüfung ausnimmt:
+<pre>
+  ---
+  match:
+    distribution: &quot;^JESSE/HTTP-Server-Simple-0.24\.&quot;
+  cpanconfig:
+    check_sigs: 0</pre>
+</li>
+<li>Damit ist das Problem <em>bis auf weiteres</em> für mich erschlagen, egal ob
+Jesse am gleichen Tag noch eine neue Distribution rausbringt oder erst
+in einem Jahr.</li>
+      </ul>
+<p>
+</p>
+<hr />
+</div></body></html>
+<!--
+ Local Variables:
+ mode: nxml
+ coding: utf-8
+ End:
+-->
+

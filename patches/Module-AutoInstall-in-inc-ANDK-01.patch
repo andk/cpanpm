@@ -1,0 +1,29 @@
+--- Plagger-0.7.16-7LzqMr/inc/Module/AutoInstall.pm~	2006-11-27 07:05:35.000000000 +0100
++++ Plagger-0.7.16-7LzqMr/inc/Module/AutoInstall.pm	2006-11-29 07:00:29.000000000 +0100
+@@ -250,16 +250,19 @@
+ 
+     _load_cpan();
+ 
+-    # Find the CPAN lock-file
+-    my $lock = MM->catfile( $CPAN::Config->{cpan_home}, ".lock" );
+-    return unless -f $lock;
+-
+-    # Check the lock
+     local *LOCK;
+-    return unless open(LOCK, $lock);
++    unless ($ENV{PERL5_CPAN_IS_RUNNING}) {
++      # Find the CPAN lock-file
++      my $lock = MM->catfile( $CPAN::Config->{cpan_home}, ".lock" );
++      return unless -f $lock;
++
++      # Check the lock
++      return unless open(LOCK, $lock);
++    }
+ 
+     if (
+-            ( $^O eq 'MSWin32' ? _under_cpan() : <LOCK> == getppid() )
++        ( $^O eq 'MSWin32' ? _under_cpan() :
++          ($ENV{PERL5_CPAN_IS_RUNNING} || <LOCK> == getppid()))
+         and ( $CPAN::Config->{prerequisites_policy} || '' ) ne 'ignore'
+     ) {
+         print <<'END_MESSAGE';

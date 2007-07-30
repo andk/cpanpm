@@ -218,4 +218,9 @@ understand the -remote switch (as far as I know, this is only
 available on UNIX); coloring of registered modules is only available
 if Term::ANSIColor is installed.
 
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
 =cut

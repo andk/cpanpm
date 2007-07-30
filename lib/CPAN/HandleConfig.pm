@@ -11,61 +11,93 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
         init     => "Interactive setting of all options",
 );
 
-%keys = map { $_ => undef } (
-                             #  allow_unauthenticated ?? some day...
-                             "build_cache",
-                             "build_dir",
-                             "bzip2",
-                             "cache_metadata",
-                             "check_sigs",
-                             "commandnumber_in_prompt",
-                             "cpan_home",
-                             "curl",
-                             "dontload_hash", # deprecated after 1.83_68 (rev. 581)
-                             "dontload_list",
-                             "ftp",
-                             "ftp_passive",
-                             "ftp_proxy",
-                             "getcwd",
-                             "gpg",
-                             "gzip",
-                             "histfile",
-                             "histsize",
-                             "http_proxy",
-                             "inactivity_timeout",
-                             "index_expire",
-                             "inhibit_startup_message",
-                             "keep_source_where",
-                             "lynx",
-                             "make",
-                             "make_arg",
-                             "make_install_arg",
-                             "make_install_make_command",
-                             "makepl_arg",
-                             "mbuild_arg",
-                             "mbuild_install_arg",
-                             "mbuild_install_build_command",
-                             "mbuildpl_arg",
-                             "ncftp",
-                             "ncftpget",
-                             "no_proxy",
-                             "pager",
-                             "password",
-                             "prefer_installer",
-                             "prerequisites_policy",
-                             "scan_cache",
-                             "shell",
-                             "show_upload_date",
-                             "tar",
-                             "term_is_latin",
-                             "term_ornaments",
-                             "test_report",
-                             "unzip",
-                             "urllist",
-                             "username",
-                             "wait_list",
-                             "wget",
-                            );
+# Q: where is the "How do I add a new config option" HOWTO?
+# A1: svn diff -r 757:758 # where dagolden added test_report
+# A2: svn diff -r 985:986 # where andk added yaml_module
+%keys = map { $_ => undef }
+    (
+     "applypatch",
+     "auto_commit",
+     "build_cache",
+     "build_dir",
+     "build_dir_reuse",
+     "build_requires_install_policy",
+     "bzip2",
+     "cache_metadata",
+     "check_sigs",
+     "colorize_debug",
+     "colorize_output",
+     "colorize_print",
+     "colorize_warn",
+     "commandnumber_in_prompt",
+     "commands_quote",
+     "cpan_home",
+     "curl",
+     "dontload_hash", # deprecated after 1.83_68 (rev. 581)
+     "dontload_list",
+     "ftp",
+     "ftp_passive",
+     "ftp_proxy",
+     "getcwd",
+     "gpg",
+     "gzip",
+     "histfile",
+     "histsize",
+     "http_proxy",
+     "inactivity_timeout",
+     "index_expire",
+     "inhibit_startup_message",
+     "keep_source_where",
+     "lynx",
+     "make",
+     "make_arg",
+     "make_install_arg",
+     "make_install_make_command",
+     "makepl_arg",
+     "mbuild_arg",
+     "mbuild_install_arg",
+     "mbuild_install_build_command",
+     "mbuildpl_arg",
+     "ncftp",
+     "ncftpget",
+     "no_proxy",
+     "pager",
+     "password",
+     "patch",
+     "prefer_installer",
+     "prerequisites_policy",
+     "prefs_dir",
+     "proxy_pass",
+     "proxy_user",
+     "randomize_urllist",
+     "scan_cache",
+     "shell",
+     "show_unparsable_versions",
+     "show_upload_date",
+     "show_zero_versions",
+     "tar",
+     "term_is_latin",
+     "term_ornaments",
+     "test_report",
+     "unzip",
+     "urllist",
+     "use_sqlite",
+     "username",
+     "wait_list",
+     "wget",
+     "yaml_module",
+    );
+
+my %prefssupport = map { $_ => 1 }
+    (
+     "build_requires_install_policy",
+     "check_sigs",
+     "make",
+     "make_install_make_command",
+     "prefer_installer",
+     "test_report",
+    );
+
 if ($^O eq "MSWin32") {
     for my $k (qw(
                   mbuild_install_build_command
@@ -90,18 +122,28 @@ sub edit {
     $o = shift @args;
     $DB::single = 1;
     if($can{$o}) {
-	$self->$o(args => \@args);
+	$self->$o(args => \@args); # o conf init => sub init => sub load
 	return 1;
     } else {
         CPAN->debug("o[$o]") if $CPAN::DEBUG;
         unless (exists $keys{$o}) {
             $CPAN::Frontend->mywarn("Warning: unknown configuration variable '$o'\n");
         }
-	if ($o =~ /list$/) {
+        my $changed;
+
+
+        # one day I used randomize_urllist for a boolean, so we must
+        # list them explicitly --ak
+	if (0) {
+        } elsif ($o =~ /^(wait_list|urllist|dontload_list)$/) {
+
+            #
+            # ARRAYS
+            #
+
 	    $func = shift @args;
 	    $func ||= "";
-            CPAN->debug("func[$func]") if $CPAN::DEBUG;
-            my $changed;
+            CPAN->debug("func[$func]args[@args]") if $CPAN::DEBUG;
 	    # Let's avoid eval, it's easier to comprehend without.
 	    if ($func eq "push") {
 		push @{$CPAN::Config->{$o}}, @args;
@@ -116,10 +158,12 @@ sub edit {
 		unshift @{$CPAN::Config->{$o}}, @args;
                 $changed = 1;
 	    } elsif ($func eq "splice") {
-		splice @{$CPAN::Config->{$o}}, @args;
+                my $offset = shift @args || 0;
+                my $length = shift @args || 0;
+		splice @{$CPAN::Config->{$o}}, $offset, $length, @args; # may warn
                 $changed = 1;
-	    } elsif (@args) {
-		$CPAN::Config->{$o} = [@args];
+	    } elsif ($func) {
+		$CPAN::Config->{$o} = [$func, @args];
                 $changed = 1;
 	    } else {
                 $self->prettyprint($o);
@@ -129,20 +173,48 @@ sub edit {
                     # reset the cached values
                     undef $CPAN::FTP::Thesite;
                     undef $CPAN::FTP::Themethod;
+                    $CPAN::Index::LAST_TIME = 0;
                 } elsif ($o eq "dontload_list") {
                     # empty it, it will be built up again
                     $CPAN::META->{dontload_hash} = {};
                 }
             }
-            return $changed;
         } elsif ($o =~ /_hash$/) {
-            @args = () if @args==1 && $args[0] eq "";
-            push @args, "" if @args % 2;
+
+            #
+            # HASHES
+            #
+
+            if (@args==1 && $args[0] eq ""){
+                @args = ();
+            } elsif (@args % 2) {
+                push @args, "";
+            }
             $CPAN::Config->{$o} = { @args };
+            $changed = 1;
         } else {
-	    $CPAN::Config->{$o} = $args[0] if defined $args[0];
-	    $self->prettyprint($o);
+
+            #
+            # SCALARS
+            #
+
+            if (defined $args[0]){
+                $CPAN::CONFIG_DIRTY = 1;
+                $CPAN::Config->{$o} = $args[0];
+                $changed = 1;
+            }
+	    $self->prettyprint($o)
+                if exists $keys{$o} or defined $CPAN::Config->{$o};
 	}
+        if ($changed) {
+            if ($CPAN::Config->{auto_commit}) {
+                $self->commit;
+            } else {
+                $CPAN::CONFIG_DIRTY = 1;
+                $CPAN::Frontend->myprint("Please use 'o conf commit' to ".
+                                         "make the config permanent!\n\n");
+            }
+        }
     }
 }
 
@@ -152,7 +224,7 @@ sub prettyprint {
   if (ref $v) {
     my(@report);
     if (ref $v eq "ARRAY") {
-      @report = map {"\t[$_]\n"} @$v;
+      @report = map {"\t$_ \[$v->[$_]]\n"} 0..$#$v;
     } else {
       @report = map { sprintf("\t%-18s => %s\n",
                               map { "[$_]" } $_,
@@ -178,6 +250,14 @@ sub prettyprint {
 
 sub commit {
     my($self,@args) = @_;
+    CPAN->debug("args[@args]") if $CPAN::DEBUG;
+    if ($CPAN::RUN_DEGRADED) {
+                             $CPAN::Frontend->mydie(
+                                                    "'o conf commit' disabled in ".
+                                                    "degraded mode. Maybe try\n".
+                                                    " !undef \$CPAN::RUN_DEGRADED\n"
+                                                   );
+    }
     my $configpm;
     if (@args) {
       if ($args[0] eq "args") {
@@ -220,8 +300,8 @@ EOF
     $fh->print(qq[$msg\$CPAN::Config = \{\n]);
     foreach (sort keys %$CPAN::Config) {
         unless (exists $keys{$_}) {
-            $CPAN::Frontend->mywarn("Dropping unknown config variable '$_'\n");
-            delete $CPAN::Config->{$_};
+            # do not drop them: forward compatibility!
+            $CPAN::Frontend->mywarn("Unknown config variable '$_'\n");
             next;
         }
 	$fh->print(
@@ -238,6 +318,7 @@ EOF
     #chmod $mode, $configpm;
 ###why was that so?    $self->defaults;
     $CPAN::Frontend->myprint("commit: wrote '$configpm'\n");
+    $CPAN::CONFIG_DIRTY = 0;
     1;
 }
 
@@ -248,7 +329,10 @@ sub neatvalue {
     my($self, $v) = @_;
     return "undef" unless defined $v;
     my($t) = ref $v;
-    return "q[$v]" unless $t;
+    unless ($t){
+        $v =~ s/\\/\\\\/g;
+        return "q[$v]";
+    }
     if ($t eq 'ARRAY') {
         my(@m, @neat);
         push @m, "[";
@@ -270,11 +354,23 @@ sub neatvalue {
 
 sub defaults {
     my($self) = @_;
+    if ($CPAN::RUN_DEGRADED) {
+                             $CPAN::Frontend->mydie(
+                                                    "'o conf defaults' disabled in ".
+                                                    "degraded mode. Maybe try\n".
+                                                    " !undef \$CPAN::RUN_DEGRADED\n"
+                                                   );
+    }
     my $done;
     for my $config (qw(CPAN/MyConfig.pm CPAN/Config.pm)) {
-      CPAN::Shell->reload_this($config) and $done++;
-      last if $done;
+        if ($INC{$config}) {
+            CPAN->debug("INC{'$config'}[$INC{$config}]") if $CPAN::DEBUG;
+            CPAN::Shell->_reload_this($config,{reloforce => 1});
+            $CPAN::Frontend->myprint("'$INC{$config}' reread\n");
+            last;
+        }
     }
+    $CPAN::CONFIG_DIRTY = 0;
     1;
 }
 
@@ -323,6 +419,7 @@ else: quote it with the correct quote type for the box we're on
         my $quote = $CPAN::Config->{commands_quote} || $quotes;
 
         if ($quote ne ' '
+            and defined($command )
             and $command =~ /\s/
             and $command !~ /[$quote]/) {
             return qq<$use_quote$command$use_quote>
@@ -446,23 +543,30 @@ sub load {
 
     }
     local($") = ", ";
-    $CPAN::Frontend->myprint(<<END) if $redo && ! $theycalled;
+    if ($redo && ! $theycalled){
+        $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 the following indispensable but missing parameters:
 
 @miss
 END
-    $CPAN::Frontend->myprint(qq{
+        $args{args} = \@miss;
+    }
+    if (0) {
+        # where do we need this?
+        $CPAN::Frontend->myprint(qq{
 $configpm initialized.
 });
-
-    sleep 2;
+    }
     CPAN::FirstTime::init($configpm, %args);
 }
 
+
+# returns mandatory but missing entries in the Config
 sub missing_config_data {
     my(@miss);
     for (
+         "auto_commit",
          "build_cache",
          "build_dir",
          "cache_metadata",
@@ -501,7 +605,7 @@ Known options:
   commit    commit session changes to disk
   defaults  reload default config values from disk
   help      this help
-  init      go through a dialog to set all parameters
+  init      enter a dialog to set all or a set of parameters
 
 Edit key values as in the following (the "o" is a literal letter o):
   o conf build_cache 15
@@ -522,13 +626,25 @@ sub cpl {
     if (
 	defined($words[2])
 	and
+        $words[2] =~ /list$/
+        and
 	(
-	 $words[2] =~ /list$/ && @words == 3
+	 @words == 3
 	 ||
-	 $words[2] =~ /list$/ && @words == 4 && length($word)
+	 @words == 4 && length($word)
 	)
        ) {
 	return grep /^\Q$word\E/, qw(splice shift unshift pop push);
+    } elsif (defined($words[2])
+             and
+             $words[2] eq "init"
+             and
+            (
+             @words == 3
+             ||
+             @words >= 4 && length($word)
+            )) {
+	return sort grep /^\Q$word\E/, keys %keys;
     } elsif (@words >= 4) {
 	return ();
     }
@@ -540,32 +656,60 @@ sub cpl {
     return grep /^\Q$word\E/, @o_conf;
 }
 
+sub prefs_lookup {
+    my($self,$distro,$what) = @_;
 
-package
-    CPAN::Config; ####::###### #hide from indexer
-# note: J. Nick Koston wrote me that they are using
-# CPAN::Config->commit although undocumented. I suggested
-# CPAN::Shell->o("conf","commit") even when ugly it is at least
-# documented
+    if ($prefssupport{$what}) {
+        return $CPAN::Config->{$what} unless
+            $distro
+                and $distro->prefs
+                    and $distro->prefs->{cpanconfig}
+                        and defined $distro->prefs->{cpanconfig}{$what};
+        return $distro->prefs->{cpanconfig}{$what};
+    } else {
+        $CPAN::Frontend->mywarn("Warning: $what not yet officially ".
+                                "supported for distroprefs, doing a normal lookup");
+        return $CPAN::Config->{$what};
+    }
+}
 
-# that's why I added the CPAN::Config class with autoload and
-# deprecated warning
 
-use strict;
-use vars qw($AUTOLOAD $VERSION);
-$VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
+{
+    package
+        CPAN::Config; ####::###### #hide from indexer
+    # note: J. Nick Koston wrote me that they are using
+    # CPAN::Config->commit although undocumented. I suggested
+    # CPAN::Shell->o("conf","commit") even when ugly it is at least
+    # documented
 
-# formerly CPAN::HandleConfig was known as CPAN::Config
-sub AUTOLOAD {
-  my($l) = $AUTOLOAD;
-  $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig");
-  $l =~ s/.*:://;
-  CPAN::HandleConfig->$l(@_);
+    # that's why I added the CPAN::Config class with autoload and
+    # deprecated warning
+
+    use strict;
+    use vars qw($AUTOLOAD $VERSION);
+    $VERSION = sprintf "%.2f", substr(q$Rev$,4)/100;
+
+    # formerly CPAN::HandleConfig was known as CPAN::Config
+    sub AUTOLOAD {
+        my $class = shift; # e.g. in dh-make-perl: CPAN::Config
+        my($l) = $AUTOLOAD;
+        $CPAN::Frontend->mywarn("Dispatching deprecated method '$l' to CPAN::HandleConfig\n");
+        $l =~ s/.*:://;
+        CPAN::HandleConfig->$l(@_);
+    }
 }
 
 1;
 
 __END__
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=cut
+
 # Local Variables:
 # mode: cperl
 # cperl-indent-level: 4

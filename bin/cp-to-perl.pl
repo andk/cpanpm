@@ -5,6 +5,19 @@
 Script to copy those files that live also in the core into a perl
 source tree.
 
+I use it such that I first make a clone of bleedperl in repoperls
+directory:
+
+    rsync -ax perl-p-5.8.0@28630/ perl-p-5.8.0@28630-cpan.pm-1.8755/
+
+Then I use cp-to-perl to clobber the clone in CPAN/SVN/ directory:
+
+    perl bin/cp-to-perl.pl /home/src/perl/repoperls/perl-p-5.8.0@28630-cpan.pm-1.8755
+
+And then back in the repoperls directory I do makepatch:
+
+    makepatch --diff 'diff -u' perl-p-5.8.0@28630/ perl-p-5.8.0@28630-cpan.pm-1.8755/ > patch
+
 =cut
 
 use strict;
@@ -31,6 +44,7 @@ my $MAP;
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
                                     lib/CPAN/Nox.pm
+                                    lib/CPAN/Queue.pm
                                     lib/CPAN/Tarzip.pm
                                      lib/CPAN/Version.pm
                                    )]],
@@ -61,6 +75,7 @@ while (my($here,$v) = each %$MAP) {
 
 exit unless prompt("y","Proceed?","","y");
 for my $c (@command) {
-  cp @$c or die "Could not cp @$c";
+  unlink $c->[1] or warn "Could not unlink the target $c->[1]: $!";
+  cp @$c or die "Could not cp $c->[0] to $c->[1]: $!";
 }
 

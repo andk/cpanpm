@@ -1,0 +1,15 @@
+--- 
+match:
+  distribution: "^MIROD/XML-Twig-"
+pl:
+  expect:
+    - "Do you want to install 'xml_pp'"
+    - "y\n"
+    - "Do you want to install 'xml_grep'"
+    - "y\n"
+    - "Do you want to install 'xml_split'"
+    - "y\n"
+    - "Do you want to install 'xml_merge'"
+    - "y\n"
+    - "Do you want to install 'xml_spellcheck'"
+    - "y\n"

@@ -1,0 +1,4 @@
+---
+match:
+  distribution: "^KCLARK/SQL-Translator-0.07"
+goto: "JROBINSON/SQL-Translator-0.08_04.tar.gz"

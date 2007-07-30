@@ -1,0 +1,14 @@
+--- 
+comment: |
+
+    Currently does not work for me for cpantesters. For some reason
+    Test::Reporter does not set the From address when Mail::Send is
+    being used but does so when Net::SMTP is being used.
+
+    update 2007-07-21: Found a way to disable Mail::Send in
+    Test::Reporter with a patch, so now I do not need to disable
+    MailTools anymore.
+
+match:
+  distribution: "^MARKOV/MailTools-\d"
+# disabled: 1

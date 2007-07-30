@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "RJBS/Email-Send-2.171\."
+patches:
+  - "ANDK/patches/Email-Send-2.171-ANDK-01.patch.gz"

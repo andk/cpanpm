@@ -1,0 +1,10 @@
+\.svn/
+^Bundle-CPAN.*tar.gz$
+^DIST/
+^Makefile$
+^Makefile\.old$
+^\.lwpcookies
+^\.releaserc
+^blib/
+^pm_to_blib$
+~$

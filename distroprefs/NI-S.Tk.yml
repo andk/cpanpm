@@ -1,0 +1,16 @@
+---
+match:
+  distribution: "^NI-S/Tk-804\.027\.tar\.gz$"
+disabled: 1
+comment: |
+
+  The patches from the Tk-804.027-p*.patch.gz family require the
+  applypatch program installed and CPAN::Config must have taken note
+  of it. Try 'o conf init applypatch' to make sure it is a known
+  external program.
+
+pl:
+  args:
+    - "XFT=1"
+patches:
+  - "SREZIC/patches/Tk-804.027-p4.patch.gz"

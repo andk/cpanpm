@@ -1,0 +1,8 @@
+---
+match:
+  distribution: "^RJRAY/RPC-XML-0.59.tar.gz"
+depends:
+  configure_requires:
+    LWP: 0
+  requires:
+    LWP: 0

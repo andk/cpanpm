@@ -1,0 +1,6 @@
+--- 
+comment: "See http://rt.cpan.org/Ticket/Display.html?id=22693"
+match:
+  distribution: "^URI/File-Slurp-9999.12.tar.gz$"
+patches:
+  - ANDK/patches/File-Slurp-9999.12-ANDK-02.patch

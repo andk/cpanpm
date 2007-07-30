@@ -1,0 +1,6 @@
+--- 
+match:
+  distribution: "^OLAF/Net-DNS-"
+pl: 
+  args: 
+    - --no-online-tests
