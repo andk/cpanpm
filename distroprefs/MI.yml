@@ -21,6 +21,7 @@ match:
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/Games-NES-Emulator-\d
     |BRICAS/WWW-OpenSearch-\d
     |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
