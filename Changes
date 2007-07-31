@@ -1,3 +1,6 @@
+    * added base_id() method to CPAN::Distribution; documented both
+      base_id() and pretty_id() (David Golden)
+
 2007-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_52:

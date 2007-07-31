@@ -5801,6 +5801,15 @@ sub pretty_id {
     substr($id,5);
 }
 
+#-> sub CPAN::Distribution::base_id
+sub base_id {
+    my $self = shift;
+    my $id = $self->pretty_id();
+    my $base_id = File::Basename::basename($id);
+    $base_id =~ s{\.(?:tar\.(bz2|gz|Z)|t(?:gz|bz)|zip)$}{}i;
+    return $base_id;
+}
+
 # mark as dirty/clean for the sake of recursion detection. $color=1
 # means "in use", $color=0 means "not in use anymore". $color=2 means
 # we have determined prereqs now and thus insist on passing this
@@ -11310,6 +11319,16 @@ Returns a multi-line description of the distribution
 
 Returns the CPAN::Author object of the maintainer who uploaded this
 distribution
+
+=item CPAN::Distribution::pretty_id()
+
+Returns a string of the form "AUTHORID/TARBALL", where AUTHORID is the
+author's PAUSE ID and TARBALL is the distribution filename.
+
+=item CPAN::Distribution::base_id()
+
+Returns the distribution filename without any archive suffix.  E.g
+"Foo-Bar-0.01"
 
 =item CPAN::Distribution::clean()
 

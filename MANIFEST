@@ -237,6 +237,7 @@ t/12cpan.t
 t/30shell.coverage
 t/30shell.t
 t/31sessions.t
+t/41distribution.t
 t/50pod.t
 t/51pod.t
 t/52podcover.t
