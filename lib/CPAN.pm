@@ -12243,6 +12243,15 @@ Henk P. Penning maintains a site that collects data about CPAN sites:
 
   http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
 
+=item 16)
+
+Why do I get asked the same questions every time I start the shell?
+
+You can make your configuration changes permanent by calling the
+command C<o conf commit>. Alternatively set the C<auto_commit>
+variable to true by running C<o conf init auto_commit> and answering
+the following question with yes.
+
 =back
 
 =head1 COMPATIBILITY
