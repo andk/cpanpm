@@ -3356,6 +3356,7 @@ sub recent {
                   $distro =~ s|/|/*/|; # allow it to reside in a subdirectory
               }
 
+              next EITEM if $distro =~ m|\*|; # did not find the thing
               $CPAN::Frontend->myprint("____$desc\n");
               push @distros, $distro;
               last EITEM if $finish_eitem;
