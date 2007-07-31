@@ -1,3 +1,14 @@
+2007-07-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.07.tar.gz started to
+	fail on 2007-07-17 between bleadperl@31618 and ...20. 20 is already
+	deleted but we can compare with 23.
+
+	When I go back to 18 and try to install it again as distro then I get
+	the same failure.
+
+	http://rt.cpan.org/Ticket/Display.html?id=28574
+
 2007-07-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* libxml2 upgrade broke XML::LibXML but in a minor way so we can write a
