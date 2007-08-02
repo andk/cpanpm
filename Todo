@@ -1,3 +1,24 @@
+2007-08-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* example perls for the various $]?
+
+installed-perls/perl/pItJUYG/perl-5.7.3@16603/bin/perl    5.007003
+installed-perls/perl/p0IId7q/perl-5.8.0@17639/bin/perl    5.008
+installed-perls/perl/pocR0se/perl-5.8.0@22312/bin/perl    5.009
+installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl    5.009001
+installed-perls/perl/pF3yxpB/perl-5.8.0@24139/bin/perl    5.009002
+installed-perls/perl/pztoXzt/perl-5.8.0@27002/bin/perl    5.009003
+installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl    5.009004
+
+installed-perls/maint-5.8/pAyq3oR/perl-5.8.0@18352/bin/perl    5.008
+installed-perls/maint-5.8/pet10ji/perl-5.8.0@20939/bin/perl    5.008001
+installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl    5.008003
+installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl    5.008004
+installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl    5.008005
+installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl    5.008006
+installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl    5.008007
+installed-perls/maint-5.8/pdHcRny/perl-5.8.0@31223/bin/perl    5.008008
+
 2007-07-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.07.tar.gz started to
@@ -41,7 +62,7 @@ N/A
 
 ----EOF ($?='0')----
 ----Output of .../pCVcKvs/perl-5.8.0@30868/bin/perl----
-OK
+GXBOK
 
 ----EOF ($?='0')----
 
