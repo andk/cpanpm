@@ -22,6 +22,7 @@ match:
     |BLBLACK/Term-Spinner-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/Games-NES-Emulator-\d
+    |BRICAS/Games-NES-ROM-\d
     |BRICAS/WWW-OpenSearch-\d
     |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
@@ -36,6 +37,8 @@ match:
     |CLACO/Finance-Currency-Convert-WebserviceX-\d
     |CLACO/Handel-Storage-RDBO-\d
     |CLACO/Handel-\d
+    |CLKAO/Pushmi-v\d
+    |CLKAO/RunApp-\d
     |CLKAO/SVK-v\d
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
