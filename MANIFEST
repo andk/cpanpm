@@ -204,6 +204,7 @@ distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/YSAS.SWF-Builder.yml
 distroprefs/YVES.Data-Dump-Streamer.yml
 distroprefs/ZEV.Test-Dependencies.yml
+distroprefs/ZINCDEV.tk-zinc.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm
