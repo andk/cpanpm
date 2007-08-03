@@ -6233,10 +6233,10 @@ sub satisfy_configure_requires {
     my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
     if ($self->{configure_requires_later}) {
         # we must not come here a second time
-        $CPAN::Frontend->mywarn("Panic: A prerequisite is not available, please investigate...");
+        $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
         require Data::Dumper;
-        $CPAN::Frontend->mydie( Data::Dumper->new([$self],
-                                                  [qw(self)])->Indent(1)->Useqq(1)->Dump );
+        $CPAN::Frontend->mydie( Data::Dumper->new([$self,\@prereq],
+                                                  [qw(self prereq)])->Indent(1)->Useqq(1)->Dump );
     }
     if ($prereq[0][0] eq "perl") {
         my $need = "requires perl '$prereq[0][1]'";

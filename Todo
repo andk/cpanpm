@@ -1,3 +1,14 @@
+2007-08-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* long standing bug in configure_requires only visible in the logfiles
+
+	logs/megainstall.20070{727T0705,730T1247,803T0330}.out
+
+	Somebody injects Apache::Cookie and somebody injects Apache::Request.
+	libapreq is untarred, configure_require hits and before it can resolve
+	things correctly configure_require_later is incremented a second time
+	and we panic.
+
 2007-08-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* example perls for the various $]?
