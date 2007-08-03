@@ -1,5 +1,28 @@
 2007-08-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Data::Dump::Streamer 2.03 still a weird place to go. Yesterday I
+	posted at http://rt.cpan.org/Ticket/Display.html?id=28270 a quite clear
+	solution to the installation bug but nobody reacts.
+
+	After that I could start doing binary searches but they broke again and
+	again and gave wrong results. Last result looks interesting
+
+----Program----
+eval q{use Data::Dump::Streamer 2.03};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pDzbqZK/perl-5.8.0@29359/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pHzMH4R/perl-5.8.0@29360/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	reganch heavily involved. Yes, this is it.
+
 	* long standing bug in configure_requires only visible in the logfiles
 
 	logs/megainstall.20070{727T0705,730T1247,803T0330}.out

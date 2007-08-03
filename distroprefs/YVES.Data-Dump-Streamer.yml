@@ -8,3 +8,6 @@ pl:
 install:
   env:
     EU_INSTALL_IGNORE_SKIP: 1
+depends:
+  requires:
+    PadWalker: 0
