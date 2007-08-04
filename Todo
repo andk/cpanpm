@@ -1,5 +1,8 @@
 2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Test::Reporter 1.32 came out and my patch against 1.30 seems not
+	needed anymore. It seems all my reports are being sent out.
+
 	* http://cpandeps.cantrell.org.uk/ dependency graph with test results
 	combined
 
