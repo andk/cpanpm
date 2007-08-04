@@ -1,3 +1,8 @@
+2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* http://cpandeps.cantrell.org.uk/ dependency graph with test results
+	combined
+
 2007-08-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Data::Dump::Streamer 2.03 still a weird place to go. Yesterday I
@@ -21,7 +26,8 @@ N/A
 
 ----EOF ($?='0')----
 
-	reganch heavily involved. Yes, this is it.
+	reganch heavily involved. Yes, this is it. See
+	http://rt.cpan.org/Ticket/Display.html?id=25574.
 
 	* long standing bug in configure_requires only visible in the logfiles
 

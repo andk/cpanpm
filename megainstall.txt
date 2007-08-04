@@ -235,6 +235,7 @@ Devel::DProfLB
 Devel::Dependencies
 Devel::EvalContext
 Devel::FastProf
+Devel::GC::Helper
 Devel::Hide
 Devel::LexAlias
 Devel::Modlist
