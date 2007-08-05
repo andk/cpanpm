@@ -3101,7 +3101,9 @@ sub rematein {
     # enter the queue but not its copy. How do they get a sensible
     # test_count?
 
-    my $needs_recursion_protection = "make|test|install";
+    # With configure_requires, "get" is vulnerable in recursion.
+
+    my $needs_recursion_protection = "get|make|test|install";
 
     # construct the queue
     my($s,@s,@qcopy);
@@ -10637,6 +10639,7 @@ defined:
   show_upload_date   boolean if commands should try to determine upload date
   show_zero_versions boolean if r command tells for which modules $version==0
   tar                location of external program tar
+  tar_verbosity      verbosity level for the tar command
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
   term_ornaments     boolean to turn ReadLine ornamenting on/off

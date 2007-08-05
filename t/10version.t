@@ -5,8 +5,8 @@ use CPAN::Version;
 use vars qw($D $N);
 
 # for debugging uncomment the next two lines
-use CPAN;
-$CPAN::DEBUG = 16384;
+# use CPAN;
+# $CPAN::DEBUG = 16384;
 
 while (<DATA>) {
   next if tr/.// > 1 && $]<5.006; # multidot tests are not for pre-5.6.0
