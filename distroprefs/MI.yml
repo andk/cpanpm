@@ -82,7 +82,9 @@ match:
     |PERIGRIN/JSON-Any-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
+    |SARTAK/Acme-Aspartame-\d
     |SARTAK/Carp-REPL-\d
+    |SARTAK/Class-Method-Modifiers-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d
