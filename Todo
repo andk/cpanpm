@@ -1,3 +1,10 @@
+2007-08-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: cleanup by age regardless size
+
+	* Todo: remove RECENT-48:00::00.yaml, let the loop-over-recent script
+	run with PERL_MM_USE_DEFAULT, see that 5.6.2 is integrated.
+
 2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Test::Reporter 1.32 came out and my patch against 1.30 is still

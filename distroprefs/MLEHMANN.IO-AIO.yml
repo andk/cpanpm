@@ -1,0 +1,5 @@
+---
+comment: "test t/01_stat....... hangs"
+match:
+  distribution: "^MLEHMANN/IO-AIO-2.4.tar.gz"
+disabled: 1
