@@ -9086,7 +9086,7 @@ sub _should_report {
     }
 
     # capable
-    if ( CPAN::Reporter->VERSION < 0.9901 ) {
+    if ( CPAN::Version->vlt( CPAN::Reporter->VERSION, 0.99 ) ) {
 	# don't cache $self->{should_report} -- need to check each phase
 	if ( $phase eq 'test' ) {
 	    return 1;
