@@ -1,3 +1,31 @@
+2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91_53:
+
+	* added base_id() method to CPAN::Distribution; documented both
+	base_id() and pretty_id() (David Golden)
+
+	* bugfix: make install did not set the PERL5LIB environment
+
+	* bugfix: smoke command skips handles distros it can't find more
+	graciously
+
+	* docfix: new FAQ entry about commit and auto_commit
+
+	* refactoring of the Queue objects for better readability
+
+	* address #28438: wording of the dialog for keep_source_where (Martin
+	Thurn,Michael Schwern)
+
+	* address #28439: did not report missing file: URL when LWP not
+	installed (Martin Thurn,Michael Schwern)
+
+	* new parameter fo eexpect: reuse (Slaven Rezic)
+
+	* bugfix 'reload cpan': make it less unintuitive (David Golden)
+
+	* bugfix in goto: did not formally say goodbye
+
 2007-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_52:

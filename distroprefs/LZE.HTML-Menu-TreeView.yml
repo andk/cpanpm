@@ -7,4 +7,4 @@ pl:
     timeout: 3
     talk:
       - "Where is your Document root"
-      - "/tmp"
+      - "/tmp\n"

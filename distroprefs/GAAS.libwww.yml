@@ -23,4 +23,4 @@ pl:
     - "-n"
   expect: 
     - "Do you want to enable these tests"
-    - "\n"
+    - "n\n"

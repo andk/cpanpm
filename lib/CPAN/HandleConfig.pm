@@ -76,6 +76,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "show_upload_date",
      "show_zero_versions",
      "tar",
+     "tar_verbosity",
      "term_is_latin",
      "term_ornaments",
      "test_report",

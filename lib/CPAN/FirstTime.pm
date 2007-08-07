@@ -444,6 +444,12 @@ substitute. You can then revisit this dialog with
         }
     }
 
+    if (!$matcher or 'tar_verbosity' =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{tar_verbosity_intro});
+        my_prompt_loop(tar_verbosity => 'v', $matcher,
+                       'none|v|vv');
+    }
+
     #
     #= Installer, arguments to make etc.
     #
@@ -1284,6 +1290,17 @@ the next generation installer Module::Build (MB) works with the
 Build.PL.
 
 },
+
+tar_verbosity_intro => qq{
+
+When CPAN.pm uses the tar command, which switch for the verbosity
+shall be used? Choose 'none' for quiet operation, 'v' for file
+name listing, 'vv' for full listing.
+
+},
+
+tar_verbosity =>
+qq{Tar command verbosity level (none or v or vv)?},
 
 prefer_installer =>
 qq{In case you could choose, which installer would you prefer (EUMM or MB)?},

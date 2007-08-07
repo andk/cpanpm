@@ -3101,7 +3101,9 @@ sub rematein {
     # enter the queue but not its copy. How do they get a sensible
     # test_count?
 
-    my $needs_recursion_protection = "make|test|install";
+    # With configure_requires, "get" is vulnerable in recursion.
+
+    my $needs_recursion_protection = "get|make|test|install";
 
     # construct the queue
     my($s,@s,@qcopy);
@@ -3356,6 +3358,7 @@ sub recent {
                   $distro =~ s|/|/*/|; # allow it to reside in a subdirectory
               }
 
+              next EITEM if $distro =~ m|\*|; # did not find the thing
               $CPAN::Frontend->myprint("____$desc\n");
               push @distros, $distro;
               last EITEM if $finish_eitem;
@@ -5801,6 +5804,15 @@ sub pretty_id {
     substr($id,5);
 }
 
+#-> sub CPAN::Distribution::base_id
+sub base_id {
+    my $self = shift;
+    my $id = $self->pretty_id();
+    my $base_id = File::Basename::basename($id);
+    $base_id =~ s{\.(?:tar\.(bz2|gz|Z)|t(?:gz|bz)|zip)$}{}i;
+    return $base_id;
+}
+
 # mark as dirty/clean for the sake of recursion detection. $color=1
 # means "in use", $color=0 means "not in use anymore". $color=2 means
 # we have determined prereqs now and thus insist on passing this
@@ -6223,10 +6235,10 @@ sub satisfy_configure_requires {
     my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
     if ($self->{configure_requires_later}) {
         # we must not come here a second time
-        $CPAN::Frontend->mywarn("Panic: A prerequisite is not available, please investigate...");
+        $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
         require Data::Dumper;
-        $CPAN::Frontend->mydie( Data::Dumper->new([$self],
-                                                  [qw(self)])->Indent(1)->Useqq(1)->Dump );
+        $CPAN::Frontend->mydie( Data::Dumper->new([$self,\@prereq],
+                                                  [qw(self prereq)])->Indent(1)->Useqq(1)->Dump );
     }
     if ($prereq[0][0] eq "perl") {
         my $need = "requires perl '$prereq[0][1]'";
@@ -8777,6 +8789,11 @@ sub install {
         delete $self->{force_update};
         return;
     }
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+
+    $CPAN::META->set_perl5lib;
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
     while (<$pipe>){
@@ -10672,6 +10689,7 @@ defined:
   show_upload_date   boolean if commands should try to determine upload date
   show_zero_versions boolean if r command tells for which modules $version==0
   tar                location of external program tar
+  tar_verbosity      verbosity level for the tar command
   term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
   term_ornaments     boolean to turn ReadLine ornamenting on/off
@@ -11360,6 +11378,16 @@ Returns a multi-line description of the distribution
 
 Returns the CPAN::Author object of the maintainer who uploaded this
 distribution
+
+=item CPAN::Distribution::pretty_id()
+
+Returns a string of the form "AUTHORID/TARBALL", where AUTHORID is the
+author's PAUSE ID and TARBALL is the distribution filename.
+
+=item CPAN::Distribution::base_id()
+
+Returns the distribution filename without any archive suffix.  E.g
+"Foo-Bar-0.01"
 
 =item CPAN::Distribution::clean()
 
@@ -12273,6 +12301,15 @@ You decide which to try in which order.
 Henk P. Penning maintains a site that collects data about CPAN sites:
 
   http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
+
+=item 16)
+
+Why do I get asked the same questions every time I start the shell?
+
+You can make your configuration changes permanent by calling the
+command C<o conf commit>. Alternatively set the C<auto_commit>
+variable to true by running C<o conf init auto_commit> and answering
+the following question with yes.
 
 =back
 

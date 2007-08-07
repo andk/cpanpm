@@ -1,5 +1,14 @@
 ---
+comment: |
+
+  Written against 1.30.
+
+  With 1.32 still needed:
+
+  Hunk #1 succeeded at 25 with fuzz 2.
+
+
 match:
-  distribution: "FHOXH/Test-Reporter-1.30.tar.gz"
+  distribution: "FHOXH/Test-Reporter-\d"
 patches:
   - "/home/sand/CPAN-SVN/patches/Test-Reporter-1.30-ANDK-01.patch.gz"

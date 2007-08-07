@@ -21,6 +21,8 @@ match:
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/Games-NES-Emulator-\d
+    |BRICAS/Games-NES-ROM-\d
     |BRICAS/WWW-OpenSearch-\d
     |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
@@ -35,6 +37,8 @@ match:
     |CLACO/Finance-Currency-Convert-WebserviceX-\d
     |CLACO/Handel-Storage-RDBO-\d
     |CLACO/Handel-\d
+    |CLKAO/Pushmi-v\d
+    |CLKAO/RunApp-\d
     |CLKAO/SVK-v\d
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
@@ -42,7 +46,8 @@ match:
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
-    |ELLIOTJS/Task-Perl-Critic-\d
+    |ELLIOTJS/Task-Perl-Critic-[v\d]
+    |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDepencencies-
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
     |GAAL/Class-Rebless-\d
@@ -62,6 +67,7 @@ match:
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LUKEC/Test-WWW-Selenium-\d
+    |LUTETIUS/pod2book-\d
     |LYOKATO/FormValidator-Simple-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MITREHC/HoneyClient-Agent-\d
@@ -71,12 +77,16 @@ match:
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
+    |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
+    |SARTAK/Acme-Aspartame-\d
     |SARTAK/Carp-REPL-\d
+    |SARTAK/Class-Method-Modifiers-\d
+    |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d

@@ -35,7 +35,6 @@ BSD::Resource
 BerkeleyDB
 Bit::Vector::Minimal
 BitTorrent
-Bot::CPAN
 Bundle::Encode
 Bundle::POE::IRC
 Bundle::POE::Simple::TCPIP::Services
@@ -236,6 +235,7 @@ Devel::DProfLB
 Devel::Dependencies
 Devel::EvalContext
 Devel::FastProf
+Devel::GC::Helper
 Devel::Hide
 Devel::LexAlias
 Devel::Modlist
@@ -814,8 +814,8 @@ Time::HiRes::Value
 Time::Period
 Time::Piece
 Time::UTC
-Tk::Font::Dialog
 Tk::FontDialog
+Tk::ObjEditor
 Tk::Pod
 Tk::TableMatrix
 Tk::Tree

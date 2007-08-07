@@ -1,3 +1,78 @@
+2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Test::Reporter 1.32 came out and my patch against 1.30 is still
+	needed:-(
+
+	* http://cpandeps.cantrell.org.uk/ dependency graph with test results
+	combined
+
+2007-08-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Data::Dump::Streamer 2.03 still a weird place to go. Yesterday I
+	posted at http://rt.cpan.org/Ticket/Display.html?id=28270 a quite clear
+	solution to the installation bug but nobody reacts.
+
+	After that I could start doing binary searches but they broke again and
+	again and gave wrong results. Last result looks interesting
+
+----Program----
+eval q{use Data::Dump::Streamer 2.03};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pDzbqZK/perl-5.8.0@29359/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pHzMH4R/perl-5.8.0@29360/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	reganch heavily involved. Yes, this is it. See
+	http://rt.cpan.org/Ticket/Display.html?id=25574.
+
+	* long standing bug in configure_requires only visible in the logfiles
+
+	logs/megainstall.20070{727T0705,730T1247,803T0330}.out
+
+	Somebody injects Apache::Cookie and somebody injects Apache::Request.
+	libapreq is untarred, configure_require hits and before it can resolve
+	things correctly configure_require_later is incremented a second time
+	and we panic.
+
+2007-08-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* example perls for the various $]?
+
+installed-perls/perl/pItJUYG/perl-5.7.3@16603/bin/perl    5.007003
+installed-perls/perl/p0IId7q/perl-5.8.0@17639/bin/perl    5.008
+installed-perls/perl/pocR0se/perl-5.8.0@22312/bin/perl    5.009
+installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl    5.009001
+installed-perls/perl/pF3yxpB/perl-5.8.0@24139/bin/perl    5.009002
+installed-perls/perl/pztoXzt/perl-5.8.0@27002/bin/perl    5.009003
+installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl    5.009004
+
+installed-perls/maint-5.8/pAyq3oR/perl-5.8.0@18352/bin/perl    5.008
+installed-perls/maint-5.8/pet10ji/perl-5.8.0@20939/bin/perl    5.008001
+installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl    5.008003
+installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl    5.008004
+installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl    5.008005
+installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl    5.008006
+installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl    5.008007
+installed-perls/maint-5.8/pdHcRny/perl-5.8.0@31223/bin/perl    5.008008
+
+2007-07-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.07.tar.gz started to
+	fail on 2007-07-17 between bleadperl@31618 and ...20. 20 is already
+	deleted but we can compare with 23.
+
+	When I go back to 18 and try to install it again as distro then I get
+	the same failure.
+
+	http://rt.cpan.org/Ticket/Display.html?id=28574
+
 2007-07-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* libxml2 upgrade broke XML::LibXML but in a minor way so we can write a
@@ -30,7 +105,7 @@ N/A
 
 ----EOF ($?='0')----
 ----Output of .../pCVcKvs/perl-5.8.0@30868/bin/perl----
-OK
+GXBOK
 
 ----EOF ($?='0')----
 
