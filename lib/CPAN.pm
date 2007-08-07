@@ -7341,7 +7341,7 @@ is part of the perl-%s distribution. To install that, you need to run
     if (exists $self->{writemakefile}) {
     } else {
 	local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
-	my($ret,$pid);
+	my($ret,$pid,$output);
 	$@ = "";
         my $go_via_alarm;
 	if ($CPAN::Config->{inactivity_timeout}) {
@@ -7364,36 +7364,47 @@ is part of the perl-%s distribution. To install that, you need to run
             }
         }
         if ($go_via_alarm) {
-            eval {
-                alarm $CPAN::Config->{inactivity_timeout};
-                local $SIG{CHLD}; # = sub { wait };
-                if (defined($pid = fork)) {
-                    if ($pid) { #parent
-                        # wait;
-                        waitpid $pid, 0;
-                    } else {    #child
-                        # note, this exec isn't necessary if
-                        # inactivity_timeout is 0. On the Mac I'd
-                        # suggest, we set it always to 0.
-                        exec $system;
-                    }
-                } else {
-                    $CPAN::Frontend->myprint("Cannot fork: $!");
-                    return;
-                }
-            };
-            alarm 0;
-            if ($@){
-                kill 9, $pid;
-                waitpid $pid, 0;
-                my $err = "$@";
-                $CPAN::Frontend->myprint($err);
-                $self->{writemakefile} = CPAN::Distrostatus->new("NO $err");
-                $@ = "";
-                return;
-            }
+	    if ( $self->_should_report('pl') ) {
+		($output, $ret) = CPAN::Reporter::record_command(
+		    $system,
+		    $CPAN::Config->{inactivity_timeout},
+		);
+		CPAN::Reporter::grade_PL( $self, $system, $output, $ret );
+	    }
+	    else {
+		eval {
+		    alarm $CPAN::Config->{inactivity_timeout};
+		    local $SIG{CHLD}; # = sub { wait };
+		    if (defined($pid = fork)) {
+			if ($pid) { #parent
+			    # wait;
+			    waitpid $pid, 0;
+			} else {    #child
+			    # note, this exec isn't necessary if
+			    # inactivity_timeout is 0. On the Mac I'd
+			    # suggest, we set it always to 0.
+			    exec $system;
+			}
+		    } else {
+			$CPAN::Frontend->myprint("Cannot fork: $!");
+			return;
+		    }
+		};
+		alarm 0;
+		if ($@){
+		    kill 9, $pid;
+		    waitpid $pid, 0;
+		    my $err = "$@";
+		    $CPAN::Frontend->myprint($err);
+		    $self->{writemakefile} = CPAN::Distrostatus->new("NO $err");
+		    $@ = "";
+		    return;
+		}
+	    }
 	} else {
             if (my $expect_model = $self->_prefs_with_expect("pl")) {
+		# XXX probably want to check _should_report here and warn 
+		# about not being able to use CPAN::Reporter with expect
                 $ret = $self->_run_via_expect($system,$expect_model);
                 if (! defined $ret
                     && $self->{writemakefile}
@@ -7401,7 +7412,12 @@ is part of the perl-%s distribution. To install that, you need to run
                     # timeout
                     return;
                 }
-            } else {
+            } 
+	    elsif ( $self->_should_report('pl') ) {
+		($output, $ret) = CPAN::Reporter::record_command($system);
+		CPAN::Reporter::grade_PL( $self, $system, $output, $ret );
+	    }
+	    else {
                 $ret = system($system);
             }
             if ($ret != 0) {
@@ -7491,8 +7507,16 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     my $system_ok;
     if ($want_expect) {
+	# XXX probably want to check _should_report here and 
+	# warn about not being able to use CPAN::Reporter with expect
         $system_ok = $self->_run_via_expect($system,$expect_model) == 0;
-    } else {
+    } 
+    elsif ( $self->_should_report('make') ) {
+	my ($output, $ret) = CPAN::Reporter::record_command($system);
+	CPAN::Reporter::grade_make( $self, $system, $output, $ret );
+	$system_ok = ! $ret;
+    }
+    else {
         $system_ok = system($system) == 0;
     }
     $self->introduce_myself;
@@ -8421,13 +8445,13 @@ sub test {
         }
     }
     if ($want_expect) {
-        if ($self->_should_report()) {
+        if ($self->_should_report('test')) {
             $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is currently ".
                                     "not supported when distroprefs specify ".
                                     "an interactive test\n");
         }
         $tests_ok = $self->_run_via_expect($system,$expect_model) == 0;
-    } elsif ( $self->_should_report ) {
+    } elsif ( $self->_should_report('test') ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
         $tests_ok = system($system) == 0;
@@ -9024,15 +9048,17 @@ sub _build_command {
 # sub CPAN::Distribution::_should_report
 sub _should_report {
     my($self, $phase) = @_;
-    $phase ||= 'test';
+    die "_should_report() requires a 'phase' argument"
+	if ! defined $phase;
     
     # configured
     my $test_report = CPAN::HandleConfig->prefs_lookup($self,
                                                        q{test_report});
     return unless $test_report;
 
-    # don't repeat
-    return $self->{should_report} if defined $self->{should_report};
+    # don't repeat if we cached a result
+    return $self->{should_report} 
+	if exists $self->{should_report};
 
     # available
     if ( ! $CPAN::META->has_inst("CPAN::Reporter")) {
@@ -9043,11 +9069,17 @@ sub _should_report {
     }
 
     # capable
-    if ( $phase ne 'test' && CPAN::Reporter->VERSION < 0.9901 ) {
-	$CPAN::Frontend->mywarn(
-	    "CPAN::Reporter too old. Will only report on test suite results."
-	);
-	return $self->{should_report} = 0;
+    if ( CPAN::Reporter->VERSION < 0.9901 ) {
+	# don't cache $self->{should_report} -- need to check each phase
+	if ( $phase eq 'test' ) {
+	    return 1;
+	}
+	else {
+	    $CPAN::Frontend->mywarn(
+		"CPAN::Reporter too old to support the '$phase' phase. Please upgrade."
+	    );
+	    return; 
+	}
     }
 
     # appropriate
@@ -9067,7 +9099,7 @@ sub _should_report {
 	return $self->{should_report} = 0;
     }
 
-    # proceed
+    # proceed and cache success
     return $self->{should_report} = 1;
 }
 
