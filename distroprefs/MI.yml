@@ -77,6 +77,7 @@ match:
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
+    |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |PERIGRIN/JSON-Any-\d
@@ -85,6 +86,7 @@ match:
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
+    |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d
