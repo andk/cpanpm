@@ -8420,46 +8420,14 @@ sub test {
                                     "testing without\n");
         }
     }
-    my $test_report = CPAN::HandleConfig->prefs_lookup($self,
-                                                       q{test_report});
-    my $want_report;
-    if ($test_report) {
-        my $can_report = $CPAN::META->has_inst("CPAN::Reporter");
-        if ($can_report) {
-            $want_report = 1;
-        } else {
-            $CPAN::Frontend->mywarn("CPAN::Reporter not installed, falling back to ".
-                                    "testing without\n");
-        }
-    }
-    my $ready_to_report = $want_report;
-    if ($ready_to_report
-        && $self->is_dot_dist
-       ) {
-        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
-                                "for local directories\n");
-        $ready_to_report = 0;
-    }
-    if ($ready_to_report
-        &&
-        $self->prefs->{patches}
-        &&
-        @{$self->prefs->{patches}}
-        &&
-        $self->{patched}
-       ) {
-        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
-                                "when the source has been patched\n");
-        $ready_to_report = 0;
-    }
     if ($want_expect) {
-        if ($ready_to_report) {
+        if ($self->_should_report()) {
             $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is currently ".
                                     "not supported when distroprefs specify ".
                                     "an interactive test\n");
         }
         $tests_ok = $self->_run_via_expect($system,$expect_model) == 0;
-    } elsif ( $ready_to_report ) {
+    } elsif ( $self->_should_report ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {
         $tests_ok = system($system) == 0;
@@ -9051,6 +9019,56 @@ sub _build_command {
         return "$perl ./Build";
     }
     return "./Build";
+}
+
+# sub CPAN::Distribution::_should_report
+sub _should_report {
+    my($self, $phase) = @_;
+    $phase ||= 'test';
+    
+    # configured
+    my $test_report = CPAN::HandleConfig->prefs_lookup($self,
+                                                       q{test_report});
+    return unless $test_report;
+
+    # don't repeat
+    return $self->{should_report} if defined $self->{should_report};
+
+    # available
+    if ( ! $CPAN::META->has_inst("CPAN::Reporter")) {
+	$CPAN::Frontend->mywarn(
+	    "CPAN::Reporter not installed, falling back to testing without\n"
+	);
+	return $self->{should_report} = 0;
+    }
+
+    # capable
+    if ( $phase ne 'test' && CPAN::Reporter->VERSION < 0.9901 ) {
+	$CPAN::Frontend->mywarn(
+	    "CPAN::Reporter too old. Will only report on test suite results."
+	);
+	return $self->{should_report} = 0;
+    }
+
+    # appropriate
+    if ($self->is_dot_dist) {
+        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
+                                "for local directories\n");
+	return $self->{should_report} = 0;
+    }
+    if ($self->prefs->{patches}
+        &&
+        @{$self->prefs->{patches}}
+        &&
+        $self->{patched}
+       ) {
+        $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is disabled ".
+                                "when the source has been patched\n");
+	return $self->{should_report} = 0;
+    }
+
+    # proceed
+    return $self->{should_report} = 1;
 }
 
 #-> sub CPAN::Distribution::reports
