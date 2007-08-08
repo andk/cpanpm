@@ -1,6 +1,29 @@
+2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use Term::ReadPassword 0.07};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../plli2XZ/perl-5.8.0@26454/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pzoOIYJ/perl-5.8.0@26465/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 26454 and 26465
+(but 26455, 26456, 26457, 26458, 26459, 26460, 26461, 26462, 26463, 26464 could not successfully be used to build perl)
+No useable patch available between 26454 and 26465
+Patches 26455, 26456, 26457, 26458, 26459, 26460, 26461, 26462, 26463, 26464 could not successfully be used to build perl
+
+
 2007-08-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: cleanup by age regardless size
+	* Feature wish: cleanup by age regardless size
 
 	* Todo: remove RECENT-48:00::00.yaml, let the loop-over-recent script
 	run with PERL_MM_USE_DEFAULT, see that 5.6.2 is integrated.
