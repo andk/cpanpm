@@ -27,6 +27,7 @@ if (-e $statefile) {
 warn "max_epoch_worked_on[$max_epoch_worked_on]";
 my $basedir = "/home/sand/CPAN-SVN/logs";
 ITERATION: while () {
+  my $iteration_start = time;
   opendir my $dh, $basedir or die;
   my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
   pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
@@ -52,21 +53,21 @@ ITERATION: while () {
     $max_epoch_this_time ||= $upload->{epoch};
     if ($upload->{epoch} < $max_epoch_worked_on) {
       warn "SKIPping already handled $upload->{path}\n";
-      sleep 0.2;
+      sleep 0.1;
       next UPLOADITEM;
     }
     open my $fh, ">", $statefile or die "Could not open >$statefile\: $!";
     print $fh $upload->{epoch}, "\n";
     my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
-      my $combo = "|-> '$perl' <-> '$upload->{path}' <-> $epoch_as_localtime <-|";
+      my $combo = "|-> '$perl' <-> '$upload->{path}' <-> $epoch_as_localtime(=$upload->{epoch}) <-|";
       if (0) {
       } elsif ($seen{$perl,$upload->{path}}++){
         warn "dead horses combo $combo";
         sleep 30;
         next ITERATION;
       } else {
-        warn "\n\nGoing to treat combo $combo\n\n\n";
+        warn "\n\n$combo\n\n\n";
         $ENV{PERL_MM_USE_DEFAULT} = 1;
         my @system = (
                       $perl,
@@ -88,6 +89,10 @@ ITERATION: while () {
     }
   }
   $max_epoch_worked_on = $max_epoch_this_time;
+  # guaratee a minimum of 60 seconds per loop
+  if (time - $iteration_start < 60) {
+    sleep 60 - (time - $iteration_start);
+  }
 }
 
 print "\n";
