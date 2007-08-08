@@ -60,7 +60,10 @@ ITERATION: while () {
     print $fh $upload->{epoch}, "\n";
     my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
-      my $combo = "|-> '$perl' <-> '$upload->{path}' <-> $epoch_as_localtime(=$upload->{epoch}) <-|";
+      my $perl_version = do { open my $fh, "$perl -e \"print \$]\" |" or die "Couldnt open $perl: $!";
+                              <$fh>;
+                            };
+      my $combo = "|-> '$perl'(=$perl_version) <-> '$upload->{path}' <-> '$epoch_as_localtime'(=$upload->{epoch}) <-|";
       if (0) {
       } elsif ($seen{$perl,$upload->{path}}++){
         warn "dead horses combo $combo";
