@@ -2,6 +2,9 @@
 
 	* release 1.91_53:
 
+	* added CPAN Testers reporting for failures of *.PL or make/Build
+	if CPAN::Reporter version is at least 0.99 (David Golden)
+    
 	* added base_id() method to CPAN::Distribution; documented both
 	base_id() and pretty_id() (David Golden)
 
