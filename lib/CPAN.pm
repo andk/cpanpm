@@ -4834,6 +4834,7 @@ sub reanimate_build_dir {
                                 force_update
                                 later
                                 notest
+                                should_report
                                 sponsored_mods
                                )) {
                 delete $do->{$skipper};

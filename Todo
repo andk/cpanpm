@@ -1,6 +1,8 @@
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* 
+	* is the output of perl Makefile.PL in the yml file now?
+
+	* binary search requested by Steffen Schwigon
 
 ----Program----
 eval q{use Term::ReadPassword 0.07};

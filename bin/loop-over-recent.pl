@@ -3,18 +3,30 @@
 use strict;
 use warnings;
 use File::Basename qw(dirname);
+use Time::HiRes qw(sleep);
 use YAML::Syck;
 
 my $recent = "/home/ftp/pub/PAUSE/authors/id/RECENT-2d.yaml";
 my $otherperls = "$0.otherperls";
+my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 
 my @perls = qw(); # we'll fill it at runtime!
 
 my %seen;
 
 my $max_epoch_worked_on = 0;
+if (-e $statefile) {
+  local $/;
+  my $state = do { open my $fh, $statefile or die "Couldn't open '$statefile': $!";
+                   <$fh>;
+                 };
+  chomp $state;
+  $state += 0;
+  $max_epoch_worked_on = $state if $state;
+}
+warn "max_epoch_worked_on[$max_epoch_worked_on]";
+my $basedir = "/home/sand/CPAN-SVN/logs";
 ITERATION: while () {
-  my $basedir = "/home/sand/CPAN-SVN/logs";
   opendir my $dh, $basedir or die;
   my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
   pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
@@ -35,21 +47,26 @@ ITERATION: while () {
   my($recent_data) = YAML::Syck::LoadFile($recent);
   my $max_epoch_this_time = 0;
  UPLOADITEM: for my $upload (reverse @$recent_data) {
-    next unless $upload->{path} =~ m!\.(tar.gz|tar.bz2)$!;
+    next unless $upload->{path} =~ m!\.(tar.gz|tar.bz2|\.zip)$!;
     next unless $upload->{type} eq "new";
     $max_epoch_this_time ||= $upload->{epoch};
-    if ($upload->{epoch} <= $max_epoch_worked_on) {
-      last UPLOADITEM;
+    if ($upload->{epoch} < $max_epoch_worked_on) {
+      warn "SKIPping already handled $upload->{path}\n";
+      sleep 0.2;
+      next UPLOADITEM;
     }
+    open my $fh, ">", $statefile or die "Could not open >$statefile\: $!";
+    print $fh $upload->{epoch}, "\n";
+    my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
-      my $combo = " '$perl' <-> '$upload->{path}' ";
+      my $combo = "|-> '$perl' <-> '$upload->{path}' <-> $epoch_as_localtime <-|";
       if (0) {
       } elsif ($seen{$perl,$upload->{path}}++){
         warn "dead horses combo $combo";
         sleep 30;
         next ITERATION;
       } else {
-        warn "Going to treat combo $combo";
+        warn "\n\nGoing to treat combo $combo\n\n\n";
         $ENV{PERL_MM_USE_DEFAULT} = 1;
         my @system = (
                       $perl,
@@ -58,7 +75,15 @@ ITERATION: while () {
                       "-e",
                       "install '$upload->{path}'",
                      );
-        0==system @system or die;
+        # 0==system @system or die;
+        unless (0==system @system){
+          warn "ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN\n";
+          warn "      Something went wrong during\n";
+          warn "      $perl\n";
+          warn "      $upload->{path}\n";
+          warn "ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN\n";
+ 	  sleep 60;
+        }
       }
     }
   }

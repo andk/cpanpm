@@ -3,6 +3,8 @@ comment: |
 
   Written against 1.30.
 
+  http://code.google.com/p/test-reporter/issues/detail?id=4
+
   With 1.32 still needed:
 
   Hunk #1 succeeded at 25 with fuzz 2.
@@ -11,4 +13,4 @@ comment: |
 match:
   distribution: "FHOXH/Test-Reporter-\d"
 patches:
-  - "/home/sand/CPAN-SVN/patches/Test-Reporter-1.30-ANDK-01.patch.gz"
+  - "ANDK/patches/Test-Reporter-1.30-ANDK-01.patch.gz"
