@@ -9093,9 +9093,9 @@ sub _should_report {
 	}
 	else {
 	    $CPAN::Frontend->mywarn(
-		"CPAN::Reporter too old to support the '$phase' phase. Please upgrade."
+		"CPAN::Reporter too old to support the '$phase' phase. Please upgrade.\n"
 	    );
-	    return; 
+	    return;
 	}
     }
 
