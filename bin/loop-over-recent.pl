@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use CPAN::DistnameInfo;
 use File::Basename qw(dirname);
 use Time::HiRes qw(sleep);
 use YAML::Syck;
@@ -47,6 +48,13 @@ ITERATION: while () {
   }
   my($recent_data) = YAML::Syck::LoadFile($recent);
   my $max_epoch_this_time = 0;
+  $recent_data = [ grep { $_->{path} =~ m!\.(tar.gz|tar.bz2|\.zip)$! } @$recent_data ];
+  {
+    my %seen;
+    $recent_data = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
+                            !$seen{$d->dist}++
+                          } @$recent_data ];
+  }
  UPLOADITEM: for my $upload (reverse @$recent_data) {
     next unless $upload->{path} =~ m!\.(tar.gz|tar.bz2|\.zip)$!;
     next unless $upload->{type} eq "new";
@@ -55,7 +63,7 @@ ITERATION: while () {
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
     $max_epoch_this_time ||= $upload->{epoch};
     if ($upload->{epoch} < $max_epoch_worked_on) {
-      warn "SKIPping already handled $upload->{path}\n";
+      warn "Skipping already handled $upload->{path}\n";
       sleep 0.1;
       next UPLOADITEM;
     }
