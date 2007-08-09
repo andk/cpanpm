@@ -50,6 +50,9 @@ ITERATION: while () {
  UPLOADITEM: for my $upload (reverse @$recent_data) {
     next unless $upload->{path} =~ m!\.(tar.gz|tar.bz2|\.zip)$!;
     next unless $upload->{type} eq "new";
+    # never install stable reporters, they are most probably older
+    # than we are
+    next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
     $max_epoch_this_time ||= $upload->{epoch};
     if ($upload->{epoch} < $max_epoch_worked_on) {
       warn "SKIPping already handled $upload->{path}\n";
