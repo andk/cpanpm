@@ -164,6 +164,7 @@ distroprefs/PAJAS.XML-LibXML.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
+distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
