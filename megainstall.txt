@@ -375,6 +375,7 @@ HTML::TreeBuilder
 HTML::TreeBuilder::XPath
 HTML::Widget
 HTML::WikiConverter
+HTTP::GHTTP
 HTTP::BrowserDetect
 HTTP::Response::Encoding
 HTTP::Server::Simple
@@ -747,6 +748,7 @@ Term::Prompt
 Term::ReadKey
 Term::ReadLine::Gnu
 Term::ReadLine::Perl
+Term::ReadPassword
 Term::Size
 Term::Size::Perl
 Term::Spinner

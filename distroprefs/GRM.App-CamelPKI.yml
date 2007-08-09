@@ -1,0 +1,5 @@
+---
+comment: "hangs"
+match:
+  distribution: "^GRM/CamelPKI/App-CamelPKI-\d"
+disabled: 1
