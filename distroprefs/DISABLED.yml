@@ -1,0 +1,10 @@
+---
+comment: |
+
+  Various reasons, maybe things that hang, maybe things that annoy
+
+match:
+  distribution: |
+    ^(?x:^OALDERS/URI-ParseSearchString-More-0.04
+    )|
+disabled: 1

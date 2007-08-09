@@ -47,7 +47,6 @@ ITERATION: while () {
     }
   }
   my($recent_data) = YAML::Syck::LoadFile($recent);
-  my $max_epoch_this_time = 0;
   $recent_data = [ grep { $_->{path} =~ m!\.(tar.gz|tar.bz2|\.zip)$! } @$recent_data ];
   {
     my %seen;
@@ -61,7 +60,6 @@ ITERATION: while () {
     # never install stable reporters, they are most probably older
     # than we are
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
-    $max_epoch_this_time ||= $upload->{epoch};
     if ($upload->{epoch} < $max_epoch_worked_on) {
       warn "Skipping already handled $upload->{path}\n";
       sleep 0.1;
@@ -102,7 +100,6 @@ ITERATION: while () {
       }
     }
   }
-  $max_epoch_worked_on = $max_epoch_this_time;
   # guaratee a minimum of 60 seconds per loop
   if (time - $iteration_start < 60) {
     sleep 60 - (time - $iteration_start);
