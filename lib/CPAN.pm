@@ -9083,20 +9083,22 @@ sub _should_report {
     # available
     if ( ! $CPAN::META->has_inst("CPAN::Reporter")) {
 	$CPAN::Frontend->mywarn(
-	    "CPAN::Reporter not installed, falling back to testing without\n"
+	    "CPAN::Reporter not installed.  No reports will be sent.\n"
 	);
 	return $self->{should_report} = 0;
     }
 
     # capable
-    if ( CPAN::Version->vlt( CPAN::Reporter->VERSION, 0.99 ) ) {
+    my $crv = CPAN::Reporter->VERSION; 
+    if ( CPAN::Version->vlt( $crv, 0.99 ) ) {
 	# don't cache $self->{should_report} -- need to check each phase
 	if ( $phase eq 'test' ) {
 	    return 1;
 	}
 	else {
 	    $CPAN::Frontend->mywarn(
-		"CPAN::Reporter too old to support the '$phase' phase. Please upgrade.\n"
+		"Reporting on the '$phase' phase requires CPAN::Reporter 0.99, but \n" . 
+		"you only have version $crv\.  Only 'test' phase reports will be sent.\n"
 	    );
 	    return;
 	}
