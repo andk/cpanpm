@@ -13,8 +13,6 @@ my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 
 my @perls = qw(); # we'll fill it at runtime!
 
-my %seen;
-
 my $max_epoch_worked_on = 0;
 if (-e $statefile) {
   local $/;
@@ -27,6 +25,7 @@ if (-e $statefile) {
 }
 warn "max_epoch_worked_on[$max_epoch_worked_on]";
 my $basedir = "/home/sand/CPAN-SVN/logs";
+my %comboseen;
 ITERATION: while () {
   my $iteration_start = time;
   opendir my $dh, $basedir or die;
@@ -60,7 +59,7 @@ ITERATION: while () {
     # never install stable reporters, they are most probably older
     # than we are
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
-    if ($upload->{epoch} < $max_epoch_worked_on) {
+    if ($upload->{epoch} <= $max_epoch_worked_on) {
       warn "Skipping already handled $upload->{path}\n";
       sleep 0.1;
       next UPLOADITEM;
@@ -69,17 +68,24 @@ ITERATION: while () {
     print $fh $upload->{epoch}, "\n";
     my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
+      next unless -x $perl;
       my $perl_version = do { open my $fh, "$perl -e \"print \$]\" |" or die "Couldnt open $perl: $!";
                               <$fh>;
                             };
       my $combo = "|-> '$perl'(=$perl_version) <-> '$upload->{path}' <-> '$epoch_as_localtime'(=$upload->{epoch}) <-|";
       if (0) {
-      } elsif ($seen{$perl,$upload->{path}}++){
+      } elsif ($comboseen{$perl,$upload->{path}}++){
         warn "dead horses combo $combo";
-        sleep 30;
-        next ITERATION;
+        sleep 5;
+        next UPLOADITEM;
       } else {
         warn "\n\n$combo\n\n\n";
+        my $abs = dirname($recent) . "/$upload->{path}";
+        local $| = 1;
+        while (! -f $abs) {
+          print ".";
+          sleep 5;
+        }
         $ENV{PERL_MM_USE_DEFAULT} = 1;
         my @system = (
                       $perl,
@@ -99,6 +105,7 @@ ITERATION: while () {
         }
       }
     }
+    next ITERATION; # see what is new before simply going through the ordered list
   }
   # guaratee a minimum of 60 seconds per loop
   if (time - $iteration_start < 60) {

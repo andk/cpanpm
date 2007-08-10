@@ -5400,7 +5400,9 @@ sub as_string {
         if (substr($self->{ID},-1,1) eq ".") { # directory
             $ro = +{};
         } else {
-            $CPAN::Frontend->mydie("Unknown object $self->{ID}");
+            $CPAN::Frontend->mywarn("Unknown object $self->{ID}\n");
+            $CPAN::Frontend->mysleep(5);
+            return;
         }
     }
     for (sort keys %$ro) {
