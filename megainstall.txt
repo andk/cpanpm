@@ -307,6 +307,7 @@ File::NFSLock
 File::Path
 File::Path::Expand
 File::Rsync
+File::RsyncP
 File::ShareDir
 File::Spec
 File::Spec::Functions
@@ -377,6 +378,7 @@ HTML::Widget
 HTML::WikiConverter
 HTTP::GHTTP
 HTTP::BrowserDetect
+HTTP::RangeSaver
 HTTP::Response::Encoding
 HTTP::Server::Simple
 HTTP::Server::Simple::Mason
@@ -424,6 +426,7 @@ Jcode
 Jifty
 Kwiki
 LWP
+LWP::Authen::Negotiate
 LWP::Authen::Wsse
 LWP::Simple
 LWP::UserAgent

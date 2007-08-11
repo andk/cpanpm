@@ -5,6 +5,7 @@ comment: |
 
 match:
   distribution: |
-    ^(?x:^OALDERS/URI-ParseSearchString-More-0.04
+    ^(?x:OALDERS/URI-ParseSearchString-More-0.04
+    |DMOW/Eludia
     )|
 disabled: 1
