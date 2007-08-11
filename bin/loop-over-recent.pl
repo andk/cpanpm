@@ -45,6 +45,8 @@ ITERATION: while () {
   if (open my $fh2, $otherperls) {
     while (<$fh2>) {
       chomp;
+      s/#.*//; # remove comments
+      next if /^\s*$/; # remove empty/white lines
       next unless -x $_;
       push @perls, $_;
     }
@@ -76,7 +78,6 @@ ITERATION: while () {
     $max_epoch_worked_on = $upload->{epoch};
     my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
-      next unless -x $perl;
       my $perl_version = do { open my $fh, "$perl -e \"print \$]\" |" or die "Couldnt open $perl: $!";
                               <$fh>;
                             };

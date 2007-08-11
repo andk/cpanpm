@@ -4,9 +4,10 @@
 # has no Compress::Zlib:
 # /home/src/perl/repoperls/installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl
 /usr/local/perl-m-5.8.0@31162/bin/perl
-/home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl
-/home/src/perl/repoperls/installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl
-/home/src/perl/repoperls/installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl
-/home/src/perl/repoperls/installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl
-/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl
+# these five are threaded and unable to build HTML-Parser 3.56 and DBI 1.58
+# /home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl
+# /home/src/perl/repoperls/installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl
+# /home/src/perl/repoperls/installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl
+# /home/src/perl/repoperls/installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl
+# /home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl
 /usr/local/perl-5.6.2/bin/perl
