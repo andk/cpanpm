@@ -11,6 +11,19 @@ DIED. FAILED test 1
         Failed 1/1 tests, 0.00% okay
 
 
+	libwww mailing list is silent about this:-(
+
+	Hey, the same goes for DBI:
+
+t/05thrclone..............Can't call method "join" on an undefined value at t/05thrclone.t line 74.
+# Looks like you planned 43 tests but only ran 2.
+# Looks like your test died just after 2.
+dubious 
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 3-43
+        Failed 41/43 tests, 4.65% okay
+t
+
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* is the output of perl Makefile.PL in the yml file now?
