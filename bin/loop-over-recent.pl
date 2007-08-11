@@ -26,17 +26,21 @@ if (-e $statefile) {
 warn "max_epoch_worked_on[$max_epoch_worked_on]";
 my $basedir = "/home/sand/CPAN-SVN/logs";
 my %comboseen;
+my %have_warned;
 ITERATION: while () {
   my $iteration_start = time;
   opendir my $dh, $basedir or die;
   my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
   pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
   shift @perls while @perls>1;
-  open my $fh, "$basedir/@perls/perl-V.txt" or die;
-  while (<$fh>) {
-    next unless /-Dprefix=(\S+)/;
-    @perls = "$1/bin/perl";
-    last;
+  {
+    open my $fh, "$basedir/@perls/perl-V.txt" or die;
+    while (<$fh>) {
+      next unless /-Dprefix=(\S+)/;
+      @perls = "$1/bin/perl";
+      last;
+    }
+    close $fh;
   }
   if (open my $fh2, $otherperls) {
     while (<$fh2>) {
@@ -60,12 +64,16 @@ ITERATION: while () {
     # than we are
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
     if ($upload->{epoch} <= $max_epoch_worked_on) {
-      warn "Skipping already handled $upload->{path}\n";
+      warn "Skipping already handled $upload->{path}\n" unless $have_warned{$upload->{path}}++;
       sleep 0.1;
       next UPLOADITEM;
     }
-    open my $fh, ">", $statefile or die "Could not open >$statefile\: $!";
-    print $fh $upload->{epoch}, "\n";
+    {
+      open my $fh, ">", $statefile or die "Could not open >$statefile\: $!";
+      print $fh $upload->{epoch}, "\n";
+      close $fh;
+    }
+    $max_epoch_worked_on = $upload->{epoch};
     my $epoch_as_localtime = scalar localtime $upload->{epoch};
     for my $perl (@perls) {
       next unless -x $perl;
@@ -81,8 +89,8 @@ ITERATION: while () {
       } else {
         warn "\n\n$combo\n\n\n";
         my $abs = dirname($recent) . "/$upload->{path}";
-        local $| = 1;
         while (! -f $abs) {
+          local $| = 1;
           print ".";
           sleep 5;
         }
@@ -111,6 +119,7 @@ ITERATION: while () {
   if (time - $iteration_start < 60) {
     sleep 60 - (time - $iteration_start);
   }
+  { local $| = 1; print "."; }
 }
 
 print "\n";

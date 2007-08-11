@@ -1,3 +1,16 @@
+2007-08-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* HTML::Parser 3.56 broken on my threaded maint perls due to failing threads
+	test. How come? Including debian perl. 3.55. tests OK.
+
+t/threads............Can't call method "join" on an undefined value at t/threads.t line 36.
+# Looks like your test died before it could output anything.
+t/threads............dubious                                                 
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED test 1
+        Failed 1/1 tests, 0.00% okay
+
+
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* is the output of perl Makefile.PL in the yml file now?
