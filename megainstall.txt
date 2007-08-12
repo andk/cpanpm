@@ -12,7 +12,7 @@ AltaVista::BabelFish
 Alter
 Alzabo
 Apache
-Apache::AuthDBI
+Apache::DBI
 Apache::GuessCharset
 Apache::HeavyCGI
 Apache::Request
@@ -333,6 +333,7 @@ GD::SecurityImage
 GD::Text
 GIS::Distance
 GSSAPI
+GTop
 Games::Bingo
 Geo::ShapeFile
 Geography::Countries
