@@ -4831,8 +4831,10 @@ sub reanimate_build_dir {
             for my $skipper (qw(
                                 badtestcnt
                                 configure_requires_later
+                                configure_requires_later_for
                                 force_update
                                 later
+                                later_for
                                 notest
                                 should_report
                                 sponsored_mods
@@ -5698,8 +5700,14 @@ sub cpan_comment {
 #-> CPAN::Distribution::undelay
 sub undelay {
     my $self = shift;
-    delete $self->{later};
-    delete $self->{configure_requires_later};
+    for my $delayer (
+                     "configure_requires_later",
+                     "configure_requires_later_for",
+                     "later",
+                     "later_for",
+                    ) {
+        delete $self->{$delayer};
+    }
 }
 
 #-> CPAN::Distribution::is_dot_dist
@@ -6237,14 +6245,18 @@ sub satisfy_configure_requires {
     }
     my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
     if ($self->{configure_requires_later}) {
-        # we must not come here a second time
-        $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
-        require YAML::Syck;
-        $CPAN::Frontend->mydie
-            (
-             YAML::Syck::Dump
-             ({self=>$self,prereq=>\@prereq,queue=>\@CPAN::Queue::All})
-            );
+        for my $k (keys %{$self->{configure_requires_later_for}||{}}) {
+            if ($self->{configure_requires_later_for}{$k}>1) {
+                # we must not come here a second time
+                $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
+                require YAML::Syck;
+                $CPAN::Frontend->mydie
+                    (
+                     YAML::Syck::Dump
+                     ({self=>$self, prereq=>\@prereq})
+                    );
+            }
+        }
     }
     if ($prereq[0][0] eq "perl") {
         my $need = "requires perl '$prereq[0][1]'";
@@ -7971,6 +7983,7 @@ of modules we are processing right now?", "yes");
         for my $p (@prereq) {
             # warn "calling color_cmd_tmps(0,1)";
             my $any = CPAN::Shell->expandany($p);
+            $self->{$slot . "_for"}{$any->id}++;
             if ($any) {
                 $any->color_cmd_tmps(0,2);
             } else {
