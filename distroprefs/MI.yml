@@ -12,6 +12,7 @@ match:
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
+    |ASH/DBIx-Class-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
