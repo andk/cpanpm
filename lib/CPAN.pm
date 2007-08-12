@@ -6243,7 +6243,7 @@ sub satisfy_configure_requires {
         $CPAN::Frontend->mydie
             (
              YAML::Syck::Dump
-             ({self=>$self,prereq=>\@prereq,queue=>\@CPAN::Queue::All]})
+             ({self=>$self,prereq=>\@prereq,queue=>\@CPAN::Queue::All})
             );
     }
     if ($prereq[0][0] eq "perl") {
