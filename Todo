@@ -41,6 +41,9 @@
 
 	But this installs mod_perl just fine as it should.
 
+	With a variant of the one liner (bin/confreq_bug_logs.pl) we see more
+	clearly what's common to all these failing runs.
+
 2007-08-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* HTML::Parser 3.56 broken on my threaded maint perls due to failing threads
@@ -137,8 +140,8 @@ Patches 26455, 26456, 26457, 26458, 26459, 26460, 26461, 26462, 26463, 26464 cou
 
 2007-08-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Test::Reporter 1.32 came out and my patch against 1.30 is still
-	needed:-(
+	* Test::Reporter 1.32 came out but switching between Mail::Send and
+	Net::SMTP is delayed till 1.34.
 
 	* http://cpandeps.cantrell.org.uk/ dependency graph with test results
 	combined
