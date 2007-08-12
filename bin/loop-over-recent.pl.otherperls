@@ -1,7 +1,10 @@
+# 5.9.5:
+/home/src/perl/repoperls/installed-perls/perl/pNUSF0c/perl-5.8.0@31684/bin/perl
+# 5.9.4:
 /home/src/perl/repoperls/installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl
+# 5.9.3:
 /home/src/perl/repoperls/installed-perls/perl/pztoXzt/perl-5.8.0@27002/bin/perl
-/home/src/perl/repoperls/installed-perls/perl/pF3yxpB/perl-5.8.0@24139/bin/perl
-# has no Compress::Zlib:
+# 5.9.1; but has no Compress::Zlib:
 # /home/src/perl/repoperls/installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl
 /usr/local/perl-m-5.8.0@31162/bin/perl
 # these five are threaded and unable to build HTML-Parser 3.56 and DBI 1.58

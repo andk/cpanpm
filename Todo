@@ -1,3 +1,46 @@
+2007-08-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* reminder about current noc:
+
+	seconds:  perl ~k/sources/CPAN/SVK/trunk/bin/loop-over-recent.pl
+	minutes:  tail -f ~sand/.cpanreporter/history.db
+  hours:    watch -n 20 ' perl ~k/sources/CPAN/SVK/trunk/bin/recent.pl|head -n 23 '
+
+	* long standing bug in configure_requires only visible in the logfiles
+
+	logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248}.out
+
+	Somebody injects Apache::Cookie and somebody injects Apache::Request.
+	Apache-DBI and Apache-Test have already been installed at this point.
+	libapreq is untarred, configure_require hits and before it can resolve
+	things correctly configure_require_later is incremented a second time
+	and we panic.
+
+	The common modules installed before the bug happens is 152:
+
+	perl -nle '$S{$1}++ if /Running make for ([\040-\177]+)/; END {
+   print map { "$_\n" } grep { $S{$_}==4 } keys %S;
+}' logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248}.out|wc -l
+152
+
+	Reading the list reveals nothing inspiring/obvious/spectacular. With
+	this tar command I can reproduce the state at the moment when the bug happened:
+
+	tar -xvz -C / -f ./installed-perls-perl-31701.tar.gz
+
+	But I need the command that reproduces it.
+
+	I thought of
+
+	rm -rf ~/.cpan/build/libapreq-1.33-* ~/.cpan/build/mod_perl-1.30-* ~/.cpan/build/Apache-*
+	rm -f /home/src/perl/repoperls/installed-perls/perl/pwRjjSU/perl-5.8.0@31701/lib/site_perl/5.9.5/Apache/DBI.pm /home/src/perl/repoperls/installed-perls/perl/pwRjjSU/perl-5.8.0@31701/lib/site_perl/5.9.5/i686-linux-64int/Apache/Test.pm
+
+	and then
+
+	cpan> install Apache::DBI Apache::Test Apache::Request
+
+	But this installs mod_perl just fine as it should
+
 2007-08-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* HTML::Parser 3.56 broken on my threaded maint perls due to failing threads
@@ -22,7 +65,39 @@ dubious
         Test returned status 255 (wstat 65280, 0xff00)
 DIED. FAILED tests 3-43
         Failed 41/43 tests, 4.65% okay
-t
+
+	Trying to build threaded perl with maint@31223 FAILS!
+
+	Blead@31701 SAME!
+
+	Blead@28938 which I have built sometime in the past fails too.
+
+	Looks like '2007-07-24 20:09 libc6-i686.list' and that reboot mark an event.
+
+	I'll try gcc-3.4 next. Does not help
+
+	Google leeds me to a posting of mine to cpantesters from May, 17 where
+	blead@31207 could not build DBI. Nothing that leads me to the real
+	cause.
+
+	Either I upgrade to libc6-2.6.1-1 or I ignore the issue. I ask apt-get
+	to upgrade and see very discouraging plans with lots of removals. So I
+	stop it. I ask aptitude to do it and it suggests to upgrade only these
+	four:
+
+	  libc6-xen libc6-i686 libc6-dev libc6 
+
+	without removing anything. This I prefer.
+
+	Without rebooting this doesn't help:
+
+t/op/getpid...................................................Thread creation fa
+iled: pthread_create returned 12 at op/getpid.t line 41.
+Can't call method "join" on an undefined value at op/getpid.t line 41.
+# Looks like you planned 3 tests but ran 1.
+FAILED--expected 3 tests, saw 1
+
+
 
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -89,15 +164,6 @@ N/A
 
 	reganch heavily involved. Yes, this is it. See
 	http://rt.cpan.org/Ticket/Display.html?id=25574.
-
-	* long standing bug in configure_requires only visible in the logfiles
-
-	logs/megainstall.20070{727T0705,730T1247,803T0330}.out
-
-	Somebody injects Apache::Cookie and somebody injects Apache::Request.
-	libapreq is untarred, configure_require hits and before it can resolve
-	things correctly configure_require_later is incremented a second time
-	and we panic.
 
 2007-08-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
