@@ -28,7 +28,6 @@ if (-e $statefile) {
 warn "max_epoch_worked_on[$max_epoch_worked_on]";
 my $basedir = "/home/sand/CPAN-SVN/logs";
 my %comboseen;
-my %have_warned;
 ITERATION: while () {
   my $iteration_start = time;
   opendir my $dh, $basedir or die;
@@ -69,7 +68,7 @@ ITERATION: while () {
     # than we are
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
     if ($upload->{epoch} < $max_epoch_worked_on) {
-      warn "Already done: $upload->{path}\n" unless $have_warned{$upload->{path}}++;
+      warn "Already done: $upload->{path}\n" unless keys %comboseen;
       sleep 0.1;
       next UPLOADITEM;
     } elsif ($upload->{epoch} == $max_epoch_worked_on) {

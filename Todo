@@ -97,7 +97,11 @@ Can't call method "join" on an undefined value at op/getpid.t line 41.
 # Looks like you planned 3 tests but ran 1.
 FAILED--expected 3 tests, saw 1
 
+	It's probably a limit problem. root can run the test. But I changed
+	limits 4 months ago?! But you didn't leave any shell until recently.
 
+	What a stupidity. I set the stack to over a GB. Everything fixed now.
+	Unwind the stack now:)
 
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
