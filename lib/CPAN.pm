@@ -7998,7 +7998,7 @@ sub unsat_prereq {
         my $meta_yml = $self->parse_meta_yml();
         %merged = (%{$meta_yml->{configure_requires}||{}},
                    %{$prefs_depends->{configure_requires}||{}});
-        $prereq_pm = {}; # all configure_requires are "b"
+        $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
         my $prereq_pm_0 = $self->prereq_pm || {};
         for my $reqtype (qw(requires build_requires)) {
