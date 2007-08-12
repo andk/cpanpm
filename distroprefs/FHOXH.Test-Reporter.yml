@@ -9,8 +9,9 @@ comment: |
 
   Hunk #1 succeeded at 25 with fuzz 2.
 
+  Fix is scheduled for 1.34
 
 match:
-  distribution: "FHOXH/Test-Reporter-\d"
+  distribution: "FHOXH/Test-Reporter-1\.3[02]"
 patches:
   - "ANDK/patches/Test-Reporter-1.30-ANDK-01.patch.gz"
