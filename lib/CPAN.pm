@@ -6240,8 +6240,8 @@ sub satisfy_configure_requires {
         # we must not come here a second time
         $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
         require Data::Dumper;
-        $CPAN::Frontend->mydie( Data::Dumper->new([$self,\@prereq],
-                                                  [qw(self prereq)])->Indent(1)->Useqq(1)->Dump );
+        $CPAN::Frontend->mydie( Data::Dumper->new([$self,\@prereq,\@CPAN::Queue::All],
+                                                  [qw(self prereq queue)])->Indent(1)->Useqq(1)->Dump );
     }
     if ($prereq[0][0] eq "perl") {
         my $need = "requires perl '$prereq[0][1]'";
