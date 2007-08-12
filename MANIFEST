@@ -138,6 +138,7 @@ distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
 distroprefs/MJD.Devel-Trace.yml
 distroprefs/MJD.Text-Template.yml
+distroprefs/MJEVANS.DBD-ODBC.yml
 distroprefs/MLEHMANN.AnyEvent.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.IO-AIO.yml

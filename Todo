@@ -8,7 +8,7 @@
 
 	* long standing bug in configure_requires only visible in the logfiles
 
-	logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248}.out
+	logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248,812T0825}.out
 
 	Somebody injects Apache::Cookie and somebody injects Apache::Request.
 	Apache-DBI and Apache-Test have already been installed at this point.
@@ -19,9 +19,9 @@
 	The common modules installed before the bug happens is 152:
 
 	perl -nle '$S{$1}++ if /Running make for ([\040-\177]+)/; END {
-   print map { "$_\n" } grep { $S{$_}==4 } keys %S;
-}' logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248}.out|wc -l
-152
+   print map { "$_\n" } grep { $S{$_}==5 } keys %S;
+}' logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248,812T0825}.out|wc -l
+50
 
 	Reading the list reveals nothing inspiring/obvious/spectacular. With
 	this tar command I can reproduce the state at the moment when the bug happened:
@@ -39,7 +39,7 @@
 
 	cpan> install Apache::DBI Apache::Test Apache::Request
 
-	But this installs mod_perl just fine as it should
+	But this installs mod_perl just fine as it should.
 
 2007-08-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
