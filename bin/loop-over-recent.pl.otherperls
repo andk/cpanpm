@@ -7,8 +7,11 @@
 # 5.9.1; but has no Compress::Zlib:
 # /home/src/perl/repoperls/installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl
 
-# our favorite 5.8.9-tobe:
-/usr/local/perl-m-5.8.0@31162/bin/perl
+# threaded; the most recent of the 5.8.9-tobe; has patch_level actually right
+/home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/bin/perl
+
+# our favorite 5.8.9-tobe with the disadvantage that it believes to be 30961; no threads
+# /usr/local/perl-m-5.8.0@31162/bin/perl
 
 # 5.8.7:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl

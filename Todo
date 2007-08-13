@@ -1,11 +1,18 @@
+2007-08-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* I suspect that Net::FPing only works with threaded perls. Need to
+	investigate.
+
 2007-08-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* reminder about current noc:
+	* reminder about current operating center:
 
 	seconds:  perl ~k/sources/CPAN/SVK/trunk/bin/loop-over-recent.pl
-	minutes:  tail -f ~sand/.cpanreporter/history.db
-  hours:    watch -n 20 ' perl ~k/sources/CPAN/SVK/trunk/bin/recent.pl|head -n 23 '
-
+	   |                                     minutes:  tail -f ~sand/.cpanreporter/history.db
+     |                                        |          hours: watch -n 20 '~k/sources/CPAN/SVK/trunk/bin/recent.pl|head -n 23'
+     |                                        |                                        |
+     v                                        v                                        v
+	
 	* long standing bug in configure_requires only visible in the logfiles
 
 	logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248,812T0825}.out
