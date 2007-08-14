@@ -10,5 +10,6 @@ match:
     |RYBSKEJ/forks-0.25
     |GRM/
     |CORLISS/CursesWidgets-\d
+    |CORLISS/CursesForms-\d
     )|
 disabled: 1
