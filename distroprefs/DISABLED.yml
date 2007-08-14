@@ -8,5 +8,7 @@ match:
     ^(?x:OALDERS/URI-ParseSearchString-More-0.04
     |DMOW/Eludia
     |RYBSKEJ/forks-0.25
+    |GRM/
+    |CORLISS/CursesWidgets-\d
     )|
 disabled: 1
