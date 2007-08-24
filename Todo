@@ -1,5 +1,8 @@
 2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
+	* it seems that make test fails on 30shell.t on bleadperl and succeeds
+	on maintperl and 5.8.6. :-(
+
 	* demerphq writes:
 
 I was using the bleadperl version of cpan to install a module
