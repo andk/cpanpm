@@ -334,6 +334,13 @@ blah blah blah
 	'help TAB' should not start downloading index files. And should then not
 	offer all modules and Bundles. FIXED
 
+2007-08-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Test the recent file mechanism with very short timespans. See what
+	happens when the RECENT file contains no elements or one element. Maybe
+	one element must always me kept? Maybe we need a timestamp in the file?
+	Maybe the timestamp of the file must be taken into account?
+
 2007-08-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* I suspect that Net::FPing only works with threaded perls. Need to
