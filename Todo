@@ -3,6 +3,20 @@
 	* it seems that make test fails on 30shell.t on bleadperl and succeeds
 	on maintperl and 5.8.6. :-(
 
+	It is about 'o conf init inactivity_timeout'. Test reproducble with
+	'make testshell-with-protocol'
+
+	5.8.6 on OSX succeeds
+	31162 (maint) succeeds
+	30481 fails
+	26727 (maint after installing Expect with sudo) fails somewhere else
+	26480 fails
+	23494 fails
+	23484 (maint after installing Expect with sudo) fails later (after 214)
+	20474 fails
+	17749 fails
+	16000 fails
+
 	* demerphq writes:
 
 I was using the bleadperl version of cpan to install a module

@@ -783,15 +783,6 @@ __END__
 #P:100
 #E:
 ########
-#P:o conf init histsize
-#E:(hist)
-########
-#P:/tmp/foo
-#E:(save)
-########
-#P:100
-#E:
-########
 #P:o conf init inactivity_timeout
 #E:............(\])
 ########
