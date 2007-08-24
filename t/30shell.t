@@ -516,7 +516,8 @@ __END__
 #E:file:///.*?CPAN
 ########
 #P:o conf init keep_source_where
-#E:kept.+?(\])
+#E:kept[\s\S]+?(\])
+#T:15
 ########
 #P:/tmp
 #E:
@@ -648,7 +649,7 @@ __END__
 #E:
 ########
 #P:o conf init prefer_installer
-#E:............(\])
+#E:which\s+installer[\S\s]+(\])
 ########
 #P:EUMM
 #E:
@@ -773,7 +774,7 @@ __END__
 #P:cwd
 #E:
 ########
-#P:o conf init histfile
+#P:o conf init /histfile|histsize/
 #E:(hist)
 ########
 #P:/tmp/foo

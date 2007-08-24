@@ -1,3 +1,339 @@
+2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* demerphq writes:
+
+I was using the bleadperl version of cpan to install a module
+(B::Utils) and here is what I saw. The second ...... DONE line took a
+long time (more than a minute) to execute, makeing me wonder if it had
+crashed, but it finished eventually.
+
+Either File::Spec should be changed to not warn, or CPAN needs to be
+changed not to pass undef to File::Spec::Win32::catdir.
+
+Yves
+Ps: this output is what i see immediately after installing blead from
+rsync. I note that it doesnt require the CPAN config process that I
+would have expected.
+
+Yves
+
+cpan shell -- CPAN exploration and modules installation (v1.9102)
+ReadLine support available (maybe install Bundle::CPAN or Bundle::CPANxxl?)
+
+cpan[1]> install B::Utils
+CPAN: Storable loaded ok (v2.16)
+Going to read C:\perl\.cpan\Metadata
+  Database was generated on Thu, 01 Feb 2007 02:26:48 GMT
+Use of uninitialized value $_ in transliteration (tr///) at
+C:/perl/lib/File/Spec/Win32.pm line 141, <FIN> line 1.
+Use of uninitialized value $_ in pattern match (m//) at
+C:/perl/lib/File/Spec/Win32.pm line 143, <FIN> line 1.
+CPAN: Time::HiRes loaded ok (v1.9707)
+  LWP not available
+CPAN: Net::FTP loaded ok (v2.77)
+Fetching with Net::FTP:
+  ftp://cpan.etla.org/pub/CPAN/authors/01mailrc.txt.gz
+Going to read C:\perl\.cpan\sources\authors\01mailrc.txt.gz
+CPAN: Compress::Zlib loaded ok (v2.005)
+............................................................................DONE
+Use of uninitialized value $_ in transliteration (tr///) at
+C:/perl/lib/File/Spec/Win32.pm line 141.
+Use of uninitialized value $_ in pattern match (m//) at
+C:/perl/lib/File/Spec/Win32.pm line 143.
+  LWP not available
+Fetching with Net::FTP:
+  ftp://cpan.etla.org/pub/CPAN/modules/02packages.details.txt.gz
+Going to read C:\perl\.cpan\sources\modules\02packages.details.txt.gz
+  Database was generated on Thu, 23 Aug 2007 01:38:11 GMT
+  HTTP::Date not available
+............................................................................DONE
+Use of uninitialized value $_ in transliteration (tr///) at
+C:/perl/lib/File/Spec/Win32.pm line 141.
+Use of uninitialized value $_ in pattern match (m//) at
+C:/perl/lib/File/Spec/Win32.pm line 143.
+  LWP not available
+Fetching with Net::FTP:
+  ftp://cpan.etla.org/pub/CPAN/modules/03modlist.data.gz
+Going to read C:\perl\.cpan\sources\modules\03modlist.data.gz
+............................................................................DONE
+Going to write C:\perl\.cpan\Metadata
+Running install for module 'B::Utils'
+CPAN: Data::Dumper loaded ok (v2.121_14)
+'YAML' not installed, falling back to Data::Dumper and Storable to
+read prefs 'C:\perl\.cpan\prefs'
+Running make for J/JJ/JJORE/B-Utils-0.05.tar.gz
+  LWP not available
+Fetching with Net::FTP:
+  ftp://cpan.etla.org/pub/CPAN/authors/id/J/JJ/JJORE/B-Utils-0.05.tar.gz
+CPAN: Digest::SHA loaded ok (v5.45)
+  LWP not available
+Fetching with Net::FTP:
+  ftp://cpan.etla.org/pub/CPAN/authors/id/J/JJ/JJORE/CHECKSUMS
+Checksum for C:\perl\.cpan\sources\authors\id\J\JJ\JJORE\B-Utils-0.05.tar.gz ok
+Scanning cache C:\perl\.cpan\build for sizes
+............................................................................DONE
+B-Utils-0.05/
+B-Utils-0.05/MANIFEST
+B-Utils-0.05/META.yml
+B-Utils-0.05/t/
+B-Utils-0.05/t/02basic.t
+B-Utils-0.05/Changes
+B-Utils-0.05/README
+B-Utils-0.05/Makefile.PL
+B-Utils-0.05/lib/
+B-Utils-0.05/lib/B/
+B-Utils-0.05/lib/B/Utils.pm
+CPAN: File::Temp loaded ok (v0.18)
+Warning (usually harmless): 'YAML' not installed, will not store
+persistent state
+
+-- 
+perl -Mre=debug -e "/just|another|perl|hacker/"
+
+2007-08-23  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* JARIAALTO@cpan.org at http://rt.cpan.org/Ticket/Display.html?id=28952
+
+Consider this when installing the CPAN bundle:
+
+  Importing PAUSE public key into your GnuPG keychain... gpg: WARNING:
+using insecure memory!
+  gpg: please see http://www.gnupg.org/faq.html for more information
+  done!
+  (You may wish to trust it locally with 'gpg --lsign-key 450F89EC')
+  Checking if your kit is complete...
+  Looks good
+  Writing Makefile for CPAN
+
+SUGGESTION
+
+Not all people use one monolithing GPG keyring, so any automatic
+"imports" beyond user control is bad. Please don't automatically import
+any keys, but sugest the KEYID or present a gpg key fetch command to use.
+
+Here is an example of the typical use of multiple keyrings to separate
+keys according to their use:
+
+$ cat ~/.gnupg/gpg.conf
+keyring pubring-remailer.pgp
+keyring pubring-sw-development.pgp
+
+In this case the CPAN key would have been put into
+pubring-sw-development.pgp, but the CPAN installer script couldn't have
+known that.
+
+
+
+	* bartl writes in RT 28946:
+
+On Windows 98, with CPAN.pm 1.9102 (ActivePerl 5.8.8 build 822), the
+CPAN shell dies as soon as it's started up, with the error message:
+
+  flock() unimplemented on this platform at
+D:/programs/ActivePerl5.8/lib/CPAN.pm line 1015.
+
+That line looks like this:
+
+        while (!flock $fh, LOCK_EX|LOCK_NB) {
+
+(And there's another line pretty much like it on line 3397.)
+
+Ironically, before installing this version, I had done nmake test
+because I was expecting trouble, and all tests passed. So I don't think
+there is any test related to flock. (ActivePerl build 5.8.8 comes with
+this version of CPAN, I've had to downgrade because of this problem.)
+
+Among the versions that are still available on CPAN, the first version
+to contain flock calls is 1.90. The latest development release still has
+these same code lines in those areas, so I don't think the problem has
+been resolved yet.
+
+The problem does not exist on a more modern, NT based, version of
+Windows, like Windows XP.
+
+	* Schwern writes I should read RT 23735
+
+	summary: kane and adam have had discussions on some IRC channel about
+	how to cooperate and have decided on two environment variables that tell
+	the other process the rel2abs of the {Makefile,Build}.PL file and the
+	$VERSION.
+
+	* off topic: perlbuzz.com Skud and Andy
+
+2007-08-22  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* cleanup of the build directory must be possible from a non-interactive
+	command. Currently all batch jobs accumulate data in the build directory
+	and the first interactive user must then cleanup the mess.
+
+	* RT 28915
+
+CPAN::HandleConfig::home does not handle a return of "undef" from
+File::HomeDir->my_data. In my particular network configuration this
+arises, causing CPAN to incorrectly ignore my ~/.cpan/CPAN/MyConfig.pm
+and try to run CPAN::FirstTime::init.  (I'm not sure why it does the
+latter, but that's not part of this bug report.)
+
+The details: CPAN is being invoked in a ssh session into an OS X box,
+which gets its user account information via NIS.  My account is
+"foreign" (i.e. not created on the Mac) and File::HomeDir->my_data()
+returns "undef" (which seems appropriate).
+
+Unfortunately, this causes CPAN::HandleConfig::load to ignore my
+existing ~/.cpan/CPAN/MyConfig.pm (as the path to it is now wrong) and
+to try to create a new one.  (It should be noted that
+CPAN::FirstTime::init uses a different algorithm to determine where the
+config file goes; it just uses $ENV{HOME}).
+
+The most obvious solution would be to check the return from
+File::HomeDir->my_data and if it is "undef" to fall back to using
+$ENV{HOME} or File::HomeDir->my_home.
+
+	* Bug: by adding 
+
+	CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+
+	in CPAN.pm line 1309 I break the whole test 30shell.t. Why? Recursion?
+
+	* svn st | perl -nale 'if (/^M/){system "ls -lt $F[1]*|head -2"}'
+
+	view which backup files we made while being offline
+
+	* Todo: verbosity; tar_verbosity was a start and it had 'none', 'v', and
+	'vv' as options. load_module_verbosity could be 'none' or 'v'. I see no
+	sense in a 'vv' option. db_verbosity would cover too many things, maybe
+	load_index_verbosity?
+
+	We must give all kinds of noise a name and one or more verbosity levels.
+
+	That which is not our own noise must be delegated to the owner.
+
+	There is a very dirty spot in mydie: it mywarns and then die()s with
+	nothing but "\n" as argument.
+
+	This dirty spot shall not disturb us while working on verbosity. It is
+	not myprint's business at all.
+
+	See my mail to David Cantrell to understand what needs be done about
+	verbosity.
+
+cpan[1]> ls andk                                                                                                  
+Going to read /Users/k/.cpan/Metadata
+  Database was generated on Sat, 24 Mar 2007 07:10:12 GMT
+Going to read /Users/k/.cpan/build/
+............................................................................DONE
+Found 26 old builds, restored the state of 5
+  LWP not available
+Fetching with Net::FTP:
+  ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS
+  Could not connect to host 'k75' with Net::FTP
+Fetching with Net::FTP
+  ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS.gz
+  Could not connect to host 'k75' with Net::FTP
+
+Trying with "/usr/bin/curl -L -f -s -S --netrc-optional" to get
+    ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS
+^C
+Trying with "/usr/bin/curl -L -f -s -S --netrc-optional" to get
+  ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS.gz
+curl: (6) Couldn't resolve host 'k75'
+
+Trying with "/usr/bin/curl -L -f -s -S --netrc-optional" to get
+    ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS
+curl: (6) Couldn't resolve host 'k75'
+
+Trying with "/usr/bin/curl -L -f -s -S --netrc-optional" to get
+  ftp://k75/pub/CPAN/authors/id/A/CHECKSUMS.gz
+curl: (6) Couldn't resolve host 'k75'
+^CCaught SIGINT, trying to continue
+
+As a last ressort we now switch to the external ftp command '/usr/bin/ftp'
+to get '/Users/k/.cpan/sources/authors/id/A/CHECKSUMS.tmp1178'.
+
+Doing so often leads to problems that are hard to diagnose.
+
+If you're victim of such problems, please consider unsetting the ftp
+config variable with
+
+    o conf ftp ""
+    o conf commit
+
+^CGot another SIGINT
+
+
+	* Todo: deprecate cvs_import.
+
+2007-08-21  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* From David Cantrell: Perfect, thanks!
+
+The only change to the code that I would ask for is that there be some
+way of turning off all the startup text and have it die() with a
+suitable message if something goes wrong, like ~/.cpan not being
+accessible.
+
+A HOWTO.pod with simple four or five line recipes showing how to write
+code for the basic functions should suffice as far as extra
+documentation goes.  I've attached the bare-bones of one.
+
+	=head1 NAME
+
+CPAN::API::HOWTO - a recipe book for programming with CPAN.pm
+
+=head1 RECIPES
+
+All of these recipes assume that you have put "use CPAN" at the top of
+your program.
+
+=head2 What distribution contains a particular module?
+
+    my $distribution = CPAN::Shell->expand(
+        "Module", "Data::UUID"
+    )->distribution()->pretty_id();
+
+This returns a string of the form "AUTHORID/TARBALL".  If you want the
+full path and filename to this distribution on a CPAN mirror, then it is
+C<.../authors/id/A/AU/AUTHORID/TARBALL>.
+
+=head2 What modules does a particular distribution contain?
+
+    CPAN::Index->reload();
+    my @modules = CPAN::Shell->expand(
+        "Distribution", "JHI/Graph-0.83.tar.gz"
+    )->containsmods();
+
+You may also refer to a distribution in the form A/AU/AUTHORID/TARBALL.
+
+=head1 SEE ALSO
+
+the main CPAN.pm documentation
+
+=head1 AUTHOR, COPYRIGHT and LICENCE
+
+blah blah blah
+
+=cut
+
+
+
+
+2007-08-18  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* Offline job?
+
+	CPAN::FirstTime manpage. DONE with one exception: cpan_home
+
+	help x. DONE
+
+	'o conf /slash/'. DONE
+
+	ask if we may try to connect to the internet
+
+	differentiate what to download on which command.
+
+	'help TAB' should not start downloading index files. And should then not
+	offer all modules and Bundles. FIXED
+
 2007-08-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* I suspect that Net::FPing only works with threaded perls. Need to
@@ -12,7 +348,7 @@
      |                                        |          hours: watch -n 20 '~k/sources/CPAN/SVK/trunk/bin/recent.pl|head -n 23'
      |                                        |                                        |
      v                                        v                                        v
-	
+
 	* long standing bug in configure_requires only visible in the logfiles
 
 	logs/megainstall.20070{727T0705,730T1247,803T0330,810T2248,812T0825}.out
@@ -23,7 +359,7 @@
 	things correctly configure_require_later is incremented a second time
 	and we panic.
 
-	The common modules installed before the bug happens is 152:
+	The number of modules installed before the bug happens is low:
 
 	perl -nle '$S{$1}++ if /Running make for ([\040-\177]+)/; END {
    print map { "$_\n" } grep { $S{$_}==5 } keys %S;
@@ -63,7 +399,6 @@ t/threads............dubious
 DIED. FAILED test 1
         Failed 1/1 tests, 0.00% okay
 
-
 	libwww mailing list is silent about this:-(
 
 	Hey, the same goes for DBI:
@@ -86,7 +421,7 @@ DIED. FAILED tests 3-43
 
 	I'll try gcc-3.4 next. Does not help
 
-	Google leeds me to a posting of mine to cpantesters from May, 17 where
+	Google leads me to a posting of mine to cpantesters from May, 17 where
 	blead@31207 could not build DBI. Nothing that leads me to the real
 	cause.
 

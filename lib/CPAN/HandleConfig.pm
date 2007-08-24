@@ -48,6 +48,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "index_expire",
      "inhibit_startup_message",
      "keep_source_where",
+     "load_module_verbosity",
      "lynx",
      "make",
      "make_arg",
@@ -220,33 +221,35 @@ sub edit {
 }
 
 sub prettyprint {
-  my($self,$k) = @_;
-  my $v = $CPAN::Config->{$k};
-  if (ref $v) {
-    my(@report);
-    if (ref $v eq "ARRAY") {
-      @report = map {"\t$_ \[$v->[$_]]\n"} 0..$#$v;
+    my($self,$k) = @_;
+    my $v = $CPAN::Config->{$k};
+    if (ref $v) {
+        my(@report);
+        if (ref $v eq "ARRAY") {
+            @report = map {"\t$_ \[$v->[$_]]\n"} 0..$#$v;
+        } else {
+            @report = map
+                {
+                    sprintf "\t%-18s => %s\n",
+                               "[$_]",
+                                        defined $v->{$_} ? "[$v->{$_}]" : "undef"
+                } keys %$v;
+        }
+        $CPAN::Frontend->myprint(
+                                 join(
+                                      "",
+                                      sprintf(
+                                              "    %-18s\n",
+                                              $k
+                                             ),
+                                      @report
+                                     )
+                                );
+    } elsif (defined $v) {
+        $CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
     } else {
-      @report = map { sprintf("\t%-18s => %s\n",
-                              map { "[$_]" } $_,
-                              defined $v->{$_} ? $v->{$_} : "UNDEFINED"
-                             )} keys %$v;
+        $CPAN::Frontend->myprint(sprintf "    %-18s undef\n", $k);
     }
-    $CPAN::Frontend->myprint(
-                             join(
-                                  "",
-                                  sprintf(
-                                          "    %-18s\n",
-                                          $k
-                                         ),
-                                  @report
-                                 )
-                            );
-  } elsif (defined $v) {
-    $CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
-  } else {
-    $CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, "UNDEFINED");
-  }
 }
 
 sub commit {
@@ -507,6 +510,8 @@ sub load {
     use Carp;
     require_myconfig_or_config;
     return unless @miss = $self->missing_config_data;
+    our $loading;
+    return if $loading++;
 
     require CPAN::FirstTime;
     my($configpm,$fh,$redo,$theycalled);
@@ -560,6 +565,8 @@ $configpm initialized.
 });
     }
     CPAN::FirstTime::init($configpm, %args);
+    $loading--;
+    return;
 }
 
 

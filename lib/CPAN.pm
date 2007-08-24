@@ -41,8 +41,8 @@ BEGIN {
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
-$ENV{PERL5_CPAN_IS_RUNNING}=1;
-$ENV{PERL5_CPANPLUS_IS_RUNNING}=1; # https://rt.cpan.org/Ticket/Display.html?id=23735
+$ENV{PERL5_CPAN_IS_RUNNING}=$$;
+$ENV{PERL5_CPANPLUS_IS_RUNNING}=$$; # https://rt.cpan.org/Ticket/Display.html?id=23735
 
 END { $CPAN::End++; &cleanup; }
 
@@ -242,7 +242,7 @@ ReadLine support %s
 	$_ = "$continuation$_" if $continuation;
 	s/^\s+//;
 	next SHELLCOMMAND if /^$/;
-	$_ = 'h' if /^\s*\?/;
+        s/^\s*\?\s+/help /;
 	if (/^(?:q(?:uit)?|bye|exit)$/i) {
 	    last SHELLCOMMAND;
 	} elsif (s/\\$//s) {
@@ -519,11 +519,13 @@ use strict;
 # Q: where is the "How do I add a new command" HOWTO?
 # A: svn diff -r 1048:1049 where andk added the report command
 @CPAN::Complete::COMMANDS = sort qw(
-                                    ! a b d h i m o q r u
+                                    ? ! a b d h i m o q r u
                                     autobundle
+                                    bye
                                     clean
                                     cvs_import
                                     dump
+                                    exit
                                     failed
                                     force
                                     fforce
@@ -537,6 +539,7 @@ use strict;
                                     mkmyconfig
                                     notest
                                     perldoc
+                                    quit
                                     readme
                                     recent
                                     recompile
@@ -777,13 +780,58 @@ use vars qw(
             $ADVANCED_QUERY
             $AUTOLOAD
             $COLOR_REGISTERED
+            $Help
             $autoload_recursion
             $reload
             @ISA
            );
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 $COLOR_REGISTERED ||= 0;
-
+$Help = {
+         '?' => \"help",
+         '!' => "eval the rest of the line as perl",
+         a => "whois author",
+         autobundle => "wtite inventory into a bundle file",
+         b => "info about bundle",
+         bye => \"quit",
+         clean => "clean up a distribution's build directory",
+         # cvs_import
+         d => "info about a distribution",
+         # dump
+         exit => \"quit",
+         failed => "list all failed actions within current session",
+         fforce => "redo a command from scratch",
+         force => "redo a command",
+         h => \"help",
+         help => "overview over commands; 'help ...' explains specific commands",
+         hosts => "statistics about recently used hosts",
+         i => "info about authors/bundles/distributions/modules",
+         install => "install a distribution",
+         install_tested => "install all distributions tested OK",
+         is_tested => "list all distributions tested OK",
+         look => "open a subshell in a distribution's directory",
+         ls => "list distributions according to a glob",
+         m => "info about a module",
+         make => "make/build a distribution",
+         mkmyconfig => "write current config into a CPAN/MyConfig.pm file",
+         notest => "run a (usually install) command but leave out the test phase",
+         o => "'o conf ...' for config stuff; 'o debug ...' for debugging",
+         perldoc => "try to get a manpage for a module",
+         q => \"quit",
+         quit => "leave the cpan shell",
+         r => "review over upgradeable modules",
+         readme => "display the README of a distro woth a pager",
+         recent => "show recent uploads to the CPAN",
+         # recompile
+         reload => "'reload cpan' or 'reload index'",
+         report => "test a distribution and send a test report to cpantesters",
+         reports => "info about reported tests from cpantesters",
+         # scripts
+         # smoke
+         test => "test a distribution",
+         u => "display uninstalled modules",
+         upgrade => "combine 'r' command with immediate installation",
+        };
 {
     $autoload_recursion   ||= 0;
 
@@ -1258,9 +1306,14 @@ sub has_inst {
         # privileged files loaded by has_inst; Note: we use $mtime
         # as a proxy for a checksum.
         $CPAN::Shell::reload->{$file} = $mtime;
-        my $v = eval "\$$mod\::VERSION";
-        $v = $v ? " (v$v)" : "";
-	$CPAN::Frontend->myprint("CPAN: $mod loaded ok$v\n");
+        CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+        if (!$CPAN::Config->{load_module_verbosity}
+            || $CPAN::Config->{load_module_verbosity} =~ /^v/
+           ) {
+            my $v = eval "\$$mod\::VERSION";
+            $v = $v ? " (v$v)" : "";
+            $CPAN::Frontend->myprint("CPAN: $mod loaded ok$v\n");
+        }
 	if ($mod eq "CPAN::WAIT") {
 	    push @CPAN::Shell::ISA, 'CPAN::WAIT';
 	}
@@ -1698,7 +1751,16 @@ use strict;
 sub h {
     my($class,$about) = @_;
     if (defined $about) {
-	$CPAN::Frontend->myprint("Detailed help not yet implemented\n");
+        my $help;
+        if (exists $Help->{$about}) {
+            if (ref $Help->{$about}) { # aliases
+                $about = ${$Help->{$about}};
+            }
+            $help = $Help->{$about};
+        } else {
+            $help = "No help available";
+        }
+        $CPAN::Frontend->myprint("$about\: $help\n");
     } else {
         my $filler = " " x (80 - 28 - length($CPAN::VERSION));
 	$CPAN::Frontend->myprint(qq{
@@ -1903,7 +1965,10 @@ sub o {
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
-	if (!@o_what) { # print all things, "o conf"
+        my($cfilter) = $o_what[0] =~ m|^/(.*)/$|;
+	if (!@o_what or $cfilter) { # print all things, "o conf"
+            $cfilter ||= "";
+            my $qrfilter = eval 'qr/$cfilter/';
 	    my($k,$v);
 	    $CPAN::Frontend->myprint("\$CPAN::Config options from ");
             my @from;
@@ -1916,11 +1981,13 @@ sub o {
             $CPAN::Frontend->myprint(join " and ", map {"'$_'"} @from);
 	    $CPAN::Frontend->myprint(":\n");
 	    for $k (sort keys %CPAN::HandleConfig::can) {
+                next unless $k =~ /$qrfilter/;
 		$v = $CPAN::HandleConfig::can{$k};
 		$CPAN::Frontend->myprint(sprintf "    %-18s [%s]\n", $k, $v);
 	    }
 	    $CPAN::Frontend->myprint("\n");
-	    for $k (sort keys %$CPAN::Config) {
+	    for $k (sort keys %CPAN::HandleConfig::keys) {
+                next unless $k =~ /$qrfilter/;
                 CPAN::HandleConfig->prettyprint($k);
 	    }
 	    $CPAN::Frontend->myprint("\n");
@@ -2944,6 +3011,7 @@ sub print_ornamented {
     }
     my $swhat = "$what"; # stringify if it is an object
     if ($CPAN::Config->{term_is_latin}){
+        # note: deprecated, need to switch to $LANG and $LC_*
         # courtesy jhi:
         $swhat
             =~ s{([\xC0-\xDF])([\x80-\xBF])}{chr(ord($1)<<6&0xC0|ord($2)&0x3F)}eg; #};
@@ -4606,8 +4674,8 @@ sub cpl {
 	$pos -= length($1);
     }
     my @return;
-    if ($pos == 0) {
-	@return = grep /^$word/, @CPAN::Complete::COMMANDS;
+    if ($pos == 0 || $line =~ /^(?:h(?:elp)?|\?)\s/) {
+	@return = grep /^\Q$word\E/, @CPAN::Complete::COMMANDS;
     } elsif ( $line !~ /^[\!abcdghimorutl]/ ) {
 	@return = ();
     } elsif ($line =~ /^(a|ls)\s/) {
@@ -10671,6 +10739,8 @@ defined:
   inhibit_startup_message
                      if true, does not print the startup message
   keep_source_where  directory in which to keep the source (if we do)
+  load_module_verbosity
+                     report loading of optional modules used by CPAN.pm
   lynx               path to external prg
   make               location of external make program
   make_arg	     arguments that should always be passed to 'make'
@@ -10711,7 +10781,7 @@ defined:
   show_zero_versions boolean if r command tells for which modules $version==0
   tar                location of external program tar
   tar_verbosity      verbosity level for the tar command
-  term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
+  term_is_latin      deprecated: if true Unicode is translated to ISO-8859-1
                      (and nonsense for characters outside latin range)
   term_ornaments     boolean to turn ReadLine ornamenting on/off
   test_report        email test reports (if CPAN::Reporter is installed)
@@ -12194,7 +12264,7 @@ that for Windows we use the File::HomeDir module that provides an
 equivalent to the concept of the home directory on Unix.
 
 Another thing you should bear in mind is that the UNINST parameter can
-be dnagerous when you are installing into a private area because you
+be dangerous when you are installing into a private area because you
 might accidentally remove modules that other people depend on that are
 not using the private area.
 
@@ -12257,6 +12327,10 @@ would be
 If other charset support is needed, please file a bugreport against
 CPAN.pm at rt.cpan.org and describe your needs. Maybe we can extend
 the support or maybe UTF-8 terminals become widely available.
+
+Note: this config variable is deprecated and will be removed in a
+future version of CPAN.pm. It will be replaced with the conventions
+around the family of $LANG and $LC_* environment variables.
 
 =item 11)
 
