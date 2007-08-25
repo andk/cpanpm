@@ -1,5 +1,7 @@
 2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
+	* 24.8. 2 emails to answer about PAUSE and Adam Monsen.
+
 	* it seems that make test fails on 30shell.t on bleadperl and succeeds
 	on maintperl and 5.8.6. :-(
 
@@ -17,7 +19,10 @@
 	17749 fails
 	16000 fails
 
-	* demerphq writes:
+	I see: the test was expecting that histfile always sets histsize and
+	vice versa; this is no longer expected. Changing the test in 2148.
+
+	* demerphq writes (maybe same bug as RT 28915???):
 
 I was using the bleadperl version of cpan to install a module
 (B::Utils) and here is what I saw. The second ...... DONE line took a
@@ -173,15 +178,18 @@ Windows, like Windows XP.
 	summary: kane and adam have had discussions on some IRC channel about
 	how to cooperate and have decided on two environment variables that tell
 	the other process the rel2abs of the {Makefile,Build}.PL file and the
-	$VERSION.
+	$VERSION. Where are the names?
+
+	
 
 	* off topic: perlbuzz.com Skud and Andy
 
 2007-08-22  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
-	* cleanup of the build directory must be possible from a non-interactive
-	command. Currently all batch jobs accumulate data in the build directory
-	and the first interactive user must then cleanup the mess.
+	* Todo: cleanup of the build directory must be possible from a
+	non-interactive command. Currently all batch jobs accumulate data in the
+	build directory and the first interactive user must then cleanup the
+	mess.
 
 	* RT 28915
 

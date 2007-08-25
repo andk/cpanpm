@@ -10647,6 +10647,14 @@ Example:
 
   o conf shell
 
+If KEY starts and ends with a slash the string in between is
+interpreted as a regular expression and only keys matching this regex
+are displayed
+
+Example:
+
+  o conf /color/
+
 =item changing of scalar values: o conf KEY VALUE
 
 Sets the config variable KEY to VALUE. The empty string can be
