@@ -1094,7 +1094,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
             }
         }
         my $sleep = 1;
-        while (!CPAN::Shell::_flock($fh, LOCK_EX|LOCK_NB)) {
+        while (!CPAN::_flock($fh, LOCK_EX|LOCK_NB)) {
             if ($sleep>10) {
                 $CPAN::Frontend->mydie("Giving up\n");
             }
@@ -3640,7 +3640,7 @@ sub _ftp_statistics {
     open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
     my $sleep = 1;
     my $waitstart;
-    while (!CPAN::Shell::_flock($fh, $locktype|LOCK_NB)) {
+    while (!CPAN::_flock($fh, $locktype|LOCK_NB)) {
         $waitstart ||= localtime();
         if ($sleep>3) {
             $CPAN::Frontend->mywarn("Waiting for a read lock on '$file' (since $waitstart)\n");
