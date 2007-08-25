@@ -496,7 +496,11 @@ sub home () {
     my $home;
     if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
-    } else {
+        unless (defined $home) {
+            $home = File::HomeDir->my_home
+        }
+    }
+    unless (defined $home) {
         $home = $ENV{HOME};
     }
     $home;

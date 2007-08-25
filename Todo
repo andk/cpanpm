@@ -290,7 +290,7 @@ config variable with
 
 2007-08-21  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
-	* From David Cantrell: Perfect, thanks!
+	* Todo: From David Cantrell: Perfect, thanks!
 
 The only change to the code that I would ask for is that there be some
 way of turning off all the startup text and have it die() with a
