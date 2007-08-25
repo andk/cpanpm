@@ -382,6 +382,17 @@ Trying to chdir to "$cwd->[1]" instead.
     }
 }
 
+sub _flock {
+    my($fh,$mode) = @_;
+    if ($Config::Config{d_flock}) {
+        return flock $fh, $mode;
+    } else {
+        $CPAN::Frontend->mywarn("Your OS does not support locking; continuing and ignoring all locking issues\n");
+        $CPAN::Frontend->mysleep(5);
+        return 1;
+    }
+}
+
 sub _yaml_module () {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if (
@@ -1083,7 +1094,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
             }
         }
         my $sleep = 1;
-        while (!flock $fh, LOCK_EX|LOCK_NB) {
+        while (!CPAN::Shell::_flock($fh, LOCK_EX|LOCK_NB)) {
             if ($sleep>10) {
                 $CPAN::Frontend->mydie("Giving up\n");
             }
@@ -3629,7 +3640,7 @@ sub _ftp_statistics {
     open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
     my $sleep = 1;
     my $waitstart;
-    while (!flock $fh, $locktype|LOCK_NB) {
+    while (!CPAN::Shell::_flock($fh, $locktype|LOCK_NB)) {
         $waitstart ||= localtime();
         if ($sleep>3) {
             $CPAN::Frontend->mywarn("Waiting for a read lock on '$file' (since $waitstart)\n");
