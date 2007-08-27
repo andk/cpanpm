@@ -3976,13 +3976,34 @@ sub localize {
         $CPAN::Config->{ftp_passive} : 1;
     my $ret;
     my $stats = $self->_new_stats($file);
+    our $connect_to_internet_ok;
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
         my $defaultsites = $sitetag && $sitetag eq "defaultsites";
         my @urllist;
         if ($defaultsites) {
-            @urllist = @CPAN::Defaultsites;
+            unless (defined $connect_to_internet_ok) {
+                $CPAN::Frontend->myprint(sprintf qq{
+I would like to connect to one of the following sites to get '%s':
+
+%s
+},
+                                         $file,
+                                         join("",map { " ".$_->text."\n" } @CPAN::Defaultsites),
+                                        );
+                my $answer = CPAN::Shell::colorable_makemaker_prompt("Is it OK to try to connect to the iternet?", "yes");
+                if ($answer =~ /^y/i) {
+                    $connect_to_internet_ok = 1;
+                } else {
+                    $connect_to_internet_ok = 0;
+                }
+            }
+            if ($connect_to_internet_ok) {
+                @urllist = @CPAN::Defaultsites;
+            } else {
+                @urllist = ();
+            }
         } else {
             my @host_seq = $level =~ /dleasy/ ?
                 @reordered : 0..$last;  # reordered has file and $Thesiteurl first
@@ -4380,6 +4401,7 @@ returned status $estatus (wstat $wstatus)$size
 sub hostdlhardest {
     my($self,$host_seq,$file,$aslocal,$stats) = @_;
 
+    return unless @$host_seq;
     my($ro_url);
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
@@ -7436,6 +7458,8 @@ is part of the perl-%s distribution. To install that, you need to run
 #	    "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
 #	    if $] > 5.00310;
         my $makepl_arg = $self->make_x_arg("pl");
+        $ENV{PERL5_CPAN_IS_EXECUTING} = File::Spec->catfile($self->{build_dir},
+                                                            "Makefile.PL");
 	$system = sprintf("%s%s Makefile.PL%s",
                           $perl,
                           $switch ? " $switch" : "",
@@ -12055,7 +12079,15 @@ When the CPAN shell enters a subshell via the look command, it sets
 the environment CPAN_SHELL_LEVEL to 1 or increments it if it is
 already set.
 
-When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING.
+When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING
+to the ID of the running process. It also sets
+PERL5_CPANPLUS_IS_RUNNING to prevent runaway processes which could
+happen with older versions of Module::Install.
+
+When running C<perl Makefile.PL>, the environment variable
+C<PERL5_CPAN_IS_EXECUTING> is set to the full path of the
+C<Makefile.PL> that is being executed. This prevents runaway processes
+with newer versions of Module::Install.
 
 When the config variable ftp_passive is set, all downloads will be run
 with the environment variable FTP_PASSIVE set to this value. This is

@@ -156,8 +156,9 @@ Color for debugging messages?
 =item commandnumber_in_prompt
 
 The prompt of the cpan shell can contain the current command number
-for easier tracking of the session or be a plain string. Do you want
-the command number in the prompt (yes/no)?
+for easier tracking of the session or be a plain string.
+
+Do you want the command number in the prompt (yes/no)?
 
 =item ftp_passive
 
@@ -1041,7 +1042,6 @@ substitute. You can then revisit this dialog with
     #
 
     if (!$matcher or 'term_is_latin' =~ /$matcher/){
-        $CPAN::Frontend->myprint($prompts{term_is_latin});
         my_yn_prompt(term_is_latin => 1, $matcher);
     }
 

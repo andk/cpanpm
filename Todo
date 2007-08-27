@@ -1,3 +1,34 @@
+2007-08-27  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* recap todos: 
+
+	jariaalto/28952: move gpg key import from Makefile.PL to FirstTime and
+	allow tight control over the gpg call itself.
+
+	adam kennedy: set XXX_VERSION
+
+	david cantrell: make verbosity controllable; add a CPAN::API::HOWTO
+	manpage
+
+	Integrate cpan_home into the new FirstTime manpage.
+
+	differentiate what to download on which command: an 'a' or 'ls' needs
+	only authors index. see also "ttl".
+
+	recent file overhaul (see also bin/rsync-over-recentfile.pl)
+
+	demerphq wants time series on a regex analyzer. perl versions are in
+	regexec.filelog.gz (but they go back till perl @1; so I'll start with
+	27000 I presume), available perls are in
+	available-nonthr-debugging-perls.txt.
+
+	cleanup build_dir by age regardless size
+
+	review Test::Reporter and see how the choice between Mail::Send and
+	Net::SMTP
+
+	BBC article about data::dump::streamer
+
 2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* 24.8. 2 emails to answer about PAUSE and Adam Monsen.
@@ -20,7 +51,7 @@
 	16000 fails
 
 	I see: the test was expecting that histfile always sets histsize and
-	vice versa; this is no longer expected. Changing the test in 2148.
+	vice versa; this is no longer expected. Changing the test in 2148. FIXED
 
 	* demerphq writes (maybe same bug as RT 28915???):
 
@@ -180,7 +211,8 @@ Windows, like Windows XP.
 	the other process the rel2abs of the {Makefile,Build}.PL file and the
 	$VERSION. Where are the names? Something with _EXECUTING and _VERSION.
 
-	I downloaded CPANPLUS to see what's up.
+	I downloaded CPANPLUS to see what's up. It seems it sets only
+	_EXECUTING. This is now also DONE for CPAN.pm.
 
 	* off topic: perlbuzz.com Skud and Andy
 
@@ -220,9 +252,7 @@ $ENV{HOME} or File::HomeDir->my_home.
 
 	in CPAN.pm line 1309 I break the whole test 30shell.t. Why? Recursion?
 
-	* svn st | perl -nale 'if (/^M/){system "ls -lt $F[1]*|head -2"}'
-
-	view which backup files we made while being offline
+	recurson protection added to load(). DONE.
 
 	* Todo: verbosity; tar_verbosity was a start and it had 'none', 'v', and
 	'vv' as options. load_module_verbosity could be 'none' or 'v'. I see no
@@ -352,7 +382,7 @@ blah blah blah
 
 	'o conf /slash/'. DONE
 
-	ask if we may try to connect to the internet
+	ask if we may try to connect to the internet DONE
 
 	differentiate what to download on which command.
 
@@ -363,7 +393,7 @@ blah blah blah
 
 	* Test the recent file mechanism with very short timespans. See what
 	happens when the RECENT file contains no elements or one element. Maybe
-	one element must always me kept? Maybe we need a timestamp in the file?
+	one element must always be kept? Maybe we need a timestamp in the file?
 	Maybe the timestamp of the file must be taken into account?
 
 2007-08-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>

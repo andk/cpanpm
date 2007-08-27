@@ -515,7 +515,8 @@ sub load {
     require_myconfig_or_config;
     return unless @miss = $self->missing_config_data;
     our $loading;
-    return if $loading++;
+    return if $loading;
+    $loading++;
 
     require CPAN::FirstTime;
     my($configpm,$fh,$redo,$theycalled);
