@@ -1,3 +1,12 @@
+2007-08-28  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* why did the tests not fail when windows 98 had no flock? Because
+	Expect was not installed, I think.
+
+	* off topic: get cable back from Ovid
+
+	* Todo: add FUSE stuff to megainstall.txt
+
 2007-08-27  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* recap todos: 
@@ -7,31 +16,46 @@
 
 	adam kennedy: set XXX_VERSION
 
-	david cantrell: make verbosity controllable; add a CPAN::API::HOWTO
-	manpage
+	david cantrell: make verbosity controllable: $redef, myconfig, Lockfile,
+	PERL5LIB, DEL, scanning, scan_cache, ... This should probably be done
+	with some optprint method to make the call selfdocumenting. But that's
+	not the $Frontend's business. We must change
+	$CPAN::Frontend->myprint($what) to
+	CPAN::Shell->optprint(category,threshold,$what).
+
+	david cantrell: add a CPAN::API::HOWTO manpage DONE
 
 	Integrate cpan_home into the new FirstTime manpage.
 
 	differentiate what to download on which command: an 'a' or 'ls' needs
 	only authors index. see also "ttl".
 
-	recent file overhaul (see also bin/rsync-over-recentfile.pl)
+	RECENT file overhaul (see also bin/rsync-over-recentfile.pl)
 
 	demerphq wants time series on a regex analyzer. perl versions are in
 	regexec.filelog.gz (but they go back till perl @1; so I'll start with
 	27000 I presume), available perls are in
 	available-nonthr-debugging-perls.txt.
 
-	cleanup build_dir by age regardless size
+	cleanup build_dir by age regardless size and useable by non-interactive
+	users.
 
 	review Test::Reporter and see how the choice between Mail::Send and
-	Net::SMTP
+	Net::SMTP is implemented.
+
+	review CPAN::Reporter 0.4801.
 
 	BBC article about data::dump::streamer
 
 2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* 24.8. 2 emails to answer about PAUSE and Adam Monsen.
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
+
+	* hr ================ no todos below this line ================ /hr
 
 	* it seems that make test fails on 30shell.t on bleadperl and succeeds
 	on maintperl and 5.8.6. :-(

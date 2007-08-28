@@ -206,11 +206,10 @@ sub shell {
                     File::Spec->rootdir();
     my $try_detect_readline;
     $try_detect_readline = $term->ReadLine eq "Term::ReadLine::Stub" if $term;
-    my $rl_avail = $Suppress_readline ? "suppressed" :
-	($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
-	    "available (maybe install Bundle::CPAN or Bundle::CPANxxl?)";
-
-    unless ($CPAN::Config->{'inhibit_startup_message'}){
+    unless ($CPAN::Config->{inhibit_startup_message}){
+        my $rl_avail = $Suppress_readline ? "suppressed" :
+            ($term->ReadLine ne "Term::ReadLine::Stub") ? "enabled" :
+                "available (maybe install Bundle::CPAN or Bundle::CPANxxl?)";
         $CPAN::Frontend->myprint(
                                  sprintf qq{
 cpan shell -- CPAN exploration and modules installation (v%s)
@@ -1060,7 +1059,7 @@ I tried to create that, but I failed with this error: $seconderror
             $mess .= qq{
 Please make sure the directory exists and is writable.
 };
-            $CPAN::Frontend->myprint($mess);
+            $CPAN::Frontend->mywarn($mess);
             return suggest_myconfig;
         }
     } # $@ after eval mkpath $dotcpan
@@ -1075,7 +1074,7 @@ Please make sure the directory exists and is writable.
         my $fh;
         unless ($fh = FileHandle->new("+>>$lockfile")) {
             if ($! =~ /Permission/) {
-                $CPAN::Frontend->myprint(qq{
+                $CPAN::Frontend->mywarn(qq{
 
 Your configuration suggests that CPAN.pm should use a working
 directory of
@@ -1317,14 +1316,9 @@ sub has_inst {
         # privileged files loaded by has_inst; Note: we use $mtime
         # as a proxy for a checksum.
         $CPAN::Shell::reload->{$file} = $mtime;
-        CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
-        if (!$CPAN::Config->{load_module_verbosity}
-            || $CPAN::Config->{load_module_verbosity} =~ /^v/
-           ) {
-            my $v = eval "\$$mod\::VERSION";
-            $v = $v ? " (v$v)" : "";
-            $CPAN::Frontend->myprint("CPAN: $mod loaded ok$v\n");
-        }
+        my $v = eval "\$$mod\::VERSION";
+        $v = $v ? " (v$v)" : "";
+        CPAN::Shell->optprint("load_module","CPAN: $mod loaded ok$v\n");
 	if ($mod eq "CPAN::WAIT") {
 	    push @CPAN::Shell::ISA, 'CPAN::WAIT';
 	}
@@ -1339,7 +1333,7 @@ sub has_inst {
 	$CPAN::Frontend->mysleep(3);
     } elsif ($mod eq "Digest::SHA"){
         if ($Have_warned->{"Digest::SHA"}++) {
-            $CPAN::Frontend->myprint(qq{CPAN: checksum security checks disabled }.
+            $CPAN::Frontend->mywarn(qq{CPAN: checksum security checks disabled }.
                                      qq{because Digest::SHA not installed.\n});
         } else {
             $CPAN::Frontend->mywarn(qq{
@@ -3054,14 +3048,26 @@ Please choose a different color (Hint: try 'o conf init /color/')\n";
 
 #-> sub CPAN::Shell::myprint ;
 
-# where is myprint/mywarn/Frontend/etc. documented? We need guidelines
-# where to use what! I think, we send everything to STDOUT and use
-# print for normal/good news and warn for news that need more
-# attention. Yes, this is our working contract for now.
+# where is myprint/mywarn/Frontend/etc. documented? Where to use what?
+# I think, we send everything to STDOUT and use print for normal/good
+# news and warn for news that need more attention. Yes, this is our
+# working contract for now.
 sub myprint {
     my($self,$what) = @_;
+    $self->print_ornamented($what,
+                            $CPAN::Config->{colorize_print}||'bold blue on_white',
+                           );
+}
 
-    $self->print_ornamented($what, $CPAN::Config->{colorize_print}||'bold blue on_white');
+sub optprint {
+    my($self,$category,$what) = @_;
+    my $vname = $category . "_verbosity";
+    CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+    if (!$CPAN::Config->{$vname}
+        || $CPAN::Config->{$vname} =~ /^v/
+       ) {
+        $CPAN::Frontend->myprint($what);
+    }
 }
 
 #-> sub CPAN::Shell::myexit ;

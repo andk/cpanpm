@@ -217,6 +217,13 @@ downloads new indexes.
 
 Let the index expire after how many days?
 
+=item inhibit_startup_message
+
+When the CPAN shell is started it normally displays a greeting message
+that contains the running version and the status of readline support.
+
+Do you want to turn this message off?
+
 =item keep_source_where
 
 Unless you are accessing the CPAN on your filesystem via a file: URL,
@@ -685,7 +692,7 @@ Shall we use it as the general CPAN build and cache directory?
         }
 
         if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
-            my_yn_prompt(build_dir_reuse => "y", $matcher);
+            my_yn_prompt(build_dir_reuse => 1, $matcher);
         }
 
         if (!$matcher or 'prefs_dir' =~ /$matcher/) {
@@ -885,6 +892,10 @@ substitute. You can then revisit this dialog with
         }
     }
 
+    #
+    # verbosity
+    #
+
     if (!$matcher or 'tar_verbosity' =~ /$matcher/) {
         my_prompt_loop(tar_verbosity => 'v', $matcher,
                        'none|v|vv');
@@ -894,6 +905,8 @@ substitute. You can then revisit this dialog with
         my_prompt_loop(load_module_verbosity => 'v', $matcher,
                        'none|v');
     }
+
+    my_yn_prompt(inhibit_startup_message => 0, $matcher);
 
     #
     #= Installer, arguments to make etc.
@@ -1100,10 +1113,6 @@ substitute. You can then revisit this dialog with
         conf_sites();
     }
 
-    # We don't ask this one now, it's plain silly and maybe is not
-    # even used correctly everywhere.
-    $CPAN::Config->{inhibit_startup_message} = 0;
-
     $CPAN::Frontend->myprint("\n\n");
     if ($matcher && !$CPAN::Config->{auto_commit}) {
         $CPAN::Frontend->myprint("Please remember to call 'o conf commit' to ".
@@ -1135,7 +1144,7 @@ sub my_yn_prompt {
     my $default;
     defined($default = $CPAN::Config->{$item}) or $default = $dflt;
 
-    $DB::single = 1;
+    # $DB::single = 1;
     if (!$m || $item =~ /$m/) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);

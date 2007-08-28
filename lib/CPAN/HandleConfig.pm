@@ -434,12 +434,8 @@ else: quote it with the correct quote type for the box we're on
 
 sub init {
     my($self,@args) = @_;
-    undef $CPAN::Config->{'inhibit_startup_message'}; # lazy trick to
-                                                      # have the least
-                                                      # important
-                                                      # variable
-                                                      # undefined
-    $self->load(@args);
+    CPAN->debug("self[$self]args[".join(",",@args)."]");
+    $self->load(doit => 1, @args);
     1;
 }
 
@@ -508,20 +504,21 @@ sub home () {
 
 sub load {
     my($self, %args) = @_;
-	$CPAN::Be_Silent++ if $args{be_silent};
+    $CPAN::Be_Silent++ if $args{be_silent};
+    my $doit;
+    $doit = delete $args{doit};
 
-    my(@miss);
     use Carp;
     require_myconfig_or_config;
-    return unless @miss = $self->missing_config_data;
+    my @miss = $self->missing_config_data;
+    return unless $doit || @miss;
     our $loading;
     return if $loading;
     $loading++;
 
     require CPAN::FirstTime;
-    my($configpm,$fh,$redo,$theycalled);
+    my($configpm,$fh,$redo);
     $redo ||= "";
-    $theycalled++ if @miss==1 && $miss[0] eq 'inhibit_startup_message';
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
 	$configpm = $INC{"CPAN/Config.pm"};
 	$redo++;
@@ -554,20 +551,13 @@ sub load {
 
     }
     local($") = ", ";
-    if ($redo && ! $theycalled){
+    if ($redo && !$doit){
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
-the following indispensable but missing parameters:
+some missing parameters...
 
-@miss
 END
         $args{args} = \@miss;
-    }
-    if (0) {
-        # where do we need this?
-        $CPAN::Frontend->myprint(qq{
-$configpm initialized.
-});
     }
     CPAN::FirstTime::init($configpm, %args);
     $loading--;
@@ -588,7 +578,7 @@ sub missing_config_data {
          #"gzip",
          "http_proxy",
          "index_expire",
-         "inhibit_startup_message",
+         #"inhibit_startup_message",
          "keep_source_where",
          #"make",
          "make_arg",
