@@ -325,6 +325,7 @@ Font::TTF
 Font::TTFMetrics
 FormValidator::Simple
 FrameMaker::FromHTML
+Fuse
 GD
 GD::Barcode
 GD::Graph
@@ -655,8 +656,12 @@ RDF::Simple
 RPC::JSON
 RPC::XML
 RTF::HTMLConverter
+Regex::PreSuf
+Regexp::Assemble
+Regexp::List
 Regexp::Log
 Regexp::Shellish
+Regexp::Trie
 ResourcePool
 Return::Value
 Roman
