@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -- -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 
 use strict;
 use warnings;
@@ -64,9 +64,22 @@ ITERATION: while () {
  UPLOADITEM: for my $upload (reverse @$recent_data) {
     next unless $upload->{path} =~ $rx;
     next unless $upload->{type} eq "new";
+
     # never install stable reporters, they are most probably older
-    # than we are
+    # than we are.
     next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
+
+    # XXX: This needs to be extended to every distro that has a higher
+    # numbered developer release. Say Foo-1.4801 is released but we
+    # have already 1.48_51 installed. And we should not skip but 'make
+    # test' instead of 'make install'. The problem with this is that
+    # we do not know what exactly is in the distro. So we must go
+    # through CPAN::DistnameInfo somehow. It gets even more
+    # complicated when the item here gets passed to a queuerunner
+    # because then the decision if test or install shall be called
+    # cannot be made now, it must be made when the job is actually
+    # started.
+
     if ($upload->{epoch} < $max_epoch_worked_on) {
       warn "Already done: $upload->{path}\n" unless keys %comboseen;
       sleep 0.1;

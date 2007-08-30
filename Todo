@@ -1,11 +1,51 @@
+2007-08-30  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* hashed out on the bus with anonymous, how the endless loop of RECENT
+	testing shall look like: one never dying job produces POE sessions that
+	shall test some distro with some perl. This queue is always keeping two
+	or three jobs active in parallel and watches stdout+stderr. If for more
+	than 10 minutes no output is produced the job gets a SIGSTOP and it is
+	moved to the unlimited(?) heap of hangers and the next job from the
+	queue is made active. Somebody provides us an interface to send stdin to
+	one of the hangers. As soon as this is done that job gets queued again
+	and is not considered a hanger anymore. The queuerunner will then send
+	it a SIGCONT to activate it. Somebody provides us an interface to list
+	all hangers, and one to show the output of one hanger.
+
+	* todo: commit bit for florian
+
+2007-08-29  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* bug from tina: new debian without gcc. Then install Bundle::CPAN and
+	it leads to the installation of a Compress::Zlib that does not work
+	because it was not compiled.
+
 2007-08-28  Andreas Koenig  <k@andreas-koenigs-computer.local>
+
+	* cpan-testers-discuss@perl.org list subscribe
+
+	* RECENT file: quartely/monthly/weekly/daily
+
+	* discussion list/bofs/david golden, foxson, barbie
+
+	* email headers/subject line ==> http upload ==> subscribe/unsubscribe
+	==> fail-safeness of email cannot be topped
+
+	* pita...
+
+	* BOF: Offline testing: Smoke needs a way to store the produced emails
+
+	* David Cantrell Feature request: every time I have no distroprefs and
+	have to answer some question, CPAN.pm should look over my sholder, record
+	the answers and write the according distroprefs file for me. Or
+	something.
 
 	* why did the tests not fail when windows 98 had no flock? Because
 	Expect was not installed, I think.
 
 	* off topic: get cable back from Ovid
 
-	* Todo: add FUSE stuff to megainstall.txt
+	* Todo: add FUSE stuff to megainstall.txt DONE
 
 2007-08-27  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
@@ -35,7 +75,8 @@
 	demerphq wants time series on a regex analyzer. perl versions are in
 	regexec.filelog.gz (but they go back till perl @1; so I'll start with
 	27000 I presume), available perls are in
-	available-nonthr-debugging-perls.txt.
+	available-nonthr-debugging-perls.txt. DONE (still need to check the job
+	in into the tests repository)
 
 	cleanup build_dir by age regardless size and useable by non-interactive
 	users.
@@ -45,7 +86,7 @@
 
 	review CPAN::Reporter 0.4801.
 
-	BBC article about data::dump::streamer
+	BBC article about data::dump::streamer? No! Talk to Yves about it!
 
 2007-08-24  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
