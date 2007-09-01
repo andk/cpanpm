@@ -144,8 +144,8 @@ require CPAN::HandleConfig;
 
         my $obj = $data->{object};
         isa_ok($obj, 'CPAN::DeferedCode');
-        $obj->();
-        is($::yaml_load_code_works, 2, 'running the code in the did the right thing');
+        my $dummy = "$obj";
+        is($::yaml_load_code_works, 2, 'stringifying the obj ran the code');
     }
 }
 
