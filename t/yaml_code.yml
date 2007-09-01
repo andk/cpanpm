@@ -1,4 +1,9 @@
---- !!perl/code |
-{
-    $::yaml_load_code_works = 1;
-}
+---
+code: !!perl/code |
+  {
+      $::yaml_load_code_works = 1;
+  }
+object: !!perl/code:CPAN::DeferedCode |
+  {
+      $::yaml_load_code_works = 2;
+  }
