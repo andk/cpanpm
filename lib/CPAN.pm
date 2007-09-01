@@ -424,6 +424,10 @@ sub _yaml_loadfile {
     return +[] unless -s $local_file;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
+        # temporarly enable yaml code deserialisation
+        no strict 'refs';
+        local ${ "${yaml_module}::LoadCode" } = 1;
+
         my $code;
         if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
             my @yaml;
