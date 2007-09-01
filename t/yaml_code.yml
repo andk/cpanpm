@@ -1,0 +1,4 @@
+--- !!perl/code |
+{
+    $::yaml_load_code_works = 1;
+}

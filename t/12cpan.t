@@ -123,6 +123,26 @@ require CPAN::HandleConfig;
     }
 }
 
+{
+    my $this_block_count;
+    BEGIN { $count += $this_block_count = 2; }
+    eval { require YAML; };
+    if ($@ || (($YAML::VERSION||$YAML::VERSION||0) < 0.62)) { # silence 5.005_04
+        for (1..$this_block_count) {
+            ok(1);
+        }
+    } else {
+        my $yaml_file = File::Spec->catfile(qw/t yaml_code.yml/);
+        my $data = CPAN->_yaml_loadfile($yaml_file);
+        my $code = $data->[0];
+
+        local $::yaml_load_code_works = 0;
+        is(ref $code, 'CODE', 'deserialisation returned CODE');
+        $code->();
+        ok($::yaml_load_code_works, 'running the code did the right thing');
+    }
+}
+
 BEGIN{plan tests => $count}
 
 # Local Variables:
