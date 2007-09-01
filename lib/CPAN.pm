@@ -9,6 +9,7 @@ use CPAN::Version;
 use CPAN::Debug;
 use CPAN::Queue;
 use CPAN::Tarzip;
+use CPAN::DeferedCode;
 use Carp ();
 use Config ();
 use Cwd ();
