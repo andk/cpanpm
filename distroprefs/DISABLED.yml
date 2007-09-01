@@ -1,15 +1,27 @@
 ---
 comment: |
 
-  Various reasons, maybe things that hang, maybe things that annoy
+  Various reasons
+
+  things that hang
+
+  things that have too interactive tests, that cannot be easily
+  automated
+
+  things that need ressources we don't have
+
+  etc.
 
 match:
   distribution: |
-    ^(?x:OALDERS/URI-ParseSearchString-More-0.04
-    |DMOW/Eludia
-    |RYBSKEJ/forks-0.25
-    |GRM/
-    |CORLISS/CursesWidgets-\d
+    ^(?x:
+    .^   # never matches, only purpose is to let things align nicely
+    |BFREE/OpenGL-\d
     |CORLISS/CursesForms-\d
+    |CORLISS/CursesWidgets-\d
+    |DMOW/Eludia
+    |GRM/
+    |OALDERS/URI-ParseSearchString-More-0.04
+    |RYBSKEJ/forks-0.25
     )|
 disabled: 1
