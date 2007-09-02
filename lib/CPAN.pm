@@ -3990,7 +3990,6 @@ sub localize {
         $CPAN::Config->{ftp_passive} : 1;
     my $ret;
     my $stats = $self->_new_stats($file);
-    $connect_to_internet_ok;
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
@@ -8659,6 +8658,8 @@ sub test {
         $self->{make_test} = CPAN::Distrostatus->new("NO");
         $self->{badtestcnt}++;
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
+        CPAN::Shell->optprint("hint",sprintf "//hint// To get more information about failing tests, try:
+  reports %s\n", $self->pretty_id);
     }
     $self->store_persistent_state;
 }
