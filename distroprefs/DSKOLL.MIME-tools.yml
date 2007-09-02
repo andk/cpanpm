@@ -1,9 +1,0 @@
----
-comment: |
-
-  bleadperl probably broke this distro with undef in %INC; needs
-  further investigation (2007-04)
-
-match:
-  distribution: "^DSKOLL/MIME-tools-5.420.tar.gz"
-disabled: 1
