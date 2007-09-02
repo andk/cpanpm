@@ -782,7 +782,7 @@ Shall we use it as the general CPAN build and cache directory?
     #= YAML code deserialisation
     #
     if (!$matcher or "yaml_load_code" =~ /$matcher/) {
-        my_yn_prompt(yaml_load_code => 1, $matcher);
+        my_yn_prompt(yaml_load_code => 0, $matcher);
     }
 
     #
