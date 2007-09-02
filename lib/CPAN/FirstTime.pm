@@ -475,6 +475,14 @@ memory consumption of CPAN.pm considerably.
 
 Use CPAN::SQLite if available? (yes/no)?
 
+=item yaml_load_code
+
+Both YAML.pm and YAML::Syck are capable of deserialising code. As this requires
+a string eval, which might be a security risk, you can use this option to
+enable or disable the deserialisation of code.
+
+Do you want to enable code deserialisation (yes/no)?
+
 =item yaml_module
 
 At the time of this writing there are two competing YAML modules,
@@ -484,14 +492,6 @@ conforming modules but at the time of writing a potential third
 player, YAML::Tiny, seemed not powerful enough to work with CPAN.pm.
 
 Which YAML implementation would you prefer?
-
-=item yaml_load_code
-
-Both YAML.pm and YAML::Syck are capable of deserialising code. As this requires
-a string eval, which might be a security risk, you can use this option to
-enable or disable the deserialisation of code.
-
-Do you want to enable code deserialisation (yes/no)?
 
 =back
 
@@ -779,6 +779,13 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
+    #= YAML code deserialisation
+    #
+    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
+        my_yn_prompt(yaml_load_code => 1, $matcher);
+    }
+
+    #
     #= YAML vs. YAML::Syck
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
@@ -788,10 +795,6 @@ Shall we use it as the general CPAN build and cache directory?
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
         }
-    }
-
-    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
-        my_yn_prompt(yaml_load_code => 1, $matcher);
     }
 
     #
