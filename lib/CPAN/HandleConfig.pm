@@ -1,6 +1,6 @@
 package CPAN::HandleConfig;
 use strict;
-use vars qw(%can %keys $VERSION);
+use vars qw(%can %keys $loading $VERSION);
 
 $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
@@ -512,7 +512,6 @@ sub load {
     require_myconfig_or_config;
     my @miss = $self->missing_config_data;
     return unless $doit || @miss;
-    our $loading;
     return if $loading;
     $loading++;
 
