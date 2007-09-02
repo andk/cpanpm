@@ -920,8 +920,9 @@ XML::XPathEngine
 XML::XPath
 XSLoader
 YAML
-YAML::LibYAML
+YAML::Syck
 YAML::Tiny
+YAML::XS
 Yahoo::Photos
 Yahoo::Search
 bignum
