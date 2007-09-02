@@ -51,6 +51,7 @@ $CPAN::Config = {
                  'urllist' => [qq[file://$cwd/t/CPAN]],
                  'wait_list' => [q[wait://ls6.informatik.uni-dortmund.de:1404]],
                  #'wget' => q[/usr/bin/wget],
+                 'yaml_load_code' => q[0],
                 };
 
 __END__
