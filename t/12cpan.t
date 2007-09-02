@@ -125,7 +125,8 @@ require CPAN::HandleConfig;
 
 {
     my $this_block_count;
-    BEGIN { $count += $this_block_count = 4; }
+    BEGIN { $count += $this_block_count = 8; }
+
     eval { require YAML; };
     if ($@ || (($YAML::VERSION||$YAML::VERSION||0) < 0.62)) { # silence 5.005_04
         for (1..$this_block_count) {
@@ -133,19 +134,40 @@ require CPAN::HandleConfig;
         }
     } else {
         my $yaml_file = _f('t/yaml_code.yml');
-        my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
 
-        local $::yaml_load_code_works = 0;
+        {
+            my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
 
-        my $code = $data->{code};
-        is(ref $code, 'CODE', 'deserialisation returned CODE');
-        $code->();
-        is($::yaml_load_code_works, 1, 'running the code did the right thing');
+            local $::yaml_load_code_works = 0;
 
-        my $obj = $data->{object};
-        isa_ok($obj, 'CPAN::DeferedCode');
-        my $dummy = "$obj";
-        is($::yaml_load_code_works, 2, 'stringifying the obj ran the code');
+            my $code = $data->{code};
+            is(ref $code, 'CODE', 'deserialisation returned CODE');
+            $code->();
+            is($::yaml_load_code_works, 0, 'running the code did the right thing');
+
+            my $obj = $data->{object};
+            isa_ok($obj, 'CPAN::DeferedCode');
+            my $dummy = "$obj";
+            is($::yaml_load_code_works, 0, 'stringifying the obj does nothing');
+        }
+
+        {
+            local $CPAN::Config->{yaml_load_code} = 1;
+
+            my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
+
+            local $::yaml_load_code_works = 0;
+
+            my $code = $data->{code};
+            is(ref $code, 'CODE', 'deserialisation returned CODE');
+            $code->();
+            is($::yaml_load_code_works, 1, 'running the code did the right thing');
+
+            my $obj = $data->{object};
+            isa_ok($obj, 'CPAN::DeferedCode');
+            my $dummy = "$obj";
+            is($::yaml_load_code_works, 2, 'stringifying the obj ran the code');
+        }
     }
 }
 
