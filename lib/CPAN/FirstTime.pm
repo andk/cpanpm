@@ -779,13 +779,6 @@ Shall we use it as the general CPAN build and cache directory?
     }
 
     #
-    #= YAML code deserialisation
-    #
-    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
-        my_yn_prompt(yaml_load_code => 0, $matcher);
-    }
-
-    #
     #= YAML vs. YAML::Syck
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
@@ -795,6 +788,13 @@ Shall we use it as the general CPAN build and cache directory?
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
         }
+    }
+
+    #
+    #= YAML code deserialisation
+    #
+    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
+        my_yn_prompt(yaml_load_code => 0, $matcher);
     }
 
     #
