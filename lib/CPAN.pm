@@ -427,7 +427,10 @@ sub _yaml_loadfile {
     if ($CPAN::META->has_inst($yaml_module)) {
         # temporarly enable yaml code deserialisation
         no strict 'refs';
-        local ${ "${yaml_module}::LoadCode" } = 1;
+        # 5.6.2 could not do the local() with the reference
+        local $YAML::LoadCode;
+        local $YAML::Syck::LoadCode;
+        ${ "$yaml_module\::LoadCode" } = 1;
 
         my $code;
         if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
@@ -520,7 +523,7 @@ use File::Find;
 package CPAN::FTP;
 use strict;
 use Fcntl qw(:flock);
-use vars qw($Ua $Thesite $ThesiteURL $Themethod);
+use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 package CPAN::LWP::UserAgent;
@@ -3987,7 +3990,7 @@ sub localize {
         $CPAN::Config->{ftp_passive} : 1;
     my $ret;
     my $stats = $self->_new_stats($file);
-    our $connect_to_internet_ok;
+    $connect_to_internet_ok;
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
