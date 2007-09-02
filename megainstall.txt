@@ -26,6 +26,7 @@ App::a2pdf
 AppConfig
 Archive::Zip
 Array::Iterator
+Array::Slice
 Audio::TagLib
 Authen::Simple
 AutoLoader
@@ -91,6 +92,7 @@ Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
 Catalyst::Plugin::Unicode
 Catalyst::Plugin::Unicode::Encoding
+Catalyst::View::Mason
 Catalyst::View::TT
 Chart::Math::Axis
 Chatbot::Eliza
@@ -621,6 +623,7 @@ Perlbal
 Petal
 Petal::Utils
 Plagger
+Pod::Coverage::CountParents
 Pod::Find
 Pod::HtmlPsPdf
 Pod::LaTeX

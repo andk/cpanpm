@@ -1,3 +1,7 @@
+2007-09-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: config option to enable code refs in YAML. (LoadCode)
+
 2007-08-30  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* hashed out on the bus with anonymous, how the endless loop of RECENT
@@ -12,13 +16,16 @@
 	it a SIGCONT to activate it. Somebody provides us an interface to list
 	all hangers, and one to show the output of one hanger.
 
+	http://gumbynet.org.uk/hackintro/
+	http://gumbynet.org.uk/hackathon/
+
 	* todo: commit bit for florian
 
 2007-08-29  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
 	* bug from tina: new debian without gcc. Then install Bundle::CPAN and
 	it leads to the installation of a Compress::Zlib that does not work
-	because it was not compiled.
+	because it was not compiled. (fakeroot/debootstrap?)
 
 2007-08-28  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
