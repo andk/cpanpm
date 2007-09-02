@@ -5,8 +5,8 @@
 todo:
 
 change format of the yaml file to contain protocol number and a status
-field that links to some protocol spec. CPAN::Recent?
-File::Rsync::Recent?
+field that links to some protocol spec.
+File::Rsync::Mirror::Recentfile?
 
 in any case we want protocol => 2 for the next version and we want a
 field that tells us in human readable language what this tree is about.
@@ -97,13 +97,20 @@ use File::Temp ();
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
-my $localbase = "/home/ftp/pub/PAUSE/authors/id/";
+use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+
+my $rf = File::Rsync::Mirror::Recentfile->new(
+                                              canonize => "naive_path_normalize",
+                                              localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                             );
+
 my $recent = "RECENT-2d.yaml";
 my $remotehost = "pause.perl.org";
 my $remotemodule = "authors";
 my $remotedir = "id";
 
-my $localabsrecent = File::Spec->catfile($localbase,$recent);
+my $localabsrecent = File::Spec->catfile($rf->localroot,$recent);
 my $remotebase = "$remotehost\::$remotemodule/$remotedir";
 
 my $max_epoch_ever = 0;
@@ -117,19 +124,21 @@ ITERATION: while () {
   my $iteration_start = time;
 
   my($fh) = File::Temp->new(TEMPLATE => ".RECENT-XXXX",
-                            DIR => $localbase,
+                            DIR => $rf->localroot,
                             SUFFIX => "yaml",
                             UNLINK => 0,
                            );
-  my($trecentfile) = File::Spec->catfile($localbase,$fh->filename);
+  my($trecentfile) = $fh->filename;
   unless ($rs->exec(
-            src => File::Spec->catfile($remotebase,$recent),
-            dst => $trecentfile,
-           )) {
+                    src => File::Spec->catfile($remotebase,$recent),
+                    dst => $trecentfile,
+                   )) {
     warn sprintf "Warning: %s", $rs->err;
     sleep 5;
     next ITERATION;
   }
+  my $mode = 0644;
+  chmod $mode, $trecentfile;
   my($recent_data) = YAML::Syck::LoadFile($trecentfile);
   my @error;
  UPLOADITEM: for my $upload (reverse @$recent_data) {
@@ -145,8 +154,9 @@ ITERATION: while () {
         $must_get++;
       }
       if ($must_get) {
-        warn "Getting $upload->{path}\n";
-        my $dst = File::Spec->catfile($localbase,$upload->{path});
+        my $dst = File::Spec->catfile($rf->localroot,$upload->{path});
+        my $doing = -e $dst ? "Syncing" : "Getting";
+        warn "$doing $upload->{path}\n";
         mkpath dirname $dst;
         unless ($rs->exec(
                   src => "$remotebase/$upload->{path}",
@@ -176,6 +186,7 @@ ITERATION: while () {
   my $minimum_time_per_loop = 20;
   { local $| = 1; print "~"; }
   if (time - $iteration_start < $minimum_time_per_loop) {
+    # last ITERATION;
     sleep $iteration_start + $minimum_time_per_loop - time;
   }
   { local $| = 1; print "."; }
