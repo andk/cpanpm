@@ -7,7 +7,15 @@ use File::Basename qw(dirname);
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
-my $recent = "/home/ftp/pub/PAUSE/authors/id/RECENT-2d.yaml";
+use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+
+my $rf = File::Rsync::Mirror::Recentfile->new(
+                                              canonize => "naive_path_normalize",
+                                              localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                             );
+
+my $recent = File::Spec->catfile($rf->localroot,"RECENT-2d.yaml");
 my $otherperls = "$0.otherperls";
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 
@@ -129,12 +137,14 @@ ITERATION: while () {
                      );
         # 0==system @system or die;
         unless (0==system @system){
+          my $sleep = 30;
           warn "ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN\n";
           warn "      Something went wrong during\n";
           warn "      $perl\n";
           warn "      $upload->{path}\n";
+          warn "      (sleeping $sleep)\n";
           warn "ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN\n";
- 	  sleep 30;
+ 	  sleep $sleep;
         }
         $comboseen{$perl,$upload->{path}} = $upload->{epoch};
       }
@@ -153,3 +163,10 @@ ITERATION: while () {
 }
 
 print "\n";
+
+__END__
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 2
+# End:

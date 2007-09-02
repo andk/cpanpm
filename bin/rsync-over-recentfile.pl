@@ -193,3 +193,10 @@ ITERATION: while () {
 }
 
 print "\n";
+
+__END__
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 2
+# End:
