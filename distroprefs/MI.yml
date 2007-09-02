@@ -50,6 +50,7 @@ match:
     |DSNOPEK/POE-Component-MessageQueue-\d
     |ELLIOTJS/Task-Perl-Critic-[v\d]
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDepencencies-
+    |FLORA/Catalyst-View-Mason-\d
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
     |GAAL/Class-Rebless-\d

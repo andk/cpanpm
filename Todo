@@ -1,5 +1,9 @@
 2007-09-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Bug: with a Makefile.PL that has a timestamp in the future, we cannot
+	proceed very far. Because the generated Makefile will be outdated.
+	Likewise with all other files in a distro.
+
 	* Todo: config option to enable code refs in YAML. (LoadCode)
 	        rafl: DONE
 
