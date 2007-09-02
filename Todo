@@ -1,6 +1,7 @@
 2007-09-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: config option to enable code refs in YAML. (LoadCode)
+	        rafl: DONE
 
 2007-08-30  Andreas Koenig  <k@andreas-koenigs-computer.local>
 
