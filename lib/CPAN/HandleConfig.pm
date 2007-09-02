@@ -88,6 +88,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "wait_list",
      "wget",
      "yaml_module",
+     "yaml_load_code",
     );
 
 my %prefssupport = map { $_ => 1 }

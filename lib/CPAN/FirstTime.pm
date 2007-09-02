@@ -485,6 +485,14 @@ player, YAML::Tiny, seemed not powerful enough to work with CPAN.pm.
 
 Which YAML implementation would you prefer?
 
+=item yaml_load_code
+
+Both YAML.pm and YAML::Syck are capable of deserialising code. As this requires
+a string eval, which might be a security risk, you can use this option to
+enable or disable the deserialisation of code.
+
+Do you want to enable code deserialisation (yes/no)?
+
 =back
 
 =head1 LICENSE
@@ -780,6 +788,10 @@ Shall we use it as the general CPAN build and cache directory?
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
         }
+    }
+
+    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
+        my_yn_prompt(yaml_load_code => 1, $matcher);
     }
 
     #
