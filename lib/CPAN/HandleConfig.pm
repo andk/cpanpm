@@ -66,8 +66,8 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "password",
      "patch",
      "prefer_installer",
-     "prerequisites_policy",
      "prefs_dir",
+     "prerequisites_policy",
      "proxy_pass",
      "proxy_user",
      "randomize_urllist",
@@ -87,8 +87,8 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "username",
      "wait_list",
      "wget",
-     "yaml_module",
      "yaml_load_code",
+     "yaml_module",
     );
 
 my %prefssupport = map { $_ => 1 }
