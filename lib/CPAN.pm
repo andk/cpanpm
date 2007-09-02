@@ -430,7 +430,7 @@ sub _yaml_loadfile {
         # 5.6.2 could not do the local() with the reference
         local $YAML::LoadCode;
         local $YAML::Syck::LoadCode;
-        ${ "$yaml_module\::LoadCode" } = 1;
+        ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
 
         my $code;
         if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
