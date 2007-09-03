@@ -1,4 +1,5 @@
 Makefile
+Makefile.old
 blib
 pm_to_blib
 t/CPAN/MyConfig.pm*
@@ -6,6 +7,7 @@ t/dot-cpan
 test.out
 *.swp
 .*
+!.gitignore
 SIGNATURE
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 CPAN-*
