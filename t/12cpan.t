@@ -127,13 +127,15 @@ require CPAN::HandleConfig;
     my $this_block_count;
     BEGIN { $count += $this_block_count = 8; }
 
-    eval { require YAML; };
-    if ($@ || (($YAML::VERSION||$YAML::VERSION||0) < 0.62)) { # silence 5.005_04
+    eval { require YAML::Syck; };
+    if ($@ || (($YAML::Syck::VERSION||$YAML::Syck::VERSION||0) < 0.97)) { # silence 5.005_04
         for (1..$this_block_count) {
             ok(1);
         }
     } else {
         my $yaml_file = _f('t/yaml_code.yml');
+
+        local $CPAN::Config->{yaml_module} = 'YAML::Syck';
 
         {
             my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
