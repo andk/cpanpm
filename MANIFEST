@@ -61,6 +61,7 @@ distroprefs/DOM.OpenGuides.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DRTECH.Config-Loader.yml
+distroprefs/DSKOLL.MIME-tools.yml
 distroprefs/DSUGAL.Devel-Size.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/DWHEELER.Params-CallbackRequest.yml
@@ -215,7 +216,9 @@ inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
+lib/CPAN/API/HOWTO.pm
 lib/CPAN/Debug.pm
+lib/CPAN/DeferedCode.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/HandleConfig.pm
 lib/CPAN/Kwalify.pm
@@ -278,4 +281,5 @@ t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
 t/CPAN/TestPatch.txt
 t/local_utils.pm
+t/yaml_code.yml
 Todo

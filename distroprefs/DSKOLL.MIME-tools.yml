@@ -1,0 +1,15 @@
+---
+comment: |
+
+  bleadperl probably broke this distro with undef in %INC; needs
+  further investigation (2007-04)
+
+  Do not re-enable lightly, it may lead to Gigabytes of output of the form
+
+  Warning: Use of "require" without parentheses is ambiguous at (eval 641) line 1.
+
+  It happened last time on 20070903T0745
+
+match:
+  distribution: "^DSKOLL/MIME-tools-5.420.tar.gz"
+disabled: 1
