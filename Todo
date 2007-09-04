@@ -1,3 +1,10 @@
+2007-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug in Pod::XXX: when writing manpage for
+	TOBY/Geo-Coordinates-OSGB-2.00.tar.gz there is a pm file with 11 MB.
+	Some perls do that without hesitating but others (and they seem to be
+	the more recent ones) never seem to finish.
+
 2007-09-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: with a Makefile.PL that has a timestamp in the future, we cannot
