@@ -1,3 +1,51 @@
+2007-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* after a fail introduce a hint for using the reports command (suggested
+	by Gabor Szabo)
+	
+	* Enable code deserialisation for YAML. (Florian Ragwitz)
+
+	* Add CPAN::DeferedCode and make CPAN.pm use it. (Florian Ragwitz)
+
+	* Add a new config option: yaml_load_code. (Florian Ragwitz)
+	
+	* turn a few myprint() into mywarn()
+	
+	* make inhibit_startup_message a normal config variable like all others
+	
+	* New manpage CPAN::API::HOWTO by David Cantrell
+
+	* now setting PERL5_CPAN_IS_EXECUTING as requested by Adam Kennedy
+
+	* ask once if we may try to connect to the internet when we try to use
+	@CPAN::Defaultsites (I think this was inspired by Steve Hay, then by
+	Gabor Szabo)
+
+	* address #28946: skip locking on platforms not supporting flock
+	
+	* address #28915: CPAN::HandleConfig::home did not cope with getting
+	undef from File::HomeDir-> my_data()
+	
+	* support 'help' with argument
+	
+	* integrate all FirstTime questions into POD
+
+	* FirstTime::my_prompt_loop now has support for *_intro prompts
+
+	* simplified lots of the complicated FirstTime::init dialogues
+
+	* new config variable load_modules_verbosity
+
+	* support 'o conf /regex/' to selectivel display the state of config varibles
+
+	* prevent recursion into HandleConfig::load()
+
+	* PERL5*_CPAN_IS_RUNNING now points to the process number
+
+	* several commands were missing in @COMMANDS so were not supported for completion
+
+	* started deprecating term_is_latin config variable
+
 2007-08-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_53:

@@ -544,6 +544,7 @@ CONFIGURATION
       show_upload_date   boolean if commands should try to determine upload date
       show_zero_versions boolean if r command tells for which modules $version==0
       tar                location of external program tar
+      tar_verbosity      verbosity level for the tar command
       term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
       term_ornaments     boolean to turn ReadLine ornamenting on/off
@@ -903,8 +904,8 @@ CONFIGURATION
         used.
 
     eexpect [hash]
-        Extended "expect". This is a hash reference with three allowed keys,
-        "mode", "timeout", and "talk".
+        Extended "expect". This is a hash reference with four allowed keys,
+        "mode", "timeout", "reuse", and "talk".
 
         "mode" may have the values "deterministic" for the case where all
         questions come in the order written down and "anyorder" for the case
@@ -924,13 +925,18 @@ CONFIGURATION
 
         In the case of "mode=deterministic" the CPAN.pm will inject the
         according answer as soon as the stream matches the regular
-        expression. In the case of "mode=anyorder" the CPAN.pm will answer a
-        question as soon as the timeout is reached for the next byte in the
-        input stream. In the latter case it removes the according
-        question/answer pair from the array, so if you want to answer the
-        question "Do you really want to do that" several times, then it must
-        be included in the array at least as often as you want this answer
-        to be given.
+        expression.
+
+        In the case of "mode=anyorder" CPAN.pm will answer a question as
+        soon as the timeout is reached for the next byte in the input
+        stream. In this mode you can use the "reuse" parameter to decide
+        what shall happen with a question-answer pair after it has been
+        used. In the default case (reuse=0) it is removed from the array, so
+        it cannot be used again accidentally. In this case, if you want to
+        answer the question "Do you really want to do that" several times,
+        then it must be included in the array at least as often as you want
+        this answer to be given. Setting the parameter "reuse" to 1 makes
+        this repetition unnecessary.
 
     env [hash]
         Environment variables to be set during the command
@@ -1124,6 +1130,14 @@ PROGRAMMER'S INTERFACE
     CPAN::Distribution::author
         Returns the CPAN::Author object of the maintainer who uploaded this
         distribution
+
+    CPAN::Distribution::pretty_id()
+        Returns a string of the form "AUTHORID/TARBALL", where AUTHORID is
+        the author's PAUSE ID and TARBALL is the distribution filename.
+
+    CPAN::Distribution::base_id()
+        Returns the distribution filename without any archive suffix. E.g
+        "Foo-Bar-0.01"
 
     CPAN::Distribution::clean()
         Changes to the directory where the distribution has been unpacked
@@ -1911,6 +1925,13 @@ FAQ
         sites:
 
           http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
+
+    16) Why do I get asked the same questions every time I start the shell?
+
+        You can make your configuration changes permanent by calling the
+        command "o conf commit". Alternatively set the "auto_commit"
+        variable to true by running "o conf init auto_commit" and answering
+        the following question with yes.
 
 COMPATIBILITY
   OLD PERL VERSIONS
