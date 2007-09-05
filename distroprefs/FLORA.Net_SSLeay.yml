@@ -13,7 +13,7 @@ patches:
   - "ANDK/patches/Net_SSLeay.pm-1.30-IMACAT-01.patch.gz"
 ---
 match:
-  distribution: "^FLORA/Net-SSLeay-1.31_02.tar.gz"
+  distribution: "^FLORA/Net-SSLeay-\d"
 pl:
   expect:
     - "\QThese tests *will* *fail* if you do not have network connectivity\E"
