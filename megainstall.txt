@@ -62,12 +62,12 @@ CGI::Session
 CGI::Untaint
 CPAN
 CPAN::Cache
-CPAN::Dependency
 CPAN::Checksums
+CPAN::Dependency
 CPAN::IndexPod
 CPAN::Mini
-CPAN::Unwind
 CPAN::Site
+CPAN::Unwind
 CPAN::YACSmoke
 CSS
 CSS::SAC
@@ -358,6 +358,7 @@ HTML::Clean
 HTML::Entities
 HTML::Entities::Numbered
 HTML::FillInForm
+HTML::FormFu
 HTML::FormatText
 HTML::Fraction
 HTML::FromText
@@ -381,8 +382,8 @@ HTML::TreeBuilder
 HTML::TreeBuilder::XPath
 HTML::Widget
 HTML::WikiConverter
-HTTP::GHTTP
 HTTP::BrowserDetect
+HTTP::GHTTP
 HTTP::RangeSaver
 HTTP::Response::Encoding
 HTTP::Server::Simple
@@ -743,6 +744,7 @@ Sys::SigAction
 TAP::Parser
 Taint::Util
 Task::CVSMonitor
+Task::Catalyst
 Task::Catalyst::Tutorial
 Task::Smoke
 Tcl
@@ -917,8 +919,8 @@ XML::Stream
 XML::Tiny
 XML::Twig
 XML::Validator::Schema
-XML::XPathEngine
 XML::XPath
+XML::XPathEngine
 XSLoader
 YAML
 YAML::Syck
