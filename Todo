@@ -1,3 +1,16 @@
+2007-09-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Something broke my parser for the output of the test runs.
+	residuum.yml are the unparsed lines. Ahhh, it's the new //hint// line.
+	FIXED.
+
+% ls -l logs/megainstall.200709*.d/residuum.yml
+-rw-rw-r-- 1 sand sand   86009 Sep  1 08:05 logs/megainstall.20070901T0114.d/residuum.yml
+-rw-rw-r-- 1 sand sand   84530 Sep  1 23:34 logs/megainstall.20070901T1206.d/residuum.yml
+-rw-rw-r-- 1 sand sand   71977 Sep  3 03:48 logs/megainstall.20070902T1240.d/residuum.yml
+-rw-rw-r-- 1 sand sand 4168125 Sep  5 13:18 logs/megainstall.20070905T0107.d/residuum.yml
+-rw-rw-r-- 1 sand sand 4307567 Sep  6 03:28 logs/megainstall.20070905T1716.d/residuum.yml
+
 2007-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug in Pod::XXX: when writing manpage for

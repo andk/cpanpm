@@ -133,6 +133,11 @@ our $HTMLSPANSTUFF = qr/(?:<[^<>]+>)*/;
           push @{$seq{$shortdistro[-1]}}, shift @lines;
           $end=1;
         }
+        if ($lines[0] =~ /^\/\/hint\/\//) {
+          push @{$seq{$shortdistro[-1]}}, shift @lines;
+          push @{$seq{$shortdistro[-1]}}, shift @lines while $lines[0] =~ /^\s/;
+          $end=1;
+        }
       }
       if ($end) {
         $i++;

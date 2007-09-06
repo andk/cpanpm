@@ -187,6 +187,7 @@ DBD::Pg
 DBD::mysql
 DBI
 DBI::Shell
+DBIx::Admin::TableInfo
 DBIx::Class
 DBIx::Class::Indexed
 DBIx::Class::Validation
