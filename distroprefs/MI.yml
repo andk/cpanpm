@@ -23,6 +23,7 @@ match:
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d
     |BRICAS/Games-NES-ROM-\d
     |BRICAS/WWW-OpenSearch-\d
