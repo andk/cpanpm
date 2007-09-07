@@ -1,3 +1,114 @@
+2007-09-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: somebody broke *.bs files with crap content recently. Leads to
+	tons of error messages with no (?) consequences but screen noise. I
+	removed all these broken *.bs files but now I have no idea where they
+	were coming from. Too much smoking produces too thick air.
+
+	Mark Overmeer just complained about the resulting smoke reports. When I
+	look into my mailq I find only two large mails waiting for delivery, all
+	others are fine. So how do I find out who wrote these files?
+
+	I first remove the crap in my mailq. Done, so we have only 235 mails in
+	the mqueue which look OK. For the record, the following are the latest
+	smokes (but their dependencies naturally missing). All times CEST. At
+	21:27 we had already a broken system.
+
+	Fri Sep  7 02:55:57 2007 JOHANL/Devel-PerlySense-0.01_11.tar.gz
+  Fri Sep  7 02:11:40 2007 LUKEC/Socialtext-Resting-RSS-0.01.tar.gz
+  Fri Sep  7 01:47:30 2007 JOHANL/Devel-PerlySense-0.01_10.tar.gz
+  Fri Sep  7 00:19:12 2007 JUERD/Unicode-Semantics-1.02.tar.gz
+  Thu Sep  6 23:48:44 2007 TOBY/Geo-Coordinates-OSGB-2.01.tar.gz
+  Thu Sep  6 23:48:32 2007 FDALY/Test-Deep-0.098.tar.gz
+  Thu Sep  6 23:38:13 2007 CORION/HTML-Display-0.38.tar.gz
+  Thu Sep  6 22:26:16 2007 REEDFISH/Net-FullAuto-0.03.tar.gz
+  Thu Sep  6 22:15:57 2007 EMORGAN/MyLibrary-3.0.4.tar.gz
+  Thu Sep  6 21:58:05 2007 SLANNING/Ogre-0.24.tar.gz
+  Thu Sep  6 21:43:59 2007 AGRUNDMA/POE-Filter-Slim-CLI-0.01.tar.gz
+  Thu Sep  6 21:27:22 2007 MARKOV/XML-Compile-0.53.tar.gz
+  Thu Sep  6 21:15:48 2007 ATOURBIN/rpm-build-perl-0.6.4.tar.gz
+  Thu Sep  6 20:13:56 2007 REEDFISH/Net-FullAuto-0.02.tar.gz
+  Thu Sep  6 18:38:06 2007 KEN/XML-XML2JSON-0.02.tar.gz
+  Thu Sep  6 18:32:48 2007 REEDFISH/Net-FullAuto-0.01.tar.gz
+  Thu Sep  6 18:28:47 2007 PERNST/Bio-Emboss-5.0.0.1.tar.gz
+  Thu Sep  6 18:23:26 2007 DROLSKY/HTML-Mason-1.37.tar.gz
+  Thu Sep  6 17:47:59 2007 PANGJ/IP-ChinaISP-0.02.tgz
+  Thu Sep  6 17:01:12 2007 CASIANO/GRID-Machine-0.077.tar.gz
+  Thu Sep  6 15:56:48 2007 JQUELIN/Tk-RotatingGauge-0.02.tar.gz
+  Thu Sep  6 13:04:21 2007 JQUELIN/Tk-RotatingGauge-0.01.tar.gz
+  Thu Sep  6 13:02:55 2007 ASH/WWW-Mechanize-TreeBuilder-1.00002.tar.gz
+  Thu Sep  6 12:51:19 2007 BINGOS/POE-Component-Server-DNS-0.12.tar.gz
+  Thu Sep  6 12:43:31 2007 LDS/Bio-Das-1.06.tar.gz
+  Thu Sep  6 12:25:40 2007 GCERRAI/Package-Data-Inheritable-0.02.tar.gz
+  Thu Sep  6 12:24:07 2007 LDS/Bio-Das-1.05.tar.gz
+  Thu Sep  6 12:10:02 2007 CASIANO/GRID-Machine-0.076.tar.gz
+  Thu Sep  6 11:44:38 2007 SMUELLER/Math-ConvexHull-1.02.tar.gz
+  Thu Sep  6 11:10:25 2007 CASIANO/GRID-Machine-0.075.tar.gz
+  Thu Sep  6 11:05:08 2007 GCERRAI/Package-Data-Inheritable-0.01.tar.gz
+  Thu Sep  6 10:56:06 2007 DESPAIR/Net-Whois-Raw-1.31.tar.gz
+  Thu Sep  6 10:13:05 2007 PJF/IPC-System-Simple-0.06.tar.gz
+  Thu Sep  6 08:46:02 2007 DESPAIR/Net-Domain-ExpireDate-0.80.tar.gz
+  Thu Sep  6 08:45:50 2007 DESPAIR/Net-Whois-Raw-1.30.tar.gz
+  Thu Sep  6 07:45:11 2007 CDOLAN/Net-IP-Match-Regexp-1.00.tar.gz
+  Thu Sep  6 06:14:23 2007 JMADLER/Acme-LeetSpeak-0.01.tar.gz
+  Thu Sep  6 06:05:20 2007 MKANAT/VCI-0.1.0_3.tar.gz
+  Thu Sep  6 04:39:33 2007 TURNERJW/Tk-TextHighlight-1.0.2.tar.gz
+  Thu Sep  6 03:12:29 2007 PANGJ/IP-ChinaISP.tgz
+  Thu Sep  6 02:42:05 2007 JOHANL/Devel-PerlySense-0.01_09.tar.gz
+  Thu Sep  6 02:16:41 2007 JOHANL/Devel-PerlySense-0.01_08.tar.gz
+  Thu Sep  6 00:48:24 2007 DAGOLDEN/CPAN-Reporter-0.99_07.tar.gz
+  Wed Sep  5 23:52:49 2007 DDICK/Net-DNS-DynDNS-0.95.tar.gz
+  Wed Sep  5 23:42:30 2007 CHRMUE/Socket-Class-1.1.0.tar.gz
+  Wed Sep  5 23:09:40 2007 PAJOUT/XML-Trivial-0.02.tar.gz
+  Wed Sep  5 23:08:13 2007 DAGOLDEN/CPAN-Reporter-0.99_06.tar.gz
+  Wed Sep  5 22:57:54 2007 DSNOPEK/POE-Component-MessageQueue-0.1.6.tar.gz
+  Wed Sep  5 21:33:13 2007 CORION/HTML-Display-0.37.tar.gz
+  Wed Sep  5 21:18:01 2007 KEN/XML-XML2JSON-0.01.tar.gz
+  Wed Sep  5 21:16:35 2007 GWYN/Text-Diff-Parser-0.07.tar.gz
+  Wed Sep  5 19:33:12 2007 BINGOS/POE-Component-Server-DNS-0.11.tar.gz
+  Wed Sep  5 19:15:18 2007 ALEXMASS/InSilicoSpectro-Databanks-0.0.21.tar.gz
+  Wed Sep  5 18:29:47 2007 BLBLACK/POE-Loop-Event_Lib-0.001_01.tar.gz
+  Wed Sep  5 17:27:54 2007 SMUELLER/Archive-Unzip-Burst-0.02_01.tar.gz
+  Wed Sep  5 17:17:35 2007 URKLE/DJabberd-VCard-LDAP-0.03.tar.gz
+  Wed Sep  5 17:07:16 2007 KARJALA/MyXML/XML-MyXML-0.0985.tar.gz
+  Wed Sep  5 16:10:25 2007 ISAAC/Business-PayPal-EWP-1.00.tar.gz
+  Wed Sep  5 16:03:54 2007 DGL/Net-CouchDb-0.01.tar.gz
+  Wed Sep  5 15:47:17 2007 JDHEDDEN/threads-shared-1.13.tar.gz
+  Wed Sep  5 15:38:10 2007 ISAAC/Business-PayPal-EWP-0.03.tar.gz
+  Wed Sep  5 15:22:47 2007 JDHEDDEN/threads-1.65.tar.gz
+  Wed Sep  5 15:18:46 2007 JSCHNEID/DBIx-ORM-Declarative-0.21.tar.gz
+  Wed Sep  5 14:55:53 2007 JSCHNEID/DBIx-ORM-Declarative-0.20.tar.gz
+  Wed Sep  5 14:48:06 2007 YAPPO/Class-Component-0.06.tar.gz
+  Wed Sep  5 14:25:13 2007 TBUSCH/Text-Scan-0.29.tar.gz
+
+
+	Here is still one of the broken bs file:
+
+-rw-rw-rw- 23942 sand sand 2217 Sep  6 22:09 /home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/lib/5.8.8/i686-linux-thread-multi-64int/auto/File/Glob/Glob.bs
+
+	And I find 163 identical *.bs files scattered all over the place with
+	the same timestamp. And they all start with
+
+/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/lib/site_perl/5.8.3/i686-linux-thread-multi-64int/Data/Dump/Streamer.pm
+/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/lib/site_perl/5.8.3/i686-linux-thread-multi-64int/Data/Dump/Streamer/_/Printers.pm
+/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/lib/site_perl/5.8.3/i686-linux-thread-multi-64int/auto/Data/Dump/Streamer/Streamer.bs
+/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/lib/site_perl/5.8.3/i686-linux-thread-multi-64int/auto/Data/Dump/Streamer/Streamer.so
+/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/man/man3/Data::Dump::Streamer.3
+/home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/lib/site_perl/5.8.8/i686-linux-thread-multi-64int/Data/Dump/Streamer.pm
+/home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/lib/site_perl/5.8.8/i686-linux-thread-multi-64int/Data/Dump/Streamer/_/Printers.pm
+/home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/lib/site_perl/5.8.8/i686-linux-thread-multi-64int/auto/Data/Dump/Streamer/Streamer.bs
+/home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/lib/site_perl/5.8.8/i686-linux-thread-multi-64int/auto/Data/Dump/Streamer/Streamer.so
+[...]
+
+	What was smoking with 31223 at 22:09? I just searched for my reports on
+	rpm-build-perl on http://www.nntp.perl.org/group/perl.cpan.testers/ and
+	they seem to be fine.
+
+	In my eyes there is only one candidate at the moment: DDS.
+
+	In the meantime Max Maischain (CORION) complained as well.
+
+	
 2007-09-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Something broke my parser for the output of the test runs.

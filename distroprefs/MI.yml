@@ -54,6 +54,7 @@ match:
     |FLORA/Catalyst-View-Mason-\d
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
+    |GAAL/Class-Accessor-Ref-\d
     |GAAL/Class-Rebless-\d
     |GAAL/Task-Smoke-\d
     |GRODITI/MooseX-Object-Pluggable-\d
