@@ -539,7 +539,7 @@ sub init {
     CPAN->debug("matcher[$matcher]") if $CPAN::DEBUG;
 
     unless ($CPAN::VERSION) {
-	require CPAN::Nox;
+        require CPAN::Nox;
     }
     require CPAN::HandleConfig;
     CPAN::HandleConfig::require_myconfig_or_config();
@@ -573,43 +573,43 @@ sub init {
     CPAN->debug("manual_conf[$manual_conf]") if $CPAN::DEBUG;
     my $fastread;
     {
-      if ($manual_conf =~ /^y/i) {
-	$fastread = 0;
-      } else {
-	$fastread = 1;
-	$CPAN::Config->{urllist} ||= [];
+        if ($manual_conf =~ /^y/i) {
+            $fastread = 0;
+        } else {
+            $fastread = 1;
+            $CPAN::Config->{urllist} ||= [];
 
-        local $^W = 0;
-	# prototype should match that of &MakeMaker::prompt
-        my $current_second = time;
-        my $current_second_count = 0;
-        my $i_am_mad = 0;
-	*_real_prompt = sub {
-	  my($q,$a) = @_;
-	  my($ret) = defined $a ? $a : "";
-	  $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
-          eval { require Time::HiRes };
-          unless ($@) {
-              if (time == $current_second) {
-                  $current_second_count++;
-                  if ($current_second_count > 20) {
-                      # I don't like more than 20 prompts per second
-                      $i_am_mad++;
-                  }
-              } else {
-                  $current_second = time;
-                  $current_second_count = 0;
-                  $i_am_mad-- if $i_am_mad>0;
-              }
-              if ($i_am_mad>0){
-                  #require Carp;
-                  #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
-                  Time::HiRes::sleep(0.1);
-              }
-          }
-	  $ret;
-	};
-      }
+            local $^W = 0;
+            # prototype should match that of &MakeMaker::prompt
+            my $current_second = time;
+            my $current_second_count = 0;
+            my $i_am_mad = 0;
+            *_real_prompt = sub {
+                my($q,$a) = @_;
+                my($ret) = defined $a ? $a : "";
+                $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
+                eval { require Time::HiRes };
+                unless ($@) {
+                    if (time == $current_second) {
+                        $current_second_count++;
+                        if ($current_second_count > 20) {
+                            # I don't like more than 20 prompts per second
+                            $i_am_mad++;
+                        }
+                    } else {
+                        $current_second = time;
+                        $current_second_count = 0;
+                        $i_am_mad-- if $i_am_mad>0;
+                    }
+                    if ($i_am_mad>0){
+                        #require Carp;
+                        #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
+                        Time::HiRes::sleep(0.1);
+                    }
+                }
+                $ret;
+            };
+        }
     }
 
     if (!$matcher or q{
@@ -768,7 +768,7 @@ Shall we use it as the general CPAN build and cache directory?
     if (!$matcher or 'test_report' =~ /$matcher/) {
         my_yn_prompt(test_report => 0, $matcher);
         if (
-            $CPAN::Config->{test_report} && 
+            $CPAN::Config->{test_report} &&
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
            ) {
@@ -825,7 +825,7 @@ Shall we use it as the general CPAN build and cache directory?
                 $CPAN::Config->{$progname} = 'not_here';
                 next;
             }
-            
+
             my $progcall = $progname;
             unless ($matcher) {
                 # we really don't need ncftp if we have ncftpget, but
@@ -883,8 +883,8 @@ substitute. You can then revisit this dialog with
     }
 
     if (!$matcher or 'pager' =~ /$matcher/) {
-        my $path = $CPAN::Config->{'pager'} || 
-            $ENV{PAGER} || find_exe("less",\@path) || 
+        my $path = $CPAN::Config->{'pager'} ||
+            $ENV{PAGER} || find_exe("less",\@path) ||
                 find_exe("more",\@path) || ($^O eq 'MacOS' ? $ENV{EDITOR} : 0 )
                     || "more";
         my_dflt_prompt(pager => $path, $matcher);
@@ -902,7 +902,7 @@ substitute. You can then revisit this dialog with
         if ($^O eq 'MacOS') {
             $CPAN::Config->{'shell'} = 'not_here';
         } else {
-            $path =~ s,\\,/,g if $^O eq 'os2';	# Cosmetic only
+            $path =~ s,\\,/,g if $^O eq 'os2'; # Cosmetic only
             my_dflt_prompt(shell => $path, $matcher);
         }
     }
@@ -944,8 +944,8 @@ substitute. You can then revisit this dialog with
                        $matcher);
     }
 
-    my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "", 
-		   $matcher);
+    my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "",
+                   $matcher);
 
     my_dflt_prompt(mbuildpl_arg => "", $matcher);
     my_dflt_prompt(mbuild_arg => "", $matcher);
@@ -1029,7 +1029,7 @@ substitute. You can then revisit this dialog with
             if ($CPAN::META->has_inst("Term::ANSIColor")) {
                 my $T="gYw";
                 print "                                      on_  on_y ".
-                    "        on_ma           on_\n"; 
+                    "        on_ma           on_\n";
                 print "                   on_black on_red  green ellow ".
                     "on_blue genta on_cyan white\n";
 
@@ -1147,10 +1147,10 @@ sub my_dflt_prompt {
             $CPAN::Frontend->myprint($intro);
         }
         $CPAN::Frontend->myprint(" <$item>\n");
-	$CPAN::Config->{$item} = prompt($prompts{$item}, $default);
+        $CPAN::Config->{$item} = prompt($prompts{$item}, $default);
         print "\n";
     } else {
-	$CPAN::Config->{$item} = $default;
+        $CPAN::Config->{$item} = $default;
     }
 }
 
@@ -1165,11 +1165,11 @@ sub my_yn_prompt {
             $CPAN::Frontend->myprint($intro);
         }
         $CPAN::Frontend->myprint(" <$item>\n");
-	my $ans = prompt($prompts{$item}, $default ? 'yes' : 'no');
+        my $ans = prompt($prompts{$item}, $default ? 'yes' : 'no');
         $CPAN::Config->{$item} = ($ans =~ /^[y1]/i ? 1 : 0);
         print "\n";
     } else {
-	$CPAN::Config->{$item} = $default;
+        $CPAN::Config->{$item} = $default;
     }
 }
 
@@ -1182,63 +1182,63 @@ sub my_prompt_loop {
     if (!$m || $item =~ /$m/) {
         $CPAN::Frontend->myprint($prompts{$item . "_intro"});
         $CPAN::Frontend->myprint(" <$item>\n");
-	do { $ans = prompt($prompts{$item}, $default);
-	} until $ans =~ /$ok/;
-	$CPAN::Config->{$item} = $ans;
+        do { $ans = prompt($prompts{$item}, $default);
+        } until $ans =~ /$ok/;
+        $CPAN::Config->{$item} = $ans;
         print "\n";
     } else {
-	$CPAN::Config->{$item} = $default;
+        $CPAN::Config->{$item} = $default;
     }
 }
 
 
 sub conf_sites {
-  my $m = 'MIRRORED.BY';
-  my $mby = File::Spec->catfile($CPAN::Config->{keep_source_where},$m);
-  File::Path::mkpath(File::Basename::dirname($mby));
-  if (-f $mby && -f $m && -M $m < -M $mby) {
-    require File::Copy;
-    File::Copy::copy($m,$mby) or die "Could not update $mby: $!";
-  }
-  my $loopcount = 0;
-  local $^T = time;
-  my $overwrite_local = 0;
-  if ($mby && -f $mby && -M _ <= 60 && -s _ > 0) {
-      my $mtime = localtime((stat _)[9]);
-      my $prompt = qq{Found $mby as of $mtime
+    my $m = 'MIRRORED.BY';
+    my $mby = File::Spec->catfile($CPAN::Config->{keep_source_where},$m);
+    File::Path::mkpath(File::Basename::dirname($mby));
+    if (-f $mby && -f $m && -M $m < -M $mby) {
+        require File::Copy;
+        File::Copy::copy($m,$mby) or die "Could not update $mby: $!";
+    }
+    my $loopcount = 0;
+    local $^T = time;
+    my $overwrite_local = 0;
+    if ($mby && -f $mby && -M _ <= 60 && -s _ > 0) {
+        my $mtime = localtime((stat _)[9]);
+        my $prompt = qq{Found $mby as of $mtime
 
 I\'d use that as a database of CPAN sites. If that is OK for you,
 please answer 'y', but if you want me to get a new database now,
 please answer 'n' to the following question.
 
 Shall I use the local database in $mby?};
-      my $ans = prompt($prompt,"y");
-      $overwrite_local = 1 unless $ans =~ /^y/i;
-  }
-  while ($mby) {
-    if ($overwrite_local) {
-      $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
-      $mby = CPAN::FTP->localize($m,$mby,3);
-      $overwrite_local = 0;
-    } elsif ( ! -f $mby ){
-      $CPAN::Frontend->myprint(qq{You have no $mby\n  I\'m trying to fetch one\n});
-      $mby = CPAN::FTP->localize($m,$mby,3);
-    } elsif (-M $mby > 60 && $loopcount == 0) {
-        $CPAN::Frontend->myprint(qq{Your $mby is older than 60 days,\n  I\'m trying }.
-                                 qq{to fetch one\n});
-        $mby = CPAN::FTP->localize($m,$mby,3);
-        $loopcount++;
-    } elsif (-s $mby == 0) {
-      $CPAN::Frontend->myprint(qq{You have an empty $mby,\n  I\'m trying to fetch one\n});
-      $mby = CPAN::FTP->localize($m,$mby,3);
-    } else {
-      last;
+        my $ans = prompt($prompt,"y");
+        $overwrite_local = 1 unless $ans =~ /^y/i;
     }
-  }
-  local $urllist = [];
-  read_mirrored_by($mby);
-  bring_your_own();
-  $CPAN::Config->{urllist} = $urllist;
+    while ($mby) {
+        if ($overwrite_local) {
+            $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
+            $mby = CPAN::FTP->localize($m,$mby,3);
+            $overwrite_local = 0;
+        } elsif ( ! -f $mby ){
+            $CPAN::Frontend->myprint(qq{You have no $mby\n  I\'m trying to fetch one\n});
+            $mby = CPAN::FTP->localize($m,$mby,3);
+        } elsif (-M $mby > 60 && $loopcount == 0) {
+            $CPAN::Frontend->myprint(qq{Your $mby is older than 60 days,\n  I\'m trying }.
+                                     qq{to fetch one\n});
+            $mby = CPAN::FTP->localize($m,$mby,3);
+            $loopcount++;
+        } elsif (-s $mby == 0) {
+            $CPAN::Frontend->myprint(qq{You have an empty $mby,\n  I\'m trying to fetch one\n});
+            $mby = CPAN::FTP->localize($m,$mby,3);
+        } else {
+            last;
+        }
+    }
+    local $urllist = [];
+    read_mirrored_by($mby);
+    bring_your_own();
+    $CPAN::Config->{urllist} = $urllist;
 }
 
 sub find_exe {
@@ -1246,10 +1246,10 @@ sub find_exe {
     my($dir);
     #warn "in find_exe exe[$exe] path[@$path]";
     for $dir (@$path) {
-	my $abs = File::Spec->catfile($dir,$exe);
-	if (($abs = MM->maybe_command($abs))) {
-	    return $abs;
-	}
+        my $abs = File::Spec->catfile($dir,$exe);
+        if (($abs = MM->maybe_command($abs))) {
+            return $abs;
+        }
     }
 }
 
@@ -1262,7 +1262,7 @@ sub picklist {
     my $pos = 0;
 
     my @nums;
-  SELECTION: while (1) {
+    SELECTION: while (1) {
 
         # display, at most, 15 items at a time
         my $limit = $#{ $items } - $pos;
@@ -1342,18 +1342,18 @@ sub read_mirrored_by {
     $fh->open($local) or die "Couldn't open $local: $!";
     local $/ = "\012";
     while (<$fh>) {
-	($host) = /^([\w\.\-]+)/ unless defined $host;
-	next unless defined $host;
-	next unless /\s+dst_(dst|location)/;
-	/location\s+=\s+\"([^\"]+)/ and @location = (split /\s*,\s*/, $1) and
-	    ($continent, $country) = @location[-1,-2];
-	$continent =~ s/\s\(.*//;
-	$continent =~ s/\W+$//; # if Jarkko doesn't know latitude/longitude
-	/dst_dst\s+=\s+\"([^\"]+)/  and $dst = $1;
-	next unless $host && $dst && $continent && $country;
-	$all{$continent}{$country}{$dst} = CPAN::Mirrored::By->new($continent,$country,$dst);
-	undef $host;
-	$dst=$continent=$country="";
+        ($host) = /^([\w\.\-]+)/ unless defined $host;
+        next unless defined $host;
+        next unless /\s+dst_(dst|location)/;
+        /location\s+=\s+\"([^\"]+)/ and @location = (split /\s*,\s*/, $1) and
+            ($continent, $country) = @location[-1,-2];
+        $continent =~ s/\s\(.*//;
+        $continent =~ s/\W+$//; # if Jarkko doesn't know latitude/longitude
+        /dst_dst\s+=\s+\"([^\"]+)/  and $dst = $1;
+        next unless $host && $dst && $continent && $country;
+        $all{$continent}{$country}{$dst} = CPAN::Mirrored::By->new($continent,$country,$dst);
+        undef $host;
+        $dst=$continent=$country="";
     }
     $fh->close;
     $CPAN::Config->{urllist} ||= [];
@@ -1426,12 +1426,12 @@ sub bring_your_own {
     my($ans,@urls);
     my $eacnt = 0; # empty answers
     do {
-	my $prompt = "Enter another URL or RETURN to quit:";
-	unless (%seen) {
-	    $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
+        my $prompt = "Enter another URL or RETURN to quit:";
+        unless (%seen) {
+            $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
 
 Please enter your CPAN site:};
-	}
+        }
         $ans = prompt ($prompt, "");
 
         if ($ans) {
@@ -1586,15 +1586,15 @@ be echoed to the terminal!
               );
 
 die "Coding error in \@prompts declaration.  Odd number of elements, above"
-  if (@prompts % 2);
+    if (@prompts % 2);
 
 %prompts = @prompts;
 
 if (scalar(keys %prompts) != scalar(@prompts)/2) {
     my %already;
     for my $item (0..$#prompts) {
-	next if $item % 2;
-	die "$prompts[$item] is duplicated\n" if $already{$prompts[$item]}++;
+        next if $item % 2;
+        die "$prompts[$item] is duplicated\n" if $already{$prompts[$item]}++;
     }
 }
 
