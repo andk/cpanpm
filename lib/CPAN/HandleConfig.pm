@@ -415,7 +415,7 @@ else: quote it with the correct quote type for the box we're on
     my ($quotes,$use_quote)
         = $^O eq 'MSWin32'
             ? ('"', '"')
-                : (q<"'>, "'")
+                : (q{"'}, "'")
                     ;
 
     sub safe_quote {
