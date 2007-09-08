@@ -55,7 +55,7 @@ sub gzip {
         my $gz = Compress::Zlib::gzopen($write, "wb")
             or $CPAN::Frontend->mydie("Cannot gzopen $write: $! (pwd is $cwd)\n");
         $gz->gzwrite($buffer)
-        while read($fhw,$buffer,4096) > 0 ;
+            while read($fhw,$buffer,4096) > 0 ;
         $gz->gzclose() ;
         $fhw->close;
         return 1;
