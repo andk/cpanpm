@@ -444,7 +444,7 @@ sub init {
 # maintainability.  RMB
 #
 sub _configpmtest {
-    my($configpmdir, $configpmtest) = @_; 
+    my($configpmdir, $configpmtest) = @_;
     if (-w $configpmtest) {
         return $configpmtest;
     } elsif (-w $configpmdir) {
