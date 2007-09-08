@@ -2327,7 +2327,7 @@ sub recompile {
                             # don't do it twice
         $cpan_file = $module->cpan_file;
         my $pack = $CPAN::META->instance('CPAN::Distribution',$cpan_file);
-        $pack->force; # 
+        $pack->force;
         $dist{$cpan_file}++;
     }
     for $cpan_file (sort keys %dist) {
@@ -3985,7 +3985,7 @@ sub localize {
     }
     @levels = qw/dleasy/ if $^O eq 'MacOS';
     my($levelno);
-    local $ENV{FTP_PASSIVE} = 
+    local $ENV{FTP_PASSIVE} =
         exists $CPAN::Config->{ftp_passive} ?
         $CPAN::Config->{ftp_passive} : 1;
     my $ret;
@@ -4291,7 +4291,7 @@ sub hostdlhard {
 
         $self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
 
-        # Try the most capable first and leave ncftp* for last as it only 
+        # Try the most capable first and leave ncftp* for last as it only
         # does FTP.
         DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
             my $funkyftp = CPAN::HandleConfig->safe_quote($CPAN::Config->{$f});
@@ -6890,9 +6890,9 @@ sub cvs_import {
 
     my $cvs_dir = (split /\//, $dir)[-1];
     $cvs_dir =~ s/-\d+[^-]+(?!\n)\Z//;
-    my $cvs_root = 
+    my $cvs_root =
       $CPAN::Config->{cvsroot} || $ENV{CVSROOT};
-    my $cvs_site_perl = 
+    my $cvs_site_perl =
       $CPAN::Config->{cvs_site_perl} || $ENV{CVS_SITE_PERL};
     if ($cvs_site_perl) {
         $cvs_dir = "$cvs_site_perl/$cvs_dir";
@@ -7549,7 +7549,7 @@ is part of the perl-%s distribution. To install that, you need to run
             }
         } else {
             if (my $expect_model = $self->_prefs_with_expect("pl")) {
-                # XXX probably want to check _should_report here and warn 
+                # XXX probably want to check _should_report here and warn
                 # about not being able to use CPAN::Reporter with expect
                 $ret = $self->_run_via_expect($system,$expect_model);
                 if (! defined $ret
@@ -7558,7 +7558,7 @@ is part of the perl-%s distribution. To install that, you need to run
                     # timeout
                     return;
                 }
-            } 
+            }
             elsif ( $self->_should_report('pl') ) {
                 ($output, $ret) = CPAN::Reporter::record_command($system);
                 CPAN::Reporter::grade_PL( $self, $system, $output, $ret );
@@ -7653,10 +7653,10 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     my $system_ok;
     if ($want_expect) {
-        # XXX probably want to check _should_report here and 
+        # XXX probably want to check _should_report here and
         # warn about not being able to use CPAN::Reporter with expect
         $system_ok = $self->_run_via_expect($system,$expect_model) == 0;
-    } 
+    }
     elsif ( $self->_should_report('make') ) {
         my ($output, $ret) = CPAN::Reporter::record_command($system);
         CPAN::Reporter::grade_make( $self, $system, $output, $ret );
@@ -9204,14 +9204,14 @@ sub _should_report {
     my($self, $phase) = @_;
     die "_should_report() requires a 'phase' argument"
         if ! defined $phase;
-    
+
     # configured
     my $test_report = CPAN::HandleConfig->prefs_lookup($self,
                                                        q{test_report});
     return unless $test_report;
 
     # don't repeat if we cached a result
-    return $self->{should_report} 
+    return $self->{should_report}
         if exists $self->{should_report};
 
     # available
@@ -9223,7 +9223,7 @@ sub _should_report {
     }
 
     # capable
-    my $crv = CPAN::Reporter->VERSION; 
+    my $crv = CPAN::Reporter->VERSION;
     if ( CPAN::Version->vlt( $crv, 0.99 ) ) {
         # don't cache $self->{should_report} -- need to check each phase
         if ( $phase eq 'test' ) {
@@ -9231,7 +9231,7 @@ sub _should_report {
         }
         else {
             $CPAN::Frontend->mywarn(
-                "Reporting on the '$phase' phase requires CPAN::Reporter 0.99, but \n" . 
+                "Reporting on the '$phase' phase requires CPAN::Reporter 0.99, but \n" .
                 "you only have version $crv\.  Only 'test' phase reports will be sent.\n"
             );
             return;
