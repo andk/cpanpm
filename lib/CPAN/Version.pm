@@ -159,5 +159,5 @@ modify it under the same terms as Perl itself.
 
 # Local Variables:
 # mode: cperl
-# cperl-indent-level: 2
+# cperl-indent-level: 4
 # End:

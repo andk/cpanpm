@@ -1,4 +1,4 @@
-# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 2 -*-
+# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 package CPAN::Tarzip;
 use strict;
 use vars qw($VERSION @ISA $BUGHUNTING);
