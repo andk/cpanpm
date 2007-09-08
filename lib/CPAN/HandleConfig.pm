@@ -188,7 +188,7 @@ sub edit {
             # HASHES
             #
 
-            if (@args==1 && $args[0] eq ""){
+            if (@args==1 && $args[0] eq "") {
                 @args = ();
             } elsif (@args % 2) {
                 push @args, "";
@@ -201,7 +201,7 @@ sub edit {
             # SCALARS
             #
 
-            if (defined $args[0]){
+            if (defined $args[0]) {
                 $CPAN::CONFIG_DIRTY = 1;
                 $CPAN::Config->{$o} = $args[0];
                 $changed = 1;
@@ -271,7 +271,7 @@ sub commit {
         $configpm = $args[0];
       }
     }
-    unless (defined $configpm){
+    unless (defined $configpm) {
         $configpm ||= $INC{"CPAN/MyConfig.pm"};
         $configpm ||= $INC{"CPAN/Config.pm"};
         $configpm || Carp::confess(q{
@@ -334,7 +334,7 @@ sub neatvalue {
     my($self, $v) = @_;
     return "undef" unless defined $v;
     my($t) = ref $v;
-    unless ($t){
+    unless ($t) {
         $v =~ s/\\/\\\\/g;
         return "q[$v]";
     }
@@ -350,7 +350,7 @@ sub neatvalue {
     }
     return "$v" unless $t eq 'HASH';
     my(@m, $key, $val);
-    while (($key,$val) = each %$v){
+    while (($key,$val) = each %$v) {
         last unless defined $key; # cautious programming in case (undef,undef) is true
         push(@m,"q[$key]=>".$self->neatvalue($val)) ;
     }
@@ -551,7 +551,7 @@ sub load {
 
     }
     local($") = ", ";
-    if ($redo && !$doit){
+    if ($redo && !$doit) {
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 some missing parameters...

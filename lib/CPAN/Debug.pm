@@ -48,7 +48,7 @@ sub debug {
         last if ++$i>=3;
     }
     pop @caller;
-    if ($CPAN::DEBUG{$caller[0][0]} & $CPAN::DEBUG){
+    if ($CPAN::DEBUG{$caller[0][0]} & $CPAN::DEBUG) {
         if ($arg and ref $arg) {
             eval { require Data::Dumper };
             if ($@) {

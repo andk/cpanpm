@@ -17,7 +17,7 @@ sub shell {
 
 sub CPAN::Shell::register {
     my($self,$mod,@rest) = @_;
-    unless ($mod){
+    unless ($mod) {
         print "register called without argument\n";
         return;
     }
@@ -62,7 +62,7 @@ sub CPAN::Shell::register {
     my $rootns = $namespace[0];
 
     # Tk, XML and Apache need special treatment
-    if ($rootns=~/^(Bundle)\b/){
+    if ($rootns=~/^(Bundle)\b/) {
         print "Bundles are not yet ready for registering\n";
         return;
     }
@@ -154,7 +154,7 @@ sub CPAN::Shell::register {
 
 sub CPAN::Shell::modsearch {
     my($self,@line) = @_;
-    unless (@line){
+    unless (@line) {
         print "modsearch called without argument\n";
         return;
     }

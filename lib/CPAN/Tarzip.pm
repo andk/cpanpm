@@ -110,7 +110,7 @@ sub gtest {
         }
         my $err = $gz->gzerror;
         $success = ! $err || $err == Compress::Zlib::Z_STREAM_END();
-        if ($len == -s $read){
+        if ($len == -s $read) {
             $success = 0;
             CPAN->debug("hit an uncompressed file") if $CPAN::DEBUG;
         }
@@ -202,7 +202,7 @@ sub untar {
     my($prefer) = 0;
 
     if (0) { # makes changing order easier
-    } elsif ($BUGHUNTING){
+    } elsif ($BUGHUNTING) {
         $prefer=2;
     } elsif (MM->maybe_command($self->{UNGZIPPRG})
              &&

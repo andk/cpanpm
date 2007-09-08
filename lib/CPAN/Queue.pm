@@ -129,7 +129,7 @@ sub jumpqueue {
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
             # CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
-            if ($All[$i]{qmod} eq $what){
+            if ($All[$i]{qmod} eq $what) {
                 $jumped++;
                 if ($jumped >= 50) {
                     die "PANIC: object[$what] 50 instances on the queue, looks like ".

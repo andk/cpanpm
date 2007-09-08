@@ -601,7 +601,7 @@ sub init {
                         $current_second_count = 0;
                         $i_am_mad-- if $i_am_mad>0;
                     }
-                    if ($i_am_mad>0){
+                    if ($i_am_mad>0) {
                         #require Carp;
                         #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
                         Time::HiRes::sleep(0.1);
@@ -618,7 +618,7 @@ sub init {
                        cpan_home
                        keep_source_where
                        prefs_dir
-                      } =~ /$matcher/){
+                      } =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{config_intro});
 
         if (!$matcher or 'cpan_home' =~ /$matcher/) {
@@ -721,7 +721,7 @@ Shall we use it as the general CPAN build and cache directory?
     #= Cache size, Index expire
     #
 
-    if (!$matcher or 'build_cache' =~ /$matcher/){
+    if (!$matcher or 'build_cache' =~ /$matcher/) {
         # large enough to build large dists like Tk
         my_dflt_prompt(build_cache => 100, $matcher);
     }
@@ -730,7 +730,7 @@ Shall we use it as the general CPAN build and cache directory?
         my_dflt_prompt(index_expire => 1, $matcher);
     }
 
-    if (!$matcher or 'scan_cache' =~ /$matcher/){
+    if (!$matcher or 'scan_cache' =~ /$matcher/) {
         my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
     }
 
@@ -745,12 +745,12 @@ Shall we use it as the general CPAN build and cache directory?
     #= Do we follow PREREQ_PM?
     #
 
-    if (!$matcher or 'prerequisites_policy' =~ /$matcher/){
+    if (!$matcher or 'prerequisites_policy' =~ /$matcher/) {
         my_prompt_loop(prerequisites_policy => 'ask', $matcher,
                        'follow|ask|ignore');
     }
 
-    if (!$matcher or 'build_requires_install_policy' =~ /$matcher/){
+    if (!$matcher or 'build_requires_install_policy' =~ /$matcher/) {
         my_prompt_loop(build_requires_install_policy => 'ask/yes', $matcher,
                        'yes|no|ask/yes|ask/no');
     }
@@ -852,7 +852,7 @@ Shall we use it as the general CPAN build and cache directory?
             }
 
             $path ||= find_exe($progcall,\@path);
-            unless ($path){ # not -e $path, because find_exe already checked that
+            unless ($path) { # not -e $path, because find_exe already checked that
                 local $"=";";
                 $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@path]\n");
                 if ($progname eq "make") {
@@ -927,11 +927,11 @@ substitute. You can then revisit this dialog with
     #= Installer, arguments to make etc.
     #
 
-    if (!$matcher or 'prefer_installer' =~ /$matcher/){
+    if (!$matcher or 'prefer_installer' =~ /$matcher/) {
         my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
     }
 
-    if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/){
+    if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
         my_dflt_prompt(makepl_arg => "", $matcher);
         my_dflt_prompt(make_arg => "", $matcher);
     }
@@ -970,7 +970,7 @@ substitute. You can then revisit this dialog with
 
     my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
     my @proxy_user_vars = qw/proxy_user proxy_pass/;
-    if (!$matcher or "@proxy_vars @proxy_user_vars" =~ /$matcher/){
+    if (!$matcher or "@proxy_vars @proxy_user_vars" =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{proxy_intro});
 
         for (@proxy_vars) {
@@ -1012,7 +1012,7 @@ substitute. You can then revisit this dialog with
     #= how cwd works
     #
 
-    if (!$matcher or 'getcwd' =~ /$matcher/){
+    if (!$matcher or 'getcwd' =~ /$matcher/) {
         my_prompt_loop(getcwd => 'cwd', $matcher,
                        'cwd|getcwd|fastcwd|backtickcwd');
     }
@@ -1037,10 +1037,10 @@ substitute. You can then revisit this dialog with
                             map {$_,"bold $_"} "black","red","green",
                             "yellow","blue",
                             "magenta",
-                            "cyan","white"){
+                            "cyan","white") {
                     printf "%12s ", $FG;
                     for my $BG ("",map {"on_$_"} qw(black red green yellow
-                                                    blue magenta cyan white)){
+                                                    blue magenta cyan white)) {
                         print $FG||$BG ?
                             Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
                     }
@@ -1069,7 +1069,7 @@ substitute. You can then revisit this dialog with
     #== term_is_latin
     #
 
-    if (!$matcher or 'term_is_latin' =~ /$matcher/){
+    if (!$matcher or 'term_is_latin' =~ /$matcher/) {
         my_yn_prompt(term_is_latin => 1, $matcher);
     }
 
@@ -1110,7 +1110,7 @@ substitute. You can then revisit this dialog with
     #= MIRRORED.BY and conf_sites()
     #
 
-    if ($matcher){
+    if ($matcher) {
         if ("urllist" =~ $matcher) {
             # conf_sites would go into endless loop with the smash prompt
             local *_real_prompt;
@@ -1220,7 +1220,7 @@ Shall I use the local database in $mby?};
             $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
             $mby = CPAN::FTP->localize($m,$mby,3);
             $overwrite_local = 0;
-        } elsif ( ! -f $mby ){
+        } elsif ( ! -f $mby ) {
             $CPAN::Frontend->myprint(qq{You have no $mby\n  I\'m trying to fetch one\n});
             $mby = CPAN::FTP->localize($m,$mby,3);
         } elsif (-M $mby > 60 && $loopcount == 0) {
@@ -1281,7 +1281,7 @@ sub picklist {
         }
         my $i = scalar @$items;
         unrangify(\@nums);
-        if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)){
+        if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)) {
             $CPAN::Frontend->mywarn("invalid items entered, try again\n");
             if ("@nums" =~ /\D/) {
                 $CPAN::Frontend->mywarn("(we are expecting only numbers between 1 and $i)\n");
