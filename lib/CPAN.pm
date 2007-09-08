@@ -1189,8 +1189,8 @@ sub find_perl {
 
     unless ($perl) {
         my ($component,$perl_name);
-        DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
-            PATH_COMPONENT: foreach $component (File::Spec->path(),
+      DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
+          PATH_COMPONENT: foreach $component (File::Spec->path(),
                                                 $Config::Config{'binexp'}) {
                 next unless defined($component) && $component;
                 my($abs) = File::Spec->catfile($component,$perl_name);
@@ -4272,7 +4272,7 @@ sub hostdlhard {
     # < /dev/null ";
     my($aslocal_dir) = File::Basename::dirname($aslocal);
     File::Path::mkpath($aslocal_dir);
-    HOSTHARD: for $ro_url (@$host_seq) {
+  HOSTHARD: for $ro_url (@$host_seq) {
         $self->_set_attempt($stats,"dlhard",$ro_url);
         my $url = "$ro_url$file";
         my($proto,$host,$dir,$getfile);
@@ -4293,7 +4293,7 @@ sub hostdlhard {
 
         # Try the most capable first and leave ncftp* for last as it only
         # does FTP.
-        DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
+      DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
             my $funkyftp = CPAN::HandleConfig->safe_quote($CPAN::Config->{$f});
             next unless defined $funkyftp;
             next if $funkyftp =~ /^\s*$/;
@@ -4437,7 +4437,7 @@ config variable with
 
 });
     $CPAN::Frontend->mysleep(2);
-    HOSTHARDEST: for $ro_url (@$host_seq) {
+  HOSTHARDEST: for $ro_url (@$host_seq) {
         $self->_set_attempt($stats,"dlhardest",$ro_url);
         my $url = "$ro_url$file";
         $self->debug("localizing ftpwise[$url]") if $CPAN::DEBUG;
@@ -4646,9 +4646,9 @@ sub new {
     if($fh->open($file)){
         $protected = ($mode & 077) == 0;
         local($/) = "";
-        NETRC: while (<$fh>) {
+      NETRC: while (<$fh>) {
             my(@tokens) = split " ", $_;
-            TOKEN: while (@tokens) {
+          TOKEN: while (@tokens) {
                 my($t) = shift @tokens;
                 if ($t eq "default"){
                     $hasdefault++;

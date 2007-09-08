@@ -1262,7 +1262,7 @@ sub picklist {
     my $pos = 0;
 
     my @nums;
-    SELECTION: while (1) {
+  SELECTION: while (1) {
 
         # display, at most, 15 items at a time
         my $limit = $#{ $items } - $pos;
