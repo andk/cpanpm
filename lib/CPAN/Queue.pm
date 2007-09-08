@@ -4,20 +4,20 @@ package CPAN::Queue::Item;
 
 # CPAN::Queue::Item::new ;
 sub new {
-  my($class,@attr) = @_;
-  my $self = bless { @attr }, $class;
-  return $self;
+    my($class,@attr) = @_;
+    my $self = bless { @attr }, $class;
+    return $self;
 }
 
 sub as_string {
-  my($self) = @_;
-  $self->{qmod};
+    my($self) = @_;
+    $self->{qmod};
 }
 
 # r => requires, b => build_requires, c => commandline
 sub reqtype {
-  my($self) = @_;
-  $self->{reqtype};
+    my($self) = @_;
+    $self->{reqtype};
 }
 
 package CPAN::Queue;
@@ -71,37 +71,37 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 
 # CPAN::Queue::queue_item ;
 sub queue_item {
-  my($class,@attr) = @_;
-  my $item = "$class\::Item"->new(@attr);
-  $class->qpush($item);
-  return 1;
+    my($class,@attr) = @_;
+    my $item = "$class\::Item"->new(@attr);
+    $class->qpush($item);
+    return 1;
 }
 
 # CPAN::Queue::qpush ;
 sub qpush {
-  my($class,$obj) = @_;
-  push @All, $obj;
-  CPAN->debug(sprintf("in new All[%s]",
-                      join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
-                     )) if $CPAN::DEBUG;
+    my($class,$obj) = @_;
+    push @All, $obj;
+    CPAN->debug(sprintf("in new All[%s]",
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
+                       )) if $CPAN::DEBUG;
 }
 
 # CPAN::Queue::first ;
 sub first {
-  my $obj = $All[0];
-  $obj;
+    my $obj = $All[0];
+    $obj;
 }
 
 # CPAN::Queue::delete_first ;
 sub delete_first {
-  my($class,$what) = @_;
-  my $i;
-  for my $i (0..$#All) {
-    if (  $All[$i]->{qmod} eq $what ) {
-      splice @All, $i, 1;
-      return;
+    my($class,$what) = @_;
+    my $i;
+    for my $i (0..$#All) {
+        if (  $All[$i]->{qmod} eq $what ) {
+            splice @All, $i, 1;
+            return;
+        }
     }
-  }
 }
 
 # CPAN::Queue::jumpqueue ;
@@ -116,9 +116,9 @@ sub jumpqueue {
         # apparently it was not the Shell that sent us this enquiry,
         # treat it as commandline
         $what[0]{reqtype} = "c";
-     }
+    }
     my $inherit_reqtype = $what[0]{reqtype} =~ /^(c|r)$/ ? "r" : "b";
-  WHAT: for my $what_tuple (@what) {
+    WHAT: for my $what_tuple (@what) {
         my($what,$reqtype) = @$what_tuple{qw(qmod reqtype)};
         if ($reqtype eq "r"
             &&
@@ -140,7 +140,7 @@ sub jumpqueue {
                     my $sleep = sprintf "%.1f", $jumped/10;
                     $CPAN::Frontend->mywarn(
 qq{Warning: Object [$what] queued $jumped times, sleeping $sleep secs!\n}
-				 );
+                    );
                     $CPAN::Frontend->mysleep($sleep);
                     # next WHAT;
                 }
@@ -159,26 +159,26 @@ qq{Warning: Object [$what] queued $jumped times, sleeping $sleep secs!\n}
 
 # CPAN::Queue::exists ;
 sub exists {
-  my($self,$what) = @_;
-  my @all = map { $_->{qmod} } @All;
-  my $exists = grep { $_->{qmod} eq $what } @All;
-  # warn "in exists what[$what] all[@all] exists[$exists]";
-  $exists;
+    my($self,$what) = @_;
+    my @all = map { $_->{qmod} } @All;
+    my $exists = grep { $_->{qmod} eq $what } @All;
+    # warn "in exists what[$what] all[@all] exists[$exists]";
+    $exists;
 }
 
 # CPAN::Queue::delete ;
 sub delete {
-  my($self,$mod) = @_;
-  @All = grep { $_->{qmod} ne $mod } @All;
-  CPAN->debug(sprintf("after delete mod[%s] All[%s]",
-                      $mod,
-                      join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
-                     )) if $CPAN::DEBUG;
+    my($self,$mod) = @_;
+    @All = grep { $_->{qmod} ne $mod } @All;
+    CPAN->debug(sprintf("after delete mod[%s] All[%s]",
+                        $mod,
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
+                       )) if $CPAN::DEBUG;
 }
 
 # CPAN::Queue::nullify_queue ;
 sub nullify_queue {
-  @All = ();
+    @All = ();
 }
 
 1;
