@@ -125,8 +125,8 @@ sub edit {
     $o = shift @args;
     $DB::single = 1;
     if($can{$o}) {
-	$self->$o(args => \@args); # o conf init => sub init => sub load
-	return 1;
+        $self->$o(args => \@args); # o conf init => sub init => sub load
+        return 1;
     } else {
         CPAN->debug("o[$o]") if $CPAN::DEBUG;
         unless (exists $keys{$o}) {
@@ -137,40 +137,40 @@ sub edit {
 
         # one day I used randomize_urllist for a boolean, so we must
         # list them explicitly --ak
-	if (0) {
+        if (0) {
         } elsif ($o =~ /^(wait_list|urllist|dontload_list)$/) {
 
             #
             # ARRAYS
             #
 
-	    $func = shift @args;
-	    $func ||= "";
+            $func = shift @args;
+            $func ||= "";
             CPAN->debug("func[$func]args[@args]") if $CPAN::DEBUG;
-	    # Let's avoid eval, it's easier to comprehend without.
-	    if ($func eq "push") {
-		push @{$CPAN::Config->{$o}}, @args;
+            # Let's avoid eval, it's easier to comprehend without.
+            if ($func eq "push") {
+                push @{$CPAN::Config->{$o}}, @args;
                 $changed = 1;
-	    } elsif ($func eq "pop") {
-		pop @{$CPAN::Config->{$o}};
+            } elsif ($func eq "pop") {
+                pop @{$CPAN::Config->{$o}};
                 $changed = 1;
-	    } elsif ($func eq "shift") {
-		shift @{$CPAN::Config->{$o}};
+            } elsif ($func eq "shift") {
+                shift @{$CPAN::Config->{$o}};
                 $changed = 1;
-	    } elsif ($func eq "unshift") {
-		unshift @{$CPAN::Config->{$o}}, @args;
+            } elsif ($func eq "unshift") {
+                unshift @{$CPAN::Config->{$o}}, @args;
                 $changed = 1;
-	    } elsif ($func eq "splice") {
+            } elsif ($func eq "splice") {
                 my $offset = shift @args || 0;
                 my $length = shift @args || 0;
-		splice @{$CPAN::Config->{$o}}, $offset, $length, @args; # may warn
+                splice @{$CPAN::Config->{$o}}, $offset, $length, @args; # may warn
                 $changed = 1;
-	    } elsif ($func) {
-		$CPAN::Config->{$o} = [$func, @args];
+            } elsif ($func) {
+                $CPAN::Config->{$o} = [$func, @args];
                 $changed = 1;
-	    } else {
+            } else {
                 $self->prettyprint($o);
-	    }
+            }
             if ($changed) {
                 if ($o eq "urllist") {
                     # reset the cached values
@@ -206,9 +206,9 @@ sub edit {
                 $CPAN::Config->{$o} = $args[0];
                 $changed = 1;
             }
-	    $self->prettyprint($o)
+            $self->prettyprint($o)
                 if exists $keys{$o} or defined $CPAN::Config->{$o};
-	}
+        }
         if ($changed) {
             if ($CPAN::Config->{auto_commit}) {
                 $self->commit;
@@ -272,9 +272,9 @@ sub commit {
       }
     }
     unless (defined $configpm){
-	$configpm ||= $INC{"CPAN/MyConfig.pm"};
-	$configpm ||= $INC{"CPAN/Config.pm"};
-	$configpm || Carp::confess(q{
+        $configpm ||= $INC{"CPAN/MyConfig.pm"};
+        $configpm ||= $INC{"CPAN/Config.pm"};
+        $configpm || Carp::confess(q{
 CPAN::Config::commit called without an argument.
 Please specify a filename where to save the configuration or try
 "o conf init" to have an interactive course through configing.
@@ -282,10 +282,10 @@ Please specify a filename where to save the configuration or try
     }
     my($mode);
     if (-f $configpm) {
-	$mode = (stat $configpm)[2];
-	if ($mode && ! -w _) {
-	    Carp::confess("$configpm is not writable");
-	}
+        $mode = (stat $configpm)[2];
+        if ($mode && ! -w _) {
+            Carp::confess("$configpm is not writable");
+        }
     }
 
     my $msg;
@@ -309,11 +309,11 @@ EOF
             $CPAN::Frontend->mywarn("Unknown config variable '$_'\n");
             next;
         }
-	$fh->print(
-		   "  '$_' => ",
-		   $self->neatvalue($CPAN::Config->{$_}),
-		   ",\n"
-		  );
+        $fh->print(
+            "  '$_' => ",
+            $self->neatvalue($CPAN::Config->{$_}),
+            ",\n"
+        );
     }
 
     $fh->print("};\n1;\n__END__\n");
@@ -453,20 +453,20 @@ sub _configpmtest {
         unlink $configpm_bak if -f $configpm_bak;
         if( -f $configpmtest ) {
             if( rename $configpmtest, $configpm_bak ) {
-				$CPAN::Frontend->mywarn(<<END);
+                $CPAN::Frontend->mywarn(<<END);
 Old configuration file $configpmtest
     moved to $configpm_bak
 END
-	    }
-	}
-	my $fh = FileHandle->new;
-	if ($fh->open(">$configpmtest")) {
-	    $fh->print("1;\n");
-	    return $configpmtest;
-	} else {
-	    # Should never happen
-	    Carp::confess("Cannot open >$configpmtest");
-	}
+            }
+        }
+        my $fh = FileHandle->new;
+        if ($fh->open(">$configpmtest")) {
+            $fh->print("1;\n");
+            return $configpmtest;
+        } else {
+            # Should never happen
+            Carp::confess("Cannot open >$configpmtest");
+        }
     } else { return }
 }
 
@@ -520,27 +520,27 @@ sub load {
     my($configpm,$fh,$redo);
     $redo ||= "";
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
-	$configpm = $INC{"CPAN/Config.pm"};
-	$redo++;
+        $configpm = $INC{"CPAN/Config.pm"};
+        $redo++;
     } elsif (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
-	$configpm = $INC{"CPAN/MyConfig.pm"};
-	$redo++;
+        $configpm = $INC{"CPAN/MyConfig.pm"};
+        $redo++;
     } else {
-	my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
-	my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
-	my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
+        my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
+        my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
+        my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
         my $inc_key;
-	if (-d $configpmdir or File::Path::mkpath($configpmdir)) {
-	    $configpm = _configpmtest($configpmdir,$configpmtest);
+        if (-d $configpmdir or File::Path::mkpath($configpmdir)) {
+            $configpm = _configpmtest($configpmdir,$configpmtest);
             $inc_key = "CPAN/Config.pm";
-	}
-	unless ($configpm) {
-	    $configpmdir = File::Spec->catdir(home,".cpan","CPAN");
-	    File::Path::mkpath($configpmdir);
-	    $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
-	    $configpm = _configpmtest($configpmdir,$configpmtest);
+        }
+        unless ($configpm) {
+            $configpmdir = File::Spec->catdir(home,".cpan","CPAN");
+            File::Path::mkpath($configpmdir);
+            $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
+            $configpm = _configpmtest($configpmdir,$configpmtest);
             $inc_key = "CPAN/MyConfig.pm";
-	}
+        }
         if ($configpm) {
           $INC{$inc_key} = $configpm;
         } else {
@@ -597,7 +597,7 @@ sub missing_config_data {
          "urllist",
         ) {
         next unless exists $keys{$_};
-	push @miss, $_ unless defined $CPAN::Config->{$_};
+        push @miss, $_ unless defined $CPAN::Config->{$_};
     }
     return @miss;
 }
@@ -627,17 +627,17 @@ sub cpl {
     CPAN->debug("word[$word] line[$line] pos[$pos]") if $CPAN::DEBUG;
     my(@words) = split " ", substr($line,0,$pos+1);
     if (
-	defined($words[2])
-	and
+        defined($words[2])
+        and
         $words[2] =~ /list$/
         and
-	(
-	 @words == 3
-	 ||
-	 @words == 4 && length($word)
-	)
+        (
+        @words == 3
+        ||
+        @words == 4 && length($word)
+        )
        ) {
-	return grep /^\Q$word\E/, qw(splice shift unshift pop push);
+        return grep /^\Q$word\E/, qw(splice shift unshift pop push);
     } elsif (defined($words[2])
              and
              $words[2] eq "init"
@@ -647,9 +647,9 @@ sub cpl {
              ||
              @words >= 4 && length($word)
             )) {
-	return sort grep /^\Q$word\E/, keys %keys;
+        return sort grep /^\Q$word\E/, keys %keys;
     } elsif (@words >= 4) {
-	return ();
+        return ();
     }
     my %seen;
     my(@o_conf) =  sort grep { !$seen{$_}++ }
