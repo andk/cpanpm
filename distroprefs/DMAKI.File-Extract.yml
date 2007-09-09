@@ -1,0 +1,11 @@
+---
+match:
+  distribution: "^DMAKI/File-Extract-\d"
+pl:
+  eexpect:
+    mode: anyorder
+    talk:
+      - "\QKeep CAM::PDF in the dependency list?\E"
+      - "y\n"
+      - "\QKeep Spreadsheet::ParseExcel in the dependency list?\E"
+      - "y\n"

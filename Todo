@@ -1,3 +1,70 @@
+2007-09-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ooooops:
+
+   ----- The following addresses had permanent fatal errors -----
+<cpan-testers@perl.org>
+    (reason: 550 sorry, your envelope sender is in my badmailfrom list)
+
+	So my last 1842 reports have not been accepted by cpantesters:-(
+
+	* how do ~/.cpanreporter/history.db and ~/.cpanreporter/reports-sent.db sync?
+
+	* Todo/Bug: Alzabo-GUI-Mason runs into endless loops during its dialog with me.
+	Some directory doesn't exist, it says.
+
+2007-09-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* I just set prefer_installer=MB after @31806 finished. I promised that
+	on IRC#toolchain to ewilhelm, need to report after the next smoke.
+	Schwern made it a ticket:
+	http://rt.cpan.org/Ticket/Display.html?id=29235
+
+	* sorry for the German. This is a bugreport from Slaven decribing that
+	eexpect/anyorder is slower than necessary, sometimes annoyingly slow. I
+	confirm and we tried to hash out solutions.
+
+	>>>>> On 21 Jul 2007 16:01:21 +0200, Slaven Rezic <slaven@rezic.de> said:
+
+ >> > Lösungsvorschläge: der Output wird solange gesammelt, bis es einen
+ >> > Match gibt. Dann wird der Match ausgeführt und der bisherige Output
+ >> > weggeschmissen (aber was ist, wenn der Output auch schon was vom
+ >> > nächsten Match enthält?). Oder du baust aus allen Regexpes ein großes
+ >> > per "(" . join("|", grep { $i++%2==0 } @talk) . ")" und fütterst -re
+ >> > damit?
+ >> 
+ >> Noch gefaellt mir der Vorschlag nicht, aber ich glaube, wir kommen der
+ >> Sache naeher.
+
+  > Wieso eigentlich?
+
+Sorry, ich habe keinen wirklicher Grund, reines Bauchgefuehl, dass ich
+die Konsequenzen nicht ueberblicken kann.
+
+  > Der letzte Vorschlag könnte gut funktionieren, weil
+  > dadurch _run_via_expect_anyorder und _run_via_expect_deterministic
+  > ähnlicher werden: im ersten Fall gibt es einen Match gegen alle
+  > Patterns, im zweiten Fall einen Match gegen genau ein Pattern.
+
+Man sollte auch in Betracht ziehen, was einem Expect selbst fuer
+diesen Fall anbietet. Man kann ja alle Regexes gleichzeitig ins Rennen
+schmeissen. Irgendwie. So richtig habe ich es damals nicht verstanden,
+wie es geht.
+
+ >> Das muesste gehen: wir setzen das Timeout auf eine Viertel Sekunde
+ >> oder so. Wenn wir nicht matchen, geben wir erstmal *nicht* auf,
+ >> sondern kumulieren. Wenn wir eine gewisse Menge Timeout nichts mehr
+ >> erhalten haben und noch immer nicht matchen, geben wir auf. Ansonsten
+ >> wie bisher.
+ >> 
+ >> Irgendwie klingt das zu einfach, um wahr zu sein. Aber ich glaube, das
+ >> ist's, was wir beide wollen, und ich sehe keinen Nachteil.
+ >> 
+
+  > Ich werd's dann versuchen. Ich habe jetzt übrigens timeout:1 gesetzt,
+  > das macht die Sache einigermaßen erträglich.
+
+
 2007-09-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Bug: somebody broke *.bs files with crap content recently. Leads to
@@ -108,6 +175,18 @@
 
 	In the meantime Max Maischain (CORION) complained as well.
 
+	Update 2007-09-08: I just discovered that not only the 10 perls were
+	broken that I'm using to smoke but many, many others as well. The
+	timestamp of the file is 2007-09-06T22:09, they have 2217 bytes and have
+	the same md5sum and although I have already deleted plenty of them I
+	still count 22049 of these files. Somebody was really busy.
+
+	Hrm. Now I have a suspect. My trimtrees is most likely to blame. These
+	files will have the same inode and somebody only changed one random
+	zero-byte file without unlinking it first and all this happened. Yes?
+	Indeed, the inode is 1855345.
+
+	So I'll have to fix trimtrees:-(
 	
 2007-09-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

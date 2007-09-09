@@ -32,6 +32,7 @@ match:
     |BTROTT/URI-Fetch-\d
     |BTROTT/XML-Feed-\d
     |CFRANKS/Catalyst-Model-Net-Amazon-\d
+    |CFRANKS/HTML-FormFu-\d
     |CFRANKS/HTML-Widget-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
@@ -112,15 +113,8 @@ pl:
   eexpect:
     mode: anyorder
     timeout: 10
+    reuse: 1
     talk:
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
       - "Auto-install"
       - "y\n"
   env:
