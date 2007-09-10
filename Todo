@@ -1,3 +1,83 @@
+2007-09-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* trying to summarize where Build.PL is inferior to Makefile.PL:
+
+	SCHWIGON/class-methodmaker/Class-MethodMaker-2.10.tar.gz
+	   (FLUFFY/Term-ProgressBar-2.09.tar.gz dependent)
+
+	Steffen seems to be the only one.
+
+	* ----Program----
+eval q{use autobox 1.10};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pAtHKhk/perl-5.8.0@25563/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pGuLryz/perl-5.8.0@25570/bin/perl----
+N/A
+
+----EOF ($?='0')----
+Need a perl between 25563 and 25570
+No patch available between 25563 and 25570
+
+
+	* the job with prefer_installer=MB has finished and this are the new fails:
+
+	new fails
+    ZOOLEIKA/RDF-Simple-0.3.tar.gz[64],
+	  SCHWIGON/class-methodmaker/Class-MethodMaker-2.10.tar.gz[170],
+	  FLORA/Net-SSLeay-1.32.tar.gz[376],
+	  SULLR/IO-Socket-SSL-1.08.tar.gz[377],
+	  AWESTHOLM/Net-SMTP-TLS-0.12.tar.gz[378],
+	  HIROSE/Net-SSL-ExpireDate-1.04.tar.gz[518],
+	  JASONK/Business-OnlinePayment-2.01.tar.gz[933],
+	  JESSE/GnuPG-Interface-0.36.tar.gz[949],
+	  SCHWIGON/pdf-fdf-simple/PDF-FDF-Simple-0.11.tar.gz[1058],
+	  JPEACOCK/SVN-Notify-Mirror-0.03603.tar.gz[1088],
+	  FLORA/Catalyst-View-Mason-0.13.tar.gz[1169],
+	  APOCAL/POE-Component-SSLify-0.08.tar.gz[1226],
+	  NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.07.tar.gz[1263],
+	  DKAMHOLZ/Catalyst-Plugin-Authentication-Store-DBIC-0.07.tar.gz[1264],
+	  JROCKWAY/Task-Catalyst-Tutorial-0.03.tar.gz[1270],
+	  FLUFFY/Term-ProgressBar-2.09.tar.gz[1273],
+	  MARKOV/XML-Compile-0.53.tar.gz[1276],
+	  MWS/ResourcePool-1.0104.tar.gz[1282],
+	  CHROMATIC/Crypt-CipherSaber-1.00.tar.gz[1293]
+
+	Some problems of a different kind with these, they were either not
+	processed at all or the logfile parser did not find them:
+
+	gone
+    /home/src/perl/cpan-sql-stuff/CPAN-SQLite/.,
+	  ADAMK/Chart-Math-Axis-1.00.tar.gz,
+	  AGRUNDMA/Catalyst-Engine-Apache-1.11.tar.gz,
+	  ANDYA/Perl-Version-v1.000.tar.gz,
+	  BRICAS/Catalyst-Plugin-I18N-0.06.tar.gz,
+	  DKAMHOLZ/Authen-Htpasswd-0.16.tar.gz,
+	  DKAMHOLZ/Catalyst-Plugin-Authentication-Store-Htpasswd-0.02.tar.gz,
+	  DMAKI/DateTime-Util-Astro-0.08.tar.gz,
+	  DOWENS/JSON-DWIW-0.13.tar.gz,
+	  DROLSKY/HTML-Mason-1.36.tar.gz,
+	  ESSKAR/Catalyst-Plugin-Session-Store-File-0.10.tar.gz,
+	  FDALY/Test-Deep-0.097.tar.gz,
+	  GAAS/Array-RefElem-1.00.tar.gz,
+	  HOLOWAY/Catalyst-Log-Log4perl-1.00.tar.gz,
+	  JCAMACHO/Catalyst-Controller-FormBuilder-0.04.tar.gz,
+	  JDHEDDEN/Object-InsideOut-3.21.tar.gz,
+	  JURACH/FCGI-ProcManager-0.17.tar.gz,
+	  MARKOV/XML-Compile-0.52.tar.gz,
+	  MRAMBERG/Catalyst-Plugin-Prototype-1.33.tar.gz,
+	  MSCHWERN/Class-Fields-0.202.tar.gz,
+	  NODINE/Text-ASCIIMathML-0.3.tar.gz,
+	  NUFFIN/Catalyst-Controller-BindLex-0.03.tar.gz,
+	  NUFFIN/Catalyst-Plugin-Session-State-URI-0.07.tar.gz,
+	  NWIGER/CGI-FormBuilder-3.0501.tgz,
+	  SKIMO/FCGI-0.67.tar.gz
+
+
 2007-09-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ooooops:
