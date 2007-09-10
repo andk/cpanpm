@@ -13,6 +13,7 @@ use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 my $rf = File::Rsync::Mirror::Recentfile->new(
                                               canonize => "naive_path_normalize",
                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                              intervals => [qw(2d)],
                                              );
 
 my $recent = File::Spec->catfile($rf->localroot,"RECENT-2d.yaml");
@@ -61,15 +62,15 @@ ITERATION: while () {
       push @perls, $_;
     }
   }
-  my($recent_data) = YAML::Syck::LoadFile($recent);
-  $recent_data = [ grep { $_->{path} =~ $rx } @$recent_data ];
+  my $recent_events = $rf->recent_events;
+  $recent_events = [ grep { $_->{path} =~ $rx } @$recent_events ];
   {
     my %seen;
-    $recent_data = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
-                            !$seen{$d->dist}++
-                          } @$recent_data ];
+    $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
+                              !$seen{$d->dist}++
+                            } @$recent_events ];
   }
- UPLOADITEM: for my $upload (reverse @$recent_data) {
+ UPLOADITEM: for my $upload (reverse @$recent_events) {
     next unless $upload->{path} =~ $rx;
     next unless $upload->{type} eq "new";
 
@@ -119,7 +120,7 @@ ITERATION: while () {
         next PERL;
       } else {
         warn "\n\n$combo\n\n\n";
-        my $abs = dirname($recent) . "/$upload->{path}";
+        my $abs = File::Spec->catfile($rf->localroot, $upload->{path});
         {
           local $| = 1;
           while (! -f $abs) {
