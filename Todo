@@ -1,5 +1,44 @@
 2007-09-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* tentative posting to Module::Build
+
+	Recently, on IRC (off the top of my head):
+
+	<klapperl>: so can you explain why the compatibility layer is broken?
+	<ewilhelm>: jeez, it is the *compatibility layer*
+
+	I think it's time that Module::Build considers another compatibility
+	layer in addition to the existing one. This is just a raw sketch to get
+	some talk going, I have not actually tried to work this out. So what
+	would people think of this:
+
+	Build.PL has a new option
+	    ...
+	    diplomatic_makefile_pl => 1,
+	    ...
+
+	generated Makefile.PL
+	    if (eval { require Module::Build; 1}){
+	      # if user has Module::Build installed we use it
+        system $^X, "Build.PL";
+	      write_diplomatic_makefile;
+	    } else {
+	      beg_user_to_install_module_build_asap();
+		    write_traditional_compat_makefile();
+	    }
+
+	the generated diplomatic Makefile would then contain:
+	    default:
+	      ./Build
+      test:
+	      ./Build test
+	    install
+	      ./Build install
+	    [...etc...]
+
+	Has this been tried? Does it have pitfalls? It seems so easy and
+	natural. Isn't anybody keen implementing it?
+
 	* switching back to EUMM for one smoke and then back to MB with the
 	distroprefs for MethodMaker which needs EUMM.
 
