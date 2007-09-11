@@ -1,6 +1,10 @@
 #!/usr/bin/perl
 
+use CPAN::DistnameInfo;
 use YAML::Syck;
+
+use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 my $max_epoch_worked_on = 0;
@@ -16,8 +20,20 @@ if (-e $statefile) {
   $state += 0;
   $max_epoch_worked_on = $state if $state;
 }
-my $recent = YAML::Syck::LoadFile "/home/ftp/pub/PAUSE/authors/id/RECENT-2d.yaml";
-ITEM: for my $item (@$recent) {
+my $rf = File::Rsync::Mirror::Recentfile->new(
+                                              canonize => "naive_path_normalize",
+                                              localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                              intervals => [qw(2d)],
+                                             );
+
+my $recent_events = $rf->recent_events;
+{
+  my %seen;
+  $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
+                            !$seen{$d->dist}++
+                          } @$recent_events ];
+}
+ITEM: for my $item (@$recent_events) {
   next unless $item->{path} =~ $rx;
   next unless $item->{type} eq "new";
   printf "%1s %s %s\n", ($max_epoch_worked_on && $max_epoch_worked_on == $item->{epoch}) ?

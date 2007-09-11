@@ -1,6 +1,13 @@
 ---
+comment: |
+
+  choosing module build enables a manually tuned installer that
+  doesn't run pod::coverage
+
 match:
   distribution: "^DMAKI/Xango-1.08\."
+cpanconfig:
+  prefer_installer: "MB"
 pl:
   eexpect:
     mode: anyorder

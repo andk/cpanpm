@@ -16,7 +16,6 @@ my $rf = File::Rsync::Mirror::Recentfile->new(
                                               intervals => [qw(2d)],
                                              );
 
-my $recent = File::Spec->catfile($rf->localroot,"RECENT-2d.yaml");
 my $otherperls = "$0.otherperls";
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 
