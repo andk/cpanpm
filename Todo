@@ -1,5 +1,28 @@
 2007-09-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* http://www.nntp.perl.org/group/perl.cpan.testers/
+
+	says that I tested 
+
+	PASS Acme-Pythonic-0.46 i686-linux-64int 2.6.16-2-k7 	1 message 	andreas.koenig.gmwojprw 	13:47
+
+	That seems to be the same as
+
+	23:00  * GumbyNET2 cpan.testers: PASS Acme-Pythonic-0.46 perl-5.6.2 
+          i686-linux-64int 2.6.16-2-k7 andreas.koenig.gmwojprw@franz.ak.mind.de
+
+	22060 22:47:11.7952 test PASS Acme-Pythonic-0.46 (perl-5.6.2) i686-linux-64int 2.6.16-2-k7
+
+	So we have 9 hours time shift.
+
+	* 23:16 <@klapperl> I see no showstopper in CPAN.pm.
+23:17 <@klapperl> I'll have a 1.91_54 by next weekend
+23:17 <@xdg> All high priority CPAN::Reporter features are in.  (E.g. duplicate 
+             report checks by phase)
+23:17 <@klapperl> and after a week we could roll 1.92
+23:17 <@xdg> Great!
+23:17 <@klapperl> great!
+
 	* tentative posting to Module::Build
 
 	Recently, on IRC (off the top of my head):
