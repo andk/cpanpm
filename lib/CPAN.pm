@@ -6422,6 +6422,9 @@ sub run_MM_or_MB {
         }
     }
     return unless $self->patch;
+    if (lc($prefer_installer) eq "rand") {
+        $prefer_installer = rand()<.5 ? "eumm" : "mb";
+    }
     if (lc($prefer_installer) eq "mb") {
         $self->{modulebuild} = 1;
     } elsif ($self->{archived} eq "patch") {

@@ -338,10 +338,13 @@ Makefile.PL and a Build.PL, which shall have precedence? The two
 installer modules we have are the old and well established
 ExtUtils::MakeMaker (for short: EUMM) which uses the Makefile.PL and
 the next generation installer Module::Build (MB) works with the
-Build.PL.
+Build.PL. As a third option you can choose RAND which will make a
+random decision. See also
+http://rt.cpan.org/Ticket/Display.html?id=29235 for more arguments on
+this tough decision.
 
-In case you could choose, which installer would you prefer (EUMM or
-MB)?
+In case you can choose between running a Makefile.PL or a Build.PL,
+which installer would you prefer (EUMM or MB or RAND)?
 
 =item prefs_dir
 
@@ -928,7 +931,7 @@ substitute. You can then revisit this dialog with
     #
 
     if (!$matcher or 'prefer_installer' =~ /$matcher/) {
-        my_prompt_loop(prefer_installer => 'EUMM', $matcher, 'MB|EUMM');
+        my_prompt_loop(prefer_installer => 'RAND', $matcher, 'MB|EUMM|RAND');
     }
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
