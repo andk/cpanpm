@@ -15,6 +15,11 @@ patches:
 match:
   distribution: "^FLORA/Net-SSLeay-\d"
 pl:
-  expect:
-    - "\QThese tests *will* *fail* if you do not have network connectivity\E"
-    - "n\n"
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "\QThese tests *will* *fail* if you do not have network connectivity\E"
+      - "n\n"
+      - "Auto-install"
+      - "y\n"
