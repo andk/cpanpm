@@ -73,7 +73,7 @@
 	* address #28439: did not report missing file URL when LWP not installed
 	(Martin Thurn,Michael Schwern)
 
-	* new parameter fo eexpect: reuse (Slaven Rezic)
+	* new parameter for eexpect: reuse (Slaven Rezic)
 
 	* bugfix 'reload cpan': make it less unintuitive (David Golden)
 

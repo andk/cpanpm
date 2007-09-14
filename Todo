@@ -1,3 +1,27 @@
+2007-09-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Strangely Tie::Cache fails on one bleadperl, 31854. Binary search
+	backwards is running. 31863 has it fixed again, maybe I need a binary
+	search forwards too.
+
+	----Program----
+	eval {require Tie::Cache};
+	print $@ ? "N/A" : "OK";
+	print "\n";
+
+	----Output of .../pOP4da9/perl-5.8.0@30730/bin/perl----
+	OK
+
+	----EOF ($?='0')----
+	----Output of .../p8QFKbX/perl-5.8.0@30740/bin/perl----
+	N/A
+
+	----EOF ($?='0')----
+	Need a perl between 30730 and 30740
+	No patch available between 30730 and 30740
+
+	
+
 2007-09-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* http://www.nntp.perl.org/group/perl.cpan.testers/
