@@ -103,6 +103,7 @@ use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 my $rf = File::Rsync::Mirror::Recentfile->new(
                                               canonize => "naive_path_normalize",
                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                              intervals => [qw(2d)],
                                              );
 
 my $recent = "RECENT-2d.yaml";
