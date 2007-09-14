@@ -1,4 +1,16 @@
-2007-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2007-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91_54: stable release candidate
+
+	* highlights of 51-54: CPAN::Reporter support for reports on separate
+	phases; support for configure_requires in META.yml; now with 207
+	distroprefs files; see below for details.
+
+	* firsttime dialog now defaults prefer_installer to "MB" and offers a
+	third option (RAND) for a random choice.
+
+	* code beautification complete overhaul, whitespace only (Florain
+	Ragwitz)
 
 	* after a fail introduce a hint for using the reports command (suggested
 	by Gabor Szabo)
