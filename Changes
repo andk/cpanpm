@@ -9,7 +9,7 @@
 	* firsttime dialog now defaults prefer_installer to "MB" and offers a
 	third option (RAND) for a random choice.
 
-	* code beautification complete overhaul, whitespace only (Florain
+	* code beautification complete overhaul, whitespace only (Florian
 	Ragwitz)
 
 	* after a fail introduce a hint for using the reports command (suggested
