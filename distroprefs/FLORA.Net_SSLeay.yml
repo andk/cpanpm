@@ -18,6 +18,7 @@ pl:
   eexpect:
     mode: anyorder
     timeout: 5
+    reuse: 1
     talk:
       - "\QThese tests *will* *fail* if you do not have network connectivity\E"
       - "n\n"

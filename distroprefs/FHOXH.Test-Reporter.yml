@@ -9,7 +9,11 @@ comment: |
 
   Hunk #1 succeeded at 25 with fuzz 2.
 
-  Fix is scheduled for 1.34
+  Fix was scheduled for 1.34
+
+  Since 1.34 is out Mail::Send seems to work as well for me. If it
+  stops working again, we need a passthrough mechanism in
+  CPAN::Reporter/_dispatch_report().
 
 match:
   distribution: "FHOXH/Test-Reporter-1\.3[02]"
