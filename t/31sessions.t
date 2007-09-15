@@ -92,8 +92,8 @@ our @SESSIONS =
                                                   Has.already.been.made.*
                                                   Has.already.been.tested.successfully)",
        "force test CPAN::Test::Dummy::Perl5::Make" => "t/00_load\.+ok",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
        "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
        "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
@@ -115,7 +115,7 @@ our @SESSIONS =
                                                   Has.already.been.tested.successfully)",
        "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
        "make CPAN::Test::Dummy::Perl5::Build::Fails" => "Has.already.been.unwrapped",
-       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "t/00_load.+FAILED",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
        "o conf dontload_list push YAML" => ".",
        "o conf dontload_list push YAML::Syck" => ".",
        "o conf commit" => "commit: wrote",

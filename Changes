@@ -1,3 +1,9 @@
+2007-09-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.91_55: stable release candidate II
+
+	* Update one test to match the output of Test::Harness 2.99_02
+
 2007-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_54: stable release candidate
