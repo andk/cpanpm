@@ -162,9 +162,9 @@ DESCRIPTION
       The second form allows to limit or expand the output with shell
       globbing as in the following examples:
 
-                ls JV/make*
-                ls GSAR/*make*
-                ls */*make*
+            ls JV/make*
+            ls GSAR/*make*
+            ls */*make*
 
       The last example is very slow and outputs extra progress indicators
       that break the alignment of the result.
@@ -420,6 +420,14 @@ CONFIGURATION
 
           o conf shell
 
+        If KEY starts and ends with a slash the string in between is
+        interpreted as a regular expression and only keys matching this
+        regex are displayed
+
+        Example:
+
+          o conf /color/
+
     changing of scalar values: o conf KEY VALUE
         Sets the config variable KEY to VALUE. The empty string can be
         specified as usual in shells, with '' or ""
@@ -505,6 +513,8 @@ CONFIGURATION
       inhibit_startup_message
                          if true, does not print the startup message
       keep_source_where  directory in which to keep the source (if we do)
+      load_module_verbosity
+                         report loading of optional modules used by CPAN.pm
       lynx               path to external prg
       make               location of external make program
       make_arg           arguments that should always be passed to 'make'
@@ -545,7 +555,7 @@ CONFIGURATION
       show_zero_versions boolean if r command tells for which modules $version==0
       tar                location of external program tar
       tar_verbosity      verbosity level for the tar command
-      term_is_latin      if true internal UTF-8 is translated to ISO-8859-1
+      term_is_latin      deprecated: if true Unicode is translated to ISO-8859-1
                          (and nonsense for characters outside latin range)
       term_ornaments     boolean to turn ReadLine ornamenting on/off
       test_report        email test reports (if CPAN::Reporter is installed)
@@ -555,6 +565,7 @@ CONFIGURATION
       username           your username if you CPAN server wants one
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
       wget               path to external prg
+      yaml_load_code     enable YAML code deserialisation
       yaml_module        which module to use to read/write YAML files
 
     You can set and query each of these options interactively in the cpan
@@ -1001,12 +1012,12 @@ PROGRAMMER'S INTERFACE
           perl -MCPAN -e 'CPAN::Shell->install(CPAN::Shell->r)'
 
           # install my favorite programs if necessary:
-          for $mod (qw(Net::FTP Digest::SHA Data::Dumper)){
+          for $mod (qw(Net::FTP Digest::SHA Data::Dumper)) {
               CPAN::Shell->install($mod);
           }
 
           # list all modules on my disk that have no VERSION number
-          for $mod (CPAN::Shell->expand("Module","/./")){
+          for $mod (CPAN::Shell->expand("Module","/./")) {
               next unless $mod->inst_file;
               # MakeMaker convention for undefined $VERSION:
               next unless $mod->inst_version eq "undef";
@@ -1030,7 +1041,7 @@ PROGRAMMER'S INTERFACE
       process, maybe something like this suits you better:
 
         # list all modules on my disk that have newer versions on CPAN
-        for $mod (CPAN::Shell->expand("Module","/./")){
+        for $mod (CPAN::Shell->expand("Module","/./")) {
           next unless $mod->inst_file;
           next if $mod->uptodate;
           printf "Module %s is installed as %s, could be updated to %s from CPAN\n",
@@ -1040,7 +1051,7 @@ PROGRAMMER'S INTERFACE
       If that gives you too much output every day, you maybe only want to
       watch for three modules. You can write
 
-        for $mod (CPAN::Shell->expand("Module","/Apache|LWP|CGI/")){
+        for $mod (CPAN::Shell->expand("Module","/Apache|LWP|CGI/")) {
 
       as the first line instead. Or you can combine some of the above
       tricks:
@@ -1458,7 +1469,7 @@ PROGRAMMER'S INTERFACE
     only difference being that *one special pod section* exists starting
     with (verbatim):
 
-            =head1 CONTENTS
+        =head1 CONTENTS
 
     In this pod section each line obeys the format
 
@@ -1614,7 +1625,15 @@ ENVIRONMENT
     When the CPAN shell enters a subshell via the look command, it sets the
     environment CPAN_SHELL_LEVEL to 1 or increments it if it is already set.
 
-    When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING.
+    When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING
+    to the ID of the running process. It also sets PERL5_CPANPLUS_IS_RUNNING
+    to prevent runaway processes which could happen with older versions of
+    Module::Install.
+
+    When running "perl Makefile.PL", the environment variable
+    "PERL5_CPAN_IS_EXECUTING" is set to the full path of the "Makefile.PL"
+    that is being executed. This prevents runaway processes with newer
+    versions of Module::Install.
 
     When the config variable ftp_passive is set, all downloads will be run
     with the environment variable FTP_PASSIVE set to this value. This is in
@@ -1815,7 +1834,7 @@ FAQ
         equivalent to the concept of the home directory on Unix.
 
         Another thing you should bear in mind is that the UNINST parameter
-        can be dnagerous when you are installing into a private area because
+        can be dangerous when you are installing into a private area because
         you might accidentally remove modules that other people depend on
         that are not using the private area.
 
@@ -1868,6 +1887,10 @@ FAQ
         If other charset support is needed, please file a bugreport against
         CPAN.pm at rt.cpan.org and describe your needs. Maybe we can extend
         the support or maybe UTF-8 terminals become widely available.
+
+        Note: this config variable is deprecated and will be removed in a
+        future version of CPAN.pm. It will be replaced with the conventions
+        around the family of $LANG and $LC_* environment variables.
 
     11) When an install fails for some reason and then I correct the error
         condition and retry, CPAN.pm refuses to install the module, saying
