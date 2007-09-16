@@ -91,7 +91,6 @@ use strict;
 use warnings;
 use File::Basename qw(dirname);
 use File::Path qw(mkpath);
-use File::Rsync;
 use File::Spec;
 use File::Temp ();
 use Time::HiRes qw(sleep);
@@ -100,30 +99,22 @@ use YAML::Syck;
 use lib "/home/k/dproj/PAUSE/SVN/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
-my $rf = File::Rsync::Mirror::Recentfile->new(
-                                              canonize => "naive_path_normalize",
-                                              localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                              intervals => [qw(2d)],
-                                              remote_host => "pause.perl.org",
-                                              remote_module => "authors",
-                                              remote_dir => "id",
-                                             );
-
-my $recent = "RECENT-2d.yaml";
-
-my $remotebase = sprintf(
-                         "%s::%s/%s",
-                         $rf->remote_host,
-                         $rf->remote_module,
-                         $rf->remote_dir,
-                        );
+my $rf = File::Rsync::Mirror::Recentfile->new
+    (
+     canonize => "naive_path_normalize",
+     localroot => "/home/ftp/pub/PAUSE/authors/id/",
+     intervals => [qw(2d)],
+     remote_host => "pause.perl.org",
+     remote_module => "authors",
+     remote_dir => "id",
+     rsync_options => {
+                       compress => 1,
+                       'rsync-path' => '/usr/bin/rsync',
+                      }
+    );
 
 my $max_epoch_ever = 0;
 
-my $rs = File::Rsync->new({
-                           compress => 1,
-                           'rsync-path' => '/usr/bin/rsync',
-                          });
 my %got_at;
 my $print_leading_newline = 0;
 ITERATION: while () {
@@ -135,11 +126,13 @@ ITERATION: while () {
                             UNLINK => 0,
                            );
   my($trecentfile) = $fh->filename;
-  unless ($rs->exec(
-                    src => File::Spec->catfile($remotebase,$recent),
-                    dst => $trecentfile,
-                   )) {
-    warn sprintf "Warning: %s", $rs->err;
+  unless ($rf->rsync->exec(
+                           src => join("/",
+                                       $rf->remotebase,
+                                       $rf->recentfile_basename),
+                           dst => $trecentfile,
+                          )) {
+    warn sprintf "Warning: %s", $rf->rsync->err;
     sleep 5;
     next ITERATION;
   }
@@ -177,12 +170,13 @@ ITERATION: while () {
           $print_leading_newline = 0;
         }
         mkpath dirname $dst;
-        unless ($rs->exec(
-                  src => "$remotebase/$upload->{path}",
-                  dst => $dst,
-                 )) {
-          warn sprintf "Warning: %s", $rs->err;
-          push @error, $rs->err;
+        unless ($rf->rsync->exec
+                (
+                 src => join("/",$rf->remotebase,$upload->{path}),
+                 dst => $dst,
+                )) {
+          warn sprintf "Warning: %s", $rf->rsync->err;
+          push @error, $rf->rsync->err;
           sleep 1;
           next UPLOADITEM;
         }
