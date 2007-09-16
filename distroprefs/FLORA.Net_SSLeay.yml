@@ -15,6 +15,7 @@ patches:
 match:
   distribution: "^FLORA/Net-SSLeay-\d"
 pl:
+  &pl_or_make
   eexpect:
     mode: anyorder
     timeout: 5
@@ -24,3 +25,8 @@ pl:
       - "n\n"
       - "Auto-install"
       - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  *pl_or_make
