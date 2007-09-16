@@ -94,7 +94,6 @@ use File::Path qw(mkpath);
 use File::Spec;
 use File::Temp ();
 use Time::HiRes qw(sleep);
-use YAML::Syck;
 
 use lib "/home/k/dproj/PAUSE/SVN/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
@@ -120,25 +119,13 @@ my $print_leading_newline = 0;
 ITERATION: while () {
   my $iteration_start = time;
 
-  my($fh) = File::Temp->new(TEMPLATE => ".RECENT-XXXX",
-                            DIR => $rf->localroot,
-                            SUFFIX => "yaml",
-                            UNLINK => 0,
-                           );
-  my($trecentfile) = $fh->filename;
-  unless ($rf->rsync->exec(
-                           src => join("/",
-                                       $rf->remotebase,
-                                       $rf->recentfile_basename),
-                           dst => $trecentfile,
-                          )) {
-    warn sprintf "Warning: %s", $rf->rsync->err;
+  my $trecentfile = eval {$rf->get_remote_recentfile_as_tempfile("2d");};
+  if ($@) {
+    warn sprintf "Warning: %s", $@;
     sleep 5;
     next ITERATION;
   }
-  my $mode = 0644;
-  chmod $mode, $trecentfile;
-  my($recent_data) = YAML::Syck::LoadFile($trecentfile);
+  my($recent_data) = $rf->recent_events_from_file($trecentfile);
   my @error;
   my $i = 0;
   my $total = @$recent_data;
@@ -188,6 +175,7 @@ ITERATION: while () {
     $max_epoch_ever = $upload->{epoch} if $upload->{epoch} > $max_epoch_ever;
   }
   if (@error) {
+    # XXX this seems a bit too drastic
     $max_epoch_ever = 0;
     %got_at = ();
   } else {

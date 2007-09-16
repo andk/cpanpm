@@ -1,3 +1,16 @@
+2007-09-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* strptime/https://rt.cpan.org/Ticket/Display.html?id=29330
+
+	How could it happen that strptime broke from one day to the other?
+	When exactly did it happen?
+
+	2007-09-11T23:51 	perl 	31847 	DateTime-Format-Strptime-1.0700 	NOT OK
+	2007-09-11T10:45 	perl 	31843 	DateTime-Format-Strptime-1.0700 	OK
+
+	Snapshot_2007_09_16_0[01].pm... DROLSKY/DateTime-Locale-0.35.tar.gz
+	broke it.
+
 2007-09-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Strangely Tie::Cache fails on one bleadperl, 31854. Binary search

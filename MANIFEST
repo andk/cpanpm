@@ -60,6 +60,7 @@ distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
 distroprefs/DOM.OpenGuides.yml
 distroprefs/DROLSKY.Alzabo.yml
+distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DRTECH.Config-Loader.yml
 distroprefs/DSKOLL.MIME-tools.yml
