@@ -90,9 +90,9 @@ and we want deprecation of the whole modules/by_* directories.
 use strict;
 use warnings;
 use File::Basename qw(dirname);
-use File::Path qw(mkpath);
 use File::Spec;
 use File::Temp ();
+use List::Util qw(min);
 use Time::HiRes qw(sleep);
 
 use lib "/home/k/dproj/PAUSE/SVN/lib/";
@@ -143,7 +143,7 @@ ITERATION: while () {
         $must_get++;
       }
       if ($must_get) {
-        my $dst = File::Spec->catfile($rf->localroot,$recent_event->{path});
+        my $dst = $rf->local_event_path($recent_event->{path});
         my $doing = -e $dst ? "Syncing" : "Getting";
         {
           printf(
@@ -156,14 +156,9 @@ ITERATION: while () {
                 );
           $print_leading_newline = 0;
         }
-        mkpath dirname $dst;
-        unless ($rf->rsync->exec
-                (
-                 src => join("/",$rf->remotebase,$recent_event->{path}),
-                 dst => $dst,
-                )) {
-          warn sprintf "Warning: %s", $rf->rsync->err;
-          push @error, $rf->rsync->err;
+        eval { $rf->mirror_path($recent_event->{path}) };
+        if ($@) {
+          push @error, $@;
           sleep 1;
           next UPLOADITEM;
         }
@@ -176,6 +171,13 @@ ITERATION: while () {
   }
   if (@error) {
     # XXX this seems a bit too drastic
+    my $errors = @error;
+    my @disperrors = splice @error, 0, min(10, scalar @error);
+    my $disperrors = @disperrors;
+    warn "Warning: Ran into $errors errors, first @disperrors follow:
+@disperrors
+";
+    sleep 12;
     $max_epoch_ever = 0;
     %got_at = ();
   } else {
