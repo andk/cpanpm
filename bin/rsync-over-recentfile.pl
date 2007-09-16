@@ -129,21 +129,21 @@ ITERATION: while () {
   my @error;
   my $i = 0;
   my $total = @$recent_data;
- UPLOADITEM: for my $upload (reverse @$recent_data) {
+ UPLOADITEM: for my $recent_event (reverse @$recent_data) {
     $i++;
-    if ($upload->{type} eq "new"){
+    if ($recent_event->{type} eq "new"){
       my $must_get;
-      if ($upload->{epoch} < $max_epoch_ever) {
+      if ($recent_event->{epoch} < $max_epoch_ever) {
         next UPLOADITEM;
-      } elsif ($upload->{epoch} == $max_epoch_ever) {
-        unless ($got_at{$upload->{path}}++) {
+      } elsif ($recent_event->{epoch} == $max_epoch_ever) {
+        unless ($got_at{$recent_event->{path}}++) {
           $must_get++;
         }
       } else {
         $must_get++;
       }
       if ($must_get) {
-        my $dst = File::Spec->catfile($rf->localroot,$upload->{path});
+        my $dst = File::Spec->catfile($rf->localroot,$recent_event->{path});
         my $doing = -e $dst ? "Syncing" : "Getting";
         {
           printf(
@@ -152,14 +152,14 @@ ITERATION: while () {
                  $doing,
                  $i,
                  $total,
-                 $upload->{path},
+                 $recent_event->{path},
                 );
           $print_leading_newline = 0;
         }
         mkpath dirname $dst;
         unless ($rf->rsync->exec
                 (
-                 src => join("/",$rf->remotebase,$upload->{path}),
+                 src => join("/",$rf->remotebase,$recent_event->{path}),
                  dst => $dst,
                 )) {
           warn sprintf "Warning: %s", $rf->rsync->err;
@@ -167,12 +167,12 @@ ITERATION: while () {
           sleep 1;
           next UPLOADITEM;
         }
-        $got_at{$upload->{path}} = $upload->{epoch};
+        $got_at{$recent_event->{path}} = $recent_event->{epoch};
       }
     } else {
-      warn "Warning: invalid upload type '$upload->{type}'";
+      warn "Warning: invalid upload type '$recent_event->{type}'";
     }
-    $max_epoch_ever = $upload->{epoch} if $upload->{epoch} > $max_epoch_ever;
+    $max_epoch_ever = $recent_event->{epoch} if $recent_event->{epoch} > $max_epoch_ever;
   }
   if (@error) {
     # XXX this seems a bit too drastic
