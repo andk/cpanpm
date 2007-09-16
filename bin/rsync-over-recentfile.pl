@@ -104,15 +104,19 @@ my $rf = File::Rsync::Mirror::Recentfile->new(
                                               canonize => "naive_path_normalize",
                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
                                               intervals => [qw(2d)],
+                                              remote_host => "pause.perl.org",
+                                              remote_module => "authors",
+                                              remote_dir => "id",
                                              );
 
 my $recent = "RECENT-2d.yaml";
-my $remotehost = "pause.perl.org";
-my $remotemodule = "authors";
-my $remotedir = "id";
 
-my $localabsrecent = File::Spec->catfile($rf->localroot,$recent);
-my $remotebase = "$remotehost\::$remotemodule/$remotedir";
+my $remotebase = sprintf(
+                         "%s::%s/%s",
+                         $rf->remote_host,
+                         $rf->remote_module,
+                         $rf->remote_dir,
+                        );
 
 my $max_epoch_ever = 0;
 
@@ -121,6 +125,7 @@ my $rs = File::Rsync->new({
                            'rsync-path' => '/usr/bin/rsync',
                           });
 my %got_at;
+my $print_leading_newline = 0;
 ITERATION: while () {
   my $iteration_start = time;
 
@@ -142,7 +147,10 @@ ITERATION: while () {
   chmod $mode, $trecentfile;
   my($recent_data) = YAML::Syck::LoadFile($trecentfile);
   my @error;
+  my $i = 0;
+  my $total = @$recent_data;
  UPLOADITEM: for my $upload (reverse @$recent_data) {
+    $i++;
     if ($upload->{type} eq "new"){
       my $must_get;
       if ($upload->{epoch} < $max_epoch_ever) {
@@ -157,7 +165,17 @@ ITERATION: while () {
       if ($must_get) {
         my $dst = File::Spec->catfile($rf->localroot,$upload->{path});
         my $doing = -e $dst ? "Syncing" : "Getting";
-        warn "$doing $upload->{path}\n";
+        {
+          printf(
+                 "%s%s (%d/%d) %s\n",
+                 $print_leading_newline ? "\n" : "",
+                 $doing,
+                 $i,
+                 $total,
+                 $upload->{path},
+                );
+          $print_leading_newline = 0;
+        }
         mkpath dirname $dst;
         unless ($rs->exec(
                   src => "$remotebase/$upload->{path}",
@@ -171,7 +189,7 @@ ITERATION: while () {
         $got_at{$upload->{path}} = $upload->{epoch};
       }
     } else {
-      warn "Warning: only 'new' implemented";
+      warn "Warning: invalid upload type '$upload->{type}'";
     }
     $max_epoch_ever = $upload->{epoch} if $upload->{epoch} > $max_epoch_ever;
   }
@@ -179,18 +197,18 @@ ITERATION: while () {
     $max_epoch_ever = 0;
     %got_at = ();
   } else {
-    rename $trecentfile, $localabsrecent; # keep this even when we write our own
+    rename $trecentfile, $rf->recentfile;
     for my $k (keys %got_at) {
       delete $got_at{$k} if $got_at{$k} < $max_epoch_ever - 60*60*24*2;
     }
   }
   my $minimum_time_per_loop = 20;
-  { local $| = 1; print "~"; }
+  { local $| = 1; print "~"; $print_leading_newline = 1; }
   if (time - $iteration_start < $minimum_time_per_loop) {
     # last ITERATION;
     sleep $iteration_start + $minimum_time_per_loop - time;
   }
-  { local $| = 1; print "."; }
+  { local $| = 1; print "."; $print_leading_newline = 1; }
 }
 
 print "\n";
