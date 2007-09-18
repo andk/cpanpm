@@ -1,3 +1,131 @@
+2007-09-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* new fails (everything related to Test::Simple?)
+		
+	PAJAS/XML-LibXML-1.64.tar.gz[172]
+	PAJAS/XML-LibXSLT-1.63.tar.gz[173]
+	PETDANCE/WWW-Mechanize-1.30.tar.gz[200]
+	PETDANCE/Test-WWW-Mechanize-1.14.tar.gz[204]
+	BDFOY/Test-Manifest-1.17.tar.gz[208]
+	URI/File-Slurp-9999.12.tar.gz[220]
+	ADAMK/File-Flat-1.00.tar.gz[222]
+	ADAMK/Test-Inline-2.207.tar.gz[224]
+	OLAF/Net-DNS-0.61.tar.gz[239]
+	RJBS/Email-Valid-0.179.tar.gz[240]
+	MIYAGAWA/Email-Find-0.10.tar.gz[241]
+	HEX/WWW-Live365-0.12.tar.gz[272]
+	BBC/File-Policy-1.005.tar.gz[344]
+	BBC/Email-MIME-CreateHTML-1.026.tar.gz[348]
+	MIYAGAWA/Email-Valid-Loose-0.05.tar.gz[415]
+	MIROD/XML-Twig-3.29.tar.gz[576]
+	AMBS/XML/XML-DT-0.47.tar.gz[585]
+	TBONE/Net-FTP-Common-6.0.tar.gz[653]
+	JMGDOC/OpenOffice-OODoc-2.035.tar.gz[721]
+	RCAPUTO/POE-Component-Client-DNS-1.00.tar.gz[728]
+	RCAPUTO/POE-Component-Client-Keepalive-0.1000.tar.gz[729]
+	CFRANKS/HTML-Widget-1.11.tar.gz[787]
+	SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz[788]
+	YANICK/XML-XPathScript-1.52.tar.gz[836]
+	BINGOS/POE-Component-Server-IRC-1.18.tar.gz[873]
+	MIYAGAWA/CGI-Untaint-email-0.03.tar.gz[904]
+	SCHUBIGER/Module-Build-Convert-0.49.tar.gz[915]
+	MUIR/modules/Daemon-Generic-0.51.tar.gz[920]
+	JROCKWAY/Directory-Scratch-0.12.tar.gz[984]
+	PARDUS/File-MimeInfo/File-MimeInfo-0.14.tar.gz[1077]
+	LBROCARD/Test-WWW-Mechanize-Catalyst-0.40.tar.gz[1079]
+	YARON/WWW-Monitor-0.24.tar.gz[1087]
+
+	* AndyA: > Ah sorry about that. We've recently added a line that says
+
+  > Result: PASS
+  > Result: FAIL
+  > Result: NOTESTS
+
+  > That was added to make life easier for CPAN::Reporter and other meta-
+  > harnesses.
+
+  > Does that help at all? We're committed to keeping that. If we ever
+
+
+	* PDL broke a while back
+
+	2007-07-24T21:46 	perl 	31650 	1001 	CSOE/PDL-2.4.3.tar.gz 	NOT OK
+	2007-07-24T00:10 	perl 	31649 	790 	CSOE/PDL-2.4.3.tar.gz 	OK
+
+	since then it's red, seemingly failing on the make phase. re-testing
+	with an older perl, @31613, succeeds on the make phase. But this doesn't
+	prove anything because all prereqs are already there. And then it fails
+	on the test phase in t/xvals.t. 31650 also failed on xvals.t. Now we
+	have a prove that it's not blead related but to some other factor.
+
+	But now, what has been upgraded on 31613 since then? Unfortunately
+	timestamps have changed because of the cleanup of hardlinks.
+
+2007-09-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* new fails
+
+  BDFOY/Test-Prereq-1.033.tar.gz[100]
+	DROLSKY/DateTime-0.41.tar.gz[144]
+	DROLSKY/DateTime-Format-Mail-0.3001.tar.gz[145]
+	LLAP/SVG-TT-Graph-0.09.tar.gz[177]
+	FGLOCK/DateTime-Set-0.25.tar.gz[227]
+	FGLOCK/DateTime-Event-Recurrence-0.16.tar.gz[238]
+	KELLAN/DateTime-Format-W3CDTF-0.04.tar.gz[293]
+	ABH/XML-RSS-1.31.tar.gz[295]
+	RONAN/SVG-Template-Graph-0.12.tar.gz[311]
+	MARKSTOS/Data-FormValidator-4.51.tar.gz[461]
+	MRAMBERG/Catalyst-Plugin-FormValidator-0.02.tar.gz[462]
+	RJBS/Date-Span-1.121.tar.gz[483]
+	RJBS/Email-Send-2.185.tar.gz[487]
+	JSIRACUSA/Rose-DateTime-0.532.tar.gz[664]
+	ROBM/Cache-FastMmap-1.19.tar.gz[708]
+	NUFFIN/Catalyst-Plugin-Session-Store-FastMmap-0.03.tar.gz[709]
+	NUFFIN/Catalyst-Plugin-Session-State-Cookie-0.08.tar.gz[710]
+	MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-0.09.tar.gz[712]
+	SCHUBIGER/DateTime-Format-Natural-0.39.tar.gz[745]
+	JUERD/DBIx-Simple-1.31.tar.gz[829]
+	FGLOCK/DateTime-Event-ICal-0.09.tar.gz[835]
+	DROLSKY/DateTime-Format-ICal-0.08.tar.gz[836]
+	DPAVLIN/Search-Estraier-0.08.tar.gz[843]
+	MIYAGAWA/XML-Atom-0.27.tar.gz[857]
+	PIJLL/DateTime-Format-Epoch-0.10.tar.gz[876]
+	DMAKI/DateTime-Util-Calc-0.13002.tar.gz[878]
+	DMAKI/DateTime-Util-Astro-0.11001.tar.gz[879]
+	DMAKI/DateTime-Event-Lunar-0.06.tar.gz[880]
+	DMAKI/DateTime-Util-Astro-0.08.tar.gz[881]
+	DMAKI/DateTime-Event-SolarTerm-0.05.tar.gz[882]
+	DMAKI/DateTime-Event-Chinese-0.05.tar.gz[883]
+	DMAKI/DateTime-Calendar-Chinese-0.07.tar.gz[884]
+
+	* this came about at 20:37:
+
+Syncing (277/312) A/AJ/AJPEACOCK/CHECKSUMS
+Syncing (281/312) B/BL/BLOONIX/CHECKSUMS
+Syncing (282/312) C/CA/CASIANO/CHECKSUMS
+Syncing (286/312) D/DG/DGRIZZANT/CHECKSUMS
+Syncing (288/312) D/DM/DMAKI/CHECKSUMS
+Syncing (290/312) F/FE/FERREIRA/CHECKSUMS
+Syncing (292/312) H/HM/HMBRAND/CHECKSUMS
+Syncing (293/312) J/JO/JOHANL/CHECKSUMS
+Syncing (295/312) J/JU/JUERD/CHECKSUMS
+Syncing (296/312) M/ML/MLEHMANN/CHECKSUMS
+Syncing (299/312) M/MR/MRAMBERG/CHECKSUMS
+Syncing (302/312) N/NU/NUFFIN/CHECKSUMS
+Syncing (304/312) CHECKSUMS
+Syncing (307/312) R/RK/RKRIMEN/CHECKSUMS
+Syncing (308/312) S/SL/SLANNING/CHECKSUMS
+Syncing (311/312) T/TS/TSCH/CHECKSUMS
+Syncing (312/312) W/WY/WYANT/CHECKSUMS
+
+	It seems that we still produce more CHECKSUMS file than necessary.
+
+	* Todo: autobox BBC article
+
+	* http://use.perl.org/~schwern/journal/34469
+
+	Schwern about version advisories. Very nice.
+
 2007-09-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* strptime/https://rt.cpan.org/Ticket/Display.html?id=29330
@@ -14,8 +142,8 @@
 2007-09-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Strangely Tie::Cache fails on one bleadperl, 31854. Binary search
-	backwards is running. 31863 has it fixed again, maybe I need a binary
-	search forwards too.
+	backwards is running. 31863 has it fixed again, need a binary search
+	forwards too.
 
 	----Program----
 	eval {require Tie::Cache};

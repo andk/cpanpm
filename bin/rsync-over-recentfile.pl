@@ -174,7 +174,7 @@ ITERATION: while () {
     my $errors = @error;
     my @disperrors = splice @error, 0, min(10, scalar @error);
     my $disperrors = @disperrors;
-    warn "Warning: Ran into $errors errors, first @disperrors follow:
+    warn "Warning: Ran into $errors errors, $disperrors follow:
 @disperrors
 ";
     sleep 12;
