@@ -10,6 +10,8 @@ comment: |
 
   things that need ressources we don't have
 
+  or W:M:Pluggable kills the cpan shell with kill(); I don't understand how
+
   etc.
 
 match:
@@ -22,6 +24,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |DMOW/Eludia
     |GRM/
+    |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     )|
