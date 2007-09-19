@@ -1,3 +1,8 @@
+2007-09-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* bug: the locking in the recentfile seems broken. yesterday the yaml
+	file got truncated at Tue Sep 18 13:56:04 2007
+
 2007-09-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* new fails (everything related to Test::Simple?)
