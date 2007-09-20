@@ -12,6 +12,8 @@ comment: |
 
   or W:M:Pluggable kills the cpan shell with kill(); I don't understand how
 
+  or Shell-GetEnv throws me into a shell and sits there doing nothing
+
   etc.
 
 match:
@@ -22,6 +24,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
+    |DJERIUS/Shell-GetEnv-0.02.tar.gz
     |DMOW/Eludia
     |GRM/
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz

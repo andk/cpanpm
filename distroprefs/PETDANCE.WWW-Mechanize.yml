@@ -6,7 +6,7 @@ comment: |
     note: PETDANCE/WWW-Mechanize-1.29_01.tar.gz
 
 match:
-  distribution: "^PETDANCE/WWW-Mechanize-"
+  distribution: "^PETDANCE/WWW-Mechanize-\d"
 pl: 
   eexpect:
     mode: anyorder
