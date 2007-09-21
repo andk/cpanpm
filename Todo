@@ -64,7 +64,24 @@
 	have a prove that it's not blead related but to some other factor.
 
 	But now, what has been upgraded on 31613 since then? Unfortunately
-	timestamps have changed because of the cleanup of hardlinks.
+	timestamps have changed because of the cleanup of hardlinks. autobundle
+	comparisons don't help because I have no succeeding version of PDL at
+	hand.
+
+	I'll have to try these:
+
+installed-perls/perl/prYHaRP/perl-5.8.0@31021/bin/perl
+installed-perls/perl/pnKRDVH/perl-5.8.0@31078/bin/perl
+installed-perls/perl/p9kRmP3/perl-5.8.0@31113/bin/perl
+installed-perls/perl/pn6vGWK/perl-5.8.0@31187/bin/perl 
+installed-perls/perl/pOCMj1r/perl-5.8.0@31251/bin/perl FAIL
+installed-perls/perl/pbULX5j/perl-5.8.0@31281/bin/perl FAIL
+installed-perls/perl/p8ObZoq/perl-5.8.0@31319/bin/perl FAIL
+installed-perls/perl/pL3qrBd/perl-5.8.0@31384/bin/perl FAIL
+installed-perls/perl/pi12oAh/perl-5.8.0@31429/bin/perl FAIL
+installed-perls/perl/pzqCeY9/perl-5.8.0@31509/bin/perl FAIL
+installed-perls/perl/pX10SPP/perl-5.8.0@31563/bin/perl FAIL
+
 
 2007-09-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

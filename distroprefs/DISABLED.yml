@@ -24,7 +24,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
-    |DJERIUS/Shell-GetEnv-0.02.tar.gz
+    |DJERIUS/Shell-GetEnv-\d
     |DMOW/Eludia
     |GRM/
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz
