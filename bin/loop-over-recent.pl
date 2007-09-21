@@ -128,6 +128,7 @@ ITERATION: while () {
           }
         }
         $ENV{PERL_MM_USE_DEFAULT} = 1;
+        $ENV{DISPLAY} = ":121";
         my @system = (
                       $perl,
                       "-Ilib",
