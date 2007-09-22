@@ -12,7 +12,9 @@ comment: |
 
   or W:M:Pluggable kills the cpan shell with kill(); I don't understand how
 
-  or Shell-GetEnv throws me into a shell and sits there doing nothing
+  or Shell-GetEnv 0.0[23] threw me into a shell to sit there doing nothing
+
+  or the tacacs thing seems to hang
 
   etc.
 
@@ -24,10 +26,11 @@ match:
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
-    |DJERIUS/Shell-GetEnv-\d
+    |DJERIUS/Shell-GetEnv-0.0[23]
     |DMOW/Eludia
     |GRM/
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz
+    |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     )|

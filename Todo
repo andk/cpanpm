@@ -1,3 +1,18 @@
+2007-09-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug in RECENT code: somebody removes a file from PAUSE and forgets to
+	pass over to the RECENT file. Then the receiver needs a more tolerant
+	strategy than the current one. Currently he retries until he gets the
+	deleted file which is never and only then he would publish his own
+	RECENT file.
+
+	* Net-DNS also broke recently
+	
+	2007-09-17T14:22 	perl 	31882 	239 	OLAF/Net-DNS-0.61.tar.gz 	NOT OK
+	2007-09-15T00:06 	perl 	31866 	110 	OLAF/Net-DNS-0.61.tar.gz 	OK
+
+	and since then 4 NOT OKs
+
 2007-09-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* sand sand 2421684982 Sep 21 22:14 megainstall.20070921T0555.out

@@ -181,11 +181,27 @@ ITERATION: while () {
     $max_epoch_ever = 0;
     %got_at = ();
   } else {
-    rename $trecentfile, $rf->recentfile;
     for my $k (keys %got_at) {
       delete $got_at{$k} if $got_at{$k} < $max_epoch_ever - 60*60*24*2;
     }
   }
+
+  # XXX broken: we must do something else when an error happens. I
+  # think we must rewrite the recent file and set the eventtype to
+  # unknown or something. But we must publish *some* recent file
+  # otherwise a single error stops the whole mirroring process. In our
+  # case it was a file that got deleted at the source but it was not
+  # reflected in the RECENT file. We must never believe that the R
+  # file is perfect.
+
+  # Note: by setting the max_time_ever to zero we might also do harm
+  # insofar we hit the parent server to often with all the files that
+  # are OK. We should probably only retry the files that have an
+  # error, like in a nosuccesscount and nosuccesstime and retry rate.
+
+  rename $trecentfile, $rf->recentfile;
+
+
   my $minimum_time_per_loop = 20;
   { local $| = 1; print "~"; $print_leading_newline = 1; }
   if (time - $iteration_start < $minimum_time_per_loop) {
