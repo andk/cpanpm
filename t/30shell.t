@@ -1093,6 +1093,24 @@ __END__
 #E:inhibit_startup_message
 #R:Term::ReadLine::Perl||Term::ReadLine::Gnu
 ########
+#P:help
+#E:Display Information
+########
+#P:h
+#E:Display Information
+########
+#P:?
+#E:Display Information
+########
+#P:help foo
+#E:foo: No help available
+########
+#P:h foo
+#E:foo: No help available
+########
+#P:? foo
+#E:foo: No help available
+########
 #P:quit
 #E:(removed\.)
 ########

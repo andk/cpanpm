@@ -1,3 +1,6 @@
+    * fixed bug that kept "?" from being interpreted as "help" command
+      (David Golden)
+    
 2007-09-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_55: stable release candidate II
