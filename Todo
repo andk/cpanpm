@@ -1,3 +1,12 @@
+2007-09-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* sand sand 2421684982 Sep 21 22:14 megainstall.20070921T0555.out
+
+	% tail -6 logs/megainstall.20070921T0555.out|uniq
+Warning: Use of "require" without parentheses is ambiguous at (eval 2354390) line 1.
+closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/installed-perls/perl/prTyqXp/perl-5.8.0@31933/lib/site_perl/5.10.0/Mail/Field.pm line 91.
+
+
 2007-09-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* bug: the locking in the recentfile seems broken. yesterday the yaml

@@ -13,6 +13,7 @@ distroprefs/ADAMK.Test-Inline.yml
 distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
+distroprefs/ANDREWF.LaTeX-Driver.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ASCOPE.Net-Google.yml
