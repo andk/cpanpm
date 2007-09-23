@@ -1816,7 +1816,14 @@ FAQ
                             INSTALLSCRIPT=~/myperl/bin \
                             INSTALLBIN=~/myperl/bin"
 
-        and then (oh joy) the equivalent command for Module::Build.
+        and then (oh joy) the equivalent command for Module::Build. That
+        would be
+
+          o conf mbuildpl_arg "--lib=~/myperl/lib \
+                            --installman1dir=~/myperl/man/man1 \
+                            --installman3dir=~/myperl/man/man3 \
+                            --installscript=~/myperl/bin \
+                            --installbin=~/myperl/bin"
 
         You can make this setting permanent like all "o conf" settings with
         "o conf commit" or by setting "auto_commit" beforehand.
