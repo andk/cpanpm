@@ -1,0 +1,36 @@
+=== lib/CPAN/Reporter/History.pm
+==================================================================
+--- lib/CPAN/Reporter/History.pm	(revision 4028)
++++ lib/CPAN/Reporter/History.pm	(local)
+@@ -93,7 +93,7 @@
+     my $phase = $result->{phase};
+     my $grade = uc $result->{grade};
+     my $dist_name = $result->{dist_name};
+-    my $perlver = $^V ? sprintf("perl-%vd", $^V) : "perl-$]";
++    my $perlver = "perl-" . _perl_version();
+     $perlver .= " patch $Config{perl_patchlevel}" 
+         if $Config{perl_patchlevel};
+     my $arch = "$Config{archname} $Config{osvers}";    
+@@ -164,6 +164,22 @@
+ }
+ 
+ #--------------------------------------------------------------------------#
++# _perl_version
++#--------------------------------------------------------------------------#
++
++sub _perl_version {
++    my $ver = "$]";
++    $ver =~ qr/(\d)\.(\d{3})(\d{0,3})/;
++    my ($maj,$min,$pat) = (0 + $1, 0 + $2, 0 + ($3||0));
++    if ( $min < 6 ) {
++        return "$]";
++    }
++    else {
++        return "$maj\.$min\.$pat";
++    }
++}
++
++#--------------------------------------------------------------------------#
+ # _record_history
+ #--------------------------------------------------------------------------#
+ 
