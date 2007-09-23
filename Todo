@@ -1,5 +1,8 @@
 2007-09-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* between bleadperl 31895 and 31937 we went from 215 fails to 159.
+	Supercool but still hard to write good reports about it.
+
 	* Bug in RECENT code: somebody removes a file from PAUSE and forgets to
 	pass over to the RECENT file. Then the receiver needs a more tolerant
 	strategy than the current one. Currently he retries until he gets the
@@ -11,7 +14,12 @@
 	2007-09-17T14:22 	perl 	31882 	239 	OLAF/Net-DNS-0.61.tar.gz 	NOT OK
 	2007-09-15T00:06 	perl 	31866 	110 	OLAF/Net-DNS-0.61.tar.gz 	OK
 
-	and since then 4 NOT OKs
+	and since then 4 NOT OKs and then when Test::Simple 0.72 appeared
+
+	2007-09-21T13:33 	perl 	31937 	472 	OLAF/Net-DNS-0.61.tar.gz 	OK
+	2007-09-19T10:43 	perl 	31895 	242 	OLAF/Net-DNS-0.61.tar.gz 	NOT OK
+
+	http://rt.cpan.org/Ticket/Display.html?id=29558
 
 2007-09-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

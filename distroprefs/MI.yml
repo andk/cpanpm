@@ -73,6 +73,7 @@ match:
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |LBROCARD/Devel-ebug-HTTP-\d
+    |LUKEC/Test-Mock-LWP-\d
     |LUKEC/Test-WWW-Selenium-\d
     |LUTETIUS/pod2book-\d
     |LYOKATO/FormValidator-Simple-\d

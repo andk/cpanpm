@@ -26,6 +26,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
+    |DDUMONT/Tk-ObjEditor-2.004.tar.gz
     |DJERIUS/Shell-GetEnv-0.0[23]
     |DMOW/Eludia
     |GRM/
