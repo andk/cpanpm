@@ -14,3 +14,12 @@ pl:
     - "XFT=1"
 patches:
   - "SREZIC/patches/Tk-804.027-p4.patch.gz"
+---
+match:
+  distribution: "^SREZIC/Tk-\d"
+pl:
+  args:
+    - "XFT=1"
+test:
+  env:
+    DISPLAY: ":121"
