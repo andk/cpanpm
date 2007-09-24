@@ -1,7 +1,7 @@
 ---
 match:
   distribution: "TBONE/HTTP-File-\d"
-pl:
+test:
   expect:
     - "\QEnter your cgi-bin directory URL (relative or absolute):\E"
     - "\n"
