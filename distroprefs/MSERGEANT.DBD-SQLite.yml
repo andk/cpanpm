@@ -5,7 +5,7 @@ comment: |
   I had to add the USE_LOCAL_SQLITE to get the tests pass.
 
 match:
-  distribution: "^MSERGEANT/DBD-SQLite-1\.13\.tar\.gz"
+  distribution: "^MSERGEANT/DBD-SQLite-\d"
 pl:
   args:
    - "USE_LOCAL_SQLITE=1"
