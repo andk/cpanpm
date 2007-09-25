@@ -178,6 +178,7 @@ distroprefs/RDF.Clone.yml
 distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
+distroprefs/RIZEN.Config-JSON.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
 distroprefs/RJBS.MIME-Light.yml
