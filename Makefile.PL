@@ -171,6 +171,8 @@ WriteMakefile(
               dist => {
                        DIST_DEFAULT => join(" ", # note: order matters!
                                             "verify-no-subdir",
+                                            "verify-changes-date",
+                                            "verify-changes-version",
                                             "dd-prefs",
                                             "Makefile",
                                             "no_CR",
@@ -245,6 +247,13 @@ OKDIRS=CPAN|DIST|bin|blib|cover_db|\
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^($(OKDIRS))\z/x&&-d($$_)}glob"*";' \
 		-e 'die"unexpected dir:$$s"if$$s'
+
+verify-changes-date:
+	@$(PERL) -ne 'BEGIN{my@t=(localtime)[5,4,3];$$t[0]+=1900;$$t[1]++;$$t=sprintf"%04d-%02d-%02d",@t}' \
+		-e 'exit if /^$$t\s/; END{die "Alert: did not find <$$t> in Changes file"}' Changes
+
+verify-changes-version:
+	@$(PERL) -ne 'exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file"}' Changes
 
 kwalify-distroprefs:
 	$(PERL) -MKwalify -MYAML::Syck \
