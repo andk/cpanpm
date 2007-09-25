@@ -938,6 +938,7 @@ i18n
 interface
 mixin
 overload
+overload::eval
 re::engine::PCRE
 re::engine::POSIX
 re::engine::Plan9
