@@ -2183,6 +2183,8 @@ sub reload {
                     "CPAN/HandleConfig.pm",
                     "CPAN/Kwalify.pm",
                     "CPAN/Queue.pm",
+                    "CPAN/Reporter/Config.pm",
+                    "CPAN/Reporter/History.pm",
                     "CPAN/Reporter.pm",
                     "CPAN/SQLite.pm",
                     "CPAN/Tarzip.pm",
