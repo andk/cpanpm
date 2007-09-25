@@ -1,3 +1,49 @@
+2007-09-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* MIME-tools-5.421 give me a major headache the testsuite (sometimes?)
+	runs into a tight loop of 'Warning: Use of "require" without parentheses
+	is ambiguous at (eval 5493800) line 1.' At least now twice for 31952 and
+	31955.
+
+	I have to kill this one:
+	
+sand     14150 55.2 45.6 714620 710088 pts/16  R+   01:32  88:43 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/Gauntlet.t
+
+	But the next test has the same problem
+
+sand     30860 64.8  1.3  24940 20572 pts/16   R+   04:13   1:14 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/Head.t
+
+	And then again for
+
+sand     30969 50.5  0.6  13924  9600 pts/16   R+   04:15   0:14 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/Misc.t
+
+	I repeatedly verify who has the problem with such commands:
+
+% lsof -p 30969|grep cwd
+perl    30969 sand  cwd    DIR    9,1    4096 17304047 /home/sand/.cpan/build/MIME-tools-5.421-fuesqd
+
+	But then one after the other
+
+sand     31244 49.3  0.8  16868 12544 pts/16   R+   04:17   0:23 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/Parser.t
+sand     31363 46.6  0.8  17768 13480 pts/16   R+   04:18   0:21 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/ParserEncoded.t
+sand     31578 34.0  0.6  14100  9888 pts/16   R+   04:20   0:09 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/ParserPreamble.t
+sand     31608 52.5  0.8  17696 13376 pts/16   R+   04:20   0:27 /home/src/perl/repoperls/installed-perls/perl/pN0oLia/perl-5.8.0@31955/bin/perl -w t/Ref.t
+
+	Now we're done. I urgently need a solution for that. Both for a
+	bugreport and for the meta stuff with probably POE. Or commandline.
+
+	Interesting enough is that Mt-5.421 is young and I have 4 OKs up to
+	31945. Compare autobundle with @31945 and @31952 and @31955:
+
+	/home/sand/.cpan/Bundle/Snapshot_2007_09_25_0[012].pm
+
+	Diffs are worthless because the latter two were killed. But I can reproduce the bug.
+
+	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/c69cf6ab2b16f985/62b09eab3381584f?lnk=gst&q=%22is+ambiguous%22&rnum=8#62b09eab3381584f
+
+	How could I forget that thread.
+	
+
 2007-09-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* between bleadperl 31895 and 31937 we went from 215 fails to 159.
@@ -4755,7 +4801,7 @@ Warning: Use of "require" without parentheses is ambiguous at (eval 743) line 1.
 Bareword found where operator expected at (eval 743) line 1, near "200::lvcreate
 "
         (Missing operator before ::lvcreate?)
-[...about 6 million lines of "closedir attempted" and "require without parsntheses"...]
+[...about 6 million lines of "closedir attempted" and "require without parentheses"...]
 Warning: Use of "require" without parentheses is ambiguous at (eval 5936852) line 1.
 Warning: Use of "require" without parentheses is ambiguous at (eval 5936853) line 1.
 Warning: Use of "require" without parentheses is ambiguous at (eval 5936854) line 1.
@@ -4773,7 +4819,7 @@ Warning: Use of "require" without parentheses is ambiguous at (eval 5936858) lin
 
 	Snapshot_2007_04_11_0[01].pm
 
-	Yhe only version difference is in Tk::Tree, impossible that it has an
+	The only version difference is in Tk::Tree, impossible that it has an
 	influence.
 
 
