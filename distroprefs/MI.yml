@@ -9,6 +9,7 @@ comment: |
 match:
   distribution: |
     ^(?x:^ADAMK/Algorithm-Dependency-\d
+    |ADAMK/HTML-Location-\d
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d

@@ -414,6 +414,7 @@ IPC::Open2
 IPC::PubSub
 IPC::ShareLite
 Image::ANSI
+Image::Delivery
 Image::ExifTool
 Image::Info::SVG
 Image::Magick::Thumbnail
