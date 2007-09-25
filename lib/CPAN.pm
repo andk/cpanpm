@@ -386,9 +386,11 @@ sub _flock {
     my($fh,$mode) = @_;
     if ($Config::Config{d_flock}) {
         return flock $fh, $mode;
-    } else {
+    } elsif (!$Have_warned->{"d_flock"}++) {
         $CPAN::Frontend->mywarn("Your OS does not support locking; continuing and ignoring all locking issues\n");
         $CPAN::Frontend->mysleep(5);
+        return 1;
+    } else {
         return 1;
     }
 }
