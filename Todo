@@ -148,10 +148,10 @@ closedir() attempted on invalid dirhandle DIR at /home/src/perl/repoperls/instal
 
 	I'll have to try these:
 
-installed-perls/perl/prYHaRP/perl-5.8.0@31021/bin/perl
-installed-perls/perl/pnKRDVH/perl-5.8.0@31078/bin/perl
-installed-perls/perl/p9kRmP3/perl-5.8.0@31113/bin/perl
-installed-perls/perl/pn6vGWK/perl-5.8.0@31187/bin/perl 
+installed-perls/perl/prYHaRP/perl-5.8.0@31021/bin/perl FAIL
+installed-perls/perl/pnKRDVH/perl-5.8.0@31078/bin/perl FAIL
+installed-perls/perl/p9kRmP3/perl-5.8.0@31113/bin/perl FAIL
+installed-perls/perl/pn6vGWK/perl-5.8.0@31187/bin/perl FAIL
 installed-perls/perl/pOCMj1r/perl-5.8.0@31251/bin/perl FAIL
 installed-perls/perl/pbULX5j/perl-5.8.0@31281/bin/perl FAIL
 installed-perls/perl/p8ObZoq/perl-5.8.0@31319/bin/perl FAIL

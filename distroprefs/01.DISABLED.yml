@@ -18,6 +18,8 @@ comment: |
 
   ObjEditor: http://rt.cpan.org/Ticket/Display.html?id=29559
 
+  DBIx-Perform wants a curses login(?)
+
   etc.
 
 match:
@@ -36,5 +38,6 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
+    |BKCHAPIN/DBIx-Perform-\d
     )|
 disabled: 1
