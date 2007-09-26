@@ -205,8 +205,10 @@ distroprefs/STEVAN.Class-MOP.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/TBONE.HTTP-File.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
+distroprefs/TIMB.Apache-Status-DBI.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/TKEEFER.Gantry.yml
+distroprefs/TLOWERY.DBI-Shell.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
 distroprefs/TSCH.Cairo.yml
 distroprefs/TSCH.Gtk2.yml
