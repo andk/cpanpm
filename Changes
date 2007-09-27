@@ -1,5 +1,23 @@
-    * fixed bug that kept "?" from being interpreted as "help" command
-      (David Golden)
+2007-09-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.9201: stable release
+
+	* bugfix: remove a compile time has_inst call from CPAN::Admin which
+	could cause a hang (Mike Brudenell, Slaven Rezic)
+
+	* address #29606: only warn once when we ignore locking issues (Steve Cooper)
+
+	* add CPAN::Reporter::* to the packages needed for "reload cpan" (David
+	Golden)
+
+	* now with 214 distroprefs files
+
+2007-09-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92: stable release
+
+	* fixed bug that kept "?" from being interpreted as "help" command
+	(David Golden)
     
 2007-09-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
