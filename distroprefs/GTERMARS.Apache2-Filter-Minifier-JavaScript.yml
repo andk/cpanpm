@@ -1,0 +1,11 @@
+---
+comment: |
+
+  I have no Apache 2 setup yet, sorry
+
+  And if you do not stop writing endless loop constructs I'll invent
+  something against it and you will regret being so stubborn.
+
+match:
+  distroprefs: "GTERMARS/Apache2-Filter-Minifier-JavaScript-\d"
+disabled: 1
