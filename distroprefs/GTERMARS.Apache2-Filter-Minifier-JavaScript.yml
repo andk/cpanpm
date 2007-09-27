@@ -7,5 +7,5 @@ comment: |
   something against it and you will regret being so stubborn.
 
 match:
-  distroprefs: "GTERMARS/Apache2-Filter-Minifier-JavaScript-\d"
+  distribution: "GTERMARS/Apache2-Filter-Minifier-JavaScript-\d"
 disabled: 1
