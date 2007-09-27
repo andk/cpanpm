@@ -8,9 +8,8 @@ use constant PAUSE_IP => "pause.perl.org";
 @EXPORT = qw(shell);
 $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
-if ($CPAN::META->has_inst("Term::ANSIColor")) {
-    $CPAN::Shell::COLOR_REGISTERED = 1;
-}
+$CPAN::Shell::COLOR_REGISTERED = 1;
+
 sub shell {
     CPAN::shell($_[0]||"admin's cpan> ",$_[1]);
 }
@@ -183,6 +182,11 @@ __END__
 =head1 SYNOPSIS
 
  perl -MCPAN::Admin -e shell
+
+=head1 STATUS
+
+Note: this module is currently not maintained. If you need it and fix
+it for your needs, please submit patches.
 
 =head1 DESCRIPTION
 
