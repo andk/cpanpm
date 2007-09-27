@@ -250,7 +250,7 @@ verify-no-subdir:
 
 verify-changes-date:
 	@$(PERL) -ne 'BEGIN{my@t=(localtime)[5,4,3];$$t[0]+=1900;$$t[1]++;$$t=sprintf"%04d-%02d-%02d",@t}' \
-		-e 'exit if /^$$t\s/; END{die "Alert: did not find <$$t> in Changes file"}' Changes
+		-e '$$ok++;exit if /^$$t\s/; END{die "Alert: did not find <$$t> in Changes file" unless $$ok}' Changes
 
 verify-changes-version:
 	@$(PERL) -ne 'exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file"}' Changes
