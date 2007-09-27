@@ -1,3 +1,6 @@
+	* bugfix: don't try to make/Build when Makefile/Build.PL fails to 
+	generate a Makefile/Build
+	
 2007-09-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9201: stable release
