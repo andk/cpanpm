@@ -1,5 +1,7 @@
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* release 1.9203: stable release with one distroprefs file fixed
+
 	* release 1.9202: stable release
 
 	* bugfix: don't try to make/Build when Makefile/Build.PL fails to 
