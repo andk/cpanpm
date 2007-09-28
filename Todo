@@ -1,5 +1,18 @@
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* MSISK/HTML-TableExtract-2.10.tar.gz: I had already RTed months ago
+	that it is due to the HTML::TreeBuilder but did I write it into a
+	distroprefs file? Yes, Sir, I have:
+	distroprefs/MSISK.HTML-TableExtract.yml and that is why since then I
+	have ONLY fails.
+
+	Would be cool to offer a fix though.
+
+	But in the interest of sanity it would be better to write a distroprefs
+	file automatically that's based on some criterium like, say, no release
+	for over N months although since that many months nothing but fail
+	reports. This would also be interesting for CPANTS.
+
 	* Todo: write a history of used distroprefs docs so we can identify
 	which ones are never used and can be purged.
 
