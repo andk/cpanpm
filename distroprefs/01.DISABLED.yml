@@ -10,18 +10,6 @@ comment: |
 
   things that need ressources we don't have
 
-  or W:M:Pluggable kills the cpan shell with kill(); I don't understand how
-
-  or Shell-GetEnv 0.0[23] threw me into a shell to sit there doing nothing
-
-  or the tacacs thing seems to hang
-
-  ObjEditor: http://rt.cpan.org/Ticket/Display.html?id=29559
-
-  DBIx-Perform wants a curses login(?)
-
-  etc.
-
 match:
   distribution: |
     ^(?x:
@@ -30,14 +18,15 @@ match:
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
-    |DDUMONT/Tk-ObjEditor-2.004.tar.gz
-    |DJERIUS/Shell-GetEnv-0.0[23]
+    |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
+    |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
     |DMOW/Eludia
     |GRM/
-    |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz
-    |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17
+    |DMAKI/Gungho-0.08006.tar.gz             # hanging test
+    |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
+    |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
-    |BKCHAPIN/DBIx-Perform-\d
+    |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     )|
 disabled: 1
