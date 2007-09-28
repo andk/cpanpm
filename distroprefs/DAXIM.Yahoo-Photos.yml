@@ -8,15 +8,8 @@ pl:
   eexpect:
     mode: anyorder
     timeout: 10
+    reuse: 1
     talk:
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
-      - "Auto-install"
-      - "y\n"
       - "Auto-install"
       - "y\n"
   env:
@@ -26,3 +19,6 @@ make:
   env:
     PERL_AUTOINSTALL: --skip    
     PERL_EXTUTILS_AUTOINSTALL: --skip
+test:
+  args:
+    - "TEST_VERBOSE=1"

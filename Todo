@@ -1,3 +1,8 @@
+2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: write a history of used distroprefs docs so we can identify
+	which ones are never used and can be purged.
+
 2007-09-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* MIME-tools-5.421 give me a major headache the testsuite (sometimes?)
