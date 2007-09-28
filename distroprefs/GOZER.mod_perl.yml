@@ -23,3 +23,4 @@ pl:
     - APACHE_SRC=/home/src/www/apache/apache/apache_2.0.xxx/src
     - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_2.0.xxx/src
     - DO_HTTPD=1
+disabled: 1
