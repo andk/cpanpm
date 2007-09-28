@@ -1,5 +1,5 @@
 ---
-comment:
+comment: |
 
   2007-09-28 : With bleadperl I saw FAILS when using recent
   Pod::Coverage but all tests up to 2007-09-15T00:06 had PASS; haven't
