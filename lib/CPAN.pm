@@ -6012,7 +6012,7 @@ sub containsmods {
         }
         $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
     }
-    keys %{$self->{CONTAINSMODS}||{}};
+    keys %{$self->{CONTAINSMODS}||={}};
 }
 
 #-> sub CPAN::Distribution::upload_date ;
