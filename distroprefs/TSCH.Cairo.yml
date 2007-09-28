@@ -1,7 +1,17 @@
 --- 
+comment: |
+
+  Why do some people believe that dieing is the appropariate way to
+  proceed whan just a dependency is not fulfilled?
+
 match:
   distribution: "^TSCH/Cairo-\d"
 depends:
   configure_requires:
     ExtUtils::PkgConfig: 0
     ExtUtils::Depends: 0
+  requires:
+    Test::Number::Delta: 0
+pl:
+  args:
+    - "PREREQ_FATAL=0"
