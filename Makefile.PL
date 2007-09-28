@@ -173,6 +173,7 @@ WriteMakefile(
                                             "verify-no-subdir",
                                             "verify-changes-date",
                                             "verify-changes-version",
+                                            "kwalify-distroprefs",
                                             "dd-prefs",
                                             "Makefile",
                                             "no_CR",
