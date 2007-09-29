@@ -1,3 +1,62 @@
+2007-09-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* todo: add more Tk modules to megainstall. Which are missing?
+
+    4454 2001-05-05 SREZIC/Tk-Autoscroll-1.11.tar.gz         MISS OK
+    9563 2007-03-17 SREZIC/Tk-Canvas-Point-0.03.tar.gz       MISS FAIL0 OK1
+    8190 2002-08-08 SREZIC/Tk-CanvasFig-1.014.tar.gz         MISS FAIL0 HANG0
+    9673 2003-02-12 SREZIC/Tk-ContextHelp-0.10.tar.gz        MISS FAIL0 HANG0
+   19515 2007-09-28 SREZIC/Tk-Date-0.42_51.tar.gz            MISS FAIL0 OK1
+   10448 2004-07-02 SREZIC/Tk-DateEntry-1.38.tar.gz          MISS FAIL0 OK1
+    5193 2005-10-10 SREZIC/Tk-Enscript-1.08.tar.gz           MISS FAIL0 OK1
+   10380 2007-04-10 SREZIC/Tk-FontDialog-0.13.tar.gz         HAVE
+   25367 2006-05-23 SREZIC/Tk-GBARR-2.07.tar.gz (Tk::Cloth)  MISS FAIL0 OK1
+   22275 2005-05-03 SREZIC/Tk-Getopt-0.49.tar.gz             MISS FAIL0 OK1
+   10848 2007-02-02 SREZIC/Tk-HistEntry-0.43.tar.gz          HAVE
+   19328 2004-07-02 SREZIC/Tk-JPEG-Lite-2.01403.tar.gz       MISS FAIL0 OK1
+    8146 2004-09-04 SREZIC/Tk-PathEntry-2.23.tar.gz          MISS FAIL0 OK1
+   60117 2007-07-27 SREZIC/Tk-Pod-0.9935.tar.gz              HAVE
+    6803 2005-08-25 SREZIC/Tk-Splash-0.14.tar.gz             MISS FAIL0 OK1
+  166725 2007-05-11 SREZIC/Tk-TIFF-0.10.tar.gz               MISS FAIL0 OK1
+   12299 2007-09-23 SREZIC/Tk-WidgetDump-1.35.tar.gz         MISS FAIL0 OK1
+    6855 2004-03-20 SREZIC/Tk-WinPrint-0.05.tar.gz           MISS FAIL1
+   12873 2006-09-01 SREZIC/Tk-XMLViewer-0.18.tar.gz          MISS FAIL0 OK1
+
+	HAVE  ... already installed
+	MISS  ... not installed yet
+	FAIL0 ... fails without DISPLAY
+	FAIL1 ... fails compile
+	OK    ... OK without DISPLAY
+	OK1   ... OK after setting DISPLAY=:121
+	HANG0 ... hangs during test with DISPLAY=:121
+	
+	* DMAKI/Gungho-0.08007.tar.gz
+
+t/03_live/twitter................skipped
+        all skipped: Enable GUNGHO_TWITTER_USERNAME and GUNGHO_TWITTER_PASSWORD to run these tests
+t/99_kwalitee....................skipped
+        all skipped: Enable TEST_KWALITEE to enable these tests
+t/99_pod-coverage................skipped
+        all skipped: Enable TEST_POD environment variable to test POD
+t/99_pod.........................skipped
+        all skipped: Enable TEST_POD environment variable to test POD
+t/engine/danga-socket/01_load....ok
+t/engine/danga-socket/04_dns.....
+
+	and hangs forever. I kill that test and this summary:
+
+Failed Test                    Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/02_config.t                     1   256     2    1  2
+t/engine/danga-socket/04_dns.t    0    15    20   40  1-20
+5 tests skipped.
+Failed 2/14 test scripts. 21/100 subtests failed.
+
+	All that should be in the report.
+
+	Repeat with maint@31223, same result, this time without sent report
+	because it was not running from the CPAN shell.
+
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* MSISK/HTML-TableExtract-2.10.tar.gz: I had already RTed months ago

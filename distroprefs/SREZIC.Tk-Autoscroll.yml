@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^SREZIC/Tk-Autoscroll-"
+  distribution: "^SREZIC/Tk-[A-Z]"
 test: 
   env:
     BATCH: 1
