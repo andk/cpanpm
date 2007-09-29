@@ -88,6 +88,7 @@ distroprefs/GOMOR.Net-Write.yml
 distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
 distroprefs/GRAY.IO-AIO-Util.yml
+distroprefs/GRICHTER.Embperl.yml
 distroprefs/GRM.App-CamelPKI.yml
 distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
