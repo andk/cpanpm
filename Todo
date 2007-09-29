@@ -43,7 +43,7 @@ t/99_pod.........................skipped
 t/engine/danga-socket/01_load....ok
 t/engine/danga-socket/04_dns.....
 
-	and hangs forever. I kill that test and this summary:
+	and hangs forever. I kill that test and get this summary:
 
 Failed Test                    Stat Wstat Total Fail  List of Failed
 -------------------------------------------------------------------------------
@@ -55,7 +55,10 @@ Failed 2/14 test scripts. 21/100 subtests failed.
 	All that should be in the report.
 
 	Repeat with maint@31223, same result, this time without sent report
-	because it was not running from the CPAN shell.
+	because it was not running from the CPAN shell. Same failure on danga
+	for 5.8.8 but 5.8.8 doesn't have the 02_config failure.
+
+	http://rt.cpan.org/Ticket/Display.html?id=29660
 
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

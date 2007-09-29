@@ -14,6 +14,7 @@ match:
   distribution: |
     ^(?x:
     .^   # never matches, only purpose is to let things align nicely
+    |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |BFREE/OpenGL-\d
     |BFREE/OpenGL-Image-\d
     |CORLISS/CursesForms-\d
