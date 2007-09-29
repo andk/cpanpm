@@ -15,19 +15,19 @@ match:
     ^(?x:
     .^   # never matches, only purpose is to let things align nicely
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
-    |BFREE/OpenGL-\d
     |BFREE/OpenGL-Image-\d
+    |BFREE/OpenGL-\d
+    |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
+    |DMAKI/Gungho-\d                         # hanging test
     |DMOW/Eludia
     |GRM/
-    |DMAKI/Gungho-\d                         # hanging test
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
-    |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     )|
 disabled: 1
