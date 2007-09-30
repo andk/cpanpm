@@ -22,7 +22,8 @@
 	And surprise, we now fulfill it.
 
 	I think the only bug is the --silence-errors option that I saw in the
-	debugger. It should be replaced with --print-errors.
+	debugger. It should be replaced with --print-errors. Otherwise the user
+	never sees an error and has to suffer.
 
 	* todo: add more Tk modules to megainstall. Which are missing?
 

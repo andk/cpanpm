@@ -1,4 +1,9 @@
 --- 
+comment: |
+
+    Despite the name of the file this is really meant for all Tk
+    modules by Slaven.
+
 match:
   distribution: "^SREZIC/Tk-[A-Z]"
 test: 

@@ -225,6 +225,8 @@ MEGA_BASE = \
 
 # define a random one
 MEGA_XML=logs/megainstall.20070412T1450.d/RJRAY!RPC-XML-0.59.xml
+
+YAML_MODULE=YAML::Syck
 }
 }
 
@@ -257,9 +259,11 @@ verify-changes-version:
 	@$(PERL) -ne '$$ok++,exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file" unless $$ok}' Changes
 
 kwalify-distroprefs:
-	$(PERL) -MKwalify -MYAML::Syck \
-	  -e 'my $$s = YAML::Syck::LoadFile("lib/CPAN/Kwalify/distroprefs.yml");my $$i=0;my $$notok=0;' \
-	  -e 'for (glob("distroprefs/*.yml")){ printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,YAML::Syck::LoadFile("$$_"))?"OK":("NOT OK ".++$$notok),$$_ };' \
+	$(PERL) -MKwalify -M$(YAML_MODULE) \
+	  -e 'my$$s=eval{$(YAML_MODULE)::LoadFile("lib/CPAN/Kwalify/distroprefs.yml")};' \
+	  -e 'die"[$$@]whileLoadFile"if$$@;' \
+	  -e 'my$$i=0;my$$notok=0;' \
+	  -e 'for (glob("distroprefs/*.yml")){ printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,$(YAML_MODULE)::LoadFile("$$_"))?"OK":("NOT OK ".++$$notok),$$_ };' \
 	  -e 'print $$notok ? "$$notok broken\n" : "All OK\n";'
 
 setversion:
