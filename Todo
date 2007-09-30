@@ -1,5 +1,29 @@
 2007-09-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* digging into gtk. It always failed because somebody told the Gtk
+	self-configuration that something on my system was not sufficient. No
+	helpful diagnostics were ever provided.
+
+	Running through the debugger today reveals that it is due to pkg-config.
+
+	Asking pkg-config with the right options reveals a few things
+
+	# pkg-config --exists --print-errors 'gtk+-2.0'
+
+	I had to call it several times and to install libxmu-dev libxinerama-dev
+	libxinerama1 (who would have guessed?)
+
+	This does at least let the above command return true.
+
+	But there is still a version requirement in the Gtk2 package that says
+
+	gtk+-2.0 >= 2.0.0
+
+	And surprise, we now fulfill it.
+
+	I think the only bug is the --silence-errors option that I saw in the
+	debugger. It should be replaced with --print-errors.
+
 	* todo: add more Tk modules to megainstall. Which are missing?
 
     4454 2001-05-05 SREZIC/Tk-Autoscroll-1.11.tar.gz         MISS OK
