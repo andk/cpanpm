@@ -53,7 +53,7 @@
 	FAIL1 ... fails compile
 	OK    ... OK without DISPLAY
 	OK1   ... OK after setting DISPLAY=:121
-	HANG0 ... hangs during test with DISPLAY=:121
+	HANG0 ... hangs during test with DISPLAY=:121 but doesn't hang with BATCH=1
 	
 	* DMAKI/Gungho-0.08007.tar.gz
 

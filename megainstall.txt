@@ -344,6 +344,7 @@ Geography::Countries
 Getopt::ArgvFile
 Getopt::Euclid
 Getopt::Long
+Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
 Graph
@@ -850,7 +851,9 @@ Time::Piece
 Time::UTC
 Tk::Autoscroll
 Tk::Canvas::Point
+Tk::CanvasFig
 Tk::Cloth
+Tk::ContextHelp
 Tk::Date
 Tk::DateEntry
 Tk::Enscript
