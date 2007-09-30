@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Crypt::SSLeay;
 use Getopt::Long;
 use HTML::TreeBuilder::XPath;
 use LWP::UserAgent;
@@ -15,19 +14,36 @@ GetOptions(\%OPT, "cred=s");
 my($searchurl) = @ARGV;
 
 sub Usage () {
-  "Usage: $0 --cred credentials searchurl
+  "Usage: $0 searchurl
 
-e.g. --cred ANDK:geheim http://search.cpan.org/~rgarcia/perl-5.9.5/
+e.g. http://search.cpan.org/~rgarcia/perl-5.9.5/
 ";
 }
 
-die Usage unless $searchurl && $OPT{cred};
+die Usage unless $searchurl;
 
 sub trim {
   my($x) = @_;
   $x =~ s/^\s+//;
   $x =~ s/\s+\z//;
   $x;
+}
+
+sub find_owner {
+  my($mod) = @_;
+  open my $fh, "/home/ftp/pub/PAUSE/modules/06perms.txt" or die;
+  local $/ = "\n";
+  while (<$fh>) {
+    next unless /^\s*$/;
+    last;
+  }
+  while (<$fh>) {
+    s/\s*\z//;
+    my($lmod,$luser,$perms) = split /,/, $_;
+    next unless $lmod eq $mod;
+    next if $perms eq "c";
+    return $luser;
+  }
 }
 
 my $ua = LWP::UserAgent->new;
@@ -46,10 +62,7 @@ for my $h2 (@h2) {
     my($td1) = $row->findnodes("./td[1]");
     my $td1_string = $td1->findvalue(".");
     my $module = trim $td1_string;
-    my $pause_resp = $ua->get("https://$OPT{cred}\@pause.perl.org/pause/authenquery?pause99_peek_perms_by=me;pause99_peek_perms_query=$module;pause99_peek_perms_sub=1;OF=YAML");
-    die $pause_resp->as_string unless $pause_resp->is_success;
-    my $yaml = YAML::Syck::Load($pause_resp->content);
-    my $owner = $yaml->[0]{owner};
+    my $owner = find_owner($module);
     printf "%-45s %-12s\n", $module, $owner;
   }
 }
