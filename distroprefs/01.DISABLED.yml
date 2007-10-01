@@ -22,7 +22,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
-    |DMAKI/Gungho-\d                         # hanging test
+    |DMAKI/Gungho-0.0800[678]                # hanging test; 0.08009 was ok
     |DMOW/Eludia
     |GRM/
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how

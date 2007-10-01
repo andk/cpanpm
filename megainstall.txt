@@ -200,6 +200,8 @@ DBIx::Simple
 DBIx::Timeout
 DB_File::Lock
 Daemon::Generic
+Danga::Socket
+Danga::Socket::Callback
 Data::Bind
 Data::Buffer
 Data::Dump
@@ -216,6 +218,7 @@ Data::OptList
 Data::Properties
 Data::Random
 Data::ShowTable
+Data::Throttler
 Data::TreeDumper
 Data::Types
 Data::Visitor
@@ -385,6 +388,7 @@ HTML::Widget
 HTML::WikiConverter
 HTTP::BrowserDetect
 HTTP::GHTTP
+HTTP::Parser
 HTTP::RangeSaver
 HTTP::Response::Encoding
 HTTP::Server::Simple
@@ -911,6 +915,7 @@ WWW::Live365
 WWW::Monitor
 WWW::OpenSearch
 WWW::REST
+WWW::RobotRules::Parser
 WWW::Scraper::ISBN::Record
 WWW::Search
 WWW::Shorten
