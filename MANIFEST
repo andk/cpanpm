@@ -179,6 +179,7 @@ distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
+distroprefs/RCLAMP.POE-Component-Server-HTTP.yml
 distroprefs/RDF.Clone.yml
 distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml

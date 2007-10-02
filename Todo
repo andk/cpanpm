@@ -1,3 +1,8 @@
+2007-10-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* off topic: try rob kinyon's bug with the next bleadperl which will
+	have no debugging and no int64bit.
+
 2007-09-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* digging into gtk. It always failed because somebody told the Gtk
