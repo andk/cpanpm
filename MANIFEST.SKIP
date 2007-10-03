@@ -69,3 +69,4 @@
 ^talks/
 ^test.out
 ~$
+cpanstats.db

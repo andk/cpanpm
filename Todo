@@ -1,3 +1,48 @@
+2007-10-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* EDPRATOMO/Algorithm-Permute-0.06.tar.gz probably needs a binary
+	search, it fails to *compile* the XS code. Presumably it has compiled
+	once upon a time. 25532 fails; 20002 OK; 23023 OK; OOOPs, I have doen
+	this already and reported. See further below.
+
+2007-10-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* JROBINSON/SQL-Translator-0.08001.tar.gz is another BBC candidate. See
+	2007-07-03 where I said I cannot run a binary search against it. Now I
+	can at least with some manual intervention. 23023 OK. It's hard to run
+	this binary search correct because now some of these perls do not pass
+	YAML tests and subsequently cannot patch/install Module::Build without
+	intervention. 24439 OK. 24759 OK.
+
+	But 24759 depends on YAML and YAML has no working version for 24759 so
+	CPAN.pm doesn't install it. We have all tests pass but no installation.
+	Need to force it. And YAML::XS is also tunneled.
+
+	So we have a very dark tunnel around 24759 with neither YAML nor
+	Module::Build. I have a patch for MB but not for YAML.
+
+	In any case 28539 still has the test 37 bug. 25532 OK; 27048 fails;
+	26369 (needs force install YAML) OK; 26695 (force install YAML) fails;
+	26465 OK; 26545 fails; 26480 OK; 
+
+	* RCLAMP/POE-Component-Server-HTTP-0.09.tar.gz looks like a BBC
+	candidate 22245 OK. But it's shadowed by the depends on POE-API-Peek
+	which was broken by blead for a while around 27514.
+
+	I have the impression that POE::API::Peek started to work on 31051 and
+	that POE::Component::Server::HTTP now works too since I have added a
+	dependency on POE::API::Peek in my distroprefs file. Nope, the
+	dependency on POE::API::Peek is in the Makefile.PL of P:C:S:HTTP.
+
+	Apparently all's well. *Maybe* there's also a configure_requires on POE
+	needed somewhere, dunno.
+
+	* IFF Compress::Zlib 2.X does not work we can take
+	PMQS/Compress-Zlib-1.42.tar.gz as a replacement!
+
+	Would be nice to find a replacement for Scalar-List-Utils too. 1.19 does
+	not work with blead@23023, but 1.17 does.
+
 2007-10-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* off topic: try rob kinyon's bug with the next bleadperl which will
