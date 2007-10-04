@@ -1,5 +1,7 @@
 2007-10-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* #29754 5.005_05 has a lockfile problem
+
 	* Todo: more often change the perl config to have more variability;
 
 	* http://rt.cpan.org/Ticket/Display.html?id=29759 whines about Gtk2 not
