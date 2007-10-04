@@ -27,6 +27,7 @@ match:
     |DMOW/Eludia
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |GRM/
+    |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |OALDERS/URI-ParseSearchString-More-0.04

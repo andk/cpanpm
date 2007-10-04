@@ -1,5 +1,13 @@
 2007-10-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* t/034-uncompfile........ok
+t/035-uncompreadline....ok
+t/040-memory............ok
+t/041-error.............Name "main::BZIP" used only once: possible typo at t/041-error.t line 11.
+
+	I had to disable ARJAY/Compress-Bzip2-2.09.tar.gz because of this.
+	Happened with 5.6.2. Shoulod make this a bugreport.
+
 	* #29754 5.005_05 has a lockfile problem
 
 	* Todo: more often change the perl config to have more variability;
