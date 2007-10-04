@@ -277,6 +277,8 @@ Email::MIME::Encodings
 Email::MIME::Modifier
 Email::MIME::XPath
 Email::MessageID
+Email::Send
+Email::Simple
 Email::Simple::Creator
 Encode
 Encode::JavaScript::UCS
@@ -378,6 +380,8 @@ HTML::Selector::XPath
 HTML::SimpleParse
 HTML::StickyQuery
 HTML::TableExtract
+HTML::TagCloud
+HTML::TagCloud::Sorted
 HTML::Tagset
 HTML::Template::Compiled
 HTML::Tidy
@@ -637,6 +641,7 @@ Perl6::Perldoc
 Perl6::Say
 Perl::Dist
 Perl::MinimumVersion
+Perl::Unsafe::Signals
 Perl::Version
 PerlIO::eol
 PerlIO::via::dynamic
