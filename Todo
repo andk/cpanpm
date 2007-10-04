@@ -46,6 +46,12 @@ pocpoc=> select distroes.name,count(*) from testruns, distroes where testruns.di
 	This also marked the change from 64bitint=define zu undef and a non
 	debugging perl, CPAN::Reporter 0.99_1[34], lots of other differences.
 
+	But I upgraded 32001 to DBM::Deep 1.0006 and now tests of IPC::PubSub
+	fail. Downgrading to DBM::Deep 1.0005 is refused because tests fail. But
+	it was not 1.0005, it was 1.0004 that which IPC::PubSub worked with
+	flawlessly.
+
+	http://rt.cpan.org/Ticket/Display.html?id=29757
 
 	* bugreport to Jifty would circle on: current SVN tells me to install
 	IPC::PubSub, Email::Send, Test::WWW::Declare
@@ -154,6 +160,8 @@ N/A
 	I think the only bug is the --silence-errors option that I saw in the
 	debugger. It should be replaced with --print-errors. Otherwise the user
 	never sees an error and has to suffer.
+
+	http://rt.cpan.org/Ticket/Display.html?id=29758
 
 	* todo: add more Tk modules to megainstall. Which are missing?
 
