@@ -1,3 +1,10 @@
+2007-10-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: more often change the perl config to have more variability;
+
+	* http://rt.cpan.org/Ticket/Display.html?id=29759 whines about Gtk2 not
+	finishing its build. Something to do with @32001 in the path.
+
 2007-10-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* what's up with IPC::PubSub breakage? Is it breaking because of its

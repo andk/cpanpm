@@ -759,11 +759,15 @@ String::Random
 String::ShellQuote
 String::Similarity
 String::Truncate
+Sub::Assert
+Sub::Context
+Sub::Current
 Sub::Exporter
 Sub::Install
 Sub::Name
 Sub::Override
 Sub::Uplevel
+Sub::WrapPackages
 Sys::Hostname
 Sys::SigAction
 TAP::Parser
