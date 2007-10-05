@@ -15,7 +15,6 @@ match:
     ^(?x:
     .^   # never matches, only purpose is to let things align nicely
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
-    |ARJAY/Compress-Bzip2-2.09.tar.gz        # test hangs on 5.6.2
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
