@@ -1113,6 +1113,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
 
         seek $fh, 0, 0;
         truncate $fh, 0;
+        $fh->autoflush(1);
         $fh->print($$, "\n");
         $fh->print(hostname(), "\n");
         $self->{LOCK} = $lockfile;
