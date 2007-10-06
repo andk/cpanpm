@@ -52,8 +52,8 @@ match:
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
-    |ELLIOTJS/Task-Perl-Critic-[v\d]
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDepencencies-
+    |ELLIOTJS/Task-Perl-Critic-[v\d]
     |FLORA/Catalyst-View-Mason-\d
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
@@ -68,12 +68,13 @@ match:
     |HOLOWAY/Catalyst-Action-REST-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-\d
+    |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
-    |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
+    |JROCKWAY/Test-YAML-Valid
     |LBROCARD/Devel-ebug-HTTP-\d
     |LUKEC/Test-Mock-LWP-\d
     |LUKEC/Test-WWW-Selenium-\d
