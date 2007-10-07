@@ -816,7 +816,6 @@ Test::Pod::Coverage
 Test::Prereq
 Test::SubCalls
 Test::WWW::Mechanize
-Test::WWW::Mechanize
 Test::WWW::Selenium
 Test::Without::Module
 Test::XML
@@ -945,6 +944,8 @@ User
 User::Identity
 Voting::Condorcet::RankedPairs
 WWW::Live365
+WWW::Mechanize
+WWW::Mechanize::Shell
 WWW::Monitor
 WWW::OpenSearch
 WWW::REST

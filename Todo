@@ -18,8 +18,6 @@
 	TURNERJW/Tk-JFileDialog-1.34.tar.gz 
 	RCS/Tk-MListbox-1.11.tar.gz
 
-	
-
 2007-10-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* t/034-uncompfile........ok
