@@ -1,3 +1,25 @@
+2007-10-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Got a list of interesting Tk modules from Slaven
+
+	Tk::Axis Tk::Carp Tk::Clock Tk::CodeText Tk::CursorControl Tk::DateEntry
+	Tk::DatePick Tk::DiffText Tk::DirSelect Tk::ExecuteCommand
+	Tk::FastSplash (tricky!) Tk::FileDialog Tk::FireButton Tk::Gauge
+	Tk::Graph Tk::GraphItems Tk::HTML Tk::IconCanvas Tk::JBrowseEntry
+	Tk::JComboBox Tk::JFileDialog Tk::JListbox Tk::JPEG::Lite Tk::LCD
+	Tk::LockDisplay (interactive!) Tk::MDI Tk::MListbox Tk::RotCanvas
+	Tk::StayOnTop Tk::Stderr Tk::TableMatrix Tk::TextANSIColor
+	Tk::TextHighlight (interactive!) Tk::TIFF Tk::ToolBar (interactive!)
+	Tk::Wizard Tk::Zinc
+
+	didn't try those marked as interactive, all others had well behaving
+	tests with DISPLAY=:121 except
+
+	TURNERJW/Tk-JFileDialog-1.34.tar.gz 
+	RCS/Tk-MListbox-1.11.tar.gz
+
+	
+
 2007-10-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* t/034-uncompfile........ok

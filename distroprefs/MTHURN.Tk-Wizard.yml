@@ -8,4 +8,4 @@ match:
 test:
   env:
     DISPLAY: ":121"
-disabled: 1
+# disabled: 1
