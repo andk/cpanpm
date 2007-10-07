@@ -31,5 +31,6 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
+    |TOMZO/Quota-1.5.2.tar.gz                # hangs during test.pl
     )|
 disabled: 1
