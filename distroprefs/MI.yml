@@ -95,6 +95,7 @@ match:
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
+    |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
     |PHAYLON/namespace-clean-\d
     |REDTREE/PDF-API2-Simple-\d
