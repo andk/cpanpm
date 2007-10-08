@@ -59,6 +59,7 @@ match:
     |GAAL/Best-\d
     |GAAL/Class-Accessor-Ref-\d
     |GAAL/Class-Rebless-\d
+    |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
