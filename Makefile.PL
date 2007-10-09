@@ -263,7 +263,7 @@ kwalify-distroprefs:
 	  -e 'my$$s=eval{$(YAML_MODULE)::LoadFile("lib/CPAN/Kwalify/distroprefs.yml")};' \
 	  -e 'die"[$$@]whileLoadFile"if$$@;' \
 	  -e 'my$$i=0;my$$notok=0;' \
-	  -e 'for (glob("distroprefs/*.yml")){ printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,$(YAML_MODULE)::LoadFile("$$_"))?"OK":("NOT OK ".++$$notok),$$_ };' \
+	  -e 'for (glob("distroprefs/*.yml")){my$$p=eval{$(YAML_MODULE)::LoadFile("$$_")};die"[$$@]in[$$_]"if$$@;printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,$$p)?"OK":("NOT OK ".++$$notok),$$_ };' \
 	  -e 'print $$notok ? "$$notok broken\n" : "All OK\n";'
 
 setversion:

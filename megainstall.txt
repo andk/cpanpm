@@ -742,6 +742,7 @@ ShiftJIS::CP932::MapUTF
 ShiftJIS::Collate
 ShiftJIS::Regexp
 ShiftJIS::X0213::MapUTF
+ShipIt
 Smart::Comments
 Socket6
 Sort::ArbBiLex
@@ -960,6 +961,7 @@ Workflow
 X500::DN
 XML::ApacheFOP
 XML::Atom
+XML::Atom::SimpleFeed
 XML::AutoWriter
 XML::Checker::Parser
 XML::Clean
