@@ -1,0 +1,9 @@
+---
+match:
+  distribution: "^NI-S/Tk-HTML-\d"
+test:
+  env:
+    DISPLAY: ":121"
+depends:
+  requires:
+    HTML::Parser: 0
