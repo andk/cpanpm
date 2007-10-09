@@ -1,3 +1,89 @@
+2007-10-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 5.005_05. Running out of the CPAN WC
+
+Warning: prerequisite File::Temp 0 not found at (eval 4) line 220.
+Warning: prerequisite Scalar::Util 0 not found at (eval 4) line 220.
+Warning: prerequisite Test::Harness 2.62 not found at (eval 4) line 220.
+Warning: prerequisite Test::More 0 not found at (eval 4) line 220.
+
+	1) install Test::Harness     # installs 2.64
+	2) install File::Temp        # installs Test::More but fails for File::Temp due Carp::Heavy
+	3) install TJENNESS/File-Temp-0.16.tar.gz  # works
+	4) install GBARR/Scalar-List-Utils-1.18.tar.gz # works
+	5) install CPAN::Reporter
+
+		Failed during this command:
+		 ARANDAL/Pod-Simple-3.05.tar.gz               : make_test NO
+		 RRA/podlators-2.0.5.tar.gz                   : make_test NO
+		 MSCHWERN/ExtUtils-MakeMaker-6.36.tar.gz      : make NO
+		 DAGOLDEN/File-pushd-1.00.tar.gz              : make_test NO
+		 DMUEY/File-Copy-Recursive-0.35.tar.gz        : make_test NO
+		 MAREKR/Pod-Parser-1.35.tar.gz                : make_test NO
+		 JV/Getopt-Long-2.37.tar.gz                   : make_test NO one dependency not OK (Pod::Usage)
+		 DAGOLDEN/CPAN-Reporter-0.4801.tar.gz         : make_test NO
+
+	6) install MAREKR/PodParser-1.23.tar.gz  # works
+	7) install Term::ANSIColor               # works
+	8) install RRA/podlators-1.27.tar.gz     # works
+	9) install MSCHWERN/ExtUtils-MakeMaker-6.36.tar.gz # works
+	10) install DAGOLDEN/File-pushd-1.00.tar.gz # works
+
+	Now I tried it with Bundle::CPANxxl and during YAML::Syck got:
+
+*** glibc detected *** /usr/local/perl-5.005_05/bin/perl: free(): invalid next size (fast): 0x0818f3a8 ***
+======= Backtrace: =========
+/lib/i686/cmov/libc.so.6[0xb7e24cf5]
+/lib/i686/cmov/libc.so.6(cfree+0x90)[0xb7e28790]
+/usr/local/perl-5.005_05/bin/perl(Perl_sv_clear+0x39f)[0x80937af]
+/usr/local/perl-5.005_05/bin/perl(Perl_sv_free+0x4b)[0x809397b]
+/usr/local/perl-5.005_05/bin/perl(Perl_free_tmps+0x4c)[0x80a795c]
+/usr/local/perl-5.005_05/bin/perl(Perl_pp_nextstate+0x4f)[0x808d73f]
+/usr/local/perl-5.005_05/bin/perl(Perl_runops_standard+0x18)[0x80c4618]
+/usr/local/perl-5.005_05/bin/perl(perl_call_sv+0x314)[0x8059864]
+/usr/local/perl-5.005_05/bin/perl(Perl_call_list+0x1dd)[0x8059ced]
+/usr/local/perl-5.005_05/bin/perl(Perl_newSUB+0x93d)[0x807aa2d]
+/usr/local/perl-5.005_05/bin/perl(Perl_yyparse+0xe9c)[0x8071bcc]
+/usr/local/perl-5.005_05/bin/perl[0x80aad21]
+/usr/local/perl-5.005_05/bin/perl(Perl_pp_require+0x4f9)[0x80abbf9]
+/usr/local/perl-5.005_05/bin/perl(Perl_runops_standard+0x18)[0x80c4618]
+/usr/local/perl-5.005_05/bin/perl(perl_call_sv+0x314)[0x8059864]
+/usr/local/perl-5.005_05/bin/perl(Perl_call_list+0x1dd)[0x8059ced]
+/usr/local/perl-5.005_05/bin/perl(Perl_newSUB+0x93d)[0x807aa2d]
+/usr/local/perl-5.005_05/bin/perl(Perl_utilize+0x25a)[0x807d3aa]
+/usr/local/perl-5.005_05/bin/perl(Perl_yyparse+0xf95)[0x8071cc5]
+/usr/local/perl-5.005_05/bin/perl[0x80aad21]
+/usr/local/perl-5.005_05/bin/perl(Perl_pp_require+0x4f9)[0x80abbf9]
+/usr/local/perl-5.005_05/bin/perl(Perl_runops_standard+0x18)[0x80c4618]
+/usr/local/perl-5.005_05/bin/perl(perl_call_sv+0x314)[0x8059864]
+/usr/local/perl-5.005_05/bin/perl(Perl_call_list+0x1dd)[0x8059ced]
+/usr/local/perl-5.005_05/bin/perl(Perl_newSUB+0x93d)[0x807aa2d]
+/usr/local/perl-5.005_05/bin/perl(Perl_utilize+0x25a)[0x807d3aa]
+/usr/local/perl-5.005_05/bin/perl(Perl_yyparse+0xf95)[0x8071cc5]
+/usr/local/perl-5.005_05/bin/perl(perl_parse+0x709)[0x805b019]
+/usr/local/perl-5.005_05/bin/perl(main+0x75)[0x8057705]
+/lib/i686/cmov/libc.so.6(__libc_start_main+0xe0)[0xb7dd1050]
+/usr/local/perl-5.005_05/bin/perl[0x8057621]
+
+	Failed during this command:
+	 AUDREYT/YAML-Syck-0.97.tar.gz                : writemakefile NO '/usr/local/perl-5.005_05/bin/perl Makefile.PL' returned status 6
+	 RGIERSIG/Expect-1.21.tar.gz                  : make_test NO
+	 INGY/YAML-0.66.tar.gz                        : writemakefile NO '/usr/local/perl-5.005_05/bin/perl Makefile.PL' returned status 7424
+	 KWILLIAMS/Module-Build-0.2808.tar.gz         : make_test NO
+	 TJENNESS/File-Temp-0.18.tar.gz               : make_test NO
+	 GBARR/Scalar-List-Utils-1.19.tar.gz          : writemakefile NO '/usr/local/perl-5.005_05/bin/perl Makefile.PL' returned status 6
+	 ILYAM/Data-Dumper-2.121.tar.gz               : make NO
+	 DMUEY/File-Copy-Recursive-0.35.tar.gz        : make_test NO
+	 DAGOLDEN/CPAN-Reporter-0.4801.tar.gz         : make_test NO
+	 GBARR/IO-1.2301.tar.gz                       : writemakefile NO '/usr/local/perl-5.005_05/bin/perl Makefile.PL' returned status 65280
+	 AUDREYT/Module-Signature-0.55.tar.gz         : make_test NO one dependency not OK (IO::Socket::INET)
+	 PMQS/IO-Compress-Zlib-2.006.tar.gz           : make_test NO
+	 PMQS/Compress-Zlib-2.007.tar.gz              : make_test NO
+	 ADAMK/Archive-Zip-1.20.tar.gz                : make_test NO
+	 TOMHUGHES/IO-Zlib-1.07.tar.gz                : make_test NO
+	 KANE/Archive-Tar-1.36.tar.gz                 : make_test NO
+	
+
 2007-10-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* [rt.cpan.org #29616] "couldn't find a hints file" error seems like a

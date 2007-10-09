@@ -123,7 +123,7 @@ my $prereq_pm = {
                  'File::Spec' => 0,   # KWILLIAMS; requires
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
-                 'File::Temp' => 0,   # JTENNESS; requires Test::More;
+                 'File::Temp' => 0,   # TJENNESS; requires Test::More;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
                  'Test::Harness' => 2.62,

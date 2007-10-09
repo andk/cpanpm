@@ -32,5 +32,6 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     |TOMZO/Quota-1.5.2.tar.gz                # hangs during test.pl
+    |TTY/kurila-\d                           # asks too many questions
     )|
 disabled: 1
