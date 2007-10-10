@@ -22,7 +22,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
-    |DMAKI/Gungho-0.0800[678]                # hanging test; 0.08009 was ok
+    |DMAKI/Gungho-0.080\d                    # hanging test; 0.08009 was ok, 0.08010 not
     |DMOW/Eludia
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |GRM/

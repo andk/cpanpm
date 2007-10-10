@@ -47,7 +47,7 @@ Warning: prerequisite Test::More 0 not found at (eval 4) line 220.
 	Now I tried it with Bundle::CPANxxl and during YAML::Syck got:
 
 *** glibc detected *** /usr/local/perl-5.005_05/bin/perl: free(): invalid next size (fast): 0x0818f3a8 ***
-======= Backtrace: =========
+======= Backtrace: ========= 
 /lib/i686/cmov/libc.so.6[0xb7e24cf5]
 /lib/i686/cmov/libc.so.6(cfree+0x90)[0xb7e28790]
 /usr/local/perl-5.005_05/bin/perl(Perl_sv_clear+0x39f)[0x80937af]
