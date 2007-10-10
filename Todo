@@ -1,3 +1,18 @@
+2007-10-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* harness 2.99_03? Where is the mailing list? tapx-dev@hexten.net
+
+	From: Elliot Shank <perl@galumph.com>
+	Subject: Confusing test results for Perl::Critic 1.079_001.
+	To: andreas.koenig@anima.de
+	CC: perlcritic <dev@perlcritic.tigris.org>
+	Date: Tue, 09 Oct 2007 14:19:45 -0500
+
+	All tests pass, yet the test run is reported as failing.
+
+	Do you have any idea what's going on?
+
+
 2007-10-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 5.005_05. Running out of the CPAN WC

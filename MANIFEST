@@ -65,6 +65,7 @@ distroprefs/DLAND.Crypt-SSLeay.yml
 distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
+distroprefs/DMUEY.File-Copy-Recursive.yml
 distroprefs/DOM.OpenGuides.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
