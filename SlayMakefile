@@ -1,0 +1,42 @@
+#
+# $Id: SlayMakefile,v 2.4 2007/10/09 10:14:11 eserte Exp $
+#
+
+{
+    use CPAN::Kwalify;
+    use Data::Dumper;
+    use Kwalify qw(validate);
+    use YAML::Syck qw(LoadFile);
+}
+
+all:
+
+dd-prefs: { map { s{\.yml$}{.dd}; $_ } glob("distroprefs/*.yml lib/CPAN/Kwalify/distroprefs.yml") }
+
+%.dd: %.yml
+	{
+		my($self, $target) = @_;
+		(my $base = $target) =~ s{\.dd$}{};
+		my $file = $base . ".yml";
+	       	print STDERR "$base...\n";
+		my @y = LoadFile($file);
+		open my $ofh, ">", "$target~" or die $!;
+		print $ofh Data::Dumper->new(\@y)->Indent(1)->Useqq(1)->Purity(1)->Sortkeys(1)->Dump or die $!;
+		close $ofh or die $!;
+		rename "$target~", $target or die $!;
+	}
+
+validate:
+	{
+		my $errors = 0;
+		my $distroprefs_path = $INC{"CPAN/Kwalify.pm"};
+		$distroprefs_path =~ s{\.pm$}{/distroprefs.yml};
+		my $schema = LoadFile($distroprefs_path);
+		for my $yml (glob("distroprefs/*.yml")) {
+			my $data = LoadFile($yml);
+			$errors++ if (!validate($schema, $data));
+		}
+		if ($errors) { die "Found $errors errors" }
+		else { "Validation OK.\n" }
+	}
+

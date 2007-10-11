@@ -596,7 +596,7 @@ PDF::Reuse::Tutorial
 PDF::Table
 PDF::Tk
 PDF::Writer
-PDF::Xtract
+# 29905 PDF::Xtract
 PDL
 PGP::Sign
 POE::API::Peek

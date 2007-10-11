@@ -1,3 +1,68 @@
+2007-10-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 5.6.2 can also have the corruption:
+
+*** glibc detected *** /usr/local/perl-5.6.2/bin/perl: double free or corruption (!prev): 0x08154f08 ***
+======= Backtrace: =========
+/lib/i686/cmov/libc.so.6[0xb7ea1cf5]
+/lib/i686/cmov/libc.so.6(cfree+0x90)[0xb7ea5790]
+/usr/local/perl-5.6.2/bin/perl(Perl_safefree+0x85)[0x80ae618]
+/usr/local/perl-5.6.2/bin/perl(Perl_mg_free+0x79)[0x80b5146]
+/usr/local/perl-5.6.2/bin/perl(Perl_sv_clear+0x510)[0x80d4af6]
+/usr/local/perl-5.6.2/bin/perl(Perl_sv_free+0x1d3)[0x80d5046]
+/usr/local/perl-5.6.2/bin/perl(Perl_sv_clear+0x6c0)[0x80d4ca6]
+/usr/local/perl-5.6.2/bin/perl(Perl_sv_free+0x1d3)[0x80d5046]
+/usr/local/perl-5.6.2/bin/perl(Perl_free_tmps+0x6f)[0x80f23c6]
+/usr/local/perl-5.6.2/bin/perl(Perl_pp_nextstate+0x64)[0x80c1780]
+/usr/local/perl-5.6.2/bin/perl(Perl_runops_debug+0x154)[0x80c135c]
+/usr/local/perl-5.6.2/bin/perl[0x805d69f]
+/usr/local/perl-5.6.2/bin/perl(perl_run+0xde)[0x805d247]
+/usr/local/perl-5.6.2/bin/perl(main+0x9f)[0x8059eb3]
+/lib/i686/cmov/libc.so.6(__libc_start_main+0xe0)[0xb7e4e050]
+/usr/local/perl-5.6.2/bin/perl[0x8059d91]
+======= Memory map: ========
+08048000-08146000 r-xp 00000000 03:02 57623      /usr/local/perl-5.6.2/bin/perl
+08146000-0814f000 rwxp 000fe000 03:02 57623      /usr/local/perl-5.6.2/bin/perl
+0814f000-08253000 rwxp 0814f000 00:00 0          [heap]
+b7c00000-b7c21000 rwxp b7c00000 00:00 0
+b7c21000-b7d00000 ---p b7c21000 00:00 0
+b7db4000-b7dbe000 r-xp 00000000 03:02 767731     /lib/libgcc_s.so.1
+b7dbe000-b7dbf000 rwxp 00009000 03:02 767731     /lib/libgcc_s.so.1
+b7dd4000-b7de7000 r-xp 00000000 03:02 767894     /lib/i686/cmov/libpthread-2.6.1.so
+b7de7000-b7de9000 rwxp 00013000 03:02 767894     /lib/i686/cmov/libpthread-2.6.1.so
+b7de9000-b7deb000 rwxp b7de9000 00:00 0
+b7deb000-b7e02000 r-xp 00000000 09:01 17550801   /home/sand/.cpan/build/Event-1.09-E0n7Zq/blib/arch/auto/Event/Event.so
+b7e02000-b7e03000 rwxp 00016000 09:01 17550801   /home/sand/.cpan/build/Event-1.09-E0n7Zq/blib/arch/auto/Event/Event.so
+b7e03000-b7e06000 rwxp b7e03000 00:00 0
+b7e06000-b7e08000 r-xp 00000000 03:02 768237     /lib/i686/cmov/libutil-2.6.1.so
+b7e08000-b7e0a000 rwxp 00001000 03:02 768237     /lib/i686/cmov/libutil-2.6.1.so
+b7e0a000-b7e0f000 r-xp 00000000 03:02 767161     /lib/i686/cmov/libcrypt-2.6.1.so
+b7e0f000-b7e11000 rwxp 00004000 03:02 767161     /lib/i686/cmov/libcrypt-2.6.1.so
+b7e11000-b7e38000 rwxp b7e11000 00:00 0
+b7e38000-b7f7a000 r-xp 00000000 03:02 767159     /lib/i686/cmov/libc-2.6.1.so
+b7f7a000-b7f7b000 r-xp 00142000 03:02 767159     /lib/i686/cmov/libc-2.6.1.so
+b7f7b000-b7f7d000 rwxp 00143000 03:02 767159     /lib/i686/cmov/libc-2.6.1.so
+b7f7d000-b7f80000 rwxp b7f7d000 00:00 0
+b7f80000-b7fa3000 r-xp 00000000 03:02 767163     /lib/i686/cmov/libm-2.6.1.so
+b7fa3000-b7fa5000 rwxp 00023000 03:02 767163     /lib/i686/cmov/libm-2.6.1.so
+b7fa5000-b7fa7000 r-xp 00000000 03:02 767162     /lib/i686/cmov/libdl-2.6.1.so
+b7fa7000-b7fa9000 rwxp 00001000 03:02 767162     /lib/i686/cmov/libdl-2.6.1.so
+b7fa9000-b7fbd000 r-xp 00000000 03:02 767552     /lib/i686/cmov/libnsl-2.6.1.so
+b7fbd000-b7fbf000 rwxp 00013000 03:02 767552     /lib/i686/cmov/libnsl-2.6.1.so
+b7fbf000-b7fc2000 rwxp b7fbf000 00:00 0
+b7fc2000-b7fc9000 r-xp 00000000 03:02 768225     /lib/i686/cmov/librt-2.6.1.so
+b7fc9000-b7fcb000 rwxp 00006000 03:02 768225     /lib/i686/cmov/librt-2.6.1.so
+b7fcb000-b7fd1000 r-xp 00000000 03:02 75923      /usr/local/perl-5.6.2/lib/site_perl/5.6.2/i686-linux-64int/auto/Time/HiRes/HiRes.so
+b7fd1000-b7fd2000 rwxp 00005000 03:02 75923      /usr/local/perl-5.6.2/lib/site_perl/5.6.2/i686-linux-64int/auto/Time/HiRes/HiRes.so
+b7fd2000-b7fd4000 r-xp 00000000 03:02 230196     /usr/local/perl-5.6.2/lib/5.6.2/i686-linux-64int/auto/attrs/attrs.so
+b7fd4000-b7fd5000 rwxp 00001000 03:02 230196     /usr/local/perl-5.6.2/lib/5.6.2/i686-linux-64int/auto/attrs/attrs.so
+b7fd6000-b7fd8000 rwxp b7fd6000 00:00 0
+b7fd8000-b7ff4000 r-xp 00000000 03:02 767854     /lib/ld-2.6.1.so
+b7ff4000-b7ff6000 rwxp 0001b000 03:02 767854     /lib/ld-2.6.1.so
+bfcad000-bfcf0000 rw-p bfcad000 00:00 0 
+
+	
+
 2007-10-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* harness 2.99_03? Where is the mailing list? tapx-dev@hexten.net
