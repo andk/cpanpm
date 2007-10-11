@@ -610,7 +610,7 @@ no_CR : ChangeLog META.yml
 foreign-prefs : dd-prefs st-prefs
 
 dd-prefs ::
-	`echo \$(PERL) | sed -e 's/perl\$\$/slaymake/'` dd-prefs
+	`echo $(PERL) | sed -e 's/perl$$/slaymake/'` dd-prefs
 
 st-prefs ::
 
