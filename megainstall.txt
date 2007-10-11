@@ -217,6 +217,7 @@ Data::Lazy
 Data::OptList
 Data::Properties
 Data::Random
+Data::Remember
 Data::ShowTable
 Data::Throttler
 Data::TreeDumper
@@ -372,6 +373,7 @@ HTML::GMap
 HTML::HTMLDoc
 HTML::HeadParser
 HTML::Mason
+HTML::ParagraphSplit
 HTML::Parser
 HTML::PopupTreeSelect::Dynamic
 HTML::Prototype

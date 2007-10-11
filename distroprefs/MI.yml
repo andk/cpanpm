@@ -63,6 +63,7 @@ match:
     |GAAL/Task-Smoke-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
+    |HANENKAMP/Bot-Net-\d
     |HANK/Catalyst-Plugin-Form-Processor-\d
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d
