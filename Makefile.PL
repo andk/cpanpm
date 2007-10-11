@@ -607,6 +607,13 @@ clean ::
 no_CR : ChangeLog META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
+foreign-prefs : dd-prefs st-prefs
+
+dd-prefs ::
+	`echo \$(PERL) | sed -e 's/perl\$\$/slaymake/'` dd-prefs
+
+st-prefs ::
+
 };
   if ($main::SVN_RELEASE) {
     push @m, qq{
@@ -621,13 +628,6 @@ chlog :: chlog-svkstyle
 
 ChangeLog : ChangeLogShort.svk
 	mv ChangeLogShort.svk ChangeLog
-
-foreign-prefs : dd-prefs st-prefs
-
-dd-prefs ::
-	`echo \$(PERL) | sed -e 's/perl\$\$/slaymake/'` dd-prefs
-
-st-prefs ::
 
 };
   }
