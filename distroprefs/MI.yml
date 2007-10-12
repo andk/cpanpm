@@ -64,6 +64,8 @@ match:
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |HANENKAMP/Bot-Net-\d
+    |HANENKAMP/Data-Remember-\d
+    |HANENKAMP/HTML-ParagraphSplit-\d
     |HANK/Catalyst-Plugin-Form-Processor-\d
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d
