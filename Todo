@@ -1,3 +1,10 @@
+2007-10-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* permanently broken since 31796, OK with current maintperl
+
+2007-09-06T07:55 	perl 	31796 	391 	SMUELLER/PAR-Packer-0.976.tar.gz 	NOT OK
+2007-09-05T17:16 	perl 	31795 	588 	SMUELLER/PAR-Packer-0.976.tar.gz 	OK
+
 2007-10-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 5.6.2 can also have the corruption:

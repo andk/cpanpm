@@ -17,6 +17,7 @@ match:
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Time-Duration-\d
+    |AWWAIID/Continuity-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
     |BLBLACK/Class-C3-\d
     |BLBLACK/DBIx-Class-Schema-Loader-\d
