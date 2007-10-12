@@ -7823,6 +7823,7 @@ sub _find_prefs {
     my $distroid = $self->pretty_id;
     #CPAN->debug("distroid[$distroid]") if $CPAN::DEBUG;
     my $prefs_dir = $CPAN::Config->{prefs_dir};
+    return if $prefs_dir =~ /^\s*$/;
     eval { File::Path::mkpath($prefs_dir); };
     if ($@) {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
