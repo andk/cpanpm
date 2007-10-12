@@ -322,6 +322,8 @@ N/A
 
 	http://groups.google.com/group/perl.perl5.porters/browse_thread/thread/a7b653fdb4b5fc34/be6f8546211987a0?lnk=gst&q=bbc+translator#be6f8546211987a0
 
+	http://rt.cpan.org/Ticket/Display.html?id=29940
+
 
 	* RCLAMP/POE-Component-Server-HTTP-0.09.tar.gz looks like a BBC
 	candidate 22245 OK. But it's shadowed by the depends on POE-API-Peek

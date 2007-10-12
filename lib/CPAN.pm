@@ -8671,8 +8671,12 @@ sub test {
         $self->{make_test} = CPAN::Distrostatus->new("NO");
         $self->{badtestcnt}++;
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
-        CPAN::Shell->optprint("hint",sprintf "//hint// To get more information about failing tests, try:
-  reports %s\n", $self->pretty_id);
+        CPAN::Shell->optprint
+              ("hint",
+               sprintf
+               ("//hint// to see the cpan-testers results for installing this module, try:
+  reports %s\n",
+                $self->pretty_id));
     }
     $self->store_persistent_state;
 }
