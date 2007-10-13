@@ -345,6 +345,8 @@ GIS::Distance
 GSSAPI
 GTop
 Games::Bingo
+Geo::Cache
+Geo::Gpx
 Geo::ShapeFile
 Geography::Countries
 Getopt::ArgvFile
@@ -700,6 +702,7 @@ Roman
 Rose::DateTime
 Rose::Object
 Rubric
+SGML::Parser::OpenSP
 SOAP::Lite
 SOAP::WSDL
 SQL::Abstract::Limit
