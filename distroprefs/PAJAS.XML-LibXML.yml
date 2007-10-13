@@ -5,6 +5,8 @@ comment: |
 
   https://rt.cpan.org/Ticket/Display.html?id=27659
 
+  Now dated since 1.64 is out.
+
 match:
   distribution: "^PAJAS/XML-LibXML-1.63.tar.gz"
 test:

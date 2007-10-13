@@ -2,6 +2,6 @@
 comment: "http://rt.cpan.org/Ticket/Display.html?id=26437"
 match:
   distribution: "^BLUEFEET/GIS-Distance-0.01001.tar.gz"
-#test:
-#  args:
-#    - "TEST_FILES='t/01_distance.t'"
+depends:
+  requires:
+    Test::Pod: 0
