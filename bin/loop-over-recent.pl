@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use CPAN::DistnameInfo;
-use File::Basename qw(dirname);
+use File::Basename qw(fileparse dirname);
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
@@ -17,11 +17,10 @@ my $rf = File::Rsync::Mirror::Recentfile->new(
                                              );
 
 my $otherperls = "$0.otherperls";
-my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
+my $bbname = fileparse($0,qr{\.pl});
+my $statefile = "$ENV{HOME}/.cpan/$bbname.state";
 
 my $rx = qr!\.(tar.gz|tar.bz2|zip|tgz|tbz)$!;
-
-my @perls = qw(); # we'll fill it at runtime!
 
 my $max_epoch_worked_on = 0;
 if (-e $statefile) {
@@ -73,20 +72,16 @@ ITERATION: while () {
     next unless $upload->{path} =~ $rx;
     next unless $upload->{type} eq "new";
 
-    # never install stable reporters, they are most probably older
-    # than we are.
-    next if $upload->{path} =~ m!DAGOLDEN/CPAN-Reporter-0\.\d+\.tar\.gz!;
-
-    # XXX: This needs to be extended to every distro that has a higher
-    # numbered developer release. Say Foo-1.4801 is released but we
-    # have already 1.48_51 installed. And we should not skip but 'make
-    # test' instead of 'make install'. The problem with this is that
-    # we do not know what exactly is in the distro. So we must go
-    # through CPAN::DistnameInfo somehow. It gets even more
-    # complicated when the item here gets passed to a queuerunner
-    # because then the decision if test or install shall be called
-    # cannot be made now, it must be made when the job is actually
-    # started.
+    # XXX: we should compute exceptions for every distro that has a
+    # higher numbered developer release. Say Foo-1.4801 is released
+    # but we have already 1.48_51 installed. We do not want this
+    # stable stuff. Test yes, so we should 'make test' instead of
+    # 'make install'. The problem with this is that we do not know
+    # what exactly is in the distro. So we must go through
+    # CPAN::DistnameInfo somehow. It gets even more complicated when
+    # the item here gets passed to a queuerunner because then the
+    # decision if test or install shall be called cannot be made now,
+    # it must be made when the job is actually started.
 
     if ($upload->{epoch} < $max_epoch_worked_on) {
       warn "Already done: $upload->{path}\n" unless keys %comboseen;

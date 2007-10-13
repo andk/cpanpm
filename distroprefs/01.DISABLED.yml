@@ -32,7 +32,7 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
-    |TOMZO/Quota-1.5.2.tar.gz                # hangs during test.pl
+    |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TTY/kurila-\d                           # asks too many questions
     )|
 disabled: 1
