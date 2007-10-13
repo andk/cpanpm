@@ -1,0 +1,16 @@
+--- lib/CPAN/Reporter.pm.orig	2007-10-13 06:12:24.000000000 +0200
++++ lib/CPAN/Reporter.pm	2007-10-13 06:15:59.000000000 +0200
+@@ -90,10 +90,11 @@
+     }
+     # if no timeout or timeout wrap code wasn't available
+     if ( ! $wrap_code ) {
++        my $ecmd = quotemeta $cmd;
+         $wrap_code = << "HERE";
+-my \$rc = system('$cmd');
++my \$rc = system("$ecmd");
+ my \$ec = \$rc == -1 ? -1 : \$?;
+-print '($cmd exited with ', \$ec, ")\\n";
++print "($ecmd exited with ", \$ec, ")\\n";
+ HERE
+     }
+ 

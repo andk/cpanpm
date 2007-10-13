@@ -1,9 +1,134 @@
+2007-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* The failing tests on mod_perl, Archive-Any, and GIS-Distance are
+	repeatable with 32104 and Log-Dispatch-Config has joined them in
+	failing. I've stopped all running loops to look around in the /tmp
+	directory.
+
+	32090 had a working A:A. fforce test on it now fails with
+
+Running make test
+Bareword found where operator expected at /tmp/N0WH1MFuPP line 1, near "'/usr/bin/make test 'TEST_FILES"
+        (Missing operator before TEST_FILES?)
+Bareword found where operator expected at /tmp/N0WH1MFuPP line 1, near "00compile"
+        (Missing operator before compile?)
+Bareword found where operator expected at /tmp/N0WH1MFuPP line 3, near "'TEST_FILES=t/00compile.t t/Any.t t/fail.t t/perl-critic.t t/pod.t t/type.t' exited"
+        (Missing operator before exited?)
+syntax error at /tmp/N0WH1MFuPP line 1, near "'/usr/bin/make test 'TEST_FILES"
+Can't find string terminator "'" anywhere before EOF at /tmp/N0WH1MFuPP line 3.
+
+	And the tempfile is gone. Starting to cleanup my /tmp directory and
+	rerunning the A:A test again and again. AA itself leaves a testfile in
+	/tmp. Not every time?
+
+	Found something, not related to the tmp directory. I have
+
+test:
+  args:
+    - "TEST_FILES=t/00compile.t t/Any.t t/fail.t t/perl-critic.t t/pod.t t/type.t"
+
+	in the distroprefs file. If I remove it we succeed. Finding a new bug by
+	working around another. Who broke the distroprefs file? It is not
+	MakeMaker or Harness. If I issue 'make test TEST_F...' manually it is
+	fine. It's something coming earlier.
+
+	It's in CPAN::Reporter. If I turn reporting off it goes away.
+	Downgrading to 0.99_1[540] same problem. Downgrading to 99_05 nope,
+	99_01 nope. To 0.4801 good.
+
+	Ticks in a command. Patch sent to David.
+
 2007-10-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* permanently broken since 31796, OK with current maintperl
+	* BLUEFEET/GIS-Distance-0.01001.tar.gz also suddenly breaks with 32101:-(
+
+	And CMOORE/Archive-Any-0.093.tar.gz too. And something somehow connected
+	to the /tmp directory.
+
+	* mod_perl starts failing with 32101:
+
+[Fri Oct 12 01:50:59 2007] [error] Can't locate lib.pm in @INC (@INC contains: /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0/i686-linux-64int /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0 /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0/i686-linux-64int /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0 /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t/ /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t/lib/perl) at /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t//docs/startup.pl line 8.\nBEGIN failed--compilation aborted at /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t//docs/startup.pl line 8.\nCompilation failed in require at (eval 2) line 1.\n
+Syntax error on line 62 of /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t/conf/httpd.conf:
+Can't locate lib.pm in @INC (@INC contains: /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0/i686-linux-64int /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0 /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0/i686-linux-64int /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0 /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t/ /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t/lib/perl) at /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t//docs/startup.pl line 8.
+BEGIN failed--compilation aborted at /home/sand/.cpan/build/mod_perl-1.30-0CO6Yi/t//docs/startup.pl line 8.
+Compilation failed in require at (eval 2) line 1.
+
+	Go figure. I want to see this repeated before I investigate.
+
+	* PAR::Filter et al. permanently broken since 31796 on blead, OK with
+	current maintperl
 
 2007-09-06T07:55 	perl 	31796 	391 	SMUELLER/PAR-Packer-0.976.tar.gz 	NOT OK
 2007-09-05T17:16 	perl 	31795 	588 	SMUELLER/PAR-Packer-0.976.tar.gz 	OK
+
+	Cannot be something with patch 31796, it's just a test fix.
+
+	I still have 31790 and 31824 around. The autobundle diff shows these
+	suspicious candidates:
+
+	- Archive::Unzip::Burst                # seems ok
+	* B
+	- Class::Component
+	- Class::MethodMaker
+	- Crypt::SipherSaber
+	* ExtUtils::Install    1.41_04/1.44    # seems ok
+	* File::Path                           # seems ok
+	+ Getopt::Attribute    1.42            # seems ok
+	* MRO::Compat                          # seems ok
+	* Module::Build                        # seems ok
+	- PAR::Filter
+	+ Set::Scalar
+	* Test::Deep
+	- Text::Diff::Parser
+	- Text::Scan
+	* XML::LibXML
+
+	/home/sand/.cpan/build/PAR-Packer-0.976-JePP61/blib/script/pp: Failed to extract a parl from 'PAR::StrippedPARL::Static' to file 'parltQZf2Gh' at /home/sand/.cpan/build/PAR-Packer-0.976-JePP61/blib/lib/PAR/Packer.pm line 1149, <DATA> line 1.
+
+	It's about extracting. This Archive::Unzip::Burst looks interesting. Why
+	do we not have it?
+
+	31790 compiles it and tests ok and has it installed.
+
+	31824 has an old CPAN but it compiles it and tests OK. PAR Packer takes
+	a long time to compile. It fails at compilation stage with
+
+./par -I../myldr/.. -I../blib/lib -I"/home/sand/.cpan/build/PAR-Packer-0.976-ZlXHYS/inc" -I"/home/sand/.cpan/build/Archive-Unzip-Burst-0.02-58kTmp/blib/arch" -I"/home/sand/.cpan/build/Archive-Unzip-Burst-0.02-58kTmp/blib/lib" -I"/home/src/perl/repoperls/installed-perls/perl/pSib5JX/perl-5.8.0@31824/lib/5.10.0/i686-linux-64int" -I"/home/src/perl/repoperls/installed-perls/perl/pSib5JX/perl-5.8.0@31824/lib/5.10.0" -I"/home/src/perl/repoperls/installed-perls/perl/pSib5JX/perl-5.8.0@31824/lib/site_perl/5.10.0/i686-linux-64int" -I"/home/src/perl/repoperls/installed-perls/perl/pSib5JX/perl-5.8.0@31824/lib/site_perl/5.10.0" -I"/home/sand/.cpan/build/PAR-Packer-0.976-ZlXHYS" -I"." -q -B -O../script/parldyn
+Usage: ./par [ -Alib.par ] [ -Idir ] [ -Mmodule ] [ src.par ] [ program.pl ]
+       ./par [ -B|-b ] [-Ooutfile] src.par
+
+	Maybe it has to do with option parsing? I mean, when I *install*
+	Archive::Unzip::Burst and then try PAR again from scratch, it fails with
+	the same error message. Getopt::ArgvFile is a prereq and has not changed.
+
+	31790 has Getopt::Attribute missing. I retry to fforce test it on 31790.
+	It compiles it. Running test ... (running out of time)
+
+	For 31824 I hide Getopt::Attribute now and fforce test PAR-Packer-0.976
+	here too. It fails again with the same error message.
+
+	For 31824 I downgrade Module::Build from 0.2808_01 to 0.2808 which 790
+	had. PAR-Parser still fails with the same error.
+
+	For 31824 I downgrade from E:I 1.44 to
+	YVES/ExtUtils-Install-1.41_04.tar.gz. I expect that if this has an
+	influence it would show in the installation of other modules and so do
+	not expect a change in behaviour. And so it gets confirmed.
+
+	For 31824 I find a File::Path 2.00_11 which is lower than the 2.01 in
+	31790.
+
+	Can I see the above par command once again for 31790?
+
+./par -I../myldr/.. -I../blib/lib -I"/home/sand/.cpan/build/PAR-Packer-0.976-slY0pI/inc" -I"/home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/5.9.5/i686-linux-64int" -I"/home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/5.9.5" -I"/home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/site_perl/5.9.5/i686-linux-64int" -I"/home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/site_perl/5.9.5" -I"/home/sand/.cpan/build/PAR-Packer-0.976-slY0pI" -I"." -q -B -O../script/parldyn
+
+	I realize that downgrading 31824 is more cumbersome than upgrading
+	31790. Just run r command and pick something and retry PAR-Parser. I
+	picked Set::Scalar and then realized that I'm hunting two bugs at once.
+	One is the above "./par" command that triggers a "Usage" error, the
+	other is a failing 20-pp test. And I see now that 31790 fails on test
+	20-pp. Unfortunately it is a very time consuming test and I must restart
+	me research to find explain each error separately.
 
 2007-10-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
