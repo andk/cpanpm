@@ -1,3 +1,39 @@
+2007-10-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Going to report tmp directory. I already have reported:
+
+	26078 Config-JSON: Using predictable filenames in /tmp is a security
+	hazard and should be avoided even in test scripts. Besides if they
+	aren't cleaned up they lead to failing tests. Please use File::Temp
+	instead.
+
+	26951 Cache-FastMmap (resolved): Using predictable filenames in /tmp has
+	some security implications too, so should be avoided. In this case it
+	simply causes the test to fail because another user has occupied this
+	file or directory.
+
+	26538 HTML-Scrubber: The first bug is that the tmp file was not cleaned
+	up and left ove from a different user in /tmp/. Generally it is
+	considered a security issue to put predictable files into /tmp.
+	File::Temp should be used instead.
+
+	26536 Module-Refresh (resolved): The first bug is that the test script
+	does not clean up after itself. /tmp/FooBar.pm is still around from a
+	test by a different user. In general it is considered a security issue
+	to write predictable file names into /tmp. Better you use File::Temp
+	(and remove the files at the end nonetheless).
+
+	Today I find a DBM Deep file, one that starts with "use strict;\nuse
+	ExtUtils::MakeMaker;\nuse CPAN::Version;\n\n# read module and prereq
+	string from STDIN\nwhile ( <STDIN> ) {...", a directory with two
+	DBM-Deep files, about 40 "Hello world" perl programs, all at 23:45, a
+	catalyst logo in PNG format at 23:47 and many, many more
+
+	29969 CGI-Session: "Temporary files left over in /tmp"
+
+	
+
+
 2007-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Slaven sends a miserable FAIL with 5.6.2 and YAML 0.39.
