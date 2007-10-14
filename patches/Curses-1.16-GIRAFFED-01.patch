@@ -1,0 +1,48 @@
+--- Makefile.PL	2007-08-07 04:45:26.000000000 +0200
++++ ../Curses-1.16-63goOf/Makefile.PL	2007-10-14 10:39:12.000000000 +0200
+@@ -235,12 +235,13 @@
+             $guess = $guess1;
+         }
+         if (not defined $guess) {
+-            print STDERR
+-                "I'm sorry, but I could not make a good guess " .
+-                "for the includes and\n" .
+-                "libraries that are needed.  " .
+-                "You will need to set the CURSES_\n" .
+-                "environment variables as described in the INSTALL file.\n";
++            print STDERR <<"EOW";
++
++I'm sorry, but I could not make a good guess for the includes and
++libraries that are needed.  You will need to set the CURSES_
++environment variables as described in the INSTALL file.
++OSNAME=$OSNAME
++EOW
+             exit 1;
+         }
+         if (ref $guess ne 'ARRAY') {
+@@ -301,7 +302,7 @@
+ my %libClass = (
+                 'bsd'      => 'bsd',
+                 'ncurses'  => 'ncurses',
+-                'ncursesw' => 'ncursesw'
++                'ncursesw' => 'ncurses'
+ );
+ 
+ 
+@@ -309,13 +310,15 @@
+ sub makeConfigH($) {
+     my ($libType) = @_;
+ #-----------------------------------------------------------------------------
+-#  $libTypeArg is the kind of Curses library we are using - 'bsd',
++#  $libType is the kind of Curses library we are using - 'bsd',
+ #  'ncurses', or 'ncursesw'.  It may be undefined if there is no
+ #  choice on this system.
+ #-----------------------------------------------------------------------------
+     print qq{Making a guess for "c-config.h"...\n};
+ 
+     my $libClass;
++        # $libClass is a more abstract type than $libType.  It is
++        # 'bsd' or 'ncurses'.
+ 
+     if (defined($libType)) {
+         $libClass = $libClass{$libType};
