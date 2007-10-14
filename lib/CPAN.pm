@@ -6476,7 +6476,7 @@ sub store_persistent_state {
     }
 }
 
-#-> CPAN::Distribution::patch
+#-> CPAN::Distribution::try_download
 sub try_download {
     my($self,$patch) = @_;
     my $norm = $self->normalize($patch);

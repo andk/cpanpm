@@ -127,6 +127,7 @@ Class::Multimethods::Pure
 Class::NamedParms
 Class::Observable
 Class::ParmList
+Class::PseudoHash
 Class::Rebless
 Class::ReturnValue
 Class::Singleton
@@ -450,6 +451,7 @@ LWP::Authen::Negotiate
 LWP::Authen::Wsse
 LWP::Simple
 LWP::UserAgent
+Latex::Encode
 Lexical::Persistence
 Lingua::AR::MacArabic
 Lingua::EN::Inflect::Number
@@ -823,6 +825,7 @@ Test::Prereq
 Test::SubCalls
 Test::WWW::Mechanize
 Test::WWW::Selenium
+Test::Weaken
 Test::Without::Module
 Test::XML
 Test::YAML::Meta

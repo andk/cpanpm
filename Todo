@@ -1,5 +1,7 @@
 2007-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Slaven sends a miserable FAIL with 5.6.2 and YAML 0.39.
+
 	* The failing tests on mod_perl, Archive-Any, and GIS-Distance are
 	repeatable with 32104 and Log-Dispatch-Config has joined them in
 	failing. I've stopped all running loops to look around in the /tmp
