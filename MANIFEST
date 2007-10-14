@@ -52,6 +52,7 @@ distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
 distroprefs/CORION.Test-Without-Module.yml
+distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
@@ -200,6 +201,7 @@ distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
 distroprefs/RJBS.MIME-Light.yml
 distroprefs/RJRAY.RPC-XML.yml
+distroprefs/RKINYON.DBM-Deep.yml
 distroprefs/RMUHLE.classes.yml
 distroprefs/RONAN.Transform-Canvas.yml
 distroprefs/ROODE.Time-Format.yml

@@ -28,15 +28,16 @@ dd-prefs: { map { s{\.yml$}{.dd}; $_ } glob("distroprefs/*.yml lib/CPAN/Kwalify/
 
 validate:
 	{
-		my $errors = 0;
+		my $errors = 0; my $files = 0;
 		my $distroprefs_path = $INC{"CPAN/Kwalify.pm"};
 		$distroprefs_path =~ s{\.pm$}{/distroprefs.yml};
 		my $schema = LoadFile($distroprefs_path);
 		for my $yml (glob("distroprefs/*.yml")) {
 			my $data = LoadFile($yml);
 			$errors++ if (!validate($schema, $data));
+	                $files++;
 		}
 		if ($errors) { die "Found $errors errors" }
-		else { "Validation OK.\n" }
+		else { "Validation OK ($files files).\n" }
 	}
 
