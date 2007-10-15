@@ -1,6 +1,13 @@
 --- 
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=29558
+
 match:
   distribution: "^OLAF/Net-DNS-"
 pl: 
   args: 
     - --no-online-tests
+depends:
+  requires:
+    Test::More: 0.72

@@ -1,3 +1,8 @@
+2007-10-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: revisit 28915, it seems to have fallen off the edge of the
+	carpet. And dmq's related one. And possibly weigh in File::Spec rev 3.25_01!
+
 2007-10-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Going to report tmp directory. I already have reported:
@@ -30,8 +35,6 @@
 	catalyst logo in PNG format at 23:47 and many, many more
 
 	29969 CGI-Session: "Temporary files left over in /tmp"
-
-	
 
 
 2007-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
