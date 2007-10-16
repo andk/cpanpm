@@ -1,3 +1,16 @@
+2007-10-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Yesterday on #p5p:
+
+23:51:48 <@rjbs> Hm.  Rose::HTML::Object::Messages breaks on 5.10
+23:51:48 <@rjbs> next  unless(defined *{$fq_sub}{'CODE'} && $name =~ 
+                 /^[A-Z0-9_]+$/);
+23:52:05 <@rjbs> $fq_sub is a string (symbolic ref)
+23:52:05 <@rjbs> Not a GLOB reference at lib/Rose/HTML/Object/Messages.pm line 
+                 168.
+
+	
+
 2007-10-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: revisit 28915, it seems to have fallen off the edge of the
