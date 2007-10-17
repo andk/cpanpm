@@ -24,6 +24,8 @@ pl:
       - "n\n"
       - "Do you want to install Mail::Transport::Dbx"
       - "n\n"
+      - "Do you want to install HTML::TreeBuilder"
+      - "n\n"
       - "Do you want to install Mail::IMAPClient"
       - "n\n"
       - "Do you want to install Mail::Internet"
