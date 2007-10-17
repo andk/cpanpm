@@ -1,4 +1,24 @@
+2007-10-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* reported:
+
+	30051 Pod-Manual        Cleaning up /tmp directory; predictable tmp filenames
+
+	* If cpan really shouldn't be run as root, then CPAN should refuse to
+	run as root if sudo is available. --Alias in
+	http://use.perl.org/comments.pl?threshold=0&mode=nested&commentsort=0&op=Change&sid=37249
+
 2007-10-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* From the timestamps one of the three must write the Hello World tempfiles:
+
+-rw-rw-r-- 1 sand sand 1605 Oct 16 10:30 HTTP-Request-AsCGI-0.5-3yvbwD.yml
+-rw-rw-r-- 1 sand sand 1465 Oct 16 10:30 Text-SimpleTable-0.03-oRnFgA.yml
+-rw-rw-r-- 1 sand sand 1516 Oct 16 10:30 HTTP-Body-0.9-PO5l6r.yml
+
+	The latter.
+
+  30048 HTTP-Body         Cleaning up /tmp directory
 
 	* Yesterday on #p5p:
 
@@ -8,8 +28,6 @@
 23:52:05 <@rjbs> $fq_sub is a string (symbolic ref)
 23:52:05 <@rjbs> Not a GLOB reference at lib/Rose/HTML/Object/Messages.pm line 
                  168.
-
-	
 
 2007-10-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -48,7 +66,9 @@
 	catalyst logo in PNG format at 23:47 and many, many more
 
 	29969 CGI-Session: "Temporary files left over in /tmp"
-
+  30020 Log-Report					  Cleaning up /tmp directory
+  30019 SQL-DB							  Cleaning up /tmp directory; predictable tmp filenames	open
+  30018 PAR-Repository-Client Cleaning up /tmp directory	open
 
 2007-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

@@ -29,4 +29,4 @@ pl:
       - "Do you want to install MIME::Entity"
       - "n\n"
       - "Do you want to run the.+tests"
-      - "n\n"
+      - "y\n"
