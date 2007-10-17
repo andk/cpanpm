@@ -20,6 +20,8 @@ pl:
     talk:
       - "Do you want to install Mail::Box::Parser::C"
       - "n\n"
+      - "Do you want to install Mail::SpamAssassin"
+      - "n\n"
       - "Do you want to install Mail::Transport::Dbx"
       - "n\n"
       - "Do you want to install Mail::IMAPClient"
