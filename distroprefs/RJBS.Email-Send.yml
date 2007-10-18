@@ -3,3 +3,15 @@ match:
   distribution: "RJBS/Email-Send-2.171\."
 patches:
   - "ANDK/patches/Email-Send-2.171-ANDK-01.patch.gz"
+---
+comment: |
+
+  Without IO::All we skip the test classic.t
+
+  But classic.t fails often/always?
+
+match:
+  distribution: "RJBS/Email-Send-\d"
+depends:
+  requires:
+    IO::All: 0
