@@ -44,9 +44,13 @@ sub read_recent_events {
   $recent_events = [ grep { $_->{path} =~ $rx } @$recent_events ];
   {
     my %seen;
-    $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
-                              !$seen{$d->dist}++
-                            } @$recent_events ];
+    $recent_events = [ grep {
+      my $path = $_->{path};
+      my $d = CPAN::DistnameInfo->new($path);
+      my $dist = $d->dist;
+      # warn "no dist for path[$path]" unless $dist;
+      $dist ? !$seen{$dist}++ : "";
+    } @$recent_events ];
   }
   $recent_events;
 }

@@ -48,30 +48,24 @@ sub sub_read_recent_events {
   $recent_events = [ grep { $_->{path} =~ $rx } @$recent_events ];
   {
     my %seen;
-    $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
-                              !$seen{$d->dist}++
-                            } @$recent_events ];
+    $recent_events = [ grep {
+      my $path = $_->{path};
+      my $d = CPAN::DistnameInfo->new($path);
+      my $dist = $d->dist;
+      # warn "no dist for path[$path]" unless $dist;
+      $dist ? !$seen{$dist}++ : "";
+    } @$recent_events ];
   }
   $heap->{recent_events} = $recent_events;
   $heap->{have_read_recent_events_at} = time;
 }
 
+
+# different than in loop_... we allow only perls from otherperls here
+# because we want no overlap
 sub determine_perls {
   my($basedir,$otherperls) = @_;
-  opendir my $dh, $basedir or die;
-  my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
-  pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
-  shift @perls while @perls>1;
-  {
-    open my $fh, "$basedir/@perls/perl-V.txt" or die;
-    while (<$fh>) {
-      next unless /-Dprefix=(\S+)/;
-      @perls = "$1/bin/perl";
-      last;
-    }
-    close $fh;
-  }
-  shift @perls while @perls && ! -x $perls[0];
+  my @perls;
   if (open my $fh2, $otherperls) {
     while (<$fh2>) {
       chomp;
@@ -80,6 +74,21 @@ sub determine_perls {
       next unless -x $_;
       push @perls, $_;
     }
+  } else {
+    opendir my $dh, $basedir or die;
+    @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
+    pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
+    shift @perls while @perls>1;
+    {
+      open my $fh, "$basedir/@perls/perl-V.txt" or die;
+      while (<$fh>) {
+        next unless /-Dprefix=(\S+)/;
+        @perls = "$1/bin/perl";
+        last;
+      }
+      close $fh;
+    }
+    shift @perls while @perls && ! -x $perls[0];
   }
   \@perls;
 }
@@ -170,3 +179,8 @@ here is why we need to decide in the very last moment again: our
 policy is that if Foo-3.14 is uploaded we won't test Foo-3.13 at all.
 So we must delay the ultimate decision to the last moment. An earlier
 decision is just a luxury. And we can implement luxury later.
+
+Next steps are POE::Component::JobQueue and a status file that
+prevents duplicate work and filters items that have a higher version
+number counterpart. It's OK when the job does nothing but "echo hello
+world" for this next step but it should do it with a JobQueue.

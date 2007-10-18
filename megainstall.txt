@@ -491,6 +491,7 @@ MP3::Info
 Mail::Address
 Mail::Alias
 Mail::Audit
+Mail::Box
 Mail::Cap
 Mail::Field
 Mail::Header
