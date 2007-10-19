@@ -236,6 +236,7 @@ DateTime::Format::W3CDTF
 DateTime::Set
 Devel::CallTrace
 Devel::Caller
+Devel::CheckLib
 Devel::Command
 Devel::Cover
 Devel::Cycle
