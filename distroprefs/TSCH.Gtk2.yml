@@ -17,6 +17,7 @@ depends:
     ExtUtils::MakeMaker: 6.35
     ExtUtils::PkgConfig: 0
     Glib: 1.16
+    Cairo: 1.043
 ---
 match:
   distribution: "^TSCH/Gnome2-PanelApplet-\d"
