@@ -1,3 +1,84 @@
+2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 32138 break keepcool and pingomatic--why? The logfiles for them are
+	not being split out. In the original logfile I see
+
+Can't open perl script "/tmp/Ab5Z0NrlWf": No such file or directory
+Can't open perl script "/tmp/Ab5Z0NrlWf": No such file or directory
+
+	So it seems that I may have deleted a wrong /tmp file and actually
+	disturbed CPAN::Reporter and caused a false negative.
+
+	* more tempfiles and who they might come from:
+
+-rw-rw-r--  1 sand sand   6000 Oct 19 07:46 8l3WxFQ5ki
+-rw-rw-r-- 1 sand sand 1487 Oct 19 07:46 CPAN-Dependency-0.11-l5Lnci.yml
+
+	Test fails and is time consuming, running out of time.
+
+-rw-r--r--  1 sand sand   2048 Oct 19 07:02 sb-test.23308
+-rw-r--r--  1 sand sand   4096 Oct 19 07:03 sb-test.23332
+-rw-r--r--  1 sand sand   2048 Oct 19 07:03 sb-test.23338
+-rw-r--r--  1 sand sand   2048 Oct 19 07:03 sb-test.23534
+-rw-rw-r-- 1 sand sand 1563 Oct 19 07:02 DateTime-Format-ISO8601-0.06-dKW3or.yml
+
+	Nope, no connection observed.
+
+-rw-rw-r--  1 sand sand      9 Oct 19 05:26 4077fsCcIV
+-rw-rw-r-- 1 sand sand 1561 Oct 19 05:26 IO-Async-0.09-sZbY3R.yml
+
+	Yes, reported
+
+	30141 IO-Async          Cleaning up /tmp directory;
+
+	Also:
+
+	30142 KinoSearch        Cleaning up /tmp directory; predictable tmp filenames
+
+-rw-rw-r--  1 sand sand    452 Oct 19 04:53 petal_debug.26135.1192762409.dhcbshswxa
+-rw-rw-r--  1 sand sand    703 Oct 19 04:53 petal_debug.26189.1192762430.vasuxjjgrp
+-rw-rw-r--  1 sand sand   1633 Oct 19 04:53 petal_debug.26188.1192762430.rmjyjqrpmt
+-rw-rw-r--  1 sand sand   1431 Oct 19 04:53 petal_debug.26188.1192762430.nnmkfdmcol
+-rw-rw-r--  1 sand sand   1395 Oct 19 04:53 petal_debug.26188.1192762430.nczunhwpnl
+-rw-rw-r--  1 sand sand   1344 Oct 19 04:53 petal_debug.26188.1192762430.lcgnvwaewx
+-rw-rw-r--  1 sand sand    150 Oct 19 04:54 petal_cache_2.19_a58e7f5fd83c96c482a2699eec876a3f
+-rw-rw-r--  1 sand sand    154 Oct 19 04:54 petal_cache_2.19_472e5319343b8068fb59de8231ee9008
+-rw-rw-r--  1 sand sand    487 Oct 19 04:54 petal_cache_2.19_3976ac25dc4109849c1cfb097b337432
+-rw-rw-r--  1 sand sand    490 Oct 19 04:54 petal_cache_2.19_1630bf5852cd9f7bedd9c5c361f6d951
+-rw-rw-r--  1 sand sand   4484 Oct 19 04:54 petal_debug.26230.1192762445.ziottszpqa
+-rw-rw-r--  1 sand sand  22188 Oct 19 04:54 petal_cache_2.19_16a885a2aea7745dae5e0a0651edc4f3
+-rw-rw-r--  1 sand sand   8621 Oct 19 04:54 petal_cache_2.19_54b3f86dbf348e89c2ec2685e7c15073
+-rw-rw-r-- 1 sand sand 1523 Oct 19 04:54 Petal-2.19-77UZcA.yml
+
+	11 files come from this one and I have reported:
+
+	30143 Petal                Cleaning up /tmp directory
+	
+drwxrwxrwx  4 sand sand   4096 Oct 19 04:49 FileCache/
+-rw-rw-r-- 1 sand sand 1563 Oct 19 04:49 Pugs-Compiler-Rule-0.26-hUeyBl.yml
+
+-rw-------  1 sand sand     42 Oct 19 04:31 ZRcWZeunOs
+drwx------  2 sand sand   4096 Oct 19 04:31 QjqZAyxa0x/
+-rw-------  1 sand sand     40 Oct 19 04:31 E13wRFaSci
+drwx------  2 sand sand   4096 Oct 19 04:31 ozY6kh6pjY/
+drwx------  2 sand sand   4096 Oct 19 04:31 lZNsNEgqMo/
+drwx------  2 sand sand   4096 Oct 19 04:31 41RniDPWeh/
+drwx------  2 sand sand   4096 Oct 19 04:31 11IxvNWzvg/
+-rw-rw-r-- 1 sand sand 1259 Oct 19 04:42 parrot-0.4.16-0zNo5F.yml
+
+-rw-------  1 sand sand    125 Oct 20 05:07 0M1yjD09XK
+-rw-rw-r-- 1 sand sand 1601 Oct 20 05:07 Slay-Makefile-Gress-0.04-qkMixG.yml
+-rw-rw-r-- 1 sand sand 1792 Oct 20 05:07 Text-Restructured-0.003036-pgPGFU.yml
+
+-rw-rw-r--  1 sand sand 227803 Oct 20 04:22 NsghdoXHTf
+drwx------  2 sand sand   4096 Oct 20 04:23 midvhy07gr
+-rw-rw-r-- 1 sand sand 1703 Oct 20 04:22 Test-Warn-0.10-etCdoR.yml
+-rw-rw-r-- 1 sand sand 2318 Oct 20 04:24 DBM-Deep-1.0006-XnHLow.yml
+
+	* reported:
+
+	30113 HTTP-Server-Simple-Mason  Cleaning up /tmp directory; predictable tmp filenames
+
 2007-10-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* reported:

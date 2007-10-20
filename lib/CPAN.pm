@@ -30,6 +30,8 @@ use Sys::Hostname qw(hostname);
 use Text::ParseWords ();
 use Text::Wrap ();
 
+sub find_perl ();
+
 # we need to run chdir all over and we would get at wrong libraries
 # there
 BEGIN {
@@ -909,9 +911,9 @@ sub _perl_fingerprint {
     if (defined $dll) {
         $mtime_dll = (-f $dll ? (stat(_))[9] : '-1');
     }
-    my $mtime_perl = (-f $^X ? (stat(_))[9] : '-1');
+    my $mtime_perl = (-f CPAN::find_perl ? (stat(_))[9] : '-1');
     my $this_fingerprint = {
-                            '$^X' => $^X,
+                            '$^X' => CPAN::find_perl,
                             sitearchexp => $Config::Config{sitearchexp},
                             'mtime_$^X' => $mtime_perl,
                             'mtime_dll' => $mtime_dll,
@@ -1184,7 +1186,7 @@ sub fastcwd {Cwd::fastcwd();}
 sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
 
 #-> sub CPAN::find_perl ;
-sub find_perl {
+sub find_perl () {
     my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
     my $pwd  = $CPAN::iCwd = CPAN::anycwd();
     my $candidate = File::Spec->catfile($pwd,$^X);
@@ -7624,7 +7626,7 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     if (my $commandline = $self->prefs->{make}{commandline}) {
         $system = $commandline;
-        $ENV{PERL} = $^X;
+        $ENV{PERL} = CPAN::find_perl;
     } else {
         if ($self->{modulebuild}) {
             unless (-f "Build") {
@@ -7930,7 +7932,7 @@ sub _find_prefs {
                             my $okd = $distroid =~ /$qr/;
                             $ok &&= $okd;
                         } elsif ($sub_attribute eq "perl") {
-                            my $okp = $^X =~ /$qr/;
+                            my $okp = CPAN::find_perl =~ /$qr/;
                             $ok &&= $okp;
                         } elsif ($sub_attribute eq "perlconfig") {
                             for my $perlconfigkey (keys %{$match->{perlconfig}}) {
@@ -8160,7 +8162,7 @@ sub unsat_prereq {
         my($available_version,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
-            $available_file = $^X;
+            $available_file = CPAN::find_perl;
         } else {
             $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
             next if $nmo->uptodate;
@@ -8570,7 +8572,7 @@ sub test {
     if (my $commandline
         = exists $prefs_test->{commandline} ? $prefs_test->{commandline} : "") {
         $system = $commandline;
-        $ENV{PERL} = $^X;
+        $ENV{PERL} = CPAN::find_perl;
     } elsif ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
     } else {
@@ -8894,7 +8896,7 @@ sub install {
     my $system;
     if (my $commandline = $self->prefs->{install}{commandline}) {
         $system = $commandline;
-        $ENV{PERL} = $^X;
+        $ENV{PERL} = CPAN::find_perl;
     } elsif ($self->{modulebuild}) {
         my($mbuild_install_build_command) =
             exists $CPAN::HandleConfig::keys{mbuild_install_build_command} &&
@@ -11232,7 +11234,8 @@ distribution name, e.g. "AUTHOR/Foo-Bar-3.14.tar.gz".
 The C<module> related one will be matched against I<all> modules
 contained in the distribution until one module matches.
 
-The C<perl> related one will be matched against C<$^X>.
+The C<perl> related one will be matched against C<$^X> (but with the
+absolute path).
 
 The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
@@ -11282,8 +11285,8 @@ Arguments to be added to the command line
 
 A full commandline that will be executed as it stands by a system
 call. During the execution the environment variable PERL will is set
-to $^X. If C<commandline> is specified, the content of C<args> is not
-used.
+to $^X (but with an absolute path). If C<commandline> is specified,
+the content of C<args> is not used.
 
 =item eexpect [hash]
 
