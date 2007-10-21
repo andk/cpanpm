@@ -10,6 +10,10 @@ process like "|sort > ...". When I tried this the other process was
 usually not yet finished. May be slow on deadlock-like conditions
 because it uses more and more time and rand. This needs to go away.
 
+rev 3424 works very well. I doesn't need a permanent lockfile. Instead
+each process creates a temporary file with the process ID while
+waiting for the lock. When the work is done nothings is left over.
+
 
 
 =cut
@@ -32,19 +36,17 @@ for my $i (0..99) {
     } else {
       my $slept = sleep rand $i/100;
       my $locked;
-      {open my $lfh, ">", "$rfile.lock.$$" or die "Couldn't open '$rfile.lock': $!";}
       while (!$locked) {
         sleep 0.05;
-        $locked = link "$rfile.lock.$$", "$rfile.lock";
+        $locked = mkdir "$rfile.lock";
       }
-      unlink "$rfile.lock.$$";
       my $content = do { open my $tfh, $rfile or die $!; local $/; <$tfh> };
       $content .= "$$ $slept\n";
       open my $nfh, ">", "$rfile.new" or die "Couldn't open: $!";
       print $nfh $content;
       close $nfh or die "Could not close '> $rfile.new': $!";
       rename "$rfile.new", $rfile or die "Could not rename to '$rfile': $!";
-      unlink "$rfile.lock";
+      rmdir "$rfile.lock";
       exit;
    }
   } else {
