@@ -10,8 +10,11 @@ comment: |
 
   But classic.t fails often/always?
 
+  See also http://rt.cpan.org/Ticket/Display.html?id=30169 where
+  Ricardo says he will excise IO::All
+
 match:
-  distribution: "RJBS/Email-Send-\d"
+  distribution: "^RJBS/Email-Send-2.190\."
 depends:
   requires:
     IO::All: 0

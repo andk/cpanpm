@@ -25,10 +25,14 @@ of the loop just change "< time ..." to "< $max_epoch ..." DONE
 Q: sorted by epoch? Who has to sort when how often? A: nobody! The
 mechanism is event based and the array is only running push and shift.
 It is a journal and is itself NOT rsynced but in fact rewritten by
-every slave. [find literature about journaling fs!] Do slaves
-inherit the timestamp from the master or do they write their own? I
-think they inherit it. But then they must not mirror events in a later
-second before all seconds below are finished.
+every slave. [find literature about journaling fs!] Do slaves inherit
+the timestamp from the master or do they write their own? I think they
+inherit it (Update 2007-10-21 akoenig : or we do not ever promise that
+the timestamps are sorted or mirror the sequence of events or we make
+them floating point numbers so they become uniq and can be treated as
+hash keys). But then they must not mirror events in a later second
+before all seconds below are finished (Update 2007-10-21 akoenig :
+this can be relaxed).
 
       M       St1       St2       St3       St4
 
@@ -36,6 +40,10 @@ second before all seconds below are finished.
    4711: B            4711: B   4711: B   4711: B
    4711: C                      4711: C   4711: C
    4712: D                                4712: D
+
+Update 2007-10-21 akoenig no 4711 timestamp evar! They become
+4711.xxxx, 4711.xxxy, etc. OR something like UUID. But if two hosts
+differ in the order, comparing them is less simple.
 
 Interesting/Ugly is the second generation problem if we let the recent
 file be written to disk too early. We should not write as long as it
@@ -55,7 +63,8 @@ operation "rename". Mirror remote files to temporary local filenames,
 then move these to the final name. After every X megabyte a RECENT
 file is written including the currently running mirrored file with its
 temporary name. Then the rename op is written to the RECENT file. Lots
-of race conditions, certainly solvable but a bit complicated.
+of race conditions, certainly solvable but a bit complicated. (Update
+2007-10-21 akoenig maybe a copy operation is better)
 
 Bug/Trap: files in recent that do not exist at the source. If we get
 no RECENT file we just wait until we get one again. Other files that
