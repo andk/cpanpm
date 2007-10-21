@@ -95,6 +95,7 @@ Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
 Chart::Math::Axis
+Chart::Mountain
 Chatbot::Eliza
 Class::Accessor
 Class::Accessor::Assert
@@ -243,6 +244,8 @@ Devel::Cycle
 Devel::DProfLB
 Devel::Dependencies
 Devel::EvalContext
+Devel::Events
+Devel::Events::Handler::ObjectTracker
 Devel::FastProf
 Devel::GC::Helper
 Devel::Hide
@@ -452,6 +455,7 @@ LWP::Authen::Negotiate
 LWP::Authen::Wsse
 LWP::Simple
 LWP::UserAgent
+LWPx::ParanoidAgent
 Latex::Encode
 Lexical::Persistence
 Lingua::AR::MacArabic
@@ -556,6 +560,8 @@ Net::Libdnet
 Net::NNTP
 Net::Netmask
 Net::Netrc
+Net::OAuth::Request
+Net::OpenID::Consumer
 Net::POP3
 Net::Packet
 Net::Pcap
@@ -922,6 +928,7 @@ Transform::Canvas
 UML::Sequence
 UNIVERSAL::isa
 URI
+URI::Fetch
 URI::Find
 URI::Template
 URI::Title
@@ -954,6 +961,7 @@ Unix::Syslog
 User
 User::Identity
 Voting::Condorcet::RankedPairs
+WWW::Facebook::API
 WWW::Live365
 WWW::Mechanize
 WWW::Mechanize::Shell
