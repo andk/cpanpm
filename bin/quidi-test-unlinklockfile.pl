@@ -1,5 +1,11 @@
 #!/usr/bin/perl
 
+=pod
+
+rev 3421 works but leaves a lock file around forever which cannot be deleted.
+
+=cut
+
 use strict;
 use warnings;
 
@@ -18,15 +24,21 @@ for my $i (0..99) {
       next;
     } else {
       my $slept = sleep rand $i/100;
-      open my $lfh, ">>", "$rfile.lock" or die "Couldn't open '$rfile.lock': $!";
-      flock $lfh, LOCK_EX;
+      my $lfh;
+      my $locked;
+      my $j;
+      while (!$locked) {
+        sleep rand(++$j/1000);
+        open $lfh, ">", "$rfile.lock" or die "Couldn't open '$rfile.lock': $!";
+        $locked = flock $lfh, LOCK_EX|LOCK_NB or close $lfh;
+      }
       my $content = do { open my $tfh, $rfile or die $!; local $/; <$tfh> };
       $content .= "$$ $slept\n";
-      open my $nfh, "| sort > $rfile.new" or die "Couldn't fork: $!";
+      open my $nfh, ">", "$rfile.new" or die "Couldn't fork: $!";
       print $nfh $content;
-      close $nfh or die "Could not close 'sort > $rfile': $!";
+      close $nfh or die "Could not close 'sort > $rfile'.new: $!";
       rename "$rfile.new", $rfile or die "Could not rename to '$rfile': $!";
-      # unlink "$rfile.lock";
+      unlink "$rfile.lock";
       close $lfh or die;
       exit;
    }
