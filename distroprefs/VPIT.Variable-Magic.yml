@@ -1,0 +1,13 @@
+---
+comment: |
+
+  Warning: this distroprefs file must be disabled again ASAP. It's
+  only needed for a binary search today (2007-10-21) between 28381 and
+  current blead. At some point the glibc noise that accompaniied 28381
+  disappeared again.
+
+match:
+  distribution: "VPIT/Variable-Magic-0.04.tar.gz"
+test:
+  args:
+    - "TEST_FILES=t/22-len.t"

@@ -1,3 +1,11 @@
+2007-10-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Variable::Magic is a candidate for a BBC article but the binary search
+	is verschleiert by the fact that 28380/28381 is an important transition
+	but there is another important transition. 28381 fails all tests with
+	glibc noise but nowadays only one test fails. I need to find the
+	transition from glibc noise to code that at least runs.
+
 2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 32138 break keepcool and pingomatic--why? The logfiles for them are
