@@ -2,7 +2,14 @@
 
 =pod
 
-rev 3421 works but leaves a lock file around forever which cannot be deleted.
+
+This is a short test script that compares several locking solutions
+that also guarantee atomicity on file reads. Strange that I could not
+find a module on CPAN for this. Probably because the answer is too simple.
+
+
+rev 3421 works but leaves a lock file around forever which cannot be
+deleted.
 
 rev 3422 worked without a permanent lockfile. It has a lockfile that
 is removed after the other file is written. Must not use another
@@ -14,6 +21,11 @@ rev 3424 works very well. I doesn't need a permanent lockfile. Instead
 each process creates a temporary file with the process ID while
 waiting for the lock. When the work is done nothings is left over.
 
+rev 3429 is taken from the Cookbook chapter 7.21, page 264 "Program
+netlock" and needs less code and less temporary files.
+
+This guy sums it up very nicely:
+http://utcc.utoronto.ca/~cks/space/blog/unix/ShellScriptLocking
 
 
 =cut
@@ -21,7 +33,7 @@ waiting for the lock. When the work is done nothings is left over.
 use strict;
 use warnings;
 
-use File::Temp;
+use File::Temp; # only used for our test file, not for the locking operation
 use IO::Handle;
 use Time::HiRes qw(sleep);
 
@@ -34,7 +46,7 @@ for my $i (0..99) {
     if ($pid) {
       next;
     } else {
-      my $slept = sleep rand $i/100;
+      my $slept = sleep rand $i/1000;
       my $locked;
       while (!$locked) {
         sleep 0.05;
