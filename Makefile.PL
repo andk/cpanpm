@@ -303,7 +303,7 @@ megainstall: logs/.exists
 			install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 			CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
 		$(PERL) bin/colorout-to-dir-2.pl logs/megainstall.$$DATE.out; \
-		./bin/dir-to-jifty.pl logs; \
+		`pwd`/bin/dir-to-jifty.pl logs; \
 	done
 
 # 16=Distribution; 32=Bundle; 32768=Queue

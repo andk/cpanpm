@@ -1,3 +1,12 @@
+2007-10-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Yesterday I built my first jifty installation with current SVN and
+	bleadperl. 32147 was the patchnumber. Soon after this installation was
+	completed this perl was used to test Email-Send-2.191 and it failed
+	miserably with errors leading to something jifty:
+
+	http://www.nntp.perl.org/group/perl.cpan.testers/2007/10/msg702186.html
+
 2007-10-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Variable::Magic is a candidate for a BBC article but the binary search
@@ -5,6 +14,10 @@
 	but there is another important transition. 28381 fails all tests with
 	glibc noise but nowadays only one test fails. I need to find the
 	transition from glibc noise to code that at least runs.
+
+	The other end seems to be 28968 so that 28969 fixed the glibc thing. But
+	this is very surprising because that patch only "bumped version to
+	5.9.5". Maybe Variable::Magic uses the 4/5 somewhere.
 
 2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
