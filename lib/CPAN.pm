@@ -10450,7 +10450,7 @@ running shell session.
 
 =item Persistence between sessions
 
-If the C<YAML> or the c<YAML::Syck> module is installed a record of
+If the C<YAML> or the C<YAML::Syck> module is installed a record of
 the internal state of all modules is written to disk after each step.
 The files contain a signature of the currently running perl version
 for later perusal.
@@ -10506,7 +10506,7 @@ to clean up and leave the shell loop. You can emulate the effect of a
 SIGTERM by sending two consecutive SIGINTs, which usually means by
 pressing C<^C> twice.
 
-CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
+CPAN.pm ignores a SIGPIPE. If the user sets C<inactivity_timeout>, a
 SIGALRM is used during the run of the C<perl Makefile.PL> or C<perl
 Build.PL> subprocess.
 
@@ -10590,9 +10590,9 @@ every step that might have failed before.
 =head2 smoke ***EXPERIMENTAL COMMAND***
 
 B<*** WARNING: this command downloads and executes software from CPAN to
-*** your computer of completely unknown status. You should never do
-*** this with your normal account and better have a dedicated well
-*** separated and secured machine to do this.>
+your computer of completely unknown status. You should never do
+this with your normal account and better have a dedicated well
+separated and secured machine to do this. ***>
 
 The C<smoke> command takes the list of recent uploads to CPAN as
 provided by the C<recent> command and tests them all. While the
@@ -12532,7 +12532,7 @@ unusable. Please consider backing up your data before every upgrade.
 
 =head1 BUGS
 
-Please report bugs via http://rt.cpan.org/
+Please report bugs via L<http://rt.cpan.org/>
 
 Before submitting a bug, please make sure that the traditional method
 of building a Perl module package from a shell by following the
@@ -12553,11 +12553,11 @@ See L<http://www.perl.com/perl/misc/Artistic.html>
 =head1 TRANSLATIONS
 
 Kawai,Takanori provides a Japanese translation of this manpage at
-http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm
+L<http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm>
 
 =head1 SEE ALSO
 
-cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
+L<cpan>, L<CPAN::Nox>, L<CPAN::Version>
 
 =cut
 
