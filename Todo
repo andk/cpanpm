@@ -19,6 +19,23 @@
 	this is very surprising because that patch only "bumped version to
 	5.9.5". Maybe Variable::Magic uses the 4/5 somewhere.
 
+	Now running Variable::Magic tests with 28969:
+
+Failed Test  Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/31-array.t    2   512    21    2  20-21
+3 tests skipped.
+
+	But current bleadperl 32152 failes with
+
+Failed Test   Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+t/10-simple.t    0    11    14    4  13-14
+Failed 1/20 test scripts. 2/217 subtests failed.
+Files=20, Tests=217,  9 wallclock secs ( 4.43 cusr +  0.27 csys =  4.70 CPU)
+Failed 1/20 test programs. 2/217 subtests failed.
+
+
 2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 32138 break keepcool and pingomatic--why? The logfiles for them are
