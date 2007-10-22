@@ -6,10 +6,13 @@ comment: |
   the glibc noise that accompaniied 28381 disappeared again and we had
   to determine the patch that fixed the glibc noise. 28969 did it.
 
-  But between 28969 and 32152...
+  But between 28969 and 32152 there is another break between
+  32014/32015. 32014 does not break on 10-simple but 32015 does.
+
+  
 
 match:
   distribution: "VPIT/Variable-Magic-0.04.tar.gz"
-test:
-  args:
-    - "TEST_FILES=t/10-simple.t"
+#test:
+#  args:
+#    - "TEST_FILES=t/10-simple.t"
