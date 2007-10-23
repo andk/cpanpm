@@ -1,4 +1,8 @@
 --- 
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=29727
+
 match:
   distribution: "^MIROD/XML-Twig-"
 pl:
