@@ -13,3 +13,6 @@ pl:
     - "y\n"
     - "Do you want to install 'xml_spellcheck'"
     - "y\n"
+depends:
+  requires:
+    Test::Pod::Coverage: 0

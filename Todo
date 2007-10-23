@@ -49,8 +49,7 @@ Files=20, Tests=217,  9 wallclock secs ( 4.43 cusr +  0.27 csys =  4.70 CPU)
 Failed 1/20 test programs. 2/217 subtests failed.
 
 
-	32015 is the first perl that breaks on 10-simple in the manner.
-
+	32015 is the first perl that breaks on 10-simple in this manner.
 
 2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
