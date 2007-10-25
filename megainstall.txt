@@ -838,6 +838,7 @@ Test::Without::Module
 Test::XML
 Test::YAML::Meta
 Text::Aligner
+Text::Aspell
 Text::Autoformat
 Text::CSV_XS
 Text::FIGlet

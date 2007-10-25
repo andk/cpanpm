@@ -15,13 +15,17 @@ sub determine_perls {
   opendir my $dh, $basedir or die;
   my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
   pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
-  shift @perls while @perls>1;
-  {
-    open my $fh, "$basedir/@perls/perl-V.txt" or die;
+ PERL: while (@perls) {
+    open my $fh, "$basedir/$perls[-1]/perl-V.txt" or die;
     while (<$fh>) {
       next unless /-Dprefix=(\S+)/;
-      @perls = "$1/bin/perl";
-      last;
+      my $perl = "$1/bin/perl";
+      if (-x $perl){
+        @perls = $perl; # only one survives
+        last PERL;
+      } else {
+        pop @perls;
+      }
     }
     close $fh;
   }

@@ -1,3 +1,150 @@
+2007-10-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Pugs needs some extralibs installed. Installed mtl
+
+	* /tmp dir again:
+
+	30255 SVG-Template-Graph                   Cleaning up /tmp directory; predictable tmp filename
+	30256 svg-svg2zinc                         Cleaning up /tmp directory; predictable tmp filenames
+
+2007-10-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* What exactly were the differences between 32173,32174,32180,32181?
+
+...32173 -Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel
+...32174 -Dinstallusrbinperl=n -Uversiononly               -des               -Dusedevel -Dusethreads -Duserelocatableinc
+...32180 -Dinstallusrbinperl=n -Uversiononly               -des               -Dusedevel -Dusethreads -Duserelocatableinc
+...32181 -Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel              -Duserelocatableinc
+
+	So for 86 I wish that we use
+
+	       -Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel -Dusethreads -Duserelocatableinc
+
+	DONE.
+
+	* And 32181 is the first that is unthreaded again:
+
+new fails
+	  AWWAIID/Continuity-0.95.tar.gz[629],
+	  DAXIM/Yahoo-Photos-0.0.2.tar.gz[1429],
+	  MLEHMANN/Coro-4.11.tar.gz[628],
+	  REDTREE/PDF-API2-Simple-1.1.2.tar.gz[359],
+	  TBONE/Net-FTP-Common-6.0.tar.gz[756],
+	  TEEJAY/Maypole-2.121.tar.gz[1439]
+	  TMTM/CGI-Untaint-date-1.00.tar.gz[1435],
+	  VKON/Tcl-0.95.tar.gz[88],
+	  YVES/Date-Simple-3.02.tar.gz[567],
+gone
+	  CLKAO/Data-Bind-0.28.tar.gz,
+	  CLKAO/Sub-Multi-0.003.tar.gz,
+	  DMAKI/Xango-1.08.tar.gz,
+	  FGLOCK/v6-0.020.tar.gz,
+	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,
+	  LBROCARD/Test-WWW-Mechanize-Catalyst-0.41.tar.gz,
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz,
+	  MNOONING/PlRPC/PlRPC-0.2020.tar.gz,
+	  PETDANCE/Test-WWW-Mechanize-1.14.tar.gz,
+	  RCAPUTO/Lexical-Persistence-0.97.tar.gz,
+	  RCAPUTO/POE-Component-Client-HTTP-0.82.tar.gz,
+	  RCLAMP/Devel-Caller-0.11.tar.gz,
+	  RCLAMP/Devel-LexAlias-0.04.tar.gz
+
+	Does that mean that we have N modules that work only on threaded or only on non threaded perls?
+
+	started to work on threaded+nondebugging and stopped to work on nonthreaded+debugging:
+	  [dep] AWWAIID/Continuity-0.95.tar.gz
+	  MLEHMANN/Coro-4.11.tar.gz
+	  [dep] TEEJAY/Maypole-2.121.tar.gz
+	  TMTM/CGI-Untaint-date-1.00.tar.gz
+	  VKON/Tcl-0.95.tar.gz
+	  YVES/Date-Simple-3.02.tar.gz
+
+	stopped to work on threaded+nondebugging and started to work on nonthreaded+debugging:
+	  [dep] CLKAO/Data-Bind-0.28.tar.gz
+	  CLKAO/Sub-Multi-0.003.tar.gz
+	  FGLOCK/v6-0.020.tar.gz
+	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
+	  [dep] MNOONING/PlRPC/PlRPC-0.2020.tar.gz
+	  [dep] RCAPUTO/Lexical-Persistence-0.97.tar.gz
+	  RCLAMP/Devel-Caller-0.11.tar.gz
+	  [dep] RCLAMP/Devel-LexAlias-0.04.tar.gz
+
+	works on threaded+debugging:
+	  CLKAO/Sub-Multi-0.003.tar.gz
+	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz (but never seems to work with optimize=O2 ???)
+
+	does not work on threaded+debugging:
+	  MLEHMANN/Coro-4.13.tar.gz
+	  VKON/Tcl-0.95.tar.gz
+	  YVES/Date-Simple-3.02.tar.gz
+	  FGLOCK/v6-0.020.tar.gz
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
+	  RCLAMP/Devel-Caller-0.11.tar.gz
+
+	always worked with O2:
+	  MLEHMANN/Coro-4.11.tar.gz
+	
+2007-10-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 32174 has broken Devel::Caller 0.11 and fixed quite a lot of others.
+	Maybe a threaded thing? Need to start book keeping. 32174 says:
+
+new fails
+	  CLKAO/Data-Bind-0.28.tar.gz[770],
+	  CLKAO/Sub-Multi-0.003.tar.gz[807],
+	  FGLOCK/v6-0.020.tar.gz[808],
+	  JPEACOCK/SVN-Notify-Mirror-0.03603.tar.gz[553],
+	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz[1230],
+	  LBROCARD/Test-WWW-Mechanize-Catalyst-0.41.tar.gz[1166],
+	  MIYAGAWA/Log-Dispatch-Config-1.02.tar.gz[939],
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz[709],
+	  MNOONING/PlRPC/PlRPC-0.2020.tar.gz[1355]
+	  MSERGEANT/POE-Component-Logger-1.00.tar.gz[940],
+	  PETDANCE/Test-WWW-Mechanize-1.14.tar.gz[438],
+	  RCAPUTO/Lexical-Persistence-0.97.tar.gz[92],
+	  RCLAMP/Devel-Caller-0.11.tar.gz[90],
+	  RCLAMP/Devel-LexAlias-0.04.tar.gz[91],
+gone
+    AWWAIID/Continuity-0.95.tar.gz,
+	  CLACO/Data-Currency-0.04002.tar.gz,
+	  CLACO/Finance-Currency-Convert-WebserviceX-0.06001.tar.gz,
+	  DAXIM/Yahoo-Photos-0.0.2.tar.gz,
+	  DCONWAY/Contextual-Return-v0.2.1.tar.gz,
+	  JROBINSON/SQL-Translator-0.08001.tar.gz,
+	  MLEHMANN/Coro-4.11.tar.gz,
+	  NIKIP/Authen-PAM-0.16.tar.gz,
+	  RCLAMP/POE-Component-Server-HTTP-0.09.tar.gz,
+	  TEEJAY/Maypole-2.121.tar.gz,
+	  TMTM/CGI-Untaint-date-1.00.tar.gz,
+	  VKON/Tcl-0.95.tar.gz,
+	  YVES/Date-Simple-3.02.tar.gz
+
+	and 32180 has no substantial change. 81 will be unthreaded again.
+
+	* spamassassin seems to have bugs in the test suite that then are
+	ignored. Seems to call out to the perl in the path which chokes on the
+	prototype "_".
+
+	* DWHEELER/Exception-Class-DBI-0.95.tar.gz failed for the first time
+	ever in 32154. It was with DBI 1.601 and I think it was the first to
+	encounter 1.601. Yes, when compiling with 32152 it was still DBI 1.59. 
+
+	http://rt.cpan.org/Ticket/Display.html?id=30230
+
+	* off topic AndyA has created coop google searches for perl and cpan:
+
+	http://google.com/coop/cse?cx=008709583689349882482%3Aw2_rnxeqmu0
+	http://google.com/coop/cse?cx=008709583689349882482%3Aj5fu_7cy8vu
+
+	* /tmp watching again:
+
+	30209 Apache-Session                   Cleaning up /tmp directory
+
+	* -rw-------  1 sand sand   2212 Oct 23 02:04 CyoWt00GDv
+
+	find . -depth -user sand -and -newer a0u4eNQ7UO -and -not -newer saoDrTlcuA -exec rm -rv {} \;
+
 2007-10-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 32154 fails with
@@ -6,7 +153,12 @@ Failed 1 test out of 1430, 99.93% okay.
         ../ext/threads/shared/t/waithires.t
 
 	on perl itself. 'make nok' sent. Seems to be because I tried a threaded
-	perl.
+	perl. Sorry, forgot to make a backup, reconstruct running...
+
+	It turns out that I see the same on 32174 and that it is load dependent.
+	And JDHEDDEN says this is not a bug and he is not willing to change the
+	timeouts. I wonder if this is related to threaded builds (321[57]4 were
+	threaded) or really only load driven.
 
 	* Yesterday I built my first jifty installation with current SVN and
 	bleadperl. 32147 was the patchnumber. Soon after this installation was
@@ -50,6 +202,8 @@ Failed 1/20 test programs. 2/217 subtests failed.
 
 
 	32015 is the first perl that breaks on 10-simple in this manner.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30197
 
 2007-10-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
