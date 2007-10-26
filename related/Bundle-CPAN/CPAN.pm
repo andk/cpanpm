@@ -40,7 +40,15 @@ Digest::SHA
 
 File::HomeDir
 
+Compress::Raw::Zlib -- needed by Compress::Zlib
+
+IO::Compress::Base -- needed by Compress::Zlib
+
+IO::Uncompress::Gunzip -- really IO::Compress::Zlib -- needed by Compress::Zlib
+
 Compress::Zlib
+
+IO::Zlib -- needed by Archive::{Tar,Zip}
 
 Archive::Tar
 
