@@ -96,6 +96,9 @@ WriteMakefile(
                                        ),
                        COMPRESS => 'gzip -9f'
                       },
+              EXTRA_META => <<EMETA,
+repository: "https://pause.perl.org:5460/svn/cpanpm/trunk/related/Bundle-CPAN"
+EMETA
 );
 
 if ($version_diff){
