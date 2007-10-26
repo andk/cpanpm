@@ -242,6 +242,7 @@ Devel::Command
 Devel::Cover
 Devel::Cycle
 Devel::DProfLB
+Devel::Declare
 Devel::Dependencies
 Devel::EvalContext
 Devel::Events
@@ -556,6 +557,7 @@ Net::IDN::Nameprep
 Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
+Net::Jaiku
 Net::Libdnet
 Net::NNTP
 Net::Netmask
@@ -626,6 +628,7 @@ POE::Component::IRC
 POE::Component::JobQueue
 POE::Component::MessageQueue
 POE::Component::Pluggable
+POE::Component::PreforkDispatch
 POE::Component::Proxy::TCP
 POE::Component::RSS
 POE::Component::SSLify

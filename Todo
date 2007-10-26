@@ -1,5 +1,137 @@
 2007-10-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Todo: NOG/AFS-2.4.0 look how the indexer fails
+
+	* Summary of recent builds only watching 8 pieces:
+	CLKAO/Sub-Multi-0.003.tar.gz,
+	JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,
+	MLEHMANN/Coro-4.{11,13}.tar.gz
+	MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
+	RCLAMP/Devel-Caller-0.11.tar.gz
+	VKON/Tcl-0.95.tar.gz
+	YVES/Date-Simple-3.02.tar.gz
+	
+     useithreads                no threads
+	+--------------------------+--------------------------+
+	|  bleadperl@32186         |  bleadperl@32181         |
+	|  PASS                    |  PASS                    |
+	|                          |                          |
+	|  Catalyst-Plugin-Unicode |  Sub-Multi               |
+	|                          |  Catalyst-Plugin-Unicode |
+	|                          |  Net-Daemon              |
+	|                          |  Devel-Caller            |
+-g|                          |                          |
+	|  FAIL                    |  FAIL                    |
+	|                          |                          |
+	|  Sub-Multi               |  Coro 4.11               |
+	|  Coro 4.13               |  Tcl                     |
+	|  Net-Daemon              |  Date-Simple             |
+	|  Devel-Caller            |                          |
+	|  Tcl                     |                          |
+	|  Date-Simple             |                          |
+	+--------------------------+--------------------------+
+	|  bleadperl@32180         |  bleadperl@32192,32193   |
+	|  PASS                    |  PASS                    |
+	|                          |                          |
+	|  Coro 4.11               |  Sub-Multi               |
+	|  Tcl                     |  Coro 4.13               |
+	|  Date-Simple             |  Net-Daemon              |
+no|                          |  Devel-Caller            |
+-g|                          |  Tcl                     |
+	|                          |                          |
+	|  FAIL                    |  FAIL                    |
+	|                          |                          |
+	|  Sub-Multi               |  Catalyst-Plugin-Unicode |
+	|  Catalyst-Plugin-Unicode |  Date-Simple             |
+	|  Net-Daemon              |                          |
+	|  Devel-Caller            |                          |
+  +--------------------------+--------------------------+
+	
+
+	* 32186 (threads+debugging) came with this change profile:
+
+new fails
+    BRADFITZ/Perlbal-1.60.tar.gz[311]
+	  DMAKI/File-MMagic-XS-0.09002.tar.gz[358]
+	  RCLAMP/Devel-Caller-0.11.tar.gz[400]
+	  RCLAMP/Devel-LexAlias-0.04.tar.gz[405]
+	  CLKAO/Data-Bind-0.28.tar.gz[406]
+	  CLKAO/Sub-Multi-0.003.tar.gz[716]
+	  FGLOCK/v6-0.020.tar.gz[717]
+	  MLEHMANN/Coro-4.13.tar.gz[725]
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz[790]
+	  MNOONING/PlRPC/PlRPC-0.2020.tar.gz[797]
+	  AVAR/re-engine-Plan9-0.14.tar.gz[862]
+	  MAURICE/IPC-ShareLite-0.09.tar.gz[889]
+	  MWS/ResourcePool-1.0104.tar.gz[942]
+	  RCAPUTO/Lexical-Persistence-0.97.tar.gz[944]
+	  DMAKI/File-Extract-0.06.tar.gz[956]
+	  SREZIC/Tk-Splash-0.14.tar.gz[1339]
+gone
+    BRADFITZ/Perlbal-1.59.tar.gz
+	  GAFFIE/ETL-Pequel-2.4-6b.tar.gz
+	  MARKOV/Mail-Box-2.075.tar.gz
+	  MLEHMANN/Coro-4.11.tar.gz
+	  REDTREE/PDF-API2-Simple-1.1.2.tar.gz
+	  TBONE/Net-FTP-Common-6.0.tar.gz
+
+		whereas 32192 (nothreads+nodebugging) had this:
+
+new fails
+    PETERW/SVG-Parser-1.01.tar.gz[33]
+	  RONAN/SVG-Template-Graph-0.13.tar.gz[36]
+	  PETDANCE/Test-WWW-Mechanize-1.14.tar.gz[182]
+	  CHROMATIC/Sub-Context-1.00.tar.gz[249]
+	  AUTRIJUS/Encode-compat-0.07.tar.gz[298]
+	  SCHWIGON/class-methodmaker/Class-MethodMaker-2.10.tar.gz[493]
+	  FLUFFY/Term-ProgressBar-2.09.tar.gz[494]
+	  AUTRIJUS/Lingua-ZH-HanDetect-0.04.tar.gz[635]
+	  CHROMATIC/Test-Kwalitee-0.30.tar.gz[728]
+	  DMAKI/POE-Component-StackedProcessor-0.05.tar.gz[766]
+	  SCHWIGON/pdf-fdf-simple/PDF-FDF-Simple-0.11.tar.gz[855]
+	  DBDPG/DBD-Pg-1.49.tar.gz[911]
+	  TBONE/Net-FTP-Common-6.0.tar.gz[929]
+	  SRSHAH/Test-Distribution-1.26.tar.gz[1103]
+	  SUNGO/POE-API-Peek-1.0802.tar.gz[1104]
+	  GWYN/POE-Component-Daemon-0.1006.tar.gz[1105]
+	  CHROMATIC/Crypt-CipherSaber-1.00.tar.gz[1107]
+	  AUTRIJUS/WWW-REST-0.01.tar.gz[1111]
+	  JESSE/GnuPG-Interface-0.36.tar.gz[1148]
+	  IMACAT/Locale-Maketext-Gettext-1.22.tar.gz[1171]
+	  LBROCARD/Test-WWW-Mechanize-Catalyst-0.41.tar.gz[1184]
+	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz[1185]
+	  RCLAMP/POE-Component-Server-HTTP-0.09.tar.gz[1238]
+	  SUNGO/POE-Component-DebugShell-1.0411.tar.gz[1406]
+gone
+    AUDREYT/Encode-IBM-0.06.tar.gz
+	  AVAR/re-engine-Plan9-0.14.tar.gz
+	  AWWAIID/Continuity-0.95.tar.gz
+	  CLKAO/Data-Bind-0.28.tar.gz
+	  CLKAO/Sub-Multi-0.003.tar.gz
+	  DAXIM/Yahoo-Photos-0.0.2.tar.gz
+	  DMAKI/File-Extract-0.06.tar.gz
+	  DMAKI/File-MMagic-XS-0.09002.tar.gz
+	  FGLOCK/v6-0.020.tar.gz
+	  GOZER/mod_perl-1.30.tar.gz
+	  LARSLUND/PDF-Reuse-Barcode-0.05.tar.gz
+	  MAURICE/IPC-ShareLite-0.09.tar.gz
+	  MIYAGAWA/Apache-GuessCharset-0.03.tar.gz
+	  MLEHMANN/Coro-4.13.tar.gz
+	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
+	  MNOONING/PlRPC/PlRPC-0.2020.tar.gz
+	  MWS/ResourcePool-1.0104.tar.gz
+	  NUFFIN/Devel-Events-Objects-0.03.tar.gz
+	  NUFFIN/Tie-RefHash-Weak-0.07.tar.gz
+	  RCAPUTO/Lexical-Persistence-0.97.tar.gz
+	  RCLAMP/Devel-Caller-0.11.tar.gz
+	  RCLAMP/Devel-LexAlias-0.04.tar.gz
+	  SREZIC/Tk-Splash-0.14.tar.gz
+	  STAS/libapreq-1.33.tar.gz
+	  TIMB/Apache-Status-DBI-1.012.tar.gz
+	  VKON/Tcl-0.95.tar.gz
+	  VPIT/Variable-Magic-0.04.tar.gz
+	  WRW/Barcode-Code128-2.01.tar.gz
+
 	* Pugs needs some extralibs installed. Installed mtl
 
 	* /tmp dir again:
@@ -18,7 +150,8 @@
 
 	So for 86 I wish that we use
 
-	       -Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel -Dusethreads -Duserelocatableinc
+...32186 -Dinstallusrbinperl=n -Uversiononly -Doptimize=-g -des -Duse64bitint -Dusedevel -Dusethreads -Duserelocatableinc
+...32192 -Dinstallusrbinperl=n -Uversiononly               -des -Duse64bitint -Dusedevel              -Duserelocatableinc
 
 	DONE.
 
@@ -62,7 +195,7 @@ gone
 	stopped to work on threaded+nondebugging and started to work on nonthreaded+debugging:
 	  [dep] CLKAO/Data-Bind-0.28.tar.gz
 	  CLKAO/Sub-Multi-0.003.tar.gz
-	  FGLOCK/v6-0.020.tar.gz
+	  [dep] FGLOCK/v6-0.020.tar.gz
 	  JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz
 	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
 	  [dep] MNOONING/PlRPC/PlRPC-0.2020.tar.gz
@@ -78,7 +211,6 @@ gone
 	  MLEHMANN/Coro-4.13.tar.gz
 	  VKON/Tcl-0.95.tar.gz
 	  YVES/Date-Simple-3.02.tar.gz
-	  FGLOCK/v6-0.020.tar.gz
 	  MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
 	  RCLAMP/Devel-Caller-0.11.tar.gz
 
