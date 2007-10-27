@@ -10,6 +10,9 @@ pl:
     - APACHE_SRC=/home/src/www/apache/apache/apache_1.3.37/src
     - APACHE_SRC_DEFAULT=/home/src/www/apache/apache/apache_1.3.37/src
     - DO_HTTPD=1
+depends:
+  build_requires:
+    LWP::UserAgent: 0
 ---
 comment: "out of order --> TODO"
 match:
