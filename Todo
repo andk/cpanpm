@@ -1,23 +1,44 @@
+2007-10-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* mod_perl also broke recently. Between 32090 and 32101. And it suddenly
+	worked again in 32192 which was a nothreads nodebugging build without
+	relocatable inc. nothing obvious, of course.
+
+	I made a autobundle for 32085. And 32108.
+
+	* 32194 came with change profile:
+
+new fails
+    PERIGRIN/JSON-Any-1.12.tar.gz[255], UNOBE/WWW-Facebook-API-v0.4.7.tar.gz[256], MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz[465], TBONE/Net-FTP-Common-6.0.tar.gz[756], MNOONING/PlRPC/PlRPC-0.2020.tar.gz[768], RCLAMP/Devel-Caller-0.11.tar.gz[787], RCLAMP/Devel-LexAlias-0.04.tar.gz[788], CLKAO/Data-Bind-0.28.tar.gz[789], CTHOM/Net-Twitter-1.06.tar.gz[808], MWS/ResourcePool-1.0104.tar.gz[856], RICKM/Net-Jaiku-0.0501.tgz[1089], CLKAO/Sub-Multi-0.003.tar.gz[1100], FGLOCK/v6-0.020.tar.gz[1102], RCAPUTO/Lexical-Persistence-0.97.tar.gz[1124], VPIT/Variable-Magic-0.04.tar.gz[1165], NUFFIN/Tie-RefHash-Weak-0.07.tar.gz[1168], NUFFIN/Devel-Events-Objects-0.03.tar.gz[1169], MSCHILLI/CPAN-Unwind-0.05.tar.gz[1207]
+gone
+    LARSLUND/PDF-Reuse-Barcode-0.05.tar.gz, RONAN/SVG-Template-Graph-0.13.tar.gz, WRW/Barcode-Code128-2.01.tar.gz
+
+	* possible todos:
+
+	- list all perlconfigs for the few succeeding Date-Simple
+
+	- pick any of the others in the contingency table summary and make a
+	filtered binary search into the past.
+
 2007-10-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Todo: NOG/AFS-2.4.0 look how the indexer fails
+	* Todo: NOG/AFS-2.4.0 look how the indexer fails DONE
 
 	* Summary of recent builds only watching 8 pieces:
 	CLKAO/Sub-Multi-0.003.tar.gz,
-	JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,
+	JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,   <<-- red herring, did not fit into square 3
 	MLEHMANN/Coro-4.{11,13}.tar.gz
 	MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
 	RCLAMP/Devel-Caller-0.11.tar.gz
 	VKON/Tcl-0.95.tar.gz
-	YVES/Date-Simple-3.02.tar.gz
+	YVES/Date-Simple-3.02.tar.gz    <<-- this was a red herring, it has more complex success/fail patterns
 	
      useithreads                no threads
 	+--------------------------+--------------------------+
 	|  bleadperl@32186         |  bleadperl@32181         |
 	|  PASS                    |  PASS                    |
 	|                          |                          |
-	|  Catalyst-Plugin-Unicode |  Sub-Multi               |
-	|                          |  Catalyst-Plugin-Unicode |
+	|                          |  Sub-Multi               |
 	|                          |  Net-Daemon              |
 	|                          |  Devel-Caller            |
 -g|                          |                          |
@@ -25,24 +46,22 @@
 	|                          |                          |
 	|  Sub-Multi               |  Coro 4.11               |
 	|  Coro 4.13               |  Tcl                     |
-	|  Net-Daemon              |  Date-Simple             |
+	|  Net-Daemon              |                          |
 	|  Devel-Caller            |                          |
 	|  Tcl                     |                          |
-	|  Date-Simple             |                          |
 	+--------------------------+--------------------------+
-	|  bleadperl@32180         |  bleadperl@32192,32193   |
+	|  bleadperl@32180,32194   |  bleadperl@32192,32193   |
 	|  PASS                    |  PASS                    |
 	|                          |                          |
-	|  Coro 4.11               |  Sub-Multi               |
+	|  Coro 4.11,4.13          |  Sub-Multi               |
 	|  Tcl                     |  Coro 4.13               |
-	|  Date-Simple             |  Net-Daemon              |
+	|                          |  Net-Daemon              |
 no|                          |  Devel-Caller            |
 -g|                          |  Tcl                     |
 	|                          |                          |
 	|  FAIL                    |  FAIL                    |
 	|                          |                          |
-	|  Sub-Multi               |  Catalyst-Plugin-Unicode |
-	|  Catalyst-Plugin-Unicode |  Date-Simple             |
+	|  Sub-Multi               |                          |
 	|  Net-Daemon              |                          |
 	|  Devel-Caller            |                          |
   +--------------------------+--------------------------+
