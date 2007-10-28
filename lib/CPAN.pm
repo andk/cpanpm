@@ -1278,6 +1278,20 @@ sub has_usable {
                                        }
                                   },
                                  ],
+               'File::Temp' => [
+                                # XXX we should probably delete from
+                                # %INC too so we can load after we
+                                # installed a new enough version --
+                                # I'm not sure.
+                                sub {require File::Temp;
+                                     unless (File::Temp::->VERSION >= 0.16) {
+                                         for ("Will not use File::Temp, need 0.16\n") {
+                                                $CPAN::Frontend->mywarn($_);
+                                                die $_;
+                                         }
+                                     }
+                                },
+                               ]
               };
     if ($usable->{$mod}) {
         for my $c (0..$#{$usable->{$mod}}) {
@@ -2978,7 +2992,7 @@ sub format_result {
 
     sub report_fh {
         return $installation_report_fh if $installation_report_fh;
-        if ($CPAN::META->has_inst("File::Temp")) {
+        if ($CPAN::META->has_usable("File::Temp")) {
             $installation_report_fh
                 = File::Temp->new(
                                   dir      => File::Spec->tmpdir,
@@ -6242,7 +6256,7 @@ EOF
     $dh->close;
     my ($packagedir);
     # XXX here we want in each branch File::Temp to protect all build_dir directories
-    if (CPAN->has_inst("File::Temp")) {
+    if (CPAN->has_usable("File::Temp")) {
         my $tdir_base;
         my $from_dir;
         my @dirents;
@@ -9092,7 +9106,7 @@ with browser $browser
                 or $CPAN::Frontend->mydie(qq{
 Could not fork '$html_converter $saved_file': $!});
             my($fh,$filename);
-            if ($CPAN::META->has_inst("File::Temp")) {
+            if ($CPAN::META->has_usable("File::Temp")) {
                 $fh = File::Temp->new(
                                       dir      => File::Spec->tmpdir,
                                       template => 'cpan_htmlconvert_XXXX',
@@ -9152,7 +9166,7 @@ sub _getsave_url {
       if $CPAN::DEBUG;
 
     my($fh,$filename);
-    if ($CPAN::META->has_inst("File::Temp")) {
+    if ($CPAN::META->has_usable("File::Temp")) {
         $fh = File::Temp->new(
                               dir      => File::Spec->tmpdir,
                               template => "cpan_getsave_url_XXXX",
@@ -9292,7 +9306,7 @@ sub reports {
     unless ($CPAN::META->has_usable("LWP")) {
         $CPAN::Frontend->mydie("LWP not installed; cannot continue");
     }
-    unless ($CPAN::META->has_inst("File::Temp")) {
+    unless ($CPAN::META->has_usable("File::Temp")) {
         $CPAN::Frontend->mydie("File::Temp not installed; cannot continue");
     }
 
