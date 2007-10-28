@@ -26,13 +26,23 @@ Jifty app
 
 RT tickets (queries, frequent bug types, )
 
-megainstall und random sequence
+megainstall in a random sequence
 
 POE
 
 distroprefs depends
 
 http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=CPAN
+
+relocateableinc => mod_perl
+
+threads,nothreads => Net::Daemon, Devel::Caller, Sub::Multi
+
+debugging/nodebugging => Coro, Tcl
+
+zlib tests time consuming
+
+urxvt
 
 =head1 Thoughts by David Golden in <5d4beb40710210830r21df9d32q671c185d01e64183@mail.gmail.com>
 

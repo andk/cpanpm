@@ -118,6 +118,7 @@ Class::Factory
 Class::Fields
 Class::Gomor
 Class::Implements
+Class::Inflate
 Class::Inner
 Class::InsideOut
 Class::Loader
