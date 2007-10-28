@@ -1,10 +1,112 @@
+2007-10-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Net-Daemon's recent FAILS under threads seems to be due to the way the
+	old Thread.pm has now become a compatibility layer. Its t/thread.t tests
+
+if (!eval { require Thread; my $t = Thread->new(sub { }) }) {
+    print "1..0\n";
+    exit 0;
+}
+
+	The compat layer seems to have started working between 30910 and 32032:
+
+% for p in `binsearchaperl --show-cache  --bounds 27048-33000 --apcdir /home/src/perl/repoperls/APC --prefix /home/src/perl/repoperls/installed-perls --cachefilter tests/filter-threaded.pl `; do
+$p -MThread -e 'print substr($^X,64), ": ", eval{Thread->new(sub { })} ? "" : "not ", "ok\n"'
+done 2>/dev/null
+@27048/bin/perl: ok
+@29353/bin/perl: not ok
+@30910/bin/perl: not ok
+@31500/bin/perl: ok
+@32032/bin/perl: ok
+@32174/bin/perl: ok
+@32186/bin/perl: ok
+@32194/bin/perl: ok
+@32195/bin/perl: ok
+
+	but probably not good enough to run the whole code in t/thread.t.
+
+	I would guess that somewhere between 27048 and 29353 they broke the
+	compatibility layer heavily and somewhere between 30910 and 31500 they
+	fixed it a bit. 30955 was the last change to Thread.pm. The fix for our
+	minimal testcase came a bit before that:
+
+----Program----
+require Thread;
+print eval{Thread->new(sub { })} ? "ok\n" : "not ok\n";
+
+----Output of .../pCY4xFO/perl-5.8.0@30952/bin/perl----
+not ok
+
+----EOF ($?='0')----
+----Output of .../pQ8RfLX/perl-5.8.0@30953/bin/perl----
+ok
+Perl exited with active threads:
+        1 running and unjoined
+        0 finished and unjoined
+        0 running and detached
+
+----EOF ($?='0')----
+
+	
+	
+	* /tmp again
+
+	30297 HTML-Display                            Cleaning up /tmp directory
+
 2007-10-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* mod_perl also broke recently. Between 32090 and 32101. And it suddenly
 	worked again in 32192 which was a nothreads nodebugging build without
 	relocatable inc. nothing obvious, of course.
 
-	I made a autobundle for 32085. And 32108.
+	I made a autobundle for 32085. And 32108. The diffs are huge.
+
+	/home/sand/.cpan/Bundle/Snapshot_2007_10_26_0[01].pm
+
+	Nono, that's something entirely different. The test server cannot be
+	started and nothing's there that would tell me an error message. I have
+	already cited the error message below but I repeat
+
+/home/src/www/apache/apache/apache_1.3.37/src/httpd -f `pwd`/t/conf/httpd.conf -X -d `pwd`/t &
+httpd listening on port 8529
+will write error_log to: t/logs/error_log
+letting apache warm up...\c
+[Sat Oct 27 13:24:44 2007] [error] Can't locate lib.pm in @INC (@INC contains: /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0/i686-linux-thread-multi-64int /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0 /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0/i686-linux-thread-multi-64int /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0 /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t/ /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t/lib/perl) at /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t//docs/startup.pl line 8.\nBEGIN failed--compilation aborted at /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t//docs/startup.pl line 8.\nCompilation failed in require at (eval 2) line 1.\n
+Syntax error on line 62 of /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t/conf/httpd.conf:
+Can't locate lib.pm in @INC (@INC contains: /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0/i686-linux-thread-multi-64int /home/src/www/apache/apache/apache_1.3.37/lib/5.10.0 /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0/i686-linux-thread-multi-64int /home/src/www/apache/apache/apache_1.3.37/lib/site_perl/5.10.0 /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t/ /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t/lib/perl) at /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t//docs/startup.pl line 8.
+BEGIN failed--compilation aborted at /home/sand/.cpan/build/mod_perl-1.30-zALo0v/t//docs/startup.pl line 8.
+Compilation failed in require at (eval 2) line 1.
+
+done
+
+	I found the lib.pm that should be found at
+	/home/src/perl/repoperls/installed-perls/perl/pFAmPwI/perl-5.8.0@32085/lib/5.10.0/i686-linux-64int
+	and indeed this is missing in the above list.
+
+	Maybe it is because of relocateableinc? Not directly, of course, because
+	we have had it working for 32085 and do not have it working for 32085
+	now. So to compare autobundles we would first need a perl that currently
+	correctly builds and tests mod_perl.
+
+	32059 nowadays has the same problem. 32032 ditto. I untar the apache
+	tarball once again and retry with 32032. Same result. 32009 was built on
+	Oct 3 and I want to see the logs really, really exactly as they were.
+	And what do I find? The same results but at that time CPAN::Reporter
+	reported OK although so many tests were not run. A very interesting
+	discovery. Probably this is just thanks to Test::Harness 2.99 now
+	popping up?
+
+	I'll now skip back in time and visit 31824 (if possible). It was the
+	first perl I built with relocateableinc and it reported OK on mod_perl.
+	Of course it also has the same bug with mod_perl 1.30. CPAN::Reporter
+	reports (and reported on 2007-09-09) UNKNOWN in this case. But it got
+	installed and make install was OK, so I did not discover the bug.
+
+	Next stop in our time travel shall bring us to 31790 (2007-09-05T01:07).
+	It was the last perl without relocateableinc. And all tests run and
+	pass. Cheerio!
+
+	http://rt.cpan.org/Ticket/Display.html?id=30300
 
 	* 32194 came with change profile:
 
@@ -26,7 +128,7 @@ gone
 
 	* Summary of recent builds only watching 8 pieces:
 	CLKAO/Sub-Multi-0.003.tar.gz,
-	JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,   <<-- red herring, did not fit into square 3
+	JROCKWAY/Catalyst-Plugin-Unicode-0.8.tar.gz,   <<-- red herring, did not fit into square 3 after second try
 	MLEHMANN/Coro-4.{11,13}.tar.gz
 	MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz
 	RCLAMP/Devel-Caller-0.11.tar.gz
@@ -35,7 +137,7 @@ gone
 	
      useithreads                no threads
 	+--------------------------+--------------------------+
-	|  bleadperl@32186         |  bleadperl@32181         |
+	|  bleadperl@32186,32195   |  bleadperl@32181         |
 	|  PASS                    |  PASS                    |
 	|                          |                          |
 	|                          |  Sub-Multi               |

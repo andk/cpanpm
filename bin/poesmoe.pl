@@ -4,13 +4,45 @@ use strict;
 use warnings;
 use CPAN::DistnameInfo;
 use File::Basename qw(fileparse dirname);
-use POE;
-use POE::Component::DebugShell;
+use POE qw(Component::JobQueue Component::DebugShell);
+
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
 use lib "/home/k/dproj/PAUSE/SVN/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+
+POE::Component::JobQueue->spawn
+    ( Alias         => 'passive',         # defaults to 'queuer'
+      WorkerLimit   => 2,                 # defaults to 8
+      Worker        => \&spawn_a_worker,  # code which will start a session
+      Passive       =>
+      {
+       Prioritizer => \&job_comparer,    # defaults to sub { 1 } # FIFO
+      },
+    );
+
+sub job_comparer { 1 }
+
+sub spawn_a_worker {
+  my ($postback, @job_params) = @_;     # same parameters as posted
+  my $first = $job_params[0];
+  POE::Session->create
+        ( inline_states => {
+                            _start => sub {
+                              my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
+                              print "sleeping 5\n";
+                              sleep 5;
+                              print "slept 5\n";
+                            },
+                            _stop => sub {},
+                           },
+          args          => [ $postback,     # $postback->(@results) to return
+                             @job_params,   # parameters of this job
+                           ],
+        );
+  print "firstpath[$first->{path}]firstperl[$first->{perl}]\n";
+}
 
 sub work_handler_start {
   my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
@@ -126,8 +158,17 @@ sub harvest_from_queue {
   my ($kernel, $heap, $session) = @_[KERNEL, HEAP, SESSION];
   my $first = shift @{$heap->{raw_queue}} or return;
   my $rest = @{$heap->{raw_queue}};
-  print "rest[$rest]firstpath[$first->{path}]firstperl[$first->{perl}]\n";
+  print "rest[$rest]\n";
+  $kernel->post( 'passive',   # post to 'passive' alias
+                 'enqueue',   # 'enqueue' a job
+                 'postback',  # which of our states is notified when it's done
+                 $first, # job parameters
+               );
   $kernel->delay('harvest_from_queue', 0.2);
+}
+
+sub postback {
+  require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump(\@_); # XXX
 }
 
 sub work_handler_stop {
@@ -140,6 +181,7 @@ POE::Session->create(
                                        increment => \&work_handler_inc,
                                        do_read_recent => \&sub_read_recent_events,
                                        harvest_from_queue => \&harvest_from_queue,
+                                       postback => \&postback,
                                        _stop     => \&work_handler_stop,
                                       }
                     );
@@ -184,3 +226,6 @@ Next steps are POE::Component::JobQueue and a status file that
 prevents duplicate work and filters items that have a higher version
 number counterpart. It's OK when the job does nothing but "echo hello
 world" for this next step but it should do it with a JobQueue.
+
+Recap: POE:C:CP:YS is based on Barbie CP:YS
+

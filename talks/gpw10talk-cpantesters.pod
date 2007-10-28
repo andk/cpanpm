@@ -1,0 +1,90 @@
+=encoding utf-8
+
+=head1 CPAN Testers
+
+Jochen Stenzel binary searches success stories
+
+thinnercache.pl has several important BBC points
+
+RECENT
+
+CPAN::Reporter 1.00
+
+grango statistik
+
+wiki grades
+
+IRC cpantesters, cpantesters-discuss, toolchain
+
+Nischen 5.005, 64bit, Dobrica talked about some phone toolkit
+
+warnings bei OK waere viel zu finden
+
+Namen David Cantrell, Chris Bingos Williams, Barbie, David Golden, Slaven
+
+Jifty app
+
+RT tickets (queries, frequent bug types, )
+
+megainstall und random sequence
+
+POE
+
+distroprefs depends
+
+http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=CPAN
+
+=head1 Thoughts by David Golden in <5d4beb40710210830r21df9d32q671c185d01e64183@mail.gmail.com>
+
+The more important words in these paragraphs above are these: "the problem".
+
+"The problem" is not well defined or perceived the same by everyone.
+
+At the core CPAN Testers provides a means to capture the experience of
+users attempting to build and test a module.  As I see it, the root of
+"the problem" is that there are many ways for things to fail, and
+authors tend to object to getting "FAIL" grades (in big capital
+letters) for things outside their control.
+
+Authors complain to CPAN Testers, testers complain to those who write
+CPAN Testers clients about getting complaints for authors.  The
+investment of time and energy to improve CPAN Testers clients is
+weighed against the annoyance of getting complaints.
+
+So, gradually, the more easily determined failure paths have being
+pruned out to just cut down on the noise.  Ones that are easy to
+automate have been -- e.g. prerequisite failures are now just
+discarded (at least by CPAN::Reporter).
+
+Harder failure paths to determine -- such as unsupported operating
+systems -- have been addressed by special key words ("OS Unsupported"
+or "No support for OS") to let authors abort building or testing with
+an NA report.  But apparently that's too hard or too obscure for some
+-- thus Devel::CheckOS.
+
+Confirming a working compiler setup and appropriate libraries is an
+even tougher problem for authors, and the method for signaling it is
+even more obscure.  ("exit 0" before creating a Makefile.)  And thus
+there is Devel::CheckLib.
+
+I'm not interested in spending my time writing an omniscient failure
+detection tool.  I'm not interested in trying to solve "the problem"
+(many ways for things to fail and authors affronted by FAIL reports)
+for all of CPAN.
+
+I'm am willing to invest my time in making it easier for authors to do
+something about being annoyed by FAIL reports from missing libraries.
+And I'm willing to invest my time to have something more constructive
+to say in response to complains. ("You're right that this is a library
+problem -- go use Devel::CheckLib and you won't get these FAIL
+reports").  That is "the problem" that Devel::CheckLib is trying to
+solve.
+
+=head1 Thoughts
+
+We have reached a point where our beloved greatest library of all
+times has degraded to some obscure collection of depressigly hard to
+use LEGO pieces. We need to turn our attention to quality assurance.
+
+
+=head1

@@ -85,6 +85,7 @@ match:
     |LUKEC/Test-WWW-Selenium-\d
     |LUTETIUS/pod2book-\d
     |LYOKATO/FormValidator-Simple-\d
+    |LYOKATO/Pod-ProjectDocs-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
