@@ -2865,8 +2865,10 @@ sub expand_by_method {
         my($regex,$command);
         if ($arg =~ m|^/(.*)/$|) {
             $regex = $1;
-        } elsif ($arg =~ m/=/) {
-            $command = 1;
+# FIXME:  there seem to be some ='s in the author data, which trigger
+#         a failure here.  This needs to be contemplated.
+#            } elsif ($arg =~ m/=/) {
+#                $command = 1;
         }
         my $obj;
         CPAN->debug(sprintf "class[%s]regex[%s]command[%s]",
@@ -2943,7 +2945,7 @@ that may go away anytime.\n"
             push @m, $obj;
         }
     }
-    @m = sort {$a->id cmp $b->id} @m;
+	@m = sort {$a->id cmp $b->id} @m;
     if ( $CPAN::DEBUG ) {
         my $wantarray = wantarray;
         my $join_m = join ",", map {$_->id} @m;
@@ -9748,22 +9750,21 @@ sub as_glimpse {
         $color_off = Term::ANSIColor::color("reset");
     }
     my $uptodateness = " ";
-    if ($class eq "Bundle") {
-    } elsif ($self->uptodate) {
-        $uptodateness = "=";
-    } elsif ($self->inst_version) {
-        $uptodateness = "<";
-    }
+	unless ($class eq "Bundle") {
+		my $u = $self->uptodate;
+		$uptodateness = $u ? "=" : "<" if defined $u;
+	};
+	my $id = do {
+		my $d = $self->distribution;
+		$d ? $d -> pretty_id : $self->cpan_userid;
+	};
     push @m, sprintf("%-7s %1s %s%-22s%s (%s)\n",
                      $class,
                      $uptodateness,
                      $color_on,
                      $self->id,
                      $color_off,
-                     ($self->distribution ?
-                      $self->distribution->pretty_id :
-                      $self->cpan_userid
-                     ),
+					 $id,
                     );
     join "", @m;
 }
@@ -10114,25 +10115,17 @@ sub test   {
 }
 #-> sub CPAN::Module::uptodate ;
 sub uptodate {
-    my($self) = @_;
-    local($_); # protect against a bug in MakeMaker 6.17
-    my($latest) = $self->cpan_version;
-    $latest ||= 0;
-    my($inst_file) = $self->inst_file;
-    my($have) = 0;
-    if (defined $inst_file) {
-        $have = $self->inst_version;
-    }
-    local($^W)=0;
-    if ($inst_file
-        &&
-        ! CPAN::Version->vgt($latest, $have)
-       ) {
-        CPAN->debug("returning uptodate. inst_file[$inst_file] ".
-                    "latest[$latest] have[$have]") if $CPAN::DEBUG;
-        return 1;
-    }
-    return;
+	my ($self) = @_;
+	local ($_);
+	my $inst = $self->inst_version or return undef;
+	my $cpan = $self->cpan_version;
+	local ($^W) = 0;
+	CPAN::Version->vgt($cpan,$inst) and return 0;
+    CPAN->debug(join("",
+		"returning uptodate. inst_file[",
+		$self->inst_file,
+        "cpan[$cpan] inst[$inst]")) if $CPAN::DEBUG;
+	return 1;
 }
 #-> sub CPAN::Module::install ;
 sub install {
