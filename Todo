@@ -65,13 +65,19 @@ Files=7, Tests=21,  1 wallclock secs ( 0.76 cusr +  0.10 csys =  0.86 CPU)
 	Yes, it fails with blead@32032 (panic free from wrong pool), it succeeds
 	with maint@31223.
 
-	And it fails for a different (symbol) reason with 27680, 27704, 27705,
-	27729.
+	And it fails for this:
+
+	  MMagic.xs:455: error: expected declaration specifiers	or '...' before '(' token'
+
+	with 27680, 27704, 27705, 27729, 27732, 27733, 27734
 	
 	It fails with the same panic free from wrong pool on 30953, 30952,
 	29353, 28507, 28106, 27906, 27806, 27755, 27741, 27735.
 
-	Next: 27735
+	Next: According to the comment in 27735 we must go back in time before
+	27649 and I see a good place at 23232 which is 51 points from 23181
+	which is quite a good distance. 23240 would have been the better choice.
+	Oh well.
 
 2007-10-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

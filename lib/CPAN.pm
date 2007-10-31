@@ -1260,7 +1260,7 @@ sub has_usable {
                            ],
                'File::HomeDir' => [
                                    sub {require File::HomeDir;
-                                        unless (File::HomeDir::->VERSION >= 0.52) {
+                                        unless (CPAN::Version->vge(File::HomeDir::->VERSION, 0.52)) {
                                             for ("Will not use File::HomeDir, need 0.52\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
@@ -1270,7 +1270,7 @@ sub has_usable {
                                   ],
                'Archive::Tar' => [
                                   sub {require Archive::Tar;
-                                       unless (Archive::Tar::->VERSION >= 1.00) {
+                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.00)) {
                                             for ("Will not use Archive::Tar, need 1.00\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
@@ -1284,7 +1284,7 @@ sub has_usable {
                                 # installed a new enough version --
                                 # I'm not sure.
                                 sub {require File::Temp;
-                                     unless (File::Temp::->VERSION >= 0.16) {
+                                     unless (CPAN::Version->vge(File::Temp::->VERSION,0.16)) {
                                          for ("Will not use File::Temp, need 0.16\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
