@@ -1,7 +1,60 @@
 2007-10-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Today I saw this ugly result:
+
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/p6GHBr2/perl-5.8.0@27906/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/01-sanity..............ok
+t/02-runthrough..........panic: free from wrong pool, <F> line 3.
+# Looks like your test died just after 13.
+t/02-runthrough..........dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+        after all the subtests completed successfully
+t/03-error...............panic: free from wrong pool.
+# Looks like your test died just after 3.
+t/03-error...............dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+        after all the subtests completed successfully
+t/99_pod-coverage........skipped
+        all skipped: Enable TEST_POD environment variable to test POD
+t/99_pod.................skipped
+        all skipped: Enable TEST_POD environment variable to test POD
+t/compat_01-selfcheck....panic: free from wrong pool.
+# Looks like your test died just after 2.
+t/compat_01-selfcheck....dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+        after all the subtests completed successfully
+t/compat_02-extmagic.....panic: free from wrong pool.
+# Looks like your test died just after 2.
+t/compat_02-extmagic.....dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+        after all the subtests completed successfully
+Failed Test             Stat Wstat Total Fail  Failed  List of Failed
+-------------------------------------------------------------------------------
+t/02-runthrough.t        255 65280    13    0   0.00%  ??
+Failed Test             Stat Wstat Total Fail  Failed  List of Failed
+-------------------------------------------------------------------------------
+t/03-error.t             255 65280     3    0   0.00%  ??
+Failed Test             Stat Wstat Total Fail  Failed  List of Failed
+-------------------------------------------------------------------------------
+t/compat_01-selfcheck.t  255 65280     2    0   0.00%  ??
+Failed Test             Stat Wstat Total Fail  Failed  List of Failed
+-------------------------------------------------------------------------------
+t/compat_02-extmagic.t   255 65280     2    0   0.00%  ??
+2 tests skipped.
+Failed 4/7 test scripts, 42.86% okay. 0/21 subtests failed, 100.00% okay.
+Files=7, Tests=21,  1 wallclock secs ( 0.76 cusr +  0.10 csys =  0.86 CPU)
+  DMAKI/File-MMagic-XS-0.09002.tar.gz
+  /usr/bin/make test -- OK
+
+	who wrote the result and who could not read it? Test::Harness 2.57_05
+	and CPAN::Reporter (not installed!), so it was me!
+
+	* Bug in File::Temp version checking code. A simple < is wrong, you must
+	use CPAN::Version!
+
 	* MLEHMANN/Gtk-Perl-0.7009.tar.gz fails because gtk-config not found or
-	something. Installed libgtk1.2-dev.
+	something. Installed libgtk1.2-dev. More libraries missing in the next
+	round of trial and error.
 
 	* File-MMagic-XS failed on 32195, 32186 which is threaded and debugging.
 	I started to watch F:M:X with 31568 but we have one other
@@ -12,11 +65,13 @@
 	Yes, it fails with blead@32032 (panic free from wrong pool), it succeeds
 	with maint@31223.
 
-	And it fails for a different (symbol) reason with 27680, 27704, 27705.
+	And it fails for a different (symbol) reason with 27680, 27704, 27705,
+	27729.
+	
 	It fails with the same panic free from wrong pool on 30953, 30952,
-	29353, 28507.
+	29353, 28507, 28106, 27906, 27806, 27755, 27741, 27735.
 
-	Next: 28106
+	Next: 27735
 
 2007-10-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

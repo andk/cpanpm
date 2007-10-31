@@ -1,38 +1,30 @@
 --- 
-match:
-  distribution: "^MLEHMANN/Coro-2.0"
-pl: 
-  expect:
-    - "Do you want to enable C context sharing"
-    - "y\n"
-    - "<s>etjmp/longjump, <u>context, <i>rix, <l>inux or <w>indows"
-    - "l\n"
-    - "C stack size factor"
-    - "16384\n"
---- 
-comment: "The patch is just providing enough fix to compile under bleadperl and run the tests. It's not approved by the author who says that there are some other bugs lurking."
-match:
-  distribution: "^MLEHMANN/Coro-2.1"
-pl: 
-  expect:
-    - "Do you want to enable C context sharing"
-    - "y\n"
-    - "<s>etjmp/longjump, <u>context, <i>rix, <l>inux or <w>indows"
-    - "l\n"
-    - "C stack size factor"
-    - "16384\n"
-    - "Number of guard pages \(0 disables\)"
-    - "\n"
-patches:
-  - ANDK/patches/Coro-2.1-ANDK-01.patch.gz
---- 
 comment: |
 
   or just to accept defaults in future releases...
 
-  The dependency on Event is only given if you want to build
-  Coro::Event.
+  The dependency on Event is only given because I want to build
+  Coro::Event and it does not get built if Event is not installed
+  BEFOREHAND.
 
+  Starting with 4.02 the defaults stopped working for me and I needed
+  CORO_INTERFACE=s. I discovered this only when we reached 4.13 and
+  only for perls with debugging on (-Doptimize=-g)
+
+match:
+  distribution: "^MLEHMANN/Coro-"
+  perlconfig:
+    optimize: "-g"
+pl:
+  env:
+    PERL_MM_USE_DEFAULT: 1
+    CORO_INTERFACE: s
+depends:
+  configure_requires:
+    Event: 0
+  requires:
+    Event: 0
+--- 
 match:
   distribution: "^MLEHMANN/Coro-"
 pl:
