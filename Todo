@@ -1,3 +1,188 @@
+2007-11-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Some distro removed the Config.pm of my testing perls so I lost 6 perl
+	installations. I removed them immediately and now let only one perl run.
+
+	From the history of sent test reports it seems that Perl-Dist is to blame.
+
+I'm starting cpan for bleadperl@32194 which has a working -V command so must have
+a Config.pm. Let me see it:
+
+			% ls -l /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/Config.pm
+		-r--r--r-- 1 sand sand 3383 2007-10-26 06:17:43 /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/Config.pm
+
+And copy it away:
+
+			cp /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/Config.pm /tmp/Config.pm.32194
+
+Ah, I see Adam has uploaded a 0.29_02 in the meantime. No mention of an
+alert. So let's try it now.
+
+			cpan[6]> install ADAMK/Perl-Dist-0.29_02.tar.gz
+		Running make for A/AD/ADAMK/Perl-Dist-0.29_02.tar.gz
+
+			CPAN.pm: Going to build A/AD/ADAMK/Perl-Dist-0.29_02.tar.gz
+
+		CPAN: CPAN::Reporter loaded ok (v1.04)
+		Checking if your kit is complete...
+		Looks good
+		Warning: prerequisite Perl::Dist::Downloads 0.02 not found.
+		Writing Makefile for Perl::Dist
+		Looking for Inno Setup 5... Failed to find the Program Files directory
+
+		(/home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/bin/perl Makefile.PL exited with 0)
+		CPAN::Reporter: Makefile.PL result is 'pass', No errors.
+		---- Unsatisfied dependencies detected during ----
+		----      ADAMK/Perl-Dist-0.29_02.tar.gz      ----
+				Perl::Dist::Downloads [requires]
+		Running make test
+			Delayed until after prerequisites
+		Running make install
+			Delayed until after prerequisites
+		Running install for module 'Perl::Dist::Downloads'
+		Running make for A/AD/ADAMK/Perl-Dist-Downloads-0.03.tar.gz
+		Checksum for /home/ftp/pub/CPAN/authors/id/A/AD/ADAMK/Perl-Dist-Downloads-0.03.tar.gz ok
+
+			CPAN.pm: Going to build A/AD/ADAMK/Perl-Dist-Downloads-0.03.tar.gz
+
+		Checking if your kit is complete...
+		Looks good
+		Writing Makefile for Perl::Dist::Downloads
+		(/home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/bin/perl Makefile.PL exited with 0)
+		CPAN::Reporter: Makefile.PL result is 'pass', No errors.
+		Installing blib/lib/auto/Perl/Dist/Downloads/mingw-runtime-3.13.tar.gz
+		Installing blib/lib/auto/Perl/Dist/Downloads/gcc-g++-3.4.5-20060117-1.tar.gz
+		Installing blib/lib/auto/Perl/Dist/Downloads/dmake-4.8-20070327-SHAY.zip
+		Installing blib/lib/auto/Perl/Dist/Downloads/gcc-core-3.4.5-20060117-1.tar.gz
+		Installing blib/lib/auto/Perl/Dist/Downloads/w32api-3.10.tar.gz
+		Installing blib/lib/auto/Perl/Dist/Downloads/mingw32-make-3.81-2.tar.gz
+		Installing blib/lib/auto/Perl/Dist/Downloads/binutils-2.17.50-20060824-1.tar.gz
+		cp lib/Perl/Dist/Downloads.pm blib/lib/Perl/Dist/Downloads.pm
+		Manifying blib/man3/Perl::Dist::Downloads.3
+		(/usr/bin/make exited with 0)
+		CPAN::Reporter: make result is 'pass', No errors.
+			ADAMK/Perl-Dist-Downloads-0.03.tar.gz
+			/usr/bin/make -- OK
+		Running make test
+		PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'inc', 'blib/lib', 'blib/arch')" t/*.t
+		t/01_compile....ok
+		t/02_main.......ok
+		t/98_pod........skipped
+						all skipped: Author tests not required for installation
+		t/99_pmv........skipped
+						all skipped: Author tests not required for installation
+		All tests successful, 2 tests skipped.
+		Files=4, Tests=9,  1 wallclock secs ( 0.21 cusr +  0.05 csys =  0.26 CPU)
+		(/usr/bin/make test exited with 0)
+		CPAN::Reporter: Test result is 'pass', All tests successful.
+		Preparing a CPAN Testers report for Perl-Dist-Downloads-0.03
+		Sending test report with 'pass' to cpan-testers@perl.org
+			ADAMK/Perl-Dist-Downloads-0.03.tar.gz
+			/usr/bin/make test -- OK
+		Running make install
+		Prepending /home/sand/.cpan/build/Perl-Dist-Downloads-0.03-QjvVtv/blib/arch /home/sand/.cpan/build/Perl-Dist-Downloads-0.03-QjvVtv/blib/lib to PERL5LIB for 'install'
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/Perl/Dist/Downloads.pm
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/mingw-runtime-3.13.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/gcc-g++-3.4.5-20060117-1.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/dmake-4.8-20070327-SHAY.zip
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/gcc-core-3.4.5-20060117-1.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/w32api-3.10.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/mingw32-make-3.81-2.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/auto/Perl/Dist/Downloads/binutils-2.17.50-20060824-1.tar.gz
+		Installing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/man/man3/Perl::Dist::Downloads.3
+		Writing /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/i686-linux-thread-multi-64int/auto/Perl/Dist/Downloads/.packlist
+		Appending installation info to /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/perllocal.pod
+			ADAMK/Perl-Dist-Downloads-0.03.tar.gz
+			/usr/bin/make install UNINST=1 -- OK
+		Running make for A/AD/ADAMK/Perl-Dist-0.29_02.tar.gz
+			Has already been unwrapped into directory /home/sand/.cpan/build/Perl-Dist-0.29_02-uH5Hsi
+
+			CPAN.pm: Going to build A/AD/ADAMK/Perl-Dist-0.29_02.tar.gz
+
+		Installing blib/lib/auto/Perl/Dist/Config.pm
+		Installing blib/lib/auto/Perl/Dist/LICENSE.txt
+		Installing blib/lib/auto/Perl/Dist/README.w32api
+		Installing blib/lib/auto/Perl/Dist/Installed.pm
+		Installing blib/lib/auto/Perl/Dist/Packlist.pm
+		Installing blib/lib/auto/Perl/Dist/FinalConfig.pm
+		Installing blib/lib/auto/Perl/Dist/libnet.cfg
+		Installing blib/lib/auto/Perl/Dist/README
+		Installing blib/lib/auto/Perl/Dist/Install.pm
+		cp lib/Perl/Dist/Asset.pm blib/lib/Perl/Dist/Asset.pm
+		cp lib/Perl/Dist/Builder.pm blib/lib/Perl/Dist/Builder.pm
+		cp lib/Perl/Dist/Inno/Registry.pm blib/lib/Perl/Dist/Inno/Registry.pm
+		cp lib/Perl/Dist.pm blib/lib/Perl/Dist.pm
+		cp lib/Perl/Dist/Inno.pm blib/lib/Perl/Dist/Inno.pm
+		cp lib/Perl/Dist/Asset/Module.pm blib/lib/Perl/Dist/Asset/Module.pm
+		cp lib/Perl/Dist/Asset/Perl.pm blib/lib/Perl/Dist/Asset/Perl.pm
+		cp lib/Perl/Dist/Asset/Binary.pm blib/lib/Perl/Dist/Asset/Binary.pm
+		cp lib/Perl/Dist/Inno/File.pm blib/lib/Perl/Dist/Inno/File.pm
+		cp lib/Perl/Dist/Asset/File.pm blib/lib/Perl/Dist/Asset/File.pm
+		cp lib/Perl/Dist/Inno/Icon.pm blib/lib/Perl/Dist/Inno/Icon.pm
+		cp lib/Perl/Dist/Asset/Distribution.pm blib/lib/Perl/Dist/Asset/Distribution.pm
+		cp script/perldist blib/script/perldist
+		/home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/bin/perl "-Iinc" "-MExtUtils::MY" -e "MY->fixin(shift)" blib/script/perldist
+		Manifying blib/man3/Perl::Dist::Builder.3
+		Manifying blib/man3/Perl::Dist.3
+		(/usr/bin/make exited with 0)
+		CPAN::Reporter: make result is 'pass', No errors.
+			ADAMK/Perl-Dist-0.29_02.tar.gz
+			/usr/bin/make -- OK
+		Running make test
+		PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'inc', 'blib/lib', 'blib/arch')" t/*.t
+		t/01_compile..........ok
+		t/03_inno_file........ok
+		t/04_inno_icon........ok
+		t/05_inno_registry....ok
+		t/06_inno.............skipped
+						all skipped: Not on Win32
+		t/07_asset_file.......ok
+		t/10_dist_new.........skipped
+						all skipped: Not on Win32
+		t/11_dist_run.........skipped
+						all skipped: Not on Win32
+		t/98_pod..............skipped
+						all skipped: Author tests not required for installation
+		t/99_pmv..............skipped
+						all skipped: Author tests not required for installation
+		All tests successful, 5 tests skipped.
+		Files=10, Tests=41,  8 wallclock secs ( 1.52 cusr +  0.14 csys =  1.66 CPU)
+		(/usr/bin/make test exited with 0)
+		CPAN::Reporter: Test result is 'pass', All tests successful.
+		Preparing a CPAN Testers report for Perl-Dist-0.29_02
+		Sending test report with 'pass' to cpan-testers@perl.org
+			ADAMK/Perl-Dist-0.29_02.tar.gz
+			/usr/bin/make test -- OK
+		Running make install
+		Prepending /home/sand/.cpan/build/Perl-Dist-0.29_02-uH5Hsi/blib/arch /home/sand/.cpan/build/Perl-Dist-0.29_02-uH5Hsi/blib/lib to PERL5LIB for 'install'
+		Can't locate Config.pm in @INC (@INC contains: inc /home/sand/.cpan/build/Perl-Dist-0.29_02-uH5Hsi/blib/arch /home/sand/.cpan/build/Perl-Dist-0.29_02-uH5Hsi/blib/lib /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0 /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0/i686-linux-thread-multi-64int /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/site_perl/5.10.0 .) at /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/AutoSplit.pm line 4.
+		BEGIN failed--compilation aborted at /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/AutoSplit.pm line 4.
+		Compilation failed in require at /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/ExtUtils/Install.pm line 9.
+		BEGIN failed--compilation aborted at /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/ExtUtils/Install.pm line 9.
+		Compilation failed in require.
+		BEGIN failed--compilation aborted.
+		make: *** [pure_site_install] Fehler 2
+			ADAMK/Perl-Dist-0.29_02.tar.gz
+			/usr/bin/make install UNINST=1 -- NOT OK
+		Failed during this command:
+		 ADAMK/Perl-Dist-0.29_02.tar.gz               : install NO
+
+		cpan[7]> q
+		Warning: Configuration not saved.
+		Lockfile removed.
+		......>sand@k75:~/CPAN
+		>sand@k75:~/CPAN-SVN% ls -l /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/Config.pm
+		ls: /home/src/perl/repoperls/installed-perls/perl/pICDJJz/perl-5.8.0@32194/lib/5.10.0/i686-linux-thread-multi-64int/Config.pm: Datei oder Verzeichnis nicht gefunden
+
+Which means in English: not found. So installing ADAMK/Perl-Dist-0.29_02.tar.gz removes the Config.pm if the installer is owner (which he usually is).
+
+	2007-11-01 akoenig : I have issued above text as a "security alert"
+	ticket on RT.cpan.org (#30404), informed the cpan-testers-discussion
+	mailing list and removed the two Perl-Dist-0.29_0[12].tar.gz files from
+	CPAN.
+
+	* Is it true that apache2 does not build with blead?
+
 2007-10-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Today I saw this ugly result:

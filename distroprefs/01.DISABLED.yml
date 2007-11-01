@@ -16,14 +16,13 @@ match:
     .^   # never matches, only purpose is to let things align nicely
     |.+/Win32(API)?-                         # I have only linux
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
-    |ADAMK/Module-Install-\d                 # probably removed all my Config.pms (?)
+    |ADAMK/Module-Install-\d                 # it is not meant to be installed AFAIK
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
-    |DAGOLDEN/Sub-Uplevel-\d                 # probably removed all my Config.pms (?)
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
     |DMAKI/Gungho-0.0\d                      # hanging test; 0.08009 was ok, 0.08010 not, 0.09 still was not
