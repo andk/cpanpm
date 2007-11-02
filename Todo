@@ -1,4 +1,17 @@
+2007-11-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* /tmp again:
+
+	30425 CatalystX-CRUD                  Cleaning up /tmp directory
+
+	* Today a new 32025 maintperl finished and it has many fails that I have
+	not noticed before. See 2007-11-01T02:38. This was due to the glitch
+	with disabling Sub-Uplevel. So this should not have caused harm because
+	no reports were sent out in such cases.
+
 2007-11-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Rethink the recent mail exchange with Barbie about timestamps in the future.
 
 	* Some distro removed the Config.pm of my testing perls so I lost 6 perl
 	installations. I removed them immediately and now let only one perl run.
@@ -263,6 +276,34 @@ Files=7, Tests=21,  1 wallclock secs ( 0.76 cusr +  0.10 csys =  0.86 CPU)
 	27649 and I see a good place at 23232 which is 51 points from 23181
 	which is quite a good distance. 23240 would have been the better choice.
 	Oh well.
+
+----Program----
+eval q{use File::MMagic::XS 0.09002};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p3g2zXo/perl-5.8.0@26177/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p2IzPOM/perl-5.8.0@26178/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	This is no way possible. 26178 did nothing but remove comments. Ahhh,
+	there is an old 27177 from 2005 involved.
+
+----Output of .../pql0Vj4/perl-5.8.0@26176/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p1BkiZu/perl-5.8.0@26177/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Yes, this is the real thing. BBC article posted to P5P.
 
 2007-10-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
