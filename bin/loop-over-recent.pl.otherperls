@@ -15,12 +15,16 @@
 
 # the latest where I did a megainstall on (on 2007-10-05)
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pXGjdKF/perl-5.8.0@32025/bin/perl
+# the latest where I did a megainstall on (on 2007-11-02)
+/home/src/perl/repoperls/installed-perls/maint-5.8/pOwntgt/perl-5.8.0@32025/bin/perl
 
 # our favorite 5.8.9-tobe with the disadvantage that it believes to be 30961; no threads
 # /usr/local/perl-m-5.8.0@31162/bin/perl
 
 # 5.8.7:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl
+# not a perfect replacement, a few more patches away!:
+/home/src/perl/repoperls/installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727/bin/perl
 # 5.8.6:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl
 # 5.8.5:
