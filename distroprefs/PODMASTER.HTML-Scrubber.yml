@@ -6,4 +6,4 @@ comment: |
 match:
   distribution: "PODMASTER/HTML-Scrubber-0.08.tar.gz"
 patches:
-  - "/home/k/sources/CPAN/SVK/trunk/patches/HTML-Scrubber-0.08-ANDK-01.patch.gz"
+  - "ANDK/patches/HTML-Scrubber-0.08-ANDK-01.patch.gz"
