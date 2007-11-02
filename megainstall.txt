@@ -58,6 +58,7 @@ CGI::Application
 CGI::Application::Plugin::AutoRunmode
 CGI::Application::Plugin::DevPopup
 CGI::Application::Plugin::Forward
+CGI::Prototype
 CGI::Session
 CGI::Untaint
 CPAN
@@ -94,6 +95,7 @@ Catalyst::Plugin::Unicode
 Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
+CharsetDetector
 Chart::Math::Axis
 Chart::Mountain
 Chatbot::Eliza
@@ -569,6 +571,7 @@ Net::POP3
 Net::Packet
 Net::Pcap
 Net::Ping
+Net::Proxy
 Net::SMTP
 Net::SNMP
 Net::SSH
