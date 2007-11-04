@@ -994,7 +994,7 @@ sub checklock {
                                     qq{
 There seems to be running another CPAN process (pid $otherpid).  Contacting...
 });
-            if (kill 0, $otherpid) {
+            if (kill 0, $otherpid or $!{EPERM}) {
                 $CPAN::Frontend->mywarn(qq{Other job is running.\n});
                 my($ans) =
                     CPAN::Shell::colorable_makemaker_prompt

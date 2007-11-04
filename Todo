@@ -17,7 +17,6 @@
     BRYCE/SVG-Metadata-0.28.tar.gz                    http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00996.html
     DMAKI/File-MMagic-XS-0.09002.tar.gz               http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-11/msg00025.html; only with threads and debugging; 
     DOMIZIO/OOTools-2.21.tar.gz                       http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00432.html
-    EBOHLMAN/Text-Query-0.07.tar.gz                   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00434.html
     EDPRATOMO/Algorithm-Permute-0.06.tar.gz           http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
     HAYASHI/Term-ReadLine-Gnu-1.16.tar.gz             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-11/msg00464.html
     ILYAZ/modules/Math-Pari-2.010709.tar.gz           http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
@@ -36,13 +35,15 @@
     TANIGUCHI/Unicode-RecursiveDowngrade-0.03.tar.gz  http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00498.html
     VKON/Tcl-0.95.tar.gz                              http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00822.html; only with debugging; 
 
-	Tested patches available
+  Tested patches available
+    Text::Query                   0.07             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00434.html
+                                                   patch on CPAN: ANDK/patches/Text-Query-0.07-ROBIN-01.patch.gz               
     Unicode::Lite                 0.12             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00012.html
-	                                                 patch on CPAN: ANDK/Unicode-Lite-0.12-NWCLARK-01.patch.gz
+                                                   patch on CPAN: ANDK/Unicode-Lite-0.12-NWCLARK-01.patch.gz
     XML::Parser                   2.34             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00662.html
-	                                                 patch on CPAN: ANDK/patches/XML-Parser-2.34-ANDK-01.patch.gz
+                                                   patch on CPAN: ANDK/patches/XML-Parser-2.34-ANDK-01.patch.gz
 
-	Authors fixed:                    broken           fixed
+  Authors fixed:                    broken           fixed
     Class::Fields                 0.202            0.203
     Class::MOP                    0.40             0.42
     Clone                         0.25             0.28
@@ -56,7 +57,7 @@
     ShiftJIS::X0213::MapUTF       0.30             0.31
     TAP::Parser                   0.52             0.54
 
-	Bleadperl fixed:                  was broken
+  Bleadperl fixed:                  was broken
     Acme::MetaSyntactic           0.99             fixed in bleadperl
     Best.pm                       0.11             fixed in bleadperl
     Class::Trait                  0.22             fixed in bleadperl
