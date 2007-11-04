@@ -8320,6 +8320,13 @@ sub unsat_prereq {
 
             my $do = $nmo->distribution;
             next NEED unless $do; # not on CPAN
+            if (CPAN::Version->vcmp($need_version, $nmo->{CPAN_VERSION}) > 0){
+                $CPAN::Frontend->mydie("Warning: Prerequisite ".
+                                       "'$need_module => $need_version' ".
+                                       "for '$self->{ID}' seems ".
+                                       "not available according the the indexes\n"
+                                      );
+            }
           NOSAYER: for my $nosayer (
                                     "unwrapped",
                                     "writemakefile",
