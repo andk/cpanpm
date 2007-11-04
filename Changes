@@ -1,3 +1,36 @@
+2007-11-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_51: unstable release (I'll make a 1.9204 soonish)
+
+	* bugfix addressing #30464 endless loop with prereq resolution (Slaven Rezic)
+
+	* applied a patch by Rich Paul to support redirection and pipes on shell
+	commands (undocumented)
+
+	* bugfix wrong usage of kill 0 (Slaven Rezic)
+
+	* protect the user from using File::Temp when it is too old
+
+	* applied a patch by Rich Paul to disable an undocumented and now
+	apparently broeken feature (some weird query language I had experimented with)
+
+	* applied a patch by Rich Paul that gains us a lot of speed lost in
+	unnecessary recomputations
+
+	* applied a patch by "TCO" addressing #30372
+
+	* replaced all occurrences of $^X with findperl (bug reported by Slaven Rezic)
+
+	* several of many suggestsions by Mark Overmeer to improve the style of
+	the dialoges. There's more stuff left in several tickets...
+
+	* address #29754: Lockfile problem with perl 5.005_05 (Slaven Rezic)
+
+	* let containsmods cache negative results: Slaven Rezic found out that
+	distros without modules can be a performance killer without this measure
+
+	* now with 242 distroprefs files	
+
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9203: stable release with one distroprefs file fixed
