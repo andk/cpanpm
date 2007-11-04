@@ -154,6 +154,44 @@ sub soft_chdir_with_alternatives ($);
     }
 }
 
+{
+	open(SAVEOUT,">&STDOUT") or die "dup failed";
+	my $redir = 0;
+	sub redirect(@) {
+		#die if $redir;
+		local $_;
+		push(@_,undef);
+		while(defined($_=shift)) {
+			if (s/^\s*>//){
+				my ($m) = s/^>// ? ">" : "";
+				s/\s+//;
+				$_=shift unless length;
+				die "no dest" unless defined;
+				open(STDOUT,">$m",$_) or die "open:$_:$!\n";
+				$redir=1;
+			} elsif ( s/^\s*\|\s*// ) {
+				my $pipe="| $_";
+				while(defined($_[0])){
+					$pipe .= ' ' . shift;
+				}
+				open(STDOUT,$pipe) or die "open:$pipe:$!\n";
+				$redir=1;
+			} else {
+				push(@_,$_);
+			}
+		}
+		return @_;
+	};
+	sub unredirect {
+		return unless $redir;
+		$redir = 0;
+		## redirect: unredirect and propagate errors.  explicit close to wait for pipe.
+		close(STDOUT);
+		open(STDOUT,">&SAVEOUT");
+		die "$@" if "$@";
+		## redirect: done
+	};
+};
 #-> sub CPAN::shell ;
 sub shell {
     my($self) = @_;
@@ -271,7 +309,12 @@ ReadLine support %s
                 next SHELLCOMMAND unless @line;
             $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
             my $command = shift @line;
-            eval { CPAN::Shell->$command(@line) };
+            eval {
+				local (*STDOUT)=*STDOUT;
+				@line = redirect(@line);
+				CPAN::Shell->$command(@line)
+			};
+			unredirect;
             if ($@) {
                 my $err = "$@";
                 if ($err =~ /\S/) {
@@ -1997,7 +2040,7 @@ sub o {
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
-        my($cfilter) = $o_what[0] =~ m|^/(.*)/$|;
+        my($cfilter) = $o_what[0] =~ m|^/(.*)/$| if @o_what;
         if (!@o_what or $cfilter) { # print all things, "o conf"
             $cfilter ||= "";
             my $qrfilter = eval 'qr/$cfilter/';
