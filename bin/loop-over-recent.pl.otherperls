@@ -18,23 +18,30 @@
 # the latest where I did a megainstall on (on 2007-11-02)
 /home/src/perl/repoperls/installed-perls/maint-5.8/pOwntgt/perl-5.8.0@32025/bin/perl
 
-# our favorite 5.8.9-tobe with the disadvantage that it believes to be 30961; no threads
+# 5.8.9-tobe with the disadvantage that it believes to be 30961; no threads
 # /usr/local/perl-m-5.8.0@31162/bin/perl
 
 # 5.8.7:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl
 # not a perfect replacement, a few more patches away!:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pbyWflA/perl-5.8.0@26727/bin/perl
+
 # 5.8.6:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl
+# not a perfect replacement, a few more patches away:
+/home/src/perl/repoperls/installed-perls/maint-5.8/pes4ltZ/perl-5.8.0@24329/bin/perl
+
 # 5.8.5:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl
+# not a perfect replacement, a few more patches away:
+/home/src/perl/repoperls/installed-perls/maint-5.8/pAAnJ0Y/perl-5.8.0@23289/bin/perl
+
 # 5.8.4:
 #/home/src/perl/repoperls/installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl
 # 5.8.3:
 #/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl
 
 # not sure if the old File::Temp is behaving correctly
-# /usr/local/perl-5.6.2/bin/perl
+/usr/local/perl-5.6.2/bin/perl
 
 # /usr/local/perl-5.005_05/bin/perl
