@@ -2,4 +2,4 @@
 match:
   distribution: "^EBOHLMAN/Text-Query-0.07"
 patches:
-  - "/tmp/Text-Query-0.07-ROBIN-01.patch"
+  - "ANDK/patches/Text-Query-0.07-ROBIN-01.patch.gz"
