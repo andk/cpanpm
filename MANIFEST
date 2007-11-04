@@ -76,6 +76,7 @@ distroprefs/DSUGAL.Devel-Size.yml
 distroprefs/DUNNIGANJ.Tk-CursorControl.yml
 distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/DWHEELER.Params-CallbackRequest.yml
+distroprefs/EBOHLMAN.Text-Query.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/EWILHELM.Math-Vec.yml
@@ -89,6 +90,7 @@ distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBROCK.Tk-StayOnTop.yml
 distroprefs/GEOFF.Apache-Test.yml
+distroprefs/GIRAFFED.Curses.yml
 distroprefs/GIULIENK.Audio-Beep.yml
 distroprefs/GOMOR.Net-Write.yml
 distroprefs/GOZER.mod_perl.yml
@@ -188,6 +190,7 @@ distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PIERS.sapnwrfc.yml
+distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RCLAMP.POE-Component-Server-HTTP.yml
@@ -234,6 +237,7 @@ distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
+distroprefs/VPIT.Variable-Magic.yml
 distroprefs/YANICK.XML-XPathScript.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml

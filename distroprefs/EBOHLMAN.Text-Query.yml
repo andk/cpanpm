@@ -1,0 +1,5 @@
+---
+match:
+  distriution: "^EBOHLMAN/Text-Query-0.07"
+patches:
+  - "/tmp/Text-Query-0.07-ROBIN-01.patch"

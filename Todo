@@ -13,34 +13,34 @@
 	"*" is for "not yet investigated". something else for "still relevant"
 	and "fixed"
 
-                                  version          links
-    Algorithm::Permute            0.06             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
-    B::Generate                   1.10             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00488.html
-    Class::Inner                  0.1              http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00499.html
-    Class::constr                 2.21             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00432.html
-    Devel::Caller                 0.11             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00813.html; only with threads;
-    Devel::Cover                  0.61             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00861.html
-    Exporter::Simple              1.10             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00710.html
-    File::MMagic::XS              0.09002          http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-11/msg00025.html; only with threads and debugging; 
-    Hatena::Keyword               0.04             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00210.html
-    Math::Pari                    2.010709         http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
-    Net::Daemon                   0.43             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00811.html; only with threads; 
-    Readonly::XS                  1.04             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00437.html
-    SVG::Metadata                 0.28             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00996.html
-    Tcl                           0.95             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00822.html; only with debugging; 
-    Term::ReadLine::Gnu           1.16             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-11/msg00464.html
-    Term::ReadPassword            0.07             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00183.html
-    Text::Query                   0.07             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00434.html; seems to be a bug in the module; 
-    Unicode::RecursiveDowngrade   0.03             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00498.html
-    XML::Validator::Schema        1.08             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00137.html
-    classes.pm                    0.943            http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00351.html
+  Unsolved:
+    BRYCE/SVG-Metadata-0.28.tar.gz                    http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00996.html
+    DMAKI/File-MMagic-XS-0.09002.tar.gz               http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-11/msg00025.html; only with threads and debugging; 
+    DOMIZIO/OOTools-2.21.tar.gz                       http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00432.html
+    EBOHLMAN/Text-Query-0.07.tar.gz                   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00434.html
+    EDPRATOMO/Algorithm-Permute-0.06.tar.gz           http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
+    HAYASHI/Term-ReadLine-Gnu-1.16.tar.gz             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-11/msg00464.html
+    ILYAZ/modules/Math-Pari-2.010709.tar.gz           http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
+    JJORE/B-Generate-1.10.tar.gz                      http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00488.html
+    MARCEL/Exporter-Simple-1.10.tar.gz                http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00710.html
+    MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz        http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00811.html; only with threads; 
+    NAOYA/Hatena-Keyword-0.04.tar.gz                  http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00210.html
+    PDCAWLEY/Class-Inner-0.1.tar.gz                   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00499.html
+    PHOENIX/Term-ReadPassword-0.07.tar.gz             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00183.html
+    PJCJ/Devel-Cover-0.61.tar.gz                      http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00861.html
+    RCLAMP/Devel-Caller-0.11.tar.gz                   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00813.html; only with threads;
+    RMUHLE/classes-0.943.tar.gz                       http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00351.html
+    ROODE/Readonly-XS-1.04.tar.gz                     http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00437.html
+    SAMTREGAR/XML-Validator-Schema-1.08.tar.gz        http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00137.html
+    SAVA/Encode-IMAPUTF7-1.00.tar.gz                  http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00375.html
+    TANIGUCHI/Unicode-RecursiveDowngrade-0.03.tar.gz  http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00498.html
+    VKON/Tcl-0.95.tar.gz                              http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00822.html; only with debugging; 
 
-	Patches available
-    Encode::IMAPUTF7              1.00             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00375.html
+	Tested patches available
     Unicode::Lite                 0.12             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00012.html
-	                                                 ANDK/Unicode-Lite-0.12-NWCLARK-01.patch.gz
+	                                                 patch on CPAN: ANDK/Unicode-Lite-0.12-NWCLARK-01.patch.gz
     XML::Parser                   2.34             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00662.html
-	                                                 ANDK/patches/XML-Parser-2.34-ANDK-01.patch.gz
+	                                                 patch on CPAN: ANDK/patches/XML-Parser-2.34-ANDK-01.patch.gz
 
 	Authors fixed:                    broken           fixed
     Class::Fields                 0.202            0.203
