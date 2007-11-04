@@ -1,3 +1,82 @@
+2007-11-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* what I want more than anything else before 5.10 is a list of all
+	modules that need patching or don't work.
+
+	A first approximation to the list that I really want would be a summary
+	of all BBC articles and the state they reached.
+
+	Shit, groups.google finds only 14 hits on "Bleadperl breaks CPAN" in a
+	narrow timeframe. So how do I find the older postings?
+
+	xray to the rescue: 373 hits on BBC. Now the list of affected modules.
+	"*" is for "not yet investigated". something else for "still relevant"
+	and "fixed"
+
+                                  version          links
+    Algorithm::Permute            0.06             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00297.html
+    B::Generate                   1.10             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00488.html
+    Class::Inner                  0.1              http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00499.html
+    Class::constr                 2.21             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00432.html
+    Devel::Caller                 0.11             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00813.html; only with threads;
+    Devel::Cover                  0.61             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00861.html
+    Exporter::Simple              1.10             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00710.html
+    File::MMagic::XS              0.09002          http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-11/msg00025.html; only with threads and debugging; 
+    Hatena::Keyword               0.04             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00210.html
+    Math::Pari                    2.010709         http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
+    Net::Daemon                   0.43             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00811.html; only with threads; 
+    Readonly::XS                  1.04             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00437.html
+    SVG::Metadata                 0.28             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00996.html
+    Tcl                           0.95             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-10/msg00822.html; only with debugging; 
+    Term::ReadLine::Gnu           1.16             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-11/msg00464.html
+    Term::ReadPassword            0.07             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-08/msg00183.html
+    Text::Query                   0.07             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00434.html; seems to be a bug in the module; 
+    Unicode::RecursiveDowngrade   0.03             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00498.html
+    XML::Validator::Schema        1.08             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00137.html
+    classes.pm                    0.943            http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-05/msg00351.html
+
+	Patches available
+    Encode::IMAPUTF7              1.00             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00375.html
+    Unicode::Lite                 0.12             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-06/msg00012.html
+	                                                 ANDK/Unicode-Lite-0.12-NWCLARK-01.patch.gz
+    XML::Parser                   2.34             http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-07/msg00662.html
+	                                                 ANDK/patches/XML-Parser-2.34-ANDK-01.patch.gz
+
+	Authors fixed:                    broken           fixed
+    Class::Fields                 0.202            0.203
+    Class::MOP                    0.40             0.42
+    Clone                         0.25             0.28
+    DBI                           1.57             1.601
+    Data::Alias                   1.03             1.07
+    Devel::Size                   0.68             0.69
+    JSON                          1.12             1.14
+    PerlPoint::Parser             0.451            1.05
+    Regexp::Assemble              0.28             0.32
+    Rose::HTML::Object::Messages  0.549            0.550               https://rt.cpan.org/Ticket/Display.html?id=30021
+    ShiftJIS::X0213::MapUTF       0.30             0.31
+    TAP::Parser                   0.52             0.54
+
+	Bleadperl fixed:                  was broken
+    Acme::MetaSyntactic           0.99             fixed in bleadperl
+    Best.pm                       0.11             fixed in bleadperl
+    Class::Trait                  0.22             fixed in bleadperl
+    Contextual::Return           v0.2.1            fixed in bleadperl
+    Perl6::Attributes             0.04             fixed in bleadperl
+    SQL::Translator               0.08001          fixed in bleadperl
+    String::Multibyte             1.05             fixed in bleadperl
+    Test::MockObject              1.07             fixed in bleadperl
+    Text::WikiFormat              0.78             fixed in bleadperl
+    YAML                          0.66             fixed in bleadperl
+
+	* new fails
+    CHORNY/Apache-Session-1.84.tar.gz[545], RCLAMP/POE-Component-Server-HTTP-0.09.tar.gz[615], ADUITSIS/IPC-Mmap-0.14.tar.gz[767], ANDK/Apache-Session-Counted-1.118.tar.gz[793], DMAKI/DateTime-Calendar-Japanese-0.06001.tar.gz[930], TEVERETT/Class-Prototyped-1.10.tar.gz[1376], MERLYN/CGI-Prototype-0.9053.tar.gz[1377], MAURICE/IPC-ShareLite-0.09.tar.gz[1443]
+
+	I see that somebody has filled the messages and semaphore space and I
+	had to clean them up. Need to watch each of these beasts and write
+	Bugreports.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30440
+
 2007-11-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* /tmp again:
@@ -1254,7 +1333,8 @@ drwx------  2 sand sand   4096 Oct 20 04:23 midvhy07gr
 	* Slaven sends a miserable FAIL with 5.6.2 and YAML 0.39.
 
 	* The failing tests on mod_perl, Archive-Any, and GIS-Distance are
-	repeatable with 32104 and Log-Dispatch-Config has joined them in
+	repeatable with 32104 and Log-Dispatch-Config
+	(http://rt.cpan.org/Ticket/Display.html?id=30073) has joined them in
 	failing. I've stopped all running loops to look around in the /tmp
 	directory.
 
