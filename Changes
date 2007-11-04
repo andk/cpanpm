@@ -2,22 +2,22 @@
 
 	* release 1.92_51: unstable release (I'll make a 1.9204 soonish)
 
-	* bugfix addressing #30464 endless loop with prereq resolution (Slaven Rezic)
+	* bugfix addressing #30464 endless loop with prereq resolution (Slaven
+	Rezic) [untested!]
 
 	* applied a patch by Rich Paul to support redirection and pipes on shell
-	commands (undocumented)
+	commands [undocumented!]
 
 	* bugfix wrong usage of kill 0 (Slaven Rezic)
 
 	* protect the user from using File::Temp when it is too old
 
-	* applied a patch by Rich Paul to disable an undocumented and now
-	apparently broeken feature (some weird query language I had experimented with)
+	* applied a patch by Rich Paul to finally disable an undocumented, then
+	deprecated and then apparently broken feature
+	($CPAN::Shell::ADVANCED_QUERY)
 
 	* applied a patch by Rich Paul that gains us a lot of speed lost in
 	unnecessary recomputations
-
-	* applied a patch by "TCO" addressing #30372
 
 	* replaced all occurrences of $^X with findperl (bug reported by Slaven Rezic)
 

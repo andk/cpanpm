@@ -157,7 +157,7 @@ sub soft_chdir_with_alternatives ($);
 {
 	open(SAVEOUT,">&STDOUT") or die "dup failed";
 	my $redir = 0;
-	sub redirect(@) {
+	sub _redirect(@) {
 		#die if $redir;
 		local $_;
 		push(@_,undef);
@@ -182,7 +182,7 @@ sub soft_chdir_with_alternatives ($);
 		}
 		return @_;
 	};
-	sub unredirect {
+	sub _unredirect {
 		return unless $redir;
 		$redir = 0;
 		## redirect: unredirect and propagate errors.  explicit close to wait for pipe.
@@ -311,10 +311,10 @@ ReadLine support %s
             my $command = shift @line;
             eval {
 				local (*STDOUT)=*STDOUT;
-				@line = redirect(@line);
+				@line = _redirect(@line);
 				CPAN::Shell->$command(@line)
 			};
-			unredirect;
+			_unredirect;
             if ($@) {
                 my $err = "$@";
                 if ($err =~ /\S/) {
@@ -8321,11 +8321,12 @@ sub unsat_prereq {
             my $do = $nmo->distribution;
             next NEED unless $do; # not on CPAN
             if (CPAN::Version->vcmp($need_version, $nmo->{CPAN_VERSION}) > 0){
-                $CPAN::Frontend->mydie("Warning: Prerequisite ".
-                                       "'$need_module => $need_version' ".
-                                       "for '$self->{ID}' seems ".
-                                       "not available according the the indexes\n"
-                                      );
+                $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                        "'$need_module => $need_version' ".
+                                        "for '$self->{ID}' seems ".
+                                        "not available according the the indexes\n"
+                                       );
+                next NEED;
             }
           NOSAYER: for my $nosayer (
                                     "unwrapped",
