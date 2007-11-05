@@ -178,9 +178,11 @@ WriteMakefile(
                                            ),
                        COMPRESS => 'gzip -9',
                       },
-              EXTRA_META => <<EMETA,
+              ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
+               (EXTRA_META => <<EMETA,
 repository: "https://pause.perl.org:5460/svn/cpanpm/trunk"
 EMETA
+               ) : ()),
              );
 
 if ($version_diff){

@@ -1,8 +1,8 @@
 use strict;
 
-use FindBin qw($Bin);
-use lib "$Bin/../lib";
-use lib "$Bin/../blib";
+#use FindBin qw($Bin);
+#use lib "$Bin/../lib";
+#use lib "$Bin/../blib";
 use CPAN;
 use Test::More tests => 5;
 
@@ -12,7 +12,7 @@ my $FALSE = undef;
 test_can_get_basic_credentials();
 test_get_basic_credentials_for_proxy();
 test_get_basic_credentials_without_proxy();
-exit;
+# exit;
 
 #############################################################################
 

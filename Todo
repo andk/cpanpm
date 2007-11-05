@@ -1,3 +1,11 @@
+2007-11-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Subject: [rt.cpan.org #30481] Failed Test Suite with Mail::SpamAssassin 3.2.3 
+
+	Looks dangerous.
+
+	* http://users.endeworks.jp/~daisuke/code/pl/File-MMagic-XS-0.09003.tar.gz ?
+
 2007-11-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* what I want more than anything else before 5.10 is a list of all
