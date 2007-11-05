@@ -179,7 +179,7 @@ DESCRIPTION
       shell session.
 
     Persistence between sessions
-      If the "YAML" or the c<YAML::Syck> module is installed a record of the
+      If the "YAML" or the "YAML::Syck" module is installed a record of the
       internal state of all modules is written to disk after each step. The
       files contain a signature of the currently running perl version for
       later perusal.
@@ -232,7 +232,7 @@ DESCRIPTION
       SIGTERM by sending two consecutive SIGINTs, which usually means by
       pressing "^C" twice.
 
-      CPAN.pm ignores a SIGPIPE. If the user sets inactivity_timeout, a
+      CPAN.pm ignores a SIGPIPE. If the user sets "inactivity_timeout", a
       SIGALRM is used during the run of the "perl Makefile.PL" or "perl
       Build.PL" subprocess.
 
@@ -306,9 +306,9 @@ DESCRIPTION
 
   smoke ***EXPERIMENTAL COMMAND***
     *** WARNING: this command downloads and executes software from CPAN to
-    *** your computer of completely unknown status. You should never do ***
-    this with your normal account and better have a dedicated well ***
-    separated and secured machine to do this.
+    your computer of completely unknown status. You should never do this
+    with your normal account and better have a dedicated well separated and
+    secured machine to do this. ***
 
     The "smoke" command takes the list of recent uploads to CPAN as provided
     by the "recent" command and tests them all. While the command is running
@@ -872,7 +872,8 @@ CONFIGURATION
         The "module" related one will be matched against *all* modules
         contained in the distribution until one module matches.
 
-        The "perl" related one will be matched against $^X.
+        The "perl" related one will be matched against $^X (but with the
+        absolute path).
 
         The value associated with "perlconfig" is itself a hashref that is
         matched against corresponding values in the %Config::Config hash
@@ -911,8 +912,8 @@ CONFIGURATION
     commandline
         A full commandline that will be executed as it stands by a system
         call. During the execution the environment variable PERL will is set
-        to $^X. If "commandline" is specified, the content of "args" is not
-        used.
+        to $^X (but with an absolute path). If "commandline" is specified,
+        the content of "args" is not used.
 
     eexpect [hash]
         Extended "expect". This is a hash reference with four allowed keys,
@@ -1988,7 +1989,7 @@ SECURITY ADVICE
     Please consider backing up your data before every upgrade.
 
 BUGS
-    Please report bugs via http://rt.cpan.org/
+    Please report bugs via <http://rt.cpan.org/>
 
     Before submitting a bug, please make sure that the traditional method of
     building a Perl module package from a shell by following the
@@ -2006,8 +2007,8 @@ LICENSE
 
 TRANSLATIONS
     Kawai,Takanori provides a Japanese translation of this manpage at
-    http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm
+    <http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm>
 
 SEE ALSO
-    cpan(1), CPAN::Nox(3pm), CPAN::Version(3pm)
+    cpan, CPAN::Nox, CPAN::Version
 
