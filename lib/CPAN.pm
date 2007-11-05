@@ -12,7 +12,7 @@ use CPAN::Tarzip;
 use CPAN::DeferedCode;
 use Carp ();
 use Config ();
-use Cwd ();
+use Cwd qw(chdir);
 use DirHandle ();
 use Exporter ();
 use ExtUtils::MakeMaker qw(prompt); # for some unknown reason,
@@ -402,6 +402,7 @@ ReadLine support %s
     soft_chdir_with_alternatives(\@cwd);
 }
 
+#-> CPAN::soft_chdir_with_alternatives ;
 sub soft_chdir_with_alternatives ($) {
     my($cwd) = @_;
     unless (@$cwd) {
@@ -565,6 +566,7 @@ sub _init_sqlite () {
 package CPAN::CacheMgr;
 use strict;
 @CPAN::CacheMgr::ISA = qw(CPAN::InfoObj CPAN);
+use Cwd qw(chdir);
 use File::Find;
 
 package CPAN::FTP;
@@ -851,6 +853,7 @@ use vars qw(
             @ISA
            );
 @CPAN::Shell::ISA = qw(CPAN::Debug);
+use Cwd qw(chdir);
 $COLOR_REGISTERED ||= 0;
 $Help = {
          '?' => \"help",
@@ -5466,6 +5469,7 @@ sub read_metadata_cache {
 
 package CPAN::InfoObj;
 use strict;
+use Cwd qw(chdir);
 
 sub ro {
     my $self = shift;
@@ -5869,6 +5873,7 @@ Please file a bugreport if you need this.\n");
 
 package CPAN::Distribution;
 use strict;
+use Cwd qw(chdir);
 
 # Accessors
 sub cpan_comment {
