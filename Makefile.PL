@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w -*- mode: cperl -*-
 use strict;
-use vars qw( $VERSION @DD_PREFS @ST_PREFS );
+use vars qw( $VERSION @ST_PREFS );
 BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
@@ -12,15 +12,6 @@ my $HAVE_YAML_SYCK = !$@;
 use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
-
-@DD_PREFS = qw(
-               distroprefs/GBARR.libnet
-               distroprefs/ILYAZ.Term-ReadLine-Perl
-               distroprefs/INGY.YAML
-               distroprefs/RGIERSIG.Expect
-               distroprefs/ABW.Template-Toolkit
-               lib/CPAN/Kwalify/distroprefs
-              );
 
 @ST_PREFS = qw(
               );
@@ -123,7 +114,7 @@ my $prereq_pm = {
                  'File::Spec' => 0,   # KWILLIAMS; requires
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
-                 'File::Temp' => 0,   # JTENNESS; requires Test::More;
+                 'File::Temp' => 0,   # TJENNESS; requires Test::More;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
                  'Test::Harness' => 2.62,
@@ -173,6 +164,7 @@ WriteMakefile(
                                             "verify-no-subdir",
                                             "verify-changes-date",
                                             "verify-changes-version",
+                                            "kwalify-distroprefs",
                                             "dd-prefs",
                                             "Makefile",
                                             "no_CR",
@@ -186,6 +178,9 @@ WriteMakefile(
                                            ),
                        COMPRESS => 'gzip -9',
                       },
+              EXTRA_META => <<EMETA,
+repository: "https://pause.perl.org:5460/svn/cpanpm/trunk"
+EMETA
              );
 
 if ($version_diff){
@@ -224,6 +219,8 @@ MEGA_BASE = \
 
 # define a random one
 MEGA_XML=logs/megainstall.20070412T1450.d/RJRAY!RPC-XML-0.59.xml
+
+YAML_MODULE=YAML::Syck
 }
 }
 
@@ -256,10 +253,7 @@ verify-changes-version:
 	@$(PERL) -ne '$$ok++,exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file" unless $$ok}' Changes
 
 kwalify-distroprefs:
-	$(PERL) -MKwalify -MYAML::Syck \
-	  -e 'my $$s = YAML::Syck::LoadFile("lib/CPAN/Kwalify/distroprefs.yml");my $$i=0;my $$notok=0;' \
-	  -e 'for (glob("distroprefs/*.yml")){ printf "%03d %-6s: %s\n", ++$$i, Kwalify::validate($$s,YAML::Syck::LoadFile("$$_"))?"OK":("NOT OK ".++$$notok),$$_ };' \
-	  -e 'print $$notok ? "$$notok broken\n" : "All OK\n";'
+	`echo $(PERL) | sed -e 's/perl$$/slaymake/'` validate
 
 setversion:
 	$(PERL) Makefile.PL --setversion
@@ -308,11 +302,11 @@ megainstall: logs/.exists
 	for DATE in `date +%Y%m%dT%H%M`; do \
 		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
 		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load; \
-			open FH, "megainstall.txt" or die; chomp(@MEGA = <FH>); \
+			open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 			install(qw($(MEGA_BASE)), map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 			CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
 		$(PERL) bin/colorout-to-dir-2.pl logs/megainstall.$$DATE.out; \
-		./bin/dir-to-jifty.pl logs; \
+		`pwd`/bin/dir-to-jifty.pl logs; \
 	done
 
 # 16=Distribution; 32=Bundle; 32768=Queue
@@ -616,6 +610,13 @@ clean ::
 no_CR : ChangeLog META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
+foreign-prefs : dd-prefs st-prefs
+
+dd-prefs ::
+	`echo $(PERL) | sed -e 's/perl$$/slaymake/'` dd-prefs
+
+st-prefs ::
+
 };
   if ($main::SVN_RELEASE) {
     push @m, qq{
@@ -631,30 +632,7 @@ chlog :: chlog-svkstyle
 ChangeLog : ChangeLogShort.svk
 	mv ChangeLogShort.svk ChangeLog
 
-foreign-prefs : dd-prefs st-prefs
-
-dd-prefs ::
-
-st-prefs ::
-
 };
-  }
-
-  for my $base (@main::DD_PREFS) {
-    push @m, qq{
-dd-prefs :: $base.dd
-
-};
-
-    if ($HAVE_YAML_SYCK) {
-      push @m, qq{$base.dd : Makefile
-	\$(PERL) -MYAML::Syck=LoadFile -MData::Dumper -e '\$\$x=shift; \@y=LoadFile("\$\$x.yml"); print Data::Dumper->new(\\\@y)->Indent(1)->Useqq(1)->Purity(1)->Sortkeys(1)->Dump' $base > $base.dd.new && mv $base.dd.new $base.dd
-
-};
-    } elsif (0) {
-      # we should only say this on author's machine:
-      warn "Warning (usually harmless): have no YAML::Syck, cannot write rules for foreign prefs"
-    }
   }
 
   for my $base (@main::ST_PREFS) {

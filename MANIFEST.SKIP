@@ -69,3 +69,5 @@
 ^talks/
 ^test.out
 ~$
+cpanstats.db
+^distroprefs/.*\.dd$
