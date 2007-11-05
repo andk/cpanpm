@@ -5,7 +5,6 @@ Changes.old
 distroprefs/00.README
 distroprefs/01.DISABLED.yml
 distroprefs/ABH.XML-RSS.yml
-distroprefs/ABW.Template-Toolkit.dd
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ACG.Scrabble-Dict.yml
 distroprefs/ADAMK.Chart-Math-Axis.yml
@@ -79,7 +78,6 @@ distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/GAAS.libwww.yml
 distroprefs/GBARR.Authen-SASL.yml
-distroprefs/GBARR.libnet.dd
 distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GEOFF.Apache-Test.yml
@@ -93,10 +91,8 @@ distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/ILYAZ.Math-Pari.yml
-distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
-distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JCRISTY.PerlMagick.yml
@@ -179,7 +175,6 @@ distroprefs/PIERS.sapnwrfc.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RDF.Clone.yml
-distroprefs/RGIERSIG.Expect.dd
 distroprefs/RGIERSIG.Expect.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
 distroprefs/RIZEN.Config-JSON.yml
@@ -252,6 +247,7 @@ PAUSE2007.pub
 README
 scripts/cpan
 SIGNATURE			Public-key signature (added by MakeMaker)
+SlayMakefile
 t/00signature.t
 t/01loadme.t
 t/02nox.t
