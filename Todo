@@ -1,3 +1,9 @@
+2007-11-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* (Eric Wilhelm on module build mailing list) I think CPAN has a bug
+	which causes it to pass make_arg to ./Build install. (I seem to remember
+	having some grief with -j recently.)
+
 2007-11-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Subject: [rt.cpan.org #30481] Failed Test Suite with Mail::SpamAssassin 3.2.3 
