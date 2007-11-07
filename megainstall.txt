@@ -636,10 +636,12 @@ POE::Component::PreforkDispatch
 POE::Component::Proxy::TCP
 POE::Component::RSS
 POE::Component::SSLify
+POE::Component::Server::DNS
 POE::Component::Server::HTTP
 POE::Component::Server::PreforkTCP
 POE::Component::StackedProcessor
 POE::Component::SubWrapper
+POE::Declarative::Mixin
 POE::Exceptions
 POE::Filter::IRCD
 POSIX
@@ -1043,5 +1045,6 @@ re::engine::POSIX
 re::engine::Plan9
 re::engine::Plugin
 re::engine::TRE
+self
 typesafety
 version

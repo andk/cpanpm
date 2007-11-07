@@ -1,3 +1,14 @@
+2007-11-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* where is the wiki? need to add hv patches, Data::Dump::Streamer,
+	bradfitz, Devel::Cover, etc. to my Sunday posting.
+
+	http://www.perlfoundation.org/perl5/index.cgi
+
+	
+
+	* need a (v)box without gzip or tar so I can see the tests succeed or fail
+
 2007-11-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* (Eric Wilhelm on module build mailing list) I think CPAN has a bug
