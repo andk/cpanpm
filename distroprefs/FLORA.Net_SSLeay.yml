@@ -12,13 +12,20 @@ match:
 patches:
   - "ANDK/patches/Net_SSLeay.pm-1.30-IMACAT-01.patch.gz"
 ---
+comment: |
+
+    Increasing the timeout because the "Auto-install" question will
+    often not arrive because we have installed everything already. So
+    then we must see the EOF otherwise we will believe we could not
+    answer a question.
+
 match:
   distribution: "^FLORA/Net-SSLeay-\d"
 pl:
   &pl_or_make
   eexpect:
     mode: anyorder
-    timeout: 5
+    timeout: 15
     reuse: 1
     talk:
       - "\QThese tests *will* *fail* if you do not have network connectivity\E"

@@ -1,5 +1,21 @@
 2007-11-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Net::SSLeay 1.32: make fails with "could not answer a question during the
+	dialog" or some such. Fails with 32230, 32226, 32222, 32219, 32216.
+
+	32212 seems different at first sight but then fails too.
+
+	* merejn:
+
+On Wed, 07 Nov 2007 05:30:34 +0100, andreas.koenig.7os6VVqR@franz.ak.mind.de
+(Andreas J. Koenig) wrote:
+
+> This patch brings bleadperl to 1.9204
+
+Can I please have an option or environment variable or install-time question
+to *NOT* ask if it is ok to connect to the internet please?
+
+
 	* where is the wiki? need to add hv patches, Data::Dump::Streamer,
 	bradfitz, Devel::Cover, etc. to my Sunday posting.
 
