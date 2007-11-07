@@ -2043,7 +2043,8 @@ sub o {
     $o_type ||= "";
     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
     if ($o_type eq 'conf') {
-        my($cfilter) = $o_what[0] =~ m|^/(.*)/$| if @o_what;
+        my($cfilter);
+        ($cfilter) = $o_what[0] =~ m|^/(.*)/$| if @o_what;
         if (!@o_what or $cfilter) { # print all things, "o conf"
             $cfilter ||= "";
             my $qrfilter = eval 'qr/$cfilter/';
