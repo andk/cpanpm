@@ -67,6 +67,7 @@ match:
     |HANENKAMP/Bot-Net-\d
     |HANENKAMP/Data-Remember-\d
     |HANENKAMP/HTML-ParagraphSplit-\d
+    |HANENKAMP/POE-Declarative-\d
     |HANK/Catalyst-Plugin-Form-Processor-\d
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d

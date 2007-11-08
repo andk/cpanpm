@@ -1,3 +1,9 @@
+2007-11-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* [rt.cpan.org #30554] Not possibible to upgrade from v1.9101 
+
+	Seems that I need to test with a perl that has no YAML.
+
 2007-11-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Net::SSLeay 1.32: make fails with "could not answer a question during the
