@@ -65,6 +65,7 @@ CPAN
 CPAN::Cache
 CPAN::Checksums
 CPAN::Dependency
+CPAN::Index::Loader
 CPAN::IndexPod
 CPAN::Mini
 CPAN::Site
@@ -263,6 +264,7 @@ Devel::Size
 Devel::SmallProf
 Devel::Symdump
 Devel::Trace
+Devel::TraceLoad
 Devel::TraceMethods
 Devel::TraceUse
 Devel::ebug
@@ -533,6 +535,7 @@ Maypole
 Metadata::ByInode
 Module::Build
 Module::Build::Convert
+Module::Changes
 Module::Compile
 Module::Find
 Module::Info
@@ -1037,6 +1040,7 @@ encoding::warnings
 enum
 i18n
 interface
+load
 mixin
 overload
 overload::eval

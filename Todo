@@ -1,6 +1,25 @@
 2007-11-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* [rt.cpan.org #30554] Not possibible to upgrade from v1.9101 
+	* Apache::Session failed today on 32235 because Test::Deep was missing.
+	seq was 388 and the seq of Test::Deep was 390. The latter was
+	successful, don't understand why it was not found by Apache::Session.
+	Needs more investigations.
+
+	* t/wmf/read..........
+1..2
+ok 1
+ok 2
+ok
+You already have a parser for (t/wmf/read.t) at /home/src/perl/repoperls/installed-perls/perl/pe1S7WD/perl-5.8.0@32235/lib/5.10.0/TAP/Harness.pm line 412
+
+	This happens with Image::MAgick and bleadperl@3223[05] even after I
+	fixed the test output of t/setattribute.t.
+
+	* RHANDOM/Template-Alloy-1.009.tar.gz works with 5.9.4, 5.9.5, 5.10.0
+	but hangs with 5.8.* during 05_tt_base. I ^Ced all 5.8 tests. 5.6.2 worked again.
+	Same for RHANDOM/Template-Parser-CET-0.05.tar.gz, even the test has the same name.
+
+	* [rt.cpan.org #30554] Not possible to upgrade from v1.9101 
 
 	Seems that I need to test with a perl that has no YAML.
 
@@ -11,7 +30,7 @@
 
 	32212 seems different at first sight but then fails too.
 
-	* merejn:
+	* merejn on P5P:
 
 On Wed, 07 Nov 2007 05:30:34 +0100, andreas.koenig.7os6VVqR@franz.ak.mind.de
 (Andreas J. Koenig) wrote:
@@ -22,7 +41,7 @@ Can I please have an option or environment variable or install-time question
 to *NOT* ask if it is ok to connect to the internet please?
 
 
-	* where is the wiki? need to add hv patches, Data::Dump::Streamer,
+	* where is the wiki? need to add hvds patches, Data::Dump::Streamer,
 	bradfitz, Devel::Cover, etc. to my Sunday posting.
 
 	http://www.perlfoundation.org/perl5/index.cgi
