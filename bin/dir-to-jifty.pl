@@ -24,10 +24,10 @@ my $cl = Jifty::ClassLoader->new (base => "Pocpoc");
 $cl->require;
 my $j = new Jifty; # sets up database connection and other stuff
 
-use FindBin ();
+# use FindBin ();
 use XML::LibXML;
 
-my $logdir = shift || "$FindBin::Bin/../logs";
+my $logdir = shift || die; # "$FindBin::Bin/../logs";
 $logdir = "$WD/$logdir" unless File::Spec->file_name_is_absolute($logdir);
 opendir my $dh, "$logdir" or die "cannot opendir '$logdir': $!";
 
