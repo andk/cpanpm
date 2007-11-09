@@ -155,43 +155,44 @@ sub soft_chdir_with_alternatives ($);
 }
 
 {
-	open(SAVEOUT,">&STDOUT") or die "dup failed";
-	my $redir = 0;
-	sub _redirect(@) {
-		#die if $redir;
-		local $_;
-		push(@_,undef);
-		while(defined($_=shift)) {
-			if (s/^\s*>//){
-				my ($m) = s/^>// ? ">" : "";
-				s/\s+//;
-				$_=shift unless length;
-				die "no dest" unless defined;
-				open(STDOUT,">$m",$_) or die "open:$_:$!\n";
-				$redir=1;
-			} elsif ( s/^\s*\|\s*// ) {
-				my $pipe="| $_";
-				while(defined($_[0])){
-					$pipe .= ' ' . shift;
-				}
-				open(STDOUT,$pipe) or die "open:$pipe:$!\n";
-				$redir=1;
-			} else {
-				push(@_,$_);
-			}
-		}
-		return @_;
-	};
-	sub _unredirect {
-		return unless $redir;
-		$redir = 0;
-		## redirect: unredirect and propagate errors.  explicit close to wait for pipe.
-		close(STDOUT);
-		open(STDOUT,">&SAVEOUT");
-		die "$@" if "$@";
-		## redirect: done
-	};
-};
+    open(SAVEOUT,">&STDOUT") or die "dup failed";
+    my $redir = 0;
+    sub _redirect(@) {
+        #die if $redir;
+        local $_;
+        push(@_,undef);
+        while(defined($_=shift)) {
+            if (s/^\s*>//){
+                my ($m) = s/^>// ? ">" : "";
+                s/\s+//;
+                $_=shift unless length;
+                die "no dest" unless defined;
+                open(STDOUT,">$m$_") or die "open:$_:$!\n";
+                $redir=1;
+            } elsif ( s/^\s*\|\s*// ) {
+                my $pipe="| $_";
+                while(defined($_[0])){
+                    $pipe .= ' ' . shift;
+                }
+                open(STDOUT,$pipe) or die "open:$pipe:$!\n";
+                $redir=1;
+            } else {
+                push(@_,$_);
+            }
+        }
+        return @_;
+    }
+    sub _unredirect {
+        return unless $redir;
+        $redir = 0;
+        ## redirect: unredirect and propagate errors.  explicit close to wait for pipe.
+        close(STDOUT);
+        open(STDOUT,">&SAVEOUT");
+        die "$@" if "$@";
+        ## redirect: done
+    }
+}
+
 #-> sub CPAN::shell ;
 sub shell {
     my($self) = @_;
