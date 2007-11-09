@@ -155,7 +155,8 @@ sub soft_chdir_with_alternatives ($);
 }
 
 {
-    open(SAVEOUT,">&STDOUT") or die "dup failed";
+    my $x = *SAVEOUT; # avoid warning
+    open($x,">&STDOUT") or die "dup failed";
     my $redir = 0;
     sub _redirect(@) {
         #die if $redir;
