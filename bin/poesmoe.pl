@@ -229,3 +229,7 @@ world" for this next step but it should do it with a JobQueue.
 
 Recap: POE:C:CP:YS is based on Barbie CP:YS
 
+Why JobQueue: because I want to prioritize 5.10 and newest 5.8 and
+balance the old perls out such that the queue never runs out without
+getting really large.
+

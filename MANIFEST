@@ -238,6 +238,7 @@ distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
 distroprefs/VPIT.Variable-Magic.yml
+distroprefs/WITTROCK.Tk-PathEntry.yml
 distroprefs/YANICK.XML-XPathScript.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
