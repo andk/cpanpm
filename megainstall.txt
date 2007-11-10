@@ -260,6 +260,7 @@ Devel::Monitor
 Devel::Profile
 Devel::REPL
 Devel::Required
+Devel::SawAmpersand
 Devel::Size
 Devel::SmallProf
 Devel::Symdump
@@ -463,6 +464,7 @@ LWP::Simple
 LWP::UserAgent
 LWPx::ParanoidAgent
 Latex::Encode
+Lexical::Attributes
 Lexical::Persistence
 Lingua::AR::MacArabic
 Lingua::EN::Inflect::Number
@@ -1038,6 +1040,7 @@ bignum
 capitalization
 encoding::warnings
 enum
+iCal::Parser
 i18n
 interface
 load
