@@ -1,3 +1,13 @@
+2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_52: unstable release (1.9205 will follow)
+
+	* bugfix: the endless loop fix that made it into 1.92_51 and 1.9204 was
+	buggy in itself. Fixing the fix and adding a test case.
+
+	* use chdir from Cwd.pm everywhere instead of the built-in chdir so that
+	we set $PWD simultaneously (requested by Slaven Rezic)
+
 2007-11-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9204: stable subset of 1.92_51
