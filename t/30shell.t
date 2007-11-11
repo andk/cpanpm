@@ -1,4 +1,4 @@
-use strict;
+ use strict;
 
 # there's POD at the very end of this file
 

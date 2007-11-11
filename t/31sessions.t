@@ -137,7 +137,7 @@ our @SESSIONS =
       ]
      },
      {
-      name => "focussing test",
+      name => "focussing test circdepe",
       pairs =>
       [
        "dump \$::x=4*6+1" => "= 25;",
@@ -148,6 +148,21 @@ our @SESSIONS =
   CPAN::Test::Dummy::Perl5::Make::CircDepeTwo.+\\[requires\\].+
   CPAN::Test::Dummy::Perl5::Make::CircDepeOne.+\\[requires\\].+
   Recursive.dependency.detected
+)",
+      ],
+     },
+     {
+      name => "focussing test unsatprereq",
+      pairs =>
+      [
+       "dump \$::x=4*6+1" => "= 25;",
+       "test CPAN::Test::Dummy::Perl5::Make::UnsatPrereq" =>
+       "(?xs:
+  Warning:.+?
+  Prerequisite.+?
+  CPAN::Test::Dummy::Perl5::Make.+?
+  99999999.99.+?
+  not[ ]available[ ]according[ ]to[ ]the[ ]indexes
 )",
       ],
      },
