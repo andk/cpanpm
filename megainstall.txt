@@ -83,6 +83,7 @@ Cache::Simple::TimedExpiry
 Cairo
 Carp::Always
 Carp::Assert::More
+Carp::Source
 Catalyst
 Catalyst::Action::RenderView
 Catalyst::Devel
@@ -363,7 +364,10 @@ Geo::Gpx
 Geo::ShapeFile
 Geography::Countries
 Getopt::ArgvFile
+Getopt::Compact
+Getopt::Declare
 Getopt::Euclid
+Getopt::Helpful
 Getopt::Long
 Getopt::Lucid
 Getopt::Mixed

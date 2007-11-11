@@ -1,3 +1,23 @@
+2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* This should become a BBC article:
+
+----Program----
+eval q{use Brackup 1.06};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pDjpgoB/perl-5.8.0@22314/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../prHc4Oy/perl-5.8.0@22315/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	
+
 2007-11-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Apache::Session failed today on 32235 because Test::Deep was missing.

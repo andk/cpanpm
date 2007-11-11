@@ -8328,11 +8328,11 @@ sub unsat_prereq {
 
             my $do = $nmo->distribution;
             next NEED unless $do; # not on CPAN
-            if (CPAN::Version->vcmp($need_version, $nmo->{CPAN_VERSION}) > 0){
+            if (CPAN::Version->vcmp($need_version, $nmo->ro->{CPAN_VERSION}) > 0){
                 $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                         "'$need_module => $need_version' ".
                                         "for '$self->{ID}' seems ".
-                                        "not available according the the indexes\n"
+                                        "not available according to the indexes\n"
                                        );
                 next NEED;
             }
