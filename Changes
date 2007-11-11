@@ -1,3 +1,19 @@
+2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.9205
+
+	* backport the bugfix from 1.92_52
+
+	* straighten out a few whitespace changes that slipped into 1.9204
+
+	* release 1.92_52: unstable release (1.9205 will follow)
+
+	* bugfix: the endless loop fix that made it into 1.92_51 and 1.9204 was
+	buggy in itself. Fixing the fix and adding a test case.
+
+	* use chdir from Cwd.pm everywhere instead of the built-in chdir so that
+	we set $PWD simultaneously (requested by Slaven Rezic)
+
 2007-11-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9204: stable subset of 1.92_51
@@ -16,7 +32,7 @@
 
 	* replaced all occurrences of $^X with findperl (bug reported by Slaven Rezic)
 
-	* several of many suggestsions by Mark Overmeer to improve the style of
+	* several of many suggestions by Mark Overmeer to improve the style of
 	the dialoges. There's more stuff left in several tickets...
 
 	* address #29754: Lockfile problem with perl 5.005_05 (Slaven Rezic)
