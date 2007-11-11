@@ -36,6 +36,7 @@ BSD::Resource
 BerkeleyDB
 Bit::Vector::Minimal
 BitTorrent
+Brackup
 Bundle::Encode
 Bundle::POE::IRC
 Bundle::POE::Simple::TCPIP::Services
