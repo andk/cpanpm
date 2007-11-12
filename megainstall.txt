@@ -221,6 +221,8 @@ Data::FormValidator
 Data::Grove
 Data::HexDump
 Data::Hierarchy
+Data::ICal
+Data::ICal::TimeZone
 Data::Lazy
 Data::OptList
 Data::Properties
@@ -1045,8 +1047,8 @@ bignum
 capitalization
 encoding::warnings
 enum
-iCal::Parser
 i18n
+iCal::Parser
 interface
 load
 mixin

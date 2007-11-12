@@ -77,6 +77,7 @@ match:
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
+    |JESSE/Data-ICal-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
