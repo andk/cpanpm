@@ -5,6 +5,9 @@ comment: |
 
   #17725 removed pseudo hashes from the core
 
+  I also tried a second solution: Class::PseudoHash but it did not
+  seem to work.
+
 match:
   distribution: "BRADFITZ/Danga-Socket-1.5[67].tar.gz"
   perlconfig:

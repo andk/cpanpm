@@ -83,6 +83,7 @@ Cache::Simple::TimedExpiry
 Cairo
 Carp::Always
 Carp::Assert::More
+Carp::Diagnostics
 Carp::Source
 Catalyst
 Catalyst::Action::RenderView
@@ -489,6 +490,7 @@ Lingua::ZH::MacChinese::Traditional
 Lingua::ZH::TaBE
 List::Compare
 List::MoreUtils
+List::Tuples
 List::Util
 Locale::Constants
 Locale::Maketext
@@ -837,6 +839,7 @@ Term::UI
 Test
 Test::Class
 Test::Deep
+Test::Dependencies
 Test::Differences
 Test::Exception
 Test::FormValidator

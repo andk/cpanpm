@@ -1,3 +1,93 @@
+2007-11-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Another BBC article
+
+	----Program----
+	eval q{use B::PerlReq 0.006005};
+	print $@ ? "N/A" : "OK";
+	print "\n";
+
+	----Output of .../pDKyJRO/perl-5.8.0@31962/bin/perl----
+	OK
+
+	----EOF ($?='0')----
+	----Output of .../pdIAoqO/perl-5.8.0@31963/bin/perl----
+	N/A
+
+	----EOF ($?='0')----
+	
+
+	* todo: publish the hvds patches
+
+	* Need to try to fix Danga::Socket with Class::PseudoHash.
+
+        use fields;
+        use Class::PseudoHash;
+        # $ref = Class::PseudoHash->new;
+        $Class::PseudoHash::FixedKeys = 0;
+
+	Nope, does not seem to work.
+
+	* To write a bradfitz special BBC it needs a list of all his modules
+	that are broken because of pseudo hashes.
+
+	Danga::Socket is only the lowest-level broken module. As long as it is
+	not fixed we cannot even *see* the others (unless we read the source).
+
+	* Test::Distribution is living in a strangely infected neighborhood. E.g. List::Tuples fails with
+
+  NKH/List-Tuples-0.03.tar.gz
+  /usr/bin/make test -- NOT OK
+//hint// to see the cpan-testers results for installing this module, try:
+  reports NKH/List-Tuples-0.03.tar.gz
+Running make install
+  make test had returned bad status, won't install without force
+Failed during this command:
+ ATOURBIN/rpm-build-perl-0.6.5.tar.gz         : make_test NO
+ ZEV/Test-Dependencies-0.08.tar.gz            : make_test NO
+ SMUELLER/Test-Strict-0.08.tar.gz             : make_test NO
+ NKH/Carp-Diagnostics-0.03.tar.gz             : make_test NO
+ NKH/List-Tuples-0.03.tar.gz                  : make_test NO
+
+	I need Cantrell's website for resolving. AHA: 0% chance of success:)
+
+	Actually this example is exposing the problem that is in the system that
+	failing modules with failing dependencies are not reported on
+	cpantesters: Carp::Diagnostics has 2 fails but only 2 reports, not more.
+	Probably because Test::Dependencies has so many fails. Downgrading to
+	Test::Dependencies 0.07 also fails a test but "CPAN::Reporter: test
+	results were not valid, Prerequisite missing."
+
+	- B::PerlReq            ...missing.
+	- PerlReq::Utils        ...missing.
+
+	B::PerlReq missing in megainstall and a candidate for BBC. Fails with
+	blead, succeeds with 5.8.8. Now also Test::Dependencies has a test.
+
+	* Lingua::Stem with Test::Harness 3.01 and 2.64 on 32274 broken
+
+t/97_distribution......no such test type: sig
+# Looks like your test died before it could output anything.
+ Dubious, test returned 255 (wstat 65280, 0xff00)
+ No subtests run
+
+  2007-11-11T01:45  perl  32269    939  SNOWHARE/Lingua-Stem-0.83.tar.gz  NOT OK
+	2007-11-10T02:38  perl  32262   1151  SNOWHARE/Lingua-Stem-0.83.tar.gz  OK
+
+	cpan[9]> m Test::Distribution
+Module id = Test::Distribution
+    CPAN_USERID  SRSHAH (Sagar R. Shah <srshah@cpan.org>)
+    CPAN_VERSION 1.29
+    CPAN_FILE    S/SR/SRSHAH/Test-Distribution-1.29.tar.gz
+    UPLOAD_DATE  2007-11-10
+    MANPAGE      Test::Distribution - perform tests on all modules of a distribution
+    INST_FILE    /home/src/perl/repoperls/installed-perls/perl/p4CNbhs/perl-5.8.0@32274/lib/site_perl/5.10.0/Test/Distribution.pm
+    INST_VERSION 1.29
+
+	Downgrading to 1.28 fixes that.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30687
+	
 2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* My release of 1.92_52 gives FAILs in 6 of *my* smokes. As the error
