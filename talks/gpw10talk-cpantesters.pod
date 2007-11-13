@@ -12,11 +12,22 @@ CPAN::Reporter 1.00
 
 grango statistik
 
-wiki grades
+wiki grades: http://cpantest.grango.org/cgi-bin/pages.cgi?act=wiki-page&pagename=Reports
+
+  PASS
+  FAIL
+  UNKNOWN
+  NA
+
+  but also: "invalid" or in other words "on hold" when a dependency is nto fulfilled
 
 IRC cpantesters, cpantesters-discuss, toolchain
 
+  all @irc.perl.org
+
 Nischen 5.005, 64bit, Dobrica talked about some phone toolkit
+
+
 
 warnings bei OK waere viel zu finden
 
@@ -97,4 +108,14 @@ times has degraded to some obscure collection of depressigly hard to
 use LEGO pieces. We need to turn our attention to quality assurance.
 
 
-=head1
+=head1 Renee baecker:
+
+Mich würde es am meisten interessieren, wie man möglichst einfach
+CPAN-Tester werden kann, so dass ich ohne groß Mehraufwand
+Test-Resultate verschicken kann. Welche Tipps und Tricks gibt es bei
+der Konfiguration der Module wie Test::Reporter etc.
+Ich habe mich mit dem Thema noch nicht allzu intensiv beschäftigt, von
+daher wäre ich an einem Überblick sehr interessiert!
+
+=cut
+
