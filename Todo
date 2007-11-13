@@ -20,6 +20,9 @@ Use of uninitialized value $file in concatenation (.) or string at /home/src/per
 	get these errors. Maybe the r command gives us a clue? No, it spits too
 	much output.
 
+	So I try an "update" to svk 3446 which was before Rich's patches and the
+	failures are the same. I should also try 3275.
+
 	* This should become a BBC article:
 
 ----Program----
