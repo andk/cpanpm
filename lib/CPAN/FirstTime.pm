@@ -160,6 +160,19 @@ for easier tracking of the session or be a plain string.
 
 Do you want the command number in the prompt (yes/no)?
 
+=item connect_to_internet_ok
+
+If you have never defined your own C<urllist> in your configuration
+then C<CPAN.pm> will be hesitant to use the built in default sites for
+downloading. It will ask you once per session if a connection to the
+internet is OK and only if you say yes, it will try to connect. But to
+avoid this question, you can choose your favorite download sites once
+and get away with it. Or, if you have no favorite download sites
+answer yes to the following question.
+
+If no urllist has been chosen yet, would you prefer CPAN.pm to connect
+to the built-in default sites without asking? (yes/no)?
+
 =item ftp_passive
 
 Shall we always set the FTP_PASSIVE environment variable when dealing
@@ -1118,6 +1131,7 @@ substitute. You can then revisit this dialog with
     #= MIRRORED.BY and conf_sites()
     #
 
+    my_yn_prompt("connect_to_internet_ok" => 0, $matcher);
     if ($matcher) {
         if ("urllist" =~ $matcher) {
             # conf_sites would go into endless loop with the smash prompt
@@ -1131,7 +1145,7 @@ substitute. You can then revisit this dialog with
     } elsif ($fastread) {
         $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".
                                  "Please call 'o conf init urllist' to configure ".
-                                 "your CPAN server(s) now!");
+                                 "your CPAN server(s) now!\n\n");
     } else {
         conf_sites();
     }

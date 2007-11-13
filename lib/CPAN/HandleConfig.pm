@@ -31,6 +31,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "colorize_warn",
      "commandnumber_in_prompt",
      "commands_quote",
+     "connect_to_internet_ok",
      "cpan_home",
      "curl",
      "dontload_hash", # deprecated after 1.83_68 (rev. 581)

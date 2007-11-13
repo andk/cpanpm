@@ -4062,6 +4062,9 @@ sub localize {
         $CPAN::Config->{ftp_passive} : 1;
     my $ret;
     my $stats = $self->_new_stats($file);
+    for ($CPAN::Config->{connect_to_internet_ok}) {
+        $connect_to_internet_ok = $_ if not defined $connect_to_internet_ok and defined $_;
+    }
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
