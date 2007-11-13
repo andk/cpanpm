@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_52';
+$CPAN::VERSION = '1.92_53';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -312,11 +312,11 @@ ReadLine support %s
             $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
             my $command = shift @line;
             eval {
-				local (*STDOUT)=*STDOUT;
-				@line = _redirect(@line);
-				CPAN::Shell->$command(@line)
-			};
-			_unredirect;
+                local (*STDOUT)=*STDOUT;
+                @line = _redirect(@line);
+                CPAN::Shell->$command(@line)
+              };
+            _unredirect;
             if ($@) {
                 my $err = "$@";
                 if ($err =~ /\S/) {

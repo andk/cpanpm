@@ -1,5 +1,25 @@
 2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* My release of 1.92_52 gives FAILs in 6 of *my* smokes. As the error
+	messages mention File::Spec too I wonder if this has to do with a recent
+	glitch that I have not yet understood.
+
+	  116743 2007-05-22 KWILLIAMS/PathTools-3.25.tar.gz
+    118823 2007-10-14 KWILLIAMS/PathTools-3.25_01.tar.gz
+
+	So 31790 has only 3.25 according to the m command.
+
+	And I get lots of these messages:
+
+Use of uninitialized value $file in string ne at /home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/5.9.5/File/Spec/Unix.pm line 312.
+Use of uninitialized value $file in concatenation (.) or string at /home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/lib/5.9.5/File/Spec/Unix.pm line 320.
+
+	And after that failing tests.
+
+	The File/Spec.pm in current bleadperl 32269 is the same, but I do not
+	get these errors. Maybe the r command gives us a clue? No, it spits too
+	much output.
+
 	* This should become a BBC article:
 
 ----Program----
