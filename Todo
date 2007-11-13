@@ -21,7 +21,20 @@ Use of uninitialized value $file in concatenation (.) or string at /home/src/per
 	much output.
 
 	So I try an "update" to svk 3446 which was before Rich's patches and the
-	failures are the same. I should also try 3275.
+	failures are the same. I should also try 3275. Indeed, the test failure
+	stays which should now have proven that it is not a change in my code
+	that broke but something that which I have installed in my smoke perls.
+
+	I should try perls close to 31790: 31613 and 31882. OK and OK. Now I can
+	go through diffs in the modules and upgrade until I have the jerk. Fun.
+	[...hours later...] This strategy does not lead anywhere.
+
+	32248 has no problem with this test either. But the scope of the problem
+	to compare whole trees with hundreds of interdependencies is simply too
+	big.
+
+	New idea: CPAN::Test::Dummy::Perl5::Make has been installed on those
+	perls, has it not? Yes. And when I uninstall it, all's well.
 
 	* This should become a BBC article:
 
