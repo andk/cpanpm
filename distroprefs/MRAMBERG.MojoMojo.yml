@@ -1,4 +1,16 @@
 ---
+comment: |
+
+  Something within Plucene was a showstopper so I do not want to say
+  yes everywhere and so I cannot integrate this into MI.yml
+
+  But now I realize that it did not help to exclude Plucene as below.
+  The tests are run nonetheless that demand
+  Plucene/Analysis/SimpleAnalyzer.pm (and P:Plugin:A:SnowballAnalyzer)
+
+  So I rerun a few Plucene::xxx tests that may or may not have been
+  dropped.
+
 match:
   distribution: |
     ^(?x:^--never matches--

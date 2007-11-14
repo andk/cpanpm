@@ -544,6 +544,7 @@ Math::SymbolicX::ParserExtensionFactory
 Math::Vec
 Maypole
 Metadata::ByInode
+Mixin::ExtraFields
 Module::Build
 Module::Build::Convert
 Module::Changes
