@@ -7632,7 +7632,7 @@ is part of the perl-%s distribution. To install that, you need to run
             if (my $expect_model = $self->_prefs_with_expect("pl")) {
                 # XXX probably want to check _should_report here and warn
                 # about not being able to use CPAN::Reporter with expect
-                $ret = $self->_run_via_expect($system,$expect_model);
+                $ret = $self->_run_via_expect($system,'writemakefile',$expect_model);
                 if (! defined $ret
                     && $self->{writemakefile}
                     && $self->{writemakefile}->failed) {
@@ -7739,7 +7739,7 @@ is part of the perl-%s distribution. To install that, you need to run
     if ($want_expect) {
         # XXX probably want to check _should_report here and
         # warn about not being able to use CPAN::Reporter with expect
-        $system_ok = $self->_run_via_expect($system,$expect_model) == 0;
+        $system_ok = $self->_run_via_expect($system,'make',$expect_model) == 0;
     }
     elsif ( $self->_should_report('make') ) {
         my ($output, $ret) = CPAN::Reporter::record_command($system);
@@ -7771,16 +7771,16 @@ sub goodbye {
 
 # CPAN::Distribution::_run_via_expect ;
 sub _run_via_expect {
-    my($self,$system,$expect_model) = @_;
+    my($self,$system,$phase,$expect_model) = @_;
     CPAN->debug("system[$system]expect_model[$expect_model]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst("Expect")) {
         my $expo = Expect->new;  # expo Expect object;
         $expo->spawn($system);
         $expect_model->{mode} ||= "deterministic";
         if ($expect_model->{mode} eq "deterministic") {
-            return $self->_run_via_expect_deterministic($expo,$expect_model);
+            return $self->_run_via_expect_deterministic($expo,$phase,$expect_model);
         } elsif ($expect_model->{mode} eq "anyorder") {
-            return $self->_run_via_expect_anyorder($expo,$expect_model);
+            return $self->_run_via_expect_anyorder($expo,$phase,$expect_model);
         } else {
             die "Panic: Illegal expect mode: $expect_model->{mode}";
         }
@@ -7791,7 +7791,7 @@ sub _run_via_expect {
 }
 
 sub _run_via_expect_anyorder {
-    my($self,$expo,$expect_model) = @_;
+    my($self,$expo,$phase,$expect_model) = @_;
     my $timeout = $expect_model->{timeout} || 5;
     my $reuse = $expect_model->{reuse};
     my @expectacopy = @{$expect_model->{talk}}; # we trash it!
@@ -7830,15 +7830,15 @@ sub _run_via_expect_anyorder {
             }
             my $why = "could not answer a question during the dialog";
             $CPAN::Frontend->mywarn("Failing: $why\n");
-            $self->{writemakefile} =
+            $self->{$phase} =
                 CPAN::Distrostatus->new("NO $why");
-            return;
+            return 0;
         }
     }
 }
 
 sub _run_via_expect_deterministic {
-    my($self,$expo,$expect_model) = @_;
+    my($self,$expo,$phase,$expect_model) = @_;
     my $ran_into_timeout;
     my $timeout = $expect_model->{timeout} || 15; # currently unsettable
     my $expecta = $expect_model->{talk};
@@ -7862,9 +7862,9 @@ expected[$regex]\nbut[$but]\n\n");
                       -re => $regex);
         if ($ran_into_timeout) {
             # note that the caller expects 0 for success
-            $self->{writemakefile} =
+            $self->{$phase} =
                 CPAN::Distrostatus->new("NO timeout during expect dialog");
-            return;
+            return 0;
         }
         $expo->send($send);
     }
@@ -8690,7 +8690,7 @@ sub test {
                                     "not supported when distroprefs specify ".
                                     "an interactive test\n");
         }
-        $tests_ok = $self->_run_via_expect($system,$expect_model) == 0;
+        $tests_ok = $self->_run_via_expect($system,'test',$expect_model) == 0;
     } elsif ( $self->_should_report('test') ) {
         $tests_ok = CPAN::Reporter::test($self, $system);
     } else {

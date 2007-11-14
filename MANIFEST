@@ -191,6 +191,7 @@ distroprefs/PDCAWLEY.Class-Inner.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/PEVANS.IPC-PerlSSH.yml
+distroprefs/PHOENIX.Term-ReadPassword.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml
