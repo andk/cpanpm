@@ -1,6 +1,6 @@
 2007-11-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Another BBC article
+	* Another BBC article?
 
 	----Program----
 	eval q{use B::PerlReq 0.006005};
@@ -15,9 +15,11 @@
 	N/A
 
 	----EOF ($?='0')----
+
+	Nope, BBC not justified. badly written test obviously. http://rt.cpan.org/Ticket/Display.html?id=30717
 	
 
-	* todo: publish the hvds patches
+	* todo: publish the hvds patches DONE
 
 	* Need to try to fix Danga::Socket with Class::PseudoHash.
 
@@ -191,8 +193,6 @@ to *NOT* ask if it is ok to connect to the internet please?
 	bradfitz, Devel::Cover, etc. to my Sunday posting.
 
 	http://www.perlfoundation.org/perl5/index.cgi
-
-	
 
 	* need a (v)box without gzip or tar so I can see the tests succeed or fail
 

@@ -560,6 +560,7 @@ Module::Refresh
 Module::Release
 Module::Versions::Report
 MogileFS::Class
+MojoMojo
 Moose
 Moose::Autobox
 Net::CIDR
