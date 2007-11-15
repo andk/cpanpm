@@ -328,6 +328,7 @@ File::Extract
 File::Fetch
 File::Headerinfo::SWF
 File::MMagic::XS
+File::Mirror
 File::NCopy
 File::NFSLock
 File::Path
@@ -549,6 +550,7 @@ Module::Build
 Module::Build::Convert
 Module::Changes
 Module::Compile
+Module::ExtractUse
 Module::Find
 Module::Info
 Module::Install
@@ -569,6 +571,7 @@ Net::Cmd
 Net::Daemon
 Net::Domain
 Net::Domain::TLD
+Net::DownloadMirror
 Net::FPing
 Net::FTP
 Net::IDN::Encode
@@ -578,6 +581,7 @@ Net::IPv4Addr
 Net::IPv6Addr
 Net::Jaiku
 Net::Libdnet
+Net::MirrorDir
 Net::NNTP
 Net::Netmask
 Net::Netrc
@@ -596,6 +600,7 @@ Net::Server
 Net::Telnet
 Net::Time
 Net::Twitter
+Net::UploadMirror
 Net::Write
 Net::XMPP
 NetAddr::IP
@@ -632,7 +637,7 @@ PDF::Reuse::Tutorial
 PDF::Table
 PDF::Tk
 PDF::Writer
-# 29905 PDF::Xtract
+PDF::Xtract
 PDL
 PGP::Sign
 POE::API::Peek
@@ -719,6 +724,7 @@ Proc::Simple
 ProgressMonitor::AbstractConfiguration
 Pugs::Compiler::Perl6
 Pugs::Compiler::Rule
+Pushmi
 Quantum::Superpositions
 RDF::Core
 RDF::Simple
