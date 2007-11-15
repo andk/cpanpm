@@ -10855,10 +10855,6 @@ defined:
                      only needed for building. yes|no|ask/yes|ask/no
   bzip2              path to external prg
   cache_metadata     use serializer to cache metadata
-  commands_quote     prefered character to use for quoting external
-                     commands when running them. Defaults to double
-                     quote on Windows, single tick everywhere else;
-                     can be set to space to disable quoting
   check_sigs         if signatures should be verified
   colorize_debug     Term::ANSIColor attributes for debugging output
   colorize_output    boolean if Term::ANSIColor should colorize output
@@ -10866,6 +10862,13 @@ defined:
   colorize_warn      Term::ANSIColor attributes for warnings
   commandnumber_in_prompt
                      boolean if you want to see current command number
+  commands_quote     prefered character to use for quoting external
+                     commands when running them. Defaults to double
+                     quote on Windows, single tick everywhere else;
+                     can be set to space to disable quoting
+  connect_to_internet_ok
+                     if we shall ask if opening a connection is ok before
+                     urllist is specified
   cpan_home          local directory reserved for this package
   curl               path to external prg
   dontload_hash      DEPRECATED
