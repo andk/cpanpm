@@ -215,7 +215,7 @@ queue and let the queue decide if the thing is really still of
 interest. We must protect against what happens when we get killed and
 must restart. We need not protect against a concurrent run of this
 program. It's not about locking, just about delaying decisions until
-they need to be reached. But still: if a job has already been done in
+one needs to be reached. But still: if a job has already been done in
 a previous run we should not stuff it into a queue again ever. And
 here is why we need to decide in the very last moment again: our
 policy is that if Foo-3.14 is uploaded we won't test Foo-3.13 at all.
