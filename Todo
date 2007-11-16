@@ -1,3 +1,15 @@
+2007-11-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Marek Rouchal has opened a ticket about Module::ExtractUse.
+
+2007-11-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Very strange. It's not about maint-5.8, it's about the date. Is it
+	again a Test::Harness thingie?
+
+2007-11-11T18:16  	maint-5.8  	32273  	838  	SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  	NOT OK
+2007-11-11T01:45 	perl 	32269 	320 	SNOWHARE/Unicode-MapUTF8-1.11.tar.gz 	OK
+
 2007-11-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Another BBC article?

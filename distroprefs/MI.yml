@@ -36,6 +36,7 @@ match:
     |CFRANKS/Catalyst-Model-Net-Amazon-\d
     |CFRANKS/HTML-FormFu-\d
     |CFRANKS/HTML-Widget-\d
+    |CFRANKS/DBIx-Class-HTML-FormFu-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
