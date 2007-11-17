@@ -45,6 +45,17 @@ distroprefs depends
 
 http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=CPAN
 
+    helps decide what needs testing
+    Interesting for some reason:
+        lots of things todo visible because already much done: B::Generate
+        lots of things todo but tasks not visible: XML::XPathScript
+        tough case because of dependencies failing, so nothing arrives: MojoMojo
+        old module: ???
+
+you need a big disk and ccache installed
+
+watch perl repositorybrowser when testing bleadperl
+
 relocateableinc => mod_perl
 
 threads,nothreads => Net::Daemon, Devel::Caller, Sub::Multi
