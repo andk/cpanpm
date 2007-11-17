@@ -112,6 +112,7 @@ match:
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
+    |SARTAK/Jifty-DBI-\d
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-

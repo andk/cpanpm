@@ -5,17 +5,42 @@
 	And the diff in the autobundles is a bit funny because 327 started
 	earlier and finished later, so it is a mix of upgrades and downgrades.
 
-2007-11-16T13:38  	perl  	32330  	709  	YANICK/XML-XPathScript-1.52.tar.gz  	NOT OK
-2007-11-15T23:07 	perl 	32327 	1008 	YANICK/XML-XPathScript-1.52.tar.gz 	OK
-2007-11-14T09:33 	perl 	32308 	325 	YANICK/XML-XPathScript-1.52.tar.gz 	OK
+	2007-11-16T13:38  perl  32330   709  YANICK/XML-XPathScript-1.52.tar.gz  NOT OK
+	2007-11-15T23:07  perl  32327  1008  YANICK/XML-XPathScript-1.52.tar.gz  OK
+	2007-11-14T09:33  perl  32308   325  YANICK/XML-XPathScript-1.52.tar.gz  OK
 
-	Module::Build 0.2808 vs 0.2808_01 is the most likely cause.
+	Module::Build 0.2808 vs 0.2808_01 is the most likely cause. But no, this
+	is it not. I tried it on 32354 which gives still a FAIL and then
+	downgraded to M:B 1.2808 and it stayed a FAIL. Upgrading to 0.2808_01
+	again does no change things either.
+
+	Ahhh, what does it really mean for a test script when ther is a shebang
+	line of
+
+	#!perl -t
+
+	?? What was the exact error message again?
+
+t/04unicode......................Can't locate XML/XPathScript.pm in @INC (@INC contains: /home/src/perl/repoperls/installed-perls/perl/pztfddi/perl-5.8.0@32354/lib/5.10.0/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pztfddi/perl-5.8.0@32354/lib/5.10.0 /home/src/perl/repoperls/installed-perls/perl/pztfddi/perl-5.8.0@32354/lib/site_perl/5.10.0/i686-linux-64int /home/src/perl/repoperls/installed-perls/perl/pztfddi/perl-5.8.0@32354/lib/site_perl/5.10.0) at t/04unicode.t line 7.
+BEGIN failed--compilation aborted at t/04unicode.t line 7.
+# Looks like your test died before it could output anything.
+ Dubious, test returned 255 (wstat 65280, 0xff00)
+ Failed 11/11 subtests
+
+	So it is the right perl being called but not the module in blib being
+	tested.
+
+	So I try it once again with 32308, run the test. UNINSTALL it. Run the
+	test again. There we have it. Fails just the same.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30796
 
 2007-11-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Nicholas says that B::Generate still suffers from an assertion under
 	debugging. So I probably need to run a binary search on debugging perls
-	for B::Generate.
+	for B::Generate. The binary search leads us again to 22314/5 that has
+	already gone into a B:Generate BBC, so nothing to shout out.
 
 	* Marek Rouchal has opened a ticket about Module::ExtractUse. Resolved
 	in a MakeMaker ticket.

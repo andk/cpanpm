@@ -1,4 +1,9 @@
 --- 
+comment: |
+
+  recently released version by SARTAK probably does not need the patch
+  anymore? I put it into regular MI.yml
+
 match:
   distribution: "^AUDREYT/Jifty-DBI-"
 pl:
