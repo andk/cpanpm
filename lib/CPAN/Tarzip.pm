@@ -3,7 +3,7 @@ package CPAN::Tarzip;
 use strict;
 use vars qw($VERSION @ISA $BUGHUNTING);
 use CPAN::Debug;
-use File::Basename ();
+use File::Basename qw(basename);
 $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
 # module is internal to CPAN.pm
 
@@ -215,9 +215,22 @@ sub untar {
              $CPAN::META->has_inst("Compress::Zlib") ) {
         $prefer = 2;
     } else {
+        my $gzip;
+        if ($self->{UNGZIPPRG}) {
+            $gzip = basename $self->{UNGZIPPRG};
+        } else {
+            $gzip = "(gzip or bzip2)";
+        }
+        my $tar;
+        if ($CPAN::Config->{tar}) {
+            $tar = basename $CPAN::Config->{tar};
+        } else {
+            $tar = "tar";
+        }
         $CPAN::Frontend->mydie(qq{
-CPAN.pm needs either the external programs tar, gzip and bzip2
-installed. Can't continue.
+CPAN.pm needs either the external programs $tar and $gzip (and
+configured in CPAN.pm's config) -or- both modules Archive::Tar and
+Compress::Zlib installed. Can't continue cutting file '$file'.
 });
     }
     my $tar_verb = "v";
@@ -241,7 +254,7 @@ installed. Can't continue.
             # pipes
             if ($is_compressed) {
                 (my $ungzf = $file) =~ s/\.gz(?!\n)\Z//;
-                $ungzf = File::Basename::basename($ungzf);
+                $ungzf = basename $ungzf;
                 my $ct = CPAN::Tarzip->new($file);
                 if ($ct->gunzip($ungzf)) {
                     $CPAN::Frontend->myprint(qq{Uncompressed $file successfully\n});
