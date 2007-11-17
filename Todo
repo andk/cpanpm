@@ -1,14 +1,34 @@
+2007-11-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 32327 was a debugging build. I see a strange INC path without blib but
+	I see nothing suspect in the two patches 329 and 330 (328 is maintperl).
+	And the diff in the autobundles is a bit funny because 327 started
+	earlier and finished later, so it is a mix of upgrades and downgrades.
+
+2007-11-16T13:38  	perl  	32330  	709  	YANICK/XML-XPathScript-1.52.tar.gz  	NOT OK
+2007-11-15T23:07 	perl 	32327 	1008 	YANICK/XML-XPathScript-1.52.tar.gz 	OK
+2007-11-14T09:33 	perl 	32308 	325 	YANICK/XML-XPathScript-1.52.tar.gz 	OK
+
+	Module::Build 0.2808 vs 0.2808_01 is the most likely cause.
+
 2007-11-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Marek Rouchal has opened a ticket about Module::ExtractUse.
+	* Nicholas says that B::Generate still suffers from an assertion under
+	debugging. So I probably need to run a binary search on debugging perls
+	for B::Generate.
+
+	* Marek Rouchal has opened a ticket about Module::ExtractUse. Resolved
+	in a MakeMaker ticket.
 
 2007-11-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Very strange. It's not about maint-5.8, it's about the date. Is it
-	again a Test::Harness thingie?
+	* Another breakage by Test::Distribution. Hopefully this will be fixed
+	in TD 2.00.
 
-2007-11-11T18:16  	maint-5.8  	32273  	838  	SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  	NOT OK
-2007-11-11T01:45 	perl 	32269 	320 	SNOWHARE/Unicode-MapUTF8-1.11.tar.gz 	OK
+	2007-11-11T18:16   maint-5.8   32273   838   SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  NOT OK
+	2007-11-11T01:45   perl        32269   320   SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  OK
+
+	
 
 2007-11-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
