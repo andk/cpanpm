@@ -149,9 +149,11 @@ MAIN : {
           my @system = (
                         $perl,
                         "-Ilib",
+                        "-I$ENV{HOME}/.cpan",
+                        "-MCPAN::MyConfig",
                         "-MCPAN",
                         "-e",
-                        "install '$upload->{path}'",
+                        "\$CPAN::Config->{build_dir_reuse}=0; install q{$upload->{path}}",
                        );
           # 0==system @system or die;
           unless (0==system @system){
