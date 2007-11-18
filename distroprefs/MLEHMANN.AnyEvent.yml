@@ -64,7 +64,46 @@ comment: |
 
   Works fine with 5.8.8.
 
-  Candidate for binary search.
+  Candidate for binary search. [going run binary search] Wow,
+  interesting things can happen. Under the environment that
+  binsearchaperl provides, 32376 PASSes all tests.
+
+  Rinse, repeat. Yes, under CPAN.pm the test hangs, under
+  binsearchaperl (which also uses CPAN.pm) the tests PASS.
+
+  The output is
+
+  t/03_child........Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  ok
+  All tests successful.
+
+  Rinse, repeat.
+
+  Test hangs, strace says
+
+  Process 15256 attached - interrupt to quit
+  clock_gettime(CLOCK_MONOTONIC, {117432, 504813059}) = 0
+  clock_gettime(CLOCK_REALTIME, {1195402827, 17881911}) = 0
+  clock_gettime(CLOCK_MONOTONIC, {117432, 506120913}) = 0
+  epoll_wait(5, 
+
+  After this it waits for a long time, then continues
+
+                {}, 64, 59743)            = 0
+  clock_gettime(CLOCK_MONOTONIC, {117492, 249319294}) = 0
+  clock_gettime(CLOCK_REALTIME, {1195402886, 762373988}) = 0
+  clock_gettime(CLOCK_MONOTONIC, {117492, 250616908}) = 0
+  epoll_wait(5,
+
+  Something with 60 seconds.
+
+  Coro also has a hard dependency on AnyEvent, so is not installable
+  at the moment.
+
+  What baffles me is that binsearchaperl does not have this problem.
+  Let me suggest to run the test as 'make test > test.out && cat
+  test.out'. This works? Yes. OK, we have a workaround.
 
 
 match:
@@ -72,6 +111,7 @@ match:
 test:
   env:
     DISPLAY: ":121"
+  commandline: "make test > test.out && cat test.out"
 depends:
   configure_requires:
     Event: 0
