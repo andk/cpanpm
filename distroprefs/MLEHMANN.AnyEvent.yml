@@ -103,8 +103,8 @@ comment: |
 
   What baffles me is that binsearchaperl does not have this problem.
   Let me suggest to run the test as 'make test > test.out && cat
-  test.out'. This works? Yes. OK, we have a workaround.
-
+  test.out'. This works? Yes. OK, we have a workaround. [...] Oops, no
+  we still have no workaround. Maybe need to turn off reporting too?
 
 match:
   distribution: "^MLEHMANN/AnyEvent-\d"
@@ -117,3 +117,5 @@ depends:
     Event: 0
   requires:
     Event: 0
+cpanconfig:
+  test_report: 0
