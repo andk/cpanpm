@@ -3,7 +3,7 @@
 /home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/bin/perl
 
 # 5.9.4 but it seems that version.pm was seriously broken on that perl ("perl-0" bug):
-/home/src/perl/repoperls/installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl
+# /home/src/perl/repoperls/installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl
 
 # 5.9.3:
 #/home/src/perl/repoperls/installed-perls/perl/pztoXzt/perl-5.8.0@27002/bin/perl

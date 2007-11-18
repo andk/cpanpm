@@ -106,6 +106,32 @@ comment: |
   test.out'. This works? Yes. OK, we have a workaround. [...] Oops, no
   we still have no workaround. Maybe need to turn off reporting too?
 
+  After I turned off reporting it did work indeed for bleadperl@32376
+  but soon later I had to take note of the fact that it didn't work
+  for 32354. As there were pretty much only VMS/CPANPLUS changes
+  between these two versions I started to suspect a problem in
+  Test::Harness.
+
+  32354 2.64 test_report=0 commandline_with_redirect=1                OK
+  32354 3.02 test_report=0 commandline_with_redirect=1                NOT OK
+  32376 3.03 test_report=0 commandline_with_redirect=1                OK
+  32376 3.03 test_report=0 commandline_with_redirect=0                NOT OK
+  32376 3.03 test_report=1 commandline_with_redirect=0                NOT OK
+  32376 2.64 test_report=1 commandline_with_redirect=0                NOT OK
+
+  So no, it seems easy to find a T:H 2.64 that fails too.
+
+  Automatic binary search seems too hard for that.
+
+  The "Too late to run CHECK messages":
+
+  do come: 32235
+
+  do not come: 32056, 32198, 32216, 32222, 32230
+
+  Crap. This has nothing to do with perl, it's because EV.pm came into
+  play (I guess).
+
 match:
   distribution: "^MLEHMANN/AnyEvent-\d"
 test:

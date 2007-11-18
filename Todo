@@ -13,7 +13,8 @@
 
 	and since then 12 more fails out of 12 sessions.
 
-	It's a dependency on AnyEvent.
+	It's a dependency on AnyEvent. Long day comparing AnyEvent results
+	follows. Mail to Marc has been sent.
 
 	* <URL: http://rt.cpan.org/Ticket/Display.html?id=30051 >
 
