@@ -1,4 +1,17 @@
+2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* <URL: http://rt.cpan.org/Ticket/Display.html?id=30051 >
+
+	Answers Yanick: pdflatex is the culprit littering /tmp. As I didn't find any easy way to...
+
 2007-11-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: write a clean_tested() method. Suggests Adam Kennedy:
+
+ah, ok, I understand.
+Although if there is dependencies involved, would that also clean A?
+Or perhaps we need a clean_all, so that CPAN Testers can just call that each cycle?
+Adam K
 
 	* 32327 was a debugging build. I see a strange INC path without blib but
 	I see nothing suspect in the two patches 329 and 330 (328 is maintperl).

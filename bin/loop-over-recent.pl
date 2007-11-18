@@ -92,6 +92,7 @@ MAIN : {
   UPLOADITEM: for my $upload (reverse @$recent_events) {
       next unless $upload->{path} =~ $rx;
       next unless $upload->{type} eq "new";
+      next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.10|;
       
       # XXX: we should compute exceptions for every distro that has a
       # higher numbered developer release. Say Foo-1.4801 is released

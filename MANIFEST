@@ -132,6 +132,7 @@ distroprefs/KAWASAKI.Lingua-JA-Romanize-Japanese.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
 distroprefs/KROW.DBIx-Password.yml
+distroprefs/KRUSCOE.Tie-DxHash.yml
 distroprefs/KVAIL.Tk-Stderr.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Module-Build.yml

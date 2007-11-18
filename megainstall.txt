@@ -993,6 +993,7 @@ Unicode::Wrap
 Unix::Syslog
 User
 User::Identity
+VFSsimple
 Voting::Condorcet::RankedPairs
 WWW::Facebook::API
 WWW::Live365
