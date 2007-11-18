@@ -1,5 +1,18 @@
 2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Just discovered that we lost JRED recently:
+
+	2007-11-08T16:04  perl  32244   494  JRED/Event-ExecFlow-0.63.tar.gz   NOT OK
+	2007-11-07T17:02  perl  32235   969  JRED/Event-ExecFlow-0.63.tar.gz   NOT OK
+	2007-11-07T01:28  perl  32230  1282  JRED/Event-ExecFlow-0.63.tar.gz   NOT OK
+	2007-11-06T07:57  perl  32226   456  JRED/Event-ExecFlow-0.63.tar.gz   OK
+	2007-11-05T13:08  perl  32222   402  JRED/Event-ExecFlow-0.63.tar.gz   OK
+	2007-11-04T20:10  perl  32219   124  JRED/Event-ExecFlow-0.63.tar.gz   OK
+
+	and since then 12 more fails out of 12 sessions.
+
+	It's a dependency on AnyEvent.
+
 	* <URL: http://rt.cpan.org/Ticket/Display.html?id=30051 >
 
 	Answers Yanick: pdflatex is the culprit littering /tmp. As I didn't find any easy way to...
@@ -65,8 +78,6 @@ BEGIN failed--compilation aborted at t/04unicode.t line 7.
 
 	2007-11-11T18:16   maint-5.8   32273   838   SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  NOT OK
 	2007-11-11T01:45   perl        32269   320   SNOWHARE/Unicode-MapUTF8-1.11.tar.gz  OK
-
-	
 
 2007-11-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

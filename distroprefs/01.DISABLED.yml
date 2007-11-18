@@ -34,7 +34,6 @@ match:
     |KANE/CPANPLUS-\d                        # asks me for my password! You do not expect that I write it into a distroprefs file, do you?
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
-    |MLEHMANN/AnyEvent-2.6                   # hangs
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl

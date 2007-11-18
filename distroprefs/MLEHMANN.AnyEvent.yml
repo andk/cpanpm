@@ -1,5 +1,72 @@
 ---
-comment: "... for the case somebody uses Tk and somebody has started 'Xvfb :121'"
+comment: |
+
+  Originally I wrote this comment: for the case somebody uses Tk and
+  somebody has started 'Xvfb :121'"
+
+  But since probably version 0.4 of AnyEvent we fail exactly with this
+  distroprefs file (rev 1953)???
+
+  No, some AnyEvent test came under suspicion to hang my machine. Need
+  to take it out of "disabled".
+
+  I took it out for the moment: |MLEHMANN/AnyEvent-2.6                   # hangs
+
+  With bleadperl@32376 the tests hang with:
+
+  ***
+  *** One or more of these modules, in order of importance, is recommended:
+  *** Event, Coro, Glib, Tk
+  ***
+
+  Checking if your kit is complete...
+  Looks good
+  Writing Makefile for AnyEvent
+  make[1]: Entering directory `/home/k/.cpan/build/AnyEvent-2.6-GGDk3C'
+  cp lib/AnyEvent/Impl/Perl.pm blib/lib/AnyEvent/Impl/Perl.pm
+  cp lib/AnyEvent.pm blib/lib/AnyEvent.pm
+  cp lib/AnyEvent/Impl/EV.pm blib/lib/AnyEvent/Impl/EV.pm
+  cp lib/AnyEvent/Impl/CoroEV.pm blib/lib/AnyEvent/Impl/CoroEV.pm
+  cp lib/AnyEvent/Impl/Glib.pm blib/lib/AnyEvent/Impl/Glib.pm
+  cp lib/AnyEvent/Impl/Tk.pm blib/lib/AnyEvent/Impl/Tk.pm
+  cp lib/AnyEvent/Impl/Coro.pm blib/lib/AnyEvent/Impl/Coro.pm
+  cp lib/AnyEvent/Impl/Event.pm blib/lib/AnyEvent/Impl/Event.pm
+  Manifying blib/man3/AnyEvent.3
+  Manifying blib/man3/AnyEvent::Impl::EV.3
+  make[1]: Leaving directory `/home/k/.cpan/build/AnyEvent-2.6-GGDk3C'
+    MLEHMANN/AnyEvent-2.6.tar.gz
+    /usr/bin/make -- OK
+  Running make test
+  make[1]: Entering directory `/home/k/.cpan/build/AnyEvent-2.6-GGDk3C'
+  PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+  t/00_load.........ok   
+  t/01_basic........1/6 Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  t/01_basic........ok   
+  t/02_signals......1/6 Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  t/02_signals......ok   
+  t/03_child........1/7 Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+
+  Note: this process was started under CPAN.pm but without
+  CPAN::Reporter. I retry it with "look AnyEvent" to reach a subshell
+  and run 'make test' directly and get the same result.
+
+  % make test TEST_FILES=t/03_child.t TEST_VERBOSE=1
+  make[1]: Entering directory `/home/k/.cpan/build/AnyEvent-2.6-GGDk3C'
+  PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(1, 'blib/lib', 'blib/arch')" t/03_child.t
+  t/03_child......
+  1..7
+  ok 1
+  ok 2
+  Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+  Too late to run CHECK block at /home/src/perl/repoperls/installed-perls/perl/pbOOGUJ/perl-5.8.0@32376/lib/site_perl/5.10.0/i686-linux-64int/EV.pm line 61.
+
+
+  Works fine with 5.8.8.
+
+  Candidate for binary search.
+
+
 match:
   distribution: "^MLEHMANN/AnyEvent-\d"
 test:
