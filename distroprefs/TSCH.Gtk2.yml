@@ -11,6 +11,9 @@ match:
 pl:
   args:
     - "PREREQ_FATAL=0"
+test:
+  env:
+    DISPLAY: ":121"
 depends:
   configure_requires:
     ExtUtils::Depends: 0.205
