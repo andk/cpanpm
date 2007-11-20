@@ -1,5 +1,9 @@
 2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* BUG! I just discovered that a success report was sent for Readonly::XS
+	after a patch was applied. This was once forbidden and must remain
+	forbidden.
+
 	* MAROS/Mail-Builder-1.03.tar.gz seems to hang on 5.6.2 I just ^Ced it.
 
 	* Just discovered that we lost JRED recently:

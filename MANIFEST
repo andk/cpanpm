@@ -211,6 +211,7 @@ distroprefs/RJRAY.RPC-XML.yml
 distroprefs/RKINYON.DBM-Deep.yml
 distroprefs/RMUHLE.classes.yml
 distroprefs/RONAN.Transform-Canvas.yml
+distroprefs/ROODE.Readonly-XS.yml
 distroprefs/ROODE.Time-Format.yml
 distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
@@ -228,6 +229,7 @@ distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/STAS.libapreq.yml
 distroprefs/STEPANOV.IMDB-Film.yml
 distroprefs/STEVAN.Class-MOP.yml
+distroprefs/SWALTERS.typesafety.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/TBONE.HTTP-File.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
