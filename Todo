@@ -1,3 +1,15 @@
+2007-11-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* where is the Gabor page with all the 5.005 modules?
+
+	http://cpantesters.szabgab.com/stats/perl_5.5.5.html
+
+	* V is a module but not indexed (?) what's up?
+
+    4934 2007-11-07 ABELTJE/V-0.13.tar.gz
+
+	
+
 2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* BUG! I just discovered that a success report was sent for Readonly::XS

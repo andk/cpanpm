@@ -1,0 +1,15 @@
+---
+match:
+  distribution: "DCANTRELL/Devel-CheckOS"
+pl:
+  eexpect:
+    mode: anyorder
+    reuse: 1
+    timeout: 5
+    talk:
+      - "Linux"
+      - "y\n"
+      - "OSFeatures::POSIXShellRedirection"
+      - "y\n"
+      - "Unix"
+      - "y\n"

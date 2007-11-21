@@ -247,6 +247,7 @@ DateTime::Set
 Devel::CallTrace
 Devel::Caller
 Devel::CheckLib
+Devel::CheckOS
 Devel::Command
 Devel::Cover
 Devel::Cycle
@@ -574,12 +575,14 @@ Net::Domain::TLD
 Net::DownloadMirror
 Net::FPing
 Net::FTP
+Net::GrowlClient
 Net::IDN::Encode
 Net::IDN::Nameprep
 Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
 Net::Jaiku
+Net::Jifty
 Net::Libdnet
 Net::MirrorDir
 Net::NNTP
@@ -816,6 +819,7 @@ Sub::Override
 Sub::Uplevel
 Sub::WrapPackages
 Sys::Hostname
+Sys::Mmap
 Sys::SigAction
 TAP::Parser
 Taint::Util
@@ -960,6 +964,7 @@ Tk::XMLViewer
 Transform::Canvas
 UML::Sequence
 UNIVERSAL::isa
+UNIVERSAL::ref
 URI
 URI::Fetch
 URI::Find
