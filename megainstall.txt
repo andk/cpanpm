@@ -15,6 +15,7 @@ Apache
 Apache::DBI
 Apache::GuessCharset
 Apache::HeavyCGI
+Apache::GzipChain
 Apache::Request
 Apache::Session
 Apache::Session::Counted

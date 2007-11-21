@@ -1,5 +1,15 @@
 2007-11-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* some encoding change
+
+	2007-11-20T10:28  perl  32412  1240   MIYAGAWA/Web-Scraper-0.22.tar.gz  NOT OK
+	2007-11-19T18:21  perl  32405   471   MIYAGAWA/Web-Scraper-0.22.tar.gz  OK
+
+	In the meantime 32405 also fails, I must go back to 32395 for an
+	autobundle comparison.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30886 (HTML::TreeBuilder::XPath)
+
 	* where is the Gabor page with all the 5.005 modules?
 
 	http://cpantesters.szabgab.com/stats/perl_5.5.5.html
@@ -8,7 +18,7 @@
 
     4934 2007-11-07 ABELTJE/V-0.13.tar.gz
 
-	
+	???
 
 2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
