@@ -868,6 +868,7 @@ Test::Pod
 Test::Pod::Coverage
 Test::Prereq
 Test::SubCalls
+Test::WWW::Declare
 Test::WWW::Mechanize
 Test::WWW::Selenium
 Test::Weaken
