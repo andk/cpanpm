@@ -1,3 +1,7 @@
+2007-11-21  Andreas J Koenig  <akoenig@iconmobile.com>
+
+	* Slaven: Give the LWP::UserAgent a conn cache to incr performance.
+
 2007-11-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* some encoding change
