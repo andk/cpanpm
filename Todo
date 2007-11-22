@@ -1,3 +1,72 @@
+2007-11-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* My own module?
+
+	2007-10-30T23:51  perl  32204   495  ANDK/MAB2-0.06.tar.gz   NOT OK
+	2007-10-30T08:15  perl  32202  1121  ANDK/MAB2-0.06.tar.gz   OK
+
+	t/dualdb.........Could not tie @recs: illegal flag specified to DB->open; Filename => kafka.dualdb, Subname => recno, Mode => 0664, Flags => 524289 at /home/sand/.cpan/build/MAB2-0.06-EfNVot/blib/lib/Tie/MAB2/Dualdb/Recno.pm line 28.
+
+	-rw-r--r-- 1 root root     299 Oct 30 22:30 libdb-dev.list
+
+	Was this the upgrade to libdb 4.6.19-1?
+
+	Or the upgrade to 1.816?
+
+     395 2007-02-04 PMQS/DB_File-1.815.meta
+   87656 2007-02-04 PMQS/DB_File-1.815.tar.gz
+     395 2007-10-28 PMQS/DB_File-1.816.meta
+   87854 2007-10-29 PMQS/DB_File-1.816.tar.gz
+
+	Downgrading to 1.815 does not help. Downgrading to libdb 4.3 does not help either.
+
+	My perl 32147 passes all tests, it has DB_File 1.816 already. I
+	re-install 1.816 and re-test Encode::MAB2 and it succeeds again.
+
+	My perl 32208 fails that test, it has 1.816 already. I re-install 1.816
+	and re-test Encode::MAB2 and it fails again.
+
+	Everything looks like a perl bug except that between 32202 and 32204
+	nothing interesting happened.
+
+	So does the downgrade of libdb only have an effect on newer perls? If
+	so, then we will see 32177 and all others I build now succeed.
+
+	I do not understand the reason for that.
+
+	* TkCarp has only fails for a while. Last srezic PASS with and first srezic FAIL with 5.8.8
+
+    Left:  http://www.nntp.perl.org/group/perl.cpan.testers/2007/06/msg504007.html
+    Right: http://www.nntp.perl.org/group/perl.cpan.testers/2007/10/msg672129.html
+
+    Module Need Have                 Module Need Have       
+    ------ ---- -----------          ------ ---- -----------
+    Carp   0    1.04                 Carp   0    1.04       
+    Tk     0    804.027_500          Tk     0    804.027_501
+
+    Module              Have         Module              Have  
+    ------------------- ------       ------------------- ------
+    CPAN                1.9102       CPAN                1.9203
+    Cwd                 3.24         Cwd                 3.25  
+    ExtUtils::CBuilder  0.18         ExtUtils::CBuilder  0.18  
+    ExtUtils::Command   1.09         ExtUtils::Command   1.13  
+    ExtUtils::Install   1.41         ExtUtils::Install   1.41  
+    ExtUtils::MakeMaker 6.32         ExtUtils::MakeMaker 6.36  
+    ExtUtils::Manifest  1.48         ExtUtils::Manifest  1.51  
+    ExtUtils::ParseXS   2.15         ExtUtils::ParseXS   2.15  
+    File::Spec          3.12         File::Spec          3.12  
+    Module::Build       0.2806       Module::Build       0.2806
+    Module::Signature   0.55         Module::Signature   0.55  
+    Test::Harness       2.56         Test::Harness       2.64  
+    Test::More          0.70         Test::More          0.70  
+    version             n/a          YAML                0.66  
+                                     YAML::Syck          0.91  
+                                     version             0.7203
+
+	Did 501 break it?
+
+	http://rt.cpan.org/Ticket/Display.html?id=30909
+
 2007-11-21  Andreas J Koenig  <akoenig@iconmobile.com>
 
 	* Slaven: Give the LWP::UserAgent a conn cache to incr performance.

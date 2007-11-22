@@ -132,16 +132,20 @@ comment: |
   Crap. This has nothing to do with perl, it's because EV.pm came into
   play (I guess).
 
+  update 2007-11-22 akoenig : if I run the test 03client.t often
+  enough manually I find it hanging from time to time. That's why I
+  now use a patched test.
+
 match:
   distribution: "^MLEHMANN/AnyEvent-\d"
 test:
   env:
     DISPLAY: ":121"
-  commandline: "make test > test.out && cat test.out"
+    PERL_ANYEVENT_VERBOSE: 2
 depends:
   configure_requires:
     Event: 0
   requires:
     Event: 0
-cpanconfig:
-  test_report: 0
+patches:
+  - "ANDK/patches/AnyEvent-2.6-ANDK-01.patch.gz"
