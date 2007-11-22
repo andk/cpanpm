@@ -1,5 +1,9 @@
 2007-11-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Re: [perl #47632] Undef loop while condition, loop code motion, and bad warning line number? 5.10-RC1 + 5.8.8
+
+	Schwern asks for a binary search
+
 	* My own module?
 
 	2007-10-30T23:51  perl  32204   495  ANDK/MAB2-0.06.tar.gz   NOT OK

@@ -1,0 +1,10 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=29637
+
+match:
+  distribution: "PETERW/SVG-Parser-\d"
+depends:
+  requires:
+    SVG::Parser::SAX: 0

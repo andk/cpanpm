@@ -56,6 +56,7 @@ distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
+distroprefs/DCANTRELL.Devel-CheckOS.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DDUMONT.Tk-ObjScanner.yml
 distroprefs/DJBERG.Tk-JListbox.yml
@@ -192,6 +193,7 @@ distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PDCAWLEY.Class-Inner.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
+distroprefs/PETERW.SVG-Parser.yml
 distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PHOENIX.Term-ReadPassword.yml
 distroprefs/PIERS.sapnwrfc.yml
