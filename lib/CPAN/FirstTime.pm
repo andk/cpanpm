@@ -721,7 +721,7 @@ Shall we use it as the general CPAN build and cache directory?
         }
 
         if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
-            my_yn_prompt(build_dir_reuse => 1, $matcher);
+            my_yn_prompt(build_dir_reuse => 0, $matcher);
         }
 
         if (!$matcher or 'prefs_dir' =~ /$matcher/) {
