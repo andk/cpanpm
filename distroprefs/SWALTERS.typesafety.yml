@@ -1,4 +1,8 @@
 ---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=30854
+
 match:
   distribution: "^SWALTERS/typesafety-0.05.tar.gz"
 pl:
