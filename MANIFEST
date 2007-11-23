@@ -68,6 +68,7 @@ distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
 distroprefs/DMUEY.File-Copy-Recursive.yml
 distroprefs/DOM.OpenGuides.yml
+distroprefs/DONEILL.MIME-tools.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Params-Validate.yml
