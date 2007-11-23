@@ -1,6 +1,29 @@
 2007-11-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* TEVERETT/Class-Prototyped-1.10.tar.gz looks like crying for a binary search help.
+
+	* Random test failures with re-engine-Plan9:
+
+	http://rt.cpan.org/Ticket/Display.html?id=30928
+
 	* DONEILL/MIME-tools-5.425.tar.gz tests hang under 5.6.2
+
+	At about the same time a bleadperl test complained:
+
+	t/Smtpsend.............can't create socket: Address already in use at t/Smtpsend.t line 18.
+# Looks like your test died before it could output anything.
+ Dubious, test returned 255 (wstat 65280, 0xff00)
+ Failed 9/9 subtests 
+
+	So this might be a concurrency issue between the two tests? Sure!
+
+	http://rt.cpan.org/Ticket/Display.html?id=30927
+
+	And 12 days ago already the companion
+
+	http://rt.cpan.org/Ticket/Display.html?id=30645
+
+	and now stopped with a distropref.
 
 2007-11-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -40,9 +63,37 @@
 	So does the downgrade of libdb only have an effect on newer perls? If
 	so, then we will see 32177 and all others I build now succeed.
 
-	I do not understand the reason for that.
+	I do not understand the reason for that. Reading the output of the perl
+	compilation indicates that -ldb is called on the linker for DB_File.so.
+	But why is there a -L/usr/local/lib? Dunno, but irrelevant because there
+	is no libdb. And DB_File is a dynamic extension that gets stored into
+	../../lib/auto/DB_File/DB_File.so. This then gets installed into
 
-	* TkCarp has only fails for a while. Last srezic PASS with and first srezic FAIL with 5.8.8
+	/home/src/perl/repoperls/installed-perls/perl/pbMhvub/perl-5.8.0@32444/lib/5.10.0/i686-linux-64int/DB_File.pm
+	and
+	/home/src/perl/repoperls/installed-perls/perl/pbMhvub/perl-5.8.0@32444/lib/5.10.0/i686-linux-64int/auto/DB_File/DB_File.so
+
+-r-xr-xr-x 1 sand sand 51221 2007-11-22 08:50 /home/src/perl/repoperls/installed-perls/perl/pbMhvub/perl-5.8.0@32444/lib/5.10.0/i686-linux-64int/auto/DB_File/DB_File.so
+-r--r--r-- 1 sand sand 63485 2007-11-22 08:50 /home/src/perl/repoperls/installed-perls/perl/pbMhvub/perl-5.8.0@32444/lib/5.10.0/i686-linux-64int/DB_File.pm
+
+	Nonono, wrong way down the road. BerkeleyDB is it, not DB_File, right? Yes
+
+                                  'requires' => {
+                                                  'BerkeleyDB' => '0.20',
+                                                  'Encode' => '1.41'
+                                                }
+
+	Now verified with
+
+Get:1 http://k66.linux.bogus testing/main libdb4.6 4.6.21-4 [562kB]
+Get:2 http://k66.linux.bogus testing/main libdb-dev 4.6.21-4 [643kB]
+
+	After that reinstalling BerkeleyDB, then testing Encode::MAB2 => FAIL.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30926
+
+	* TkCarp has only fails for a while. Last srezic PASS with and first
+	srezic FAIL with 5.8.8
 
     Left:  http://www.nntp.perl.org/group/perl.cpan.testers/2007/06/msg504007.html
     Right: http://www.nntp.perl.org/group/perl.cpan.testers/2007/10/msg672129.html
@@ -79,6 +130,8 @@
 
 	* Slaven: Give the LWP::UserAgent a conn cache to incr performance.
 
+	Patch in the mail but still undecided if this is really an improvement.
+
 2007-11-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* some encoding change
@@ -99,7 +152,7 @@
 
     4934 2007-11-07 ABELTJE/V-0.13.tar.gz
 
-	???
+	??? Mail sent, answer received, needs further processing.
 
 2007-11-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

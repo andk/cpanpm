@@ -209,6 +209,7 @@ DBIx::Perlish
 DBIx::SearchBuilder
 DBIx::Simple
 DBIx::Timeout
+DB_File
 DB_File::Lock
 Daemon::Generic
 Danga::Socket
