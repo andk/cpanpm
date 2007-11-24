@@ -2,6 +2,21 @@
 
 	* TEVERETT/Class-Prototyped-1.10.tar.gz looks like crying for a binary search help.
 
+----Program----
+eval q{use Class::Prototyped 1.10};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pLNXwon/perl-5.8.0@30979/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pTP10LN/perl-5.8.0@30980/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
 	* Random test failures with re-engine-Plan9:
 
 	http://rt.cpan.org/Ticket/Display.html?id=30928
