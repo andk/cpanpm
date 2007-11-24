@@ -1,0 +1,112 @@
+--- /root/src/CPAN-1.9203/lib/CPAN.pm	2007-10-27 20:16:32.000000000 -0400
++++ CPAN.pm	2007-10-29 08:09:02.000000000 -0400
+@@ -145,20 +145,58 @@
+         if (exists $export{$l}) {
+             CPAN::Shell->$l(@_);
+         } else {
+             die(qq{Unknown CPAN command "$AUTOLOAD". }.
+                 qq{Type ? for help.\n});
+         }
+         $autoload_recursion--;
+     }
+ }
+
++{
++	open(SAVEOUT,">&STDOUT") or die "dup failed";
++	my $redir = 0;
++	sub redirect(@) {
++		#die if $redir;
++		local $_;
++		push(@_,undef);
++		while(defined($_=shift)) {
++			if (s/^\s*>//){
++				my ($m) = s/^>// ? ">" : "";
++				s/\s+//;
++				$_=shift unless length;
++				die "no dest" unless defined;
++				open(STDOUT,">$m",$_) or die "open:$_:$!\n";
++				$redir=1;
++			} elsif ( s/^\s*\|\s*// ) {
++				my $pipe="| $_";
++				while(defined($_[0])){
++					$pipe .= ' ' . shift;
++				}
++				open(STDOUT,$pipe) or die "open:$pipe:$!\n";
++				$redir=1;
++			} else {
++				push(@_,$_);
++			}
++		}
++		return @_;
++	};
++	sub unredirect {
++		return unless $redir;
++		$redir = 0;
++		## redirect: unredirect and propagate errors.  explicit close to wait for pipe.
++		close(STDOUT);
++		open(STDOUT,">&SAVEOUT");
++		die "$@" if "$@";
++		## redirect: done
++	};
++};
+ #-> sub CPAN::shell ;
+ sub shell {
+     my($self) = @_;
+     $Suppress_readline = ! -t STDIN unless defined $Suppress_readline;
+     CPAN::HandleConfig->load unless $CPAN::Config_loaded++;
+
+     my $oprompt = shift || CPAN::Prompt->new;
+     my $prompt = $oprompt;
+     my $commandline = shift || "";
+     $CPAN::CurrentCommandId ||= 1;
+@@ -262,21 +300,26 @@
+             $continuation = "";
+             $prompt = $oprompt;
+         } elsif (/./) {
+             my(@line);
+             eval { @line = Text::ParseWords::shellwords($_) };
+             warn($@), next SHELLCOMMAND if $@;
+             warn("Text::Parsewords could not parse the line [$_]"),
+                 next SHELLCOMMAND unless @line;
+             $CPAN::META->debug("line[".join("|",@line)."]") if $CPAN::DEBUG;
+             my $command = shift @line;
+-            eval { CPAN::Shell->$command(@line) };
++            eval {
++				local (*STDOUT)=*STDOUT;
++				@line = redirect(@line);
++				CPAN::Shell->$command(@line)
++			};
++			unredirect;
+             if ($@) {
+                 my $err = "$@";
+                 if ($err =~ /\S/) {
+                     require Carp;
+                     require Dumpvalue;
+                     my $dv = Dumpvalue->new();
+                     Carp::cluck(sprintf "Catching error: %s", $dv->stringify($err));
+                 }
+             }
+             if ($command =~ /^(
+@@ -1973,21 +2016,21 @@
+
+ # CPAN::Shell::o and CPAN::HandleConfig::edit are closely related. 'o
+ # conf' calls through to CPAN::HandleConfig::edit. 'o conf' should
+ # probably have been called 'set' and 'o debug' maybe 'set debug' or
+ # 'debug'; 'o conf ARGS' calls ->edit in CPAN/HandleConfig.pm
+ sub o {
+     my($self,$o_type,@o_what) = @_;
+     $o_type ||= "";
+     CPAN->debug("o_type[$o_type] o_what[".join(" | ",@o_what)."]\n");
+     if ($o_type eq 'conf') {
+-        my($cfilter) = $o_what[0] =~ m|^/(.*)/$|;
++        my($cfilter) = $o_what[0] =~ m|^/(.*)/$| if @o_what;
+         if (!@o_what or $cfilter) { # print all things, "o conf"
+             $cfilter ||= "";
+             my $qrfilter = eval 'qr/$cfilter/';
+             my($k,$v);
+             $CPAN::Frontend->myprint("\$CPAN::Config options from ");
+             my @from;
+             if (exists $INC{'CPAN/Config.pm'}) {
+                 push @from, $INC{'CPAN/Config.pm'};
+             }
+             if (exists $INC{'CPAN/MyConfig.pm'}) {
