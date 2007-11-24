@@ -2,6 +2,11 @@
 
 =head1 CPAN Testers
 
+http://perlmonks.org/?node_id=652605
+
+    Ovid wants fun while testing: he wrote a wrapper that runs all *.t
+    scripts in one process to shave some loading time off.
+
 Jochen Stenzel binary searches success stories
 
 thinnercache.pl has several important BBC points
