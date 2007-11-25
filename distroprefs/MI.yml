@@ -79,8 +79,10 @@ match:
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
+    |JROCKWAY/Angerwhale-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
+    |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
     |LBROCARD/Devel-ebug-HTTP-\d

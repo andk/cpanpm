@@ -6,4 +6,4 @@ comment: |
 match:
   distribution: "RCLAMP/Devel-Caller-0.11.tar.gz"
 patches:
-  - "/tmp/Devel-Caller-0.11-SMPETERS-01.patch.gz"
+  - "ANDK/patches/Devel-Caller-0.11-SMPETERS-01.patch.gz"

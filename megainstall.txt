@@ -11,6 +11,7 @@ Algorithm::Points::MinimumDistance
 AltaVista::BabelFish
 Alter
 Alzabo
+Angerwhale
 Apache
 Apache::DBI
 Apache::GuessCharset

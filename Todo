@@ -195,6 +195,8 @@ Get:2 http://k66.linux.bogus testing/main libdb-dev 4.6.21-4 [643kB]
 
 	* MAROS/Mail-Builder-1.03.tar.gz seems to hang on 5.6.2 I just ^Ced it.
 
+	It was probably DONEILL/MIME-tools-5.425.tar.gz? See above.
+
 	* Just discovered that we lost JRED recently:
 
 	2007-11-08T16:04  perl  32244   494  JRED/Event-ExecFlow-0.63.tar.gz   NOT OK
@@ -207,7 +209,7 @@ Get:2 http://k66.linux.bogus testing/main libdb-dev 4.6.21-4 [643kB]
 	and since then 12 more fails out of 12 sessions.
 
 	It's a dependency on AnyEvent. Long day comparing AnyEvent results
-	follows. Mail to Marc has been sent.
+	follows. Mail to Marc has been sent. Update 2007-11-25 akoenig : FIXED
 
 	* <URL: http://rt.cpan.org/Ticket/Display.html?id=30051 >
 
