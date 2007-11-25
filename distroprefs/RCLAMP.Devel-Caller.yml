@@ -1,0 +1,9 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=30897
+
+match:
+  distribution: "RCLAMP/Devel-Caller-0.11.tar.gz"
+patches:
+  - "/tmp/Devel-Caller-0.11-SMPETERS-01.patch.gz"

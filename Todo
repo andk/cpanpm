@@ -1,3 +1,21 @@
+2007-11-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Schwern posted about RT::Client::REST. Looks interesting.
+
+	http://use.perl.org/~schwern/journal/34967
+
+2007-11-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Overlooked this one
+
+	2007-11-07T01:28  perl  32230   282   GAAS/Font-AFM-1.19.tar.gz   NOT OK
+	2007-11-06T07:57  perl  32226   919   GAAS/Font-AFM-1.19.tar.gz   OK
+
+	Looks like Test::Harness. 3.00 came out on 11-06. With 32474 and 3.0 I
+	see FA fail too.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30962
+
 2007-11-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* TEVERETT/Class-Prototyped-1.10.tar.gz looks like crying for a binary search help.
@@ -44,7 +62,7 @@ N/A
 
 	* Re: [perl #47632] Undef loop while condition, loop code motion, and bad warning line number? 5.10-RC1 + 5.8.8
 
-	Schwern asks for a binary search
+	Schwern asks for a binary search. DONE
 
 	* My own module?
 

@@ -736,6 +736,7 @@ RDF::Core
 RDF::Simple
 RPC::JSON
 RPC::XML
+RT::Client::REST
 RTF::HTMLConverter
 Regex::PreSuf
 Regexp::Assemble
