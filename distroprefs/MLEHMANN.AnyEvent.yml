@@ -1,8 +1,13 @@
 ---
 comment: |
 
-  If I run the test 03client.t often enough manually I find it hanging
-  from time to time. That's why I now use a patched test.
+  If I run the test 03client.t often enough manually I found it
+  hanging from time to time. That's why I used a patched test before
+  2.7 was available.
+
+  Since 2.7 does not use EV as first choice it never hangs and I can
+  comment this patch out because nowadays I want to use 2.6 as a
+  testbed for future EV versions.
 
 match:
   distribution: "^MLEHMANN/AnyEvent-2.6.tar.gz"
@@ -15,8 +20,8 @@ depends:
     Event: 0
   requires:
     Event: 0
-patches:
-  - "ANDK/patches/AnyEvent-2.6-ANDK-01.patch.gz"
+# patches:
+#   - "ANDK/patches/AnyEvent-2.6-ANDK-01.patch.gz"
 ---
 comment: |
 
