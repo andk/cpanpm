@@ -36,6 +36,11 @@ BEGIN {
             last TABU;
         }
     }
+    unless ($exit_message) {
+        if ($YAML::VERSION && $YAML::VERSION < 0.60) {
+            $exit_message = "YAML too old for this test";
+        }
+    }
     if ($exit_message) {
         $|=1;
         print "1..0 # Skip: $exit_message\n";
