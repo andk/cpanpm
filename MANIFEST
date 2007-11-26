@@ -59,6 +59,7 @@ distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCANTRELL.Devel-CheckOS.yml
 distroprefs/DCONWAY.Parse-RecDescent.yml
 distroprefs/DDUMONT.Tk-ObjScanner.yml
+distroprefs/DHARRIS.DB_File-Lock.yml
 distroprefs/DJBERG.Tk-JListbox.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DKWILSON.Tk-DKW.yml
@@ -82,6 +83,7 @@ distroprefs/EBOHLMAN.Text-Query.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
 distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/EWILHELM.Math-Vec.yml
+distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/FHOXH.Test-Reporter.yml
 distroprefs/FLORA.Net_SSLeay.yml
@@ -201,6 +203,7 @@ distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RCAPUTO.POE.yml
+distroprefs/RCLAMP.Devel-Caller.yml
 distroprefs/RCLAMP.POE-Component-Server-HTTP.yml
 distroprefs/RCSEEGE.Tk-JComboBox.yml
 distroprefs/RDF.Clone.yml
@@ -254,6 +257,7 @@ distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/YSAS.SWF-Builder.yml
 distroprefs/YVES.Data-Dump-Streamer.yml
+distroprefs/YVES.Date-Simple.yml
 distroprefs/ZEV.Test-Dependencies.yml
 distroprefs/ZINCDEV.tk-zinc.yml
 inc/Test/Builder.pm

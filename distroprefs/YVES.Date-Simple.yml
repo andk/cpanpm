@@ -1,0 +1,29 @@
+---
+comment: |
+
+  XS throws:
+
+  /home/src/perl/repoperls/installed-perls/perl/p2q1YUZ/perl-5.8.0@32481/bin/perl /home/src/perl/repoperls/installed-perls/perl/p2q1YUZ/perl-5.8.0@32481/lib/5.10.0/ExtUtils/xsubpp  -typemap /home/src/perl/repoperls/installed-perls/perl/p2q1YUZ/perl-5.8.0@32481/lib/5.10.0/ExtUtils/typemap  Simple.xs > Simple.xsc && mv Simple.xsc Simple.c
+  Please specify prototyping behavior for Simple.xs (see perlxs manual)
+  cc    -c -o Simple.o Simple.c
+  Simple.xs:3:20: error: EXTERN.h: No such file or directory
+  Simple.xs:4:18: error: perl.h: No such file or directory
+  Simple.xs:5:18: error: XSUB.h: No such file or directory
+  Simple.xs:8: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'dim'
+  Simple.xs:10: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'tweak'
+  Simple.xs:12: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'cum_days'        
+  Simple.xs:16: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'is_leap_year'    
+  Simple.xs:22: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'days_in_month'   
+  Simple.xs:32: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'ymd_to_days'     
+  Simple.xs:62: error: expected ')' before 'days'
+  Simple.xs:133: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'd8_to_days'     
+  Simple.xs:159: error: expected '=', ',', ';', 'asm' or '__attribute__' before '*' token        
+  Simple.xs:175: error: expected ')' before '*' token
+  Simple.xs:180: error: expected '=', ',', ';', 'asm' or '__attribute__' before '*' token        
+  Simple.c:223: warning: data definition has no type or storage class
+
+match:
+  distribution: "YVES/Date-Simple-3.02.tar.gz"
+pl:
+  args:
+    - "noxs"
