@@ -1,3 +1,16 @@
+2007-11-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SEANO/Sepia-0.95.tar.gz might need a binary search. But it is
+	problematic because CPAN::Reporter and Sepia have an issue with each
+	other so it seems. Twice I have seen a hang after CPAN says
+	"CPAN::Reporter loaded". No! What looks like a hang is just something
+	taking many minutes. No?
+
+	No, it's just a buggy question/answer game for installing dependencies.
+	Somebody seems to have forgotten to set $| or something.
+
+	http://rt.cpan.org/Ticket/Display.html?id=30998
+
 2007-11-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Schwern posted about RT::Client::REST. Looks interesting.

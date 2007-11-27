@@ -1,0 +1,12 @@
+---
+match:
+  distribution: "SEANO/Sepia-0.95.tar.gz"
+pl:
+  commandline: "$PERL Makefile.PL < /dev/null"
+depends:
+  configure_requires:
+    PadWalker: 0
+    Lexical::Persistence: 0
+    Module::CoreList: 0
+    Devel::Size: 0
+    Module::Info: 0
