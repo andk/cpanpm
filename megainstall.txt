@@ -205,6 +205,7 @@ DBIx::Class::Indexed
 DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
+DBIx::HA
 DBIx::ORM::Declarative
 DBIx::Perlish
 DBIx::SearchBuilder
