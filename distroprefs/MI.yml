@@ -14,6 +14,7 @@ match:
     |ADAMK/URI-ToDisk-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |ASH/DBIx-Class-\d
+    |AUDREYT/Scalar-Defer-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Time-Duration-\d
