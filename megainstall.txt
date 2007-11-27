@@ -712,6 +712,7 @@ Pod::ParseUtils
 Pod::Parser
 Pod::Pdf
 Pod::PerlPoint
+Pod::Perldoc::ToToc
 Pod::Sdf
 Pod::Select
 Pod::WikiDoc

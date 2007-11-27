@@ -1,0 +1,15 @@
+---
+comment: |
+
+  It seems that gnome-dev must be installed but I do not want to
+  install it because it depends on (for me) broken libdb 4.6.
+
+  Maybe I should set to disabled instead? No, because once this
+  package gives me something without insisting on gnome-dev, it may
+  start working for me.
+
+match:
+  distribution: "MLEHMANN/Gtk-Perl-\d"
+pl:
+  args:
+    - "--without-pkgname=gnome"
