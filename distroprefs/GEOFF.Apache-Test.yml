@@ -1,7 +1,6 @@
 --- 
 match:
-  distribution: "^PGOLLUCCI/Apache-Test-\d"
-pl: 
-  args: 
-    - -httpd
-    - /usr/sbin/apache-perl
+  distribution: "^(PGOLLUCCI|GEOFF|PHRED)/Apache-Test-\d"
+test:
+  env: 
+    APACHE: /usr/sbin/apache-perl
