@@ -1,5 +1,24 @@
 2007-11-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Sepia binary search
+
+----Program----
+our $have_warned;
+BEGIN { $SIG{__WARN__} = sub { return if $have_warned++; print "suppressing one or more warnings\n" }; }
+eval q{use Sepia "0.95_02"};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pA0wlau/perl-5.8.0@30609/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pV9JsIn/perl-5.8.0@30610/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
 	* Long time been there, never noticed:
 
 	2007-07-04T01:03  perl  31526   529   JONALLEN/a2pdf-1.13.tar.gz  NOT OK
@@ -15,6 +34,9 @@
 
 	* PHRED/Apache-Test-1.30.tar.gz has a new dialog that needs to be
 	distropreffed.
+
+	This might need further work. Yesterday I saw a dialog despite
+	envariable APACHE being set?
 
 	* SEANO/Sepia-0.95.tar.gz might need a binary search. But it is
 	problematic because CPAN::Reporter and Sepia have an issue with each
