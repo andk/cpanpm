@@ -149,6 +149,7 @@ distroprefs/LUSOL.Tk-Gauge.yml
 distroprefs/LZE.HTML-Menu-TreeView.yml
 distroprefs/MARKOV.CPAN-Site.yml
 distroprefs/MARKOV.Mail-Box.yml
+distroprefs/MARKOV.Mail-IMAPClient.yml
 distroprefs/MARKOV.MailTools.yml
 distroprefs/MARKSTOS.CGI-Session.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
@@ -167,6 +168,7 @@ distroprefs/MJEVANS.DBD-ODBC.yml
 distroprefs/MLEHMANN.AnyEvent.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.EV.yml
+distroprefs/MLEHMANN.Gtk-Perl.yml
 distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
@@ -228,6 +230,7 @@ distroprefs/SCHUBIGER.DateTime-Format.yml
 distroprefs/SCHWERN.Class-Fields.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
+distroprefs/SEANO.Sepia.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml

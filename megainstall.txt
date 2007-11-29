@@ -34,6 +34,7 @@ Audio::TagLib
 Authen::Simple
 AutoLoader
 B::Deobfuscate
+B::Lint
 BFD
 BSD::Resource
 BerkeleyDB

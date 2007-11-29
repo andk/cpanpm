@@ -1,4 +1,12 @@
 ---
+comment: |
+
+  Don't know why 0.01 got installed but it seems it has an older Tk::CornerBox
+
+match:
+  distribution: "DKWILSON/Tk-DKW-0.01"
+disabled: 1
+---
 match:
   distribution: "DKWILSON/Tk-DKW-\d"
 test:
