@@ -4,3 +4,4 @@ match:
 test:
   env: 
     APACHE: /usr/sbin/apache-perl
+    PERL_MM_USE_DEFAULT: 1
