@@ -118,6 +118,7 @@ match:
     |SARTAK/Class-Method-Modifiers-\d
     |SARTAK/Jifty-DBI-\d
     |(?:JESSE|SARTAK)/Jifty-\d
+    |SARTAK/Net-Jifty-\d
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
