@@ -1007,6 +1007,7 @@ Unicode::Wrap
 Unix::Syslog
 User
 User::Identity
+V
 VFSsimple
 Voting::Condorcet::RankedPairs
 WWW::Facebook::API

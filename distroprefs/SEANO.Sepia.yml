@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "SEANO/Sepia-0.95.*.tar.gz"
+  distribution: "SEANO/Sepia-\d"
 pl:
   commandline: "$PERL Makefile.PL < /dev/null"
 depends:
@@ -10,3 +10,4 @@ depends:
     Module::CoreList: 0
     Devel::Size: 0
     Module::Info: 0
+    Test::Expect: 0
