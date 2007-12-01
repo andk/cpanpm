@@ -1,3 +1,9 @@
+2007-11-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* JJORE/overload-eval-0.07.tar.gz fails on 2007-11-28T09:27??
+
+	Also fails on 32032 which was also threaded. Works with many others.
+
 2007-11-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Sepia binary search

@@ -117,6 +117,7 @@ match:
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
     |SARTAK/Jifty-DBI-\d
+    |(?:JESSE|SARTAK)/Jifty-\d
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-

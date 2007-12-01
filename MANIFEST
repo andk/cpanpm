@@ -116,7 +116,6 @@ distroprefs/JENDA.Mail-Sender.yml
 distroprefs/JESSE.Data-ICal.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
-distroprefs/JESSE.Jifty.yml
 distroprefs/JGMYERS.Encode-Detect.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
