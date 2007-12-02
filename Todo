@@ -4,6 +4,10 @@
 
 	Also fails on 32032 which was also threaded. Works with many others.
 
+	Trying 30952 which is also threaded. FAIL.
+
+	Trying 27048 which is also threaded. FAIL.
+
 2007-11-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Sepia binary search
