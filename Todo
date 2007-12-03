@@ -1,3 +1,77 @@
+2007-12-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Gtk2 has one single PASS. It fails on 27002 more or less the same way
+	as with current 5.10. It fails on 23023 because Glib fails there. Maybe
+	it would be interesting to find the place in history when Glib started
+	working and then to run Gtk2 through that version. Just a binarysearch
+	without --build should do.
+
+----Output of .../p4eJlzo/perl-5.8.0@25733/bin/perl----
+N/A
+
+----EOF ($?='0')----
+----Output of .../pdv4QaU/perl-5.8.0@25948/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+	Perfect! The error summary with 25948 is shorter than the one with 5.10.
+
+	Wohoo, on "look" the DISPLAY isn't set, of course. But then the test
+	succeeds just fine:
+
+DISPLAY=:121 make test TEST_FILES="t/GdkDisplayManager.t" TEST_VERBOSE=1
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pdv4QaU/perl-5.8.0@25948/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(1, 'blib/lib', 'blib/arch')" t/GdkDisplayManager.t
+t/GdkDisplayManager......
+1..4
+ok 1 - The object isa Gtk2::Gdk::DisplayManager
+ok 2
+ok 3
+ok 4 - The object isa Gtk2::Gdk::Device
+ok
+All tests successful.
+Files=1, Tests=4,  1 wallclock secs ( 0.02 usr  0.00 sys +  0.25 cusr  0.01 csys =  0.28 CPU)
+Result: PASS
+
+	But from 'test Gtk2' in the CPAN shell I get:
+
+t/GdkDisplayManager..................The application 'GdkDisplayManager.t' lost its connection to the display :121.0;
+most likely the X server was shut down or you killed/destroyed
+the application.
+ Dubious, test returned 1 (wstat 256, 0x100)
+ No subtests run 
+t/GdkDnd.............................Gdk-WARNING **: Drops for GDK_DRAG_PROTO_ROOTWIN must be handled internally at t/GdkDnd.t line 100.
+ok
+
+
+	So under CPAN shell the connection is lost, under 'make test' tests are
+	succeeding? NO, under make test with arguments it works, under make test
+	without arguments it fails. NO, it's once again RANDOM TEST RESULTS.
+
+	When I run the command
+
+	DISPLAY=:121 make test TEST_FILES="t/00.Gtk2.t t/01.GtkWindow.t t/02.GtkContainer.t t/Gdk.t t/GdkCairo.t t/GdkColor.t t/GdkCursor.t t/GdkDisplay.t t/GdkDisplayManager.t"
+
+	several times then I get both a success and a failure. But the problem
+	case is always the last one.
+
+	AND there's another one that is even more annoying:
+
+DISPLAY=:121 make test TEST_FILES=t/PangoLayout.t
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/pdv4QaU/perl-5.8.0@25948/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/PangoLayout.t
+t/PangoLayout......1/68 Modification of a read-only value attempted at t/PangoLayout.t line 134.
+# Looks like you planned 68 tests but only ran 36.
+# Looks like your test died just after 36.
+t/PangoLayout...... Dubious, test returned 255 (wstat 65280, 0xff00)
+ Failed 32/68 subtests 
+
+
+	If I run it in the debugger it loses track of the debugger context
+	completely and I cannot set a breakpoint. At least with 25948. So
+	switching to current bleadperl I reach that line and see that the
+	argument 23 is sent to some C lib and there it chokes. Not my area of
+	interest.
+
 2007-11-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* JJORE/overload-eval-0.07.tar.gz fails on 2007-11-28T09:27??
@@ -7,6 +81,12 @@
 	Trying 30952 which is also threaded. FAIL.
 
 	Trying 27048 which is also threaded. FAIL.
+
+	Trying 23232 which is also threaded. Perl v5.9.4 required--this is only v5.9.2
+
+	Everything before 28317 fails.
+
+	http://rt.cpan.org/Ticket/Display.html?id=31139
 
 2007-11-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
