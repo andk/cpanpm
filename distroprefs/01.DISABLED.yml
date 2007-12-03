@@ -34,6 +34,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DJERIUS/Shell-GetEnv-0.0[23]            # went into a shell to sit there doing nothing
+    |DMAKI/GunghoX-FollowLinks-\d            # the danga socket test hangs again
     |DMOW/Eludia
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |GRM/
