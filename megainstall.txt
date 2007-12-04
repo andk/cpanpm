@@ -31,6 +31,7 @@ Archive::Zip
 Array::Iterator
 Array::Slice
 Audio::TagLib
+Authen::Htpasswd
 Authen::Simple
 AutoLoader
 B::Deobfuscate

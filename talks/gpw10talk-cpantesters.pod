@@ -14,6 +14,8 @@ being sent from www.ebay.com.
 
 thinnercache.pl has several important BBC points
 
+PREREQ_FATAL=0
+
 RECENT
 
 CPAN::Reporter 1.00
