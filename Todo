@@ -1,3 +1,8 @@
+2007-12-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Feature request to David Golden: turn on/off cc_author via
+	distroprefs. How?
+
 2007-12-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Gtk2 has one single PASS. It fails on 27002 more or less the same way
