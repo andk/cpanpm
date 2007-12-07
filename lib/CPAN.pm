@@ -8636,12 +8636,18 @@ sub test {
     }
 
     if ($self->{modulebuild}) {
-        my $v = CPAN::Shell->expand("Module","Test::Harness")->inst_version;
+        my $thm = CPAN::Shell->expand("Module","Test::Harness");
+        my $v = $thm->inst_version;
         if (CPAN::Version->vlt($v,2.62)) {
-            $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
+            # XXX Eric Wilhelm reported this as a bug: klapperl:
+            # Test::Harness 3.0 self-tests, so that should be 'unless
+            # installing Test::Harness'
+            unless ($self->id eq $thm->distribution->id) {
+               $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
   '$v', you need at least '2.62'. Please upgrade your Test::Harness.\n});
-            $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
-            return;
+                $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
+                return;
+            }
         }
     }
 
