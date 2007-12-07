@@ -290,6 +290,7 @@ Devel::Hide
 Devel::LexAlias
 Devel::Modlist
 Devel::Monitor
+Devel::PerlySense
 Devel::Profile
 Devel::REPL
 Devel::Required

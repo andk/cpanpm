@@ -20,6 +20,7 @@ match:
     |AVIF/Time-Duration-\d
     |AWWAIID/Continuity-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
+    |BLBLACK/Catalyst-Plugin-C3-\d
     |BLBLACK/Class-C3-\d
     |BLBLACK/DBIx-Class-Schema-Loader-\d
     |BLBLACK/DBIx-Class-\d

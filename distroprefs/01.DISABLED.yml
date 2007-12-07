@@ -43,6 +43,7 @@ match:
     |KANE/CPANPLUS-\d                        # asks me for my password! You do not expect that I write it into a distroprefs file, do you?
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
+    |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs

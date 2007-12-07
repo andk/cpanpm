@@ -1,3 +1,32 @@
+2007-12-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Alias says: "YAML::Tiny is quite clear about what it is, a module that
+	supports reading and writing of the block-mode JSON-subset of the YAML
+	specification."
+
+	mauzo writes a more complete spec:
+
+Perl doesn't have a formal spec, either, yet it seems to acquire its fair share of bugs :).
+
+YAML::Tiny has a perfectly decent (informal, implicit) spec:
+
+   1. if write_string is passed any Perl data structure consisting only of unmagical scalars, arrays and hashes, produce a spec-compliant YAML document representing it which can be parsed by YAML::Tiny or any more complete YAML parser;
+   2. if write_string is passed any other Perl data structure, report an error saying so;
+   3. if read_string is passed any spec-compliant YAML document, either
+         1. parse that document correctly and return the corresponding Perl data structure, or
+         2. report an error that this document is unsupported and a more complete parser should be used;
+   4. if read_string is passed anything that isn't a spec-compliant YAML document, report an error saying so.
+
+Any other behaviour, such as Adam has just fixed, is a bug. The only thing that might be useful is documentation of which cases get 3.1 and which get 3.2.
+
+	I must write a RT ticket demanding these specs become part of the manpage.
+
+	http://rt.cpan.org/Ticket/Display.html?id=31275
+
+	* off topic: http://use.perl.org/~pmichaud/journal/35049
+
+	patrick on state of perl6/parrot
+
 2007-12-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Feature request to David Golden: turn on/off cc_author via
@@ -76,6 +105,10 @@ t/PangoLayout...... Dubious, test returned 255 (wstat 65280, 0xff00)
 	switching to current bleadperl I reach that line and see that the
 	argument 23 is sent to some C lib and there it chokes. Not my area of
 	interest.
+
+	I made the random test results a ticket:
+
+	http://rt.cpan.org/Ticket/Display.html?id=31255
 
 2007-11-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
