@@ -94,6 +94,7 @@ match:
     |LUTETIUS/pod2book-\d
     |LYOKATO/FormValidator-Simple-\d
     |LYOKATO/Pod-ProjectDocs-\d
+    |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
