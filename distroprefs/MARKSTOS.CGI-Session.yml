@@ -7,6 +7,15 @@ comment: |
   ALERT! Broken! When the target of a goto does not succeed, there is
   the chance to loop endlessly.
 
-# match:
-#   distribution: "^MARKSTOS/CGI-Session-4.20.tar.gz"
+  ALERT: without the dependencies 2 in 300 testruns succeed due to
+  SKIPped tests.
+
+match:
+  distribution: "^MARKSTOS/CGI-Session-4.20"
 # goto: "MARKSTOS/CGI-Session-4.20_1.tar.gz"
+depends:
+  requires:
+    DB_File: 0
+    FreezeThaw: 0
+    DBD::mysql: 0
+    DataSource: 0

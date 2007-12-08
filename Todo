@@ -1,3 +1,35 @@
+2007-12-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* New BBC candidate
+
+----Program----
+eval q{use Test::Class 0.25};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pykQRSb/perl-5.8.0@32581/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pvgC1Ko/perl-5.8.0@32582/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	We have many other victims between 32580 and now but most of them are
+	shaky things that have already proven exhibited random behaviour in the
+	past.
+
+	XML::RSS::LibXML       ok
+	DBIx::Timeout          ok
+	XML::RSS::Liberal      ok
+	Net::FTP::Common       ok
+	WebService::Bloglines  ok
+	Getopt::Attribute      not ok
+	Module::Changes        not ok (dependency of Getopt::Attribute)
+	CGI-Session            not ok but it was only luckily ok on 32980 due to SKIPs
+
+
 2007-12-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Alias says: "YAML::Tiny is quite clear about what it is, a module that

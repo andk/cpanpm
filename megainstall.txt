@@ -34,6 +34,7 @@ Archive::Tar
 Archive::Zip
 Array::Iterator
 Array::Slice
+Audio::SndFile
 Audio::TagLib
 Authen::Htpasswd
 Authen::PAM
@@ -345,6 +346,7 @@ Excel::Template
 Expect
 Exporter
 Exporter::Lite
+Exporter::Simple
 ExtUtils::Depends
 ExtUtils::Embed
 ExtUtils::F77
@@ -735,6 +737,7 @@ Parrot::Interpreter
 Parse::BACKPAN::Packages
 Parse::RecDescent
 Parse::Yapp
+Path::Class
 Perl6::Attributes
 Perl6::Caller
 Perl6::Export
