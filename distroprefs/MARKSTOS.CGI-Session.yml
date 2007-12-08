@@ -1,21 +1,16 @@
 ---
 comment: |
 
-  At the time of this writing 4.20 fails as miserably as 4.20_1. I
-  only wrote this file to have a reminder.
+  ALERT: without the dependency 2 in 300 testruns succeed due to
+  SKIPped test.
 
-  ALERT! Broken! When the target of a goto does not succeed, there is
-  the chance to loop endlessly.
+  Normally t/g4_dbfile_json.t fails.
 
-  ALERT: without the dependencies 2 in 300 testruns succeed due to
-  SKIPped tests.
+  http://rt.cpan.org/Ticket/Display.html?id=25325
 
 match:
   distribution: "^MARKSTOS/CGI-Session-4.20"
-# goto: "MARKSTOS/CGI-Session-4.20_1.tar.gz"
 depends:
   requires:
     DB_File: 0
-    FreezeThaw: 0
-    DBD::mysql: 0
-    DataSource: 0
+    YAML::Syck: 0

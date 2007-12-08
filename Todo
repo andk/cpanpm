@@ -28,6 +28,7 @@ N/A
 	Getopt::Attribute      not ok
 	Module::Changes        not ok (dependency of Getopt::Attribute)
 	CGI-Session            not ok but it was only luckily ok on 32980 due to SKIPs
+	Log-Dispatch-Config    ok
 
 
 2007-12-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
