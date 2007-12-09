@@ -825,6 +825,10 @@ __END__
 ########
 #P:o conf ftp ""
 ########
+#P:o conf build_dir_reuse 1
+#E:
+#R:YAML
+########
 #P:m Fcntl
 #E:Found \d old builds?, restored the state of (?:\d|none)[\s\S]+?Defines fcntl
 #R:YAML
