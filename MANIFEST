@@ -263,6 +263,8 @@ distroprefs/YVES.Data-Dump-Streamer.yml
 distroprefs/YVES.Date-Simple.yml
 distroprefs/ZEV.Test-Dependencies.yml
 distroprefs/ZINCDEV.tk-zinc.yml
+distroprefs/ZOOLEIKA.RDF-Simple.yml
+distroprefs/ZOOLEIKA.SVG-Plot.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm

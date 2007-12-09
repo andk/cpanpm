@@ -247,6 +247,7 @@ Data::FormValidator
 Data::Grove
 Data::HexDump
 Data::Hierarchy
+Data::Hive
 Data::ICal
 Data::ICal::TimeZone
 Data::Lazy
