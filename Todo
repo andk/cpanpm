@@ -1,3 +1,32 @@
+2007-12-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Test::Harness 3.04 failing when Encode not installed?
+
+t/unicode.........................
+#   Failed test 'Unicode smiley (script): value for description matches'
+#   at t/unicode.t line 111.
+Wide character in print at t/lib/Test/Builder.pm line 1266.
+#          got: 'Everything is fine âº'
+#     expected: 'Everything is fine %Gâº%@'
+# Looks like you failed 1 test of 20.
+ Dubious, test returned 1 (wstat 256, 0x100)
+ Failed 1/20 subtests
+
+	Haven't seen this before.
+
+	http://rt.cpan.org/Ticket/Display.html?id=31314
+
+	* Jifty failed on IPC::PubSub::Cache::Memcached: Can't locate
+	Cache/Memcached.pm. Looks like somebody forgot a dependency decl.
+
+	In the Jifty dependency preparations I see only IPC::PubSub and
+	Cache::Cache but no Memchache stuff. The full error states:
+
+	Cannot load backend module: IPC::PubSub::Cache::Memcached: Can't locate Cache/Memcached.pm in @INC (@INC contains: /home/sand/.cpan/build/Jifty-0.71129-LHzsQe/inc /home/sand/.cpan/build/Jifty-0.71129-LHzsQe/blib/lib /home/sand/.cpan/build/Jifty-0.71129-LHzsQe/blib/arch /home/src/perl/repoperls/installed-perls/perl/p0klOEE/perl-5.8.0@32600/lib/5.10.0/i686-linux /home/src/perl/repoperls/installed-perls/perl/p0klOEE/perl-5.8.0@32600/lib/5.10.0 /home/src/perl/repoperls/installed-perls/perl/p0klOEE/perl-5.8.0@32600/lib/site_perl/5.10.0/i686-linux /home/src/perl/repoperls/installed-perls/perl/p0klOEE/perl-5.8.0@32600/lib/site_perl/5.10.0 . /home/sand/.cpan/build/Jifty-0.71129-LHzsQe/lib Jifty::ClassLoader=HASH(0x8b21e68) Jifty::ClassLoader=HASH(0x8b245a8) Jifty::ClassLoader=HASH(0x8b24358) Jifty::ClassLoader=HASH(0x8b25778) Jifty::ClassLoader=HASH(0x96c9790) Jifty::ClassLoader=HASH(0x96cb800) Jifty::ClassLoader=HASH(0x96cbe20) Jifty::ClassLoader=HASH(0x972f5a8) /home/sand/.cpan/build/Jifty-0.71129-LHzsQe/lib) at /home/src/perl/repoperls/installed-perls/perl/p0klOEE/perl-5.8.0@32600/lib/site_perl/5.10.0/IPC/PubSub/Cache/Memcached.pm line 5.
+
+	and happens during t/04-test_file
+
+
 2007-12-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* New BBC candidate
@@ -17,19 +46,28 @@ N/A
 ----EOF ($?='0')----
 
 	We have many other victims between 32580 and now but most of them are
-	shaky things that have already proven exhibited random behaviour in the
-	past.
+	shaky things that have already exhibited random behaviour in the past.
 
-	XML::RSS::LibXML       ok
-	DBIx::Timeout          ok
-	XML::RSS::Liberal      ok
-	Net::FTP::Common       ok
-	WebService::Bloglines  ok
-	Getopt::Attribute      not ok
-	Module::Changes        not ok (dependency of Getopt::Attribute)
-	CGI-Session            not ok but it was only luckily ok on 32980 due to SKIPs
-	Log-Dispatch-Config    ok
+	XML::RSS::LibXML                     ok
+	DBIx::Timeout                        ok
+	XML::RSS::Liberal                    ok
+	Net::FTP::Common                     ok
+	WebService::Bloglines                ok
+	Getopt::Attribute                    not ok
+	Module::Changes                      not ok (dependency of Getopt::Attribute)
+	CGI-Session                          not ok but only due to SKIPs ok on 32980
+	Log-Dispatch-Config                  ok
+	POE-Component-Logger                 ok
+	POE-Component-MessageQueue           ok
+  Attribute-Types                      not ok
+	Attribute::Overload                  not ok
+	Finance-Currency-Convert-WebserviceX ok
+	Data-Currency                        ok
+	SVG-Plot                             not ok but was not ok before too
+	HTML::GMap                           not ok (dependency of CGI::Session)
+	CGI-Application-Plugin-Session       not ok (dependency of CGI::Session)
 
+	#32582 (Attribute::Handlers) breaks Test::Class, Getopt::Attribute, Attribute::Types, Attribute::Overload and more. Shall I write a BBC on it or is there something in the pipeline?
 
 2007-12-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

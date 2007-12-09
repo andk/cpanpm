@@ -53,6 +53,7 @@ match:
     |DCOPPIT/Benchmark-Timer-\d
     |DJERIUS/Shell-GetEnv-\d
     |DMAKI/Catalyst-Model-FormFu-\d
+    |DMAKI/Danga-Socket-Callback-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d

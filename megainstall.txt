@@ -34,6 +34,7 @@ Archive::Tar
 Archive::Zip
 Array::Iterator
 Array::Slice
+Attribute::Types
 Audio::SndFile
 Audio::TagLib
 Authen::Htpasswd
@@ -408,6 +409,7 @@ Geo::Gpx
 Geo::ShapeFile
 Geography::Countries
 Getopt::ArgvFile
+Getopt::Attribute
 Getopt::Compact
 Getopt::Declare
 Getopt::Euclid
