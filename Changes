@@ -1,3 +1,21 @@
+2007-12-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_53: unstable release low priority
+
+	* now with 262 distroprefs files
+
+	* fix the bug where CPAN.pm refused to upgrade to Test::Harness 3
+	because Test::Harness was too old (Eric Wilhelm)
+
+	* skip tests when YAML too old
+
+	* default changed in Firsttime: prefer the conservative choice to NOT
+	use build_dir_reuse
+
+	* improve diagnostics when Tarzip believes that it must give up
+
+	* new config variable connect_to_internet_ok (requested by Merijn Brand)
+
 2007-11-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.9205

@@ -126,6 +126,7 @@ Class::Accessor::Lvalue
 Class::Accessor::Named
 Class::Accessor::Ref
 Class::AutoClass
+Class::AutoGenerate
 Class::Base
 Class::C3
 Class::C3::XS
