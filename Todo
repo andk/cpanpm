@@ -1,3 +1,9 @@
+2007-12-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* P5NCI may need a binary search where it *started* to work. Depends
+	what chromatic wants to know. Ticket 27963. 32395 fails, 32444 passes
+	tests.
+
 2007-12-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ALERT

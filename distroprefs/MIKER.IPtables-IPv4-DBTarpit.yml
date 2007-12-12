@@ -1,0 +1,9 @@
+---
+comment: |
+
+  needs more work, asks difficult questions
+
+match:
+  distribution: "MIKER/IPtables-IPv4-DBTarpit-\d"
+disabled: 1
+
