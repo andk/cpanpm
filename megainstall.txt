@@ -29,6 +29,7 @@ App::CLI
 App::Info
 App::Info::Lib::Iconv
 App::a2pdf
+App::sync_cpantesters
 AppConfig
 Archive::Tar
 Archive::Zip
@@ -383,6 +384,7 @@ File::Spec::Functions
 File::Tail
 File::Temp
 File::Type
+FileHandle::Deluxe
 FileHandle::Unget
 Filesys::Df
 Filesys::Virtual

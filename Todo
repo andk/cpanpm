@@ -1,3 +1,27 @@
+2007-12-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ALERT
+
+2007-12-10T07:35  perl  32603   25  DAGOLDEN/CPAN-Reporter-1.06.tar.gz  NOT OK
+2007-12-09T16:21  perl  32601   25  DAGOLDEN/CPAN-Reporter-1.06.tar.gz  OK
+
+	It cannot be perl because the changes were 
+
+32603 on 2007/12/10 by craigb@craigb-brianor
+
+	Fix uninitialized pointer bug in VMS version of readdir() when
+	case preservation feature is enabled.
+
+32602 on 2007/12/09 by craigb@craigb-brianor
+
+	Tolkien quote for vms/vms.c.
+
+	autobundle? No, I think it is Test-Harness 3.05. Trying on PAUSE with 32602
+
+2007-12-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ELLIOTJS via RT has brought evidence about CPAN.pm failures on solaris
+
 2007-12-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Test::Harness 3.04 failing when Encode not installed?
