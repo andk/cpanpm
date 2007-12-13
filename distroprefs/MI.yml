@@ -39,6 +39,7 @@ match:
     |CFRANKS/HTML-FormFu-\d
     |CFRANKS/HTML-Widget-\d
     |CFRANKS/DBIx-Class-HTML-FormFu-\d
+    |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
