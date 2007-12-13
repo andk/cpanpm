@@ -1,3 +1,11 @@
+2007-12-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug: I just did a 'fforce get' on modperl followed by a 'install'. The
+	install tried to apply the patch a second time and then quickly failed
+	because apparently the "install" attribute wasn't cleared. Eeek. Low
+	prio because 'fforce get' is a bit of nonsense on the user side (it
+	seems).
+
 2007-12-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* P5NCI may need a binary search where it *started* to work. Depends
