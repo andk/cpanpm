@@ -2,6 +2,11 @@
 
 =head1 CPAN Testers
 
+21:45 < nadim> history | wc -l => 500
+21:46 < nadim> history | grep test | wc -l => 375
+21:46 < nadim> I have to get a life!
+
+
 http://perlmonks.org/?node_id=652605
 
     Ovid wants fun while testing: he wrote a wrapper that runs all *.t

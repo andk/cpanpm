@@ -38,5 +38,5 @@ DIRENT: for my $dirent (@rall) {
       }
     }
   }
-  shift @lookback if @lookback > 5;
+  shift @lookback if @lookback > 50;
 }

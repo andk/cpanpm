@@ -1,4 +1,31 @@
+2007-12-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* BSUGARS/IPC-Shareable-0.60.tar.gz needs a bugreport, maybe is a BBC
+	"can't use...". On top of that several perls hang on test ipchv.t so
+	that I must disable it.
+
+	But, but, but nobody seems to use it, it's latest release is from 2001.
+	Just ignore it!
+
 2007-12-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Final binsearch on P5NCI:
+
+----Program----
+eval q{use P5NCI 0.31};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pecvOBn/perl-5.8.0@32401/bin/perl----
+N/A
+
+----EOF ($?='0')----
+----Output of .../pbMBeR9/perl-5.8.0@32405/bin/perl----
+OK
+
+----EOF ($?='0')----
+
+	http://rt.cpan.org/Ticket/Display.html?id=27963
 
 	* Bug: I just did a 'fforce get' on modperl followed by a 'install'. The
 	install tried to apply the patch a second time and then quickly failed
@@ -10,7 +37,7 @@
 
 	* P5NCI may need a binary search where it *started* to work. Depends
 	what chromatic wants to know. Ticket 27963. 32395 fails, 32444 passes
-	tests.
+	tests. DONE.
 
 2007-12-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -19,7 +46,7 @@
 2007-12-10T07:35  perl  32603   25  DAGOLDEN/CPAN-Reporter-1.06.tar.gz  NOT OK
 2007-12-09T16:21  perl  32601   25  DAGOLDEN/CPAN-Reporter-1.06.tar.gz  OK
 
-	It cannot be perl because the changes were 
+	It cannot be perl because the changes were .... 
 
 32603 on 2007/12/10 by craigb@craigb-brianor
 
@@ -32,6 +59,8 @@
 
 	autobundle? No, I think it is Test-Harness 3.05. Trying on PAUSE with 32602
 
+	FIXED by David in 1.0601
+	
 2007-12-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ELLIOTJS via RT has brought evidence about CPAN.pm failures on solaris
@@ -52,7 +81,7 @@ Wide character in print at t/lib/Test/Builder.pm line 1266.
 
 	Haven't seen this before.
 
-	http://rt.cpan.org/Ticket/Display.html?id=31314
+	http://rt.cpan.org/Ticket/Display.html?id=31314 and fixed.
 
 	* Jifty failed on IPC::PubSub::Cache::Memcached: Can't locate
 	Cache/Memcached.pm. Looks like somebody forgot a dependency decl.
@@ -105,7 +134,12 @@ N/A
 	HTML::GMap                           not ok (dependency of CGI::Session)
 	CGI-Application-Plugin-Session       not ok (dependency of CGI::Session)
 
-	#32582 (Attribute::Handlers) breaks Test::Class, Getopt::Attribute, Attribute::Types, Attribute::Overload and more. Shall I write a BBC on it or is there something in the pipeline?
+	#32582 (Attribute::Handlers) breaks Test::Class, Getopt::Attribute,
+	Attribute::Types, Attribute::Overload and more. Shall I write a BBC on
+	it or is there something in the pipeline?
+
+	I wrote a BBC and then quickly somebody provided a fix (he had not even
+	noticed my posting). So forget it.
 
 2007-12-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -130,7 +164,7 @@ Any other behaviour, such as Adam has just fixed, is a bug. The only thing that 
 
 	I must write a RT ticket demanding these specs become part of the manpage.
 
-	http://rt.cpan.org/Ticket/Display.html?id=31275
+	http://rt.cpan.org/Ticket/Display.html?id=31275 where Alias say "A challenge"
 
 	* off topic: http://use.perl.org/~pmichaud/journal/35049
 
@@ -322,6 +356,7 @@ N/A
 
 ----EOF ($?='0')----
 
+	BBC? Yes. And ticket. http://rt.cpan.org/Ticket/Display.html?id=31556
 
 	* Random test failures with re-engine-Plan9:
 
