@@ -293,6 +293,10 @@ Devel::Events::Handler::ObjectTracker
 Devel::FastProf
 Devel::GC::Helper
 Devel::Hide
+Devel::Leak
+Devel::Leak::Object
+Devel::LeakTrace
+Devel::LeakTrace::Fast
 Devel::LexAlias
 Devel::Modlist
 Devel::Monitor
@@ -730,7 +734,6 @@ POE::Component::Server::PreforkTCP
 POE::Component::StackedProcessor
 POE::Component::SubWrapper
 POE::Declarative::Mixin
-POE::Exceptions
 POE::Filter::IRCD
 POSIX
 PPI
