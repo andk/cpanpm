@@ -14,6 +14,7 @@ Alzabo
 Angerwhale
 Apache
 Apache::ASP
+Apache::DB
 Apache::DBI
 Apache::GuessCharset
 Apache::GzipChain
@@ -49,6 +50,7 @@ B::Lint
 BFD
 BSD::Resource
 BerkeleyDB
+Biblio::Document::Parser
 Bit::Vector
 Bit::Vector::Minimal
 BitTorrent
@@ -939,6 +941,7 @@ Test::Differences
 Test::Exception
 Test::FormValidator
 Test::HTTP::Server::Simple
+Test::HTTPStatus
 Test::Harness
 Test::JSON
 Test::Kwalitee

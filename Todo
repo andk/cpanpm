@@ -1,3 +1,43 @@
+2007-12-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* From Chorny:
+
+----Program----
+eval q{use Test::HTTPStatus 1.07};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p9mfFVw/perl-5.8.0@31020/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../prYHaRP/perl-5.8.0@31021/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	But this is crap. We must declare an external dependency on
+	Test::Pod::Coverage first. So now we get:
+
+----Program----
+eval q{use Test::HTTPStatus 1.07};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../psiUhc4/perl-5.8.0@26486/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pQD0dEL/perl-5.8.0@26487/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	On Apache::DB we will start the binary search between 31941 and 32032.
+
+	On Biblio::Document::Parser between 23232 and 23606.
+
+
 2007-12-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: next BBC summary must include today's mail from/to Alexandr

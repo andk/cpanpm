@@ -85,8 +85,8 @@ match:
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
     |JROCKWAY/Angerwhale-\d
-    |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
+    |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
@@ -98,6 +98,7 @@ match:
     |LYOKATO/FormValidator-Simple-\d
     |LYOKATO/Pod-ProjectDocs-\d
     |MARCEL/App-sync_cpantesters-\d
+    |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MITREHC/HoneyClient-Agent-\d
