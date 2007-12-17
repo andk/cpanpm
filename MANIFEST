@@ -28,6 +28,7 @@ distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
+distroprefs/BDFOY.Test-HTTPStatus.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
@@ -155,6 +156,7 @@ distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/METZZO.Java.yml
 distroprefs/MI.yml
+distroprefs/MIKER.IPtables-IPv4-DBTarpit.yml
 distroprefs/MInoinc.yml
 distroprefs/MIROD.XML-Twig.yml
 distroprefs/MIYAGAWA.Net-IDN-Nameprep.yml
