@@ -1,3 +1,7 @@
+2007-12-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* want to have: CPANPLUS::Dist::Deb with CPAN.pm as backend.
+
 2007-12-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* on blead@32674. Sigh.

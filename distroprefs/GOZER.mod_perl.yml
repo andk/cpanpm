@@ -4,7 +4,7 @@ comment: |
   http://svn.apache.org/viewvc?view=rev&revision=555908
 
 match:
-  distribution: "^(GOZER)/mod_perl-1"
+  distribution: "^(GOZER|LOCAL)/mod_perl-1"
 pl:
   args:
     - EVERYTHING=1
