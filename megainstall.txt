@@ -261,6 +261,7 @@ Data::Properties
 Data::Random
 Data::Remember
 Data::ShowTable
+Data::Swap
 Data::Throttler
 Data::TreeDumper
 Data::Types
@@ -437,6 +438,7 @@ GraphViz
 Graphics::ColorNames
 Gtk
 Gtk2
+HOP::Lexer
 HTML::Clean
 HTML::Entities
 HTML::Entities::Numbered
@@ -1156,6 +1158,7 @@ YAML
 YAML::Syck
 YAML::Tiny
 YAML::XS
+Yada::Yada::Yada
 Yahoo::Photos
 Yahoo::Search
 bignum

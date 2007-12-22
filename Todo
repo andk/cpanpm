@@ -1,3 +1,94 @@
+2007-12-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* on blead@32674. Sigh.
+
+new fails
+  RIZEN/Config-JSON-1.1.1.tar.gz[124]
+	BRADFITZ/Danga-Socket-1.57.tar.gz[203]
+	DMAKI/Danga-Socket-Callback-0.01200.tar.gz[204]
+	OLAF/Net-DNS-0.61.tar.gz[258]
+	RJBS/Email-Valid-0.179.tar.gz[259]
+	MIYAGAWA/Email-Valid-Loose-0.05.tar.gz[261]
+	LYOKATO/FormValidator-Simple-0.22.tar.gz[263]
+	CLACO/DBIx-Class-Validation-0.02001.tar.gz[264]
+	GMPASSOS/Safe-World-0.14.tar.gz[285]
+	NODINE/Text-Restructured-0.003037.tar.gz[292]
+	CFRANKS/HTML-Widget-1.11.tar.gz[303]
+	JJORE/B-Generate-1.11.tar.gz[318]
+	MIYAGAWA/Email-Find-0.10.tar.gz[436]
+	RCAPUTO/POE-Component-Client-DNS-1.00.tar.gz[455]
+	JJORE/AI-Prolog-0.739.tar.gz[584]
+	DPAVLIN/Search-Estraier-0.08.tar.gz[748]
+	RCAPUTO/POE-Component-Client-Keepalive-0.1000.tar.gz[761]
+	RCAPUTO/POE-Component-Client-HTTP-0.82.tar.gz[762]
+	DMAKI/Xango-1.08.tar.gz[770]
+	JMASON/Mail-SpamAssassin-3.2.3.tar.gz[775]
+	PIJLL/DateTime-Format-Epoch-0.11.tar.gz[785]
+	NEELY/Data-Serializer-0.43.tar.gz[806]
+	BBC/Email-MIME-CreateHTML-1.026.tar.gz[841]
+	SARTAK/Jifty-0.71129.tar.gz[856]
+	NUFFIN/Test-TAP-Model-0.09.tar.gz[934]
+	NUFFIN/Test-TAP-HTMLMatrix-0.09.tar.gz[935]
+	GAAL/Task-Smoke-0.16.tar.gz[936]
+	BINGOS/POE-Component-Server-IRC-1.24.tar.gz[1009]
+	JOHANL/Devel-PerlySense-0.0136.tar.gz[1014]
+	VKON/Tcl-0.95.tar.gz[1025]
+	LGODDARD/Tk-Wizard-2.124.tar.gz[1101]
+	MIYAGAWA/CGI-Untaint-email-0.03.tar.gz[1269]
+
+2007-12-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* And on RT #31708 I found Data::Swap as being a binary search help seeker.
+
+----Program----
+eval q{use Data::Swap 0.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../poY9GSb/perl-5.8.0@22739/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../piOkQwD/perl-5.8.0@22741/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+2007-12-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 5.10 is out and I find at home this binarysearch
+
+----Program----
+eval q{use Apache::DB 0.13};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pmRlzse/perl-5.8.0@32012/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p7cydGv/perl-5.8.0@32013/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	What's in it? Signalhandler stuff, and yes, the error message is
+
+/home/src/perl/repoperls/installed-perls/perl/psSfy01/perl-5.8.0@32032/bin/perl /home/src/perl/repoperls/installed-perls/perl/psSfy01/perl-5.8.0@32032/lib/5.10.0/ExtUtils/xsubpp  -typemap /home/src/perl/repoperls/installed-perls/perl/psSfy01/perl-5.8.0@32032/lib/5.10.0/ExtUtils/typemap  DB.xs > DB.xsc && mv DB.xsc DB.c
+cc -c   -D_REENTRANT -D_GNU_SOURCE -DDEBUGGING -fno-strict-aliasing -pipe -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -g   -DVERSION=\"0.13\" -DXS_VERSION=\"0.13\" -fPIC "-I/home/src/perl/repoperls/installed-perls/perl/psSfy01/perl-5.8.0@32032/lib/5.10.0/i686-linux-thread-multi-64int/CORE"   DB.c
+DB.xs: In function XS_DB_ApacheSIGINT:
+DB.xs:59: error: too few arguments to function ApacheSIGINT
+make: *** [DB.o] Fehler 1
+
+	What I don't know is how to get the right ifdef.
+
+	* 32631:
+
+new fails
+    DROLSKY/HTML-Mason-1.37.tar.gz[821], JESSE/HTTP-Server-Simple-Mason-0.09.tar.gz[822], MJEWELL/docparser/Biblio-Document-Parser-1.10.tar.gz[913], SARTAK/Jifty-0.71129.tar.gz[947], FWILES/Apache-DB-0.13.tar.gz[997], BDFOY/Test-HTTPStatus-1.07.tar.gz[1116], RCLAMP/Devel-LeakTrace-0.05.tar.gz[1324], FLORA/Catalyst-View-Mason-0.15.tar.gz[1337], GWYN/POE-Component-Daemon-0.1006.tar.gz[1340], AUDREYT/Encode-IBM-0.07.tar.gz[1407]
+
+	The new fails are only due to new discoveries by Alexandr Chorny
+
 2007-12-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* From Chorny:
@@ -36,7 +127,6 @@ N/A
 	On Apache::DB we will start the binary search between 31941 and 32032.
 
 	On Biblio::Document::Parser between 23232 and 23606.
-
 
 2007-12-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
