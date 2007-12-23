@@ -322,6 +322,9 @@ logs/.exists :
 run :
 	$(PERL) -Ilib -MCPAN -eshell
 
+run_testenv_db :
+	$(PERL) -Ilib -It -MCPAN::MyConfig -MCPAN -deshell
+
 record-session :
 	$(PERL) -Ilib -MCPAN -e '$$CPAN::Suppress_readline=$$CPAN::Echo_readline=1;shell' | tee ttt.out
 
