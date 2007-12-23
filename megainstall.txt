@@ -37,6 +37,7 @@ Archive::Zip
 Array::Iterator
 Array::Slice
 Astro::Flux
+Astro::MoonPhase
 Attribute::Types
 Audio::SndFile
 Audio::TagLib
@@ -96,6 +97,7 @@ Cache::FastMmap
 Cache::File
 Cache::Memcached
 Cache::Memcached::GetParserXS
+Cache::Memcached::Fast
 Cache::Memcached::XS
 Cache::Simple::TimedExpiry
 Cairo
@@ -403,6 +405,7 @@ Flickr::API
 Font::AFM
 Font::TTF
 Font::TTFMetrics
+Form::Processor
 FormValidator::Simple
 FrameMaker::FromHTML
 Fuse
@@ -1002,6 +1005,7 @@ Tie::Cache::LRU
 Tie::Cycle
 Tie::DxHash
 Tie::EncryptedHash
+Tie::Sub
 Time::Duration
 Time::HiRes
 Time::HiRes::Value
