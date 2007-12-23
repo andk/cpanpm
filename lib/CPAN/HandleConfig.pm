@@ -290,12 +290,13 @@ Please specify a filename where to save the configuration or try
     }
 
     my $msg;
+    my $home = home();
     $msg = <<EOF unless $configpm =~ /MyConfig/;
 
 # This is CPAN.pm's systemwide configuration file. This file provides
 # defaults for users, and the values can be changed in a per-user
 # configuration file. The user-config file is being looked for as
-# ~/.cpan/CPAN/MyConfig.pm.
+# $home/.cpan/CPAN/MyConfig.pm.
 
 EOF
     $msg ||= "\n";
