@@ -12,6 +12,8 @@ comment: |
 
   Trying to keep this thing out of my environment.
 
-match:
-  distribution: "MSCHWERN/Test-Simple-0.(7[3-9]|[89]\d).*.tar.gz"
-goto: "MSCHWERN/Test-Simple-0.72.tar.gz"
+  2007-12-24: giving up resistence
+
+#match:
+#  distribution: "MSCHWERN/Test-Simple-0.(7[3-9]|[89]\d).*.tar.gz"
+#goto: "MSCHWERN/Test-Simple-0.72.tar.gz"
