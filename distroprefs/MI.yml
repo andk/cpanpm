@@ -75,6 +75,7 @@ match:
     |HANENKAMP/HTML-ParagraphSplit-\d
     |HANENKAMP/POE-Declarative-\d
     |HANK/Catalyst-Plugin-Form-Processor-\d
+    |HANK/Form-Processor-\d
     |HDP/Data-Hive-\d
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d

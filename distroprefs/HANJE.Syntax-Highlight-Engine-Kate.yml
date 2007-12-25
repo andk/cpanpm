@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "^HANJE/Syntax-Highlight-Engine-Kate-0.02"
+patches:
+  - "/home/k/sources/CPAN/SVK/trunk/patches/Syntax-Highlight-Engine-Kate-0.02-ANDK-01.patch.gz"
