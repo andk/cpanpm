@@ -775,7 +775,10 @@ BEGIN failed--compilation aborted at t/04unicode.t line 7.
 
 	----EOF ($?='0')----
 
-	Nope, BBC not justified. badly written test obviously. http://rt.cpan.org/Ticket/Display.html?id=30717
+	Nope, BBC not justified. badly written test obviously.
+	http://rt.cpan.org/Ticket/Display.html?id=30717
+
+	Resolved in 0.006006.
 
 	* todo: publish the hvds patches DONE
 
@@ -823,6 +826,12 @@ Failed during this command:
 
 	B::PerlReq missing in megainstall and a candidate for BBC. Fails with
 	blead, succeeds with 5.8.8. Now also Test::Dependencies has a test.
+
+	Update 2007-12-26 : Ticket to Test-Dependencies opened today
+	http://rt.cpan.org/Ticket/Display.html?id=31906 But both
+	Carp-Diagnostics and List-Tuples are by Nadim and make no sense as it
+	seems and I cannot argue over it. Hrm. I can:
+	http://rt.cpan.org/Ticket/Display.html?id=31914
 
 	* Lingua::Stem with Test::Harness 3.01 and 2.64 on 32274 broken
 
