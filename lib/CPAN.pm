@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_53';
+$CPAN::VERSION = '1.92_54';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -10633,7 +10633,7 @@ current item.
 
 B<Note>: This command requires XML::LibXML installed.
 
-B<Note>: This whole command currently is a bit klunky and will
+B<Note>: This whole command currently is just a hack and will
 probably change in future versions of CPAN.pm but the general
 approach will likely stay.
 
@@ -10677,7 +10677,7 @@ provided by the C<recent> command and tests them all. While the
 command is running $SIG{INT} is defined to mean that the current item
 shall be skipped.
 
-B<Note>: This whole command currently is a bit klunky and will
+B<Note>: This whole command currently is just a hack and will
 probably change in future versions of CPAN.pm but the general
 approach will likely stay.
 
@@ -10757,6 +10757,13 @@ module or not.
 
 The typical usage case is for private modules or working copies of
 projects from remote repositories on the local disk.
+
+=head2 Redirection
+
+The usual shell redirection symbols C< | > and C<< > >> are recognized
+by the cpan shell when surrounded by whitespace. So piping into a
+pager and redirecting output into a file works quite similar to any
+shell.
 
 =head1 CONFIGURATION
 
