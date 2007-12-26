@@ -3541,6 +3541,7 @@ sub smoke {
     my($self) = @_;
     my $distros = $self->recent;
   DISTRO: for my $distro (@$distros) {
+        next if $distro->id =~ m|/Bundle-|; # XXX crude heuristic to skip bundles
         $CPAN::Frontend->myprint(sprintf "Going to download and test '$distro'\n");
         {
             my $skip = 0;

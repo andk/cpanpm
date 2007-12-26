@@ -6,4 +6,5 @@ test:
     DISPLAY: ":121"
 depends:
   requires:
+    HTML::Parse: 0
     HTML::Parser: 0
