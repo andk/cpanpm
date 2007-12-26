@@ -12,7 +12,8 @@ http://perlmonks.org/?node_id=652605
     Ovid wants fun while testing: he wrote a wrapper that runs all *.t
     scripts in one process to shave some loading time off.
 
-Jochen Stenzel binary searches success stories, many please
+Jochen Stenzel binary searches success stories, many please.
+chocolateboy mail perhaps (2007-12-26)?
 
 Quite often encountering bad tests like tests that rely on the cookies
 being sent from www.ebay.com.
