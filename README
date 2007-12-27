@@ -274,7 +274,7 @@ DESCRIPTION
 
     Note: This command requires XML::LibXML installed.
 
-    Note: This whole command currently is a bit klunky and will probably
+    Note: This whole command currently is just a hack and will probably
     change in future versions of CPAN.pm but the general approach will
     likely stay.
 
@@ -314,7 +314,7 @@ DESCRIPTION
     by the "recent" command and tests them all. While the command is running
     $SIG{INT} is defined to mean that the current item shall be skipped.
 
-    Note: This whole command currently is a bit klunky and will probably
+    Note: This whole command currently is just a hack and will probably
     change in future versions of CPAN.pm but the general approach will
     likely stay.
 
@@ -389,6 +389,11 @@ DESCRIPTION
 
     The typical usage case is for private modules or working copies of
     projects from remote repositories on the local disk.
+
+  Redirection
+    The usual shell redirection symbols " | " and ">" are recognized by the
+    cpan shell when surrounded by whitespace. So piping into a pager and
+    redirecting output into a file works quite similar to any shell.
 
 CONFIGURATION
     When the CPAN module is used for the first time, a configuration dialog
