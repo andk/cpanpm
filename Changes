@@ -1,3 +1,18 @@
+2007-12-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_54: unstable release bugfix
+
+	* document how redirection in the shell works
+
+	* skip distros in the smoke command when they match m|/Bundle-| (quick
+	hack suggested by David Golden)
+
+	* address #31825: wrong location of MyConfig.pm in Config.pm on OS X
+	(patch by Michael Stillwell)
+
+	* address #31750: fix the logic when Compress::Zlib is not installed,
+	add a test to verify it
+
 2007-12-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_53: unstable release low priority
