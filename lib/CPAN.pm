@@ -742,10 +742,13 @@ use overload '""' => "as_string";
 
 sub new {
     my($class,$module,$file,$during,$error) = @_;
+    # my $at = Carp::longmess(""); # XXX find something more beautiful
     bless { module => $module,
             file => $file,
             during => $during,
-            error => $error }, $class;
+            error => $error,
+            # at => $at,
+          }, $class;
 }
 
 sub as_string {
@@ -7941,9 +7944,22 @@ sub _find_prefs {
                 #CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
                 my @distropref;
                 if ($thisexte eq "yml") {
-                    # need no eval because if we have no YAML we do not try to read *.yml
+                    # need eval because if YAML has a bug we should fail gracefully
                     #CPAN->debug(sprintf "before yaml load abs[%s]", $abs) if $CPAN::DEBUG;
-                    @distropref = @{CPAN->_yaml_loadfile($abs)};
+                    my $distropref = eval { CPAN->_yaml_loadfile($abs) };
+                    if ($@) {
+                        $CPAN::Frontend->mywarn("Error reading distroprefs file ".
+                                                "$_, skipping\: $@");
+                        $CPAN::Frontend->mysleep(1);
+                        next DIRENT;
+                    } elsif (!$distropref) {
+                        $CPAN::Frontend->mywarn("Unknown error reading distroprefs file ".
+                                                "$_, skipping.");
+                        $CPAN::Frontend->mysleep(1);
+                        next DIRENT;
+                    } else {
+                        @distropref = @$distropref;
+                    }
                     #CPAN->debug(sprintf "after yaml load abs[%s]", $abs) if $CPAN::DEBUG;
                 } elsif ($thisexte eq "dd") {
                     package CPAN::Eval;
