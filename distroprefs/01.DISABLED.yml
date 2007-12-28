@@ -50,6 +50,7 @@ match:
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TTY/kurila-\d                           # asks too many questions
     |WYANT/Astro-SpaceTrack-\d               # asks for a username/passwd during tests
+    |WYANT/Astro-satpass-\d                  # asks during testing to download something
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     )|
 disabled: 1
