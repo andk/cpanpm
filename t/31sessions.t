@@ -224,11 +224,16 @@ for my $session (@SESSIONS) {
         my($actual) = $chunks[$i+1];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
         diag("command[$command]expect[$expect]actual[$actual]") if $VERBOSE;
-        unless (like($actual,"/$expect/","command[$command]")) {
+        my $success = like($actual,"/$expect/","command[$command]");
+        if (!$success) {
             require Dumpvalue;
             my $dumper = Dumpvalue->new();
             my $i0 = $i > 4 ? $i-5 : 0;
-            warn join "", "# ", map { "[".$dumper->stringify($_)."]" } @chunks[$i0..$i];
+            warn join "", map { "#$_\:{q[".
+                                    $dumper->stringify($session->{pairs}[2*$_]).
+                                        "]=>q[".
+                                            $dumper->stringify($chunks[$_+1]).
+                                                "]}\n" } $i0..$i;
         }
     }
 }
