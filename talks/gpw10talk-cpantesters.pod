@@ -2,6 +2,30 @@
 
 =head1 CPAN Testers
 
+=joke
+
+(pointer from Andy Armstrong)
+
+http://www.annoyances.org/exec/show/article09-200
+
+Software Testing is not politically Correct.
+
+NEW YORK -- People for Ethical Treatment of Software (PETS) announced today that seven more software companies have been added to the group's watch list of companies that regularly practice software testing.
+
+"There is no need for software to be mistreated in this way so that companies like these can market new products." said Ken Grandola, spokesperson for PETS. "Alternative methods of testing these products are available"
+
+According to PETS, these companies force software to undergo lengthy and arduous tests, often without rest, for hours or days at a time. Employees are assigned to "break" the software by any means necessary, and inside sources report that they often joke about "torturing" the software.
+
+"It's no joke," said Grandola. "Innocent programs, from the day the are compiled, are cooped up in tiny rooms and "crashed" for hours on end. They spend the whole lives on dirty, ill-maintained computers, and are unceremoniously deleted when they're not needed anymore".
+
+Grandola said the software is kept in unsanitary conditions and is infested with bugs.
+
+"We know that alternatives to this horror exist." he said, citing industry giant Microsoft Corporation as a company that has become successful without resorting to software testing.
+
+
+
+=eojoke
+
 21:45 < nadim> history | wc -l => 500
 21:46 < nadim> history | grep test | wc -l => 375
 21:46 < nadim> I have to get a life!
