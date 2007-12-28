@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_54';
+$CPAN::VERSION = '1.92_55';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -8676,6 +8676,10 @@ sub test {
         $ENV{PERL} = CPAN::find_perl;
     } elsif ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
+        unless (-e "Build") {
+            my $id = $self->pretty_id;
+            $CPAN::Frontend->mywarn("Alert: no 'Build' file found while trying to test '$id'");
+        }
     } else {
         $system = join " ", $self->_make_command(), "test";
     }
