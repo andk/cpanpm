@@ -204,7 +204,8 @@ plan tests => $cnt
 is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
 $ENV{PERL_MM_USE_DEFAULT} = 1;
 
-for my $session (@SESSIONS) {
+for my $si (0..$#SESSIONS) {
+    my $session = $SESSIONS[$si];
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
     open SYSTEM, "| $system" or die;
@@ -229,7 +230,7 @@ for my $session (@SESSIONS) {
             require Dumpvalue;
             my $dumper = Dumpvalue->new();
             my $i0 = $i > 4 ? $i-5 : 0;
-            warn join "", map { "#$_\:{q[".
+            warn join "", map { "##$si($session->{name})/$_\:{q[".
                                     $dumper->stringify($session->{pairs}[2*$_]).
                                         "]=>q[".
                                             $dumper->stringify($chunks[$_+1]).
