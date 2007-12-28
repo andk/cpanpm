@@ -76,6 +76,9 @@ N/A
 
 ----EOF ($?='0')----
 
+	Sent a one-line note to Matthijs. Saying goodbye to the usual BBC
+	articles.
+
 2007-12-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 5.10 is out and I find at home this binarysearch
@@ -102,7 +105,7 @@ DB.xs: In function XS_DB_ApacheSIGINT:
 DB.xs:59: error: too few arguments to function ApacheSIGINT
 make: *** [DB.o] Fehler 1
 
-	What I don't know is how to get the right ifdef.
+	What I don't know is how to get the right ifdef. BBC written 2007-12-27.
 
 	* 32631:
 
@@ -147,6 +150,7 @@ N/A
 ----EOF ($?='0')----
 
 	On Apache::DB we will start the binary search between 31941 and 32032.
+	BBC written 2007-12-27.
 
 	On Biblio::Document::Parser between 23232 and 23606.
 
