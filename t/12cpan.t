@@ -84,7 +84,7 @@ require CPAN::HandleConfig;
                                              # without yaml
     if ($@ || (($YAML::VERSION||$YAML::VERSION||0) < 0.62)) { # silence 5.005_04
         for (1..$this_block_count) {
-            ok(1);
+            ok(1, "dummy Kwalify/YAML $_");
         }
     } else {
         my $data = {
@@ -128,9 +128,17 @@ require CPAN::HandleConfig;
     BEGIN { $count += $this_block_count = 8; }
 
     eval { require YAML::Syck; };
-    if ($@ || (($YAML::Syck::VERSION||$YAML::Syck::VERSION||0) < 0.97)) { # silence 5.005_04
+    my $excuse;
+    if ($@) {
+        $excuse = "YAML::Syck not available";
+    } elsif (($YAML::Syck::VERSION||$YAML::Syck::VERSION||0) < 0.97) { # silence 5.005_04
+        $excuse = "YAML::Syck too old";
+    } elsif ($] < 5.008) {
+        $excuse = "Defered code segfaults on 5.6.x";
+    }
+    if ($excuse) {
         for (1..$this_block_count) {
-            ok(1);
+            ok(1, "Skipping ($excuse) $_");
         }
     } else {
         my $yaml_file = _f('t/yaml_code.yml');

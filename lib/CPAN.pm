@@ -10976,7 +10976,7 @@ defined:
   username           your username if you CPAN server wants one
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
   wget               path to external prg
-  yaml_load_code     enable YAML code deserialisation
+  yaml_load_code     enable YAML code deserialisation via CPAN::DeferedCode
   yaml_module        which module to use to read/write YAML files
 
 You can set and query each of these options interactively in the cpan

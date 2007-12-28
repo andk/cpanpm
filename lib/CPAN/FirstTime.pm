@@ -498,9 +498,10 @@ Use CPAN::SQLite if available? (yes/no)?
 
 =item yaml_load_code
 
-Both YAML.pm and YAML::Syck are capable of deserialising code. As this requires
-a string eval, which might be a security risk, you can use this option to
-enable or disable the deserialisation of code.
+Both YAML.pm and YAML::Syck are capable of deserialising code. As this
+requires a string eval, which might be a security risk, you can use
+this option to enable or disable the deserialisation of code via
+CPAN::DeferedCode. (Note: This does not work under perl 5.6)
 
 Do you want to enable code deserialisation (yes/no)?
 
