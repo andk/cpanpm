@@ -4,3 +4,9 @@ match:
   distribution: "^DROLSKY/Params-Validate-0\.87\.tar\.gz$"
 patches:
   - "ANDK/patches/Params-Validate-0.86-NWCLARK-01.patch.gz"
+---
+comment: "http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-12/msg00833.html"
+match:
+  distribution: "^DROLSKY/Params-Validate-0\.89\.tar\.gz$"
+patches:
+  - "ANDK/patches/Params-Validate-0.89-SMPETERS-01.patch.gz"
