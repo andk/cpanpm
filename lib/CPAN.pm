@@ -6857,7 +6857,8 @@ and run
 sub untar_me {
     my($self,$ct) = @_;
     $self->{archived} = "tar";
-    if ($ct->untar()) {
+    my $result = eval { $ct->untar() };
+    if ($result) {
         $self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
         $self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed");

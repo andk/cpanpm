@@ -43,6 +43,9 @@ program.
 
 sub _my_which {
     my($what) = @_;
+    if ($CPAN::Config->{$what}) {
+        return $CPAN::Config->{$what};
+    }
     if ($CPAN::META->has_inst("File::Which")) {
         return File::Which::which($what);
     }
