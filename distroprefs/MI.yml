@@ -88,6 +88,7 @@ match:
     |JESSE/Data-ICal-\d
     |JROCKWAY/Angerwhale-\d
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
+    |JROCKWAY/Catalyst-Plugin-ConfigLoader-Environment-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/File-Attributes-\d

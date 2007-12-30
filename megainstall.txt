@@ -69,6 +69,7 @@ Business::CreditCard
 Business::ISBN
 Business::OnlinePayment
 Business::ReportWriter
+C::Analyser
 CAM::PDF
 CDB_File
 CGI
@@ -886,6 +887,7 @@ Spreadsheet::ParseExcel
 Spreadsheet::Read
 Spreadsheet::WriteExcel
 Spreadsheet::WriteExcelXML
+Statistics::Distributions
 Storable
 String::Approx
 String::CRC32
@@ -1000,6 +1002,7 @@ Text::Wrap
 Text::Wrapper
 Text::vFile::asData
 Text::xSV
+ThreatNet::IRC
 Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
