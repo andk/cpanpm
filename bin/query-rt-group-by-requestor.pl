@@ -138,6 +138,7 @@ sub who {
                'shlomif@iglu.org.il'        => 'SHLOMIF',
                'schmorp@schmorp.de'         => 'MLEHMANN',
                'schwern@pobox.com'          => 'MSCHWERN',
+               'schwern@bestpractical.com'  => 'MSCHWERN',
                'slaven@rezic.de'            => 'SREZIC',
                'slaven@cpan'                => 'SREZIC',
                'slaven.rezic@berlin.de'     => 'SREZIC',
