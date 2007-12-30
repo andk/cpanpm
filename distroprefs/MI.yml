@@ -13,6 +13,7 @@ match:
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
+    |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
     |ASH/DBIx-Class-\d
     |AUDREYT/Scalar-Defer-\d
     |AVAR/Bot-BB2-\d
