@@ -10,7 +10,7 @@ my %Config = (
               server      => 'http://rt.cpan.org',
               username    => 'ANDK',
               password    => '',
-              chunksize   => 400,
+              chunksize   => 396,
              );
 
 GetOptions(\my %config, map { "$_=s" } keys %Config);
@@ -92,13 +92,40 @@ sub who {
   my($v) = @_;
   my $who = $v->{Requestors} || $v->{Creator};
   return "" unless $who;
-  if ($who =~ s/\@cpan\.org$//) {
+  if ($who =~ s/\@cpan\.org(,.*)?$//) {
     $who = uc $who;
   }
   my %alias = (
-               'schwern@pobox.com' => 'MSCHWERN',
-               'slaven@rezic.de'   => 'SREZIC',
-               'cpan@ali.as'       => 'ADAMK',
+               'Marek.Rouchal@gmx.net'      => 'MAREKR',
+               'marek.rouchal@infineon.com' => 'MAREKR',
+               'aaron@FreeBSD.org'          => 'ACDALTON',
+               'alexchorny@gmail.com'       => 'CHORNY',
+               'andy@petdance.com'          => 'PETDANCE',
+               'a.r.ferreira@gmail.com'     => 'FERREIRA',
+               'at@altlinux.org'            => 'ATOURBIN',
+               'at@altlinux.ru'             => 'ATOURBIN',
+               'barbie@missbarbell.co.uk'   => 'BARBIE',
+               'blair@orcaware.com'         => 'BZAJAC',
+               'cpan@ali.as'                => 'ADAMK',
+               'cpan@chrisdolan.net'        => 'CDOLAN',
+               'cpan@clotho.com'            => 'CLOTHO',
+               'dha@panix.com'              => 'DHA',
+               'imacat@mail.imacat.idv.tw'  => 'IMACAT',
+               'ivorw-cpan@xemaps.com'      => 'IVORW',
+               'jdhedden@1979.usna.com'     => 'JDHEDDEN',
+               'jesse@bestpractical.com'    => 'JESSE',
+               'jesse@fsck.com'             => 'JESSE',
+               'mark@summersault.com'       => 'MARKSTOS',
+               'mark@twoshortplanks.com'    => 'MARKF',
+               'merlyn@stonehenge.com'      => 'MERLYN',
+               'nospam-abuse@bloodgate.com' => 'TELS',
+               'ntyni@iki.fi'               => 'Niko Tyni',
+               'ron@savage.net.au'          => 'RSAVAGE',
+               'schwern@pobox.com'          => 'MSCHWERN',
+               'slaven@rezic.de'            => 'SREZIC',
+               'steve@fisharerojo.org'      => 'SMPETERS',
+               'steven@knowmad.com'         => 'WMCKEE',
+               'william@knowmad.com'        => 'WMCKEE',
               );
   $who = $alias{$who} || $who;
 }
@@ -113,6 +140,6 @@ TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
 my $top = 1;
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   printf "%2d: %34s %4d\n", $top, $k, $S{$k};
-  last if $top >= 15;
+  last if $top >= 60;
   $top++;
 }

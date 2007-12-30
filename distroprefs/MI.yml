@@ -112,6 +112,7 @@ match:
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
     |MRAMBERG/Catalyst-Plugin-Compress-Bzip2
     |MRAMBERG/Catalyst-Plugin-Compress-Zlib
+    |MRAMBERG/Catalyst-Plugin-SubRequest-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Task-Catalyst-\d
