@@ -10,6 +10,7 @@ my %Config = (
               server      => 'http://rt.cpan.org',
               username    => 'ANDK',
               password    => '',
+              chunksize   => 400,
              );
 
 GetOptions(\my %config, map { "$_=s" } keys %Config);
@@ -34,7 +35,8 @@ FINDHOLES: for (my $i = 1; $i <= $curmax; $i++) {
     last FINDHOLES;
   }
 }
-my $nextmax = $curmax + 400;
+
+my $nextmax = $curmax + $Config{chunksize};
 
 my $rt = RT::Client::REST->new(
                                server  => $Config{server},
@@ -50,7 +52,7 @@ if ($Config{password}) {
     @ids = $rt->search(
                        type    => 'ticket',
                        query   => qq[
-            (Id >= $curmax and Id < $nextmax)
+            (Id >= $curmax and Id <= $nextmax)
         ],
                       );
   };
@@ -69,7 +71,7 @@ if ($Config{password}) {
       } elsif (keys %ids) {
         $feedback = "_";
       } else {
-        print "stopping at $id. Maybe we have reached the upper end";
+        print "stopping at $id. Maybe we have reached the upper end\n";
         last ID;
       }
       $ALL->{tickets}{$id} = exists $ids{$id} ? $rt->show(type => 'ticket', id => $id) : {};
@@ -86,15 +88,31 @@ if ($Config{password}) {
   print "filled\n";
 }
 
+sub who {
+  my($v) = @_;
+  my $who = $v->{Requestors} || $v->{Creator};
+  return "" unless $who;
+  if ($who =~ s/\@cpan\.org$//) {
+    $who = uc $who;
+  }
+  my %alias = (
+               'schwern@pobox.com' => 'MSCHWERN',
+               'slaven@rezic.de'   => 'SREZIC',
+               'cpan@ali.as'       => 'ADAMK',
+              );
+  $who = $alias{$who} || $who;
+}
+
+keys %{$ALL->{tickets}}; # reset iterator
 my %S;
 TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
-  my $who = $v->{Requestors} || $v->{Creator};
+  my $who = who($v);
   next TICKET unless $who;
   $S{$who}++;
 }
 my $top = 1;
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   printf "%2d: %34s %4d\n", $top, $k, $S{$k};
-  last if $top >= 10;
+  last if $top >= 15;
   $top++;
 }
