@@ -128,10 +128,14 @@ sub who {
                'mark@summersault.com'       => 'MARKSTOS',
                'mark@twoshortplanks.com'    => 'MARKF',
                'merlyn@stonehenge.com'      => 'MERLYN',
+               'mnodine@alum.mit.edu'       => 'NODINE',
                'nadim@khemir.net'           => 'NKH',
+               'njh@bandsman.co.uk'         => 'NJH',
+               'njh@ecs.soton.ac.uk'        => 'NJH',
                'nospam-abuse@bloodgate.com' => 'TELS',
                'ntyni@iki.fi'               => 'Niko Tyni',
                'nothingmuch@woobling.org'   => 'NUFFIN',
+               'rafl@debian.org'            => 'FLORA',
                'rcaputo@pobox.com'          => 'RCAPUTO',
                'ron@savage.net.au'          => 'RSAVAGE',
                'rurban@x-ray.at'            => 'RURBAN',
@@ -160,6 +164,54 @@ TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
 my $top = 1;
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   printf "%2d: %34s %4d\n", $top, $k, $S{$k};
-  # last if $top >= 60;
+  last if $top >= 40;
   $top++;
 }
+
+
+__END__
+
+
+The first top 40 produced by the script above @ 32007 (2007-12-30)
+after many hours of data collecting:
+
+ 1:                              guest  486
+ 2:                             SREZIC  388
+ 3:                           MSCHWERN  383
+ 4:                               ANDK  347
+ 5:                              ADAMK  316
+ 6:                           MARKSTOS  304
+ 7:                             CHORNY  248
+ 8:                               RRWO  205
+ 9:                             WMCKEE  161
+10:                           SMPETERS  136
+11:                              TONYC  132
+12:                           LGODDARD  129
+13:                             CDOLAN  117
+14:                           JDHEDDEN  114
+15:                            RCAPUTO  110
+16:                               RJBS  101
+17:                             MAREKR  101
+18:                             MTHURN   98
+19:                           ATOURBIN   85
+20:                           PETDANCE   84
+21:                              SAPER   79
+22:                             BARBIE   72
+23:                              JESSE   71
+24:                                NKH   62
+25:                             IMACAT   60
+26:                             CORION   60
+27:                           ACDALTON   59
+28:                           DAGOLDEN   58
+29:                            RSAVAGE   57
+30:                             MERLYN   52
+31:                          HANENKAMP   51
+32:                          Niko Tyni   50
+33:                               TELS   49
+34:                           LTHEGLER   47
+35:                              MARKF   47
+36:                          PODMASTER   47
+37:                            JPIERCE   47
+38:                            GROUSSE   46
+39:                             BZAJAC   46
+40:                               KANE   44
