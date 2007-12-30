@@ -1,0 +1,9 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=31998
+
+match:
+  distribution: "LBROCARD/Test-WWW-Mechanize-Catalyst-0.41.tar.gz"
+patches:
+  - "ANDK/patches/Test-WWW-Mechanize-Catalyst-0.41-ANDK-01.patch.gz"
