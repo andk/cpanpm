@@ -1,3 +1,16 @@
+2007-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_55: unstable relase bugfix
+
+	* address #32003: if untar breaks we broke too much of the session
+
+	* regain 5.6.1 compatibility in the testsuite
+
+	* improve diagnostics in t/31sessions.t to understand better what's up
+	in #31750
+
+	* fail gracefully on distroprefs parse error
+
 2007-12-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_54: unstable release bugfix
