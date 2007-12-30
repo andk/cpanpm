@@ -11,6 +11,8 @@
 
 	* fail gracefully on distroprefs parse error
 
+	* now with 267 distroprefs files
+
 2007-12-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_54: unstable release bugfix
