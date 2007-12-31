@@ -215,7 +215,6 @@ MEGA_BASE = \
  DBD::SQLite \
  Test::Simple \
  /home/src/perl/tk/SVN/. \
- /home/src/perl/cpan-sql-stuff/CPAN-SQLite/. \
  /home/src/graphics/magick/ImageMagick-6.3.5/PerlMagick/. \
 
 

@@ -6,11 +6,6 @@ test:
   env: 
     PERL_REPOSITORY_APC_REPO: "/home/src/perl/repoperls/APC"
 ---
-match:
-  distribution: "/CPAN-SQLite/\.$"
-pl:
-  commandline: "make clean; cvs -q up -dP; $PERL Makefile.PL"
----
 comment: "Xvfb :121 must be started by somebody else"
 match:
   distribution: "^/home/src/perl/tk/SVN/\.$"
