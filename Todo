@@ -1,3 +1,8 @@
+2007-12-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Need a tool to bring all broken distros into a tree shape as to
+	eliminate leaves below a common node.
+
 2007-12-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* summary

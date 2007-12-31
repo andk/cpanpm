@@ -162,11 +162,15 @@ TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
   $S{$who}++;
 }
 my $top = 1;
+printf "<dl>\n";
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
-  printf "%2d: %34s %4d\n", $top, $k, $S{$k};
+  my $x = sprintf "<code>%2d: %-9s %4d</code><br/>\n", $top, $k, $S{$k};
+  $x =~ s/ /&nbsp;/g;
+  print $x;
   last if $top >= 40;
   $top++;
 }
+printf "</dl>\n";
 
 
 __END__
