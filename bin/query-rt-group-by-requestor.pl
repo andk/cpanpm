@@ -1,3 +1,9 @@
+
+# $HeadURL#
+
+# see first posting http://use.perl.org/~LaPerla/journal/35252
+
+
 use strict;
 use warnings;
 
@@ -171,51 +177,3 @@ for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   $top++;
 }
 printf "</dl>\n";
-
-
-__END__
-
-
-The first top 40 produced by the script above @ 32007 (2007-12-30)
-after many hours of data collecting:
-
- 1:                              guest  486
- 2:                             SREZIC  388
- 3:                           MSCHWERN  383
- 4:                               ANDK  347
- 5:                              ADAMK  316
- 6:                           MARKSTOS  304
- 7:                             CHORNY  248
- 8:                               RRWO  205
- 9:                             WMCKEE  161
-10:                           SMPETERS  136
-11:                              TONYC  132
-12:                           LGODDARD  129
-13:                             CDOLAN  117
-14:                           JDHEDDEN  114
-15:                            RCAPUTO  110
-16:                               RJBS  101
-17:                             MAREKR  101
-18:                             MTHURN   98
-19:                           ATOURBIN   85
-20:                           PETDANCE   84
-21:                              SAPER   79
-22:                             BARBIE   72
-23:                              JESSE   71
-24:                                NKH   62
-25:                             IMACAT   60
-26:                             CORION   60
-27:                           ACDALTON   59
-28:                           DAGOLDEN   58
-29:                            RSAVAGE   57
-30:                             MERLYN   52
-31:                          HANENKAMP   51
-32:                          Niko Tyni   50
-33:                               TELS   49
-34:                           LTHEGLER   47
-35:                              MARKF   47
-36:                          PODMASTER   47
-37:                            JPIERCE   47
-38:                            GROUSSE   46
-39:                             BZAJAC   46
-40:                               KANE   44
