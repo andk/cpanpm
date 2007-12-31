@@ -1,5 +1,5 @@
 
-# $HeadURL#
+# $HeadURL$
 
 # see first posting http://use.perl.org/~LaPerla/journal/35252
 
