@@ -45,6 +45,7 @@ match:
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
+    |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25

@@ -1,6 +1,44 @@
 =encoding utf-8
 
-=head1 CPAN Testers
+=head1 Was ist ein CPAN Tester?
+
+... ein Perl User, der das Modul CPAN::Reporter installiert und
+konfiguriert hat.
+
+--oder--
+
+... CPANPLUS ...
+
+=head1 Konfiguriert?
+
+CPAN::Reporter schreibt das Ergebnis der interaktiven Konfiguration in
+die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
+
+  cc_author=ask/no
+  debug=1
+  edit_report=ask/no
+  editor=emacsclient
+  email_from=andreas.koenig.gmwojprw@franz.ak.mind.de
+  send_duplicates=ask/no
+  send_report=ask/no
+  smtp_server=localhost
+
+=head1 No SMTP, no Tester
+
+WIP
+
+=head1 Der  Alltag eines CPAN Testers
+
+21:45 < nadim> history | wc -l => 500
+21:46 < nadim> history | grep test | wc -l => 375
+21:46 < nadim> I have to get a life!
+
+=head1 Success Stories
+
+=head1 
+
+
+
 
 =joke
 
@@ -25,11 +63,6 @@ Grandola said the software is kept in unsanitary conditions and is infested with
 
 
 =eojoke
-
-21:45 < nadim> history | wc -l => 500
-21:46 < nadim> history | grep test | wc -l => 375
-21:46 < nadim> I have to get a life!
-
 
 http://perlmonks.org/?node_id=652605
 
@@ -59,7 +92,7 @@ wiki grades: http://cpantest.grango.org/cgi-bin/pages.cgi?act=wiki-page&pagename
   UNKNOWN
   NA
 
-  but also: "invalid" or in other words "on hold" when a dependency is nto fulfilled
+  but also: "invalid" or in other words "on hold" when a dependency is not fulfilled
 
 IRC cpantesters, cpantesters-discuss, toolchain
 
@@ -155,9 +188,8 @@ solve.
 =head1 Thoughts
 
 We have reached a point where our beloved greatest library of all
-times has degraded to some obscure collection of depressigly hard to
+times has degraded to some obscure collection of depressingly hard to
 use LEGO pieces. We need to turn our attention to quality assurance.
-
 
 =head1 Renee baecker:
 

@@ -1,8 +1,4 @@
 --- 
-comment: |
-
-  http://rt.cpan.org/Ticket/Display.html?id=29558
-
 match:
   distribution: "^OLAF/Net-DNS-"
 pl: 
@@ -11,5 +7,3 @@ pl:
 depends:
   requires:
     Test::More: 0.72
-patches:
-  - "ANDK/patches/Net-DNS-0.61-FERREIRA-01.patch.gz"
