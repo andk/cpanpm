@@ -31,6 +31,7 @@ match:
     |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d
     |BRICAS/Games-NES-ROM-\d
+    |BRICAS/URI-Template-\d
     |BRICAS/WWW-OpenSearch-\d
     |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
