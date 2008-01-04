@@ -102,21 +102,6 @@ my %prefssupport = map { $_ => 1 }
      "test_report",
     );
 
-if ($^O eq "MSWin32") {
-    for my $k (qw(
-                  mbuild_install_build_command
-                  make_install_make_command
-                 )) {
-        delete $keys{$k};
-        if (exists $CPAN::Config->{$k}) {
-            for ("deleting previously set config variable '$k' => '$CPAN::Config->{$k}'") {
-                $CPAN::Frontend ? $CPAN::Frontend->mywarn($_) : warn $_;
-            }
-            delete $CPAN::Config->{$k};
-        }
-    }
-}
-
 # returns true on successful action
 sub edit {
     my($self,@args) = @_;
