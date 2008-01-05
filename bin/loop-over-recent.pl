@@ -12,24 +12,28 @@ use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
 sub determine_perls {
   my($basedir,$otherperls) = @_;
-  opendir my $dh, $basedir or die;
-  my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
-  pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
- PERL: while (@perls) {
-    open my $fh, "$basedir/$perls[-1]/perl-V.txt" or die;
-    while (<$fh>) {
-      next unless /-Dprefix=(\S+)/;
-      my $perl = "$1/bin/perl";
-      if (-x $perl){
-        @perls = $perl; # only one survives
-        last PERL;
-      } else {
-        pop @perls;
+  my @perls;
+  my $trust_latest_bleadperls = 0;
+  if ($trust_latest_bleadperls) {
+    opendir my $dh, $basedir or die;
+    my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
+    pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
+  PERL: while (@perls) {
+      open my $fh, "$basedir/$perls[-1]/perl-V.txt" or die;
+      while (<$fh>) {
+        next unless /-Dprefix=(\S+)/;
+        my $perl = "$1/bin/perl";
+        if (-x $perl){
+          @perls = $perl; # only one survives
+          last PERL;
+        } else {
+          pop @perls;
+        }
       }
+      close $fh;
     }
-    close $fh;
+    shift @perls while @perls && ! -x $perls[0];
   }
-  shift @perls while @perls && ! -x $perls[0];
   if (open my $fh2, $otherperls) {
     while (<$fh2>) {
       chomp;
