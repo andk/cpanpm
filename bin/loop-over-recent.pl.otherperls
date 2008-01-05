@@ -1,25 +1,13 @@
+# 5.10.0 itself:
+/home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
+
 # 5.10.0 (after RC2) debugging:
 /home/src/perl/repoperls/installed-perls/perl/pPXCIpe/perl-5.8.0@32606/bin/perl
 
 # 5.10.0 (after RC2) threaded:
 /home/src/perl/repoperls/installed-perls/perl/pgvYBDM/perl-5.8.0@32524/bin/perl
 
-# 5.9.5:
-#!!!# /home/src/perl/repoperls/installed-perls/perl/pNUSF0c/perl-5.8.0@31684/bin/perl
-/home/src/perl/repoperls/installed-perls/perl/pNaGaP6/perl-5.8.0@31790/bin/perl
-
-# 5.9.4 but it seems that version.pm was seriously broken on that perl ("perl-0" bug):
-# /home/src/perl/repoperls/installed-perls/perl/p0fQi13/perl-5.8.0@28966/bin/perl
-
-# 5.9.3:
-#/home/src/perl/repoperls/installed-perls/perl/pztoXzt/perl-5.8.0@27002/bin/perl
-# 5.9.1; but has no Compress::Zlib:
-# /home/src/perl/repoperls/installed-perls/perl/pqwklWx/perl-5.8.0@22491/bin/perl
-
-# threaded; the most recent of the 5.8.9-tobe; has patch_level actually right
-# /home/src/perl/repoperls/installed-perls/maint-5.8/pFrR8O4/perl-5.8.0@31223/bin/perl
-
-# the latest where I did a megainstall on (on 2007-10-05)
+# the latest 5.8.9 where I did a megainstall on (on 2007-10-05)
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pXGjdKF/perl-5.8.0@32025/bin/perl
 # the latest where I did a megainstall on (on 2007-11-02)
 /home/src/perl/repoperls/installed-perls/maint-5.8/pOwntgt/perl-5.8.0@32025/bin/perl
