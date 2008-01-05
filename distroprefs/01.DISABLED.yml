@@ -31,6 +31,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
+    |BOWMANBS/Audio-Ecasound-\d              # hanges very early
     |BSUGARS/IPC-Shareable-\d                # hangs on test 38ipchv and has already a ticket on that
     |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # has caused a hang more than one time during t/13-command-au
     |CORLISS/CursesForms-\d
