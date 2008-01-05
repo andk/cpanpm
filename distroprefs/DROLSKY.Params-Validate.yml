@@ -10,3 +10,4 @@ match:
   distribution: "^DROLSKY/Params-Validate-0\.89\.tar\.gz$"
 patches:
   - "ANDK/patches/Params-Validate-0.89-SMPETERS-01.patch.gz"
+  - "ANDK/patches/Params-Validate-0.89-ANDK-02.patch.gz"

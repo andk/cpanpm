@@ -1062,6 +1062,7 @@ Tk::Tree
 Tk::WidgetDump
 Tk::Wizard
 Tk::XMLViewer
+Touch
 Transform::Canvas
 UML::Sequence
 UNIVERSAL::isa

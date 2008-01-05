@@ -8,3 +8,4 @@ match:
   distribution: "^RDF/Clone-0\.28\.tar\.gz$"
 patches:
   - "ANDK/patches/Clone-0.28-SMPETERS-01.patch.gz"
+  - "ANDK/patches/Clone-0.28-ANDK-02.patch.gz"
