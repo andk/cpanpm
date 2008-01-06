@@ -1,0 +1,32 @@
+#
+# 2008-01-06 andk : this patch seems like it will be broken again soon
+# but at least works for bleadperl@32864
+#
+
+--- Data-Dump-1.08-SGPJ39/lib/Data/Dump.pm~	2006-11-29 11:47:17.000000000 +0100
++++ Data-Dump-1.08-SGPJ39/lib/Data/Dump.pm	2008-01-06 11:50:08.000000000 +0100
+@@ -111,8 +111,12 @@ sub _dump
+ 
+     my($name, $idx, $dont_remember) = @_;
+ 
+-    my($class, $type, $id);
+-    if (overload::StrVal($rval) =~ /^(?:([^=]+)=)?([A-Z]+)\(0x([^\)]+)\)$/) {
++    my($class, $type, $id, $type_char_class);
++    $type_char_class = 'A-Z';
++    if ($] >= 5.011) {
++        $type_char_class .= 'egxp'; # early 5.11 had type Regexp
++    }
++    if (overload::StrVal($rval) =~ /^(?:([^=]+)=)?([$type_char_class]+)\(0x([^\)]+)\)$/) {
+ 	$class = $1;
+ 	$type  = $2;
+ 	$id    = $3;
+@@ -121,6 +125,9 @@ sub _dump
+     }
+     if ($] < 5.008 && $type eq "SCALAR") {
+ 	$type = "REF" if $ref eq "REF";
++    } elsif ($] >= 5.011 && $type eq "Regexp") {
++        $type = "REF";
++        $class = "Regexp";
+     }
+     warn "\$$name(@$idx) $class $type $id ($ref)" if $DEBUG;
+ 
