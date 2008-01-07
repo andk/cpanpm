@@ -573,7 +573,7 @@ sub missing_config_data {
          "makepl_arg",
          "mbuild_arg",
          "mbuild_install_arg",
-         "mbuild_install_build_command",
+         ($^O eq "MSWin32" ? "" : "mbuild_install_build_command"),
          "mbuildpl_arg",
          "no_proxy",
          #"pager",
