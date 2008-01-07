@@ -2,4 +2,4 @@
 match:
   distribution: "^GAAS/Data-Dump-1.08.tar.gz"
 patches:
-  - "/home/k/sources/CPAN/SVK/trunk/patches/Data-Dump-1.08-ANDK-01.patch"
+  - "ANDK/patches/Data-Dump-1.08-ANDK-01.patch.gz"
