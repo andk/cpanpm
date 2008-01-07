@@ -14,4 +14,4 @@ make:
   env:
     PERL_AUTOINSTALL: --skip    
 patches:
-  - "ANDK/patches/YAML-Syck-1.00-ANDK-01.patch.gz"
+  - "ANDK/patches/YAML-Syck-1.00-ANDK-03.patch.gz"
