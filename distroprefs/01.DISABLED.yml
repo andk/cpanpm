@@ -31,12 +31,14 @@ match:
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
+    |BOWMANBS/Audio-Ecasound-\d              # hanges very early: RT 32101
     |BSUGARS/IPC-Shareable-\d                # hangs on test 38ipchv RT 19169
     |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # has caused a hang more than one time during t/13-command-au
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DMAKI/GunghoX-FollowLinks-\d            # the danga socket test hangs again
+    |DMAKI/                                  # hangs again with something (Text-MeCab)
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |GRM/
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
