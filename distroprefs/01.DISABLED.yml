@@ -39,6 +39,7 @@ match:
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DMAKI/GunghoX-FollowLinks-\d            # the danga socket test hangs again
     |DMAKI/                                  # hangs again with something (Text-MeCab)
+    |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |GRM/
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
