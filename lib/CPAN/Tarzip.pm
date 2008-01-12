@@ -220,7 +220,9 @@ sub untar {
     my($prefer) = 0;
 
     my $exttar = $self->{TARPRG};
+    $exttar = "" if $exttar =~ /^\s+$/; # user refuses to use it
     my $extgzip = $self->{UNGZIPPRG};
+    $extgzip = "" if $extgzip =~ /^\s+$/; # user refuses to use it
     if (0) { # makes changing order easier
     } elsif ($BUGHUNTING) {
         $prefer=2;
