@@ -1,9 +1,15 @@
 --- 
-comment: "expect-in-any-order is too slow but works; expect alone reaches default timeout"
+comment: |
+
+  expect-in-any-order is too slow but works; expect alone reaches default timeout
+
+  update 2008-01-13 akoenig : trying to run without the patch so we
+  can delete it from CPAN?
+
 match:
   distribution: "^MIYAGAWA/Plagger-"
-patches:
-  - "ANDK/Module-AutoInstall-in-inc-ANDK-01.patch"
+#patches:
+#  - "ANDK/Module-AutoInstall-in-inc-ANDK-01.patch"
 pl:
   eexpect:
     mode: deterministic
