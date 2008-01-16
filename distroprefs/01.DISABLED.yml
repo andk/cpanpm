@@ -44,6 +44,7 @@ match:
     |GRM/
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
+    |JJORE/Enbugger-                         # steps into the debugger
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
