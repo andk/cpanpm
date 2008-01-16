@@ -1,15 +1,76 @@
 =encoding utf-8
 
+=head1 Der  Alltag eines CPAN Testers
+
+  21:45 < nadim> history | wc -l => 500
+  21:46 < nadim> history | grep test | wc -l => 375
+  21:46 < nadim> I have to get a life!
+
 =head1 Was ist ein CPAN Tester?
 
-... ein Perl User, der das Modul CPAN::Reporter installiert und
-konfiguriert hat.
+=over
 
---oder--
+=item * CPAN::Reporter
 
-... CPANPLUS ...
+=item * CPANPLUS und CPAN::YACSmoke
 
-=head1 Konfiguriert?
+=item * POE::Component::CPAN::YACSmoke
+
+=back
+
+=head1 URLs
+
+=over
+
+=item * http://cpantest.grango.org/
+
+=item * http://cpantesters.perl.org/
+
+=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
+
+=item * http://www.nntp.perl.org/group/perl.cpan.testers/
+
+=item * http://cpandeps.cantrell.org.uk/?module=
+
+=item * http://perl.grango.org/
+
+=back
+
+=head1 People
+
+=over
+
+=item * Alexandr Ciornii
+
+=item * Barbie
+
+=item * Bingos (Chris Williams)
+
+=item * David Cantrell
+
+=item * David Golden
+
+=item * Imacat
+
+=item * Jost Krieger
+
+=item * Sébastien Aperghis-Tramoni
+
+=item * Slaven Rezić
+
+=back
+
+=head1 RT
+
+=over
+
+=item http://use.perl.org/~LaPerla/journal/35252
+
+
+
+=back
+
+=head1 Konfigurieren
 
 CPAN::Reporter schreibt das Ergebnis der interaktiven Konfiguration in
 die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
@@ -23,182 +84,10 @@ die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
   send_report=ask/no
   smtp_server=localhost
 
+In the works: C<cc_skipfile>, C<send_skipfile>
+
 =head1 No SMTP, no Tester
 
-WIP
-
-=head1 Der  Alltag eines CPAN Testers
-
-21:45 < nadim> history | wc -l => 500
-21:46 < nadim> history | grep test | wc -l => 375
-21:46 < nadim> I have to get a life!
-
-=head1 Success Stories
-
-=head1 
-
-
-
-
-=joke
-
-(pointer from Andy Armstrong)
-
-http://www.annoyances.org/exec/show/article09-200
-
-Software Testing is not politically Correct.
-
-NEW YORK -- People for Ethical Treatment of Software (PETS) announced today that seven more software companies have been added to the group's watch list of companies that regularly practice software testing.
-
-"There is no need for software to be mistreated in this way so that companies like these can market new products." said Ken Grandola, spokesperson for PETS. "Alternative methods of testing these products are available"
-
-According to PETS, these companies force software to undergo lengthy and arduous tests, often without rest, for hours or days at a time. Employees are assigned to "break" the software by any means necessary, and inside sources report that they often joke about "torturing" the software.
-
-"It's no joke," said Grandola. "Innocent programs, from the day the are compiled, are cooped up in tiny rooms and "crashed" for hours on end. They spend the whole lives on dirty, ill-maintained computers, and are unceremoniously deleted when they're not needed anymore".
-
-Grandola said the software is kept in unsanitary conditions and is infested with bugs.
-
-"We know that alternatives to this horror exist." he said, citing industry giant Microsoft Corporation as a company that has become successful without resorting to software testing.
-
-
-
-=eojoke
-
-http://perlmonks.org/?node_id=652605
-
-    Ovid wants fun while testing: he wrote a wrapper that runs all *.t
-    scripts in one process to shave some loading time off.
-
-Jochen Stenzel binary searches success stories, many please.
-chocolateboy mail perhaps (2007-12-26)?
-
-Quite often encountering bad tests like tests that rely on the cookies
-being sent from www.ebay.com.
-
-thinnercache.pl has several important BBC points
-
-PREREQ_FATAL=0
-
-RECENT
-
-CPAN::Reporter 1.00
-
-grango statistik
-
-wiki grades: http://cpantest.grango.org/cgi-bin/pages.cgi?act=wiki-page&pagename=Reports
-
-  PASS
-  FAIL
-  UNKNOWN
-  NA
-
-  but also: "invalid" or in other words "on hold" when a dependency is not fulfilled
-
-IRC cpantesters, cpantesters-discuss, toolchain
-
-  all @irc.perl.org
-
-Nischen 5.005, 64bit, Dobrica talked about some phone toolkit
-
-
-
-warnings bei OK waere viel zu finden
-
-Namen David Cantrell, Chris Bingos Williams, Barbie, David Golden, Slaven
-
-Jifty app
-
-RT tickets (queries, frequent bug types, )
-
-megainstall in a random sequence
-
-POE
-
-distroprefs depends
-
-http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=CPAN
-
-    helps decide what needs testing
-    Interesting for some reason:
-        lots of things todo visible because already much done: B::Generate
-        lots of things todo but tasks not visible: XML::XPathScript
-        tough case because of dependencies failing, so nothing arrives: MojoMojo
-        old module: ???
-
-you need a big disk and ccache installed
-
-watch perl repositorybrowser when testing bleadperl
-
-relocateableinc => mod_perl
-
-threads,nothreads => Net::Daemon, Devel::Caller, Sub::Multi
-
-debugging/nodebugging => Coro, Tcl
-
-zlib tests time consuming
-
-urxvt
-
-=head1 Thoughts by David Golden in <5d4beb40710210830r21df9d32q671c185d01e64183@mail.gmail.com>
-
-The more important words in these paragraphs above are these: "the problem".
-
-"The problem" is not well defined or perceived the same by everyone.
-
-At the core CPAN Testers provides a means to capture the experience of
-users attempting to build and test a module.  As I see it, the root of
-"the problem" is that there are many ways for things to fail, and
-authors tend to object to getting "FAIL" grades (in big capital
-letters) for things outside their control.
-
-Authors complain to CPAN Testers, testers complain to those who write
-CPAN Testers clients about getting complaints for authors.  The
-investment of time and energy to improve CPAN Testers clients is
-weighed against the annoyance of getting complaints.
-
-So, gradually, the more easily determined failure paths have being
-pruned out to just cut down on the noise.  Ones that are easy to
-automate have been -- e.g. prerequisite failures are now just
-discarded (at least by CPAN::Reporter).
-
-Harder failure paths to determine -- such as unsupported operating
-systems -- have been addressed by special key words ("OS Unsupported"
-or "No support for OS") to let authors abort building or testing with
-an NA report.  But apparently that's too hard or too obscure for some
--- thus Devel::CheckOS.
-
-Confirming a working compiler setup and appropriate libraries is an
-even tougher problem for authors, and the method for signaling it is
-even more obscure.  ("exit 0" before creating a Makefile.)  And thus
-there is Devel::CheckLib.
-
-I'm not interested in spending my time writing an omniscient failure
-detection tool.  I'm not interested in trying to solve "the problem"
-(many ways for things to fail and authors affronted by FAIL reports)
-for all of CPAN.
-
-I'm am willing to invest my time in making it easier for authors to do
-something about being annoyed by FAIL reports from missing libraries.
-And I'm willing to invest my time to have something more constructive
-to say in response to complains. ("You're right that this is a library
-problem -- go use Devel::CheckLib and you won't get these FAIL
-reports").  That is "the problem" that Devel::CheckLib is trying to
-solve.
-
-=head1 Thoughts
-
-We have reached a point where our beloved greatest library of all
-times has degraded to some obscure collection of depressingly hard to
-use LEGO pieces. We need to turn our attention to quality assurance.
-
-=head1 Renee baecker:
-
-Mich würde es am meisten interessieren, wie man möglichst einfach
-CPAN-Tester werden kann, so dass ich ohne groß Mehraufwand
-Test-Resultate verschicken kann. Welche Tipps und Tricks gibt es bei
-der Konfiguration der Module wie Test::Reporter etc.
-Ich habe mich mit dem Thema noch nicht allzu intensiv beschäftigt, von
-daher wäre ich an einem Überblick sehr interessiert!
+Todo
 
 =cut
-
