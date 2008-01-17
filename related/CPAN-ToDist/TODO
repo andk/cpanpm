@@ -1,0 +1,10 @@
+* better error checking
+* generate proper outputfilenames
+* generate Depends field for both perl and other modules
+* generate Suggests field
+* generate Description field
+* allow hooking into cpan shell
+* follow dependencies
+* generate md5sums
+* install extra documentation (README, TODO, examples, ...)
+* write commandline wrapper
