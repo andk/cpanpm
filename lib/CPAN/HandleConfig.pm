@@ -478,6 +478,12 @@ sub require_myconfig_or_config () {
 
 sub home () {
     my $home;
+    # Suppress load messages until we load the config and know whether
+    # load messages are desired.  Otherwise, it's unexpected and odd 
+    # why one load message pops up even when verbosity is turned off.
+    # This means File::HomeDir load messages are never seen, but I
+    # think that's probably OK -- DAGOLDEN
+    local $CPAN::Config->{load_module_verbosity} = q[none];
     if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
         unless (defined $home) {
