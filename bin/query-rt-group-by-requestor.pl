@@ -17,6 +17,7 @@ my %Config = (
               username    => 'ANDK',
               password    => '',
               chunksize   => 396,
+              nbsp        => 0,
              );
 
 GetOptions(\my %config, map { "$_=s" } keys %Config);
@@ -171,7 +172,7 @@ my $top = 1;
 printf "<dl>\n";
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   my $x = sprintf "<code>%2d: %-9s %4d</code><br/>\n", $top, $k, $S{$k};
-  $x =~ s/ /&nbsp;/g;
+  $x =~ s/ /&nbsp;/g if $Config{nbsp};
   print $x;
   last if $top >= 40;
   $top++;

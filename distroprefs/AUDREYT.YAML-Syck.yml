@@ -1,9 +1,4 @@
 --- 
-comment: |
-
-  JSON 2.00 is not compatible with 1.xx but was uploaded 2007-12-19
-  after YAML-Syck 1.00 (2007-12-09)
-
 match:
   distribution: "AUDREYT/YAML-Syck-"
 pl:
@@ -18,8 +13,6 @@ pl:
 make:
   env:
     PERL_AUTOINSTALL: --skip    
-patches:
-  - "ANDK/patches/YAML-Syck-1.00-ANDK-04.patch.gz"
 depends:
   build_requires:
     Devel::Leak: 0
