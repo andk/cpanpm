@@ -7668,7 +7668,7 @@ is part of the perl-%s distribution. To install that, you need to run
             my $why = "No '$makefile' created";
             $CPAN::Frontend->mywarn($why);
             $self->{writemakefile} = CPAN::Distrostatus
-                ->new(qq{NO -- $why});
+                ->new(qq{NO -- $why\n});
             $self->store_persistent_state;
             return $self->goodbye("$system -- NOT OK");
         }
