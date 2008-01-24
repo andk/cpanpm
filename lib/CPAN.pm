@@ -7665,10 +7665,12 @@ is part of the perl-%s distribution. To install that, you need to run
             delete $self->{make_clean}; # if cleaned before, enable next
         } else {
             my $makefile = $self->{modulebuild} ? "Build" : "Makefile";
+            my $why = "No '$makefile' created";
+            $CPAN::Frontend->mywarn($why);
             $self->{writemakefile} = CPAN::Distrostatus
-                ->new(qq{NO -- No $makefile created});
+                ->new(qq{NO -- $why});
             $self->store_persistent_state;
-            return $self->goodbye("$system -- NO $makefile created");
+            return $self->goodbye("$system -- NOT OK");
         }
     }
     if ($CPAN::Signal) {
