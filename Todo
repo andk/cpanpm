@@ -1,3 +1,23 @@
+2008-01-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Carp-Clan?
+
+cpan[2]> install Carp::Clan 
+Running install for module 'Carp::Clan'
+
+  The module Carp::Clan isn't available on CPAN.
+
+  Either the module has not yet been uploaded to CPAN, or it is
+  temporary unavailable. Please contact the author to find out
+  more about the status. Try 'i Carp::Clan'.
+
+	I find 
+
+     471 2008-01-11 JJORE/Carp-Clan-5.10.meta
+   18618 2008-01-11 JJORE/Carp-Clan-5.10.tar.gz
+
+	but it isn't indexed. Probably a decreasing version number case?
+
 2008-01-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* (from Slaven) Diese Datei ist leer:

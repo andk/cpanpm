@@ -1,0 +1,10 @@
+---
+match:
+  distribution: "MSCHILLI/RRDTool-OO-\d"
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "Do you want me to install it for you right now"
+      - "n\n"
