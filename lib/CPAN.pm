@@ -8671,6 +8671,30 @@ sub test {
         }
     }
 
+    # bypass actual tests if "trust_test_report_history" and have a report
+    my $have_tested_fcn;
+    if (   ! $self->{force_update}
+        && $CPAN::Config->{trust_test_report_history}
+        && $CPAN::META->has_inst("CPAN::Reporter::History") 
+        && ( $have_tested_fcn = CPAN::Reporter::History->can("have_tested" ))
+    ) {
+        if ( my @reports = $have_tested_fcn->( dist => $self->base_id ) ) {
+            # Do nothing if grade was DISCARD
+            if ( $reports[-1]->{grade} =~ /^(?:PASS|UNKNOWN)$/ ) {
+                $self->{make_test} = CPAN::Distrostatus->new("YES");
+                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                $CPAN::Frontend->myprint("Found prior test report -- OK\n");
+                return;
+            }
+            elsif ( $reports[-1]->{grade} =~ /^(?:FAIL|NA)$/ ) {
+                $self->{make_test} = CPAN::Distrostatus->new("NO");
+                $self->{badtestcnt}++;
+                $CPAN::Frontend->mywarn("Found prior test report -- NOT OK\n");
+                return;
+            }
+        }
+    }
+
     my $system;
     my $prefs_test = $self->prefs->{test};
     if (my $commandline

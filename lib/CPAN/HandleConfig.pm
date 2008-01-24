@@ -82,6 +82,7 @@ $VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
      "term_is_latin",
      "term_ornaments",
      "test_report",
+     "trust_test_report_history",
      "unzip",
      "urllist",
      "use_sqlite",

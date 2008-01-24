@@ -488,6 +488,18 @@ you will need to configure CPAN::Reporter before sending reports.
 
 Email test reports if CPAN::Reporter is installed (yes/no)?
 
+=item trust_test_report_history
+
+When a distribution has already been tested by CPAN::Reporter on
+this machine, CPAN can skip the test phase and just rely on the 
+test report history instead.
+
+Note that this will not apply to distributions that failed tests
+because of missing dependencies.  Also, tests can be run 
+regardless of the history using "force".
+
+Do you want to rely on the test report history (yes/no)?
+
 =item use_sqlite
 
 CPAN::SQLite is a layer between the index files that are downloaded
@@ -798,6 +810,10 @@ Shall we use it as the general CPAN build and cache directory?
             CPAN::Reporter::configure();
             $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
         }
+    }
+
+    if (!$matcher or 'trust_test_report_history' =~ /$matcher/) {
+        my_yn_prompt(trust_test_report_history => 0, $matcher);
     }
 
     #

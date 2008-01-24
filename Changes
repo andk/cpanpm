@@ -1,3 +1,7 @@
+    * added 'trust_test_report_history' config option; when set, CPAN
+      will skip tests for a distribution and rely on test report results
+      if a prior test report is found; requires CPAN::Reporter 1.07_02
+
 2007-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_55: unstable relase bugfix
