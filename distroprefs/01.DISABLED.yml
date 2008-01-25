@@ -54,6 +54,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
+    |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TTY/kurila-\d                           # asks too many questions
     |WYANT/Astro-SpaceTrack-\d               # asks for a username/passwd during tests
