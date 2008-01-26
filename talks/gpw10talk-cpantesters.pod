@@ -10,11 +10,9 @@
 
 =over
 
-=item * CPAN::Reporter
+=item * CPAN, CPAN::Reporter, CPAN::Reporter::Smoker
 
-=item * CPANPLUS und CPAN::YACSmoke
-
-=item * POE::Component::CPAN::YACSmoke
+=item * CPANPLUS, CPAN::YACSmoke, POE::Component::CPAN::YACSmoke
 
 =back
 
@@ -39,6 +37,10 @@
 =head1 People
 
 =over
+
+=item * Adam J. Foxson
+
+=item * Adam Kennedy
 
 =item * Alexandr Ciornii
 
@@ -66,7 +68,7 @@
 
 =item http://use.perl.org/~LaPerla/journal/35252
 
-
+=item http://rt.cpan.org/Search/Build.html
 
 =back
 
