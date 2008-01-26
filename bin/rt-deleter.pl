@@ -14,10 +14,6 @@ Tickets will be displayed with 'less'.
 
 The question will be aksed if you want to delete it.
 
-=head1 BUGS
-
-It's not Unicode what arrives in the yml.
-
 =cut
 
 use strict;
@@ -29,6 +25,7 @@ use HTML::TreeBuilder;
 use HTML::FormatText;
 use LWP::UserAgent ();
 use YAML::Syck;
+$YAML::Syck::ImplicitUnicode = 1;
 
 my %Config = (
               server      => 'http://rt.cpan.org',
@@ -56,6 +53,8 @@ for my $i (0..$#rtickets) {
     my $x = ("." x length($sto)) . '$';
     $to =~ s/$x/$sto/;
     push @tickets, $from..$to;
+  } else {
+    push @tickets, $rtickets[$i];
   }
 }
 {
@@ -89,10 +88,12 @@ TICKET: for my $ticket (@tickets) {
   my $displ = "$Config{server}/Ticket/Display.html?id=$ticket";
   print "Retrieving ticket '$ticket' as $displ...\n";
   my $resp = $ua->get($displ);
-  my $tree = HTML::TreeBuilder->new_from_content($resp->content);
+  my $tree = HTML::TreeBuilder->new_from_content($resp->decoded_content);
   my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
   open my $less, "|-", "less" or die "Could not fork: $!";
+  binmode $less, ":utf8";
   my $text = $formatter->format($tree);
+  $DB::single++;
   print $less $text;
   close $less;
   $tree->delete;
