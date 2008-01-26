@@ -76,9 +76,7 @@ sub build {
 sub fake_install {
     my ($self) = @_;
 
-    local $CPAN::Config->{mbuild_install_arg} = 'destdir='. $self->build_dir;
-    local $CPAN::Config->{make_install_arg} = 'DESTDIR='. $self->build_dir;
-    $self->distribution->install;
+    $self->distribution->test;
 }
 
 sub generate {

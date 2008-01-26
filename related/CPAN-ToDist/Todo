@@ -1,0 +1,37 @@
+2008-01-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* perl -I `pwd`/lib -I /home/k/sources/CPAN/SVK/trunk/related/CPAN-ToDist/lib -MCPAN::ToDist::Deb -MCPAN -e "
+CPAN::ToDist::Deb->new({
+      module      => CPAN::Shell->expand('Module', 'Data::UUID'),
+      destination => '/tmp',
+  })->run;
+"
+
+	This currently fails for me with
+
+All tests successful.
+Files=3, Tests=30,  1 wallclock secs ( 0.30 cusr +  0.04 csys =  0.34 CPU)
+  RJBS/Data-UUID-1.148.tar.gz
+  /usr/bin/make test -- OK
+Warnung, in Datei »/tmp/toTrhBnpbp/DEBIAN/control« nahe Zeile 12 Paket »cpan-data-uuid-perl«:
+ description fehlt
+dpkg-deb: Baue Paket »cpan-data-uuid-perl« in »/tmp/bar.deb«.
+dpkg-deb: Ignoriere 1 Warnungen wegen der control-Datei(en)
+
+
+	* introduce some kind of recursive switch so that all dependent DEB are
+	goign to be built.
+
+	* do not install because buildign deb should be independent of
+	installing. Testing is good and seems necessary but we should be able to
+	buil our debs even if we have no write permissions to the installation
+	directories. Probably FIXED in my tiny contribution today.
+
+	
+
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "Todo"
+	tab-width: 2
+	left-margin: 2
+	End:
