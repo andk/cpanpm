@@ -38,6 +38,7 @@ my %Config = (
 GetOptions(\my %config,
            (map { "$_=s" } keys %Config),
            "nonono!",
+           "stats!",
           ) or die;
 while (my($k,$v) = each %config) {
   $Config{$k} = $v;
@@ -138,6 +139,28 @@ TICKET: for my $ticket (@tickets) {
   }
 }
 
-YAML::Syck::DumpFile("$yaml_db_file.new", $ALL);
+open my $fh, ">:utf8", "$yaml_db_file.new" or die "Couldn't open: $!";
+print $fh YAML::Syck::Dump($ALL);
+rename $yaml_db_file, "$yaml_db_file~";
 rename "$yaml_db_file.new", $yaml_db_file;
 print "Memories written to $yaml_db_file\n";
+
+if ($Config{stats}) {
+  print "Collecting stats\n";
+  my %del_by;
+  for my $k (keys %$ALL) {
+    if ($ALL->{$k}{text} =~ /^(.+) - Ticket deleted/m) {
+      $del_by{$1}++;
+    } elsif ($ALL->{$k}{could_delete}) {
+      $del_by{ANDK}++;
+    } else {
+      $del_by{UNKNOWN}++;
+    }
+  }
+  my $i = 0;
+  for my $k (sort { $del_by{$b} <=> $del_by{$a} } keys %del_by) {
+    $i++;
+    printf "%3d %23s %5d\n", $i, $k, $del_by{$k};
+    last if $i >= 40;
+  }
+}

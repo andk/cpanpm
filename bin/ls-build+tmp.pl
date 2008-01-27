@@ -1,5 +1,27 @@
+
+
+=head1 
+
+read the build directories and the /tmp directory and merge them in
+such a way that we can say which distro dropped something.
+
+=cut
+
 use strict;
 use warnings;
+
+use Getopt::Long;
+my %Config = (
+             );
+
+GetOptions(\my %config,
+           (map { "$_=s" } keys %Config),
+           "debug!",
+          ) or die;
+while (my($k,$v) = each %config) {
+  $Config{$k} = $v;
+}
+
 
 my @all;
 for my $dir (qw(/tmp /home/sand/.cpan/build /home/k/.cpan/build)) {
@@ -34,6 +56,14 @@ DIRENT: for my $dirent (@rall) {
         }
         print "---\n";
       } else {
+        if ($Config{debug}) {
+          my @t = localtime($dirent->[1]);
+          $t[5]+=1900;
+          $t[4]++;
+          my $sigil = -d $dirent->[0] ? "/" : "";
+          printf "%04d-%02d-%02dT%02d:%02d:%02d %s%s\n", @t[5,4,3,2,1,0], $dirent->[0], $sigil;
+          # printf "%s\n", $dirent->[0];
+        }
         next DIRENT;
       }
     }
