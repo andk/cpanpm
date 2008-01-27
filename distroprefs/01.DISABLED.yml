@@ -50,11 +50,12 @@ match:
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
+    |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |OALDERS/URI-ParseSearchString-More-0.04
     |RYBSKEJ/forks-0.25
-    |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
+    |TOKUHIROM/Moxy-\d                       # test hangs
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TTY/kurila-\d                           # asks too many questions
     |WYANT/Astro-SpaceTrack-\d               # asks for a username/passwd during tests
