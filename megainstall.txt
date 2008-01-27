@@ -865,6 +865,7 @@ Set::ConsistentHash
 Set::Crontab
 Set::Infinite
 Set::IntSpan::Fast
+Set::Integer::Gapfillers
 ShiftJIS::CP932::Correct
 ShiftJIS::CP932::MapUTF
 ShiftJIS::Collate
