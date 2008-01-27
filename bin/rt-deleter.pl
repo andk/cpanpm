@@ -35,7 +35,10 @@ my %Config = (
               less        => '',
              );
 
-GetOptions(\my %config, map { "$_=s" } keys %Config) or die;
+GetOptions(\my %config,
+           (map { "$_=s" } keys %Config),
+           "nonono!",
+          ) or die;
 while (my($k,$v) = each %config) {
   $Config{$k} = $v;
 }
@@ -90,19 +93,33 @@ TICKET: for my $ticket (@tickets) {
   my $resp = $ua->get($displ);
   my $tree = HTML::TreeBuilder->new_from_content($resp->decoded_content);
   my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
-  open my $less, "|-", "less" or die "Could not fork: $!";
-  binmode $less, ":utf8";
   my $text = $formatter->format($tree);
   $DB::single++;
-  print $less $text;
-  close $less;
+  if ($Config{nonono}) {
+    print "not showing '$ticket'\n";
+    sleep 1;
+  } else {
+    open my $less, "|-", "less" or die "Could not fork: $!";
+    binmode $less, ":utf8";
+    print $less $text;
+    close $less;
+  }
   $tree->delete;
   # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
-  print (("=" x 79) . "\n") for 1,2;
-  my $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
+  my $answer;
+  if ($Config{nonono}) {
+    $answer = "n";
+  } else {
+    print (("=" x 79) . "\n") for 1,2;
+    $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
+  }
   if ($answer =~ /^q/i) {
     last TICKET;
   } elsif ($answer =~ /^n/i) {
+    $ALL->{$ticket} ||= { text => $text,
+                          want_delete => 0,
+                          date => scalar(localtime),
+                        };
     next TICKET;
   } elsif ($answer =~ /^y/i) {
     $ALL->{$ticket} = { text => $text,
