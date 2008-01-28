@@ -89,6 +89,11 @@ TICKET: for my $ticket (@tickets) {
     warn "Alert: skipping invalid ticket '$ticket'";
     next TICKET;
   }
+  if ($ticket =~ /^(17751)$/) {
+    # 
+    warn "Alert: skipping known DOS ticket '$ticket'";
+    next TICKET;
+  }
   my $displ = "$Config{server}/Ticket/Display.html?id=$ticket";
   print "Retrieving ticket '$ticket' as $displ...\n";
   my $resp = $ua->get($displ);
@@ -161,6 +166,6 @@ if ($Config{stats}) {
   for my $k (sort { $del_by{$b} <=> $del_by{$a} } keys %del_by) {
     $i++;
     printf "%3d %23s %5d\n", $i, $k, $del_by{$k};
-    last if $i >= 40;
+    last if $i >= 10;
   }
 }
