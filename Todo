@@ -1,3 +1,26 @@
+2008-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: post to P5P:
+
+----Program----
+eval q{use Devel::Cover 0.63};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...po5d47x/perl-5.10.0@33071/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...pPgv7op/perl-5.10.0@33072/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	* bisect for Florian Math::Pari patch
+
+	* bisect for Moritz Lenz the regex thing.
+
+
 2008-01-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Carp-Clan?
