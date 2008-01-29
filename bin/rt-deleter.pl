@@ -55,7 +55,7 @@ for my $i (0..$#rtickets) {
     my($from,$sto) = ($1,$2);
     my $to = $from;
     my $x = ("." x length($sto)) . '$';
-    $to =~ s/$x/$sto/;
+    $to = $sto unless $to =~ s/$x/$sto/; # s/// fails on 99..100
     push @tickets, $from..$to;
   } else {
     push @tickets, $rtickets[$i];
