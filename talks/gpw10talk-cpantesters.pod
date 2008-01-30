@@ -30,6 +30,8 @@
 
 =item * http://cpandeps.cantrell.org.uk/?module=
 
+see also greasemonkey and http://use.perl.org/~Yanick/journal/35507
+
 =item * http://perl.grango.org/
 
 =back
