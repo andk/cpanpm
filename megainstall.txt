@@ -82,6 +82,7 @@ CGI::Application::Plugin::Forward
 CGI::Prototype
 CGI::Session
 CGI::Untaint
+CHI
 CPAN
 CPAN::Cache
 CPAN::Checksums
@@ -310,6 +311,7 @@ Devel::Profile
 Devel::REPL
 Devel::Required
 Devel::SawAmpersand
+Devel::SearchINC
 Devel::Size
 Devel::SmallProf
 Devel::Symdump
