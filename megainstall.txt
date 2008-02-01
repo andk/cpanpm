@@ -48,6 +48,7 @@ Authen::Simple
 AutoLoader
 B::Deobfuscate
 B::Lint
+B::Size
 BFD
 BSD::Resource
 BerkeleyDB
@@ -484,6 +485,7 @@ Handel
 Hash::AsObject
 Heap
 Heap::Simple
+Hook::Scope
 I18N::Charset
 I18N::Collate
 I18N::LangTags

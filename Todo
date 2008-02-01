@@ -1,3 +1,22 @@
+2008-01-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use Net::DNS 0.62};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...pm8xeIK/perl-5.10.0@33087/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...pjheziE/perl-5.10.0@33088/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
 2008-01-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: post to P5P:
