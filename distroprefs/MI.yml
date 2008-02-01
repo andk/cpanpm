@@ -98,6 +98,7 @@ match:
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
+    |JSWARTZ/CHI-\d
     |KARMAN/Catalyst-Plugin-Session-Store-File-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LUKEC/Test-Mock-LWP-\d

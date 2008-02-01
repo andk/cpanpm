@@ -1,3 +1,22 @@
+2008-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use Devel::StackTrace 1.15};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...pnKj4xI/perl-5.10.0@33021/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...pMXqMnB/perl-5.10.0@33022/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
 2008-01-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 
