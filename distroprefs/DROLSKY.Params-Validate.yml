@@ -17,7 +17,7 @@ comment: |
 match:
   distribution: "^DROLSKY/Params-Validate-0\.89\.tar\.gz$"
 patches:
-  - "ANDK/Params-Validate-0.89-ANDK-04.patch.gz"
+  - "ANDK/patches/Params-Validate-0.89-ANDK-05.patch.gz"
 depends:
   build_requires:
     Test::Taint: 0

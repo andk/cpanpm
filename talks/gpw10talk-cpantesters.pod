@@ -28,6 +28,12 @@
 
 =item * http://www.nntp.perl.org/group/perl.cpan.testers/
 
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page1.html
+
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page84.html
+
+  http://use.perl.org/~BinGOs/journal/35550
+
 =item * http://cpandeps.cantrell.org.uk/?module=
 
 see also greasemonkey and http://use.perl.org/~Yanick/journal/35507
