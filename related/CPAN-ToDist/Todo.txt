@@ -31,7 +31,7 @@ dpkg-deb: Ignoriere 1 Warnungen wegen der control-Datei(en)
 
 	Local Variables:
 	mode: change-log
-	change-log-default-name: "Todo"
+	change-log-default-name: "Todo.txt"
 	tab-width: 2
 	left-margin: 2
 	End:
