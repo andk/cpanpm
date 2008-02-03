@@ -94,6 +94,7 @@ match:
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
     |JROCKWAY/Catalyst-Plugin-ConfigLoader-Environment-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
+    |JROCKWAY/Chroniton-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
@@ -108,6 +109,7 @@ match:
     |LYOKATO/Pod-ProjectDocs-\d
     |MARCEL/App-sync_cpantesters-\d
     |MARCEL/Class-Accessor-Complex-\d
+    |MARCEL/Class-Accessor-FactoryTyped-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d

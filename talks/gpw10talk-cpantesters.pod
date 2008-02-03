@@ -16,6 +16,10 @@
 
 =back
 
+=head1 Warum teste ich?
+
+Um Bugs zu finden, bevor Ihr sie findet.
+
 =head1 URLs
 
 =over
@@ -35,8 +39,6 @@
   http://use.perl.org/~BinGOs/journal/35550
 
 =item * http://cpandeps.cantrell.org.uk/?module=
-
-see also greasemonkey and http://use.perl.org/~Yanick/journal/35507
 
 =item * http://perl.grango.org/
 
@@ -63,6 +65,15 @@ see also greasemonkey and http://use.perl.org/~Yanick/journal/35507
 =item * Imacat
 
 =item * Jost Krieger
+
+=item * Mark Lehmann
+
+=item * Ovid
+
+I find it sad that so many companies have this tension between QA and
+developers and here were are, seeing the EXACT same thing.
+
+http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-01/msg00722.html
 
 =item * Sébastien Aperghis-Tramoni
 

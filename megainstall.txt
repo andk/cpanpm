@@ -126,9 +126,11 @@ CharsetDetector
 Chart::Math::Axis
 Chart::Mountain
 Chatbot::Eliza
+Chroniton
 Class::Accessor
 Class::Accessor::Assert
 Class::Accessor::Class
+Class::Accessor::FactoryTyped
 Class::Accessor::Lvalue
 Class::Accessor::Named
 Class::Accessor::Ref
