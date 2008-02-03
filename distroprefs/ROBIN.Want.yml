@@ -1,0 +1,9 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=32579
+
+match:
+  distribution: "ROBIN/Want-0.16.tar.gz"
+patches:
+  - "ANDK/patches/Want-0.16-JDHEDDEN-01.patch.gz"
