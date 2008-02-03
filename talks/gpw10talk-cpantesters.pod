@@ -18,7 +18,7 @@
 
 =head1 Warum teste ich?
 
-Um Bugs zu finden, bevor Ihr sie findet.
+Um Bugs zu finden, bevor ich sie als Enduser finde.
 
 =head1 URLs
 

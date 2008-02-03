@@ -239,7 +239,7 @@ mega-validate: bin/colorout-to-dir.rng
 
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 OKDIRS=CPAN|DIST|bin|blib|cover_db|\
-       distroprefs|eg|gpw9-cpan-talk.d|inc|lib|logs|patches|perlbug|\
+       distroprefs|eg|inc|lib|logs|patches|perlbug|\
        protocols|related|release-lib|scripts|t|talks
 
 verify-no-subdir:

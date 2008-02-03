@@ -21,7 +21,6 @@ distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
-distroprefs/AUDREYT.Jifty-DBI.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
@@ -116,7 +115,6 @@ distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JCRISTY.PerlMagick.yml
 distroprefs/JENDA.Mail-Sender.yml
-distroprefs/JESSE.Data-ICal.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
 distroprefs/JGMYERS.Encode-Detect.yml
