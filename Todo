@@ -1,3 +1,17 @@
+2008-02-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Could it be a way to increase responsibility consciousness among MI
+	users: report it as a bug when they distribute an old version? Makes
+	little sense in the absence of a good recent version. Ajj, but Chroniton
+	distributes 0.63 and that version seems to have not evan a check for
+	PERL5_CPANPLUS_IS_RUNNING.
+
+	* A plan how we could protect the world from recursive usage. Inc the
+	counter in the environment, display it, display in which directory we
+	are, sleep for a long and increasing time, recommend the user to hit ^C
+	and file a bug report. Display the process number. Display a countdown
+	when we will continue. Display some sort of stack trace.
+
 2008-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 

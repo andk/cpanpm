@@ -94,7 +94,6 @@ match:
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
     |JROCKWAY/Catalyst-Plugin-ConfigLoader-Environment-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
-    |JROCKWAY/Chroniton-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
