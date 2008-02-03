@@ -1,5 +1,72 @@
 2008-02-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Frank Wigand tells me stories about a bug in AUTOLOAD, version, or
+	CPAN.pm.
+
+	http://perlmonks.org/?node_id=665058
+
+	After installing a few thousand modules I can reproduce the failure.
+	With both 1.9205 and current repository version. I must call 'reload
+	index' and then 'r'. An 'r' when loading the data from Metadata
+	succeeds.
+
+	Introducing more evals allows me to identify the modules that *trigger*
+	the bug:
+
+	'Acme::MetaSyntactic::nethack':
+	'Class::Accessor::Classy':
+	'Class::DBI':
+	'Class::Std':
+	'Config::Std':
+	'Getopt::Euclid':
+	'Smart::Comments':
+	'Sub::Installer':
+	'Text::Balanced':
+
+	I can then also step through the debugger in the AutoLoader which
+	believes it is being called for:
+
+	  DB<<11>> x $AUTOLOAD
+0  'main::version::(""'
+
+	Before we reach there we see a version object that looks like so:
+
+	  DB<7> x $have
+0  main::version=HASH(0xcc1b6ec)
+   'original' => 'v1.0.0'
+   'qv' => 1
+   'version' => ARRAY(0xcc1b8e4)
+      0  1
+      1  0
+      2  0
+
+	and the debugger displays it as such, so apparently overloading is
+	turned off somehow. Because if I construct such an object manually, it
+	has overloading and the 'x $have' just does:
+
+	  DB<16> x $have                                       
+0  v1.0.0
+
+
+	I now have it down to:
+
+% /home/src/perl/repoperls/installed-perls/maint-5.8/p8tnrrm/perl-5.8.0@27144/bin/perl -Ilib -MCPAN -e '
+use CPAN;
+CPAN::Shell->reload("index");
+$TRACEMODULE = CPAN::Shell->expand('Module','Acme::MetaSyntactic::nethack');
+$traceinst = $TRACEMODULE->inst_version;
+print $traceinst;         
+'
+
+	Bombs immediately.
+
+	My perllocal.pod has many candidates that might have changed something.
+
+	A binary search would probably compare two perls and add one module
+	after the other to the one that is still sane?
+
+	stop,stop,stop Frank has found the culprit in Safe.pm 2.14.
+
 	* Could it be a way to increase responsibility consciousness among MI
 	users: report it as a bug when they distribute an old version? Makes
 	little sense in the absence of a good recent version. Ajj, but Chroniton
