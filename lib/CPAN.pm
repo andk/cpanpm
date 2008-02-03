@@ -2575,36 +2575,57 @@ sub _u_r_common {
         $file =~ s!^./../!!;
         my($latest) = $module->cpan_version;
         my($inst_file) = $module->inst_file;
+        CPAN->debug("file[$file]latest[$latest]") if $CPAN::DEBUG;
         my($have);
         return if $CPAN::Signal;
-        if ($inst_file) {
-            if ($what eq "a") {
-                $have = $module->inst_version;
-            } elsif ($what eq "r") {
-                $have = $module->inst_version;
-                local($^W) = 0;
-                if ($have eq "undef") {
-                    $version_undefs++;
-                    push @version_undefs, $module->as_glimpse;
-                } elsif (CPAN::Version->vcmp($have,0)==0) {
-                    $version_zeroes++;
-                    push @version_zeroes, $module->as_glimpse;
+        my($next_MODULE);
+        eval { # version.pm involved!
+            if ($inst_file) {
+                if ($what eq "a") {
+                    $have = $module->inst_version;
+                } elsif ($what eq "r") {
+                    $have = $module->inst_version;
+                    local($^W) = 0;
+                    if ($have eq "undef") {
+                        $version_undefs++;
+                        push @version_undefs, $module->as_glimpse;
+                    } elsif (CPAN::Version->vcmp($have,0)==0) {
+                        $version_zeroes++;
+                        push @version_zeroes, $module->as_glimpse;
+                    }
+                    ++$next_MODULE unless CPAN::Version->vgt($latest, $have);
+                    # to be pedantic we should probably say:
+                    #    && !($have eq "undef" && $latest ne "undef" && $latest gt "");
+                    # to catch the case where CPAN has a version 0 and we have a version undef
+                } elsif ($what eq "u") {
+                    ++$next_MODULE;
                 }
-                next MODULE unless CPAN::Version->vgt($latest, $have);
-# to be pedantic we should probably say:
-#    && !($have eq "undef" && $latest ne "undef" && $latest gt "");
-# to catch the case where CPAN has a version 0 and we have a version undef
-            } elsif ($what eq "u") {
-                next MODULE;
+            } else {
+                if ($what eq "a") {
+                    ++$next_MODULE;
+                } elsif ($what eq "r") {
+                    ++$next_MODULE;
+                } elsif ($what eq "u") {
+                    $have = "-";
+                }
             }
-        } else {
-            if ($what eq "a") {
-                next MODULE;
-            } elsif ($what eq "r") {
-                next MODULE;
-            } elsif ($what eq "u") {
-                $have = "-";
-            }
+        };
+        next MODULE if $next_MODULE;
+        if ($@) {
+            $CPAN::Frontend->mywarn
+                (sprintf("Error while comparing cpan/installed versions of '%s':
+INST_FILE: %s
+INST_VERSION: %s %s
+CPAN_VERSION: %s %s
+",
+                         $module->id,
+                         $inst_file || "",
+                         (defined $have ? $have : "[UNDEFINED]"),
+                         (ref $have ? ref $have : ""),
+                         $latest,
+                         (ref $latest ? ref $latest : ""),
+                        ));
+            next MODULE;
         }
         return if $CPAN::Signal; # this is sometimes lengthy
         $seen{$file} ||= 0;
@@ -3015,7 +3036,8 @@ that may go away anytime.\n"
     if ( $CPAN::DEBUG ) {
         my $wantarray = wantarray;
         my $join_m = join ",", map {$_->id} @m;
-        $self->debug("wantarray[$wantarray]join_m[$join_m]");
+        # $self->debug("wantarray[$wantarray]join_m[$join_m]");
+        $self->debug("wantarray[$wantarray]");
     }
     return wantarray ? @m : $m[0];
 }
@@ -9671,13 +9693,16 @@ sub inst_file {
     $me[-1] .= ".pm";
     my($incdir,$bestv);
     foreach $incdir ($CPAN::Config->{'cpan_home'},@INC) {
-        my $bfile = File::Spec->catfile($incdir, @me);
-        CPAN->debug("bfile[$bfile]") if $CPAN::DEBUG;
-        next unless -f $bfile;
-        my $foundv = MM->parse_version($bfile);
-        if (!$bestv || CPAN::Version->vgt($foundv,$bestv)) {
-            $self->{INST_FILE} = $bfile;
-            $self->{INST_VERSION} = $bestv = $foundv;
+        my $parsefile = File::Spec->catfile($incdir, @me);
+        CPAN->debug("parsefile[$parsefile]") if $CPAN::DEBUG;
+        next unless -f $parsefile;
+        my $have = eval { MM->parse_version($parsefile); };
+        if ($@) {
+            $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
+        }
+        if (!$bestv || CPAN::Version->vgt($have,$bestv)) {
+            $self->{INST_FILE} = $parsefile;
+            $self->{INST_VERSION} = $bestv = $have;
         }
     }
     $self->{INST_FILE};
@@ -10356,7 +10381,10 @@ sub available_version {
 #-> sub CPAN::Module::parse_version ;
 sub parse_version {
     my($self,$parsefile) = @_;
-    my $have = MM->parse_version($parsefile);
+    my $have = eval { MM->parse_version($parsefile); };
+    if ($@) {
+        $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
+    }
     $have = "undef" unless defined $have && length $have;
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
     $have =~ s/ $//; # trailing whitespace happens all the time
