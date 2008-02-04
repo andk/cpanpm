@@ -28,6 +28,8 @@ distroprefs/AVIF.Time-Duration.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
+distroprefs/BINGOS.POE-Component-Client-FTP.yml
+distroprefs/BINGOS.POE-Component-Client-NSCA.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
@@ -72,6 +74,7 @@ distroprefs/DOM.OpenGuides.yml
 distroprefs/DONEILL.MIME-tools.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
+distroprefs/DROLSKY.Devel-StackTrace.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DRTECH.Config-Loader.yml
 distroprefs/DSKOLL.MIME-tools.yml
@@ -88,6 +91,7 @@ distroprefs/FDALY.Test-Deep.yml
 distroprefs/FHOXH.Test-Reporter.yml
 distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
+distroprefs/GAAS.Data-Dump.yml
 distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.libwww.yml
 distroprefs/GBARR.Authen-SASL.yml
@@ -125,10 +129,12 @@ distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JOHNL.DBD-Informix.yml
 distroprefs/JOHNSCA.TkCarp.yml
+distroprefs/JOSEPHW.XML-Writer.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/JPRIT.Event.yml
 distroprefs/JROBINSON.SQL-Translator.yml
+distroprefs/JROCKWAY.Chroniton.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/KANE.CPANPLUS.yml
 distroprefs/KASEI.Class-Accessor.yml
@@ -141,6 +147,7 @@ distroprefs/KVAIL.Tk-Stderr.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LAMPRECHT.Tk-GraphItems.yml
+distroprefs/LBROCARD.Test-WWW-Mechanize-Catalyst.yml
 distroprefs/LDS.Crypt-CBC.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
@@ -174,6 +181,7 @@ distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MRAMBERG.MojoMojo.yml
+distroprefs/MSCHILLI.RRDTool-OO.yml
 distroprefs/MSCHWERN.Test-Simple.yml
 distroprefs/MSERGEANT.AxKit.yml
 distroprefs/MSERGEANT.CDB_File.yml
@@ -219,6 +227,8 @@ distroprefs/RJBS.MIME-Light.yml
 distroprefs/RJRAY.RPC-XML.yml
 distroprefs/RKINYON.DBM-Deep.yml
 distroprefs/RMUHLE.classes.yml
+distroprefs/ROBIN.PadWalker.yml
+distroprefs/ROBIN.Want.yml
 distroprefs/RONAN.Transform-Canvas.yml
 distroprefs/ROODE.Readonly-XS.yml
 distroprefs/ROODE.Time-Format.yml
