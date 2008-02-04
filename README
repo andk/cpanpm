@@ -567,6 +567,9 @@ CONFIGURATION
                          (and nonsense for characters outside latin range)
       term_ornaments     boolean to turn ReadLine ornamenting on/off
       test_report        email test reports (if CPAN::Reporter is installed)
+      trust_test_report_history
+                         skip testing when previously tested ok (according to
+                         CPAN::Reporter history)
       unzip              location of external program unzip
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
       use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
