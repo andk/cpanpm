@@ -121,6 +121,9 @@ my $prereq_pm = {
                  'Test::More' => 0,   # MSCHWERN;
                                       # Test-Simple-0.62.tar.gz;
                 };
+if ($^O eq "darwin") {
+  $prereq_pm->{'File::HomeDir'} = 0.69;
+}
 
 if ($HAVE_FILE_SPEC) {
   # import PAUSE public key to user's keychain
