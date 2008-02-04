@@ -2,6 +2,7 @@
 comment: |
 
   http://rt.cpan.org/Ticket/Display.html?id=32579
+  http://rt.cpan.org/Ticket/Display.html?id=32627
 
 match:
   distribution: "ROBIN/Want-0.16.tar.gz"
