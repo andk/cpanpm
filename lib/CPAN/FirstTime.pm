@@ -657,7 +657,7 @@ sub init {
 
         if (!$matcher or 'cpan_home' =~ /$matcher/) {
             my $cpan_home = $CPAN::Config->{cpan_home}
-                || File::Spec->catdir($ENV{HOME}, ".cpan");
+                || File::Spec->catdir(CPAN::HandleConfig::home(), ".cpan");
 
             if (-d $cpan_home) {
                 $CPAN::Frontend->myprint(qq{
