@@ -1,6 +1,25 @@
-    * added 'trust_test_report_history' config option; when set, CPAN
-      will skip tests for a distribution and rely on test report results
-      if a prior test report is found; requires CPAN::Reporter 1.07_02
+2008-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_56: unstable release both bugfixes and new features
+
+	* addressing #32841: fixing wrong usage of HOME vs File::HomeDir spotted
+	by Randy Kobes nased ona bugreport by David Wheeler; help from Schwern
+	and Adam Kennedy and I'm sure this will need more iterations.
+
+	* added 'trust_test_report_history' config option; when set, CPAN will
+	skip tests for a distribution and rely on test report results if a prior
+	test report is found; requires CPAN::Reporter 1.07_02
+
+	* protect against the infamous bug in Safe 2.13 that causes data
+	corruption and ugly error messages line unknown method version::("")) or
+	some such
+
+	* let people disable the direct usage of gzip and tar by supplying a
+	whitespace config variable
+
+	* improvements to PPM support by Randy Kobes
+
+	* now with 274 distroprefs files
 
 2007-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
