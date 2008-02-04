@@ -61,13 +61,8 @@ for my $i (0..$#rtickets) {
     push @tickets, $rtickets[$i];
   }
 }
-{
-  my $ans = prompt "Planning to visit tickets @tickets. OK? [Yn]", "y";
-  unless ($ans =~ /^y/) {
-    print "OK, exiting\n";
-    exit;
-  }
-}
+@tickets = sort {$a <=> $b} @tickets;
+print "Planning to visit tickets @tickets.\n";
 my $yaml_db_file = __FILE__;
 $yaml_db_file =~ s/\.pl$/.yml/;
 my $ALL;
@@ -120,14 +115,17 @@ TICKET: for my $ticket (@tickets) {
     $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
   }
   if ($answer =~ /^q/i) {
+    print "OK, end of loop\n";
     last TICKET;
   } elsif ($answer =~ /^n/i) {
+    print "OK, leaving ticket '$ticket' alone\n";
     $ALL->{$ticket} ||= { text => $text,
                           want_delete => 0,
                           date => scalar(localtime),
                         };
     next TICKET;
   } elsif ($answer =~ /^y/i) {
+    print "OK, trying to delete ticket '$ticket'\n";
     $ALL->{$ticket} = { text => $text,
                         want_delete => 1,
                         date => scalar(localtime),
