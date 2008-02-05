@@ -1,6 +1,22 @@
+2008-02-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* need to re-visit OLAF/Net-DNS-0.62.tar.gz, not in RT and not inspected
+	closely enough.
+
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-01/msg01365.html
+
+	* need to find the autobox mail that said something	about
+	1.22?
+
+	http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2007-12/msg00809.html
+
+	No need to run binary search again. Now in RT:
+
+	http://rt.cpan.org/Ticket/Display.html?id=32928
+
 2008-02-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Frank Wigand tells me stories about a bug in AUTOLOAD, version, or
+	* Frank Wiegand tells me stories about a bug in AUTOLOAD, version, or
 	CPAN.pm.
 
 	http://perlmonks.org/?node_id=665058
