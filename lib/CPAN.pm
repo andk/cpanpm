@@ -9617,8 +9617,8 @@ sub contains {
     my $in_cont = 0;
     $self->debug("inst_file[$inst_file]") if $CPAN::DEBUG;
     while (<$fh>) {
-        $in_cont = m/^=(?!head1\s+CONTENTS)/ ? 0 :
-            m/^=head1\s+CONTENTS/ ? 1 : $in_cont;
+        $in_cont = m/^=(?!head1\s+(?i-xsm:CONTENTS))/ ? 0 :
+            m/^=head1\s+(?i-xsm:CONTENTS)/ ? 1 : $in_cont;
         next unless $in_cont;
         next if /^=/;
         s/\#.*//;
