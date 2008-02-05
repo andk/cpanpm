@@ -47,6 +47,7 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
+    |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KNORR/Net-MirrorDir                     # asks questions
     |KNORR/Net-                              # no questions during make test please
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
