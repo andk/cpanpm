@@ -5394,10 +5394,10 @@ sub rd_modlist {
     }
     push @eval2, q{CPAN::Modulelist->data;};
     local($^W) = 0;
-    my($comp) = Safe->new("CPAN::Safe1");
+    my($compmt) = Safe->new("CPAN::Safe1");
     my($eval2) = join("\n", @eval2);
     CPAN->debug(sprintf "length of eval2[%d]", length $eval2) if $CPAN::DEBUG;
-    my $ret = $comp->reval($eval2);
+    my $ret = $compmt->reval($eval2);
     Carp::confess($@) if $@;
     return if $CPAN::Signal;
     my $i = 0;
@@ -5861,8 +5861,8 @@ sub dir_listing {
         my $eval = <$fh>;
         $eval =~ s/\015?\012/\n/g;
         close $fh;
-        my($comp) = Safe->new();
-        $cksum = $comp->reval($eval);
+        my($compmt) = Safe->new();
+        $cksum = $compmt->reval($eval);
         if ($@) {
             rename $lc_file, "$lc_file.bad";
             Carp::confess($@) if $@;
@@ -7162,8 +7162,8 @@ sub CHECKSUM_check_file {
         my $eval = <$fh>;
         $eval =~ s/\015?\012/\n/g;
         close $fh;
-        my($comp) = Safe->new();
-        $cksum = $comp->reval($eval);
+        my($compmt) = Safe->new();
+        $cksum = $compmt->reval($eval);
         if ($@) {
             rename $chk_file, "$chk_file.bad";
             Carp::confess($@) if $@;
