@@ -83,6 +83,7 @@ match:
     |HDP/KSx-IndexManager-\d
     |HIROSE/Net-SSL-ExpireDate-\d
     |HOLOWAY/Catalyst-Action-REST-\d
+    |JAYK/Catalyst-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
