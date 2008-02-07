@@ -86,8 +86,10 @@ print $traceinst;
 	* Could it be a way to increase responsibility consciousness among MI
 	users: report it as a bug when they distribute an old version? Makes
 	little sense in the absence of a good recent version. Ajj, but Chroniton
-	distributes 0.63 and that version seems to have not evan a check for
+	distributes 0.63 and that version seems to have not even a check for
 	PERL5_CPANPLUS_IS_RUNNING.
+
+	http://rt.cpan.org/Ticket/Display.html?id=32984
 
 	* A plan how we could protect the world from recursive usage. Inc the
 	counter in the environment, display it, display in which directory we

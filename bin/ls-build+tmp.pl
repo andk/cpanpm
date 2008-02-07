@@ -46,7 +46,7 @@ DIRENT: for my $dirent (@rall) {
       if ($age > $cleanup_time) {
         require File::Path;
         warn "Going to rmtree '$dirent->[0]' age[$age]\n";
-        sleep 0.2;
+        sleep 0.05;
         File::Path::rmtree($dirent->[0]);
         next DIRENT;
       }

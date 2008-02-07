@@ -313,6 +313,7 @@ t/10version.t
 t/11mirroredby.t
 t/12cpan.t
 t/13tarzip.t
+t/14forkbomb.t
 t/30shell.coverage
 t/30shell.t
 t/31sessions.t

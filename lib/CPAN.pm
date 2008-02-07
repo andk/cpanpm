@@ -44,6 +44,26 @@ BEGIN {
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
+if ($ENV{PERL5_CPAN_IS_RUNNING}) {
+    $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
+    my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
+    my @rec = split /,/, $rec;
+    warn "# ALERT: Recursive call of CPAN.pm detected\n\n";
+    my $w = sprintf "# CPAN.pm is running in process %d now", pop @rec;
+    my $sleep = 0;
+    while (@rec) {
+        $w .= sprintf " which has been called by process %d", pop @rec;
+        $sleep += 60;
+    }
+    $w .= ".\n\n# Sleeping $sleep seconds to protect other processes\n";
+    warn $w;
+    local $| = 1;
+    while ($sleep > 0) {
+        printf "\r#%5d", --$sleep;
+        sleep 1;
+    }
+    print "\n";
+}
 $ENV{PERL5_CPAN_IS_RUNNING}=$$;
 $ENV{PERL5_CPANPLUS_IS_RUNNING}=$$; # https://rt.cpan.org/Ticket/Display.html?id=23735
 
