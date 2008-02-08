@@ -7,7 +7,7 @@ comment: |
   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00855.html
   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
 
-  With the patch from RAFL we have reached 23556 and fail with 24557
+  With the patch from RAFL we have reached 24556 and fail with 24557
 
 match:
   distribution: "^ILYAZ/modules/Math-Pari-2.010709"
