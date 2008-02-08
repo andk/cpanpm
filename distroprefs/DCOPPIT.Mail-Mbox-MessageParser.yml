@@ -1,0 +1,28 @@
+---
+comment: |
+
+  First questions about bzip, bzip2, diff, grep, gzip
+
+  And then MI user:-(
+
+  First time used: DCOPPIT/Mail-Mbox-MessageParser-1.5000.tar.gz
+
+match:
+  distribution: "DCOPPIT/Mail-Mbox-MessageParser-"
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 10
+    reuse: 1
+    talk:
+      - "Auto-install"
+      - "y\n"
+      - "Where can I find your .* executable"
+      - "\n"
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip

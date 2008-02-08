@@ -594,6 +594,7 @@ Mail::Header
 Mail::IMAPClient
 Mail::Internet
 Mail::Mailer
+Mail::Mbox::MessageParser
 Mail::RFC822::Address
 Mail::Send
 Mail::Sendmail
