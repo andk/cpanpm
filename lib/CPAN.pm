@@ -7845,9 +7845,15 @@ sub _run_via_expect_anyorder {
     my $reuse = $expect_model->{reuse};
     my @expectacopy = @{$expect_model->{talk}}; # we trash it!
     my $but = "";
+    my $timeout_start = time;
   EXPECT: while () {
         my($eof,$ran_into_timeout);
-        my @match = $expo->expect($timeout,
+        # XXX not up to the full power of expect. one could certainly
+        # wrap all of the talk pairs into a single expect call and on
+        # success tweak it and step ahead to the next question. The
+        # current implementation unnecessarily limits itself to a
+        # single match.
+        my @match = $expo->expect(1,
                                   [ eof => sub {
                                         $eof++;
                                     } ],
@@ -7876,6 +7882,11 @@ sub _run_via_expect_anyorder {
                     splice @expectacopy, $i, 2 unless $reuse;
                     next EXPECT;
                 }
+            }
+            my $have_waited = time - $timeout_start;
+            if ($have_waited < $timeout) {
+                # warn "DEBUG: have_waited[$have_waited]timeout[$timeout]";
+                next EXPECT;
             }
             my $why = "could not answer a question during the dialog";
             $CPAN::Frontend->mywarn("Failing: $why\n");
