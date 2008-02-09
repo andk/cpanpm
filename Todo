@@ -1,3 +1,77 @@
+2008-02-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Slaven suspects a misbehaviour of the new recursion detection. He
+	encountered it with Tcl.
+
+	* cpantesters website seems to have stalled. Reported to Robert.
+
+2008-02-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Frank asks me to investigate this based on program which is already in
+	rt.perl.org since Jan 8.
+
+	$p -Itests -MUnknownError
+
+31253:5.9.5::thr=:opt=-g
+Global symbol "$asd" requires explicit package name at tests/UnknownError.pm line 8.
+BEGIN not safe after errors--compilation aborted at tests/UnknownError.pm line 9.
+Compilation failed in require.
+BEGIN failed--compilation aborted.
+31384:5.9.5::thr=:opt=-g
+Unknown error
+Compilation failed in require.
+BEGIN failed--compilation aborted.
+
+	Wrote a call_UnknownError.pl. The UnknownError.pm was already there.
+	Apparently I was disturbed when running it the first time.
+
+----Program----
+my $out = `'$^X' -Itests -MUnknownError 2>&1`;
+$out =~ s/at .*$//mg;
+print $out;
+
+----Output of .../plx9DAz/perl-5.9.4@31254/bin/perl----
+Global symbol "$asd" requires explicit package name 
+BEGIN not safe after errors--compilation aborted 
+Compilation failed in require.
+BEGIN failed--compilation aborted.
+
+----EOF ($?='0')----
+----Output of .../pwiMCxf/perl-5.9.4@31255/bin/perl----
+Unknown error
+Compilation failed in require.
+BEGIN failed--compilation aborted.
+
+----EOF ($?='0')----
+
+	Reported to P5P
+
+	* inspired by RT#33004
+
+----Program----
+eval q{use Mail::Mbox::MessageParser 1.5};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../paCcXxw/perl-5.9.1@23470/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../prlkihB/perl-5.9.1@23471/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	There is a regex written with qr/.../ which is later used within a
+	pattern. The -m of the inner pattern was overruled by the outer /m until
+	23470 and not overruled in 23471. It's the pattern 'from_pattern' from
+	the Config.pm. Fixing this fixes one test, not all. Two more spots to
+	patch.
+
+	distroprefs/DCOPPIT.Mail-Mbox-MessageParser.yml
+
+	http://rt.cpan.org/Ticket/Display.html?id=33004
+
 2008-02-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* need to re-visit OLAF/Net-DNS-0.62.tar.gz, not in RT and not inspected

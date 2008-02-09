@@ -7,6 +7,8 @@ comment: |
 
   First time used: DCOPPIT/Mail-Mbox-MessageParser-1.5000.tar.gz
 
+  http://rt.cpan.org/Ticket/Display.html?id=33004
+
 match:
   distribution: "DCOPPIT/Mail-Mbox-MessageParser-"
 pl:
@@ -26,3 +28,5 @@ make:
   env:
     PERL_AUTOINSTALL: --skip    
     PERL_EXTUTILS_AUTOINSTALL: --skip
+patches:
+  - "ANDK/patches/Mail-Mbox-MessageParser-1.5000-ANDK-01.patch.gz"
