@@ -11,7 +11,7 @@ use strict;
 use lib "lib";
 use CPAN;
 my $i = shift;
-die "# Stopping the bomb, saw arg $i" if $i && $i>=2;
+die "# Stopping the bomb, saw arg $i" if $i && $i>=4;
 my $pid = fork;
 die "could not fork" unless defined $pid;
 if ($pid){ # parent

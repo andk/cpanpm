@@ -50,12 +50,18 @@ if ($ENV{PERL5_CPAN_IS_RUNNING}) {
     my @rec = split /,/, $rec;
     warn "# ALERT: Recursive call of CPAN.pm detected\n\n";
     my $w = sprintf "# CPAN.pm is running in process %d now", pop @rec;
-    my $sleep = 0;
+    my %sleep = (
+                 3 => 30,
+                 4 => 60,
+                 5 => 120,
+                );
+    my $sleep = @rec > 5 ? 300 : ($sleep{scalar @rec}||0);
     while (@rec) {
         $w .= sprintf " which has been called by process %d", pop @rec;
-        $sleep += 60;
     }
-    $w .= ".\n\n# Sleeping $sleep seconds to protect other processes\n";
+    if ($sleep) {
+        $w .= ".\n\n# Sleeping $sleep seconds to protect other processes\n";
+    }
     warn $w;
     local $| = 1;
     while ($sleep > 0) {
