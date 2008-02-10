@@ -7607,7 +7607,7 @@ is part of the perl-%s distribution. To install that, you need to run
 #        $switch = "-MExtUtils::MakeMaker ".
 #            "-Mops=:default,:filesys_read,:filesys_open,require,chdir"
 #            if $] > 5.00310;
-        my $makepl_arg = $self->make_x_arg("pl");
+        my $makepl_arg = $self->_make_phase_arg("pl");
         $ENV{PERL5_CPAN_IS_EXECUTING} = File::Spec->catfile($self->{build_dir},
                                                             "Makefile.PL");
         $system = sprintf("%s%s Makefile.PL%s",
@@ -7769,7 +7769,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $system = join " ", $self->_make_command(),  $CPAN::Config->{make_arg};
         }
         $system =~ s/\s+$//;
-        my $make_arg = $self->make_x_arg("make");
+        my $make_arg = $self->_make_phase_arg("make");
         $system = sprintf("%s%s",
                           $system,
                           $make_arg ? " $make_arg" : "",
@@ -8169,25 +8169,50 @@ $filler2 $bs $filler2
     return $self->{prefs} = +{};
 }
 
-# CPAN::Distribution::make_x_arg
-sub make_x_arg {
-    my($self, $whixh) = @_;
-    my $make_x_arg;
+# CPAN::Distribution::_make_phase_arg
+sub _make_phase_arg {
+    my($self, $phase) = @_;
+    my $_make_phase_arg;
     my $prefs = $self->prefs;
     if (
         $prefs
-        && exists $prefs->{$whixh}
-        && exists $prefs->{$whixh}{args}
-        && $prefs->{$whixh}{args}
+        && exists $prefs->{$phase}
+        && exists $prefs->{$phase}{args}
+        && $prefs->{$phase}{args}
        ) {
-        $make_x_arg = join(" ",
+        $_make_phase_arg = join(" ",
                            map {CPAN::HandleConfig
-                                 ->safe_quote($_)} @{$prefs->{$whixh}{args}},
+                                 ->safe_quote($_)} @{$prefs->{$phase}{args}},
                           );
     }
-    my $what = sprintf "make%s_arg", $whixh eq "make" ? "" : $whixh;
-    $make_x_arg ||= $CPAN::Config->{$what};
-    return $make_x_arg;
+
+# cpan[2]> o conf make[TAB]
+# make                       make_install_make_command
+# make_arg                   makepl_arg
+# make_install_arg
+# cpan[2]> o conf mbuild[TAB]
+# mbuild_arg                    mbuild_install_build_command
+# mbuild_install_arg            mbuildpl_arg
+
+    my $mantra; # must switch make/mbuild here
+    if ($self->{modulebuild}) {
+        $mantra = "mbuild";
+    } else {
+        $mantra = "make";
+    }
+    my %map = (
+               pl => "pl_arg",
+               make => "_arg",
+               test => "_test_arg", # does not really exist but maybe
+                                    # will some day and now protects
+                                    # us from unini warnings
+               install => "_install_arg",
+              );
+    my $phase_underscore_meshup = $map{$phase};
+    my $what = sprintf "%s%s", $mantra, $phase_underscore_meshup;
+
+    $_make_phase_arg ||= $CPAN::Config->{$what};
+    return $_make_phase_arg;
 }
 
 # CPAN::Distribution::_make_command
@@ -8775,7 +8800,7 @@ sub test {
     } else {
         $system = join " ", $self->_make_command(), "test";
     }
-    my $make_test_arg = $self->make_x_arg("test");
+    my $make_test_arg = $self->_make_phase_arg("test");
     $system = sprintf("%s%s",
                       $system,
                       $make_test_arg ? " $make_test_arg" : "",
