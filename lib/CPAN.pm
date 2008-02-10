@@ -44,13 +44,14 @@ BEGIN {
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
-if ($ENV{PERL5_CPAN_IS_RUNNING}) {
+if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
     $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
     my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
     my @rec = split /,/, $rec;
     warn "# Note: Recursive call of CPAN.pm detected\n";
     my $w = sprintf "# CPAN.pm is running in process %d now", pop @rec;
     my %sleep = (
+                 3 => 30,
                  4 => 60,
                  5 => 120,
                 );
@@ -2588,7 +2589,11 @@ sub _u_r_common {
        @version_undefs,@version_zeroes);
     $version_undefs = $version_zeroes = 0;
     my $sprintf = "%s%-25s%s %9s %9s  %s\n";
-    my @expand = $self->expand('Module',@args);
+    my @expand = sort {
+        $b->_is_representative_module <=> $a->_is_representative_module
+            ||
+                $a->id cmp $b->id
+            } $self->expand('Module',@args);
     my $expand = scalar @expand;
     if (0) { # Looks like noise to me, was very useful for debugging
              # for metadata cache
@@ -9854,6 +9859,21 @@ sub description {
 sub distribution {
     my($self) = @_;
     CPAN::Shell->expand("Distribution",$self->cpan_file);
+}
+
+#-> sub CPAN::Module::_is_representative_module
+sub _is_representative_module {
+    my($self) = @_;
+    return $self->{_is_representative_module} if defined $self->{_is_representative_module};
+    my $pm = $self->cpan_file or return 0;
+    $pm =~ s|.+/||;
+    $pm =~ s{\.(?:tar\.(bz2|gz|Z)|t(?:gz|bz)|zip)$}{}i; # see base_id
+    $pm =~ s|-\d+\.\d+.+$||;
+    $pm =~ s|-[\d\.]+$||;
+    $pm =~ s/-/::/g;
+    $self->{_is_representative_module} = $pm eq $self->{ID} ? 1 : 0;
+    # warn "DEBUG: $pm eq $self->{ID} => $self->{_is_representative_module}";
+    $self->{_is_representative_module};
 }
 
 #-> sub CPAN::Module::undelay

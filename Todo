@@ -1,3 +1,30 @@
+2008-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* http://rt.cpan.org/Ticket/Display.html?id=32525: sent me a nice patch
+	to make the listings prettier by using representative module names for
+	the distros that have one so instead of this:
+
+App::Prove                     3.07      3.08  ANDYA/Test-Harness-3.08.tar.gz
+DBD::Gofer::Transport::Base  0.010088  0.010377  TIMB/DBI-1.602.tar.gz
+
+	....we would see
+
+DBI                           1.601     1.602  TIMB/DBI-1.602.tar.gz
+Test::Harness                  3.07      3.08  ANDYA/Test-Harness-3.08.tar.gz
+
+	I rolled my own implementation of this idea today that needed less code
+	to change. It costs a bit more CPU to sort the raw list of modules and
+	the stupid thing is that we sort all, not only those that are being
+	displayed finally. But that was always our goal: to display while we go
+	so the user gets information as soon as possible. So now the list is
+	sorted by the boolean "representative module" and on second order
+	alphabetically. This means that after a first pass through the alphabet
+	there is a second as in:
+
+XML::SimpleObject::LibXML      0.53      0.60  DBRIAN/XML-SimpleObject-LibXML-0.60.tar.gz
+Catalyst::Model::Search::Item     undef      0.01  MRAMBERG/Catalyst-Model-Search-0.01.tar.gz
+
+
 2008-02-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Slaven suspects a misbehaviour of the new recursion detection. He
