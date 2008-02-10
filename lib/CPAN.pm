@@ -48,10 +48,9 @@ if ($ENV{PERL5_CPAN_IS_RUNNING}) {
     $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
     my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
     my @rec = split /,/, $rec;
-    warn "# ALERT: Recursive call of CPAN.pm detected\n\n";
+    warn "# Note: Recursive call of CPAN.pm detected\n";
     my $w = sprintf "# CPAN.pm is running in process %d now", pop @rec;
     my %sleep = (
-                 3 => 30,
                  4 => 60,
                  5 => 120,
                 );
@@ -8428,6 +8427,8 @@ sub unsat_prereq {
                                     "make_clean",
                                    ) {
                 if ($do->{$nosayer}) {
+                    my $selfid = $self->pretty_id;
+                    my $did = $do->pretty_id;
                     if (UNIVERSAL::can($do->{$nosayer},"failed") ?
                         $do->{$nosayer}->failed :
                         $do->{$nosayer} =~ /^NO/) {
@@ -8439,8 +8440,8 @@ sub unsat_prereq {
                         }
                         $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                                 "'$need_module => $need_version' ".
-                                                "for '$self->{ID}' failed when ".
-                                                "processing '$do->{ID}' with ".
+                                                "for '$selfid' failed when ".
+                                                "processing '$did' with ".
                                                 "'$nosayer => $do->{$nosayer}'. Continuing, ".
                                                 "but chances to succeed are limited.\n"
                                                );
@@ -8452,7 +8453,7 @@ sub unsat_prereq {
                             # 2007-03
                             $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                                     "'$need_module => $need_version' ".
-                                                    "for '$self->{ID}' already installed ".
+                                                    "for '$selfid' already installed ".
                                                     "but installation looks suspicious. ".
                                                     "Skipping another installation attempt, ".
                                                     "to prevent looping endlessly.\n"
