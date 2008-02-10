@@ -1,5 +1,18 @@
 2008-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Wrote a new entry into http://rt.cpan.org/Ticket/Display.html?id=30145
+	to nail down XML::RSS::LibXML which failed again today with
+
+t/items-are-0....................http://my.netscape.com/publish/formats/rss-0.91.dtd:1: parser error : Content error in the external subset
+<br />
+^
+Can't call method "getNamespaces" on an undefined value at /home/sand/.cpan/build/XML-RSS-LibXML-0.3002-NE3qqm/blib/lib/XML/RSS/LibXML.pm line 172.
+# Looks like you planned 502 tests but only ran 472.
+# Looks like your test died just after 472.
+ Dubious, test returned 255 (wstat 65280, 0xff00)
+ Failed 30/502 subtests 
+^I(less 23 skipped subtests: 449 okay)
+
 	* http://rt.cpan.org/Ticket/Display.html?id=32841 Would have to consider
 	all possible directories on a given system. Compare them if they are at
 	all different. Offer the user a chance to resolve things if they are
