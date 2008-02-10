@@ -6675,7 +6675,7 @@ ending run
 
 t/32-selector.t  255 65280    38   72  3-38
 
-	Jets, this can be worked around with extremely ugly nonsensical code.
+	Yes, this can be worked around with extremely ugly nonsensical code.
 	But it may give way to something better.
 
 	For now I put the patch into the patches directory.
