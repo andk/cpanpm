@@ -2,12 +2,13 @@
 
 =pod
 
+Part of "megainstall"
+
  $0 --logs=megainstalldir
 
 looks at one dirent that tells us which perl we are talking about
 
-Ask that perl for its config.
-
+Ask that perl for its config and store it as perl-V.txt
 
 =cut
 
