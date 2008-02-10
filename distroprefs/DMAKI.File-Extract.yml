@@ -9,3 +9,12 @@ pl:
       - "y\n"
       - "\QKeep Spreadsheet::ParseExcel in the dependency list?\E"
       - "y\n"
+      - "Auto-install"
+      - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  env:
+    PERL_AUTOINSTALL: --skip    
+    PERL_EXTUTILS_AUTOINSTALL: --skip

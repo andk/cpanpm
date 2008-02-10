@@ -1,5 +1,18 @@
 2008-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* http://rt.cpan.org/Ticket/Display.html?id=32841 Would have to consider
+	all possible directories on a given system. Compare them if they are at
+	all different. Offer the user a chance to resolve things if they are
+	different.
+
+	Found more than one CPAN/MyConfig.pm files:
+
+	[1] .../...
+	[2] .../...
+	[3] .../...
+
+	Please tell me which one I shall use.
+
 	* http://rt.cpan.org/Ticket/Display.html?id=32525: sent me a nice patch
 	to make the listings prettier by using representative module names for
 	the distros that have one so instead of this:
