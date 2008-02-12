@@ -3403,6 +3403,7 @@ to find objects with matching identifiers.
     # queuerunner (please be warned: when I started to change the
     # queue to hold objects instead of names, I made one or two
     # mistakes and never found which. I reverted back instead)
+    my $fail_cnt = 0;
     while (my $q = CPAN::Queue->first) {
         my $obj;
         my $s = $q->as_string;
@@ -3485,10 +3486,11 @@ to find objects with matching identifiers.
             CPAN::Queue->delete($s);
             CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
         } else {
-            if ( $CPAN::Config->{halt_on_failure} ) {
+            if ( ! $obj->delayed && $CPAN::Config->{halt_on_failure} ) {
                 $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
                 CPAN::Queue->nullify_queue;
             }
+            $fail_cnt++;
             CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
 
@@ -3506,6 +3508,7 @@ to find objects with matching identifiers.
             $obj->color_cmd_tmps(0,0);
         }
     }
+    return $fail_cnt ? 0 : 1;
 }
 
 #-> sub CPAN::Shell::recent ;
@@ -5959,6 +5962,20 @@ sub undelay {
                     ) {
         delete $self->{$delayer};
     }
+}
+
+#-> CPAN::Distribution::delayed
+sub delayed {
+    my $self = shift;
+    for my $delayer (
+                     "configure_requires_later",
+                     "configure_requires_later_for",
+                     "later",
+                     "later_for",
+                    ) {
+        return 1 if $self->{$delayer};
+    }
+    return;
 }
 
 #-> CPAN::Distribution::is_dot_dist
@@ -9219,6 +9236,7 @@ sub install {
     delete $self->{force_update};
     # $DB::single = 1;
     $self->store_persistent_state;
+    return ! $self->{install}->failed;
 }
 
 sub introduce_myself {
@@ -9607,6 +9625,15 @@ sub undelay {
     }
 }
 
+#-> CPAN::Bundle::delayed
+sub delayed {
+    my $self = shift;
+    for my $c ( $self->contains ) {
+        my $obj = CPAN::Shell->expandany($c) or next;
+        return 1 if $obj->delayed;
+    }
+}
+
 # mark as dirty/clean
 #-> sub CPAN::Bundle::color_cmd_tmps ;
 sub color_cmd_tmps {
@@ -9912,6 +9939,14 @@ sub undelay {
     if ( my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file) ) {
         $dist->undelay;
     }
+}
+
+#-> sub CPAN::Module::delayed
+sub delayed {
+    my $self = shift;
+    my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file);
+    return $dist->delayed if $dist;
+    return;
 }
 
 # mark as dirty/clean
@@ -10394,7 +10429,7 @@ sub install {
 });
         $CPAN::Frontend->mysleep(5);
     }
-    $self->rematein('install') if $doit;
+    return $doit ? $self->rematein('install') : 1;
 }
 #-> sub CPAN::Module::clean ;
 sub clean  { shift->rematein('clean') }
