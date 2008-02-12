@@ -313,9 +313,12 @@ sub _default
 	foreach my $arg ( @$args )
 		{
 		if( $options{f} ) { CPAN::Shell->force( $method, $arg ) }
-		else              { CPAN::Shell->$method( $arg )        }
+		else { 
+			my $rc = CPAN::Shell->$method( $arg );
+			last if ! $rc && $CPAN::Config->{halt_on_failure}; 
 		}
 	}
+}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 sub _print_help
