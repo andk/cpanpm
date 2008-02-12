@@ -1,3 +1,7 @@
+	* added 'halt_on_failure' config option to halt queue processing 
+	  after the first failure rather than processing all remaining times
+	  (patch by David Golden; requested by Andrew Hampe and Matisse Enzer)
+
 2008-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_56: unstable release both bugfixes and new features
@@ -5,6 +9,7 @@
 	* addressing #32841: fixing wrong usage of HOME vs File::HomeDir spotted
 	by Randy Kobes based on a bugreport by David Wheeler; with help from
 	Schwern and Adam Kennedy and I'm sure this will need more iterations.
+
 
 	* added 'trust_test_report_history' config option; when set, CPAN will
 	skip tests for a distribution and rely on test report results if a prior

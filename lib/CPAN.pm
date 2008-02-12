@@ -3485,6 +3485,10 @@ to find objects with matching identifiers.
             CPAN::Queue->delete($s);
             CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
         } else {
+            if ( $CPAN::Config->{halt_on_failure} ) {
+                $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
+                CPAN::Queue->nullify_queue;
+            }
             CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
 
@@ -11052,6 +11056,8 @@ defined:
   getcwd             see below
   gpg                path to external prg
   gzip               location of external program gzip
+  halt_on_failure    stop processing after the first failure of queued
+                     items or dependencies
   histfile           file to maintain history between sessions
   histsize           maximum number of lines to keep in histfile
   http_proxy         proxy host for http requests
