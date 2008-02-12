@@ -1,3 +1,29 @@
+2008-02-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use Safe::World 0.14};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pGZP5H3/perl-5.9.2@24965/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pR6Z2HL/perl-5.9.2@24966/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
+2008-02-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* maybe still unreported: Safe::World, FreezeThaw, Devel::Size,
+	Data::Dump::Streamer, Authen-Htpasswd-0.16
+
+	* reported but unfixed: Devel::ebug, Storable, Tk
+
 2008-02-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Wrote a new entry into http://rt.cpan.org/Ticket/Display.html?id=30145

@@ -46,6 +46,20 @@ Um Bugs zu finden, bevor ich sie als Enduser finde.
 
 =back
 
+=head1 Use
+
+=over
+
+=item * Devel-CheckLib
+
+check that a library is available
+
+=item * Devel-CheckOS
+
+check what OS we're running on
+
+=back
+
 =head1 People
 
 =over
