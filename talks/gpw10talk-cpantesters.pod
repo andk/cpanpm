@@ -1,5 +1,9 @@
 =encoding utf-8
 
+=head1 Hat das jemand getestet?
+
+Andreas König, DPW10, RRZE, Erlangen, 2008-02-13
+
 =head1 Der  Alltag eines CPAN Testers
 
   21:45 < nadim> history | wc -l => 500
@@ -10,104 +14,25 @@
 
 =over
 
-=item * CPAN, CPAN::Reporter, CPAN::Reporter::Smoker
+=item * CPAN + CPAN::Reporter + 1 Prise Konfiguration
 
-=item * CPANPLUS, CPAN::YACSmoke, POE::Component::CPAN::YACSmoke
+=item * C<o conf init /report/>
 
-=back
+=item * C<test Foo::Bar::Baz>
 
-=head1 Warum teste ich?
+=item * C<report Foo::Bar::Baz>
 
-Um Bugs zu finden, bevor ich sie als Enduser finde.
+Casual Reporting.
 
-=head1 URLs
+=item * CPAN::Reporter::Smoker
 
-=over
-
-=item * http://cpantest.grango.org/
-
-=item * http://cpantesters.perl.org/
-
-=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
-
-=item * http://www.nntp.perl.org/group/perl.cpan.testers/
-
-  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page1.html
-
-  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page84.html
-
-  http://use.perl.org/~BinGOs/journal/35550
-
-=item * http://cpandeps.cantrell.org.uk/?module=
-
-=item * http://perl.grango.org/
-
-=item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
-
-=back
-
-=head1 Use
-
-=over
-
-=item * Devel-CheckLib
-
-check that a library is available
-
-=item * Devel-CheckOS
-
-check what OS we're running on
-
-=back
-
-=head1 People
-
-=over
-
-=item * Adam J. Foxson
-
-=item * Adam Kennedy
-
-=item * Alexandr Ciornii
-
-=item * Barbie
-
-=item * Bingos (Chris Williams)
-
-=item * David Cantrell
-
-=item * David Golden
-
-=item * Imacat
-
-=item * Jost Krieger
-
-=item * Mark Lehmann
-
-=item * Ovid
-
-I find it sad that so many companies have this tension between QA and
-developers and here were are, seeing the EXACT same thing.
-
-http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-01/msg00722.html
-
-=item * Sébastien Aperghis-Tramoni
-
-=item * Slaven Rezić
-
-=back
-
-=head1 RT
-
-=over
-
-=item http://use.perl.org/~LaPerla/journal/35252
-
-=item http://rt.cpan.org/Search/Build.html
+Von David Golden
 
 =back
 
 =head1 Konfigurieren
+
+=over
 
 CPAN::Reporter schreibt das Ergebnis der interaktiven Konfiguration in
 die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
@@ -123,8 +48,270 @@ die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
 
 In the works: C<cc_skipfile>, C<send_skipfile>
 
-=head1 No SMTP, no Tester
+=back
 
-Todo
+=head1 Old school
+
+=over
+
+=item * CPANPLUS
+
+=item * CPAN::YACSmoke
+
+Der erste Smoker von Barbie.
+
+=item * POE::Component::CPAN::YACSmoke
+
+Hochleistungs-Smoker unter POE von Bingos (Chris Williams)
+
+=back
+
+=head1 Warum teste ich?
+
+=over
+
+=item * um Bugs zu finden, bevor ich als Enduser auf sie treffe
+
+=item * in Modulen
+
+=item * in Perl
+
+=item * weil es eine ganze Menge Spaß macht
+
+=item * weil es dem Ruf unseres CPAN gut tut
+
+=item * weil es eine Menge dabei zu entdecken gibt
+
+=item * weil ich dabei den Autoren etwas zurückgeben kann
+
+Etwa Test::Harness durchtesten.
+
+=back
+
+=head1 Wann scheitert das Testen?
+
+=over
+
+=item * Wenn Entwickler und Tester nicht miteinander können
+
+=item * Ovid:
+
+I find it sad that so many companies have this tension between QA and
+developers and here we are seeing the EXACT same thing.
+
+http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-01/msg00722.html
+
+In dem Thread, in dem Ovid das gesagt hat, sind Emotionen hochgekocht,
+die für mich schwer nachvollziehbar sind. Es kommt offensichtlich beim
+Aufeinandertreffen von göttlichen Entwicklern und dem undankbaren,
+stets nur auf seinen eigenen Vorteil bedachten, schmarotzendem Pöbel
+zu existenziellen Katastrophen.
+
+=head1 Existentielle Katastrophen
+
+=over
+
+Oft kommt es nicht vor. Aber man sollte damit rechnen. Manche
+Entwickler haben eben einen Arbeitsstil, der vom User etwas mehr
+Leidensfähigkeit oder Einsatz fordert. Daran ist auch nichts
+auszusetzen. Schließlich tun sie das alles aus eigenen Stuecken, also
+haben wir auch nichts zu fordern. Wenn ein Tester kein Interesse an
+unseren Diensten hat, hands down.
+
+Ich bemühe mich dann so gut ich kann, einen Patch zu schreiben, eine
+Distroprefs-Datei zu schreiben, nur eine kurze Notiz an den Autor.
+Oder ganz ab in den Killfile.
+
+=back
+
+=head1 Grenzfälle
+
+=item * Schlechte Tests sind relativ harmlos
+
+Tests, die Bugs anzeigen, wo keine sind oder die existierende Bugs
+nicht anzeigen, stellen nicht den Vorang des Testens in Frage. Es ist
+halt dann eine frage der Zet, bis jemand die schlechten Tests
+identifiziert.
+
+=item * Random Test Results
+
+Zusätzliche Buchführung kann manchmal helfen, zufällige Testergebnisse
+zu identifizieren. Wer immer wieder die gleichen Module testet,
+liefert über CPAN::Reporter immer höchstens einen PASS und eine FAIL
+pro perl Version ab. Wenn die Tests aber 150 PASS und 50 FAIL
+ergeben...
+
+=item * Overeager Testing
+
+Es gibt Tests, die laufen zu lange.
+
+=item * Hänger
+
+Es gibt Tests, die bleiben einfach stehen.
+
+=back
+
+=head1 URLs
+
+=over
+
+=item * http://cpantest.grango.org/
+
+Das ist das von Barbie aufgesetzte Testers Wiki. Hat nur wenige
+Seiten, aber gute Linksammlung, gute Anleitungen.
+
+=item * http://cpantesters.perl.org/
+
+Die unprätentiöse Sammlung aller Testergebnisse. Beachte die Links am
+Fuß der Seiten auf YAML/JSON/XML Downloads.
+
+=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
+
+Eine herrliche tabellarische Aufarbeitung der Rohdaten von
+cpantesters. Matrix, weil die Ergebnisse wenigstens in zwei
+Dimensionen präsentiert werden.
+
+=item * http://www.nntp.perl.org/group/perl.cpan.testers/
+
+Hier kommen die Testreports zuerst an. Einmal stündlich werden neue
+Seiten generiert. Solange muß der Autor warten, wenn wir als Tester
+ihm kein CC geschickt haben.
+
+Im Januar wurde der einmillionste Testreport von David Cantrell
+eingeliefert.
+
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page1.html
+
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page84.html
+
+  http://use.perl.org/~BinGOs/journal/35550
+
+=item * http://cpandeps.cantrell.org.uk/?module=
+
+Kurz vor der letzten YAPC in Wien hat David Cantrell sich dieses
+Kleinod ausgedaecht. Anhand der META.yml Dateien, die heutzutage bei
+den meisten Distributionen dabei sind, malt er eine Art Dependency
+Graphen und berechnet anhand der aktuellen FAIL Quoten die
+Gesamtwahrscheinlichkeit aus, daß ein Modul mit Erfolg getestet werden
+kann.
+
+=item * http://perl.grango.org/
+
+Hier sammelt Barbie seine Statistiken. Hier ist auch die Hall Of Fame
+der größten Tester aller Zeiten.
+
+=item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
+
+Eine erst vor kurzem von brian d foy oder Andy Armstrong für die CPAN
+Testers entdeckte Ressource. Eine Art Stats'R'Us, wo man eigene Daten
+hochladen kann, damit sie dann von einem Java Plugin hübsch dargetellt
+werden.
+
+=back
+
+=head1 Howto Use your {Makefile,Build}.PL
+
+=over
+
+=item * Makefile.PL: require 5.008
+
+Rule out old perl versions
+
+=item * Build.PL: requires => { perl => 5.008 }
+
+Same thing
+
+=item * Devel-CheckLib
+
+check that a library is available
+
+=item * Devel-CheckOS
+
+check what OS we're running on
+
+=back
+
+=head1 Grades
+
+=over
+
+=item PASS
+
+=item FAIL
+
+=item NA
+
+=item UNKNOWN
+
+=item "invalid"
+
+=back
+
+=head1 Mailing lists
+
+=over
+
+=item * http://log.perl.org
+
+Announcement pending on cpan-uploads@perl.org, but alternatives
+pointed out by Bingos in http://use.perl.org/~BinGOs/journal/35631
+
+=back
+
+=head1 People
+
+=over
+
+=item * Adam J. Foxson
+
+=item * Adam Kennedy
+
+=item * Alexandr Ciornii
+
+=item * Andy Lester
+
+=item * Barbie
+
+=item * Bingos (Chris Williams)
+
+=item * David Cantrell
+
+=item * David Golden
+
+=item * Imacat
+
+=item * Jost Krieger
+
+=item * Mark Lehmann
+
+=item * Sébastien Aperghis-Tramoni
+
+=item * Slaven Rezić
+
+=back
+
+=head1 RT
+
+=over
+
+=item * http://rt.cpan.org/
+
+Ich mag RT als Bug Tracking System. Die Fähigkeit, die meisten
+Arbeiten per Email zu erledigen, das REST Interface, die klaren
+URLs,die man leicht nachbauen kann, das alles macht es zu einem guten
+Partner in der täglichen Arbeit.
+
+=item * http://use.perl.org/~LaPerla/journal/35252
+
+Zu Sylvester als Neujahrsgruß entstanden, um einmal herauszufinden,
+wie dieses RT denn eigentlich zu über 30000 Bugreport in nur 6 Jahren
+gekommen ist. Es ist nicht nur Spam, wenn auch ein gewaltiger
+Einschlag von Spam zu beobachten ist.
+
+=item * http://rt.cpan.org/Search/Build.html
+
+Hier ist die Suchmaske von RT, die ein wenig gewöhnungsbedürftig ist.
+
+=back
 
 =cut

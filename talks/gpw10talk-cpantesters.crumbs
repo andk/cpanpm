@@ -1,3 +1,36 @@
+CPAN::Reporter::Smoker ansehen
+
+Finde das Zitat, wo jemand sagt, was Marc anscheinend denkt.
+
+Mehr Raum geben dem Scheitern: das ist eine Menge dran an dem, was
+Marc gesagt hat.
+
+Finde mehr Links zu RT Tickets, etwa fuer random test results.
+Eventuell die .out Datei holen.
+
+Finde Links auf die Matrix, die auf den ersten Blick etwas zeigen.
+
+Finde Links, die bei David Cantrell nett aussehen. Angerwhale?
+
+Modular aufgebaut, Test::Reporter von beiden Seiten verwendet.
+Umsteigen auf HTTP deshalb wahrscheinlich reibungslos moeglich.
+
+Mailing Lists fehlt noch vollstaendig.
+
+Wie alt ist rt.cpan.org nochmal?
+
+Wo habe ich neulich "Profit" geschrieben? Im APC Changes file
+eventuell. Nein. Aber im README.additionaltarballs, den es nun gar
+nich mehr gibt, habe ich es vermutlich geschrieben.
+
+Dave Rolsky
+
+Wie hiess mein erster Lieblingstester, der wirklich kein Entwickler
+war? Der glaube ich vier Kinder hatte?
+
+
+
+
 =head1 Success Stories
 
 =head1 IRC Channels
@@ -35,6 +68,7 @@ IRC cpantesters, cpantesters-discuss, toolchain
 
 Nischen 5.005, 64bit, Dobrica talked about some phone toolkit
 
+PITA fehlt auch noch ganz.
 
 
 warnings bei OK waere viel zu finden
