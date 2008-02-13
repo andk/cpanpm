@@ -122,6 +122,8 @@ Ich bemühe mich dann so gut ich kann, einen Patch zu schreiben, eine
 Distroprefs-Datei zu schreiben, nur eine kurze Notiz an den Autor.
 Oder ganz ab in den Killfile.
 
+Wenn wir als Tester Autoren nerven, dann erreichen wir gar nichts.
+
 =back
 
 =head1 Grenzfälle
@@ -132,6 +134,12 @@ Tests, die Bugs anzeigen, wo keine sind oder die existierende Bugs
 nicht anzeigen, stellen nicht den Vorang des Testens in Frage. Es ist
 halt dann eine frage der Zet, bis jemand die schlechten Tests
 identifiziert.
+
+=back
+
+=head1 Grenzfälle II
+
+=over
 
 =item * Random Test Results
 
@@ -145,67 +153,22 @@ ergeben...
 
 Es gibt Tests, die laufen zu lange.
 
-=item * Hänger
-
-Es gibt Tests, die bleiben einfach stehen.
-
 =back
 
-=head1 URLs
+=head1 Grenzfälle II
 
 =over
 
-=item * http://cpantest.grango.org/
+=item * Hänger
 
-Das ist das von Barbie aufgesetzte Testers Wiki. Hat nur wenige
-Seiten, aber gute Linksammlung, gute Anleitungen.
+Es gibt Tests, die bleiben einfach stehen. Wer mit Bingo's POE Server
+arbeitet, kennt das Problem nicht. Andere müssen entscheiden, ob der
+Prozess auf Input wartet und entsprechend antworten, und dann später
+eine Distroprefs-Datei schreiben; oder ob sie die Distribution
+überspringen wollen und sie in einen Exclude-File aufnehmen.
 
-=item * http://cpantesters.perl.org/
-
-Die unprätentiöse Sammlung aller Testergebnisse. Beachte die Links am
-Fuß der Seiten auf YAML/JSON/XML Downloads.
-
-=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
-
-Eine herrliche tabellarische Aufarbeitung der Rohdaten von
-cpantesters. Matrix, weil die Ergebnisse wenigstens in zwei
-Dimensionen präsentiert werden.
-
-=item * http://www.nntp.perl.org/group/perl.cpan.testers/
-
-Hier kommen die Testreports zuerst an. Einmal stündlich werden neue
-Seiten generiert. Solange muß der Autor warten, wenn wir als Tester
-ihm kein CC geschickt haben.
-
-Im Januar wurde der einmillionste Testreport von David Cantrell
-eingeliefert.
-
-  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page1.html
-
-  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page84.html
-
-  http://use.perl.org/~BinGOs/journal/35550
-
-=item * http://cpandeps.cantrell.org.uk/?module=
-
-Kurz vor der letzten YAPC in Wien hat David Cantrell sich dieses
-Kleinod ausgedaecht. Anhand der META.yml Dateien, die heutzutage bei
-den meisten Distributionen dabei sind, malt er eine Art Dependency
-Graphen und berechnet anhand der aktuellen FAIL Quoten die
-Gesamtwahrscheinlichkeit aus, daß ein Modul mit Erfolg getestet werden
-kann.
-
-=item * http://perl.grango.org/
-
-Hier sammelt Barbie seine Statistiken. Hier ist auch die Hall Of Fame
-der größten Tester aller Zeiten.
-
-=item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
-
-Eine erst vor kurzem von brian d foy oder Andy Armstrong für die CPAN
-Testers entdeckte Ressource. Eine Art Stats'R'Us, wo man eigene Daten
-hochladen kann, damit sie dann von einem Java Plugin hübsch dargetellt
-werden.
+Environment Variable setzen: PERL_MM_USE_DEFAULT=1 und
+AUTOMATED_TESTING=1. Smoker machen das automatisch.
 
 =back
 
@@ -247,14 +210,85 @@ check what OS we're running on
 
 =back
 
+=head1 URLs
+
+=over
+
+=item * http://cpantest.grango.org/
+
+Das ist das von Barbie aufgesetzte Testers Wiki. Hat nur wenige
+Seiten, aber gute Linksammlung, gute Anleitungen.
+
+=item * http://cpantesters.perl.org/
+
+Die unprätentiöse Sammlung aller Testergebnisse. Beachte die Links am
+Fuß der Seiten auf YAML/JSON/XML Downloads.
+
+=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
+
+Eine herrliche tabellarische Aufarbeitung der Rohdaten von
+cpantesters. Matrix, weil die Ergebnisse wenigstens in zwei
+Dimensionen präsentiert werden.
+
+=item * http://www.nntp.perl.org/group/perl.cpan.testers/
+
+Hier kommen die Testreports zuerst an. Einmal stündlich werden neue
+Seiten generiert. Solange muß der Autor warten, wenn wir als Tester
+ihm kein CC geschickt haben.
+
+Im Januar wurde der einmillionste Testreport von David Cantrell
+eingeliefert.
+
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page1.html
+
+  http://www.nntp.perl.org/group/perl.cpan.testers/2008/01/page84.html
+
+  http://use.perl.org/~BinGOs/journal/35550
+
+Bis vor wenigen Tagen eine Mailingliste, jetzt nicht mehr
+subscribierbar.
+
+=item * http://cpandeps.cantrell.org.uk/?module=
+
+Kurz vor der letzten YAPC in Wien hat David Cantrell sich dieses
+Kleinod ausgedaecht. Anhand der META.yml Dateien, die heutzutage bei
+den meisten Distributionen dabei sind, malt er eine Art Dependency
+Graphen und berechnet anhand der aktuellen FAIL Quoten die
+Gesamtwahrscheinlichkeit aus, daß ein Modul mit Erfolg getestet werden
+kann.
+
+=item * http://search.cpan.org/
+
+Search hat immer schon sehr gut auf andere Websites verlinkt. So auch
+seit kurzem auf die Testers Matrix und die CPAN Dependencies.
+
+=item * http://perl.grango.org/
+
+Hier sammelt Barbie seine Statistiken. Hier ist auch die Hall Of Fame
+der größten Tester aller Zeiten.
+
+=item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
+
+Eine erst vor kurzem von brian d foy oder Andy Armstrong für die CPAN
+Testers entdeckte Ressource. Eine Art Stats'R'Us, wo man eigene Daten
+hochladen kann, damit sie dann von einem Java Plugin hübsch dargetellt
+werden.
+
+=back
+
 =head1 Mailing lists
 
 =over
 
-=item * http://log.perl.org
+=item * http://www.nntp.perl.org/group/perl.cpan.uploads
 
-Announcement pending on cpan-uploads@perl.org, but alternatives
+Announcement pending on http://log.perl.org/  Alternatives
 pointed out by Bingos in http://use.perl.org/~BinGOs/journal/35631
+
+=item * http://www.nntp.perl.org/group/perl.cpan.testers.discuss
+
+Wer regelmäßig testet, sollte unbedingt hier subscriben. Traffic ist
+sehr gering.
 
 =back
 
