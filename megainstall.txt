@@ -90,6 +90,7 @@ CPAN::Dependency
 CPAN::Index::Loader
 CPAN::IndexPod
 CPAN::Mini
+CPAN::Reporter::Smoker
 CPAN::Site
 CPAN::Unwind
 CPAN::YACSmoke

@@ -1,3 +1,15 @@
+2008-02-12  Andreas Koenig  <k@k78.linux.bogus>
+
+	* Investigate new noise from a
+	Lingua-Stem-Snowball-0.941/5.11/Test-Harness-3.09/whatever combination.
+	Megabytes of warnings against uc(undef) apparently starting yesterday.
+
+	The error reads:
+
+	Use of uninitialized value $dir in uc at /home/src/perl/repoperls/installed-perls/perl/pvCr5Qs/perl-5.10.0@33278/lib/5.11.0/TAP/Parser/Grammar.pm line 371.
+
+	RT#33146
+
 2008-02-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 
@@ -16,6 +28,10 @@ N/A
 
 ----EOF ($?='0')----
 
+	This was a SEGV at that time but in the meantime it is a 'Unknown
+	operator name "threadsv" at ....Safe/World/Compartement.pm line 95.'
+
+	This means that 24966 is of only marginal interest.
 
 2008-02-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
