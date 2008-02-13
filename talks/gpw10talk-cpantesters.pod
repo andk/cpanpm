@@ -68,6 +68,33 @@ Hochleistungs-Smoker unter POE von Bingos (Chris Williams)
 
 =back
 
+=head1 Datentransport
+
+=over
+
+=item * Test::Reporter
+
+von beiden Systemen zur Einlieferung der Daten auf dem zentralen
+cpantesters Server verwendet. Von Adam J. Foxson
+
+=item * CPAN::Testers
+
+B<Kein> Modul, lediglich eine manpage, die die Datenflüsse darstellt
+
+=item * testers-over-http-upload
+
+Work in progress. Wird in Test::Reporter entsprechnd reflektiert werden.
+
+=back
+
+=head1 Datenpool
+
+=over
+
+=item * sammelt Daten über first hand experiences
+
+=back
+
 =head1 Warum teste ich?
 
 =over
@@ -111,6 +138,25 @@ zu existenziellen Grundfragen.
 
 =back
 
+=head1 Wann scheitert das Testen außerdem?
+
+=over
+
+=item * Wenn Tester zu viele schlechte Reports abliefern
+
+Marc Lehmann ist das wohl passiert und er hat wohl einen Autoresponder
+für cpantesters eingerichtet, der gewisse Mails von cpantesters
+postwendend zurückschickt.
+
+=item * Andy Armstrong
+
+I'm locked in correspondence with Marc now.
+
+His view: cpan-testers are incompetent, ego tripping, quasi-religious  
+nuisances.
+
+=back
+
 =head1 Fehler im Testsystem
 
 =over
@@ -132,11 +178,9 @@ zu machen, sie ersetzen aber nicht die Analyse.
 
 =over
 
-Oft kommt es nicht vor. Aber man sollte damit rechnen. Manche
-Entwickler haben eben einen Arbeitsstil, der vom User etwas mehr
-Leidensfähigkeit oder Einsatz fordert. Daran ist auch nichts
-auszusetzen. Schließlich tun sie das alles aus eigenen Stücken, also
-haben wir auch nichts zu fordern. Wenn ein Tester kein Interesse an
+Oft kommt es nicht vor. Aber man sollte damit rechnen.
+
+Wenn ein Tester kein Interesse an
 unseren Diensten hat, hands down. Ab in den Killfile.
 
 Wenn dann noch etwas offen ist, einen Patch schreiben, eine
@@ -148,6 +192,8 @@ Wenn wir als Tester Autoren nerven, war alle Mühe vergeblich.
 =back
 
 =head1 Grenzfälle
+
+=over
 
 =item * Schlechte Tests sind relativ harmlos
 
@@ -170,7 +216,7 @@ liefert über CPAN::Reporter immer höchstens einen PASS und eine FAIL
 pro perl Version ab. Wenn die Tests aber 150 PASS und 50 FAIL
 ergeben...
 
-https://rt.cpan.org/Ticket/Display.html?id=28122
+http://rt.cpan.org/Ticket/Display.html?id=28122
 
 =item * Overeager Testing
 
@@ -215,21 +261,34 @@ check that a library is available
 
 check what OS we're running on
 
+=item * Notbremse: exit 0, ohne einen Makefilezu schreiben
+
 =back
 
 =head1 Grades
 
 =over
 
-=item PASS
+=item * PASS
 
-=item FAIL
+distribution built and tested correctly
 
-=item NA
+=item * FAIL
 
-=item UNKNOWN
+distribution failed to build or test correctly
 
-=item "invalid"
+=item * UNKNOWN
+
+distribution built, but had no test suite or outcome was inconclusive
+
+=item * NA
+
+distribution is not applicable to this platform and/or 
+version of Perl
+
+=item * "invalid"
+
+Not really a grade. Dependency has failed, no report shall be sent
 
 =back
 
@@ -242,6 +301,14 @@ check what OS we're running on
 Das ist das von Barbie aufgesetzte Testers Wiki. Hat nur wenige
 Seiten, aber gute Linksammlung, gute Anleitungen.
 
+=item * http://cpantest.grango.org/wiki/Reports
+
+Die Grades von der letzten Seite erklärt
+
+=item * http://cpantest.grango.org/wiki/CPANAuthorNotes
+
+Eine FAQ für Autoren
+
 =back
 
 =head1 URLs
@@ -252,6 +319,8 @@ Seiten, aber gute Linksammlung, gute Anleitungen.
 
 Die unprätentiöse Sammlung aller Testergebnisse. Beachte die Links am
 Fuß der Seiten auf YAML/JSON/XML Downloads.
+
+=item * http://cpantesters.perl.org/show/Test-Reporter.html
 
 =back
 
@@ -264,6 +333,10 @@ Fuß der Seiten auf YAML/JSON/XML Downloads.
 Eine herrliche tabellarische Aufarbeitung der Rohdaten von
 cpantesters. Matrix, weil die Ergebnisse wenigstens in zwei
 Dimensionen präsentiert werden.
+
+=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=Safe-World
+
+=item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi?dist=B-Generate
 
 =back
 
@@ -304,6 +377,8 @@ Graphen und berechnet anhand der aktuellen FAIL Quoten die
 Gesamtwahrscheinlichkeit aus, daß ein Modul mit Erfolg getestet werden
 kann.
 
+=item * http://cpandeps.cantrell.org.uk/?module=Jifty
+
 =back
 
 =head1 URLs
@@ -314,6 +389,8 @@ kann.
 
 Search hat immer schon sehr gut auf andere Websites verlinkt. So auch
 seit kurzem auf die Testers Matrix und die CPAN Dependencies.
+
+=item * http://search.cpan.org/~sartak/Jifty-0.71129/
 
 =back
 
@@ -326,6 +403,8 @@ seit kurzem auf die Testers Matrix und die CPAN Dependencies.
 Hier sammelt Barbie seine Statistiken. Hier ist auch die Hall Of Fame
 der größten Tester aller Zeiten.
 
+
+
 =back
 
 =head1 URLs
@@ -334,7 +413,7 @@ der größten Tester aller Zeiten.
 
 =item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
 
-Eine erst vor kurzem von brian d foy oder Andy Armstrong für die CPAN
+Eine erst vor kurzem von brian d foy und Andy Armstrong für die CPAN
 Testers entdeckte Ressource. Eine Art Stats'R'Us, wo man eigene Daten
 hochladen kann, damit sie dann von einem Java Plugin hübsch dargetellt
 werden.
@@ -347,53 +426,39 @@ werden.
 
 =item * http://www.nntp.perl.org/group/perl.cpan.uploads
 
-Announcement pending on http://log.perl.org/  Alternatives
-pointed out by Bingos in http://use.perl.org/~BinGOs/journal/35631
+Offizielles Announcement steht noch aus. Alternatives pointed out by
+Bingos in http://use.perl.org/~BinGOs/journal/35631
+
+=back
+
+=head1 Mailing lists
+
+=over
 
 =item * http://www.nntp.perl.org/group/perl.cpan.testers.discuss
 
 Wer regelmäßig testet, sollte unbedingt hier subscriben. Traffic ist
 sehr gering.
 
+=back
+
+=head1 Mailing lists
+
+=over
+
 =item * http://www.nntp.perl.org/group/perl.qa/
 
 Test::Harness und TAP (Test Anything Protocol)
 
-=item * http://www.nntp.perl.org/group/perl.module-authors/
-
-Alles ums Schreiben von Modulen, häufig auch über richtiges Testen.
-
 =back
 
-=head1 People
+=head1 Mailing lists
 
 =over
 
-=item * Adam J. Foxson
+=item * http://www.nntp.perl.org/group/perl.module-authors/
 
-=item * Adam Kennedy
-
-=item * Alexandr Ciornii
-
-=item * Andy Lester
-
-=item * Barbie
-
-=item * Bingos (Chris Williams)
-
-=item * David Cantrell
-
-=item * David Golden
-
-=item * Imacat
-
-=item * Jost Krieger
-
-=item * Mark Lehmann
-
-=item * Sébastien Aperghis-Tramoni
-
-=item * Slaven Rezić
+Alles ums Schreiben von Modulen, häufig auch über richtiges Testen.
 
 =back
 
@@ -412,13 +477,18 @@ Partner in der täglichen Arbeit.
 
 Zu Sylvester als Neujahrsgruß entstanden, um einmal herauszufinden,
 wie dieses RT denn eigentlich zu über 30000 Bugreport in nur 6 Jahren
-gekommen ist. Es ist nicht nur Spam, wenn auch ein gewaltiger
-Einschlag von Spam zu beobachten ist.
-
-=item * http://rt.cpan.org/Search/Build.html
-
-Hier ist die Suchmaske von RT, die ein wenig gewöhnungsbedürftig ist.
+gekommen ist.
 
 =back
+
+=head1 Hat das jemand getestet?
+
+=over
+
+=item Ja
+
+=back
+
+=head1 Aber hat das auch jemand B<richtig> getestet?
 
 =cut

@@ -204,6 +204,7 @@ Convert::Recode
 Convert::TNEF
 Convert::UUlib
 Coro
+Coro::Debug
 Crypt::Blowfish
 Crypt::CBC
 Crypt::CipherSaber
