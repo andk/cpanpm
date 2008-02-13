@@ -1,12 +1,37 @@
 CPAN::Reporter::Smoker ansehen
 
-Finde das Zitat, wo jemand sagt, was Marc anscheinend denkt.
+OMG, see CPAN::Testers which contains my talk as manpage!
+
+Vielleicht auf die manpage verlinken wegen der Graphik?
+
+Finde das Zitat, wo jemand sagt, was Marc anscheinend denkt. OK,
+perl-qa/9204 on k75. Und?
+
+  From: Andy Armstrong <andy@hexten.net>
+  To: Michael G Schwern <schwern@pobox.com>
+  Date: Wed, 19 Dec 2007 03:30:03 +0000
+  Subject: Re: Auto: Your message 'FAIL IO-AIO-2.51 i386-freebsd-thread-multi 6.2-release' has NOT been received
+
+  I'm locked in correspondence with Marc now.
+
+  His view: cpan-testers are incompetent, ego tripping, quasi-religious  
+  nuisances.
+  My view: approx your view.
+
+  Obviously that's my (probably extremely unprofessional) impression of  
+  his views. He did mention religion and ego though :)
 
 Mehr Raum geben dem Scheitern: das ist eine Menge dran an dem, was
 Marc gesagt hat.
 
+Uebrigens war der thread zwischen marc und slaven am 4.12.2007
+
+Dagegen muss man David's view halten, dass das ganz System erst einmal
+nichts als Daten erzeugt und immer noch jede Menge Arbeit bleibt, die
+Daten zu interpretieren. (Fernerkundung)
+
 Finde mehr Links zu RT Tickets, etwa fuer random test results.
-Eventuell die .out Datei holen.
+Eventuell die .out Datei holen. DONE
 
 Finde Links auf die Matrix, die auf den ersten Blick etwas zeigen.
 

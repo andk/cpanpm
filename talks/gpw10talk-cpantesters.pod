@@ -14,19 +14,21 @@ Andreas König, DPW10, RRZE, Erlangen, 2008-02-13
 
 =over
 
-=item * CPAN + CPAN::Reporter + 1 Prise Konfiguration
+=item * C<CPAN.pm> + C<CPAN::Reporter> + Konfiguration
 
 =item * C<o conf init /report/>
 
 =item * C<test Foo::Bar::Baz>
 
+Side effect reporting
+
 =item * C<report Foo::Bar::Baz>
 
-Casual Reporting.
+Casual reporting
 
-=item * CPAN::Reporter::Smoker
+=item * C<CPAN::Reporter::Smoker>
 
-Von David Golden
+Von David Golden - Turnkey CPAN Testers smoking
 
 =back
 
@@ -46,7 +48,7 @@ die Datei C<~/.cpanreporter/config.ini>. Im INI Format.
   send_report=ask/no
   smtp_server=localhost
 
-In the works: C<cc_skipfile>, C<send_skipfile>
+Seit 1.08 auch: C<cc_skipfile>, C<send_skipfile>
 
 =back
 
@@ -76,7 +78,7 @@ Hochleistungs-Smoker unter POE von Bingos (Chris Williams)
 
 =item * in Perl
 
-=item * weil es eine ganze Menge Spaß macht
+=item * weil es Spaß macht
 
 =item * weil es dem Ruf unseres CPAN gut tut
 
@@ -105,24 +107,43 @@ In dem Thread, in dem Ovid das gesagt hat, sind Emotionen hochgekocht,
 die für mich schwer nachvollziehbar sind. Es kommt offensichtlich beim
 Aufeinandertreffen von göttlichen Entwicklern und dem undankbaren,
 stets nur auf seinen eigenen Vorteil bedachten, schmarotzendem Pöbel
-zu existenziellen Katastrophen.
+zu existenziellen Grundfragen.
 
-=head1 Existentielle Katastrophen
+=back
+
+=head1 Fehler im Testsystem
+
+=over
+
+=item * Traditionelle, manuelle Bugreports
+
+sind immer vorzuziehen, wenn man ein Problem analysiert hat und
+weiss, wovon man redet.
+
+=item * Automatisierte Testreports
+
+sind immer nur Daten und enthalten hoffentlich genug Hinweise über die
+Natur von PASSes und FAILs. Sie können anderen helfen, sich ein Bild
+zu machen, sie ersetzen aber nicht die Analyse.
+
+=back
+
+=head1 Kommunikationsgau
 
 =over
 
 Oft kommt es nicht vor. Aber man sollte damit rechnen. Manche
 Entwickler haben eben einen Arbeitsstil, der vom User etwas mehr
 Leidensfähigkeit oder Einsatz fordert. Daran ist auch nichts
-auszusetzen. Schließlich tun sie das alles aus eigenen Stuecken, also
+auszusetzen. Schließlich tun sie das alles aus eigenen Stücken, also
 haben wir auch nichts zu fordern. Wenn ein Tester kein Interesse an
-unseren Diensten hat, hands down.
+unseren Diensten hat, hands down. Ab in den Killfile.
 
-Ich bemühe mich dann so gut ich kann, einen Patch zu schreiben, eine
-Distroprefs-Datei zu schreiben, nur eine kurze Notiz an den Autor.
-Oder ganz ab in den Killfile.
+Wenn dann noch etwas offen ist, einen Patch schreiben, eine
+Distroprefs-Datei zu schreiben, höchstens eine kurze Notiz an den
+Autor.
 
-Wenn wir als Tester Autoren nerven, dann erreichen wir gar nichts.
+Wenn wir als Tester Autoren nerven, war alle Mühe vergeblich.
 
 =back
 
@@ -149,9 +170,11 @@ liefert über CPAN::Reporter immer höchstens einen PASS und eine FAIL
 pro perl Version ab. Wenn die Tests aber 150 PASS und 50 FAIL
 ergeben...
 
+https://rt.cpan.org/Ticket/Display.html?id=28122
+
 =item * Overeager Testing
 
-Es gibt Tests, die laufen zu lange.
+Es gibt Tests, die laufen zu lange. So what?
 
 =back
 
@@ -172,7 +195,7 @@ AUTOMATED_TESTING=1. Smoker machen das automatisch.
 
 =back
 
-=head1 Howto Use your {Makefile,Build}.PL
+=head1 Howto Use Your {Makefile,Build}.PL
 
 =over
 
@@ -219,16 +242,34 @@ check what OS we're running on
 Das ist das von Barbie aufgesetzte Testers Wiki. Hat nur wenige
 Seiten, aber gute Linksammlung, gute Anleitungen.
 
+=back
+
+=head1 URLs
+
+=over
+
 =item * http://cpantesters.perl.org/
 
 Die unprätentiöse Sammlung aller Testergebnisse. Beachte die Links am
 Fuß der Seiten auf YAML/JSON/XML Downloads.
+
+=back
+
+=head1 URLs
+
+=over
 
 =item * http://bbbike2.radzeit.de/~slaven/cpantestersmatrix.cgi
 
 Eine herrliche tabellarische Aufarbeitung der Rohdaten von
 cpantesters. Matrix, weil die Ergebnisse wenigstens in zwei
 Dimensionen präsentiert werden.
+
+=back
+
+=head1 URLs
+
+=over
 
 =item * http://www.nntp.perl.org/group/perl.cpan.testers/
 
@@ -248,6 +289,12 @@ eingeliefert.
 Bis vor wenigen Tagen eine Mailingliste, jetzt nicht mehr
 subscribierbar.
 
+=back
+
+=head1 URLs
+
+=over
+
 =item * http://cpandeps.cantrell.org.uk/?module=
 
 Kurz vor der letzten YAPC in Wien hat David Cantrell sich dieses
@@ -257,15 +304,33 @@ Graphen und berechnet anhand der aktuellen FAIL Quoten die
 Gesamtwahrscheinlichkeit aus, daß ein Modul mit Erfolg getestet werden
 kann.
 
+=back
+
+=head1 URLs
+
+=over
+
 =item * http://search.cpan.org/
 
 Search hat immer schon sehr gut auf andere Websites verlinkt. So auch
 seit kurzem auf die Testers Matrix und die CPAN Dependencies.
 
+=back
+
+=head1 URLs
+
+=over
+
 =item * http://perl.grango.org/
 
 Hier sammelt Barbie seine Statistiken. Hier ist auch die Hall Of Fame
 der größten Tester aller Zeiten.
+
+=back
+
+=head1 URLs
+
+=over
 
 =item * http://services.alphaworks.ibm.com/manyeyes/view/SmAgULsOtha6g7GcD5KnL2-
 
@@ -289,6 +354,14 @@ pointed out by Bingos in http://use.perl.org/~BinGOs/journal/35631
 
 Wer regelmäßig testet, sollte unbedingt hier subscriben. Traffic ist
 sehr gering.
+
+=item * http://www.nntp.perl.org/group/perl.qa/
+
+Test::Harness und TAP (Test Anything Protocol)
+
+=item * http://www.nntp.perl.org/group/perl.module-authors/
+
+Alles ums Schreiben von Modulen, häufig auch über richtiges Testen.
 
 =back
 
