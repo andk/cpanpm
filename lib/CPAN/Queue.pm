@@ -181,6 +181,11 @@ sub nullify_queue {
     @All = ();
 }
 
+# CPAN::Queue::size ;
+sub size {
+    return scalar @All;
+}
+
 1;
 
 __END__

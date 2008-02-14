@@ -3486,7 +3486,10 @@ to find objects with matching identifiers.
             CPAN::Queue->delete($s);
             CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
         } else {
-            if ( ! $obj->delayed && $CPAN::Config->{halt_on_failure} ) {
+            if ( ! $obj->delayed && 
+                $CPAN::Config->{halt_on_failure} &&
+                CPAN::Queue->size > 1
+            ) {
                 $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
                 CPAN::Queue->nullify_queue;
             }
