@@ -458,10 +458,10 @@ Trying to chdir to "$cwd->[1]" instead.
 
 sub _flock {
     my($fh,$mode) = @_;
-    if ($Config::Config{d_flock}) {
+    if ( $Config::Config{d_flock} || $Config::Config{d_fcntl_can_lock} ) {
         return flock $fh, $mode;
     } elsif (!$Have_warned->{"d_flock"}++) {
-        $CPAN::Frontend->mywarn("Your OS does not support locking; continuing and ignoring all locking issues\n");
+        $CPAN::Frontend->mywarn("Your OS does not seem to support locking; continuing and ignoring all locking issues\n");
         $CPAN::Frontend->mysleep(5);
         return 1;
     } else {
