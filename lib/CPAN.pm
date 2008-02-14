@@ -2995,6 +2995,7 @@ sub expand_by_method {
                    ) if $CPAN::DEBUG;
         if (defined $regex) {
             if (CPAN::_sqlite_running) {
+                CPAN::Index->reload;
                 $CPAN::SQLite->search($class, $regex);
             }
             for $obj (
