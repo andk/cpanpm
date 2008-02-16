@@ -91,6 +91,7 @@ match:
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
+    |JESSE/Shipwright-\d
     |JROBINSON/DBIx-Class-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
     |JROCKWAY/Angerwhale-\d

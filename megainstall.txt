@@ -883,6 +883,7 @@ ShiftJIS::Collate
 ShiftJIS::Regexp
 ShiftJIS::X0213::MapUTF
 ShipIt
+Shipwright
 Smart::Comments
 Socket6
 Sort::ArbBiLex
