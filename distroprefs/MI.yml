@@ -92,12 +92,14 @@ match:
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
     |JROBINSON/DBIx-Class-\d
+    |JROCKWAY/Algorithm-IncludeExclude-\d
     |JROCKWAY/Angerwhale-\d
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
     |JROCKWAY/Catalyst-Plugin-ConfigLoader-Environment-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
     |JROCKWAY/File-Attributes-\d
+    |JROCKWAY/File-Attributes-Recursive-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
     |JSWARTZ/CHI-\d
@@ -114,6 +116,7 @@ match:
     |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MEMOWE/HTML-SBC-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
