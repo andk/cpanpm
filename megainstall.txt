@@ -168,6 +168,7 @@ Class::Rebless
 Class::ReturnValue
 Class::Singleton
 Class::Std
+Class::Std::Fast
 Class::Throwable
 Class::Trait
 Class::Virtual
@@ -697,6 +698,7 @@ Object::Signature
 Object::Tiny
 OpenOffice::OOBuilder
 OpenOffice::OODoc
+OpenThought
 P5NCI
 PAR
 PAR::Dist::FromCPAN

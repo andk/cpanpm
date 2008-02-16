@@ -64,6 +64,7 @@ match:
     |DSNOPEK/POE-Component-MessageQueue-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDepencencies-
     |ELLIOTJS/Task-Perl-Critic-[v\d]
+    |ERIC/OpenThought-\d
     |FLORA/Catalyst-View-Mason-\d
     |FOX/Bot-CPAN-\d
     |GAAL/Best-\d
