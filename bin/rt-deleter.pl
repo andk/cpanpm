@@ -33,6 +33,9 @@ my %Config = (
               password    => '',
               cookie      => '',
               less        => '',
+              autodelete  => [
+                              qw/R+e+a+l+.+?m+e+n+!+.+?M+i+l+i+o+n+s+.+?o+f+.+?p+e+o+p+l+e+.+?a+c+r+o+s+.+?t+h+e+.+?w+o+r+l+d+/,
+                             ],
              );
 
 GetOptions(\my %config,
@@ -92,25 +95,36 @@ TICKET: for my $ticket (@tickets) {
   my $displ = "$Config{server}/Ticket/Display.html?id=$ticket";
   print "Retrieving ticket '$ticket' as $displ...\n";
   my $resp = $ua->get($displ);
-  my $tree = HTML::TreeBuilder->new_from_content($resp->decoded_content);
-  my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
-  my $text = $formatter->format($tree);
-  $DB::single++;
+  my $decoded = $resp->decoded_content;
+  my $answer;
   if ($Config{nonono}) {
     print "not showing '$ticket'\n";
     sleep 1;
+    $answer = "n";
+  } elsif ($Config{autodelete}) {
+  REGEXP: for my $rx (@{$Config{autodelete}}) {
+      if ($decoded =~ $rx) {
+        print "Ticket matches '$rx'\n";
+        $answer = "y";
+        last REGEXP;
+      }
+    }
+  }
+  my $tree = HTML::TreeBuilder->new_from_content($decoded);
+  my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
+  my $text = $formatter->format($tree);
+  $tree->delete;
+  # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
+  if ($answer) {
+    print (("=" x 79) . "\n") for 1,2;
+    print "Answer '$answer' has already been determined automatically\n";
+    sleep 1;
   } else {
+    $DB::single++;
     open my $less, "|-", "less" or die "Could not fork: $!";
     binmode $less, ":utf8";
     print $less $text;
     close $less;
-  }
-  $tree->delete;
-  # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
-  my $answer;
-  if ($Config{nonono}) {
-    $answer = "n";
-  } else {
     print (("=" x 79) . "\n") for 1,2;
     $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
   }

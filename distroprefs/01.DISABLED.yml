@@ -45,6 +45,7 @@ match:
     |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
+    |HORROCKS/PersistentPerl-\d              # hangs early
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
