@@ -10,5 +10,5 @@ match:
 patches:
   - "ANDK/patches/HTML-Scrubber-0.08-ANDK-01.patch.gz"
 pl:
-  env:
+  args:
     PREREQ_FATAL: 0
