@@ -2282,6 +2282,7 @@ sub reload {
                     "CPAN/Queue.pm",
                     "CPAN/Reporter/Config.pm",
                     "CPAN/Reporter/History.pm",
+                    "CPAN/Reporter/PrereqCheck.pm",
                     "CPAN/Reporter.pm",
                     "CPAN/SQLite.pm",
                     "CPAN/Tarzip.pm",
