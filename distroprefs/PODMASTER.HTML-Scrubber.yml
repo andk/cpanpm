@@ -11,4 +11,4 @@ patches:
   - "ANDK/patches/HTML-Scrubber-0.08-ANDK-01.patch.gz"
 pl:
   args:
-    PREREQ_FATAL: 0
+    - "PREREQ_FATAL=0"
