@@ -849,14 +849,22 @@ sub text {
 package CPAN::Distrostatus;
 use overload '""' => "as_string",
     fallback => 1;
+use vars qw($something_has_failed_at);
 sub new {
     my($class,$arg) = @_;
+    my $failed = substr($arg,0,2) eq "NO";
+    if ($failed) {
+        $something_has_failed_at = $CPAN::CurrentCommandId;
+    }
     bless {
            TEXT => $arg,
-           FAILED => substr($arg,0,2) eq "NO",
+           FAILED => $failed,
            COMMANDID => $CPAN::CurrentCommandId,
            TIME => time,
           }, $class;
+}
+sub something_has_just_failed () {
+    $something_has_failed_at == $CPAN::CurrentCommandId;
 }
 sub commandid { shift->{COMMANDID} }
 sub failed { shift->{FAILED} }
@@ -3405,8 +3413,7 @@ to find objects with matching identifiers.
     # queuerunner (please be warned: when I started to change the
     # queue to hold objects instead of names, I made one or two
     # mistakes and never found which. I reverted back instead)
-    my $fail_cnt = 0;
-    while (my $q = CPAN::Queue->first) {
+  QITEM: while (my $q = CPAN::Queue->first) {
         my $obj;
         my $s = $q->as_string;
         my $reqtype = $q->reqtype || "";
@@ -3419,7 +3426,7 @@ to find objects with matching identifiers.
                                     "to an object. Skipping.\n");
             $CPAN::Frontend->mysleep(5);
             CPAN::Queue->delete_first($s);
-            next;
+            next QITEM;
         }
         $obj->{reqtype} ||= "";
         {
@@ -3488,14 +3495,6 @@ to find objects with matching identifiers.
             CPAN::Queue->delete($s);
             CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
         } else {
-            if ( ! $obj->delayed && 
-                $CPAN::Config->{halt_on_failure} &&
-                CPAN::Queue->size > 1
-            ) {
-                $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
-                CPAN::Queue->nullify_queue;
-            }
-            $fail_cnt++;
             CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
 
@@ -3506,6 +3505,14 @@ to find objects with matching identifiers.
                 $obj->$unpragma();
             }
         }
+        if ($CPAN::Config->{halt_on_failure}
+                &&
+                    CPAN::Distrostatus::something_has_just_failed()
+              ) {
+            $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
+            CPAN::Queue->nullify_queue;
+            last QITEM;
+        }
         CPAN::Queue->delete_first($s);
     }
     if ($meth =~ /^($needs_recursion_protection)$/) {
@@ -3513,7 +3520,6 @@ to find objects with matching identifiers.
             $obj->color_cmd_tmps(0,0);
         }
     }
-    return $fail_cnt ? 0 : 1;
 }
 
 #-> sub CPAN::Shell::recent ;
@@ -5967,20 +5973,6 @@ sub undelay {
                     ) {
         delete $self->{$delayer};
     }
-}
-
-#-> CPAN::Distribution::delayed
-sub delayed {
-    my $self = shift;
-    for my $delayer (
-                     "configure_requires_later",
-                     "configure_requires_later_for",
-                     "later",
-                     "later_for",
-                    ) {
-        return 1 if $self->{$delayer};
-    }
-    return;
 }
 
 #-> CPAN::Distribution::is_dot_dist
@@ -9241,7 +9233,6 @@ sub install {
     delete $self->{force_update};
     # $DB::single = 1;
     $self->store_persistent_state;
-    return ! $self->{install}->failed;
 }
 
 sub introduce_myself {
@@ -9630,15 +9621,6 @@ sub undelay {
     }
 }
 
-#-> CPAN::Bundle::delayed
-sub delayed {
-    my $self = shift;
-    for my $c ( $self->contains ) {
-        my $obj = CPAN::Shell->expandany($c) or next;
-        return 1 if $obj->delayed;
-    }
-}
-
 # mark as dirty/clean
 #-> sub CPAN::Bundle::color_cmd_tmps ;
 sub color_cmd_tmps {
@@ -9944,14 +9926,6 @@ sub undelay {
     if ( my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file) ) {
         $dist->undelay;
     }
-}
-
-#-> sub CPAN::Module::delayed
-sub delayed {
-    my $self = shift;
-    my $dist = CPAN::Shell->expand("Distribution", $self->cpan_file);
-    return $dist->delayed if $dist;
-    return;
 }
 
 # mark as dirty/clean

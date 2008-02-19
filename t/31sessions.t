@@ -188,6 +188,19 @@ our @SESSIONS =
 )",
       ],
      },
+
+     {
+         name => "halt_on_failure",
+         pairs => [
+             "dump \$::x=4*6+1" => "= 25;",
+             "o conf halt_on_failure 1" => "1",
+             "test CPAN::Test::Dummy::Perl5::Build::Fails CPAN::Test::Dummy::Perl5::Make::Failearly" =>
+                 "FAIL",
+             # must not see Failearly in the failed summary
+             "failed" => q{(?x:Failed \s during \s this \s session: \s+
+                               \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
+           ],
+     }
     );
 
 my $cnt;
