@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_56';
+$CPAN::VERSION = '1.92_57';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -48,14 +48,14 @@ if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
     $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
     my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
     my @rec = split /,/, $rec;
-    warn "# Note: Recursive call of CPAN.pm detected\n";
-    my $w = sprintf "# CPAN.pm is running in process %d now", pop @rec;
+    # warn "# Note: Recursive call of CPAN.pm detected\n";
+    my $w = sprintf "# Note: CPAN.pm is running in process %d now", pop @rec;
     my %sleep = (
-                 3 => 30,
-                 4 => 60,
-                 5 => 120,
+                 4 => 30,
+                 5 => 60,
+                 6 => 120,
                 );
-    my $sleep = @rec > 5 ? 300 : ($sleep{scalar @rec}||0);
+    my $sleep = @rec > 6 ? 300 : ($sleep{scalar @rec}||0);
     while (@rec) {
         $w .= sprintf " which has been called by process %d", pop @rec;
     }
