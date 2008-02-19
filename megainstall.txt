@@ -430,6 +430,7 @@ Geo::Cache
 Geo::Gpx
 Geo::ShapeFile
 Geography::Countries
+Getargs::Long
 Getopt::ArgvFile
 Getopt::Attribute
 Getopt::Compact
