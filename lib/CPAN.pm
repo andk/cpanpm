@@ -864,7 +864,8 @@ sub new {
           }, $class;
 }
 sub something_has_just_failed () {
-    $something_has_failed_at == $CPAN::CurrentCommandId;
+    defined $something_has_failed_at &&
+        $something_has_failed_at == $CPAN::CurrentCommandId;
 }
 sub commandid { shift->{COMMANDID} }
 sub failed { shift->{FAILED} }
