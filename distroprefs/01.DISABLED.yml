@@ -60,6 +60,7 @@ match:
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |OALDERS/URI-ParseSearchString-More-0.04
+    |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
     |RYBSKEJ/forks-0.25
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
