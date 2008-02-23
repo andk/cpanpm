@@ -3688,10 +3688,9 @@ sub get_basic_credentials {
 sub get_proxy_credentials {
     my $self = shift;
     my ($user, $password);
-    if ( defined $CPAN::Config->{proxy_user} &&
-         defined $CPAN::Config->{proxy_pass}) {
+    if ( defined $CPAN::Config->{proxy_user} ) {
         $user = $CPAN::Config->{proxy_user};
-        $password = $CPAN::Config->{proxy_pass};
+        $password = $CPAN::Config->{proxy_pass} || "";
         return ($user, $password);
     }
     my $username_prompt = "\nProxy authentication needed!
@@ -3707,10 +3706,9 @@ sub get_proxy_credentials {
 sub get_non_proxy_credentials {
     my $self = shift;
     my ($user,$password);
-    if ( defined $CPAN::Config->{username} &&
-         defined $CPAN::Config->{password}) {
+    if ( defined $CPAN::Config->{username} ) {
         $user = $CPAN::Config->{username};
-        $password = $CPAN::Config->{password};
+        $password = $CPAN::Config->{password} || "";
         return ($user, $password);
     }
     my $username_prompt = "\nAuthentication needed!
@@ -4443,6 +4441,7 @@ sub hostdlhard {
 
         # Try the most capable first and leave ncftp* for last as it only
         # does FTP.
+        my $proxy_vars = $self->_proxy_vars($ro_url);
       DLPRG: for my $f (qw(curl wget lynx ncftpget ncftp)) {
             my $funkyftp = CPAN::HandleConfig->safe_quote($CPAN::Config->{$f});
             next unless defined $funkyftp;
@@ -4464,6 +4463,9 @@ sub hostdlhard {
                 $stdout_redir = "";
             } elsif ($f eq 'curl') {
                 $src_switch = ' -L -f -s -S --netrc-optional';
+                if ($proxy_vars->{http_proxy}) {
+                    $src_switch .= qq{ -U "$proxy_vars->{proxy_user}:$proxy_vars->{proxy_pass}" -x "$proxy_vars->{http_proxy}"};
+                }
             }
 
             if ($f eq "ncftpget") {
@@ -4558,6 +4560,39 @@ No success, the file that lynx has downloaded is an empty file.
             return if $CPAN::Signal;
         } # transfer programs
     } # host
+}
+
+#-> CPAN::FTP::_proxy_vars
+sub _proxy_vars {
+    my($self,$url) = @_;
+    my $ret = +{};
+    my $http_proxy = $CPAN::Config->{'http_proxy'} || $ENV{'http_proxy'};
+    if ($http_proxy) {
+        my($host) = $url =~ m|://([^/:]+)|;
+        my $want_proxy = 1;
+        my $noproxy = $CPAN::Config->{'no_proxy'} || $ENV{'no_proxy'} || "";
+        my @noproxy = split /\s*,\s*/, $noproxy;
+        if ($host) {
+          DOMAIN: for my $domain (@noproxy) {
+                if ($host =~ /\Q$domain\E$/) { # cf. LWP::UserAgent
+                    $want_proxy = 0;
+                    last DOMAIN;
+                }
+            }
+        } else {
+            $CPAN::Frontend->mywarn("  Could not determine host from http_proxy '$http_proxy'\n");
+        }
+        if ($want_proxy) {
+            my($user, $pass) =
+                &CPAN::LWP::UserAgent::get_proxy_credentials();
+            $ret = {
+                    proxy_user => $user,
+                    proxy_pass => $pass,
+                    http_proxy => $http_proxy
+                  };
+        }
+    }
+    return $ret;
 }
 
 # package CPAN::FTP;

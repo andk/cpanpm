@@ -182,6 +182,39 @@ require CPAN::HandleConfig;
     }
 }
 
+{
+    my $this_block_count;
+    my @no_proxy;
+    BEGIN {
+        @no_proxy = ({
+                      domain => "at",
+                      expect => 1,
+                     },
+                     {
+                      domain => "kh",
+                      expect => 0,
+                     },
+                    );
+        $this_block_count = 3 * @no_proxy;
+        $count += $this_block_count;
+    }
+    my $ftp = "CPAN::FTP";
+    $CPAN::Config->{http_proxy} = "http://myproxy.local/";
+    $CPAN::Config->{proxy_user} = "myproxyuser";
+    $CPAN::Config->{proxy_pass} = "myproxypass";
+    $ENV{PERL_MM_USE_DEFAULT} = 1;
+    for my $n (@no_proxy) {
+        $CPAN::Config->{no_proxy} = $n->{domain};
+        my $pftpvars = $ftp->_proxy_vars("http://battambang.kh/");
+        for my $x (qw(http_proxy proxy_user proxy_pass)) {
+            ok($n->{expect}
+               ==
+               !!$pftpvars->{$x},
+               "found $x\[$pftpvars->{$x}] on domain[$n->{domain}]");
+        }
+    }
+}
+
 BEGIN{plan tests => $count}
 
 # Local Variables:
