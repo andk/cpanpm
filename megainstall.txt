@@ -564,6 +564,7 @@ Lingua::ZH::MacChinese::Simplified
 Lingua::ZH::MacChinese::Traditional
 Lingua::ZH::TaBE
 List::Compare
+List::Maker
 List::MoreUtils
 List::Tuples
 List::Util
@@ -873,6 +874,7 @@ SWF::Search
 Safe::Hole
 Scalar::Defer
 Scalar::Util
+Scalar::Util::Clone
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
