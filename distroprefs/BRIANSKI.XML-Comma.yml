@@ -9,7 +9,7 @@ comment: |
 
 match:
   distribution: "^BRIANSKI/XML-Comma-"
-pl:
+make:
   eexpect:
     mode: anyorder
     timeout: 5

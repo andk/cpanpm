@@ -30,9 +30,8 @@ match:
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
-    |BOWMANBS/Audio-Ecasound-\d              # hanges very early: RT 32101
-    |BRIANSKI/XML-Comma-\d                   # hangs in comma-create-config.pl
-    |BSUGARS/IPC-Shareable-\d                # hangs on test 38ipchv RT 19169
+    |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
+    |BSUGARS/IPC-Shareable-0.09              # hangs on test 38ipchv RT 19169
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # has caused a hang more than one time during t/13-command-au
     |CORLISS/CursesForms-\d
