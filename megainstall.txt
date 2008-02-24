@@ -106,7 +106,6 @@ Cache::Memcached::XS
 Cache::Simple::TimedExpiry
 Cairo
 Carp::Always
-Carp::Always
 Carp::Assert::More
 Carp::Clan
 Carp::Diagnostics
