@@ -1,3 +1,22 @@
+2008-02-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Spending some tuits on 01.DISABLED.yml
+
+  CPAN.pm: Going to build A/AD/ADAMK/ThreatNet-IRC-0.01.tar.gz
+
+==> ExtUtils::AutoInstall 0.49 required. Install it from CPAN? [Y/n] n
+Undefined subroutine &ExtUtils::AutoInstall::_make_args called at inc/Module/Install/AutoInstall.pm - /usr/local/share/perl/5.8.4/Module/Install/AutoInstall.pm line 46, <STDIN> line 1.
+Warning: No success on command[/home/src/perl/repoperls/installed-perls/perl/pyIdwn2/perl-5.10.0@33356/bin/perl Makefile.PL]
+  ADAMK/ThreatNet-IRC-0.01.tar.gz
+  /home/src/perl/repoperls/installed-perls/perl/pyIdwn2/perl-5.10.0@33356/bin/perl Makefile.PL -- NOT OK
+Running make test
+  Make had some problems, won't test
+Failed during this command:
+ ADAMK/ThreatNet-IRC-0.01.tar.gz              : writemakefile NO '/home/src/perl/repoperls/installed-perls/perl/pyIdwn2/perl-5.10.0@33356/bin/perl Makefile.PL' returned status 2304
+
+	What for is ExtUtils::AutoInstall required? Where is it documented?
+
+
 2008-02-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ARTURAZ/Net-Vypress-Chat-0.72.1.tar.bz2

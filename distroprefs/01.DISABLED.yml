@@ -25,8 +25,7 @@ match:
     .^   # never matches, only purpose is to let things align nicely
     |.+/Win32(API)?-                         # I have only linux
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
-    |ADAMK/ThreatNet-IRC-\d                  # running sudo something, AAAAAAARRRRRRG!
-    |AGRUNDMA/POE-Loop-EV-                   # one test hangs
+    |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
@@ -34,7 +33,7 @@ match:
     |BOWMANBS/Audio-Ecasound-\d              # hanges very early: RT 32101
     |BRIANSKI/XML-Comma-\d                   # hangs in comma-create-config.pl
     |BSUGARS/IPC-Shareable-\d                # hangs on test 38ipchv RT 19169
-    |CAIDAPERL/Chart-Graph-\d                # hangs
+    |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # has caused a hang more than one time during t/13-command-au
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
