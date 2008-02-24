@@ -7,12 +7,10 @@ comment: |
   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00855.html
   http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2006-10/msg00860.html
 
-  With the patch from RAFL we have reached 24556 and fail with 24557
+  With a patch from RAFL we have reached 24556 and failed with 24557
 
 match:
   distribution: "^ILYAZ/modules/Math-Pari-2.010709"
 pl: 
   args: 
     - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
-patches:
-  - "/tmp/pari.diff"
