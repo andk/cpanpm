@@ -100,11 +100,12 @@ CSS::SAC
 Cache::FastMmap
 Cache::File
 Cache::Memcached
-Cache::Memcached::GetParserXS
 Cache::Memcached::Fast
+Cache::Memcached::GetParserXS
 Cache::Memcached::XS
 Cache::Simple::TimedExpiry
 Cairo
+Carp::Always
 Carp::Always
 Carp::Assert::More
 Carp::Clan
@@ -324,6 +325,7 @@ Devel::Trace
 Devel::TraceLoad
 Devel::TraceMethods
 Devel::TraceUse
+Devel::TrackObjects
 Devel::ebug
 Devel::ebug::HTTP
 Device::SerialPort
@@ -695,6 +697,7 @@ Number::WithError
 OLE::Storage_Lite
 OOPS
 Object::Accessor
+Object::Destroyer
 Object::Realize::Later
 Object::Signature
 Object::Tiny
@@ -875,6 +878,7 @@ Safe::Hole
 Scalar::Defer
 Scalar::Util
 Scalar::Util::Clone
+Schedule::Cron
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
@@ -1166,6 +1170,7 @@ XML::Simple
 XML::SimpleObject
 XML::Stream
 XML::Tiny
+XML::TreePP
 XML::Twig
 XML::Validator::Schema
 XML::Writer

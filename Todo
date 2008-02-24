@@ -1,5 +1,41 @@
 2008-02-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Curious:
+
+----Program----
+eval q{use Devel::LeakTrace 0.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../p9aWFUh/perl-5.8.0@17967/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pUEVfU9/perl-5.8.0@17968/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Also in maint-5.8:
+
+----Program----
+eval q{use Devel::LeakTrace 0.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pcZcM34/perl-5.8.0@18079/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../piE8rWS/perl-5.8.0@18080/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Reported on P5P: http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-02/msg00717.html
+
+	And on RT: https://rt.cpan.org/Ticket/Display.html?id=33548
+
 	* Spending some tuits on 01.DISABLED.yml
 
   CPAN.pm: Going to build A/AD/ADAMK/ThreatNet-IRC-0.01.tar.gz
