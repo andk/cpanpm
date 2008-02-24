@@ -110,10 +110,7 @@ TICKET: for my $ticket (@tickets) {
       }
     }
   }
-  my $tree = HTML::TreeBuilder->new_from_content($decoded);
-  my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
-  my $text = $formatter->format($tree);
-  $tree->delete;
+  my $text = _h2text($decoded);
   # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
   if ($answer) {
     print (("=" x 79) . "\n") for 1,2;
@@ -146,13 +143,20 @@ TICKET: for my $ticket (@tickets) {
                       };
     my $delete = "$Config{server}/RT-Extension-QuickDelete/ToggleQuickDelete?id=$ticket";
     my $resp = $ua->get($delete);
-    unless ($resp->is_success) {
+    if ($resp->is_success) {
+      my $decoded = $resp->decoded_content;
+      if ($decoded =~ /Undelete/) {
+        $ALL->{$ticket}{could_delete} = 1;
+        print "Ticket '$ticket' deleted\n";
+      } else {
+        my $text = _h2text($decoded);
+        die "ALERT: response was succeess but did not contain 'Undelete'. text[$text]";
+      }
+    } else {
       $ALL->{$ticket}{could_delete} = 0;
       warn "ALERT: Could not delete ticket '$ticket': " . $resp->as_string;
       last TICKET;
     }
-    $ALL->{$ticket}{could_delete} = 1;
-    print "Ticket '$ticket' deleted\n";
   }
 }
 
@@ -180,4 +184,13 @@ if ($Config{stats}) {
     printf "%3d %23s %5d\n", $i, $k, $del_by{$k};
     last if $i >= 10;
   }
+}
+
+sub _h2text ($) {
+  my($decoded) = @_;
+  my $tree = HTML::TreeBuilder->new_from_content($decoded);
+  my $formatter = HTML::FormatText->new(leftmargin => 0, rightmargin => 50);
+  my $text = $formatter->format($tree);
+  $tree->delete;
+  $text;
 }
