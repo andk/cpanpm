@@ -33,7 +33,6 @@ match:
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
     |BSUGARS/IPC-Shareable-0.09              # hangs on test 38ipchv RT 19169
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
-    |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # has caused a hang more than one time during t/13-command-au
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
