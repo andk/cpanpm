@@ -206,11 +206,12 @@ require CPAN::HandleConfig;
     for my $n (@no_proxy) {
         $CPAN::Config->{no_proxy} = $n->{domain};
         my $pftpvars = $ftp->_proxy_vars("http://battambang.kh/");
-        for my $x (qw(http_proxy proxy_user proxy_pass)) {
+        for my $k (qw(http_proxy proxy_user proxy_pass)) {
+            my $v = defined $pftpvars->{$k} ? $pftpvars->{$k} : "UNDEF";
             ok($n->{expect}
                ==
-               !!$pftpvars->{$x},
-               "found $x\[$pftpvars->{$x}] on domain[$n->{domain}]");
+               !!$pftpvars->{$k},
+               "found $k\[$v] on domain[$n->{domain}]");
         }
     }
 }
