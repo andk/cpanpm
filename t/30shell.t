@@ -174,6 +174,12 @@ $HAVE->{"Term::ReadLine::Perl||Term::ReadLine::Gnu"}
     =
     $HAVE->{"Term::ReadLine::Perl"}
     || $HAVE->{"Term::ReadLine::Gnu"};
+# My impression is that wehn Devel::Cover is running we cannot test
+# Expect. Across several perl versions the same test was hanging. Go
+# figure.
+if ($INC{"Devel/Cover.pm"}) {
+    delete $HAVE->{Expect};
+}
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
@@ -316,7 +322,7 @@ TUPL: for my $i (0..$#prgs){
         }
         my $this_timeout = $test_timeout || $default_timeout;
         if ($INC{"Devel/Cover.pm"}) {
-            $this_timeout*=10;
+            $this_timeout*=12;
         }
         $expo->expect(
                       $this_timeout,
