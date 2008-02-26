@@ -1077,6 +1077,7 @@ Tk::Wizard
 Tk::XMLViewer
 Touch
 Transform::Canvas
+Tripletail
 UML::Sequence
 UNIVERSAL::isa
 UNIVERSAL::ref
@@ -1129,6 +1130,7 @@ WWW::Scraper::ISBN::Record
 WWW::Search
 WWW::Shorten
 WWW::Slides
+Waft
 Want
 Web::Scraper
 Workflow
