@@ -2,6 +2,26 @@
 
 	* Test::Class 0.28 is a candidate to prove something between 33356 and 33358
 
+	Maybe Test::Simple, Test::More, Test::Builder? Yes.
+
+	http://rt.cpan.org/Ticket/Display.html?id=33574
+
+	Is there more to it?
+
+	new fails
+    ILYAZ/modules/Math-Pari-2.010709.tar.gz[42]
+	  PDENIS/Test-Strict-0.09.tar.gz[244]
+	  MIYAGAWA/Catalyst-View-JSON-0.23.tar.gz[329]
+	  MTHURN/I18N-Charset-1.388.tar.gz[630]
+	  REDTREE/PDF-API2-Simple-1.1.4u.tar.gz[657]
+	  ADIE/Test-Class-0.28.tar.gz[847]
+	  NEELY/Data-Serializer-0.43.tar.gz[939]
+	  BBC/Email-MIME-CreateHTML-1.026.tar.gz[940]
+	  JAYK/Catalyst-Authentication-Store-DBIx-Class-0.104.tar.gz[1010]
+	  MIYAGAWA/Apache-GuessCharset-0.03.tar.gz[1266]
+	  CHOCOLATE/Scalar-Util-Clone-0.10.tar.gz[1332]
+	  MSTROUT/Devel-REPL-1.002000.tar.gz[1513]
+
 2008-02-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Curious:
