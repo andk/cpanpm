@@ -31,7 +31,6 @@ match:
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
-    |BSUGARS/IPC-Shareable-0.09              # hangs on test 38ipchv RT 19169
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
@@ -39,7 +38,7 @@ match:
     |DMAKI/Text-MeCab                        # hangs asking questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
-    |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16
+    |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16, RT 33279
     |GONERI/Ocsinventory-Agent-\d            # hanger
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever

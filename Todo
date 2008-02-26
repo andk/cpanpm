@@ -9,10 +9,10 @@
 	Is there more to it?
 
 	new fails
-    ILYAZ/modules/Math-Pari-2.010709.tar.gz[42]
-	  PDENIS/Test-Strict-0.09.tar.gz[244]
-	  MIYAGAWA/Catalyst-View-JSON-0.23.tar.gz[329]
-	  MTHURN/I18N-Charset-1.388.tar.gz[630]
+    ILYAZ/modules/Math-Pari-2.010709.tar.gz[42]             # the usual
+	  PDENIS/Test-Strict-0.09.tar.gz[244]                     # Devel::Cover
+	  MIYAGAWA/Catalyst-View-JSON-0.23.tar.gz[329]            # broken dependency declaration
+	  MTHURN/I18N-Charset-1.388.tar.gz[630]                   # random due to skip
 	  REDTREE/PDF-API2-Simple-1.1.4u.tar.gz[657]
 	  ADIE/Test-Class-0.28.tar.gz[847]
 	  NEELY/Data-Serializer-0.43.tar.gz[939]
