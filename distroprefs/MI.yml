@@ -60,6 +60,7 @@ match:
     |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/Danga-Socket-Callback-\d
     |DMAKI/Event-Notify-\d
+    |DMAKI/GunghoX-FollowLinks-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DSNOPEK/POE-Component-MessageQueue-\d
