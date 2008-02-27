@@ -1,7 +1,37 @@
-	* added 'halt_on_failure' config option to halt queue processing 
-	  after the first failure rather than processing all remaining times
-	  (patch by David Golden; requested by Andrew Hampe and Matisse Enzer)
+2008-02-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* release 1.92_57: getting closer to 1.93
+
+	* address #32823: fix a (rare) case where the make_args were appended to
+	the commandline on the call to ./Build (reported by David Golden and
+	Michael Schwern)
+	
+	* applied a patch from Randy Kobes to update index before a query when
+	CPAN::SQLite is active
+	
+	* added 'halt_on_failure' config option to halt queue processing after
+	the first failure rather than processing all remaining items
+	(patch by David Golden; requested by Andrew Hampe and Matisse Enzer)
+
+	* address #33505: allow empty passwords in the config and pass proxy
+	data through to curl (suggestions by kevinarpe)
+
+	* new diagnostics when CPAN.pm is required a second time. Introduce a
+	sleep period when it is required several times because then a loop might
+	be the cause and this might provide a clue to the user.
+
+	* address #32525: when running the 'r' command, try to display the
+	module name that is best suited for the distribution name (suggestion
+	and prove of concept implementation by imacat)
+
+	* speed up distroprefs on eexpect/anyorder by reducing timeout to 1
+	second and retrying until full timeout reached
+
+	* address 32923: allow =head1 CONTENT without regard to case (David
+	Wheeler)
+
+	* Now with 277 distroprefs files
+	
 2008-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_56: unstable release both bugfixes and new features
@@ -10,13 +40,12 @@
 	by Randy Kobes based on a bugreport by David Wheeler; with help from
 	Schwern and Adam Kennedy and I'm sure this will need more iterations.
 
-
 	* added 'trust_test_report_history' config option; when set, CPAN will
 	skip tests for a distribution and rely on test report results if a prior
 	test report is found; requires CPAN::Reporter 1.07_02
 
 	* protect against the infamous bug in Safe 2.13 that causes data
-	corruption and ugly error messages line unknown method version::("")) or
+	corruption and ugly error messages like unknown method version::("")) or
 	some such
 
 	* let people disable the direct usage of gzip and tar by supplying a
