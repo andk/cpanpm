@@ -511,6 +511,8 @@ CONFIGURATION
       getcwd             see below
       gpg                path to external prg
       gzip               location of external program gzip
+      halt_on_failure    stop processing after the first failure of queued
+                         items or dependencies
       histfile           file to maintain history between sessions
       histsize           maximum number of lines to keep in histfile
       http_proxy         proxy host for http requests
