@@ -192,6 +192,7 @@ distroprefs/MSERGEANT.DBIx-AnyDBD.yml
 distroprefs/MSERGEANT.XML-Filter-XInclude.yml
 distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MSISK.HTML-TableExtract.yml
+distroprefs/MTHURN.I18N-Charset.yml
 distroprefs/MTHURN.Tk-Wizard.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
