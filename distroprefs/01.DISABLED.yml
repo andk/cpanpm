@@ -40,6 +40,7 @@ match:
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16, RT 33279
     |GONERI/Ocsinventory-Agent-\d            # hanger
+    |GRICHTER/DBIx-Recordset-\d              # hangs
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |HORROCKS/PersistentPerl-\d              # hangs early
