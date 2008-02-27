@@ -2599,17 +2599,29 @@ sub _u_r_common {
        @version_undefs,@version_zeroes);
     $version_undefs = $version_zeroes = 0;
     my $sprintf = "%s%-25s%s %9s %9s  %s\n";
-    my @expand = sort {
-        $b->_is_representative_module <=> $a->_is_representative_module
-            ||
-                $a->id cmp $b->id
-            } $self->expand('Module',@args);
-    my $expand = scalar @expand;
-    if (0) { # Looks like noise to me, was very useful for debugging
+    my @expand = $self->expand('Module',@args);
+    if ($CPAN::DEBUG) { # Looks like noise to me, was very useful for debugging
              # for metadata cache
-        $CPAN::Frontend->myprint(sprintf "%d matches in the database\n", $expand);
+        my $expand = scalar @expand;
+        $CPAN::Frontend->myprint(sprintf "%d matches in the database, time[%d]\n", $expand, time);
     }
-  MODULE: for $module (@expand) {
+    my @sexpand;
+    if ($] < 5.008) {
+        # hard to believe that the more complex sorting can lead to
+        # stack curruptions on older perl
+        @sexpand = sort {$a->id cmp $b->id} @expand;
+    } else {
+        @sexpand = sort {
+            $b->_is_representative_module <=> $a->_is_representative_module
+                ||
+                    $a->id cmp $b->id
+                } @expand;
+    }
+    if ($CPAN::DEBUG) {
+        $CPAN::Frontend->myprint(sprintf "sorted at time[%d]\n", time);
+        sleep 1;
+    }
+  MODULE: for $module (@sexpand) {
         my $file  = $module->cpan_file;
         next MODULE unless defined $file; # ??
         $file =~ s!^./../!!;
@@ -3078,7 +3090,8 @@ that may go away anytime.\n"
         my $wantarray = wantarray;
         my $join_m = join ",", map {$_->id} @m;
         # $self->debug("wantarray[$wantarray]join_m[$join_m]");
-        $self->debug("wantarray[$wantarray]");
+        my $count = scalar @m;
+        $self->debug("class[$class]wantarray[$wantarray]count m[$count]");
     }
     return wantarray ? @m : $m[0];
 }
@@ -9944,7 +9957,7 @@ sub distribution {
 sub _is_representative_module {
     my($self) = @_;
     return $self->{_is_representative_module} if defined $self->{_is_representative_module};
-    my $pm = $self->cpan_file or return 0;
+    my $pm = $self->cpan_file or return $self->{_is_representative_module} = 0;
     $pm =~ s|.+/||;
     $pm =~ s{\.(?:tar\.(bz2|gz|Z)|t(?:gz|bz)|zip)$}{}i; # see base_id
     $pm =~ s|-\d+\.\d+.+$||;
