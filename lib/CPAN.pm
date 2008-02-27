@@ -56,13 +56,16 @@ if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
                  6 => 120,
                 );
     my $sleep = @rec > 6 ? 300 : ($sleep{scalar @rec}||0);
+    my $verbose = @rec >= 3;
     while (@rec) {
         $w .= sprintf " which has been called by process %d", pop @rec;
     }
     if ($sleep) {
         $w .= ".\n\n# Sleeping $sleep seconds to protect other processes\n";
     }
-    warn $w;
+    if ($verbose) {
+        warn $w;
+    }
     local $| = 1;
     while ($sleep > 0) {
         printf "\r#%5d", --$sleep;
