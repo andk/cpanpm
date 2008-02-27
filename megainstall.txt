@@ -80,6 +80,7 @@ CGI::Application::Plugin::AutoRunmode
 CGI::Application::Plugin::DevPopup
 CGI::Application::Plugin::Forward
 CGI::Prototype
+CGI::Scriptpaths
 CGI::Session
 CGI::Untaint
 CHI
