@@ -17,3 +17,11 @@ comment: |
 #match:
 #  distribution: "MSCHWERN/Test-Simple-0.(7[3-9]|[89]\d).*.tar.gz"
 #goto: "MSCHWERN/Test-Simple-0.72.tar.gz"
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=33645
+
+match:
+  distribution: "MSCHWERN/Test-Simple-0.7(5|6_01|6_02|7|8|9_01).tar.gz"
+goto: "MSCHWERN/Test-Simple-0.74.tar.gz"
