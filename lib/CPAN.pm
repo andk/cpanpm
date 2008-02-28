@@ -12821,6 +12821,26 @@ command C<o conf commit>. Alternatively set the C<auto_commit>
 variable to true by running C<o conf init auto_commit> and answering
 the following question with yes.
 
+=item 17)
+
+Older versions of CPAN.pm had the original root directory of all
+tarballs in the build directory. Now there are always random
+characters appended to these directory names. Why was this done?
+
+The random characters are provided by File::Temp and ensure that each
+module's individual build directory is unique. This makes running
+CPAN.pm in concurrent processes simultaneously safe.
+
+=item 18)
+
+Speaking of the build directory. Do I have to clean it up myself?
+
+You have the choice to set the config variable C<scan_cache> to
+C<never>. Then you must clean it up yourself. The other possible
+value, C<atstart> only cleans up the build directory when you start
+the CPAN shell. If you never start up the CPAN shell, you probably
+also have to clean up the build directory yourself.
+
 =back
 
 =head1 COMPATIBILITY
