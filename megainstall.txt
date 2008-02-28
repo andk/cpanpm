@@ -699,6 +699,7 @@ OOPS
 Object::Accessor
 Object::Destroyer
 Object::Realize::Later
+Object::Relation
 Object::Signature
 Object::Tiny
 OpenOffice::OOBuilder
