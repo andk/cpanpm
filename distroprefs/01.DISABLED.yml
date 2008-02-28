@@ -67,6 +67,7 @@ match:
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
     |WYANT/Astro-SpaceTrack-\d               # asks for a username/passwd during tests
     |WYANT/Astro-satpass-\d                  # asks during testing to download something
+    |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |TPABA/
