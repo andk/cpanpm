@@ -11535,12 +11535,12 @@ uploaded that is better than the last released version.
 =item install [hash]
 
 Processing instructions for the C<make install> or C<./Build install>
-phase of the CPAN mantra. See below under I<Processiong Instructions>.
+phase of the CPAN mantra. See below under I<Processing Instructions>.
 
 =item make [hash]
 
 Processing instructions for the C<make> or C<./Build> phase of the
-CPAN mantra. See below under I<Processiong Instructions>.
+CPAN mantra. See below under I<Processing Instructions>.
 
 =item match [hash]
 
@@ -11560,7 +11560,7 @@ absolute path).
 
 The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
-living in the C< Config.pm > module.
+living in the C<Config.pm> module.
 
 If more than one restriction of C<module>, C<distribution>, and
 C<perl> is specified, the results of the separately computed match
@@ -11584,13 +11584,13 @@ distribution.
 =item pl [hash]
 
 Processing instructions for the C<perl Makefile.PL> or C<perl
-Build.PL> phase of the CPAN mantra. See below under I<Processiong
+Build.PL> phase of the CPAN mantra. See below under I<Processing
 Instructions>.
 
 =item test [hash]
 
 Processing instructions for the C<make test> or C<./Build test> phase
-of the CPAN mantra. See below under I<Processiong Instructions>.
+of the CPAN mantra. See below under I<Processing Instructions>.
 
 =back
 
