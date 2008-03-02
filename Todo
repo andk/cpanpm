@@ -1,3 +1,31 @@
+2008-03-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SAPER/CPAN-Dependency-0.12 hangs:
+
+>sand@k75:~/CPAN-SVN% ps -A -o user,pid,ppid,start_time,cmd | grep '^sand'|grep 3533
+sand      3533  3527 12:26 /home/src/perl/repoperls/installed-perls/perl/pXTMoRe/perl-5.10.0@33401/bin/perl -w t/02internals.t
+sand      7509 27737 12:42 grep 3533
+>sand@k75:~/CPAN-SVN% strace -p 3533
+Process 3533 attached - interrupt to quit
+select(8, [4], NULL, NULL, {278, 608000} <unfinished ...>
+Process 3533 detached
+>sand@k75:~/CPAN-SVN% kill 3533     
+>sand@k75:~/CPAN-SVN% 
+
+	Or, it seems, it has very long timeouts and connects ftp without passive
+	or whatever.
+
+	RT 33726
+
+	* I need to keep a pointer to the last BBC articles and I should check
+	if all unresolved ones are in RT. Today somebody reported Readonly::XS
+	on RT. Should have been there already. Now as a reply in
+
+	http://rt.cpan.org/Ticket/Display.html?id=33711
+
+	Nowadays I think I always post BBCs immediately to RT which is the right
+	thing.
+
 2008-02-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Test::Class 0.28 is a candidate to prove something between 33356 and 33358
