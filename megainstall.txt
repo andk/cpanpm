@@ -449,6 +449,7 @@ Graph::Easy::As_svg
 Graph::SocialMap
 GraphViz
 Graphics::ColorNames
+Graphics::ColorObject
 Gtk
 Gtk2
 HOP::Lexer

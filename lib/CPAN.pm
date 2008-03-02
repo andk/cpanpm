@@ -2614,11 +2614,17 @@ sub _u_r_common {
         # stack curruptions on older perl
         @sexpand = sort {$a->id cmp $b->id} @expand;
     } else {
-        @sexpand = sort {
-            $b->_is_representative_module <=> $a->_is_representative_module
-                ||
-                    $a->id cmp $b->id
-                } @expand;
+        @sexpand = map {
+            $_->[1]
+        } sort {
+            $b->[0] <=> $a->[0]
+            ||
+            $a->[1]{ID} cmp $b->[1]{ID},
+        } map {
+            [$_->_is_representative_module,
+             $_
+            ]
+        } @expand;
     }
     if ($CPAN::DEBUG) {
         $CPAN::Frontend->myprint(sprintf "sorted at time[%d]\n", time);
@@ -5114,11 +5120,20 @@ sub reanimate_build_dir {
     my $i = 0;
     my $painted = 0;
     my $restored = 0;
-    $CPAN::Frontend->myprint("Going to read $CPAN::Config->{build_dir}/\n");
     my @candidates = map { $_->[0] }
         sort { $b->[1] <=> $a->[1] }
             map { [ $_, -M File::Spec->catfile($d,$_) ] }
                 grep {/\.yml$/} readdir $dh;
+    unless (@candidates) {
+        $CPAN::Frontend->myprint("Build_dir empty, nothing to restore\n");
+        return;
+    }
+    $CPAN::Frontend->myprint
+        (sprintf("Going to read %d yaml file%s from %s/\n",
+                 scalar @candidates,
+                 @candidates==1 ? "" : "s",
+                 $CPAN::Config->{build_dir}
+                ));
   DISTRO: for $i (0..$#candidates) {
         my $dirent = $candidates[$i];
         my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
@@ -5180,9 +5195,7 @@ sub reanimate_build_dir {
         }
     }
     $CPAN::Frontend->myprint(sprintf(
-                                     "DONE\nFound %s old build%s, restored the state of %s\n",
-                                     @candidates ? sprintf("%d",scalar @candidates) : "no",
-                                     @candidates==1 ? "" : "s",
+                                     "DONE\nRestored the state of %s\n",
                                      $restored || "none",
                                     ));
 }
