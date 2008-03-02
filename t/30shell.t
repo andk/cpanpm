@@ -1,4 +1,4 @@
- use strict;
+use strict;
 
 # there's POD at the very end of this file
 
@@ -836,7 +836,7 @@ __END__
 #R:YAML
 ########
 #P:m Fcntl
-#E:Found \d old builds?, restored the state of (?:\d|none)[\s\S]+?Defines fcntl
+#E:Restored the state of (?:\d|none)[\s\S]+?Defines fcntl
 #R:YAML
 ########
 #P:a JHI
