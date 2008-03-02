@@ -1277,10 +1277,11 @@ sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
 #-> sub CPAN::find_perl ;
 sub find_perl () {
     my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
-    my $pwd  = $CPAN::iCwd = CPAN::anycwd();
-    my $candidate = File::Spec->catfile($pwd,$^X);
-    $perl ||= $candidate if MM->maybe_command($candidate);
-
+    unless ($perl) {
+        my $pwd  = $CPAN::iCwd = CPAN::anycwd();
+        my $candidate = File::Spec->catfile($pwd,$^X);
+        $perl = $candidate if MM->maybe_command($candidate);
+    }
     unless ($perl) {
         my ($component,$perl_name);
       DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
@@ -1296,7 +1297,7 @@ sub find_perl () {
         }
     }
 
-    return $perl;
+    return $^X = $perl;
 }
 
 
@@ -3876,11 +3877,7 @@ sub _add_to_statistics {
     $self->debug("yaml_module[$yaml_module]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         $stats->{thesiteurl} = $ThesiteURL;
-        if (CPAN->has_inst("Time::HiRes")) {
-            $stats->{end} = Time::HiRes::time();
-        } else {
-            $stats->{end} = time;
-        }
+        $stats->{end} = CPAN::FTP::_mytime();
         my $fh = FileHandle->new;
         my $time = time;
         my $sdebug = 0;
@@ -5134,6 +5131,7 @@ sub reanimate_build_dir {
                  @candidates==1 ? "" : "s",
                  $CPAN::Config->{build_dir}
                 ));
+    my $start = CPAN::FTP::_mytime;
   DISTRO: for $i (0..$#candidates) {
         my $dirent = $candidates[$i];
         my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
@@ -5194,9 +5192,11 @@ sub reanimate_build_dir {
             $painted++;
         }
     }
+    my $took = CPAN::FTP::_mytime - $start;
     $CPAN::Frontend->myprint(sprintf(
-                                     "DONE\nRestored the state of %s\n",
+                                     "DONE\nRestored the state of %s (in %.4f secs)\n",
                                      $restored || "none",
+                                     $took,
                                     ));
 }
 

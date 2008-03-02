@@ -118,7 +118,6 @@ sub edit {
     CPAN->debug("self[$self]args[".join(" | ",@args)."]");
     my($o,$str,$func,$args,$key_exists);
     $o = shift @args;
-    $DB::single = 1;
     if($can{$o}) {
         $self->$o(args => \@args); # o conf init => sub init => sub load
         return 1;
