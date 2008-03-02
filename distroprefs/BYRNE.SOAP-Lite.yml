@@ -1,3 +1,11 @@
+---
+comment: |
+
+  This is from 2004-02-26
+
+match:
+  distribution: "^BYRNE/SOAP/SOAP-Lite-0\.60a\.tar\.gz$"
+disabled: 1
 --- 
 match:
   distribution: "^BYRNE/SOAP-Lite-0.69"
@@ -14,8 +22,12 @@ patches:
 depends:
   requires:
     MIME::Parser: 0
----
-comment: "This is from 2004-02-26"
+--- 
 match:
-  distribution: "^BYRNE/SOAP/SOAP-Lite-0\.60a\.tar\.gz$"
-disabled: 1
+  distribution: "^MKUTTER/SOAP-Lite-0.71"
+pl: 
+  expect:
+    - "see the detailed list"
+    - "\n"
+    - "Do you want to proceed with this configuration\?"
+    - "\n"
