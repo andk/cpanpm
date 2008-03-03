@@ -56,6 +56,7 @@ match:
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
+    |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |OALDERS/URI-ParseSearchString-More-0.04
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
     |RYBSKEJ/forks-0.25
