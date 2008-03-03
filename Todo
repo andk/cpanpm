@@ -1,3 +1,18 @@
+2008-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* POE-0.9999
+
+	make test TEST_FILES=t/90_regression/cfedde-filter-httpd.t
+
+	FAIL under Test::Simple 0.78 with perl@33409
+	PASS under Test::Simple 0.74 with perl@33409
+	PASS under Test::Simple 0.74 with perl@33390
+	FAIL under Test::Simple 0.78 with perl@33390
+	PASS under Test::Simple 0.74 with perl@32642 (5.10.0)
+	FAIL under Test::Simple 0.74 with perl@32642 (5.10.0)
+
+	http://rt.cpan.org/Ticket/Display.html?id=33768
+
 2008-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* maybe still unreported: FreezeThaw, Safe::World, Data::Dump::Streamer,

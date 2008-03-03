@@ -1,0 +1,11 @@
+---
+comment: |
+
+  I don't know if it is documented. From skimming the Makefile.PL is
+  seems the way to specify that we want mod_perl 1.
+
+match:
+  distribution: "PHRED/Apache-Reload-\d"
+pl:
+  args:
+    - "1"
