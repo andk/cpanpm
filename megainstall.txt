@@ -53,6 +53,7 @@ BFD
 BSD::Resource
 BerkeleyDB
 Biblio::Document::Parser
+Bit::MorseSignals
 Bit::Vector
 Bit::Vector::Minimal
 BitTorrent
@@ -240,6 +241,7 @@ DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
 DBIx::HA
+DBIx::MyParse
 DBIx::ORM::Declarative
 DBIx::Perlish
 DBIx::SearchBuilder
@@ -615,6 +617,7 @@ Math::BigInt::FastCalc
 Math::BigInt::GMP
 Math::BigRat
 Math::Cephes
+Math::Combinatorics
 Math::GMP
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset
@@ -691,6 +694,7 @@ Net::Twitter
 Net::UploadMirror
 Net::Write
 Net::XMPP
+Net::Z3950::ZOOM
 NetAddr::IP
 News::Article
 Number::Format
@@ -886,6 +890,7 @@ Set::Crontab
 Set::Infinite
 Set::IntSpan::Fast
 Set::Integer::Gapfillers
+Shell::Perl
 ShiftJIS::CP932::Correct
 ShiftJIS::CP932::MapUTF
 ShiftJIS::Collate

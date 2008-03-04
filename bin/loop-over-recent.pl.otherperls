@@ -1,19 +1,17 @@
+# some recent 5.10.1 with -g:
+/home/src/perl/repoperls/installed-perls/maint-5.10/pXj9dmy/perl-5.10.0@33288/bin/perl
+
 # 5.10.0 itself:
 /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
 
-# 5.10.0 (after RC2) debugging:
-# /home/src/perl/repoperls/installed-perls/perl/pPXCIpe/perl-5.8.0@32606/bin/perl
+# the latest 5.8.9 where I did a megainstall on
+/home/src/perl/repoperls/installed-perls/maint-5.8/pBxK9vV/perl-5.8.8@33243/bin/perl
+# was: pOwntgt/perl-5.8.0@32025/bin/perl
 
-# 5.10.0 (after RC2) threaded:
-# /home/src/perl/repoperls/installed-perls/perl/pgvYBDM/perl-5.8.0@32524/bin/perl
-
-# the latest 5.8.9 where I did a megainstall on (on 2007-10-05)
-#!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pXGjdKF/perl-5.8.0@32025/bin/perl
-# the latest where I did a megainstall on (on 2007-11-02)
-/home/src/perl/repoperls/installed-perls/maint-5.8/pOwntgt/perl-5.8.0@32025/bin/perl
-
-# 5.8.9-tobe with the disadvantage that it believes to be 30961; no threads
-# /usr/local/perl-m-5.8.0@31162/bin/perl
+# quite close to 5.8.8 itself with -O2:
+/home/src/perl/repoperls/installed-perls/maint-5.8/p8tnrrm/perl-5.8.0@27144/bin/perl
+# with -g
+/home/src/perl/repoperls/installed-perls/maint-5.8/pIS17Oa/perl-5.8.0@27512/bin/perl
 
 # 5.8.7:
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pybSSNM/perl-5.8.0@26876/bin/perl
@@ -24,16 +22,6 @@
 #!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/prOuseq/perl-5.8.0@24448/bin/perl
 # not a perfect replacement, a few more patches away:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pes4ltZ/perl-5.8.0@24329/bin/perl
-
-# 5.8.5:
-#!!!# /home/src/perl/repoperls/installed-perls/maint-5.8/pOrDlAM/perl-5.8.0@23390/bin/perl
-# not a perfect replacement, a few more patches away:
-/home/src/perl/repoperls/installed-perls/maint-5.8/pAAnJ0Y/perl-5.8.0@23289/bin/perl
-
-# 5.8.4:
-#/home/src/perl/repoperls/installed-perls/maint-5.8/pKwJ8yG/perl-5.8.0@23004/bin/perl
-# 5.8.3:
-#/home/src/perl/repoperls/installed-perls/maint-5.8/p4wjLcy/perl-5.8.0@22552/bin/perl
 
 # not sure if the old File::Temp is behaving correctly
 /usr/local/perl-5.6.2/bin/perl

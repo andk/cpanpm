@@ -1,5 +1,15 @@
 2008-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* FreezeThaw is pure perl and is written such that the test goes
+	somewhere out of reach, out of memory, unlimited recursion or some such.
+	make testdb comes to the last test which is really a large eval and
+	there is gets lost. It's definitely only related to Regexp.
+
+	* what is my latest 5.10.1? It could be 33412 but it is 33288:5.10.0::thr=:opt=-g
+
+	* what is my latest 5.8.9? It could be 33424 but it is
+	pBxK9vV/perl-5.8.8@33243:5.8.8::thr=:opt=-O2
+
 	* POE-0.9999
 
 	make test TEST_FILES=t/90_regression/cfedde-filter-httpd.t
