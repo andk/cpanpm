@@ -12,6 +12,7 @@ match:
     |ADAMK/HTML-Location-\d
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
+    |AGENT/OpenResty-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
     |ASH/DBIx-Class-\d
