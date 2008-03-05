@@ -8,6 +8,8 @@
 	33423 MIX  no64bitint -g nothreads
 	33430 FAIL no64bitint threads
 
+	http://rt.cpan.org//Ticket/Display.html?id=33816
+
 2008-03-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* FreezeThaw is pure perl and is written such that the test goes
