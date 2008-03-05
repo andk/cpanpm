@@ -3582,7 +3582,7 @@ sub recent {
               $distro =~ s|.*?/authors/id/./../||;
               my $size   = $eitem->findvalue("enclosure/\@length");
               my $desc   = $eitem->findvalue("description");
-               $desc =~ s/.+? - //;
+              $desc =~ s/.+? - //;
               $CPAN::Frontend->myprint("$distro [$size b]\n    $desc\n");
               push @distros, $distro;
           }

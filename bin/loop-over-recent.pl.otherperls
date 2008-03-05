@@ -1,5 +1,7 @@
 # some recent 5.10.1 with -g:
 /home/src/perl/repoperls/installed-perls/maint-5.10/pXj9dmy/perl-5.10.0@33288/bin/perl
+# threaded and optimized:
+/home/src/perl/repoperls/installed-perls/maint-5.10/piB7lpk/perl-5.10.0@33412/bin/perl
 
 # 5.10.0 itself:
 /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
@@ -7,6 +9,8 @@
 # the latest 5.8.9 where I did a megainstall on
 /home/src/perl/repoperls/installed-perls/maint-5.8/pBxK9vV/perl-5.8.8@33243/bin/perl
 # was: pOwntgt/perl-5.8.0@32025/bin/perl
+# threaded:
+/home/src/perl/repoperls/installed-perls/maint-5.8/pB3dGVG/perl-5.8.8@33430/bin/perl
 
 # quite close to 5.8.8 itself with -O2:
 /home/src/perl/repoperls/installed-perls/maint-5.8/p8tnrrm/perl-5.8.0@27144/bin/perl
