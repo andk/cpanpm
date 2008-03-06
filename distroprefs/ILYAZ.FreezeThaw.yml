@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "ILYAZ/modules/FreezeThaw-0.43.tar.gz"
+patches:
+  - "ANDK/patches/FreezeThaw-0.43-ANDK-01.patch.gz"

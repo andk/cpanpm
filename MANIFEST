@@ -114,6 +114,7 @@ distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/HMBRAND.Tk-Clock.yml
+distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
@@ -213,6 +214,7 @@ distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/PETERW.SVG-Parser.yml
 distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PHOENIX.Term-ReadPassword.yml
+distroprefs/PHRED.Apache-Reload.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml

@@ -34,6 +34,7 @@
 ^mail
 ^make-test-
 ^memo
+^nntp-testers
 ^patches
 ^perlbug/
 ^pm_to_blib
