@@ -60,7 +60,7 @@ match:
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |OALDERS/URI-ParseSearchString-More-0.04
-    |PHILIPS/DBIx-MyParse-\d                 # asks questions
+    |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.12              # hangs in t/02internals
