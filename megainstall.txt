@@ -997,6 +997,7 @@ Text::Aligner
 Text::Aspell
 Text::Autoformat
 Text::CSV_XS
+Text::Diff
 Text::FIGlet
 Text::Filter
 Text::Format
