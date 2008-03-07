@@ -272,6 +272,7 @@ Data::Properties
 Data::Random
 Data::Remember
 Data::ShowTable
+Data::Structure::Util
 Data::Swap
 Data::Throttler
 Data::TreeDumper
