@@ -1,3 +1,12 @@
+2008-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* maybe still unreported: Safe::World, Data::Dump::Streamer,
+	Authen-Htpasswd-0.16
+
+	* reported but unfixed: Devel::ebug, Storable, Tk, Devel::Size
+
+	* reported and fixed: FreezeThaw, Test::Deep, Params::Validate
+
 2008-03-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PIJLL/DateTime-Format-Epoch-0.11.tar.gz has both fails and passes. 64bitint?
@@ -24,6 +33,7 @@ ok 27
 # 'FrT;@1|/13|(?mi-xs:^abc)'
 # 'FrT;!0|{>0|$6|Regexp/13|(?mi-xs:^abc)})0|@1|@3|<0|<0|$2|11'
 
+	http://rt.cpan.org/Ticket/Display.html?id=33844
 
 	* what is my latest 5.10.1? It could be 33412 but it is 33288:5.10.0::thr=:opt=-g
 
@@ -42,13 +52,6 @@ ok 27
 	FAIL under Test::Simple 0.74 with perl@32642 (5.10.0)
 
 	http://rt.cpan.org/Ticket/Display.html?id=33768
-
-2008-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
-
-	* maybe still unreported: FreezeThaw, Safe::World, Data::Dump::Streamer,
-	Authen-Htpasswd-0.16
-
-	* reported but unfixed: Devel::ebug, Storable, Tk, Devel::Size
 
 2008-03-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
