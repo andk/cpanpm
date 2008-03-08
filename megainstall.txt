@@ -612,6 +612,8 @@ Mail::Send
 Mail::Sendmail
 Mail::Transport::Dbx
 Mail::Util
+Makefile::DOM
+Makefile::Parser
 Math::Approx::Symbolic
 Math::Base85
 Math::Bezier::Convert
@@ -838,6 +840,7 @@ RT::Client::REST
 RTF::HTMLConverter
 Regex::PreSuf
 Regexp::Assemble
+Regexp::Common::IRC
 Regexp::List
 Regexp::Log
 Regexp::Shellish

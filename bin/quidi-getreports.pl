@@ -3,7 +3,7 @@ use warnings;
 use LWP::UserAgent;
 my $ua = LWP::UserAgent->new;
 my @want_config = qw(gccversion);
-my @want_other = qw(REPORT_WRITER REQ:Moose);
+my @want_other = qw(REQ:Test::More);
 # my @want_config = qw(archname usethreads usemymalloc cc byteorder libc gccversion intsize use64bitint archname optimize);
 while (<DATA>) {
     my($ok,$id) = /(PASS|FAIL)\s+(\d+)/ or next;

@@ -15,6 +15,8 @@ match:
     |ADAMK/HTML-Location-\d
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
+    |AGENT/Makefile-DOM-\d
+    |AGENT/Makefile-Parser-\d
     |AGENT/OpenResty-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
@@ -147,6 +149,7 @@ match:
     |MSTROUT/Devel-REPL-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
+    |PERIGRIN/Regexp-Common-IRC-\d
     |PHAYLON/MooseX-Types-\d
     |PHAYLON/namespace-clean-\d
     |REDTREE/PDF-API2-Simple-\d
