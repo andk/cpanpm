@@ -7,7 +7,8 @@
 This module requires Module::Build to install itself.
   Install Module::Build from CPAN? [y] 
 
-	
+	Aha. This is a special Module::Build silliness that calls CPAN
+	recursively to install Module::Build::Compat. If you say no, it dies.
 
 2008-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 

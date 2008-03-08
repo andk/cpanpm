@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "FOTANGO/Data-Structure-Util-0.12.tar.gz"
+depends:
+  configure_requires:
+    Module::Build: 0
