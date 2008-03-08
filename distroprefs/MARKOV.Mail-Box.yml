@@ -1,9 +1,7 @@
 ---
 comment: |
 
-  Just a skeleton, I did not finish this prefs file because I cannot
-  use Mailtools on my system for unknown reasons. But as Mail-Box
-  depends on Mailtools I cannot run the tests.
+  Just a skeleton
 
 match:
   distribution: "^MARKOV/Mail-Box-2\.\d"
@@ -17,6 +15,7 @@ pl:
     PERL_EXTUTILS_AUTOINSTALL: --skip    
   eexpect:
     mode: anyorder
+    timeout: 20
     talk:
       - "Do you want to install Mail::Box::Parser::C"
       - "n\n"

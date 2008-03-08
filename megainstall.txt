@@ -380,6 +380,7 @@ ExtUtils::MakeMaker
 ExtUtils::Manifest
 ExtUtils::ModuleMaker
 ExtUtils::PkgConfig
+FCGI::Engine
 FLV::Info
 Fcntl
 File::BOM

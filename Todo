@@ -1,5 +1,16 @@
 2008-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* This I get with maint-5.8@33449:
+
+WARNING: DBIx::Class::StartupCheck: This version of Perl is likely to exhibit
+extremely slow performance for certain critical operations.
+Please consider recompiling Perl.  For more information, see
+https://bugzilla.redhat.com/show_bug.cgi?id=196836 and/or
+http://lists.scsys.co.uk/pipermail/dbix-class/2007-October/005119.html.
+You can suppress this message by setting DBIC_NO_WARN_BAD_PERL=1 in your
+environment.
+
+
 	* Data::Structure::Util broke somewhere 24650..24661
 
   CPAN.pm: Going to build F/FO/FOTANGO/Data-Structure-Util-0.12.tar.gz

@@ -6,6 +6,9 @@ comment: |
   seem to be needed to prevent infinite recursion under certain
   unknown circumstances.
 
+  The timeout must really be more than 10 seconds, Net::Jifty for
+  example didn't make it in ten (once).
+
 match:
   distribution: |
     ^(?x:^ADAMK/Algorithm-Dependency-\d
@@ -144,6 +147,7 @@ match:
     |MSTROUT/Devel-REPL-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
+    |PHAYLON/MooseX-Types-\d
     |PHAYLON/namespace-clean-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
@@ -157,7 +161,10 @@ match:
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d
+    |STEVAN/FCGI-Engine-\d
+    |STEVAN/MooseX-Daemonize-\d
     |TELS/graph/Graph-
+    |THEPLER/MooseX-Types-Path-Class-\d
     |YARON/WWW-Monitor-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
     |ZIGOROU/Catalyst-Model-MozRepl-\d
@@ -170,7 +177,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 10
+    timeout: 20
     reuse: 1
     talk:
       - "Auto-install"
