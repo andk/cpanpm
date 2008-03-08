@@ -1,4 +1,8 @@
 ---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=27047
+
 match:
   distribution: "RMUHLE/classes-0.943.tar.gz"
 depends:
