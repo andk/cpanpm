@@ -154,6 +154,7 @@ match:
     |PHAYLON/namespace-clean-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
+    |RKITOVER/Catalyst-Plugin-RelativePaths-\d
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d

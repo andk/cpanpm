@@ -4,3 +4,5 @@ match:
 depends:
   build_requires:
     Test::Exception: 0.25
+patches:
+  - "ANDK/patches/classes-0.943-ANDK-01.patch.gz"
