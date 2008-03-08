@@ -28,6 +28,7 @@ match:
     |BLBLACK/DBIx-Class-\d
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
+    |BOBTFISH/Text-Markdown-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d

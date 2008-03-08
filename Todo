@@ -1,3 +1,14 @@
+2008-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Data::Structure::Util broke somewhere 24650..24661
+
+  CPAN.pm: Going to build F/FO/FOTANGO/Data-Structure-Util-0.12.tar.gz
+
+This module requires Module::Build to install itself.
+  Install Module::Build from CPAN? [y] 
+
+	
+
 2008-03-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* maybe still unreported: Safe::World, Data::Dump::Streamer,
