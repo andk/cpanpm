@@ -10,7 +10,6 @@ http://lists.scsys.co.uk/pipermail/dbix-class/2007-October/005119.html.
 You can suppress this message by setting DBIC_NO_WARN_BAD_PERL=1 in your
 environment.
 
-
 	* Data::Structure::Util broke somewhere 24650..24661
 
   CPAN.pm: Going to build F/FO/FOTANGO/Data-Structure-Util-0.12.tar.gz

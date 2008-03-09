@@ -55,6 +55,7 @@ distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
 distroprefs/CORION.Test-Without-Module.yml
+distroprefs/CSOE.PDL.yml
 distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml

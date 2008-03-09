@@ -844,6 +844,7 @@ RTF::HTMLConverter
 Regex::PreSuf
 Regexp::Assemble
 Regexp::Common::IRC
+Regexp::Copy
 Regexp::List
 Regexp::Log
 Regexp::Shellish
