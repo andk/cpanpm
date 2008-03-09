@@ -1,3 +1,20 @@
+2008-03-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ExtUtils::Command broken; suspect Test::Simple
+
+perl/pMDhhVO/perl-5.10.0@33370;5.11.0;thr=;opt=-O2;perl_patchlevel=              PASS 0.75
+perl/paM8WrN/perl-5.10.0@33387;5.11.0;thr=;opt=-O2;perl_patchlevel=              FAIL 0.77
+                         33390                                                   PASS
+perl/pXTMoRe/perl-5.10.0@33401;5.11.0;thr=;opt=-O2;perl_patchlevel=
+perl/pXZ43Pl/perl-5.10.0@33409;5.11.0;thr=;opt=-O2;perl_patchlevel=              FAIL
+perl/p5BztI8/perl-5.10.0@33411;5.11.0;thr=;opt=-O2;perl_patchlevel=              FAIL
+perl/paD9wDz/perl-5.10.0@33423;5.11.0;thr=;opt=-g;perl_patchlevel=33423
+perl/pRu8vDi/perl-5.10.0@33450;5.11.0;thr=define;opt=-O2;perl_patchlevel=33450
+perl/pq7Gob0/perl-5.10.0@33451;5.11.0;thr=;opt=-O2;perl_patchlevel=33451         FAIL
+perl/pPLJssF/perl-5.10.0@33452;5.11.0;thr=;opt=-O2;perl_patchlevel=33452         FAIL 0.78
+
+	http://rt.cpan.org/Ticket/Display.html?id=33926
+
 2008-03-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* This I get with maint-5.8@33449:
