@@ -6291,7 +6291,7 @@ sub get {
         my @e;
         my $goodbye_message;
         $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
-        if ($self->prefs->{disabled}) {
+        if ($self->prefs->{disabled} && ! $self->{force_update}) {
             my $why = sprintf(
                               "Disabled via prefs file '%s' doc %d",
                               $self->{prefs_file},
