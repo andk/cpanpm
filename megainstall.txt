@@ -1,3 +1,4 @@
+AI::Categorizer
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
@@ -490,6 +491,7 @@ HTML::TreeBuilder::XPath
 HTML::Widget
 HTML::WikiConverter
 HTTP::BrowserDetect
+HTTP::CryptoCookie
 HTTP::GHTTP
 HTTP::Parser
 HTTP::RangeSaver
@@ -702,6 +704,7 @@ Net::Z3950::ZOOM
 NetAddr::IP
 News::Article
 Number::Format
+Number::Range
 Number::WithError
 OLE::Storage_Lite
 OOPS
@@ -990,6 +993,7 @@ Test::Prereq
 Test::Reporter
 Test::SubCalls
 Test::Tester
+Test::Unit::Runner::XML
 Test::WWW::Declare
 Test::WWW::Mechanize
 Test::WWW::Selenium
@@ -1174,6 +1178,7 @@ XML::Parser::Lite::Tree
 XML::Parser::PerlSAX
 XML::RSS
 XML::RSS::LibXML
+XML::RSS::FromHTML::Simple
 XML::RegExp
 XML::SAX
 XML::SAX2Perl

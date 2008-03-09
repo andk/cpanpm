@@ -1,4 +1,8 @@
 ---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=33844
+
 match:
   distribution: "ILYAZ/modules/FreezeThaw-0.43.tar.gz"
 patches:
