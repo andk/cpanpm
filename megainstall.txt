@@ -345,6 +345,7 @@ DocSet
 ETL::Pequel
 Email::Address
 Email::Date
+Email::Delete
 Email::Find
 Email::Folder
 Email::FolderType
@@ -369,6 +370,7 @@ Error
 Event
 Event::ExecFlow
 Event::Lib
+Event::Notify
 Excel::Template
 Expect
 Exporter
@@ -568,6 +570,7 @@ Lingua::JA::MacJapanese
 Lingua::KO::Hangul::Util
 Lingua::KO::MacKorean
 Lingua::RU::Charset
+Lingua::Stem::Es
 Lingua::StopWords
 Lingua::ZH::MacChinese::Simplified
 Lingua::ZH::MacChinese::Traditional
@@ -653,6 +656,7 @@ Module::Pluggable
 Module::Pluggable::Fast
 Module::Refresh
 Module::Release
+Module::Starter
 Module::Versions::Report
 MogileFS::Class
 MojoMojo

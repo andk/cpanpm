@@ -157,6 +157,7 @@ sub who {
                'steve@fisharerojo.org'      => 'SMPETERS',
                'steven@knowmad.com'         => 'WMCKEE',
                'william@knowmad.com'        => 'WMCKEE',
+               'xdaveg@gmail.com'           => 'DAGOLDEN',
               );
   $who = $alias{$who} || $who;
 }
