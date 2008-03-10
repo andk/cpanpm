@@ -1,3 +1,18 @@
+2008-03-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* VPIT/IPC-MorseSignals-0.13 hangs during t/62-fork-storable.t under
+	maint-5.10@33443.
+
+	And it hangs on t/61-fork-utf8 under maint-5.10.0@33412
+
+	* AI::Prolog jumped into my eye:
+
+2007-12-20T21:07  perl  32674   584   JJORE/AI-Prolog-0.739.tar.gz  NOT OK
+2007-12-18T19:17  perl  32642   441   JJORE/AI-Prolog-0.739.tar.gz  OK
+
+	Red since then independent of the branch. Already reported in RT 31905,
+	it's the infamous Test::Simple fix.
+
 2008-03-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* ExtUtils::Command broken; suspect Test::Simple

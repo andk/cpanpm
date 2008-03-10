@@ -70,6 +70,7 @@ match:
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TTY/kurila-\d                           # asks too many questions
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
+    |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WYANT/Astro-SpaceTrack-\d               # asks for a username/passwd during tests
     |WYANT/Astro-satpass-\d                  # asks during testing to download something
