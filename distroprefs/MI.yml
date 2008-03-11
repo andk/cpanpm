@@ -7,7 +7,8 @@ comment: |
   unknown circumstances.
 
   The timeout must really be more, Net::Jifty for example didn't make
-  it in ten (once), OpenResty didn't make it in 20.
+  it in ten (once), OpenResty didn't make it in 20 (I took it out
+  then)
 
 match:
   distribution: |
@@ -17,7 +18,6 @@ match:
     |ADAMK/URI-ToDisk-\d
     |AGENT/Makefile-DOM-\d
     |AGENT/Makefile-Parser-\d
-    |AGENT/OpenResty-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
     |ASH/DBIx-Class-\d
@@ -186,7 +186,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 30
+    timeout: 20
     reuse: 1
     talk:
       - "Auto-install"
