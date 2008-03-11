@@ -84,6 +84,7 @@ match:
     |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
     |GPHAT/Osgood-Client-\d
+    |GPHAT/Osgood-Server-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |HANENKAMP/Bot-Net-\d
