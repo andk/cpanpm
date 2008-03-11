@@ -673,6 +673,7 @@ Net::FPing
 Net::FTP
 Net::FTP::Common
 Net::GrowlClient
+Net::IMAP::Server
 Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
@@ -840,6 +841,7 @@ QDBM_File
 Quantum::Superpositions
 RDF::Core
 RDF::Simple
+RDF::Server
 RPC::JSON
 RPC::PlServer
 RPC::XML
