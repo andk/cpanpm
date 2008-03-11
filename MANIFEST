@@ -207,6 +207,7 @@ distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.Perl6-Caller.yml
 distroprefs/OVID.TAPx-Parser.yml
+distroprefs/OVID.Test-JSON.yml
 distroprefs/OWEN.PDF-Labels.yml
 distroprefs/PAJAS.XML-LibXML.yml
 distroprefs/PARDUS.File-MimeInfo.yml

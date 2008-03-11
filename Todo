@@ -1,5 +1,9 @@
 2008-03-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* Some day Ken Williams made a few statements about what CPAN.pm is
+	considered to do in the face of a recommends or an optional_features.
+	Where is it?
+
 	* VPIT/IPC-MorseSignals-0.13 hangs during t/62-fork-storable.t under
 	maint-5.10@33443.
 

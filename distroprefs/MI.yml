@@ -33,6 +33,7 @@ match:
     |BLBLACK/DBIx-Class-\d
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
+    |BRICAS/CGI-Application-PhotoGallery-\d
     |BOBTFISH/Text-Markdown-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/File-SAUCE-\d
@@ -82,6 +83,7 @@ match:
     |GAAL/Class-Rebless-\d
     |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
+    |GPHAT/Osgood-Client-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |HANENKAMP/Bot-Net-\d
