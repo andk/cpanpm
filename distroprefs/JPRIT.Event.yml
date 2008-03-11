@@ -7,9 +7,10 @@ patches:
 ---
 comment: |
 
-  a test hangs under perl-5.6.2.
+  a test hangs under perl-5.6.2. Much worse: memory corruption, glibc
+  errors detected, etc.
 
 match:
-  distribution: "JPRIT/Event-1.09.tar.gz"
+  distribution: "JPRIT/Event-\d"
   perl: ".../perl-5\.6\.2/bin/perl"
 disabled: 1
