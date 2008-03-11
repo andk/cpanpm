@@ -3,8 +3,11 @@ comment: |
 
   something is slow during the PL phase
 
+  http://rt.cpan.org//Ticket/Display.html?id=33982
+
 match:
   distribution: "AGENT/OpenResty-\d"
+disabled: 1
 pl:
   eexpect:
     mode: anyorder
