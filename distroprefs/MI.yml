@@ -6,8 +6,8 @@ comment: |
   seem to be needed to prevent infinite recursion under certain
   unknown circumstances.
 
-  The timeout must really be more than 10 seconds, Net::Jifty for
-  example didn't make it in ten (once).
+  The timeout must really be more, Net::Jifty for example didn't make
+  it in ten (once), OpenResty didn't make it in 20.
 
 match:
   distribution: |
@@ -186,7 +186,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 20
+    timeout: 30
     reuse: 1
     talk:
       - "Auto-install"
