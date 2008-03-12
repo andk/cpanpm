@@ -42,6 +42,7 @@ BEGIN {
     }
 }
 no lib ".";
+use CPAN::PERL5INC; # must come after absification
 
 require Mac::BuildTools if $^O eq 'MacOS';
 if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
@@ -106,6 +107,7 @@ use vars qw(
             $Have_warned
             $MAX_RECURSION
             $META
+            $Perl5lib_tempfile
             $RUN_DEGRADED
             $Signal
             $SQLite
@@ -1524,6 +1526,7 @@ sub cleanup {
   $META->savehist;
   close $META->{LOCKFH};
   unlink $META->{LOCK};
+  unlink $Perl5lib_tempfile if defined $Perl5lib_tempfile;
   # require Carp;
   # Carp::cluck("DEBUGGING");
   if ( $CPAN::CONFIG_DIRTY ) {
@@ -1597,6 +1600,8 @@ sub _list_sorted_descending_is_tested {
 }
 
 #-> sub CPAN::set_perl5lib
+{
+my $fh;
 sub set_perl5lib {
     my($self,$for) = @_;
     unless ($for) {
@@ -1606,15 +1611,32 @@ sub set_perl5lib {
     $self->{is_tested} ||= {};
     return unless %{$self->{is_tested}};
     my $env = $ENV{PERL5LIB};
+    my $opt = $ENV{PERL5OPT} || "";
     $env = $ENV{PERLLIB} unless defined $env;
     my @env;
-    push @env, $env if defined $env and length $env;
+    push @env, split /\Q$Config::Config{path_sep}\E/, $env if defined $env and length $env;
     #my @dirs = map {("$_/blib/arch", "$_/blib/lib")} keys %{$self->{is_tested}};
     #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
 
     my @dirs = map {("$_/blib/arch", "$_/blib/lib")} $self->_list_sorted_descending_is_tested;
+    return if !@env && !@dirs;
+    my $yaml_module = CPAN::_yaml_module;
+
+    if ($CPAN::META->has_inst($yaml_module) && $CPAN::META->has_usable("File::Temp")) {
+        unless (defined $fh) {
+            $fh =
+                File::Temp->new(
+                                dir      => File::Spec->tmpdir,
+                                template => 'cpan_perl5inc_XXXX',
+                                suffix   => '.txt',
+                                unlink   => 0,
+                               );
+            $Perl5lib_tempfile = $fh->filename;
+        }
+    }
     if (@dirs < 12) {
         $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
+        $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
     } elsif (@dirs < 24) {
         my @d = map {my $cp = $_;
                      $cp =~ s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/;
@@ -1624,16 +1646,30 @@ sub set_perl5lib {
                                  "%BUILDDIR%=$CPAN::Config->{build_dir} ".
                                  "for '$for'\n"
                                 );
+        $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
+    } elsif ($Perl5lib_tempfile) {
+        my $cnt = keys %{$self->{is_tested}};
+        $CPAN::Frontend->myprint("Delegating blib/arch and blib/lib of ".
+                                 "$cnt build dirs to CPAN::PERL5LIB; ".
+                                 "for '$for'\n"
+                                );
+        my $inc = File::Basename::dirname(File::Basename::dirname($INC{"CPAN/PERL5INC.pm"}));
+        $ENV{PERL5OPT} = "$opt -I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
+        seek $fh, 0, 0;
+        truncate $fh, 0;
+        CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
     } else {
         my $cnt = keys %{$self->{is_tested}};
+        $CPAN::Frontend->mywarn("Your PERL5LIB is growing, installation ".
+                                "of a YAML module is recommended. See the manpage ".
+                                "of CPAN::PERL5INC for further information\n");
         $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib of ".
                                  "$cnt build dirs to PERL5LIB; ".
                                  "for '$for'\n"
                                 );
+        $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
     }
-
-    $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
-}
+}}
 
 package CPAN::CacheMgr;
 use strict;
@@ -6283,7 +6319,7 @@ sub get {
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
-
+    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -7572,6 +7608,7 @@ is part of the perl-%s distribution. To install that, you need to run
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
+    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -8763,6 +8800,7 @@ sub test {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
 
+    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -9254,6 +9292,7 @@ sub install {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
 
+    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
     $CPAN::META->set_perl5lib;
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
