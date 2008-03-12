@@ -38,7 +38,8 @@ See L<http://www.perl.com/perl/misc/Artistic.html>
 
 use strict;
 package CPAN::PERL5INC;
-use vars qw($yaml_module);
+use vars qw($VERSION $yaml_module);
+$VERSION = "5.50";
 sub import {
     my($class,$what,@args) = @_;
     return unless $what;
