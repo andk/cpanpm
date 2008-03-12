@@ -12,6 +12,7 @@ distroprefs/ADAMK.Chart-Math-Axis.yml
 distroprefs/ADAMK.Image-Delivery.yml
 distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ADAMK.Test-Inline.yml
+distroprefs/AGENT.OpenResty.yml
 distroprefs/AGRUNDMA.POE-Loop-EV.yml
 distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
@@ -299,6 +300,7 @@ lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
 lib/CPAN/Nox.pm
+lib/CPAN/PERL5INC.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
