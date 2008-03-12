@@ -1,3 +1,20 @@
+2008-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_58: bugfix
+
+	* new module CPAN::PERL5INC repleaces the current PERL5INC stuff for
+	larger numers of directories involved
+
+	* force pragma can now override the effect of 'disabled' in distroprefs
+	(David Golden)
+
+	* speed up find_perl by caching absolute path in $^X (discovered by
+	Slaven Rezic)
+
+	* new FAQ entries about the build directory
+
+	* now with 284 distroprefs files
+
 2008-02-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_57: getting closer to 1.93
