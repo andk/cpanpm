@@ -41,6 +41,7 @@ package CPAN::PERL5INC;
 use vars qw($yaml_module);
 sub import {
     my($class,$what,@args) = @_;
+    return unless $what;
     if ($what eq "yaml_module") {
         my $yinc = $yaml_module = $args[0];
         $yinc =~ s|::|/|g;

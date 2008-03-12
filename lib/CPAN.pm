@@ -1611,7 +1611,6 @@ sub set_perl5lib {
     $self->{is_tested} ||= {};
     return unless %{$self->{is_tested}};
     my $env = $ENV{PERL5LIB};
-    my $opt = $ENV{PERL5OPT} || "";
     $env = $ENV{PERLLIB} unless defined $env;
     my @env;
     push @env, split /\Q$Config::Config{path_sep}\E/, $env if defined $env and length $env;
@@ -1654,7 +1653,8 @@ sub set_perl5lib {
                                  "for '$for'\n"
                                 );
         my $inc = File::Basename::dirname(File::Basename::dirname($INC{"CPAN/PERL5INC.pm"}));
-        $ENV{PERL5OPT} = "$opt -I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
+        $ENV{PERL5OPT} .= " " if $ENV{PERL5OPT};
+        $ENV{PERL5OPT} .= "-I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
         seek $fh, 0, 0;
         truncate $fh, 0;
         CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
