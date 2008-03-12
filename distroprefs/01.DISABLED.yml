@@ -50,6 +50,7 @@ match:
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
+    |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KNORR/Net-MirrorDir                     # asks questions
     |KNORR/Net-                              # no questions during make test please
     |LUPE/Filesys-SamFS-\d                   # have no SamFS

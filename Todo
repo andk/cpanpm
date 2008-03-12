@@ -1,3 +1,24 @@
+2008-03-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use Hatena::Keyword 0.05};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pW6uQKQ/perl-5.9.1@24009/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pBwPNFp/perl-5.9.1@24010/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	thinnercache tells me that Unicode::RecursiveDowngrade broke at the same
+	patch
+	
 2008-03-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Some day Ken Williams made a few statements about what CPAN.pm is
