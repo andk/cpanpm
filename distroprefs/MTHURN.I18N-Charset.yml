@@ -5,8 +5,11 @@ comment: |
   is skipped and leads to a PASS, otherwise to a FAIL. Need to
   stabelize and always do it towards more dependencies.
 
+  Or maybe it was Unicode::MapUTF8? Or both?
+
 match:
   distribution: "MTHURN/I18N-Charset-\d"
 depends:
   requires:
     Unicode::Map8: 0
+    Unicode::MapUTF8: 0
