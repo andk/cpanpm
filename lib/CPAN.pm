@@ -1584,6 +1584,13 @@ sub is_tested {
     $self->{is_tested}{$what} = $when;
 }
 
+#-> sub CPAN::reset_tested
+# forget all distributions tested -- resets what gets included in PERL5LIB
+sub reset_tested {
+    my ($self) = @_;
+    $self->{is_tested} = {};
+}
+
 #-> sub CPAN::is_installed
 # unsets the is_tested flag: as soon as the thing is installed, it is
 # not needed in set_perl5lib anymore
@@ -11998,11 +12005,6 @@ Returns 1 if this distribution file seems to be a perl distribution.
 Normally this is derived from the file name only, but the index from
 CPAN can contain a hint to achieve a return value of true for other
 filenames too.
-
-=item CPAN::Distribution::is_tested()
-
-List all the distributions that have been tested sucessfully but not
-yet installed. See also C<install_tested>.
 
 =item CPAN::Distribution::look()
 

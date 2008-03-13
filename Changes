@@ -1,3 +1,8 @@
+
+    * add reset_tested() function to forget distributions previously tested
+      in a session, which resets the list of directories added to PERL5LIB
+      (David Golden)
+
 2008-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_58: bugfix
