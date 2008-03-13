@@ -9292,7 +9292,7 @@ sub install {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
 
-    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     my($pipe) = FileHandle->new("$system $stderr |");
     my($makeout) = "";
