@@ -997,7 +997,7 @@ substitute. You can then revisit this dialog with
     my_dflt_prompt(mbuild_arg => "", $matcher);
 
     if (exists $CPAN::HandleConfig::keys{mbuild_install_build_command}
-	and $^O ne "MSWin32") {
+        and $^O ne "MSWin32") {
         # as long as Windows needs $self->_build_command, we cannot
         # support sudo on windows :-)
         my_dflt_prompt(mbuild_install_build_command => "./Build", $matcher);

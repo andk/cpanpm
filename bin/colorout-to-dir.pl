@@ -169,11 +169,11 @@ __END__
 
 This is the data we want to gather:
 
-	distribution            MIYAGAWA/XML-Atom-1.2.3.tar.gz
-	perl                    /home/src/perl/..../perl              !reveals maint vs perl
-	logfile (=date)         megainstall.20070422T1717.out
-	ok                      OK or "make_test NO" or something
-	log_as_xml
+        distribution            MIYAGAWA/XML-Atom-1.2.3.tar.gz
+        perl                    /home/src/perl/..../perl              !reveals maint vs perl
+        logfile (=date)         megainstall.20070422T1717.out
+        ok                      OK or "make_test NO" or something
+        log_as_xml
 
 So if we take the input filename, s/.out/.d/ on it and make that a
 directory, we have the storage area and the first metadata. If we then

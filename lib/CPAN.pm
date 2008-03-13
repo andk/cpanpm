@@ -4007,7 +4007,7 @@ sub ftp_get {
     my($class,$host,$dir,$file,$target) = @_;
     $class->debug(
                   qq[Going to fetch file [$file] from dir [$dir]
-	on host [$host] as local [$target]\n]
+        on host [$host] as local [$target]\n]
                  ) if $CPAN::DEBUG;
     my $ftp = Net::FTP->new($host);
     unless ($ftp) {
@@ -4040,8 +4040,8 @@ sub ftp_get {
 
 # If more accuracy is wanted/needed, Chris Leach sent me this patch...
 
- # > *** /install/perl/live/lib/CPAN.pm-	Wed Sep 24 13:08:48 1997
- # > --- /tmp/cp	Wed Sep 24 13:26:40 1997
+ # > *** /install/perl/live/lib/CPAN.pm- Wed Sep 24 13:08:48 1997
+ # > --- /tmp/cp Wed Sep 24 13:26:40 1997
  # > ***************
  # > *** 1562,1567 ****
  # > --- 1562,1580 ----

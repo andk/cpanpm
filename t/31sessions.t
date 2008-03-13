@@ -57,12 +57,12 @@ It was our intent to shape the force pragma as follows:
 
 Do we want to repeat testing?
 
-	            command     session     restored_state
-	Distro
-	  OK          no          no          no
-	  FAIL        no          yes         yes
-	Module/Bundle
-	  OK/FAIL     pass everything through to underlying distros
+                    command     session     restored_state
+        Distro
+          OK          no          no          no
+          FAIL        no          yes         yes
+        Module/Bundle
+          OK/FAIL     pass everything through to underlying distros
 
 =cut
 
