@@ -1,3 +1,16 @@
+2008-03-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* GSHANK/Form-Processor-Model-DBIC-0.01.tar.gz has something that triggers
+
+Can't use string ("--") as a HASH ref while "strict refs" in use at /home/src/perl/repoperls/installed-perls/maint-5.8/pnDGtsd/perl-5.8.7@27040/lib/5.8.8/CPAN.pm line 8441.
+ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN
+      Something went wrong during
+      /home/src/perl/repoperls/installed-perls/maint-5.8/pnDGtsd/perl-5.8.7@27040/bin/perl
+      G/GS/GSHANK/Form-Processor-Model-DBIC-0.01.tar.gz
+      (sleeping 30)
+ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN
+
+
 2008-03-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 
@@ -23,7 +36,14 @@ N/A
 
 	* Some day Ken Williams made a few statements about what CPAN.pm is
 	considered to do in the face of a recommends or an optional_features.
-	Where is it?
+	Where is it? Can't find it.
+
+	So recap what Slaven hashed out today:
+
+	If the user says dynamic_config=0 and specifies optional_features and
+	the distroprefs give me want_optional_features, then I can merge these
+	requires and build_requires and configure_requires into the main stuff
+	and proceed without asking questions. Really cool.
 
 	* VPIT/IPC-MorseSignals-0.13 hangs during t/62-fork-storable.t under
 	maint-5.10@33443.

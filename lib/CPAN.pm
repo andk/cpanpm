@@ -11584,6 +11584,11 @@ declaration.
 
 Specifies that this distribution shall not be processed at all.
 
+=item features [array]
+
+Currently unimplemented. Will deal with optional_features from
+META.yml.
+
 =item goto [string]
 
 The canonical name of a delegate distribution that shall be installed

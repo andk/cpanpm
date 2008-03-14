@@ -82,3 +82,7 @@ mapping:
     mapping:
       =:
         type: text
+  features:
+    type: seq
+    sequence:
+      - type: text
