@@ -8445,6 +8445,10 @@ sub unsat_prereq {
     my $prefs_depends = $self->prefs->{depends}||{};
     if ($slot eq "configure_requires_later") {
         my $meta_yml = $self->parse_meta_yml();
+        unless (ref $meta_yml and ref $meta_yml eq "HASH") {
+            $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
+            $meta_yml = +{};
+        }
         %merged = (%{$meta_yml->{configure_requires}||{}},
                    %{$prefs_depends->{configure_requires}||{}});
         $prereq_pm = {}; # configure_requires defined as "b"
@@ -8647,6 +8651,10 @@ sub read_yaml {
                                               # META.yml
     }
     # not "authoritative"
+    unless (ref $self->{yaml_content} and ref $self->{yaml_content} eq "HASH") {
+        $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
+        $self->{yaml_content} = +{};
+    }
     if (not exists $self->{yaml_content}{dynamic_config}
         or $self->{yaml_content}{dynamic_config}
        ) {
