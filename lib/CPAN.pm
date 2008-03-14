@@ -1,7 +1,7 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_58';
+$CPAN::VERSION = '1.92_59';
 $CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
 
 use CPAN::HandleConfig;
@@ -1664,6 +1664,7 @@ sub set_perl5lib {
         $ENV{PERL5OPT} .= "-I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
         seek $fh, 0, 0;
         truncate $fh, 0;
+        $fh->autoflush(1);
         CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
     } else {
         my $cnt = keys %{$self->{is_tested}};
