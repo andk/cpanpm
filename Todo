@@ -12,6 +12,9 @@ ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN-ATTN
 
 	Fixed in my sources, too early to write RT ticket.
 
+	At least wrote http://rt.cpan.org//Ticket/Display.html?id=34073 on
+	YAML::Syck which should (probably?) not have accepted this META.yml.
+
 2008-03-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 
