@@ -10630,7 +10630,8 @@ sub parse_version {
     if ($@) {
         $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
     }
-    $have = "undef" unless defined $have && length $have;
+    my $leastsanity = eval { defined $have && length $have; };
+    $have = "undef" unless $leastsanity;
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
     $have =~ s/ $//; # trailing whitespace happens all the time
 
