@@ -8195,11 +8195,11 @@ sub _find_prefs {
                     # do not take the order of C<keys %$match> because
                     # "module" is by far the slowest
                     my $saw_valid_subkeys = 0;
-                    for my $sub_attribute (qw(distribution perl perlconfig module)) {
+                    for my $sub_attribute (qw(env distribution perl perlconfig module)) {
                         next unless exists $match->{$sub_attribute};
                         $saw_valid_subkeys++;
-                        my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                         if ($sub_attribute eq "module") {
+                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                             my $okm = 0;
                             #CPAN->debug(sprintf "distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
                             my @modules = $self->containsmods;
@@ -8210,9 +8210,19 @@ sub _find_prefs {
                             }
                             $ok &&= $okm;
                         } elsif ($sub_attribute eq "distribution") {
+                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                             my $okd = $distroid =~ /$qr/;
                             $ok &&= $okd;
+                        } elsif ($sub_attribute eq "env") {
+                            for my $envele (keys %{$match->{env}}) {
+                                my $envval = $ENV{$envele} || "";
+                                my $qr = eval "qr{$distropref->{match}{$sub_attribute}{$envele}}";
+                                my $oke = $envval =~ /$qr/;
+                                $ok &&= $oke;
+                                last if $ok == 0;
+                            }
                         } elsif ($sub_attribute eq "perl") {
+                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
                             my $okp = CPAN::find_perl =~ /$qr/;
                             $ok &&= $okp;
                         } elsif ($sub_attribute eq "perlconfig") {
@@ -10300,7 +10310,7 @@ sub as_string {
                      $local_file || "(not installed)");
     push @m, sprintf($sprintf, 'INST_VERSION',
                      $self->inst_version) if $local_file;
-    if (%{$CPAN::META->{is_tested}}) { # XXX needs to be methodified somehow
+    if (%{$CPAN::META->{is_tested}||{}}) { # XXX needs to be methodified somehow
         my $available_file = $self->available_file;
         if ($available_file && $available_file ne $local_file) {
             push @m, sprintf($sprintf, 'AVAILABLE_FILE', $available_file);
@@ -11519,6 +11529,8 @@ C<expect>.
     perl: "/usr/local/cariba-perl/bin/perl"
     perlconfig:
       archname: "freebsd"
+    env:
+      DANCING_FLOOR: "Shubiduh"
   disabled: 1
   cpanconfig:
     make: gmake
@@ -11630,8 +11642,8 @@ CPAN mantra. See below under I<Processing Instructions>.
 =item match [hash]
 
 A hashref with one or more of the keys C<distribution>, C<modules>,
-C<perl>, and C<perlconfig> that specify if a document is targeted at a
-specific CPAN distribution or installation.
+C<perl>, C<perlconfig>, and C<env> that specify if a document is
+targeted at a specific CPAN distribution or installation.
 
 The corresponding values are interpreted as regular expressions. The
 C<distribution> related one will be matched against the canonical
@@ -11647,11 +11659,14 @@ The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
 living in the C<Config.pm> module.
 
-If more than one restriction of C<module>, C<distribution>, and
-C<perl> is specified, the results of the separately computed match
-values must all match. If this is the case then the hashref
-represented by the YAML document is returned as the preference
-structure for the current distribution.
+The value associated with C<env> is itself a hashref that is
+matched against corresponding values in the C<%ENV> hash.
+
+If more than one restriction of C<module>, C<distribution>, etc. is
+specified, the results of the separately computed match values must
+all match. If this is the case then the hashref represented by the
+YAML document is returned as the preference structure for the current
+distribution.
 
 =item patches [array]
 
