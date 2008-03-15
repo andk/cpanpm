@@ -6327,7 +6327,7 @@ sub get {
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
-    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -7616,7 +7616,7 @@ is part of the perl-%s distribution. To install that, you need to run
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
-    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -8816,7 +8816,7 @@ sub test {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
 
-    local $ENV{PERL5OPT} = $ENV{PERL5OPT};
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
