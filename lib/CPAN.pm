@@ -1664,8 +1664,8 @@ sub set_perl5lib {
         $ENV{PERL5OPT} .= "-I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
         seek $fh, 0, 0;
         truncate $fh, 0;
-        $fh->autoflush(1);
         CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
+        $fh->flush();
     } else {
         my $cnt = keys %{$self->{is_tested}};
         $CPAN::Frontend->mywarn("Your PERL5LIB is growing, installation ".
