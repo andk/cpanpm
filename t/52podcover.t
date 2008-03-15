@@ -18,6 +18,7 @@ my $trustme = { trustme => [ qw{
                                 new
                                 new
                                 readhist
+                                reset_tested
                                 savehist
                                 set_perl5lib
                                 shell
