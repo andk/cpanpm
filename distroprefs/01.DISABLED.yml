@@ -63,6 +63,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
+    |ROHAN/Google-Adwords-v\d                # asks in the middle of the test suite(?)
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.12              # hangs in t/02internals
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
