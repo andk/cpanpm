@@ -121,6 +121,7 @@ Carp::Source
 Catalyst
 Catalyst::Action::RenderView
 Catalyst::Devel
+Catalyst::Plugin::Assets
 Catalyst::Plugin::Authentication
 Catalyst::Plugin::Authorization::Roles
 Catalyst::Plugin::ConfigLoader
@@ -967,6 +968,7 @@ Task::Smoke
 Tcl
 TeX::Encode
 Template
+Template::Alloy
 Template::Config
 Template::Extract
 Template::Plugin::Class

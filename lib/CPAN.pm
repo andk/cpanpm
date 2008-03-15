@@ -8456,8 +8456,8 @@ sub unsat_prereq {
     my $prefs_depends = $self->prefs->{depends}||{};
     if ($slot eq "configure_requires_later") {
         my $meta_yml = $self->parse_meta_yml();
-        unless (ref $meta_yml and ref $meta_yml eq "HASH") {
-            $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
+        if (defined $meta_yml && (! ref $meta_yml || ref $meta_yml ne "HASH")) {
+            $CPAN::Frontend->mywarn("The content of META.yml is defined but not a HASH reference. Cannot use it.\n");
             $meta_yml = +{};
         }
         %merged = (%{$meta_yml->{configure_requires}||{}},
@@ -8662,9 +8662,11 @@ sub read_yaml {
                                               # META.yml
     }
     # not "authoritative"
-    unless (ref $self->{yaml_content} and ref $self->{yaml_content} eq "HASH") {
-        $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
-        $self->{yaml_content} = +{};
+    for ($self->{yaml_content}) {
+        if (defined $_ && (! ref $_ || ref $_ ne "HASH")) {
+            $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
+            $self->{yaml_content} = +{};
+        }
     }
     if (not exists $self->{yaml_content}{dynamic_config}
         or $self->{yaml_content}{dynamic_config}
