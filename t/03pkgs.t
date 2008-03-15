@@ -9,6 +9,7 @@ if ($ENV{PERL_CORE}){
   @m = ("CPAN", map { "CPAN::$_" } qw(Debug
                                       DeferedCode
                                       FirstTime
+                                      Kwalify
                                       Nox
                                       PERL5INC
                                       Queue
