@@ -1,0 +1,7 @@
+---
+comment: "pure testing"
+match:
+  distribution: "/Term-Title-\d"
+  env:
+    DISABLE_TERM_TITLE: 1
+disabled: 1
