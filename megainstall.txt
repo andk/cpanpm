@@ -2,6 +2,7 @@ AI::Categorizer
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
+Acme::Bleach
 Acme::MetaSyntactic
 Algorithm::Annotate
 Algorithm::C3
@@ -36,6 +37,7 @@ AppConfig
 Archive::Tar
 Archive::Zip
 Array::Iterator
+Array::RefElem
 Array::Slice
 Astro::Flux
 Astro::MoonPhase
@@ -50,6 +52,7 @@ AutoLoader
 B::Deobfuscate
 B::Lint
 B::Size
+B::TerseSize
 BFD
 BSD::Resource
 BerkeleyDB
@@ -90,12 +93,14 @@ CPAN
 CPAN::Cache
 CPAN::Checksums
 CPAN::Dependency
+CPAN::Faker
 CPAN::Index::Loader
 CPAN::IndexPod
 CPAN::Mini
 CPAN::Reporter::Smoker
 CPAN::Site
 CPAN::Unwind
+CPAN::WWW::Testers
 CPAN::YACSmoke
 CPANPLUS
 CSS
@@ -318,6 +323,7 @@ Devel::Modlist
 Devel::Monitor
 Devel::PerlySense
 Devel::Profile
+Devel::Profiler
 Devel::REPL
 Devel::Required
 Devel::SawAmpersand
@@ -575,6 +581,7 @@ Lingua::StopWords
 Lingua::ZH::MacChinese::Simplified
 Lingua::ZH::MacChinese::Traditional
 Lingua::ZH::TaBE
+Linux::Inotify2
 List::Compare
 List::Maker
 List::MoreUtils
@@ -646,6 +653,7 @@ Module::Build::Convert
 Module::Changes
 Module::Compile
 Module::ExtractUse
+Module::Faker
 Module::Find
 Module::Info
 Module::Install
@@ -944,14 +952,17 @@ Sub::Name
 Sub::Override
 Sub::Uplevel
 Sub::WrapPackages
+Sys::CPU
 Sys::Hostname
 Sys::Mmap
 Sys::SigAction
+Sys::Virt
 TAP::Parser
 Taint::Util
 Task::CVSMonitor
 Task::Catalyst
 Task::Catalyst::Tutorial
+Task::Moose
 Task::Smoke
 Tcl
 TeX::Encode
@@ -975,6 +986,7 @@ Term::Size::Perl
 Term::Spinner
 Term::UI
 Test
+Test::AutoBuild
 Test::Builder
 Test::Builder::Tester
 Test::Class

@@ -76,6 +76,7 @@ distroprefs/DMAKI.Xango.yml
 distroprefs/DMUEY.File-Copy-Recursive.yml
 distroprefs/DOM.OpenGuides.yml
 distroprefs/DONEILL.MIME-tools.yml
+distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Devel-StackTrace.yml
@@ -143,6 +144,7 @@ distroprefs/JPRIT.Event.yml
 distroprefs/JROBINSON.SQL-Translator.yml
 distroprefs/JROCKWAY.Chroniton.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
+distroprefs/JV.Getopt-Long.yml
 distroprefs/KANE.CPANPLUS.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KAWASAKI.Lingua-JA-Romanize-Japanese.yml
@@ -292,6 +294,7 @@ inc/Test/More.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pm
+lib/CPAN/API/HOWTO.pod
 lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
 lib/CPAN/FirstTime.pm
