@@ -1,8 +1,8 @@
 use strict;
 
-package CPAN::Test::Dummy::Perl5::Make::ConfReq;
+package CPAN::Test::Dummy::Perl5::Make::Features;
 
-$CPAN::Test::Dummy::Perl5::Make::ConfReq::VERSION = '1.00';
+$CPAN::Test::Dummy::Perl5::Make::Features::VERSION = '1.00';
 
 1;
 
@@ -12,11 +12,11 @@ __END__
 
 =head1 NAME
 
-CPAN::Test::Dummy::Perl5::Make::ConfReq - CPAN Test Dummy
+CPAN::Test::Dummy::Perl5::Make::Features - CPAN Test Dummy
 
 =head1 SYNOPSIS
 
-    use CPAN::Test::Dummy::Perl5::Make::ConfReq;
+    use CPAN::Test::Dummy::Perl5::Make::Features;
 
 =head1 DESCRIPTION
 
@@ -31,7 +31,7 @@ Andreas Koenig, based PITA by Adam Kennedy.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2007 Andreas Koenig
+Copyright 2008 Andreas Koenig
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

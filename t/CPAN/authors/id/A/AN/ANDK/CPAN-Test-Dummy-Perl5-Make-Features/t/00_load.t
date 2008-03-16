@@ -9,13 +9,13 @@ if ( $] >= 5.004 ) {
 }
 
 eval {
-	require CPAN::Test::Dummy::Perl5::Make::ConfReq;
+	require CPAN::Test::Dummy::Perl5::Make::Features;
 };
 
 if ( length($@) ) {
-	print "not ok 2 - CPAN::Test::Dummy::Perl5::Make::ConfReq loads ok\n";
+	print "not ok 2 - CPAN::Test::Dummy::Perl5::Make::Features loads ok\n";
 } else {
-	print "ok 2 - CPAN::Test::Dummy::Perl5::Make::ConfReq loads ok\n";
+	print "ok 2 - CPAN::Test::Dummy::Perl5::Make::Features loads ok\n";
 }
 
 exit(0);

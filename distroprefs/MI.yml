@@ -98,6 +98,7 @@ match:
     |HANK/Form-Processor-\d
     |HDP/Data-Hive-\d
     |HDP/KSx-IndexManager-\d
+    |HDP/MooseX-InsideOut-\d
     |HIROSE/Net-SSL-ExpireDate-\d
     |HOLOWAY/Catalyst-Action-REST-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
@@ -181,6 +182,7 @@ match:
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |STEVAN/FCGI-Engine-\d
     |STEVAN/MooseX-Daemonize-\d
+    |STEVAN/MooseX-Storage-\d
     |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d

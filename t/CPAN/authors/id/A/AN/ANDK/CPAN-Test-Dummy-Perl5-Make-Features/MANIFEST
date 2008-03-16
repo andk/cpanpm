@@ -1,5 +1,5 @@
 Changes
-lib/CPAN/Test/Dummy/Perl5/Make/ConfReq.pm
+lib/CPAN/Test/Dummy/Perl5/Make/Features.pm
 Makefile.PL
 MANIFEST
 README

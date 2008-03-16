@@ -1128,7 +1128,7 @@ __END__
 
 =head1 NAME
 
-30shell - The main test script for CPAN.pm
+30shell - The (old) main test script for CPAN.pm (superceded mostly by 31sections.t)
 
 =head1 SYNOPSIS
 

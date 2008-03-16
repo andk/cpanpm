@@ -19,7 +19,8 @@
 	* CPAN::PERL5INC now also used in available_file() so that testers that
 	do not install can continue to work as before this module was introduced
 
-	* new protection against subtly broken META.yml files
+	* new protection against subtly broken META.yml files (testcase provided
+	by Form-Processor-Model-DBIC-0.01)
 
 	* cleanup some files on whitespace, notably CRLF files that could
 	confuse some svn clients

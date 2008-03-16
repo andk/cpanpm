@@ -825,6 +825,7 @@ Pod::Parser
 Pod::Pdf
 Pod::PerlPoint
 Pod::Perldoc::ToToc
+Pod::S5
 Pod::Sdf
 Pod::Select
 Pod::Simple

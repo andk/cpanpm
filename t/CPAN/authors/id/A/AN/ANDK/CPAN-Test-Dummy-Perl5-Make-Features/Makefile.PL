@@ -1,18 +1,11 @@
-eval q{
-use CPAN::Test::Dummy::Perl5::Make 1.05; # configure_requires must take care for this
-};
-
-if ($@ && $ARGV[0] ne "open_the_backdoor") {
-  die $@;
-}
 use strict;
 use ExtUtils::MakeMaker;
 use File::Spec;
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
 
 WriteMakefile(
-              NAME          => 'CPAN::Test::Dummy::Perl5::Make::ConfReq',
-              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/ConfReq.pm'),
+              NAME          => 'CPAN::Test::Dummy::Perl5::Make::Features',
+              VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/Features.pm'),
               ABSTRACT      => 'CPAN Test Dummy for CPAN.pm',
               ($ExtUtils::MakeMaker::VERSION >= 6.31 ?
                (LICENSE      => "perl") : (),

@@ -293,7 +293,6 @@ inc/Test/Builder.pm
 inc/Test/More.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
-lib/CPAN/API/HOWTO.pm
 lib/CPAN/API/HOWTO.pod
 lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
@@ -350,6 +349,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeTwo-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-ConfReq-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz
+t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
