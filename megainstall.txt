@@ -671,6 +671,7 @@ MogileFS::Class
 MojoMojo
 Moose
 Moose::Autobox
+Net::Analysis
 Net::CIDR
 Net::Cmd
 Net::DNS
