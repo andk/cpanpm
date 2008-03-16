@@ -2,7 +2,7 @@ use strict;
 
 package CPAN::Test::Dummy::Perl5::Make::Features;
 
-$CPAN::Test::Dummy::Perl5::Make::Features::VERSION = '1.00';
+$CPAN::Test::Dummy::Perl5::Make::Features::VERSION = '1.01';
 
 1;
 

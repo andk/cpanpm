@@ -89,6 +89,18 @@ my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > tes
 our @SESSIONS =
     (
      {
+      name => "optional_features",
+      pairs =>
+      [
+       "dump \$::x=4*6+1" => "= 25;",
+       "o conf halt_on_failure 1" => "1",
+       "get CPAN::Test::Dummy::Perl5::Make::Features" => ".^#nevermatches",
+       q{!CPAN::Shell->expand("Module","CPAN::Test::Dummy::Perl5::Make::Features")->distribution->{yaml_content}} => ".^#nevermatches",
+       "test CPAN::Test::Dummy::Perl5::Make::Features" => ".^#nevermatches",
+
+      ]
+     },
+     {
       name => "configure_requires",
       pairs =>
       [
@@ -190,21 +202,24 @@ our @SESSIONS =
      },
 
      {
-         name => "halt_on_failure",
-         pairs => [
-             "dump \$::x=4*6+1" => "= 25;",
-             "o conf halt_on_failure 1" => "1",
-             "test CPAN::Test::Dummy::Perl5::Build::Fails CPAN::Test::Dummy::Perl5::Make::Failearly" =>
-                 "FAIL",
-             # must not see Failearly in the failed summary
-             "failed" => q{(?x:Failed \s during \s this \s session: \s+
+      name => "halt_on_failure",
+      pairs =>
+      [
+       "dump \$::x=4*6+1" => "= 25;",
+       "o conf halt_on_failure 1" => "1",
+       "test CPAN::Test::Dummy::Perl5::Build::Fails CPAN::Test::Dummy::Perl5::Make::Failearly" =>
+       "FAIL",
+       # must not see Failearly in the failed summary
+       "failed" => q{(?x:Failed \s during \s this \s session: \s+
                                \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
-           ],
-     }
+      ],
+     },
+
     );
 
 my $cnt;
 for my $session (@SESSIONS) {
+    $cnt++;
     for (my $i = 0; $i<$#{$session->{pairs}}; $i+=2) {
         $cnt++;
     }
@@ -221,6 +236,7 @@ for my $si (0..$#SESSIONS) {
     my $session = $SESSIONS[$si];
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
+    ok($session->{name}, "opening new session $session->{name}");
     open SYSTEM, "| $system" or die;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];

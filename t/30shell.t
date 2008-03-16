@@ -1235,7 +1235,7 @@ To add a new distro, the following steps must be taken:
 
 (2) Create the distro tarball
 
-- add a stanza to CPAN.pm's Makefile.PL that produces the distro with
+- add a stanza to CPAN.pm's ../Makefile.PL that produces the distro with
   the whole dependency on all files within the distro and moves it up
   into the author's homedir. Run this with 'make testdistros'.
 
