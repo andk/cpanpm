@@ -3,6 +3,7 @@
 #
 
 {
+    use lib "lib";
     use CPAN::Kwalify;
     use Data::Dumper;
     use Kwalify qw(validate);
