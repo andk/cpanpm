@@ -153,6 +153,7 @@ match:
     |MSTROUT/Devel-REPL-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
+    |PERIGRIN/MooseX-Workers-\d
     |PERIGRIN/Regexp-Common-IRC-\d
     |PHAYLON/MooseX-Types-\d
     |PHAYLON/namespace-clean-\d
