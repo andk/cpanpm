@@ -1668,8 +1668,8 @@ sub set_perl5lib {
         $fh->flush();
     } else {
         my $cnt = keys %{$self->{is_tested}};
-        $CPAN::Frontend->mywarn("Your PERL5LIB is growing, installation ".
-                                "of a YAML module is recommended. See the manpage ".
+        $CPAN::Frontend->mywarn("Your PERL5LIB is growing (now $cnt distros), installation ".
+                                "of a YAML module is highly recommended. See the manpage ".
                                 "of CPAN::PERL5INC for further information\n");
         $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib of ".
                                  "$cnt build dirs to PERL5LIB; ".
