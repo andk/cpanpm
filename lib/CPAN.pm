@@ -8451,6 +8451,39 @@ of modules we are processing right now?", "yes");
     return;
 }
 
+sub _feature_depends {
+    my($self) = @_;
+    my $meta_yml = $self->parse_meta_yml();
+    my $optf = $meta_yml->{optional_features} or return;
+    if (!ref $optf or ref $optf ne "ARRAY"){
+        $CPAN::Frontend->mywarn("The content of optional_feature is not an ARRAY reference. Cannot use it.\n");
+        $optf = [];
+    }
+    my $wantf = $self->prefs->{features} or return;
+    if (!ref $wantf or ref $wantf ne "ARRAY"){
+        $CPAN::Frontend->mywarn("The content of 'features' is not an ARRAY reference. Cannot use it.\n");
+        $wantf = [];
+    }
+    my $dep = +{};
+    for my $wf (@$wantf) {
+        for my $of (@$optf) {
+            my $f = $of->{$wf} or next;
+            $CPAN::Frontend->myprint("Found the demanded feature '$wf' that ".
+                                     "is accompanied by this description:\n".
+                                     $f->{description}.
+                                     "\n\n"
+                                    );
+            for my $reqtype (qw(configure_requires build_requires requires)) {
+                my $reqhash = $f->{$reqtype} or next;
+                while (my($k,$v) = each %$reqhash) {
+                    $dep->{$reqtype}{$k} = $v;
+                }
+            }
+        }
+    }
+    $dep;
+}
+
 #-> sub CPAN::Distribution::unsat_prereq ;
 # return ([Foo=>1],[Bar=>1.2]) for normal modules
 # return ([perl=>5.008]) if we need a newer perl than we are running under
@@ -8458,21 +8491,27 @@ sub unsat_prereq {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
+    my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
         my $meta_yml = $self->parse_meta_yml();
         if (defined $meta_yml && (! ref $meta_yml || ref $meta_yml ne "HASH")) {
             $CPAN::Frontend->mywarn("The content of META.yml is defined but not a HASH reference. Cannot use it.\n");
             $meta_yml = +{};
         }
-        %merged = (%{$meta_yml->{configure_requires}||{}},
-                   %{$prefs_depends->{configure_requires}||{}});
+        %merged = (
+                   %{$meta_yml->{configure_requires}||{}},
+                   %{$prefs_depends->{configure_requires}||{}},
+                   %{$feature_depends->{configure_requires}||{}},
+                  );
         $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
         my $prereq_pm_0 = $self->prereq_pm || {};
         for my $reqtype (qw(requires build_requires)) {
             $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
-            for my $k (keys %{$prefs_depends->{$reqtype}||{}}) {
-                $prereq_pm->{$reqtype}{$k} = $prefs_depends->{$reqtype}{$k};
+            for my $dep ($prefs_depends,$feature_depends) {
+                for my $k (keys %{$dep->{$reqtype}||{}}) {
+                    $prereq_pm->{$reqtype}{$k} = $dep->{$reqtype}{$k};
+                }
             }
         }
         %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
@@ -11626,8 +11665,8 @@ Specifies that this distribution shall not be processed at all.
 
 =item features [array]
 
-Currently unimplemented. Will deal with optional_features from
-META.yml.
+Experimental implementation (added in version 1.92_59). Shall deal with
+optional_features from META.yml.
 
 =item goto [string]
 

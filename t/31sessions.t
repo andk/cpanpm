@@ -85,30 +85,23 @@ my $VERBOSE = 0;
 #  2>&1 is no solution. I intertwingled them, I missed a few "ok"
 my $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
 
+BEGIN {
+    for my $x ("_f",) {
+        no strict "refs";
+        *$x = \&{"local_utils\::$x"};
+    }
+}
+open FH, (">" . _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
+print FH <<EOF;
+---
+match:
+  distribution: "ANDK/CPAN-Test-Dummy-Perl5-Make-Features-"
+features:
+  - "rice"
+EOF
 
 our @SESSIONS =
     (
-     {
-      name => "optional_features",
-      pairs =>
-      [
-       "dump \$::x=4*6+1" => "= 25;",
-       "o conf halt_on_failure 1" => "1",
-       "get CPAN::Test::Dummy::Perl5::Make::Features" => ".^#nevermatches",
-       q{!CPAN::Shell->expand("Module","CPAN::Test::Dummy::Perl5::Make::Features")->distribution->{yaml_content}} => ".^#nevermatches",
-       "test CPAN::Test::Dummy::Perl5::Make::Features" => ".^#nevermatches",
-
-      ]
-     },
-     {
-      name => "configure_requires",
-      pairs =>
-      [
-       "test CPAN::Test::Dummy::Perl5::Make::ConfReq" => "test.*-- OK",
-       "clean CPAN::Test::Dummy::Perl5::Make::ConfReq" => "clean.*-- OK",
-       "clean CPAN::Test::Dummy::Perl5::Make" => "clean.*-- OK",
-      ]
-     },
      {
       name => "the historically first",
       pairs =>
@@ -138,7 +131,7 @@ our @SESSIONS =
       ]
      },
      {
-      name => "second",
+      name => "the historically second",
       pairs =>
       [
        "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
@@ -156,7 +149,7 @@ our @SESSIONS =
       ]
      },
      {
-      name => "without_yaml", # because we disabled it with dontload_list above
+      name => "after we turned off yaml with dontload",
       pairs =>
       [
        # Note: I had C<cannot.parse.*> also here (for FTPstats) but
@@ -200,7 +193,6 @@ our @SESSIONS =
 )",
       ],
      },
-
      {
       name => "halt_on_failure",
       pairs =>
@@ -212,9 +204,34 @@ our @SESSIONS =
        # must not see Failearly in the failed summary
        "failed" => q{(?x:Failed \s during \s this \s session: \s+
                                \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
+       "o conf dontload_list pop" => ".",
+       "o conf dontload_list pop" => ".",
+       "o conf commit" => "commit: wrote",
       ],
      },
-
+     {
+      name => "optional_features",
+      pairs =>
+      [
+       "dump \$::x=6*6+9" => "= 45;",
+       "o conf prefs_dir $cwd/t/dot-cpan/prefs" => "prefs",
+       "test CPAN::Test::Dummy::Perl5::Make::Features" =>
+       "(?sx:Builds.rice.+
+          ANDK/CPAN-Test-Dummy-Perl5-Build-\\d.+
+          \\./Build[ ]test[ ]--[ ]OK.+
+          ANDK/CPAN-Test-Dummy-Perl5-Make-Features-\\d.+
+          make[ ]test[ ]--[ ]OK)",
+      ]
+     },
+     {
+      name => "configure_requires",
+      pairs =>
+      [
+       "test CPAN::Test::Dummy::Perl5::Make::ConfReq" => "test.*-- OK",
+       "clean CPAN::Test::Dummy::Perl5::Make::ConfReq" => "clean.*-- OK",
+       "clean CPAN::Test::Dummy::Perl5::Make" => "clean.*-- OK",
+      ]
+     },
     );
 
 my $cnt;
@@ -253,8 +270,8 @@ for my $si (0..$#SESSIONS) {
         my($expect) = $session->{pairs}[2*$i+1];
         my($actual) = $chunks[$i+1];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
-        diag("command[$command]expect[$expect]actual[$actual]") if $VERBOSE;
-        my $success = like($actual,"/$expect/","command[$command]");
+        diag("cmd[$command]expect[$expect]actual[$actual]") if $VERBOSE;
+        my $success = like($actual,"/$expect/","cmd[$command]");
         if (!$success) {
             require Dumpvalue;
             my $dumper = Dumpvalue->new();

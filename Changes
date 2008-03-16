@@ -25,6 +25,8 @@
 	* cleanup some files on whitespace, notably CRLF files that could
 	confuse some svn clients
 
+	* experimental support for optional_features in META.yml (pre-alpha)
+
 	* now with 287 distroprefs files
 
 2008-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
