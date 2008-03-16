@@ -88,7 +88,8 @@ unless (@CPAN::Defaultsites) {
         "http://www.perl.org/CPAN/",
             "ftp://ftp.perl.org/pub/CPAN/";
 }
-# $CPAN::iCwd (i for initial) is going to be initialized during find_perl
+# $CPAN::iCwd (i for initial)
+$CPAN::iCwd ||= CPAN::anycwd();
 $CPAN::Perl ||= CPAN::find_perl();
 $CPAN::Defaultdocs ||= "http://search.cpan.org/perldoc?";
 $CPAN::Defaultrecent ||= "http://search.cpan.org/uploads.rdf";
@@ -1280,9 +1281,8 @@ sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
 sub find_perl () {
     my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
     unless ($perl) {
-        my $pwd  = $CPAN::iCwd = CPAN::anycwd();
-        my $candidate = File::Spec->catfile($pwd,$^X);
-        $perl = $candidate if MM->maybe_command($candidate);
+        my $candidate = File::Spec->catfile($CPAN::iCwd,$^X);
+        $^X = $perl = $candidate if MM->maybe_command($candidate);
     }
     unless ($perl) {
         my ($component,$perl_name);
@@ -1292,14 +1292,13 @@ sub find_perl () {
                 next unless defined($component) && $component;
                 my($abs) = File::Spec->catfile($component,$perl_name);
                 if (MM->maybe_command($abs)) {
-                    $perl = $abs;
+                    $^X = $perl = $abs;
                     last DIST_PERLNAME;
                 }
             }
         }
     }
-
-    return $^X = $perl;
+    return $perl;
 }
 
 
