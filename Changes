@@ -1,7 +1,28 @@
+2008-03-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-    * add reset_tested() function to forget distributions previously tested
-      in a session, which resets the list of directories added to PERL5LIB
-      (David Golden)
+	* release 1.92_59: new distroprefs parameter match/env; bugfixing
+
+	* address #34104: add match/env into the distroprefs mix (suggested by
+	Slaven Rezic)
+
+	* add reset_tested() function to forget distributions previously tested
+	in a session, which resets the list of directories added to PERL5LIB
+	(David Golden)
+
+	* address #34062: regain lost 'cpan .' command (reporter Slaven Rezic)
+
+	* shut up "exited subroutine via last" warning in an expect loop
+
+	* address #34102: wrong diagnostic message when no META.yml was there
+	(reporter Slaven Rezic)
+
+	* CPAN::PERL5INC now also used in available_file() so that testers that
+	do not install can continue to work as before this module was introduced
+
+	* new protection against subtly broken META.yml files
+
+	* cleanup some files on whitespace, notably CRLF files that could
+	confuse some svn clients
 
 2008-03-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
