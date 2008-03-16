@@ -780,6 +780,8 @@ CONFIGURATION
         perl: "/usr/local/cariba-perl/bin/perl"
         perlconfig:
           archname: "freebsd"
+        env:
+          DANCING_FLOOR: "Shubiduh"
       disabled: 1
       cpanconfig:
         make: gmake
@@ -858,6 +860,10 @@ CONFIGURATION
     disabled [boolean]
         Specifies that this distribution shall not be processed at all.
 
+    features [array]
+        Experimental implementation (added in version 1.92_59). Shall deal
+        with optional_features from META.yml.
+
     goto [string]
         The canonical name of a delegate distribution that shall be
         installed instead. Useful when a new version, although it tests OK
@@ -874,8 +880,8 @@ CONFIGURATION
 
     match [hash]
         A hashref with one or more of the keys "distribution", "modules",
-        "perl", and "perlconfig" that specify if a document is targeted at a
-        specific CPAN distribution or installation.
+        "perl", "perlconfig", and "env" that specify if a document is
+        targeted at a specific CPAN distribution or installation.
 
         The corresponding values are interpreted as regular expressions. The
         "distribution" related one will be matched against the canonical
@@ -891,10 +897,13 @@ CONFIGURATION
         matched against corresponding values in the %Config::Config hash
         living in the "Config.pm" module.
 
-        If more than one restriction of "module", "distribution", and "perl"
-        is specified, the results of the separately computed match values
-        must all match. If this is the case then the hashref represented by
-        the YAML document is returned as the preference structure for the
+        The value associated with "env" is itself a hashref that is matched
+        against corresponding values in the %ENV hash.
+
+        If more than one restriction of "module", "distribution", etc. is
+        specified, the results of the separately computed match values must
+        all match. If this is the case then the hashref represented by the
+        YAML document is returned as the preference structure for the
         current distribution.
 
     patches [array]
@@ -1222,10 +1231,6 @@ PROGRAMMER'S INTERFACE
         Normally this is derived from the file name only, but the index from
         CPAN can contain a hint to achieve a return value of true for other
         filenames too.
-
-    CPAN::Distribution::is_tested()
-        List all the distributions that have been tested sucessfully but not
-        yet installed. See also "install_tested".
 
     CPAN::Distribution::look()
         Changes to the directory where the distribution has been unpacked
