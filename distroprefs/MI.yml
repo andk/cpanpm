@@ -179,6 +179,7 @@ match:
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
     |YARON/WWW-Monitor-\d
+    |YVESAGO/NET-Sieve-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
     |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d
