@@ -30,7 +30,9 @@ use Sys::Hostname qw(hostname);
 use Text::ParseWords ();
 use Text::Wrap ();
 
+# protect against "called too early"
 sub find_perl ();
+sub anycwd ();
 
 # we need to run chdir all over and we would get at wrong libraries
 # there
