@@ -866,12 +866,11 @@ CONFIGURATION
 
     install [hash]
         Processing instructions for the "make install" or "./Build install"
-        phase of the CPAN mantra. See below under *Processiong
-        Instructions*.
+        phase of the CPAN mantra. See below under *Processing Instructions*.
 
     make [hash]
         Processing instructions for the "make" or "./Build" phase of the
-        CPAN mantra. See below under *Processiong Instructions*.
+        CPAN mantra. See below under *Processing Instructions*.
 
     match [hash]
         A hashref with one or more of the keys "distribution", "modules",
@@ -890,7 +889,7 @@ CONFIGURATION
 
         The value associated with "perlconfig" is itself a hashref that is
         matched against corresponding values in the %Config::Config hash
-        living in the " Config.pm " module.
+        living in the "Config.pm" module.
 
         If more than one restriction of "module", "distribution", and "perl"
         is specified, the results of the separately computed match values
@@ -911,12 +910,12 @@ CONFIGURATION
 
     pl [hash]
         Processing instructions for the "perl Makefile.PL" or "perl
-        Build.PL" phase of the CPAN mantra. See below under *Processiong
+        Build.PL" phase of the CPAN mantra. See below under *Processing
         Instructions*.
 
     test [hash]
         Processing instructions for the "make test" or "./Build test" phase
-        of the CPAN mantra. See below under *Processiong Instructions*.
+        of the CPAN mantra. See below under *Processing Instructions*.
 
   Processing Instructions
     args [array]
@@ -1976,6 +1975,22 @@ FAQ
         command "o conf commit". Alternatively set the "auto_commit"
         variable to true by running "o conf init auto_commit" and answering
         the following question with yes.
+
+    17) Older versions of CPAN.pm had the original root directory of all
+        tarballs in the build directory. Now there are always random
+        characters appended to these directory names. Why was this done?
+
+        The random characters are provided by File::Temp and ensure that
+        each module's individual build directory is unique. This makes
+        running CPAN.pm in concurrent processes simultaneously safe.
+
+    18) Speaking of the build directory. Do I have to clean it up myself?
+
+        You have the choice to set the config variable "scan_cache" to
+        "never". Then you must clean it up yourself. The other possible
+        value, "atstart" only cleans up the build directory when you start
+        the CPAN shell. If you never start up the CPAN shell, you probably
+        also have to clean up the build directory yourself.
 
 COMPATIBILITY
   OLD PERL VERSIONS
