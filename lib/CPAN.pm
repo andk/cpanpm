@@ -8037,6 +8037,7 @@ sub _run_via_expect_anyorder {
 sub _run_via_expect_deterministic {
     my($self,$expo,$phase,$expect_model) = @_;
     my $ran_into_timeout;
+    my $ran_into_eof;
     my $timeout = $expect_model->{timeout} || 15; # currently unsettable
     my $expecta = $expect_model->{talk};
   EXPECT: for (my $i = 0; $i <= $#$expecta; $i+=2) {
@@ -8048,7 +8049,7 @@ sub _run_via_expect_deterministic {
                             my $but = $expo->clear_accum;
                             $CPAN::Frontend->mywarn("EOF (maybe harmless)
 expected[$regex]\nbut[$but]\n\n");
-                            last EXPECT;
+                            $ran_into_eof++;
                         } ],
                       [ timeout => sub {
                             my $but = $expo->clear_accum;
@@ -8062,6 +8063,8 @@ expected[$regex]\nbut[$but]\n\n");
             $self->{$phase} =
                 CPAN::Distrostatus->new("NO timeout during expect dialog");
             return 0;
+        } elsif ($ran_into_eof) {
+            last EXPECT;
         }
         $expo->send($send);
     }
