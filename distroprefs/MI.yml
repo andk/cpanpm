@@ -138,6 +138,7 @@ match:
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
+    |MIYAGAWA/XML-Atom-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
@@ -174,6 +175,7 @@ match:
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |STEVAN/FCGI-Engine-\d
     |STEVAN/MooseX-Daemonize-\d
+    |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
     |YARON/WWW-Monitor-\d
