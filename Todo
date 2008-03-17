@@ -1,3 +1,21 @@
+2008-03-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* PERL5INC/OPT/LIB needs more testing. Net::Amazon::Signature is well
+	suited because it depends on Spiffy but doesn't declare that. Somebody
+	seems to put the PERL5OPT into INC:
+
+	I got it. It seems not possible to load two -M with one PERL5OPT (?)
+
+	At least this does not work:
+
+	PERL5OPT="-MCPAN::PERL5INC=yaml_module,YAML::Syck -MCPAN::PERL5INC=yaml_module,YAML::Syck" make test
+
+	So I must 
+
+2008-03-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Slaven's segfault in RT 34066 needs more thought!!!
+
 2008-03-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* GSHANK/Form-Processor-Model-DBIC-0.01.tar.gz has something that triggers

@@ -1,8 +1,8 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_59';
-$CPAN::VERSION = eval $CPAN::VERSION if $CPAN::VERSION =~ /_/;
+$CPAN::VERSION = '1.92_60';
+$CPAN::VERSION =~ s/_//;
 
 use CPAN::HandleConfig;
 use CPAN::Version;
@@ -1629,7 +1629,9 @@ sub set_perl5lib {
     return if !@env && !@dirs;
     my $yaml_module = CPAN::_yaml_module;
 
-    if ($CPAN::META->has_inst($yaml_module) && $CPAN::META->has_usable("File::Temp")) {
+    if ($CPAN::META->has_inst($yaml_module)
+        && $CPAN::META->has_usable("File::Temp")
+        && !$ENV{PERL5OPT}) {
         unless (defined $fh) {
             $fh =
                 File::Temp->new(
@@ -1661,8 +1663,8 @@ sub set_perl5lib {
                                  "for '$for'\n"
                                 );
         my $inc = File::Basename::dirname(File::Basename::dirname($INC{"CPAN/PERL5INC.pm"}));
-        $ENV{PERL5OPT} .= " " if $ENV{PERL5OPT};
-        $ENV{PERL5OPT} .= "-I$inc -MCPAN::PERL5INC=yaml_module,$yaml_module -MCPAN::PERL5INC=tempfile,$Perl5lib_tempfile";
+        $ENV{PERL5LIB} = $inc;
+        $ENV{PERL5OPT} = "-MCPAN::PERL5INC=yaml_module,$yaml_module,tempfile,$Perl5lib_tempfile";
         seek $fh, 0, 0;
         truncate $fh, 0;
         CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
@@ -2337,6 +2339,7 @@ sub reload {
                     "CPAN/FirstTime.pm",
                     "CPAN/HandleConfig.pm",
                     "CPAN/Kwalify.pm",
+                    "CPAN/PERL5INC.pm",
                     "CPAN/Queue.pm",
                     "CPAN/Reporter/Config.pm",
                     "CPAN/Reporter/History.pm",
