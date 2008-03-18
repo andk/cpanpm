@@ -552,6 +552,8 @@ Image::Size
 Imager
 Imager::Graph
 Inline
+InlineX::CPP2XS
+InlineX::C2XS
 Iterator
 JSON
 JSON::DWIW
