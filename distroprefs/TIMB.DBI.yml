@@ -14,12 +14,22 @@ comment: |
 
   This instruction is only shown on older perl below 5.7 or something
 
+  We need to set the timeout high because DBI wants to tell us
+  something and sleeps between paragraphs:
+
+  % grep sleep Makefile.PL
+      sleep 4;                                         
+      sleep 4;
+      sleep 1;
+      sleep 1;
+
+
 match:
   distribution: "TIMB/DBI-\d"
 pl:
   eexpect:
     mode: anyorder
-    timeout: 5
+    timeout: 20
     talk:
       - "Press return to continue\.\.\."
       - "\n"
