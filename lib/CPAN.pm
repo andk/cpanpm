@@ -4,12 +4,23 @@ package CPAN;
 $CPAN::VERSION = '1.92_60';
 $CPAN::VERSION =~ s/_//;
 
+# we need to run chdir all over and we would get at wrong libraries
+# there
+use File::Spec ();
+BEGIN {
+    if (File::Spec->can("rel2abs")) {
+        for my $inc (@INC) {
+            $inc = File::Spec->rel2abs($inc) unless ref $inc;
+        }
+    }
+}
 use CPAN::HandleConfig;
 use CPAN::Version;
 use CPAN::Debug;
 use CPAN::Queue;
 use CPAN::Tarzip;
 use CPAN::DeferedCode;
+use CPAN::PERL5INC; # must come after absification
 use Carp ();
 use Config ();
 use Cwd qw(chdir);
@@ -22,7 +33,6 @@ use File::Basename ();
 use File::Copy ();
 use File::Find;
 use File::Path ();
-use File::Spec ();
 use FileHandle ();
 use Fcntl qw(:flock);
 use Safe ();
@@ -34,17 +44,7 @@ use Text::Wrap ();
 sub find_perl ();
 sub anycwd ();
 
-# we need to run chdir all over and we would get at wrong libraries
-# there
-BEGIN {
-    if (File::Spec->can("rel2abs")) {
-        for my $inc (@INC) {
-            $inc = File::Spec->rel2abs($inc) unless ref $inc;
-        }
-    }
-}
 no lib ".";
-use CPAN::PERL5INC; # must come after absification
 
 require Mac::BuildTools if $^O eq 'MacOS';
 if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
@@ -899,7 +899,26 @@ use vars qw(
             $autoload_recursion
             $reload
             @ISA
+            @relo
            );
+our @relo = (
+             "CPAN.pm",
+             "CPAN/Debug.pm",
+             "CPAN/FirstTime.pm",
+             "CPAN/HandleConfig.pm",
+             "CPAN/Kwalify.pm",
+             "CPAN/PERL5INC.pm",
+             "CPAN/Queue.pm",
+             "CPAN/Reporter/Config.pm",
+             "CPAN/Reporter/History.pm",
+             "CPAN/Reporter/PrereqCheck.pm",
+             "CPAN/Reporter.pm",
+             "CPAN/SQLite.pm",
+             "CPAN/Tarzip.pm",
+             "CPAN/Version.pm",
+            );
+# record the initial timestamp for reload.
+$reload = { map {$INC{$_} ? ($_,(stat $INC{$_})[9]) : ()} @relo };
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 use Cwd qw(chdir);
 $COLOR_REGISTERED ||= 0;
@@ -2324,6 +2343,7 @@ sub hosts {
     $CPAN::Frontend->myprint($R);
 }
 
+# here is where 'reload cpan' is done
 #-> sub CPAN::Shell::reload ;
 sub reload {
     my($self,$command,@arg) = @_;
@@ -2333,22 +2353,6 @@ sub reload {
         my $redef = 0;
         chdir $CPAN::iCwd if $CPAN::iCwd; # may fail
         my $failed;
-        my @relo = (
-                    "CPAN.pm",
-                    "CPAN/Debug.pm",
-                    "CPAN/FirstTime.pm",
-                    "CPAN/HandleConfig.pm",
-                    "CPAN/Kwalify.pm",
-                    "CPAN/PERL5INC.pm",
-                    "CPAN/Queue.pm",
-                    "CPAN/Reporter/Config.pm",
-                    "CPAN/Reporter/History.pm",
-                    "CPAN/Reporter/PrereqCheck.pm",
-                    "CPAN/Reporter.pm",
-                    "CPAN/SQLite.pm",
-                    "CPAN/Tarzip.pm",
-                    "CPAN/Version.pm",
-                   );
       MFILE: for my $f (@relo) {
             next unless exists $INC{$f};
             my $p = $f;
@@ -2407,13 +2411,7 @@ sub _reload_this {
         return;
     }
     my $mtime = (stat $file)[9];
-    if ($reload->{$f}) {
-    } elsif ($^T < $mtime) {
-        # since we started the file has changed, force it to be reloaded
-        $reload->{$f} = -1;
-    } else {
-        $reload->{$f} = $mtime;
-    }
+    $reload->{$f} ||= -1;
     my $must_reload = $mtime != $reload->{$f};
     $args ||= {};
     $must_reload ||= $args->{reloforce}; # o conf defaults needs this
