@@ -457,6 +457,7 @@ Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
+Google::Adwords
 Graph
 Graph::Easy
 Graph::Easy::As_svg
@@ -554,6 +555,7 @@ Imager::Graph
 Inline
 InlineX::CPP2XS
 InlineX::C2XS
+InlineX::XS
 Iterator
 JSON
 JSON::DWIW
@@ -685,6 +687,7 @@ Net::FPing
 Net::FTP
 Net::FTP::Common
 Net::GrowlClient
+Net::Hiveminder
 Net::IMAP::Server
 Net::IMAP::Simple
 Net::IPv4Addr
