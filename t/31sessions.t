@@ -23,6 +23,11 @@ BEGIN {
     } else {
         $exit_message = "Module::Build not installed";
     }
+    if ($CPAN::META->has_inst("File::Temp")) {
+        # print "# File::Temp loadable\n";
+    } else {
+        $exit_message = "File::Temp not available";
+    }
   TABU: for my $tabu (qw(
                          CPAN::Test::Dummy::Perl5::Make
                          CPAN::Test::Dummy::Perl5::Make::ConfReq
@@ -30,6 +35,7 @@ BEGIN {
                          CPAN::Test::Dummy::Perl5::Make::CircDepeOne
                          CPAN::Test::Dummy::Perl5::Make::CircDepeTwo
                          CPAN::Test::Dummy::Perl5::Make::CircDepeThree
+                         CPAN::Test::Dummy::Perl5::Make::Features
                          CPAN::Test::Dummy::Perl5::Make::UnsatPrereq
                         )) {
         if ($CPAN::META->has_inst($tabu)) {

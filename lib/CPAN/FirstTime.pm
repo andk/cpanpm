@@ -496,6 +496,18 @@ you will need to configure CPAN::Reporter before sending reports.
 
 Email test reports if CPAN::Reporter is installed (yes/no)?
 
+=item threshold_perl5lib_upto
+
+If you are using CPAN.pm to test a couple (or thousands) of modules
+without installing them, you will appreciate support of the @INC
+maintaining variety. The easy way to support uninstalled modules is by
+stuffing all the paths ending in blib/arch and blib/lib in the
+environment variable PERL5LIB. But there is a system dependent
+threshold to this variable where PERL5LIB stops working. Beyond that
+threshold CPAN.pm can switch to a slower method that stores the paths
+on disk in a YAML file. After how many distros shall we switch to the
+slower method?
+
 =item trust_test_report_history
 
 When a distribution has already been tested by CPAN::Reporter on
@@ -660,6 +672,7 @@ sub init {
                        cpan_home
                        keep_source_where
                        prefs_dir
+                       threshold_perl5lib_upto
                       } =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{config_intro});
 
@@ -743,6 +756,13 @@ Shall we use it as the general CPAN build and cache directory?
 
         if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
             my_yn_prompt(build_dir_reuse => 0, $matcher);
+        }
+
+        if (!$matcher or 'threshold_perl5lib_upto' =~ /$matcher/) {
+            my_dflt_prompt("threshold_perl5lib_upto",
+                           24,
+                           $matcher,
+                          );
         }
 
         if (!$matcher or 'prefs_dir' =~ /$matcher/) {
