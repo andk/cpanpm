@@ -1,3 +1,11 @@
+2008-03-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Slaven reports a special problem with Util-Properties 0.17 with
+	current CPAN.pm. It complains about -T while 1.9205 does not. With 5.8.8.
+
+	I have seen quite some successes with current CPAN.pm and several perls.
+	But also inexplicable behaviour (but not wrt -T).
+
 2008-03-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PERL5INC/OPT/LIB needs more testing. Net::Amazon::Signature is well
