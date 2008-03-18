@@ -1662,10 +1662,10 @@ sub set_perl5lib {
             $Perl5lib_tempfile = $fh->filename;
         }
     }
-    if (@dirs < 12) {
+    if (@dirs < 12 && @dirs < ($CPAN::Config->{threshold_perl5lib_upto}||0)) {
         $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
-    } elsif (@dirs < 24) {
+    } elsif (@dirs < 24 && @dirs < ($CPAN::Config->{threshold_perl5lib_upto}||0)) {
         my @d = map {my $cp = $_;
                      $cp =~ s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/;
                      $cp
@@ -1690,8 +1690,9 @@ sub set_perl5lib {
         $fh->flush();
     } else {
         my $cnt = keys %{$self->{is_tested}};
-        $CPAN::Frontend->mywarn("Your PERL5LIB is growing (now $cnt distros), installation ".
-                                "of a YAML module is highly recommended. See the manpage ".
+        $CPAN::Frontend->mywarn("Your PERL5LIB is growing (now $cnt distros) but we cannot ".
+                                "switch to the PERL5OPT method of extending \@INC; installation ".
+                                "of a YAML module is highly recommended; see the manpage ".
                                 "of CPAN::PERL5INC for further information\n");
         $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib of ".
                                  "$cnt build dirs to PERL5LIB; ".
