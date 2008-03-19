@@ -1,3 +1,8 @@
+2008-03-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Devel::Profiler has a very annoying test that tests plausible speed
+	and sets the threshod so low that nearly everybody fails.
+
 2008-03-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Slaven reports a special problem with Util-Properties 0.17 with

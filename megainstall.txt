@@ -536,6 +536,7 @@ IO::String
 IO::Stringy
 IO::Tee
 IO::Zlib
+IPC::Concurrency
 IPC::Mmap
 IPC::Open2
 IPC::PubSub
@@ -861,6 +862,7 @@ RDF::Server
 RPC::JSON
 RPC::PlServer
 RPC::XML
+RRDTool::Creator
 RT::Client::REST
 RTF::HTMLConverter
 Regex::PreSuf
@@ -1160,6 +1162,7 @@ Unicode::Wrap
 Unix::Syslog
 User
 User::Identity
+Util::Properties
 V
 VFSsimple
 Verilog::Parser
