@@ -74,6 +74,7 @@ match:
     |DMAKI/GunghoX-FollowLinks-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
+    |DONEILL/MIME-tools-\d
     |DSNOPEK/POE-Component-MessageQueue-\d
     |EDENC/MooseX-Role-Cmd-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-

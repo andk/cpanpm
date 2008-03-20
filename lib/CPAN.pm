@@ -1662,10 +1662,11 @@ sub set_perl5lib {
             $Perl5lib_tempfile = $fh->filename;
         }
     }
-    if (@dirs < 12 && @dirs < ($CPAN::Config->{threshold_perl5lib_upto}||0)) {
+    my $cctpu = defined $CPAN::Config->{threshold_perl5lib_upto} ? $CPAN::Config->{threshold_perl5lib_upto} : 24;
+    if (@dirs < 12 && @dirs < $cctpu) {
         $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
-    } elsif (@dirs < 24 && @dirs < ($CPAN::Config->{threshold_perl5lib_upto}||0)) {
+    } elsif (@dirs < 24 && @dirs < $cctpu) {
         my @d = map {my $cp = $_;
                      $cp =~ s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/;
                      $cp

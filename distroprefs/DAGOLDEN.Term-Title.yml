@@ -1,7 +1,14 @@
 ---
-comment: "pure testing"
+comment: |
+
+  the disable envariable is for pure testing
+
+  the xterm thing is to prevent the test from clobbering when
+  TERM=screen
+
 match:
   distribution: "/Term-Title-\d"
   env:
     DISABLE_TERM_TITLE: 1
+    TERM: "xterm"
 disabled: 1
