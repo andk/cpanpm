@@ -1,3 +1,12 @@
+2008-03-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Does Clone have issues ATM? Object-Relation has a problem and among
+	all dependencies the reddest is Clone. But I do have Clone in current
+	blead, why is it red? Simply because Steve and I have patched for 5.11
+	and not reported on RT as it seems.  Now done with
+
+	http://rt.cpan.org/Ticket/Display.html?id=34317
+
 2008-03-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Devel::Profiler has a very annoying test that tests plausible speed
