@@ -10,7 +10,7 @@ CPAN::PERL5INC - Keep all tested and not installed modules in INC
 
 CPAN.pm keeps track of tested but not yet installed modules. To make
 these modules available to modules that are tested later, it normally
-populates the environment variable PERL5INC.
+populates the environment variable PERL5LIB.
 
 This module is an alternative to PERL5LIB that circumvents limitations
 of the size of the environment. The import routine is abused to let
@@ -20,14 +20,17 @@ array reference in the C<inc> slot of that hash will be appended to
 @INC.
 
 When the number of tested but uninstalled distros grows, CPAN tries to
-use this module. It issues a warning when this is not feasible. A YAML
-module should be installed and File::Temp should be available in order
-to get it working.
+use this module after the threshold C<threshold_perl5lib_upto> is
+reached. It issues a warning when this is not feasible. A YAML module
+should be installed and File::Temp should be available in order to get
+it working.
 
 =head1 BUGS
 
 Does not work with paths containing comma. Does not work when the
 environment variable PERL5OPT is already in use for something else.
+Tests that have tainting turned on often fail when PERL5OPT is set
+because the variable is then ignored.
 
 =head1 LICENSE
 

@@ -498,15 +498,18 @@ Email test reports if CPAN::Reporter is installed (yes/no)?
 
 =item threshold_perl5lib_upto
 
-If you are using CPAN.pm to test a couple (or thousands) of modules
-without installing them, you will appreciate support of the @INC
-maintaining variety. The easy way to support uninstalled modules is by
-stuffing all the paths ending in blib/arch and blib/lib in the
-environment variable PERL5LIB. But there is a system dependent
-threshold to this variable where PERL5LIB stops working. Beyond that
-threshold CPAN.pm can switch to a slower method that stores the paths
-on disk in a YAML file. After how many distros shall we switch to the
-slower method?
+If you are using CPAN.pm to test a couple (or thousands) of modules,
+AND you want to do so *without* installing them, then you will
+appreciate support of the @INC extending variety. For details, see the
+mapage for CPAN::PERL5INC.
+
+To recap quickly: CPAN.pm supports an easy way to extend @INC (by
+stuffing all paths of tested but uninstalled modules into the
+environment variable PERL5LIB). And, for larger installations, a
+method that has PERL5OPT involved and the large @INC is written to
+disk. After how many distros shall we switch to the slower method?
+Recommended default is 24 which should be safe on all systems even
+with very long path components.
 
 =item trust_test_report_history
 
@@ -1590,7 +1593,9 @@ config_intro => qq{
 The following questions are intended to help you with the
 configuration. The CPAN module needs a directory of its own to cache
 important index files and maybe keep a temporary mirror of CPAN files.
-This may be a site-wide or a personal directory.},
+This may be a site-wide or a personal directory.
+
+},
 
 # cpan_home => qq{ },
 

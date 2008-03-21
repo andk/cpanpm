@@ -1645,7 +1645,7 @@ sub set_perl5lib {
     #$CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB.\n");
 
     my @dirs = map {("$_/blib/arch", "$_/blib/lib")} $self->_list_sorted_descending_is_tested;
-    return if !@env && !@dirs;
+    return if !@dirs;
     my $yaml_module = CPAN::_yaml_module;
 
     if ($CPAN::META->has_inst($yaml_module)
@@ -1679,7 +1679,7 @@ sub set_perl5lib {
     } elsif ($Perl5lib_tempfile) {
         my $cnt = keys %{$self->{is_tested}};
         $CPAN::Frontend->myprint("Delegating blib/arch and blib/lib of ".
-                                 "$cnt build dirs to CPAN::PERL5LIB; ".
+                                 "$cnt build dirs to CPAN::PERL5INC via $Perl5lib_tempfile; ".
                                  "for '$for'\n"
                                 );
         my $inc = File::Basename::dirname(File::Basename::dirname($INC{"CPAN/PERL5INC.pm"}));
@@ -11319,6 +11319,8 @@ defined:
                      (and nonsense for characters outside latin range)
   term_ornaments     boolean to turn ReadLine ornamenting on/off
   test_report        email test reports (if CPAN::Reporter is installed)
+  threshold_perl5lib_upto
+                     threshold determining method to extend @INC at runtime
   trust_test_report_history
                      skip testing when previously tested ok (according to
                      CPAN::Reporter history)
