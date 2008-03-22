@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "CHOCOLATE/Scalar-Util-Clone-\d"
+patches:
+  - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-01.patch"
+
