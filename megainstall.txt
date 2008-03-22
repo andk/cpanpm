@@ -54,6 +54,7 @@ B::Lint
 B::Size
 B::TerseSize
 BFD
+BS::Event
 BSD::Resource
 BerkeleyDB
 Biblio::Document::Parser
@@ -696,6 +697,7 @@ Net::IMAP::Server
 Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
+Net::IRC3
 Net::Jaiku
 Net::Jifty
 Net::LDAP
@@ -724,6 +726,7 @@ Net::Twitter
 Net::UploadMirror
 Net::Write
 Net::XMPP
+Net::XMPP2
 Net::Z3950::ZOOM
 NetAddr::IP
 News::Article
