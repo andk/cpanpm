@@ -52,6 +52,7 @@ match:
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |JJORE/Enbugger-                         # steps into the debugger
+    |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
