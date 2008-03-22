@@ -26,7 +26,7 @@ my @want_config = @{$Opt{conf}||[]};
 @want_config = qw(archname usethreads optimize) unless @want_config;
 # my @want_config = qw(gccversion usethreads usemymalloc cc byteorder libc gccversion intsize use64bitint archname);
 
-my @want_req = @{$Opt{conf}||[]};
+my @want_req = @{$Opt{req}||[]};
 # @want_req = qw(Test::More) unless @want_req;
 
 $|=1;
