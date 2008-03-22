@@ -259,6 +259,7 @@ DB_File::Lock
 Daemon::Generic
 Danga::Socket
 Danga::Socket::Callback
+DashProfiler
 Data::Bind
 Data::Buffer
 Data::Dump
@@ -457,6 +458,7 @@ Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
+DBD::Gofer::Transport::http
 Google::Adwords
 Graph
 Graph::Easy
@@ -658,6 +660,7 @@ Module::Build
 Module::Build::Convert
 Module::Changes
 Module::Compile
+Module::Dependency::Info
 Module::ExtractUse
 Module::Faker
 Module::Find
@@ -917,12 +920,15 @@ Safe::Hole
 Scalar::Defer
 Scalar::Util
 Scalar::Util::Clone
+Scalar::Util::Numeric
 Schedule::Cron
+Scope::Guard
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
 Set::IntSpan::Fast
 Set::Integer::Gapfillers
+Shell::Autobox
 Shell::Perl
 ShiftJIS::CP932::Correct
 ShiftJIS::CP932::MapUTF
@@ -980,6 +986,7 @@ Template
 Template::Alloy
 Template::Config
 Template::Extract
+Template::Parser::Greedy
 Template::Plugin::Class
 Template::Plugin::Number::Format
 Template::Provider::Encoding
