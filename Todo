@@ -20,6 +20,13 @@
 	I have seen quite some successes with current CPAN.pm and several perls.
 	But also inexplicable behaviour (but not wrt -T).
 
+	Other contenders:
+
+	BBKR/IPC-Concurrency-0.4.tar.gz
+	JACQUELIN/RRDTool-Creator-0.9.tar.gz
+	ADIE/Test-Class-0.28.tar.gz
+
+
 2008-03-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PERL5INC/OPT/LIB needs more testing. Net::Amazon::Signature is well
