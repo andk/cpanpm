@@ -1,6 +1,13 @@
 ---
+comment: |
+
+  the first patch deals with PADBUSY which was removed from perl in patch 18409
+
+  at 5.9.2@24518 they removed AvFLAGS
+
 match:
   distribution: "CHOCOLATE/Scalar-Util-Clone-\d"
 patches:
   - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-01.patch"
+  - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-02.patch"
 

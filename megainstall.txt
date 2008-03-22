@@ -392,6 +392,7 @@ ExtUtils::MakeMaker
 ExtUtils::Manifest
 ExtUtils::ModuleMaker
 ExtUtils::PkgConfig
+ExtUtils::XSBuilder
 FCGI::Engine
 FLV::Info
 Fcntl
@@ -1237,6 +1238,7 @@ XML::Validator::Schema
 XML::Writer
 XML::XPath
 XML::XPathEngine
+XS::Writer
 XSLoader
 YAML
 YAML::Syck
