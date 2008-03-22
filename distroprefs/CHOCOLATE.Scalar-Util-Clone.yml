@@ -3,11 +3,14 @@ comment: |
 
   the first patch deals with PADBUSY which was removed from perl in patch 18409
 
-  at 5.9.2@24518 they removed AvFLAGS
+  at 5.9.2@24518 they removed AvFLAGS, addressed in patch 02
+
+  24522 removed HvPMROOT, cured in patch 03
 
 match:
   distribution: "CHOCOLATE/Scalar-Util-Clone-\d"
 patches:
   - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-01.patch"
   - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-02.patch"
+  - "/home/k/sources/CPAN/SVK/trunk/patches/Scalar-Util-Clone-0.10-ANDK-03.patch"
 
