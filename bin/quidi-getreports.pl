@@ -1,3 +1,62 @@
+
+
+=head1 NAME
+
+quidi-getreports - Quickly fetch cpantesters results with all reports
+
+=head1 SYNOPSIS
+
+  $0 [options] distroname
+
+=head1 DESCRIPTION
+
+!!!!Alert: alpha quality software!!!!
+
+The intent is to get as both the summary at cpantesters and the
+individual reports and parse the reports and collect the data for
+further inspection.
+
+We always only fetch the reports for the most recent (optionally
+picked) release.
+
+=head2 Examples
+
+  getreports.pl --req Clone Object-Relation
+
+This gets all recent reports for Object-Relation and outputs the
+version number of the prerequisite Clone.
+
+  getreports.pl Clone
+
+Collects reports about Clone and reports the default set of metadata.
+
+  getreports.pl --req Moose Devel-Events |sort
+
+Collect reports for Devel-Events and report the version number of
+Moose in thses reports and sort by success/failure. If Moose broke
+Devel-Events is becomes pretty obvious.
+
+  getreports.pl --conf REPORT_WRITER Template-Timer | sed -e 's/.*REPORT_//' | sort | uniq -c | sort -n
+
+Which tool was used to write how many reports, sorted by frequency.
+
+  getreports.pl --conf REPORT_WRITER --conf FROM Template-Timer | grep 'UNDEF'
+
+Who was in the From field of the mails whose report writer was not determined.
+
+  getreports.pl IPC-Run
+
+At the time of this writing this collected the results of
+IPC-Run-0.80_91 which was not really the latest release. In this case
+manual investigations were necessary to find out that 0.80 was the
+most recent.
+
+  getreports.pl --vdistro IPC-Run-0.80 IPC-Run
+
+Pick the specific release IPC-Run-0.80.
+
+=cut
+
 use strict;
 use warnings;
 
@@ -17,6 +76,7 @@ GetOptions(\%Opt,
            "conf=s\@",
            "req=s\@",
            "verbose!",
+           "vdistro=s",
           ) or die Usage;
 
 my $ua = LWP::UserAgent->new;
@@ -28,6 +88,10 @@ my @want_config = @{$Opt{conf}||[]};
 
 my @want_req = @{$Opt{req}||[]};
 # @want_req = qw(Test::More) unless @want_req;
+
+if (! @ARGV) {
+    die Usage;
+}
 
 $|=1;
 for my $distro (@ARGV) {
@@ -67,13 +131,21 @@ for my $distro (@ARGV) {
     my $nsu = $doc->documentElement->namespaceURI;
     $xc->registerNs('x', $nsu) if $nsu;
     # $DB::single++;
-    my($latest_release_ul) = $nsu ? $xc->findnodes("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:ul[1]") :
-        $doc->findnodes("/html/body/div[\@id = 'doc']/div//ul[1]");
-    my($latest_release_distrov) = $nsu ? $xc->findvalue("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[1]/x:a/\@id") :
-        $doc->findvalue("/html/body/div[\@id = 'doc']/div//h2[1]/a/\@id");
-    print "LATEST: $latest_release_distrov\n";
+    my($selected_release_ul,$selected_release_distrov);
+    if ($Opt{vdistro}) {
+        ($selected_release_distrov) = $nsu ? $xc->findvalue("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[x:a/\@id = '$Opt{vdistro}']/x:a/\@id") :
+            $doc->findvalue("/html/body/div[\@id = 'doc']/div//h2[a/\@id = '$Opt{vdistro}']/a/\@id");
+        ($selected_release_ul) = $nsu ? $xc->findnodes("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[x:a/\@id = '$Opt{vdistro}']/following-sibling::ul[1]") :
+            $doc->findnodes("/html/body/div[\@id = 'doc']/div//h2[a/\@id = '$Opt{vdistro}']/following-sibling::ul[1]");
+    } else {
+        ($selected_release_distrov) = $nsu ? $xc->findvalue("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[1]/x:a/\@id") :
+            $doc->findvalue("/html/body/div[\@id = 'doc']/div//h2[1]/a/\@id");
+        ($selected_release_ul) = $nsu ? $xc->findnodes("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:ul[1]") :
+            $doc->findnodes("/html/body/div[\@id = 'doc']/div//ul[1]");
+    }
+    print "SELECTED: $selected_release_distrov\n";
     my($ok,$id);
-    for my $test ($nsu ? $xc->findnodes("x:li",$latest_release_ul) : $latest_release_ul->findnodes("li")) {
+    for my $test ($nsu ? $xc->findnodes("x:li",$selected_release_ul) : $selected_release_ul->findnodes("li")) {
         $ok = $nsu ? $xc->findvalue("x:span[1]/\@class",$test) : $test->findvalue("span[1]/\@class");
         $id = $nsu ? $xc->findvalue("x:a[1]/text()",$test)     : $test->findvalue("a[1]/text()");
         my $nnt_dir = "nntp-testers";
