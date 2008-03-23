@@ -1,0 +1,13 @@
+--- Scalar-Util-Clone-0.10-nFePGc/Clone.xs~	2008-03-22 14:42:40.000000000 +0100
++++ Scalar-Util-Clone-0.10-nFePGc/Clone.xs	2008-03-22 19:18:10.000000000 +0100
+@@ -554,8 +554,9 @@ SVs_PADBUSY | 
+ 	    SvMAGIC(dest) = clone_mg(aTHX_ SvMAGIC(src));
+ 	    CLONE_COPY_STASH(src, dest);
+ 	    AvARYLEN((AV*)dest) = clone_sv_inc(AvARYLEN((AV*)src), FALSE);
++#ifdef AvFLAGS
+ 	    AvFLAGS((AV*)dest) = AvFLAGS((AV*)src);
+-
++#endif
+ 	    if (AvARRAY((AV*)src)) {
+ 		SV **dst_ary, **src_ary;
+ 		SSize_t items = AvFILLp((AV*)src) + 1;

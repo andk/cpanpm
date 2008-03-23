@@ -1,0 +1,12 @@
+--- Scalar-Util-Clone-0.10-yKYWZ1/Clone.xs~	2008-03-22 20:06:57.000000000 +0100
++++ Scalar-Util-Clone-0.10-yKYWZ1/Clone.xs	2008-03-22 21:11:13.000000000 +0100
+@@ -628,7 +628,9 @@ SVs_PADBUSY | 
+ 	       HvEITER((HV*)dest) = (HE*)NULL;
+ 	       }
+ 	     */
++#ifdef HvPMROOT
+ 	    HvPMROOT((HV*)dest) = HvPMROOT((HV*)src); /* XXX */
++#endif
+ 	    HvNAME((HV*)dest) = SAVEPV(HvNAME((HV*)src));
+ 	    /* Record stashes for possible cloning in Perl_clone(). */
+ 	    /*

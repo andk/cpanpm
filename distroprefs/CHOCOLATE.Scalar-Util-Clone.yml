@@ -1,11 +1,16 @@
 ---
 comment: |
 
-  the first patch deals with PADBUSY which was removed from perl in patch 18409
+  - the first deals with PADBUSY which was removed from perl in patch 18409
 
-  at 5.9.2@24518 they removed AvFLAGS, addressed in patch 02
+  - at 24518 they removed AvFLAGS
 
-  24522 removed HvPMROOT, cured in patch 03
+  - 24522 removed HvPMROOT
+
+  - 24526 (with minor corrections in 27 and 29) broke out the member
+    xhv_eiter from XPVHV
+
+  http://rt.cpan.org/Ticket/Display.html?id=33501
 
 match:
   distribution: "CHOCOLATE/Scalar-Util-Clone-\d"

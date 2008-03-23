@@ -1,0 +1,163 @@
+diff -urp Scalar-Util-Clone-0.10-oJeQEO.orig/Clone.c Scalar-Util-Clone-0.10-oJeQEO/Clone.c
+--- Scalar-Util-Clone-0.10-oJeQEO.orig/Clone.xs	2008-01-08 13:56:33.000000000 +0100
++++ Scalar-Util-Clone-0.10-oJeQEO/Clone.xs	2008-03-22 11:56:08.000000000 +0100
+@@ -372,7 +372,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+         
+         SVpad_OUR conflicts with SvWEAKREF, so we can't turn that off:
+ 
+-            SvFLAGS(dest) &= ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVs_TEMP | SVpad_OUR);
++            SvFLAGS(dest) &= ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVs_TEMP | SVpad_OUR);
+ 
+ 	also note: we can't factor out the flag copying (by placing it here) because the flags
+ 	influence SvUPGRADE
+@@ -389,30 +393,50 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	    /* warn("SVt_NULL"); */
+ 	    /* FIXME: already null */
+ 	    (void)SvUPGRADE(dest, SVt_NULL);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    break;
+ 	case SVt_IV:
+ 	    /* warn("SVt_IV"); */
+ 	    (void)SvUPGRADE(dest, SVt_IV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvIVX(dest) = SvIVX(src);
+ 	    break;
+ 	case SVt_NV:
+ 	    /* warn("SVt_NV"); */
+ 	    (void)SvUPGRADE(dest, SVt_NV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvNVX(dest) = SvNVX(src);
+ 	    break;
+ 	case SVt_RV:
+ 	    /* warn("SVt_RV"); */
+ 	    (void)SvUPGRADE(dest, SVt_RV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    CLONE_RVPV(src, dest);
+ 	    break;
+ 	case SVt_PV:
+ 	    /* warn("SVt_PV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)     = SvCUR(src);
+ 	    SvLEN(dest)     = SvLEN(src);
+ 	    CLONE_RVPV(src, dest);
+@@ -420,7 +444,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVIV:
+ 	    /* warn("SVt_PVIV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVIV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)	= SvCUR(src);
+ 	    SvLEN(dest)	= SvLEN(src);
+ 	    SvIVX(dest)	= SvIVX(src);
+@@ -429,7 +457,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVNV:
+ 	    /* warn("SVt_PVNV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVNV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)	= SvCUR(src);
+ 	    SvLEN(dest)	= SvLEN(src);
+ 	    SvIVX(dest)	= SvIVX(src);
+@@ -449,7 +481,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	    }
+ 
+ 	    (void)SvUPGRADE(dest, SVt_PVMG);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)	= SvCUR(src);
+ 	    SvLEN(dest)	= SvLEN(src);
+ 	    SvIVX(dest)	= SvIVX(src);
+@@ -461,7 +497,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVBM:
+ 	    /* warn("SVt_PVBM"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVBM);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)	= SvCUR(src);
+ 	    SvLEN(dest)	= SvLEN(src);
+ 	    SvIVX(dest)	= SvIVX(src);
+@@ -476,7 +516,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVLV:
+ 	    /* warn("SVt_PVLV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVLV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest) = SvCUR(src);
+ 	    SvLEN(dest) = SvLEN(src);
+ 	    SvIVX(dest) = SvIVX(src);
+@@ -498,7 +542,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVAV:
+ 	    /* warn("SVt_PVAV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVAV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest)	= SvCUR(src);
+ 	    SvLEN(dest)	= SvLEN(src);
+ 	    SvIVX(dest)	= SvIVX(src);
+@@ -539,7 +587,11 @@ static SV * clone_sv(pTHX_ SV *src, I32 
+ 	case SVt_PVHV:
+ 	    /* warn("SVt_PVHV"); */
+ 	    (void)SvUPGRADE(dest, SVt_PVHV);
+-	    SvFLAGS(dest) = SvFLAGS(src) & ~(SVs_PADBUSY | SVs_PADTMP | SVs_PADMY | SVf_OOK);
++	    SvFLAGS(dest) = SvFLAGS(src) & ~(
++#ifdef SVs_PADBUSY
++SVs_PADBUSY | 
++#endif
++ SVs_PADTMP | SVs_PADMY | SVf_OOK);
+ 	    SvCUR(dest) = SvCUR(src);
+ 	    SvLEN(dest) = SvLEN(src);
+ 	    SvIVX(dest) = SvIVX(src);
