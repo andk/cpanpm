@@ -1,3 +1,7 @@
+2008-03-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* RSOD/IPC-Run-0.80.tar.gz fails? Apparently yes, from time to time.
+
 2008-03-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Does Clone have issues ATM? Object-Relation has a problem and among
