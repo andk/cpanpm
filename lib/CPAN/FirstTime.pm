@@ -265,7 +265,7 @@ Verbosity level for loading modules (none or v)?
 
 Every Makefile.PL is run by perl in a separate process. Likewise we
 run 'make' and 'make install' in separate processes. If you have
-any parameters (e.g. PREFIX, LIB, UNINST or the like) you want to
+any parameters (e.g. PREFIX, UNINST or the like) you want to
 pass to the calls, please specify them here.
 
 If you don't understand this question, just press ENTER.
@@ -1003,6 +1003,13 @@ substitute. You can then revisit this dialog with
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
         my_dflt_prompt(makepl_arg => "", $matcher);
         my_dflt_prompt(make_arg => "", $matcher);
+        if ( $CPAN::Config->{makepl_arg} =~ /LIBS=|INC=/ ) {
+            $CPAN::Frontend->mywarn( 
+                "Warning: Using LIBS or INC in makepl_arg will likely break distributions\n" . 
+                "that specify their own LIBS or INC options in Makefile.PL.\n"
+            );
+        }
+
     }
 
     require CPAN::HandleConfig;
