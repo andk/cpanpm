@@ -1,0 +1,10 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=30855
+
+match:
+  distribution: "RBS/XML-AutoWriter-\d"
+depends:
+  requires:
+    XML::Parser: 0
