@@ -1054,6 +1054,7 @@ Text::Filter
 Text::Format
 Text::Iconv
 Text::LevenshteinXS
+Text::Markdown
 Text::Metaphone
 Text::Ngram
 Text::PDF
@@ -1180,6 +1181,7 @@ V
 VFSsimple
 Verilog::Parser
 Voting::Condorcet::RankedPairs
+WWW::Curl
 WWW::Facebook::API
 WWW::Live365
 WWW::Mechanize

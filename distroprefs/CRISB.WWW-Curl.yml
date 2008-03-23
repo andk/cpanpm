@@ -1,0 +1,16 @@
+---
+comment: |
+
+  Writing "3" because the author promised in
+  http://rt.cpan.org/Ticket/Display.html?id=33579 that the "4" will do
+  it right.
+
+  The bug here is that he tries interactivity during testing and
+  Test::Harness eats everything. So only confirmation is possible by
+  setting PERL_MM_USE_DEFAULT.
+
+match:
+  distribution: "CRISB/WWW-Curl-3"
+test:
+  env:
+    PERL_MM_USE_DEFAULT: 1
