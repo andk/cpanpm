@@ -23,7 +23,7 @@ my $ua = LWP::UserAgent->new;
 $ua->parse_head(0);
 
 my @want_config = @{$Opt{conf}||[]};
-@want_config = qw(archname usethreads optimize) unless @want_config;
+@want_config = qw(archname usethreads optimize REPORT_WRITER FROM) unless @want_config;
 # my @want_config = qw(gccversion usethreads usemymalloc cc byteorder libc gccversion intsize use64bitint archname);
 
 my @want_req = @{$Opt{req}||[]};
@@ -97,6 +97,13 @@ for my $distro (@ARGV) {
         my $moduleunpack = {};
         my $expect_prereq = 0;
       LINE: while (<$fh>) {
+            unless ($extract{FROM}) {
+                if (0) {
+                } elsif (m|<div class="h_name">From:</div> <b>(.+)</b><br/>|) {
+                    $extract{FROM} = $1;
+                }
+                $extract{FROM} =~ s/\.$// if $extract{FROM};
+            }
             unless ($extract{REPORT_WRITER}) {
                 if (0) {
                 } elsif (/created (?:automatically )?by (\S+)/) {
