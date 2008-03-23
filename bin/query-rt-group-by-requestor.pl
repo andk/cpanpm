@@ -18,6 +18,7 @@ my %Config = (
               password    => '',
               chunksize   => 396,
               nbsp        => 0,
+              top         => 40,
              );
 
 GetOptions(\my %config, map { "$_=s" } keys %Config);
@@ -107,6 +108,7 @@ sub who {
                'Marek.Rouchal@gmx.net'      => 'MAREKR',
                'marek.rouchal@infineon.com' => 'MAREKR',
                'aaron@FreeBSD.org'          => 'ACDALTON',
+               'agentzh@gmail.com'          => 'AGENT',
                'alexchorny@gmail.com'       => 'CHORNY',
                'andreas.koenig@anima.de'    => 'ANDK',
                'andy@petdance.com'          => 'PETDANCE',
@@ -118,11 +120,14 @@ sub who {
                'autrijus@autrijus.org'      => 'AUDREYT',
                'barbie@missbarbell.co.uk'   => 'BARBIE',
                'blair@orcaware.com'         => 'BZAJAC',
+               'chris@clotho.com'           => 'CLOTHO',
                'corion@corion.net'          => 'CORION',
                'cpan@ali.as'                => 'ADAMK',
                'cpan@audreyt.org'           => 'AUDREYT',
                'cpan@chrisdolan.net'        => 'CDOLAN',
                'cpan@clotho.com'            => 'CLOTHO',
+               'cpan@pjedwards.co.uk'       => 'STIGPJE',
+               'dan.horne@redbone.co.nz'    => 'DHORNE',
                'david@landgren.net'         => 'DLAND',
                'dha@panix.com'              => 'DHA',
                'gbarr@pobox.com'            => 'GBARR',
@@ -132,11 +137,15 @@ sub who {
                'jesse@bestpractical.com'    => 'JESSE',
                'jesse@fsck.com'             => 'JESSE',
                'jhi@iki.fi'                 => 'JHI',
+               'julian@mehnle.net'          => 'JMEHNLE',
                'mark@summersault.com'       => 'MARKSTOS',
                'mark@twoshortplanks.com'    => 'MARKF',
                'merlyn@stonehenge.com'      => 'MERLYN',
                'mnodine@alum.mit.edu'       => 'NODINE',
+               'm.nooning@comcast.net'      => 'MNOONING',
+               'mstevens@etla.org'          => 'MSTEVENS',
                'nadim@khemir.net'           => 'NKH',
+               'nigel.metheringham@Dev.intechnology.co.uk' => 'NIGELM',
                'njh@bandsman.co.uk'         => 'NJH',
                'njh@ecs.soton.ac.uk'        => 'NJH',
                'nospam-abuse@bloodgate.com' => 'TELS',
@@ -156,6 +165,8 @@ sub who {
                'steve.hay@uk.radan.com'     => 'SHAY',
                'steve@fisharerojo.org'      => 'SMPETERS',
                'steven@knowmad.com'         => 'WMCKEE',
+               'stro@railways.dp.ua'        => 'STRO',
+               'ville.skytta@iki.fi'        => 'SCOP',
                'william@knowmad.com'        => 'WMCKEE',
                'xdaveg@gmail.com'           => 'DAGOLDEN',
               );
@@ -175,7 +186,8 @@ for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   my $x = sprintf "<code>%2d: %-9s %4d</code><br/>\n", $top, $k, $S{$k};
   $x =~ s/ /&nbsp;/g if $Config{nbsp};
   print $x;
-  last if $top >= 40;
+  my $showtop = $config{top} || 40;
+  last if $top >= $showtop;
   $top++;
 }
 printf "</dl>\n";
