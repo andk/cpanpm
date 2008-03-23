@@ -525,6 +525,8 @@ IO
 IO::All
 IO::Async::Buffer
 IO::Compress::Base
+IO::Compress::Lzop
+IO::Compress::Zlib::Constants
 IO::Digest
 IO::File
 IO::Handle
