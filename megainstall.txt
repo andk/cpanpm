@@ -420,6 +420,7 @@ File::Spec::Functions
 File::Tail
 File::Temp
 File::Type
+File::Util
 FileHandle::Deluxe
 FileHandle::Unget
 Filesys::Df
@@ -511,6 +512,7 @@ HTTP::Parser
 HTTP::RangeSaver
 HTTP::Response::Encoding
 HTTP::Server::Simple
+HTTP::Server::Simple::Dispatched
 HTTP::Server::Simple::Mason
 Handel
 Hash::AsObject
@@ -658,6 +660,7 @@ Math::Symbolic
 Math::SymbolicX::ParserExtensionFactory
 Math::Vec
 Maypole
+MediaWiki
 Metadata::ByInode
 Mixin::ExtraFields
 Module::Build
@@ -683,6 +686,7 @@ MogileFS::Class
 MojoMojo
 Moose
 Moose::Autobox
+MooseX::Emulate::Class::Accessor::Fast
 Net::Analysis
 Net::CIDR
 Net::Cmd
@@ -747,6 +751,7 @@ Object::Tiny
 OpenOffice::OOBuilder
 OpenOffice::OODoc
 OpenThought
+Osgood::Client
 P5NCI
 PAR
 PAR::Dist::FromCPAN
@@ -889,6 +894,7 @@ Rose::DateTime
 Rose::Object
 Rubric
 SGML::Parser::OpenSP
+SIOC
 SNMP
 SOAP::Lite
 SOAP::WSDL

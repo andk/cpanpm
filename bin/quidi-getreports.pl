@@ -185,6 +185,9 @@ for my $distro (@ARGV) {
                     } elsif (($r,$v,$s) = $p5 =~ /revision (\S+) version (\S+) subversion (\S+)/) {
                         $r =~ s/\.0//;
                         $extract{PERL} = "$r.$v.$s";
+                    } elsif (($r,$v,$s) = $p5 =~ /(\d+\S*) patchlevel (\S+) subversion (\S+)/) {
+                        $r =~ s/\.0//;
+                        $extract{PERL} = "$r.$v.$s";
                     } else {
                         $extract{PERL} = $p5;
                     }
@@ -248,6 +251,7 @@ for my $distro (@ARGV) {
                         }
                     }
                     $module =~ s/\s+$//;
+                    $v =~ s/^\s+//;
                     $v =~ s/\s+$//;
                     $extract{$module} = $v;
                 }
@@ -257,8 +261,13 @@ for my $distro (@ARGV) {
                                      type => 1,
                                     };
                 } elsif (/(\s+)(Module Name\s+)(Have\s+)Want/) {
+                    my $adjust_1 = 0;
+                    my $adjust_2 = -2; # hackish way of avoiding two-pass
+                    my $adjust_3 = 2;
+                    # two pass would be required to see where the
+                    # columns really are. Or could we get away with split?
                     $moduleunpack = {
-                                     tpl => 'a'.length($1).'a'.length($2).'a'.length($3),
+                                     tpl => 'a'.length($1).'a'.(length($2)+$adjust_2).'a'.(length($3)+$adjust_3),
                                      type => 2,
                                     };
                 }
