@@ -67,6 +67,7 @@ match:
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
+    |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |OALDERS/URI-ParseSearchString-More-0.04
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
