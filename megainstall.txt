@@ -445,6 +445,7 @@ GD::SVG
 GD::SecurityImage
 GD::Text
 GIS::Distance
+GPS::SpaceTrack
 GSSAPI
 GTop
 Games::Bingo

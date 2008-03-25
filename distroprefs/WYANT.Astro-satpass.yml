@@ -1,0 +1,10 @@
+---
+match:
+  distribution: "WYANT/Astro-satpass-\d"
+pl:
+  args:
+    - "-n"
+test:
+  expect:
+    - "Shall I download"
+    - "n\n"
