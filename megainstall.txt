@@ -402,6 +402,7 @@ File::Basename
 File::Binary
 File::Copy
 File::CounterFile
+File::ExtAttr
 File::Extract
 File::Fetch
 File::Headerinfo::SWF
@@ -474,6 +475,7 @@ Gtk
 Gtk2
 HOP::Lexer
 HTML::Clean
+HTML::DOM
 HTML::Entities
 HTML::Entities::Numbered
 HTML::FillInForm
@@ -509,6 +511,7 @@ HTTP::BrowserDetect
 HTTP::CryptoCookie
 HTTP::GHTTP
 HTTP::Parser
+HTTP::Proxy
 HTTP::RangeSaver
 HTTP::Response::Encoding
 HTTP::Server::Simple
@@ -1078,6 +1081,7 @@ Text::Template
 Text::Typography
 Text::Unidecode
 Text::VimColor
+Text::WikiCreole
 Text::WikiFormat
 Text::Wrap
 Text::Wrapper
