@@ -71,7 +71,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
-    |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8@33430 during test.pl
+    |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.12              # hangs in t/02internals
     |STSANDER/Device-Davis-\d                # asks me for a tty to use

@@ -9,9 +9,9 @@
 
 2008-03-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* Repeatedly observed a "Possible unintended interpolation of ...@334xx"
+	* Repeatedly observed a "Possible unintended interpolation of ...@33430"
 
-	Where did it come from?
+	Where did it come from? Probably my fault!
 
 2008-03-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
