@@ -62,6 +62,7 @@ Bit::MorseSignals
 Bit::Vector
 Bit::Vector::Minimal
 BitTorrent
+Bloom::Filter
 Brackup
 Bundle::Encode
 Bundle::POE::IRC
@@ -651,6 +652,7 @@ Math::BigInt::GMP
 Math::BigRat
 Math::Cephes
 Math::Combinatorics
+Math::Expression
 Math::GMP
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset
