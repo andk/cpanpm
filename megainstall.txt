@@ -1207,6 +1207,7 @@ WWW::Slides
 Waft
 Want
 Web::Scraper
+Web::Scraper::Config
 Workflow
 X500::DN
 XML::ApacheFOP

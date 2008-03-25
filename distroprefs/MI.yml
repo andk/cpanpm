@@ -73,6 +73,7 @@ match:
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
+    |DMAKI/Web-Scraper-Config-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DONEILL/MIME-tools-\d
