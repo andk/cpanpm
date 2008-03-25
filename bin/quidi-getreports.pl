@@ -267,9 +267,9 @@ for my $distro (@ARGV) {
                     $v =~ s/\s+$//;
                     $extract{$module} = $v;
                 }
-                if (/(\s+)(Module\s+) Need Have/) {
+                if (/(\s+)(Module\s+)(Need\s+)Have/) {
                     $moduleunpack = {
-                                     tpl => 'a'.length($1).'a'.length($2).'a6'.'a*',
+                                     tpl => 'a'.length($1).'a'.length($2).'a'.length($3).'a*',
                                      type => 1,
                                     };
                 } elsif (/(\s+)(Module Name\s+)(Have\s+)Want/) {
