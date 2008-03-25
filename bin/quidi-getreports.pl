@@ -168,6 +168,8 @@ for my $distro (@ARGV) {
         my $report_writer;
         my $moduleunpack = {};
         my $expect_prereq = 0;
+        my $expect_toolchain = 0;
+        my $expecting_toolchain_soon = 0;
         my $previous_line = ""; # so we can neutralize line breaks
       LINE: while (<$fh>) {
             chomp; # reliable line endings?
@@ -228,7 +230,7 @@ for my $distro (@ARGV) {
                     $extract{$want} = $cand;
                 }
             }
-            if ($expect_prereq) {
+            if ($expect_prereq || $expect_toolchain) {
                 if (exists $moduleunpack->{type}) {
                     my($module,$v);
                     if ($moduleunpack->{type} == 1) {
@@ -247,6 +249,16 @@ for my $distro (@ARGV) {
                         if ($leader =~ /^\*/) {
                             $moduleunpack = {};
                             $expect_prereq = 0;
+                            next LINE;
+                        }
+                    } elsif ($moduleunpack->{type} == 3) {
+                        (my $leader,$module,$v) = eval { unpack $moduleunpack->{tpl}, $_; };
+                        next LINE if $@;
+                        if (!$module) {
+                            $moduleunpack = {};
+                            $expect_toolchain = 0;
+                            next LINE;
+                        } elsif ($module =~ /^-/) {
                             next LINE;
                         }
                     }
@@ -274,6 +286,19 @@ for my $distro (@ARGV) {
             }
             if (/PREREQUISITES|Prerequisite modules loaded/) {
                 $expect_prereq=1;
+            }
+            if ($expecting_toolchain_soon) {
+                if (/(\s+)(Module\s+) Have/) {
+                    $expect_toolchain=1;
+                    $expecting_toolchain_soon=0;
+                    $moduleunpack = {
+                                     tpl => 'a'.length($1).'a'.length($2).'a*',
+                                     type => 3,
+                                    };
+                }
+            }
+            if (/toolchain versions installed/) {
+                $expecting_toolchain_soon=1;
             }
             $previous_line = $_;
         } # LINE

@@ -10,9 +10,12 @@ test:
   env:
     DISPLAY: ":121"
 --- 
-comment: "Or if you prefer to follow the defaults..."
+comment: |
+
+  AFAIU, an alternative on POE would be to follow the defaults (?)
+
 match:
-  distribution: "^RCAPUTO/POE-"
+  distribution: "^RCAPUTO/POE-\d"
 pl: 
   args:
     - --default
