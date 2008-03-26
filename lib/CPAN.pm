@@ -7724,8 +7724,12 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     local %ENV = %env;
     my $system;
-    if (my $commandline = $self->prefs->{pl}{commandline}) {
-        $system = $commandline;
+    my $pl_commandline;
+    if ($self->prefs->{pl}) {
+        $pl_commandline = $self->prefs->{pl}{commandline};
+    }
+    if ($pl_commandline) {
+        $system = $pl_commandline;
         $ENV{PERL} = $^X;
     } elsif ($self->{'configure'}) {
         $system = $self->{'configure'};
@@ -7748,9 +7752,13 @@ is part of the perl-%s distribution. To install that, you need to run
                           $makepl_arg ? " $makepl_arg" : "",
                          );
     }
-    if (my $env = $self->prefs->{pl}{env}) {
-        for my $e (keys %$env) {
-            $ENV{$e} = $env->{$e};
+    my $pl_env;
+    if ($self->prefs->{pl}) {
+        $pl_env = $self->prefs->{pl}{env};
+    }
+    if ($pl_env) {
+        for my $e (keys %$pl_env) {
+            $ENV{$e} = $pl_env->{$e};
         }
     }
     if (exists $self->{writemakefile}) {
@@ -7885,8 +7893,12 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
-    if (my $commandline = $self->prefs->{make}{commandline}) {
-        $system = $commandline;
+    my $make_commandline;
+    if ($self->prefs->{make}) {
+        $make_commandline = $self->prefs->{make}{commandline};
+    }
+    if ($make_commandline) {
+        $system = $make_commandline;
         $ENV{PERL} = CPAN::find_perl;
     } else {
         if ($self->{modulebuild}) {
@@ -7907,12 +7919,14 @@ is part of the perl-%s distribution. To install that, you need to run
                           $make_arg ? " $make_arg" : "",
                          );
     }
-    if (my $env = $self->prefs->{make}{env}) { # overriding the local
-                                               # ENV of PL, not the
-                                               # outer ENV, but
-                                               # unlikely to be a risk
-        for my $e (keys %$env) {
-            $ENV{$e} = $env->{$e};
+    my $make_env;
+    if ($self->prefs->{make}) {
+        $make_env = $self->prefs->{make}{env};
+    }
+    if ($make_env) { # overriding the local ENV of PL, not the outer
+                     # ENV, but unlikely to be a risk
+        for my $e (keys %$make_env) {
+            $ENV{$e} = $make_env->{$e};
         }
     }
     my $expect_model = $self->_prefs_with_expect("make");
@@ -9007,9 +9021,13 @@ sub test {
         $env{$k} = $v;
     }
     local %ENV = %env;
-    if (my $env = $self->prefs->{test}{env}) {
-        for my $e (keys %$env) {
-            $ENV{$e} = $env->{$e};
+    my $test_env;
+    if ($self->prefs->{test}) {
+        $test_env = $self->prefs->{test}{env};
+    }
+    if ($test_env) {
+        for my $e (keys %$test_env) {
+            $ENV{$e} = $test_env->{$e};
         }
     }
     my $expect_model = $self->_prefs_with_expect("test");
