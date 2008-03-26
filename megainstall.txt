@@ -1211,6 +1211,7 @@ Waft
 Want
 Web::Scraper
 Web::Scraper::Config
+WordNet::SenseRelate::AllWords
 Workflow
 X500::DN
 XML::ApacheFOP
