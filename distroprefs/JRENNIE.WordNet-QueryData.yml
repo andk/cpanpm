@@ -1,0 +1,16 @@
+---
+comment: |
+
+  In version 1.47 we really need both variables but from looking at
+  the code only the latter is used. (?)
+
+  Keep in mind: they are needed whenever we run it!
+
+match:
+  distribution: "JRENNIE/WordNet-QueryData-\d"
+  perlconfig:
+    archname: "linux"
+pl:
+  env:
+    WNHOME: "/usr/share/wordnet"
+    WNSEARCHDIR: "/usr/share/wordnet"
