@@ -11688,8 +11688,11 @@ Specifies that this distribution shall not be processed at all.
 
 =item features [array]
 
-Experimental implementation (added in version 1.92_59). Shall deal with
-optional_features from META.yml.
+B<ALERT: Not ready for use, will change in a future version>
+
+Experimental implementation (added in version 1.92_59). Shall deal
+with optional_features from META.yml once the specification has
+settled. At the moment the META.yml spec looks buggy.
 
 =item goto [string]
 
