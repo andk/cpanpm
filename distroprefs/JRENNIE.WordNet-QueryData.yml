@@ -6,10 +6,12 @@ comment: |
 
   Keep in mind: they are needed whenever we run it!
 
+  After several attempts giving up. They make too many assumptions
+  about the installation of wordnet.
+
 match:
   distribution: "JRENNIE/WordNet-QueryData-\d|/WordNet-Similarity|/WordNet-SenseRelate-AllWords"
-  perlconfig:
-    archname: "linux"
+disabled: 1
 pl:
   env:
     WNHOME: "/usr/share/wordnet"
