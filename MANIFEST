@@ -35,6 +35,7 @@ distroprefs/BINGOS.POE-Component-Client-NSCA.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
+distroprefs/BOBTFISH.Text-Markdown.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BRADFITZ.Perlbal.yml
 distroprefs/BRIANSKI.XML-Comma.yml
@@ -50,15 +51,18 @@ distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CERNEY.Tk-IDElayout.yml
 distroprefs/CHANG-LIU.XML-Node.yml
 distroprefs/CHARTGRP.Chart.yml
+distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
 distroprefs/CORION.Test-Without-Module.yml
+distroprefs/CRISB.WWW-Curl.yml
 distroprefs/CSOE.PDL.yml
 distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAGOLDEN.Term-Title.yml
+distroprefs/DANKOGAI.Regexp-Optimizer.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
@@ -142,6 +146,7 @@ distroprefs/JOSEPHW.XML-Writer.yml
 distroprefs/JPEACOCK.SVN-Notify-Mirror.yml
 distroprefs/JPIERCE.IO-Pager.yml
 distroprefs/JPRIT.Event.yml
+distroprefs/JRENNIE.WordNet-QueryData.yml
 distroprefs/JROBINSON.SQL-Translator.yml
 distroprefs/JROCKWAY.Chroniton.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
@@ -202,6 +207,7 @@ distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MSISK.HTML-TableExtract.yml
 distroprefs/MTHURN.I18N-Charset.yml
 distroprefs/MTHURN.Tk-Wizard.yml
+distroprefs/NEILW.Inline-CPP.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
@@ -226,6 +232,7 @@ distroprefs/PHRED.Apache-Reload.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml
+distroprefs/RBS.XML-AutoWriter.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RCLAMP.Devel-Caller.yml
 distroprefs/RCLAMP.POE-Component-Server-HTTP.yml
@@ -277,9 +284,12 @@ distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
+distroprefs/VMAN.Net-Libdnet.yml
 distroprefs/VPIT.Variable-Magic.yml
 distroprefs/WITTROCK.Tk-PathEntry.yml
 distroprefs/WRW.Barcode-Code128.yml
+distroprefs/WYANT.Astro-satpass.yml
+distroprefs/WYANT.Astro-SpaceTrack.yml
 distroprefs/YANICK.XML-XPathScript.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml

@@ -1,3 +1,14 @@
+2008-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_60: gearing towards a new stable release
+
+	* minor bugfixing
+
+	* documented that the support for optional_features is not yet ready for
+	prime time.
+
+	* now with 297 distroprefs files
+
 2008-03-16  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_59: new distroprefs parameter match/env; bugfixing
