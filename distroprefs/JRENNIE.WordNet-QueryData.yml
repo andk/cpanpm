@@ -14,6 +14,10 @@ pl:
   env:
     WNHOME: "/usr/share/wordnet"
     WNSEARCHDIR: "/usr/share/wordnet"
+make:
+  env:
+    WNHOME: "/usr/share/wordnet"
+    WNSEARCHDIR: "/usr/share/wordnet"
 test:
   env:
     WNHOME: "/usr/share/wordnet"
