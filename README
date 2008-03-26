@@ -569,6 +569,8 @@ CONFIGURATION
                          (and nonsense for characters outside latin range)
       term_ornaments     boolean to turn ReadLine ornamenting on/off
       test_report        email test reports (if CPAN::Reporter is installed)
+      threshold_perl5lib_upto
+                         threshold determining method to extend @INC at runtime
       trust_test_report_history
                          skip testing when previously tested ok (according to
                          CPAN::Reporter history)
@@ -861,8 +863,11 @@ CONFIGURATION
         Specifies that this distribution shall not be processed at all.
 
     features [array]
+        ALERT: Not ready for use, will change in a future version
+
         Experimental implementation (added in version 1.92_59). Shall deal
-        with optional_features from META.yml.
+        with optional_features from META.yml once the specification has
+        settled. At the moment the META.yml spec looks buggy.
 
     goto [string]
         The canonical name of a delegate distribution that shall be
