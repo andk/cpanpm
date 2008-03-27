@@ -1,0 +1,15 @@
+---
+comment: |
+
+  Too many PASSes when these dependencies are not there because then
+  tests are skipped.
+
+match:
+  distribution: "NEELY/Data-Serializer-\d"
+depends:
+  requires:
+    Digest::MD5: 0
+    Digest::SHA1: 0
+    Digest::SHA: 0
+    Crypt::Blowfish: 0
+    Crypt::CBC: 0
