@@ -73,10 +73,11 @@ use XML::LibXML::XPathContext;
 sub Usage ();
 our %Opt;
 GetOptions(\%Opt,
-           "conf=s\@",
-           "req=s\@",
-           "verbose!",
-           "vdistro=s",
+           "conf=s\@",  # %Config and other (made up on the fly) variables }the two need
+           "req=s\@",   # prerequisites or toolchain module version        }to be streamlined
+           "verbose+",  # feedback during download where we stand
+           "vdistro=s", # versioned distro if we do not want the most recent
+           "local!",    # use a local *.html if present even if older than 24 hours
           ) or die Usage;
 
 my $ua = LWP::UserAgent->new;
@@ -99,13 +100,25 @@ for my $distro (@ARGV) {
     mkpath $cts_dir;
     my $ctarget = "$cts_dir/$distro.html";
     my $cheaders = "$cts_dir/$distro.headers";
-    unless (-e $ctarget) {
+    if (! -e $ctarget or (!$Opt{local} && -M $ctarget > 1)) {
+        if (-e $ctarget && $Opt{verbose}) {
+            my(@stat) = stat _;
+            my $timestamp = gmtime $stat[9];
+            print "(timestamp $timestamp GMT)\n";
+        }
         print "Fetching $ctarget..." if $Opt{verbose};
         my $resp = $ua->mirror("http://cpantesters.perl.org/show/$distro.html",$ctarget);
         if ($resp->is_success) {
             print "DONE\n" if $Opt{verbose};
             open my $fh, ">", $cheaders or die;
-            print $fh $resp->headers->as_string;
+            for ($resp->headers->as_string) {
+                print $fh $_;
+                if ($Opt{verbose}>1) {
+                    print;
+                }
+            }
+        } elsif (304 == $resp->code) {
+            print "DONE (not modified)\n";
         } else {
             die $resp->status_line;
         }
@@ -131,17 +144,24 @@ for my $distro (@ARGV) {
     my $nsu = $doc->documentElement->namespaceURI;
     $xc->registerNs('x', $nsu) if $nsu;
     # $DB::single++;
-    my($selected_release_ul,$selected_release_distrov);
+    my($selected_release_ul,$selected_release_distrov,$excuse_string);
     if ($Opt{vdistro}) {
+        $excuse_string = "selected distro '$Opt{vdistro}'";
         ($selected_release_distrov) = $nsu ? $xc->findvalue("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[x:a/\@id = '$Opt{vdistro}']/x:a/\@id") :
             $doc->findvalue("/html/body/div[\@id = 'doc']/div//h2[a/\@id = '$Opt{vdistro}']/a/\@id");
         ($selected_release_ul) = $nsu ? $xc->findnodes("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[x:a/\@id = '$Opt{vdistro}']/following-sibling::ul[1]") :
             $doc->findnodes("/html/body/div[\@id = 'doc']/div//h2[a/\@id = '$Opt{vdistro}']/following-sibling::ul[1]");
     } else {
+        $excuse_string = "any distro";
         ($selected_release_distrov) = $nsu ? $xc->findvalue("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:h2[1]/x:a/\@id") :
             $doc->findvalue("/html/body/div[\@id = 'doc']/div//h2[1]/a/\@id");
         ($selected_release_ul) = $nsu ? $xc->findnodes("/x:html/x:body/x:div[\@id = 'doc']/x:div//x:ul[1]") :
             $doc->findnodes("/html/body/div[\@id = 'doc']/div//ul[1]");
+    }
+    unless ($selected_release_distrov) {
+        warn "Warning: could not find $excuse_string in '$ctarget'";
+        sleep 1;
+        next;
     }
     print "SELECTED: $selected_release_distrov\n";
     my($ok,$id);
@@ -155,7 +175,14 @@ for my $distro (@ARGV) {
             print "Fetching $target..." if $Opt{verbose};
             my $resp = $ua->mirror("http://www.nntp.perl.org/group/perl.cpan.testers/$id",$target);
             if ($resp->is_success) {
-                print "DONE\n" if $Opt{verbose};
+                if ($Opt{verbose}) {
+                    my(@stat) = stat $target;
+                    my $timestamp = gmtime $stat[9];
+                    print "(timestamp $timestamp GMT)\n";
+                    if ($Opt{verbose} > 1) {
+                        print $resp->headers->as_string;
+                    }
+                }
                 my $headers = "$target.headers";
                 open my $fh, ">", $headers or die;
                 print $fh $resp->headers->as_string;
