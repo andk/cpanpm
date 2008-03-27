@@ -1,0 +1,37 @@
+--- Pari.xs.orig	2006-10-18 07:39:34.000000000 +0100
++++ Pari.xs	2008-03-06 17:19:08.000000000 +0000
+@@ -29,6 +29,14 @@ extern "C" {
+ }
+ #endif 
+ 
++#if PERL_VERSION < 9
++/* XXXX Nasty of us... */
++#define NUMARGS(cv)	(((CV*)cv)->sv_any->xof_off)
++#else
++/* Which then forces our hand on later perls: */
++#define NUMARGS(cv)	(SvLEN(cv))
++#endif
++
+ /* This should not be defined at this moment, but in 5.001n is. */
+ #ifdef coeff
+ #  undef coeff
+@@ -1150,7 +1158,8 @@ installPerlFunctionCV(SV* cv, char *name
+ 	}
+ 	*s = '\0';
+     }
+-    ((CV*)cv)->sv_any->xof_off = numargs;	/* XXXX Nasty of us... */
++    assert(!SvPVX(cv));
++    NUMARGS(cv) = numargs;
+     SAVEINT(doing_PARI_autoload);
+     doing_PARI_autoload = 1;
+     ep = install((void*)SvREFCNT_inc(cv), name, code);
+@@ -1216,7 +1225,7 @@ callPerlFunction(entree *ep, ...)
+ {
+     va_list args;
+     SV *cv = (SV*) ep->value;
+-    int numargs = ((CV*)cv)->sv_any->xof_off;	/* XXXX Nasty of us... */
++    int numargs = NUMARGS(cv);
+     GEN res;
+     int i;
+     dSP;
+

@@ -1,0 +1,191 @@
+--- Pari.xs	(revision 2612)
++++ Pari.xs	(revision 2621)
+@@ -101,6 +101,35 @@
+    frame on the entry into the function for which SV is the argument.
+ */
+ 
++#define PARI_MAGIC_TYPE	((char)0336)
++#define PARI_MAGIC_PRIVATE 0x2020
++
++static IV*
++PARI_SV_to_IVp(SV *const sv)
++{
++    MAGIC *mg;
++    for (mg = SvMAGIC(sv); mg; mg = mg->mg_moremagic) {
++	if (mg->mg_type == PARI_MAGIC_TYPE
++	    && mg->mg_private == PARI_MAGIC_PRIVATE)
++	    return (IV *) &mg->mg_ptr;
++    }
++    assert(0);
++    return NULL;
++}
++
++#define SV_to_GEN_IV(tsv)	\
++	((SvTYPE(tsv) == SVt_PVAV) ? *PARI_SV_to_IVp(tsv) : SvIV(tsv))
++
++#if PERL_VERSION > 9
++/* 5.9.x and later assert that you're not using SvPVX() and SvCUR() on arrays,
++   so need a little more code to cheat round this.  */
++#  define ARRAY_POST_59(sv)	(SvTYPE(sv) == SVt_PVAV)
++#  define AvARRAY_set(sv, val)	AvARRAY(sv) = (val)
++#else
++#  define ARRAY_POST_59(sv)	0
++#  define AvARRAY_set(sv, val)	/* This will never be called. */
++#endif
++
+ #define GENmovedOffStack ((char*) 1) /* Just an atom. */
+ #define GENfirstOnStack ((char*) 2) /* Just an atom. */
+ #define GENheap NULL
+@@ -158,8 +187,13 @@
+     }								\
+     if (isonstack(in)) {					\
+ 	SV* g = SvRV(sv);					\
+-	SvCUR(g) = oldavma - bot;				\
+-	SvPVX(g) = (char*)PariStack;				\
++	if(ARRAY_POST_59(g)) {					\
++	    AvFILLp(g) = oldavma - bot;				\
++	    AvARRAY_set(g, (SV**)PariStack);			\
++	} else {						\
++	    SvCUR(g) = oldavma - bot;				\
++	    SvPVX(g) = (char*)PariStack;			\
++	}							\
+ 	PariStack = g;						\
+ 	perlavma = avma;					\
+ 	onStack_inc;						\
+@@ -246,10 +280,16 @@
+ #endif
+     SV *newsub = newRV_noinc((SV*)av);	/* cannot use sv, it may be 
+ 					   sv_restore()d */
++    MAGIC *mg;
+ 
+     (void)SvUPGRADE((SV*)av, SVt_PVAV);    
++#if PERL_VERSION < 9
+     SvPVX(av)	= s;
+-    SvIVX(av)	= i;
++#else
++    AvARRAY(av) = (SV**)s;
++#endif
++    mg = sv_magicext((SV*)av, NULL, PARI_MAGIC_TYPE, NULL, (void*)i, 0);
++    mg->mg_private = PARI_MAGIC_PRIVATE;
+     sv_magic((SV*)av, newsub, 'P', Nullch, 0);
+     SvREFCNT_dec(newsub);		/* now RC(newsub)==1 */
+ 	/* We avoid an reference loop, so should be careful on DESTROY */
+@@ -419,7 +459,7 @@
+ 	  if (SvSTASH(tsv) == pariStash) {
+ 	    is_pari:
+ 	      {
+-		  GEN x = (GEN)SvIV(tsv);
++		  GEN x = (GEN)SV_to_GEN_IV(tsv);
+ 		  if (typ(x) == t_POL	/* Polynomial. */
+ 		      && lgef(x)==4		/* 2 terms */
+ 		      && (gcmp0((GEN)x[2]))	/* Free */
+@@ -435,7 +475,7 @@
+ 		  /* Itsn't good to croak: $v=PARIvar 'v'; vector(3,$v,'v'); */
+ 		  if (generate)
+ 		      /*croak("Same iterator in embedded PARI loop construct")*/;
+-		  return (entree*) SvIV(tsv);
++		  return (entree*) SV_to_GEN_IV(tsv);
+ 	      }
+ 	  } else if (sv_derived_from(sv, "Math::Pari")) { /* Avoid recursion */
+ 	      if (sv_derived_from(sv, "Math::Pari::Ep"))
+@@ -702,13 +742,13 @@
+ 	  if (SvSTASH(tsv) == pariStash) {
+ 	    is_pari:
+ 	      {
+-		  IV tmp = SvIV(tsv);
++ 		  IV tmp = SV_to_GEN_IV(tsv);
+ 		  return (GEN) tmp;
+ 	      }
+ 	  } else if (SvSTASH(tsv) == pariEpStash) {
+ 	    is_pari_ep: 
+ 	      {
+-		  IV tmp = SvIV(tsv);
++ 		  IV tmp = SV_to_GEN_IV(tsv);
+ 		  return (GEN)(((entree*) tmp)->value);
+ 	      }
+ 	  } else if (sv_derived_from(sv, "Math::Pari")) { /* Avoid recursion */
+@@ -1108,6 +1148,7 @@
+     char *code, *s;
+     I32 req = numargs, opt = 0;
+     entree *ep;
++    MAGIC *mg;
+ 
+     if(SvROK(cv))
+ 	cv = SvRV(cv);
+@@ -1150,7 +1191,9 @@
+ 	}
+ 	*s = '\0';
+     }
+-    ((CV*)cv)->sv_any->xof_off = numargs;	/* XXXX Nasty of us... */
++    mg = sv_magicext((SV*)cv, NULL, PARI_MAGIC_TYPE, NULL,
++		     INT2PTR(char *, numargs), 0);
++    mg->mg_private = PARI_MAGIC_PRIVATE;
+     SAVEINT(doing_PARI_autoload);
+     doing_PARI_autoload = 1;
+     ep = install((void*)SvREFCNT_inc(cv), name, code);
+@@ -1183,9 +1226,19 @@
+   
+   for (sv1 = PariStack; sv1 != sv; sv1 = nextsv) {
+     ret++;
+-    nextsv = (SV *) SvPVX(sv1);
+-    SvPVX(sv1) = GENmovedOffStack; /* Mark as moved off stack. */
+-    SvIVX(sv1) = (IV) gclone((GEN)SvIV(sv1));
++    if (ARRAY_POST_59(sv1)) {
++	nextsv = (SV *)AvARRAY(sv1);
++	AvARRAY_set(sv1, (SV **)GENmovedOffStack); /* Mark as moved off stack. */
++    } else {
++	nextsv = (SV *) SvPVX(sv1);
++	SvPVX(sv1) = GENmovedOffStack; /* Mark as moved off stack. */
++    }
++    if(SvTYPE(sv1) == SVt_PVAV) {
++	IV *p = PARI_SV_to_IVp(sv1);
++	*p = (IV) gclone((GEN)*p);
++    } else {
++	SvIVX(sv1) = (IV) gclone((GEN)SvIV(sv1));
++    }
+     onStack_dec;
+     offStack_inc;
+   }
+@@ -1216,7 +1269,7 @@
+ {
+     va_list args;
+     SV *cv = (SV*) ep->value;
+-    int numargs = ((CV*)cv)->sv_any->xof_off;	/* XXXX Nasty of us... */
++    int numargs = *PARI_SV_to_IVp(cv);
+     GEN res;
+     int i;
+     dSP;
+@@ -3738,11 +3791,13 @@
+      {
+ 	 /* PariStack keeps the latest SV that keeps a GEN on stack. */
+ 	 SV* sv = SvRV(rv);
+-	 char* type = SvPVX(sv);	/* The value of PariStack when the
++	 char* type = ARRAY_POST_59(sv) ? (char *)AvARRAY(sv) : SvPVX(sv);
++					/* The value of PariStack when the
+ 					 * variable was created, thus the
+ 					 * previous SV that keeps a GEN from
+ 					 * stack, or some atoms. */
+-	 long oldavma = SvCUR(sv) + bot; /* The value of avma on the entry
++	 long oldavma = (ARRAY_POST_59(sv) ? AvFILLp(sv) : SvCUR(sv)) + bot;
++					 /* The value of avma on the entry
+ 					  * to function having the SV as
+ 					  * argument. */
+ 	 long howmany;
+@@ -3762,11 +3817,15 @@
+ 	     AvFILLp((AV*)sv) = -1;	
+ 	 }
+ #endif
+-	 SvPVX(sv) = GENheap;		/* To avoid extra free() in moveoff.... */
++	 if (ARRAY_POST_59(sv)) {
++	     AvARRAY_set(sv, (SV **)GENheap);
++	 } else {
++	     SvPVX(sv) = GENheap;		/* To avoid extra free() in moveoff.... */
++	 }
+ 	 if (type == GENheap)	/* Leave it alone? XXXX */
+ 	     /* break */ ;
+ 	 else if (type == GENmovedOffStack) {/* Know that it _was temporary. */
+-	     killbloc((GEN)SvIV(sv));	     
++	     killbloc((GEN)SV_to_GEN_IV(sv));	     
+ 	 } else {
+ 	 		/* Still on stack */
+ 	     if (type != (char*)PariStack) { /* But not the newest one. */

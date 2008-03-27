@@ -14,3 +14,5 @@ match:
 pl: 
   args: 
     - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
+patches:
+  - "/home/k/sources/CPAN/SVK/trunk/patches/nclark-math-pari-perlmonks-672924.patch"
