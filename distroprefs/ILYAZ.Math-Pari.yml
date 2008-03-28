@@ -9,6 +9,8 @@ comment: |
 
   With a patch from RAFL we have reached 24556 and failed with 24557
 
+  Update 2008-03-28 akoenig: http://perlmonks.org/?displaytype=displaycode;node_id=672924
+
 match:
   distribution: "^ILYAZ/modules/Math-Pari-2.010709"
 pl: 

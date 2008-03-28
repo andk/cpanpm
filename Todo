@@ -1,3 +1,10 @@
+2008-03-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* data::serializer: I stopped a binary search because of Math::Pari
+
+	* Math::Pari: a perlmonks posting leads to success but later perls broke
+	it again
+
 2008-03-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* maybe still unreported: Safe::World, Data::Dump::Streamer,
