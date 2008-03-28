@@ -2,6 +2,24 @@
 
 	* data::serializer: I stopped a binary search because of Math::Pari
 
+	Then I restarted it and it ended with the impossible resolution:
+
+----Program----
+eval q{use Data::Serializer 0.44};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...pVDHwBj/perl-5.10.0@33153/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...pyNdNAp/perl-5.10.0@33154/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Crap because 33154 is a patch of just a test.
+
 	* Math::Pari: a perlmonks posting leads to success but later perls broke
 	it again
 

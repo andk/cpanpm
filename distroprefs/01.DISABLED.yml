@@ -27,6 +27,7 @@ match:
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
+    |BARBIE/                                 # opt out. Barbie does not want time-in-the-future errors
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
