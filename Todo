@@ -20,6 +20,113 @@ N/A
 
 	Crap because 33154 is a patch of just a test.
 
+-optimize='-g';
++optimize='-O2';
+
+-archname='i686-linux-64int';
++archname='i686-linux';
+
+	Let's remove 33154. Next iteration ends here:
+
+----Program----
+eval q{use Data::Serializer 0.44};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...pyQ307v/perl-5.10.0@33550/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...p0PdUk4/perl-5.10.0@33551/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	with only configdiff:
+
+-d_builtin_expect='define';
++d_builtin_expect='undef';
+
+	Stepping through the debugger reaches a point:
+
+643:      return $cipher_obj->encrypt($digest);
+  DB<42> x $digest
+0  '6cbcecd11182ea942e597f5a5b77b2883885cceccff88f6b08e025db66316c96=["one","two","three"]'
+  DB<43> x $cipher_obj
+0  Crypt::CBC=HASH(0x90d1b74)
+   'blocksize' => 8
+   'cipher' => 'Crypt::Blowfish'
+   'header_mode' => 'salt'
+   'iv' => undef
+   'key' => undef
+   'keysize' => 56
+   'legacy_hack' => undef
+   'literal_key' => ''
+   'make_random_iv' => 1
+   'make_random_salt' => 1
+   'padding' => CODE(0x8aa745c)
+      -> &Crypt::CBC::_standard_padding in /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm:461-476
+   'passphrase' => 'test'
+   'pcbc' => undef
+   'salt' => undef
+  DB<44> s
+Crypt::CBC::encrypt(/home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm:173):
+173:        my ($self,$data) = @_;
+  DB<44> n
+Crypt::CBC::encrypt(/home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm:174):
+174:        $self->start('encrypting');
+  DB<44> 
+Crypt::CBC::encrypt(/home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm:175):
+175:        my $result = $self->crypt($data);
+  DB<44> 
+input must be 8 bytes long at /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/i686-linux-64int/Crypt/Blowfish.pm line 56.
+ at /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/i686-linux-64int/Crypt/Blowfish.pm line 56
+        Crypt::Blowfish::encrypt('Crypt::Blowfish=HASH(0x90cc684)', 'u¿&µ[²k') called at /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm line 250
+        Crypt::CBC::crypt('Crypt::CBC=HASH(0x90d1b74)', '6cbcecd11182ea942e597f5a5b77b2883885cceccff88f6b08e025db66316...') called at /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm line 175
+        Crypt::CBC::encrypt('Crypt::CBC=HASH(0x90d1b74)', '6cbcecd11182ea942e597f5a5b77b2883885cceccff88f6b08e025db66316...') called at blib/lib/Data/Serializer.pm line 643
+        Data::Serializer::_encrypt('Data::Serializer=SCALAR(0x909efac)', '["one","two","three"]', 'Blowfish', 'SHA-256') called at blib/lib/Data/Serializer.pm line 738
+        Data::Serializer::serialize(undef, 'ARRAY(0x8510aac)') called at ./t/serializer-testlib line 340
+        main::run_test('ExtUtils::TBone=HASH(0x85122ac)', 'JSON', 'simplearray', 'encryption') called at t/05-Encryption.t line 53
+
+
+	Retrying
+
+  DB<47> 
+Crypt::CBC::crypt(/home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/Crypt/CBC.pm:245):
+245:        foreach my $block (@blocks) {
+  DB<47> x \@blocks
+0  ARRAY(0x8a93128)
+   0  '6cbcecd1'
+   1  '1182ea94'
+   2  '2e597f5a'
+   3  '5b77b288'
+   4  '3885ccec'
+   5  'cff88f6b'
+   6  '08e025db'
+   7  '66316c96'
+   8  '=["one",'
+   9  '"two","t'
+  DB<48> l
+245==>      foreach my $block (@blocks) {
+246:          if ($d) { # decrypting
+247:            $result .= $iv = $iv ^ $self->{'crypt'}->decrypt($block);
+248:            $iv = $block unless $self->{pcbc};
+249           } else { # encrypting
+250:            $result .= $iv = $self->{'crypt'}->encrypt($iv ^ $block);
+251           }
+252:          $iv = $iv ^ $block if $self->{pcbc};
+253         }
+254:        $self->{'civ'} = $iv;               # remember the iv
+  DB<48> c 254
+input must be 8 bytes long at /home/src/perl/repoperls/installed-perls/perl/prFWwqr/perl-5.10.0@33580/lib/site_perl/5.11.0/i686-linux-64int/Crypt/Blowfish.pm line 56.
+
+
+	After some more stepping down into the debugger I discover that somebody
+	passes in an 8 character string to Blowfish and as it is UTF8 it is not
+	8 bytes and Blowfish correctly dies. Seems to be JSON 2.07 related.
+	33550 has no JSON installed. Is it that?
+	
+
 	* Math::Pari: a perlmonks posting leads to success but later perls broke
 	it again
 
