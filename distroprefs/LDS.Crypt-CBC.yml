@@ -5,3 +5,13 @@ match:
 depends:
   requires:
     Crypt::IDEA: 1.08
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=34521
+
+match:
+  distribution: "^LDS/Crypt-CBC-2.27.tar.gz"
+depends:
+  requires:
+    Crypt::Rijndahl: 0
