@@ -1,11 +1,12 @@
 2008-03-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Crypt-CBC-2.27 seems to not declate prereq Crypt-Rijndahl but fail
-	without it? Seen with 25418.
+	without it? Seen with 25418. Reported in
+	http://rt.cpan.org/Ticket/Display.html?id=34521
 
 2008-03-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* data::serializer: I stopped a binary search because of Math::Pari
+	* Data::Serializer: I stopped a binary search because of Math::Pari
 
 	Then I restarted it and it ended with the impossible resolution:
 
@@ -129,8 +130,13 @@ input must be 8 bytes long at /home/src/perl/repoperls/installed-perls/perl/prFW
 	After some more stepping down into the debugger I discover that somebody
 	passes in an 8 character string to Blowfish and as it is UTF8 it is not
 	8 bytes and Blowfish correctly dies. Seems to be JSON 2.07 related.
-	33550 has no JSON installed. Is it that?
-	
+	33550 has no JSON installed. Is it that? Yes, maybe. But if I add JSON
+	into the prereq mix I need to go much further back in history. 5.8.8 is
+	OK, 24518 isn't and for perls before patch 25000 several things fall
+	apart for different reasons.
+
+	19173 cannot have JSON and subsequently Data::Serializer succeeds. So
+	the test scripts must add JSON as explicit requirement.
 
 	* Math::Pari: a perlmonks posting leads to success but later perls broke
 	it again
