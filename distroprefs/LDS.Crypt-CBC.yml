@@ -14,4 +14,4 @@ match:
   distribution: "^LDS/Crypt-CBC-2.27.tar.gz"
 depends:
   requires:
-    Crypt::Rijndahl: 0
+    Crypt::Rijndael: 0
