@@ -24,6 +24,7 @@ match:
     ^(?x:
     .^   # never matches, only purpose is to let things align nicely
     |.+/Win32(API)?-                         # I have only linux
+    |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
