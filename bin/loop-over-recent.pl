@@ -132,9 +132,9 @@ MAIN : {
             do { open my $fh, "$perl -e \"print \$]\" |" or die "Couldnt open $perl: $!";
                  <$fh>;
                };
-        my $testtime = time;
-        my $combo = "perl|-> '$perl'(=$perl_version)\npath|-> '$upload->{path}'\n".
-            "recv|-> '$epoch_as_localtime'(=$upload->{epoch})\ntime|-> $testtime\n\n";
+        my $testtime = localtime;
+        my $combo = "perl|-> $perl (=$perl_version)\npath|-> $upload->{path}\n".
+            "recv|-> $epoch_as_localtime (=$upload->{epoch})\ntime|-> $testtime";
         if (0) {
         } elsif ($comboseen{$perl,$upload->{path}}){
           warn "dead horses combo $combo";
