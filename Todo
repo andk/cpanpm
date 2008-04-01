@@ -1,3 +1,17 @@
+2008-03-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* No useable patch available between 17639 and 17672
+
+	This is where we lost JSON.
+
+	* distname vs modulename: david golden recently seemed to have suggested
+	a solution to the distname trap that everybody so far had been ignoring.
+	Where is a link?
+
+	* No useable patch available between 17639 and 17836
+
+	-Ui_db as described further down
+
 2008-03-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* timestamps in the future:
@@ -10,7 +24,7 @@ I think that's a very reasonable way to go.
 
 	This needs to be done soonish.
 
-	* Crypt-CBC-2.27 seems to not declate prereq Crypt-Rijndahl but fail
+	* Crypt-CBC-2.27 seems to not declate prereq Crypt-Rijndael but fail
 	without it? Seen with 25418. Reported in
 	http://rt.cpan.org/Ticket/Display.html?id=34521
 
@@ -147,6 +161,10 @@ input must be 8 bytes long at /home/src/perl/repoperls/installed-perls/perl/prFW
 
 	19173 cannot have JSON and subsequently Data::Serializer succeeds. So
 	the test scripts must add JSON as explicit requirement.
+
+	Now I find out that JSON does not run on 17968 either. So where did JSON
+	2.07 stop? 17639 was the beginning of 5.9.0 the day after 5.8.0. And
+	JSON 2.07 still did work with 17637.
 
 	* Math::Pari: a perlmonks posting leads to success but later perls broke
 	it again
