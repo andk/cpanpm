@@ -1,5 +1,15 @@
 2008-03-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* timestamps in the future:
+
+>  I'm going beyond that: toss the entire _make_ unless they say
+>  "allow_future_timestamps". Then CPAN::Reporter could refuse to send
+>  reports when they actually do set "allow_future_timestamp".
+
+I think that's a very reasonable way to go.
+
+	This needs to be done soonish.
+
 	* Crypt-CBC-2.27 seems to not declate prereq Crypt-Rijndahl but fail
 	without it? Seen with 25418. Reported in
 	http://rt.cpan.org/Ticket/Display.html?id=34521

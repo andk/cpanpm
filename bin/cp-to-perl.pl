@@ -44,9 +44,10 @@ my $MAP;
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
                                     lib/CPAN/Nox.pm
+                                    lib/CPAN/PERL5INC.pm
                                     lib/CPAN/Queue.pm
                                     lib/CPAN/Tarzip.pm
-                                     lib/CPAN/Version.pm
+                                    lib/CPAN/Version.pm
                                    )]],
           "scripts/" => ["lib/CPAN/bin/" => [qw(
                                                 scripts/cpan
