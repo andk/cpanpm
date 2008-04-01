@@ -12,7 +12,7 @@ directory:
 
 Then I use cp-to-perl to clobber the clone in CPAN/SVN/ directory:
 
-    perl bin/cp-to-perl.pl /home/src/perl/repoperls/perl-p-5.8.0@28630-cpan.pm-1.8755
+    sudo perl bin/cp-to-perl.pl /home/src/perl/repoperls/perl-p-5.8.0@28630-cpan.pm-1.8755
 
 And then back in the repoperls directory I do makepatch:
 
@@ -40,6 +40,7 @@ my $MAP;
                                    )]],
           "lib/" => ["lib/"  => [qw(
                                     lib/CPAN.pm
+                                    lib/CPAN/API/HOWTO.pod
                                     lib/CPAN/Debug.pm
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
@@ -76,7 +77,7 @@ while (my($here,$v) = each %$MAP) {
 
 exit unless prompt("y","Proceed?","","y");
 for my $c (@command) {
-  unlink $c->[1] or warn "Could not unlink the target $c->[1]: $!";
-  cp @$c or die "Could not cp $c->[0] to $c->[1]: $!";
+  unlink $c->[1] or warn "Warning: Could not unlink the target $c->[1]: $!";
+  cp @$c or die "Alert: Could not cp $c->[0] to $c->[1]: $!";
 }
 
