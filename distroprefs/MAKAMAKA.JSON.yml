@@ -1,0 +1,9 @@
+---
+comment: |
+
+  "5.008" hardcoded and not always right
+
+match:
+  distribution: "MAKAMAKA/JSON-2.07.tar.gz"
+patches:
+  - "/home/k/sources/CPAN/SVK/trunk/patches/JSON-2.07-ANDK-01.patch"
