@@ -6,7 +6,7 @@ comment: |
   simple requires
 
 match:
-  distribution: "^STAS/libapreq-\d"
+  distribution: "^(STAS|GEOFF)/libapreq-\d"
 pl:
   args:
     - "-httpd"

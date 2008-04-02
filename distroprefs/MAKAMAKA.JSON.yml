@@ -1,9 +1,11 @@
 ---
 comment: |
 
-  "5.008" hardcoded and not always right
+  "5.008" hardcoded is wrong when the utf8::is_utf8 subroutine is missing
+
+  http://rt.cpan.org/Ticket/Display.html?id=34599
 
 match:
   distribution: "MAKAMAKA/JSON-2.07.tar.gz"
 patches:
-  - "/home/k/sources/CPAN/SVK/trunk/patches/JSON-2.07-ANDK-01.patch"
+  - "ANDK/patches/JSON-2.07-ANDK-01.patch.gz"

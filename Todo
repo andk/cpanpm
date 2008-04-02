@@ -67,6 +67,8 @@ N/A
 
 	So it is 17671. And as expected it has (pretty certainly) to do with the
 	change of the PERL_VERSION in patchlevel.h from 8 to 9.
+
+	http://rt.cpan.org/Ticket/Display.html?id=34599 reports/fixes JSON
 	
 	* distname vs modulename: david golden recently seemed to have suggested
 	a solution to the distname trap that everybody so far had been ignoring.
