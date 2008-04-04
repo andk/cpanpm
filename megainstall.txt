@@ -654,6 +654,7 @@ Math::BigRat
 Math::Cephes
 Math::Combinatorics
 Math::Expression
+Math::Expression::Evaluator
 Math::GMP
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset
@@ -817,6 +818,7 @@ Params::Smart
 Params::Validate
 Parrot::Interpreter
 Parse::BACKPAN::Packages
+Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
 Path::Class
