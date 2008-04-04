@@ -25,7 +25,9 @@ use HTML::TreeBuilder;
 use HTML::FormatText;
 use LWP::UserAgent ();
 use YAML::Syck;
-$YAML::Syck::ImplicitUnicode = 1;
+{ no warnings "once"; $YAML::Syck::ImplicitUnicode = 1; }
+
+sub _h2text ($);
 
 my %Config = (
               server      => 'http://rt.cpan.org',
@@ -114,16 +116,16 @@ TICKET: for my $ticket (@tickets) {
   my $text = _h2text($decoded);
   # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
   if ($answer) {
-    print (("=" x 79) . "\n") for 1,2;
+    print join "", (("=" x 79) . "\n") x 2;
     print "Answer '$answer' has already been determined automatically\n";
     sleep 1;
   } else {
-    $DB::single++;
+      {no warnings "once"; $DB::single++;}
     open my $less, "|-", "less" or die "Could not fork: $!";
     binmode $less, ":utf8";
     print $less $text;
     close $less;
-    print (("=" x 79) . "\n") for 1,2;
+    print join "", (("=" x 79) . "\n") x 2;
     $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
   }
   if ($answer =~ /^q/i) {
@@ -161,6 +163,7 @@ TICKET: for my $ticket (@tickets) {
   }
 }
 
+print "End of loop, writing memories...";
 open my $fh, ">:utf8", "$yaml_db_file.new" or die "Couldn't open: $!";
 print $fh YAML::Syck::Dump($ALL);
 rename $yaml_db_file, "$yaml_db_file~";
