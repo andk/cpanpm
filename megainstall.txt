@@ -159,6 +159,7 @@ Class::DBI::Plugin::Type
 Class::Data::Accessor
 Class::Data::Inheritable
 Class::Date
+Class::Error
 Class::Factory
 Class::Fields
 Class::Gomor

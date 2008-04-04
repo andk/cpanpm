@@ -65,7 +65,7 @@ sub import {
         my $loader = UNIVERSAL::can($yaml_module, "LoadFile");
         my $loaded = $loader->($arg_t);
         # require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump({inc=>$loaded->{inc}, INC => \@INC}); # XXX
-        push @INC, @{$loaded->{inc}};
+        unshift @INC, @{$loaded->{inc}};
     } else {
         die "missing argument tempfile";
     }
