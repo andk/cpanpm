@@ -901,7 +901,7 @@ use vars qw(
             @ISA
             @relo
            );
-our @relo = (
+@relo =     (
              "CPAN.pm",
              "CPAN/Debug.pm",
              "CPAN/FirstTime.pm",
