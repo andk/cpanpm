@@ -186,6 +186,7 @@ Class::Trait
 Class::Virtual
 Class::Workflow
 Class::XPath
+Class::XSAccessor
 Class::constr
 Clone
 Code::Splice

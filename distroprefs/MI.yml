@@ -184,6 +184,7 @@ match:
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
     |SRI/Catalyst-Plugin-HTML-Widget-\d
+    |SRI/HTML-Declare-\d
     |STEVAN/FCGI-Engine-\d
     |STEVAN/MooseX-Daemonize-\d
     |STEVAN/MooseX-Storage-\d
