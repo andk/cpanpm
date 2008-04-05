@@ -101,11 +101,17 @@ use warnings;
 use File::Basename qw(dirname);
 use File::Spec;
 use File::Temp ();
+use Getopt::Long qw(GetOptions);
 use List::Util qw(min);
 use Time::HiRes qw(sleep);
 
 use lib "/home/k/dproj/PAUSE/SVN/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+
+our %Opt;
+GetOptions(\%Opt,
+           "loops=i",
+          ) or die;
 
 my $rf = File::Rsync::Mirror::Recentfile->new
     (
@@ -125,7 +131,9 @@ my $max_epoch_ever = 0;
 
 my %got_at;
 my $print_leading_newline = 0;
+my $loop = 0;
 ITERATION: while () {
+  last if $Opt{loops} && $loop++ >= $Opt{loops};
   my $iteration_start = time;
 
   my $trecentfile = eval {$rf->get_remote_recentfile_as_tempfile("2d");};
