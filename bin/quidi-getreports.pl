@@ -78,6 +78,7 @@ GetOptions(\%Opt,
            "verbose+",  # feedback during download where we stand
            "vdistro=s", # versioned distro if we do not want the most recent
            "local!",    # use a local *.html if present even if older than 24 hours
+           "mirrorhtmlonly!",
           ) or die Usage;
 
 my $ua = LWP::UserAgent->new;
@@ -100,7 +101,7 @@ for my $distro (@ARGV) {
     mkpath $cts_dir;
     my $ctarget = "$cts_dir/$distro.html";
     my $cheaders = "$cts_dir/$distro.headers";
-    if (! -e $ctarget or (!$Opt{local} && -M $ctarget > 1)) {
+    if (! -e $ctarget or (!$Opt{local} && -M $ctarget > .25)) {
         if (-e $ctarget && $Opt{verbose}) {
             my(@stat) = stat _;
             my $timestamp = gmtime $stat[9];
@@ -113,12 +114,14 @@ for my $distro (@ARGV) {
             open my $fh, ">", $cheaders or die;
             for ($resp->headers->as_string) {
                 print $fh $_;
-                if ($Opt{verbose}>1) {
+                if ($Opt{verbose} && $Opt{verbose}>1) {
                     print;
                 }
             }
         } elsif (304 == $resp->code) {
             print "DONE (not modified)\n";
+            my $atime = my $mtime = time;
+            utime $atime, $mtime, $cheaders;
         } else {
             die $resp->status_line;
         }

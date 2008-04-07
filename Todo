@@ -1,3 +1,27 @@
+2008-04-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 
+
+----Program----
+eval q{use CharsetDetector 1.0};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pdVMYpV/perl-5.9.2@25178/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../p1Kjy6j/perl-5.9.2@25179/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
+	* There are some perls on my system that cannot compile current Expect!
+
+	Which are that? At the moment just 25185. 25180 and 25194 both have it,
+	so the gap must be pretty small.	
+
 2008-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* 
