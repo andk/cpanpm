@@ -350,6 +350,7 @@ Digest::HMAC
 Digest::MD2
 Digest::MD5
 Digest::SHA
+Digest::SHA::PurePerl
 Digest::SHA1
 Digest::Tiger
 Directory::Scratch

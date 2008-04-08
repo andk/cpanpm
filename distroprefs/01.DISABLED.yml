@@ -86,6 +86,7 @@ match:
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |XERN/CGI-QuickApp-\d                    # hangs immediately
+    |KAZUHO/Parallel-Prefork-0.02            # hangs
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     )|
 disabled: 1

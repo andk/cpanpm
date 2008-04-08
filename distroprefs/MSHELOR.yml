@@ -4,6 +4,10 @@ comment: |
   Author would prefer to never see false positives which I cannot
   guarantee, so we turn off mails for him completely
 
+  I had a good email exchange with Mark and so I rediscovered the
+  cpanconfig/test_report distropref setting which I had already
+  forgotten.
+
 match:
   distribution: "MSHELOR/"
 cpanconfig:
