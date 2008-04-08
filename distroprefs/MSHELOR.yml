@@ -1,0 +1,11 @@
+---
+comment: |
+
+  Author would prefer to never see false positives which I cannot
+  guarantee, so we turn off mails for him completely
+
+match:
+  distribution: "MSHELOR/"
+cpanconfig:
+  test_report: 0
+

@@ -67,7 +67,6 @@ match:
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
-    |MSHELOR/                                # would prefer to never see false positives which I cannot guarantee
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
