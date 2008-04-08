@@ -84,6 +84,7 @@ sub next { $_[0]->() }
 package CPAN::Distroprefs;
 
 use Carp ();
+use DirHandle;
 
 sub _load_method {
     my ($self, $loader, $result) = @_;
@@ -249,10 +250,12 @@ sub match_env          { shift->_hash_match(env        => @_) }
 sub matches {
     my ($self, $arg) = @_;
 
+    my $default_match = 0;
     for my $key (grep { $self->has_match($_) } $self->match_attributes) {
         unless (exists $arg->{$key}) {
             Carp::croak "Can't match pref: missing argument key $key";
         }
+        $default_match = 1;
         my $val = $arg->{$key};
         # make it possible to avoid computing things until we have to
         if (ref($val) eq 'CODE') { $val = $val->() }
@@ -260,7 +263,7 @@ sub matches {
         return 0 unless $self->$meth($val);
     }
 
-    return 1;
+    return $default_match;
 }
 
 1;
