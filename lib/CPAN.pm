@@ -1,4 +1,5 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
+# vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
 $CPAN::VERSION = '1.92_60';
@@ -6067,6 +6068,7 @@ Please file a bugreport if you need this.\n");
 package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
+use CPAN::Distroprefs;
 
 # Accessors
 sub cpan_comment {
@@ -8120,18 +8122,17 @@ sub _find_prefs {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
     my $yaml_module = CPAN::_yaml_module;
+    my $ext_map = {};
     my @extensions;
     if ($CPAN::META->has_inst($yaml_module)) {
-        push @extensions, "yml";
+        $ext_map->{yml} = 'CPAN';
     } else {
         my @fallbacks;
         if ($CPAN::META->has_inst("Data::Dumper")) {
-            push @extensions, "dd";
-            push @fallbacks, "Data::Dumper";
+            push @fallbacks, $ext_map->{dd} = 'Data::Dumper';
         }
         if ($CPAN::META->has_inst("Storable")) {
-            push @extensions, "st";
-            push @fallbacks, "Storable";
+            push @fallbacks, $ext_map->{st} = 'Storable';
         }
         if (@fallbacks) {
             local $" = " and ";
@@ -8146,141 +8147,55 @@ sub _find_prefs {
             }
         }
     }
-    if (@extensions) {
-        my $dh = DirHandle->new($prefs_dir)
-            or die Carp::croak("Couldn't open '$prefs_dir': $!");
-      DIRENT: for (sort $dh->read) {
-            next if $_ eq "." || $_ eq "..";
-            my $exte = join "|", @extensions;
-            next unless /\.($exte)$/;
-            my $thisexte = $1;
-            my $abs = File::Spec->catfile($prefs_dir, $_);
-            if (-f $abs) {
-                #CPAN->debug(sprintf "abs[%s]", $abs) if $CPAN::DEBUG;
-                my @distropref;
-                if ($thisexte eq "yml") {
-                    # need eval because if YAML has a bug we should fail gracefully
-                    #CPAN->debug(sprintf "before yaml load abs[%s]", $abs) if $CPAN::DEBUG;
-                    my $distropref = eval { CPAN->_yaml_loadfile($abs) };
-                    if ($@) {
-                        $CPAN::Frontend->mywarn("Error reading distroprefs file ".
-                                                "$_, skipping\: $@");
-                        $CPAN::Frontend->mysleep(1);
-                        next DIRENT;
-                    } elsif (!$distropref) {
-                        $CPAN::Frontend->mywarn("Unknown error reading distroprefs file ".
-                                                "$_, skipping.");
-                        $CPAN::Frontend->mysleep(1);
-                        next DIRENT;
-                    } else {
-                        @distropref = @$distropref;
-                    }
-                    #CPAN->debug(sprintf "after yaml load abs[%s]", $abs) if $CPAN::DEBUG;
-                } elsif ($thisexte eq "dd") {
-                    package CPAN::Eval;
-                    no strict;
-                    open FH, "<$abs" or $CPAN::Frontend->mydie("Could not open '$abs': $!");
-                    local $/;
-                    my $eval = <FH>;
-                    close FH;
-                    eval $eval;
-                    if ($@) {
-                        $CPAN::Frontend->mydie("Error in distroprefs file $_\: $@");
-                    }
-                    my $i = 1;
-                    while (${"VAR".$i}) {
-                        push @distropref, ${"VAR".$i};
-                        $i++;
-                    }
-                } elsif ($thisexte eq "st") {
-                    # eval because Storable is never forward compatible
-                    eval { @distropref = @{scalar Storable::retrieve($abs)}; };
-                    if ($@) {
-                        $CPAN::Frontend->mywarn("Error reading distroprefs file ".
-                                                "$_, skipping\: $@");
-                        $CPAN::Frontend->mysleep(4);
-                        next DIRENT;
-                    }
-                }
-                # $DB::single=1;
-                #CPAN->debug(sprintf "#distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
-              ELEMENT: for my $y (0..$#distropref) {
-                    my $distropref = $distropref[$y];
-                    $self->_validate_distropref($distropref,$abs,$y);
-                    my $match = $distropref->{match};
-                    unless ($match) {
-                        #CPAN->debug("no 'match' in abs[$abs], skipping") if $CPAN::DEBUG;
-                        next ELEMENT;
-                    }
-                    my $ok = 1;
-                    # do not take the order of C<keys %$match> because
-                    # "module" is by far the slowest
-                    my $saw_valid_subkeys = 0;
-                    for my $sub_attribute (qw(env distribution perl perlconfig module)) {
-                        next unless exists $match->{$sub_attribute};
-                        $saw_valid_subkeys++;
-                        if ($sub_attribute eq "module") {
-                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
-                            my $okm = 0;
-                            #CPAN->debug(sprintf "distropref[%d]", scalar @distropref) if $CPAN::DEBUG;
-                            my @modules = $self->containsmods;
-                            #CPAN->debug(sprintf "modules[%s]", join(",",@modules)) if $CPAN::DEBUG;
-                          MODULE: for my $module (@modules) {
-                                $okm ||= $module =~ /$qr/;
-                                last MODULE if $okm;
-                            }
-                            $ok &&= $okm;
-                        } elsif ($sub_attribute eq "distribution") {
-                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
-                            my $okd = $distroid =~ /$qr/;
-                            $ok &&= $okd;
-                        } elsif ($sub_attribute eq "env") {
-                            for my $envele (keys %{$match->{env}}) {
-                                my $envval = $ENV{$envele} || "";
-                                my $qr = eval "qr{$distropref->{match}{$sub_attribute}{$envele}}";
-                                my $oke = $envval =~ /$qr/;
-                                $ok &&= $oke;
-                                last if $ok == 0;
-                            }
-                        } elsif ($sub_attribute eq "perl") {
-                            my $qr = eval "qr{$distropref->{match}{$sub_attribute}}";
-                            my $okp = CPAN::find_perl =~ /$qr/;
-                            $ok &&= $okp;
-                        } elsif ($sub_attribute eq "perlconfig") {
-                            for my $perlconfigkey (keys %{$match->{perlconfig}}) {
-                                my $perlconfigval = $match->{perlconfig}->{$perlconfigkey};
-                                # XXX should probably warn if Config does not exist
-                                my $okpc = $Config::Config{$perlconfigkey} =~ /$perlconfigval/;
-                                $ok &&= $okpc;
-                                last if $ok == 0;
-                            }
-                        } else {
-                            $CPAN::Frontend->mydie("Nonconforming .$thisexte file '$abs': ".
-                                                   "unknown sub_attribut '$sub_attribute'. ".
-                                                   "Please ".
-                                                   "remove, cannot continue.");
-                        }
-                        last if $ok == 0; # short circuit
-                    }
-                    unless ($saw_valid_subkeys) {
-                        $CPAN::Frontend->mydie("Nonconforming .$thisexte file '$abs': ".
-                                               "missing match/* subattribute. ".
-                                               "Please ".
-                                               "remove, cannot continue.");
-                    }
-                    #CPAN->debug(sprintf "ok[%d]", $ok) if $CPAN::DEBUG;
-                    if ($ok) {
-                        return {
-                                prefs => $distropref,
-                                prefs_file => $abs,
-                                prefs_file_doc => $y,
-                               };
-                    }
-
-                }
-            }
+    my $finder = CPAN::Distroprefs->find($prefs_dir, $ext_map);
+    DIRENT: while (my $result = $finder->next) {
+        if ($result->is_warning) {
+            $CPAN::Frontend->mywarn($result->as_string);
+            $CPAN::Frontend->mysleep(1);
+            next DIRENT;
+        } elsif ($result->is_fatal) {
+            $CPAN::Frontend->mydie($result->as_string);
         }
-        $dh->close;
+
+        my @prefs = @{ $result->prefs };
+
+      ELEMENT: for my $y (0..$#prefs) {
+            my $pref = $prefs[$y];
+            $self->_validate_distropref($pref->data, $result->abs, $y);
+
+            # I don't know why we silently skip when there's no match, but
+            # complain if there's an empty match hashref, and there's no
+            # comment explaining why -- hdp, 2008-03-18
+            unless ($pref->has_any_match) {
+                next ELEMENT;
+            }
+
+            unless ($pref->has_valid_subkeys) {
+                $CPAN::Frontend->mydie(sprintf
+                    "Nonconforming .%s file '%s': " .
+                    "missing match/* subattribute. " .
+                    "Please remove, cannot continue.",
+                    $result->ext, $result->abs,
+                );
+            }
+
+            my $arg = {
+                env          => \%ENV,
+                distribution => $distroid,
+                perl         => \&CPAN::find_perl,
+                perlconfig   => \%Config::Config,
+                module       => sub { [ $self->containsmods ] },
+            };
+
+            if ($pref->matches($arg)) {
+                return {
+                    prefs => $pref->data,
+                    prefs_file => $result->abs,
+                    prefs_file_doc => $y,
+                };
+            }
+
+        }
     }
     return;
 }

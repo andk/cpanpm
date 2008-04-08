@@ -317,6 +317,7 @@ lib/CPAN/PERL5INC.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
+lib/CPAN/Distroprefs.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
