@@ -374,6 +374,7 @@ Email::Send
 Email::Simple
 Email::Simple::Creator
 Encode
+Encode::Base32::Crockford
 Encode::JavaScript::UCS
 Encode::MAB2table
 Encode::MIME::Header
