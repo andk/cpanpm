@@ -27,6 +27,7 @@ match:
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
+    |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |BARBIE/                                 # opt out. Barbie does not want time-in-the-future errors
     |BFREE/OpenGL-Image-\d
@@ -40,11 +41,12 @@ match:
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
-    |EKAWAS/MOBY-                            # hangs
     |DMAKI/Text-MeCab                        # hangs asking questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
+    |EKAWAS/MOBY-                            # hangs
     |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16, RT 33279
+    |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
     |GRICHTER/DBIx-Recordset-\d              # hangs
     |GRM/
@@ -52,11 +54,11 @@ match:
     |HORROCKS/PersistentPerl-\d              # hangs early
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
-    |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |JJORE/Enbugger-                         # steps into the debugger
-    |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
+    |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
+    |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KNORR/Net-                              # no questions during make test please
     |KNORR/Net-MirrorDir                     # asks questions
@@ -73,6 +75,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
+    |RJRAY/RPC-XML-0.60.tar.gz               # hangs
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
@@ -86,7 +89,6 @@ match:
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |XERN/CGI-QuickApp-\d                    # hangs immediately
-    |KAZUHO/Parallel-Prefork-0.02            # hangs
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     )|
 disabled: 1
