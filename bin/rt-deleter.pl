@@ -39,6 +39,7 @@ my %Config = (
                               qr/(?s:R+e+a+l+.+?m+e+n+!+.+?M+i+l+i+o+n+s+.+?o+f+.+?p+e+o+p+l+e+.+?a+c+r+o+s+.+?t+h+e+.+?w+o+r+l+d+)/,
                               qr/We strongly recommend deleting this letter and avoid clicking any links/,
                               qr/\QI looked for you on Reunion.com, the largest people\E/,
+                              qr/Enjoy secure ordering, lowest possible prices/,
                              ],
              );
 
