@@ -313,12 +313,9 @@ sub _default
 	foreach my $arg ( @$args )
 		{
 		if( $options{f} ) { CPAN::Shell->force( $method, $arg ) }
-		else { 
-			my $rc = CPAN::Shell->$method( $arg );
-			last if ! $rc && $CPAN::Config->{halt_on_failure}; 
+		else              { CPAN::Shell->$method( $arg )        }
 		}
 	}
-}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 sub _print_help
@@ -341,7 +338,7 @@ sub _create_autobundle
 	CPAN::Shell->autobundle;
 	}
 
-sub _recompile
+sub _recompiling
 	{
 	print "Recompiling dynamically-loaded extensions\n";
 
