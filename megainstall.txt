@@ -283,6 +283,7 @@ Data::OptList
 Data::Properties
 Data::Random
 Data::Remember
+Data::SExpression
 Data::ShowTable
 Data::Structure::Util
 Data::Swap
@@ -813,6 +814,7 @@ POE::Component::SubWrapper
 POE::Declarative::Mixin
 POE::Filter::IRCD
 POSIX
+POSIX::Regex
 PPI
 PTools::SDF
 Package::Constants
@@ -1002,6 +1004,7 @@ Taint::Util
 Task::CVSMonitor
 Task::Catalyst
 Task::Catalyst::Tutorial
+Task::Email::PEP::All
 Task::Moose
 Task::Smoke
 Tcl

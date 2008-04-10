@@ -44,6 +44,7 @@ my %Config = (
                               qr/bietet Ihnen ein leistungsorientiertes Lohn und/,
                               qr/wunderbare Aufstiegschancen/,
                               qr/J..?.?ai en ma possession tous les documents/,
+                              qr/Dior, the Christian Dior Fashion House has/,
                              ],
              );
 
