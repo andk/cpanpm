@@ -238,7 +238,9 @@ Crypt::Random
 Crypt::Rijndael
 Crypt::SSLeay
 Curses
+Curses::UI
 Cwd
+DBD::Gofer::Transport::http
 DBD::Mock
 DBD::Pg
 DBD::SQLite
@@ -351,8 +353,8 @@ Digest::HMAC
 Digest::MD2
 Digest::MD5
 Digest::SHA
-Digest::SHA::PurePerl
 Digest::SHA1
+Digest::SHA::PurePerl
 Digest::Tiger
 Directory::Scratch
 DocSet
@@ -456,6 +458,7 @@ GTop
 Games::Bingo
 Geo::Cache
 Geo::Gpx
+Geo::Proj::Japan
 Geo::ShapeFile
 Geography::Countries
 Getargs::Long
@@ -469,7 +472,6 @@ Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
-DBD::Gofer::Transport::http
 Google::Adwords
 Graph
 Graph::Easy
@@ -572,8 +574,8 @@ Image::Size
 Imager
 Imager::Graph
 Inline
-InlineX::CPP2XS
 InlineX::C2XS
+InlineX::CPP2XS
 InlineX::XS
 Iterator
 JSON
@@ -760,6 +762,7 @@ Object::Realize::Later
 Object::Relation
 Object::Signature
 Object::Tiny
+Ogre::SceneManager
 OpenOffice::OOBuilder
 OpenOffice::OODoc
 OpenThought
@@ -822,6 +825,7 @@ PadWalker
 Params::CallbackRequest
 Params::Smart
 Params::Validate
+Paranoid
 Parrot::Interpreter
 Parse::BACKPAN::Packages
 Parse::Marpa
@@ -885,8 +889,8 @@ Pushmi
 QDBM_File
 Quantum::Superpositions
 RDF::Core
-RDF::Simple
 RDF::Server
+RDF::Simple
 RPC::JSON
 RPC::PlServer
 RPC::XML
@@ -969,6 +973,7 @@ Sort::ArbBiLex
 Sort::Key::Radix
 Spiffy
 Spoon
+Spreadsheet::Engine
 Spreadsheet::ParseExcel
 Spreadsheet::Read
 Spreadsheet::WriteExcel
@@ -999,6 +1004,7 @@ Sys::Hostname
 Sys::Mmap
 Sys::SigAction
 Sys::Virt
+SystemC::Vregs
 TAP::Parser
 Taint::Util
 Task::CVSMonitor
@@ -1201,6 +1207,7 @@ User::Identity
 Util::Properties
 V
 VFSsimple
+VS::Chart
 Verilog::Parser
 Voting::Condorcet::RankedPairs
 WWW::Curl
@@ -1220,6 +1227,7 @@ Waft
 Want
 Web::Scraper
 Web::Scraper::Config
+WebService::ISBNDB
 WordNet::SenseRelate::AllWords
 Workflow
 X500::DN
@@ -1247,8 +1255,8 @@ XML::Parser
 XML::Parser::Lite::Tree
 XML::Parser::PerlSAX
 XML::RSS
-XML::RSS::LibXML
 XML::RSS::FromHTML::Simple
+XML::RSS::LibXML
 XML::RegExp
 XML::SAX
 XML::SAX2Perl
