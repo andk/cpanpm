@@ -149,6 +149,7 @@ match:
     |MIYAGAWA/XML-Atom-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
+    |MRAMBERG/Catalyst-Devel-\d
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
     |MRAMBERG/Catalyst-Plugin-Compress-Bzip2
     |MRAMBERG/Catalyst-Plugin-Compress-Zlib
