@@ -4,7 +4,7 @@ use strict;
 use vars qw($VERSION @ISA $BUGHUNTING);
 use CPAN::Debug;
 use File::Basename qw(basename);
-$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
+$VERSION = "5.5";
 # module is internal to CPAN.pm
 
 @ISA = qw(CPAN::Debug);

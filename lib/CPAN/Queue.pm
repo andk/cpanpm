@@ -67,7 +67,7 @@ package CPAN::Queue;
 # in CPAN::Distribution::rematein.
 
 use vars qw{ @All $VERSION };
-$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
+$VERSION = "5.5";
 
 # CPAN::Queue::queue_item ;
 sub queue_item {

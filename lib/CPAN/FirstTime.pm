@@ -19,7 +19,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec ();
 use vars qw($VERSION $urllist);
-$VERSION = sprintf "%.6f", substr(q$Rev$,4)/1000000 + 5.4;
+$VERSION = "5.5";
 
 =head1 NAME
 
