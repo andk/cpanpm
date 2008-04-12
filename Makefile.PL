@@ -237,6 +237,11 @@ sub postamble {
 .rnc.rng:
 	trang -I rnc -O rng $*.rnc $*.rng
 
+svn-update:
+	svn up
+
+update: svn-update dd-prefs
+
 mega-validate: bin/colorout-to-dir.rng
 	xmllint -relaxng bin/colorout-to-dir.rng -noout $(MEGA_XML)
 
