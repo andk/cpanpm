@@ -1,5 +1,9 @@
 2008-04-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* would like to get JavaScript to compile. Needs work on Debian. The
+	$lib/$libs thing is broken, fixing it was easy but then the compilation
+	and the tests still failed.
+
 	* refresh investigations Data::Serializer
 
 2008-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
