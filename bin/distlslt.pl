@@ -1,27 +1,59 @@
 use strict;
 use warnings;
 
+use CPAN;
+use DateTime;
+use Time::Progress;
+
 my $ROOT = "/home/ftp/pub/PAUSE";
 open my $fh, "zcat $ROOT/modules/02packages.details.txt.gz|" or die;
 my(%age,%distro);
+my $state = "header";
+my $current_line = 0;
+my $tp = Time::Progress->new();
+my $lines;
+$| = 1;
 while (<$fh>) {
-    next if 1../^\s*$/;
-    chomp;
-    my($m,$v,$d) = split " ", $_;
-    warn "could not find '$d' for '$m'" unless -e "$ROOT/authors/id/$d";
-    my $age = -M _;
-    $age{$m} = $age;
-    $distro{$m} = $d;
+    if ($state eq "header") {
+        if (/^\s*$/){
+            $state = "body";
+            next;
+        } elsif (/^Line-Count:\s*(\d+)/) {
+            $lines = $1;
+            $tp->attr( min => 1, max => $lines );
+        }
+    } elsif ($state eq "body") {
+        chomp;
+        $current_line++;
+        my($m,$v,$d) = split " ", $_;
+        unless (-e "$ROOT/authors/id/$d"){
+            warn "could not find '$d' for '$m'";
+            next;
+        }
+        my $age = -M _;
+        $age{$m} = $age;
+        $distro{$m} = $d;
+        if ($lines==$current_line || !($current_line % 100)) {
+            my $formatted_current_line = sprintf "%8d", $current_line;
+            print $tp->report("\r$formatted_current_line %p over: %l s, left %e s; ETA: %f", $current_line );
+        }
+    } else {
+        die "illegal state $state";
+    }
 }
+print "\n";
 my @m = sort { $age{$a} <=> $age{$b} } keys %age;
-warn sprintf "Found %d modules\n", scalar @m;
 my $painted = 0;
+CPAN::Index->reload;
 for my $i (0..$#m) {
     while (($painted/40) < ($i/@m)) {
         my $age = $age{$m[$i]};
         my $mtime = $^T-86400*$age;
-        my $lt = localtime($mtime);
-        printf "%2d %-35s %s\n", ++$painted, $lt, $m[$i];
+        my $lt = DateTime->from_epoch(epoch => $mtime)->ymd;
+        my $mod = CPAN::Shell->expand("Module",$m[$i]);
+        my $have = $mod ? CPAN::Shell->expand("Module",$m[$i])->inst_version : "";
+        $have ||= "";
+        printf "%2d %-10s %-5s %-20s %s\n", ++$painted, $lt, $have, $m[$i], substr($distro{$m[$i]},5);
     }
 }
 
