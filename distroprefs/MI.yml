@@ -142,6 +142,7 @@ match:
     |MARCEL/Pod-Generated-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MDXI/Curses-UI-\d
     |MEMOWE/HTML-SBC-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
