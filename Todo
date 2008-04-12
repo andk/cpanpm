@@ -1,3 +1,7 @@
+2008-04-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* refresh investigations Data::Serializer
+
 2008-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* may be a bug in Distroprefs.pm the $abs in line 122. Seen with some DD
