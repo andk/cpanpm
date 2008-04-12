@@ -1,6 +1,28 @@
+2008-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* may be a bug in Distroprefs.pm the $abs in line 122. Seen with some DD
+	only perl.
+
+	* OOTools:
+
+----Program----
+eval q{use Class::Error 2.21};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pBnR154/perl-5.9.2@24659/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../pWYtCAP/perl-5.9.2@24660/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+
 2008-04-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* 
+	* CharsetDetector
 
 ----Program----
 eval q{use CharsetDetector 1.0};
@@ -24,7 +46,7 @@ N/A
 
 2008-04-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* 
+	* Data-Serializer:
 
 ----Program----
 eval q{use Data::Serializer 0.44; use JSON 2.07};
