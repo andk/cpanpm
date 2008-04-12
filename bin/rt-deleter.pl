@@ -45,6 +45,7 @@ my %Config = (
                               qr/wunderbare Aufstiegschancen/,
                               qr/J..?.?ai en ma possession tous les documents/,
                               qr/Dior, the Christian Dior Fashion House has/,
+                              qr/Spring Sale Fashion Footwear Shoes/,
                              ],
              );
 
