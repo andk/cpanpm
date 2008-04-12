@@ -115,14 +115,15 @@ sub _load_dd {
     my @data;
     {
         package CPAN::Eval;
-        no strict;
         # this caused a die in CPAN.pm, and I am leaving it 'fatal', though I'm
         # not sure why we wouldn't just skip the file as we do for all other
         # errors. -- hdp
+        my $abs = $result->abs;
         open FH, "<$abs" or die $result->as_fatal(msg => "$!");
         local $/;
         my $eval = <FH>;
         close FH;
+        no strict;
         eval $eval;
         if (my $err = $@) {
             die $result->as_warning({ msg => $err });
@@ -134,7 +135,7 @@ sub _load_dd {
         }
     }
     return @data;
-}    
+}
 
 sub _load_st {
     my ($self, $loader, $result) = @_;
