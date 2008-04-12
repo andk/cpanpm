@@ -557,6 +557,7 @@ IO::Stringy
 IO::Tee
 IO::Zlib
 IPC::Concurrency
+IPC::Filter
 IPC::Mmap
 IPC::Open2
 IPC::PubSub
