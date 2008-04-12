@@ -1,6 +1,4 @@
 
-# $HeadURL: /local/cpanpm/trunk/bin/query-rt-group-by-requestor.pl $
-
 # see first posting http://use.perl.org/~LaPerla/journal/35252
 
 
@@ -12,7 +10,7 @@ Get a cookie from, say firebug. Call me with numbers and ranges, eg
 
 Tickets will be displayed with 'less'.
 
-The question will be aksed if you want to delete it.
+The question will be asked if you want to delete it.
 
 =cut
 
@@ -46,6 +44,7 @@ my %Config = (
                               qr/J..?.?ai en ma possession tous les documents/,
                               qr/Dior, the Christian Dior Fashion House has/,
                               qr/Spring Sale Fashion Footwear Shoes/,
+                              qr/(?s:P+r+e+s+e+n+t+.+u+n+f+o+r+g+e+t+t+a+b+l+e+.+n+i+g+h+t+.+t+o+.+y+o+u+r+.+b+e+l+o+v+e+d+.+o+n+e+)/,
                              ],
              );
 
