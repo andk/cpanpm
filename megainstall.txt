@@ -250,6 +250,7 @@ DBI::Shell
 DBIx::Admin::TableInfo
 DBIx::Class
 DBIx::Class::Indexed
+DBIx::Class::Schema::Loader
 DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
@@ -257,6 +258,7 @@ DBIx::HA
 DBIx::MyParse
 DBIx::ORM::Declarative
 DBIx::Perlish
+DBIx::RetryOverDisconnects
 DBIx::SearchBuilder
 DBIx::Simple
 DBIx::Timeout
@@ -437,6 +439,7 @@ Filesys::Virtual
 Filter::Simple
 Filter::Util::Call
 FindBin
+FindBin::libs
 Flickr::API
 Font::AFM
 Font::TTF
@@ -669,6 +672,7 @@ Math::Geometry::Planar::Offset
 Math::Pari
 Math::Polygon
 Math::Polynom
+Math::Prime::XS
 Math::Random
 Math::Round::Var
 Math::Symbolic
@@ -980,6 +984,7 @@ Spreadsheet::Read
 Spreadsheet::WriteExcel
 Spreadsheet::WriteExcelXML
 Statistics::Distributions
+Statistics::Regression
 Storable
 String::Approx
 String::CRC32
@@ -1050,6 +1055,7 @@ Test::FormValidator
 Test::HTTP::Server::Simple
 Test::HTTPStatus
 Test::Harness
+Test::A8N
 Test::JSON
 Test::Kwalitee
 Test::LongString
@@ -1118,6 +1124,7 @@ Time::HiRes
 Time::HiRes::Value
 Time::Period
 Time::Piece
+Time::Progress
 Time::Timezone
 Time::UTC
 Tk::Autoscroll
@@ -1173,6 +1180,7 @@ UML::Sequence
 UNIVERSAL::isa
 UNIVERSAL::ref
 URI
+URI::Escape::JavaScript
 URI::Fetch
 URI::Find
 URI::Template
@@ -1217,6 +1225,7 @@ WWW::Live365
 WWW::Mechanize
 WWW::Mechanize::Shell
 WWW::Monitor
+WWW::Ohloh::API
 WWW::OpenSearch
 WWW::REST
 WWW::RobotRules::Parser
