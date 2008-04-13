@@ -905,7 +905,7 @@ use vars qw(
 @relo =     (
              "CPAN.pm",
              "CPAN/Debug.pm",
-             "CPAN/Distribution.pm",
+             "CPAN/Distroprefs.pm",
              "CPAN/FirstTime.pm",
              "CPAN/HandleConfig.pm",
              "CPAN/Kwalify.pm",
