@@ -1,6 +1,6 @@
+# -*- coding: utf-8 -*-
 
 # see first posting http://use.perl.org/~LaPerla/journal/35252
-
 
 =head1 rt-deleter
 
@@ -45,6 +45,7 @@ my %Config = (
                               qr/Dior, the Christian Dior Fashion House has/,
                               qr/Spring Sale Fashion Footwear Shoes/,
                               qr/(?s:P+r+e+s+e+n+t+.+u+n+f+o+r+g+e+t+t+a+b+l+e+.+n+i+g+h+t+.+t+o+.+y+o+u+r+.+b+e+l+o+v+e+d+.+o+n+e+)/,
+                              qr/\QНи3kи{e} ц{e}ны!!!\E/,
                              ],
              );
 
@@ -205,3 +206,4 @@ sub _h2text ($) {
   $tree->delete;
   $text;
 }
+
