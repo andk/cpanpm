@@ -645,8 +645,7 @@ testallperls :
 
 clean ::
 	$(RM) t/CPAN/authors/id/A/AN/ANDK/*/Build \
-		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old \
-		t/CPAN/authors/id/A/AN/ANDK/*/META.yml
+		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
 no_CR : ChangeLog META.yml
