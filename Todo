@@ -1,3 +1,17 @@
+2008-04-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* would like to get DJHD/Speech-Recognizer-SPX-0.09.tar.gz running on
+	debian but it needs more work:
+
+Package pocketsphinx was not found in the pkg-config search path.
+Perhaps you should add the directory containing `pocketsphinx.pc'
+to the PKG_CONFIG_PATH environment variable
+No package 'pocketsphinx' found
+Unable to locate PocketSphinx using pkg-config.  Please make sure that
+you have installed pkg-config and PocketSphinx on your system, and
+that PKG_CONFIG_PATH is set correctly.
+
+
 2008-04-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* would like to get JavaScript to compile. Needs work on Debian. The

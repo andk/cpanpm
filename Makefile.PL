@@ -408,7 +408,7 @@ testdistros: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-ConfReq-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz \
-	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.02.tar.gz \
+	t/CPAN/authors/id/A/AN/ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-1.04.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip \
         t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
@@ -565,7 +565,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-ConfReq-1.00.tar.gz: \
 		$(MAKE) clean
 	ls -l $@
 
-t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.02.tar.gz: \
+t/CPAN/authors/id/A/AN/ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-1.04.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features/Changes \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features/MANIFEST \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features/mymeta.yml \
@@ -575,7 +575,7 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.02.tar.gz: \
 	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features && \
 		$(PERL) Makefile.PL open_the_backdoor && \
 		$(MAKE) dist && \
-		mv CPAN-Test-Dummy-Perl5-Make-Features-1.02.tar.gz .. && \
+		mv CPAN-Test-Dummy-Perl5-Make-Features-1.04.tar.gz ../cpantestdummies/ && \
 		$(MAKE) clean
 	ls -l $@
 

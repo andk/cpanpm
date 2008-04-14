@@ -98,7 +98,7 @@ BEGIN {
     print FH <<EOF;
 ---
 match:
-  distribution: "ANDK/CPAN-Test-Dummy-Perl5-Make-Features-"
+  distribution: "ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-"
 features:
   - "rice"
 EOF
@@ -222,7 +222,7 @@ EOF
            "(?sx:Builds.rice.+
           ANDK/CPAN-Test-Dummy-Perl5-Build-\\d.+
           \\./Build[ ]test[ ]--[ ]OK.+
-          ANDK/CPAN-Test-Dummy-Perl5-Make-Features-\\d.+
+          ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-\\d.+
           make[ ]test[ ]--[ ]OK)",
           ]
          },

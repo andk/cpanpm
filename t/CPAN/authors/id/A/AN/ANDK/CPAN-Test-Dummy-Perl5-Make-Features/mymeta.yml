@@ -6,11 +6,11 @@ license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.32_01 and tweaked manually
 dynamic_config: 0
 optional_features:
-    - noodles:
+    noodles:
         description: "Makes noodles"
         requires:  
             CPAN::Test::Dummy::Perl5::Make: 0
-    - rice:
+    rice:
         description: "Builds rice"
         requires:  
             CPAN::Test::Dummy::Perl5::Build: 0

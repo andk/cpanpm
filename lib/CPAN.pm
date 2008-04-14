@@ -8388,9 +8388,9 @@ sub _feature_depends {
     my($self) = @_;
     my $meta_yml = $self->parse_meta_yml();
     my $optf = $meta_yml->{optional_features} or return;
-    if (!ref $optf or ref $optf ne "ARRAY"){
-        $CPAN::Frontend->mywarn("The content of optional_feature is not an ARRAY reference. Cannot use it.\n");
-        $optf = [];
+    if (!ref $optf or ref $optf ne "HASH"){
+        $CPAN::Frontend->mywarn("The content of optional_feature is not a HASH reference. Cannot use it.\n");
+        $optf = {};
     }
     my $wantf = $self->prefs->{features} or return;
     if (!ref $wantf or ref $wantf ne "ARRAY"){
@@ -8399,19 +8399,24 @@ sub _feature_depends {
     }
     my $dep = +{};
     for my $wf (@$wantf) {
-        for my $of (@$optf) {
-            my $f = $of->{$wf} or next;
+        if (my $f = $optf->{$wf}) {
             $CPAN::Frontend->myprint("Found the demanded feature '$wf' that ".
                                      "is accompanied by this description:\n".
                                      $f->{description}.
                                      "\n\n"
                                     );
+            # configure_requires currently not in the spec, unlikely to be useful anyway
             for my $reqtype (qw(configure_requires build_requires requires)) {
                 my $reqhash = $f->{$reqtype} or next;
                 while (my($k,$v) = each %$reqhash) {
                     $dep->{$reqtype}{$k} = $v;
                 }
             }
+        } else {
+            $CPAN::Frontend->mywarn("The demanded feature '$wf' was not ".
+                                    "found in the META.yml file".
+                                    "\n\n"
+                                   );
         }
     }
     $dep;
@@ -11602,13 +11607,12 @@ declaration.
 
 Specifies that this distribution shall not be processed at all.
 
-=item features [array]
+=item features [array] *** EXPERIMENTAL FEATURE ***
 
-B<ALERT: Not ready for use, will change in a future version>
-
-Experimental implementation (added in version 1.92_59). Shall deal
-with optional_features from META.yml once the specification has
-settled. At the moment the META.yml spec looks buggy.
+Experimental implementation to deal with optional_features from
+META.yml. Still needs coordination with installer software and
+currently only works for META.yml declaring C<dynamic_config=0>. Use
+with caution.
 
 =item goto [string]
 
