@@ -55,6 +55,12 @@ most recent.
 
 Pick the specific release IPC-Run-0.80.
 
+=head1 BUGS/TODO
+
+The switches --conf and --req *must* be folded into a single option
+and the things that we give it as parameters need prefixes like conf,
+req, tool, meta, test.
+
 =cut
 
 use strict;
