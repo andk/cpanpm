@@ -914,6 +914,7 @@ ResourcePool
 Return::Value
 Roman
 Rose::DateTime
+Rose::HTML::Objects
 Rose::Object
 Rubric
 SGML::Parser::OpenSP
