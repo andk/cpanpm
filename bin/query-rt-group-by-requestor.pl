@@ -13,7 +13,7 @@ use List::Util qw(max);
 use YAML::Syck;
 
 my %Config = (
-              server      => 'http://rt.cpan.org',
+              server      => 'https://rt.cpan.org',
               username    => 'ANDK',
               password    => '',
               chunksize   => 396,
@@ -53,7 +53,7 @@ my $rt = RT::Client::REST->new(
 
 if ($Config{password}) {
   eval { $rt->login( username => $Config{username}, password => $Config{password} ); };
-  die "problem logging in: '$@'" if $@;
+  die "Alert: Problem logging in: '$@'" if $@;
 
   my @ids;
   eval {
