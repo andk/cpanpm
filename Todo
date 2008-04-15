@@ -20,6 +20,33 @@ that PKG_CONFIG_PATH is set correctly.
 
 	* refresh investigations Data::Serializer
 
+	The string that is brought from JSON via Data::Serializer to Ctypt::CBC::encrypt is this:
+
+  DB<10> Devel::Peek::Dump $data
+SV = PVMG(0x8a9e908) at 0x87e1964
+  REFCNT = 2
+  FLAGS = (PADMY,POK,pPOK,UTF8)
+  IV = 0
+  NV = 0
+  PV = 0x8b32198 "6cbcecd11182ea942e597f5a5b77b2883885cceccff88f6b08e025db66316c96=[\"one\",\"two\",\"three\"]"\0 [UTF8 "6cbcecd11182ea942e597f5a5b77b2883885cceccff88f6b08e025db66316c96=["one","two","three"]"]
+  CUR = 86
+  LEN = 221
+  MAGIC = 0x85c4148
+    MG_VIRTUAL = &PL_vtbl_utf8
+    MG_TYPE = PERL_MAGIC_utf8(w)
+    MG_LEN = 86
+
+	So far no difference between 2396[56] in Crypt::CBC::crypt.
+
+	The difference comes after 
+
+	my @blocks = unpack("a$bs "x(int(length($self->{'buffer'})/$bs)) . "a*", $self->{'buffer'});
+
+	These blocks are UTF8 since 23966 and were not so in 23965. Even with
+	identical 7bit content this makes a difference later.
+
+	
+
 2008-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* may be a bug in Distroprefs.pm the $abs in line 122. Seen with some DD
