@@ -55,6 +55,11 @@ most recent.
 
 Pick the specific release IPC-Run-0.80.
 
+The following is a simple job to refresh all HTML pages we already
+have and fetch new reports referenced there too:
+
+
+
 =head1 BUGS/TODO
 
 The switches --conf and --req *must* be folded into a single option
@@ -101,9 +106,11 @@ if (! @ARGV) {
     die Usage;
 }
 
+my $ROOT = "$ENV{HOME}/var/cpantesters";
+
 $|=1;
 for my $distro (@ARGV) {
-    my $cts_dir = "cpantesters-show";
+    my $cts_dir = "$ROOT/cpantesters-show";
     mkpath $cts_dir;
     my $ctarget = "$cts_dir/$distro.html";
     my $cheaders = "$cts_dir/$distro.headers";
@@ -177,9 +184,9 @@ for my $distro (@ARGV) {
     for my $test ($nsu ? $xc->findnodes("x:li",$selected_release_ul) : $selected_release_ul->findnodes("li")) {
         $ok = $nsu ? $xc->findvalue("x:span[1]/\@class",$test) : $test->findvalue("span[1]/\@class");
         $id = $nsu ? $xc->findvalue("x:a[1]/text()",$test)     : $test->findvalue("a[1]/text()");
-        my $nnt_dir = "nntp-testers";
+        my $nnt_dir = "$ROOT/nntp-testers";
         mkpath $nnt_dir;
-        my $target = "nntp-testers/$id";
+        my $target = "$nnt_dir/$id";
         unless (-e $target) {
             print "Fetching $target..." if $Opt{verbose};
             my $resp = $ua->mirror("http://www.nntp.perl.org/group/perl.cpan.testers/$id",$target);
