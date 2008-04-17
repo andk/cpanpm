@@ -22,7 +22,7 @@ patches:
 ---
 comment: "out of order --> TODO"
 match:
-  distribution: "^(PGOLLUCCI)/mod_perl-2"
+  distribution: "^(PGOLLUCCI|GOZER)/mod_perl-2"
 pl:
   args:
     - EVERYTHING=1
