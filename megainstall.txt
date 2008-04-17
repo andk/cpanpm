@@ -62,6 +62,7 @@ Bit::MorseSignals
 Bit::Vector
 Bit::Vector::Minimal
 BitTorrent
+Blikistan
 Bloom::Filter
 Brackup
 Bundle::Encode
@@ -90,6 +91,7 @@ CGI::Prototype
 CGI::Scriptpaths
 CGI::Session
 CGI::Untaint
+CGI::Wiki
 CHI
 CPAN
 CPAN::Cache
@@ -270,6 +272,7 @@ Danga::Socket::Callback
 DashProfiler
 Data::Bind
 Data::Buffer
+Data::Conveyor
 Data::Dump
 Data::Dump::Streamer
 Data::Dumper
@@ -284,6 +287,7 @@ Data::ICal
 Data::ICal::TimeZone
 Data::Lazy
 Data::OptList
+Data::Phrasebook
 Data::Properties
 Data::Random
 Data::Remember
@@ -475,6 +479,7 @@ Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
+Goo
 Google::Adwords
 Graph
 Graph::Easy
@@ -587,6 +592,7 @@ JSON::DWIW
 JSON::XS
 Jcode
 Jifty
+KindaPerl6
 Kwiki
 LWP
 LWP::Authen::Negotiate
@@ -612,6 +618,7 @@ Lingua::ZH::MacChinese::Simplified
 Lingua::ZH::MacChinese::Traditional
 Lingua::ZH::TaBE
 Linux::Inotify2
+Linux::SysInfo
 List::Compare
 List::Maker
 List::MoreUtils
@@ -706,10 +713,12 @@ MojoMojo
 Moose
 Moose::Autobox
 MooseX::Emulate::Class::Accessor::Fast
+Net::Amazon
 Net::Analysis
 Net::CIDR
 Net::Cmd
 Net::DNS
+Net::DRI
 Net::Daemon
 Net::Domain
 Net::Domain::TLD
@@ -728,6 +737,7 @@ Net::Jaiku
 Net::Jifty
 Net::LDAP
 Net::Libdnet
+Net::MRIM
 Net::MirrorDir
 Net::NNTP
 Net::Netmask
@@ -739,6 +749,7 @@ Net::Packet
 Net::Pcap
 Net::Ping
 Net::Proxy
+Net::SIP
 Net::SMTP
 Net::SNMP
 Net::SSH
@@ -777,6 +788,8 @@ PAR
 PAR::Dist::FromCPAN
 PAR::Packer
 PApp
+Package::Builder
+PBS::Build
 PDF
 PDF::API2
 PDF::API2::Simple
@@ -1091,6 +1104,7 @@ Text::Iconv
 Text::LevenshteinXS
 Text::Markdown
 Text::Metaphone
+Text::NSP
 Text::Ngram
 Text::PDF
 Text::Query
@@ -1178,6 +1192,7 @@ Touch
 Transform::Canvas
 Tripletail
 UML::Sequence
+UMMF
 UNIVERSAL::isa
 UNIVERSAL::ref
 URI
@@ -1239,6 +1254,7 @@ Want
 Web::Scraper
 Web::Scraper::Config
 WebService::ISBNDB
+WebService::Validator::HTML::W3C
 WordNet::SenseRelate::AllWords
 Workflow
 X500::DN
