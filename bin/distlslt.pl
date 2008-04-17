@@ -3,8 +3,15 @@ use warnings;
 
 use CPAN;
 use DateTime;
+use Getopt::Long;
 use Time::Progress;
 
+our %Opt;
+GetOptions(\%Opt,
+            "n=n",
+           ) or die "Usage: ...";
+
+$Opt{n} ||= 40;
 my $ROOT = "/home/ftp/pub/PAUSE";
 open my $fh, "zcat $ROOT/modules/02packages.details.txt.gz|" or die;
 my(%age,%distro);
@@ -46,7 +53,7 @@ my @m = sort { $age{$a} <=> $age{$b} } keys %age;
 my $painted = 0;
 CPAN::Index->reload;
 for my $i (0..$#m) {
-    while (($painted/40) < ($i/@m)) {
+    while (($painted/$Opt{n}) < ($i/@m)) {
         my $age = $age{$m[$i]};
         my $mtime = $^T-86400*$age;
         my $lt = DateTime->from_epoch(epoch => $mtime)->ymd;
