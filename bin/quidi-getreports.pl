@@ -12,12 +12,12 @@ quidi-getreports - Quickly fetch cpantesters results with all reports
 
 !!!!Alert: alpha quality software!!!!
 
-The intent is to get as both the summary at cpantesters and the
+The intent is to get at both the summary at cpantesters and the
 individual reports and parse the reports and collect the data for
 further inspection.
 
 We always only fetch the reports for the most recent (optionally
-picked) release.
+picked) release. Target root directory is C<$HOME/var/cpantesters>
 
 =head2 Examples
 
@@ -58,7 +58,13 @@ Pick the specific release IPC-Run-0.80.
 The following is a simple job to refresh all HTML pages we already
 have and fetch new reports referenced there too:
 
-
+  perl -le '
+  for my $dirent (glob "$ENV{HOME}/var/cpantesters/cpantesters-show/*.html"){
+    my($distro) = $dirent =~ m|/([^/]+)\.html$| or next;
+    print $distro;
+    my $system = "perl bin/quidi-getreports.pl --verbose --verbose $distro";
+    0 == system $system or die;
+  }'
 
 =head1 BUGS/TODO
 
