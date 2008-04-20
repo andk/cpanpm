@@ -1,9 +1,0 @@
-$VAR1 = {
-  "comment" => "More about this patch at https://rt.cpan.org/Ticket/Display.html?id=21723",
-  "match" => {
-    "distribution" => "^RGIERSIG/Expect-1.20\\.tar\\.gz\$"
-  },
-  "patches" => [
-    "ANDK/Expect-1.20-ANDK-01.patch"
-  ]
-};
