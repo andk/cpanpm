@@ -25,6 +25,7 @@ dd-prefs: { map { s{\.yml$}{.dd}; $_ } glob("distroprefs/*.yml lib/CPAN/Kwalify/
 		print $ofh Data::Dumper->new(\@y)->Indent(1)->Useqq(1)->Purity(1)->Sortkeys(1)->Dump or die $!;
 		close $ofh or die $!;
 		rename "$target~", $target or die $!;
+		return; # note: return value gets printed!
 	}
 
 validate:
