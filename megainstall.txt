@@ -266,6 +266,7 @@ DBIx::Simple
 DBIx::Timeout
 DB_File
 DB_File::Lock
+DTS::Assignment
 Daemon::Generic
 Danga::Socket
 Danga::Socket::Callback
@@ -465,6 +466,7 @@ GTop
 Games::Bingo
 Geo::Cache
 Geo::Gpx
+Geo::Raster
 Geo::Proj::Japan
 Geo::ShapeFile
 Geography::Countries
@@ -484,6 +486,7 @@ Google::Adwords
 Graph
 Graph::Easy
 Graph::Easy::As_svg
+Graph::Maker
 Graph::SocialMap
 GraphViz
 Graphics::ColorNames
@@ -527,6 +530,7 @@ HTML::WikiConverter
 HTTP::BrowserDetect
 HTTP::CryptoCookie
 HTTP::GHTTP
+HTTP::MobileAttribute::Plugin::Default::AirHPhone
 HTTP::Parser
 HTTP::Proxy
 HTTP::RangeSaver
@@ -539,6 +543,7 @@ Hash::AsObject
 Heap
 Heap::Simple
 Hook::Scope
+Hyper::Application
 I18N::Charset
 I18N::Collate
 I18N::LangTags
@@ -726,6 +731,7 @@ Net::DownloadMirror
 Net::FPing
 Net::FTP
 Net::FTP::Common
+Net::Frame::Dump
 Net::GrowlClient
 Net::Hiveminder
 Net::IMAP::Server
@@ -898,6 +904,7 @@ PostScript::Graph::Bar
 PostScript::MailLabels
 PostScript::Simple
 PostScript::Simple::Table
+Prima
 Proc::ProcessTable
 Proc::Simple
 ProgressMonitor::AbstractConfiguration
