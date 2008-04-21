@@ -143,6 +143,7 @@ match:
     |MARCEL/Class-Value-\d
     |MARCEL/Data-Conveyor-\d
     |MARCEL/Data-Storage-\d
+    |MARCEL/Google-Chart-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Pod-Generated-\d
     |MARCEL/Test-Compile-\d

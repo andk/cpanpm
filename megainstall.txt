@@ -483,6 +483,7 @@ Getopt::Mixed
 GnuPG::Interface
 Goo
 Google::Adwords
+Google::Chart
 Graph
 Graph::Easy
 Graph::Easy::As_svg
