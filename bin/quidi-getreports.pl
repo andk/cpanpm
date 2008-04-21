@@ -19,41 +19,61 @@ further inspection.
 We always only fetch the reports for the most recent (optionally
 picked) release. Target root directory is C<$HOME/var/cpantesters>
 
+The C<--q> paramater can be repeated. It takes one argument which
+stands for a query. This query must consist of two parts, a qualifier
+and the query itself. Qualifiers are one of the following
+
+  conf       parameters from the output of 'perl -V'
+             e.g.: conf:usethreads, conf:cc
+  mod        for installed modules, either from perrequisites or from the toolchain
+             e.g.: mod:Test::Simple, mod:Imager
+  meta       all other parameters
+             e.g.: meta:perl, meta:from
+
+The conf parameters specify a word used by the C<Config> module.
+
+The mod parameters consist of a package name.
+
+The meta parameters are the following: C<perl> for the perl version,
+C<from> for the sender of the report, C<date> for the date in the mail
+header, C<writer> for the module that produced the report.
+
+
 =head2 Examples
 
-  getreports.pl --req Clone Object-Relation
-
 This gets all recent reports for Object-Relation and outputs the
-version number of the prerequisite Clone.
+version number of the prerequisite Clone:
 
-  getreports.pl Clone
+  $0 --q mod:Clone Object-Relation
 
-Collects reports about Clone and reports the default set of metadata.
+Collects reports about Clone and reports the default set of metadata:
 
-  getreports.pl --req Moose Devel-Events |sort
+  $0 Clone
 
 Collect reports for Devel-Events and report the version number of
 Moose in thses reports and sort by success/failure. If Moose broke
-Devel-Events is becomes pretty obvious.
+Devel-Events is becomes pretty obvious:
 
-  getreports.pl --conf REPORT_WRITER Template-Timer | sed -e 's/.*REPORT_//' | sort | uniq -c | sort -n
+  $0 --q mod:Moose Devel-Events |sort
 
-Which tool was used to write how many reports, sorted by frequency.
+Which tool was used to write how many reports, sorted by frequency:
 
-  getreports.pl --conf REPORT_WRITER --conf FROM Template-Timer | grep 'UNDEF'
+  $0 --q meta:writer Template-Timer | sed -e 's/.*meta:writer//' | sort | uniq -c | sort -n
 
-Who was in the From field of the mails whose report writer was not determined.
+Who was in the From field of the mails whose report writer was not determined:
 
-  getreports.pl IPC-Run
+  $0 --q meta:writer --q meta:from Template-Timer | grep 'UNDEF'
 
 At the time of this writing this collected the results of
 IPC-Run-0.80_91 which was not really the latest release. In this case
 manual investigations were necessary to find out that 0.80 was the
-most recent.
+most recent:
 
-  getreports.pl --vdistro IPC-Run-0.80 IPC-Run
+  $0 IPC-Run
 
-Pick the specific release IPC-Run-0.80.
+Pick the specific release IPC-Run-0.80:
+
+  $0 --vdistro IPC-Run-0.80 IPC-Run
 
 The following is a simple job to refresh all HTML pages we already
 have and fetch new reports referenced there too:
@@ -65,12 +85,6 @@ have and fetch new reports referenced there too:
     my $system = "perl bin/quidi-getreports.pl --verbose --verbose $distro";
     0 == system $system or die;
   }'
-
-=head1 BUGS/TODO
-
-The switches --conf and --req *must* be folded into a single option
-and the things that we give it as parameters need prefixes like conf,
-req, tool, meta, test.
 
 =cut
 
@@ -90,8 +104,7 @@ use XML::LibXML::XPathContext;
 sub Usage ();
 our %Opt;
 GetOptions(\%Opt,
-           "conf=s\@",  # %Config and other (made up on the fly) variables }the two need
-           "req=s\@",   # prerequisites or toolchain module version        }to be streamlined
+           "q=s\@",     # 
            "verbose+",  # feedback during download where we stand
            "vdistro=s", # versioned distro if we do not want the most recent
            "local!",    # use a local *.html if present even if older than 24 hours
@@ -101,12 +114,8 @@ GetOptions(\%Opt,
 my $ua = LWP::UserAgent->new;
 $ua->parse_head(0);
 
-my @want_config = @{$Opt{conf}||[]};
-@want_config = qw(PERL archname usethreads optimize REPORT_WRITER FROM) unless @want_config;
-# my @want_config = qw(gccversion usethreads usemymalloc cc byteorder libc gccversion intsize use64bitint archname);
-
-my @want_req = @{$Opt{req}||[]};
-# @want_req = qw(Test::More) unless @want_req;
+my @q = @{$Opt{q}||[]};
+@q = qw(meta:perl conf:archname conf:usethreads conf:optimize meta:writer meta:from) unless @q;
 
 if (! @ARGV) {
     die Usage;
@@ -222,7 +231,7 @@ for my $distro (@ARGV) {
         my $previous_line = ""; # so we can neutralize line breaks
       LINE: while (<$fh>) {
             chomp; # reliable line endings?
-            unless ($extract{PERL}) {
+            unless ($extract{"meta:perl"}) {
                 my $p5;
                 if (0) {
                 } elsif (/Summary of my perl5 \((.+)\) configuration:/) {
@@ -232,39 +241,47 @@ for my $distro (@ARGV) {
                     my($r,$v,$s,$p);
                     if (($r,$v,$s,$p) = $p5 =~ /revision (\S+) version (\S+) subversion (\S+) patch (\S+)/) {
                         $r =~ s/\.0//; # 5.0 6 2!
-                        $extract{PERL} = "$r.$v.$s\@$p";
+                        $extract{"meta:perl"} = "$r.$v.$s\@$p";
                     } elsif (($r,$v,$s) = $p5 =~ /revision (\S+) version (\S+) subversion (\S+)/) {
                         $r =~ s/\.0//;
-                        $extract{PERL} = "$r.$v.$s";
+                        $extract{"meta:perl"} = "$r.$v.$s";
                     } elsif (($r,$v,$s) = $p5 =~ /(\d+\S*) patchlevel (\S+) subversion (\S+)/) {
                         $r =~ s/\.0//;
-                        $extract{PERL} = "$r.$v.$s";
+                        $extract{"meta:perl"} = "$r.$v.$s";
                     } else {
-                        $extract{PERL} = $p5;
+                        $extract{"meta:perl"} = $p5;
                     }
                 }
             }
-            unless ($extract{FROM}) {
+            unless ($extract{"meta:from"}) {
                 if (0) {
-                } elsif (m|<div class="h_name">From:</div> <b>(.+)</b><br/>|) {
-                    $extract{FROM} = $1;
+                } elsif (m|<div class="h_name">From:</div> <b>(.+?)</b><br/>|) {
+                    $extract{"meta:from"} = $1;
                 }
-                $extract{FROM} =~ s/\.$// if $extract{FROM};
+                $extract{"meta:from"} =~ s/\.$// if $extract{"meta:from"};
             }
-            unless ($extract{REPORT_WRITER}) {
+            unless ($extract{"meta:date"}) {
+                if (0) {
+                } elsif (m|<div class="h_name">Date:</div> (.+?)<br/>|) {
+                    $extract{"meta:date"} = $1;
+                }
+                $extract{"meta:date"} =~ s/\.$// if $extract{"meta:date"};
+            }
+            unless ($extract{"meta:writer"}) {
                 for ("$previous_line $_") {
                     if (0) {
                     } elsif (/created (?:automatically )?by (\S+)/) {
-                        $extract{REPORT_WRITER} = $1;
+                        $extract{"meta:writer"} = $1;
                     } elsif (/CPANPLUS, version (\S+)/) {
-                        $extract{REPORT_WRITER} = "CPANPLUS $1";
+                        $extract{"meta:writer"} = "CPANPLUS $1";
                     } elsif (/This report was machine-generated by CPAN::YACSmoke (\S+)/) {
-                        $extract{REPORT_WRITER} = "CPAN::YACSmoke $1";
+                        $extract{"meta:writer"} = "CPAN::YACSmoke $1";
                     }
-                    $extract{REPORT_WRITER} =~ s/[\.,]$// if $extract{REPORT_WRITER};
+                    $extract{"meta:writer"} =~ s/[\.,]$// if $extract{"meta:writer"};
                 }
             }
-            for my $want (@want_config) {
+            for my $q (@q) {
+                my($want) = $q =~ /conf:(.+)/ or next;
                 if (/\Q$want\E=(\S+)/) {
                     my $cand = $1;
                     if ($cand =~ /^'/) {
@@ -276,7 +293,7 @@ for my $distro (@ARGV) {
                         }
                     }
                     $cand =~ s/,$//;
-                    $extract{$want} = $cand;
+                    $extract{"conf:$want"} = $cand;
                 }
             }
             if ($expect_prereq || $expect_toolchain) {
@@ -314,7 +331,7 @@ for my $distro (@ARGV) {
                     $module =~ s/\s+$//;
                     $v =~ s/^\s+//;
                     $v =~ s/\s+$//;
-                    $extract{$module} = $v;
+                    $extract{"mod:$module"} = $v;
                 }
                 if (/(\s+)(Module\s+)(Need\s+)Have/) {
                     $moduleunpack = {
@@ -352,7 +369,7 @@ for my $distro (@ARGV) {
             $previous_line = $_;
         } # LINE
         my $diag = "";
-        for my $want (@want_req, @want_config) {
+        for my $want (@q) {
             my $have  = $extract{$want} || "";
             $diag .= " $want\[$have]";
         }
