@@ -1,3 +1,13 @@
+2008-04-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* apc-overview says/should say
+
+maint-5.10                   5.10.1   32695  33660 ( 116) [have 33642]
+maint-5.8                     5.8.9   27041  33694 ( 982) [have 33638]
+perl                         5.11.0   32643  33714 ( 810) [have 33714]
+
+	missing number of patches since last build
+
 2008-04-20  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Coming back to Data::Serializer. The trick was to do what in the
@@ -24,6 +34,10 @@
 	print length $cipher_obj->encrypt($digest)==32 ? "ok\n" : "not ok\n";
 
 	http://rt.cpan.org/Ticket/Display.html?id=35239
+
+	And a perlbug
+
+	Bitops on strings when UTF8 flag is set
 
 2008-04-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -71,8 +85,6 @@ SV = PVMG(0x8a9e908) at 0x87e1964
 
 	These blocks are UTF8 since 23966 and were not so in 23965. Even with
 	identical 7bit content this makes a difference later.
-
-	
 
 2008-04-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
