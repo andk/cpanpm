@@ -106,7 +106,20 @@ TICKET: for my $ticket (@tickets) {
   my $displ = "$Config{server}/Ticket/Display.html?id=$ticket";
   print "Retrieving ticket '$ticket' as $displ...\n";
   my $resp = $ua->get($displ);
+  unless ($resp->is_success) {
+      warn sprintf "Could not retrieve '%s': %s", $displ, $resp->code;
+      sleep 2;
+      next TICKET;
+  }
   my $decoded = $resp->decoded_content;
+  unless ($decoded) {
+      $decoded = $resp->content;
+      my $cnt = $decoded =~ tr[\200-\377][?]d;
+      if ($cnt) {
+          warn sprintf "Warning: had to replace %d bytes in the content of the message", $cnt;
+          sleep 2;
+      }
+  }
   my $answer;
   if ($Config{nonono}) {
     print "not showing '$ticket'\n";
