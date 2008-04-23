@@ -46,6 +46,8 @@ my %Config = (
                               qr/Spring Sale Fashion Footwear Shoes/,
                               qr/(?s:P+r+e+s+e+n+t+.+u+n+f+o+r+g+e+t+t+a+b+l+e+.+n+i+g+h+t+.+t+o+.+y+o+u+r+.+b+e+l+o+v+e+d+.+o+n+e+)/,
                               qr/\QНи3kи{e} ц{e}ны!!!\E/,
+                              qr/I am the representative of the large Ukrainian/,
+                              qr|Consortium of Export/Import Based in Czech|,
                              ],
              );
 
