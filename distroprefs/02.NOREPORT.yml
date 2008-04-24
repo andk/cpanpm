@@ -1,0 +1,19 @@
+---
+comment: |
+
+  Author would prefer to never see false positives which I cannot
+  guarantee, so we turn off mails for him completely. Main involvement
+  was Digest::SHA which got FAILs during a short phase of 5.9.3 due to
+  some broken headerfiles in these bleadperls. A better solution than
+  disabling reports would be configure stuff that probes for the
+  signature of Newz (or was it Newx?)
+
+  I had a good email exchange with Mark and so I rediscovered the
+  cpanconfig/test_report distropref setting which I had already
+  forgotten.
+
+match:
+  distribution: "MSHELOR/"
+cpanconfig:
+  test_report: 0
+
