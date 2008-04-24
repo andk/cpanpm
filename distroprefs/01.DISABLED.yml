@@ -30,7 +30,6 @@ match:
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
-    |BARBIE/                                 # opt out. Barbie does not want time-in-the-future errors
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)

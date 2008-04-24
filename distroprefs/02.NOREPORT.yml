@@ -12,8 +12,14 @@ comment: |
   cpanconfig/test_report distropref setting which I had already
   forgotten.
 
+  BARBIE: opt out. Barbie does not want time-in-the-future errors
+
 match:
-  distribution: "MSHELOR/"
+  distribution: |
+    ^(?x:
+    .^   # never matches
+    |BARBIE/
+    |MSHELOR/
+    )|
 cpanconfig:
   test_report: 0
-
