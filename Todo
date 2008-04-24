@@ -1,3 +1,16 @@
+2008-04-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Event::Lib seems to need a binarysearch. Might be a Test::Harness issue.
+
+	Ok, came to the conclusion it is Test::Harness 3.0 related.
+
+	* JSON::XS 2.2 is accused to need a binary search but I find it working
+	under many bleadperls and indeed failing with a very old bleedperl
+	(30953).
+
+	cpantesters currently count Pass 65 : Fail 3, so this seems to be a
+	bogus report.
+
 2008-04-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* apc-overview says/should say
