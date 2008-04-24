@@ -6,8 +6,6 @@
 
 	* ongoing PERL5INC surgeries: maybe this experiment is failing
 
-	* now with 308 distroprefs files
-
 	* major distroprefs code refactoring into new module CPAN::Distroprefs,
 	adding tests (Hans Dieter Pearcey)
 
@@ -20,6 +18,8 @@
 	protection from install only on make_test
 
 	* repair broken smoke command
+
+	* now with 308 distroprefs files
 
 2008-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
