@@ -1,3 +1,26 @@
+2008-04-24  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_61: waiting for enlightenment on dubious PERL5INC behaviour
+
+	* regain 5.005 compat (Slaven Rezic)
+
+	* ongoing PERL5INC surgeries: maybe this experiment is failing
+
+	* now with 308 distroprefs files
+
+	* major distroprefs code refactoring into new module CPAN::Distroprefs,
+	adding tests (Hans Dieter Pearcey)
+
+	* cpan script upgraded to 1.53 (brian d foy)
+
+	* rework the whole experimental "feature" thingie since the META.yml
+	spec was fixed
+
+	* address #30464 (imacat): small refactoring and extend the loop
+	protection from install only on make_test
+
+	* repair broken smoke command
+
 2008-03-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_60: gearing towards a new stable release
