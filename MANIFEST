@@ -4,6 +4,7 @@ Changes
 Changes.old
 distroprefs/00.README
 distroprefs/01.DISABLED.yml
+distroprefs/02.NOREPORT.yml
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ACG.Scrabble-Dict.yml
@@ -20,6 +21,7 @@ distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ANDREWF.LaTeX-Driver.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
+distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
@@ -53,6 +55,7 @@ distroprefs/CHANG-LIU.XML-Node.yml
 distroprefs/CHARTGRP.Chart.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
+distroprefs/CLAESJAC.JavaScript.yml
 distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
@@ -62,6 +65,7 @@ distroprefs/CRISB.WWW-Curl.yml
 distroprefs/CSOE.PDL.yml
 distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAGOLDEN.Term-Title.yml
+distroprefs/DAMS.RT-Client-REST.yml
 distroprefs/DANKOGAI.Regexp-Optimizer.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
@@ -121,8 +125,10 @@ distroprefs/GRM.App-CamelPKI.yml
 distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
+distroprefs/HDP.Perl-Version.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/HMBRAND.Tk-Clock.yml
+distroprefs/ILMARI.DBIx-Class-Schema-Loader.yml
 distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
@@ -169,6 +175,7 @@ distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LUSOL.Tk-Gauge.yml
 distroprefs/LZE.HTML-Menu-TreeView.yml
+distroprefs/MAKAMAKA.JSON.yml
 distroprefs/MARKOV.CPAN-Site.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.Mail-IMAPClient.yml
@@ -207,7 +214,9 @@ distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MSISK.HTML-TableExtract.yml
 distroprefs/MTHURN.I18N-Charset.yml
 distroprefs/MTHURN.Tk-Wizard.yml
+distroprefs/NEELY.Data-Serializer.yml
 distroprefs/NEILW.Inline-CPP.yml
+distroprefs/NESTING.Unicode-Wrap.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
@@ -263,6 +272,7 @@ distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
 distroprefs/SEANO.Sepia.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
+distroprefs/SLANNING.Ogre.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
@@ -290,6 +300,7 @@ distroprefs/WITTROCK.Tk-PathEntry.yml
 distroprefs/WRW.Barcode-Code128.yml
 distroprefs/WYANT.Astro-satpass.yml
 distroprefs/WYANT.Astro-SpaceTrack.yml
+distroprefs/YAMATO.QDBM_File.yml
 distroprefs/YANICK.XML-XPathScript.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
@@ -307,6 +318,7 @@ lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod
 lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
+lib/CPAN/Distroprefs.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/HandleConfig.pm
 lib/CPAN/Kwalify.pm
@@ -317,7 +329,6 @@ lib/CPAN/PERL5INC.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
-lib/CPAN/Distroprefs.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
@@ -362,11 +373,12 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircDepeTwo-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-ConfReq-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz
-t/CPAN/authors/id/A/AN/ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-1.04.tar.gz
+t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.02.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
-t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/cpantestdummies/CHECKSUMS
+t/CPAN/authors/id/A/AN/ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-1.04.tar.gz
+t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 t/CPAN/authors/id/A/AN/ANDK/patches/CHECKSUMS
 t/CPAN/authors/id/A/AN/CHECKSUMS
 t/CPAN/authors/id/A/CHECKSUMS
