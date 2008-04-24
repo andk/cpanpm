@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_60';
+$CPAN::VERSION = '1.92_61';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -8320,7 +8320,12 @@ sub follow_prereqs {
     my($slot) = shift;
     my(@prereq_tuples) = grep {$_->[0] ne "perl"} @_;
     return unless @prereq_tuples;
-    my @prereq = map { $_->[0] } @prereq_tuples;
+    my(@good_prereq_tuples);
+    for my $p (@prereq_tuples) {
+        # XXX watch out for foul ones
+        # $DB::single++;
+        push @good_prereq_tuples, $p;
+    }
     my $pretty_id = $self->pretty_id;
     my %map = (
                b => "build_requires",
@@ -8328,7 +8333,6 @@ sub follow_prereqs {
                c => "commandline",
               );
     my($filler1,$filler2,$filler3,$filler4);
-    # $DB::single=1;
     my $unsat = "Unsatisfied dependencies detected during";
     my $w = length($unsat) > length($pretty_id) ? length($unsat) : length($pretty_id);
     {
@@ -8346,7 +8350,7 @@ sub follow_prereqs {
     $CPAN::Frontend->
         myprint("$filler1 $unsat $filler2".
                 "$filler3 $pretty_id $filler4".
-                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @prereq_tuples),
+                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @good_prereq_tuples),
                );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
@@ -8357,6 +8361,7 @@ sub follow_prereqs {
 of modules we are processing right now?", "yes");
         $follow = $answer =~ /^\s*y/i;
     } else {
+        my @prereq = map { $_=>[0] } @good_prereq_tuples;
         local($") = ", ";
         $CPAN::Frontend->
             myprint("  Ignoring dependencies on modules @prereq\n");
@@ -8364,8 +8369,9 @@ of modules we are processing right now?", "yes");
     if ($follow) {
         my $id = $self->id;
         # color them as dirty
-        for my $p (@prereq) {
+        for my $gp (@good_prereq_tuples) {
             # warn "calling color_cmd_tmps(0,1)";
+            my $p = $gp->[0];
             my $any = CPAN::Shell->expandany($p);
             $self->{$slot . "_for"}{$any->id}++;
             if ($any) {
@@ -8377,7 +8383,7 @@ of modules we are processing right now?", "yes");
         }
         # queue them and re-queue yourself
         CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}},
-                               map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @prereq_tuples);
+                               map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @good_prereq_tuples);
         $self->{$slot} = "Delayed until after prerequisites";
         return 1; # signal success to the queuerunner
     }
@@ -8423,8 +8429,9 @@ sub _feature_depends {
 }
 
 #-> sub CPAN::Distribution::unsat_prereq ;
-# return ([Foo=>1],[Bar=>1.2]) for normal modules
+# return ([Foo,"r"],[Bar,"b"]) for normal modules
 # return ([perl=>5.008]) if we need a newer perl than we are running under
+# (sorry for the inconsistency, it was an accident)
 sub unsat_prereq {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
@@ -8486,44 +8493,9 @@ sub unsat_prereq {
         # or if the installed version is too old. We cannot omit this
         # check, because if 'force' is in effect, nobody else will check.
         if (defined $available_file) {
-            my(@all_requirements) = split /\s*,\s*/, $need_version;
-            local($^W) = 0;
-            my $ok = 0;
-          RQ: for my $rq (@all_requirements) {
-                if ($rq =~ s|>=\s*||) {
-                } elsif ($rq =~ s|>\s*||) {
-                    # 2005-12: one user
-                    if (CPAN::Version->vgt($available_version,$rq)) {
-                        $ok++;
-                    }
-                    next RQ;
-                } elsif ($rq =~ s|!=\s*||) {
-                    # 2005-12: no user
-                    if (CPAN::Version->vcmp($available_version,$rq)) {
-                        $ok++;
-                        next RQ;
-                    } else {
-                        last RQ;
-                    }
-                } elsif ($rq =~ m|<=?\s*|) {
-                    # 2005-12: no user
-                    $CPAN::Frontend->mywarn("Downgrading not supported (rq[$rq])\n");
-                    $ok++;
-                    next RQ;
-                }
-                if (! CPAN::Version->vgt($rq, $available_version)) {
-                    $ok++;
-                }
-                CPAN->debug(sprintf("need_module[%s]available_file[%s]".
-                                    "available_version[%s]rq[%s]ok[%d]",
-                                    $need_module,
-                                    $available_file,
-                                    $available_version,
-                                    CPAN::Version->readable($rq),
-                                    $ok,
-                                   )) if $CPAN::DEBUG;
-            }
-            next NEED if $ok == @all_requirements;
+            my $fulfills_all_version_rqs = $self->_fulfills_all_version_rqs
+                ($need_module,$available_file,$available_version,$need_version);
+            next NEED if $fulfills_all_version_rqs;
         }
 
         if ($need_module eq "perl") {
@@ -8531,7 +8503,7 @@ sub unsat_prereq {
         }
         $self->{sponsored_mods}{$need_module} ||= 0;
         CPAN->debug("need_module[$need_module]s/s/n[$self->{sponsored_mods}{$need_module}]") if $CPAN::DEBUG;
-        if ($self->{sponsored_mods}{$need_module}++) {
+        if (my $sponsoring = $self->{sponsored_mods}{$need_module}++) {
             # We have already sponsored it and for some reason it's still
             # not available. So we do ... what??
 
@@ -8598,16 +8570,18 @@ sub unsat_prereq {
                                                 "'$nosayer => $do->{$nosayer}'. Continuing, ".
                                                 "but chances to succeed are limited.\n"
                                                );
+                        $CPAN::Frontend->mysleep($sponsoring/10);
                         next NEED;
                     } else { # the other guy succeeded
-                        if ($nosayer eq "install") {
+                        if ($nosayer =~ /^(install|make_test)$/) {
                             # we had this with
                             # DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
-                            # 2007-03
+                            # in 2007-03 for 'make install'
+                            # and 2008-04: #30464 (for 'make test')
                             $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                                     "'$need_module => $need_version' ".
                                                     "for '$selfid' already installed ".
-                                                    "but installation looks suspicious. ".
+                                                    "but the result looks suspicious. ".
                                                     "Skipping another installation attempt, ".
                                                     "to prevent looping endlessly.\n"
                                                    );
@@ -8623,6 +8597,48 @@ sub unsat_prereq {
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
     CPAN->debug("returning from unsat_prereq[@unfolded]") if $CPAN::DEBUG;
     @need;
+}
+
+sub _fulfills_all_version_rqs {
+    my($self,$need_module,$available_file,$available_version,$need_version) = @_;
+    my(@all_requirements) = split /\s*,\s*/, $need_version;
+    local($^W) = 0;
+    my $ok = 0;
+  RQ: for my $rq (@all_requirements) {
+        if ($rq =~ s|>=\s*||) {
+        } elsif ($rq =~ s|>\s*||) {
+            # 2005-12: one user
+            if (CPAN::Version->vgt($available_version,$rq)) {
+                $ok++;
+            }
+            next RQ;
+        } elsif ($rq =~ s|!=\s*||) {
+            # 2005-12: no user
+            if (CPAN::Version->vcmp($available_version,$rq)) {
+                $ok++;
+                next RQ;
+            } else {
+                last RQ;
+            }
+        } elsif ($rq =~ m|<=?\s*|) {
+            # 2005-12: no user
+            $CPAN::Frontend->mywarn("Downgrading not supported (rq[$rq])\n");
+            $ok++;
+            next RQ;
+        }
+        if (! CPAN::Version->vgt($rq, $available_version)) {
+            $ok++;
+        }
+        CPAN->debug(sprintf("need_module[%s]available_file[%s]".
+                            "available_version[%s]rq[%s]ok[%d]",
+                            $need_module,
+                            $available_file,
+                            $available_version,
+                            CPAN::Version->readable($rq),
+                            $ok,
+                           )) if $CPAN::DEBUG;
+    }
+    return $ok == @all_requirements;
 }
 
 #-> sub CPAN::Distribution::read_yaml ;
