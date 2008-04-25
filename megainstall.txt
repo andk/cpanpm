@@ -1,4 +1,4 @@
-AI::Categorizer
+I::Categorizer
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
@@ -324,6 +324,7 @@ Devel::Cycle
 Devel::DProfLB
 Devel::Declare
 Devel::Dependencies
+Devel::Deprecate
 Devel::EvalContext
 Devel::Events
 Devel::Events::Handler::ObjectTracker
