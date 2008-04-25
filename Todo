@@ -1,3 +1,10 @@
+2008-04-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* IPC::Run fails today with any perl I try even with perls that have
+	installed it successfully in the past and recent days. Either a
+	dependency on a module has got a new version or something on that system
+	(semaphores?). Interesting is http://rt.cpan.org/Ticket/Display.html?id=28150
+
 2008-04-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Event::Lib seems to need a binarysearch. Might be a Test::Harness issue.

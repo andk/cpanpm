@@ -263,6 +263,7 @@ distroprefs/ROODE.Readonly-XS.yml
 distroprefs/ROODE.Time-Format.yml
 distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
+distroprefs/RSOD.IPC-Run.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/RYBSKEJ.forks.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
