@@ -9,8 +9,6 @@ plan tests => 4;
 
 my %ext = (
   yml => 'YAML',
-  dd  => 'Data::Dumper',
-  st  => 'Storable',
 );
 
 sub find_ok {
@@ -59,7 +57,10 @@ find_ok(
   'match .yml',
 );
 
-delete $ext{yml};
+%ext = (
+  dd  => 'Data::Dumper',
+  st  => 'Storable',
+);
 find_ok(
   {
     distribution => 'INGY/YAML-0.66',
