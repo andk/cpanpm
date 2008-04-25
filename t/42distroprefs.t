@@ -59,7 +59,6 @@ find_ok(
 
 %ext = (
   dd  => 'Data::Dumper',
-  st  => 'Storable',
 );
 find_ok(
   {
