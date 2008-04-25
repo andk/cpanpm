@@ -70,3 +70,8 @@ find_ok(
   },
   'match .dd',
 );
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 2
+# End:
