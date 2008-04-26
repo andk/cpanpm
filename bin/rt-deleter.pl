@@ -49,6 +49,7 @@ my %Config = (
                               qr/I am the representative of the large Ukrainian/,
                               qr|Consortium of Export/Import Based in Czech|,
                               qr{(?s:I+n+c+r+e+a+s+e+.+?S+e+x+u+a+l+.+?E+n+e+r+g+y+.+a+n+d+.+?P+l+e+a+s+u+r+e+)},
+                              qr{It is Very Easy To Loss Weight},
                              ],
              );
 
