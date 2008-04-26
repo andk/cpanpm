@@ -367,6 +367,7 @@ Digest::Tiger
 Directory::Scratch
 DocSet
 ETL::Pequel
+Egg::Model::Session
 Email::Address
 Email::Date
 Email::Delete
@@ -444,6 +445,7 @@ Filesys::Df
 Filesys::Virtual
 Filter::Simple
 Filter::Util::Call
+Finance::Bank::Postbank_de
 FindBin
 FindBin::libs
 Flickr::API
@@ -1035,6 +1037,7 @@ Sys::SigAction
 Sys::Virt
 SystemC::Vregs
 TAP::Parser
+TM::PSI
 Taint::Util
 Task::CVSMonitor
 Task::Catalyst
