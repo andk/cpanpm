@@ -243,6 +243,7 @@ for my $distro (@ARGV) {
         my $previous_line = ""; # so we can neutralize line breaks
       LINE: while (<$fh>) {
             chomp; # reliable line endings?
+            s/&quot;//; # HTML !!!
             unless ($extract{"meta:perl"}) {
                 my $p5;
                 if (0) {
@@ -293,43 +294,31 @@ for my $distro (@ARGV) {
                     $extract{"meta:writer"} =~ s/[\.,]$// if $extract{"meta:writer"};
                 }
             }
-            my @conf_vars;
-            if (my $qr = $Opt{allvars}) {
+            if ($in_summary) {
+                # we do that first three lines a bit too often
+                my $qr = $Opt{allvars};
                 $qr = qr/$qr/;
-                if ($in_summary) {
-                    if (/^\s*$/ || m|</pre>|) {
-                        $in_summary = 0;
-                    } else {
-                        while (my($k,$v) = /\G,?\s+([^=]+)=('[^']+?'|\S+)/gc) {
-                            $k = "conf:$k";
-                            next unless $k =~ qr/$qr/;
-                            push @conf_vars, $k;
-                            $v =~ s/,$//;
-                            if ($v =~ /^'(.*)'$/) {
-                                $v = $1;
-                            }
-                            # $DB::single = $k eq "conf:cc"
+                my %conf_vars = map {($_ => 1)} grep { /^conf:/ } @q;
+
+                if (/^\s*$/ || m|</pre>|) {
+                    $in_summary = 0;
+                } else {
+                    while (my($k,$v) = /\G,?\s+([^=]+)=('[^']+?'|\S+)/gc) {
+                        $k = "conf:$k";
+                        $v =~ s/,$//;
+                        if ($v =~ /^'(.*)'$/) {
+                            $v = $1;
+                        }
+                        $v =~ s/^\s+//;
+                        $v =~ s/\s+$//;
+                        # $DB::single = $k eq "conf:cc"
+                        if ($k =~ qr/$qr/) {
                             $allvars{$k}{$v}++;
                         }
-                    }
-                }
-            } else {
-                @conf_vars = grep { /^conf:/ } @q;
-            }
-            for my $q (@conf_vars) {
-                my($want) = $q =~ /conf:(.+)/ or next;
-                if (/\Q$want\E=(\S+)/) {
-                    my $cand = $1;
-                    if ($cand =~ /^'/) {
-                        my($cand2) = /\Q$want\E=('(\\'|[^'])*')/;
-                        if ($cand2) {
-                            $cand = $cand2;
-                        } else {
-                            die "something wrong in id[$id]want[$want]";
+                        if ($conf_vars{$k}) {
+                            $extract{$k} = $v;
                         }
                     }
-                    $cand =~ s/,$//;
-                    # $extract{"conf:$want"} = $cand;
                 }
             }
             if ($expect_prereq || $expect_toolchain) {
