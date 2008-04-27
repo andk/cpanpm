@@ -296,8 +296,8 @@ for my $distro (@ARGV) {
             }
             if ($in_summary) {
                 # we do that first three lines a bit too often
-                my $qr = $Opt{allvars};
-                $qr = qr/$qr/;
+                my $qr = $Opt{allvars} || "";
+                $qr = qr/$qr/ if $qr;
                 my %conf_vars = map {($_ => 1)} grep { /^conf:/ } @q;
 
                 if (/^\s*$/ || m|</pre>|) {
@@ -312,7 +312,7 @@ for my $distro (@ARGV) {
                         $v =~ s/^\s+//;
                         $v =~ s/\s+$//;
                         # $DB::single = $k eq "conf:cc"
-                        if ($k =~ qr/$qr/) {
+                        if ($qr && $k =~ $qr) {
                             $allvars{$k}{$v}++;
                         }
                         if ($conf_vars{$k}) {
