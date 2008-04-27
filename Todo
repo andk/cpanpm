@@ -5,6 +5,10 @@
 	regression and lists them. POE::API::Peek is such a case but also
 	List-Sliding-Changes might be analyzable that way.
 
+	L:S:C is fixed and get-reports did not help. Would have needed more
+	insights into tests but most reports do not provide that especially not
+	when it is a PASS.
+
 2008-04-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* IPC::Run fails today with any perl I try even with perls that have
