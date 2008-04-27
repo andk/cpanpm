@@ -34,6 +34,7 @@ App::Info::Lib::Iconv
 App::a2pdf
 App::sync_cpantesters
 AppConfig
+Archive::Builder
 Archive::Tar
 Archive::Zip
 Array::Iterator
@@ -309,9 +310,16 @@ DateTime
 DateTime::Calendar::Julian
 DateTime::Event::Recurrence
 DateTime::Format::Builder
+DateTime::Format::DBI
+DateTime::Format::Duration
+DateTime::Format::Epoch
+DateTime::Format::HTTP
 DateTime::Format::Mail
 DateTime::Format::MySQL
 DateTime::Format::Natural
+DateTime::Format::Oracle
+DateTime::Format::Pg
+DateTime::Format::RSS
 DateTime::Format::W3CDTF
 DateTime::Set
 Devel::CallTrace
@@ -480,6 +488,7 @@ Getopt::Compact
 Getopt::Declare
 Getopt::Euclid
 Getopt::Helpful
+Getopt::LL
 Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
@@ -603,6 +612,10 @@ Jcode
 Jifty
 KindaPerl6
 Kwiki
+Kwiki::Blog
+Kwiki::Formatter::Emphasis
+Kwiki::PageStats
+Kwiki::Test
 LWP
 LWP::Authen::Negotiate
 LWP::Authen::Wsse
