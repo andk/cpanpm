@@ -91,6 +91,7 @@ have and fetch new reports referenced there too:
 use strict;
 use warnings;
 
+use DateTime::Format::Strptime;
 use File::Path qw(mkpath);
 use Getopt::Long;
 use LWP::UserAgent;
@@ -277,7 +278,15 @@ for my $distro (@ARGV) {
             unless ($extract{"meta:date"}) {
                 if (0) {
                 } elsif (m|<div class="h_name">Date:</div> (.+?)<br/>|) {
-                    $extract{"meta:date"} = $1;
+                    my $date = $1;
+                    my $p = DateTime::Format::Strptime->new(
+                                                            locale => "en",
+                                                            time_zone => "UTC",
+                                                            # April 13, 2005 23:50
+                                                            pattern => "%b %d, %Y %R",
+                                                          );
+                    my $dt = $p->parse_datetime($date);
+                    $extract{"meta:date"} = $dt->datetime;
                 }
                 $extract{"meta:date"} =~ s/\.$// if $extract{"meta:date"};
             }
