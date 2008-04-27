@@ -101,14 +101,17 @@ use XML::LibXML::XPathContext;
 #                 $xpc->registerNs('x', 'http://www.w3.org/1999/xhtml');
 #                 $xpc->find('/x:html',$node);
 
-sub Usage ();
+sub Usage () {
+    die "Usage: FIXME";
+};
 our %Opt;
 GetOptions(\%Opt,
-           "q=s\@",     # 
-           "verbose+",  # feedback during download where we stand
-           "vdistro=s", # versioned distro if we do not want the most recent
            "local!",    # use a local *.html if present even if older than 24 hours
            "mirrorhtmlonly!",
+           "q=s\@",     #
+           "allvars=s", # list all queryable variables
+           "vdistro=s", # versioned distro if we do not want the most recent
+           "verbose+",  # feedback during download where we stand
           ) or die Usage;
 
 my $ua = LWP::UserAgent->new;
@@ -121,10 +124,18 @@ if (! @ARGV) {
     die Usage;
 }
 
+if ($Opt{allvars}) {
+    eval { require YAML::Syck };
+    if ($@) {
+        die "YAML::Syck required for allvars option: $@";
+    }
+}
+
 my $ROOT = "$ENV{HOME}/var/cpantesters";
 
 $|=1;
 for my $distro (@ARGV) {
+    my %allvars;
     my $cts_dir = "$ROOT/cpantesters-show";
     mkpath $cts_dir;
     my $ctarget = "$cts_dir/$distro.html";
@@ -228,6 +239,7 @@ for my $distro (@ARGV) {
         my $expect_prereq = 0;
         my $expect_toolchain = 0;
         my $expecting_toolchain_soon = 0;
+        my $in_summary = 0;
         my $previous_line = ""; # so we can neutralize line breaks
       LINE: while (<$fh>) {
             chomp; # reliable line endings?
@@ -236,6 +248,7 @@ for my $distro (@ARGV) {
                 if (0) {
                 } elsif (/Summary of my perl5 \((.+)\) configuration:/) {
                     $p5 = $1;
+                    $in_summary = 1;
                 }
                 if ($p5) {
                     my($r,$v,$s,$p);
@@ -280,7 +293,30 @@ for my $distro (@ARGV) {
                     $extract{"meta:writer"} =~ s/[\.,]$// if $extract{"meta:writer"};
                 }
             }
-            for my $q (@q) {
+            my @conf_vars;
+            if (my $qr = $Opt{allvars}) {
+                $qr = qr/$qr/;
+                if ($in_summary) {
+                    if (/^\s*$/ || m|</pre>|) {
+                        $in_summary = 0;
+                    } else {
+                        while (my($k,$v) = /\G,?\s+([^=]+)=('[^']+?'|\S+)/gc) {
+                            $k = "conf:$k";
+                            next unless $k =~ qr/$qr/;
+                            push @conf_vars, $k;
+                            $v =~ s/,$//;
+                            if ($v =~ /^'(.*)'$/) {
+                                $v = $1;
+                            }
+                            # $DB::single = $k eq "conf:cc"
+                            $allvars{$k}{$v}++;
+                        }
+                    }
+                }
+            } else {
+                @conf_vars = grep { /^conf:/ } @q;
+            }
+            for my $q (@conf_vars) {
                 my($want) = $q =~ /conf:(.+)/ or next;
                 if (/\Q$want\E=(\S+)/) {
                     my $cand = $1;
@@ -293,7 +329,7 @@ for my $distro (@ARGV) {
                         }
                     }
                     $cand =~ s/,$//;
-                    $extract{"conf:$want"} = $cand;
+                    # $extract{"conf:$want"} = $cand;
                 }
             }
             if ($expect_prereq || $expect_toolchain) {
@@ -329,9 +365,11 @@ for my $distro (@ARGV) {
                         }
                     }
                     $module =~ s/\s+$//;
-                    $v =~ s/^\s+//;
-                    $v =~ s/\s+$//;
-                    $extract{"mod:$module"} = $v;
+                    if ($module) {
+                        $v =~ s/^\s+//;
+                        $v =~ s/\s+$//;
+                        $extract{"mod:$module"} = $v;
+                    }
                 }
                 if (/(\s+)(Module\s+)(Need\s+)Have/) {
                     $moduleunpack = {
@@ -369,11 +407,22 @@ for my $distro (@ARGV) {
             $previous_line = $_;
         } # LINE
         my $diag = "";
+        if (my $qr = $Opt{allvars}) {
+            $qr = qr/$qr/;
+            while (my($k,$v) = each %extract) {
+                if ($k =~ $qr) {
+                    $allvars{$k}{$v}++;
+                }
+            }
+        }
         for my $want (@q) {
             my $have  = $extract{$want} || "";
             $diag .= " $want\[$have]";
         }
         printf " %-4s %8d%s\n", $ok, $id, $diag;
+    }
+    if ($Opt{allvars}) {
+        print YAML::Syck::Dump(\%allvars);
     }
 }
 __END__
