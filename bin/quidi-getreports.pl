@@ -322,7 +322,7 @@ for my $distro (@ARGV) {
                         $v =~ s/\s+$//;
                         # $DB::single = $k eq "conf:cc"
                         if ($qr && $k =~ $qr) {
-                            $allvars{$k}{$v}++;
+                            $allvars{$k}{$v}{$ok}++;
                         }
                         if ($conf_vars{$k}) {
                             $extract{$k} = $v;
@@ -409,7 +409,7 @@ for my $distro (@ARGV) {
             $qr = qr/$qr/;
             while (my($k,$v) = each %extract) {
                 if ($k =~ $qr) {
-                    $allvars{$k}{$v}++;
+                    $allvars{$k}{$v}{$ok}++;
                 }
             }
         }
