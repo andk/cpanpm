@@ -1,7 +1,0 @@
----
-# $HeadURL$
-comment: "https://rt.cpan.org/Ticket/Display.html?id=24933"
-match:
-  distribution: "^CORION/Test-Without-Module-0.09.tar.gz"
-patches:
-  - "ANDK/patches/Test-Without-Module-0.09-ANDK-01.patch.gz"
