@@ -8,7 +8,8 @@ use Time::Progress;
 
 our %Opt;
 GetOptions(\%Opt,
-            "n=n",
+           "n=n",
+           "withcpan!",
            ) or die "Usage: ...";
 
 $Opt{n} ||= 40;
@@ -51,16 +52,22 @@ while (<$fh>) {
 print "\n";
 my @m = sort { $age{$a} <=> $age{$b} } keys %age;
 my $painted = 0;
-CPAN::Index->reload;
+if ($Opt{withcpan}) {
+    CPAN::Index->reload;
+}
 for my $i (0..$#m) {
     while (($painted/$Opt{n}) < ($i/@m)) {
         my $age = $age{$m[$i]};
         my $mtime = $^T-86400*$age;
         my $lt = DateTime->from_epoch(epoch => $mtime)->ymd;
-        my $mod = CPAN::Shell->expand("Module",$m[$i]);
-        my $have = $mod ? CPAN::Shell->expand("Module",$m[$i])->inst_version : "";
-        $have ||= "";
-        printf "%2d %-10s %-5s %-20s %s\n", ++$painted, $lt, $have, $m[$i], substr($distro{$m[$i]},5);
+        my $have = "";
+        my $have_format = "%s";
+        if ($Opt{withcpan}) {
+            $have_format = " %-5s";
+            my $mod = CPAN::Shell->expand("Module",$m[$i]);
+            $have = $mod ? CPAN::Shell->expand("Module",$m[$i])->inst_version : "";
+        }
+        printf "%2d %-10s$have_format %-20s %s\n", ++$painted, $lt, $have, $m[$i], substr($distro{$m[$i]},5);
     }
 }
 
