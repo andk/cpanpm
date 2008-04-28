@@ -76,6 +76,7 @@ Bundle::RT
 Bundle::Slash
 Bundle::XML
 Business::CreditCard
+Business::IBAN
 Business::ISBN
 Business::OnlinePayment
 Business::ReportWriter
@@ -413,6 +414,7 @@ Exporter::Simple
 ExtUtils::Depends
 ExtUtils::Embed
 ExtUtils::F77
+ExtUtils::FakeConfig
 ExtUtils::MakeMaker
 ExtUtils::Manifest
 ExtUtils::ModuleMaker
@@ -489,6 +491,7 @@ Getopt::Declare
 Getopt::Euclid
 Getopt::Helpful
 Getopt::LL
+Getopt::Lazy
 Getopt::Long
 Getopt::Lucid
 Getopt::Mixed
@@ -685,6 +688,7 @@ Mail::Transport::Dbx
 Mail::Util
 Makefile::DOM
 Makefile::Parser
+Markaya
 Math::Approx::Symbolic
 Math::Base85
 Math::Bezier::Convert
@@ -710,6 +714,7 @@ Math::Vec
 Maypole
 MediaWiki
 Metadata::ByInode
+Metaweb
 Mixin::ExtraFields
 Module::Build
 Module::Build::Convert
@@ -735,11 +740,13 @@ MojoMojo
 Moose
 Moose::Autobox
 MooseX::Emulate::Class::Accessor::Fast
+MooseX::Storage
 Net::Amazon
 Net::Analysis
 Net::CIDR
 Net::Cmd
 Net::DNS
+Net::DNS::ToolKit
 Net::DRI
 Net::Daemon
 Net::Domain
@@ -1260,6 +1267,7 @@ VFSsimple
 VS::Chart
 Verilog::Parser
 Voting::Condorcet::RankedPairs
+WWW::ColiPoste
 WWW::Curl
 WWW::Facebook::API
 WWW::Live365
