@@ -65,7 +65,8 @@ for my $i (0..$#m) {
         if ($Opt{withcpan}) {
             $have_format = " %-5s";
             my $mod = CPAN::Shell->expand("Module",$m[$i]);
-            $have = $mod ? CPAN::Shell->expand("Module",$m[$i])->inst_version : "";
+            $have = CPAN::Shell->expand("Module",$m[$i])->inst_version if $mod;
+            $have = "" unless defined $have;
         }
         printf "%2d %-10s$have_format %-20s %s\n", ++$painted, $lt, $have, $m[$i], substr($distro{$m[$i]},5);
     }
