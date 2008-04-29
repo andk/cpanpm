@@ -37,7 +37,6 @@ match:
     |BLBLACK/Term-Spinner-\d
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BRICAS/CGI-Application-PhotoGallery-\d
-    |BOBTFISH/Text-Markdown-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d

@@ -4,7 +4,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 5
+    timeout: 15
     talk:
       - "Do you want to install 'Markdown.pl'\?"
       - "y\n"

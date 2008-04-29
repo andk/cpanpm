@@ -1,3 +1,7 @@
+2008-04-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Bug in new distroprefs: sorting has been lost
+
 2008-04-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* get-reports: when we get no clue from whatever we try we would like to
