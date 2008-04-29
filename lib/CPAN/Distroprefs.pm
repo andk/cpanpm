@@ -151,12 +151,15 @@ sub find {
     my ($self, $dir, $ext_map) = @_;
 
     my $dh = DirHandle->new($dir) or Carp::croak("Couldn't open '$dir': $!");
+    my @files;
+    while (defined(my $file = $dh->read)) { push @files, $file }
+    @files = sort @files;
 
     # label the block so that we can use redo in the middle
     return CPAN::Distroprefs::Iterator->new(sub { LOOP: {
         return unless %$ext_map;
 
-        local $_ = $dh->read;
+        local $_ = shift @files;
         return unless defined;
         redo if $_ eq '.' || $_ eq '..';
 

@@ -5,11 +5,23 @@ use Config;
 use CPAN::Distroprefs;
 
 eval "require YAML; 1" or plan skip_all => "YAML required";
-plan tests => 4;
+plan tests => 5;
 
 my %ext = (
   yml => 'YAML',
 );
+
+my $finder = CPAN::Distroprefs->find(
+  './distroprefs', \%ext,
+);
+
+my $last = '0';
+my $errors = 0;
+while (my $next = $finder->next) {
+  $errors++ if $next->file lt $last;
+  $last = $next->file;
+}
+is($errors, 0, "finder traversed alphabetically");
 
 sub find_ok {
   my ($arg, $expect, $label) = @_;
