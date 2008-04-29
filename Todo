@@ -1,5 +1,7 @@
 2008-04-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* XML::SAX::RTF needs an emergency release
+
 	* Bug in new distroprefs: sorting has been lost
 
 2008-04-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
