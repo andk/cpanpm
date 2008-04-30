@@ -112,6 +112,7 @@ match:
     |JESSE/Data-ICal-\d
     |JESSE/Shipwright-\d
     |JROBINSON/DBIx-Class-\d
+    |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
     |JROCKWAY/Angerwhale-\d
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
@@ -201,6 +202,7 @@ match:
     |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
+    |YAPPO/HTTP-Engine-\d
     |YARON/WWW-Monitor-\d
     |YVESAGO/NET-Sieve-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d

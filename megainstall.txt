@@ -129,6 +129,7 @@ Catalyst::Action::RenderView
 Catalyst::Devel
 Catalyst::Plugin::Assets
 Catalyst::Plugin::Authentication
+Catalyst::Plugin::Authentication::Credential::TypeKey
 Catalyst::Plugin::Authorization::Roles
 Catalyst::Plugin::ConfigLoader
 Catalyst::Plugin::FormValidator
@@ -187,6 +188,7 @@ Class::Std
 Class::Std::Fast
 Class::Throwable
 Class::Trait
+Class::Value::Contact
 Class::Virtual
 Class::Workflow
 Class::XPath
@@ -295,6 +297,7 @@ Data::Properties
 Data::Random
 Data::Remember
 Data::SExpression
+Data::Semantic::URI
 Data::ShowTable
 Data::Structure::Util
 Data::Swap
@@ -373,6 +376,7 @@ Digest::SHA
 Digest::SHA1
 Digest::SHA::PurePerl
 Digest::Tiger
+Dir::Which
 Directory::Scratch
 DocSet
 ETL::Pequel
@@ -432,6 +436,7 @@ File::CounterFile
 File::ExtAttr
 File::Extract
 File::Fetch
+File::Filename
 File::Headerinfo::SWF
 File::MMagic::XS
 File::Mirror
@@ -542,9 +547,11 @@ HTML::TokeParser::Simple
 HTML::TreeBuilder
 HTML::TreeBuilder::XPath
 HTML::Widget
+HTML::WidgetValidator
 HTML::WikiConverter
 HTTP::BrowserDetect
 HTTP::CryptoCookie
+HTTP::Engine
 HTTP::GHTTP
 HTTP::MobileAttribute::Plugin::Default::AirHPhone
 HTTP::Parser
@@ -941,6 +948,7 @@ RDF::Core
 RDF::Server
 RDF::Simple
 RPC::JSON
+RPC::Object
 RPC::PlServer
 RPC::XML
 RRDTool::Creator
@@ -1054,6 +1062,7 @@ Sys::CPU
 Sys::Hostname
 Sys::Mmap
 Sys::SigAction
+Sys::Statistics::Linux
 Sys::Virt
 SystemC::Vregs
 TAP::Parser
