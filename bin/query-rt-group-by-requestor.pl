@@ -3,6 +3,40 @@
 
 # see first posting http://use.perl.org/~LaPerla/journal/35252
 
+=pod
+
+RT::Client::REST broke at some point in time and I posted a mostly
+clueless patch that seemed to work. At least the progam did not die
+immediately. The patch was integrated into 0.35 and soon after that
+ticket 35146 was opened that reverted a part of my patch. (Sidenote:
+The patch is posted reverse)
+
+Now with that patch this program again died quickly with
+
+    HTTP::Message content must be bytes
+
+So I decided to patch REST thusly:
+
+--- /home/k/.cpan/build/RT-Client-REST-0.35-d_Mo_f/lib/RT/Client/REST.pm	2008-04-15 12:24:11.000000000 +0200
++++ /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/lib/site_perl/5.10.0/RT/Client/REST.pm	2008-05-01 09:27:13.000000000 +0200
+@@ -496,7 +496,8 @@
+         # not sufficiently portable and uncomplicated.)
+         $res->code($1);
+         $res->message($2);
+-        $res->decoded_content($text);
++        use Encode;
++        $res->content(Encode::encode_utf8($text));
+         #$session->update($res) if ($res->is_success || $res->code != 401);
+         if ($res->header('set-cookie')) {
+             my $jar = HTTP::Cookies->new;
+
+
+
+
+Of course this cannot be correct but for me it works right now quite
+well but only because rt.cpan.orgg sends charset=utf-8 or so.
+
+=cut
 
 use strict;
 use warnings;
@@ -35,6 +69,8 @@ if (-e $yaml_db_file) {
   $ALL = {};
 }
 my $curmax = max keys %{$ALL->{tickets} || {}};
+$curmax ||= 0;
+print "highest registered ticket number ATM: $curmax\n";
 $curmax ||= 1;
 FINDHOLES: for (my $i = 1; $i <= $curmax; $i++) {
   if (exists $ALL->{tickets}{$i}) {
@@ -43,6 +79,17 @@ FINDHOLES: for (my $i = 1; $i <= $curmax; $i++) {
     last FINDHOLES;
   }
 }
+print "Max after findholes: $curmax\n";
+TRIM: for (my $i = $curmax;;$i--) {
+    my $ticket = $ALL->{tickets}{$i};
+    $curmax = $i;
+    if (keys %$ticket) {
+        last;
+    } else {
+        delete $ALL->{tickets}{$i};
+    }
+}
+print "Max after trim: $curmax\n";
 
 my $nextmax = $curmax + $Config{chunksize};
 
@@ -59,9 +106,7 @@ if ($Config{password}) {
   eval {
     @ids = $rt->search(
                        type    => 'ticket',
-                       query   => qq[
-            (Id >= $curmax and Id <= $nextmax)
-        ],
+                       query   => qq[(Id >= $curmax and Id <= $nextmax)],
                       );
   };
   die "search failed: $@" if $@;
@@ -82,11 +127,16 @@ if ($Config{password}) {
         print "stopping at $id. Maybe we have reached the upper end\n";
         last ID;
       }
-      $ALL->{tickets}{$id} = exists $ids{$id} ? $rt->show(type => 'ticket', id => $id) : {};
+      my $ticket = exists $ids{$id} ? $rt->show(type => 'ticket', id => $id) : {};
+      unless (keys %$ticket) {
+          $DB::single++;
+          $feedback = "?";
+      }
+      $ALL->{tickets}{$id} = $ticket;
       print $feedback;
     }
     delete $ids{$id};
-    unless ($id % 15){
+    unless ($id % 17){
       print "z";
       sleep 3;
     }
