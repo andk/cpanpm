@@ -1,7 +1,7 @@
 # some recent 5.10.1 not threaded and with -g:
 /home/src/perl/repoperls/installed-perls/maint-5.10/pJQOW0w/perl-5.10.0@33443/bin/perl
 # threaded and not -g:
-/home/src/perl/repoperls/installed-perls/maint-5.10/piB7lpk/perl-5.10.0@33412/bin/perl
+/home/src/perl/repoperls/installed-perls/maint-5.10/pecapvd/perl-5.10.0@33628/bin/perl
 
 # 5.10.0 itself:
 /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
@@ -24,7 +24,10 @@
 # 5.8.6:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pes4ltZ/perl-5.8.0@24329/bin/perl
 
-# not sure if the old File::Temp is behaving correctly
-/usr/local/perl-5.6.2/bin/perl
+# 5.8.5:
+/home/src/perl/repoperls/installed-perls/maint-5.8/pxPtejL/perl-5.8.0@23262/bin/perl
+
+# /usr/local getting too crowded
+# /usr/local/perl-5.6.2/bin/perl
 
 # /usr/local/perl-5.005_05/bin/perl
