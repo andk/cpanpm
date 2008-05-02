@@ -8580,9 +8580,9 @@ sub unsat_prereq {
                             # and 2008-04: #30464 (for 'make test')
                             $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                                     "'$need_module => $need_version' ".
-                                                    "for '$selfid' already installed ".
+                                                    "for '$selfid' already built ".
                                                     "but the result looks suspicious. ".
-                                                    "Skipping another installation attempt, ".
+                                                    "Skipping another build attempt, ".
                                                     "to prevent looping endlessly.\n"
                                                    );
                             next NEED;
