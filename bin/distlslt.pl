@@ -8,6 +8,7 @@ use Time::Progress;
 
 our %Opt;
 GetOptions(\%Opt,
+           "fulldate!",
            "n=n",
            "withcpan!",
            ) or die "Usage: ...";
@@ -55,20 +56,29 @@ my $painted = 0;
 if ($Opt{withcpan}) {
     CPAN::Index->reload;
 }
+my $now = DateTime->now;
 for my $i (0..$#m) {
     while (($painted/$Opt{n}) < ($i/@m)) {
         my $age = $age{$m[$i]};
         my $mtime = $^T-86400*$age;
-        my $lt = DateTime->from_epoch(epoch => $mtime)->ymd;
+        my $dt = DateTime->from_epoch(epoch => $mtime);
+        my $lt = $dt->ymd;
+        my $age_days = int(($now->epoch - $dt->epoch)/86400);
         my $have = "";
         my $have_format = "%s";
+        my $display_date = $age_days;
+        my $date_format = "%4d";
         if ($Opt{withcpan}) {
             $have_format = " %-5s";
             my $mod = CPAN::Shell->expand("Module",$m[$i]);
             $have = CPAN::Shell->expand("Module",$m[$i])->inst_version if $mod;
             $have = "" unless defined $have;
         }
-        printf "%2d %-10s$have_format %-20s %s\n", ++$painted, $lt, $have, $m[$i], substr($distro{$m[$i]},5);
+        if ($Opt{fulldate}) {
+            $date_format = "%-10s";
+            $display_date = $lt;
+        }
+        printf "%2d $date_format$have_format %-20s %s\n", ++$painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
     }
 }
 
