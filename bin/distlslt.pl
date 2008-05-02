@@ -117,7 +117,7 @@ my @txlabel = map { sprintf "%dm", int(-$_/30+.5) } @{$value_sets->[0]}[@t_index
                                                  value_sets => $value_sets,
                                                 },
                                   );
-    print $chart->get_url, "&chxt=x,r&chxl=0:|$txlabel[0]|$txlabel[1]|$txlabel[2]|1:|0|25|50|75|100&chxp=0,$txpos[0],$txpos[1],$txpos[2]&chm=c,FF0000,0,$t_index[0],10|c,FF0000,0,$t_index[1],10|c,FF0000,0,$t_index[2],10&chf=c,ls,90,999999,0.25,AAAAAA,0.25,CCCCCC,0.25,EEEEEE,0.25\n";
+    print $chart->get_url, "&chls=3&chxt=x,r&chxl=0:|$txlabel[0]|$txlabel[1]|$txlabel[2]|1:|0|25|50|75|100&chxp=0,$txpos[0],$txpos[1],$txpos[2]&chm=c,FF0000,0,$t_index[0],10|c,FF0000,0,$t_index[1],10|c,FF0000,0,$t_index[2],10&chf=c,ls,90,999999,0.25,AAAAAA,0.25,CCCCCC,0.25,EEEEEE,0.25\n";
 }
 
 =pod
