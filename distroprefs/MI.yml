@@ -45,6 +45,7 @@ match:
     |BRICAS/Template-Provider-FromDATA-\d
     |BRICAS/URI-Template-\d
     |BRICAS/WWW-OpenSearch-\d
+    |BTROTT/Authen-TypeKey-\d
     |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
@@ -89,6 +90,7 @@ match:
     |GAAL/Class-Rebless-\d
     |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
+    |GBARR/Authen-SASL-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
     |GRODITI/MooseX-Object-Pluggable-\d
