@@ -81,17 +81,27 @@ for my $i (0..$#m) {
         }
         $painted++;
         printf "%2d $date_format$have_format %-20s %s\n", $painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
-        push @{$value_sets->[0]}, 100*$display_date/3000;
-        push @{$value_sets->[1]}, 100*(1-(($painted-1)/$Opt{n}));
+        push @{$value_sets->[0]}, -$display_date;
+        push @{$value_sets->[1]}, 1-(($painted-1)/$Opt{n});
     }
 }
+push @{$value_sets->[0]}, $value_sets->[0][-1]; # must use the 0 for proper scaling
+push @{$value_sets->[1]}, 0;
+# good enough results with n=20
+# todo: right axis, labels 75,50,25 and the 3 corresponding dates
 {
     use Google::Chart;
-    require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump({value_sets=>$value_sets}); # XXX
+    use List::Util qw(min max);
+    for my $vs (@$value_sets) {
+        my $min = min @$vs;
+        my $max = max @$vs;
+        my $range = $max - $min;
+        $vs = [ map { 100 * ($_ - $min)/$range } @$vs ];
+    }
 
     my $chart = Google::Chart->new(
                                    type_name => 'type_line_xy',
-                                   set_size  => [ 300, 100 ],
+                                   set_size  => [ 300, 120 ],
                                    data_spec => {
                                                  encoding  => 'data_simple_encoding',
                                                  max_value => 100,
