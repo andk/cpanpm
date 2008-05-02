@@ -65,6 +65,7 @@ Bit::Vector::Minimal
 BitTorrent
 Blikistan
 Bloom::Filter
+Bot::Net
 Brackup
 Bundle::Encode
 Bundle::POE::IRC
@@ -232,6 +233,7 @@ Crypt::DES
 Crypt::DH
 Crypt::DSA
 Crypt::IDEA
+Crypt::NULL
 Crypt::OpenPGP
 Crypt::OpenSSL::Bignum
 Crypt::OpenSSL::RSA
@@ -543,6 +545,7 @@ HTML::Tagset
 HTML::Template
 HTML::Template::Compiled
 HTML::Tidy
+HTML::ToDocBook
 HTML::TokeParser::Simple
 HTML::TreeBuilder
 HTML::TreeBuilder::XPath
@@ -748,6 +751,7 @@ Moose
 Moose::Autobox
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Storage
+MooseX::Types::Set::Object
 Net::Amazon
 Net::Analysis
 Net::CIDR
@@ -1026,6 +1030,7 @@ ShiftJIS::X0213::MapUTF
 ShipIt
 Shipwright
 Smart::Comments
+Sms::Token::UD
 Socket6
 Sort::ArbBiLex
 Sort::Key::Radix
@@ -1231,6 +1236,7 @@ Tk::Wizard
 Tk::XMLViewer
 Touch
 Transform::Canvas
+Tree::Simple::View
 Tripletail
 UML::Sequence
 UMMF
