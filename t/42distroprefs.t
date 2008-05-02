@@ -20,7 +20,7 @@ my $last = '0';
 my @errors;
 while (my $next = $finder->next) {
   if ( $next->file lt $last ) {
-      push @errors, $next->file . " not lt $last\n";
+      push @errors, $next->file . " lt $last\n";
   }
   $last = $next->file;
 }
