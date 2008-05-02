@@ -17,12 +17,14 @@ my $finder = CPAN::Distroprefs->find(
 );
 
 my $last = '0';
-my $errors = 0;
+my @errors;
 while (my $next = $finder->next) {
-  $errors++ if $next->file lt $last;
+  if ( $next->file lt $last ) {
+      push @errors, $next->file . " not lt $last\n";
+  }
   $last = $next->file;
 }
-is($errors, 0, "finder traversed alphabetically");
+is(scalar @errors, 0, "finder traversed alphabetically") or diag @errors;
 
 sub find_ok {
   my ($arg, $expect, $label) = @_;
