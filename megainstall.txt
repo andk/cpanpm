@@ -28,6 +28,7 @@ Apache::Session::Counted
 Apache::Status::DBI
 Apache::Test
 App::Ack
+App::Asciio
 App::CLI
 App::Info
 App::Info::Lib::Iconv
@@ -298,6 +299,7 @@ Data::Phrasebook
 Data::Properties
 Data::Random
 Data::Remember
+Data::Rmap
 Data::SExpression
 Data::Semantic::URI
 Data::ShowTable
@@ -328,6 +330,7 @@ DateTime::Format::Pg
 DateTime::Format::RSS
 DateTime::Format::W3CDTF
 DateTime::Set
+Devel::ArgNames
 Devel::CallTrace
 Devel::Caller
 Devel::CheckLib
@@ -485,6 +488,7 @@ GSSAPI
 GTop
 Games::Bingo
 Geo::Cache
+Geo::Google::PolylineEncoder
 Geo::Gpx
 Geo::Raster
 Geo::Proj::Japan
@@ -539,6 +543,7 @@ HTML::Selector::XPath
 HTML::SimpleParse
 HTML::StickyQuery
 HTML::TableExtract
+HTML::TableParser
 HTML::TagCloud
 HTML::TagCloud::Sortable
 HTML::Tagset
@@ -913,6 +918,7 @@ Pod::Coverage
 Pod::Coverage::CountParents
 Pod::Escapes
 Pod::Find
+Pod::Generated
 Pod::HtmlPsPdf
 Pod::LaTeX
 Pod::Manual
@@ -1131,6 +1137,7 @@ Test::Prereq
 Test::Reporter
 Test::SubCalls
 Test::Tester
+Test::Trap
 Test::Unit::Runner::XML
 Test::WWW::Declare
 Test::WWW::Mechanize
