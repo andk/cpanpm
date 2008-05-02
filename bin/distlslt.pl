@@ -57,6 +57,7 @@ if ($Opt{withcpan}) {
     CPAN::Index->reload;
 }
 my $now = DateTime->now;
+my $value_sets = [];
 for my $i (0..$#m) {
     while (($painted/$Opt{n}) < ($i/@m)) {
         my $age = $age{$m[$i]};
@@ -78,10 +79,27 @@ for my $i (0..$#m) {
             $date_format = "%-10s";
             $display_date = $lt;
         }
-        printf "%2d $date_format$have_format %-20s %s\n", ++$painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
+        $painted++;
+        printf "%2d $date_format$have_format %-20s %s\n", $painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
+        push @{$value_sets->[0]}, 100*$display_date/3000;
+        push @{$value_sets->[1]}, 100*(1-(($painted-1)/$Opt{n}));
     }
 }
+{
+    use Google::Chart;
+    require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump({value_sets=>$value_sets}); # XXX
 
+    my $chart = Google::Chart->new(
+                                   type_name => 'type_line_xy',
+                                   set_size  => [ 300, 100 ],
+                                   data_spec => {
+                                                 encoding  => 'data_simple_encoding',
+                                                 max_value => 100,
+                                                 value_sets => $value_sets,
+                                                },
+                                  );
+    print $chart->get_url, "\n";
+}
 
 =pod
 
