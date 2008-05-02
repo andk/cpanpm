@@ -1,4 +1,4 @@
-I::Categorizer
+AI::Categorizer
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344

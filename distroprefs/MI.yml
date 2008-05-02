@@ -141,11 +141,15 @@ match:
     |MARCEL/Class-Factory-Enhanced-\d
     |MARCEL/Class-Scaffold-\d
     |MARCEL/Class-Value-\d
+    |MARCEL/Class-Value-Contact-\d
     |MARCEL/Data-Conveyor-\d
+    |MARCEL/Data-Semantic-\d
+    |MARCEL/Data-Semantic-URI-\d
     |MARCEL/Data-Storage-\d
     |MARCEL/Google-Chart-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Pod-Generated-\d
+    |MARCEL/Test-CompanionClasses-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MDXI/Curses-UI-\d

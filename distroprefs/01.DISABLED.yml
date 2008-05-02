@@ -48,6 +48,7 @@ match:
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EKAWAS/MOBY-                            # hangs
     |ERIC/OpenThought-\d                     # too old MI, 0.63 in 1.99.16, RT 33279
+    |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
