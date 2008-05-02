@@ -58,6 +58,7 @@ if ($Opt{withcpan}) {
 }
 my $now = DateTime->now;
 my $value_sets = [];
+my @t_index;
 for my $i (0..$#m) {
     while (($painted/$Opt{n}) < ($i/@m)) {
         my $age = $age{$m[$i]};
@@ -79,14 +80,21 @@ for my $i (0..$#m) {
             $date_format = "%-10s";
             $display_date = $lt;
         }
+        if ($painted>1 && (($painted % ($Opt{n}/4)) == ($Opt{n}/4-1))) {
+            push @t_index, $painted;
+        }
         $painted++;
         printf "%2d $date_format$have_format %-20s %s\n", $painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
         push @{$value_sets->[0]}, -$display_date;
         push @{$value_sets->[1]}, 1-(($painted-1)/$Opt{n});
     }
 }
-push @{$value_sets->[0]}, $value_sets->[0][-1]; # must use the 0 for proper scaling
-push @{$value_sets->[1]}, 0;
+unless (@t_index == 3) {
+    warn "ALERT: not 3 elements in t_index[@t_index]";
+}
+XAXIS: push @{$value_sets->[0]}, $value_sets->[0][-1]; # must use the 0 for proper scaling
+YAXIS: push @{$value_sets->[1]}, 0;
+my @txlabel = map { sprintf "%dd", -$_ } @{$value_sets->[0]}[@t_index];
 # good enough results with n=20
 # todo: right axis, labels 75,50,25 and the 3 corresponding dates
 {
@@ -96,8 +104,9 @@ push @{$value_sets->[1]}, 0;
         my $min = min @$vs;
         my $max = max @$vs;
         my $range = $max - $min;
-        $vs = [ map { 100 * ($_ - $min)/$range } @$vs ];
+        $vs = [ map { int(100 * ($_ - $min)/$range) } @$vs ];
     }
+    my @txpos = @{$value_sets->[0]}[@t_index];
 
     my $chart = Google::Chart->new(
                                    type_name => 'type_line_xy',
@@ -108,7 +117,7 @@ push @{$value_sets->[1]}, 0;
                                                  value_sets => $value_sets,
                                                 },
                                   );
-    print $chart->get_url, "\n";
+    print $chart->get_url, "&chxt=x,r&chxl=0:|$txlabel[0]|$txlabel[1]|$txlabel[2]|1:|0|25|50|75|100&chxp=0,$txpos[0],$txpos[1],$txpos[2]&chm=c,FF0000,0,$t_index[0],10|c,FF0000,0,$t_index[1],10|c,FF0000,0,$t_index[2],10&chf=c,ls,90,999999,0.25,AAAAAA,0.25,CCCCCC,0.25,EEEEEE,0.25\n";
 }
 
 =pod
