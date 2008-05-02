@@ -1030,6 +1030,7 @@ ShiftJIS::X0213::MapUTF
 ShipIt
 Shipwright
 Smart::Comments
+SmartMatch::Sugar
 Sms::Token::UD
 Socket6
 Sort::ArbBiLex
