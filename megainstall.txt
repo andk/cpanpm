@@ -1246,6 +1246,7 @@ URI
 URI::Escape::JavaScript
 URI::Fetch
 URI::Find
+URI::Find::UTF8
 URI::Template
 URI::Title
 URI::URL
