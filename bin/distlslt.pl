@@ -94,7 +94,7 @@ unless (@t_index == 3) {
 }
 XAXIS: push @{$value_sets->[0]}, $value_sets->[0][-1]; # must use the 0 for proper scaling
 YAXIS: push @{$value_sets->[1]}, 0;
-my @txlabel = map { sprintf "%dd", -$_ } @{$value_sets->[0]}[@t_index];
+my @txlabel = map { sprintf "%dm", int(-$_/30+.5) } @{$value_sets->[0]}[@t_index];
 # good enough results with n=20
 # todo: right axis, labels 75,50,25 and the 3 corresponding dates
 {
