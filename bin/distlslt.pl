@@ -1,6 +1,19 @@
 use strict;
 use warnings;
 
+=pod
+
+This is the script I used to prepare the posting "How fresh is the
+CPAN":
+
+http://use.perl.org/~LaPerla/journal/36320
+
+I called it with '-n 12', higher numbers were not that well painted by
+google. Note that the N must be devideable by 4 to get the graphics
+correct.
+
+=cut
+
 use CPAN;
 use DateTime;
 use Getopt::Long;
@@ -80,21 +93,26 @@ for my $i (0..$#m) {
             $date_format = "%-10s";
             $display_date = $lt;
         }
-        if ($painted>1 && (($painted % ($Opt{n}/4)) == ($Opt{n}/4-1))) {
-            push @t_index, $painted;
-        }
         $painted++;
+        my $fullquart = int($Opt{n}/4+.01);
+        if ($painted>1 && ((($painted-1) % $fullquart) == 0)) {
+            push @t_index, $painted-1;
+        }
         printf "%2d $date_format$have_format %-20s %s\n", $painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
         push @{$value_sets->[0]}, -$display_date;
         push @{$value_sets->[1]}, 1-(($painted-1)/$Opt{n});
     }
 }
-unless (@t_index == 3) {
-    warn "ALERT: not 3 elements in t_index[@t_index]";
-}
+warn "DEBUG: t_index[@t_index]";
 XAXIS: push @{$value_sets->[0]}, $value_sets->[0][-1]; # must use the 0 for proper scaling
 YAXIS: push @{$value_sets->[1]}, 0;
-my @txlabel = map { sprintf "%dm", int(-$_/30+.5) } @{$value_sets->[0]}[@t_index];
+my @txlabel;
+my $display_months = 1;
+if ($display_months) {
+    @txlabel = map { sprintf "%.1fm", -$_/30 } @{$value_sets->[0]}[@t_index];
+} else {
+    @txlabel = map { sprintf "%dd", -$_ } @{$value_sets->[0]}[@t_index];
+}
 # good enough results with n=20
 # todo: right axis, labels 75,50,25 and the 3 corresponding dates
 {
