@@ -1,3 +1,46 @@
+2008-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* SOAP-WSDL fails sometimes with Can't locate object method "new" via
+	package "SOAP::WSDL::Transport::HTTP"
+
+	Stepping through the debugger reveals it may have to do with the fact
+	that I have Test::Without::Module installed. Because otherwise he skips
+	tests silently.
+
+	http://rt.cpan.org/Ticket/Display.html?id=35610
+
+	* Catalyst-View-Jemplate 0.06 had a few fails recently, the first on May
+	1.
+
+	Jemplate 0.22 seems to break it
+
+    CPAN_FILE    R/RK/RKRIMEN/Jemplate-0.22.tar.gz
+    UPLOAD_DATE  2008-04-29
+
+	There is no older version in the RKRIMEN directory. Previous maintainer
+	was INGY. Downgrading to INGY/Jemplate-0.21? Does not fix it. 0.20 fixes
+	this.
+
+	http://rt.cpan.org//Ticket/Display.html?id=35609
+
+	* DROLSKY/Log-Dispatch-2.21.tar.gz has its first fail ever yesterday.
+
+	Looks like a Params::Validate issue
+
+	k75 33755 0.89 PASS
+	k75 33755 0.90 FAIL
+	k81 32642 0.89 PASS
+	k81 32642 0.90 FAIL
+	k78 5.8.8 0.89 PASS
+	k78 5.8.8 0.90 FAIL
+
+	http://rt.cpan.org/Ticket/Display.html?id=35608
+
+	* SHA256-0.01b has some 64bit issue. All FAILs are systems that have
+	use64bitint set.
+
+	http://rt.cpan.org/Ticket/Display.html?id=33944
+
 2008-04-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* XML::SAX::RTF needs an emergency release
