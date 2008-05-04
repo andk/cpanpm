@@ -12,6 +12,7 @@ Algorithm::Permute
 Algorithm::Points::MinimumDistance
 AltaVista::BabelFish
 Alter
+Alvis::TermTagger
 Alzabo
 Angerwhale
 Apache
@@ -144,6 +145,7 @@ Catalyst::View::TT
 CharsetDetector
 Chart::Math::Axis
 Chart::Mountain
+Chart::OFC
 Chatbot::Eliza
 Chroniton
 Class::Accessor
@@ -195,6 +197,7 @@ Class::Virtual
 Class::Workflow
 Class::XPath
 Class::XSAccessor
+Class::XSAccessor::Array
 Class::constr
 Clone
 Code::Splice
@@ -260,6 +263,7 @@ DBIx::Admin::TableInfo
 DBIx::Class
 DBIx::Class::Indexed
 DBIx::Class::Schema::Loader
+DBIx::Class::Stash
 DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
@@ -520,6 +524,7 @@ Graphics::ColorNames
 Graphics::ColorObject
 Gtk
 Gtk2
+Gungho
 HOP::Lexer
 HTML::Clean
 HTML::DOM
@@ -571,6 +576,8 @@ HTTP::Server::Simple::Dispatched
 HTTP::Server::Simple::Mason
 Handel
 Hash::AsObject
+Hash::Merge
+Hash::Merge::Simple
 Heap
 Heap::Simple
 Hook::Scope
@@ -607,6 +614,7 @@ IPC::Open2
 IPC::PubSub
 IPC::Run
 IPC::ShareLite
+IWL::Break
 Image::ANSI
 Image::Delivery
 Image::ExifTool
@@ -618,6 +626,7 @@ Image::Pngslimmer
 Image::Size
 Imager
 Imager::Graph
+IncPatch
 Inline
 InlineX::C2XS
 InlineX::CPP2XS
@@ -755,6 +764,8 @@ MojoMojo
 Moose
 Moose::Autobox
 MooseX::Emulate::Class::Accessor::Fast
+MooseX::Iterator
+MooseX::Mutate
 MooseX::Storage
 MooseX::Types::Set::Object
 Net::Amazon
@@ -1287,6 +1298,7 @@ User
 User::Identity
 Util::Properties
 V
+VCI
 VFSsimple
 VS::Chart
 Verilog::Parser
