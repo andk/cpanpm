@@ -74,6 +74,7 @@ match:
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
+    |DMAKI/WWW-RobotRules-Parser-\d
     |DMAKI/Web-Scraper-Config-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
@@ -192,6 +193,7 @@ match:
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
+    |SARTAK/IncPatch-\d
     |SARTAK/Jifty-DBI-\d
     |SARTAK/Jifty-Plugin-OAuth-\d
     |(?:JESSE|SARTAK)/Jifty-\d
