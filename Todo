@@ -1,3 +1,32 @@
+2008-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Devel::Profiler
+
+	http://rt.cpan.org/Ticket/Display.html?id=35620
+
+	* new bug in Module::Install? MooseX::Storage declares the dependency
+	"Best" on feature "YAML". Then I set my usual environment variables for
+	Module::Install and nobody asks a question and Best is not being
+	installed. Who's doing wrong?
+
+	To find out, we need a perl without Best.pm. 33711
+
+	Trying on the commandline both
+
+	/home/src/perl/repoperls/installed-perls/perl/pw3p8BE/perl-5.10.0@33711/bin/perl Build.PL
+	and
+	/home/src/perl/repoperls/installed-perls/perl/pw3p8BE/perl-5.10.0@33711/bin/perl Makefile.PL
+
+	ask the right questions, But setting either PERL_AUTOINSTALL=--skip or
+	PERL_EXTUTILS_AUTOINSTALL=--skip leads to no questions asked.
+
+	This is contrary to my expectations but as I'm not sure how
+	Module::Install intends to behave I cannot really tell what's up.
+
+	I filed a ticket against Module::Install to please provide some docs.
+
+	https://rt.cpan.org/Ticket/Display.html?id=35619
+
 2008-05-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* SOAP-WSDL fails sometimes with Can't locate object method "new" via
