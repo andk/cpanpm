@@ -298,6 +298,7 @@ Data::Hive
 Data::ICal
 Data::ICal::TimeZone
 Data::Lazy
+Data::Libra
 Data::OptList
 Data::Phrasebook
 Data::Properties
@@ -525,6 +526,7 @@ Graphics::ColorObject
 Gtk
 Gtk2
 Gungho
+GunghoX::FollowLinks
 HOP::Lexer
 HTML::Clean
 HTML::DOM
