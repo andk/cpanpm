@@ -513,8 +513,7 @@ sub _yaml_loadfile {
         # temporarly enable yaml code deserialisation
         no strict 'refs';
         # 5.6.2 could not do the local() with the reference
-        local $YAML::LoadCode;
-        local $YAML::Syck::LoadCode;
+        local ${"$yaml_module\::LoadCode"};
         ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
 
         my $code;
