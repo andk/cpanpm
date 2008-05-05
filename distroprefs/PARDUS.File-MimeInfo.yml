@@ -5,6 +5,12 @@ comment: |
   Pod::Coverage but all tests up to 2007-09-15T00:06 had PASS; haven't
   investigated why
 
+  http://rt.cpan.org/Ticket/Display.html?id=35633 >
+  Duplicate from: http://rt.cpan.org/Public/Bug/Display.html?id=33097
+
+  I must never whine again about decreasing version numbers.
+
+disabled: 1
 match:
   distribution: "PARDUS/File-MimeInfo/File-MimeInfo-\d"
 depends:
