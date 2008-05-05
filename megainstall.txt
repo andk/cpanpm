@@ -576,6 +576,7 @@ HTTP::Response::Encoding
 HTTP::Server::Simple
 HTTP::Server::Simple::Dispatched
 HTTP::Server::Simple::Mason
+HTTPx::Dispatcher
 Handel
 Hash::AsObject
 Hash::Merge
@@ -916,6 +917,7 @@ Perl6::Form
 Perl6::Junction
 Perl6::Perldoc
 Perl6::Say
+Perl::Critic::More
 Perl::Dist
 Perl::MinimumVersion
 Perl::Unsafe::Signals
