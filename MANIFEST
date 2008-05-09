@@ -60,6 +60,7 @@ distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
+distroprefs/CORION.List-Sliding-Changes.yml
 distroprefs/CORION.Test-Without-Module.yml
 distroprefs/CRISB.WWW-Curl.yml
 distroprefs/CSOE.PDL.yml
@@ -103,6 +104,7 @@ distroprefs/EWILHELM.Math-Vec.yml
 distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/FHOXH.Test-Reporter.yml
+distroprefs/FLORA.File-Extractor.yml
 distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/FOTANGO.Data-Structure-Util.yml
@@ -133,7 +135,6 @@ distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
-distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JAYK.Catalyst-Authen-S-D-C.yml
