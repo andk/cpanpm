@@ -4552,7 +4552,7 @@ No patch available between 25563 and 25570
 	Schwern made it a ticket:
 	http://rt.cpan.org/Ticket/Display.html?id=29235
 
-	* sorry for the German. This is a bugreport from Slaven decribing that
+	* sorry for the German. This is a bugreport from Slaven describing that
 	eexpect/anyorder is slower than necessary, sometimes annoyingly slow. I
 	confirm and we tried to hash out solutions.
 
