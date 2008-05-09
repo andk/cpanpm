@@ -235,6 +235,7 @@ Crypt::CBC
 Crypt::CipherSaber
 Crypt::DES
 Crypt::DH
+Crypt::DH::GMP
 Crypt::DSA
 Crypt::IDEA
 Crypt::NULL
@@ -301,6 +302,7 @@ Data::Lazy
 Data::Libra
 Data::OptList
 Data::Phrasebook
+Data::PowerSet
 Data::Properties
 Data::Random
 Data::Remember
@@ -445,6 +447,7 @@ File::Copy
 File::CounterFile
 File::ExtAttr
 File::Extract
+File::Extractor
 File::Fetch
 File::Filename
 File::Headerinfo::SWF
@@ -716,6 +719,7 @@ Mail::Util
 Makefile::DOM
 Makefile::Parser
 Markaya
+MasonX::Resolver::WidgetFactory
 Math::Approx::Symbolic
 Math::Base85
 Math::Bezier::Convert
@@ -820,6 +824,7 @@ Net::Server
 Net::Telnet
 Net::Time
 Net::Twitter
+Net::UCP::IntTimeout
 Net::UploadMirror
 Net::Write
 Net::XMPP
@@ -990,6 +995,7 @@ Regexp::Trie
 ResourcePool
 Return::Value
 Roman
+Rose::DB::Object
 Rose::DateTime
 Rose::HTML::Objects
 Rose::Object
@@ -1036,6 +1042,7 @@ Scalar::Util::Clone
 Scalar::Util::Numeric
 Schedule::Cron
 Scope::Guard
+Scriptalicious
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
@@ -1055,6 +1062,7 @@ SmartMatch::Sugar
 Sms::Token::UD
 Socket6
 Sort::ArbBiLex
+Sort::DataTypes
 Sort::Key::Radix
 Spiffy
 Spoon
@@ -1320,8 +1328,10 @@ WWW::REST
 WWW::RobotRules::Parser
 WWW::Scraper::ISBN::Record
 WWW::Search
+WWW::Search::Metapedia
 WWW::Shorten
 WWW::Slides
+WWW::TarPipe
 Waft
 Want
 Web::Scraper
