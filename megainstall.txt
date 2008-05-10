@@ -264,6 +264,7 @@ DBIx::Admin::TableInfo
 DBIx::Class
 DBIx::Class::Indexed
 DBIx::Class::Schema::Loader
+DBIx::Class::Schema::Slave
 DBIx::Class::Stash
 DBIx::Class::Validation
 DBIx::CopyRecord
@@ -438,6 +439,7 @@ ExtUtils::PkgConfig
 ExtUtils::XSBuilder
 FCGI::Engine
 FLV::Info
+Fault
 Fcntl
 File::BOM
 File::BaseDir
@@ -496,6 +498,7 @@ GSSAPI
 GTop
 Games::Bingo
 Geo::Cache
+Geo::Coordinates::Converter::Format::Degree
 Geo::Google::PolylineEncoder
 Geo::Gpx
 Geo::Raster
@@ -620,6 +623,7 @@ IPC::Mmap
 IPC::Open2
 IPC::PubSub
 IPC::Run
+IPC::SRLock
 IPC::ShareLite
 IWL::Break
 Image::ANSI
@@ -682,6 +686,7 @@ List::MoreUtils
 List::Tuples
 List::Util
 Locale::Constants
+Locale::Geocode
 Locale::Maketext
 Locale::Maketext::Fuzzy
 Locale::Maketext::Gettext
@@ -777,6 +782,7 @@ MooseX::Iterator
 MooseX::Mutate
 MooseX::Storage
 MooseX::Types::Set::Object
+Muldis
 Net::Amazon
 Net::Analysis
 Net::CIDR
@@ -1162,6 +1168,7 @@ Test::Pod
 Test::Pod::Coverage
 Test::Prereq
 Test::Reporter
+Test::Run
 Test::SubCalls
 Test::Tester
 Test::Trap
@@ -1338,6 +1345,7 @@ WWW::Slides
 WWW::TarPipe
 Waft
 Want
+Weather::Google
 Web::Scraper
 Web::Scraper::Config
 WebService::ISBNDB
