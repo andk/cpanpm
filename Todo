@@ -1,3 +1,14 @@
+2008-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Kwiki::Test and 5.10.1 tobe have a problem. 33787 is my maint-5.10,
+	33788 my blead. Autobundles in
+
+	    /home/sand/.cpan/Bundle/Snapshot_2008_05_10_0[01].pm
+
+	First suspect File::Path 2.04 vs 2.06?
+
+	http://rt.cpan.org//Ticket/Display.html?id=35761
+
 2008-05-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Devel::Profiler
