@@ -188,6 +188,7 @@ match:
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
     |RKRIMEN/Catalyst-Plugin-Assets-\d
     |RKRIMEN/File-Assets-\d
+    |RKRIMEN/Hash-Merge-Simple-\d
     |RKRIMEN/Path-Resource-\d
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/App-Nopaste-\d
