@@ -586,6 +586,7 @@ Hash::Merge
 Hash::Merge::Simple
 Heap
 Heap::Simple
+Hook::Filter
 Hook::Scope
 Hyper::Application
 I18N::Charset
@@ -643,6 +644,7 @@ JSON::DWIW
 JSON::XS
 Jcode
 Jifty
+Kephra
 KindaPerl6
 Kwiki
 Kwiki::Blog
@@ -965,12 +967,14 @@ PostScript::Graph::Bar
 PostScript::MailLabels
 PostScript::Simple
 PostScript::Simple::Table
+PowerTools::Data
 Prima
 Proc::ProcessTable
 Proc::Simple
 ProgressMonitor::AbstractConfiguration
 Pugs::Compiler::Perl6
 Pugs::Compiler::Rule
+Purple
 Pushmi
 QDBM_File
 Quantum::Superpositions
@@ -1412,3 +1416,4 @@ re::engine::TRE
 self
 typesafety
 version
+with
