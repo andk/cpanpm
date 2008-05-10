@@ -13,3 +13,9 @@ pl:
   expect:
     - "Do you want to build wxWidgets"
     - "n\n"
+---
+match:
+  distribution: "MBARBON/Wx-\d"
+test:
+  env:
+    DISPLAY: ":121"
