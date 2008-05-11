@@ -311,6 +311,7 @@ Data::Rmap
 Data::SExpression
 Data::Semantic::URI
 Data::ShowTable
+Data::Sofu::List
 Data::Structure::Util
 Data::Swap
 Data::Throttler
@@ -322,6 +323,7 @@ Date::Leapyear
 Date::Manip
 Date::Parse
 Date::Simple
+Date::Tiny
 DateTime
 DateTime::Calendar::Julian
 DateTime::Event::Recurrence
@@ -913,6 +915,7 @@ PPI
 PTools::SDF
 Package::Constants
 PadWalker
+Paper::Specs
 Params::CallbackRequest
 Params::Smart
 Params::Validate
@@ -935,6 +938,7 @@ Perl::Dist
 Perl::MinimumVersion
 Perl::Unsafe::Signals
 Perl::Version
+PerlIO::Util
 PerlIO::eol
 PerlIO::via::dynamic
 PerlIO::via::symlink
@@ -1335,6 +1339,7 @@ WWW::Mechanize::Shell
 WWW::Monitor
 WWW::Ohloh::API
 WWW::OpenSearch
+WWW::PAUSE::CleanUpHomeDir
 WWW::REST
 WWW::RobotRules::Parser
 WWW::Scraper::ISBN::Record
@@ -1409,6 +1414,7 @@ bignum
 capitalization
 encoding::warnings
 enum
+forks
 i18n
 iCal::Parser
 interface
