@@ -211,6 +211,7 @@ match:
     |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
+    |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
     |YARON/WWW-Monitor-\d
     |YVESAGO/NET-Sieve-\d
