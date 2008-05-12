@@ -51,6 +51,7 @@ my %Config = (
                               qr{(?s:I+n+c+r+e+a+s+e+.+?S+e+x+u+a+l+.+?E+n+e+r+g+y+.+a+n+d+.+?P+l+e+a+s+u+r+e+)},
                               qr{It is Very Easy To Loss Weight},
                               qr{8.901.530.28.70\.},
+                              qr{495.{3}772.07.57},
                              ],
              );
 
