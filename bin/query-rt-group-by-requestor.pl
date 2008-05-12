@@ -46,6 +46,8 @@ use Getopt::Long;
 use List::Util qw(max);
 use YAML::Syck;
 
+warn "Working with version $RT::Client::REST::VERSION";
+
 my %Config = (
               server      => 'https://rt.cpan.org',
               username    => 'ANDK',
@@ -116,25 +118,26 @@ if ($Config{password}) {
   $|=1;
   print "filling $curmax..$nextmax\n";
  ID: for my $id ($curmax..$nextmax) {
+    my $feedback;
     if ($ALL->{tickets}{$id}){
+      $feedback = "E"; # existed before
     } else {
-      my $feedback;
       if (exists $ids{$id}) {
-        $feedback = ".";
       } elsif (keys %ids) {
-        $feedback = "_";
       } else {
-        print "stopping at $id. Maybe we have reached the upper end\n";
+        print "\nStopping at $id.\n";
         last ID;
       }
       my $ticket = exists $ids{$id} ? $rt->show(type => 'ticket', id => $id) : {};
-      unless (keys %$ticket) {
-          $DB::single++;
-          $feedback = "?";
+      if (keys %$ticket) {
+        $feedback = "w"; # wrote something interesting
+      } else {
+        $DB::single++;
+        $feedback = "e"; # empty
       }
       $ALL->{tickets}{$id} = $ticket;
-      print $feedback;
     }
+    print $feedback;
     delete $ids{$id};
     unless ($id % 17){
       print "z";
@@ -241,3 +244,8 @@ for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   $top++;
 }
 printf "</dl>\n";
+
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 2
+# End:
