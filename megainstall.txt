@@ -3,6 +3,7 @@ AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
 Acme::Bleach
+Acme::Chef
 Acme::MetaSyntactic
 Algorithm::Annotate
 Algorithm::C3
@@ -37,6 +38,7 @@ App::a2pdf
 App::sync_cpantesters
 AppConfig
 Archive::Builder
+Archive::Cpio
 Archive::Tar
 Archive::Zip
 Array::Iterator
@@ -160,6 +162,7 @@ Class::AutoGenerate
 Class::Base
 Class::C3
 Class::C3::XS
+Class::Component
 Class::DBI
 Class::DBI::AbstractSearch
 Class::DBI::AsForm
@@ -426,6 +429,7 @@ Event::ExecFlow
 Event::Lib
 Event::Notify
 Excel::Template
+Exception::Base
 Expect
 Exporter
 Exporter::Lite
@@ -745,6 +749,7 @@ Math::Geometry::Planar::Offset
 Math::Pari
 Math::Polygon
 Math::Polynom
+Math::Preference::SVD
 Math::Prime::XS
 Math::Random
 Math::Round::Var
@@ -835,6 +840,7 @@ Net::Telnet
 Net::Time
 Net::Twitter
 Net::UCP::IntTimeout
+Net::UPnP
 Net::UploadMirror
 Net::Write
 Net::XMPP
@@ -1014,6 +1020,7 @@ Rose::DateTime
 Rose::HTML::Objects
 Rose::Object
 Rubric
+Runops::Trace
 SGML::Parser::OpenSP
 SIOC
 SNMP
@@ -1173,6 +1180,7 @@ Test::Pod::Coverage
 Test::Prereq
 Test::Reporter
 Test::Run
+Test::Smoke
 Test::SubCalls
 Test::Tester
 Test::Trap
