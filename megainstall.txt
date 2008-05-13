@@ -398,6 +398,7 @@ Dir::Which
 Directory::Scratch
 DocSet
 ETL::Pequel
+EekBoek
 Egg::Model::Session
 Email::Address
 Email::Date
@@ -447,6 +448,7 @@ FCGI::Engine
 FLV::Info
 Fault
 Fcntl
+Fey
 File::BOM
 File::BaseDir
 File::Basename
@@ -631,6 +633,7 @@ IPC::PubSub
 IPC::Run
 IPC::SRLock
 IPC::ShareLite
+IPC::System::Simple
 IWL::Break
 Image::ANSI
 Image::Delivery
@@ -862,6 +865,7 @@ Object::Tiny
 Ogre::SceneManager
 OpenOffice::OOBuilder
 OpenOffice::OODoc
+OpenResty
 OpenThought
 Osgood::Client
 P5NCI

@@ -206,6 +206,7 @@ match:
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |SRI/HTML-Declare-\d
     |STEVAN/FCGI-Engine-\d
+    |STEVAN/Moose-\d
     |STEVAN/MooseX-Daemonize-\d
     |STEVAN/MooseX-Storage-\d
     |STEVAN/Task-Moose-\d
