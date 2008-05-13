@@ -715,6 +715,7 @@ MIME::Lite
 MIME::QuotedPrint
 MKDoc::XML
 MP3::Info
+Macrame
 Mail::Address
 Mail::Alias
 Mail::Audit

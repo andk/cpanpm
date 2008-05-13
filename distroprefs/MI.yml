@@ -68,6 +68,7 @@ match:
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d
+    |DIZ/Locale-Geocode-\d
     |DJERIUS/Shell-GetEnv-\d
     |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/Danga-Socket-Callback-\d

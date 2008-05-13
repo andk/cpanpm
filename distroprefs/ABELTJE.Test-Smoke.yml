@@ -1,0 +1,7 @@
+---
+match:
+  distribution: "ABELTJE/Test-Smoke-\d"
+pl:
+  expect:
+    - "Where would you like to install Test::Smoke\?"
+    - "\n"
