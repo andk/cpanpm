@@ -108,6 +108,7 @@ CPAN::Dependency
 CPAN::Faker
 CPAN::Index::Loader
 CPAN::IndexPod
+CPAN::Metrics
 CPAN::Mini
 CPAN::Reporter::Smoker
 CPAN::Site
@@ -204,6 +205,7 @@ Class::XSAccessor
 Class::XSAccessor::Array
 Class::constr
 Clone
+Coat
 Code::Splice
 Color::Library
 Compress::LZF
@@ -291,6 +293,7 @@ Danga::Socket::Callback
 DashProfiler
 Data::Bind
 Data::Buffer
+Data::Capture
 Data::Conveyor
 Data::Dump
 Data::Dump::Streamer
@@ -1441,6 +1444,7 @@ load
 mixin
 overload
 overload::eval
+parent
 re::engine::PCRE
 re::engine::POSIX
 re::engine::Plan9
