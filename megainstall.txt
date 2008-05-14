@@ -34,6 +34,7 @@ App::Asciio
 App::CLI
 App::Info
 App::Info::Lib::Iconv
+App::TemplateServer
 App::a2pdf
 App::sync_cpantesters
 AppConfig
@@ -204,6 +205,7 @@ Class::XSAccessor::Array
 Class::constr
 Clone
 Code::Splice
+Color::Library
 Compress::LZF
 Compress::Zlib
 Compress::Zlib::Perl
@@ -398,6 +400,7 @@ Dir::Which
 Directory::Scratch
 DocSet
 ETL::Pequel
+EV::ADNS
 EekBoek
 Egg::Model::Session
 Email::Address
@@ -593,6 +596,7 @@ HTTP::Server::Simple::Mason
 HTTPx::Dispatcher
 Handel
 Hash::AsObject
+Hash::Inflator
 Hash::Merge
 Hash::Merge::Simple
 Heap
@@ -654,6 +658,7 @@ InlineX::XS
 Iterator
 JSON
 JSON::DWIW
+JSON::RPC::Server
 JSON::XS
 Jcode
 Jifty
@@ -915,6 +920,7 @@ POE::Component::RSS
 POE::Component::SSLify
 POE::Component::Server::DNS
 POE::Component::Server::HTTP
+POE::Component::Server::SimpleHTTP
 POE::Component::Server::PreforkTCP
 POE::Component::StackedProcessor
 POE::Component::SubWrapper
@@ -1443,4 +1449,5 @@ re::engine::TRE
 self
 typesafety
 version
+version::Limit
 with
