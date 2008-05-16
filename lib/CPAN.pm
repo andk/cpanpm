@@ -1542,12 +1542,13 @@ sub cleanup {
         $subroutine eq '(eval)';
   }
   return if $ineval && !$CPAN::End;
+  # Perl5lib_tempfile is not a global file, so cleanup regardless of lock
+  unlink $Perl5lib_tempfile if defined $Perl5lib_tempfile;
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
   close $META->{LOCKFH};
   unlink $META->{LOCK};
-  unlink $Perl5lib_tempfile if defined $Perl5lib_tempfile;
   # require Carp;
   # Carp::cluck("DEBUGGING");
   if ( $CPAN::CONFIG_DIRTY ) {
