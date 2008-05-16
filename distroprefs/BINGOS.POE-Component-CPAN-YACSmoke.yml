@@ -4,7 +4,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 2
+    timeout: 15
     talk:
       - "Do you want to enable optional Proc::Killfam support"
       - "y\n"

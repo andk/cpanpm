@@ -215,6 +215,7 @@ match:
     |THEPLER/MooseX-Types-Path-Class-\d
     |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
+    |YAPPO/Class-Component-\d
     |YARON/WWW-Monitor-\d
     |YVESAGO/NET-Sieve-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d

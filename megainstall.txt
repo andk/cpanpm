@@ -602,6 +602,7 @@ Hash::AsObject
 Hash::Inflator
 Hash::Merge
 Hash::Merge::Simple
+Hash::Util::FieldHash::Compat
 Heap
 Heap::Simple
 Hook::Filter
@@ -883,6 +884,7 @@ PAR::Dist::FromCPAN
 PAR::Packer
 PApp
 Package::Builder
+Path::Class::Versioned
 PBS::Build
 PDF
 PDF::API2
@@ -942,6 +944,7 @@ Params::Validate
 Paranoid
 Parrot::Interpreter
 Parse::BACKPAN::Packages
+Parse::BooleanLogic
 Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
@@ -1364,6 +1367,7 @@ WWW::OpenSearch
 WWW::PAUSE::CleanUpHomeDir
 WWW::REST
 WWW::RobotRules::Parser
+WWW::Scraper::ISBN::AmazonDE_Driver
 WWW::Scraper::ISBN::Record
 WWW::Search
 WWW::Search::Metapedia
