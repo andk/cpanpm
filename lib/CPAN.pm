@@ -1560,7 +1560,7 @@ sub cleanup {
 sub readhist {
     my($self,$term,$histfile) = @_;
     my($fh) = FileHandle->new;
-    open $fh, "<$histfile" or last;
+    open $fh, "<$histfile" or return;
     local $/ = "\n";
     while (<$fh>) {
         chomp;
