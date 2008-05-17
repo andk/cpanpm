@@ -21,6 +21,7 @@ my $curpos = 0;
 my $line;
 my $file = youngest();
 my $currentpackage;
+$| = 1;
 
 FILE: while () {
     open GWFILE, $file or die "Could not open '$file': $!";
@@ -32,7 +33,7 @@ FILE: while () {
     my $i = 0;
     open GWFILE, $file or die "Could not open '$file': $!";
     my $lastline = "";
-    for (;;) {
+  LINE: for (;;) {
         my $gotone;
         for ($curpos = tell(GWFILE); $line = <GWFILE>; $curpos = tell(GWFILE)) {
             $i++;
@@ -84,6 +85,8 @@ FILE: while () {
         }
         if ($gotone) {
             sleep 0.33;
+        } elsif ($i < $lines) {
+            # no sleep
         } else {
             sleep 1.33;
             my $youngest = youngest();
