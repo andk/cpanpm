@@ -2,17 +2,13 @@
 
 =pod
 
-customization and extension of mytail-f.pl with the ability to switch
-to the next file
+customization and extension of mytail-f.pl for megainstall log files.
 
-Bug: if we stand in the middle of a line, we really disturb the
-output. FIXED
+with the ability to switch to the next file when one file is finished;
 
-Bug II: we're probably reading too often the directory. we chould skip
-that when we just found some output. FIXED
+displaying filename and current package from time to time;
 
-Bug III: we should repeat the current package from the last CPAN.pm:
-line. DONE
+intelligent handling of incomplete lines
 
 =cut
 
@@ -42,7 +38,7 @@ FILE: while () {
             $i++;
             $gotone=1;
             if ($line =~ /^\s+CPAN\.pm:/) {
-                ($currentpackage) = $line =~ /^\s+(\w[^\e]+\w)(?:\e.*)\s*$/;
+                ($currentpackage) = $line =~ /^\s+CPAN\.pm: Going to build\s+(\w[^\e]+\w)(?:\e.*)\s*$/;
             }
             if ($i > $lines - 10) {
                 my @time = localtime;
