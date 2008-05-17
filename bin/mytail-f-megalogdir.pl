@@ -12,7 +12,7 @@ Bug II: we're probably reading too often the directory. we chould skip
 that when we just found some output. FIXED
 
 Bug III: we should repeat the current package from the last CPAN.pm:
-line.
+line. DONE
 
 =cut
 
@@ -24,6 +24,7 @@ use Time::HiRes qw(time sleep);
 my $curpos = 0;
 my $line;
 my $file = youngest();
+my $currentpackage;
 
 FILE: while () {
     open GWFILE, $file or die "Could not open '$file': $!";
@@ -40,6 +41,9 @@ FILE: while () {
         for ($curpos = tell(GWFILE); $line = <GWFILE>; $curpos = tell(GWFILE)) {
             $i++;
             $gotone=1;
+            if ($line =~ /^\s+CPAN\.pm:/) {
+                ($currentpackage) = $line =~ /^\s+(\w[^\e]+\w)(?:\e.*)\s*$/;
+            }
             if ($i > $lines - 10) {
                 my @time = localtime;
                 my $localtime = sprintf "%02d:%02d:%02d", @time[2,1,0];
@@ -47,12 +51,26 @@ FILE: while () {
                 $fractime =~ s/\d+\.//;
                 $fractime .= "0000";
                 my $prefix = sprintf "%5d %s.%s", $i, $localtime, substr($fractime,0,4);
-                if (($i % 13) == 0) {
+                if (($i % 18) == 0) {
+                    my $filelabel = $file;
+                    my $currentpackagelabel;
+                    if ($currentpackage) {
+                        $currentpackagelabel = $currentpackage;
+                        $currentpackagelabel .= " "
+                            while length $currentpackagelabel < length $filelabel;
+                        $filelabel .= " "
+                            while length $currentpackagelabel > length $filelabel;
+                    }
                     if (length $lastline) {
-                        print "\n(($file))\n";
-                        print $lastline;
+                        print "\n(( $filelabel ))\n";
                     } else {
-                        print "(($file))\n";
+                        print "(( $filelabel ))\n";
+                    }
+                    if ($currentpackagelabel) {
+                        print "(( $currentpackagelabel ))\n";
+                    }
+                    if ($lastline) {
+                        print $lastline;
                     }
                 }
                 if (length $lastline) {
