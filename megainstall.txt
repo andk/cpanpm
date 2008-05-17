@@ -1233,6 +1233,7 @@ Text::Reform
 Text::Restructured
 Text::Roman
 Text::Shellwords
+Text::Similarity
 Text::Table
 Text::Tabs
 Text::TabularDisplay
