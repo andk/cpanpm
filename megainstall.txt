@@ -461,6 +461,7 @@ File::Basename
 File::Binary
 File::Copy
 File::CounterFile
+File::EmptyDirs
 File::ExtAttr
 File::Extract
 File::Extractor
@@ -751,6 +752,7 @@ Math::Base85
 Math::Bezier::Convert
 Math::BigInt::FastCalc
 Math::BigInt::GMP
+Math::BigInt::Pari
 Math::BigRat
 Math::Cephes
 Math::Combinatorics
@@ -1355,6 +1357,7 @@ VFSsimple
 VS::Chart
 Verilog::Parser
 Voting::Condorcet::RankedPairs
+Vroom::Vroom
 WWW::ColiPoste
 WWW::Curl
 WWW::Facebook::API
