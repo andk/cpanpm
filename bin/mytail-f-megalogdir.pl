@@ -36,8 +36,10 @@ FILE: while () {
     open GWFILE, $file or die "Could not open '$file': $!";
     my $lastline = "";
     for (;;) {
+        my $gotone;
         for ($curpos = tell(GWFILE); $line = <GWFILE>; $curpos = tell(GWFILE)) {
             $i++;
+            $gotone=1;
             if ($i > $lines - 10) {
                 my @time = localtime;
                 my $localtime = sprintf "%02d:%02d:%02d", @time[2,1,0];
@@ -68,10 +70,12 @@ FILE: while () {
         }
         sleep 0.33;
         seek(GWFILE, $curpos, 0);  # seek to where we had been
-        my $youngest = youngest();
-        if ($youngest ne $file) {
-            $file = $youngest;
-            next FILE;
+        unless ($gotone) {
+            my $youngest = youngest();
+            if ($youngest ne $file) {
+                $file = $youngest;
+                next FILE;
+            }
         }
     }
 }
