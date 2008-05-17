@@ -4,6 +4,9 @@ comment: |
   Why do some people believe that dieing is the appropariate way to
   proceed whan just a dependency is not fulfilled?
 
+  When it comes to the dialog "Install ..." then it is already too
+  late to fix things. (Usually pgk-config not installed)
+
 match:
   distribution: "^TSCH/Cairo-\d"
 depends:
@@ -15,3 +18,9 @@ depends:
 pl:
   args:
     - "PREREQ_FATAL=0"
+  eexpect:
+    mode: anyorder
+    timeout: 10
+    talk:
+      - "Install ExtUtils::PkgConfig from CPAN"
+      - "n\n"

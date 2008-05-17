@@ -36,6 +36,7 @@ match:
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
     |BLBLACK/MooseX-LazyLogDispatch-\d
+    |BOBMATH/Crypt-CAST5_PP-\d
     |BRICAS/CGI-Application-PhotoGallery-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/File-SAUCE-\d
