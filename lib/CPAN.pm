@@ -6399,7 +6399,7 @@ sub get {
         $self->safe_chdir($sub_wd);
         return;
     }
-    return $self->run_MM_or_MB($local_file);
+    return $self->choose_MM_or_MB($local_file);
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
@@ -6661,8 +6661,8 @@ sub satisfy_configure_requires {
     die "never reached";
 }
 
-#-> sub CPAN::Distribution::run_MM_or_MB ;
-sub run_MM_or_MB {
+#-> sub CPAN::Distribution::choose_MM_or_MB ;
+sub choose_MM_or_MB {
     my($self,$local_file) = @_;
     $self->satisfy_configure_requires() or return;
     my($mpl) = File::Spec->catfile($self->{build_dir},"Makefile.PL");
