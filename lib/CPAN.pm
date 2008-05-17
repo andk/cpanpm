@@ -7715,6 +7715,9 @@ is part of the perl-%s distribution. To install that, you need to run
                 }
             } else {
                 push @e, "Has already been made";
+                my $wait_for_prereqs = eval { $self->satisfy_requires };
+                return 1 if $wait_for_prereqs;   # tells queuerunner to continue
+                return $self->goodbye($@) if $@; # tells queuerunner to stop
             }
         }
 
