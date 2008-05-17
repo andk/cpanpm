@@ -6521,7 +6521,7 @@ EOF
             @dirents = @readdir;
         }
         $packagedir = File::Temp::tempdir(
-                                          "cpan_$tdir_base-XXXXXX",
+                                          "$tdir_base-XXXXXX",
                                           DIR => $builddir,
                                           CLEANUP => 0,
                                          );
