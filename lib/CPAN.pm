@@ -6614,6 +6614,31 @@ sub parse_meta_yml {
     return $early_yaml;
 }
 
+#-> sub CPAN::Distribution::satisfy_requires ;
+sub satisfy_requires {
+    my ($self) = @_;
+    if (my @prereq = $self->unsat_prereq("later")) {
+        if ($prereq[0][0] eq "perl") {
+            my $need = "requires perl '$prereq[0][1]'";
+            my $id = $self->pretty_id;
+            $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
+            $self->{make} = CPAN::Distrostatus->new("NO $need");
+            $self->store_persistent_state;
+            die "[prereq] -- NOT OK\n";
+        } else {
+            my $follow = eval { $self->follow_prereqs("later",@prereq); };
+            if (0) {
+            } elsif ($follow) {
+                # signal success to the queuerunner
+                return 1;
+            } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
+                $CPAN::Frontend->mywarn($@);
+                die "[depend] -- NOT OK\n";
+            }
+        }
+    }
+}
+
 #-> sub CPAN::Distribution::satisfy_configure_requires ;
 sub satisfy_configure_requires {
     my($self) = @_;
@@ -7872,26 +7897,9 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
-    if (my @prereq = $self->unsat_prereq("later")) {
-        if ($prereq[0][0] eq "perl") {
-            my $need = "requires perl '$prereq[0][1]'";
-            my $id = $self->pretty_id;
-            $CPAN::Frontend->mywarn("$id $need; you have only $]; giving up\n");
-            $self->{make} = CPAN::Distrostatus->new("NO $need");
-            $self->store_persistent_state;
-            return $self->goodbye("[prereq] -- NOT OK");
-        } else {
-            my $follow = eval { $self->follow_prereqs("later",@prereq); };
-            if (0) {
-            } elsif ($follow) {
-                # signal success to the queuerunner
-                return 1;
-            } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
-                $CPAN::Frontend->mywarn($@);
-                return $self->goodbye("[depend] -- NOT OK");
-            }
-        }
-    }
+    my $wait_for_prereqs = eval { $self->satisfy_requires };
+    return 1 if $wait_for_prereqs;   # tells queuerunner to continue
+    return $self->goodbye($@) if $@; # tells queuerunner to stop
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
