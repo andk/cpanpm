@@ -9,7 +9,7 @@ Bug: if we stand in the middle of a line, we really disturb the
 output. FIXED
 
 Bug II: we're probably reading too often the directory. we chould skip
-that when we just found some output.
+that when we just found some output. FIXED
 
 Bug III: we should repeat the current package from the last CPAN.pm:
 line.
@@ -68,15 +68,17 @@ FILE: while () {
                 }
             }
         }
-        sleep 0.33;
-        seek(GWFILE, $curpos, 0);  # seek to where we had been
-        unless ($gotone) {
+        if ($gotone) {
+            sleep 0.33;
+        } else {
+            sleep 1.33;
             my $youngest = youngest();
             if ($youngest ne $file) {
                 $file = $youngest;
                 next FILE;
             }
         }
+        seek(GWFILE, $curpos, 0);  # seek to where we had been
     }
 }
 
