@@ -237,6 +237,7 @@ Convert::TNEF
 Convert::UUlib
 Coro
 Coro::Debug
+CouchDB::View
 Crypt::Blowfish
 Crypt::CBC
 Crypt::CipherSaber
@@ -518,6 +519,7 @@ Geo::Google::PolylineEncoder
 Geo::Gpx
 Geo::Raster
 Geo::Proj::Japan
+Geo::Query
 Geo::ShapeFile
 Geography::Countries
 Getargs::Long
@@ -799,6 +801,7 @@ MogileFS::Class
 MojoMojo
 Moose
 Moose::Autobox
+MooseX::Clone
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Mutate
@@ -809,6 +812,7 @@ Net::Amazon
 Net::Analysis
 Net::CIDR
 Net::Cmd
+Net::CouchDb
 Net::DNS
 Net::DNS::ToolKit
 Net::DRI

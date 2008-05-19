@@ -1,5 +1,0 @@
---- 
-match:
-  distribution: "^GBARR/Authen-SASL-\d"
-pl: 
-  args: ["--defaultdeps"]

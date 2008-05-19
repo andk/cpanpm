@@ -59,3 +59,21 @@ depends:
     MIME::Base64: 3.0701
     Math::Pari: 0
     URI::Escape: 3.29
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 20
+    reuse: 1
+    talk:
+      - "Auto-install"
+      - "y\n"
+# for very old bundled AutoInstall:
+      - "Do you wish to install"
+      - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip

@@ -28,6 +28,7 @@ match:
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Time-Duration-\d
     |AWWAIID/Continuity-\d
+    |BERLE/MooseX-Method-\d
     |BLBLACK/Catalyst-Model-DBIC-Schema-\d
     |BLBLACK/Catalyst-Plugin-C3-\d
     |BLBLACK/Class-C3-\d
@@ -47,7 +48,6 @@ match:
     |BRICAS/URI-Template-\d
     |BRICAS/WWW-OpenSearch-\d
     |BTROTT/Authen-TypeKey-\d
-    |BTROTT/Crypt-OpenPGP-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
     |BTROTT/XML-Feed-\d
@@ -177,6 +177,7 @@ match:
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
+    |NEKOKAK/DBIx-Class-Stash-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
@@ -234,6 +235,9 @@ pl:
     reuse: 1
     talk:
       - "Auto-install"
+      - "y\n"
+# for very old bundled AutoInstall:
+      - "Do you wish to install"
       - "y\n"
   env:
     PERL_AUTOINSTALL: --skip
