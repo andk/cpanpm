@@ -111,7 +111,6 @@ distroprefs/FOTANGO.Data-Structure-Util.yml
 distroprefs/GAAS.Data-Dump.yml
 distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.libwww.yml
-distroprefs/GBARR.Authen-SASL.yml
 distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBROCK.Tk-StayOnTop.yml

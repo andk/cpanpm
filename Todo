@@ -1,3 +1,26 @@
+2008-05-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* David did some refactoring and now we see that satisfy_requires and
+	satisfy_configure_requires are similar but not foldable into one thing.
+	Is this intentional or are there bugs lurking?
+
+	* "later_for" seems an unused variable, David said. Dispensable or lost
+	in transition? Not lost in transition, rather introduced without a clear
+	mission.
+
+	* bleedperl between 33832 and 33845 broke CPAN::Reporter?
+
+t/51_test_report_fail..................
+#   Failed test 't-MultipleMatch: 'make test' grade explanation correct'
+#   at t/51_test_report_fail.t line 105.
+#          got: ''make test' error detected.'
+#     expected: 'One or more tests failed.'
+# Looks like you failed 1 test of 102.
+ Dubious, test returned 1 (wstat 256, 0x100)
+ Failed 1/102 subtests
+
+	This is in the logfile but I cannot reproduce it.
+
 2008-05-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Kwiki::Test and 5.10.1 tobe have a problem. 33787 is my maint-5.10,
