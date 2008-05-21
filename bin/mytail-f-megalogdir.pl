@@ -23,6 +23,8 @@ my $file = youngest();
 my $currentpackage;
 $| = 1;
 
+our @sleepscala = (2,3,5,8,13,21,34);
+my $sleepscalaindex = 0;
 FILE: while () {
     open GWFILE, $file or die "Could not open '$file': $!";
     my $lines;
@@ -85,10 +87,14 @@ FILE: while () {
         }
         if ($gotone) {
             sleep 0.33;
+            $sleepscalaindex=0;
         } elsif ($i < $lines) {
             # no sleep
         } else {
-            sleep 1.33;
+            sleep $sleepscala[$sleepscalaindex];
+            if ($sleepscalaindex<$#sleepscala) {
+                $sleepscalaindex++;
+            }
             my $youngest = youngest();
             if ($youngest ne $file) {
                 $file = $youngest;
