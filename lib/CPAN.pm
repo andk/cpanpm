@@ -7641,7 +7641,8 @@ is part of the perl-%s distribution. To install that, you need to run
         }
     }
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
-    $self->get;
+    $self->get; 
+    return if $self->prefs->{disabled} && ! $self->{force_update};
     if ($self->{configure_requires_later}) {
         return;
     }
@@ -8820,6 +8821,7 @@ sub test {
         return $self->goto($goto);
     }
     $self->make;
+    return if $self->prefs->{disabled} && ! $self->{force_update};
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
