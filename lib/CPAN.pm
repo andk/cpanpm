@@ -9336,7 +9336,8 @@ sub install {
 
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
-    my($pipe) = FileHandle->new("$system $stderr |");
+    my($pipe) = FileHandle->new("$system $stderr |") || Carp::croak
+("Can't execute $system: $!");
     my($makeout) = "";
     while (<$pipe>) {
         print $_; # intentionally NOT use Frontend->myprint because it
