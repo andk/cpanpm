@@ -513,6 +513,7 @@ GPS::SpaceTrack
 GSSAPI
 GTop
 Games::Bingo
+Games::RolePlay::MapGen
 Geo::Cache
 Geo::Coordinates::Converter::Format::Degree
 Geo::Google::PolylineEncoder
@@ -777,6 +778,7 @@ Maypole
 MediaWiki
 Metadata::ByInode
 Metaweb
+Method::Signatures
 Mixin::ExtraFields
 Module::Build
 Module::Build::Convert
@@ -810,6 +812,7 @@ MooseX::Types::Set::Object
 Muldis
 Net::Amazon
 Net::Analysis
+Net::BitTorrent
 Net::CIDR
 Net::Cmd
 Net::CouchDb
@@ -1115,6 +1118,7 @@ Spreadsheet::ParseExcel
 Spreadsheet::Read
 Spreadsheet::WriteExcel
 Spreadsheet::WriteExcelXML
+Squatting
 Statistics::Distributions
 Statistics::Gtest
 Statistics::Regression
@@ -1186,6 +1190,7 @@ Test::Deep
 Test::Dependencies
 Test::Differences
 Test::Exception
+Test::File
 Test::FormValidator
 Test::HTTP::Server::Simple
 Test::HTTPStatus
@@ -1206,6 +1211,8 @@ Test::Reporter
 Test::Run
 Test::Smoke
 Test::SubCalls
+Test::TAP
+Test::TAP::HTMLMatrix
 Test::Tester
 Test::Trap
 Test::Unit::Runner::XML

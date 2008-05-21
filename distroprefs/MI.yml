@@ -76,6 +76,7 @@ match:
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
+    |DMAKI/POE-Component-Q4M-\d
     |DMAKI/WWW-RobotRules-Parser-\d
     |DMAKI/Web-Scraper-Config-\d
     |DMAKI/XML-RSS-LibXML-\d
@@ -135,6 +136,7 @@ match:
     |LUKEC/Blikistan-\d
     |LUKEC/Test-Mock-LWP-\d
     |LUKEC/Test-WWW-Selenium-\d
+    |LUSHE/Egg-View-TT-\d
     |LUTETIUS/pod2book-\d
     |LYOKATO/FormValidator-Simple-\d
     |LYOKATO/Pod-ProjectDocs-\d
@@ -151,7 +153,9 @@ match:
     |MARCEL/Data-Semantic-\d
     |MARCEL/Data-Semantic-URI-\d
     |MARCEL/Data-Storage-\d
+    |MARCEL/Dist-Joseki-\d
     |MARCEL/Google-Chart-\d
+    |MARCEL/Hash-Inflator-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
     |MARCEL/Pod-Generated-\d
     |MARCEL/Test-CompanionClasses-\d
