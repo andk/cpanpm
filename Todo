@@ -1,3 +1,9 @@
+2008-05-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Games::RolePlay::MapGen puzzling fails may need autobundle diffs.
+
+	/home/sand/.cpan/Bundle/Snapshot_2008_05_21_00.pm
+
 2008-05-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* David did some refactoring and now we see that satisfy_requires and
