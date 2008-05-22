@@ -5,12 +5,14 @@ Changes.old
 distroprefs/00.README
 distroprefs/01.DISABLED.yml
 distroprefs/02.NOREPORT.yml
+distroprefs/ABELTJE.Test-Smoke.yml
 distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ACG.Scrabble-Dict.yml
 distroprefs/ACH.Tk-Contrib.yml
 distroprefs/ADAMK.Chart-Math-Axis.yml
 distroprefs/ADAMK.Image-Delivery.yml
+distroprefs/ADAMK.PPI.yml
 distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ADAMK.Test-Inline.yml
 distroprefs/AGENT.OpenResty.yml
@@ -46,6 +48,7 @@ distroprefs/BSMITH.Devel-EvalContext.yml
 distroprefs/BTROTT.Convert-PEM.yml
 distroprefs/BTROTT.Crypt-DH.yml
 distroprefs/BTROTT.Crypt-DSA.yml
+distroprefs/BTROTT.Crypt-OpenPGP.yml
 distroprefs/BTROTT.XML-FOAF.yml
 distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
@@ -53,6 +56,7 @@ distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CERNEY.Tk-IDElayout.yml
 distroprefs/CHANG-LIU.XML-Node.yml
 distroprefs/CHARTGRP.Chart.yml
+distroprefs/CHISEL.Zucchini.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLAESJAC.JavaScript.yml
@@ -60,6 +64,7 @@ distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
+distroprefs/CORDATA.Kwiki-Formatter-Emphasis.yml
 distroprefs/CORION.List-Sliding-Changes.yml
 distroprefs/CORION.Test-Without-Module.yml
 distroprefs/CRISB.WWW-Curl.yml
@@ -80,6 +85,7 @@ distroprefs/DJBERG.Tk-JListbox.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DKWILSON.Tk-DKW.yml
 distroprefs/DLAND.Crypt-SSLeay.yml
+distroprefs/DMAKI.Class-DBI-Plugin-DateTime.yml
 distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
@@ -129,6 +135,7 @@ distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HDP.Perl-Version.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/HMBRAND.Tk-Clock.yml
+distroprefs/HORROCKS.PersistentPerl.yml
 distroprefs/ILMARI.DBIx-Class-Schema-Loader.yml
 distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
@@ -172,6 +179,7 @@ distroprefs/LAMPRECHT.Tk-GraphItems.yml
 distroprefs/LBROCARD.Test-WWW-Mechanize-Catalyst.yml
 distroprefs/LDS.Crypt-CBC.yml
 distroprefs/LEAKIN.File-Rsync.yml
+distroprefs/LICHTKIND.Kephra.yml
 distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LUSOL.Tk-Gauge.yml
@@ -189,6 +197,7 @@ distroprefs/MI.yml
 distroprefs/MIKER.IPtables-IPv4-DBTarpit.yml
 distroprefs/MInoinc.yml
 distroprefs/MIROD.XML-Twig.yml
+distroprefs/MIYAGAWA.Catalyst-View-JSON.yml
 distroprefs/MIYAGAWA.Net-IDN-Nameprep.yml
 distroprefs/MIYAGAWA.Plagger.yml
 distroprefs/MIYAGAWA.XML-Atom.yml
@@ -221,6 +230,7 @@ distroprefs/NESTING.Unicode-Wrap.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NIKIP.Authen-PAM.yml
+distroprefs/NKH.PerlBuildSystem.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/OLAF.Net-DNS.yml
@@ -268,6 +278,7 @@ distroprefs/RSOD.IPC-Run.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/RYBSKEJ.forks.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
+distroprefs/SANKO.Net-BitTorrent.yml
 distroprefs/SCHUBIGER.DateTime-Format.yml
 distroprefs/SCHWERN.Class-Fields.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
