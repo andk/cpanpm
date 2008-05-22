@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "CHISEL/Zucchini-0.0.6.tar.gz"
+  distribution: "CHISEL/Zucchini-\d"
 test:
   eexpect:
     mode: anyorder
