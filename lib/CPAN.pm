@@ -5216,6 +5216,8 @@ sub reanimate_build_dir {
                                 notest
                                 should_report
                                 sponsored_mods
+                                prefs
+                                negative_prefs_cache
                                )) {
                 delete $do->{$skipper};
             }
