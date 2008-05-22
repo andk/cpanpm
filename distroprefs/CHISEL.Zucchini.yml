@@ -7,5 +7,5 @@ test:
     timeout: 20
     reuse: 1
     talk:
-      - "Password:"
+      - "(?i:Password:)"
       - "\n"
