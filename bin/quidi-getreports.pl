@@ -240,11 +240,23 @@ for my $distro (@ARGV) {
         my $expect_prereq = 0;
         my $expect_toolchain = 0;
         my $expecting_toolchain_soon = 0;
+
         my $in_summary = 0;
-        my $previous_line = ""; # so we can neutralize line breaks
+        my $in_prg_output = 0;
+
+        my $current_headline;
+        my @previous_line = ""; # so we can neutralize line breaks
       LINE: while (<$fh>) {
             chomp; # reliable line endings?
             s/&quot;//; # HTML !!!
+            if (/^--------/ && $previous_line[-2] && $previous_line[-2] =~ /^--------/) {
+                $current_headline = $previous_line[-1];
+                if ($current_headline =~ /PROGRAM OUTPUT/) {
+                    $in_prg_output = 1;
+                } else {
+                    $in_prg_output = 0;
+                }
+            }
             unless ($extract{"meta:perl"}) {
                 my $p5;
                 if (0) {
@@ -291,7 +303,7 @@ for my $distro (@ARGV) {
                 $extract{"meta:date"} =~ s/\.$// if $extract{"meta:date"};
             }
             unless ($extract{"meta:writer"}) {
-                for ("$previous_line $_") {
+                for ("$previous_line[-1] $_") {
                     if (0) {
                     } elsif (/created (?:automatically )?by (\S+)/) {
                         $extract{"meta:writer"} = $1;
@@ -327,6 +339,13 @@ for my $distro (@ARGV) {
                         if ($conf_vars{$k}) {
                             $extract{$k} = $v;
                         }
+                    }
+                }
+            }
+            if ($in_prg_output) {
+                unless ($extract{"meta:output_from"}) {
+                    if (/Output from (.+):$/) {
+                        $extract{"meta:output_from"} = $1
                     }
                 }
             }
@@ -408,7 +427,7 @@ for my $distro (@ARGV) {
             if (/toolchain versions installed/) {
                 $expecting_toolchain_soon=1;
             }
-            $previous_line = $_;
+            push @previous_line, $_;
         } # LINE
         my $diag = "";
         if (my $qr = $Opt{allvars}) {
