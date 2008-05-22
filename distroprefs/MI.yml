@@ -166,7 +166,9 @@ match:
     |MARCEL/Class-Factory-Enhanced-\d
     |MARCEL/Class-Scaffold-\d
     |MARCEL/Class-Value-\d
+    |MARCEL/Class-Value-Bundle-\d
     |MARCEL/Class-Value-Contact-\d
+    |MARCEL/Class-Value-SemanticAdapter-\d
     |MARCEL/Data-Conveyor-\d
     |MARCEL/Data-Semantic-\d
     |MARCEL/Data-Semantic-URI-\d
@@ -213,6 +215,7 @@ match:
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
     |RKRIMEN/Catalyst-Plugin-Assets-\d
+    |RKRIMEN/Config-JFDI-\d
     |RKRIMEN/File-Assets-\d
     |RKRIMEN/Hash-Merge-Simple-\d
     |RKRIMEN/Path-Resource-\d

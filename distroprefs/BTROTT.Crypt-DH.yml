@@ -19,7 +19,6 @@ comment: |
 
 match:
   distribution: "^BTROTT/Crypt-DH-"
-  perl: ".../installed-perls/..."
 depends:
   requires:
     Math::BigInt::GMP: 1.23
