@@ -23,6 +23,7 @@ match:
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
     |ASH/DBIx-Class-\d
     |ASHLEY/Catalyst-Authentication-Credential-OpenID-\d
+    |ASKSH/Acme-Locals-\d
     |AUDREYT/Scalar-Defer-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
@@ -132,6 +133,7 @@ match:
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
     |KARMAN/Catalyst-Plugin-Session-Store-File-\d
+    |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LUKEC/Blikistan-\d
     |LUKEC/Test-Mock-LWP-\d
