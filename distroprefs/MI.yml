@@ -12,15 +12,18 @@ comment: |
 
 match:
   distribution: |
-    ^(?x:^ADAMK/Algorithm-Dependency-\d
+    ^(?x:^ABRAXXA/Catalyst-View-Email-\d
+    |ADAMK/Algorithm-Dependency-\d
     |ADAMK/HTML-Location-\d
     |ADAMK/PITA-XML-\d
     |ADAMK/URI-ToDisk-\d
     |AGENT/Makefile-DOM-\d
     |AGENT/Makefile-GraphViz-\d
     |AGENT/Makefile-Parser-\d
+    |AGRUNDMA/Catalyst-Engine-HTTP-Prefork-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
+    |AGRUNDMA/Catalyst-Plugin-Session-Store-DBI-\d
     |ASH/DBIx-Class-\d
     |ASHLEY/Catalyst-Authentication-Credential-OpenID-\d
     |ASKSH/Acme-Locals-\d
@@ -40,7 +43,11 @@ match:
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BOBMATH/Crypt-CAST5_PP-\d
     |BRICAS/CGI-Application-PhotoGallery-\d
+    |BRICAS/Catalyst-Model-DBIC-\d
+    |BRICAS/Catalyst-Model-Gedcom-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
+    |BRICAS/Catalyst-Plugin-I18N-\d
+    |BRICAS/Catalyst-View-vCard-\d
     |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d
     |BRICAS/Games-NES-ROM-\d
@@ -57,6 +64,7 @@ match:
     |CFRANKS/HTML-Widget-\d
     |CFRANKS/DBIx-Class-HTML-FormFu-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
+    |CLACO/Catalyst-Model-NetBlogger-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
@@ -71,8 +79,10 @@ match:
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d
     |DIZ/Locale-Geocode-\d
+    |DJERIUS/App-Env-\d
     |DJERIUS/Shell-GetEnv-\d
     |DMAKI/Catalyst-Model-FormFu-\d
+    |DMAKI/Catalyst-Model-HTML-FormFu-\d
     |DMAKI/Danga-Socket-Callback-\d
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
@@ -83,6 +93,7 @@ match:
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DONEILL/MIME-tools-\d
+    |DRPROLIX/Catalyst-Helper-View-TT-Bootstrap-\d
     |DSNOPEK/POE-Component-MessageQueue-\d
     |EDENC/MooseX-Role-Cmd-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
@@ -96,6 +107,7 @@ match:
     |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
     |GBARR/Authen-SASL-\d
+    |GPHAT/Chart-Clicker-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
     |GRODITI/MooseX-Object-Pluggable-\d
@@ -118,6 +130,7 @@ match:
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
     |JESSE/Shipwright-\d
+    |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JROBINSON/DBIx-Class-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
@@ -140,9 +153,12 @@ match:
     |LUKEC/Test-WWW-Selenium-\d
     |LUSHE/Egg-View-TT-\d
     |LUTETIUS/pod2book-\d
+    |LYOKATO/Catalyst-View-TT-ForceUTF8-\d
     |LYOKATO/FormValidator-Simple-\d
     |LYOKATO/Pod-ProjectDocs-\d
     |MARCEL/App-sync_cpantesters-\d
+    |MARCEL/Business-Address-POBox-\d
+    |MARCEL/Class-Accessor-Bundle-\d
     |MARCEL/Class-Accessor-Complex-\d
     |MARCEL/Class-Accessor-Constructor-\d
     |MARCEL/Class-Accessor-FactoryTyped-\d
@@ -163,6 +179,7 @@ match:
     |MARCEL/Test-CompanionClasses-\d
     |MARCEL/Test-Compile-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
+    |MASAKI/Catalyst-Controller-Resources-\d
     |MDXI/Curses-UI-\d
     |MEMOWE/HTML-SBC-\d
     |MITREHC/HoneyClient-Agent-\d
@@ -221,6 +238,12 @@ match:
     |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
+    |TOKUHIROM/Archer-\d
+    |TOMYHERO/App-Starter-\d
+    |TOMYHERO/Catalyst-Model-CacheFunky-Loader-\d
+    |TOMYHERO/Catalyst-Model-DynamicAdaptor-\d
+    |TOMYHERO/Catalyst-Plugin-Config-Multi-\d
+    |TOMYHERO/Catalyst-Plugin-ConfigLoader-Multi-\d
     |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
     |YAPPO/Class-Component-\d
