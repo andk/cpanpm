@@ -1,0 +1,11 @@
+---
+match:
+  distribution: "CHISEL/Zucchini-0.0.6.tar.gz"
+test:
+  eexpect:
+    mode: anyorder
+    timeout: 20
+    reuse: 1
+    talk:
+      - "Password:"
+      - "\n"

@@ -48,6 +48,7 @@ match:
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/Catalyst-Plugin-I18N-\d
     |BRICAS/Catalyst-View-vCard-\d
+    |BRICAS/DBIx-Class-ResultSet-Data-Pageset-\d
     |BRICAS/File-SAUCE-\d
     |BRICAS/Games-NES-Emulator-\d
     |BRICAS/Games-NES-ROM-\d
@@ -66,6 +67,7 @@ match:
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
     |CLACO/Catalyst-Model-NetBlogger-\d
     |CLACO/Class-Accessor-Grouped-\d
+    |CLACO/DBIx-Class-InflateColumn-Currency-\d
     |CLACO/DBIx-Class-UUIDColumns-\d
     |CLACO/DBIx-Class-Validation-\d
     |CLACO/Data-Currency-\d
@@ -110,6 +112,7 @@ match:
     |GPHAT/Chart-Clicker-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
+    |GRODITI/DBIx-Class-EncodedColumn-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |HANENKAMP/Bot-Net-\d
@@ -143,11 +146,13 @@ match:
     |JROCKWAY/File-Attributes-Recursive-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
+    |JSHIRLEY/DBIx-Class-TimeStamp-\d
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
     |KARMAN/Catalyst-Plugin-Session-Store-File-\d
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
+    |LSAUNDERS/DBIx-Class-Fixtures-\d
     |LUKEC/Blikistan-\d
     |LUKEC/Test-Mock-LWP-\d
     |LUKEC/Test-WWW-Selenium-\d
@@ -169,6 +174,7 @@ match:
     |MARCEL/Class-Value-Bundle-\d
     |MARCEL/Class-Value-Contact-\d
     |MARCEL/Class-Value-SemanticAdapter-\d
+    |MARCEL/DB-Pluggable-\d
     |MARCEL/Data-Conveyor-\d
     |MARCEL/Data-Semantic-\d
     |MARCEL/Data-Semantic-URI-\d
@@ -203,6 +209,7 @@ match:
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
     |NEKOKAK/DBIx-Class-Stash-\d
+    |NEKOKAK/DBIx-Class-TableNames-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
