@@ -340,7 +340,13 @@ for my $distro (@ARGV) {
                             $moduleunpack = {};
                             $expect_prereq = 0;
                             next LINE;
-                        } elsif ($module =~ /^-/) {
+                        } elsif ($leader =~ /^(
+                                             buil          # build_requires:
+                                            )/x) {
+                            next LINE;
+                        } elsif ($module =~ /^(
+                                             -             # line drawing
+                                            )/x) {
                             next LINE;
                         }
                     } elsif ($moduleunpack->{type} == 2) {
