@@ -296,6 +296,7 @@ Data::Bind
 Data::Buffer
 Data::Capture
 Data::Conveyor
+Data::Domain::SemanticAdapter
 Data::Dump
 Data::Dump::Streamer
 Data::Dumper
@@ -308,6 +309,7 @@ Data::Hierarchy
 Data::Hive
 Data::ICal
 Data::ICal::TimeZone
+Data::KeyDiff
 Data::Lazy
 Data::Libra
 Data::OptList
@@ -315,15 +317,18 @@ Data::Phrasebook
 Data::PowerSet
 Data::Properties
 Data::Random
+Data::Rand::Obscure
 Data::Remember
 Data::Rmap
 Data::SExpression
+Data::Semantic::Net
 Data::Semantic::URI
 Data::ShowTable
 Data::Sofu::List
 Data::Structure::Util
 Data::Swap
 Data::Throttler
+Data::Throttler::Memcached
 Data::TreeDumper
 Data::Types
 Data::Visitor
@@ -349,6 +354,7 @@ DateTime::Format::Pg
 DateTime::Format::RSS
 DateTime::Format::W3CDTF
 DateTime::Set
+DateTimeX::Easy
 Devel::ArgNames
 Devel::CallTrace
 Devel::Caller

@@ -86,6 +86,8 @@ match:
     |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/Catalyst-Model-HTML-FormFu-\d
     |DMAKI/Danga-Socket-Callback-\d
+    |DMAKI/Data-Throttler-Memcached-\d
+    |DMAKI/Data-Visitor-Encode-\d
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
@@ -176,9 +178,16 @@ match:
     |MARCEL/Class-Value-SemanticAdapter-\d
     |MARCEL/DB-Pluggable-\d
     |MARCEL/Data-Conveyor-\d
+    |MARCEL/Data-Domain-SemanticAdapter-\d
+    |MARCEL/Data-Domain-URI-\d
     |MARCEL/Data-Semantic-\d
+    |MARCEL/Data-Semantic-Net-\d
     |MARCEL/Data-Semantic-URI-\d
     |MARCEL/Data-Storage-\d
+    |MARCEL/Data-Timeline-\d
+    |MARCEL/Data-Timeline-Bundle-\d
+    |MARCEL/Data-Timeline-IScrobbler-\d
+    |MARCEL/Data-Timeline-SVK-\d
     |MARCEL/Dist-Joseki-\d
     |MARCEL/Google-Chart-\d
     |MARCEL/Hash-Inflator-\d
@@ -223,6 +232,9 @@ match:
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
     |RKRIMEN/Catalyst-Plugin-Assets-\d
     |RKRIMEN/Config-JFDI-\d
+    |RKRIMEN/Data-KeyDiff-\d
+    |RKRIMEN/Data-Rand-Obscure-\d
+    |RKRIMEN/DateTimeX-Easy-\d
     |RKRIMEN/File-Assets-\d
     |RKRIMEN/Hash-Merge-Simple-\d
     |RKRIMEN/Path-Resource-\d
@@ -230,6 +242,7 @@ match:
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
+    |SARTAK/Date-Extract-\d
     |SARTAK/IncPatch-\d
     |SARTAK/Jifty-DBI-\d
     |SARTAK/Jifty-Plugin-OAuth-\d
