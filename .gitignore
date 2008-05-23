@@ -12,4 +12,8 @@ SIGNATURE
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 ./CPAN-*
 ChangeLog
-./distroprefs/*.dd
+# not ignore ILYAZ,GBARR,INGY
+./distroprefs/[A-FHJ-Z]*.dd
+./distroprefs/G[AC-Z]*.dd
+./distroprefs/I[A-KMO-Z]*.dd
+

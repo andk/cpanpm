@@ -116,6 +116,7 @@ distroprefs/FOTANGO.Data-Structure-Util.yml
 distroprefs/GAAS.Data-Dump.yml
 distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.libwww.yml
+distroprefs/GBARR.libnet.dd
 distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBROCK.Tk-StayOnTop.yml
@@ -138,8 +139,10 @@ distroprefs/HORROCKS.PersistentPerl.yml
 distroprefs/ILMARI.DBIx-Class-Schema-Loader.yml
 distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
+distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
+distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JAYK.Catalyst-Authen-S-D-C.yml
