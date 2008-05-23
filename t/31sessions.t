@@ -56,6 +56,7 @@ BEGIN {
 }
 
 use strict;
+use File::Spec;
 use Test::More;
 
 =pod
@@ -253,13 +254,14 @@ EOF
 is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
 $ENV{PERL_MM_USE_DEFAULT} = 1;
 our $VERBOSE = 0;
+my $devnull = File::Spec->devnull;
 
 for my $si (0..$#SESSIONS) {
     my $session = $SESSIONS[$si];
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
     ok($session->{name}, "opening new session $session->{name}");
-    open SYSTEM, "| $system" or die;
+    open SYSTEM, "| $system 2> $devnull" or die "Could not open '| $system': $!";
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
         my($expect) = $session->{pairs}[2*$i+1];
