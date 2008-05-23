@@ -1,15 +1,15 @@
-2008-05-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+2008-05-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_62
 
-  * fixed PERL5INC tempfile leak when running without lock file 
-    (David Golden)
+	* fixed PERL5INC tempfile leak when running without lock file
+	(David Golden)
 
-  * better preqreq and distropref disabled support under
-    build_dir_reuse (David Golden)
+	* better preqreq and distropref disabled support under build_dir_reuse
+	(David Golden)
 
-  * distropref cache won't persist across sessions with build_dir_reuse
-    (David Golden)
+	* distropref cache won't persist across sessions with build_dir_reuse
+	(David Golden)
 
 	* patch from chocelateboy: found a FileHandle->new with an argument
 
