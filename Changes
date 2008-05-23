@@ -17,6 +17,8 @@
 
 	* finishing the CPAN::Distroprefs refactoring (Hans Dieter Pearcey)
 
+	* silence noisy tests
+
 	* now with 320 distroprefs files
 
 2008-04-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
