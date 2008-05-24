@@ -224,6 +224,7 @@ match:
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Task-Catalyst-\d
+    |MSIMERSON/Mail-Toaster-\d
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
