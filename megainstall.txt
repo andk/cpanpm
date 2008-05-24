@@ -477,6 +477,7 @@ File::Filename
 File::Headerinfo::SWF
 File::MMagic::XS
 File::Mirror
+File::Monitor
 File::NCopy
 File::NFSLock
 File::Path

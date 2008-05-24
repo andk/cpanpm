@@ -1,0 +1,15 @@
+---
+comment: |
+
+  too old MI, 0.63 in 1.99.16, RT 33279
+
+  must write the dependencies here to not go into the infamous
+  MI recursion
+
+match:
+  distribution: "ERIC/OpenThought-\d"
+depends:
+  configure_requires:
+    version::Limit: 0.03
+    Apache::Session: 0
+    HTML::Template: 0
