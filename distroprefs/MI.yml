@@ -141,6 +141,7 @@ match:
     |JESSE/Data-ICal-\d
     |JESSE/Shipwright-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
+    |JGOULAH/Net-Akamai-\d
     |JROBINSON/DBIx-Class-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
@@ -214,6 +215,7 @@ match:
     |MIYAZAKI/HTTP-MobileUID-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MLAWREN/MySpam-\d
+    |MLAWREN/NCGI-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Devel-\d
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
@@ -234,6 +236,7 @@ match:
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
     |PERIGRIN/MooseX-Workers-\d
+    |PERIGRIN/Net-AIML-\d
     |PERIGRIN/Regexp-Common-IRC-\d
     |PHAYLON/MooseX-Types-\d
     |PHAYLON/namespace-clean-\d
