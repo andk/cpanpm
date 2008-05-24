@@ -1,13 +1,12 @@
 ---
 comment: |
 
-  something is slow during the PL phase
-
-  http://rt.cpan.org//Ticket/Display.html?id=33982
+  something was slow during the PL phase, so it was disabled for a while
+  http://rt.cpan.org//Ticket/Display.html?id=33982 resolved
 
 match:
   distribution: "AGENT/OpenResty-\d"
-disabled: 1
+disabled: 0
 pl:
   eexpect:
     mode: anyorder

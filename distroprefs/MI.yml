@@ -218,6 +218,7 @@ match:
     |MARCEL/Text-Pipe-\d
     |MARCEL/Text-Pipe-Translate-\d
     |MARCEL/Text-Pipe-W3CDTF-\d
+    |MARCEL/Vim-Complete-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MASAKI/Catalyst-Controller-Resources-\d
     |MDXI/Curses-UI-\d
