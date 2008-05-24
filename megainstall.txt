@@ -639,6 +639,7 @@ IO::Pipe
 IO::Scalar
 IO::Seekable
 IO::Socket::SSL
+IO::Socket::Telnet
 IO::String
 IO::Stringy
 IO::Tee
@@ -654,6 +655,7 @@ IPC::ShareLite
 IPC::System::Simple
 IWL::Break
 Image::ANSI
+Image::Compare
 Image::Delivery
 Image::ExifTool
 Image::Info::SVG
