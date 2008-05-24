@@ -12,10 +12,16 @@ intelligent handling of incomplete lines
 
 =cut
 
+use File::Basename qw(basename);
 use File::Spec;
+use Getopt::Long;
 use List::Util qw(maxstr);
 use Time::HiRes qw(time sleep);
 
+our %Opt;
+GetOptions(\%Opt,
+          "debug!",
+          ) or die;
 
 my $curpos = 0;
 my $line;
@@ -24,21 +30,24 @@ my $currentpackage;
 $| = 1;
 
 our @sleepscala = (2,3,5,8,13,21,34);
+@sleepscala = (2,3,5) if $Opt{debug};
 my $sleepscalaindex = 0;
 FILE: while () {
     open GWFILE, $file or die "Could not open '$file': $!";
-    my $lines;
+    my $lines = 0;
     while (<GWFILE>) {
-        $lines = $.;
+        $lines++;
     }
     close GWFILE;
     my $i = 0;
     open GWFILE, $file or die "Could not open '$file': $!";
     my $lastline = "";
   LINE: for (;;) {
+        warn "lines[$lines]" if $Opt{debug};
         my $gotone;
         for ($curpos = tell(GWFILE); $line = <GWFILE>; $curpos = tell(GWFILE)) {
             $i++;
+            # warn "i[$i]curpos[$curpos]" if $Opt{debug};
             $gotone=1;
             if ($line =~ /^\s+CPAN\.pm:/) {
                 ($currentpackage) = $line =~ /^\s+CPAN\.pm: Going to build\s+(\w[^\e]+\w)(?:\e.*)\s*$/;
@@ -92,11 +101,17 @@ FILE: while () {
             # no sleep
         } else {
             sleep $sleepscala[$sleepscalaindex];
+            my $youngest = youngest();
             if ($sleepscalaindex<$#sleepscala) {
                 $sleepscalaindex++;
+                if ($sleepscalaindex==$#sleepscala) {
+                    print "\nINFO: max sleepscala reached\n";
+                }
+            } else {
+                printf "\rINFO: %s youngest[%s]", scalar localtime, basename $youngest;
             }
-            my $youngest = youngest();
             if ($youngest ne $file) {
+                print "\nswitching to $youngest\n";
                 $file = $youngest;
                 next FILE;
             }
