@@ -64,8 +64,6 @@ match:
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
-    |KNORR/Net-                              # no questions during make test please
-    |KNORR/Net-MirrorDir                     # asks questions
     |KORTY/
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LZE/CGI-CMS-\d                          # asks questions about paths

@@ -1,3 +1,4 @@
+s
 ---
 comment: |
 
@@ -30,6 +31,7 @@ match:
     |AUDREYT/Scalar-Defer-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
+    |AVIF/Image-Compare-\d
     |AVIF/Time-Duration-\d
     |AWWAIID/Continuity-\d
     |BERLE/MooseX-Method-\d
@@ -60,6 +62,7 @@ match:
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
     |BTROTT/XML-Feed-\d
+    |CAMELCASE/HTML-TurboForm-\d
     |CFRANKS/Catalyst-Model-Net-Amazon-\d
     |CFRANKS/HTML-FormFu-\d
     |CFRANKS/HTML-Widget-\d
@@ -91,15 +94,18 @@ match:
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
+    |DMAKI/Iterator-File-Line-\d
     |DMAKI/POE-Component-Q4M-\d
     |DMAKI/WWW-RobotRules-Parser-\d
     |DMAKI/Web-Scraper-Config-\d
     |DMAKI/XML-RSS-LibXML-\d
     |DMAKI/XML-RSS-Liberal-
     |DONEILL/MIME-tools-\d
+    |DOY/Games-Word-\d
     |DRPROLIX/Catalyst-Helper-View-TT-Bootstrap-\d
     |DSNOPEK/POE-Component-MessageQueue-\d
     |EDENC/MooseX-Role-Cmd-\d
+    |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
     |ELLIOTJS/Task-Perl-Critic-[v\d]
     |ERIC/OpenThought-\d
@@ -189,6 +195,8 @@ match:
     |MARCEL/Data-Timeline-IScrobbler-\d
     |MARCEL/Data-Timeline-SVK-\d
     |MARCEL/Dist-Joseki-\d
+    |MARCEL/Games-Go-Coordinate-\d
+    |MARCEL/Games-Go-Rank-\d
     |MARCEL/Google-Chart-\d
     |MARCEL/Hash-Inflator-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
@@ -199,10 +207,12 @@ match:
     |MASAKI/Catalyst-Controller-Resources-\d
     |MDXI/Curses-UI-\d
     |MEMOWE/HTML-SBC-\d
+    |MIKI/HTML-Feature-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
     |MIYAGAWA/XML-Atom-\d
+    |MIYAZAKI/HTTP-MobileUID-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MLAWREN/MySpam-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
@@ -236,13 +246,19 @@ match:
     |RKRIMEN/Data-Rand-Obscure-\d
     |RKRIMEN/DateTimeX-Easy-\d
     |RKRIMEN/File-Assets-\d
+    |RKRIMEN/File-Ignore-\d
+    |RKRIMEN/Google-Ranker-\d
+    |RKRIMEN/Google-Search-\d
     |RKRIMEN/Hash-Merge-Simple-\d
+    |RKRIMEN/JS-YUI-Loader-\d
+    |RKRIMEN/JS-jQuery-Loader-\d
     |RKRIMEN/Path-Resource-\d
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
     |SARTAK/Class-Method-Modifiers-\d
     |SARTAK/Date-Extract-\d
+    |SARTAK/IO-Socket-Telnet-\d
     |SARTAK/IncPatch-\d
     |SARTAK/Jifty-DBI-\d
     |SARTAK/Jifty-Plugin-OAuth-\d
@@ -267,6 +283,7 @@ match:
     |TOMYHERO/Catalyst-Model-DynamicAdaptor-\d
     |TOMYHERO/Catalyst-Plugin-Config-Multi-\d
     |TOMYHERO/Catalyst-Plugin-ConfigLoader-Multi-\d
+    |TRAVAIL/DBIx-Class-Schema-Slave-\d
     |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
     |YAPPO/Class-Component-\d
