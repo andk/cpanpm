@@ -88,3 +88,5 @@ mapping:
     type: seq
     sequence:
       - type: text
+  reminder:
+    type: text
