@@ -331,6 +331,7 @@ Data::Throttler
 Data::Throttler::Memcached
 Data::TreeDumper
 Data::Types
+Data::UUID
 Data::Visitor
 Date::Calc
 Date::Leapyear
@@ -474,6 +475,7 @@ File::Extract
 File::Extractor
 File::Fetch
 File::Filename
+File::Find::Parallel
 File::Headerinfo::SWF
 File::MMagic::XS
 File::Mirror
@@ -523,6 +525,7 @@ Games::Bingo
 Games::RolePlay::MapGen
 Geo::Cache
 Geo::Coordinates::Converter::Format::Degree
+Geo::GeoNames
 Geo::Google::PolylineEncoder
 Geo::Gpx
 Geo::Raster
@@ -987,6 +990,7 @@ Perlbal
 Petal
 Petal::Utils
 Plagger
+Pod::Constants
 Pod::Coverage
 Pod::Coverage::CountParents
 Pod::Escapes
@@ -1419,6 +1423,7 @@ XML::Comma
 XML::Compile
 XML::DOM
 XML::DOM::XPath
+XML::Descent
 XML::Elemental
 XML::Filter::XInclude
 XML::Generator

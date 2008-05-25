@@ -28,6 +28,7 @@ match:
     |ASH/DBIx-Class-\d
     |ASHLEY/Catalyst-Authentication-Credential-OpenID-\d
     |ASKSH/Acme-Locals-\d
+    |ASKSH/sys-\d
     |AUDREYT/Scalar-Defer-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
@@ -62,6 +63,7 @@ match:
     |BRICAS/Text-Normalize-NACO-\d
     |BRICAS/URI-Template-\d
     |BRICAS/WWW-OpenSearch-\d
+    |BRICAS/WWW-Wikipedia-\d
     |BTROTT/Authen-TypeKey-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
@@ -164,6 +166,7 @@ match:
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
     |KARMAN/Catalyst-Plugin-Session-Store-File-\d
+    |KEN/XML-XML2JSON-\d
     |KULP/Text-vFile-toXML-\d
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
@@ -191,6 +194,7 @@ match:
     |MARCEL/Class-Value-SemanticAdapter-\d
     |MARCEL/DB-Pluggable-\d
     |MARCEL/Data-Conveyor-\d
+    |MARCEL/Data-Domain-Net-\d
     |MARCEL/Data-Domain-SemanticAdapter-\d
     |MARCEL/Data-Domain-URI-\d
     |MARCEL/Data-Semantic-\d
