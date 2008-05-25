@@ -32,6 +32,6 @@ for (;;) {
       printf "%5d %s.%s %s", $i, $localtime, substr($fractime,0,4), $line;
     }
   }
-  sleep 0.33;
+  sleep 2;
   seek(GWFILE, $curpos, 0);  # seek to where we had been
 }
