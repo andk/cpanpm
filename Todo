@@ -1,3 +1,22 @@
+2008-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* >>>>> On Sun, 25 May 2008 12:53:15 -0400, "David Golden" said:
+
+  > So here's what I think should be the logic, more or less:
+
+  > * under "install", all 'requires' must be satisfied without adding
+  > build directories to PERL5LIB or else they need to be queued.  All
+  > "build_requires" must be satisfied including build directories or they
+  > need to be queued.
+
+  > * under "test/make", "requires" or "build_requires" must be satisfied
+  > including build directories or they need to be queued
+
+  > What do you think?
+
+	Excellent summary. This will indeed allow the user to mix install and
+	make/test commands.
+
 2008-05-21  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Games::RolePlay::MapGen puzzling fails may need autobundle diffs.
