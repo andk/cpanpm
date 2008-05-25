@@ -105,7 +105,7 @@ FILE: while () {
             if ($sleepscalaindex<$#sleepscala) {
                 $sleepscalaindex++;
                 if ($sleepscalaindex==$#sleepscala) {
-                    print "\nINFO: max sleepscala reached\n";
+                    printf "\nINFO: max sleepscala reached at %s\n", scalar localtime;
                 }
             } else {
                 printf "\rINFO: %s youngest[%s]", scalar localtime, basename $youngest;
