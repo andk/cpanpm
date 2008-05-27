@@ -3,7 +3,7 @@
 use CPAN::DistnameInfo;
 use YAML::Syck;
 
-use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use lib "/home/k/dproj/PAUSE/wc/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";

@@ -105,7 +105,7 @@ use Getopt::Long qw(GetOptions);
 use List::Util qw(min);
 use Time::HiRes qw(sleep);
 
-use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use lib "/home/k/dproj/PAUSE/wc/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
 our %Opt;

@@ -7,7 +7,7 @@ use File::Basename qw(fileparse dirname);
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
-use lib "/home/k/dproj/PAUSE/SVN/lib/";
+use lib "/home/k/dproj/PAUSE/wc/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 
 sub determine_perls {
