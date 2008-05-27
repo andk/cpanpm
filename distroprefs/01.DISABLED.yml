@@ -47,6 +47,7 @@ match:
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EKAWAS/MOBY-                            # hangs
+    |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs

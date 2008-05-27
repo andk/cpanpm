@@ -89,6 +89,7 @@ match:
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d
+    |DIABLO/Rsync-Config-\d
     |DIZ/Locale-Geocode-\d
     |DJERIUS/App-Env-\d
     |DJERIUS/Shell-GetEnv-\d
@@ -323,6 +324,7 @@ match:
     |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d
     |ZIGOROU/MozRepl-\d
+    |ZIGOROU/MozRepl-Plugin-LinkTools-\d
     |ZIGOROU/Nagios-Plugins-Memcached-\d
     |ZIGOROU/WebService-Reflexa-\d
     |ZIGOROU/WebService-TRIPIT-Thesaurus-\d
