@@ -952,11 +952,13 @@ POE::Component::StackedProcessor
 POE::Component::SubWrapper
 POE::Declarative::Mixin
 POE::Filter::IRCD
+POE::XUL::Window
 POSIX
 POSIX::Regex
 PPI
 PTools::SDF
 Package::Constants
+Pad::Tie
 PadWalker
 Paper::Specs
 Params::CallbackRequest
@@ -1029,6 +1031,7 @@ Proc::Simple
 ProgressMonitor::AbstractConfiguration
 Pugs::Compiler::Perl6
 Pugs::Compiler::Rule
+Puppet::VcsTools::File
 Purple
 Pushmi
 QDBM_File
@@ -1126,6 +1129,7 @@ Sort::DataTypes
 Sort::Key::Radix
 Spiffy
 Spoon
+Spread
 Spreadsheet::Engine
 Spreadsheet::ParseExcel
 Spreadsheet::Read
