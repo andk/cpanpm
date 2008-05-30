@@ -816,12 +816,14 @@ MojoMojo
 Moose
 Moose::Autobox
 MooseX::Clone
+MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Mutate
 MooseX::Storage
 MooseX::Types::Set::Object
 Muldis
+Net::Akamai
 Net::Amazon
 Net::Analysis
 Net::BitTorrent
@@ -1470,6 +1472,7 @@ YAML::XS
 Yada::Yada::Yada
 Yahoo::Photos
 Yahoo::Search
+autobox::Core
 bignum
 capitalization
 encoding::warnings

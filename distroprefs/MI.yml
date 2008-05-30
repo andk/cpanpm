@@ -126,6 +126,7 @@ match:
     |GBARR/Authen-SASL-\d
     |GHENRY/Samba-LDAP-\d
     |GPHAT/Chart-Clicker-\d
+    |GPHAT/MooseX-Method-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
     |GRODITI/DBIx-Class-EncodedColumn-\d
@@ -302,6 +303,7 @@ match:
     |STEVAN/FCGI-Engine-\d
     |STEVAN/Moose-\d
     |STEVAN/MooseX-Daemonize-\d
+    |STEVAN/MooseX-Getopt-\d
     |STEVAN/MooseX-Storage-\d
     |STEVAN/Task-Moose-\d
     |TELS/graph/Graph-
