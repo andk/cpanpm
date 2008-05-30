@@ -74,6 +74,7 @@ $VERSION = "5.5";
      "pager",
      "password",
      "patch",
+     "perl5lib_verbosity",
      "prefer_installer",
      "prefs_dir",
      "prerequisites_policy",

@@ -511,6 +511,14 @@ disk. After how many distros shall we switch to the slower method?
 Recommended default is 24 which should be safe on all systems even
 with very long path components.
 
+=item perl5lib_verbosity
+
+When CPAN.pm extends @INC via PERL5LIB, it prints a list of
+directories added (or a summary of how many directories are
+added).  Choose 'v' to get this message, 'none' to suppress it.
+
+Verbosity level for PERL5LIB changes (none or v)?
+
 =item trust_test_report_history
 
 When a distribution has already been tested by CPAN::Reporter on
@@ -987,6 +995,11 @@ substitute. You can then revisit this dialog with
 
     if (!$matcher or 'load_module_verbosity' =~ /$matcher/) {
         my_prompt_loop(load_module_verbosity => 'v', $matcher,
+                       'none|v');
+    }
+
+    if (!$matcher or 'perl5lib_verbosity' =~ /$matcher/) {
+        my_prompt_loop(perl5lib_verbosity => 'v', $matcher,
                        'none|v');
     }
 

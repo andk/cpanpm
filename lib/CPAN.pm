@@ -1666,21 +1666,21 @@ sub set_perl5lib {
     }
     my $cctpu = defined $CPAN::Config->{threshold_perl5lib_upto} ? $CPAN::Config->{threshold_perl5lib_upto} : 24;
     if (@dirs < 12 && @dirs < $cctpu) {
-        $CPAN::Frontend->myprint("Prepending @dirs to PERL5LIB for '$for'\n");
+        $CPAN::Frontend->optprint('perl5lib', "Prepending @dirs to PERL5LIB for '$for'\n");
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
     } elsif (@dirs < 24 && @dirs < $cctpu) {
         my @d = map {my $cp = $_;
                      $cp =~ s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/;
                      $cp
                  } @dirs;
-        $CPAN::Frontend->myprint("Prepending @d to PERL5LIB; ".
+        $CPAN::Frontend->optprint('perl5lib', "Prepending @d to PERL5LIB; ".
                                  "%BUILDDIR%=$CPAN::Config->{build_dir} ".
                                  "for '$for'\n"
                                 );
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
     } elsif (@dirs >= $cctpu && $Perl5lib_tempfile) {
         my $cnt = keys %{$self->{is_tested}};
-        $CPAN::Frontend->myprint("Delegating blib/arch and blib/lib of ".
+        $CPAN::Frontend->optprint('perl5lib', "Delegating blib/arch and blib/lib of ".
                                  "$cnt build dirs to CPAN::PERL5INC via $Perl5lib_tempfile; ".
                                  "for '$for'\n"
                                 );
@@ -1697,7 +1697,7 @@ sub set_perl5lib {
 #                                "switch to the PERL5OPT method of extending \@INC; installation ".
 #                                "of a YAML module is highly recommended; see the manpage ".
 #                                "of CPAN::PERL5INC for further information\n");
-        $CPAN::Frontend->myprint("Prepending blib/arch and blib/lib of ".
+        $CPAN::Frontend->optprint('perl5lib', "Prepending blib/arch and blib/lib of ".
                                  "$cnt build dirs to PERL5LIB; ".
                                  "for '$for'\n"
                                 );
@@ -11266,6 +11266,7 @@ defined:
   pager              location of external program more (or any pager)
   password           your password if you CPAN server wants one
   patch              path to external prg
+  perl5lib_verbosity verbosity level for PERL5LIB additions
   prefer_installer   legal values are MB and EUMM: if a module comes
                      with both a Makefile.PL and a Build.PL, use the
                      former (EUMM) or the latter (MB); if the module
