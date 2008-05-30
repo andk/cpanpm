@@ -52,6 +52,7 @@ my %Config = (
                               qr{It is Very Easy To Loss Weight},
                               qr{8.901.530.28.70\.},
                               qr{495.{3}772.07.57},
+                              qr{(?s:le super lot de la loterie.*sultats de la Loterie Mega Millions.*FELICITATION!)},
                              ],
              );
 
