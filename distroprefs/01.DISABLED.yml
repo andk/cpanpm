@@ -55,6 +55,7 @@ match:
     |GRICHTER/DBIx-Recordset-\d              # hangs
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
+    |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
