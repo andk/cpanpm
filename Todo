@@ -91,6 +91,7 @@ cmp: EOF auf /home/sand/.cpan/build/Archive-Extract-0.26-t7pU2J/t/src/x.lzma.
 	main-5.10 has the packed file instead of the unpacked one. So who calls
 	uupacktool and how?
 
+	Ahh, 33943 must fix it. My last try was 33942.
 
 2008-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
