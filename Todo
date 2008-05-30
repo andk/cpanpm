@@ -1,3 +1,97 @@
+2008-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* flock on windows is mandatory -- mail from Jan Dubois
+
+2008-05-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* what's the matter with maint-5.10? need a perl between 33823 and 33921
+	and because 33921 does not build I must read the available perls in the
+	APC directory:
+
+	% ls APC/perl-5.10.x-diffs
+
+	Trying 33883. Trying lots of older 5.10s which all must have worked some
+	time before because I do not think the I have skipped testing often. All
+	fail in the same way. Some debian upgrade must have broken something.
+	For the record:
+
+ok 385 - Archive type recognized properly
+not ok 386 - extract() for 'x.lzma' reports success
+
+#   Failed test 'extract() for 'x.lzma' reports success'
+#   at ../lib/Archive/Extract/t/01_Archive-Extract.t line 334.
+ok 387 - No errors capturing buffers
+not ok 388 - Found correct number of output files
+
+#   Failed test 'Found correct number of output files'
+#   at ../lib/Archive/Extract/t/01_Archive-Extract.t line 356.
+#          got: '0'
+#     expected: '1'
+Modification of non-creatable array value attempted, subscript -1 at ../lib/Archive/Extract/t/01_Archive-Extract.t line 358.
+1..388
+# Looks like you failed 2 tests of 388.
+# Looks like your test died just after 388.
+dubious
+        Test returned status 255 (wstat 65280, 0xff00)
+DIED. FAILED tests 386, 388
+        Failed 2/388 tests, 99.48% okay
+Failed Test                               Stat Wstat Total Fail  List of Failed
+-------------------------------------------------------------------------------
+../lib/Archive/Extract/t/01_Archive-Extra  255 65280   388    2  386 388
+Failed 1/1 test scripts. 2/388 subtests failed.
+Files=1, Tests=388,  3 wallclock secs ( 1.05 cusr +  0.34 csys =  1.39 CPU)
+
+	But Archive::Extract from CPAN passes its tests.
+
+	Look, the x.lzma files in perl and in Archive::Extract differ:
+
+% md5sum ~/.cpan/build/Archive-Extract-0.26-t7pU2J/t/src/x.lzma ./x.lzma
+44c17dfa72c5277ff13518c9214f8a02  /home/sand/.cpan/build/Archive-Extract-0.26-t7pU2J/t/src/x.lzma
+447ad6244441d9cccfa8ab690b6cd035  ./x.lzma
+>sand@k75:/home/src/perl/repoperls/perl-m-5.10.0@33942/lib/Archive/Extract/t/src% cmp -l ~/.cpan/build/Archive-Extract-0.26-t7pU2J/t/src/x.lzma ./x.lzma
+ 1 135  43
+ 2   0  43
+ 3   0  43
+ 4 200  43
+ 5   0  43
+ 6   0  43
+ 7   0  43
+ 8   0  43
+ 9   0  43
+10   0  43
+11   0  43
+12   0  43
+13   0  43
+14   0  43
+15   0  43
+16   0  43
+17   0  43
+18   0  43
+cmp: EOF auf /home/sand/.cpan/build/Archive-Extract-0.26-t7pU2J/t/src/x.lzma.
+
+	What? The test file in the CPAN distro is only 18 bytes? Bleedperl's
+	also has only 18 bytes.
+
+	see http://public.activestate.com/cgi-bin/perlbrowse/r///depot/maint-5.10/perl/lib/Archive/Extract/t/src/x.lzma.packed which says:
+
+//depot/maint-5.10/perl/lib/Archive/Extract/t/src/x.lzma.packed
+... #2 change 33943 integrate on 2008/05/28 by davem@davem-pigeon (text) 'Integrate: [ 33414] Subject: [p'
+... ... copy from //depot/perl/lib/Archive/Extract/t/src/x.lzma.packed#2
+... #1 change 33113 branch on 2008/01/29 by nicholas@nicholas-saigo (text) 'Integrate: [ 32652] Upgrade to '
+... ... branch from //depot/perl/lib/Archive/Extract/t/src/x.lzma.packed#1
+
+	And the same for bleadperl http://public.activestate.com/cgi-bin/perlbrowse/r///depot/perl/lib/Archive/Extract/t/src/x.lzma.packed
+
+//depot/perl/lib/Archive/Extract/t/src/x.lzma.packed
+... #2 change 33470 edit on 2008/03/10 by rgs@scipion (text) 'Subject: Re: [PATCH] make Archi'
+... ... copy into //depot/maint-5.10/perl/lib/Archive/Extract/t/src/x.lzma.packed#2
+... #1 change 33098 add on 2008/01/28 by stevep@stevep-kirk (text) 'Upgrade to Archive-Extract-0.26'
+... ... branch into //depot/maint-5.10/perl/lib/Archive/Extract/t/src/x.lzma.packed#1
+
+	main-5.10 has the packed file instead of the unpacked one. So who calls
+	uupacktool and how?
+
+
 2008-05-25  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* >>>>> On Sun, 25 May 2008 12:53:15 -0400, "David Golden" said:
