@@ -126,6 +126,7 @@ Cache::Memcached::GetParserXS
 Cache::Memcached::XS
 Cache::Simple::TimedExpiry
 Cairo
+Captcha::reCAPTCHA
 Carp::Always
 Carp::Assert::More
 Carp::Clan
@@ -488,6 +489,7 @@ File::Rsync
 File::RsyncP
 File::Scan
 File::ShareDir
+File::SortedSeek
 File::Spec
 File::Spec::Functions
 File::Tail
@@ -501,6 +503,7 @@ Filesys::Virtual
 Filter::Simple
 Filter::Util::Call
 Finance::Bank::Postbank_de
+Finance::Currency::Convert::XE
 FindBin
 FindBin::libs
 Flickr::API
@@ -1286,6 +1289,7 @@ Tie::DxHash
 Tie::EncryptedHash
 Tie::Sub
 Time::Duration
+Time::Format
 Time::HiRes
 Time::HiRes::Value
 Time::Period

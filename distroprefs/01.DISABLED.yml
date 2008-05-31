@@ -73,12 +73,14 @@ match:
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
+    |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |OALDERS/URI-ParseSearchString-More-0.04
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
-    |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags 
+    |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
+    |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
