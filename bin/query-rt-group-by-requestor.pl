@@ -116,8 +116,9 @@ if ($Config{password}) {
   my %ids;
   @ids{@ids} = ();
   $|=1;
-  print "filling $curmax..$nextmax\n";
- ID: for my $id ($curmax..$nextmax) {
+  my $maxid = max @ids;
+  print "filling $curmax..$maxid\n";
+ ID: for my $id ($curmax..$maxid) {
     my $feedback;
     if ($ALL->{tickets}{$id}){
       $feedback = "E"; # existed before
