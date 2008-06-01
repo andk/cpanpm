@@ -1,3 +1,8 @@
+2008-05-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* There seems to be a bug when the user has makepl_args and the
+	distroprefs file has other pl/args.
+
 2008-05-29  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* flock on windows is mandatory -- mail from Jan Dubois
