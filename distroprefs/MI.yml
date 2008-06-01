@@ -83,6 +83,7 @@ match:
     |CLACO/Finance-Currency-Convert-WebserviceX-\d
     |CLACO/Handel-Storage-RDBO-\d
     |CLACO/Handel-\d
+    |CLKAO/PerlIO-via-dynamic-\d
     |CLKAO/Pushmi-v\d
     |CLKAO/RunApp-\d
     |CLKAO/SVK-v\d
@@ -152,16 +153,16 @@ match:
     |JESSE/Shipwright-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JGOULAH/Net-Akamai-\d
-    |JROBINSON/DBIx-Class-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
+    |JROBINSON/DBIx-Class-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
     |JROCKWAY/Angerwhale-\d
     |JROCKWAY/Catalyst-Component-ACCEPT_CONTEXT-\d
     |JROCKWAY/Catalyst-Plugin-ConfigLoader-Environment-\d
     |JROCKWAY/Catalyst-Plugin-Unicode-\d
     |JROCKWAY/Directory-Scratch-\d
-    |JROCKWAY/File-Attributes-\d
     |JROCKWAY/File-Attributes-Recursive-\d
+    |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
     |JSHIRLEY/DBIx-Class-TimeStamp-\d
@@ -190,23 +191,23 @@ match:
     |MARCEL/Class-Accessor-Installer-\d
     |MARCEL/Class-Factory-Enhanced-\d
     |MARCEL/Class-Scaffold-\d
-    |MARCEL/Class-Value-\d
     |MARCEL/Class-Value-Bundle-\d
     |MARCEL/Class-Value-Contact-\d
     |MARCEL/Class-Value-SemanticAdapter-\d
+    |MARCEL/Class-Value-\d
     |MARCEL/DB-Pluggable-\d
     |MARCEL/Data-Conveyor-\d
     |MARCEL/Data-Domain-Net-\d
     |MARCEL/Data-Domain-SemanticAdapter-\d
     |MARCEL/Data-Domain-URI-\d
-    |MARCEL/Data-Semantic-\d
     |MARCEL/Data-Semantic-Net-\d
     |MARCEL/Data-Semantic-URI-\d
+    |MARCEL/Data-Semantic-\d
     |MARCEL/Data-Storage-\d
-    |MARCEL/Data-Timeline-\d
     |MARCEL/Data-Timeline-Bundle-\d
     |MARCEL/Data-Timeline-IScrobbler-\d
     |MARCEL/Data-Timeline-SVK-\d
+    |MARCEL/Data-Timeline-\d
     |MARCEL/Dist-Joseki-\d
     |MARCEL/Games-Go-Coordinate-\d
     |MARCEL/Games-Go-Rank-\d
@@ -221,9 +222,9 @@ match:
     |MARCEL/Template-Plugin-GoogleChart-\d
     |MARCEL/Test-CompanionClasses-\d
     |MARCEL/Test-Compile-\d
-    |MARCEL/Text-Pipe-\d
     |MARCEL/Text-Pipe-Translate-\d
     |MARCEL/Text-Pipe-W3CDTF-\d
+    |MARCEL/Text-Pipe-\d
     |MARCEL/Vim-Complete-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MASAKI/Catalyst-Controller-Resources-\d
@@ -249,6 +250,7 @@ match:
     |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Task-Catalyst-\d
     |MSIMERSON/Mail-Toaster-\d
+    |MSTROUT/Catalyst-Controller-BindLex-\d
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d

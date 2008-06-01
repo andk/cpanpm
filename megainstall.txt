@@ -103,6 +103,7 @@ CGI::Wiki
 CHI
 CPAN
 CPAN::Cache
+CPAN::CachingProxy
 CPAN::Checksums
 CPAN::Dependency
 CPAN::Faker
@@ -182,6 +183,7 @@ Class::Implements
 Class::Inflate
 Class::Inner
 Class::InsideOut
+Class::Lego::Constructor
 Class::Loader
 Class::MakeMethods
 Class::MethodMaker
@@ -598,6 +600,7 @@ HTML::ToDocBook
 HTML::TokeParser::Simple
 HTML::TreeBuilder
 HTML::TreeBuilder::XPath
+HTML::Truncate
 HTML::Widget
 HTML::WidgetValidator
 HTML::WikiConverter
@@ -1171,6 +1174,7 @@ Sys::SigAction
 Sys::Statistics::Linux
 Sys::Virt
 SystemC::Vregs
+TAP::Formatter::HTML
 TAP::Parser
 TM::PSI
 Taint::Util
@@ -1212,6 +1216,7 @@ Test::Deep
 Test::Dependencies
 Test::Differences
 Test::Exception
+Test::FITesque::Fixture
 Test::File
 Test::FormValidator
 Test::HTTP::Server::Simple
@@ -1234,7 +1239,6 @@ Test::Run
 Test::Smoke
 Test::SubCalls
 Test::TAP
-Test::TAP::HTMLMatrix
 Test::Tester
 Test::Trap
 Test::Unit::Runner::XML
@@ -1352,7 +1356,9 @@ UMMF
 UNIVERSAL::isa
 UNIVERSAL::ref
 URI
+URI::Escape
 URI::Escape::JavaScript
+URI::Escape::XS
 URI::Fetch
 URI::Find
 URI::Find::UTF8
