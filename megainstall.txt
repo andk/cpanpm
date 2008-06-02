@@ -858,6 +858,7 @@ Net::Jaiku
 Net::Jifty
 Net::LDAP
 Net::Libdnet
+Net::MAC
 Net::MRIM
 Net::MirrorDir
 Net::NNTP
@@ -935,6 +936,7 @@ PDF::Writer
 PDF::Xtract
 PDL
 PGP::Sign
+PITA
 POE
 POE::API::Peek
 POE::Component::CPAN::YACSmoke
@@ -1175,6 +1177,7 @@ Sys::Statistics::Linux
 Sys::Virt
 SystemC::Vregs
 TAP::Formatter::HTML
+TAP::Harness::Remote
 TAP::Parser
 TM::PSI
 Taint::Util
