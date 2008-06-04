@@ -64,6 +64,7 @@ BS::Event
 BSD::Resource
 BerkeleyDB
 Biblio::Document::Parser
+Bio::Das
 Bit::MorseSignals
 Bit::Vector
 Bit::Vector::Minimal
@@ -149,6 +150,7 @@ Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
 CharsetDetector
+Chart::Clicker
 Chart::Math::Axis
 Chart::Mountain
 Chart::OFC
@@ -211,6 +213,7 @@ Clone
 Coat
 Code::Splice
 Color::Library
+Combine::FromImage
 Compress::LZF
 Compress::Zlib
 Compress::Zlib::Perl
@@ -288,6 +291,7 @@ DBIx::RetryOverDisconnects
 DBIx::SearchBuilder
 DBIx::Simple
 DBIx::Timeout
+DBIx::VersionedSubs::AutoLoad
 DB_File
 DB_File::Lock
 DTS::Assignment
@@ -528,6 +532,7 @@ GSSAPI
 GTop
 Games::Bingo
 Games::RolePlay::MapGen
+Games::Tournament::Swiss
 Geo::Cache
 Geo::Coordinates::Converter::Format::Degree
 Geo::GeoNames
@@ -712,6 +717,7 @@ Lingua::Han::Utils
 Lingua::JA::MacJapanese
 Lingua::KO::Hangul::Util
 Lingua::KO::MacKorean
+Lingua::PT::Conjugate
 Lingua::RU::Charset
 Lingua::Stem::Es
 Lingua::StopWords
@@ -757,6 +763,7 @@ Mail::Field
 Mail::Header
 Mail::IMAPClient
 Mail::Internet
+Mail::Karmasphere::Client
 Mail::Mailer
 Mail::Mbox::MessageParser
 Mail::RFC822::Address
@@ -818,6 +825,7 @@ Module::Release
 Module::Starter
 Module::Versions::Report
 MogileFS::Class
+Mogstored::HTTPServer::Perlbal
 MojoMojo
 Moose
 Moose::Autobox
@@ -854,6 +862,7 @@ Net::IMAP::Simple
 Net::IPv4Addr
 Net::IPv6Addr
 Net::IRC3
+Net::Jabber::Bot
 Net::Jaiku
 Net::Jifty
 Net::LDAP
@@ -999,6 +1008,7 @@ PerlIO::eol
 PerlIO::via::dynamic
 PerlIO::via::symlink
 Perlbal
+Perlbal::XS::HTTPHeaders
 Petal
 Petal::Utils
 Plagger
@@ -1066,6 +1076,7 @@ Regexp::Shellish
 Regexp::Trie
 ResourcePool
 Return::Value
+RiveScript
 Roman
 Rose::DB::Object
 Rose::DateTime
@@ -1401,6 +1412,8 @@ VCI
 VFSsimple
 VS::Chart
 Verilog::Parser
+Vim::Complete
+Vim::Snippet::Converter
 Voting::Condorcet::RankedPairs
 Vroom::Vroom
 WWW::ColiPoste
