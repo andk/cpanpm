@@ -530,6 +530,7 @@ GIS::Distance
 GPS::SpaceTrack
 GSSAPI
 GTop
+GameClock
 Games::Bingo
 Games::RolePlay::MapGen
 Games::Tournament::Swiss
@@ -686,6 +687,7 @@ Inline
 InlineX::C2XS
 InlineX::CPP2XS
 InlineX::XS
+IsUTF8
 Iterator
 JSON
 JSON::DWIW
@@ -1127,6 +1129,7 @@ Scalar::Util::Numeric
 Schedule::Cron
 Scope::Guard
 Scriptalicious
+Script::Remote
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
@@ -1290,6 +1293,7 @@ Text::Table
 Text::Tabs
 Text::TabularDisplay
 Text::Template
+Text::Trac
 Text::Typography
 Text::Unidecode
 Text::VimColor
