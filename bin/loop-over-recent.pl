@@ -97,7 +97,10 @@ MAIN : {
       next unless $upload->{path} =~ $rx;
       next unless $upload->{type} eq "new";
       next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.10|;
-      next if $upload->{path} =~ m|^D/DA/DAGOLDEN/CPAN-Reporter-1.15|;
+      my $action = "install";
+      if ($upload->{path} =~ m|^D/DA/DAGOLDEN/CPAN-Reporter-\d+\.\d+_|){
+        $action = "test";
+      }
       
       # XXX: we should compute exceptions for every distro that has a
       # higher numbered developer release. Say Foo-1.4801 is released
@@ -161,7 +164,7 @@ MAIN : {
                         "-MCPAN::MyConfig",
                         "-MCPAN",
                         "-e",
-                        "\$CPAN::Config->{build_dir_reuse}=0; install q{$upload->{path}}",
+                        "\$CPAN::Config->{build_dir_reuse}=0; $action q{$upload->{path}}",
                        );
           # 0==system @system or die;
           unless (0==system @system){
