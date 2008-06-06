@@ -534,6 +534,7 @@ GPS::SpaceTrack
 GSSAPI
 GTop
 GameClock
+Games::Affenspiel
 Games::Bingo
 Games::RolePlay::MapGen
 Games::Tournament::Swiss
@@ -839,6 +840,7 @@ MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Mutate
+MooseX::Plaggerize
 MooseX::Storage
 MooseX::Types::Set::Object
 Muldis
@@ -981,6 +983,7 @@ POE::XUL::Window
 POSIX
 POSIX::Regex
 PPI
+PTools
 PTools::SDF
 Package::Constants
 Pad::Tie
@@ -1463,6 +1466,7 @@ XML::Clean
 XML::Comma
 XML::Compile
 XML::DOM
+XML::DOM2
 XML::DOM::XPath
 XML::Descent
 XML::Elemental
