@@ -1,3 +1,22 @@
+2008-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* URI::Escape::XS has 10 fails all of which have useperlio, usemymalloc,
+	ld=cc, intsize=4, hint=recommended, dlsrc=dl_dlopen.xs,
+	d_longlong=define, ccversion="", cc=cc, alignbytes=4. But what does that
+	tell us?
+
+	perl bin/quidi-getreports.pl -q=conf:intsize URI-Escape-XS | perl -nale 'if ($F[0] eq "FAIL"){ print "~/var/cpantesters/nntp-testers/$F[1]"}'|xargs echo
+
+	With this list we can grep for the test failure (it is always 03-hashu.
+	Uniq -c gives us:
+
+      1 #   Failed test 'decodeURI(&quot;%uD869&quot;)'
+      9 #   Failed test 'decodeURI(&quot;%uD869%uDEB2%u5F3E%u0064&quot;)'
+
+	The shorter one is /home/k/var/cpantesters/nntp-testers/1595927 from chris.
+
+	No clue.
+
 2008-05-31  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* There seems to be a bug when the user has makepl_args and the
