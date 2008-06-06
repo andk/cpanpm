@@ -269,6 +269,7 @@ match:
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
+    |RKITOVER/Catalyst-Plugin-SmartURI-\d
     |RKRIMEN/Catalyst-Plugin-Assets-\d
     |RKRIMEN/Config-JFDI-\d
     |RKRIMEN/Data-KeyDiff-\d
