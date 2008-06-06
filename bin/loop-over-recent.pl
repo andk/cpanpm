@@ -13,7 +13,7 @@ use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
 sub determine_perls {
   my($basedir,$otherperls) = @_;
   my @perls;
-  my $trust_latest_bleadperls = 0;
+  my $trust_latest_bleadperls = 1;
   if ($trust_latest_bleadperls) {
     opendir my $dh, $basedir or die;
     my @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
@@ -97,6 +97,7 @@ MAIN : {
       next unless $upload->{path} =~ $rx;
       next unless $upload->{type} eq "new";
       next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.10|;
+      next if $upload->{path} =~ m|^D/DA/DAGOLDEN/CPAN-Reporter-1.15|;
       
       # XXX: we should compute exceptions for every distro that has a
       # higher numbered developer release. Say Foo-1.4801 is released
