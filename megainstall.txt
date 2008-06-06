@@ -6,8 +6,10 @@ Acme::Bleach
 Acme::Chef
 Acme::MetaSyntactic
 Algorithm::Annotate
+Algorithm::CheckDigits
 Algorithm::C3
 Algorithm::Diff
+Algorithm::Nhash
 Algorithm::Partition
 Algorithm::Permute
 Algorithm::Points::MinimumDistance
@@ -319,6 +321,7 @@ Data::ICal::TimeZone
 Data::KeyDiff
 Data::Lazy
 Data::Libra
+Data::Omap
 Data::OptList
 Data::Phrasebook
 Data::PowerSet
@@ -919,6 +922,7 @@ OpenOffice::OODoc
 OpenResty
 OpenThought
 Osgood::Client
+Oxford::Calendar
 P5NCI
 PAR
 PAR::Dist::FromCPAN
@@ -1163,6 +1167,7 @@ Squatting
 Statistics::Distributions
 Statistics::Gtest
 Statistics::Regression
+Stem
 Storable
 String::Approx
 String::CRC32
