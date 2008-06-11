@@ -181,6 +181,7 @@ WriteMakefile(
                                            ),
                        COMPRESS => 'gzip -9',
                       },
+              # I took it from RT-CPAN ticket 30098:
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (EXTRA_META => <<EMETA,
 repository: "https://pause.perl.org:5460/svn/cpanpm/trunk"
