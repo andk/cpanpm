@@ -144,6 +144,7 @@ Catalyst::Plugin::Authentication
 Catalyst::Plugin::Authentication::Credential::TypeKey
 Catalyst::Plugin::Authorization::Roles
 Catalyst::Plugin::ConfigLoader
+Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
 Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
@@ -419,6 +420,7 @@ Digest::SHA::PurePerl
 Digest::Tiger
 Dir::Which
 Directory::Scratch
+Directory::Scratch::Structured
 DocSet
 ETL::Pequel
 EV::ADNS
@@ -519,6 +521,7 @@ Flickr::API
 Font::AFM
 Font::TTF
 Font::TTFMetrics
+Forest::Tree
 Form::Processor
 FormValidator::Simple
 FrameMaker::FromHTML
@@ -618,6 +621,7 @@ HTTP::BrowserDetect
 HTTP::CryptoCookie
 HTTP::Engine
 HTTP::GHTTP
+HTTP::HeaderParser::XS
 HTTP::MobileAttribute::Plugin::Default::AirHPhone
 HTTP::Parser
 HTTP::Proxy
@@ -748,6 +752,7 @@ Locale::PGetText
 Locale::Recode
 LockFile::Simple
 Log::Agent
+Log::Handler
 Log::Message
 Log::Message::Simple
 Lucene
@@ -829,6 +834,7 @@ Module::Pluggable::Fast
 Module::Refresh
 Module::Release
 Module::Starter
+Module::Template::Setup
 Module::Versions::Report
 MogileFS::Class
 Mogstored::HTTPServer::Perlbal
@@ -843,6 +849,7 @@ MooseX::Mutate
 MooseX::Plaggerize
 MooseX::Storage
 MooseX::Types::Set::Object
+Mouse
 Muldis
 Net::Akamai
 Net::Amazon
@@ -1167,6 +1174,7 @@ Spreadsheet::Read
 Spreadsheet::WriteExcel
 Spreadsheet::WriteExcelXML
 Squatting
+Statistics::Contingency
 Statistics::Distributions
 Statistics::Gtest
 Statistics::Regression
@@ -1319,6 +1327,7 @@ Tie::DxHash
 Tie::EncryptedHash
 Tie::Sub
 Time::Duration
+Time::Duration::Object
 Time::Format
 Time::HiRes
 Time::HiRes::Value
@@ -1486,6 +1495,7 @@ XML::RSS
 XML::RSS::FromHTML::Simple
 XML::RSS::LibXML
 XML::RegExp
+XML::RelaxNG::Compact::PXB
 XML::SAX
 XML::SAX2Perl
 XML::SAX::Base
