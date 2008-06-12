@@ -283,6 +283,7 @@ match:
     |RKRIMEN/Hash-Merge-Simple-\d
     |RKRIMEN/JS-YUI-Loader-\d
     |RKRIMEN/JS-jQuery-Loader-\d
+    |RKRIMEN/Path-Abstract-\d
     |RKRIMEN/Path-Resource-\d
     |RLB/Notification-Center-\d
     |SARTAK/Acme-Aspartame-\d

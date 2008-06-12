@@ -5,6 +5,7 @@ ANDK/keepcool-0.344
 Acme::Bleach
 Acme::Chef
 Acme::MetaSyntactic
+Algorithm::AhoCorasick
 Algorithm::Annotate
 Algorithm::CheckDigits
 Algorithm::C3
@@ -224,6 +225,7 @@ Compress::Zlib
 Compress::Zlib::Perl
 Config
 Config::Any
+Config::AutoConf
 Config::General
 Config::INI::Reader
 Config::IniFiles
@@ -331,6 +333,7 @@ Data::Pairs
 Data::Phrasebook
 Data::PowerSet
 Data::Properties
+Data::Rand
 Data::Random
 Data::Rand::Obscure
 Data::Remember
