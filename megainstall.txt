@@ -293,6 +293,7 @@ DBIx::Perlish
 DBIx::RetryOverDisconnects
 DBIx::SearchBuilder
 DBIx::Simple
+DBIx::SimplePerl
 DBIx::Timeout
 DBIx::VersionedSubs::AutoLoad
 DB_File
@@ -324,6 +325,7 @@ Data::Lazy
 Data::Libra
 Data::Omap
 Data::OptList
+Data::Pairs
 Data::Phrasebook
 Data::PowerSet
 Data::Properties
@@ -430,6 +432,7 @@ Email::Address
 Email::Date
 Email::Delete
 Email::Find
+Email::Filter
 Email::Folder
 Email::FolderType
 Email::FolderType::Net
@@ -800,6 +803,7 @@ Math::Expression::Evaluator
 Math::GMP
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset
+Math::Geometry::Voronoi
 Math::Pari
 Math::Polygon
 Math::Polynom
