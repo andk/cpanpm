@@ -46,7 +46,7 @@ my $rf = File::Rsync::Mirror::Recentfile->new(
                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
                                               intervals => [qw(2d)],
                                              );
-
+my $have_a_current = 0;
 my $recent_events = $rf->recent_events;
 {
   my %seen;
@@ -54,25 +54,27 @@ my $recent_events = $rf->recent_events;
                             !$seen{$d->dist}++
                                 && $_->{path} =~ $rx
                                     && $_->{type} eq "new";
-                            
                           } @$recent_events ];
+  for my $re (@$recent_events) {
+    if ($re->{epoch} == $max_epoch_worked_on) {
+      $re->{is_current} = 1;
+      $have_a_current = 1;
+    }
+  }
 }
-my $current_is_marked = 0;
 my $count = 0;
 ITEM: for my $i (0..$#$recent_events) {
   my $item = $recent_events->[$i];
   my $mark = "";
-  if (!$current_is_marked) {
-    if ($max_epoch_worked_on) {
-      if ($max_epoch_worked_on == $item->{epoch}) {
-        $mark = "*";
-        $current_is_marked = 1;
-      } elsif ($max_epoch_worked_on < $item->{epoch}
-               && $#$recent_events > $i
-               && $max_epoch_worked_on > $recent_events->[$i+1]->{epoch}) {
-        printf "%1s %s\n", "*", scalar localtime $recent_events->[$i+1]->{epoch};
-        $current_is_marked = 1;
-      }
+  if ($max_epoch_worked_on) {
+    if ($item->{is_current}) {
+      $mark = "*";
+    } elsif (!$have_a_current
+             && $max_epoch_worked_on > $item->{epoch}
+             && $i > 0
+             && $max_epoch_worked_on < $recent_events->[$i-1]->{epoch}) {
+      $DB::single++;
+      printf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
     }
   }
   printf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
