@@ -116,6 +116,8 @@ CPAN::Metrics
 CPAN::Mini
 CPAN::Reporter::Smoker
 CPAN::Site
+CPAN::Testers::Report
+CPAN::Testers::ParseReport
 CPAN::Unwind
 CPAN::WWW::Testers
 CPAN::YACSmoke

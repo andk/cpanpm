@@ -240,6 +240,7 @@ match:
     |MLAWREN/MySpam-\d
     |MLAWREN/NCGI-\d
     |MLAWREN/SQL-DB-\d
+    |MPG/POD-Credentials-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Devel-\d
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
