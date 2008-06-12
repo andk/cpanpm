@@ -883,6 +883,10 @@ This module requires Module::Build to install itself.
 	And if Module::Build cannot be built? When this happens it will be fixed
 	within days or we can force install it and with 5.10 this is moot.
 
+	Nope, changing mind again. If there is no reason to use "passthrough",
+	they really should use "traditional", the only sane option when there is
+	no special reason why you'd absolutely need Module::Build.
+
 2008-03-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* PIJLL/DateTime-Format-Epoch-0.11.tar.gz has both fails and passes. 64bitint?
