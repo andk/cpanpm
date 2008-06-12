@@ -1,17 +1,11 @@
-# some recent 5.10.1 not threaded and with -g:
-/home/src/perl/repoperls/installed-perls/maint-5.10/pJQOW0w/perl-5.10.0@33443/bin/perl
-# threaded and not -g:
-/home/src/perl/repoperls/installed-perls/maint-5.10/pecapvd/perl-5.10.0@33628/bin/perl
+# some recent 5.10.1-tobe
+/home/src/perl/repoperls/installed-perls/maint-5.10/pjgo6vl/perl-5.10.0@33955/bin/perl
 
 # 5.10.0 itself:
 /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
 
-# some recent 5.8.9 threaded and without -g
-/home/src/perl/repoperls/installed-perls/maint-5.8/pB3dGVG/perl-5.8.8@33430/bin/perl
-
-# was: pOwntgt/perl-5.8.0@32025/bin/perl
-# unthreaded and without -g:
-/home/src/perl/repoperls/installed-perls/maint-5.8/pBxK9vV/perl-5.8.8@33243/bin/perl
+# some recent 5.8.9-tobe
+/home/src/perl/repoperls/installed-perls/maint-5.8/pGdJCdi/perl-5.8.8@33994/bin/perl
 
 # 5.8.8 itself not threaded and with -O2:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pnDGtsd/perl-5.8.7@27040/bin/perl
