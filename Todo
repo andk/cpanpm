@@ -1,3 +1,25 @@
+2008-06-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* As the last time in 2008-03-08 today I hit the Makefile.PLs written by
+	Module::Build::Compat "passthough" model. This time with
+	Data-Float-0.009 and Text-SimpleTable-0.03. Why does this perl have no
+	Module::Build? I thought my megainstall rules install it because they
+	install Bundle::CPANxxl? Yes, I do. But M:B FAILs with current
+	5.8.9-tobe. Is it Test::Harness 3.11? At line 675 we install T:H 3.11
+	and at 950 we fail the test compat.t, so yes, this is with 3.11.
+
+	Retrying with 33994 I see T:H 3.11 fail in its
+	t/compat/test-harness-compat.t. It has 3.10 and M:B PASSes.
+
+	Retrying with 33935 I see M:B PASS with T:H 3.10. Here T:H 3.11 PASSes
+	andis now installed. Testing M:B again FAILs on its t/compat.t test.
+
+	Retrying with what next? I would like to have a stock 5.8.8 as it comes
+	with just the bare metal.... Not needed because AndyA apparently
+	allready knows (witnessed on #p5p)
+
+	Workaround is to force install M:B.
+
 2008-06-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* URI::Escape::XS has 10 fails all of which have useperlio, usemymalloc,
@@ -852,6 +874,14 @@ This module requires Module::Build to install itself.
 
 	Aha. This is a special Module::Build silliness that calls CPAN
 	recursively to install Module::Build::Compat. If you say no, it dies.
+
+	update 2008-06-12 akoenig : what's the politically correct way to deal
+	with this Makefile.PL nowadays? Large Module::Build::Compat thread at
+	http://www.nntp.perl.org/group/perl.perl5.porters/2008/01/msg133202.html
+	(just a random point in the middle), no conclusion there. My conclusion:
+	install Module::Build really early and never see this discussion again.
+	And if Module::Build cannot be built? When this happens it will be fixed
+	within days or we can force install it and with 5.10 this is moot.
 
 2008-03-05  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
