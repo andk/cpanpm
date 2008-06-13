@@ -690,6 +690,7 @@ Image::ANSI
 Image::Compare
 Image::Delivery
 Image::ExifTool
+Image::Grab
 Image::Info::SVG
 Image::Magick::Thumbnail
 Image::Magick::Thumbnail::Fixed
@@ -710,6 +711,7 @@ JSON::DWIW
 JSON::RPC::Server
 JSON::XS
 Jcode
+Jemplate
 Jifty
 Kephra
 KindaPerl6
@@ -1271,6 +1273,7 @@ Test::LongString
 Test::MockModule
 Test::MockObject
 Test::More
+Test::More::Strict
 Test::NoWarnings
 Test::PDF
 Test::Pod
@@ -1471,6 +1474,7 @@ Weather::Google
 Web::Scraper
 Web::Scraper::Config
 WebService::ISBNDB
+WebService::Validator::CSS::W3C
 WebService::Validator::HTML::W3C
 WordNet::SenseRelate::AllWords
 Workflow
@@ -1527,6 +1531,7 @@ YAML
 YAML::Syck
 YAML::Tiny
 YAML::XS
+YAPE::Regex::Explain
 Yada::Yada::Yada
 Yahoo::Photos
 Yahoo::Search
