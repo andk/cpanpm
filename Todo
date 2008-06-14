@@ -1,3 +1,10 @@
+2008-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Todo: report Data::Float the bug to switch to "traditional" instead of
+	"passthrough".
+
+	https://rt.cpan.org/Ticket/Display.html?id=36731
+
 2008-06-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* As the last time in 2008-03-08 today I hit the Makefile.PLs written by
@@ -12,11 +19,11 @@
 	t/compat/test-harness-compat.t. It has 3.10 and M:B PASSes.
 
 	Retrying with 33935 I see M:B PASS with T:H 3.10. Here T:H 3.11 PASSes
-	andis now installed. Testing M:B again FAILs on its t/compat.t test.
+	and is now installed. Testing M:B again FAILs on its t/compat.t test.
 
 	Retrying with what next? I would like to have a stock 5.8.8 as it comes
 	with just the bare metal.... Not needed because AndyA apparently
-	allready knows (witnessed on #p5p)
+	already knows (witnessed on #p5p)
 
 	Workaround is to force install M:B.
 
