@@ -296,6 +296,7 @@ match:
     |SARTAK/Jifty-DBI-\d
     |SARTAK/Jifty-Plugin-OAuth-\d
     |(?:JESSE|SARTAK)/Jifty-\d
+    |SARTAK/Moose-\d
     |SARTAK/Net-Hiveminder-\d
     |SARTAK/Net-Jifty-\d
     |SARTAK/Term-VT102-ZeroBased-\d
