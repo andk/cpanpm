@@ -3205,7 +3205,7 @@ sub format_result {
 # to turn colordebugging on, write
 # cpan> o conf colorize_output 1
 
-#-> sub CPAN::Shell::print_ornamented ;
+#-> sub CPAN::Shell::colorize_output ;
 {
     my $print_ornamented_have_warned = 0;
     sub colorize_output {
@@ -3250,7 +3250,7 @@ sub print_ornamented {
             print "Term::ANSIColor rejects color[$ornament]: $@\n
 Please choose a different color (Hint: try 'o conf init /color/')\n";
         }
-        # GGOLDBACH/Test-GreaterVersion-0.008 broke wthout this
+        # GGOLDBACH/Test-GreaterVersion-0.008 broke without this
         # $trailer construct. We want the newline be the last thing if
         # there is a newline at the end ensuring that the next line is
         # empty for other players
