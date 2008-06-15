@@ -6,7 +6,7 @@ recent -
 
 =head1 SYNOPSIS
 
- watch -n 20 'perl ~k/sources/CPAN/GIT/trunk/bin/recent.pl -n 15;perl -e\$c=800\;while\(--\$c\){print\ rand\(80\)\<1\?\"_\":\"\ \"} '
+ watch -t -n 20 'perl ~k/sources/CPAN/GIT/trunk/bin/recent.pl -n 25 --burn-in-protection'
 
 =head1 DESCRIPTION
 
@@ -14,7 +14,14 @@ Show most recent uploads according to the RECENT file and mark the
 currently processing one (according to ~/.cpan/loop-over-recent.state
 with a star.
 
+The burn-in-protection changes something from time to time. This also
+cleans up STDERR remnants that otherwise might annoy the user of
+watch(1).
+
 =cut
+
+use strict;
+use warnings;
 
 use CPAN::DistnameInfo;
 use Getopt::Long;
@@ -22,7 +29,8 @@ use YAML::Syck;
 
 our %Opt;
 GetOptions(\%Opt,
-          "n=i",
+           "n=i",
+           "burn-in-protection|lossy!",
           );
 use lib "/home/k/dproj/PAUSE/wc/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
@@ -51,6 +59,7 @@ my $recent_events = $rf->recent_events;
 {
   my %seen;
   $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
+                            no warnings 'uninitialized';
                             !$seen{$d->dist}++
                                 && $_->{path} =~ $rx
                                     && $_->{type} eq "new";
@@ -66,6 +75,7 @@ my $count = 0;
 ITEM: for my $i (0..$#$recent_events) {
   my $item = $recent_events->[$i];
   my $mark = "";
+  my $line = "";
   if ($max_epoch_worked_on) {
     if ($item->{is_current}) {
       $mark = "*";
@@ -73,11 +83,27 @@ ITEM: for my $i (0..$#$recent_events) {
              && $max_epoch_worked_on > $item->{epoch}
              && $i > 0
              && $max_epoch_worked_on < $recent_events->[$i-1]->{epoch}) {
-      $DB::single++;
-      printf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
+      $line .= sprintf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
     }
   }
-  printf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
+  $line .= sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
+  if ($Opt{"burn-in-protection"}) {
+    require Term::ANSIColor;
+    my $color_on = Term::ANSIColor::color("blue");
+    my $color_off = Term::ANSIColor::color("reset");
+    chomp $line;
+    while (rand 40 < 1) {
+      $line = " $line";
+    }
+    while (length($line) < 78){
+      $line .= rand(30)<1 ? "_" : " ";
+    }
+    if (rand(80)<1) {
+      $line =~ s/ /_/g;
+    }
+    $line .= "\n";
+  }
+  print $line;
   if ($Opt{n} && ++$count>=$Opt{n}) {
     last ITEM;
   }
