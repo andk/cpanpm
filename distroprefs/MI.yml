@@ -238,6 +238,7 @@ match:
     |MIYAGAWA/XML-Atom-\d
     |MIYAZAKI/HTTP-MobileUID-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
+    |MIZZY/Text-Trac-\d
     |MLAWREN/MySpam-\d
     |MLAWREN/NCGI-\d
     |MLAWREN/SQL-DB-\d
