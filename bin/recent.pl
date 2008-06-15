@@ -52,7 +52,7 @@ if (-e $statefile) {
 my $rf = File::Rsync::Mirror::Recentfile->new(
                                               canonize => "naive_path_normalize",
                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                              intervals => [qw(2d)],
+                                              interval => q(2d),
                                              );
 my $have_a_current = 0;
 my $recent_events = $rf->recent_events;
@@ -89,7 +89,7 @@ ITEM: for my $i (0..$#$recent_events) {
   $line .= sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
   if ($Opt{"burn-in-protection"}) {
     chomp $line;
-    while (rand 40 < 1) {
+    while (rand 30 < 1) {
       $line = " $line";
     }
     if (length($line) > 80) {
@@ -101,7 +101,7 @@ ITEM: for my $i (0..$#$recent_events) {
     while (length($line) < 80){
       $line .= rand(30)<1 ? "_" : " ";
     }
-    if (rand(80)<1) {
+    if (rand(30)<1) {
       $line =~ s/ /_/g;
     }
     $line .= "\n";
