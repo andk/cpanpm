@@ -138,6 +138,7 @@ Carp::Always
 Carp::Assert::More
 Carp::Clan
 Carp::Diagnostics
+Carp::REPL
 Carp::Source
 Catalyst
 Catalyst::Action::RenderView
@@ -227,6 +228,7 @@ Config
 Config::Any
 Config::AutoConf
 Config::General
+Config::Hierarchical
 Config::INI::Reader
 Config::IniFiles
 Config::JSON
@@ -418,6 +420,7 @@ Devel::ebug
 Devel::ebug::HTTP
 Device::SerialPort
 Digest::BubbleBabble
+Digest::CMAC
 Digest::HMAC
 Digest::MD2
 Digest::MD5
@@ -860,6 +863,7 @@ MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Mutate
 MooseX::Plaggerize
+MooseX::Singleton
 MooseX::Storage
 MooseX::Types::Set::Object
 Mouse
@@ -1044,6 +1048,7 @@ Petal::Utils
 Plagger
 Pod::Constants
 Pod::Coverage
+Pod::Coverage::Moose
 Pod::Coverage::CountParents
 Pod::Escapes
 Pod::Find
@@ -1458,6 +1463,7 @@ WWW::Curl
 WWW::Facebook::API
 WWW::Live365
 WWW::Mechanize
+WWW::Mechanize::Plugin::Web::Scraper
 WWW::Mechanize::Shell
 WWW::Monitor
 WWW::Ohloh::API
@@ -1540,6 +1546,7 @@ Yada::Yada::Yada
 Yahoo::Photos
 Yahoo::Search
 autobox::Core
+autodie
 bignum
 capitalization
 encoding::warnings
@@ -1550,6 +1557,7 @@ iCal::Parser
 interface
 load
 mixin
+namespace::clean
 overload
 overload::eval
 parent
