@@ -627,6 +627,7 @@ HTML::WidgetValidator
 HTML::WikiConverter
 HTTP::BrowserDetect
 HTTP::CryptoCookie
+HTTP::Daemon::Threaded
 HTTP::Engine
 HTTP::GHTTP
 HTTP::HeaderParser::XS
@@ -668,6 +669,7 @@ IO::LockedFile
 IO::Multiplex
 IO::Pager
 IO::Pipe
+IO::Prompt
 IO::Scalar
 IO::Seekable
 IO::Socket::SSL
@@ -993,6 +995,7 @@ POE::Component::Server::DNS
 POE::Component::Server::HTTP
 POE::Component::Server::SimpleHTTP
 POE::Component::Server::PreforkTCP
+POE::Component::SpreadClient
 POE::Component::StackedProcessor
 POE::Component::SubWrapper
 POE::Declarative::Mixin
@@ -1396,6 +1399,7 @@ Tk::Wizard
 Tk::XMLViewer
 Touch
 Transform::Canvas
+Tree::Persist
 Tree::Simple::View
 Tripletail
 UML::Sequence

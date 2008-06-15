@@ -8,7 +8,8 @@ comment: |
 
   The timeout must really be more, Net::Jifty for example didn't make
   it in ten (once), OpenResty didn't make it in 20 (I took it out
-  then)
+  then). Then Jifty didn't make it in 20 (sometimes) so I increased
+  the default to 60
 
 match:
   distribution: |
@@ -340,7 +341,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 20
+    timeout: 60
     reuse: 1
     talk:
       - "Auto-install"
