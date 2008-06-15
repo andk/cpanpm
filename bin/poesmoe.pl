@@ -49,7 +49,7 @@ sub work_handler_start {
   $heap->{rf} = File::Rsync::Mirror::Recentfile->new(
                                                      canonize => "naive_path_normalize",
                                                      localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                                     intervals => [qw(2d)],
+                                                     interval => q(2d),
                                                     );
   $heap->{otherperls} = "$0.otherperls";
   my $bbname = fileparse($0,qr{\.pl});

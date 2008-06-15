@@ -117,7 +117,7 @@ my $rf = File::Rsync::Mirror::Recentfile->new
     (
      canonize => "naive_path_normalize",
      localroot => "/home/ftp/pub/PAUSE/authors/id/",
-     intervals => [qw(2d)],
+     interval => q(2d),
      remote_host => "pause.perl.org",
      remote_module => "authors",
      remote_dir => "id",
