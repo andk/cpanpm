@@ -88,14 +88,17 @@ ITEM: for my $i (0..$#$recent_events) {
   }
   $line .= sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
   if ($Opt{"burn-in-protection"}) {
-    require Term::ANSIColor;
-    my $color_on = Term::ANSIColor::color("blue");
-    my $color_off = Term::ANSIColor::color("reset");
     chomp $line;
     while (rand 40 < 1) {
       $line = " $line";
     }
-    while (length($line) < 78){
+    if (length($line) > 80) {
+      while (length($line) > 80){
+        chop($line);
+      }
+      substr($line,80-1,1) = rand(30)<1 ? "_" : ">";
+    }
+    while (length($line) < 80){
       $line .= rand(30)<1 ? "_" : " ";
     }
     if (rand(80)<1) {
