@@ -31,6 +31,7 @@ our %Opt;
 GetOptions(\%Opt,
            "n=i",
            "burn-in-protection|lossy!",
+           "alternative=i",
           );
 use lib "/home/k/dproj/PAUSE/wc/lib/";
 use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
@@ -49,11 +50,24 @@ if (-e $statefile) {
   $state += 0;
   $max_epoch_worked_on = $state if $state;
 }
-my $rf = File::Rsync::Mirror::Recentfile->new(
-                                              canonize => "naive_path_normalize",
-                                              localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                              interval => q(2d),
-                                             );
+my $rf1 = File::Rsync::Mirror::Recentfile->new(
+                                               canonize => "naive_path_normalize",
+                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
+                                               interval => q(2d),
+                                              );
+my $rf2 = File::Rsync::Mirror::Recentfile->new(
+                                               canonize => "naive_path_normalize",
+                                               localroot => "/home/ftp/pub/PAUSE/authors/",
+                                               interval => q(1W),
+                                               filenameroot => "TESTPLEASEIGNORE",
+                                              );
+$Opt{alternative} ||= 1;
+my $rf;
+if ($Opt{alternative}==1) {
+  $rf = $rf1;
+} elsif ($Opt{alternative}==2) {
+  $rf = $rf2;
+}
 my $have_a_current = 0;
 my $recent_events = $rf->recent_events;
 {
