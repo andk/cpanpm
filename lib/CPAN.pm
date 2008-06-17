@@ -513,31 +513,30 @@ sub _yaml_loadfile {
         # temporarly enable yaml code deserialisation
         no strict 'refs';
         # 5.6.2 could not do the local() with the reference
-        local ${"$yaml_module\::LoadCode"};
+        # so we do it manually instead
+        my $old_loadcode = ${"$yaml_module\::LoadCode"};
         ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
 
-        my $code;
+        my ($code, @yaml);
         if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
-            my @yaml;
             eval { @yaml = $code->($local_file); };
             if ($@) {
                 # this shall not be done by the frontend
                 die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
             }
-            return \@yaml;
         } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
             local *FH;
             open FH, $local_file or die "Could not open '$local_file': $!";
             local $/;
             my $ystream = <FH>;
-            my @yaml;
             eval { @yaml = $code->($ystream); };
             if ($@) {
                 # this shall not be done by the frontend
                 die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
             }
-            return \@yaml;
         }
+        ${"$yaml_module\::LoadCode"} = $old_loadcode;
+        return \@yaml;
     } else {
         # this shall not be done by the frontend
         die CPAN::Exception::yaml_not_installed->new($yaml_module, $local_file, "parse");
@@ -1629,6 +1628,8 @@ sub _list_sorted_descending_is_tested {
 }
 
 #-> sub CPAN::set_perl5lib
+# Notes on max environment variable length:
+#   - Win32 : XP or later, 8191; Win2000 or NT4, 2047
 {
 my $fh;
 sub set_perl5lib {
