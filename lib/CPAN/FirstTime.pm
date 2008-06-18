@@ -496,21 +496,6 @@ you will need to configure CPAN::Reporter before sending reports.
 
 Email test reports if CPAN::Reporter is installed (yes/no)?
 
-=item threshold_perl5lib_upto
-
-If you are using CPAN.pm to test a couple (or thousands) of modules,
-AND you want to do so *without* installing them, then you will
-appreciate support of the @INC extending variety. For details, see the
-mapage for CPAN::PERL5INC.
-
-To recap quickly: CPAN.pm supports an easy way to extend @INC (by
-stuffing all paths of tested but uninstalled modules into the
-environment variable PERL5LIB). And, for larger installations, a
-method that has PERL5OPT involved and the large @INC is written to
-disk. After how many distros shall we switch to the slower method?
-Recommended default is 24 which should be safe on all systems even
-with very long path components.
-
 =item perl5lib_verbosity
 
 When CPAN.pm extends @INC via PERL5LIB, it prints a list of
@@ -683,7 +668,6 @@ sub init {
                        cpan_home
                        keep_source_where
                        prefs_dir
-                       threshold_perl5lib_upto
                       } =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{config_intro});
 
@@ -767,13 +751,6 @@ Shall we use it as the general CPAN build and cache directory?
 
         if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
             my_yn_prompt(build_dir_reuse => 0, $matcher);
-        }
-
-        if (!$matcher or 'threshold_perl5lib_upto' =~ /$matcher/) {
-            my_dflt_prompt("threshold_perl5lib_upto",
-                           24,
-                           $matcher,
-                          );
         }
 
         if (!$matcher or 'prefs_dir' =~ /$matcher/) {

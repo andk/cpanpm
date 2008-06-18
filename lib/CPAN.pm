@@ -21,7 +21,6 @@ use CPAN::Debug;
 use CPAN::Queue;
 use CPAN::Tarzip;
 use CPAN::DeferedCode;
-use CPAN::PERL5INC; # must come after absification
 use Carp ();
 use Config ();
 use Cwd qw(chdir);
@@ -111,7 +110,6 @@ use vars qw(
             $Have_warned
             $MAX_RECURSION
             $META
-            $Perl5lib_tempfile
             $RUN_DEGRADED
             $Signal
             $SQLite
@@ -907,7 +905,6 @@ use vars qw(
              "CPAN/FirstTime.pm",
              "CPAN/HandleConfig.pm",
              "CPAN/Kwalify.pm",
-             "CPAN/PERL5INC.pm",
              "CPAN/Queue.pm",
              "CPAN/Reporter/Config.pm",
              "CPAN/Reporter/History.pm",
@@ -1541,8 +1538,6 @@ sub cleanup {
         $subroutine eq '(eval)';
   }
   return if $ineval && !$CPAN::End;
-  # Perl5lib_tempfile is not a global file, so cleanup regardless of lock
-  unlink $Perl5lib_tempfile if defined $Perl5lib_tempfile;
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
@@ -1649,27 +1644,11 @@ sub set_perl5lib {
 
     my @dirs = map {("$_/blib/arch", "$_/blib/lib")} $self->_list_sorted_descending_is_tested;
     return if !@dirs;
-    my $yaml_module = CPAN::_yaml_module;
 
-    if ($CPAN::META->has_inst($yaml_module)
-        && $CPAN::META->has_usable("File::Temp")
-        && !$ENV{PERL5OPT}) {
-        unless (defined $fh) {
-            $fh =
-                File::Temp->new(
-                                dir      => File::Spec->tmpdir,
-                                template => 'cpan_perl5inc_XXXX',
-                                suffix   => '.txt',
-                                unlink   => 0,
-                               );
-            $Perl5lib_tempfile = $fh->filename;
-        }
-    }
-    my $cctpu = defined $CPAN::Config->{threshold_perl5lib_upto} ? $CPAN::Config->{threshold_perl5lib_upto} : 24;
-    if (@dirs < 12 && @dirs < $cctpu) {
+    if (@dirs < 12) {
         $CPAN::Frontend->optprint('perl5lib', "Prepending @dirs to PERL5LIB for '$for'\n");
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
-    } elsif (@dirs < 24 && @dirs < $cctpu) {
+    } elsif (@dirs < 24 ) {
         my @d = map {my $cp = $_;
                      $cp =~ s/^\Q$CPAN::Config->{build_dir}\E/%BUILDDIR%/;
                      $cp
@@ -1679,25 +1658,8 @@ sub set_perl5lib {
                                  "for '$for'\n"
                                 );
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
-    } elsif (@dirs >= $cctpu && $Perl5lib_tempfile) {
-        my $cnt = keys %{$self->{is_tested}};
-        $CPAN::Frontend->optprint('perl5lib', "Delegating blib/arch and blib/lib of ".
-                                 "$cnt build dirs to CPAN::PERL5INC via $Perl5lib_tempfile; ".
-                                 "for '$for'\n"
-                                );
-        my $inc = File::Basename::dirname(File::Basename::dirname($INC{"CPAN/PERL5INC.pm"}));
-        $ENV{PERL5LIB} = $inc;
-        $ENV{PERL5OPT} = "-MCPAN::PERL5INC=yaml_module,$yaml_module,tempfile,$Perl5lib_tempfile";
-        seek $fh, 0, 0;
-        truncate $fh, 0;
-        CPAN->_yaml_dumpfile($fh,{ inc => [@dirs,@env] });
-        $fh->flush();
     } else {
         my $cnt = keys %{$self->{is_tested}};
-#        $CPAN::Frontend->mywarn("Your PERL5LIB is growing (now $cnt distros) but we cannot ".
-#                                "switch to the PERL5OPT method of extending \@INC; installation ".
-#                                "of a YAML module is highly recommended; see the manpage ".
-#                                "of CPAN::PERL5INC for further information\n");
         $CPAN::Frontend->optprint('perl5lib', "Prepending blib/arch and blib/lib of ".
                                  "$cnt build dirs to PERL5LIB; ".
                                  "for '$for'\n"
@@ -11292,8 +11254,6 @@ defined:
                      (and nonsense for characters outside latin range)
   term_ornaments     boolean to turn ReadLine ornamenting on/off
   test_report        email test reports (if CPAN::Reporter is installed)
-  threshold_perl5lib_upto
-                     threshold determining method to extend @INC at runtime
   trust_test_report_history
                      skip testing when previously tested ok (according to
                      CPAN::Reporter history)

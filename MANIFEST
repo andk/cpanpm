@@ -340,7 +340,6 @@ lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
 lib/CPAN/Nox.pm
-lib/CPAN/PERL5INC.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm

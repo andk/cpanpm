@@ -91,7 +91,6 @@ $VERSION = "5.5";
      "term_is_latin",
      "term_ornaments",
      "test_report",
-     "threshold_perl5lib_upto",
      "trust_test_report_history",
      "unzip",
      "urllist",
