@@ -493,7 +493,11 @@ sub home () {
     # why one load message pops up even when verbosity is turned off.
     # This means File::HomeDir load messages are never seen, but I
     # think that's probably OK -- DAGOLDEN
-    local $CPAN::Config->{load_module_verbosity} = q[none];
+    
+    # 5.6.2 seemed to segfault localizing a value in a hashref 
+    # so do it manually instead
+    my $old_v = $CPAN::Config->{load_module_verbosity};
+    $CPAN::Config->{load_module_verbosity} = q[none];
     if ($CPAN::META->has_usable("File::HomeDir")) {
         $home = File::HomeDir->my_data;
         unless (defined $home) {
@@ -503,6 +507,7 @@ sub home () {
     unless (defined $home) {
         $home = $ENV{HOME};
     }
+    $CPAN::Config->{load_module_verbosity} = $old_v;
     $home;
 }
 

@@ -1,4 +1,6 @@
 
+  * fixed some localization bugs seen on 5.6.2 (David Golden)
+
   * added 'perl5lib_verbosity' config option to silence 'added to PERL5LIB'
     messages (David Golden)
 
