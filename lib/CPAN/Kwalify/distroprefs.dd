@@ -135,6 +135,9 @@ $VAR1 = {
       "type" => "seq"
     },
     "pl" => {},
+    "reminder" => {
+      "type" => "text"
+    },
     "test" => {}
   },
   "type" => "map"
