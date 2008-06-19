@@ -1,13 +1,16 @@
+2008-06-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-  * The CPAN::PERL5INC experiment didn't work and all related code was removed.  
-  Because PERL5OPT "-M" switches are resolved after command line "-M" 
-  switches, CPAN::PERL5INC sets @INC too late for any PL code or tests that 
-  load prerequisite modules with "-M" on a command line.
+	* release 1.92_63
+
+	* The CPAN::PERL5INC experiment didn't work and all related code was
+	removed. Because PERL5OPT "-M" switches are resolved after command line
+	"-M" switches, CPAN::PERL5INC sets @INC too late for any PL code or
+	tests that load prerequisite modules with "-M" on a command line.
   
-  * fixed some localization bugs seen on 5.6.2 (David Golden)
+	* fixed some localization bugs seen on 5.6.2 (David Golden)
 
-  * added 'perl5lib_verbosity' config option to silence 'added to PERL5LIB'
-  messages (David Golden)
+	* added 'perl5lib_verbosity' config option to silence 'added to
+	PERL5LIB' messages (David Golden)
 
 2008-05-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
