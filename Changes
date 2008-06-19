@@ -12,6 +12,8 @@
 	* added 'perl5lib_verbosity' config option to silence 'added to
 	PERL5LIB' messages (David Golden)
 
+	* now with 340 distroprefs files
+
 2008-05-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_62
