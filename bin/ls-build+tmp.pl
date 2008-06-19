@@ -2,8 +2,9 @@
 
 =head1 
 
-read the build directories and the /tmp directory and merge them in
-such a way that we can say which distro dropped something.
+read the build directories and the /tmp and the home directory and
+merge them in such a way that we can say which distro dropped
+something.
 
 =cut
 
@@ -15,9 +16,11 @@ use Getopt::Long;
 use Time::HiRes qw(sleep);
 
 my %ignore = map { ;"/tmp/$_" => 1; } ".X121-lock", ".UUID_NODEID";
-
+for my $de (qw(.aptitude backup .bash_history .bash_logout .bash_profile .bashrc bin .ccache .cpan .cpanplus .cpanreporter .crossfire )) {
+    $ignore{"/home/sand/$de"} = 1;
+}
 my %Config = (
-              cleanup => 30,
+              cleanup => 30, # only for /tmp
              );
 
 GetOptions(\my %config,
