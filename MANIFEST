@@ -21,8 +21,10 @@ distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ANDREWF.LaTeX-Driver.yml
+distroprefs/ANDYA.File-Find-Parallel.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
+distroprefs/ANDYA.Test-Harness.yml
 distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
@@ -37,7 +39,10 @@ distroprefs/BDFOY.Test-HTTPStatus.yml
 distroprefs/BINGOS.POE-Component-Client-FTP.yml
 distroprefs/BINGOS.POE-Component-Client-NSCA.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
+distroprefs/BINGOS.POE-Component-Server-NSCA.yml
+distroprefs/BINGOS.POE-Component-Server-SimpleContent.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
+distroprefs/BINGOS.POE-Component-SmokeBox-Recent.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BOBTFISH.Text-Markdown.yml
 distroprefs/BRADFITZ.Danga-Socket.yml
@@ -88,8 +93,10 @@ distroprefs/DMAKI.Class-DBI-Plugin-DateTime.yml
 distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
+distroprefs/DMARTIN.Unix-SavedIDs.yml
 distroprefs/DMUEY.File-Copy-Recursive.yml
 distroprefs/DOM.OpenGuides.yml
+distroprefs/DOMM.Module-CPANTS-ProcessCPAN.yml
 distroprefs/DONEILL.MIME-tools.yml
 distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DROLSKY.Alzabo.yml
@@ -104,7 +111,10 @@ distroprefs/DURIST.WWW-Babelfish.yml
 distroprefs/DWHEELER.Params-CallbackRequest.yml
 distroprefs/EBOHLMAN.Text-Query.yml
 distroprefs/EESTABROO.IMAP-Admin.yml
+distroprefs/EIJABB.MARC-Errorchecks.yml
+distroprefs/ERIC.OpenThought.yml
 distroprefs/ERYQ.Convert-BinHex.yml
+distroprefs/ESUMMERS.MARC-Charset.yml
 distroprefs/EWILHELM.Math-Vec.yml
 distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
@@ -147,6 +157,7 @@ distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JAYK.Catalyst-Authen-S-D-C.yml
 distroprefs/JCRISTY.PerlMagick.yml
+distroprefs/JDIEPEN.Audio-LADSPA.yml
 distroprefs/JENDA.Mail-Sender.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
@@ -154,6 +165,7 @@ distroprefs/JGMYERS.Encode-Detect.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
 distroprefs/JJORE.Carp-Clan.yml
+distroprefs/JKEGL.Test-Weaken.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JOHNL.DBD-Informix.yml
@@ -168,10 +180,12 @@ distroprefs/JROCKWAY.Chroniton.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/JV.Getopt-Long.yml
 distroprefs/KANE.CPANPLUS.yml
+distroprefs/KARASIK.IO-Lambda.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KAWASAKI.Lingua-JA-Romanize-Japanese.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
+distroprefs/KNORR.Net-MirrorDir.yml
 distroprefs/KROW.DBIx-Password.yml
 distroprefs/KRUSCOE.Tie-DxHash.yml
 distroprefs/KVAIL.Tk-Stderr.yml
@@ -186,6 +200,7 @@ distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LUSOL.Tk-Gauge.yml
 distroprefs/LZE.HTML-Menu-TreeView.yml
+distroprefs/MAHEX.Image-Grab.yml
 distroprefs/MAKAMAKA.JSON.yml
 distroprefs/MARKOV.CPAN-Site.yml
 distroprefs/MARKOV.Mail-Box.yml
@@ -231,10 +246,12 @@ distroprefs/NEILW.Inline-CPP.yml
 distroprefs/NESTING.Unicode-Wrap.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
+distroprefs/NICOLAW.WWW-Comic.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/NKH.PerlBuildSystem.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
+distroprefs/NUFFIN.Devel-Events.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.Perl6-Caller.yml
@@ -262,12 +279,14 @@ distroprefs/RCSEEGE.Tk-JComboBox.yml
 distroprefs/RDF.Clone.yml
 distroprefs/REDTREE.PDF-API2-Simple.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
+distroprefs/RICKM.DateTime-Format-Strptime.yml
 distroprefs/RIZEN.Config-JSON.yml
 distroprefs/RJBS.Data-UUID.yml
 distroprefs/RJBS.Email-Send.yml
 distroprefs/RJBS.MIME-Light.yml
 distroprefs/RJRAY.RPC-XML.yml
 distroprefs/RKINYON.DBM-Deep.yml
+distroprefs/RKOBES.PPM-Make.yml
 distroprefs/RMUHLE.classes.yml
 distroprefs/ROBIN.PadWalker.yml
 distroprefs/ROBIN.Want.yml
@@ -324,6 +343,7 @@ distroprefs/YVES.Data-Dump-Streamer.yml
 distroprefs/YVES.Date-Simple.yml
 distroprefs/ZEV.Test-Dependencies.yml
 distroprefs/ZINCDEV.tk-zinc.yml
+distroprefs/ZOFFIX.LWP-UserAgent-ProxyHopper.yml
 distroprefs/ZOOLEIKA.RDF-Simple.yml
 distroprefs/ZOOLEIKA.SVG-Plot.yml
 inc/Test/Builder.pm

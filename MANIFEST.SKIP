@@ -74,4 +74,6 @@
 ^test.out
 ~$
 cpanstats.db
-^distroprefs/.*\.dd$
+^distroprefs/[A-FHJ-Z]*\.dd$
+^distroprefs/G[AC-Z]*\.dd$
+^distroprefs/I[A-KMO-Z]*\.dd$
