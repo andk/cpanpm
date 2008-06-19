@@ -1,3 +1,9 @@
+2008-06-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Sys-Syscall-0.22 hangs with 34066 (maint-5.8) during 02-sendfile. That
+	makes Danga-Socket a DISCARD. Hmm. And then Perlbal hangs in its test.
+	Hmm.
+
 2008-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: report Data::Float the bug to switch to "traditional" instead of
