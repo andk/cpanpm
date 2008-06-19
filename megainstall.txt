@@ -58,6 +58,7 @@ Authen::PAM
 Authen::SASL
 Authen::Simple
 AutoLoader
+B::Debug
 B::Deobfuscate
 B::Lint
 B::Size
@@ -170,6 +171,7 @@ Class::Accessor::FactoryTyped
 Class::Accessor::Lvalue
 Class::Accessor::Named
 Class::Accessor::Ref
+Class::Adapter
 Class::AutoClass
 Class::AutoGenerate
 Class::Base
@@ -581,6 +583,7 @@ Google::Chart
 Graph
 Graph::Easy
 Graph::Easy::As_svg
+Graph::Flowchart
 Graph::Maker
 Graph::SocialMap
 GraphViz
@@ -715,6 +718,7 @@ JSON
 JSON::DWIW
 JSON::RPC::Server
 JSON::XS
+JavaScript::Dumper
 Jcode
 Jemplate
 Jifty
@@ -728,6 +732,7 @@ Kwiki::Test
 LWP
 LWP::Authen::Negotiate
 LWP::Authen::Wsse
+LWP::ConnCache::Resolving
 LWP::Simple
 LWP::UserAgent
 LWPx::ParanoidAgent
@@ -1211,6 +1216,7 @@ String::Similarity
 String::Truncate
 Sub::Assert
 Sub::Context
+Sub::Contract
 Sub::Current
 Sub::Exporter
 Sub::Install
@@ -1282,6 +1288,7 @@ Test::MockModule
 Test::MockObject
 Test::More
 Test::More::Strict
+Test::Most
 Test::NoWarnings
 Test::PDF
 Test::Pod
@@ -1500,6 +1507,7 @@ XML::Compile
 XML::DOM
 XML::DOM2
 XML::DOM::XPath
+XML::DTD
 XML::Descent
 XML::Elemental
 XML::Filter::XInclude
