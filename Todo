@@ -4,6 +4,34 @@
 	makes Danga-Socket a DISCARD. Hmm. And then Perlbal hangs in its test.
 	Hmm.
 
+	update 2008-06-23: 34074@bleadperl also hangs. 34053 too. Why did I not
+	notice that? 33949 same. Aha: since Jun 15 there is process 9195 running
+	occupying port 60001, owned by sand, parent is 1 and it has plenty
+	children. I kill it and run the tests for 33949 again. Doesn't help. Now
+	process 21113, testing some t/31-realworld.t has occupied port 60001.
+
+	When I kill that then the Syscall test runs through.
+
+	Whose bug is that? I'd say Sys::Syscall should fail more gracefully
+	instead of just hanging.
+
+	Retrying 34053: now Sys-Syscall-0.22/t/01-epoll.t fails! But at least
+	without hanging. Same with 33949:
+
+t/01-epoll.........
+#   Failed test 'made temp listening socket'
+#   at t/01-epoll.t line 61.
+Can't use an undefined value as a symbol reference at t/01-epoll.t line 62.
+# Looks like you planned 20 tests but only ran 13.
+# Looks like you failed 1 test of 13 run.
+# Looks like your test died just after 13.
+ Dubious, test returned 255 (wstat 65280, 0xff00)
+ Failed 8/20 subtests 
+
+	Of course, there's process 9193 listening on 60000 since Jun 15.
+
+	And now epoll runs through everywhere.
+
 2008-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: report Data::Float the bug to switch to "traditional" instead of
