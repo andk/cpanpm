@@ -89,7 +89,6 @@ my $count = 0;
 ITEM: for my $i (0..$#$recent_events) {
   my $item = $recent_events->[$i];
   my $mark = "";
-  my $line = "";
   if ($max_epoch_worked_on) {
     if ($item->{is_current}) {
       $mark = "*";
@@ -97,10 +96,10 @@ ITEM: for my $i (0..$#$recent_events) {
              && $max_epoch_worked_on > $item->{epoch}
              && $i > 0
              && $max_epoch_worked_on < $recent_events->[$i-1]->{epoch}) {
-      $line .= sprintf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
+      printf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
     }
   }
-  $line .= sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
+  my $line = sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
   if ($Opt{"burn-in-protection"}) {
     chomp $line;
     while (rand 30 < 1) {
