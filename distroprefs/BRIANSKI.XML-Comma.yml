@@ -38,3 +38,13 @@ depends:
     Class::ClassDecorator: 0
     Math::BaseCalc: 0
     DBD::mysql: 0
+---
+match:
+  distribution: "^BRIANSKI/Proc-Exists-"
+make:
+  eexpect:
+    mode: anyorder
+    timeout: 5
+    talk:
+      - "forego XS"
+      - "no\n"
