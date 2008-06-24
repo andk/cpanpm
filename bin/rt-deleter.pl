@@ -53,6 +53,8 @@ my %Config = (
                               qr{8.901.530.28.70\.},
                               qr{495.{3}772.07.57},
                               qr{(?s:le super lot de la loterie.*sultats de la Loterie Mega Millions.*FELICITATION!)},
+                              qr{(?:eflyers|newsflash|specialfeatures|accountsaction|Radio&Music|adlinx|tvlinx)\@es1\.indiantelevision\.com},
+                              qr{Read.*?What.*?Our.*?Satisfied.*?Customers.*?Say},
                              ],
              );
 
