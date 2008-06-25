@@ -32,6 +32,8 @@ Can't use an undefined value as a symbol reference at t/01-epoll.t line 62.
 
 	And now epoll runs through everywhere.
 
+	http://rt.cpan.org/Ticket/Display.html?id=37075
+
 2008-06-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Todo: report Data::Float the bug to switch to "traditional" instead of
