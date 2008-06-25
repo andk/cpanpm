@@ -262,6 +262,7 @@ match:
     |NEKOKAK/DBIx-Class-TableNames-\d
     |NEMUX/Net-UCP-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
+    |NUFFIN/MooseX-Storage-\d
     |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
