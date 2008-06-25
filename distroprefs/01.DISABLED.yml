@@ -62,6 +62,7 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
+    |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
