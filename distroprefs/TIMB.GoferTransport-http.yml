@@ -1,0 +1,5 @@
+---
+match:
+  distribution: "TIMB/GoferTransport-http-\d"
+depends:
+  configure_requires: "Apache::Constants"
