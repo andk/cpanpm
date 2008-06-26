@@ -41,7 +41,7 @@ depends:
 ---
 comment: |
 
-  not surewhy I wrote the eexpect into a make stanza first...
+  not sure why I wrote the eexpect into a make stanza first...
 
 match:
   distribution: "^BRIANSKI/Proc-Exists-"

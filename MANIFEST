@@ -319,6 +319,7 @@ distroprefs/TBONE.HTTP-File.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.Apache-Status-DBI.yml
 distroprefs/TIMB.DBI.yml
+distroprefs/TIMB.GoferTransport-http.yml
 distroprefs/TJENNESS.Tk-TextANSIColor.yml
 distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
