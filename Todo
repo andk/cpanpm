@@ -1,3 +1,12 @@
+2008-06-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Email-Simple 2.004/2.003: During the latest megainstall I installed
+	first 2.004 and later 2.003 for whatever reason. And then, when he tried
+	to install Email-Simple-FromHandle, he complained that 2.003 was
+	insufficient.
+
+	http://rt.cpan.org/Ticket/Display.html?id=37144
+
 2008-06-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Sys-Syscall-0.22 hangs with 34066 (maint-5.8) during 02-sendfile. That
