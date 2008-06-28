@@ -69,6 +69,12 @@ MAIN : {
                                                 localroot => "/home/ftp/pub/PAUSE/authors/id/",
                                                 interval => q(2d),
                                                );
+  my $rf2 = File::Rsync::Mirror::Recentfile->new(
+                                                 canonize => "naive_path_normalize",
+                                                 localroot => "/home/ftp/pub/PAUSE/authors/",
+                                                 interval => q(1W),
+                                                 filenameroot => "TESTPLEASEIGNORE",
+                                                );
 
   my $otherperls = "$0.otherperls";
   my $bbname = fileparse($0,qr{\.pl});
@@ -89,7 +95,7 @@ MAIN : {
   my %comboseen;
  ITERATION: while () {
     my $iteration_start = time;
-    my $recent_events = read_recent_events($rf,$rx);
+    my $recent_events = read_recent_events($rf2,$rx);
     my $perls;
     # my @good_recent_events; # ? first collect them, then only if we
     # have something go ahead?
@@ -146,7 +152,7 @@ MAIN : {
           next PERL;
         } else {
           warn "\n\n$combo\n\n\n";
-          my $abs = File::Spec->catfile($rf->localroot, $upload->{path});
+          my $abs = File::Spec->catfile($rf2->localroot, $upload->{path});
           {
             local $| = 1;
             while (! -f $abs) {
@@ -157,6 +163,8 @@ MAIN : {
           $ENV{PERL_MM_USE_DEFAULT} = 1;
           $ENV{AUTOMATED_TESTING} = 1;
           $ENV{DISPLAY} = ":121";
+          my $distro = $upload->{path};
+          $distro =~ s|^id/||;
           my @system = (
                         $perl,
                         "-Ilib",
@@ -164,7 +172,7 @@ MAIN : {
                         "-MCPAN::MyConfig",
                         "-MCPAN",
                         "-e",
-                        "\$CPAN::Config->{build_dir_reuse}=0; $action q{$upload->{path}}",
+                        "\$CPAN::Config->{build_dir_reuse}=0; $action q{$distro}",
                        );
           # 0==system @system or die;
           unless (0==system @system){
