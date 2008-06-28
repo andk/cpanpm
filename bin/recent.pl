@@ -61,7 +61,7 @@ my $rf2 = File::Rsync::Mirror::Recentfile->new(
                                                interval => q(1W),
                                                filenameroot => "TESTPLEASEIGNORE",
                                               );
-$Opt{alternative} ||= 1;
+$Opt{alternative} ||= 2;
 my $rf;
 if ($Opt{alternative}==1) {
   $rf = $rf1;
@@ -99,7 +99,7 @@ ITEM: for my $i (0..$#$recent_events) {
       printf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
     }
   }
-  my $line = sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},5);
+  my $line = sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},$Opt{alternative}==1 ? 5 : 8);
   if ($Opt{"burn-in-protection"}) {
     chomp $line;
     while (rand 30 < 1) {
