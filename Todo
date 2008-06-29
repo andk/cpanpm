@@ -1,3 +1,30 @@
+2008-06-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	*  rt-perl-22977
+
+----Program----
+sub f ($); # Comment out to get right result!
+sub f ($) {
+        my $test = $_[0];
+        write;
+        format STDOUT =
+@<<<<<<<
+$test
+.
+}
+f(1);
+f(2);
+
+----Output of .../pMZAcVt/perl-5.8.0@19648/bin/perl----
+1
+1
+
+----EOF ($?='0')----
+----Output of .../pgL2gwc/perl-5.8.0@19649/bin/perl----
+
+----EOF ($?='11')----
+
+
 2008-06-26  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Email-Simple 2.004/2.003: During the latest megainstall I installed

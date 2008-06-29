@@ -288,6 +288,7 @@ DBI::Shell
 DBIx::Admin::TableInfo
 DBIx::Class
 DBIx::Class::Indexed
+DBIx::Class::ResultSet::HashRef
 DBIx::Class::Schema::Loader
 DBIx::Class::Schema::Slave
 DBIx::Class::Stash
@@ -355,6 +356,7 @@ Data::TreeDumper
 Data::Types
 Data::UUID
 Data::Visitor
+Data::YAML
 Date::Calc
 Date::Leapyear
 Date::Manip
@@ -378,6 +380,7 @@ DateTime::Format::RSS
 DateTime::Format::W3CDTF
 DateTime::Set
 DateTimeX::Easy
+DbFramework::Persistent
 Devel::ArgNames
 Devel::CallTrace
 Devel::Caller
@@ -714,11 +717,13 @@ InlineX::CPP2XS
 InlineX::XS
 IsUTF8
 Iterator
+Iterator::File
 JSON
 JSON::DWIW
 JSON::RPC::Server
 JSON::XS
 JavaScript::Dumper
+JavaScript::Writer
 Jcode
 Jemplate
 Jifty
@@ -1009,6 +1014,7 @@ POE::Component::StackedProcessor
 POE::Component::SubWrapper
 POE::Declarative::Mixin
 POE::Filter::IRCD
+POE::Test::Loops
 POE::XUL::Window
 POSIX
 POSIX::Regex
@@ -1189,6 +1195,7 @@ Socket6
 Sort::ArbBiLex
 Sort::DataTypes
 Sort::Key::Radix
+Sort::Rank
 Spiffy
 Spoon
 Spread
@@ -1525,6 +1532,7 @@ XML::Parser::PerlSAX
 XML::RSS
 XML::RSS::FromHTML::Simple
 XML::RSS::LibXML
+XML::RSS::PicLens
 XML::RegExp
 XML::RelaxNG::Compact::PXB
 XML::SAX
