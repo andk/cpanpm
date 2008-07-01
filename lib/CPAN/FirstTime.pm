@@ -178,6 +178,20 @@ to the built-in default sites without asking? (yes/no)?
 Shall we always set the FTP_PASSIVE environment variable when dealing
 with ftp download (yes/no)?
 
+=item ftpstats_period
+
+Statistics about downloads are truncated by size and period
+simultaneously.
+
+How many days shall we keep statistics about downloads?
+
+=item ftpstats_size
+
+Statistics about downloads are truncated by size and period
+simultaneously.
+
+How many items shall we keep in the statistics about downloads?
+
 =item getcwd
 
 CPAN.pm changes the current working directory often and needs to
@@ -1194,6 +1208,12 @@ substitute. You can then revisit this dialog with
         }
         if ("randomize_urllist" =~ $matcher) {
             my_dflt_prompt(randomize_urllist => 0, $matcher);
+        }
+        if ("ftpstats_size" =~ $matcher) {
+            my_dflt_prompt(ftpstats_size => 99, $matcher);
+        }
+        if ("ftpstats_period" =~ $matcher) {
+            my_dflt_prompt(ftpstats_period => 14, $matcher);
         }
     } elsif ($fastread) {
         $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".

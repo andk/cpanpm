@@ -46,6 +46,8 @@ $VERSION = "5.5";
      "ftp",
      "ftp_passive",
      "ftp_proxy",
+     "ftpstats_size",
+     "ftpstats_period",
      "getcwd",
      "gpg",
      "gzip",

@@ -3902,12 +3902,13 @@ sub _add_to_statistics {
         push @debug, scalar @{$fullstats->{history}} if $sdebug;
         push @debug, time if $sdebug;
         push @{$fullstats->{history}}, $stats;
-        # arbitrary hardcoded constants until somebody demands to have
-        # them settable; YAML.pm 0.62 is unacceptably slow with 999;
+        # YAML.pm 0.62 is unacceptably slow with 999;
         # YAML::Syck 0.82 has no noticable performance problem with 999;
+        my $ftpstats_size = $CPAN::Config->{ftpstats_size} || 99;
+        my $ftpstats_period = $CPAN::Config->{ftpstats_period} || 14;
         while (
-               @{$fullstats->{history}} > 99
-               || $time - $fullstats->{history}[0]{start} > 14*86400
+               @{$fullstats->{history}} > $ftpstats_size
+               || $time - $fullstats->{history}[0]{start} > 86400*$ftpstats_period
               ) {
             shift @{$fullstats->{history}}
         }
@@ -11192,6 +11193,8 @@ defined:
   ftp                path to external prg
   ftp_passive        if set, the envariable FTP_PASSIVE is set for downloads
   ftp_proxy          proxy host for ftp requests
+  ftpstats_period    max number of days to keep download statistics
+  ftpstats_size      max number of items to keep in the download statistics
   getcwd             see below
   gpg                path to external prg
   gzip               location of external program gzip
@@ -12881,7 +12884,8 @@ http://www.refcnt.org/papers/module-build-convert
 
 =item 15)
 
-What's the best CPAN site for me?
+I'm frequently irritated with the CPAN shell's inability to help me
+select a good mirror.
 
 The urllist config parameter is yours. You can add and remove sites at
 will. You should find out which sites have the best uptodateness,
@@ -12892,6 +12896,14 @@ You decide which to try in which order.
 Henk P. Penning maintains a site that collects data about CPAN sites:
 
   http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
+
+Also, feel free to play with experimental features. Run
+
+  o conf init randomize_urllist ftpstats_period ftpstats_size
+
+and choose your favorite parameters. After a few downloads running the
+C<hosts> command will probably assist you in choosing the best mirror
+sites.
 
 =item 16)
 
