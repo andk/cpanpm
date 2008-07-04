@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#
 
 # see first posting http://use.perl.org/~LaPerla/journal/35252
 
@@ -55,6 +55,13 @@ my %Config = (
                               qr{(?s:le super lot de la loterie.*sultats de la Loterie Mega Millions.*FELICITATION!)},
                               qr{(?:eflyers|newsflash|specialfeatures|accountsaction|Radio&Music|adlinx|tvlinx)\@es1\.indiantelevision\.com},
                               qr{Read.*?What.*?Our.*?Satisfied.*?Customers.*?Say},
+                              qr{\Q***<br />
+Warning!<br />
+This letter contains a virus which has been<br />
+successfully detected and cured.<br />
+***<br />\E},
+                              qr{\QOur system detected an illegal attachment on your message\E},
+                              qr{Diagnostic-Code:\s+X-Postfix;\s+host.+\s+said:\s+550\s+.+\s+Recipient address rejected:.+\s+User unknown in virtual mailbox table},
                              ],
              );
 
@@ -150,13 +157,15 @@ TICKET: for my $ticket (@tickets) {
     print "Answer '$answer' has already been determined automatically\n";
     sleep 1;
   } else {
-      {no warnings "once"; $DB::single++;}
+    {no warnings "once"; $DB::single++;}
     open my $less, "|-", "less" or die "Could not fork: $!";
     binmode $less, ":utf8";
+    print $less $decoded;
+    print $less "="x79,"\n" for 0..1;
     print $less $text;
     close $less;
     print join "", (("=" x 79) . "\n") x 2;
-    $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? [Nyq]", "n";
+    $answer = prompt "You have now seen the ticket '$ticket'. Do you want to delete it? {N,y,q,yq}", "n";
   }
   if ($answer =~ /^q/i) {
     print "OK, end of loop\n";
@@ -188,6 +197,10 @@ TICKET: for my $ticket (@tickets) {
     } else {
       $ALL->{$ticket}{could_delete} = 0;
       warn "ALERT: Could not delete ticket '$ticket': " . $resp->as_string;
+      last TICKET;
+    }
+    if ($answer =~ /^yq/i) {
+      print "OK, end of loop\n";
       last TICKET;
     }
   }
@@ -229,3 +242,10 @@ sub _h2text ($) {
   $text;
 }
 
+__END__
+
+# Local Variables:
+# mode: cperl
+# coding: utf-8
+# cperl-indent-level: 2
+# End:
