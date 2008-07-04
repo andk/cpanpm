@@ -64,6 +64,7 @@ successfully detected and cured.<br />
                               qr{Diagnostic-Code:\s+X-Postfix;\s+host.+\s+said:\s+550\s+.+\s+Recipient address rejected:.+\s+User unknown in virtual mailbox table},
                               qr{<title>.+Mail delivery failed: returning message to sender</title>},
                               qr{(?:Hello|Hallo|Hai|Hei),(?:\s|<br\s*/>)*\s+http://\S+\.cn\s},
+                              qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
                              ],
              );
 
