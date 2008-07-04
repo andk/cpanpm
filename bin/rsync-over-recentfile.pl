@@ -24,11 +24,11 @@ of the loop just change "< time ..." to "< $max_epoch ..." DONE
 
 Q: sorted by epoch? Who has to sort when how often? A: nobody! The
 mechanism is "event" based and the array is only running push and
-shift. It is a journal (that throws memory away based on an interval)
-and is itself NOT rsynced but in fact rewritten by every slave.
-[journaling fs are not so much related because they throw away after
-having written] Do slaves inherit the timestamp from the master or do
-they write their own? I think they inherit it (Update 2007-10-21
+shift (and grep). It is a journal (that throws memory away based on an
+interval) and is itself NOT rsynced but in fact (?) rewritten by every
+slave. [journaling fs are not so much related because they throw away
+after having written] Do slaves inherit the timestamp from the master
+or do they write their own? I think they inherit it (Update 2007-10-21
 akoenig : or we do not ever promise that the timestamps are sorted or
 mirror the sequence of events or we make them floating point numbers
 so they become uniq and can be treated as hash keys [this I like!]).
