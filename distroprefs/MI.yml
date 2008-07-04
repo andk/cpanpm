@@ -72,6 +72,7 @@ match:
     |CAMELCASE/HTML-TurboForm-\d
     |CFRANKS/Catalyst-Model-Net-Amazon-\d
     |CFRANKS/HTML-FormFu-\d
+    |CFRANKS/HTML-FormFu-Model-DBIC-\d
     |CFRANKS/HTML-Widget-\d
     |CFRANKS/DBIx-Class-HTML-FormFu-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
