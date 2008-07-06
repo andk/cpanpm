@@ -58,8 +58,8 @@ my $rf1 = File::Rsync::Mirror::Recentfile->new(
 my $rf2 = File::Rsync::Mirror::Recentfile->new(
                                                canonize => "naive_path_normalize",
                                                localroot => "/home/ftp/pub/PAUSE/authors/",
-                                               interval => q(1W),
-                                               filenameroot => "TESTPLEASEIGNORE",
+                                               interval => q(6h),
+                                               filenameroot => "RECENT",
                                               );
 $Opt{alternative} ||= 2;
 my $rf;
@@ -124,7 +124,9 @@ ITEM: for my $i (0..$#$recent_events) {
     last ITEM;
   }
 }
-
+if (0 == $count) {
+  print sprintf "  found nothing of interest in %s\n", $rf->recentfile_basename;
+}
 __END__
 
 # Local Variables:

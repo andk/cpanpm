@@ -2,25 +2,19 @@
 
 =pod
 
-todo:
-
-change format of the yaml file to contain protocol number and a status
-field that links to some protocol spec.
 File::Rsync::Mirror::Recentfile?
 
-in any case we want protocol => 2 for the next version and we want a
-field that tells us in human readable language what this tree is about.
-
-and a field mirroring_from: consisting of host, module, path,
-authentification_needed, 
-
-add interval (2d,1W) of the whole file to the metadata.
+need a field mirroring_from: consisting of host, module, path,
+authentification_needed,
 
 keep the very first item in the got_at hash. we cannot know if this
 second has been fully processed. On the next loop we need to look into
-the get_at hash. if nothing happens for a full interval's length the
+the got_at hash. if nothing happens for a full interval's length the
 current code would delete this item. UPDATE: when removing at the end
 of the loop just change "< time ..." to "< $max_epoch ..." DONE
+
+The got_at hash must die. That's solved with floating point time. We
+never have two items with the same timestamp.
 
 Q: sorted by epoch? Who has to sort when how often? A: nobody! The
 mechanism is "event" based and the array is only running push and
@@ -57,10 +51,10 @@ of the inner loop. When a server falls behind for some reason and
 catches up, then the dependents recover much earlier. LATER (needs the
 write_recent routines in a module).
 
-Interesting/Superadvanced/Stupid is the idea to rewrite large files as
+Stupid is the idea to rewrite large files as
 chunks to be concatenated later.
 
-Interesting/Superadvanced/Complicated is the idea to allow an
+Stupid is the idea to allow an
 operation "rename". Mirror remote files to temporary local filenames,
 then move these to the final name. After every X megabyte a RECENT
 file is written including the currently running mirrored file with its
@@ -129,9 +123,9 @@ ITERATION: while () {
     my $rf = File::Rsync::Mirror::Recentfile->new
         (
          canonize => "naive_path_normalize",
-         filenameroot => "TESTPLEASEIGNORE",
+         filenameroot => "RECENT",
          ignore_link_stat_errors => 1,
-         interval => q(1W),
+         interval => q(6h),
          localroot => "/home/ftp/pub/PAUSE/$rmodule",
          remote_dir => "",
          remote_host => "pause.perl.org",
@@ -154,7 +148,7 @@ ITERATION: while () {
       sleep 5;
       next ITERATION;
     }
-    my($recent_data) = $rf->recent_events_from_file($trecentfile);
+    my($recent_data) = $rf->recent_events_from_tempfile();
     my @error;
     my $i = 0;
     my $total = @$recent_data;

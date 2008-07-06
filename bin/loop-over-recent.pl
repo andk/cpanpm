@@ -72,8 +72,8 @@ MAIN : {
   my $rf2 = File::Rsync::Mirror::Recentfile->new(
                                                  canonize => "naive_path_normalize",
                                                  localroot => "/home/ftp/pub/PAUSE/authors/",
-                                                 interval => q(1W),
-                                                 filenameroot => "TESTPLEASEIGNORE",
+                                                 interval => q(6h),
+                                                 filenameroot => "RECENT",
                                                 );
 
   my $otherperls = "$0.otherperls";
