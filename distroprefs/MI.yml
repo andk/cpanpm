@@ -167,6 +167,7 @@ match:
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
+    |JSHIRLEY/Catalyst-Action-REST-\d
     |JSHIRLEY/DBIx-Class-TimeStamp-\d
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
@@ -256,6 +257,7 @@ match:
     |MRAMBERG/Task-Catalyst-\d
     |MSIMERSON/Mail-Toaster-\d
     |MSTROUT/Catalyst-Controller-BindLex-\d
+    |MSTROUT/Catalyst-Plugin-Authentication-Store-DBIC-\d
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
