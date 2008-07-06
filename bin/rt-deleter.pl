@@ -63,8 +63,16 @@ successfully detected and cured.<br />
                               qr{\QOur system detected an illegal attachment on your message\E},
                               qr{Diagnostic-Code:\s+X-Postfix;\s+host.+\s+said:\s+550\s+.+\s+Recipient address rejected:.+\s+User unknown in virtual mailbox table},
                               qr{<title>.+Mail delivery failed: returning message to sender</title>},
-                              qr{(?:Hello|Hallo|Hai|Hei),(?:\s|<br\s*/>)*\s+http://\S+\.cn\s},
+                              qr{(?:Ciao|God dag|Guten Tag|Hallo|Hai|Hei|Hej|Hello|Heya|Hi|Ni hao|Oi|Salve),(?:\s|<br\s*/>)*\s+http://\S+[\.\[\]](?:cn|com)[\s<]},
                               qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
+                              qr{If you would like not to receive any further communication from us, please send email to unsubscribe\@whozat.com.},
+                              qr{[\x{0400}-\x{0513}\s]{50}}, # 50 cyrillic is spam?
+                              qr{Avis de tempete sur les prix},
+                              qr{Sie wuenschen Ihre Freizeit fuer Ihre Finanzen nutzen},
+                              qr{Sie haben oefters Freizeit},
+                              qr{Mailen Sie uns.*\.ru und lassen Sie sich genauere Informationen zukommen.},
+                              qr{Viel Kohle in klitzekleiner Zeit},
+                              qr{To begin processing of your prize contact:},
                              ],
              );
 
