@@ -9,6 +9,7 @@
 use strict;
 use warnings;
 use File::Basename qw(dirname);
+use File::Path qw(mkpath);
 use File::Spec;
 use Getopt::Long qw(GetOptions);
 use List::Util qw(min);
@@ -72,7 +73,7 @@ ITERATION: while () {
         $max_epoch_ever{$rmodule} ||= 0;
         if ($Opt{use_interval} && $recent_event->{epoch}+$Opt{use_interval} < time) {
           next UPLOADITEM;
-        } elsif ($recent_event->{epoch} < $max_epoch_ever{$rmodule}) {
+        } elsif ($recent_event->{epoch} <= $max_epoch_ever{$rmodule}) {
           next UPLOADITEM;
         } else {
           $must_get++;
