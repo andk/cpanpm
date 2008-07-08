@@ -8,7 +8,9 @@ use Time::HiRes qw(sleep);
 use YAML::Syck;
 
 use lib "/home/k/dproj/PAUSE/wc/lib/";
-use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+unless (eval {require PAUSE; 1}) {
+  require File::Rsync::Mirror::Recentfile;
+}
 
 sub determine_perls {
   my($basedir,$otherperls) = @_;
