@@ -1,3 +1,42 @@
+2008-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* XML::RSS::Tools has three FAILS that nobody else reported but me.
+
+	Manually reproducable with 5.10.0 () and ParseReport does not lead me in
+	any direction.
+
+	So I decide to upgrade random pieces.
+
+	I come by Archive::Any and I see it fail the same way as XML::RSS::Tools!!!
+
+t/type............
+#   Failed test 'right warning, unknown type'
+#   at t/type.t line 15.
+# found carped warning: uplevel 2 is more than the caller stack at /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/lib/site_perl/5.10.0/Test/Warn.pm line 283
+# found warning: No mime type found for type 'hominawoof' at /home/sand/.cpan/build/Archive-Any-0.0932-SZsz9I/blib/lib/Archive/Any.pm line 169.
+# expected to find warning: (?-xism:No mime type found for type 'hominawoof')
+
+#   Failed test 'right warning, no type'
+#   at t/type.t line 19.
+# found carped warning: uplevel 2 is more than the caller stack at /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/lib/site_perl/5.10.0/Test/Warn.pm line 283
+# found warning: No handler available for type 'text/plain' at /home/sand/.cpan/build/Archive-Any-0.0932-SZsz9I/blib/lib/Archive/Any.pm line 179.
+# expected to find warning: (?-xism:No handler available for type 'text/plain')
+# Looks like you failed 2 tests of 7.
+ Dubious, test returned 2 (wstat 512, 0x200)
+ Failed 2/7 subtests 
+
+Test Summary Report
+-------------------
+t/type        (Wstat: 512 Tests: 7 Failed: 2)
+  Failed tests:  5, 7
+
+
+	Test-Warn has many used-by and many dependencies. I pick for example
+	dependency on Sub::Uplevel and this perl has 0.19_03.
+
+	Only few have 0.19_03 installed. And indeed, downgrading to 0.1901 fixes
+	the issue.
+
 2008-07-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Math-BaseCalc
