@@ -220,6 +220,7 @@ sub who {
                'steve@fisharerojo.org'      => 'SMPETERS',
                'steven@knowmad.com'         => 'WMCKEE',
                'stro@railways.dp.ua'        => 'STRO',
+               'user42@zip.com.au',         => 'KRYDE',
                'ville.skytta@iki.fi'        => 'SCOP',
                'william@knowmad.com'        => 'WMCKEE',
                'xdaveg@gmail.com'           => 'DAGOLDEN',
