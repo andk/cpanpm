@@ -74,6 +74,7 @@ successfully detected and cured.<br />
                               qr{Viel Kohle in klitzekleiner Zeit},
                               qr{To begin processing of your prize contact:},
                               qr{(?mx: (^ [ef]\S{9}\s[ef]\S{9}\s[ef]\S{9}.+\n){3} )},
+                              qr{(?mx: (^ [ef]\S{10}\s[ef]\S{10}\s[ef]\S{10}.+\n){3} )},
                               qr{The attachment file in the message has been removed by eManager},
                               qr{(?s:This is an automated response to let you know that your message has been.+?caught by our spam filter)},
                               qr{(?s:The WatchGuard Firebox which protects your network detected a message which may.+?not be safe\.)},
