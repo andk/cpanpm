@@ -120,7 +120,7 @@ ITERATION: while () {
     rename $trecentfile, $rf->recentfile;
   }
 
-  my $minimum_time_per_loop = 5;
+  my $minimum_time_per_loop = 60;
   { local $| = 1; print "."; $print_leading_newline = 1; }
   if (time - $iteration_start < $minimum_time_per_loop) {
     sleep $iteration_start + $minimum_time_per_loop - time;
