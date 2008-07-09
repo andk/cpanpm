@@ -275,6 +275,8 @@ match:
     |PHAYLON/MooseX-Types-\d
     |PHAYLON/Pod-Coverage-Moose-\d
     |PHAYLON/namespace-clean-\d
+    |PLU/DBIx-Class-ResultSet-HashRef-\d
+    |RBERJON/JSON-Any-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
