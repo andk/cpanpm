@@ -27,6 +27,7 @@ match:
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
+    |AGENT/OpenResty-0                       # 0.3.8 hangs after 'cp etc/openresty.conf etc/site-openresty.conf'
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
