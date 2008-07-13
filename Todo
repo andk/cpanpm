@@ -1,3 +1,13 @@
+2008-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* STEVAN/FCGI-Engine-0.04 seems to hang forever
+
+2008-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* App-Control-1.02 seems to call the wrong perl and when it then fails
+	it goes into a--fortunately slow--endless loop. Need to investigate
+	soonish if nobody beats me to it.
+
 2008-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* XML::RSS::Tools has three FAILS that nobody else reported but me.

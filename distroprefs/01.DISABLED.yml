@@ -32,6 +32,7 @@ match:
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
+    |AWRIGLEY/App-Control-\d                 # endless loop
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
@@ -92,6 +93,7 @@ match:
     |RYBSKEJ/forks-0.25
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
+    |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
