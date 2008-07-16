@@ -1,5 +1,7 @@
 2008-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
+	* DBD-Pg on k81 hangs forever asking for 'Path to pg_config?'
+
 	* STEVAN/FCGI-Engine-0.04 seems to hang forever
 
 2008-07-09  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
