@@ -411,6 +411,7 @@ Devel::Profile
 Devel::Profiler
 Devel::REPL
 Devel::Required
+Devel::Refcount
 Devel::SawAmpersand
 Devel::SearchINC
 Devel::Size
@@ -741,6 +742,7 @@ LWP::ConnCache::Resolving
 LWP::Simple
 LWP::UserAgent
 LWPx::ParanoidAgent
+Layout::Manager
 Lexical::Attributes
 Lexical::Persistence
 Lingua::AR::MacArabic
@@ -766,6 +768,7 @@ List::Maker
 List::MoreUtils
 List::Tuples
 List::Util
+List::oo
 Locale::Constants
 Locale::Geocode
 Locale::Maketext
@@ -966,6 +969,7 @@ PAR::Packer
 PApp
 Package::Builder
 Path::Class::Versioned
+Path::Router
 PBS::Build
 PDF
 PDF::API2
@@ -1453,6 +1457,7 @@ Unicode::MapUTF8
 Unicode::Normalize
 Unicode::RecursiveDowngrade
 Unicode::Regex::Set
+Unicode::Semantics
 Unicode::String
 Unicode::Transform
 Unicode::Transliterate
