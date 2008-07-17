@@ -88,7 +88,7 @@ successfully detected and cured.<br />
              );
 
 GetOptions(\my %config,
-           (map { "$_=s" } keys %Config),
+           (map { ref $Config{$_} ? "$_=s\@" : "$_=s" } keys %Config),
            "nonono!",
            "stats!",
           ) or die;
