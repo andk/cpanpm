@@ -125,6 +125,8 @@ CPAN::WWW::Testers
 CPAN::YACSmoke
 CPANPLUS
 CSS
+CSS::Minifier
+CSS::Minifier::XS
 CSS::SAC
 Cache::FastMmap
 Cache::File
@@ -465,6 +467,7 @@ Encode::Base32::Crockford
 Encode::JavaScript::UCS
 Encode::MAB2table
 Encode::MIME::Header
+Encode::ZapCP1252
 Encode::compat
 Errno
 Error
@@ -489,6 +492,7 @@ ExtUtils::PkgConfig
 ExtUtils::XSBuilder
 FCGI::Engine
 FLV::Info
+FSA::Rules
 Fault
 Fcntl
 Fey
