@@ -1,3 +1,71 @@
+2008-07-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* mixed success with JSON::XS. At least a first binary search
+	demonstrates that there must be some problem.
+
+----Program----
+eval q{use JSON::XS 2.22};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of .../pQYroRO/perl-5.9.3@27322/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of .../piMBZQp/perl-5.9.3@27323/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	Is it a Test::Harness problem? The test output looks OK but the summary
+	says FAIL. T:H is up to date, 3.12. Upgrading CPAN from 1.9205 to
+	1.92_63. Upgrading CPAN::Reporter from 1.1601 to 1.16_51.
+
+	Still same bad result.
+
+	Upgrading to Test::Harness::Straps 0.30 No success
+
+cpan[5]> install JSON::XS
+Running install for module 'JSON::XS'
+Running make for M/ML/MLEHMANN/JSON-XS-2.22.tar.gz
+  Has already been unwrapped into directory /home/sand/.cpan/build/JSON-XS-2.22-bEP80n                                                                          
+  Has already been made
+Running make test
+PERL_DL_NONLAZY=1 /home/src/perl/repoperls/installed-perls/perl/piMBZQp/perl-5.9.3@27323/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+t/00_load...............ok
+t/01_utf8...............ok
+t/02_error.............. All 31 subtests passed
+t/03_types..............ok
+t/04_dwiw_encode........ok
+t/05_dwiw_decode........ok
+t/06_pc_pretty..........ok
+t/07_pc_esc.............ok
+t/08_pc_base............ok
+t/09_pc_extra_number....ok
+t/10_pc_keysort.........ok
+t/11_pc_expo............ok
+t/12_blessed............ok
+t/13_limit..............ok
+t/14_latin1.............ok
+t/15_prefix.............ok
+t/16_tied...............ok
+t/17_relaxed............ok
+t/18_json_checker.......ok
+t/19_incr...............ok
+t/99_binary.............ok
+
+Test Summary Report
+-------------------
+Files=21, Tests=25547, 24 wallclock secs ( 9.90 usr  0.04 sys + 13.26 cusr  0.25 csys = 23.45 CPU)
+Result: FAIL
+Failed 1/21 test programs. 0/25547 subtests failed.
+
+
+	Most probably the t/02error.t thing, it has no "ok".
+
+	Oh no! I saw the above thing several times and now I retried and it has
+	disappeared with that same perl @27323.
+
 2008-07-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* DBD-Pg on k81 hangs forever asking for 'Path to pg_config?'
