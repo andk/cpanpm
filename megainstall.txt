@@ -366,6 +366,7 @@ Date::Parse
 Date::Simple
 Date::Tiny
 DateTime
+DateTime::Calendar::Japanese
 DateTime::Calendar::Julian
 DateTime::Event::Recurrence
 DateTime::Format::Builder
@@ -672,6 +673,7 @@ IMAP::Admin
 IO
 IO::All
 IO::Async::Buffer
+IO::CaptureOutput
 IO::Compress::Base
 IO::Compress::Lzop
 IO::Compress::Zlib::Constants
@@ -878,6 +880,7 @@ MooseX::Clone
 MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
+MooseX::Log::Log4perl
 MooseX::Mutate
 MooseX::Plaggerize
 MooseX::Singleton
@@ -885,6 +888,7 @@ MooseX::Storage
 MooseX::Types::Set::Object
 Mouse
 Muldis
+MySQL::Slurp
 Net::Akamai
 Net::Amazon
 Net::Analysis
@@ -1187,6 +1191,7 @@ Set::Crontab
 Set::Infinite
 Set::IntSpan::Fast
 Set::Integer::Gapfillers
+Set::Object
 Shell::Autobox
 Shell::Perl
 ShiftJIS::CP932::Correct
@@ -1562,6 +1567,7 @@ XML::XPath
 XML::XPathEngine
 XS::Writer
 XSLoader
+XUL::App
 YAML
 YAML::Syck
 YAML::Tiny
@@ -1592,6 +1598,7 @@ re::engine::Plan9
 re::engine::Plugin
 re::engine::TRE
 self
+threads::shared
 typesafety
 version
 version::Limit
