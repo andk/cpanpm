@@ -21,6 +21,7 @@ match:
     |AGENT/Makefile-DOM-\d
     |AGENT/Makefile-GraphViz-\d
     |AGENT/Makefile-Parser-\d
+    |AGENT/XUL-App-\d
     |AGRUNDMA/Catalyst-Engine-HTTP-Prefork-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d

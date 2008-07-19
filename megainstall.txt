@@ -345,6 +345,7 @@ Data::Random
 Data::Rand::Obscure
 Data::Remember
 Data::Rmap
+Data::Serializer
 Data::SExpression
 Data::Semantic::Net
 Data::Semantic::URI
