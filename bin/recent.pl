@@ -33,8 +33,8 @@ GetOptions(\%Opt,
            "burn-in-protection|lossy!",
            "alternative=i",
           );
-use lib "/home/k/dproj/PAUSE/wc/lib/";
-use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+use lib "/home/k/sources/File-Rsync-Mirror-Recentfile/lib/";
+use File::Rsync::Mirror::Recentfile;
 
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 my $max_epoch_worked_on = 0;
@@ -126,6 +126,15 @@ ITEM: for my $i (0..$#$recent_events) {
 }
 if (0 == $count) {
   print sprintf "  found nothing of interest in %s\n", $rf->recentfile_basename;
+} elsif ($count < $Opt{n}) {
+  while ($count < $Opt{n}) {
+    my $line = "";
+    while (length($line) < 80){
+      $line .= rand(30)<1 ? "_" : " ";
+    }
+    print "$line\n";
+    $count++;
+  }
 }
 __END__
 

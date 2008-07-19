@@ -9,8 +9,8 @@ use POE qw(Component::JobQueue Component::DebugShell);
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
-use lib "/home/k/dproj/PAUSE/wc/lib/";
-use PAUSE; # loads File::Rsync::Mirror::Recentfile for now
+use lib "/home/k/sources/File-Rsync-Mirror-Recentfile/lib/";
+require File::Rsync::Mirror::Recentfile;
 
 POE::Component::JobQueue->spawn
     ( Alias         => 'passive',         # defaults to 'queuer'
