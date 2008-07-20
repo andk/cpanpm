@@ -3943,15 +3943,21 @@ sub _copy_stat {
     my @stat = stat($src);
     die "Can't stat $src: $!" if !@stat;
 
-    chmod $stat[2], $dest
-	or warn "Can't chmod $dest to " . sprintf("0%o", $stat[2]) . ": $!";
-    chown $stat[4], $stat[5], $dest
-	or do {
-	    my $save_err = $!; # otherwise it's lost in the get... calls
-	    warn "Can't chown $dest to " .
-		 (getpwuid($stat[4]))[0] . "/" .
-                 (getgrgid($stat[5]))[0] . ": $save_err";
-	};
+    eval {
+	chmod $stat[2], $dest
+	    or warn "Can't chmod $dest to " . sprintf("0%o", $stat[2]) . ": $!";
+    };
+    warn $@ if $@;
+    eval {
+	chown $stat[4], $stat[5], $dest
+	    or do {
+		my $save_err = $!; # otherwise it's lost in the get... calls
+		warn "Can't chown $dest to " .
+		    (getpwuid($stat[4]))[0] . "/" .
+			(getgrgid($stat[5]))[0] . ": $save_err";
+	    };
+    };
+    warn $@ if $@;
 }
 
 # if file is CHECKSUMS, suggest the place where we got the file to be
