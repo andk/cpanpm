@@ -120,7 +120,8 @@ ITEM: for my $i (0..$#$recent_events) {
     $line .= "\n";
   }
   print $line;
-  if ($Opt{n} && ++$count>=$Opt{n}) {
+  ++$count;
+  if ($Opt{n} && $count>=$Opt{n}) {
     last ITEM;
   }
 }
