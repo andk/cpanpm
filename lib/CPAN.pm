@@ -3928,9 +3928,30 @@ sub _add_to_statistics {
         }
         # Win32 cannot rename a file to an existing filename
         unlink($sfile) if ($^O eq 'MSWin32');
+	_copy_stat($sfile, "$sfile.$$") if -e $sfile;
         rename "$sfile.$$", $sfile
             or $CPAN::Frontend->mydie("Could not rename '$sfile.$$' to '$sfile': $!\n");
     }
+}
+
+# Copy some stat information (owner, group, mode and) from one file to
+# another.
+# This is a utility function which might be moved to a utility repository.
+#-> sub CPAN::FTP::_copy_stat
+sub _copy_stat {
+    my($src, $dest) = @_;
+    my @stat = stat($src);
+    die "Can't stat $src: $!" if !@stat;
+
+    chmod $stat[2], $dest
+	or warn "Can't chmod $dest to " . sprintf("0%o", $stat[2]) . ": $!";
+    chown $stat[4], $stat[5], $dest
+	or do {
+	    my $save_err = $!; # otherwise it's lost in the get... calls
+	    warn "Can't chown $dest to " .
+		 (getpwuid($stat[4]))[0] . "/" .
+                 (getgrgid($stat[5]))[0] . ": $save_err";
+	};
 }
 
 # if file is CHECKSUMS, suggest the place where we got the file to be
