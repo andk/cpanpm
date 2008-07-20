@@ -130,6 +130,7 @@ match:
     |GBARR/Authen-SASL-\d
     |GHENRY/Samba-LDAP-\d
     |GPHAT/Chart-Clicker-\d
+    |GPHAT/Layout-Manager-\d
     |GPHAT/MooseX-Method-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
