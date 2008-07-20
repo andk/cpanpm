@@ -84,6 +84,8 @@ successfully detected and cured.<br />
                               qr{every dentist in the United States with full contact details},
                               qr{Si no desea recibir información en un futuro},
                               qr{\QFuck beer! Got sexy girl?\E},
+                              qr{\QITEMS BELOW ARE INCLUDED IN THE DEAL AT NO EXTRA COST\E},
+                              qr{\QThis week only you pay only:\E},
                              ],
              );
 
