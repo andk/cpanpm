@@ -3941,20 +3941,24 @@ sub _add_to_statistics {
 sub _copy_stat {
     my($src, $dest) = @_;
     my @stat = stat($src);
-    die "Can't stat $src: $!" if !@stat;
+    if (!@stat) {
+	$CPAN::Frontend->mywarn("Can't stat '$src': $!\n");
+	return;
+    }
 
     eval {
 	chmod $stat[2], $dest
-	    or warn "Can't chmod $dest to " . sprintf("0%o", $stat[2]) . ": $!";
+	    or $CPAN::Frontend->mywarn("Can't chmod '$dest' to " . sprintf("0%o", $stat[2]) . ": $!\n");
     };
     warn $@ if $@;
     eval {
 	chown $stat[4], $stat[5], $dest
 	    or do {
 		my $save_err = $!; # otherwise it's lost in the get... calls
-		warn "Can't chown $dest to " .
-		    (getpwuid($stat[4]))[0] . "/" .
-			(getgrgid($stat[5]))[0] . ": $save_err";
+		$CPAN::Frontend->mywarn("Can't chown '$dest' to " .
+					(getpwuid($stat[4]))[0] . "/" .
+					(getgrgid($stat[5]))[0] . ": $save_err\n"
+				       );
 	    };
     };
     warn $@ if $@;
