@@ -169,7 +169,7 @@ ITERATION: while () {
           $must_get++;
         }
         if ($must_get) {
-          my $dst = $rf->local_event_path($recent_event->{path});
+          my $dst = $rf->local_path($recent_event->{path});
           my $doing = -e $dst ? "Syncing" : "Getting";
           {
             printf(
@@ -184,6 +184,7 @@ ITERATION: while () {
           }
           eval { $rf->mirror_path($recent_event->{path}) };
           if ($@) {
+            warn "error[$@]";
             push @error, $@;
             sleep 1;
             next UPLOADITEM;
@@ -235,7 +236,7 @@ ITERATION: while () {
     # are OK. We should probably only retry the files that have an
     # error, like in a nosuccesscount and nosuccesstime and retry rate.
 
-    rename $trecentfile, $rf->recentfile;
+    rename $trecentfile, $rf->rfile;
   }
 
   my $minimum_time_per_loop = 20;
