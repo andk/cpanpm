@@ -79,7 +79,7 @@ ITERATION: while () {
           $must_get++;
         }
         if ($must_get) {
-          my $dst = $rf->local_event_path($recent_event->{path});
+          my $dst = $rf->local_path($recent_event->{path});
           my $doing = -e $dst ? "Syncing" : "Getting";
           {
             printf(
@@ -117,7 +117,7 @@ ITERATION: while () {
       sleep 12;
       $max_epoch_ever{$rmodule} = 0;
     }
-    rename $trecentfile, $rf->recentfile;
+    rename $trecentfile, $rf->rfile;
   }
 
   my $minimum_time_per_loop = 60;
