@@ -1489,6 +1489,7 @@ Voting::Condorcet::RankedPairs
 Vroom::Vroom
 WWW::ColiPoste
 WWW::Curl
+WWW::Dict::Leo::Org
 WWW::Facebook::API
 WWW::Live365
 WWW::Mechanize
@@ -1575,6 +1576,7 @@ YAML::Tiny
 YAML::XS
 YAPE::Regex::Explain
 Yada::Yada::Yada
+Yahoo::Marketing
 Yahoo::Photos
 Yahoo::Search
 autobox::Core
