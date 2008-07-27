@@ -61,6 +61,7 @@ my $rf2 = File::Rsync::Mirror::Recentfile->new(
                                                interval => q(6h),
                                                filenameroot => "RECENT",
                                               );
+$Opt{n}||=0;
 $Opt{alternative} ||= 2;
 my $rf;
 if ($Opt{alternative}==1) {
