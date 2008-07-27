@@ -19,6 +19,7 @@ Alter
 Alvis::TermTagger
 Alzabo
 Angerwhale
+AnyEvent::GPSD
 Apache
 Apache::ASP
 Apache::DB
@@ -155,7 +156,7 @@ Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
 Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
-Catalyst::Plugin::Unicode
+Catalys::Plugin::Unicode
 Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
@@ -526,6 +527,7 @@ File::ShareDir
 File::SortedSeek
 File::Spec
 File::Spec::Functions
+File::System
 File::Tail
 File::Temp
 File::Type
@@ -882,6 +884,7 @@ MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Log::Log4perl
+MooseX::Method
 MooseX::Mutate
 MooseX::Plaggerize
 MooseX::Singleton
@@ -1301,6 +1304,7 @@ Test::FormValidator
 Test::HTTP::Server::Simple
 Test::HTTPStatus
 Test::Harness
+Test::HexString
 Test::A8N
 Test::JSON
 Test::Kwalitee
