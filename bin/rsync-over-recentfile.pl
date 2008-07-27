@@ -105,16 +105,12 @@ require File::Rsync::Mirror::Recentfile;
 
 our %Opt;
 GetOptions(\%Opt,
-           "use_interval=i",
            "loops=i",
            "verbose!",
           ) or die;
 
-my %max_epoch_ever;
-
-my %got_at;
-my $print_leading_newline = 0;
 my $loop = 0;
+my %reached;
 ITERATION: while () {
   last if $Opt{loops} && $loop++ >= $Opt{loops};
   my $iteration_start = time;
@@ -142,110 +138,16 @@ ITERATION: while () {
          verbose => $Opt{verbose},
         );
 
-    my $trecentfile = eval {$rf->get_remote_recentfile_as_tempfile();};
-    if ($@) {
-      warn sprintf "Warning: %s", $@; # XXX need a logging mechanism
-      sleep 5;
-      next ITERATION;
-    }
-    my($recent_data) = $rf->recent_events_from_tempfile();
-    my @error;
-    my $i = 0;
-    my $total = @$recent_data;
-  UPLOADITEM: for my $recent_event (reverse @$recent_data) {
-      $i++;
-      if ($recent_event->{type} eq "new"){
-        my $must_get;
-        $max_epoch_ever{$rmodule} ||= 0;
-        if ($Opt{use_interval} && $recent_event->{epoch}+$Opt{use_interval} < time) {
-          next UPLOADITEM;
-        } elsif ($recent_event->{epoch} < $max_epoch_ever{$rmodule}) {
-          next UPLOADITEM;
-        } elsif ($recent_event->{epoch} == $max_epoch_ever{$rmodule}) {
-          unless ($got_at{$recent_event->{path}}++) {
-            $must_get++;
-          }
-        } else {
-          $must_get++;
-        }
-        if ($must_get) {
-          my $dst = $rf->local_path($recent_event->{path});
-          my $doing = -e $dst ? "Syncing" : "Getting";
-          {
-            printf(
-                   "%s%s (%d/%d) %s\n",
-                   $print_leading_newline ? "\n" : "",
-                   $doing,
-                   $i,
-                   $total,
-                   $recent_event->{path},
-                  );
-            $print_leading_newline = 0;
-          }
-          eval { $rf->mirror_path($recent_event->{path}) };
-          if ($@) {
-            warn "error[$@]";
-            push @error, $@;
-            sleep 1;
-            next UPLOADITEM;
-          }
-          $got_at{$recent_event->{path}} = $recent_event->{epoch};
-        }
-      } elsif ($recent_event->{type} eq "delete") {
-        # note that we should not delete files on CPAN immediately
-        # before the indexes are adjusted. This is probably a bug in
-        # the CPAN system but the problem might be quite common.
-
-        # the mirror master should always adjust his indexes before
-        # actually deleting files. Or at least rewrite the index
-        # immediately after a couple of deletes. Fortunately the cpan
-        # system usually only deletes files that are in no index
-        # anymore (but people make mistakes)
-      } else {
-        warn "Warning: invalid upload type '$recent_event->{type}'"; # XXX logging
-      }
-      $max_epoch_ever{$rmodule} = $recent_event->{epoch} if $recent_event->{epoch} > $max_epoch_ever{$rmodule};
-    }
-    if (@error) {
-      # XXX this seems a bit too drastic
-      my $errors = @error;
-      my @disperrors = splice @error, 0, min(10, scalar @error);
-      my $disperrors = @disperrors;
-      warn "Warning: Ran into $errors errors, $disperrors follow:
-@disperrors
-";
-      sleep 12;
-      $max_epoch_ever{$rmodule} = 0;
-      %got_at = ();
-    } else {
-      for my $k (keys %got_at) {
-        delete $got_at{$k} if $got_at{$k} < $max_epoch_ever{$rmodule} - 60*60*24*2;
-      }
-    }
-
-    # XXX broken: we must do something else when an error happens. I
-    # think we must rewrite the recent file and set the eventtype to
-    # unknown or something. But we must publish *some* recent file
-    # otherwise a single error stops the whole mirroring process. In our
-    # case it was a file that got deleted at the source but it was not
-    # reflected in the RECENT file. We must never believe that the R
-    # file is perfect.
-
-    # Note: by setting the max_time_ever to zero we might also do harm
-    # insofar we hit the parent server to often with all the files that
-    # are OK. We should probably only retry the files that have an
-    # error, like in a nosuccesscount and nosuccesstime and retry rate.
-
-    rename $trecentfile, $rf->rfile;
+    $rf->mirror(after => $reached{$rmodule}||0);
+    my $re = $rf->recent_events;
+    $reached{$rmodule} = $re->[0]{epoch};
   }
+  require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump(\%reached); # XXX
 
   my $minimum_time_per_loop = 20;
-  { local $| = 1; print "."; $print_leading_newline = 1; }
   if (time - $iteration_start < $minimum_time_per_loop) {
-    # last ITERATION;
     sleep $iteration_start + $minimum_time_per_loop - time;
   }
-  { local $| = 1; print "~"; $print_leading_newline = 1; }
 }
 
 print "\n";
