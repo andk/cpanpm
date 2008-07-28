@@ -1,4 +1,13 @@
 --- 
+comment: |
+
+  The patch is nearly as broken as the original. The original runs
+  into an endless loop without a httpd. The patch brings us an OK/PASS
+  because it somehow leads to an empty variable TEST_FILES which means
+  as much as "we have no tests". Weird. I hope to revisit this some
+  day, for now I'm happy to have the endless loop banned. If you read
+  this and have ideas, please step forward:)
+
 match:
   distribution: "^(PGOLLUCCI|GEOFF|PHRED)/Apache-Test-\d"
 test:
