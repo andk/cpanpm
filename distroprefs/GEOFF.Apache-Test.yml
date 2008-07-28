@@ -5,3 +5,5 @@ test:
   env: 
     APACHE: /usr/sbin/apache-perl
     PERL_MM_USE_DEFAULT: 1
+patches:
+  - "ANDK/patches/Apache-Test-1.30-ANDK-01.patch.gz"
