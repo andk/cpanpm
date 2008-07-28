@@ -8,6 +8,8 @@ comment: |
   day, for now I'm happy to have the endless loop banned. If you read
   this and have ideas, please step forward:)
 
+  Note: http://rt.cpan.org/Ticket/Display.html?id=12911
+
 match:
   distribution: "^(PGOLLUCCI|GEOFF|PHRED)/Apache-Test-\d"
 test:
