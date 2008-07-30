@@ -1554,6 +1554,8 @@ sub cleanup {
 #-> sub CPAN::readhist
 sub readhist {
     my($self,$term,$histfile) = @_;
+    my $histsize = $CPAN::Config->{'histsize'} || 100;
+    $term->Attribs->{'MaxHistorySize'} = $histsize if (defined($term->Attribs->{'MaxHistorySize'}));
     my($fh) = FileHandle->new;
     open $fh, "<$histfile" or return;
     local $/ = "\n";
