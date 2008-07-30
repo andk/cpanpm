@@ -131,6 +131,7 @@ match:
     |GHENRY/Samba-LDAP-\d
     |GPHAT/Chart-Clicker-\d
     |GPHAT/Geometry-Primitive-\d
+    |GPHAT/Graphics-Color-\d
     |GPHAT/Graphics-Primitive-\d
     |GPHAT/Layout-Manager-\d
     |GPHAT/MooseX-Method-\d
@@ -269,6 +270,7 @@ match:
     |NEKOKAK/DBIx-Class-TableNames-\d
     |NEMUX/Net-UCP-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
+    |NUFFIN/MooseX-Getopt-\d
     |NUFFIN/MooseX-Storage-\d
     |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
