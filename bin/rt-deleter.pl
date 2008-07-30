@@ -65,11 +65,11 @@ successfully detected and cured.<br />
                               qr{<title>.+Mail delivery failed: returning message to sender</title>},
                               qr{(?x:Ahn \s nyeong|Ciao|God \s dag|Guten \s Tag|
 Hallo|Hai|Hei|Hej|Hello|Hey|Heya|Hi|Hoi|
-Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?x:
+Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
 \QFuck \s beer! \s Got \s sexy \s girl\?\E
 |How \s to \s keep \s your \s girlfriend \s happy \s \.\.\.
 |How+ \s to \s turn \s your.+
-|Prove \s Your \s L+ove!
+|(prove|save) \s your \s l+o+v+e+!?
 )(?:\s|<br\s*/>)*http://\S+[\.\[\]](?:cn|com)[\s<]},
                               qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
                               qr{If you would like not to receive any further communication from us, please send email to unsubscribe\@whozat.com.},
@@ -103,7 +103,8 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?x:
                               qr{Sign up so you can check it out with me},
                               qr{Ideas for your Business},
                               qr{We design and manufacture car wraps},
-                              qr{Anjelina Jolie XXX Video Free.}
+                              qr{Anjelina Jolie XXX Video Free.},
+                              qr{Click here and Enjoy: <a href="http://},
                              ],
              );
 
