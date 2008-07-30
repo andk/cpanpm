@@ -63,13 +63,13 @@ successfully detected and cured.<br />
                               qr{\QOur system detected an illegal attachment on your message\E},
                               qr{Diagnostic-Code:\s+X-Postfix;\s+host.+\s+said:\s+550\s+.+\s+Recipient address rejected:.+\s+User unknown in virtual mailbox table},
                               qr{<title>.+Mail delivery failed: returning message to sender</title>},
-                              qr{(?x:Ahn \s nyeong|Ciao|God \s dag|Guten \s Tag|
+                              qr{(?x:Ahn \s nyeong|Ciao|God \s dag|Goedendag|Guten \s Tag|
 Hallo|Hai|Hei|Hej|Hello|Hey|Heya|Hi|Hoi|
 Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
 \QFuck \s beer! \s Got \s sexy \s girl\?\E
 |How \s to \s keep \s your \s girlfriend \s happy \s \.\.\.
 |How+ \s to \s turn \s your.+
-|(prove|save) \s your \s l+o+v+e+!?
+|(p+r+o+v+e+|s+a+v+e+) \s y+o+u+r+ \s l+o+v+e+!?
 )(?:\s|<br\s*/>)*http://\S+[\.\[\]](?:cn|com)[\s<]},
                               qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
                               qr{If you would like not to receive any further communication from us, please send email to unsubscribe\@whozat.com.},
