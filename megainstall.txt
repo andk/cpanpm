@@ -2,6 +2,7 @@ AI::Categorizer
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
+ARGV::readonly
 Acme::Bleach
 Acme::Chef
 Acme::MetaSyntactic
