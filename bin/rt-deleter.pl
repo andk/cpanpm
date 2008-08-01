@@ -91,7 +91,8 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{US Pharmaceutical Company Executives List(ing)?},
                               qr{every dentist in the (United States|US) with full contact details},
                               qr{Chiropractors in the USA},
-                              qr{for termination of this mail send a blank message with},
+                              qr{for (termination of|stopping) this e?mail (in future )?send (us )?an? (blank message|email) with},
+                              qr{Chiropractors offices with full contact data},
 
                               qr{Si no desea recibir información en un futuro},
                               qr{\QFuck beer! Got sexy girl?\E},
