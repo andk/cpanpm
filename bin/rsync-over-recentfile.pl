@@ -142,11 +142,15 @@ ITERATION: while () {
     my $re = $rf->recent_events;
     $reached{$rmodule} = $re->[0]{epoch};
   }
+  $reached{now} = time;
   require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump(\%reached); # XXX
 
   my $minimum_time_per_loop = 20;
-  if (time - $iteration_start < $minimum_time_per_loop) {
-    sleep $iteration_start + $minimum_time_per_loop - time;
+  my $sleep = $iteration_start + $minimum_time_per_loop - time;
+  if ($sleep > 0.01) {
+    sleep $sleep;
+  } else {
+    # negative time not invented yet
   }
 }
 
