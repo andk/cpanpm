@@ -73,6 +73,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
 )(?:\s|<br\s*/>)*http://\S+[\.\[\]](?:cn|com)[\s<]},
                               qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
                               qr{If you would like not to receive any further communication from us, please send email to unsubscribe\@whozat.com.},
+                              qr{To unsubscribe, send an email to: \S+ with the address: \S+ in the subject line},
                               qr{[\x{0400}-\x{0513}\s]{50}}, # 50 cyrillic is spam?
                               qr{Avis de tempete sur les prix},
                               qr{Sie wuenschen Ihre Freizeit fuer Ihre Finanzen nutzen},
@@ -91,8 +92,10 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{US Pharmaceutical Company Executives List(ing)?},
                               qr{every dentist in the (United States|US) with full contact details},
                               qr{Chiropractors in the USA},
+                              qr{Contact List of Chiropractors},
                               qr{for (termination of|stopping) this e?mail (in future )?send (us )?an? (blank message|email) with},
                               qr{Chiropractors offices with full contact data},
+                              qr{(?i:dentists and dental services)},
 
                               qr{Si no desea recibir información en un futuro},
                               qr{\QFuck beer! Got sexy girl?\E},
@@ -106,6 +109,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{We design and manufacture car wraps},
                               qr{Anjelina Jolie XXX Video Free.},
                               qr{Click here and Enjoy: <a href="http://},
+                              qr{You can check you order status at the fol?owing link:},
                              ],
              );
 
