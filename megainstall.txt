@@ -347,6 +347,7 @@ Data::Random
 Data::Rand::Obscure
 Data::Remember
 Data::Rmap
+Data::Section
 Data::Serializer
 Data::SExpression
 Data::Semantic::Net
@@ -1049,6 +1050,7 @@ Paranoid
 Parrot::Interpreter
 Parse::BACKPAN::Packages
 Parse::BooleanLogic
+Parse::CPAN::MirroredBy
 Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
