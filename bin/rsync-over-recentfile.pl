@@ -115,13 +115,14 @@ ITERATION: while () {
   last if $Opt{loops} && $loop++ >= $Opt{loops};
   my $iteration_start = time;
 
-  for my $rmodule (qw(authors modules)) {
+  for my $tuple ([authors => "6h"],[modules => "1h"]) {
+    my($rmodule,$interval) = @$tuple;
     my $rf = File::Rsync::Mirror::Recentfile->new
         (
          canonize => "naive_path_normalize",
          filenameroot => "RECENT",
          ignore_link_stat_errors => 1,
-         interval => q(6h),
+         interval => $interval,
          localroot => "/home/ftp/pub/PAUSE/$rmodule",
          remote_dir => "",
          remote_host => "pause.perl.org",
