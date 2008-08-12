@@ -185,6 +185,7 @@ sub who {
                'david@landgren.net'         => 'DLAND',
                'dha@panix.com'              => 'DHA',
                'gbarr@pobox.com'            => 'GBARR',
+               'he@NetBSD.org'              => 'Havard Eidnes',
                'imacat@mail.imacat.idv.tw'  => 'IMACAT',
                'ivorw-cpan@xemaps.com'      => 'IVORW',
                'jdhedden@1979.usna.com'     => 'JDHEDDEN',
