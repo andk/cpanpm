@@ -100,7 +100,7 @@ use Getopt::Long qw(GetOptions);
 use List::Util qw(min);
 use Time::HiRes qw(sleep);
 
-use lib "/home/k/sources/File-Rsync-Mirror-Recentfile/lib/";
+use lib "/home/k/sources/rersyncrecent/lib/";
 require File::Rsync::Mirror::Recentfile;
 
 our %Opt;

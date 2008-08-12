@@ -33,7 +33,7 @@ GetOptions(\%Opt,
            "burn-in-protection|lossy!",
            "alternative=i",
           );
-use lib "/home/k/sources/File-Rsync-Mirror-Recentfile/lib/";
+use lib "/home/k/sources/rersyncrecent/lib/";
 use File::Rsync::Mirror::Recentfile;
 
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
