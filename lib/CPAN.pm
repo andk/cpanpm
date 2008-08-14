@@ -8919,27 +8919,39 @@ sub test {
         }
     }
 
-    # bypass actual tests if "trust_test_report_history" and have a report
-    my $have_tested_fcn;
-    if (   ! $self->{force_update}
-        && $CPAN::Config->{trust_test_report_history}
-        && $CPAN::META->has_inst("CPAN::Reporter::History") 
-        && ( $have_tested_fcn = CPAN::Reporter::History->can("have_tested" ))
-    ) {
-        if ( my @reports = $have_tested_fcn->( dist => $self->base_id ) ) {
-            # Do nothing if grade was DISCARD
-            if ( $reports[-1]->{grade} =~ /^(?:PASS|UNKNOWN)$/ ) {
-                $self->{make_test} = CPAN::Distrostatus->new("YES");
-                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
-                $CPAN::Frontend->myprint("Found prior test report -- OK\n");
-                return;
+    if ( ! $self->{force_update}  ) {
+        # bypass actual tests if "trust_test_report_history" and have a report
+        my $have_tested_fcn;
+        if (   $CPAN::Config->{trust_test_report_history}
+            && $CPAN::META->has_inst("CPAN::Reporter::History") 
+            && ( $have_tested_fcn = CPAN::Reporter::History->can("have_tested" ))) {
+            if ( my @reports = $have_tested_fcn->( dist => $self->base_id ) ) {
+                # Do nothing if grade was DISCARD
+                if ( $reports[-1]->{grade} =~ /^(?:PASS|UNKNOWN)$/ ) {
+                    $self->{make_test} = CPAN::Distrostatus->new("YES");
+                    $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                    $CPAN::Frontend->myprint("Found prior test report -- OK\n");
+                    return;
+                }
+                elsif ( $reports[-1]->{grade} =~ /^(?:FAIL|NA)$/ ) {
+                    $self->{make_test} = CPAN::Distrostatus->new("NO");
+                    $self->{badtestcnt}++;
+                    $CPAN::Frontend->mywarn("Found prior test report -- NOT OK\n");
+                    return;
+                }
             }
-            elsif ( $reports[-1]->{grade} =~ /^(?:FAIL|NA)$/ ) {
-                $self->{make_test} = CPAN::Distrostatus->new("NO");
-                $self->{badtestcnt}++;
-                $CPAN::Frontend->mywarn("Found prior test report -- NOT OK\n");
-                return;
-            }
+        }
+        # another chance to reanimate a lost state is needed. Somebody
+        # has not written a report but has successfully tested. The
+        # distro is still in build_dir. The smokeing machine has reset
+        # the fine global "is_tested" hash. How can we regain?
+        if ( UNIVERSAL::can($self->{make_test},"failed") ? # note by rafl: blessed + ->can
+             !$self->{make_test}->failed :
+             $self->{make_test} =~ /^YES/
+           ) {
+            $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+            $CPAN::Frontend->myprint("Found prior test report -- OK\n");
+            return;
         }
     }
 
