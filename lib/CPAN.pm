@@ -8885,6 +8885,11 @@ sub test {
                 } else {
                     push @e, "Has already been tested successfully";
                 }
+                # rafl&andk try to get the damn smoker running without
+                # understanding the full consequences of adding the
+                # following line. David, please shout if it breaks
+                # something
+                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
             }
         } elsif (!@e) {
             push @e, "Has no own directory";
