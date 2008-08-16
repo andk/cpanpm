@@ -241,6 +241,7 @@ Config::JSON
 Config::Simple
 Config::Std
 Config::XPath
+Contextual::Return
 Continuity
 Convert::ASCII::Armour
 Convert::ASCIInames
