@@ -519,6 +519,7 @@ File::Fetch
 File::Filename
 File::Find::Parallel
 File::Headerinfo::SWF
+File::LibMagic
 File::MMagic::XS
 File::Mirror
 File::Monitor
