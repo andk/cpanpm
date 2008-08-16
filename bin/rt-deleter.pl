@@ -60,9 +60,14 @@ Warning!<br />
 This letter contains a virus which has been<br />
 successfully detected and cured.<br />
 ***<br />\E},
+
+
                               qr{\QOur system detected an illegal attachment on your message\E},
                               qr{Diagnostic-Code:\s+X-Postfix;\s+host.+\s+said:\s+550\s+.+\s+Recipient address rejected:.+\s+User unknown in virtual mailbox table},
                               qr{<title>.+Mail delivery failed: returning message to sender</title>},
+                              qr{----- The following addresses had permanent fatal errors -----},
+
+
                               qr{(?x:Ahn \s nyeong|Ciao|God \s dag|Goedendag|Guten \s Tag|
 Hallo|Hai|Hei|Hej|Hello|Hey|Heya|Hi|Hoi|
 Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
