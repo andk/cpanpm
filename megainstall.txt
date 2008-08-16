@@ -99,6 +99,7 @@ CDB_File
 CGI
 CGI::Ajax
 CGI::Application
+CGI::Application::Dispatch
 CGI::Application::Plugin::AutoRunmode
 CGI::Application::Plugin::DevPopup
 CGI::Application::Plugin::Forward
@@ -118,6 +119,7 @@ CPAN::Index::Loader
 CPAN::IndexPod
 CPAN::Metrics
 CPAN::Mini
+CPAN::Mini::Webserver
 CPAN::Reporter::Smoker
 CPAN::Site
 CPAN::Testers::Report
@@ -414,6 +416,7 @@ Devel::LeakTrace::Fast
 Devel::LexAlias
 Devel::Modlist
 Devel::Monitor
+Devel::NYTProf
 Devel::PerlySense
 Devel::Profile
 Devel::Profiler
@@ -647,6 +650,7 @@ HTML::Widget
 HTML::WidgetValidator
 HTML::WikiConverter
 HTTP::BrowserDetect
+HTTP::Cache::Transparent
 HTTP::CryptoCookie
 HTTP::Daemon::Threaded
 HTTP::Engine
@@ -853,6 +857,7 @@ Math::SymbolicX::ParserExtensionFactory
 Math::Vec
 Maypole
 MediaWiki
+MediaWiki::API
 Metadata::ByInode
 Metaweb
 Method::Signatures
