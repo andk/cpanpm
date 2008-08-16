@@ -8406,7 +8406,7 @@ sub _feature_depends {
     my $meta_yml = $self->parse_meta_yml();
     my $optf = $meta_yml->{optional_features} or return;
     if (!ref $optf or ref $optf ne "HASH"){
-        $CPAN::Frontend->mywarn("The content of optional_feature is not a HASH reference. Cannot use it.\n");
+        $CPAN::Frontend->mywarn("The content of optional_features is not a HASH reference. Cannot use it.\n");
         $optf = {};
     }
     my $wantf = $self->prefs->{features} or return;
