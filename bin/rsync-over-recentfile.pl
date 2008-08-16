@@ -144,6 +144,10 @@ ITERATION: while () {
     $reached{$rmodule} = $re->[0]{epoch};
   }
   $reached{now} = time;
+  for my $k (keys %reached) {
+    next if $k =~ /T/;
+    $reached{$k . "T"} = scalar localtime $reached{$k};
+  }
   require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump(\%reached); # XXX
 
   my $minimum_time_per_loop = 20;
