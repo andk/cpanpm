@@ -127,7 +127,7 @@ ITEM: for my $i (0..$#$recent_events) {
   }
 }
 if (0 == $count) {
-  print sprintf "  found nothing of interest in %s\n", $rf->recentfile_basename;
+  print sprintf "  found nothing of interest in %s\n", $rf->rfile;
 } elsif ($count < $Opt{n}) {
   while ($count < $Opt{n}) {
     my $line = "";
