@@ -76,6 +76,7 @@ match:
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
+    |LAOMOI/XiaoI-0.03.tar.gz                # hung
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LZE/CGI-CMS-\d                          # asks questions about paths
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
