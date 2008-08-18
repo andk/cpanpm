@@ -5219,18 +5219,7 @@ sub reanimate_build_dir {
                 delete $do->{$skipper};
             }
             # $DB::single = 1;
-            if ($do->{make_test}
-                && $do->{build_dir}
-                && !(UNIVERSAL::can($do->{make_test},"failed") ?
-                     $do->{make_test}->failed :
-                     $do->{make_test} =~ /^YES/
-                    )
-                && (
-                    !$do->{install}
-                    ||
-                    $do->{install}->failed
-                   )
-               ) {
+            if ($do->tested_ok_but_not_installed) {
                 $CPAN::META->is_tested($do->{build_dir},$do->{make_test}{TIME});
             }
             $restored++;
@@ -6203,6 +6192,25 @@ sub base_id {
     $base_id =~ s{\.(?:tar\.(bz2|gz|Z)|t(?:gz|bz)|zip)$}{}i;
     return $base_id;
 }
+
+#-> sub CPAN::Distribution::tested_ok_but_not_installed
+sub tested_ok_but_not_installed {
+    my $self = shift;
+    return (
+           $self->{make_test}
+        && $self->{build_dir}
+        && (UNIVERSAL::can($self->{make_test},"failed") ?
+             ! $self->{make_test}->failed :
+             $self->{make_test} =~ /^YES/
+            )
+        && (
+            !$self->{install}
+            ||
+            $self->{install}->failed
+           )
+    ); 
+}
+
 
 # mark as dirty/clean for the sake of recursion detection. $color=1
 # means "in use", $color=0 means "not in use anymore". $color=2 means
@@ -8884,12 +8892,12 @@ sub test {
                     }
                 } else {
                     push @e, "Has already been tested successfully";
+                    # if global "is_tested" has been cleared, we need to mark this to
+                    # be added to PERL5LIB if not already installed
+                    if ($self->tested_ok_but_not_installed) {
+                        $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                    }
                 }
-                # rafl&andk try to get the damn smoker running without
-                # understanding the full consequences of adding the
-                # following line. David, please shout if it breaks
-                # something
-                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
             }
         } elsif (!@e) {
             push @e, "Has no own directory";
@@ -8934,7 +8942,11 @@ sub test {
                 # Do nothing if grade was DISCARD
                 if ( $reports[-1]->{grade} =~ /^(?:PASS|UNKNOWN)$/ ) {
                     $self->{make_test} = CPAN::Distrostatus->new("YES");
-                    $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                    # if global "is_tested" has been cleared, we need to mark this to
+                    # be added to PERL5LIB if not already installed
+                    if ($self->tested_ok_but_not_installed) {
+                        $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                    }
                     $CPAN::Frontend->myprint("Found prior test report -- OK\n");
                     return;
                 }
@@ -8945,18 +8957,6 @@ sub test {
                     return;
                 }
             }
-        }
-        # another chance to reanimate a lost state is needed. Somebody
-        # has not written a report but has successfully tested. The
-        # distro is still in build_dir. The smokeing machine has reset
-        # the fine global "is_tested" hash. How can we regain?
-        if ( UNIVERSAL::can($self->{make_test},"failed") ? # note by rafl: blessed + ->can
-             !$self->{make_test}->failed :
-             $self->{make_test} =~ /^YES/
-           ) {
-            $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
-            $CPAN::Frontend->myprint("Found prior test report -- OK\n");
-            return;
         }
     }
 
