@@ -328,6 +328,7 @@ match:
     |STEVAN/MooseX-Getopt-\d
     |STEVAN/MooseX-Storage-\d
     |STEVAN/Task-Moose-\d
+    |SUNNAVY/Shipwright-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
     |TOKUHIROM/Archer-\d
