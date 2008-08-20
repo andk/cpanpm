@@ -919,6 +919,7 @@ Net::DownloadMirror
 Net::FPing
 Net::FTP
 Net::FTP::Common
+Net::FTP::Throttle
 Net::Frame::Dump
 Net::GrowlClient
 Net::Hiveminder
@@ -1243,6 +1244,7 @@ String::CRC32
 String::Diff
 String::Expand
 String::Fraction
+String::Koremutake
 String::Multibyte
 String::Random
 String::ShellQuote
@@ -1290,6 +1292,7 @@ Template::Provider::Unicode::Japanese
 Template::Timer
 Term::Menu
 Term::ProgressBar
+Term::ProgressBar::Quiet
 Term::Prompt
 Term::ReadKey
 Term::ReadLine::Gnu
