@@ -157,6 +157,7 @@ match:
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
+    |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JGOULAH/Net-Akamai-\d
