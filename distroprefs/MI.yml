@@ -133,6 +133,7 @@ match:
     |GPHAT/Geometry-Primitive-\d
     |GPHAT/Graphics-Color-\d
     |GPHAT/Graphics-Primitive-\d
+    |GPHAT/Graphics-Primitive-Driver-Cairo-\d
     |GPHAT/Layout-Manager-\d
     |GPHAT/MooseX-Method-\d
     |GPHAT/Osgood-Client-\d
