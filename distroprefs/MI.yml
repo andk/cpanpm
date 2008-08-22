@@ -274,7 +274,6 @@ match:
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |NUFFIN/MooseX-Getopt-\d
     |NUFFIN/MooseX-Storage-\d
-    |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
     |PERIGRIN/MooseX-Workers-\d
@@ -284,7 +283,6 @@ match:
     |PHAYLON/Pod-Coverage-Moose-\d
     |PHAYLON/namespace-clean-\d
     |PLU/DBIx-Class-ResultSet-HashRef-\d
-    |RBERJON/JSON-Any-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
