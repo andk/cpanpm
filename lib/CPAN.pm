@@ -5414,6 +5414,10 @@ happen.\a
         # 1.57 we assign remaining text to $comment thus allowing to
         # influence isa_perl
         my($mod,$version,$dist,$comment) = split " ", $_, 4;
+        unless ($mod && $version && $dist) {
+            $CPAN::Frontend->mywarn("Could not split line[$_]\n");
+            next;
+        }
         my($bundle,$id,$userid);
 
         if ($mod eq 'CPAN' &&
