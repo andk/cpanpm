@@ -8,6 +8,10 @@ comment: |
 
 match:
   distribution: "^TELS/devel/Devel-Size-0.70"
-test:
-  args:
-    - "TEST_FILES=t/pod*.t"
+
+# only enable this when you have sending of reports disabled, it leads
+# to bogus test reports
+
+#test:
+#  args:
+#    - "TEST_FILES=t/pod*.t"
