@@ -1,3 +1,12 @@
+2008-08-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* it has already been reported as http://rt.cpan.org/Ticket/Display.html?id=36912
+
+	Hook::Filter has a use_ok in a BEGIN block. Only reached one of several
+	things is missing because then it is a skip_all. use_ok in BEGIN block?
+	Wasn't this allowed in old times due to a Test::Simple bug? Yes. I added
+	a comment to the ticket.
+
 2008-07-17  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* mixed success with JSON::XS. At least a first binary search

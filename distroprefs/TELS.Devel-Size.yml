@@ -1,0 +1,13 @@
+---
+comment: |
+
+  NOT FOR SERIOUS USE!!!
+
+  Beware, this is just for a binary search to find the patchlevel when
+  it stopped to compile.
+
+match:
+  distribution: "^TELS/devel/Devel-Size-0.70"
+test:
+  args:
+    - "TEST_FILES=t/pod*.t"
