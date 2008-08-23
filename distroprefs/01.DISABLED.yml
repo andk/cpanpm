@@ -69,6 +69,7 @@ match:
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKUTEJ/Xen-Control-\d                   # calls sudo
+    |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
