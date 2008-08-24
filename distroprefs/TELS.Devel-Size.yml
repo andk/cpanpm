@@ -6,4 +6,4 @@ comment: |
 match:
   distribution: "^TELS/devel/Devel-Size-0.70"
 patches:
-  - "ANDK/patches/Devel-Size-0.70-RURBAN-02.patch.gz"
+  - "ANDK/Devel-Size-0.70-RURBAN-03.patch.gz"
