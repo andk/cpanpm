@@ -48,10 +48,12 @@ match:
     |BLBLACK/Term-Spinner-\d
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BOBMATH/Crypt-CAST5_PP-\d
+    |BOGDAN/Catalyst-Model-DBIC-Schema-\d
     |BOKUTIN/Template-Plugin-Filter-VisualTruncate-\d
     |BRICAS/CGI-Application-PhotoGallery-\d
     |BRICAS/Catalyst-Model-DBIC-\d
     |BRICAS/Catalyst-Model-Gedcom-\d
+    |BRICAS/Catalyst-Plugin-Authorization-Roles-\d
     |BRICAS/Catalyst-Plugin-ConfigLoader-\d
     |BRICAS/Catalyst-Plugin-I18N-\d
     |BRICAS/Catalyst-View-vCard-\d
