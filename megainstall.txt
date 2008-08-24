@@ -8,8 +8,8 @@ Acme::Chef
 Acme::MetaSyntactic
 Algorithm::AhoCorasick
 Algorithm::Annotate
-Algorithm::CheckDigits
 Algorithm::C3
+Algorithm::CheckDigits
 Algorithm::Diff
 Algorithm::Nhash
 Algorithm::Partition
@@ -122,8 +122,8 @@ CPAN::Mini
 CPAN::Mini::Webserver
 CPAN::Reporter::Smoker
 CPAN::Site
-CPAN::Testers::Report
 CPAN::Testers::ParseReport
+CPAN::Testers::Report
 CPAN::Unwind
 CPAN::WWW::Testers
 CPAN::YACSmoke
@@ -147,6 +147,7 @@ Carp::Clan
 Carp::Diagnostics
 Carp::REPL
 Carp::Source
+Catalys::Plugin::Unicode
 Catalyst
 Catalyst::Action::RenderView
 Catalyst::Devel
@@ -159,7 +160,6 @@ Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
 Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
-Catalys::Plugin::Unicode
 Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
@@ -346,15 +346,15 @@ Data::Phrasebook
 Data::PowerSet
 Data::Properties
 Data::Rand
-Data::Random
 Data::Rand::Obscure
+Data::Random
 Data::Remember
 Data::Rmap
-Data::Section
-Data::Serializer
 Data::SExpression
+Data::Section
 Data::Semantic::Net
 Data::Semantic::URI
+Data::Serializer
 Data::ShowTable
 Data::Sofu::List
 Data::Structure::Util
@@ -421,8 +421,8 @@ Devel::PerlySense
 Devel::Profile
 Devel::Profiler
 Devel::REPL
-Devel::Required
 Devel::Refcount
+Devel::Required
 Devel::SawAmpersand
 Devel::SearchINC
 Devel::Size
@@ -456,8 +456,8 @@ Egg::Model::Session
 Email::Address
 Email::Date
 Email::Delete
-Email::Find
 Email::Filter
+Email::Find
 Email::Folder
 Email::FolderType
 Email::FolderType::Net
@@ -578,9 +578,9 @@ Geo::Coordinates::Converter::Format::Degree
 Geo::GeoNames
 Geo::Google::PolylineEncoder
 Geo::Gpx
-Geo::Raster
 Geo::Proj::Japan
 Geo::Query
+Geo::Raster
 Geo::ShapeFile
 Geography::Countries
 Getargs::Long
@@ -653,6 +653,7 @@ HTML::WikiConverter
 HTTP::BrowserDetect
 HTTP::Cache::Transparent
 HTTP::CryptoCookie
+HTTP::DAV
 HTTP::Daemon::Threaded
 HTTP::Engine
 HTTP::GHTTP
@@ -662,6 +663,7 @@ HTTP::Parser
 HTTP::Proxy
 HTTP::RangeSaver
 HTTP::Response::Encoding
+HTTP::Server::Brick
 HTTP::Server::Simple
 HTTP::Server::Simple::Dispatched
 HTTP::Server::Simple::Mason
@@ -801,6 +803,7 @@ Log::Handler
 Log::Message
 Log::Message::Simple
 Lucene
+MARC::Charset
 MD5
 MIME::Base64
 MIME::Body
@@ -989,9 +992,6 @@ PAR
 PAR::Dist::FromCPAN
 PAR::Packer
 PApp
-Package::Builder
-Path::Class::Versioned
-Path::Router
 PBS::Build
 PDF
 PDF::API2
@@ -1033,8 +1033,8 @@ POE::Component::RSS
 POE::Component::SSLify
 POE::Component::Server::DNS
 POE::Component::Server::HTTP
-POE::Component::Server::SimpleHTTP
 POE::Component::Server::PreforkTCP
+POE::Component::Server::SimpleHTTP
 POE::Component::SpreadClient
 POE::Component::StackedProcessor
 POE::Component::SubWrapper
@@ -1047,6 +1047,7 @@ POSIX::Regex
 PPI
 PTools
 PTools::SDF
+Package::Builder
 Package::Constants
 Pad::Tie
 PadWalker
@@ -1063,6 +1064,8 @@ Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
 Path::Class
+Path::Class::Versioned
+Path::Router
 Perl6::Attributes
 Perl6::Caller
 Perl6::Export
@@ -1086,8 +1089,8 @@ Petal::Utils
 Plagger
 Pod::Constants
 Pod::Coverage
-Pod::Coverage::Moose
 Pod::Coverage::CountParents
+Pod::Coverage::Moose
 Pod::Escapes
 Pod::Find
 Pod::Generated
@@ -1199,8 +1202,8 @@ Scalar::Util::Clone
 Scalar::Util::Numeric
 Schedule::Cron
 Scope::Guard
-Scriptalicious
 Script::Remote
+Scriptalicious
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
@@ -1247,6 +1250,7 @@ String::Fraction
 String::Koremutake
 String::Multibyte
 String::Random
+String::ShellQuote
 String::ShellQuote
 String::Similarity
 String::Truncate
@@ -1303,6 +1307,7 @@ Term::Size::Perl
 Term::Spinner
 Term::UI
 Test
+Test::A8N
 Test::AutoBuild
 Test::Builder
 Test::Builder::Tester
@@ -1318,7 +1323,6 @@ Test::HTTP::Server::Simple
 Test::HTTPStatus
 Test::Harness
 Test::HexString
-Test::A8N
 Test::JSON
 Test::Kwalitee
 Test::LongString
@@ -1510,6 +1514,7 @@ WWW::Dict::Leo::Org
 WWW::Facebook::API
 WWW::Live365
 WWW::Mechanize
+WWW::Mechanize::GZip
 WWW::Mechanize::Plugin::Web::Scraper
 WWW::Mechanize::Shell
 WWW::Monitor
