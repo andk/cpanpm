@@ -1,17 +1,9 @@
 ---
 comment: |
 
-  NOT FOR SERIOUS USE!!!
-
-  Beware, this is just for a binary search to find the patchlevel when
-  it stopped to compile.
+  http://rt.cpan.org/Ticket/Display.html?id=33530
 
 match:
   distribution: "^TELS/devel/Devel-Size-0.70"
-
-# only enable this when you have sending of reports disabled, it leads
-# to bogus test reports
-
-#test:
-#  args:
-#    - "TEST_FILES=t/pod*.t"
+patches:
+  - "ANDK/patches/Devel-Size-0.70-RURBAN-01.patch.gz"
