@@ -98,6 +98,7 @@ match:
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
+    |RHOOPER/HTTP-Lite-\d                    # asks for a URL
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-\d                     # hangs with 27040 (=5.8.8) on t/01test.t
     |RYBSKEJ/forks-0.25
