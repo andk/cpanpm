@@ -119,6 +119,7 @@ match:
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |XERN/CGI-QuickApp-\d                    # hangs immediately
+    |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     )|
