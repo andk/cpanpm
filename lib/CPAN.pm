@@ -10797,6 +10797,44 @@ displayed with the rather verbose method C<as_string>, but if we find
 more than one, we display each object with the terse method
 C<as_glimpse>.
 
+Examples:
+
+  cpan> m Acme::MetaSyntactic
+  Module id = Acme::MetaSyntactic
+      CPAN_USERID  BOOK (Philippe Bruhat (BooK) <[...]>)
+      CPAN_VERSION 0.99
+      CPAN_FILE    B/BO/BOOK/Acme-MetaSyntactic-0.99.tar.gz
+      UPLOAD_DATE  2006-11-06
+      MANPAGE      Acme::MetaSyntactic - Themed metasyntactic variables names
+      INST_FILE    /usr/local/lib/perl/5.10.0/Acme/MetaSyntactic.pm
+      INST_VERSION 0.99
+  cpan> a BOOK
+  Author id = BOOK
+      EMAIL        [...]
+      FULLNAME     Philippe Bruhat (BooK)
+  cpan> d BOOK/Acme-MetaSyntactic-0.99.tar.gz
+  Distribution id = B/BO/BOOK/Acme-MetaSyntactic-0.99.tar.gz
+      CPAN_USERID  BOOK (Philippe Bruhat (BooK) <[...]>)
+      CONTAINSMODS Acme::MetaSyntactic Acme::MetaSyntactic::Alias [...]
+      UPLOAD_DATE  2006-11-06
+  cpan> m /lorem/
+  Module  = Acme::MetaSyntactic::loremipsum (BOOK/Acme-MetaSyntactic-0.99.tar.gz)
+  Module    Text::Lorem            (ADEOLA/Text-Lorem-0.3.tar.gz)
+  Module    Text::Lorem::More      (RKRIMEN/Text-Lorem-More-0.12.tar.gz)
+  Module    Text::Lorem::More::Source (RKRIMEN/Text-Lorem-More-0.12.tar.gz)
+  cpan> i /berlin/
+  Distribution    BEATNIK/Filter-NumberLines-0.02.tar.gz
+  Module  = DateTime::TimeZone::Europe::Berlin (DROLSKY/DateTime-TimeZone-0.7904.tar.gz)
+  Module    Filter::NumberLines    (BEATNIK/Filter-NumberLines-0.02.tar.gz)
+  Author          [...]
+
+The examples illustrate several aspects: the first three queries
+target modules, authors, or distros directly and yield exactly one
+result. The last two use regular expressions and yield several
+results. The last one targets all of bundles, modules, authors, and
+distros simultaneously. When more than one result is available, they
+are printed in one-line format.
+
 =item C<get>, C<make>, C<test>, C<install>, C<clean> modules or distributions
 
 These commands take any number of arguments and investigate what is
