@@ -6126,8 +6126,7 @@ sub normalize {
         $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-]{2,}/|
        ) {
         return $s if $s =~ m:^N/A|^Contact Author: ;
-        $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4| or
-            $CPAN::Frontend->mywarn("Strange distribution name [$s]\n");
+        $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4|;
         CPAN->debug("s[$s]") if $CPAN::DEBUG;
     }
     $s;
