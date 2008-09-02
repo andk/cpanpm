@@ -80,7 +80,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{(?i:Pour ne plus recevoir de messages.+cliquez ici)},
                               qr{If you would like not to receive any further communication from us, please send email to unsubscribe\@whozat.com.},
                               qr{To unsubscribe, send an email to: \S+ with the address: \S+ in the subject line},
-                              qr{[\x{0400}-\x{0513}\s]{50}}, # 50 cyrillic is spam?
+                              qr{[\x{0400}-\x{0513}\s,\.:]{50}}, # 50 cyrillic is spam?
                               qr{Avis de tempete sur les prix},
                               qr{Sie wuenschen Ihre Freizeit fuer Ihre Finanzen nutzen},
                               qr{Sie haben oefters Freizeit},
@@ -116,6 +116,8 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{Anjelina Jolie XXX Video Free.},
                               qr{Click here and Enjoy: <a href="http://},
                               qr{You can check you order status at the fol?owing link:},
+
+                              qr{(Sexy|Nude) Angelina Jolie video!},
                              ],
              );
 
