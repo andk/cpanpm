@@ -7174,6 +7174,15 @@ Could not determine which directory to use for looking at $dist.
         local $ENV{CPAN_SHELL_LEVEL} = $ENV{CPAN_SHELL_LEVEL}||0;
         $ENV{CPAN_SHELL_LEVEL} += 1;
         my $shell = CPAN::HandleConfig->safe_quote($CPAN::Config->{'shell'});
+
+        local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+            ? $ENV{PERL5LIB}
+                : ($ENV{PERLLIB} || "");
+
+        local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+        $CPAN::META->set_perl5lib;
+        local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
         unless (system($shell) == 0) {
             my $code = $? >> 8;
             $CPAN::Frontend->mywarn("Subprocess shell exit code $code\n");
