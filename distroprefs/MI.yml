@@ -330,6 +330,7 @@ match:
     |STEVAN/MooseX-Daemonize-\d
     |STEVAN/MooseX-Getopt-\d
     |STEVAN/MooseX-Storage-\d
+    |STEVAN/Path-Router-\d
     |STEVAN/Task-Moose-\d
     |SUNNAVY/Shipwright-\d
     |TELS/graph/Graph-
