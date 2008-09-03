@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.92_63';
+$CPAN::VERSION = '1.92_64';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -6507,6 +6507,15 @@ EOF
     my $dh = DirHandle->new(File::Spec->curdir)
         or Carp::croak("Couldn't opendir .: $!");
     my @readdir = grep $_ !~ /^\.\.?(?!\n)\Z/s, $dh->read; ### MAC??
+    if (grep { $_ eq "pax_global_header" } @readdir) {
+        $CPAN::Frontend->mywarn("Your (un)tar seems to have extracted a file named 'pax_global_header'
+from the tarball '$local_file'.
+This is almost certainly an error. Please upgrade your tar.
+I'll ignore this file for now.
+See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
+        $CPAN::Frontend->mysleep(5);
+        @readdir = grep { $_ ne "pax_global_header" } @readdir;
+    }
     $dh->close;
     my ($packagedir);
     # XXX here we want in each branch File::Temp to protect all build_dir directories
