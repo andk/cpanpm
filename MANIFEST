@@ -271,6 +271,7 @@ distroprefs/PHRED.Apache-Reload.yml
 distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/QANTINS.BitTorrent.yml
+distroprefs/RBERJON.JSON-Any.yml
 distroprefs/RBS.XML-AutoWriter.yml
 distroprefs/RCAPUTO.POE.yml
 distroprefs/RCLAMP.Devel-Caller.yml
@@ -316,6 +317,7 @@ distroprefs/STEVAN.Class-MOP.yml
 distroprefs/SWALTERS.typesafety.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/TBONE.HTTP-File.yml
+distroprefs/TELS.Devel-Size.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.Apache-Status-DBI.yml
 distroprefs/TIMB.DBI.yml

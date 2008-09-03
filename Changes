@@ -1,3 +1,27 @@
+2008-09-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_64
+
+	* workaround for tarballs containing a pax_global_header comment
+	(reported by David Cantrell and Jan Dubois)
+
+	* set the PERL5LIB also on the look command (suggested by Slaven Rezic)
+
+	* better protection against invalid index files
+
+	* fix esoteric bug in build_dir_reuse/reset_tested (David Golden)
+
+	* allow more than 100 commands in history (Rodrigo Marchant)
+
+	* preserve modification and owner bits when overwriting FTPstats.yml
+	(Slaven Rezic)
+
+	* address #32841: Location of .cpan Inconsistent on Mac OS X (David Wheeler)
+
+	* updated the FAQ about choosing mirror sites
+
+	* now with 343 distroprefs files (the curve is flattening)
+
 2008-06-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_63
