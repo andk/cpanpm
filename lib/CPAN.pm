@@ -9657,6 +9657,14 @@ sub _should_report {
     return $self->{should_report}
         if exists $self->{should_report};
 
+    # don't report if we generated a Makefile.PL
+    if ( $self->{had_no_makefile_pl} ) {
+        $CPAN::Frontend->mywarn(
+            "Will not send CPAN Testers report with generated Makefile.PL.\n"
+        );
+        return $self->{should_report} = 0;
+    }
+
     # available
     if ( ! $CPAN::META->has_inst("CPAN::Reporter")) {
         $CPAN::Frontend->mywarn(
