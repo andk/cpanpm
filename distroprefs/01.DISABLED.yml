@@ -40,6 +40,7 @@ match:
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
+    |CGUINE/Games-Sudoku-SudokuTk-0.07.tar.gz # hangs
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
