@@ -545,6 +545,7 @@ CONFIGURATION
       pager              location of external program more (or any pager)
       password           your password if you CPAN server wants one
       patch              path to external prg
+      perl5lib_verbosity verbosity level for PERL5LIB additions
       prefer_installer   legal values are MB and EUMM: if a module comes
                          with both a Makefile.PL and a Build.PL, use the
                          former (EUMM) or the latter (MB); if the module
@@ -569,8 +570,6 @@ CONFIGURATION
                          (and nonsense for characters outside latin range)
       term_ornaments     boolean to turn ReadLine ornamenting on/off
       test_report        email test reports (if CPAN::Reporter is installed)
-      threshold_perl5lib_upto
-                         threshold determining method to extend @INC at runtime
       trust_test_report_history
                          skip testing when previously tested ok (according to
                          CPAN::Reporter history)
