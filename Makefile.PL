@@ -32,7 +32,7 @@ $main::SVN_RELEASE = 0;
 if (-d ".svn") {
   $main::SVN_RELEASE = 1;
 } elsif ($ARGV[0] && $ARGV[0] =~ /setversion/) {
-  warn "!!!making SVK based release, take care!!!";
+  warn "!!!making release without .svn??? Take care!!!";
   @ARGV = ();
   sleep 2;
 }
@@ -271,16 +271,6 @@ setversion:
 README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
-
-chlog-svkstyle :: chlog-svk-short
-
-chlog-svk-short : ChangeLogShort.svk
-ChangeLogShort.svk : Makefile.PL lib/CPAN.pm distroprefs/00.README
-	-LC_ALL=$(LC_ALL_noexport) svk log -v //local/cpanpm > $@
-
-chlog-svk-long : ChangeLogLong.svk
-ChangeLogLong.svk :
-	-LC_ALL=$(LC_ALL_noexport) svk log -v //mirror/cpanpm > $@
 
 # got this from http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-svn :
@@ -672,10 +662,7 @@ ChangeLog : ChangeLogTrad.svn
 };
   } else {
     push @m, qq{
-chlog :: chlog-svkstyle
-
-ChangeLog : ChangeLogShort.svk
-	mv ChangeLogShort.svk ChangeLog
+chlog ::
 
 };
   }
