@@ -183,6 +183,7 @@ match:
     |KARMAN/Catalyst-Plugin-Session-Store-File-\d
     |KEN/XML-XML2JSON-\d
     |KULP/Text-vFile-toXML-\d
+    |LAMMEL/MooseX-Log-Log4perl-\d
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LSAUNDERS/DBIx-Class-Fixtures-\d
