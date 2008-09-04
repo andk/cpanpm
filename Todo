@@ -1,3 +1,15 @@
+2008-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* limit the autogeneration of a Makefile.PL to single-file stuff should
+	not break too many script distros. Requested by
+
+Mailing-List: contact perl-qa-help@perl.org; run by ezmlm
+To: perl-qa@perl.org
+Subject: Re: imaginary Makefile.PL (and scripts)
+Date: Wed, 3 Sep 2008 13:24:34 -0700
+Message-Id: <200809031324.34780.ewilhelm@cpan.org>
+From: Eric Wilhelm <scratchcomputing@gmail.com>
+
 2008-08-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* it has already been reported as http://rt.cpan.org/Ticket/Display.html?id=36912
