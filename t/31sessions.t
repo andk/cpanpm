@@ -50,7 +50,7 @@ BEGIN {
     }
     if ($exit_message) {
         $|=1;
-        print "1..0 # Skip: $exit_message\n";
+        print "1..0 # SKIP $exit_message\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
     }
 }

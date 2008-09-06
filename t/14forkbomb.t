@@ -2,7 +2,7 @@ BEGIN {
     $|++;
     unless (@ARGV && shift(@ARGV) eq "--doit") {
         $|=1;
-        print "1..0 # Skip: test only run when called with --doit\n";
+        print "1..0 # SKIP test only run when called with --doit\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
         exit;
     }
