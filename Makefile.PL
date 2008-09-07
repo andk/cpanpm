@@ -304,7 +304,9 @@ megainstall: logs/.exists
 		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load; \
 		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
-		  install("DAGOLDEN/CPAN-Reporter-1.16_51.tar.gz"); \
+		  install("ANDK/CPAN-1.92_64.tar.gz"); \
+		  install("EWILHELM/Module-Build-0.2808_03.tar.gz"); \
+		  install("MSCHWERN/Test-Simple-0.81_01.tar.gz"); \
 		  CPAN::Shell->reload("cpan"); \
 		  install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 		  CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
