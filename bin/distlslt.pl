@@ -32,7 +32,10 @@ open my $fh, "zcat $ROOT/modules/02packages.details.txt.gz|" or die;
 my(%age,%distro);
 my $state = "header";
 my $current_line = 0;
-my $tp = Time::Progress->new();
+my $tp;
+if (-t *STDOUT) {
+    $tp = Time::Progress->new();
+}
 my $lines;
 $| = 1;
 while (<$fh>) {
@@ -42,7 +45,7 @@ while (<$fh>) {
             next;
         } elsif (/^Line-Count:\s*(\d+)/) {
             $lines = $1;
-            $tp->attr( min => 1, max => $lines );
+            $tp->attr( min => 1, max => $lines ) if $tp;
         }
     } elsif ($state eq "body") {
         chomp;
@@ -57,7 +60,7 @@ while (<$fh>) {
         $distro{$m} = $d;
         if ($lines==$current_line || !($current_line % 100)) {
             my $formatted_current_line = sprintf "%8d", $current_line;
-            print $tp->report("\r$formatted_current_line %p over: %l s, left %e s; ETA: %f", $current_line );
+            print $tp->report("\r$formatted_current_line %p over: %l s, left %e s; ETA: %f", $current_line ) if $tp;
         }
     } else {
         die "illegal state $state";
@@ -99,7 +102,7 @@ for my $i (0..$#m) {
             push @t_index, $painted-1;
         }
         printf "%2d $date_format$have_format %-20s %s\n", $painted, $display_date, $have, $m[$i], substr($distro{$m[$i]},5);
-        push @{$value_sets->[0]}, -$display_date;
+        push @{$value_sets->[0]}, $Opt{fulldate} ? $display_date : -$display_date;
         push @{$value_sets->[1]}, 1-(($painted-1)/$Opt{n});
     }
 }
@@ -116,26 +119,34 @@ if ($display_months) {
 # good enough results with n=20
 # todo: right axis, labels 75,50,25 and the 3 corresponding dates
 {
-    use Google::Chart;
-    use List::Util qw(min max);
-    for my $vs (@$value_sets) {
-        my $min = min @$vs;
-        my $max = max @$vs;
-        my $range = $max - $min;
-        $vs = [ map { int(100 * ($_ - $min)/$range) } @$vs ];
+    my $HAVE_GOOGLE_CHARTS;
+    my @txpos;
+    unless ($Opt{fulldate}) {
+        $HAVE_GOOGLE_CHARTS = eval { require Google::Chart; 1; };
+        use List::Util qw(min max);
+        for my $vs (@$value_sets) {
+            my $min = min @$vs;
+            my $max = max @$vs;
+            my $range = $max - $min;
+            $vs = [ map { int(100 * ($_ - $min)/$range) } @$vs ];
+        }
+        @txpos = @{$value_sets->[0]}[@t_index];
     }
-    my @txpos = @{$value_sets->[0]}[@t_index];
+    if ($HAVE_GOOGLE_CHARTS) {
+        my $chart = Google::Chart->new(
+                                       type_name => 'type_line_xy',
+                                       set_size  => [ 300, 120 ],
+                                       data_spec => {
+                                                     encoding  => 'data_simple_encoding',
+                                                     max_value => 100,
+                                                     value_sets => $value_sets,
+                                                    },
+                                      );
+        print $chart->get_url, "&chls=3&chxt=x,r&chxl=0:|$txlabel[0]|$txlabel[1]|$txlabel[2]|1:|0|25|50|75|100&chxp=0,$txpos[0],$txpos[1],$txpos[2]&chm=c,FF0000,0,$t_index[0],10|c,FF0000,0,$t_index[1],10|c,FF0000,0,$t_index[2],10&chf=c,ls,90,999999,0.25,AAAAAA,0.25,CCCCCC,0.25,EEEEEE,0.25\n";
+    } else {
+        require YAML::Syck; print STDERR "Line " . __LINE__ . ", File: " . __FILE__ . "\n" . YAML::Syck::Dump(\@txpos); # XXX
 
-    my $chart = Google::Chart->new(
-                                   type_name => 'type_line_xy',
-                                   set_size  => [ 300, 120 ],
-                                   data_spec => {
-                                                 encoding  => 'data_simple_encoding',
-                                                 max_value => 100,
-                                                 value_sets => $value_sets,
-                                                },
-                                  );
-    print $chart->get_url, "&chls=3&chxt=x,r&chxl=0:|$txlabel[0]|$txlabel[1]|$txlabel[2]|1:|0|25|50|75|100&chxp=0,$txpos[0],$txpos[1],$txpos[2]&chm=c,FF0000,0,$t_index[0],10|c,FF0000,0,$t_index[1],10|c,FF0000,0,$t_index[2],10&chf=c,ls,90,999999,0.25,AAAAAA,0.25,CCCCCC,0.25,EEEEEE,0.25\n";
+    }
 }
 
 =pod
