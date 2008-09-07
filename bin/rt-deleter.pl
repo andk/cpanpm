@@ -115,6 +115,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{\QPastas Simples - Pastas com Bolsa\E},
                               qr{(?i:HOW TO CLAIM YOUR PRIZE)},
                               qr{ULTIMAS NOTEBOOKS DELL},
+                              qr{(?:eventually considered the camera as a valuable)},
                               qr{Sign up so you can check it out with me},
                               qr{Ideas for your Business},
                               qr{We design and manufacture car wraps},
