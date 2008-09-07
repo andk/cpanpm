@@ -613,6 +613,7 @@ Gtk2
 Gungho
 GunghoX::FollowLinks
 HOP::Lexer
+HOP::Parser
 HTML::Clean
 HTML::DOM
 HTML::Entities
@@ -904,6 +905,7 @@ MooseX::Storage
 MooseX::Types::Set::Object
 Mouse
 Muldis
+MyCPAN::Indexer
 MySQL::Slurp
 Net::Akamai
 Net::Amazon

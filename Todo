@@ -1,3 +1,30 @@
+2008-09-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* HOP-Parser-0.01 broke between
+
+ FAIL  1754549 meta:from[DAGOLDEN] meta:date[2008-06-20T22:25:00]
+ PASS  1727355 meta:from[andreas.koenig.gmwojprw] meta:date[2008-06-18T02:45:00]
+
+	HOP::Stream 0.02 came out
+
+	http://rt.cpan.org/Ticket/Display.html?id=37367 by RUDY with patch
+
+2008-09-06  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* ATOURBIN/rpm-build-perl-0.6.8.tar.gz (= B::PerlReq) broke between Jun
+	28 and Jul 8 for all perls that had modules up to date. My 34053 is not
+	uptodate and it still tests ok.
+
+	Looking at the output of 'r' should reveal something.
+
+	B::Debug                       1.07      1.11  OK
+	B::Utils                       0.05      0.06  OK
+	Devel::CallTrace                1.0       1.2  OK
+	Devel::Backtrace               0.10      0.11  OK
+	CPAN::Reporter                 1.15      1.1601 NOT OK
+
+	https://rt.cpan.org/Ticket/Display.html?id=39054 by DAGOLDEN with patch
+
 2008-09-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* limit the autogeneration of a Makefile.PL to single-file stuff should
