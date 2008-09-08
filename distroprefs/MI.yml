@@ -22,6 +22,7 @@ match:
     |AGENT/Makefile-GraphViz-\d
     |AGENT/Makefile-Parser-\d
     |AGENT/XUL-App-\d
+    |AGRUNDMA/Catalyst-Engine-Apache-\d
     |AGRUNDMA/Catalyst-Engine-HTTP-Prefork-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
@@ -166,6 +167,7 @@ match:
     |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
+    |JGOULAH/MooseX-LogDispatch-\d
     |JGOULAH/Net-Akamai-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROBINSON/DBIx-Class-\d
@@ -264,6 +266,7 @@ match:
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
     |MRAMBERG/Catalyst-Plugin-Compress-Bzip2
     |MRAMBERG/Catalyst-Plugin-Compress-Zlib
+    |MRAMBERG/Catalyst-Plugin-Prototype-\d
     |MRAMBERG/Catalyst-Plugin-SubRequest-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
