@@ -294,6 +294,7 @@ match:
     |PHAYLON/Pod-Coverage-Moose-\d
     |PHAYLON/namespace-clean-\d
     |PLU/DBIx-Class-ResultSet-HashRef-\d
+    |PRAVUS/Authen-CAS-Client-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
