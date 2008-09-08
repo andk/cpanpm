@@ -26,7 +26,7 @@ my $version_from;
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
   warn "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nYou should get a new one\n"
-        if $ExtUtils::MakeMaker::VERSION < 6.0;
+        if $ExtUtils::MakeMaker::VERSION < 6.4502;
 }
 $main::SVN_RELEASE = 0;
 if (-d ".svn") {
@@ -182,11 +182,10 @@ WriteMakefile(
                        COMPRESS => 'gzip -9',
                       },
               # I took it from RT-CPAN ticket 30098:
-              ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
-               (EXTRA_META => <<EMETA,
-repository: "https://pause.perl.org:5460/svn/cpanpm/trunk"
-EMETA
-               ) : ()),
+              ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
+               (META_ADD => {
+                             repository => "https://pause.perl.org:5460/svn/cpanpm/trunk",
+                            }) : ()),
              );
 
 if ($version_diff){
