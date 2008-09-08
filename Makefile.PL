@@ -305,7 +305,6 @@ megainstall: logs/.exists
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
 		  install("ANDK/CPAN-1.92_64.tar.gz"); \
 		  install("EWILHELM/Module-Build-0.2808_03.tar.gz"); \
-		  install("MSCHWERN/Test-Simple-0.81_01.tar.gz"); \
 		  CPAN::Shell->reload("cpan"); \
 		  install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 		  CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
