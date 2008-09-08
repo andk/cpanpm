@@ -141,6 +141,7 @@ match:
     |GPHAT/MooseX-Method-\d
     |GPHAT/Osgood-Client-\d
     |GPHAT/Osgood-Server-\d
+    |GRODITI/Catalyst-Component-InstancePerContext-\d
     |GRODITI/DBIx-Class-EncodedColumn-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
