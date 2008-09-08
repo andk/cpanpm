@@ -156,6 +156,7 @@ match:
     |HDP/MooseX-InsideOut-\d
     |HIROSE/Net-SSL-ExpireDate-\d
     |HOLOWAY/Catalyst-Action-REST-\d
+    |HOLOWAY/Catalyst-Log-Log4perl-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
