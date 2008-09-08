@@ -47,7 +47,9 @@ match:
     |BLBLACK/DBIx-Class-\d
     |BLBLACK/MRO-Compat-\d
     |BLBLACK/Term-Spinner-\d
+    |BLBLACK/MooseX-ConfigFromFile-\d
     |BLBLACK/MooseX-LazyLogDispatch-\d
+    |BLBLACK/MooseX-SimpleConfig-\d
     |BOBMATH/Crypt-CAST5_PP-\d
     |BOGDAN/Catalyst-Model-DBIC-Schema-\d
     |BOKUTIN/Template-Plugin-Filter-VisualTruncate-\d

@@ -116,6 +116,7 @@ CPAN::Checksums
 CPAN::Dependency
 CPAN::Faker
 CPAN::Index::Loader
+CPAN::Indexer::Mirror
 CPAN::IndexPod
 CPAN::Metrics
 CPAN::Mini
