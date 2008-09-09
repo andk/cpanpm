@@ -106,6 +106,7 @@ match:
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
+    |SSCAFFIDI/Stem-0.12.tar.gz              # hangs
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
