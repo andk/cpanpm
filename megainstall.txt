@@ -103,6 +103,7 @@ CGI::Application::Dispatch
 CGI::Application::Plugin::AutoRunmode
 CGI::Application::Plugin::DevPopup
 CGI::Application::Plugin::Forward
+CGI::Cookie::XS
 CGI::Prototype
 CGI::Scriptpaths
 CGI::Session
@@ -511,11 +512,13 @@ File::BaseDir
 File::Basename
 File::Binary
 File::Copy
+File::Corresponding
 File::CounterFile
 File::EmptyDirs
 File::ExtAttr
 File::Extract
 File::Extractor
+File::FcntlLock
 File::Fetch
 File::Filename
 File::Find::Parallel
@@ -688,6 +691,7 @@ IMAP::Admin
 IO
 IO::All
 IO::Async::Buffer
+IO::Capture
 IO::CaptureOutput
 IO::Compress::Base
 IO::Compress::Lzop
@@ -1558,6 +1562,7 @@ XML::DOM::XPath
 XML::DTD
 XML::Descent
 XML::Elemental
+XML::Entities
 XML::Filter::XInclude
 XML::Generator
 XML::Generator::SVG::ShapeFile
