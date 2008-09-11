@@ -298,8 +298,8 @@ checkout ::
 megainstall: logs/.exists
 	for DATE in `date +%Y%m%dT%H%M`; do \
 		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
-		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -MPOSIX -e 'CPAN::HandleConfig->load; \
-		  sub intime {POSIX::strftime("%FT%T",localtime()) lt "2008-09-12T23:59:59"} \
+		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -MPOSIX -e 'sub intime {POSIX::strftime("%FT%T",localtime()) lt "2008-09-12T23:59:59"}; \
+		  CPAN::HandleConfig->load; \
 		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
 		  install("ANDK/CPAN-1.92_64.tar.gz"); \
