@@ -1,3 +1,23 @@
+2008-09-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Class-MOP
+
+----Program----
+eval q{use Class::MOP 0.65};
+print $@ ? "N/A" : "OK";
+print "\n";
+
+----Output of ...pIitLTW/perl-5.10.0@32733/bin/perl----
+OK
+
+----EOF ($?='0')----
+----Output of ...p3OAlrp/perl-5.10.0@32734/bin/perl----
+N/A
+
+----EOF ($?='0')----
+
+	http://rt.cpan.org/Ticket/Display.html?id=39149
+
 2008-09-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* HOP-Parser-0.01 broke between
