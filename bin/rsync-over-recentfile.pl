@@ -2,40 +2,26 @@
 
 =pod
 
-File::Rsync::Mirror::Recentfile?
+Q1: sorted by epoch? Who has to sort when how often?
 
-need a field mirroring_from: consisting of host, module, path,
-authentification_needed,
+A11 (wrong): nobody! The mechanism is "event" based and the array is only
+running push and shift (and grep). It is a journal (that throws memory
+away based on an interval) and is itself NOT rsynced but in fact (?)
+rewritten by every slave.
 
-keep the very first item in the got_at hash. we cannot know if this
-second has been fully processed. On the next loop we need to look into
-the got_at hash. if nothing happens for a full interval's length the
-current code would delete this item. UPDATE: when removing at the end
-of the loop just change "< time ..." to "< $max_epoch ..." DONE
+A12: usually nobody because the normal flow of things just sort
+everything in the right slots. But in case somebody breaks the rules,
+she has to sort accordingly and set a dirtymark flag.
 
-The got_at hash must die. That's solved with floating point time. We
-never have two items with the same timestamp.
+Q2: or we do not ever promise that the timestamps are sorted or mirror
+the sequence of events or we make them floating point numbers so they
+become uniq and can be treated as hash keys [this I like!]). Please
+keep in mind that we must be able to help customers who have
+6000000000 files.
 
-Q: sorted by epoch? Who has to sort when how often? A: nobody! The
-mechanism is "event" based and the array is only running push and
-shift (and grep). It is a journal (that throws memory away based on an
-interval) and is itself NOT rsynced but in fact (?) rewritten by every
-slave. [journaling fs are not so much related because they throw away
-after having written] Do slaves inherit the timestamp from the master
-or do they write their own? I think they inherit it (Update 2007-10-21
-akoenig : or we do not ever promise that the timestamps are sorted or
-mirror the sequence of events or we make them floating point numbers
-so they become uniq and can be treated as hash keys [this I like!]).
-But then they must not mirror events in a later second before all
-seconds below are finished (Update 2007-10-21 akoenig : this can be
-relaxed).
-
-      M       St1       St2       St3       St4
-
-   4711: A  4711: A   4711: A   4711: A   4711: A
-   4711: B            4711: B   4711: B   4711: B
-   4711: C                      4711: C   4711: C
-   4712: D                                4712: D
+A21: yes, we promise the timestamps are sorted. They are floats and
+keeing them sorted and uniq should be doable without too complicated
+algorithms.
 
 Update 2007-10-21 akoenig no 4711 timestamp evar! They become
 4711.xxxx, 4711.xxxy, etc. OR something like UUID. But if two hosts
@@ -139,7 +125,7 @@ ITERATION: while () {
          verbose => $Opt{verbose},
         );
 
-    $rf->mirror(after => $reached{$rmodule}||0);
+    $rf->mirror(after => $reached{$rmodule}||0, "skip-deletes" => 1);
     my $re = $rf->recent_events;
     $reached{$rmodule} = $re->[0]{epoch};
   }
