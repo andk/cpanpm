@@ -101,6 +101,7 @@ match:
     |DIABLO/Rsync-Config-\d
     |DIZ/Locale-Geocode-\d
     |DJERIUS/App-Env-\d
+    |DJERIUS/HTML-TableParser-\d
     |DJERIUS/Shell-GetEnv-\d
     |DMAKI/Catalyst-Model-FormFu-\d
     |DMAKI/Catalyst-Model-HTML-FormFu-\d
@@ -138,8 +139,8 @@ match:
     |GPHAT/Chart-Clicker-\d
     |GPHAT/Geometry-Primitive-\d
     |GPHAT/Graphics-Color-\d
-    |GPHAT/Graphics-Primitive-\d
     |GPHAT/Graphics-Primitive-Driver-Cairo-\d
+    |GPHAT/Graphics-Primitive-\d
     |GPHAT/Layout-Manager-\d
     |GPHAT/MooseX-Method-\d
     |GPHAT/Osgood-Client-\d
