@@ -1069,6 +1069,7 @@ Paranoid
 Parrot::Interpreter
 Parse::BACKPAN::Packages
 Parse::BooleanLogic
+Parse::CPAN::Distributions
 Parse::CPAN::MirroredBy
 Parse::Marpa
 Parse::RecDescent
@@ -1133,6 +1134,7 @@ PostScript::Simple
 PostScript::Simple::Table
 PowerTools::Data
 Prima
+Proc::InvokeEditor
 Proc::ProcessTable
 Proc::Simple
 ProgressMonitor::AbstractConfiguration
@@ -1330,6 +1332,7 @@ Test::Exception
 Test::FITesque::Fixture
 Test::File
 Test::FormValidator
+Test::Group
 Test::HTTP::Server::Simple
 Test::HTTPStatus
 Test::Harness
