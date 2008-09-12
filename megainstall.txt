@@ -392,6 +392,7 @@ DateTime::Format::RSS
 DateTime::Format::W3CDTF
 DateTime::Set
 DateTimeX::Easy
+Date::Tiny
 DbFramework::Persistent
 Devel::ArgNames
 Devel::CallTrace
