@@ -364,6 +364,7 @@ Data::Swap
 Data::Throttler
 Data::Throttler::Memcached
 Data::TreeDumper
+Data::TreeDumper::Renderer::DHTML
 Data::Types
 Data::UUID
 Data::Visitor
@@ -1083,6 +1084,7 @@ Perl6::Perldoc
 Perl6::Say
 Perl::Critic::More
 Perl::Dist
+Perl::Metrics::Simple
 Perl::MinimumVersion
 Perl::Unsafe::Signals
 Perl::Version
@@ -1364,6 +1366,7 @@ Text::Aspell
 Text::Autoformat
 Text::CSV_XS
 Text::Diff
+Text::Diff::HTML
 Text::FIGlet
 Text::Filter
 Text::Format
