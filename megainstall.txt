@@ -1573,6 +1573,7 @@ XML::Generator
 XML::Generator::SVG::ShapeFile
 XML::Handler::YAWriter
 XML::LibXML
+XML::LibXML::Simple
 XML::LibXSLT
 XML::NamespaceSupport
 XML::Node
