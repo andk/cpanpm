@@ -793,6 +793,7 @@ Linux::SysInfo
 List::Compare
 List::Maker
 List::MoreUtils
+List::Pairwise
 List::Tuples
 List::Util
 List::oo
