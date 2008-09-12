@@ -12,3 +12,6 @@ patches:
 pl:
   args:
     - "PREREQ_FATAL=0"
+depends:
+  configure_requires:
+    HTML::Parser: 0
