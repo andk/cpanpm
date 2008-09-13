@@ -53,7 +53,7 @@ my %Config = (
               username    => 'ANDK',
               password    => '',
               chunksize   => 396,
-              nbsp        => 0,
+              html        => 0,
               top         => 40,
              );
 
@@ -133,7 +133,6 @@ if ($Config{password}) {
       if (keys %$ticket) {
         $feedback = "w"; # wrote something interesting
       } else {
-        $DB::single++;
         $feedback = "e"; # empty
       }
       $ALL->{tickets}{$id} = $ticket;
@@ -237,16 +236,24 @@ TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
   $S{$who}++;
 }
 my $top = 1;
-printf "<dl>\n";
+printf "%s\n", $Config{html} ? "<dl>" : "";
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
-  my $x = sprintf "<code>%2d: %-9s %4d</code><br/>\n", $top, $k, $S{$k};
-  $x =~ s/ /&nbsp;/g if $Config{nbsp};
+  my $x = sprintf
+      (
+       "%s%2d: %-9s %4d%s\n",
+       $Config{html} ? "<code>" : " ",
+       $top,
+       $k,
+       $S{$k},
+       $Config{html} ? "</code><br/>" : "",
+      );
+  $x =~ s/ /&nbsp;/g if $Config{html};
   print $x;
-  my $showtop = $config{top} || 40;
+  my $showtop = $Config{top} || 40;
   last if $top >= $showtop;
   $top++;
 }
-printf "</dl>\n";
+printf "%s\n", $Config{html} ? "</dl>" : "";
 
 # Local Variables:
 # mode: cperl
