@@ -149,7 +149,6 @@ Carp::Clan
 Carp::Diagnostics
 Carp::REPL
 Carp::Source
-Catalys::Plugin::Unicode
 Catalyst
 Catalyst::Action::RenderView
 Catalyst::Devel
@@ -162,6 +161,7 @@ Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
 Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
+Catalyst::Plugin::Unicode
 Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
@@ -1404,6 +1404,7 @@ Text::Wrapper
 Text::vFile::asData
 Text::xSV
 ThreatNet::IRC
+Tie::Array::Lazy
 Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
