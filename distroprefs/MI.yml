@@ -291,6 +291,7 @@ match:
     |PERIGRIN/MooseX-Workers-\d
     |PERIGRIN/Net-AIML-\d
     |PERIGRIN/Regexp-Common-IRC-\d
+    |PERLER/Pod-Browser-\d
     |PHAYLON/MooseX-Types-\d
     |PHAYLON/Pod-Coverage-Moose-\d
     |PHAYLON/namespace-clean-\d
