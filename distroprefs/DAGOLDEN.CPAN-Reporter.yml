@@ -3,3 +3,8 @@ match:
   distribution: "DAGOLDEN/CPAN-Reporter-1.0[01].tar.gz"
 patches:
   - "/home/k/sources/CPAN/SVK/trunk/patches/CPAN-Reporter-100.patch"
+---
+comment: "http://rt.cpan.org/Ticket/Display.html?id=39240"
+match:
+  distribution: "DAGOLDEN/CPAN-Reporter-1.1701.tar.gz"
+goto: "DAGOLDEN/CPAN-Reporter-1.17.tar.gz"
