@@ -254,6 +254,7 @@ distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/NUFFIN.Devel-Events.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
+distroprefs/OVID.HOP-Parser.yml
 distroprefs/OVID.Perl6-Caller.yml
 distroprefs/OVID.TAPx-Parser.yml
 distroprefs/OVID.Test-JSON.yml
