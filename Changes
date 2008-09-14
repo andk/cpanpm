@@ -1,3 +1,14 @@
+2008-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_65 (aiming at 1.93 once again)
+
+	* address #39243: signature test now skips when no SHA module available
+	(requested by M Schwern)
+
+	* adjust skip message formatting to Test::Harness 3.13 strictness
+
+	* now with 344 distroprefs files
+
 2008-09-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_64
