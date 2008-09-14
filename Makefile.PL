@@ -269,12 +269,9 @@ README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
-# got this from http://ch.tudelft.nl/~arthur/svn2cl/
-chlog-svn :
-	-LC_ALL=$(LC_ALL_noexport) svn log -v https://pause.perl.org:5460/svn/cpanpm/trunk > ChangeLog.svn
-
+# http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-trad : ChangeLogTrad.svn
-ChangeLogTrad.svn :
+ChangeLogTrad.svn : Makefile lib/CPAN.pm MANIFEST
 	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > $@
 
 # for debugging
@@ -655,10 +652,10 @@ st-prefs ::
 };
   if ($main::SVN_RELEASE) {
     push @m, qq{
-chlog :: chlog-svn chlog-trad
+chlog :: chlog-trad
 
 ChangeLog : ChangeLogTrad.svn
-	mv ChangeLogTrad.svn ChangeLog
+	$(CP) ChangeLogTrad.svn ChangeLog
 };
   } else {
     push @m, qq{
