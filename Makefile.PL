@@ -272,7 +272,7 @@ README: lib/CPAN.pm Makefile
 # http://ch.tudelft.nl/~arthur/svn2cl/
 chlog-trad : ChangeLogTrad.svn
 ChangeLogTrad.svn : Makefile lib/CPAN.pm MANIFEST
-	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day https://pause.perl.org:5460/svn/cpanpm/trunk > $@
+	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day --stdout -rHEAD:2000 https://pause.perl.org:5460/svn/cpanpm/trunk > $@
 
 # for debugging
 chlog-xml :
