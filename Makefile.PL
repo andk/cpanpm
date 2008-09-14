@@ -655,7 +655,7 @@ st-prefs ::
 chlog :: chlog-trad
 
 ChangeLog : ChangeLogTrad.svn
-	$(CP) ChangeLogTrad.svn ChangeLog
+	\$(CP) ChangeLogTrad.svn ChangeLog
 };
   } else {
     push @m, qq{
