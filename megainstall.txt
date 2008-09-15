@@ -53,6 +53,7 @@ Array::Slice
 Astro::Flux
 Astro::MoonPhase
 Attribute::Types
+Audio::FLAC::Header
 Audio::SndFile
 Audio::TagLib
 Authen::Htpasswd
