@@ -1,3 +1,20 @@
+2008-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Class::MOP and 32734:
+
+Class-MOP-0.64_01.tar.gz  OK
+Class-MOP-0.64_02.tar.gz  OK
+Class-MOP-0.64_03.tar.gz  OK
+Class-MOP-0.64_04.tar.gz  OK
+Class-MOP-0.64_05.tar.gz  NOT OK
+
+	A comment explains that the other versions did not load XS but fell back
+	to the pure perl versions.
+
+	It's not a trivial enough thing for me to simply fix it with an #if.
+
+	Envariable CLASS_MOP_NO_XS? Fixes it, of course but does not help us much.
+
 2008-09-10  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Class-MOP

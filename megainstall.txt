@@ -62,6 +62,7 @@ Authen::Simple
 AutoLoader
 B::Debug
 B::Deobfuscate
+B::Flags
 B::Lint
 B::Size
 B::TerseSize
@@ -89,6 +90,7 @@ Bundle::RT
 Bundle::Slash
 Bundle::XML
 Business::CreditCard
+Business::DE::Konto
 Business::IBAN
 Business::ISBN
 Business::OnlinePayment
@@ -130,6 +132,7 @@ CPAN::Unwind
 CPAN::WWW::Testers
 CPAN::YACSmoke
 CPANPLUS
+CPANPLUS::Dist::RPM
 CSS
 CSS::Minifier
 CSS::Minifier::XS
@@ -252,6 +255,7 @@ Convert::ASCIInames
 Convert::ASN1
 Convert::BER
 Convert::Base32
+Convert::BaseN
 Convert::Bencode
 Convert::BinHex
 Convert::CharMap
@@ -910,6 +914,7 @@ MooseX::Mutate
 MooseX::Plaggerize
 MooseX::Singleton
 MooseX::Storage
+MooseX::TheSchwartz
 MooseX::Types::Set::Object
 Mouse
 Muldis
@@ -967,6 +972,7 @@ Net::SSH::Perl
 Net::SSL::ExpireDate
 Net::SSLeay
 Net::Server
+Net::Social
 Net::Telnet
 Net::Time
 Net::Twitter
@@ -1176,6 +1182,7 @@ Runops::Trace
 SGML::Parser::OpenSP
 SIOC
 SNMP
+SNMP::LogParser
 SOAP::Lite
 SOAP::WSDL
 SQL::Abstract::Limit
@@ -1278,6 +1285,7 @@ Sub::Override
 Sub::Uplevel
 Sub::WrapPackages
 Sys::CPU
+Sys::FreezeThaw
 Sys::Hostname
 Sys::Mmap
 Sys::SigAction
