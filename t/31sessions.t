@@ -45,7 +45,24 @@ BEGIN {
     }
     unless ($exit_message) {
         if ($YAML::VERSION && $YAML::VERSION < 0.60) {
-            $exit_message = "YAML too old for this test";
+            $exit_message = "YAML v$YAML::VERSION too old for this test";
+        }
+    }
+    unless ($exit_message) {
+        my @pairs = (
+                     [unzip => "Archive::Zip"],
+                     [tar => "Archive::Tar"],
+                     [gzip => "Compress::Zlib"],
+                    );
+        my $p;
+        my(@path) = split /$Config::Config{path_sep}/, $ENV{PATH};
+        require CPAN::FirstTime;
+        for $pair (@pairs) {
+            my($prg,$module) = @$pair;
+            next if $CPAN::META->has_inst($module);
+            next if CPAN::FirstTime::find_exe($prg,\@path);
+            $exit_message = "Module '$module' not installed and fallback program '$prg' not found in path[@path].";
+            last;
         }
     }
     if ($exit_message) {
