@@ -528,6 +528,7 @@ File::Extractor
 File::FcntlLock
 File::Fetch
 File::Filename
+File::Find::Match
 File::Find::Parallel
 File::Headerinfo::SWF
 File::LibMagic
@@ -1229,6 +1230,7 @@ Set::ConsistentHash
 Set::Crontab
 Set::Infinite
 Set::IntSpan::Fast
+Set::IntSpan::Island
 Set::Integer::Gapfillers
 Set::Object
 Shell::Autobox

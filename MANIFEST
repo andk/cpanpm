@@ -100,6 +100,7 @@ distroprefs/DOMM.Module-CPANTS-ProcessCPAN.yml
 distroprefs/DONEILL.MIME-tools.yml
 distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DROLSKY.Alzabo.yml
+distroprefs/DROLSKY.Class-MOP.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Devel-StackTrace.yml
 distroprefs/DROLSKY.Params-Validate.yml

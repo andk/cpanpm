@@ -1,0 +1,9 @@
+---
+comment: http://rt.cpan.org/Ticket/Display.html?id=39149
+match:
+  distribution: "^DROLSKY/Class-MOP-1.65.tar.gz"
+goto: "SARTAK/Class-MOP-1.64.tar.gz"
+---
+match:
+  distribution: "^DROLSKY/Moose-0.5[67].tar.gz"
+goto: "SARTAK/Moose-0.55.tar.gz"

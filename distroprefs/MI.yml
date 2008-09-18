@@ -235,6 +235,7 @@ match:
     |MARCEL/Google-Chart-\d
     |MARCEL/Hash-Inflator-\d
     |MARCEL/LWP-UserAgent-ProgressBar-\d
+    |MARCEL/Module-Install-Template-\d
     |MARCEL/PerlIO-via-Pipe-\d
     |MARCEL/Pod-Generated-\d
     |MARCEL/String-BlackWhiteList-\d
@@ -317,6 +318,7 @@ match:
     |RKRIMEN/Path-Abstract-\d
     |RKRIMEN/Path-Resource-\d
     |RLB/Notification-Center-\d
+    |RSRCHBOY/CPANPLUS-Dist-RPM-\d
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
