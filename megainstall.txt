@@ -994,7 +994,7 @@ OOPS
 Object::Accessor
 Object::Destroyer
 Object::Realize::Later
-Object::Relation
+Object::Relation::NO_SMOKER_39316
 Object::Signature
 Object::Tiny
 Ogre::SceneManager
