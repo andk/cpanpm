@@ -120,6 +120,7 @@ match:
 features:
   - "rice"
 EOF
+    close FH or die "Could not close 't/dot-cpan/prefs/TestDistroPrefsFile.yml': $!";
 
     @SESSIONS =
         (
