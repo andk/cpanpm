@@ -295,13 +295,13 @@ checkout ::
 megainstall: logs/.exists
 	for DATE in `date +%Y%m%dT%H%M`; do \
 		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
-		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -MPOSIX -e 'sub intime {POSIX::strftime("%FT%T",localtime()) lt "2008-09-15T23:59:59"}; \
+		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -MPOSIX -e 'sub intime {POSIX::strftime("%FT%T",localtime()) lt "2008-09-20T23:59:59"}; \
 		  CPAN::HandleConfig->load; \
 		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
 		  install("ANDK/CPAN-1.92_64.tar.gz"); \
 		  install("MSCHWERN/Test-Simple-0.81_02.tar.gz")    if intime(); \
-		  install("EWILHELM/Module-Build-0.2808_04.tar.gz") if intime(); \
+		  install("EWILHELM/Module-Build-0.2808_05.tar.gz") if intime(); \
 		  CPAN::Shell->reload("cpan"); \
 		  install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 		  CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
