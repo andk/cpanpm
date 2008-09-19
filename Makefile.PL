@@ -299,7 +299,7 @@ megainstall: logs/.exists
 		  CPAN::HandleConfig->load; \
 		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
-		  install("ANDK/CPAN-1.92_64.tar.gz"); \
+		  install("ANDK/CPAN-1.92_65.tar.gz"); \
 		  install("MSCHWERN/Test-Simple-0.81_02.tar.gz")    if intime(); \
 		  install("EWILHELM/Module-Build-0.2808_05.tar.gz") if intime(); \
 		  CPAN::Shell->reload("cpan"); \
