@@ -987,6 +987,7 @@ Net::XMPP
 Net::XMPP2
 Net::Z3950::ZOOM
 NetAddr::IP
+NetHack::Item::Weapon
 News::Article
 Number::Format
 Number::Range
@@ -1164,6 +1165,7 @@ RPC::XML
 RRDTool::Creator
 RT::Client::REST
 RTF::HTMLConverter
+Reaction
 Regex::PreSuf
 Regexp::Assemble
 Regexp::Common::IRC
@@ -1533,6 +1535,7 @@ V
 VCI
 VFSsimple
 VS::Chart
+Variable::Magic
 Verilog::Parser
 Vim::Complete
 Vim::Snippet::Converter
