@@ -559,6 +559,7 @@ Filter::Simple
 Filter::Util::Call
 Finance::Bank::Postbank_de
 Finance::Currency::Convert::XE
+Finance::Quote
 FindBin
 FindBin::libs
 Flickr::API
@@ -1335,6 +1336,7 @@ Test::A8N
 Test::AutoBuild
 Test::Builder
 Test::Builder::Tester
+Test::CPAN::Meta
 Test::Class
 Test::Deep
 Test::Dependencies
@@ -1392,6 +1394,7 @@ Text::Metaphone
 Text::NSP
 Text::Ngram
 Text::PDF
+Text::Phonetic
 Text::Query
 Text::Quoted
 Text::RecordParser

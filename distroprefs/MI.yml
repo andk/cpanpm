@@ -125,7 +125,6 @@ match:
     |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
     |ELLIOTJS/Task-Perl-Critic-[v\d]
-    |ERIC/OpenThought-\d
     |FLORA/Catalyst-View-Mason-\d
     |FLORA/File-Extractor-\d
     |FOX/Bot-CPAN-\d
