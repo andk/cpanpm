@@ -308,6 +308,9 @@ Can't continue cutting file '$file'.
         unless ($CPAN::META->has_usable("Archive::Tar")) {
             $CPAN::Frontend->mydie("Archive::Tar not installed, please install it to continue");
         }
+        # Make sure AT does not use permissions in the archive
+        # This leaves it to the user's umask instead
+        local $Archive::Tar::CHMOD = 0;
         my $tar = Archive::Tar->new($file,1);
         my $af; # archive file
         my @af;

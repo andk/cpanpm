@@ -1,3 +1,7 @@
+
+  * security fix: Archive::Tar should not preserve permissions in the
+  tarball; extracted file permissions will be set from users umask instead 
+
 2008-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_65 (aiming at 1.93 once again)
