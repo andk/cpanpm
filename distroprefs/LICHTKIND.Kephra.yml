@@ -1,6 +1,7 @@
 ---
 match:
   distribution: "LICHTKIND/Kephra-\d"
+disabled: 1
 test:
   env:
     DISPLAY: ":121"
