@@ -44,6 +44,7 @@ match:
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
+    |DAMI/DBIx-DataModel-\d                  # hangs on t/Storable.t
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DMAKI/Alien-MeCab                       # ditto
