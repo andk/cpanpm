@@ -11,6 +11,7 @@ Algorithm::Annotate
 Algorithm::C3
 Algorithm::CheckDigits
 Algorithm::Diff
+Algorithm::Line::Bresenham
 Algorithm::Nhash
 Algorithm::Partition
 Algorithm::Permute
@@ -39,6 +40,7 @@ App::Asciio
 App::CLI
 App::Info
 App::Info::Lib::Iconv
+App::Prove::History
 App::TemplateServer
 App::a2pdf
 App::sync_cpantesters
@@ -52,6 +54,7 @@ Array::RefElem
 Array::Slice
 Astro::Flux
 Astro::MoonPhase
+Attribute::Cached
 Attribute::Types
 Audio::FLAC::Header
 Audio::SndFile
@@ -278,6 +281,7 @@ Crypt::DH::GMP
 Crypt::DSA
 Crypt::IDEA
 Crypt::NULL
+Crypt::OTP26
 Crypt::OpenPGP
 Crypt::OpenSSL::Bignum
 Crypt::OpenSSL::RSA
@@ -546,6 +550,7 @@ File::ShareDir
 File::SortedSeek
 File::Spec
 File::Spec::Functions
+File::Stat::Moose
 File::System
 File::Tail
 File::Temp
@@ -621,6 +626,7 @@ Graph::SocialMap
 GraphViz
 Graphics::ColorNames
 Graphics::ColorObject
+Grid::Coord
 Gtk
 Gtk2
 Gungho
@@ -710,6 +716,7 @@ IO::File
 IO::Handle
 IO::Interface
 IO::LockedFile
+IO::Moose
 IO::Multiplex
 IO::Pager
 IO::Pipe
@@ -914,6 +921,7 @@ MooseX::Iterator
 MooseX::Log::Log4perl
 MooseX::Method
 MooseX::Mutate
+MooseX::Params::Validate
 MooseX::Plaggerize
 MooseX::Singleton
 MooseX::Storage
@@ -1098,6 +1106,7 @@ Perl::Critic::More
 Perl::Dist
 Perl::Metrics::Simple
 Perl::MinimumVersion
+Perl::Tags
 Perl::Unsafe::Signals
 Perl::Version
 PerlIO::Util
@@ -1281,9 +1290,11 @@ String::ShellQuote
 String::Similarity
 String::Truncate
 Sub::Assert
+Sub::Auto
 Sub::Context
 Sub::Contract
 Sub::Current
+Sub::Curried
 Sub::Exporter
 Sub::Install
 Sub::Name
@@ -1425,6 +1436,7 @@ Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
 Tie::DxHash
+Tie::Hash::StructKeyed
 Tie::EncryptedHash
 Tie::Sub
 Time::Duration
@@ -1627,6 +1639,7 @@ XML::XPathEngine
 XS::Writer
 XSLoader
 XUL::App
+XUL::Node
 YAML
 YAML::Syck
 YAML::Tiny
