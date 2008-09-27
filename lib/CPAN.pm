@@ -355,7 +355,7 @@ ReadLine support %s
                 if ($err =~ /\S/) {
                     require Carp;
                     require Dumpvalue;
-                    my $dv = Dumpvalue->new();
+                    my $dv = Dumpvalue->new(tick => '"');
                     Carp::cluck(sprintf "Catching error: %s", $dv->stringify($err));
                 }
             }
@@ -6401,6 +6401,11 @@ sub get {
         $self->check_integrity;
         return if $CPAN::Signal;
         (my $packagedir,$local_file) = $self->run_preps_on_packagedir;
+        if (exists $self->{writemakefile} && ref $self->{writemakefile}
+           && $self->{writemakefile}->can("failed") &&
+           $self->{writemakefile}->failed) {
+            return;
+        }
         $packagedir ||= $self->{build_dir};
         $self->{build_dir} = $packagedir;
     }
@@ -6526,8 +6531,20 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         if (@readdir == 1 && -d $readdir[0]) {
             $tdir_base = $readdir[0];
             $from_dir = File::Spec->catdir(File::Spec->curdir,$readdir[0]);
-            my $dh2 = DirHandle->new($from_dir)
-                or Carp::croak("Couldn't opendir $from_dir: $!");
+            my $dh2;
+            unless ($dh2 = DirHandle->new($from_dir)) {
+                my($mode) = (stat $from_dir)[2];
+                my $why = sprintf
+                    (
+                     "Couldn't opendir '%s', mode '%o': %s",
+                     $from_dir,
+                     $mode,
+                     $!,
+                    );
+                $CPAN::Frontend->mywarn("$why\n");
+                $self->{writemakefile} = CPAN::Distrostatus->new("NO -- $why");
+                return;
+            }
             @dirents = grep $_ !~ /^\.\.?(?!\n)\Z/s, $dh2->read; ### MAC??
         } else {
             my $userid = $self->cpan_userid;
@@ -8722,7 +8739,12 @@ sub _fulfills_all_version_rqs {
 sub read_yaml {
     my($self) = @_;
     return $self->{yaml_content} if exists $self->{yaml_content};
-    my $build_dir = $self->{build_dir};
+    my $build_dir;
+    unless ($build_dir = $self->{build_dir}) {
+        # maybe permission on build_dir was missing
+        $CPAN::Frontend->mywarn("Warning: cannot determine META.yml without a build_dir.\n");
+        return;
+    }
     my $yaml = File::Spec->catfile($build_dir,"META.yml");
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
@@ -8761,6 +8783,9 @@ sub prereq_pm {
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
         || $self->{modulebuild};
+    unless ($self->{build_dir}) {
+        return;
+    }
     CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
                 $self->{writemakefile}||"",
                 $self->{modulebuild}||"",
@@ -8803,7 +8828,10 @@ sub prereq_pm {
         }
     }
     unless ($req || $breq) {
-        my $build_dir = $self->{build_dir} or die "Panic: no build_dir?";
+        my $build_dir;
+        unless ( $build_dir = $self->{build_dir} ) {
+            return;
+        }
         my $makefile = File::Spec->catfile($build_dir,"Makefile");
         my $fh;
         if (-f $makefile
