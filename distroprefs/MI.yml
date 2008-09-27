@@ -286,6 +286,7 @@ match:
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |NUFFIN/MooseX-Getopt-\d
     |NUFFIN/MooseX-Storage-\d
+    |OSFAMERON/Perl-Tags-\d
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
     |PERIGRIN/MooseX-Workers-\d

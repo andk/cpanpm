@@ -33,6 +33,7 @@ match:
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
     |AWRIGLEY/App-Control-\d                 # endless loop
+    |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
