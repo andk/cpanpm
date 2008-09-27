@@ -1260,7 +1260,9 @@ Sms::Token::UD
 Socket6
 Sort::ArbBiLex
 Sort::DataTypes
+Sort::Key
 Sort::Key::Radix
+Sort::Maker
 Sort::Rank
 Spiffy
 Spoon
