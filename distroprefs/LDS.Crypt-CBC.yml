@@ -15,3 +15,12 @@ match:
 depends:
   requires:
     Crypt::Rijndael: 0
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=27112
+
+match:
+  distribution: "^LDS/Crypt-CBC-2.\d+.tar.gz"
+patches:
+  - ANDK/patches/Crypt-CBC-2.29-ANDK-01.patch.gz

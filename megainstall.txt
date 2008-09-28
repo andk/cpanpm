@@ -405,6 +405,7 @@ DateTimeX::Easy
 Date::Tiny
 DbFramework::Persistent
 Devel::ArgNames
+Devel::CallSite
 Devel::CallTrace
 Devel::Caller
 Devel::CheckLib

@@ -47,12 +47,14 @@ match:
     |CORLISS/CursesWidgets-\d
     |DAMI/DBIx-DataModel-\d                  # hangs on t/Storable.t
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
+    |DMAKI/Google-Chart-\d                   # reminds us about some incompatibility
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DMAKI/Alien-MeCab                       # ditto
     |DSNOPEK/POE-Component-MessageQueue-0.2.2.tar.gz # hangs in 09_ack_auto (but not on k81)
     |DOM/CGI-Wiki-\d                         # asks database questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
+    |EILARA/XUL-Node-\d                      # asks for port -- 8077?
     |EKAWAS/MOBY-                            # hangs
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
@@ -103,6 +105,7 @@ match:
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
+    |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-\d                     # hangs with 27040 (=5.8.8) on t/01test.t
     |RYBSKEJ/forks-0.25
@@ -123,6 +126,7 @@ match:
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
+    |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls
