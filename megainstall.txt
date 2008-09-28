@@ -749,6 +749,7 @@ Image::Info::SVG
 Image::Magick::Thumbnail
 Image::Magick::Thumbnail::Fixed
 Image::Magick::Thumbnail::PDF
+Image::Match
 Image::Pngslimmer
 Image::Size
 Imager
