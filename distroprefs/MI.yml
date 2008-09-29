@@ -280,6 +280,7 @@ match:
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d
     |MSTROUT/Devel-REPL-\d
+    |MSTROUT/Reaction-\d
     |NEKOKAK/DBIx-Class-Stash-\d
     |NEKOKAK/DBIx-Class-TableNames-\d
     |NEMUX/Net-UCP-\d
@@ -288,6 +289,7 @@ match:
     |NUFFIN/MooseX-Storage-\d
     |OSFAMERON/Perl-Tags-\d
     |OSFAMERON/Sub-Auto-\d
+    |OSFAMERON/Sub-Curried-\d
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
     |PERIGRIN/MooseX-Workers-\d
