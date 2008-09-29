@@ -1,6 +1,15 @@
+2008-09-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.92_66 FEATURE FREEZE for 1.93
+
+	* if nothing serious happens this will become 1.93 in a few days
 
   * security fix: Archive::Tar should not preserve permissions in the
-  tarball; extracted file permissions will be set from users umask instead 
+	tarball; extracted file permissions will be set from users umask instead
+	(David Golden)
+
+	* improve on dealing with a tarball with zero permissions (thanks to
+	RPHANEY/openStatisticalServices-0.018.tar.gz)
 
 2008-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
