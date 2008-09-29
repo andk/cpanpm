@@ -1440,6 +1440,7 @@ Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
 Tie::DxHash
+Tie::Hash::Sorted
 Tie::Hash::StructKeyed
 Tie::EncryptedHash
 Tie::Sub
@@ -1618,6 +1619,7 @@ XML::NodeFilter
 XML::Parser
 XML::Parser::Lite::Tree
 XML::Parser::PerlSAX
+XML::Pastor
 XML::RSS
 XML::RSS::FromHTML::Simple
 XML::RSS::LibXML
