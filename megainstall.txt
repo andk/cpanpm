@@ -313,6 +313,7 @@ DBIx::Class::Stash
 DBIx::Class::Validation
 DBIx::CopyRecord
 DBIx::DBSchema
+DBIx::DataModel
 DBIx::HA
 DBIx::MyParse
 DBIx::ORM::Declarative
@@ -739,6 +740,7 @@ IPC::Run
 IPC::SRLock
 IPC::ShareLite
 IPC::System::Simple
+IPTables::IPv4::DBTarpit
 IWL::Break
 Image::ANSI
 Image::Compare

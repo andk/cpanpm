@@ -51,6 +51,7 @@ match:
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BLBLACK/MooseX-SimpleConfig-\d
     |BOBMATH/Crypt-CAST5_PP-\d
+    |BOBTFISH/MooseX-Storage-\d
     |BOGDAN/Catalyst-Model-DBIC-Schema-\d
     |BOKUTIN/Template-Plugin-Filter-VisualTruncate-\d
     |BRICAS/CGI-Application-PhotoGallery-\d

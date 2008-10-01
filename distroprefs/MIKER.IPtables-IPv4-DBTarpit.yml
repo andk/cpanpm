@@ -1,8 +1,17 @@
 ---
-comment: |
-
-  needs more work, asks difficult questions
-
 match:
   distribution: "MIKER/IPTables-IPv4-DBTarpit-\d"
-disabled: 1
+pl:
+  expect:
+    - "dbtarpit daemon install directory"
+    - "/usr/local/sand/sbin\n"
+    - "shared library install directory"
+    - "/usr/local/sand/lib\n"
+    - "shared library header install directory"
+    - "/usr/local/sand/include\n"
+    - "dbtarpit database env/home directory"
+    - "/usr/local/sand/var/run/dbtarpit\n"
+    - "dbtarpit primary database name"
+    - "tarpit\n"
+    - "dbtarpit secondary database name"
+    - "tarpitarchive\n"
