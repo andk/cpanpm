@@ -599,10 +599,12 @@ Geo::GeoNames
 Geo::Google::PolylineEncoder
 Geo::Gpx
 Geo::Proj::Japan
+Geo::Proj4
 Geo::Query
 Geo::Raster
 Geo::ShapeFile
 Geography::Countries
+Geometry::Primitive
 Getargs::Long
 Getopt::ArgvFile
 Getopt::Attribute
@@ -868,6 +870,7 @@ Math::BigInt::FastCalc
 Math::BigInt::GMP
 Math::BigInt::Pari
 Math::BigRat
+Math::Brent
 Math::Cephes
 Math::Combinatorics
 Math::Expression
@@ -1408,6 +1411,7 @@ Text::Filter
 Text::Format
 Text::Iconv
 Text::LevenshteinXS
+Text::Lorem::More
 Text::Markdown
 Text::Metaphone
 Text::NSP
