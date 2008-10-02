@@ -109,6 +109,7 @@ match:
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-\d                     # hangs with 27040 (=5.8.8) on t/01test.t
     |RYBSKEJ/forks-0.25
+    |SAMV/Tangram-\d                         # Do you plan to run the test suite...you will need to set up an EMPTY database
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
