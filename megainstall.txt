@@ -1692,4 +1692,5 @@ threads::shared
 typesafety
 version
 version::Limit
+warnings::unused
 with
