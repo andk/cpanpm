@@ -109,6 +109,8 @@ CGI::Application::Dispatch
 CGI::Application::Plugin::AutoRunmode
 CGI::Application::Plugin::DevPopup
 CGI::Application::Plugin::Forward
+CGI::Application::Plugin::ValidateRM
+CGI::Compress::Gzip
 CGI::Cookie::XS
 CGI::Prototype
 CGI::Scriptpaths
@@ -956,6 +958,7 @@ Net::FPing
 Net::FTP
 Net::FTP::Common
 Net::FTP::Throttle
+Net::Finger::Server
 Net::Frame::Dump
 Net::GrowlClient
 Net::Hiveminder
@@ -1006,6 +1009,7 @@ NetHack::Item::Weapon
 News::Article
 Number::Format
 Number::Range
+Number::Tolerant
 Number::WithError
 OLE::Storage_Lite
 OOPS
@@ -1430,6 +1434,7 @@ Text::Table
 Text::Tabs
 Text::TabularDisplay
 Text::Template
+Text::Template::Simple
 Text::Trac
 Text::Typography
 Text::Unidecode
