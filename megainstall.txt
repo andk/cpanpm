@@ -458,6 +458,7 @@ Digest::CMAC
 Digest::HMAC
 Digest::MD2
 Digest::MD5
+Digest::MD5::File
 Digest::SHA
 Digest::SHA1
 Digest::SHA::PurePerl
@@ -656,6 +657,7 @@ HTML::ParagraphSplit
 HTML::Parser
 HTML::PopupTreeSelect::Dynamic
 HTML::Prototype
+HTML::Rainbow
 HTML::Scrubber
 HTML::Selector::XPath
 HTML::SimpleParse
@@ -830,6 +832,7 @@ Locale::PGetText
 Locale::Recode
 LockFile::Simple
 Log::Agent
+Log::Dispatch::FileRotate
 Log::Handler
 Log::Message
 Log::Message::Simple
@@ -1274,6 +1277,7 @@ Sort::DataTypes
 Sort::Key
 Sort::Key::Radix
 Sort::Maker
+Sort::Naturally
 Sort::Rank
 Spiffy
 Spoon
