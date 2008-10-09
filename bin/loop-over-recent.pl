@@ -8,7 +8,7 @@ use Time::HiRes qw(sleep);
 use YAML::Syck;
 
 use lib "/home/k/sources/rersyncrecent/lib/";
-require File::Rsync::Mirror::Recentfile;
+require File::Rsync::Mirror::Recent;
 
 sub determine_perls {
   my($basedir,$otherperls) = @_;
@@ -49,7 +49,7 @@ sub determine_perls {
 
 sub read_recent_events {
   my($rf,$rx) = @_;
-  my $recent_events = $rf->recent_events;
+  my $recent_events = $rf->news(max => 56);
   $recent_events = [ grep { $_->{path} =~ $rx } @$recent_events ];
   {
     my %seen;
@@ -65,18 +65,10 @@ sub read_recent_events {
 }
 
 MAIN : {
-  my $rf = File::Rsync::Mirror::Recentfile->new(
-                                                canonize => "naive_path_normalize",
-                                                localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                                interval => q(2d),
-                                               );
-  my $rf2 = File::Rsync::Mirror::Recentfile->new(
-                                                 canonize => "naive_path_normalize",
-                                                 localroot => "/home/ftp/pub/PAUSE/authors/",
-                                                 interval => q(6h),
-                                                 filenameroot => "RECENT",
-                                                );
-
+  my $rf = File::Rsync::Mirror::Recent->new(
+                                            localroot => "/home/ftp/pub/PAUSE/authors/",
+                                            local => "/home/ftp/pub/PAUSE/authors/RECENT.recent",
+                                           );
   my $otherperls = "$0.otherperls";
   my $bbname = fileparse($0,qr{\.pl});
   my $statefile = "$ENV{HOME}/.cpan/$bbname.state";
@@ -96,14 +88,14 @@ MAIN : {
   my %comboseen;
  ITERATION: while () {
     my $iteration_start = time;
-    my $recent_events = read_recent_events($rf2,$rx);
+    my $recent_events = read_recent_events($rf,$rx);
     my $perls;
     # my @good_recent_events; # ? first collect them, then only if we
     # have something go ahead?
   UPLOADITEM: for my $upload (reverse @$recent_events) {
       next unless $upload->{path} =~ $rx;
       next unless $upload->{type} eq "new";
-      next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.10|;
+      next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.1[01]|;
       my $action = "install";
       if ($upload->{path} =~ m|^D/DA/DAGOLDEN/CPAN-Reporter-\d+\.\d+_|){
         $action = "test";
@@ -153,7 +145,7 @@ MAIN : {
           next PERL;
         } else {
           warn "\n\n$combo\n\n\n";
-          my $abs = File::Spec->catfile($rf2->localroot, $upload->{path});
+          my $abs = File::Spec->catfile($rf->localroot, $upload->{path});
           {
             local $| = 1;
             while (! -f $abs) {

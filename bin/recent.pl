@@ -33,8 +33,9 @@ GetOptions(\%Opt,
            "burn-in-protection|lossy!",
            "alternative=i",
           );
+$Opt{n}||=0;
 use lib "/home/k/sources/rersyncrecent/lib/";
-use File::Rsync::Mirror::Recentfile;
+use File::Rsync::Mirror::Recent;
 
 my $statefile = "$ENV{HOME}/.cpan/loop-over-recent.state";
 my $max_epoch_worked_on = 0;
@@ -50,27 +51,12 @@ if (-e $statefile) {
   $state += 0;
   $max_epoch_worked_on = $state if $state;
 }
-my $rf1 = File::Rsync::Mirror::Recentfile->new(
-                                               canonize => "naive_path_normalize",
-                                               localroot => "/home/ftp/pub/PAUSE/authors/id/",
-                                               interval => q(2d),
-                                              );
-my $rf2 = File::Rsync::Mirror::Recentfile->new(
-                                               canonize => "naive_path_normalize",
-                                               localroot => "/home/ftp/pub/PAUSE/authors/",
-                                               interval => q(6h),
-                                               filenameroot => "RECENT",
-                                              );
-$Opt{n}||=0;
-$Opt{alternative} ||= 2;
-my $rf;
-if ($Opt{alternative}==1) {
-  $rf = $rf1;
-} elsif ($Opt{alternative}==2) {
-  $rf = $rf2;
-}
+my $rf = File::Rsync::Mirror::Recent->new(
+                                          localroot => "/home/ftp/pub/PAUSE/authors/",
+                                          local => "/home/ftp/pub/PAUSE/authors/RECENT.recent",
+                                         );
 my $have_a_current = 0;
-my $recent_events = $rf->recent_events;
+my $recent_events = $rf->news(max=>223);
 {
   my %seen;
   $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
@@ -100,7 +86,13 @@ ITEM: for my $i (0..$#$recent_events) {
       printf "%1s %s\n", "*", scalar localtime $max_epoch_worked_on;
     }
   }
-  my $line = sprintf "%1s %s %s\n", $mark, scalar localtime $item->{epoch}, substr($item->{path},$Opt{alternative}==1 ? 5 : 8);
+  my $line = sprintf
+      (
+       "%1s %s %s\n",
+       $mark,
+       scalar localtime $item->{epoch},
+       substr($item->{path},
+              8));
   if ($Opt{"burn-in-protection"}) {
     chomp $line;
     while (rand 30 < 1) {

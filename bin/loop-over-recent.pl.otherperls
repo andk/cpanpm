@@ -1,11 +1,11 @@
 # some recent 5.10.1-tobe
-/home/src/perl/repoperls/installed-perls/maint-5.10/pjgo6vl/perl-5.10.0@33955/bin/perl
+/home/src/perl/repoperls/installed-perls/maint-5.10/pNKUKn4/perl-5.10.0@34437/bin/perl
 
 # 5.10.0 itself:
 /home/src/perl/repoperls/installed-perls/perl/pVNtS9N/perl-5.8.0@32642/bin/perl
 
 # some recent 5.8.9-tobe
-/home/src/perl/repoperls/installed-perls/maint-5.8/pGdJCdi/perl-5.8.8@33994/bin/perl
+/home/src/perl/repoperls/installed-perls/maint-5.8/pJfglKk/perl-5.8.8@34468/bin/perl
 
 # 5.8.8 itself not threaded and with -O2:
 /home/src/perl/repoperls/installed-perls/maint-5.8/pnDGtsd/perl-5.8.7@27040/bin/perl
