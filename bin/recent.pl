@@ -56,7 +56,7 @@ my $rf = File::Rsync::Mirror::Recent->new(
                                           local => "/home/ftp/pub/PAUSE/authors/RECENT.recent",
                                          );
 my $have_a_current = 0;
-my $recent_events = $rf->news(max=>223);
+my $recent_events = $rf->news(max=>283);
 {
   my %seen;
   $recent_events = [ grep { my $d = CPAN::DistnameInfo->new($_->{path});
