@@ -51,6 +51,7 @@ match:
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DMAKI/Alien-MeCab                       # ditto
     |DSNOPEK/POE-Component-MessageQueue-0.2.2.tar.gz # hangs in 09_ack_auto (but not on k81)
+    |DSNOPEK/POE-Component-MessageQueue-0.2..*.tar.gz # same with 3
     |DOM/CGI-Wiki-\d                         # asks database questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
