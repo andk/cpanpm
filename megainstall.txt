@@ -1601,6 +1601,7 @@ Weather::Google
 Web::Scraper
 Web::Scraper::Config
 WebService::ISBNDB
+WebService::Upcoming
 WebService::Validator::CSS::W3C
 WebService::Validator::HTML::W3C
 WordNet::SenseRelate::AllWords
