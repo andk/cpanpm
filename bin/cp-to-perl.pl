@@ -22,6 +22,7 @@ And then back in the repoperls directory I do makepatch:
 
 use strict;
 use warnings;
+use File::Basename qw(dirname);
 use File::Copy qw(cp);
 use Term::Prompt;
 
@@ -35,17 +36,17 @@ my $MAP;
   no warnings 'qw';
   $MAP = {
           "" => ["lib/CPAN/" => [qw(
-                                    SIGNATURE
-                                    PAUSE*.pub
+                                     PAUSE*.pub
                                    )]],
           "lib/" => ["lib/"  => [qw(
                                     lib/CPAN.pm
                                     lib/CPAN/API/HOWTO.pod
                                     lib/CPAN/Debug.pm
+                                    lib/CPAN/DeferedCode.pm
+                                    lib/CPAN/Distroprefs.pm
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
                                     lib/CPAN/Nox.pm
-                                    lib/CPAN/PERL5INC.pm
                                     lib/CPAN/Queue.pm
                                     lib/CPAN/Tarzip.pm
                                     lib/CPAN/Version.pm
@@ -68,7 +69,11 @@ while (my($here,$v) = each %$MAP) {
     my @expand_file = glob($file);
     for my $efile (@expand_file) {
       my @c = $efile;
-      push @c, sprintf "%s/%s%s", $target, $theredir, substr($efile,$prefix_length);
+      my $target_file = sprintf "%s/%s%s", $target, $theredir, substr($efile,$prefix_length);
+      unless (-d dirname $target_file) {
+          push @command, sprintf "mkdir %s", dirname $target_file;
+      }
+      push @c, $target_file;
       printf "cp %-21s %s\n", @c;
       push @command, \@c;
     }
