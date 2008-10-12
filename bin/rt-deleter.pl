@@ -98,6 +98,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{(?:Message you sent blocked by bulk email filter!)},
                               qr{(?:The message has been blocked because it contains)},
                               qr{(?:Si vous ne souhaitez plus recevoir de mail de notre part,)},
+                              qr{(?:The email you sent with the following subject has NOT BEEN DELIVERED)},
 
 
                               qr{US Pharmaceutical Company Executives List(ing)?},
