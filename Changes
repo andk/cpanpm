@@ -1,3 +1,23 @@
+2008-10-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* this is release 1.93
+
+	* no changes against 1.92_66 except in the distroprefs directory (which
+	is not used by default)
+
+	* highlights include:
+
+	* selection of displayed modules during the 'r' command more intuitive
+	(at the same time order of modules changed because we run two passes)
+
+	* several relevant bugfixes, including one related to security
+	(setting $Archive::Tar::CHMOD=0 to prevent undesired world writable
+	directories and files)
+
+	* for details see below the changes entries for 1.92_51 to 1.92_66.
+
+	* thanks to the many contributors who have made this release possible
+
 2008-09-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_66 FEATURE FREEZE for 1.93
@@ -226,7 +246,7 @@
 
 2007-12-30  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* release 1.92_55: unstable relase bugfix
+	* release 1.92_55: unstable release bugfix
 
 	* address #32003: if untar breaks we broke too much of the session
 
