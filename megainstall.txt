@@ -542,6 +542,8 @@ File::Find::Parallel
 File::Headerinfo::SWF
 File::LibMagic
 File::MMagic::XS
+File::MergeSort
+File::MimeInfo
 File::Mirror
 File::Monitor
 File::NCopy
@@ -562,6 +564,7 @@ File::Temp
 File::Type
 File::Util
 FileHandle::Deluxe
+FileHandle::Fmode
 FileHandle::Unget
 Filesys::Df
 Filesys::Virtual
@@ -584,6 +587,7 @@ Fuse
 GD
 GD::Barcode
 GD::Graph
+GD::Image::Scale2x
 GD::SVG
 GD::SecurityImage
 GD::Text
@@ -813,6 +817,7 @@ Lingua::ZH::MacChinese::Simplified
 Lingua::ZH::MacChinese::Traditional
 Lingua::ZH::TaBE
 Linux::Inotify2
+Linux::LVM
 Linux::SysInfo
 List::Compare
 List::Maker
@@ -906,6 +911,7 @@ Module::Build::Convert
 Module::Changes
 Module::Compile
 Module::Dependency::Info
+Module::Extract
 Module::ExtractUse
 Module::Faker
 Module::Find
@@ -913,6 +919,8 @@ Module::Info
 Module::Install
 Module::Load
 Module::Loaded
+Module::Manifest
+Module::Math::Depends
 Module::Plan::Base
 Module::Pluggable
 Module::Pluggable::Fast
@@ -932,12 +940,14 @@ MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Log::Log4perl
 MooseX::Method
+MooseX::Method::Signatures
 MooseX::Mutate
 MooseX::Params::Validate
 MooseX::Plaggerize
 MooseX::Singleton
 MooseX::Storage
 MooseX::TheSchwartz
+MooseX::Types
 MooseX::Types::Set::Object
 Mouse
 Muldis
@@ -1398,6 +1408,7 @@ Test::Run
 Test::Smoke
 Test::SubCalls
 Test::TAP
+Test::Taint
 Test::Tester
 Test::Trap
 Test::Unit::Runner::XML
@@ -1464,6 +1475,7 @@ Time::Duration::Object
 Time::Format
 Time::HiRes
 Time::HiRes::Value
+Time::Local::Extended
 Time::Period
 Time::Piece
 Time::Progress
@@ -1680,6 +1692,7 @@ enum
 forks
 i18n
 iCal::Parser
+indirect
 interface
 load
 mixin
