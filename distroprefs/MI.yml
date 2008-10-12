@@ -63,6 +63,7 @@ match:
     |BRICAS/Catalyst-View-vCard-\d
     |BRICAS/DBIx-Class-ResultSet-Data-Pageset-\d
     |BRICAS/File-SAUCE-\d
+    |BRICAS/GD-Image-Scale2x-\d
     |BRICAS/Games-NES-Emulator-\d
     |BRICAS/Games-NES-ROM-\d
     |BRICAS/HTML-TagCloud-Sortable-\d
