@@ -8,10 +8,10 @@ my @m;
 if ($ENV{PERL_CORE}){
   @m = ("CPAN", map { "CPAN::$_" } qw(Debug
                                       DeferedCode
+                                      Distroprefs
                                       FirstTime
                                       Kwalify
                                       Nox
-                                      PERL5INC
                                       Queue
                                       Tarzip
                                       Version
