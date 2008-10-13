@@ -242,7 +242,7 @@ EOF
           ANDK/CPAN-Test-Dummy-Perl5-Build-\\d.+
           \\./Build[ ]test[ ]--[ ]OK.+
           ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-\\d.+
-          make[ ]test[ ]--[ ]OK)",
+          make\\S*[ ]test[ ]--[ ]OK)",
           ]
          },
          {

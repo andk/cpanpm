@@ -4,7 +4,7 @@ BEGIN {
     eval "qr/qr/";
     if ($@) {
         $|=1;
-        print "1..0 # Skip: no qr//\n";
+        print "1..0 # SKIP no qr//\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
     }
 }

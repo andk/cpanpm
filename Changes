@@ -1,3 +1,9 @@
+2008-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* this is release 1.9301
+
+	* tests, as always, badly written tests! (RT #39994, #40001)
+
 2008-10-12  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* this is release 1.93

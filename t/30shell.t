@@ -10,14 +10,33 @@ BEGIN {
     eval { require Expect };
     if ($@) {
         unless ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
-            print "1..0 # Skip: no Expect, maybe try env CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1\n";
+            print "1..0 # SKIP no Expect, maybe try env CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT=1\n";
             eval "require POSIX; 1" and POSIX::_exit(0);
         }
     }
     eval { require YAML };
     if ($YAML::VERSION && $YAML::VERSION < 0.60) {
-        print "1..0 # Skip: YAML too old for this test\n";
+        print "1..0 # SKIP YAML too old for this test\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
+    }
+  TABU: for my $tabu (qw(
+                         CPAN::Test::Dummy::Perl5::Make
+                         CPAN::Test::Dummy::Perl5::Make::ConfReq
+                         CPAN::Test::Dummy::Perl5::Build::Fails
+                         CPAN::Test::Dummy::Perl5::Make::CircDepeOne
+                         CPAN::Test::Dummy::Perl5::Make::CircDepeTwo
+                         CPAN::Test::Dummy::Perl5::Make::CircDepeThree
+                         CPAN::Test::Dummy::Perl5::Make::Features
+                         CPAN::Test::Dummy::Perl5::Make::UnsatPrereq
+                        )) {
+        my $f = $tabu;
+        $f =~ s|::|/|g;
+        $f .= ".pm";
+        if (eval qq{require $tabu; 1}) {
+            my $exit_message = "Found module '$tabu' installed at $INC{$f}. Cannot run this test.";
+            print "1..0 # SKIP $exit_message\n";
+            eval "require POSIX; 1" and POSIX::_exit(0);
+        }
     }
 }
 
@@ -226,7 +245,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
-my $default_timeout = 180;
+my $default_timeout = 240;
 
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
@@ -491,7 +510,6 @@ __END__
 ########
 #P:yesplease
 #E:commit: wrote.+?MyConfig
-#T:180
 ########
 #P:# o debug all
 ########
@@ -523,7 +541,6 @@ __END__
 ########
 #P:o conf init keep_source_where
 #E:kept[\s\S]+?(\])
-#T:15
 ########
 #P:/tmp
 #E:
@@ -879,12 +896,10 @@ __END__
 ########
 #P:ls ANDK
 #E:\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/CPAN-Test-Dummy[\d\D]*?\d+\s+\d\d\d\d-\d\d-\d\d\sANDK/Devel-Symdump
-#T:180
 ########
 #P:ls ANDK/CPAN*
 #E:Text::Glob\s+loaded\s+ok[\d\D]*?CPAN-Test-Dummy
 #R:Text::Glob
-#T:180
 ########
 #P:force ls ANDK/CPAN*
 #E:CPAN-Test-Dummy
@@ -899,7 +914,6 @@ __END__
 #P:test CPAN::Test::Dummy::Perl5::Build
 #E:\s\sANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz[\s\S]*?test\s+--\s+OK
 #R:Module::Build
-#T:180
 ########
 #P:o debug 0
 #E:turned off
@@ -1022,7 +1036,6 @@ __END__
 #P:test Bundle::CpanTestDummies
 #E:Test-Dummy-Perl5-Build-Fails-.+?make_test\s+NO
 #R:Module::Build
-#T:180
 ########
 #P:get Bundle::CpanTestDummies
 #E:Has already been unwrapped
@@ -1063,11 +1076,9 @@ __END__
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #N: "is up to date" is for when they have it installed in INC
 #R:Module::Build
-#T:180
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::CircDepeOne
 #E:is up to date|Recursive dependency
-#T:180
 ########
 #P:o conf defaults
 ########
@@ -1077,7 +1088,6 @@ __END__
 ########
 #P:test ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 #E:D i s t r o[\s\S]+?COMMANDLINE[\s\S]+?test -- OK
-#T:180
 #R:Expect YAML
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build::Fails
