@@ -136,5 +136,6 @@ match:
     |YAPPO/HTTP-Engine-0.0.1..tar.gz         # preventing the next case
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
+    |ZOFFIX/POE-Component-WWW-Google-PageRank-\d # hangs in 00-load with 34437
     )|
 disabled: 1
