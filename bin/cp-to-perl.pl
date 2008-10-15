@@ -46,6 +46,9 @@ my $MAP;
                                     lib/CPAN/Distroprefs.pm
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
+                                    lib/CPAN/Kwalify.pm
+                                    lib/CPAN/Kwalify/distroprefs.dd
+                                    lib/CPAN/Kwalify/distroprefs.yml
                                     lib/CPAN/Nox.pm
                                     lib/CPAN/Queue.pm
                                     lib/CPAN/Tarzip.pm
