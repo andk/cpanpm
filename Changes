@@ -95,7 +95,7 @@
 	* fixed PERL5INC tempfile leak when running without lock file
 	(David Golden)
 
-	* better preqreq and distropref disabled support under build_dir_reuse
+	* better prereq and distropref disabled support under build_dir_reuse
 	(David Golden)
 
 	* distropref cache won't persist across sessions with build_dir_reuse
