@@ -425,6 +425,7 @@ Devel::Events
 Devel::Events::Handler::ObjectTracker
 Devel::FastProf
 Devel::GC::Helper
+Devel::Gladiator
 Devel::Hide
 Devel::Leak
 Devel::Leak::Object
@@ -1384,6 +1385,7 @@ Test::Differences
 Test::Exception
 Test::FITesque::Fixture
 Test::File
+Test::Fork
 Test::FormValidator
 Test::Group
 Test::HTTP::Server::Simple
