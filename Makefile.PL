@@ -299,8 +299,6 @@ megainstall: logs/.exists
 		  CPAN::HandleConfig->load; \
 		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
 		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
-		  install("ANDK/CPAN-1.92_65.tar.gz"); \
-		  install("MSCHWERN/Test-Simple-0.81_02.tar.gz")    if intime(); \
 		  CPAN::Shell->reload("cpan"); \
 		  install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
 		  CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
