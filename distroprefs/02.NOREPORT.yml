@@ -14,11 +14,15 @@ comment: |
 
   BARBIE: opt out. Barbie does not want time-in-the-future errors
 
+  MSCHWERN: does not want reports coming from old perls. Once I
+  abandon testing old perls I can re-enable him
+
 match:
   distribution: |
     ^(?x:
     .^   # never matches
     |BARBIE/
+    |MSCHWERN/
     |MSHELOR/
     )|
 cpanconfig:
