@@ -195,6 +195,7 @@ match:
     |LAMMEL/MooseX-Log-Log4perl-\d
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
+    |LBROCARD/Test-WWW-Mechanize-Catalyst-\d 
     |LSAUNDERS/DBIx-Class-Fixtures-\d
     |LUKEC/Blikistan-\d
     |LUKEC/Test-Mock-LWP-\d
@@ -322,6 +323,7 @@ match:
     |RKRIMEN/JS-jQuery-Loader-\d
     |RKRIMEN/Path-Abstract-\d
     |RKRIMEN/Path-Resource-\d
+    |RKRIMEN/Text-Lorem-More-\d
     |RLB/Notification-Center-\d
     |RSRCHBOY/CPANPLUS-Dist-RPM-\d
     |SARTAK/Acme-Aspartame-\d

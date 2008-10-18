@@ -67,6 +67,7 @@ AutoLoader
 B::Debug
 B::Deobfuscate
 B::Flags
+B::Hooks::OP::Check
 B::Lint
 B::Size
 B::TerseSize
@@ -165,6 +166,7 @@ Catalyst::Plugin::Assets
 Catalyst::Plugin::Authentication
 Catalyst::Plugin::Authentication::Credential::TypeKey
 Catalyst::Plugin::Authorization::Roles
+Catalyst::Plugin::C3
 Catalyst::Plugin::ConfigLoader
 Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
@@ -696,6 +698,7 @@ HTTP::Parser
 HTTP::Proxy
 HTTP::RangeSaver
 HTTP::Response::Encoding
+HTTP::Response::OnDisk
 HTTP::Server::Brick
 HTTP::Server::Simple
 HTTP::Server::Simple::Dispatched
@@ -1687,6 +1690,7 @@ Yahoo::Photos
 Yahoo::Search
 autobox::Core
 autodie
+autorequire
 bignum
 capitalization
 encoding::warnings
