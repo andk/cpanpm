@@ -213,10 +213,18 @@ sub _pattern {
     return eval sprintf 'qr{%s}', $self->data->{match}{$key};
 }
 
+sub _match {
+    my ($self, $qr, $val) = @_;
+    my $not = ($qr =~ s/!\s*//);
+    $qr = eval sprintf 'qr{%s}', $qr;
+    my $match = ($val =~ /$qr/);
+    $match = !$match if $not;
+    return $match;
+}
+
 sub _scalar_match {
     my ($self, $key, $data) = @_;
-    my $qr = $self->_pattern($key);
-    return $data =~ /$qr/ ? 1 : 0;
+    return $self->_match($self->data->{match}{$key}, $data);
 }
 
 sub _hash_match {
@@ -224,8 +232,7 @@ sub _hash_match {
     my $match = $self->data->{match}{$key};
     for my $mkey (keys %$match) {
         my $val = defined $data->{$mkey} ? $data->{$mkey} : '';
-        my $qr  = eval sprintf 'qr{%s}', $match->{$mkey};
-        return 0 unless $val =~ /$qr/;
+        return 0 unless $self->_match($match->{$mkey}, $val);
     }
     return 1;
 }
