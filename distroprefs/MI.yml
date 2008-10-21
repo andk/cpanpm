@@ -110,6 +110,7 @@ match:
     |DMAKI/Danga-Socket-Callback-\d
     |DMAKI/Data-Throttler-Memcached-\d
     |DMAKI/Data-Visitor-Encode-\d
+    |DMAKI/DateTime-.+-\d
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d

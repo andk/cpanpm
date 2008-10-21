@@ -42,6 +42,7 @@ match:
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
+    |CORION/WWW-Mechanize-Shell-0.46.tar.gz  # hangs every so often in t/13-command-au.t
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
@@ -60,6 +61,7 @@ match:
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
+    |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
     |GRICHTER/DBIx-Recordset-\d              # hangs
