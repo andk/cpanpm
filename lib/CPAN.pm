@@ -8818,7 +8818,7 @@ sub prereq_pm {
                     $areq->{$k} = $v;
                 } elsif ($k =~ /[A-Za-z]/ &&
                          $v =~ /[A-Za-z]/ &&
-                         $CPAN::META->exists("Module",$v)
+                         $CPAN::META->exists("CPAN::Module",$v)
                         ) {
                     $CPAN::Frontend->mywarn("Suspicious key-value pair in META.yml's ".
                                             "requires hash: $k => $v; I'll take both ".
