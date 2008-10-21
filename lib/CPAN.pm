@@ -6859,7 +6859,12 @@ sub try_download {
             }
             my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
             $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
+            my $patches_dir = $CPAN::Config->{patches_dir};
             for my $patch (@$patches) {
+                if ($patches_dir && !File::Spec->file_name_is_absolute($patch)) {
+                    my $f = File::Spec->catfile($patches_dir, $patch);
+                    $patch = $f if -f $f;
+                }
                 unless (-f $patch) {
                     if (my $trydl = $self->try_download($patch)) {
                         $patch = $trydl;
@@ -11414,6 +11419,7 @@ defined:
   pager              location of external program more (or any pager)
   password           your password if you CPAN server wants one
   patch              path to external prg
+  patches_dir        local directory containing patch files
   perl5lib_verbosity verbosity level for PERL5LIB additions
   prefer_installer   legal values are MB and EUMM: if a module comes
                      with both a Makefile.PL and a Build.PL, use the
