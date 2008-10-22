@@ -366,6 +366,7 @@ lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
 lib/CPAN/Nox.pm
 lib/CPAN/Queue.pm
+lib/CPAN/Shell.pm
 lib/CPAN/Tarzip.pm
 lib/CPAN/Version.pm
 Makefile.PL
