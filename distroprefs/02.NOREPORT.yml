@@ -1,6 +1,28 @@
 ---
 comment: |
 
+  binary searches through older perls tend to be distracting and
+  should avoid sending reports. Last time we irritated MSCHWERN with
+  29317.
+
+match:
+  env:
+    PERL_BINSEARCHAPERL_RUNNING: .
+cpanconfig:
+  test_report: 0
+---
+comment: |
+
+  But also in general nobody wants to see 5.[79] anymore
+
+match:
+  perlconfig:
+    version: "^5\.[79]"
+cpanconfig:
+  test_report: 0
+---
+comment: |
+
   Author would prefer to never see false positives which I cannot
   guarantee, so we turn off mails for him completely. Main involvement
   was Digest::SHA which got FAILs during a short phase of 5.9.3 due to
@@ -14,15 +36,11 @@ comment: |
 
   BARBIE: opt out. Barbie does not want time-in-the-future errors
 
-  MSCHWERN: does not want reports coming from old perls. Once I
-  abandon testing old perls I can re-enable him
-
 match:
   distribution: |
     ^(?x:
     .^   # never matches
     |BARBIE/
-    |MSCHWERN/
     |MSHELOR/
     )|
 cpanconfig:
