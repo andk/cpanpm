@@ -114,6 +114,7 @@ match:
     |DMAKI/Event-Notify-\d
     |DMAKI/Gungho-\d
     |DMAKI/GunghoX-FollowLinks-\d
+    |DMAKI/HTTP-Response-OnDisk-\d
     |DMAKI/Iterator-File-Line-\d
     |DMAKI/POE-Component-Q4M-\d
     |DMAKI/WWW-RobotRules-Parser-\d
@@ -251,6 +252,7 @@ match:
     |MARCEL/Text-Pipe-W3CDTF-\d
     |MARCEL/Text-Pipe-\d
     |MARCEL/Vim-Complete-\d
+    |MARCEL/YAML-Active-\d
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MASAKI/Catalyst-Controller-Resources-\d
     |MDXI/Curses-UI-\d

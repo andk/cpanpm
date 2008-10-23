@@ -235,6 +235,7 @@ Class::Throwable
 Class::Trait
 Class::Value::Contact
 Class::Virtual
+Class::Void
 Class::Workflow
 Class::XPath
 Class::XSAccessor
@@ -889,6 +890,7 @@ Math::BigInt::FastCalc
 Math::BigInt::GMP
 Math::BigInt::Pari
 Math::BigRat
+Math::BigSimple
 Math::Brent
 Math::Cephes
 Math::Combinatorics
@@ -1477,6 +1479,7 @@ Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
 Tie::DxHash
+Tie::FieldVals
 Tie::Hash::Sorted
 Tie::Hash::StructKeyed
 Tie::EncryptedHash
@@ -1703,6 +1706,7 @@ bignum
 capitalization
 encoding::warnings
 enum
+ex::lib::zip
 forks
 i18n
 iCal::Parser
