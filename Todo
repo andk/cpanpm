@@ -1,3 +1,8 @@
+2008-10-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Scriptalicious had its first fail on 2008-07-08 with a bleadperl since
+	then 6 green and 31 red.
+
 2008-09-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Class::MOP and 32734:
