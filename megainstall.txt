@@ -6,6 +6,7 @@ ARGV::readonly
 Acme::Bleach
 Acme::Chef
 Acme::MetaSyntactic
+Acme::Oil
 Algorithm::AhoCorasick
 Algorithm::Annotate
 Algorithm::C3
@@ -56,6 +57,9 @@ Array::Slice
 Astro::Flux
 Astro::MoonPhase
 Attribute::Cached
+Attribute::Context
+Attribute::Default
+Attribute::Persistent
 Attribute::Types
 Audio::FLAC::Header
 Audio::SndFile
@@ -681,6 +685,7 @@ HTML::TagCloud::Sortable
 HTML::Tagset
 HTML::Template
 HTML::Template::Compiled
+HTML::Template::Dumper
 HTML::Tidy
 HTML::ToDocBook
 HTML::TokeParser::Simple
@@ -964,6 +969,7 @@ Mouse
 Muldis
 MyCPAN::Indexer
 MySQL::Slurp
+Nagios::WebTransact
 Net::Akamai
 Net::Amazon
 Net::Analysis
@@ -1032,6 +1038,7 @@ NetAddr::IP
 NetHack::Item::Weapon
 News::Article
 Number::Format
+Number::RGB
 Number::Range
 Number::Tolerant
 Number::WithError
@@ -1138,6 +1145,7 @@ Perl6::Junction
 Perl6::Perldoc
 Perl6::Say
 Perl::Critic::More
+Perl::Critic::Policy::RegularExpressions::RequireDotMatchAnything
 Perl::Dist
 Perl::Metrics::Simple
 Perl::MinimumVersion
@@ -1339,6 +1347,7 @@ Sub::Name
 Sub::Override
 Sub::Uplevel
 Sub::WrapPackages
+Symbol::Values
 Sys::CPU
 Sys::FreezeThaw
 Sys::Hostname
@@ -1594,6 +1603,7 @@ VCI
 VFSsimple
 VS::Chart
 Variable::Magic
+Variable::Strongly::Typed
 Verilog::Parser
 Vim::Complete
 Vim::Snippet::Converter
@@ -1639,6 +1649,7 @@ XML::ApacheFOP
 XML::Atom
 XML::Atom::SimpleFeed
 XML::AutoWriter
+XML::Checker
 XML::Checker::Parser
 XML::Clean
 XML::Comma
@@ -1647,6 +1658,7 @@ XML::DOM
 XML::DOM2
 XML::DOM::XPath
 XML::DTD
+XML::Database
 XML::Descent
 XML::Elemental
 XML::Entities
