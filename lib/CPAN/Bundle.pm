@@ -4,6 +4,7 @@ package CPAN::Bundle;
 use strict;
 use CPAN::Module;
 @CPAN::Bundle::ISA = qw(CPAN::Module);
+use Carp ();
 
 use vars qw(
             $VERSION
