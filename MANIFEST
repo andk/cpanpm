@@ -366,6 +366,7 @@ lib/CPAN/HandleConfig.pm
 lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
+lib/CPAN/LWP/UserAgent.pm
 lib/CPAN/Nox.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Shell.pm
