@@ -613,9 +613,6 @@ sub _init_sqlite () {
     }
 }
 
-package CPAN;
-use strict;
-
 $META ||= CPAN->new; # In case we re-eval ourselves we need the ||
 
 # from here on only subs.
@@ -1279,10 +1276,6 @@ sub set_perl5lib {
     }
 }}
 
-
-
-package CPAN;
-use strict;
 
 1;
 
