@@ -3,6 +3,7 @@
 package CPAN::Author;
 use strict;
 
+use Carp ();
 use CPAN::InfoObj;
 @CPAN::Author::ISA = qw(CPAN::InfoObj);
 

@@ -4,6 +4,7 @@ package CPAN::FTP;
 use strict;
 
 use Fcntl qw(:flock);
+use Carp ();
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
