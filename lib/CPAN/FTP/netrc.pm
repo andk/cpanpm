@@ -4,7 +4,7 @@ use strict;
 # package CPAN::FTP::netrc;
 sub new {
     my($class) = @_;
-    my $home = CPAN::HandleConfig::home;
+    my $home = CPAN::HandleConfig::home();
     my $file = File::Spec->catfile($home,".netrc");
 
     my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
