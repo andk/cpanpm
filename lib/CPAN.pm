@@ -2228,13 +2228,13 @@ sub store_persistent_state {
         return;
     }
     my $file = sprintf "%s.yml", $dir;
-    my $yaml_module = CPAN::_yaml_module;
+    my $yaml_module = CPAN::_yaml_module();
     if ($CPAN::META->has_inst($yaml_module)) {
         CPAN->_yaml_dumpfile(
                              $file,
                              {
                               time => time,
-                              perl => CPAN::_perl_fingerprint,
+                              perl => CPAN::_perl_fingerprint(),
                               distribution => $self,
                              }
                             );
@@ -3446,7 +3446,7 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     if ($make_commandline) {
         $system = $make_commandline;
-        $ENV{PERL} = CPAN::find_perl;
+        $ENV{PERL} = CPAN::find_perl();
     } else {
         if ($self->{modulebuild}) {
             unless (-f "Build") {
@@ -3666,7 +3666,7 @@ sub _find_prefs {
     if ($@) {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
-    my $yaml_module = CPAN::_yaml_module;
+    my $yaml_module = CPAN::_yaml_module();
     my $ext_map = {};
     my @extensions;
     if ($CPAN::META->has_inst($yaml_module)) {
@@ -4014,7 +4014,7 @@ sub unsat_prereq {
         my($available_version,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
-            $available_file = CPAN::find_perl;
+            $available_file = CPAN::find_perl();
         } else {
             $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
             next if $nmo->uptodate;
@@ -4501,7 +4501,7 @@ sub test {
     if (my $commandline
         = exists $prefs_test->{commandline} ? $prefs_test->{commandline} : "") {
         $system = $commandline;
-        $ENV{PERL} = CPAN::find_perl;
+        $ENV{PERL} = CPAN::find_perl();
     } elsif ($self->{modulebuild}) {
         $system = sprintf "%s test", $self->_build_command();
         unless (-e "Build") {
@@ -4833,7 +4833,7 @@ sub install {
     my $system;
     if (my $commandline = $self->prefs->{install}{commandline}) {
         $system = $commandline;
-        $ENV{PERL} = CPAN::find_perl;
+        $ENV{PERL} = CPAN::find_perl();
     } elsif ($self->{modulebuild}) {
         my($mbuild_install_build_command) =
             exists $CPAN::HandleConfig::keys{mbuild_install_build_command} &&
