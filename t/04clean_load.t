@@ -10,7 +10,7 @@ find(\&list_modules, 'blib/lib');
 use Test::More;
 plan(tests => scalar @modules);
 foreach my $file (@modules) {
-    diag $file;
+    #diag $file;
     system("$^X -c $file >our 2>err");
     my $fail;
     if (open ERR, '<err') {
