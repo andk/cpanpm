@@ -1611,7 +1611,7 @@ sub reload {
     if ($CPAN::Config->{build_dir_reuse}) {
         $self->reanimate_build_dir;
     }
-    if (CPAN::_sqlite_running) {
+    if (CPAN::_sqlite_running()) {
         $CPAN::SQLite->reload(time => $time, force => $force)
             if not $LAST_TIME;
     }
@@ -1647,7 +1647,7 @@ sub reanimate_build_dir {
                  @candidates==1 ? "" : "s",
                  $CPAN::Config->{build_dir}
                 ));
-    my $start = CPAN::FTP::_mytime;
+    my $start = CPAN::FTP::_mytime();
   DISTRO: for $i (0..$#candidates) {
         my $dirent = $candidates[$i];
         my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
@@ -1699,7 +1699,7 @@ sub reanimate_build_dir {
             $painted++;
         }
     }
-    my $took = CPAN::FTP::_mytime - $start;
+    my $took = CPAN::FTP::_mytime() - $start;
     $CPAN::Frontend->myprint(sprintf(
                                      "DONE\nRestored the state of %s (in %.4f secs)\n",
                                      $restored || "none",
@@ -1736,7 +1736,7 @@ sub reload_x {
 sub rd_authindex {
     my($cl, $index_target) = @_;
     return unless defined $index_target;
-    return if CPAN::_sqlite_running;
+    return if CPAN::_sqlite_running();
     my @lines;
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     local(*FH);
@@ -1777,7 +1777,7 @@ sub userid {
 sub rd_modpacks {
     my($self, $index_target) = @_;
     return unless defined $index_target;
-    return if CPAN::_sqlite_running;
+    return if CPAN::_sqlite_running();
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -1994,7 +1994,7 @@ happen.\a
 sub rd_modlist {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
-    return if CPAN::_sqlite_running;
+    return if CPAN::_sqlite_running();
     $CPAN::Frontend->myprint("Going to read $index_target\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
@@ -2046,7 +2046,7 @@ sub rd_modlist {
 sub write_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
-    return if CPAN::_sqlite_running;
+    return if CPAN::_sqlite_running();
     return unless $CPAN::META->has_usable("Storable");
     my $cache;
     foreach my $k (qw(CPAN::Bundle CPAN::Author CPAN::Module
@@ -2066,7 +2066,7 @@ sub write_metadata_cache {
 sub read_metadata_cache {
     my($self) = @_;
     return unless $CPAN::Config->{'cache_metadata'};
-    return if CPAN::_sqlite_running;
+    return if CPAN::_sqlite_running();
     return unless $CPAN::META->has_usable("Storable");
     my $metadata_file = File::Spec->catfile($CPAN::Config->{cpan_home},"Metadata");
     return unless -r $metadata_file and -f $metadata_file;
