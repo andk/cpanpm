@@ -31,6 +31,7 @@ use CPAN::DeferredCode;
 use CPAN::Shell;
 use CPAN::LWP::UserAgent;
 use CPAN::Exception::RecursiveDependency;
+use CPAN::Exception::yaml_not_installed;
 
 use Carp ();
 use Config ();
@@ -625,76 +626,6 @@ use vars qw(
 );
 $VERSION = "5.5";
 
-
-package CPAN::Exception::yaml_not_installed;
-use strict;
-use overload '""' => "as_string";
-
-use vars qw(
-            $VERSION
-);
-$VERSION = "5.5";
-
-
-sub new {
-    my($class,$module,$file,$during) = @_;
-    bless { module => $module, file => $file, during => $during }, $class;
-}
-
-sub as_string {
-    my($self) = shift;
-    "'$self->{module}' not installed, cannot $self->{during} '$self->{file}'\n";
-}
-
-package CPAN::Exception::yaml_process_error;
-use strict;
-use overload '""' => "as_string";
-
-use vars qw(
-            $VERSION
-);
-$VERSION = "5.5";
-
-
-sub new {
-    my($class,$module,$file,$during,$error) = @_;
-    # my $at = Carp::longmess(""); # XXX find something more beautiful
-    bless { module => $module,
-            file => $file,
-            during => $during,
-            error => $error,
-            # at => $at,
-          }, $class;
-}
-
-sub as_string {
-    my($self) = shift;
-    if ($self->{during}) {
-        if ($self->{file}) {
-            if ($self->{module}) {
-                if ($self->{error}) {
-                    return "Alert: While trying to '$self->{during}' YAML file\n".
-                        " '$self->{file}'\n".
-                            "with '$self->{module}' the following error was encountered:\n".
-                                "  $self->{error}\n";
-                } else {
-                    return "Alert: While trying to '$self->{during}' YAML file\n".
-                        " '$self->{file}'\n".
-                            "with '$self->{module}' some unknown error was encountered\n";
-                }
-            } else {
-                return "Alert: While trying to '$self->{during}' YAML file\n".
-                    " '$self->{file}'\n".
-                        "some unknown error was encountered\n";
-            }
-        } else {
-            return "Alert: While trying to '$self->{during}' some YAML file\n".
-                    "some unknown error was encountered\n";
-        }
-    } else {
-        return "Alert: unknown error encountered\n";
-    }
-}
 
 package CPAN::Prompt; use overload '""' => "as_string";
 use vars qw($prompt);

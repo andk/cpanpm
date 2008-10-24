@@ -366,6 +366,7 @@ lib/CPAN/DeferredCode.pm
 lib/CPAN/Distribution.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/Exception/RecursiveDependency.pm
+lib/CPAN/Exception/yaml_not_installed.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
