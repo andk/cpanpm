@@ -18,6 +18,7 @@ BEGIN {
 use CPAN::HandleConfig;
 use CPAN::Version;
 use CPAN::CacheMgr;
+use CPAN::Complete;
 use CPAN::Debug;
 use CPAN::FTP;
 use CPAN::Index;
