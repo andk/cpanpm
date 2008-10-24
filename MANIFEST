@@ -356,6 +356,7 @@ inc/Test/More.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod
+lib/CPAN/Author.pm
 lib/CPAN/CachMgr.pm
 lib/CPAN/Complete.pm
 lib/CPAN/Debug.pm
