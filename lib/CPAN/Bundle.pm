@@ -10,9 +10,6 @@ use vars qw(
 );
 $VERSION = "5.5";
 
-package CPAN::Bundle;
-use strict;
-
 sub look {
     my $self = shift;
     $CPAN::Frontend->myprint($self->as_string);
