@@ -363,6 +363,7 @@ lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
 lib/CPAN/Distribution.pm
 lib/CPAN/Distroprefs.pm
+lib/CPAN/Exception/RecursiveDependency.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
