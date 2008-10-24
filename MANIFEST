@@ -361,6 +361,7 @@ lib/CPAN/CachMgr.pm
 lib/CPAN/Complete.pm
 lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
+lib/CPAN/Distribution.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
