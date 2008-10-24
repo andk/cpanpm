@@ -363,6 +363,7 @@ lib/CPAN/DeferredCode.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/HandleConfig.pm
+lib/CPAN/InfoObj.pm
 lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
