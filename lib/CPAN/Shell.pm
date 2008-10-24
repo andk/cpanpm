@@ -36,6 +36,7 @@ $VERSION = "5.5";
 $reload = { map {$INC{$_} ? ($_,(stat $INC{$_})[9]) : ()} @relo };
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 use Cwd qw(chdir);
+use Carp ();
 $COLOR_REGISTERED ||= 0;
 $Help = {
          '?' => \"help",
