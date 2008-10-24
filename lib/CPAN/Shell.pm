@@ -631,11 +631,11 @@ sub _reload_this {
 sub mkmyconfig {
     my($self, $cpanpm, %args) = @_;
     require CPAN::FirstTime;
-    my $home = CPAN::HandleConfig::home;
+    my $home = CPAN::HandleConfig::home();
     $cpanpm = $INC{'CPAN/MyConfig.pm'} ||
         File::Spec->catfile(split /\//, "$home/.cpan/CPAN/MyConfig.pm");
     File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
-    CPAN::HandleConfig::require_myconfig_or_config;
+    CPAN::HandleConfig::require_myconfig_or_config();
     $CPAN::Config ||= {};
     $CPAN::Config = {
         %$CPAN::Config,
