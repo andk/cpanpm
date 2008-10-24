@@ -5,7 +5,7 @@ use strict;
 
 use CPAN::InfoObj;
 @CPAN::Author::ISA = qw(CPAN::InfoObj);
-use Carp ();
+
 use vars qw(
             $VERSION
 );

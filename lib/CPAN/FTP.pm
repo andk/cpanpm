@@ -7,7 +7,6 @@ use Fcntl qw(:flock);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
-use Carp ();
 
 use vars qw(
             $VERSION
