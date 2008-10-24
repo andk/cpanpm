@@ -605,11 +605,21 @@ use strict;
 use Cwd qw(chdir);
 use File::Find;
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::FTP;
 use strict;
 use Fcntl qw(:flock);
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
+
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
 
 package CPAN::Complete;
 use strict;
@@ -650,6 +660,11 @@ use strict;
                                     upgrade
 );
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::Index;
 use strict;
 use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03 $HAVE_REANIMATED);
@@ -659,13 +674,28 @@ $DATE_OF_03 ||= 0;
 # use constant PROTOCOL => "2.0"; # outcommented to avoid warning on upgrade from 1.57
 sub PROTOCOL { 2.0 }
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::Author;
 use strict;
 @CPAN::Author::ISA = qw(CPAN::InfoObj);
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::Distribution;
 use strict;
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
+
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
 
 package CPAN::Bundle;
 use strict;
@@ -675,9 +705,19 @@ package CPAN::Module;
 use strict;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::Exception::RecursiveDependency;
 use strict;
 use overload '""' => "as_string";
+
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
 
 # a module sees its distribution (no version)
 # a distribution sees its prereqs (which are module names) (usually with versions)
