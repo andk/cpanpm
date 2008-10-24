@@ -358,6 +358,7 @@ inc/Test/More.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod
+lib/CPAN/CachMgr.pm
 lib/CPAN/Debug.pm
 lib/CPAN/DeferredCode.pm
 lib/CPAN/Distroprefs.pm
