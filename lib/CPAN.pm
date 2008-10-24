@@ -1735,7 +1735,7 @@ sub _clean_cache {
     File::Path::rmtree($dir);
     my $id_deleted = 0;
     if ($dir !~ /\.yml$/ && -f "$dir.yml") {
-        my $yaml_module = CPAN::_yaml_module;
+        my $yaml_module = CPAN::_yaml_module();
         if ($CPAN::META->has_inst($yaml_module)) {
             my($peek_yaml) = eval { CPAN->_yaml_loadfile("$dir.yml"); };
             if ($@) {
