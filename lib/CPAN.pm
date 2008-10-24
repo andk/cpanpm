@@ -611,6 +611,11 @@ package CPAN::Bundle;
 use strict;
 @CPAN::Bundle::ISA = qw(CPAN::Module);
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 package CPAN::Module;
 use strict;
 @CPAN::Module::ISA = qw(CPAN::InfoObj);
@@ -625,6 +630,12 @@ package CPAN::Exception::yaml_not_installed;
 use strict;
 use overload '""' => "as_string";
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
+
 sub new {
     my($class,$module,$file,$during) = @_;
     bless { module => $module, file => $file, during => $during }, $class;
@@ -638,6 +649,12 @@ sub as_string {
 package CPAN::Exception::yaml_process_error;
 use strict;
 use overload '""' => "as_string";
+
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 
 sub new {
     my($class,$module,$file,$during,$error) = @_;
@@ -681,6 +698,12 @@ sub as_string {
 
 package CPAN::Prompt; use overload '""' => "as_string";
 use vars qw($prompt);
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
+
 $prompt = "cpan> ";
 $CPAN::CurrentCommandId ||= 0;
 sub new {
@@ -701,6 +724,12 @@ sub as_string {
 package CPAN::URL; use overload '""' => "as_string", fallback => 1;
 # accessors: TEXT(the url string), FROM(DEF=>defaultlist,USER=>urllist),
 # planned are things like age or quality
+
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 sub new {
     my($class,%args) = @_;
     bless {
@@ -723,6 +752,12 @@ package CPAN::Distrostatus;
 use overload '""' => "as_string",
     fallback => 1;
 use vars qw($something_has_failed_at);
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
+
 sub new {
     my($class,$arg) = @_;
     my $failed = substr($arg,0,2) eq "NO";
