@@ -445,6 +445,7 @@ Devel::LexAlias
 Devel::Modlist
 Devel::Monitor
 Devel::NYTProf
+Devel::PartialDump
 Devel::PerlySense
 Devel::Profile
 Devel::Profiler
