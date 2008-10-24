@@ -3615,6 +3615,11 @@ package CPAN::InfoObj;
 use strict;
 use Cwd qw(chdir);
 
+use vars qw(
+            $VERSION
+);
+$VERSION = "5.5";
+
 sub ro {
     my $self = shift;
     exists $self->{RO} and return $self->{RO};
