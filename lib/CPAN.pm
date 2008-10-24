@@ -618,7 +618,8 @@ use vars qw(
 );
 $VERSION = "5.5";
 
-package CPAN::Prompt; use overload '""' => "as_string";
+package CPAN::Prompt;
+use overload '""' => "as_string";
 use vars qw($prompt);
 use vars qw(
             $VERSION
@@ -643,7 +644,8 @@ sub as_string {
     }
 }
 
-package CPAN::URL; use overload '""' => "as_string", fallback => 1;
+package CPAN::URL;
+use overload '""' => "as_string", fallback => 1;
 # accessors: TEXT(the url string), FROM(DEF=>defaultlist,USER=>urllist),
 # planned are things like age or quality
 
