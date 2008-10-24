@@ -366,6 +366,7 @@ lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
 lib/CPAN/HandleConfig.pm
 lib/CPAN/InfoObj.pm
+lib/CPAN/Index.pm
 lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
