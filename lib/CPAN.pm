@@ -1641,7 +1641,7 @@ sub _new_stats {
 #-> sub CPAN::FTP::_add_to_statistics
 sub _add_to_statistics {
     my($self,$stats) = @_;
-    my $yaml_module = CPAN::_yaml_module;
+    my $yaml_module = CPAN::_yaml_module();
     $self->debug("yaml_module[$yaml_module]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         $stats->{thesiteurl} = $ThesiteURL;
