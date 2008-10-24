@@ -28,6 +28,7 @@ use CPAN::Index;
 use CPAN::InfoObj;
 use CPAN::Module;
 use CPAN::Prompt;
+use CPAN::URL;
 use CPAN::Queue;
 use CPAN::Tarzip;
 use CPAN::DeferredCode;
@@ -609,36 +610,6 @@ sub _init_sqlite () {
         $negative_cache->{time} = time;
         return $negative_cache->{fact} = $ret;
     }
-}
-
-
-
-package CPAN::URL;
-use overload '""' => "as_string", fallback => 1;
-# accessors: TEXT(the url string), FROM(DEF=>defaultlist,USER=>urllist),
-# planned are things like age or quality
-
-use vars qw(
-            $VERSION
-);
-$VERSION = "5.5";
-
-sub new {
-    my($class,%args) = @_;
-    bless {
-           %args
-          }, $class;
-}
-sub as_string {
-    my($self) = @_;
-    $self->text;
-}
-sub text {
-    my($self,$set) = @_;
-    if (defined $set) {
-        $self->{TEXT} = $set;
-    }
-    $self->{TEXT};
 }
 
 package CPAN::Distrostatus;
