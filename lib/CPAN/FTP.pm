@@ -2,7 +2,9 @@
 # vim: ts=4 sts=4 sw=4:
 package CPAN::FTP;
 use strict;
+
 use Fcntl qw(:flock);
+use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
@@ -10,9 +12,6 @@ use vars qw(
             $VERSION
 );
 $VERSION = "5.5";
-
-package CPAN::FTP;
-use strict;
 
 #-> sub CPAN::FTP::ftp_statistics
 # if they want to rewrite, they need to pass in a filehandle
