@@ -363,6 +363,7 @@ lib/CPAN/Complete.pm
 lib/CPAN/Debug.pm
 lib/CPAN/DeferedCode.pm
 lib/CPAN/Distribution.pm
+lib/CPAN/Distrostatus.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/Exception/RecursiveDependency.pm
 lib/CPAN/Exception/yaml_not_installed.pm
