@@ -127,6 +127,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{(Sexy|Nude) Angelina Jolie video!},
                               qr{(?:VENDAS - GLOBAL GESSO)},
                               qr{Este es un correo no solicitado},
+                              qr{(?:Dear Client,<br />)},
                              ],
              );
 
