@@ -3,6 +3,7 @@ AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
 ARGV::readonly
+Abstract::Meta::Class
 Acme::Bleach
 Acme::Chef
 Acme::MetaSyntactic
@@ -183,6 +184,7 @@ Catalyst::Plugin::Unicode::Encoding
 Catalyst::View::Mason
 Catalyst::View::TT
 CatalystX::CRUD::YUI
+CatalystX::GlobalContext
 CharsetDetector
 Chart::Clicker
 Chart::Math::Axis
@@ -374,6 +376,7 @@ Data::Rand::Obscure
 Data::Random
 Data::Remember
 Data::Rmap
+Data::Rx
 Data::SExpression
 Data::Section
 Data::Semantic::Net
@@ -576,6 +579,7 @@ File::Tail
 File::Temp
 File::Type
 File::Util
+FileArchiveIndexer
 FileHandle::Deluxe
 FileHandle::Fmode
 FileHandle::Unget
@@ -603,6 +607,7 @@ GD::Graph
 GD::Image::Scale2x
 GD::SVG
 GD::SecurityImage
+GD::Tab::Guitar
 GD::Text
 GIS::Distance
 GPS::SpaceTrack
@@ -747,6 +752,7 @@ IO::Moose
 IO::Multiplex
 IO::Pager
 IO::Pipe
+IO::Plumbing
 IO::Prompt
 IO::Scalar
 IO::Seekable
@@ -1166,6 +1172,7 @@ Pod::Constants
 Pod::Coverage
 Pod::Coverage::CountParents
 Pod::Coverage::Moose
+Pod::Elemental
 Pod::Escapes
 Pod::Find
 Pod::Generated
@@ -1197,6 +1204,8 @@ PostScript::Simple
 PostScript::Simple::Table
 PowerTools::Data
 Prima
+Proc::Daemon
+Proc::Exists
 Proc::InvokeEditor
 Proc::ProcessTable
 Proc::Simple
@@ -1448,6 +1457,7 @@ Text::Autoformat
 Text::CSV_XS
 Text::Diff
 Text::Diff::HTML
+Text::Editor::Easy
 Text::FIGlet
 Text::Filter
 Text::Format
@@ -1650,6 +1660,7 @@ XML::ApacheFOP
 XML::Atom
 XML::Atom::SimpleFeed
 XML::AutoWriter
+XML::Bare
 XML::Checker
 XML::Checker::Parser
 XML::Clean

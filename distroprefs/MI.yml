@@ -76,14 +76,15 @@ match:
     |BTROTT/Authen-TypeKey-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
+    |BTROTT/WWW-Blog-Metadata-\d             
     |BTROTT/XML-Feed-\d
     |CAMELCASE/HTML-TurboForm-\d
-    |CFRANKS/Catalyst-Model-Net-Amazon-\d
-    |CFRANKS/HTML-FormFu-\d
-    |CFRANKS/HTML-FormFu-Model-DBIC-\d
-    |CFRANKS/HTML-Widget-\d
-    |CFRANKS/DBIx-Class-HTML-FormFu-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
+    |CFRANKS/Catalyst-Model-Net-Amazon-\d
+    |CFRANKS/DBIx-Class-HTML-FormFu-\d
+    |CFRANKS/HTML-FormFu-Model-DBIC-\d
+    |CFRANKS/HTML-FormFu-\d
+    |CFRANKS/HTML-Widget-\d
     |CLACO/Catalyst-Model-NetBlogger-\d
     |CLACO/Class-Accessor-Grouped-\d
     |CLACO/DBIx-Class-InflateColumn-Currency-\d
