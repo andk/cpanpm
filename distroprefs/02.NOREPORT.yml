@@ -1,16 +1,4 @@
 ---
-#comment: |
-#
-#  binary searches through older perls tend to be distracting and
-#  should avoid sending reports. Last time we irritated MSCHWERN with
-#  29317.
-#
-#match:
-#  env:
-#    PERL_BINSEARCHAPERL_RUNNING: .
-#cpanconfig:
-#  test_report: 0
----
 comment: |
 
   But also in general nobody wants to see 5.[79] anymore
