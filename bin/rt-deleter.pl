@@ -128,6 +128,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{(?:VENDAS - GLOBAL GESSO)},
                               qr{Este es un correo no solicitado},
                               qr{(?:Dear Client,<br />)},
+                              qr{(?:Your account was temporarily blocked. Here is an instruction on recovery of your account.)},
                              ],
              );
 
