@@ -314,6 +314,7 @@ DBD::Gofer::Transport::http
 DBD::Mock
 DBD::Pg
 DBD::SQLite
+DBD::SQLite::Amalgamation
 DBD::mysql
 DBI
 DBI::Shell
@@ -481,6 +482,7 @@ Digest::Tiger
 Dir::Which
 Directory::Scratch
 Directory::Scratch::Structured
+Dist::Zilla
 DocSet
 ETL::Pequel
 EV::ADNS
@@ -640,6 +642,7 @@ Getopt::Helpful
 Getopt::LL
 Getopt::Lazy
 Getopt::Long
+Getopt::Long::Descriptive
 Getopt::Lucid
 Getopt::Mixed
 GnuPG::Interface
@@ -784,6 +787,7 @@ Image::Magick::Thumbnail::Fixed
 Image::Magick::Thumbnail::PDF
 Image::Match
 Image::Pngslimmer
+Image::PNGwriter
 Image::Size
 Imager
 Imager::Graph
@@ -884,6 +888,7 @@ Mail::IMAPClient
 Mail::Internet
 Mail::Karmasphere::Client
 Mail::Mailer
+Mail::MboxParser
 Mail::Mbox::MessageParser
 Mail::Qmail::Queue
 Mail::RFC822::Address
@@ -1012,6 +1017,7 @@ Net::Libdnet
 Net::MAC
 Net::MRIM
 Net::MirrorDir
+Net::Msmgr
 Net::NNTP
 Net::Netmask
 Net::Netrc
