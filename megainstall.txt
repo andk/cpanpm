@@ -166,6 +166,7 @@ Carp::Diagnostics
 Carp::REPL
 Carp::Source
 Catalyst
+Catalyst::Action::REST
 Catalyst::Action::RenderView
 Catalyst::Devel
 Catalyst::Plugin::Assets
@@ -962,6 +963,7 @@ Mogstored::HTTPServer::Perlbal
 MojoMojo
 Moose
 Moose::Autobox
+Moose::Policy
 MooseX::Clone
 MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
@@ -1016,6 +1018,7 @@ Net::LDAP
 Net::Libdnet
 Net::MAC
 Net::MRIM
+Net::ManageSieve
 Net::MirrorDir
 Net::Msmgr
 Net::NNTP
@@ -1147,6 +1150,7 @@ Parse::CPAN::MirroredBy
 Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
+PatchReader
 Path::Class
 Path::Class::Versioned
 Path::Router
