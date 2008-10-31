@@ -190,7 +190,6 @@ match:
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
-    |JSHIRLEY/Catalyst-Action-REST-\d
     |JSHIRLEY/DBIx-Class-TimeStamp-\d
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
@@ -360,6 +359,7 @@ match:
     |STEVAN/Path-Router-\d
     |STEVAN/Task-Moose-\d
     |SUNNAVY/Shipwright-\d
+    |SYBER/DBIx-RetryOverDisconnects-\d
     |TELS/graph/Graph-
     |THEPLER/MooseX-Types-Path-Class-\d
     |TOKUHIROM/Archer-\d
