@@ -93,6 +93,7 @@ match:
     |LZE/CGI-CMS-\d                          # asks questions about paths
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
+    |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib

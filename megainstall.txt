@@ -24,6 +24,7 @@ Alvis::TermTagger
 Alzabo
 Angerwhale
 AnyEvent::GPSD
+AnyEvent::HTTP
 Apache
 Apache::ASP
 Apache::DB
@@ -484,6 +485,7 @@ Dir::Which
 Directory::Scratch
 Directory::Scratch::Structured
 Dist::Zilla
+Distribution::Guess::BuildSystem
 DocSet
 ETL::Pequel
 EV::ADNS
@@ -800,6 +802,7 @@ InlineX::XS
 IsUTF8
 Iterator
 Iterator::File
+JSAN
 JSON
 JSON::DWIW
 JSON::RPC::Server
@@ -942,6 +945,8 @@ Module::Compile
 Module::Dependency::Info
 Module::Extract
 Module::ExtractUse
+Module::Extract::Namespaces
+Module::Extract::Use
 Module::Faker
 Module::Find
 Module::Info
@@ -1026,6 +1031,7 @@ Net::Netmask
 Net::Netrc
 Net::OAuth::Request
 Net::OpenID::Consumer
+Net::OpenID::Server
 Net::POP3
 Net::Packet
 Net::Pcap
@@ -1663,6 +1669,7 @@ WebService::ISBNDB
 WebService::Upcoming
 WebService::Validator::CSS::W3C
 WebService::Validator::HTML::W3C
+Wiki::Toolkit::Formatter::Markdown
 Wiki::Toolkit::Plugin::RSS::Reader
 WordNet::SenseRelate::AllWords
 Workflow
