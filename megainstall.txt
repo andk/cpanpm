@@ -46,6 +46,7 @@ App::Info::Lib::Iconv
 App::MadEye
 App::Prove::History
 App::TemplateServer
+App::TimeTracker
 App::a2pdf
 App::sync_cpantesters
 AppConfig
@@ -918,6 +919,7 @@ Math::Combinatorics
 Math::Expression
 Math::Expression::Evaluator
 Math::GMP
+Math::GSL::Histogram2D
 Math::Geometry::Planar::GPC
 Math::Geometry::Planar::Offset
 Math::Geometry::Voronoi
@@ -1072,6 +1074,8 @@ Object::Realize::Later
 Object::Relation::NO_SMOKER_39316
 Object::Signature
 Object::Tiny
+Objects::Collection
+Ocsinventory::Agent::Config
 Ogre::SceneManager
 OpenOffice::OOBuilder
 OpenOffice::OODoc
@@ -1270,6 +1274,7 @@ SOAP::Lite
 SOAP::WSDL
 SQL::Abstract::Limit
 SQL::ReservedWords
+SQL::Shell::Manual
 SQL::Statement
 SQL::Translator
 SREZIC/pingomatic-1.013
@@ -1307,6 +1312,7 @@ Schedule::Cron
 Scope::Guard
 Script::Remote
 Scriptalicious
+Search::Tools::RegExp::Keyword
 Set::ConsistentHash
 Set::Crontab
 Set::Infinite
@@ -1342,6 +1348,7 @@ Spreadsheet::ParseExcel
 Spreadsheet::Read
 Spreadsheet::WriteExcel
 Spreadsheet::WriteExcelXML
+Spreadsheet::WriteExcel::Worksheet::SheetProtection
 Squatting
 Statistics::Contingency
 Statistics::Distributions
@@ -1471,6 +1478,7 @@ Test::YAML::Meta
 Text::Aligner
 Text::Aspell
 Text::Autoformat
+Text::BibTeX::BibStyle
 Text::CSV_XS
 Text::Diff
 Text::Diff::HTML
