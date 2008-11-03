@@ -88,6 +88,7 @@ match:
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
+    |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LZE/CGI-CMS-\d                          # asks questions about paths
@@ -105,6 +106,7 @@ match:
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |OALDERS/URI-ParseSearchString-More-0.04
+    |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
