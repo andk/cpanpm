@@ -209,52 +209,7 @@ match:
     |LYOKATO/Catalyst-View-TT-ForceUTF8-\d
     |LYOKATO/FormValidator-Simple-\d
     |LYOKATO/Pod-ProjectDocs-\d
-    |MARCEL/App-sync_cpantesters-\d
-    |MARCEL/Business-Address-POBox-\d
-    |MARCEL/Class-Accessor-Bundle-\d
-    |MARCEL/Class-Accessor-Complex-\d
-    |MARCEL/Class-Accessor-Constructor-\d
-    |MARCEL/Class-Accessor-FactoryTyped-\d
-    |MARCEL/Class-Accessor-Installer-\d
-    |MARCEL/Class-Factory-Enhanced-\d
-    |MARCEL/Class-Scaffold-\d
-    |MARCEL/Class-Value-Bundle-\d
-    |MARCEL/Class-Value-Contact-\d
-    |MARCEL/Class-Value-SemanticAdapter-\d
-    |MARCEL/Class-Value-\d
-    |MARCEL/DB-Pluggable-\d
-    |MARCEL/Data-Conveyor-\d
-    |MARCEL/Data-Domain-Net-\d
-    |MARCEL/Data-Domain-SemanticAdapter-\d
-    |MARCEL/Data-Domain-URI-\d
-    |MARCEL/Data-Semantic-Net-\d
-    |MARCEL/Data-Semantic-URI-\d
-    |MARCEL/Data-Semantic-\d
-    |MARCEL/Data-Storage-\d
-    |MARCEL/Data-Timeline-Bundle-\d
-    |MARCEL/Data-Timeline-IScrobbler-\d
-    |MARCEL/Data-Timeline-SVK-\d
-    |MARCEL/Data-Timeline-\d
-    |MARCEL/Dist-Joseki-\d
-    |MARCEL/Games-Go-Coordinate-\d
-    |MARCEL/Games-Go-Rank-\d
-    |MARCEL/Google-Chart-\d
-    |MARCEL/Hash-Inflator-\d
-    |MARCEL/LWP-UserAgent-ProgressBar-\d
-    |MARCEL/Module-Install-Template-\d
-    |MARCEL/PerlIO-via-Pipe-\d
-    |MARCEL/Pod-Generated-\d
-    |MARCEL/String-BlackWhiteList-\d
-    |MARCEL/String-FlexMatch-\d
-    |MARCEL/Template-Plugin-CPAN-Packages-\d
-    |MARCEL/Template-Plugin-GoogleChart-\d
-    |MARCEL/Test-CompanionClasses-\d
-    |MARCEL/Test-Compile-\d
-    |MARCEL/Text-Pipe-Translate-\d
-    |MARCEL/Text-Pipe-W3CDTF-\d
-    |MARCEL/Text-Pipe-\d
-    |MARCEL/Vim-Complete-\d
-    |MARCEL/YAML-Active-\d
+    |MARCEL/
     |MARKSTOS/Test-WWW-Selenium-CGIApp-\d
     |MASAKI/Catalyst-Controller-Resources-\d
     |MDXI/Curses-UI-\d
@@ -388,7 +343,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
-    timeout: 60
+    timeout: 120
     reuse: 1
     talk:
       - "Auto-install"
