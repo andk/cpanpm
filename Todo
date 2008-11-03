@@ -1,3 +1,15 @@
+2008-11-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* somebody has successfully called cpanplus. I suspect it was
+	Devel-ebug-HTTP-0.32. Or Module::Install::Catalyst. Whatever. I now have
+	a process standing in
+	/home/sand/.cpanplus/5.11.0/build/Catalyst-Runtime-5.7015 doing nothing
+	having 6 pipes open and giving me no clue.
+
+	Yes, Leon has Module::Install 0.60 in inc/. Arrrrrrrgh.
+
+	http://rt.cpan.org/Ticket/Display.html?id=40599
+
 2008-10-23  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Scriptalicious had its first fail on 2008-07-08 with a bleadperl since
