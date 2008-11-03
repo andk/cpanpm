@@ -931,6 +931,7 @@ Math::Prime::XS
 Math::Random
 Math::Round::Var
 Math::Symbolic
+Math::SymbolicX::FastEvaluator
 Math::SymbolicX::ParserExtensionFactory
 Math::Vec
 Maypole
