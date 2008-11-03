@@ -1236,7 +1236,6 @@ sub my_dflt_prompt {
     my ($item, $dflt, $m) = @_;
     my $default = $CPAN::Config->{$item} || $dflt;
 
-    $DB::single = 1;
     if (!$m || $item =~ /$m/) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
@@ -1273,7 +1272,6 @@ sub my_prompt_loop {
     my $default = $CPAN::Config->{$item} || $dflt;
     my $ans;
 
-    $DB::single = 1;
     if (!$m || $item =~ /$m/) {
         $CPAN::Frontend->myprint($prompts{$item . "_intro"});
         $CPAN::Frontend->myprint(" <$item>\n");
