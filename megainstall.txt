@@ -13,6 +13,7 @@ Algorithm::Annotate
 Algorithm::C3
 Algorithm::CheckDigits
 Algorithm::Diff
+Algorithm::FloodControl
 Algorithm::Line::Bresenham
 Algorithm::Nhash
 Algorithm::Partition
@@ -76,6 +77,7 @@ B::Debug
 B::Deobfuscate
 B::Flags
 B::Hooks::OP::Check
+B::Hooks::Parser
 B::Lint
 B::Size
 B::TerseSize
@@ -1023,6 +1025,7 @@ Net::Jabber::Bot
 Net::Jaiku
 Net::Jifty
 Net::LDAP
+Net::LDAP::Class
 Net::Libdnet
 Net::MAC
 Net::MRIM
@@ -1040,6 +1043,7 @@ Net::Packet
 Net::Pcap
 Net::Ping
 Net::Proxy
+Net::RTorrent
 Net::SIP
 Net::SMTP
 Net::SNMP
@@ -1481,6 +1485,7 @@ Text::Aspell
 Text::Autoformat
 Text::BibTeX::BibStyle
 Text::CSV_XS
+Text::CSV::Separator
 Text::Diff
 Text::Diff::HTML
 Text::Editor::Easy
