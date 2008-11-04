@@ -1,3 +1,12 @@
+2008-11-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* shlomi-regex-utf8.pl needs a trick to kill itself after a second or
+	two but without alarm because alarm doesn't kill the running regexp.
+	Implemented with open..."|-". It uses alarm but in the parent and the
+	child runs the regex.
+
+	* S/SR/SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz also calls cpanplus.
+
 2008-11-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* somebody has successfully called cpanplus. I suspect it was
