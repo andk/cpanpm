@@ -266,6 +266,7 @@ match:
     |PRAVUS/Authen-CAS-Client-\d
     |REDTREE/PDF-API2-Simple-\d
     |RJBS/Rubric-\d
+    |RKITOVER/Catalyst-Controller-WrapCGI-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
     |RKITOVER/Catalyst-Plugin-SmartURI-\d
     |RKRIMEN/Carp-Clan-Share-\d
