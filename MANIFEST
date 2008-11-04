@@ -141,6 +141,7 @@ distroprefs/GRAY.IO-AIO-Util.yml
 distroprefs/GRICHTER.Embperl.yml
 distroprefs/GRM.App-CamelPKI.yml
 distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
+distroprefs/GWYN.POE-Component-Daemon.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HDP.Perl-Version.yml
@@ -178,6 +179,7 @@ distroprefs/JPRIT.Event.yml
 distroprefs/JRENNIE.WordNet-QueryData.yml
 distroprefs/JROBINSON.SQL-Translator.yml
 distroprefs/JROCKWAY.Chroniton.yml
+distroprefs/JSHIRLEY.Catalyst-Action-REST.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/JV.Getopt-Long.yml
 distroprefs/KANE.CPANPLUS.yml
@@ -210,6 +212,7 @@ distroprefs/MARKOV.MailTools.yml
 distroprefs/MARKSTOS.CGI-Session.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
+distroprefs/MCEGLOWS.Bloom-Filter.yml
 distroprefs/METZZO.Java.yml
 distroprefs/MI.yml
 distroprefs/MIKER.IPtables-IPv4-DBTarpit.yml
@@ -229,6 +232,7 @@ distroprefs/MLEHMANN.EV.yml
 distroprefs/MLEHMANN.Gtk-Perl.yml
 distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
+distroprefs/MLFISHER.Test-MockDBI.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MRAMBERG.MojoMojo.yml
 distroprefs/MSCHILLI.RRDTool-OO.yml
@@ -302,6 +306,7 @@ distroprefs/RSOD.IPC-Run.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/RYBSKEJ.forks.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
+distroprefs/SAMTREGAR.Devel-Profiler.yml
 distroprefs/SANKO.Net-BitTorrent.yml
 distroprefs/SCHUBIGER.DateTime-Format.yml
 distroprefs/SCHWERN.Class-Fields.yml
