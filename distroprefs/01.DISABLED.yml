@@ -61,6 +61,7 @@ match:
     |EKAWAS/MOBY-                            # hangs
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
+    |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
@@ -145,5 +146,6 @@ match:
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     |ZOFFIX/POE-Component-WWW-Google-PageRank-\d # hangs in 00-load with 34437
+    |ZOFFIX/POE-Component-WebService-HtmlKitCom-FavIconFromImage-\d # hangs
     )|
 disabled: 1
