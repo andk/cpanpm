@@ -98,6 +98,7 @@ match:
     |CLKAO/Pushmi-v\d
     |CLKAO/RunApp-\d
     |CLKAO/SVK-v\d
+    |CWEST/JSAN-\d
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d

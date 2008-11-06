@@ -1115,6 +1115,7 @@ PDF::Xtract
 PDL
 PGP::Sign
 PITA
+PITA::XML
 POE
 POE::API::Peek
 POE::Component::CPAN::YACSmoke
