@@ -129,6 +129,9 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{Este es un correo no solicitado},
                               qr{(?:Dear Client,<br />)},
                               qr{(?:Your account was temporarily blocked. Here is an instruction on recovery of your account.)},
+                              qr{CLICK THIS LINK TO VISIT:},
+                              qr{It's free to join and easy to sign up!},
+                              qr{More Easy To Make Money},
                              ],
              );
 
