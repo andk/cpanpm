@@ -1519,6 +1519,8 @@ Text::Trac
 Text::Typography
 Text::Unidecode
 Text::VimColor
+Text::WagnerFischer
+Text::WagnerFischer::Armenian
 Text::WikiCreole
 Text::WikiFormat
 Text::Wrap
@@ -1743,6 +1745,7 @@ XML::Validator::Schema
 XML::Writer
 XML::XPath
 XML::XPathEngine
+XML::XSH2
 XS::Writer
 XSLoader
 XUL::App
