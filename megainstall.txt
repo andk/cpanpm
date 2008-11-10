@@ -79,8 +79,12 @@ B::Flags
 B::Hooks::OP::Check
 B::Hooks::Parser
 B::Lint
+B::More
+B::OPCheck
+B::RecDeparse
 B::Size
 B::TerseSize
+B::XSUB::Dumber
 BFD
 BS::Event
 BSD::Resource
