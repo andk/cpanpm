@@ -132,6 +132,7 @@ Ni \s hao|Oi|Salve|Bonjour,Try\s)[,\.]+(?:\s|<br\s*/>)*\s*(?xi:
                               qr{CLICK THIS LINK TO VISIT:},
                               qr{It's free to join and easy to sign up!},
                               qr{More Easy To Make Money},
+                              qr{You have recieved a Hallmark E-Card from your friend.},
                              ],
              );
 
