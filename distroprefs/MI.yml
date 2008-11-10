@@ -168,6 +168,7 @@ match:
     |HIROSE/Net-SSL-ExpireDate-\d
     |HOLOWAY/Catalyst-Action-REST-\d
     |HOLOWAY/Catalyst-Log-Log4perl-\d
+    |ISILLITOE/MooseX-Role-Cmd-\d
     |JAYK/Catalyst-Plugin-Authentication-Store-DBIx-Class-\d
     |JAYK/Catalyst-Plugin-Authentication-\d
     |JCAMACHO/Catalyst-Controller-FormBuilder-\d
