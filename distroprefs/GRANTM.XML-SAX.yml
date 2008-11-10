@@ -3,7 +3,9 @@ comment: |
 
   Added XML::LibXML to satisfy XML::Validator::Schema and maybe others
   later. XML::SAX would accept to be installed without parser, do not
-  know why.
+  know why. Update 2008-11-10 got circular dependency between LibXML
+  and SAX:-(, had to remove that again, trying with single requires
+  (instead of configure_requires) now.
 
   Introduced eexpect after seeing that the question is not asked when
   we are called very early, like on 20081105T0337
@@ -19,5 +21,5 @@ pl:
       - "Do you want XML::SAX to alter ParserDetails.ini"
       - "y\n"
 depends:
-  configure_requires:
+  requires:
     XML::LibXML: 0

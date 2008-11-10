@@ -155,6 +155,7 @@ match:
     |GRODITI/DBIx-Class-EncodedColumn-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
+    |GUGU/Algorithm-FloodControl-\d
     |HANENKAMP/Bot-Net-\d
     |HANENKAMP/Data-Remember-\d
     |HANENKAMP/HTML-ParagraphSplit-\d
