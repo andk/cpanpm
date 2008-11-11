@@ -107,7 +107,7 @@ match:
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
-    |NWCLARK/perl-                           # pumpkin!
+    |NWCLARK/perl-                           # pumpkin
     |OALDERS/URI-ParseSearchString-More-0.04
     |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
