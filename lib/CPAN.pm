@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.9301';
+$CPAN::VERSION = '1.93_51';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -4230,6 +4230,20 @@ I would like to connect to one of the following sites to get '%s':
             if ($connect_to_internet_ok) {
                 @urllist = @CPAN::Defaultsites;
             } else {
+                my $sleep = 5;
+                $CPAN::Frontend->mywarn(sprintf qq{
+
+You have not configured a urllist and did not allow to connect to the
+internet. I will continue but it is very likely that we will face
+problems. If this happens, please consider to call either
+
+    o conf init connect_to_internet_ok
+or
+    o conf init urllist
+
+Sleeping $sleep seconds now.
+});
+                $CPAN::Frontend->mysleep($sleep);
                 @urllist = ();
             }
         } else {
@@ -5219,7 +5233,6 @@ sub reanimate_build_dir {
                                )) {
                 delete $do->{$skipper};
             }
-            # $DB::single = 1;
             if ($do->tested_ok_but_not_installed) {
                 $CPAN::META->is_tested($do->{build_dir},$do->{make_test}{TIME});
             }
@@ -8418,7 +8431,6 @@ sub follow_prereqs {
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
         # XXX watch out for foul ones
-        # $DB::single++;
         push @good_prereq_tuples, $p;
     }
     my $pretty_id = $self->pretty_id;
@@ -9304,7 +9316,6 @@ sub install {
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-    # $DB::single=1;
     unless ($self->{badtestcnt}) {
         $self->test;
     }
@@ -9481,7 +9492,6 @@ sub install {
         }
     }
     delete $self->{force_update};
-    # $DB::single = 1;
     $self->store_persistent_state;
 }
 
