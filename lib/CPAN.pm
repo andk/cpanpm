@@ -2,7 +2,11 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
+<<<<<<< HEAD:lib/CPAN.pm
 $CPAN::VERSION = '1.93_02'; # make the _02 a dev release and release it as 1.9303 after merge into blead
+=======
+$CPAN::VERSION = '1.93_51';
+>>>>>>> a1c808a... bootstrapping had been broken by connect_to_internet_ok=0 in FirstTime; should be regained with this patch:lib/CPAN.pm
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
