@@ -1,5 +1,11 @@
 --- 
-comment: "tested with 2.18 and 2.19"
+comment: |
+
+  tested with 2.18 and 2.19
+
+  2008-11-11 akoenig update: with 5 seconds timeout we were probably
+  too miserly today
+
 match:
   distribution: "^ABW/Template-Toolkit-2\."
 pl:
@@ -7,7 +13,7 @@ pl:
     - TT_EXTRAS=no
   eexpect:
     mode: anyorder
-    timeout: 5
+    timeout: 15
     talk:
       - "Do you want to build the XS Stash module"
       - "y\n"
