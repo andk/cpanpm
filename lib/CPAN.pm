@@ -1119,9 +1119,11 @@ Please report if something unexpected happens\n");
                         # XXX
                         # $_->{build_dir_reuse} = 0; # 2006-11-17 akoenig Why was that?
                         $_->{commandnumber_in_prompt} = 0; # visibility
-                        $_->{histfile} = "";               # who should win otherwise?
-                        $_->{cache_metadata} = 0;          # better would be a lock?
-                        $_->{use_sqlite} = 0;              # better would be a write lock!
+                        $_->{histfile}       = "";  # who should win otherwise?
+                        $_->{cache_metadata} = 0;   # better would be a lock?
+                        $_->{use_sqlite}     = 0;   # better would be a write lock!
+                        $_->{auto_commit}    = 0;   # we are violent, do not persist
+                        $_->{test_report}    = 0;   # Oliver Paukstadt had sent wrong reports in degraded mode
                     }
                 } else {
                     $CPAN::Frontend->mydie("
