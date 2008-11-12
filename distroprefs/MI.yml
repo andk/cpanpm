@@ -33,6 +33,7 @@ match:
     |ASKSH/Acme-Locals-\d
     |ASKSH/sys-\d
     |AUDREYT/Scalar-Defer-\d
+    |AUTRIJUS/ExtUtils-AutoInstall-0.63.tar.gz
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Image-Compare-\d
