@@ -1,4 +1,5 @@
 AI::Categorizer
+AI::MaxEntropy
 AI::Prolog
 AMF::Perl
 ANDK/keepcool-0.344
@@ -42,6 +43,7 @@ Apache::Test
 App::Ack
 App::Asciio
 App::CLI
+App::CPAN::Mini::Visit
 App::Info
 App::Info::Lib::Iconv
 App::MadEye
@@ -142,8 +144,10 @@ CPAN::Faker
 CPAN::Index::Loader
 CPAN::Indexer::Mirror
 CPAN::IndexPod
+CPAN::Metadata::RDF
 CPAN::Metrics
 CPAN::Mini
+CPAN::Mini::Devel
 CPAN::Mini::Webserver
 CPAN::Reporter::Smoker
 CPAN::Site
@@ -431,6 +435,7 @@ DateTimeX::Easy
 Date::Tiny
 DbFramework::Persistent
 Devel::ArgNames
+Devel::BeginLift
 Devel::CallSite
 Devel::CallTrace
 Devel::Caller
@@ -1346,6 +1351,7 @@ Socket6
 Sort::ArbBiLex
 Sort::DataTypes
 Sort::Key
+Sort::Key::OID
 Sort::Key::Radix
 Sort::Maker
 Sort::Naturally

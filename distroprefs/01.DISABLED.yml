@@ -129,6 +129,7 @@ match:
     |SSCAFFIDI/Stem-0.12.tar.gz              # hangs
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
+    |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl

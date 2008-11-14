@@ -257,6 +257,7 @@ match:
     |OSFAMERON/Perl-Tags-\d
     |OSFAMERON/Sub-Auto-\d
     |OSFAMERON/Sub-Curried-\d
+    |PERIGRIN/JSON-Any-\d
     |PERIGRIN/MooseX-Async-\d
     |PERIGRIN/MooseX-POE-\d
     |PERIGRIN/MooseX-Workers-\d
