@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use CPAN::DistnameInfo;
 use File::Basename qw(fileparse dirname);
+use File::Temp;
 use Time::HiRes qw(sleep);
 use YAML::Syck;
 
@@ -87,6 +88,7 @@ MAIN : {
   my $basedir = "/home/sand/CPAN-SVN/logs";
   my %comboseen;
  ITERATION: while () {
+    sanity_check();
     my $iteration_start = time;
     my $recent_events = read_recent_events($rf,$rx);
     my $perls;
@@ -196,6 +198,14 @@ MAIN : {
 
   print "\n";
 
+}
+
+sub sanity_check {
+  my $tmpdir = File::Temp::tempdir(
+                                   "loop-over-recent-XXXXXX",
+                                   DIR => "/tmp",
+                                   CLEANUP => 1,
+                                  ) or die $!;
 }
 
 __END__
