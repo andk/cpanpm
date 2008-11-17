@@ -20,6 +20,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
+    reuse: 1
     talk:
       - "Upgrade DateTime::Util::Calc\?"
       - "y\n"
@@ -35,6 +36,7 @@ match:
 pl:
   eexpect:
     mode: anyorder
+    reuse: 1
     timeout: 5
     talk:
       - "Auto-install"
