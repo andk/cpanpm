@@ -241,6 +241,7 @@ match:
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
     |MRAMBERG/Task-Catalyst-\d
+    |MRAMBERG/Task-Catalyst-Tutorial-\d
     |MSIMERSON/Mail-Toaster-\d
     |MSTROUT/Catalyst-Controller-BindLex-\d
     |MSTROUT/Catalyst-Plugin-Authentication-Store-DBIC-\d
