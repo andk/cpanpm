@@ -89,7 +89,6 @@ match:
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
     |KORTY/
-    |KWILLIAMS/Crypt-SKey-0.08               # tests interactively
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
     |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
