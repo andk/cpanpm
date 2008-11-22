@@ -57,6 +57,7 @@ Archive::Builder
 Archive::Cpio
 Archive::Tar
 Archive::Zip
+Array::Heap2
 Array::Iterator
 Array::RefElem
 Array::Slice
@@ -204,6 +205,7 @@ Chart::Math::Axis
 Chart::Mountain
 Chart::OFC
 Chatbot::Eliza
+Chess
 Chroniton
 Class::Accessor
 Class::Accessor::Assert
@@ -319,6 +321,7 @@ Crypt::RC4
 Crypt::RSA
 Crypt::Random
 Crypt::Rijndael
+Crypt::SKey
 Crypt::SSLeay
 Curses
 Curses::UI
@@ -554,6 +557,7 @@ ExtUtils::XSBuilder
 FCGI::Engine
 FLV::Info
 FSA::Rules
+Fatal::Exception
 Fault
 Fcntl
 Fey
@@ -634,6 +638,7 @@ GTop
 GameClock
 Games::Affenspiel
 Games::Bingo
+Games::Minesweeper
 Games::RolePlay::MapGen
 Games::Tournament::Swiss
 Geo::Cache
@@ -687,6 +692,7 @@ HTML::Entities
 HTML::Entities::Numbered
 HTML::FillInForm
 HTML::FormFu
+HTML::FormWidgets::Anchor
 HTML::FormatText
 HTML::Fraction
 HTML::FromText
@@ -956,6 +962,7 @@ Method::Signatures
 Mixin::ExtraFields
 Module::Build
 Module::Build::Convert
+Module::CPANTS::Site
 Module::Changes
 Module::Compile
 Module::Dependency::Info
@@ -1099,6 +1106,7 @@ OpenOffice::OODoc
 OpenResty
 OpenThought
 Osgood::Client
+Osgood::Server
 Oxford::Calendar
 P5NCI
 PAR
