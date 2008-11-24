@@ -1,4 +1,4 @@
-package CPAN::DeferedCode;
+package CPAN::DeferredCode;
 
 use strict;
 use vars qw/$VERSION/;
