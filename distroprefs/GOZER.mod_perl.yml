@@ -1,6 +1,16 @@
 ---
 comment: |
 
+  Currently no interest in apache on that smoker. No technical reasons.
+
+match:
+  distribution: "/mod_perl-1"
+  perlconfig:
+    archname: "x86_64-linux"
+disabled: 1
+---
+comment: |
+
   http://svn.apache.org/viewvc?view=rev&revision=555908
 
 match:
