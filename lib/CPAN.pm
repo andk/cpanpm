@@ -10683,7 +10683,7 @@ with little enthusiasm).
 
 =head2 Debugging
 
-Debugging this module is more than a bit complex duew to interference from
+Debugging this module is more than a bit complex due to interference from
 the software producing the indices on CPAN, the mirroring process on CPAN,
 packaging, configuration, synchronicity, and even (gasp!) due to bugs
 within the CPAN.pm module itself.
