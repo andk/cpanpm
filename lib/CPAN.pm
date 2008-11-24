@@ -979,7 +979,7 @@ sub checklock {
                                            "process $otherpid.\n".
                                            "Cannot proceed.\n"));
         } elsif ($RUN_DEGRADED) {
-            $CPAN::Frontend->mywarn("Running in degraded mode (experimental)\n");
+            $CPAN::Frontend->mywarn("Running in downgraded mode (experimental)\n");
         } elsif (defined $otherpid && $otherpid) {
             return if $$ == $otherpid; # should never happen
             $CPAN::Frontend->mywarn(
@@ -990,10 +990,10 @@ There seems to be running another CPAN process (pid $otherpid).  Contacting...
                 $CPAN::Frontend->mywarn(qq{Other job is running.\n});
                 my($ans) =
                     CPAN::Shell::colorable_makemaker_prompt
-                        (qq{Shall I try to run in degraded }.
+                        (qq{Shall I try to run in downgraded }.
                         qq{mode? (Y/n)},"y");
                 if ($ans =~ /^y/i) {
-                    $CPAN::Frontend->mywarn("Running in degraded mode (experimental).
+                    $CPAN::Frontend->mywarn("Running in downgraded mode (experimental).
 Please report if something unexpected happens\n");
                     $RUN_DEGRADED = 1;
                     for ($CPAN::Config) {
@@ -1022,7 +1022,7 @@ You may want to kill the other job and delete the lockfile. On UNIX try:
                 unless $ans =~ /^y/i;
             } else {
                 Carp::croak(
-                    qq{Lockfile '$lockfile' not writeable by you. }.
+                    qq{Lockfile '$lockfile' not writable by you. }.
                     qq{Cannot proceed.\n}.
                     qq{    On UNIX try:\n}.
                     qq{    rm '$lockfile'\n}.
@@ -2645,7 +2645,7 @@ sub hostdlhard {
             $CPAN::Frontend->myprint(
                                      qq[
 Trying with "$funkyftp$src_switch" to get
-    $url
+    "$url"
 ]);
             my($system) =
                 "$chdir$funkyftp$src_switch \"$url\" $devnull$stdout_redir";
@@ -2695,7 +2695,7 @@ No success, the file that lynx has downloaded is an empty file.
                 $CPAN::Frontend->myprint(
                                         qq[
     Trying with "$funkyftp$src_switch" to get
-    $url.gz
+    "$url.gz"
     ]);
                 my($system) = "$funkyftp$src_switch \"$url.gz\" $devnull > $asl_gz";
                 $self->debug("system[$system]") if $CPAN::DEBUG;
@@ -2723,7 +2723,7 @@ No success, the file that lynx has downloaded is an empty file.
                     ", left\n$aslocal with size ".-s _ :
                     "\nWarning: expected file [$aslocal] doesn't exist";
                 $CPAN::Frontend->myprint(qq{
-    System call "$system"
+    Function system("$system")
     returned status $estatus (wstat $wstatus)$size
     });
             }
@@ -2784,8 +2784,8 @@ to get '$aslocal'.
 
 Doing so often leads to problems that are hard to diagnose.
 
-If you're victim of such problems, please consider unsetting the ftp
-config variable with
+If you're the victim of such problems, please consider unsetting the 
+ftp config variable with
 
     o conf ftp ""
     o conf commit
@@ -2836,7 +2836,7 @@ config variable with
                 }
                 $CPAN::Frontend->myprint(qq{
   Trying with external ftp to get
-    $url
+    '$url'
   $netrc_explain
   Going to send the dialog
 $dialog
@@ -5070,8 +5070,8 @@ We\'ll try to build it with that Makefile then.
         }
         $cf =~ s|[/\\:]||g;     # risk of filesystem damage
         $cf = "unknown" unless length($cf);
-        if (my $crap = $self->_contains_crap($build_dir)) {
-            my $why = qq{Package contains $crap; not recognized as a perl package, giving up};
+        if (my $crud = $self->_contains_crud($build_dir)) {
+            my $why = qq{Package contains $crud; not recognized as a perl package, giving up};
             $CPAN::Frontend->mywarn("$why\n");
             $self->{writemakefile} = CPAN::Distrostatus->new(qq{NO -- $why});
             return;
@@ -5106,8 +5106,8 @@ WriteMakefile(
     }
 }
 
-#-> CPAN;:Distribution::_contains_crap
-sub _contains_crap {
+#-> CPAN;:Distribution::_contains_crud
+sub _contains_crud {
     my($self,$dir) = @_;
     my(@dirs, $dh, @files);
     opendir $dh, $dir or return;
@@ -5216,7 +5216,7 @@ sub _signature_business {
                                            );
 
                     my $wrap =
-                        sprintf(qq{I'd recommend removing %s. Some error occured    }.
+                        sprintf(qq{I'd recommend removing %s. Some error occurred   }.
                                 qq{while checking its signature, so it could        }.
                                 qq{be invalid. Maybe you have configured            }.
                                 qq{your 'urllist' with a bad URL. Please check this }.
@@ -6739,7 +6739,7 @@ sub unsat_prereq {
                 $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                         "'$need_module => $need_version' ".
                                         "for '$self->{ID}' seems ".
-                                        "not available according to the indexes\n"
+                                        "not available according to the indices\n"
                                        );
                 next NEED;
             }
@@ -8930,28 +8930,28 @@ Basic commands:
 
 The CPAN module automates or at least simplifies the make and install
 of perl modules and extensions. It includes some primitive searching
-capabilities and knows how to use Net::FTP or LWP or some external
-download clients to fetch the distributions from the net.
+capabilities and knows how to use Net::FTP, LWP, and certain external
+download clients to fetch distributions from the net.
 
-These are fetched from one or more of the mirrored CPAN (Comprehensive
+These are fetched from one or more mirrored CPAN (Comprehensive
 Perl Archive Network) sites and unpacked in a dedicated directory.
 
-The CPAN module also supports the concept of named and versioned
-I<bundles> of modules. Bundles simplify the handling of sets of
+The CPAN module also supports named and versioned
+I<bundles> of modules. Bundles simplify handling of sets of
 related modules. See Bundles below.
 
 The package contains a session manager and a cache manager. The
-session manager keeps track of what has been fetched, built and
+session manager keeps track of what has been fetched, built, and
 installed in the current session. The cache manager keeps track of the
 disk space occupied by the make processes and deletes excess space
-according to a simple FIFO mechanism.
+using a simple FIFO mechanism.
 
 All methods provided are accessible in a programmer style and in an
 interactive shell style.
 
 =head2 CPAN::shell([$prompt, $command]) Starting Interactive Mode
 
-The interactive mode is entered by running
+Enter interactive mode by running
 
     perl -MCPAN -e shell
 
@@ -8960,14 +8960,14 @@ or
     cpan
 
 which puts you into a readline interface. If C<Term::ReadKey> and
-either C<Term::ReadLine::Perl> or C<Term::ReadLine::Gnu> are installed
-it supports both history and command completion.
+either of C<Term::ReadLine::Perl> or C<Term::ReadLine::Gnu> are installed,
+history and command completion are supported.
 
-Once you are on the command line, type C<h> to get a one page help
-screen and the rest should be self-explanatory.
+Once at the command line, type C<h> for one-page help
+screen; the rest should be self-explanatory.
 
-The function call C<shell> takes two optional arguments, one is the
-prompt, the second is the default initial command line (the latter
+The function call C<shell> takes two optional arguments: one the
+prompt, the second the default initial command line (the latter
 only works if a real ReadLine interface module is installed).
 
 The most common uses of the interactive modes are
@@ -8981,16 +8981,16 @@ for each of the four categories and another, C<i> for any of the
 mentioned four. Each of the four entities is implemented as a class
 with slightly differing methods for displaying an object.
 
-Arguments you pass to these commands are either strings exactly matching
-the identification string of an object or regular expressions that are
-then matched case-insensitively against various attributes of the
-objects. The parser recognizes a regular expression only if you
-enclose it between two slashes.
+Arguments to these commands are either strings exactly matching
+the identification string of an object, or regular expressions 
+matched case-insensitively against various attributes of the
+objects. The parser only recognizes a regular expression when you
+enclose it with slashes.
 
-The principle is that the number of found objects influences how an
+The principle is that the number of objects found influences how an
 item is displayed. If the search finds one item, the result is
-displayed with the rather verbose method C<as_string>, but if we find
-more than one, we display each object with the terse method
+displayed with the rather verbose method C<as_string>, but if 
+more than one is found, each object is displayed with the terse method
 C<as_glimpse>.
 
 Examples:
@@ -9044,29 +9044,29 @@ the configuration parameter C<prerequisites_policy>.)
 C<get> downloads a distribution file and untars or unzips it, C<make>
 builds it, C<test> runs the test suite, and C<install> installs it.
 
-Any C<make> or C<test> are run unconditionally. An
+Any C<make> or C<test> is run unconditionally. An
 
   install <distribution_file>
 
-also is run unconditionally. But for
+is also run unconditionally. But for
 
   install <module>
 
-CPAN checks if an install is actually needed for it and prints
-I<module up to date> in the case that the distribution file containing
-the module doesn't need to be updated.
+CPAN checks whether an install is needed and prints
+I<module up to date> if the distribution file containing
+the module doesn't need updating.
 
 CPAN also keeps track of what it has done within the current session
-and doesn't try to build a package a second time regardless if it
+and doesn't try to build a package a second time regardless of whether it
 succeeded or not. It does not repeat a test run if the test
 has been run successfully before. Same for install runs.
 
 The C<force> pragma may precede another command (currently: C<get>,
-C<make>, C<test>, or C<install>) and executes the command from scratch
-and tries to continue in case of some errors. See the section below on
+C<make>, C<test>, or C<install>) to execute the command from scratch
+and attempt to continue past certain errors. See the section below on
 the C<force> and the C<fforce> pragma.
 
-The C<notest> pragma may be used to skip the test part in the build
+The C<notest> pragma skips the test part in the build
 process.
 
 Example:
@@ -9084,18 +9084,18 @@ being executed within the distribution file's working directory.
 C<readme> displays the README file of the associated distribution.
 C<Look> gets and untars (if not yet done) the distribution file,
 changes to the appropriate directory and opens a subshell process in
-that directory. C<perldoc> displays the pod documentation of the
-module in html or plain text format.
+that directory. C<perldoc> displays the module's pod documentation 
+in html or plain text format.
 
 =item C<ls> author
 
 =item C<ls> globbing_expression
 
 The first form lists all distribution files in and below an author's
-CPAN directory as they are stored in the CHECKUMS files distributed on
-CPAN. The listing goes recursive into all subdirectories.
+CPAN directory as stored in the CHECKUMS files distributed on
+CPAN. The listing recurses into subdirectories.
 
-The second form allows to limit or expand the output with shell
+The second form limits or expands the output with shell
 globbing as in the following examples:
 
       ls JV/make*
@@ -9107,7 +9107,7 @@ that break the alignment of the result.
 
 Note that globbing only lists directories explicitly asked for, for
 example FOO/* will not list FOO/bar/Acme-Sthg-n.nn.tar.gz. This may be
-regarded as a bug and may be changed in future versions.
+regarded as a bug that may be changed in some future version.
 
 =item C<failed>
 
@@ -9124,22 +9124,22 @@ for later perusal.
 
 If the configurations variable C<build_dir_reuse> is set to a true
 value, then CPAN.pm reads the collected YAML files. If the stored
-signature matches the currently running perl the stored state is
-loaded into memory such that effectively persistence between sessions
-is established.
+signature matches the currently running perl, the stored state is
+loaded into memory such that persistence between sessions
+is effectively established.
 
 =item The C<force> and the C<fforce> pragma
 
 To speed things up in complex installation scenarios, CPAN.pm keeps
 track of what it has already done and refuses to do some things a
 second time. A C<get>, a C<make>, and an C<install> are not repeated.
-A C<test> is only repeated if the previous test was unsuccessful. The
+A C<test> is repeated only if the previous test was unsuccessful. The
 diagnostic message when CPAN.pm refuses to do something a second time
 is one of I<Has already been >C<unwrapped|made|tested successfully> or
 something similar. Another situation where CPAN refuses to act is an
-C<install> if the according C<test> was not successful.
+C<install> if the corresponding C<test> was not successful.
 
-In all these cases, the user can override the goatish behaviour by
+In all these cases, the user can override this stubborn behaviour by
 prepending the command with the word force, for example:
 
   cpan> force get Foo
@@ -9147,7 +9147,7 @@ prepending the command with the word force, for example:
   cpan> force test Baz
   cpan> force install Acme::Meta
 
-Each I<forced> command is executed with the according part of its
+Each I<forced> command is executed with the corresponding part of its
 memory erased.
 
 The C<fforce> pragma is a variant that emulates a C<force get> which
@@ -9156,24 +9156,24 @@ restarting the whole get/make/test/install procedure from scratch.
 
 =item Lockfile
 
-Interactive sessions maintain a lockfile, per default C<~/.cpan/.lock>.
-Batch jobs can run without a lockfile and do not disturb each other.
+Interactive sessions maintain a lockfile, by default C<~/.cpan/.lock>.
+Batch jobs can run without a lockfile and not disturb each other.
 
-The shell offers to run in I<degraded mode> when another process is
+The shell offers to run in I<downgraded mode> when another process is
 holding the lockfile. This is an experimental feature that is not yet
 tested very well. This second shell then does not write the history
-file, does not use the metadata file and has a different prompt.
+file, does not use the metadata file, and has a different prompt.
 
 =item Signals
 
 CPAN.pm installs signal handlers for SIGINT and SIGTERM. While you are
-in the cpan-shell it is intended that you can press C<^C> anytime and
+in the cpan-shell, it is intended that you can press C<^C> anytime and
 return to the cpan-shell prompt. A SIGTERM will cause the cpan-shell
 to clean up and leave the shell loop. You can emulate the effect of a
 SIGTERM by sending two consecutive SIGINTs, which usually means by
 pressing C<^C> twice.
 
-CPAN.pm ignores a SIGPIPE. If the user sets C<inactivity_timeout>, a
+CPAN.pm ignores SIGPIPE. If the user sets C<inactivity_timeout>, a
 SIGALRM is used during the run of the C<perl Makefile.PL> or C<perl
 Build.PL> subprocess.
 
@@ -9181,12 +9181,12 @@ Build.PL> subprocess.
 
 =head2 CPAN::Shell
 
-The commands that are available in the shell interface are methods in
-the package CPAN::Shell. If you enter the shell command, all your
-input is split by the Text::ParseWords::shellwords() routine which
-acts like most shells do. The first word is being interpreted as the
-method to be called and the rest of the words are treated as arguments
-to this method. Continuation lines are supported if a line ends with a
+The commands available in the shell interface are methods in
+the package CPAN::Shell. If you enter the shell command, your
+input is split by the Text::ParseWords::shellwords() routine, which
+acts like most shells do. The first word is interpreted as the
+method to be invoked, and the rest of the words are treated as the method's arguments.
+Continuation lines are supported by ending a line with a
 literal backslash.
 
 =head2 autobundle
@@ -9205,36 +9205,35 @@ versions of CPAN.pm
 This commands provides a statistical overview over recent download
 activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
-configured or YAML not installed, then no stats are provided.
+configured or YAML not installed, no stats are provided.
 
 =head2 mkmyconfig
 
-mkmyconfig() writes your own CPAN::MyConfig file into your ~/.cpan/
+mkmyconfig() writes your own CPAN::MyConfig file into your C<~/.cpan/>
 directory so that you can save your own preferences instead of the
-system wide ones.
+system-wide ones.
 
 =head2 recent ***EXPERIMENTAL COMMAND***
 
 The C<recent> command downloads a list of recent uploads to CPAN and
-displays them I<slowly>. While the command is running $SIG{INT} is
-defined to mean that the loop shall be left after having displayed the
-current item.
+displays them I<slowly>. While the command is running, a $SIG{INT} 
+exits the loop after displaying the current item.
 
 B<Note>: This command requires XML::LibXML installed.
 
 B<Note>: This whole command currently is just a hack and will
-probably change in future versions of CPAN.pm but the general
-approach will likely stay.
+probably change in future versions of CPAN.pm, but the general
+approach will likely remain.
 
 B<Note>: See also L<smoke>
 
 =head2 recompile
 
-recompile() is a very special command in that it takes no argument and
+recompile() is a special command that takes no argument and
 runs the make/test/install cycle with brute force over all installed
 dynamically loadable extensions (aka XS modules) with 'force' in
 effect. The primary purpose of this command is to finish a network
-installation. Imagine, you have a common source tree for two different
+installation. Imagine you have a common source tree for two different
 architectures. You decide to do a completely independent fresh
 installation. You start on one architecture with the help of a Bundle
 file produced earlier. CPAN installs the whole Bundle for you, but
@@ -9251,7 +9250,7 @@ commands), then you should try the CPAN::Nox module for recovery.
 
 The C<report> command temporarily turns on the C<test_report> config
 variable, then runs the C<force test> command with the given
-arguments. The C<force> pragma is used to re-run the tests and repeat
+arguments. The C<force> pragma reruns the tests and repeats
 every step that might have failed before.
 
 =head2 smoke ***EXPERIMENTAL COMMAND***
@@ -9267,8 +9266,8 @@ command is running $SIG{INT} is defined to mean that the current item
 shall be skipped.
 
 B<Note>: This whole command currently is just a hack and will
-probably change in future versions of CPAN.pm but the general
-approach will likely stay.
+probably change in future versions of CPAN.pm, but the general
+approach will likely remain.
 
 B<Note>: See also L<recent>
 
@@ -9281,8 +9280,8 @@ were listed by that.
 =head2 The four C<CPAN::*> Classes: Author, Bundle, Module, Distribution
 
 Although it may be considered internal, the class hierarchy does matter
-for both users and programmer. CPAN.pm deals with above mentioned four
-classes, and all those classes share a set of methods. A classical
+for both users and programmer. CPAN.pm deals with the four
+classes mentioned above, and those classes all share a set of methods. Classical
 single polymorphism is in effect. A metaclass object registers all
 objects of all kinds and indexes them with a string. The strings
 referencing objects have a separated namespace (well, not completely
@@ -9340,7 +9339,7 @@ without CPAN.pm is one of
 
 the command C<cpan .> does all of this at once. It figures out which
 of the two mantras is appropriate, fetches and installs all
-prerequisites, cares for them recursively and finally finishes the
+prerequisites, takes care of them recursively, and finally finishes the
 installation of the module in the current directory, be it a CPAN
 module or not.
 
@@ -9350,20 +9349,20 @@ projects from remote repositories on the local disk.
 =head2 Redirection
 
 The usual shell redirection symbols C< | > and C<< > >> are recognized
-by the cpan shell when surrounded by whitespace. So piping into a
-pager and redirecting output into a file works quite similar to any
-shell.
+by the cpan shell B<only when surrounded by whitespace>. So piping to
+pager or redirecting output into a file works somewhat as in a normal
+shell, with the stipulation that you must type extra spaces.
 
 =head1 CONFIGURATION
 
 When the CPAN module is used for the first time, a configuration
-dialog tries to determine a couple of site specific options. The
+dialogue tries to determine a couple of site specific options. The
 result of the dialog is stored in a hash reference C< $CPAN::Config >
 in a file CPAN/Config.pm.
 
-The default values defined in the CPAN/Config.pm file can be
+Default values defined in the CPAN/Config.pm file can be
 overridden in a user specific file: CPAN/MyConfig.pm. Such a file is
-best placed in $HOME/.cpan/CPAN/MyConfig.pm, because $HOME/.cpan is
+best placed in C<$HOME/.cpan/CPAN/MyConfig.pm>, because C<$HOME/.cpan> is
 added to the search path of the CPAN module before the use() or
 require() statements. The mkmyconfig command writes this file for you.
 
@@ -9383,15 +9382,15 @@ Displays a short help
 
 =item displaying current values: o conf [KEY]
 
-Displays the current value(s) for this config variable. Without KEY
+Displays the current value(s) for this config variable. Without KEY,
 displays all subcommands and config variables.
 
 Example:
 
   o conf shell
 
-If KEY starts and ends with a slash the string in between is
-interpreted as a regular expression and only keys matching this regex
+If KEY starts and ends with a slash, the string in between is
+treated as a regular expression and only keys matching this regex
 are displayed
 
 Example:
@@ -9415,7 +9414,7 @@ removes the last element of the list. C<o conf KEYS unshift LIST>
 prepends a list of values to the list, C<o conf KEYS push LIST>
 appends a list of valued to the list.
 
-Likewise, C<o conf KEY splice LIST> passes the LIST to the according
+Likewise, C<o conf KEY splice LIST> passes the LIST to the corresponding
 splice command.
 
 Finally, any other list of arguments is taken as a new list value for
@@ -9445,8 +9444,8 @@ where WORD is any valid config variable or a regular expression.
 
 =head2 Config Variables
 
-Currently the following keys in the hash reference $CPAN::Config are
-defined:
+The following keys in the hash reference $CPAN::Config are
+currently defined:
 
   applypatch         path to external prg
   auto_commit        commit all changes to config variables to disk
@@ -9465,12 +9464,12 @@ defined:
   colorize_warn      Term::ANSIColor attributes for warnings
   commandnumber_in_prompt
                      boolean if you want to see current command number
-  commands_quote     prefered character to use for quoting external
+  commands_quote     preferred character to use for quoting external
                      commands when running them. Defaults to double
                      quote on Windows, single tick everywhere else;
                      can be set to space to disable quoting
   connect_to_internet_ok
-                     if we shall ask if opening a connection is ok before
+                     whether to ask if opening a connection is ok before
                      urllist is specified
   cpan_home          local directory reserved for this package
   curl               path to external prg
@@ -9492,10 +9491,10 @@ defined:
   http_proxy         proxy host for http requests
   inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                      after this many seconds inactivity. Set to 0 to
-                     never break.
-  index_expire       after this many days refetch index files
+                     disable timeouts.
+  index_expire       refetch index files after this many days 
   inhibit_startup_message
-                     if true, does not print the startup message
+                     if true, suppress the startup message
   keep_source_where  directory in which to keep the source (if we do)
   load_module_verbosity
                      report loading of optional modules used by CPAN.pm
@@ -9525,7 +9524,7 @@ defined:
                      with both a Makefile.PL and a Build.PL, use the
                      former (EUMM) or the latter (MB); if the module
                      comes with only one of the two, that one will be
-                     used in any case
+                     used no matter the setting
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
@@ -9602,9 +9601,9 @@ explanation about the functioning of a variable than the manpage.
 =head2 CPAN::anycwd($path): Note on config variable getcwd
 
 CPAN.pm changes the current working directory often and needs to
-determine its own current working directory. Per default it uses
-Cwd::cwd but if this doesn't work on your system for some reason,
-alternatives can be configured according to the following table:
+determine its own current working directory. By default it uses
+Cwd::cwd, but if for some reason this doesn't work on your system,
+configure alternatives according to the following table:
 
 =over 4
 
@@ -9641,8 +9640,8 @@ or
 =head2 The urllist parameter has CD-ROM support
 
 The C<urllist> parameter of the configuration table contains a list of
-URLs that are to be used for downloading. If the list contains any
-C<file> URLs, CPAN always tries to get files from there first. This
+URLs used for downloading. If the list contains any
+C<file> URLs, CPAN always tries there first. This
 feature is disabled for index files. So the recommendation for the
 owner of a CD-ROM with CPAN contents is: include your local, possibly
 outdated CD-ROM as a C<file> URL at the end of urllist, e.g.
@@ -9651,7 +9650,7 @@ outdated CD-ROM as a C<file> URL at the end of urllist, e.g.
 
 CPAN.pm will then fetch the index files from one of the CPAN sites
 that come at the beginning of urllist. It will later check for each
-module if there is a local copy of the most recent version.
+module to see whether there is a local copy of the most recent version.
 
 Another peculiarity of urllist is that the site that we could
 successfully fetch the last file from automatically gets a preference
@@ -9669,8 +9668,8 @@ about recent downloads. You can view the statistics with the C<hosts>
 command or inspect them directly by looking into the C<FTPstats.yml>
 file in your C<cpan_home> directory.
 
-To get some interesting statistics it is recommended to set the
-C<randomize_urllist> parameter that introduces some amount of
+To get some interesting statistics, it is recommended that
+C<randomize_urllist> be set; this introduces some amount of
 randomness into the URL selection.
 
 =head2 The C<requires> and C<build_requires> dependency declarations
@@ -9678,9 +9677,9 @@ randomness into the URL selection.
 Since CPAN.pm version 1.88_51 modules declared as C<build_requires> by
 a distribution are treated differently depending on the config
 variable C<build_requires_install_policy>. By setting
-C<build_requires_install_policy> to C<no> such a module is not being
-installed. It is only built and tested and then kept in the list of
-tested but uninstalled modules. As such it is available during the
+C<build_requires_install_policy> to C<no>, such a module is not 
+installed. It is only built and tested, and then kept in the list of
+tested but uninstalled modules. As such, it is available during the
 build of the dependent module by integrating the path to the
 C<blib/arch> and C<blib/lib> directories in the environment variable
 PERL5LIB. If C<build_requires_install_policy> is set ti C<yes>, then
@@ -9693,8 +9692,8 @@ C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 (B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
 still considered beta quality)
 
-Distributions on the CPAN usually behave according to what we call the
-CPAN mantra. Or since the event of Module::Build we should talk about
+Distributions on CPAN usually behave according to what we call the
+CPAN mantra. Or since the event of Module::Build, we should talk about
 two mantras:
 
     perl Makefile.PL     perl Build.PL
@@ -9703,8 +9702,8 @@ two mantras:
     make install         ./Build install
 
 But some modules cannot be built with this mantra. They try to get
-some extra data from the user via the environment, extra arguments or
-interactively thus disturbing the installation of large bundles like
+some extra data from the user via the environment, extra arguments, or
+interactively--thus disturbing the installation of large bundles like
 Phalanx100 or modules with many dependencies like Plagger.
 
 The distroprefs system of C<CPAN.pm> addresses this problem by
@@ -9732,7 +9731,7 @@ temporarily override assorted C<CPAN.pm> configuration variables
 
 =item
 
-specify dependencies that the original maintainer forgot to specify
+specify dependencies the original maintainer forgot 
 
 =item
 
@@ -9745,7 +9744,7 @@ distribution in the C<distroprefs/> directory for examples.
 
 =head2 Filenames
 
-The YAML files themselves must have the C<.yml> extension, all other
+The YAML files themselves must have the C<.yml> extension; all other
 files are ignored (for two exceptions see I<Fallback Data::Dumper and
 Storable> below). The containing directory can be specified in
 C<CPAN.pm> in the C<prefs_dir> config variable. Try C<o conf init
@@ -9753,10 +9752,10 @@ prefs_dir> in the CPAN shell to set and activate the distroprefs
 system.
 
 Every YAML file may contain arbitrary documents according to the YAML
-specification and every single document is treated as an entity that
+specification, and every document is treated as an entity that
 can specify the treatment of a single distribution.
 
-The names of the files can be picked freely, C<CPAN.pm> always reads
+Filenames can be picked arbitrarily; C<CPAN.pm> always reads
 all files (in alphabetical order) and takes the key C<match> (see
 below in I<Language Specs>) as a hashref containing match criteria
 that determine if the current distribution matches the YAML document
@@ -9764,7 +9763,7 @@ or not.
 
 =head2 Fallback Data::Dumper and Storable
 
-If neither your configured C<yaml_module> nor YAML.pm is installed
+If neither your configured C<yaml_module> nor YAML.pm is installed,
 CPAN.pm falls back to using Data::Dumper and Storable and looks for
 files with the extensions C<.dd> or C<.st> in the C<prefs_dir>
 directory. These files are expected to contain one or more hashrefs.
@@ -9784,7 +9783,7 @@ YAML would look like so:
         nstore(\@y, shift)' somefile.yml somefile.st
 
 In bootstrapping situations it is usually sufficient to translate only
-a few YAML files to Data::Dumper for the crucial modules like
+a few YAML files to Data::Dumper for crucial modules like
 C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>. If you prefer Storable
 over Data::Dumper, remember to pull out a Storable version that writes
 an older format than all the other Storable versions that will need to
@@ -9896,12 +9895,12 @@ Specifies that this distribution shall not be processed at all.
 
 Experimental implementation to deal with optional_features from
 META.yml. Still needs coordination with installer software and
-currently only works for META.yml declaring C<dynamic_config=0>. Use
+currently works only for META.yml declaring C<dynamic_config=0>. Use
 with caution.
 
 =item goto [string]
 
-The canonical name of a delegate distribution that shall be installed
+The canonical name of a delegate distribution to install
 instead. Useful when a new version, although it tests OK itself,
 breaks something else or a developer release or a fork is already
 uploaded that is better than the last released version.
@@ -9919,7 +9918,7 @@ CPAN mantra. See below under I<Processing Instructions>.
 =item match [hash]
 
 A hashref with one or more of the keys C<distribution>, C<modules>,
-C<perl>, C<perlconfig>, and C<env> that specify if a document is
+C<perl>, C<perlconfig>, and C<env> that specify whether a document is
 targeted at a specific CPAN distribution or installation.
 
 The corresponding values are interpreted as regular expressions. The
@@ -9941,14 +9940,14 @@ matched against corresponding values in the C<%ENV> hash.
 
 If more than one restriction of C<module>, C<distribution>, etc. is
 specified, the results of the separately computed match values must
-all match. If this is the case then the hashref represented by the
+all match. If so, the hashref represented by the
 YAML document is returned as the preference structure for the current
 distribution.
 
 =item patches [array]
 
 An array of patches on CPAN or on the local disk to be applied in
-order via the external patch program. If the value for the C<-p>
+order via an external patch program. If the value for the C<-p>
 parameter is C<0> or C<1> is determined by reading the patch
 beforehand.
 
@@ -9981,10 +9980,10 @@ Arguments to be added to the command line
 
 =item commandline
 
-A full commandline that will be executed as it stands by a system
-call. During the execution the environment variable PERL will is set
+A full commandline to run via C<system()>.
+During execution, the environment variable PERL is set
 to $^X (but with an absolute path). If C<commandline> is specified,
-the content of C<args> is not used.
+C<args> is not used.
 
 =item eexpect [hash]
 
@@ -9996,26 +9995,26 @@ questions come in the order written down and C<anyorder> for the case
 where the questions may come in any order. The default mode is
 C<deterministic>.
 
-C<timeout> denotes a timeout in seconds. Floating point timeouts are
-OK. In the case of a C<mode=deterministic> the timeout denotes the
-timeout per question, in the case of C<mode=anyorder> it denotes the
+C<timeout> denotes a timeout in seconds. Floating-point timeouts are
+OK. With C<mode=deterministic>, the timeout denotes the
+timeout per question; with C<mode=anyorder> it denotes the
 timeout per byte received from the stream or questions.
 
 C<talk> is a reference to an array that contains alternating questions
 and answers. Questions are regular expressions and answers are literal
-strings. The Expect module will then watch the stream coming from the
+strings. The Expect module watches the stream from the
 execution of the external program (C<perl Makefile.PL>, C<perl
 Build.PL>, C<make>, etc.).
 
-In the case of C<mode=deterministic> the CPAN.pm will inject the
-according answer as soon as the stream matches the regular expression.
+For C<mode=deterministic>, the CPAN.pm injects the
+corresponding answer as soon as the stream matches the regular expression.
 
-In the case of C<mode=anyorder> CPAN.pm will answer a question as soon
+For C<mode=anyorder> CPAN.pm answers a question as soon
 as the timeout is reached for the next byte in the input stream. In
-this mode you can use the C<reuse> parameter to decide what shall
+this mode you can use the C<reuse> parameter to decide what will
 happen with a question-answer pair after it has been used. In the
-default case (reuse=0) it is removed from the array, so it cannot be
-used again accidentally. In this case, if you want to answer the
+default case (reuse=0) it is removed from the array, avoiding being
+used again accidentally. If you want to answer the
 question C<Do you really want to do that> several times, then it must
 be included in the array at least as often as you want this answer to
 be given. Setting the parameter C<reuse> to 1 makes this repetition
@@ -10029,7 +10028,7 @@ Environment variables to be set during the command
 
 C<< expect: <array> >> is a short notation for
 
-  eexpect:
+eexpect:
     mode: deterministic
     timeout: 15
     talk: <array>
@@ -10040,23 +10039,23 @@ C<< expect: <array> >> is a short notation for
 
 If you have the C<Kwalify> module installed (which is part of the
 Bundle::CPANxxl), then all your distroprefs files are checked for
-syntactical correctness.
+syntactic correctness.
 
 =head2 Example Distroprefs Files
 
 C<CPAN.pm> comes with a collection of example YAML files. Note that these
 are really just examples and should not be used without care because
-they cannot fit everybody's purpose. After all the authors of the
+they cannot fit everybody's purpose. After all, the authors of the
 packages that ask questions had a need to ask, so you should watch
 their questions and adjust the examples to your environment and your
-needs. You have beend warned:-)
+needs. You have been warned:-)
 
 =head1 PROGRAMMER'S INTERFACE
 
-If you do not enter the shell, the available shell commands are both
-available as methods (C<CPAN::Shell-E<gt>install(...)>) and as
+If you do not enter the shell, shell commands are 
+available both as methods (C<CPAN::Shell-E<gt>install(...)>) and as
 functions in the calling package (C<install(...)>).  Before calling low-level
-commands it makes sense to initialize components of CPAN you need, e.g.:
+commands, it makes sense to initialize components of CPAN you need, e.g.:
 
   CPAN::HandleConfig->load;
   CPAN::Shell::setup_output;
@@ -10078,13 +10077,13 @@ The IDs of all objects available within a program are strings that can
 be expanded to the corresponding real objects with the
 C<CPAN::Shell-E<gt>expand("Module",@things)> method. Expand returns a
 list of CPAN::Module objects according to the C<@things> arguments
-given. In scalar context it only returns the first element of the
+given. In scalar context, it returns only the first element of the
 list.
 
 =item expandany(@things)
 
 Like expand, but returns objects of the appropriate type, i.e.
-CPAN::Bundle objects for bundles, CPAN::Module objects for modules and
+CPAN::Bundle objects for bundles, CPAN::Module objects for modules, and
 CPAN::Distribution objects for distributions. Note: it does not expand
 to CPAN::Author objects.
 
@@ -10112,18 +10111,18 @@ functionalities that are available in the shell.
     # find out which distribution on CPAN contains a module:
     print CPAN::Shell->expand("Module","Apache::Constants")->cpan_file
 
-Or if you want to write a cronjob to watch The CPAN, you could list
+Or if you want to schedule a I<cron> job to watch CPAN, you could list
 all modules that need updating. First a quick and dirty way:
 
     perl -e 'use CPAN; CPAN::Shell->r;'
 
-If you don't want to get any output in the case that all modules are
-up to date, you can parse the output of above command for the regular
-expression //modules are up to date// and decide to mail the output
-only if it doesn't match. Ick?
+If you don't want any output should all modules be
+up to date, parse the output of above command for the regular
+expression C</modules are up to date/> and decide to mail the output
+only if it doesn't match. 
 
-If you prefer to do it more in a programmer style in one single
-process, maybe something like this suits you better:
+If you prefer to do it more in a programmerish style in one single
+process, something like this may better suit you:
 
   # list all modules on my disk that have newer versions on CPAN
   for $mod (CPAN::Shell->expand("Module","/./")) {
@@ -10133,8 +10132,8 @@ process, maybe something like this suits you better:
         $mod->id, $mod->inst_version, $mod->cpan_version;
   }
 
-If that gives you too much output every day, you maybe only want to
-watch for three modules. You can write
+If that gives too much output every day, you may want to
+watch only for three modules. You can write
 
   for $mod (CPAN::Shell->expand("Module","/Apache|LWP|CGI/")) {
 
@@ -10265,8 +10264,8 @@ runs C<make clean> there.
 =item CPAN::Distribution::containsmods()
 
 Returns a list of IDs of modules contained in a distribution file.
-Only works for distributions listed in the 02packages.details.txt.gz
-file. This typically means that only the most recent version of a
+Works only for distributions listed in the 02packages.details.txt.gz
+file. This typically means that just most recent version of a
 distribution is covered.
 
 =item CPAN::Distribution::cvs_import()
@@ -10301,20 +10300,20 @@ current session.
 
 Changes to the directory where the distribution has been unpacked and
 runs the external command C<make install> there. If C<make> has not
-yet been run, it will be run first. A C<make test> will be issued in
-any case and if this fails, the install will be canceled. The
+yet been run, it will be run first. A C<make test> is issued in
+any case and if this fails, the install is cancelled. The
 cancellation can be avoided by letting C<force> run the C<install> for
 you.
 
-This install method has only the power to install the distribution if
-there are no dependencies in the way. To install an object and all of
+This install method only has the power to install the distribution if
+there are no dependencies in the way. To install an object along with all 
 its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
 
 =item CPAN::Distribution::install_tested()
 
-Install all the distributions that have been tested sucessfully but
+Install all distributions that have tested sucessfully but
 not yet installed. See also C<is_tested>.
 
 =item CPAN::Distribution::isa_perl()
@@ -10339,10 +10338,10 @@ Makefile.PL> or C<perl Build.PL> and C<make> there.
 =item CPAN::Distribution::perldoc()
 
 Downloads the pod documentation of the file associated with a
-distribution (in html format) and runs it through the external
-command lynx specified in C<$CPAN::Config->{lynx}>. If lynx
-isn't available, it converts it to plain text with external
-command html2text and runs it through the pager specified
+distribution (in HTML format) and runs it through the external
+command I<lynx> specified in C<$CPAN::Config->{lynx}>. If I<lynx>
+isn't available, it converts it to plain text with the external
+command I<html2text> and runs it through the pager specified
 in C<$CPAN::Config->{pager}>
 
 =item CPAN::Distribution::prefs()
@@ -10350,18 +10349,18 @@ in C<$CPAN::Config->{pager}>
 Returns the hash reference from the first matching YAML file that the
 user has deposited in the C<prefs_dir/> directory. The first
 succeeding match wins. The files in the C<prefs_dir/> are processed
-alphabetically and the canonical distroname (e.g.
+alphabetically, and the canonical distroname (e.g.
 AUTHOR/Foo-Bar-3.14.tar.gz) is matched against the regular expressions
 stored in the $root->{match}{distribution} attribute value.
 Additionally all module names contained in a distribution are matched
-agains the regular expressions in the $root->{match}{module} attribute
+against the regular expressions in the $root->{match}{module} attribute
 value. The two match values are ANDed together. Each of the two
 attributes are optional.
 
 =item CPAN::Distribution::prereq_pm()
 
 Returns the hash reference that has been announced by a distribution
-as the the C<requires> and C<build_requires> elements. These can be
+as the C<requires> and C<build_requires> elements. These can be
 declared either by the C<META.yml> (if authoritative) or can be
 deposited after the run of C<Build.PL> in the file C<./_build/prereqs>
 or after the run of C<Makfile.PL> written as the C<PREREQ_PM> hash in
@@ -10511,9 +10510,9 @@ Where the 'DSLIP' characters have the following meanings:
 
 =item CPAN::Module::force($method,@args)
 
-Forces CPAN to perform a task that it normally would have refused to
-do. Force takes as arguments a method name to be called and any number
-of additional arguments that should be passed to the called method.
+Forces CPAN to perform a task it would normally refuse to
+do. Force takes as arguments a method name to be invoked and any number
+of additional arguments to pass that method.
 The internals of the object get the needed changes so that CPAN.pm
 does not refuse to take the action. See also the section above on the
 C<force> and the C<fforce> pragma.
@@ -10525,7 +10524,7 @@ Runs a get on the distribution associated with this module.
 =item CPAN::Module::inst_file()
 
 Returns the filename of the module found in @INC. The first file found
-is reported just like perl itself stops searching @INC when it finds a
+is reported, just as perl itself stops searching @INC once it finds a
 module.
 
 =item CPAN::Module::available_file()
@@ -10560,9 +10559,9 @@ Runs a C<make> on the distribution associated with this module.
 =item CPAN::Module::manpage_headline()
 
 If module is installed, peeks into the module's manpage, reads the
-headline and returns it. Moreover, if the module has been downloaded
+headline, and returns it. Moreover, if the module has been downloaded
 within this session, does the equivalent on the downloaded module even
-if it is not installed.
+if it hasn't been installed yet.
 
 =item CPAN::Module::perldoc()
 
@@ -10643,9 +10642,9 @@ modules in a snapshot bundle file.
 =head1 PREREQUISITES
 
 If you have a local mirror of CPAN and can access all files with
-"file:" URLs, then you only need a perl better than perl5.003 to run
+"file:" URLs, then you only need a perl later than perl5.003 to run
 this module. Otherwise Net::FTP is strongly recommended. LWP may be
-required for non-UNIX systems or if your nearest CPAN site is
+required for non-UNIX systems, or if your nearest CPAN site is
 associated with a URL that is not C<ftp:>.
 
 If you have neither Net::FTP nor LWP, there is a fallback mechanism
@@ -10678,19 +10677,19 @@ parsed, please try the above method.
 
 come as compressed or gzipped tarfiles or as zip files and contain a
 C<Makefile.PL> or C<Build.PL> (well, we try to handle a bit more, but
-without much enthusiasm).
+with little enthusiasm).
 
 =back
 
 =head2 Debugging
 
-The debugging of this module is a bit complex, because we have
-interferences of the software producing the indices on CPAN, of the
-mirroring process on CPAN, of packaging, of configuration, of
-synchronicity, and of bugs within CPAN.pm.
+Debugging this module is more than a bit complex duew to interference from
+the software producing the indices on CPAN, the mirroring process on CPAN,
+packaging, configuration, synchronicity, and even (gasp!) due to bugs
+within the CPAN.pm module itself.
 
-For debugging the code of CPAN.pm itself in interactive mode some more
-or less useful debugging aid can be turned on for most packages within
+For debugging the code of CPAN.pm itself in interactive mode, some 
+debugging aid can be turned on for most packages within
 CPAN.pm with one of
 
 =over 2
@@ -10714,7 +10713,7 @@ turns debugging on for all packages.
 which sets the debugging packages directly. Note that C<o debug 0>
 turns debugging off.
 
-What seems quite a successful strategy is the combination of C<reload
+What seems a successful strategy is the combination of C<reload
 cpan> and the debugging switches. Add a new debug statement while
 running in the shell and then issue a C<reload cpan> and see the new
 debugging messages immediately without losing the current context.
@@ -10731,9 +10730,9 @@ Data::Dumper directly.
 
 =head2 Floppy, Zip, Offline Mode
 
-CPAN.pm works nicely without network too. If you maintain machines
-that are not networked at all, you should consider working with file:
-URLs. Of course, you have to collect your modules somewhere first. So
+CPAN.pm works nicely without network access, too. If you maintain machines
+that are not networked at all, you should consider working with C<file:>
+URLs. You'll have to collect your modules somewhere first. So
 you might use CPAN.pm to put together all you need on a networked
 machine. Then copy the $CPAN::Config->{keep_source_where} (but not
 $CPAN::Config->{build_dir}) directory on a floppy. This floppy is kind
@@ -10747,10 +10746,10 @@ with this floppy. See also below the paragraph about CD-ROM support.
 =item has_inst($module)
 
 Returns true if the module is installed. Used to load all modules into
-the running CPAN.pm which are considered optional. The config variable
-C<dontload_list> can be used to intercept the C<has_inst()> call such
+the running CPAN.pm that are considered optional. The config variable
+C<dontload_list> intercepts the C<has_inst()> call such
 that an optional module is not loaded despite being available. For
-example the following command will prevent that C<YAML.pm> is being
+example, the following command will prevent C<YAML.pm> from being
 loaded:
 
     cpan> o conf dontload_list push YAML
@@ -10759,15 +10758,15 @@ See the source for details.
 
 =item has_usable($module)
 
-Returns true if the module is installed and is in a usable state. Only
+Returns true if the module is installed and in a usable state. Only
 useful for a handful of modules that are used internally. See the
 source for details.
 
 =item instance($module)
 
 The constructor for all the singletons used to represent modules,
-distributions, authors and bundles. If the object already exists, this
-method returns the object, otherwise it calls the constructor.
+distributions, authors, and bundles. If the object already exists, this
+method returns the object; otherwise, it calls the constructor.
 
 =back
 
@@ -10780,7 +10779,7 @@ itself. But we try to make it easy to add security on demand:
 
 =head2 Cryptographically signed modules
 
-Since release 1.77 CPAN.pm has been able to verify cryptographically
+Since release 1.77, CPAN.pm has been able to verify cryptographically
 signed module distributions using Module::Signature.  The CPAN modules
 can be signed by their authors, thus giving more security.  The simple
 unsigned MD5 checksums that were used before by CPAN protect mainly
@@ -10798,14 +10797,14 @@ checking on or off.
 
 =head1 EXPORT
 
-Most functions in package CPAN are exported per default. The reason
+Most functions in package CPAN are exported by default. The reason
 for this is that the primary use is intended for the cpan shell or for
 one-liners.
 
 =head1 ENVIRONMENT
 
 When the CPAN shell enters a subshell via the look command, it sets
-the environment CPAN_SHELL_LEVEL to 1 or increments it if it is
+the environment CPAN_SHELL_LEVEL to 1, or increments that variable if it is
 already set.
 
 When CPAN runs, it sets the environment variable PERL5_CPAN_IS_RUNNING
@@ -10827,38 +10826,39 @@ also always set passive mode by running libnetcfg.
 
 =head1 POPULATE AN INSTALLATION WITH LOTS OF MODULES
 
-Populating a freshly installed perl with my favorite modules is pretty
+Populating a freshly installed perl with one's favorite modules is pretty
 easy if you maintain a private bundle definition file. To get a useful
 blueprint of a bundle definition file, the command autobundle can be used
 on the CPAN shell command line. This command writes a bundle definition
-file for all modules that are installed for the currently running perl
-interpreter. It's recommended to run this command only once and from then
+file for all modules installed for the current perl
+interpreter. It's recommended to run this command once only, and from then
 on maintain the file manually under a private name, say
 Bundle/my_bundle.pm. With a clever bundle file you can then simply say
 
     cpan> install Bundle::my_bundle
 
-then answer a few questions and then go out for a coffee.
+then answer a few questions and go out for coffee (possibly
+even in a different city).
 
 Maintaining a bundle definition file means keeping track of two
 things: dependencies and interactivity. CPAN.pm sometimes fails on
 calculating dependencies because not all modules define all MakeMaker
 attributes correctly, so a bundle definition file should specify
-prerequisites as early as possible. On the other hand, it's a bit
-annoying that many distributions need some interactive configuring. So
-what I try to accomplish in my private bundle file is to have the
+prerequisites as early as possible. On the other hand, it's 
+annoying that so many distributions need some interactive configuring. So
+what you can try to accomplish in your private bundle file is to have the
 packages that need to be configured early in the file and the gentle
-ones later, so I can go out after a few minutes and leave CPAN.pm
-untended.
+ones later, so you can go out for cofeee after a few minutes and leave CPAN.pm
+to churn away untended.
 
 =head1 WORKING WITH CPAN.pm BEHIND FIREWALLS
 
 Thanks to Graham Barr for contributing the following paragraphs about
 the interaction between perl, and various firewall configurations. For
 further information on firewalls, it is recommended to consult the
-documentation that comes with the ncftp program. If you are unable to
-go through the firewall with a simple Perl setup, it is very likely
-that you can configure ncftp so that it works for your firewall.
+documentation that comes with the I<ncftp> program. If you are unable to
+go through the firewall with a simple Perl setup, it is likely
+that you can configure I<ncftp> so that it works through your firewall.
 
 =head2 Three basic types of firewalls
 
@@ -10868,32 +10868,32 @@ Firewalls can be categorized into three basic types.
 
 =item http firewall
 
-This is where the firewall machine runs a web server and to access the
-outside world you must do it via the web server. If you set environment
-variables like http_proxy or ftp_proxy to a values beginning with http://
-or in your web browser you have to set proxy information then you know
-you are running an http firewall.
+This is when the firewall machine runs a web server, and to access the
+outside world, you must do so via that web server. If you set environment
+variables like http_proxy or ftp_proxy to values beginning with http://,
+or in your web browser you've proxy information set, then you know
+you are running behind an http firewall.
 
 To access servers outside these types of firewalls with perl (even for
-ftp) you will need to use LWP.
+ftp), you need LWP.
 
 =item ftp firewall
 
 This where the firewall machine runs an ftp server. This kind of
 firewall will only let you access ftp servers outside the firewall.
 This is usually done by connecting to the firewall with ftp, then
-entering a username like "user@outside.host.com"
+entering a username like "user@outside.host.com".
 
-To access servers outside these type of firewalls with perl you
-will need to use Net::FTP.
+To access servers outside these type of firewalls with perl, you
+need Net::FTP.
 
-=item One way visibility
+=item One-way visibility
 
-I say one way visibility as these firewalls try to make themselves look
-invisible to the users inside the firewall. An FTP data connection is
-normally created by sending the remote server your IP address and then
-listening for the connection. But the remote server will not be able to
-connect to you because of the firewall. So for these types of firewall
+One-way visibility means these firewalls try to make themselves 
+invisible to users inside the firewall. An FTP data connection is
+normally created by sending your IP address to the remote server and then
+listening for the return connection. But the remote server will not be able to
+connect to you because of the firewall. For these types of firewall,
 FTP connections need to be done in a passive mode.
 
 There are two that I can think off.
@@ -10902,16 +10902,17 @@ There are two that I can think off.
 
 =item SOCKS
 
-If you are using a SOCKS firewall you will need to compile perl and link
-it with the SOCKS library, this is what is normally called a 'socksified'
+If you are using a SOCKS firewall, you will need to compile perl and link
+it with the SOCKS library.  This is what is normally called a 'socksified'
 perl. With this executable you will be able to connect to servers outside
-the firewall as if it is not there.
+the firewall as if it were not there.
 
 =item IP Masquerade
 
-This is the firewall implemented in the Linux kernel, it allows you to
-hide a complete network behind one IP address. With this firewall no
-special compiling is needed as you can access hosts directly.
+This is when the firewall implemented in the kernel (via NAT, or networking
+address translation), it allows you to hide a complete network behind one
+IP address. With this firewall no special compiling is needed as you can
+access hosts directly.
 
 For accessing ftp servers behind such firewalls you usually need to
 set the environment variable C<FTP_PASSIVE> or the config variable
@@ -10948,7 +10949,7 @@ Your mileage may vary...
 I installed a new version of module X but CPAN keeps saying,
 I have the old version installed
 
-Most probably you B<do> have the old version installed. This can
+Probably you B<do> have the old version installed. This can
 happen if a module installs itself into a different directory in the
 @INC path than it was previously installed. This is not really a
 CPAN.pm problem, you would have the same problem when installing the
@@ -11075,7 +11076,7 @@ well be that your Bundle installs some prerequisite later than some
 depending item and thus your second try is able to resolve everything.
 Please note, CPAN.pm does not know the dependency tree in advance and
 cannot sort the queue of things to install in a topologically correct
-order. It resolves perfectly well IF all modules declare the
+order. It resolves perfectly well B<if> all modules declare the
 prerequisites correctly with the PREREQ_PM attribute to MakeMaker or
 the C<requires> stanza of Module::Build. For bundles which fail and
 you need to install often, it is recommended to sort the Bundle
@@ -11083,7 +11084,7 @@ definition file manually.
 
 =item 8)
 
-In our intranet we have many modules for internal use. How
+In our intranet, we have many modules for internal use. How
 can I integrate these modules with CPAN.pm but without uploading
 the modules to CPAN?
 
@@ -11092,11 +11093,11 @@ Have a look at the CPAN::Site module.
 =item 9)
 
 When I run CPAN's shell, I get an error message about things in my
-/etc/inputrc (or ~/.inputrc) file.
+C</etc/inputrc> (or C<~/.inputrc>) file.
 
 These are readline issues and can only be fixed by studying readline
 configuration on your architecture and adjusting the referenced file
-accordingly. Please make a backup of the /etc/inputrc or ~/.inputrc
+accordingly. Please make a backup of the C</etc/inputrc> or C<~/.inputrc>
 and edit them. Quite often harmless changes like uppercasing or
 lowercasing some arguments solves the problem.
 
@@ -11133,7 +11134,7 @@ Or you can use
 
   look Foo::Bar
 
-and then 'make install' directly in the subshell.
+and then C<make install> directly in the subshell.
 
 =item 12)
 
@@ -11243,7 +11244,7 @@ prerequisite but CPAN has reasonable workarounds if it is missing.
 
 This module and its competitor, the CPANPLUS module, are both much
 cooler than the other. CPAN.pm is older. CPANPLUS was designed to be
-more modular but it was never tried to make it compatible with CPAN.pm.
+more modular, but it was never intended to be compatible with CPAN.pm.
 
 =head1 SECURITY ADVICE
 
@@ -11282,5 +11283,3 @@ L<http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm>
 L<cpan>, L<CPAN::Nox>, L<CPAN::Version>
 
 =cut
-
-

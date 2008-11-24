@@ -41,7 +41,7 @@ $Help = {
          '?' => \"help",
          '!' => "eval the rest of the line as perl",
          a => "whois author",
-         autobundle => "wtite inventory into a bundle file",
+         autobundle => "write inventory into a bundle file",
          b => "info about bundle",
          bye => \"quit",
          clean => "clean up a distribution's build directory",
@@ -60,7 +60,7 @@ $Help = {
          install_tested => "install all distributions tested OK",
          is_tested => "list all distributions tested OK",
          look => "open a subshell in a distribution's directory",
-         ls => "list distributions according to a glob",
+         ls => "list distributions matching a fileglob",
          m => "info about a module",
          make => "make/build a distribution",
          mkmyconfig => "write current config into a CPAN/MyConfig.pm file",
@@ -69,7 +69,7 @@ $Help = {
          perldoc => "try to get a manpage for a module",
          q => \"quit",
          quit => "leave the cpan shell",
-         r => "review over upgradeable modules",
+         r => "review upgradable modules",
          readme => "display the README of a distro woth a pager",
          recent => "show recent uploads to the CPAN",
          # recompile
@@ -995,7 +995,7 @@ CPAN_VERSION: %s %s
         if ($version_undefs) {
             my $s_has = $version_undefs > 1 ? "s have" : " has";
             $CPAN::Frontend->myprint(qq{$version_undefs installed module$s_has no }.
-                                     qq{parseable version number\n});
+                                     qq{parsable version number\n});
             if ($CPAN::Config->{show_unparsable_versions}) {
                 local $" = "\t";
                 $CPAN::Frontend->myprint(qq{  they are\n\t@version_undefs\n});
