@@ -156,7 +156,7 @@ require CPAN::HandleConfig;
             is($::yaml_load_code_works, 0, 'running the code did the right thing');
 
             my $obj = $data->{object};
-            isa_ok($obj, 'CPAN::DeferedCode');
+            isa_ok($obj, 'CPAN::DeferredCode');
             local $^W;
             my $dummy = "$obj";
             is($::yaml_load_code_works, 0, 'stringifying the obj does nothing');
@@ -175,7 +175,7 @@ require CPAN::HandleConfig;
             is($::yaml_load_code_works, 1, 'running the code did the right thing');
 
             my $obj = $data->{object};
-            isa_ok($obj, 'CPAN::DeferedCode');
+            isa_ok($obj, 'CPAN::DeferredCode');
             my $dummy = "$obj";
             is($::yaml_load_code_works, 2, 'stringifying the obj ran the code');
         }

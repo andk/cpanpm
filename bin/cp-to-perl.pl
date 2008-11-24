@@ -42,7 +42,7 @@ my $MAP;
                                     lib/CPAN.pm
                                     lib/CPAN/API/HOWTO.pod
                                     lib/CPAN/Debug.pm
-                                    lib/CPAN/DeferedCode.pm
+                                    lib/CPAN/DeferredCode.pm
                                     lib/CPAN/Distroprefs.pm
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
