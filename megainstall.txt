@@ -1113,6 +1113,7 @@ PAR
 PAR::Dist::FromCPAN
 PAR::Packer
 PApp
+PApp::XML
 PBS::Build
 PDF
 PDF::API2
@@ -1169,7 +1170,6 @@ POSIX::Regex
 PPI
 PTools
 PTools::SDF
-PApp::XML
 Package::Builder
 Package::Constants
 Pad::Tie
@@ -1377,8 +1377,8 @@ Spreadsheet::Engine
 Spreadsheet::ParseExcel
 Spreadsheet::Read
 Spreadsheet::WriteExcel
-Spreadsheet::WriteExcelXML
 Spreadsheet::WriteExcel::Worksheet::SheetProtection
+Spreadsheet::WriteExcelXML
 Squatting
 Statistics::Contingency
 Statistics::Distributions
@@ -1470,9 +1470,9 @@ Test::File
 Test::Fork
 Test::FormValidator
 Test::Group
+Test::HTML::Content
 Test::HTTP::Server::Simple
 Test::HTTPStatus
-Test::HTML::Content
 Test::Harness
 Test::HexString
 Test::JSON
@@ -1509,8 +1509,8 @@ Text::Aligner
 Text::Aspell
 Text::Autoformat
 Text::BibTeX::BibStyle
-Text::CSV_XS
 Text::CSV::Separator
+Text::CSV_XS
 Text::Diff
 Text::Diff::HTML
 Text::Editor::Easy
@@ -1557,10 +1557,10 @@ Tie::Array::Sorted
 Tie::Cache::LRU
 Tie::Cycle
 Tie::DxHash
+Tie::EncryptedHash
 Tie::FieldVals
 Tie::Hash::Sorted
 Tie::Hash::StructKeyed
-Tie::EncryptedHash
 Tie::Sub
 Time::Duration
 Time::Duration::Object
@@ -1701,6 +1701,7 @@ WWW::Search::Metapedia
 WWW::Shorten
 WWW::Slides
 WWW::TarPipe
+WWW::Wikipedia::TemplateFiller
 Waft
 Want
 Weather::Google
