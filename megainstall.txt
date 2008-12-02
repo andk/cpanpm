@@ -219,6 +219,7 @@ Class::AutoClass
 Class::AutoGenerate
 Class::Base
 Class::C3
+Class::C3::Adopt::NEXT
 Class::C3::XS
 Class::Component
 Class::DBI
@@ -342,6 +343,7 @@ DBIx::Class::Schema::Loader
 DBIx::Class::Schema::Slave
 DBIx::Class::Stash
 DBIx::Class::Validation
+DBIx::Compare
 DBIx::CopyRecord
 DBIx::DBSchema
 DBIx::DataModel
@@ -456,6 +458,7 @@ Devel::EvalContext
 Devel::Events
 Devel::Events::Handler::ObjectTracker
 Devel::FastProf
+Devel::FindRef
 Devel::GC::Helper
 Devel::Gladiator
 Devel::Hide
@@ -629,6 +632,7 @@ GD::Graph
 GD::Image::Scale2x
 GD::SVG
 GD::SecurityImage
+GD::Sparkline
 GD::Tab::Guitar
 GD::Text
 GIS::Distance
@@ -646,6 +650,7 @@ Geo::Coordinates::Converter::Format::Degree
 Geo::GeoNames
 Geo::Google::PolylineEncoder
 Geo::Gpx
+Geo::OSM::Tiles
 Geo::Proj::Japan
 Geo::Proj4
 Geo::Query
@@ -1056,6 +1061,7 @@ Net::Netmask
 Net::Netrc
 Net::OAuth::Request
 Net::OpenID::Consumer
+Net::OpenID::Consumer::Lite
 Net::OpenID::Server
 Net::POP3
 Net::Packet
@@ -1098,6 +1104,7 @@ Object::Realize::Later
 Object::Relation::NO_SMOKER_39316
 Object::Signature
 Object::Tiny
+Object::Tiny::XS
 Objects::Collection
 Ocsinventory::Agent::Config
 Ogre::SceneManager
@@ -1189,6 +1196,7 @@ Parse::RecDescent
 Parse::Yapp
 PatchReader
 Path::Class
+Path::Class::URI
 Path::Class::Versioned
 Path::Router
 Perl6::Attributes
@@ -1294,6 +1302,7 @@ Rose::HTML::Objects
 Rose::Object
 Rubric
 Rubyish::Attribute
+Rubyish::Perl
 Runops::Trace
 SGML::Parser::OpenSP
 SIOC
@@ -1356,6 +1365,7 @@ ShiftJIS::CP932::MapUTF
 ShiftJIS::Collate
 ShiftJIS::Regexp
 ShiftJIS::X0213::MapUTF
+Shika
 ShipIt
 Shipwright
 Smart::Comments
@@ -1383,6 +1393,7 @@ Squatting
 Statistics::Contingency
 Statistics::Distributions
 Statistics::Gtest
+Statistics::KernelEstimation
 Statistics::Regression
 Stem
 Storable
@@ -1784,6 +1795,7 @@ Yada::Yada::Yada
 Yahoo::Marketing
 Yahoo::Photos
 Yahoo::Search
+Zucchini
 autobox::Core
 autodie
 autorequire
