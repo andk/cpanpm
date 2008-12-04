@@ -389,6 +389,7 @@ Data::Omap
 Data::OptList
 Data::Pairs
 Data::Phrasebook
+Date::Pipeline
 Data::PowerSet
 Data::Properties
 Data::Rand
@@ -645,6 +646,8 @@ Games::Bingo
 Games::Minesweeper
 Games::RolePlay::MapGen
 Games::Tournament::Swiss
+Gearman::Client::Async
+Genezzo::Contrib::Clustered
 Geo::Cache
 Geo::Coordinates::Converter::Format::Degree
 Geo::GeoNames
@@ -893,6 +896,7 @@ Log::Agent
 Log::Dispatch::Binlog
 Log::Dispatch::FileRotate
 Log::Handler
+Log::Log4perl::Layout::PatternLayout::Elapsed
 Log::Message
 Log::Message::Simple
 Lucene
@@ -997,11 +1001,13 @@ MojoMojo
 Moose
 Moose::Autobox
 Moose::Policy
+Moose::Test
 MooseX::Clone
 MooseX::Daemonize
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Log::Log4perl
+MooseX::Meta::Attribute::Trait::Lvalue
 MooseX::Method
 MooseX::Method::Signatures
 MooseX::Mutate
@@ -1108,6 +1114,7 @@ Object::Tiny::XS
 Objects::Collection
 Ocsinventory::Agent::Config
 Ogre::SceneManager
+OODoc::Format
 OpenOffice::OOBuilder
 OpenOffice::OODoc
 OpenResty
@@ -1182,6 +1189,7 @@ Package::Constants
 Pad::Tie
 PadWalker
 Paper::Specs
+Parallel::SubFork
 Params::CallbackRequest
 Params::Smart
 Params::Validate
@@ -1520,6 +1528,7 @@ Text::Aligner
 Text::Aspell
 Text::Autoformat
 Text::BibTeX::BibStyle
+Text::Bidi
 Text::CSV::Separator
 Text::CSV_XS
 Text::Diff
@@ -1699,6 +1708,7 @@ WWW::Mechanize
 WWW::Mechanize::GZip
 WWW::Mechanize::Plugin::Web::Scraper
 WWW::Mechanize::Shell
+WWW::Mechanize::Plugin::AutoWrite
 WWW::Monitor
 WWW::Ohloh::API
 WWW::OpenSearch
@@ -1729,6 +1739,7 @@ Workflow
 X500::DN
 XML::ApacheFOP
 XML::Atom
+XML::Atom::Categories
 XML::Atom::SimpleFeed
 XML::AutoWriter
 XML::Bare
@@ -1786,11 +1797,13 @@ XS::Writer
 XSLoader
 XUL::App
 XUL::Node
+Xacobeo
 YAML
 YAML::Syck
 YAML::Tiny
 YAML::XS
 YAPE::Regex::Explain
+YATT::Toplevel::FCGI
 Yada::Yada::Yada
 Yahoo::Marketing
 Yahoo::Photos
