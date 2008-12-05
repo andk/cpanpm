@@ -158,10 +158,12 @@ CPAN::Unwind
 CPAN::WWW::Testers
 CPAN::YACSmoke
 CPANPLUS
+CPANPLUS::Dist::Gentoo
 CPANPLUS::Dist::RPM
 CSS
 CSS::Minifier
 CSS::Minifier::XS
+CSS::Packer
 CSS::SAC
 Cache::FastMmap
 Cache::File
@@ -190,6 +192,7 @@ Catalyst::Plugin::C3
 Catalyst::Plugin::ConfigLoader
 Catalyst::Plugin::CookiedSession
 Catalyst::Plugin::FormValidator
+Catalyst::Plugin::Geography
 Catalyst::Plugin::I18N::DBIC
 Catalyst::Plugin::Session
 Catalyst::Plugin::Static::Simple
@@ -1639,6 +1642,7 @@ Tk::Tree
 Tk::WidgetDump
 Tk::Wizard
 Tk::XMLViewer
+ToolSet
 Touch
 Transform::Canvas
 Tree::Persist
@@ -1735,6 +1739,10 @@ WebService::Validator::HTML::W3C
 Wiki::Toolkit::Formatter::Markdown
 Wiki::Toolkit::Plugin::RSS::Reader
 WordNet::SenseRelate::AllWords
+WordPress
+WordPress::API
+WordPress::Post
+WordPress::XMLRPC
 Workflow
 X500::DN
 XML::ApacheFOP
@@ -1799,6 +1807,7 @@ XUL::App
 XUL::Node
 Xacobeo
 YAML
+YAML::Old
 YAML::Syck
 YAML::Tiny
 YAML::XS
