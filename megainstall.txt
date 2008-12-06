@@ -971,6 +971,7 @@ MediaWiki::API
 Metadata::ByInode
 Metaweb
 Method::Signatures
+Method::Signatures::Simple
 Mixin::ExtraFields
 Module::Build
 Module::Build::Convert
@@ -1007,6 +1008,7 @@ Moose::Policy
 Moose::Test
 MooseX::Clone
 MooseX::Daemonize
+MooseX::Declare
 MooseX::Emulate::Class::Accessor::Fast
 MooseX::Iterator
 MooseX::Log::Log4perl
@@ -1217,6 +1219,8 @@ Perl6::Form
 Perl6::Junction
 Perl6::Perldoc
 Perl6::Say
+Perl6::Signatures
+Perl6::Subs
 Perl::Critic::More
 Perl::Critic::Policy::RegularExpressions::RequireDotMatchAnything
 Perl::Dist
@@ -1506,6 +1510,7 @@ Test::MockObject
 Test::More
 Test::More::Strict
 Test::Most
+Test::NoTabs
 Test::NoWarnings
 Test::PDF
 Test::Pod
@@ -1844,6 +1849,7 @@ re::engine::Plan9
 re::engine::Plugin
 re::engine::TRE
 self
+signatures
 threads::shared
 typesafety
 version
