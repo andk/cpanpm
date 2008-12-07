@@ -92,6 +92,7 @@ BFD
 BS::Event
 BSD::Resource
 BerkeleyDB
+BerkeleyDB::Manager
 Biblio::Document::Parser
 Bio::Das
 Bit::MorseSignals
@@ -272,6 +273,7 @@ Code::Splice
 Color::Library
 Combine::FromImage
 Compress::LZF
+Compress::LZMA::External
 Compress::Zlib
 Compress::Zlib::Perl
 Config
@@ -573,6 +575,7 @@ File::BaseDir
 File::Basename
 File::Binary
 File::Copy
+File::Copy::Recursive
 File::Corresponding
 File::CounterFile
 File::EmptyDirs
@@ -802,6 +805,7 @@ IPC::Concurrency
 IPC::Filter
 IPC::Mmap
 IPC::Open2
+IPC::Open3::Utils
 IPC::PubSub
 IPC::Run
 IPC::SRLock
@@ -1023,6 +1027,7 @@ MooseX::Storage
 MooseX::TheSchwartz
 MooseX::Types
 MooseX::Types::Set::Object
+MooseX::YAML
 Mouse
 Muldis
 MyCPAN::Indexer
@@ -1516,6 +1521,7 @@ Test::PDF
 Test::Pod
 Test::Pod::Coverage
 Test::Prereq
+Test::Refcount
 Test::Reporter
 Test::Run
 Test::Smoke
@@ -1545,6 +1551,7 @@ Text::Editor::Easy
 Text::FIGlet
 Text::Filter
 Text::Format
+Text::Hyphen
 Text::Iconv
 Text::LevenshteinXS
 Text::Lorem::More
