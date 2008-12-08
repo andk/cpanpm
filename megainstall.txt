@@ -1202,6 +1202,7 @@ Paper::Specs
 Parallel::SubFork
 Params::CallbackRequest
 Params::Smart
+Params::Util
 Params::Validate
 Paranoid
 Parrot::Interpreter
