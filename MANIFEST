@@ -1,7 +1,4 @@
-ChangeLog
-ChangeLog.old
 Changes
-Changes.old
 distroprefs/00.README
 distroprefs/01.DISABLED.yml
 distroprefs/02.NOREPORT.yml
@@ -362,7 +359,7 @@ lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod
 lib/CPAN/Debug.pm
-lib/CPAN/DeferedCode.pm
+lib/CPAN/DeferredCode.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/HandleConfig.pm
