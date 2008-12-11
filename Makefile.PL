@@ -182,7 +182,7 @@ WriteMakefile(
               # I took it from RT-CPAN ticket 30098:
               ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
                (META_ADD => {
-                             repository => "https://pause.perl.org:5460/svn/cpanpm/trunk",
+                             repository => "git://github.com/andk/cpanpm.git",
                             }) : ()),
              );
 
