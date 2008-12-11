@@ -4,7 +4,7 @@
 use FindBin ();
 
 my $logdir = "$FindBin::Bin/../logs";
-opendir my $dh, $logdir or die;
+opendir my $dh, $logdir or die "Could not open '$logfir': $!";
 my @LS;
 for my $dirent (sort { $b cmp $a } readdir $dh) {
   next unless $dirent =~ /^megainstall\.(\d+T\d+)\.out$/;
