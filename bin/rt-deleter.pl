@@ -164,12 +164,13 @@ for my $i (0..$#rtickets) {
 }
 @tickets = sort {$a <=> $b} @tickets;
 print "Planning to visit tickets @tickets.\n";
-my $yaml_db_file = __FILE__;
-$yaml_db_file =~ s/\.pl$/.yml/;
+my $yaml_db_file = "$ENV{HOME}/sources/CPAN/data/rt-deleter.yml";
 my $ALL;
 if (-e $yaml_db_file) {
   $ALL = YAML::Syck::LoadFile($yaml_db_file);
 } else {
+  warn "WARNING: yaml file '$yaml_db_file' not found!!!";
+  sleep 3;
   $ALL = {};
 }
 

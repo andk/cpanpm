@@ -62,12 +62,13 @@ while (my($k,$v) = each %config) {
   $Config{$k} = $v;
 }
 
-my $yaml_db_file = __FILE__;
-$yaml_db_file =~ s/\.pl$/.yml/;
+my $yaml_db_file = "$ENV{HOME}/sources/CPAN/data/query-rt-group-by-requestor.yml";
 my $ALL;
 if (-e $yaml_db_file) {
   $ALL = YAML::Syck::LoadFile($yaml_db_file);
 } else {
+  warn "WARNING: yaml file '$yaml_db_file' not found!!!";
+  sleep 3;
   $ALL = {};
 }
 my $curmax = max keys %{$ALL->{tickets} || {}};
