@@ -122,7 +122,7 @@ FILE: while () {
 
 sub youngest {
     my($dir,$pat) = @_;
-    $dir ||= "/home/sand/CPAN-SVN/logs/";
+    $dir ||= "/home/sand/cpanpm/logs/";
     $pat ||= qr/^megainstall\..*\.out$/;
     opendir my $dh, $dir or die "Could not opendir '$dir': $!";
     my $youngest = maxstr grep { $_ =~ $pat } readdir $dh;
