@@ -1,14 +1,5 @@
-# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
-# vim: ts=4 sts=4 sw=4:
 package CPAN::Distribution;
 use strict;
-@CPAN::Distribution::ISA = qw(CPAN::InfoObj);
-
-use vars qw(
-            $VERSION
-);
-$VERSION = "5.5";
-
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
 
@@ -916,8 +907,8 @@ We\'ll try to build it with that Makefile then.
         }
         $cf =~ s|[/\\:]||g;     # risk of filesystem damage
         $cf = "unknown" unless length($cf);
-        if (my $crap = $self->_contains_crap($build_dir)) {
-            my $why = qq{Package contains $crap; not recognized as a perl package, giving up};
+        if (my $crud = $self->_contains_crud($build_dir)) {
+            my $why = qq{Package contains $crud; not recognized as a perl package, giving up};
             $CPAN::Frontend->mywarn("$why\n");
             $self->{writemakefile} = CPAN::Distrostatus->new(qq{NO -- $why});
             return;
@@ -952,8 +943,8 @@ WriteMakefile(
     }
 }
 
-#-> CPAN;:Distribution::_contains_crap
-sub _contains_crap {
+#-> CPAN;:Distribution::_contains_crud
+sub _contains_crud {
     my($self,$dir) = @_;
     my(@dirs, $dh, @files);
     opendir $dh, $dir or return;
@@ -1062,7 +1053,7 @@ sub _signature_business {
                                            );
 
                     my $wrap =
-                        sprintf(qq{I'd recommend removing %s. Some error occured    }.
+                        sprintf(qq{I'd recommend removing %s. Some error occurred   }.
                                 qq{while checking its signature, so it could        }.
                                 qq{be invalid. Maybe you have configured            }.
                                 qq{your 'urllist' with a bad URL. Please check this }.
@@ -2371,7 +2362,6 @@ sub follow_prereqs {
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
         # XXX watch out for foul ones
-        # $DB::single++;
         push @good_prereq_tuples, $p;
     }
     my $pretty_id = $self->pretty_id;
@@ -2586,7 +2576,7 @@ sub unsat_prereq {
                 $CPAN::Frontend->mywarn("Warning: Prerequisite ".
                                         "'$need_module => $need_version' ".
                                         "for '$self->{ID}' seems ".
-                                        "not available according to the indexes\n"
+                                        "not available according to the indices\n"
                                        );
                 next NEED;
             }
@@ -3257,7 +3247,6 @@ sub install {
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-    # $DB::single=1;
     unless ($self->{badtestcnt}) {
         $self->test;
     }
@@ -3434,7 +3423,6 @@ sub install {
         }
     }
     delete $self->{force_update};
-    # $DB::single = 1;
     $self->store_persistent_state;
 }
 
