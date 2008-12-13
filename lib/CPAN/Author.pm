@@ -3,7 +3,6 @@
 package CPAN::Author;
 use strict;
 
-use Carp ();
 use CPAN::InfoObj;
 @CPAN::Author::ISA = qw(CPAN::InfoObj);
 use vars qw(
@@ -168,7 +167,7 @@ sub dir_listing {
             Carp::confess($@) if $@;
         }
     } elsif ($may_ftp) {
-        Carp::carp "Could not open '$lc_file' for reading.";
+        Carp::carp ("Could not open '$lc_file' for reading.");
     } else {
         # Maybe should warn: "You may want to set show_upload_date to a true value"
         return;

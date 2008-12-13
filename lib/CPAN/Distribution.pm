@@ -2,6 +2,10 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
+use CPAN::InfoObj;
+@CPAN::Distribution::ISA = qw(CPAN::InfoObj);
+use vars qw($VERSION);
+$VERSION = "1.93";
 
 # Accessors
 sub cpan_comment {

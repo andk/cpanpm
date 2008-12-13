@@ -4,11 +4,9 @@ package CPAN::FTP;
 use strict;
 
 use Fcntl qw(:flock);
-use Carp ();
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
-use Carp ();
 
 use vars qw(
             $VERSION
@@ -269,7 +267,7 @@ sub ftp_get {
 sub localize {
     my($self,$file,$aslocal,$force) = @_;
     $force ||= 0;
-    Carp::croak "Usage: ->localize(cpan_file,as_local_file[,$force])"
+    Carp::croak( "Usage: ->localize(cpan_file,as_local_file[,$force])" )
         unless defined $aslocal;
     $self->debug("file[$file] aslocal[$aslocal] force[$force]")
         if $CPAN::DEBUG;

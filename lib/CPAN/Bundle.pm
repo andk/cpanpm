@@ -210,7 +210,7 @@ sub rematein {
     my($self,$meth) = @_;
     $self->debug("self[$self] meth[$meth]") if $CPAN::DEBUG;
     my($id) = $self->id;
-    Carp::croak "Can't $meth $id, don't have an associated bundle file. :-(\n"
+    Carp::croak( "Can't $meth $id, don't have an associated bundle file. :-(\n" )
         unless $self->inst_file || $self->cpan_file;
     my($s,%fail);
     for $s ($self->contains) {
