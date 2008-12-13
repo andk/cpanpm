@@ -211,7 +211,7 @@ EOF
   Prerequisite.+?
   CPAN::Test::Dummy::Perl5::Make.+?
   99999999.99.+?
-  not[ ]available[ ]according[ ]to[ ]the[ ]indexes
+  not[ ]available[ ]according[ ]to[ ]the[ ]ind
 )",
           ],
          },
