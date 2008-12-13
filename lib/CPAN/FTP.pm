@@ -1,3 +1,4 @@
+<<<<<<< HEAD:lib/CPAN/FTP.pm
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 # vim: ts=4 sts=4 sw=4:
 package CPAN::FTP;
@@ -7,6 +8,7 @@ use Fcntl qw(:flock);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
+use Carp ();
 
 use vars qw(
             $VERSION
@@ -74,7 +76,7 @@ sub _new_stats {
 #-> sub CPAN::FTP::_add_to_statistics
 sub _add_to_statistics {
     my($self,$stats) = @_;
-    my $yaml_module = CPAN::_yaml_module;
+    my $yaml_module = CPAN::_yaml_module();
     $self->debug("yaml_module[$yaml_module]") if $CPAN::DEBUG;
     if ($CPAN::META->has_inst($yaml_module)) {
         $stats->{thesiteurl} = $ThesiteURL;
@@ -880,7 +882,7 @@ to get '$aslocal'.
 
 Doing so often leads to problems that are hard to diagnose.
 
-If you're the victim of such problems, please consider unsetting the 
+If you're the victim of such problems, please consider unsetting the
 ftp config variable with
 
     o conf ftp ""
