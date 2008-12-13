@@ -1,5 +1,11 @@
 package CPAN::Index;
 use strict;
+use vars qw($LAST_TIME $DATE_OF_02 $DATE_OF_03 $HAVE_REANIMATED);
+@CPAN::Index::ISA = qw(CPAN::Debug);
+$LAST_TIME ||= 0;
+$DATE_OF_03 ||= 0;
+# use constant PROTOCOL => "2.0"; # outcommented to avoid warning on upgrade from 1.57
+sub PROTOCOL { 2.0 }
 
 #-> sub CPAN::Index::force_reload ;
 sub force_reload {
