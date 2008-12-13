@@ -28,7 +28,7 @@ use YAML::Syck;
 sub _h2text ($);
 
 my %Config = (
-              server      => 'http://rt.cpan.org',
+              server      => 'https://rt.cpan.org',
               username    => 'ANDK',
               password    => '',
               cookie      => '',
@@ -224,6 +224,7 @@ TICKET: for my $ticket (@tickets) {
   }
   my $text = _h2text($decoded);
   # http://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=32655
+  # https://rt.cpan.org/RT-Extension-QuickDelete/ToggleQuickDelete?id=41648
   if ($answer) {
     print join "", (("=" x 79) . "\n") x 2;
     print "Answer '$answer' has already been determined automatically\n";
