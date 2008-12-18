@@ -570,6 +570,7 @@ Fatal::Exception
 Fault
 Fcntl
 Fey
+Fey::ORM
 File::BOM
 File::BaseDir
 File::Basename
@@ -606,6 +607,7 @@ File::SortedSeek
 File::Spec
 File::Spec::Functions
 File::Stat::Moose
+File::Stat::Trigger
 File::System
 File::Tail
 File::Temp
@@ -1113,6 +1115,8 @@ Number::Range
 Number::Tolerant
 Number::WithError
 OLE::Storage_Lite
+ORLite
+ORLite::Migrate
 OOPS
 Object::Accessor
 Object::Destroyer
@@ -1210,6 +1214,7 @@ Parse::BACKPAN::Packages
 Parse::BooleanLogic
 Parse::CPAN::Distributions
 Parse::CPAN::MirroredBy
+Parse::ErrorString::Perl
 Parse::Marpa
 Parse::RecDescent
 Parse::Yapp
@@ -1412,6 +1417,7 @@ Spreadsheet::WriteExcel::Worksheet::SheetProtection
 Spreadsheet::WriteExcelXML
 Squatting
 Statistics::Contingency
+Statistics::Descriptive::Weighted
 Statistics::Distributions
 Statistics::Gtest
 Statistics::KernelEstimation
@@ -1437,6 +1443,7 @@ Sub::Contract
 Sub::Current
 Sub::Curried
 Sub::Exporter
+Sub::Identify
 Sub::Install
 Sub::Name
 Sub::Override
@@ -1525,6 +1532,7 @@ Test::Prereq
 Test::Refcount
 Test::Reporter
 Test::Run
+Test::Script
 Test::Smoke
 Test::SubCalls
 Test::TAP
@@ -1703,6 +1711,7 @@ Unicode::Wrap
 Unix::Syslog
 User
 User::Identity
+Util::Any
 Util::Properties
 V
 VCI
@@ -1777,6 +1786,7 @@ XML::Database
 XML::Descent
 XML::Elemental
 XML::Entities
+XML::FeedPP
 XML::Filter::XInclude
 XML::Generator
 XML::Generator::SVG::ShapeFile
@@ -1808,6 +1818,7 @@ XML::SimpleObject
 XML::Stream
 XML::Tiny
 XML::TreePP
+XML::TreePP::XMLPath
 XML::Twig
 XML::Validator::Schema
 XML::Writer
@@ -1848,6 +1859,7 @@ load
 local::lib
 mixin
 namespace::clean
+ora
 overload
 overload::eval
 parent
