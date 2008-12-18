@@ -37,7 +37,7 @@ pl:
   eexpect:
     mode: anyorder
     reuse: 1
-    timeout: 5
+    timeout: 60
     talk:
       - "Auto-install"
       - "y\n"
