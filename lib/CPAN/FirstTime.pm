@@ -42,6 +42,8 @@ variables are collected.
 # down until the next =back the manpage must be parsed by the program
 # because the text is used in the init dialogues.
 
+my @podpara = split /\n\n/, <<'=back';
+
 =over 2
 
 =item auto_commit
@@ -567,6 +569,132 @@ modify it under the same terms as Perl itself.
 =cut
 
 use vars qw( %prompts );
+
+{
+
+    my @prompts = (
+
+manual_config => qq[
+
+CPAN is the world-wide archive of perl resources. It consists of about
+300 sites that all replicate the same contents around the globe. Many
+countries have at least one CPAN site already. The resources found on
+CPAN are easily accessible with the CPAN.pm module. If you want to use
+CPAN.pm, lots of things have to be configured. Fortunately, most of
+them can be determined automatically. If you prefer the automatic
+configuration, answer 'yes' below.
+
+If you prefer to enter a dialog instead, you can answer 'no' to this
+question and I'll let you configure in small steps one thing after the
+other. (Note: you can revisit this dialog anytime later by typing 'o
+conf init' at the cpan prompt.)
+],
+
+config_intro => qq{
+
+The following questions are intended to help you with the
+configuration. The CPAN module needs a directory of its own to cache
+important index files and maybe keep a temporary mirror of CPAN files.
+This may be a site-wide or a personal directory.
+
+},
+
+# cpan_home => qq{ },
+
+cpan_home_where => qq{
+
+First of all, I'd like to create this directory. Where?
+
+},
+
+external_progs => qq{
+
+The CPAN module will need a few external programs to work properly.
+Please correct me, if I guess the wrong path for a program. Don't
+panic if you do not have some of them, just press ENTER for those. To
+disable the use of a program, you can type a space followed by ENTER.
+
+},
+
+proxy_intro => qq{
+
+If you're accessing the net via proxies, you can specify them in the
+CPAN configuration or via environment variables. The variable in
+the \$CPAN::Config takes precedence.
+
+},
+
+proxy_user => qq{
+
+If your proxy is an authenticating proxy, you can store your username
+permanently. If you do not want that, just press RETURN. You will then
+be asked for your username in every future session.
+
+},
+
+proxy_pass => qq{
+
+Your password for the authenticating proxy can also be stored
+permanently on disk. If this violates your security policy, just press
+RETURN. You will then be asked for the password in every future
+session.
+
+},
+
+urls_intro => qq{
+
+Now we need to know where your favorite CPAN sites are located. Push
+a few sites onto the array (just in case the first on the array won\'t
+work). If you are mirroring CPAN to your local workstation, specify a
+file: URL.
+
+First, pick a nearby continent and country by typing in the number(s)
+in front of the item(s) you want to select. You can pick several of
+each, separated by spaces. Then, you will be presented with a list of
+URLs of CPAN mirrors in the countries you selected, along with
+previously selected URLs. Select some of those URLs, or just keep the
+old list. Finally, you will be prompted for any extra URLs -- file:,
+ftp:, or http: -- that host a CPAN mirror.
+
+},
+
+password_warn => qq{
+
+Warning: Term::ReadKey seems not to be available, your password will
+be echoed to the terminal!
+
+},
+
+              );
+
+    die "Coding error in \@prompts declaration.  Odd number of elements, above"
+        if (@prompts % 2);
+
+    %prompts = @prompts;
+
+    if (scalar(keys %prompts) != scalar(@prompts)/2) {
+        my %already;
+        for my $item (0..$#prompts) {
+            next if $item % 2;
+            die "$prompts[$item] is duplicated\n" if $already{$prompts[$item]}++;
+        }
+    }
+
+    shift @podpara;
+    while (@podpara) {
+        warn "Alert: cannot parse my own manpage for init dialog" unless $podpara[0] =~ s/^=item\s+//;
+        my $name = shift @podpara;
+        my @para;
+        while (@podpara && $podpara[0] !~ /^=item/) {
+            push @para, shift @podpara;
+        }
+        $prompts{$name} = pop @para;
+        if (@para) {
+            $prompts{$name . "_intro"} = join "", map { "$_\n\n" } @para;
+        }
+    }
+
+}
 
 sub init {
     my($configpm, %args) = @_;
@@ -1583,141 +1711,5 @@ sub prompt_no_strip ($;$) {
 }
 
 
-BEGIN {
-
-my @prompts = (
-
-manual_config => qq[
-
-CPAN is the world-wide archive of perl resources. It consists of about
-300 sites that all replicate the same contents around the globe. Many
-countries have at least one CPAN site already. The resources found on
-CPAN are easily accessible with the CPAN.pm module. If you want to use
-CPAN.pm, lots of things have to be configured. Fortunately, most of
-them can be determined automatically. If you prefer the automatic
-configuration, answer 'yes' below.
-
-If you prefer to enter a dialog instead, you can answer 'no' to this
-question and I'll let you configure in small steps one thing after the
-other. (Note: you can revisit this dialog anytime later by typing 'o
-conf init' at the cpan prompt.)
-],
-
-config_intro => qq{
-
-The following questions are intended to help you with the
-configuration. The CPAN module needs a directory of its own to cache
-important index files and maybe keep a temporary mirror of CPAN files.
-This may be a site-wide or a personal directory.
-
-},
-
-# cpan_home => qq{ },
-
-cpan_home_where => qq{
-
-First of all, I'd like to create this directory. Where?
-
-},
-
-external_progs => qq{
-
-The CPAN module will need a few external programs to work properly.
-Please correct me, if I guess the wrong path for a program. Don't
-panic if you do not have some of them, just press ENTER for those. To
-disable the use of a program, you can type a space followed by ENTER.
-
-},
-
-proxy_intro => qq{
-
-If you're accessing the net via proxies, you can specify them in the
-CPAN configuration or via environment variables. The variable in
-the \$CPAN::Config takes precedence.
-
-},
-
-proxy_user => qq{
-
-If your proxy is an authenticating proxy, you can store your username
-permanently. If you do not want that, just press RETURN. You will then
-be asked for your username in every future session.
-
-},
-
-proxy_pass => qq{
-
-Your password for the authenticating proxy can also be stored
-permanently on disk. If this violates your security policy, just press
-RETURN. You will then be asked for the password in every future
-session.
-
-},
-
-urls_intro => qq{
-
-Now we need to know where your favorite CPAN sites are located. Push
-a few sites onto the array (just in case the first on the array won\'t
-work). If you are mirroring CPAN to your local workstation, specify a
-file: URL.
-
-First, pick a nearby continent and country by typing in the number(s)
-in front of the item(s) you want to select. You can pick several of
-each, separated by spaces. Then, you will be presented with a list of
-URLs of CPAN mirrors in the countries you selected, along with
-previously selected URLs. Select some of those URLs, or just keep the
-old list. Finally, you will be prompted for any extra URLs -- file:,
-ftp:, or http: -- that host a CPAN mirror.
-
-},
-
-password_warn => qq{
-
-Warning: Term::ReadKey seems not to be available, your password will
-be echoed to the terminal!
-
-},
-
-              );
-
-die "Coding error in \@prompts declaration.  Odd number of elements, above"
-    if (@prompts % 2);
-
-%prompts = @prompts;
-
-if (scalar(keys %prompts) != scalar(@prompts)/2) {
-    my %already;
-    for my $item (0..$#prompts) {
-        next if $item % 2;
-        die "$prompts[$item] is duplicated\n" if $already{$prompts[$item]}++;
-    }
-}
-
-local *FH;
-my $pmfile = __FILE__;
-open FH, $pmfile or die "Could not open '$pmfile': $!";
-local $/ = "";
-my @podpara;
-while (<FH>) {
-    next if 1 .. /^=over/;
-    chomp;
-    push @podpara, $_;
-    last if /^=back/;
-}
-pop @podpara;
-while (@podpara) {
-    warn "Alert: cannot parse my own manpage for init dialog" unless $podpara[0] =~ s/^=item\s+//;
-    my $name = shift @podpara;
-    my @para;
-    while (@podpara && $podpara[0] !~ /^=item/) {
-        push @para, shift @podpara;
-    }
-    $prompts{$name} = pop @para;
-    if (@para) {
-        $prompts{$name . "_intro"} = join "", map { "$_\n\n" } @para;
-    }
-}
-
-} # EOBEGIN
 
 1;

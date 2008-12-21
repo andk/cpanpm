@@ -9,7 +9,7 @@ sub config {
     return if $SETUPDONE;
     if ($CPAN::META->has_usable('LWP::UserAgent')) {
         require LWP::UserAgent;
-        @ISA = qw(Exporter LWP::UserAgent);
+        @ISA = qw(Exporter LWP::UserAgent); ## no critic
         $SETUPDONE++;
     } else {
         $CPAN::Frontend->mywarn("  LWP::UserAgent not available\n");
