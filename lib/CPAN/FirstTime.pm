@@ -815,30 +815,19 @@ sub init {
 
         init_cpan_home($matcher);
 
-        if (!$matcher or 'keep_source_where' =~ /$matcher/) {
-            my_dflt_prompt("keep_source_where",
-                           File::Spec->catdir($CPAN::Config->{cpan_home},"sources"),
-                           $matcher,
-                          );
-        }
-
-        if (!$matcher or 'build_dir' =~ /$matcher/) {
-            my_dflt_prompt("build_dir",
-                           File::Spec->catdir($CPAN::Config->{cpan_home},"build"),
-                           $matcher
-                          );
-        }
-
-        if (!$matcher or 'build_dir_reuse' =~ /$matcher/) {
-            my_yn_prompt(build_dir_reuse => 0, $matcher);
-        }
-
-        if (!$matcher or 'prefs_dir' =~ /$matcher/) {
-            my_dflt_prompt("prefs_dir",
-                           File::Spec->catdir($CPAN::Config->{cpan_home},"prefs"),
-                           $matcher
-                          );
-        }
+        my_dflt_prompt("keep_source_where",
+                       File::Spec->catdir($CPAN::Config->{cpan_home},"sources"),
+                       $matcher,
+                      );
+        my_dflt_prompt("build_dir",
+                       File::Spec->catdir($CPAN::Config->{cpan_home},"build"),
+                       $matcher
+                      );
+        my_yn_prompt(build_dir_reuse => 0, $matcher);
+        my_dflt_prompt("prefs_dir",
+                       File::Spec->catdir($CPAN::Config->{cpan_home},"prefs"),
+                       $matcher
+                      );
     }
 
     #
@@ -850,19 +839,10 @@ sub init {
     #
     #= Cache size, Index expire
     #
+    my_dflt_prompt(build_cache => 100, $matcher);
 
-    if (!$matcher or 'build_cache' =~ /$matcher/) {
-        # large enough to build large dists like Tk
-        my_dflt_prompt(build_cache => 100, $matcher);
-    }
-
-    if (!$matcher or 'index_expire' =~ /$matcher/) {
-        my_dflt_prompt(index_expire => 1, $matcher);
-    }
-
-    if (!$matcher or 'scan_cache' =~ /$matcher/) {
-        my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
-    }
+    my_dflt_prompt(index_expire => 1, $matcher);
+    my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
 
     #
     #= cache_metadata
@@ -875,22 +855,15 @@ sub init {
     #= Do we follow PREREQ_PM?
     #
 
-    if (!$matcher or 'prerequisites_policy' =~ /$matcher/) {
-        my_prompt_loop(prerequisites_policy => 'ask', $matcher,
-                       'follow|ask|ignore');
-    }
-
-    if (!$matcher or 'build_requires_install_policy' =~ /$matcher/) {
-        my_prompt_loop(build_requires_install_policy => 'ask/yes', $matcher,
-                       'yes|no|ask/yes|ask/no');
-    }
+    my_prompt_loop(prerequisites_policy => 'ask', $matcher,
+                   'follow|ask|ignore');
+    my_prompt_loop(build_requires_install_policy => 'ask/yes', $matcher,
+                   'yes|no|ask/yes|ask/no');
 
     #
     #= Module::Signature
     #
-    if (!$matcher or 'check_sigs' =~ /$matcher/) {
-        my_yn_prompt(check_sigs => 0, $matcher);
-    }
+    my_yn_prompt(check_sigs => 0, $matcher);
 
     #
     #= CPAN::Reporter
@@ -908,9 +881,7 @@ sub init {
         }
     }
 
-    if (!$matcher or 'trust_test_report_history' =~ /$matcher/) {
-        my_yn_prompt(trust_test_report_history => 0, $matcher);
-    }
+    my_yn_prompt(trust_test_report_history => 0, $matcher);
 
     #
     #= YAML vs. YAML::Syck
@@ -927,9 +898,7 @@ sub init {
     #
     #= YAML code deserialisation
     #
-    if (!$matcher or "yaml_load_code" =~ /$matcher/) {
-        my_yn_prompt(yaml_load_code => 0, $matcher);
-    }
+    my_yn_prompt(yaml_load_code => 0, $matcher);
 
     #
     #= External programs
@@ -1016,7 +985,7 @@ substitute. You can then revisit this dialog with
         }
     }
 
-    if (!$matcher or 'pager' =~ /$matcher/) {
+    {
         my $path = $CPAN::Config->{'pager'} ||
             $ENV{PAGER} || find_exe("less",\@path) ||
                 find_exe("more",\@path) || ($^O eq 'MacOS' ? $ENV{EDITOR} : 0 )
@@ -1024,7 +993,7 @@ substitute. You can then revisit this dialog with
         my_dflt_prompt(pager => $path, $matcher);
     }
 
-    if (!$matcher or 'shell' =~ /$matcher/) {
+    {
         my $path = $CPAN::Config->{'shell'};
         if ($path && File::Spec->file_name_is_absolute($path)) {
             $CPAN::Frontend->mywarn("Warning: configured $path does not exist\n")
@@ -1045,30 +1014,19 @@ substitute. You can then revisit this dialog with
     # verbosity
     #
 
-    if (!$matcher or 'tar_verbosity' =~ /$matcher/) {
-        my_prompt_loop(tar_verbosity => 'v', $matcher,
-                       'none|v|vv');
-    }
-
-    if (!$matcher or 'load_module_verbosity' =~ /$matcher/) {
-        my_prompt_loop(load_module_verbosity => 'v', $matcher,
-                       'none|v');
-    }
-
-    if (!$matcher or 'perl5lib_verbosity' =~ /$matcher/) {
-        my_prompt_loop(perl5lib_verbosity => 'v', $matcher,
-                       'none|v');
-    }
-
+    my_prompt_loop(tar_verbosity => 'v', $matcher,
+                   'none|v|vv');
+    my_prompt_loop(load_module_verbosity => 'v', $matcher,
+                   'none|v');
+    my_prompt_loop(perl5lib_verbosity => 'v', $matcher,
+                   'none|v');
     my_yn_prompt(inhibit_startup_message => 0, $matcher);
 
     #
     #= Installer, arguments to make etc.
     #
 
-    if (!$matcher or 'prefer_installer' =~ /$matcher/) {
-        my_prompt_loop(prefer_installer => 'MB', $matcher, 'MB|EUMM|RAND');
-    }
+    my_prompt_loop(prefer_installer => 'MB', $matcher, 'MB|EUMM|RAND');
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
         my_dflt_prompt(makepl_arg => "", $matcher);
@@ -1114,9 +1072,7 @@ substitute. You can then revisit this dialog with
     #
     #== halt_on_failure
     #
-    if (!$matcher or 'halt_on_failure' =~ /$matcher/) {
-        my_yn_prompt(halt_on_failure => 0, $matcher);
-    }
+    my_yn_prompt(halt_on_failure => 0, $matcher);
 
     #
     #= Proxies
@@ -1166,10 +1122,8 @@ substitute. You can then revisit this dialog with
     #= how cwd works
     #
 
-    if (!$matcher or 'getcwd' =~ /$matcher/) {
-        my_prompt_loop(getcwd => 'cwd', $matcher,
-                       'cwd|getcwd|fastcwd|backtickcwd');
-    }
+    my_prompt_loop(getcwd => 'cwd', $matcher,
+                   'cwd|getcwd|fastcwd|backtickcwd');
 
     #
     #= the CPAN shell itself (prompt, color)
@@ -1223,9 +1177,7 @@ substitute. You can then revisit this dialog with
     #== term_is_latin
     #
 
-    if (!$matcher or 'term_is_latin' =~ /$matcher/) {
-        my_yn_prompt(term_is_latin => 1, $matcher);
-    }
+    my_yn_prompt(term_is_latin => 1, $matcher);
 
     #
     #== save history in file 'histfile'
