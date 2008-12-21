@@ -36,6 +36,7 @@ $VERSION = "5.5";
 $reload = { map {$INC{$_} ? ($_,(stat $INC{$_})[9]) : ()} @relo };
 @CPAN::Shell::ISA = qw(CPAN::Debug);
 use Cwd qw(chdir);
+use Carp ();
 $COLOR_REGISTERED ||= 0;
 $Help = {
          '?' => \"help",
@@ -631,11 +632,11 @@ sub _reload_this {
 sub mkmyconfig {
     my($self, $cpanpm, %args) = @_;
     require CPAN::FirstTime;
-    my $home = CPAN::HandleConfig::home;
+    my $home = CPAN::HandleConfig::home();
     $cpanpm = $INC{'CPAN/MyConfig.pm'} ||
         File::Spec->catfile(split /\//, "$home/.cpan/CPAN/MyConfig.pm");
     File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
-    CPAN::HandleConfig::require_myconfig_or_config;
+    CPAN::HandleConfig::require_myconfig_or_config();
     $CPAN::Config ||= {};
     $CPAN::Config = {
         %$CPAN::Config,
