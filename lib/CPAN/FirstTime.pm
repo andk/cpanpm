@@ -740,7 +740,7 @@ sub init {
     local($\) = "";
     local($|) = 1;
 
-    my($ans,$default);
+    my($ans,$default); # why so half global?
 
     #
     #= Files, directories
@@ -813,69 +813,7 @@ sub init {
                       } =~ /$matcher/) {
         $CPAN::Frontend->myprint($prompts{config_intro});
 
-        if (!$matcher or 'cpan_home' =~ /$matcher/) {
-            my $cpan_home = $CPAN::Config->{cpan_home}
-                || File::Spec->catdir(CPAN::HandleConfig::home(), ".cpan");
-
-            if (-d $cpan_home) {
-                $CPAN::Frontend->myprint(qq{
-
-I see you already have a  directory
-    $cpan_home
-Shall we use it as the general CPAN build and cache directory?
-
-});
-            } else {
-                # no cpan-home, must prompt and get one
-                $CPAN::Frontend->myprint($prompts{cpan_home_where});
-            }
-
-            $default = $cpan_home;
-            my $loop = 0;
-            my $last_ans;
-            $CPAN::Frontend->myprint(" <cpan_home>\n");
-          PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
-                print "\n";
-                if (File::Spec->file_name_is_absolute($ans)) {
-                    my @cpan_home = split /[\/\\]/, $ans;
-                  DIR: for my $dir (@cpan_home) {
-                        if ($dir =~ /^~/ and (!$last_ans or $ans ne $last_ans)) {
-                            $CPAN::Frontend
-                                ->mywarn("Warning: a tilde in the path will be ".
-                                         "taken as a literal tilde. Please ".
-                                         "confirm again if you want to keep it\n");
-                            $last_ans = $default = $ans;
-                            next PROMPT;
-                        }
-                    }
-                } else {
-                    require Cwd;
-                    my $cwd = Cwd::cwd();
-                    my $absans = File::Spec->catdir($cwd,$ans);
-                    $CPAN::Frontend->mywarn("The path '$ans' is not an ".
-                                            "absolute path. Please specify ".
-                                            "an absolute path\n");
-                    $default = $absans;
-                    next PROMPT;
-                }
-                eval { File::Path::mkpath($ans); }; # dies if it can't
-                if ($@) {
-                    $CPAN::Frontend->mywarn("Couldn't create directory $ans.\n".
-                                            "Please retry.\n");
-                    next PROMPT;
-                }
-                if (-d $ans && -w _) {
-                    last PROMPT;
-                } else {
-                    $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
-                                            "or directory is not writable. Please retry.\n");
-                    if (++$loop > 5) {
-                        $CPAN::Frontend->mydie("Giving up");
-                    }
-                }
-            }
-            $CPAN::Config->{cpan_home} = $ans;
-        }
+        init_cpan_home($matcher);
 
         if (!$matcher or 'keep_source_where' =~ /$matcher/) {
             my_dflt_prompt("keep_source_where",
@@ -1357,6 +1295,73 @@ substitute. You can then revisit this dialog with
                                  "make the config permanent!\n\n");
     } else {
         CPAN::HandleConfig->commit($configpm);
+    }
+}
+
+sub init_cpan_home {
+    my($matcher) = @_;
+    if (!$matcher or 'cpan_home' =~ /$matcher/) {
+        my $cpan_home = $CPAN::Config->{cpan_home}
+            || File::Spec->catdir(CPAN::HandleConfig::home(), ".cpan");
+
+        if (-d $cpan_home) {
+            $CPAN::Frontend->myprint(qq{
+
+I see you already have a  directory
+    $cpan_home
+Shall we use it as the general CPAN build and cache directory?
+
+});
+        } else {
+            # no cpan-home, must prompt and get one
+            $CPAN::Frontend->myprint($prompts{cpan_home_where});
+        }
+
+        my $default = $cpan_home;
+        my $loop = 0;
+        my($last_ans,$ans);
+        $CPAN::Frontend->myprint(" <cpan_home>\n");
+    PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
+            print "\n";
+            if (File::Spec->file_name_is_absolute($ans)) {
+                my @cpan_home = split /[\/\\]/, $ans;
+            DIR: for my $dir (@cpan_home) {
+                    if ($dir =~ /^~/ and (!$last_ans or $ans ne $last_ans)) {
+                        $CPAN::Frontend
+                            ->mywarn("Warning: a tilde in the path will be ".
+                                     "taken as a literal tilde. Please ".
+                                     "confirm again if you want to keep it\n");
+                        $last_ans = $default = $ans;
+                        next PROMPT;
+                    }
+                }
+            } else {
+                require Cwd;
+                my $cwd = Cwd::cwd();
+                my $absans = File::Spec->catdir($cwd,$ans);
+                $CPAN::Frontend->mywarn("The path '$ans' is not an ".
+                                        "absolute path. Please specify ".
+                                        "an absolute path\n");
+                $default = $absans;
+                next PROMPT;
+            }
+            eval { File::Path::mkpath($ans); }; # dies if it can't
+            if ($@) {
+                $CPAN::Frontend->mywarn("Couldn't create directory $ans.\n".
+                                        "Please retry.\n");
+                next PROMPT;
+            }
+            if (-d $ans && -w _) {
+                last PROMPT;
+            } else {
+                $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
+                                        "or directory is not writable. Please retry.\n");
+                if (++$loop > 5) {
+                    $CPAN::Frontend->mydie("Giving up");
+                }
+            }
+        }
+        $CPAN::Config->{cpan_home} = $ans;
     }
 }
 
