@@ -43,7 +43,7 @@ sub is_success { 0 }
 
 package CPAN::Distroprefs::Result::Error;
 use vars qw(@ISA);
-BEGIN { @ISA = 'CPAN::Distroprefs::Result' }
+BEGIN { @ISA = 'CPAN::Distroprefs::Result' } ## no critic
 BEGIN { __PACKAGE__->__accessor($_) for qw(msg) }
 
 sub as_string {
@@ -57,21 +57,21 @@ sub as_string {
 
 package CPAN::Distroprefs::Result::Warning;
 use vars qw(@ISA);
-BEGIN { @ISA = 'CPAN::Distroprefs::Result::Error' }
+BEGIN { @ISA = 'CPAN::Distroprefs::Result::Error' } ## no critic
 sub is_warning { 1 }
 sub fmt_reason  { "Error reading distroprefs file %s, skipping: %s" }
 sub fmt_unknown { "Unknown error reading distroprefs file %s, skipping." }
 
 package CPAN::Distroprefs::Result::Fatal;
 use vars qw(@ISA);
-BEGIN { @ISA = 'CPAN::Distroprefs::Result::Error' }
+BEGIN { @ISA = 'CPAN::Distroprefs::Result::Error' } ## no critic
 sub is_fatal { 1 }
 sub fmt_reason  { "Error reading distroprefs file %s: %s" }
 sub fmt_unknown { "Unknown error reading distroprefs file %s." }
 
 package CPAN::Distroprefs::Result::Success;
 use vars qw(@ISA);
-BEGIN { @ISA = 'CPAN::Distroprefs::Result' }
+BEGIN { @ISA = 'CPAN::Distroprefs::Result' } ## no critic
 BEGIN { __PACKAGE__->__accessor($_) for qw(prefs extension) }
 sub is_success { 1 }
 

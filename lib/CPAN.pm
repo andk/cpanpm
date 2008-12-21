@@ -176,7 +176,7 @@ sub soft_chdir_with_alternatives ($);
     $autoload_recursion ||= 0;
 
     #-> sub CPAN::AUTOLOAD ;
-    sub AUTOLOAD {
+    sub AUTOLOAD { ## no critic
         $autoload_recursion++;
         my($l) = $AUTOLOAD;
         $l =~ s/.*:://;

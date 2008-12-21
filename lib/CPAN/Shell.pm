@@ -87,7 +87,7 @@ $Help = {
     $autoload_recursion   ||= 0;
 
     #-> sub CPAN::Shell::AUTOLOAD ;
-    sub AUTOLOAD {
+    sub AUTOLOAD { ## no critic
         $autoload_recursion++;
         my($l) = $AUTOLOAD;
         my $class = shift(@_);
