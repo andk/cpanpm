@@ -1,9 +1,12 @@
 #!/usr/bin/perl -- -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
 
+# /home/src/perl/repoperls/installed-perls/perl/p5B38YI/perl-5.10.0@35088/bin/perl /home/k/sources/CPAN/ghub/cpanpm/bin/loop-over-recent.pl
+
 use strict;
 use warnings;
 use CPAN::DistnameInfo;
 use File::Basename qw(fileparse dirname);
+use File::Path qw(rmtree);
 use File::Temp;
 use Time::HiRes qw(sleep);
 use YAML::Syck;
@@ -201,11 +204,12 @@ MAIN : {
 }
 
 sub sanity_check {
+  # cleanup => 1 only active at program exit, not at scope exit!
   my $tmpdir = File::Temp::tempdir(
                                    "loop-over-recent-XXXXXX",
                                    DIR => "/tmp",
-                                   CLEANUP => 1,
                                   ) or die $!;
+  rmtree $tmpdir;
 }
 
 __END__
