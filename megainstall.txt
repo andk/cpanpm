@@ -329,6 +329,7 @@ Crypt::Random
 Crypt::Rijndael
 Crypt::SKey
 Crypt::SSLeay
+Crypt::Vernam
 Curses
 Curses::UI
 Cwd
@@ -661,6 +662,7 @@ Geo::Coordinates::Converter::Format::Degree
 Geo::GeoNames
 Geo::Google::PolylineEncoder
 Geo::Gpx
+Geo::IP
 Geo::OSM::Tiles
 Geo::Proj::Japan
 Geo::Proj4
@@ -682,6 +684,10 @@ Getopt::Long
 Getopt::Long::Descriptive
 Getopt::Lucid
 Getopt::Mixed
+Git::FastExport
+Git::Fingerd
+Git::PurePerl
+Git::Wrapper
 GnuPG::Interface
 Goo
 Google::Adwords
@@ -1225,6 +1231,7 @@ Path::Class::Versioned
 Path::Router
 Perl6::Attributes
 Perl6::Caller
+Perl6::Contexts
 Perl6::Export
 Perl6::Form
 Perl6::Junction
@@ -1495,6 +1502,7 @@ Term::Spinner
 Term::UI
 Test
 Test::A8N
+Test::Assert
 Test::AutoBuild
 Test::Builder
 Test::Builder::Tester
