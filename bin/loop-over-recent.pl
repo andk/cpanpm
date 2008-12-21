@@ -14,31 +14,13 @@ use YAML::Syck;
 use lib "/home/k/sources/rersyncrecent/lib/";
 require File::Rsync::Mirror::Recent;
 
+our $Signal = 0;
+
+$SIG{INT} = $SIG{TERM} = sub { $Signal=1 };
+
 sub determine_perls {
   my($basedir,$otherperls) = @_;
   my @perls;
-  my $trust_latest_bleadperls = 0;
-  if ($trust_latest_bleadperls) {
-    if (opendir my $dh, $basedir) {
-      @perls = sort grep { /^megainstall\..*\.d$/ } readdir $dh;
-      pop @perls while ! -e "$basedir/$perls[-1]/perl-V.txt";
-    PERL: while (@perls) {
-        open my $fh, "$basedir/$perls[-1]/perl-V.txt" or die;
-        while (<$fh>) {
-          next unless /-Dprefix=(\S+)/;
-          my $perl = "$1/bin/perl";
-          if (-x $perl){
-            @perls = $perl; # only one survives
-            last PERL;
-          } else {
-            pop @perls;
-          }
-        }
-        close $fh;
-      }
-      shift @perls while @perls && ! -x $perls[0];
-    }
-  }
   if (open my $fh2, $otherperls) {
     while (<$fh2>) {
       chomp;
@@ -91,6 +73,7 @@ MAIN : {
   my $basedir = "/home/sand/CPAN-SVN/logs";
   my %comboseen;
  ITERATION: while () {
+    last if $Signal;
     sanity_check();
     my $iteration_start = time;
     my $recent_events = read_recent_events($rf,$rx);
@@ -98,6 +81,7 @@ MAIN : {
     # my @good_recent_events; # ? first collect them, then only if we
     # have something go ahead?
   UPLOADITEM: for my $upload (reverse @$recent_events) {
+      last if $Signal;
       next unless $upload->{path} =~ $rx;
       next unless $upload->{type} eq "new";
       next if $upload->{path} =~ m|^R/RG/RGARCIA/perl-5.1[01]|;
@@ -136,6 +120,7 @@ MAIN : {
       my $epoch_as_localtime = scalar localtime $upload->{epoch};
       $perls ||= determine_perls($basedir,$otherperls);
     PERL: for my $perl (@$perls) {
+        last if $Signal;
         my $perl_version =
             do { open my $fh, "$perl -e \"print \$]\" |" or die "Couldnt open $perl: $!";
                  <$fh>;
