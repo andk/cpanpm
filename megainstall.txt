@@ -151,6 +151,7 @@ CPAN::Metrics
 CPAN::Mini
 CPAN::Mini::Devel
 CPAN::Mini::Webserver
+CPAN::MirrorStatus
 CPAN::Reporter::Smoker
 CPAN::Site
 CPAN::Testers::ParseReport
@@ -456,6 +457,7 @@ Devel::CheckLib
 Devel::CheckOS
 Devel::Command
 Devel::Cover
+Devel::CoverX::Covered
 Devel::Cycle
 Devel::DProfLB
 Devel::Declare
@@ -488,6 +490,7 @@ Devel::SawAmpersand
 Devel::SearchINC
 Devel::Size
 Devel::SmallProf
+Devel::StackTrace::WithLexicals
 Devel::Symdump
 Devel::Trace
 Devel::TraceLoad
@@ -946,6 +949,7 @@ Mail::Transport::Dbx
 Mail::Util
 Makefile::DOM
 Makefile::Parser
+Markapl
 Markaya
 MasonX::Resolver::WidgetFactory
 Math::Approx::Symbolic
@@ -1239,6 +1243,7 @@ Perl6::Perldoc
 Perl6::Say
 Perl6::Signatures
 Perl6::Subs
+Perlwikipedia
 Perl::Critic::More
 Perl::Critic::Policy::RegularExpressions::RequireDotMatchAnything
 Perl::Dist
@@ -1376,6 +1381,7 @@ SWF::NeedsRecompile
 SWF::Search
 Safe::Hole
 Scalar::Defer
+Scalar::Random
 Scalar::Util
 Scalar::Util::Clone
 Scalar::Util::Numeric
@@ -1443,6 +1449,7 @@ String::ShellQuote
 String::ShellQuote
 String::Similarity
 String::Truncate
+Sub::Alias
 Sub::Assert
 Sub::Auto
 Sub::Context
@@ -1461,6 +1468,7 @@ Sys::CPU
 Sys::FreezeThaw
 Sys::Hostname
 Sys::Mmap
+Sys::Mmap::Simple
 Sys::SigAction
 Sys::Statistics::Linux
 Sys::Virt
