@@ -903,87 +903,8 @@ sub init {
     #
     #= External programs
     #
-
-    my @external_progs = qw/bzip2 gzip tar unzip
-
-                            make
-
-                            curl lynx wget ncftpget ncftp ftp
-
-                            gpg
-
-                            patch applypatch
-                            /;
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
-    if (!$matcher or "@external_progs" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{external_progs});
-
-        my $old_warn = $^W;
-        local $^W if $^O eq 'MacOS';
-        local $^W = $old_warn;
-        my $progname;
-        for $progname (@external_progs) {
-            next if $matcher && $progname !~ /$matcher/;
-            if ($^O eq 'MacOS') {
-                $CPAN::Config->{$progname} = 'not_here';
-                next;
-            }
-
-            my $progcall = $progname;
-            unless ($matcher) {
-                # we really don't need ncftp if we have ncftpget, but
-                # if they chose this dialog via matcher, they shall have it
-                next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
-            }
-            my $path = $CPAN::Config->{$progname}
-                || $Config::Config{$progname}
-                    || "";
-            if (File::Spec->file_name_is_absolute($path)) {
-                # testing existence is not good enough, some have these exe
-                # extensions
-
-                # warn "Warning: configured $path does not exist\n" unless -e $path;
-                # $path = "";
-            } elsif ($path =~ /^\s+$/) {
-                # preserve disabled programs
-            } else {
-                $path = '';
-            }
-            unless ($path) {
-                # e.g. make -> nmake
-                $progcall = $Config::Config{$progname} if $Config::Config{$progname};
-            }
-
-            $path ||= find_exe($progcall,\@path);
-            unless ($path) { # not -e $path, because find_exe already checked that
-                local $"=";";
-                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@path]\n");
-                if ($progname eq "make") {
-                    $CPAN::Frontend->mywarn("ALERT: 'make' is an essential tool for ".
-                                            "building perl Modules. Please make sure you ".
-                                            "have 'make' (or some equivalent) ".
-                                            "working.\n"
-                                           );
-                    if ($^O eq "MSWin32") {
-                        $CPAN::Frontend->mywarn("
-Windows users may want to follow this procedure when back in the CPAN shell:
-
-    look YVES/scripts/alien_nmake.pl
-    perl alien_nmake.pl
-
-This will install nmake on your system which can be used as a 'make'
-substitute. You can then revisit this dialog with
-
-    o conf init make
-
-");
-                    }
-                }
-            }
-            $prompts{$progname} = "Where is your $progname program?";
-            my_dflt_prompt($progname,$path,$matcher);
-        }
-    }
+    _init_external_progs($matcher,\@path);
 
     {
         my $path = $CPAN::Config->{'pager'} ||
@@ -1247,6 +1168,89 @@ substitute. You can then revisit this dialog with
                                  "make the config permanent!\n\n");
     } else {
         CPAN::HandleConfig->commit($configpm);
+    }
+}
+
+sub _init_external_progs {
+    my($matcher,$PATH) = @_;
+    my @external_progs = qw/bzip2 gzip tar unzip
+
+                            make
+
+                            curl lynx wget ncftpget ncftp ftp
+
+                            gpg
+
+                            patch applypatch
+                            /;
+    if (!$matcher or "@external_progs" =~ /$matcher/) {
+        $CPAN::Frontend->myprint($prompts{external_progs});
+
+        my $old_warn = $^W;
+        local $^W if $^O eq 'MacOS';
+        local $^W = $old_warn;
+        my $progname;
+        for $progname (@external_progs) {
+            next if $matcher && $progname !~ /$matcher/;
+            if ($^O eq 'MacOS') {
+                $CPAN::Config->{$progname} = 'not_here';
+                next;
+            }
+
+            my $progcall = $progname;
+            unless ($matcher) {
+                # we really don't need ncftp if we have ncftpget, but
+                # if they chose this dialog via matcher, they shall have it
+                next if $progname eq "ncftp" && $CPAN::Config->{ncftpget} gt " ";
+            }
+            my $path = $CPAN::Config->{$progname}
+                || $Config::Config{$progname}
+                    || "";
+            if (File::Spec->file_name_is_absolute($path)) {
+                # testing existence is not good enough, some have these exe
+                # extensions
+
+                # warn "Warning: configured $path does not exist\n" unless -e $path;
+                # $path = "";
+            } elsif ($path =~ /^\s+$/) {
+                # preserve disabled programs
+            } else {
+                $path = '';
+            }
+            unless ($path) {
+                # e.g. make -> nmake
+                $progcall = $Config::Config{$progname} if $Config::Config{$progname};
+            }
+
+            $path ||= find_exe($progcall,$PATH);
+            unless ($path) { # not -e $path, because find_exe already checked that
+                local $"=";";
+                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n");
+                if ($progname eq "make") {
+                    $CPAN::Frontend->mywarn("ALERT: 'make' is an essential tool for ".
+                                            "building perl Modules. Please make sure you ".
+                                            "have 'make' (or some equivalent) ".
+                                            "working.\n"
+                                           );
+                    if ($^O eq "MSWin32") {
+                        $CPAN::Frontend->mywarn("
+Windows users may want to follow this procedure when back in the CPAN shell:
+
+    look YVES/scripts/alien_nmake.pl
+    perl alien_nmake.pl
+
+This will install nmake on your system which can be used as a 'make'
+substitute. You can then revisit this dialog with
+
+    o conf init make
+
+");
+                    }
+                }
+            }
+            $prompts{$progname} = "Where is your $progname program?";
+            my_dflt_prompt($progname,$path,$matcher);
+        }
     }
 }
 
