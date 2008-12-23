@@ -115,6 +115,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
+    |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
