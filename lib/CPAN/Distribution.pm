@@ -505,6 +505,7 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
                                           DIR => $builddir,
                                           CLEANUP => 0,
                                          );
+        chmod 0755, $packagedir; # may fail
         my $f;
         for $f (@dirents) { # is already without "." and ".."
             my $from = File::Spec->catdir($from_dir,$f);
