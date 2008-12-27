@@ -26,6 +26,8 @@ use File::Basename qw(dirname);
 use File::Copy qw(cp);
 use Term::Prompt;
 
+die "missing support for 'Porting/Maintainers.pl' and gabor refactoring";
+
 my $target = shift or die "Usage: $0 targetdirectory";
 die "Could not find directory '$target'" unless -d $target;
 $target =~ s|/+$||;

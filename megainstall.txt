@@ -1282,6 +1282,7 @@ Pod::S5
 Pod::Sdf
 Pod::Select
 Pod::Simple
+Pod::Tidy
 Pod::WikiDoc
 Pod::XML
 Pod::Xhtml
@@ -1387,6 +1388,7 @@ Scalar::Util::Clone
 Scalar::Util::Numeric
 Schedule::Cron
 Scope::Guard
+Scope::Upper
 Script::Remote
 Scriptalicious
 Search::Tools::RegExp::Keyword
@@ -1848,6 +1850,7 @@ XUL::Node
 Xacobeo
 YAML
 YAML::Old
+YAML::Perl
 YAML::Syck
 YAML::Tiny
 YAML::XS
