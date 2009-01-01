@@ -49,6 +49,8 @@ use YAML::Syck;
 
 warn "Working with version $RT::Client::REST::VERSION";
 
+# XXX yes, it's a stupid setup that requires an argument to
+# (logically) boolean options
 my %Config = (
               server      => 'https://rt.cpan.org',
               username    => 'ANDK',
@@ -233,7 +235,7 @@ sub who {
 }
 
 sub users_2007 {
-  my $postedlist = <<EOL;
+  my $postedlist = <<'EOL';
      1: guest      486
      2: SREZIC     393
      3: MSCHWERN   385
