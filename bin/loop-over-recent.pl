@@ -30,6 +30,11 @@ sub determine_perls {
       push @perls, $_;
     }
   }
+  unless (@perls) {
+    if (hostname() =~ /^k81/) {
+      @perls = qw(/usr/local/perl-5.10/bin/perl);
+    }
+  }
   \@perls;
 }
 
@@ -70,7 +75,7 @@ MAIN : {
     $max_epoch_worked_on = $state if $state;
   }
   warn "max_epoch_worked_on[$max_epoch_worked_on]";
-  my $basedir = "/home/sand/CPAN-SVN/logs";
+  my $basedir = "/home/sand/cpanpm/logs";
   my %comboseen;
  ITERATION: while () {
     last if $Signal;
