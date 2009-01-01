@@ -7,6 +7,7 @@ ARGV::readonly
 Abstract::Meta::Class
 Acme::Bleach
 Acme::Chef
+Acme::Curse
 Acme::MetaSyntactic
 Acme::Oil
 Algorithm::AhoCorasick
@@ -951,6 +952,7 @@ Makefile::DOM
 Makefile::Parser
 Markapl
 Markaya
+Marpa
 MasonX::Resolver::WidgetFactory
 Math::Approx::Symbolic
 Math::Base85
