@@ -1,7 +1,8 @@
-
-# $HeadURL$
-
 # see first posting http://use.perl.org/~LaPerla/journal/35252
+# (Top rt.cpan.org requestors) (up to ticket 32022)
+
+# second: http://use.perl.org/~LaPerla/journal/38195 (Who wrote all
+# the RT tickets?) (up to ticket 42061)
 
 =pod
 
@@ -34,7 +35,7 @@ So I decided to patch REST thusly:
 
 
 Of course this cannot be correct but for me it works right now quite
-well but only because rt.cpan.orgg sends charset=utf-8 or so.
+well but only because rt.cpan.org sends charset=utf-8 or so.
 
 =cut
 
@@ -55,9 +56,10 @@ my %Config = (
               chunksize   => 396,
               html        => 0,
               top         => 40,
+              withlastyear => 0,
              );
 
-GetOptions(\my %config, map { "$_=s" } keys %Config);
+GetOptions(\my %config, map { "$_=s" } keys %Config) or die;
 while (my($k,$v) = each %config) {
   $Config{$k} = $v;
 }
@@ -229,6 +231,58 @@ sub who {
   $who = $alias{$who} || $who;
 }
 
+sub users_2007 {
+  my $postedlist = <<EOL;
+     1: guest      486
+     2: SREZIC     393
+     3: MSCHWERN   385
+     4: ANDK       347
+     5: ADAMK      317
+     6: MARKSTOS   304
+     7: CHORNY     248
+     8: RRWO       205
+     9: WMCKEE     161
+    10: SMPETERS   136
+    11: TONYC      132
+    12: LGODDARD   129
+    13: CDOLAN     117
+    14: JDHEDDEN   114
+    15: RCAPUTO    110
+    16: RJBS       101
+    17: MAREKR     101
+    18: MTHURN      98
+    19: ATOURBIN    85
+    20: PETDANCE    84
+    21: SAPER       79
+    22: BARBIE      72
+    23: JESSE       71
+    24: NKH         62
+    25: IMACAT      60
+    26: CORION      60
+    27: ACDALTON    59
+    28: DAGOLDEN    58
+    29: RSAVAGE     57
+    30: MERLYN      52
+    31: HANENKAMP   51
+    32: Niko Tyni   51
+    33: TELS        49
+    34: LTHEGLER    47
+    35: MARKF       47
+    36: PODMASTER   47
+    37: JPIERCE     47
+    38: GROUSSE     46
+    39: BZAJAC      46
+    40: KANE        44
+EOL
+    
+  my %p;
+  for my $line (split /\n/, $postedlist) {
+    my($pos,$name,$count) = $line =~ /(\d+):\s(\S.+\S)\s+(\d+)$/;
+    $p{$name} = { pos => $pos, count => $count };
+  }
+  return \%p;
+}
+
 keys %{$ALL->{tickets}}; # reset iterator
 my %S;
 TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
@@ -238,14 +292,21 @@ TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
 }
 my $top = 1;
 printf "%s\n", $Config{html} ? "<dl>" : "";
+my $p;
+my $sprintf = "%s%2d: %-9s %4d%s\n";
+if ($Config{withlastyear}) {
+  $sprintf = "%s%2d: %-9s %4d (%2s) %3s%s\n";
+  $p = users_2007();
+}
 for my $k (sort {$S{$b} <=> $S{$a}} keys %S) {
   my $x = sprintf
       (
-       "%s%2d: %-9s %4d%s\n",
+       $sprintf,
        $Config{html} ? "<code>" : " ",
        $top,
        $k,
        $S{$k},
+       $p ? ( $p->{$k}{pos} || "-", $p->{$k}{pos} ? $S{$k}-$p->{$k}{count} : "-") : (),
        $Config{html} ? "</code><br/>" : "",
       );
   $x =~ s/ /&nbsp;/g if $Config{html};
