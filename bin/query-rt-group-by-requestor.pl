@@ -56,7 +56,8 @@ my %Config = (
               chunksize   => 396,
               html        => 0,
               top         => 40,
-              withlastyear => 0,
+              withlastyear => 0, # well, hardcoded 2007
+              upto        => 0,  # allows recalc against a point in the past
              );
 
 GetOptions(\my %config, map { "$_=s" } keys %Config) or die;
@@ -261,20 +262,80 @@ sub users_2007 {
     26: CORION      60
     27: ACDALTON    59
     28: DAGOLDEN    58
-    29: RSAVAGE     57
-    30: MERLYN      52
-    31: HANENKAMP   51
-    32: Niko Tyni   51
-    33: TELS        49
-    34: LTHEGLER    47
-    35: MARKF       47
-    36: PODMASTER   47
-    37: JPIERCE     47
-    38: GROUSSE     46
-    39: BZAJAC      46
-    40: KANE        44
+    29: CLOTHO      57
+    30: RSAVAGE     57
+    31: MERLYN      52
+    32: HANENKAMP   51
+    33: Niko Tyni   51
+    34: TELS        49
+    35: LTHEGLER    47
+    36: MARKF       47
+    37: PODMASTER   47
+    38: JPIERCE     47
+    39: GROUSSE     46
+    40: BZAJAC      46
+    41: KANE        44
+    42: JONASBN     44
+    43: STENNIE     43
+    44: SPOON       43
+    45: MUENALAN    41
+    46: JJORE       41
+    47: RURBAN      40
+    48: SHLOMIF     37
+    49: JOHANL      36
+    50: dsteinbrunner@pobox.com   36
+    51: SHAY        36
+    52: DLAND       36
+    53: IVORW       35
+    54: mcummings@gentoo.org   34
+    55: FERREIRA    34
+    56: NUFFIN      34
+    57: NIKC        33
+    58: STIGPJE     33
+    59: arnaud@underlands.org   33
+    60: MSTEVENS    32
+    61: DHA         31
+    62: ABH         31
+    63: NJH         31
+    64: SCOP        30
+    65: KWILLIAMS   30
+    66: STRO        30
+    67: SMYLERS     30
+    68: perl@infotrope.net   29
+    69: DHORNE      29
+    70: dave@riverside-cms.co.uk   28
+    71: SMUELLER    28
+    72: dhoworth@mrc-lmb.cam.ac.uk   27
+    73: ISHIGAKI    27
+    74: JKEENAN     26
+    75: JMEHNLE     26
+    76: DMUEY       26
+    77: tom@eborcom.com   25
+    78: cpan@fireartist.com   25
+    79: JROCKWAY    25
+    80: NODINE      25
+    81: DMITRI      24
+    82: JHI         24
+    83: RENEEB      24
+    84: jpo@di.uminho.pt   24
+    85: DOM         24
+    86: cweyl@alumni.drew.edu   24
+    87: BOOK        23
+    88: OVID        23
+    89: DAXIM       22
+    90: tony@develop-help.com   22
+    91: THALJEF     22
+    92: CNANDOR     21
+    93: GHENRY      21
+    94: CLACO       21
+    95: perl@crystalflame.net   21
+    96: YANICK      21
+    97: m.romani@spinsoft.it   21
+    98: MARKOV      20
+    99: DJERIUS     20
+    100: LEIRA       20
 EOL
-    
+
   my %p;
   for my $line (split /\n/, $postedlist) {
     my($pos,$name,$count) = $line =~ /(\d+):\s(\S.+\S)\s+(\d+)$/;
@@ -286,6 +347,9 @@ EOL
 keys %{$ALL->{tickets}}; # reset iterator
 my %S;
 TICKET: while (my($k,$v) = each %{$ALL->{tickets}}) {
+  if (my $upto = $Config{upto}) {
+    next TICKET if $k > $upto;
+  }
   my $who = who($v);
   next TICKET unless $who;
   $S{$who}++;
