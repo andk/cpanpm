@@ -8,6 +8,7 @@
 ^CPAN-.+/.+
 ^CPAN-.+gz$
 ^CPAN/MakeMaker
+^Change.*\.old
 ^ChangeLog.*\.svk
 ^DIST
 ^DIST
@@ -27,6 +28,7 @@
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
 ^eg/
+^err$
 ^gpw9-cpan-talk\.
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm@
@@ -36,6 +38,7 @@
 ^make-test-
 ^memo
 ^nntp-testers
+^our$
 ^patches
 ^perlbug/
 ^pm_to_blib
