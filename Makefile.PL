@@ -200,28 +200,6 @@ sub macro {
     q{
 LC_ALL_noexport=en_GB.utf8
 
-ALL_PERLS = /usr/bin/perl \
-	    /usr/local/bin/perl \
-            /usr/local/perl-5.004_05/bin/perl \
-            /usr/local/perl-5.005_04/bin/perl \
-            /usr/local/perl-5.6.2/bin/perl \
-	    /usr/local/perl-5.8.0/bin/perl \
-	    /usr/local/perl-5.8.4/bin/perl \
-
-
-# not sorted because order matters
-MEGA_BASE = \
- Bundle::CPANxxl \
- CPAN::DistnameInfo \
- DBD::SQLite \
- Test::Simple \
- /home/src/perl/tk/SVN/. \
- /home/src/graphics/magick/ImageMagick-6.3.5/PerlMagick/. \
-
-
-# define a random one
-MEGA_XML=logs/megainstall.20070412T1450.d/RJRAY!RPC-XML-0.59.xml
-
 YAML_MODULE=YAML::Syck
 }
 }
@@ -239,9 +217,6 @@ svn-update:
 	svn up
 
 update: svn-update dd-prefs
-
-mega-validate: bin/colorout-to-dir.rng
-	xmllint -relaxng bin/colorout-to-dir.rng -noout $(MEGA_XML)
 
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 OKDIRS=CPAN|DIST|bin|blib|cover_db|\
@@ -289,22 +264,6 @@ release ::
 
 checkout ::
 	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
-
-# 16=Distribution; 1024=Shell; 32768=Queue
-# $$CPAN::DEBUG|=16;$$CPAN::DEBUG|=1024;$$CPAN::DEBUG|=32768;
-megainstall: logs/.exists
-	for DATE in `date +%Y%m%dT%H%M`; do \
-		nohup $(PERL) -Ilib -MCPAN -e 'install(qw(Term::ReadKey))' < /dev/null > logs/megainstall.$$DATE.out 2>&1; \
-		LANG=en_US.utf8 $(PERL) -Ilib -MCPAN -MPOSIX -e 'sub intime {POSIX::strftime("%FT%T",localtime()) lt "2008-09-30T23:59:59"}; \
-		  CPAN::HandleConfig->load; \
-		  open FH, "megainstall.txt" or die; chomp(@MEGA = grep {!/^#/} <FH>); \
-		  install(grep {!m[/]||-e$$_} qw($(MEGA_BASE))); \
-		  CPAN::Shell->reload("cpan"); \
-		  install(map {$$_->[0]} sort {$$a->[1]<=>$$b->[1]} map {[$$_,rand(1)]} @MEGA); \
-		  CPAN::Shell->failed' >> logs/megainstall.$$DATE.out 2>&1; \
-		$(PERL) bin/colorout-to-dir-2.pl logs/megainstall.$$DATE.out; \
-		`pwd`/bin/dir-to-jifty.pl logs; \
-	done
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
@@ -626,10 +585,6 @@ t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz :
 #
 #
 #
-
-testallperls :
-	:>SIGNATURE
-	for p in $(ALL_PERLS); do $$p -v && $$p Makefile.PL && $(MAKE) test; done
 
 clean ::
 	$(RM) t/CPAN/authors/id/A/AN/ANDK/*/Build \
