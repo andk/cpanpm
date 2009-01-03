@@ -3448,7 +3448,23 @@ sub perldoc {
     my($dist) = $self->id;
     my $package = $self->called_for;
 
-    $self->_display_url( $CPAN::Defaultdocs . $package );
+    if ($CPAN::META->has_inst("Pod::Perldocs")) {
+        my($perl) = $self->perl
+            or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
+        my @args = ($perl, q{-MPod::Perldocs}, q{-e},
+                    q{Pod::Perldocs->run()}, $package);
+        my($wstatus);
+        unless ( ($wstatus = system(@args)) == 0 ) {
+            my $estatus = $wstatus >> 8;
+            $CPAN::Frontend->myprint(qq{
+    Function system("@args")
+    returned status $estatus (wstat $wstatus)
+    });	
+        }
+    }
+    else {
+        $self->_display_url( $CPAN::Defaultdocs . $package );
+    }
 }
 
 #-> sub CPAN::Distribution::_check_binary ;
