@@ -6638,8 +6638,8 @@ sub parse_meta_yml {
     return unless -f $yaml;
     my $early_yaml;
     eval {
-        require Parse::Metayaml; # hypothetical
-        $early_yaml = Parse::Metayaml::LoadFile($yaml)->[0];
+        require Parse::CPAN::Meta;
+        $early_yaml = Parse::CPAN::Meta::LoadFile($yaml)->[0];
     };
     unless ($early_yaml) {
         eval { $early_yaml = CPAN->_yaml_loadfile($yaml)->[0]; };
