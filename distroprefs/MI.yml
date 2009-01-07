@@ -257,6 +257,7 @@ match:
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |NUFFIN/MooseX-Getopt-\d
     |NUFFIN/MooseX-Storage-\d
+    |NUFFIN/Task-KiokuDB-\d
     |OSFAMERON/Perl-Tags-\d
     |OSFAMERON/Sub-Auto-\d
     |OSFAMERON/Sub-Curried-\d
