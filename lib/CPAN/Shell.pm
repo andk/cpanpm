@@ -53,6 +53,7 @@ $Help = {
          failed => "list all failed actions within current session",
          fforce => "redo a command from scratch",
          force => "redo a command",
+         get => "download a distribution",
          h => \"help",
          help => "overview over commands; 'help ...' explains specific commands",
          hosts => "statistics about recently used hosts",
@@ -71,7 +72,7 @@ $Help = {
          q => \"quit",
          quit => "leave the cpan shell",
          r => "review upgradable modules",
-         readme => "display the README of a distro woth a pager",
+         readme => "display the README of a distro with a pager",
          recent => "show recent uploads to the CPAN",
          # recompile
          reload => "'reload cpan' or 'reload index'",
