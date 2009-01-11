@@ -126,7 +126,6 @@ WriteMakefile(
                                             "verify-changes-date",
                                             "verify-changes-version",
                                             "kwalify-distroprefs",
-                                            "dd-prefs",
                                             "Makefile",
                                             "no_CR",
                                             "META.yml",
@@ -134,7 +133,6 @@ WriteMakefile(
                                             "README",
                                             "testdistros",
                                             "all",
-                                            "chlog",
                                             "tardist",
                                            ),
                        COMPRESS => 'gzip -9',
@@ -542,6 +540,8 @@ dd-prefs ::
 	`echo $(PERL) | sed -e 's/perl$$/slaymake/'` dd-prefs
 
 st-prefs ::
+
+chlog ::
 
 };
 
