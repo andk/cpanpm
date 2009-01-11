@@ -533,7 +533,7 @@ clean ::
 		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
-no_CR : ChangeLog META.yml
+no_CR : META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
 foreign-prefs : dd-prefs st-prefs
