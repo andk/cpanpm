@@ -39,7 +39,7 @@ if ($HAVE_FILE_SPEC) {
     shift @ARGV;
     my $st;
     local $ENV{LANG} = "C";
-    my $dirty = system "git diff-index --exit-code --summary HEAD";
+    my $dirty = ! system "git status -a > /dev/null";
     die "Not everything checked in or out?" if $dirty;
 
     if ($version_set_manually) {
