@@ -60,14 +60,15 @@ use Text::Wrap ();
 # protect against "called too early"
 sub find_perl ();
 sub anycwd ();
+sub _uniq;
 
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
 if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
     $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
-    my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
-    my @rec = split /,/, $rec;
+    my @rec = _uniq split(/,/, $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION}), $$;
+    $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} = join ",", @rec;
     # warn "# Note: Recursive call of CPAN.pm detected\n";
     my $w = sprintf "# Note: CPAN.pm is running in process %d now", pop @rec;
     my %sleep = (
@@ -242,6 +243,12 @@ sub soft_chdir_with_alternatives ($);
         die "$@" if "$@";
         ## redirect: done
     }
+}
+
+sub _uniq {
+    my(@list) = @_;
+    my %seen;
+    return map { !$seen{$_} } @list;
 }
 
 #-> sub CPAN::shell ;
