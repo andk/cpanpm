@@ -2204,9 +2204,11 @@ C<expect>.
   match:
     module: "Dancing::Queen"
     distribution: "^CHACHACHA/Dancing-"
+    not_distribution: "\.zip$"
     perl: "/usr/local/cariba-perl/bin/perl"
     perlconfig:
       archname: "freebsd"
+      not_cc: "gcc"
     env:
       DANCING_FLOOR: "Shubiduh"
   disabled: 1
@@ -2324,6 +2326,7 @@ CPAN mantra. See below under I<Processing Instructions>.
 A hashref with one or more of the keys C<distribution>, C<modules>,
 C<perl>, C<perlconfig>, and C<env> that specify whether a document is
 targeted at a specific CPAN distribution or installation.
+Keys prefixed with C<not_> negates the corresponding match.
 
 The corresponding values are interpreted as regular expressions. The
 C<distribution> related one will be matched against the canonical
@@ -2338,9 +2341,11 @@ absolute path).
 The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
 living in the C<Config.pm> module.
+Keys prefixed with C<not_> negates the corresponding match.
 
 The value associated with C<env> is itself a hashref that is
 matched against corresponding values in the C<%ENV> hash.
+Keys prefixed with C<not_> negates the corresponding match.
 
 If more than one restriction of C<module>, C<distribution>, etc. is
 specified, the results of the separately computed match values must
