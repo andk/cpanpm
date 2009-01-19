@@ -60,14 +60,15 @@ use Text::Wrap ();
 # protect against "called too early"
 sub find_perl ();
 sub anycwd ();
+sub _uniq;
 
 no lib ".";
 
 require Mac::BuildTools if $^O eq 'MacOS';
 if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
     $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} ||= $ENV{PERL5_CPAN_IS_RUNNING};
-    my $rec = $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} .= ",$$";
-    my @rec = split /,/, $rec;
+    my @rec = _uniq split(/,/, $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION}), $$;
+    $ENV{PERL5_CPAN_IS_RUNNING_IN_RECURSION} = join ",", @rec;
     # warn "# Note: Recursive call of CPAN.pm detected\n";
     my $w = sprintf "# Note: CPAN.pm is running in process %d now", pop @rec;
     my %sleep = (
@@ -242,6 +243,12 @@ sub soft_chdir_with_alternatives ($);
         die "$@" if "$@";
         ## redirect: done
     }
+}
+
+sub _uniq {
+    my(@list) = @_;
+    my %seen;
+    return map { !$seen{$_} } @list;
 }
 
 #-> sub CPAN::shell ;
@@ -2197,9 +2204,11 @@ C<expect>.
   match:
     module: "Dancing::Queen"
     distribution: "^CHACHACHA/Dancing-"
+    not_distribution: "\.zip$"
     perl: "/usr/local/cariba-perl/bin/perl"
     perlconfig:
       archname: "freebsd"
+      not_cc: "gcc"
     env:
       DANCING_FLOOR: "Shubiduh"
   disabled: 1
@@ -2317,6 +2326,7 @@ CPAN mantra. See below under I<Processing Instructions>.
 A hashref with one or more of the keys C<distribution>, C<modules>,
 C<perl>, C<perlconfig>, and C<env> that specify whether a document is
 targeted at a specific CPAN distribution or installation.
+Keys prefixed with C<not_> negates the corresponding match.
 
 The corresponding values are interpreted as regular expressions. The
 C<distribution> related one will be matched against the canonical
@@ -2331,9 +2341,11 @@ absolute path).
 The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
 living in the C<Config.pm> module.
+Keys prefixed with C<not_> negates the corresponding match.
 
 The value associated with C<env> is itself a hashref that is
 matched against corresponding values in the C<%ENV> hash.
+Keys prefixed with C<not_> negates the corresponding match.
 
 If more than one restriction of C<module>, C<distribution>, etc. is
 specified, the results of the separately computed match values must

@@ -218,7 +218,7 @@ sub rd_authindex {
     return unless defined $index_target;
     return if CPAN::_sqlite_running();
     my @lines;
-    $CPAN::Frontend->myprint("Going to read $index_target\n");
+    $CPAN::Frontend->myprint("Going to read '$index_target'\n");
     local(*FH);
     tie *FH, 'CPAN::Tarzip', $index_target;
     local($/) = "\n";
@@ -258,7 +258,7 @@ sub rd_modpacks {
     my($self, $index_target) = @_;
     return unless defined $index_target;
     return if CPAN::_sqlite_running();
-    $CPAN::Frontend->myprint("Going to read $index_target\n");
+    $CPAN::Frontend->myprint("Going to read '$index_target'\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
     CPAN->debug(sprintf "start[%d]", time) if $CPAN::DEBUG;
@@ -475,7 +475,7 @@ sub rd_modlist {
     my($cl,$index_target) = @_;
     return unless defined $index_target;
     return if CPAN::_sqlite_running();
-    $CPAN::Frontend->myprint("Going to read $index_target\n");
+    $CPAN::Frontend->myprint("Going to read '$index_target'\n");
     my $fh = CPAN::Tarzip->TIEHANDLE($index_target);
     local $_;
     my $slurp = "";
@@ -550,7 +550,7 @@ sub read_metadata_cache {
     return unless $CPAN::META->has_usable("Storable");
     my $metadata_file = File::Spec->catfile($CPAN::Config->{cpan_home},"Metadata");
     return unless -r $metadata_file and -f $metadata_file;
-    $CPAN::Frontend->myprint("Going to read $metadata_file\n");
+    $CPAN::Frontend->myprint("Going to read '$metadata_file'\n");
     my $cache;
     eval { $cache = Storable::retrieve($metadata_file) };
     $CPAN::Frontend->mywarn($@) if $@; # ?? missing "\n" after $@ in mywarn ??

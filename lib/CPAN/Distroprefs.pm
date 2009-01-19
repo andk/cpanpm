@@ -201,40 +201,63 @@ sub data { shift->{data} }
 
 sub has_any_match { $_[0]->data->{match} ? 1 : 0 }
 
-sub has_match { exists $_[0]->data->{match}{$_[1]} }
+sub has_match {
+    my $match = $_[0]->data->{match} || return 0;
+    exists $match->{$_[1]} || exists $match->{"not_$_[1]"}
+}
 
 sub has_valid_subkeys {
     grep { exists $_[0]->data->{match}{$_} }
+        map { $_, "not_$_" }
         $_[0]->match_attributes
 }
 
 sub _pattern {
-    my ($self, $key) = @_;
-    return eval sprintf 'qr{%s}', $self->data->{match}{$key};
+    my $re = shift;
+    return eval sprintf 'qr{%s}', $re;
+}
+
+sub _match_scalar {
+    my ($match, $data) = @_;
+    my $qr = _pattern($match);
+    return $data =~ /$qr/;
+}
+
+sub _match_hash {
+    my ($match, $data) = @_;
+    for my $mkey (keys %$match) {
+	(my $dkey = $mkey) =~ s/^not_//;
+        my $val = defined $data->{$dkey} ? $data->{$dkey} : '';
+	if (_match_scalar($match->{$mkey}, $val)) {
+	    return 0 if $mkey =~ /^not_/;
+	}
+	else {
+	    return 0 if $mkey !~ /^not_/;
+	}
+    }
+    return 1;
 }
 
 sub _match {
-    my ($self, $qr, $val) = @_;
-    my $not = ($qr =~ s/!\s*//);
-    $qr = eval sprintf 'qr{%s}', $qr;
-    my $match = ($val =~ /$qr/);
-    $match = !$match if $not;
-    return $match;
+    my ($self, $key, $data, $matcher) = @_;
+    my $m = $self->data->{match};
+    if (exists $m->{$key}) {
+	return 0 unless $matcher->($m->{$key}, $data);
+    }
+    if (exists $m->{"not_$key"}) {
+	return 0 if $matcher->($m->{"not_$key"}, $data);
+    }
+    return 1;
 }
 
 sub _scalar_match {
     my ($self, $key, $data) = @_;
-    return $self->_match($self->data->{match}{$key}, $data);
+    return $self->_match($key, $data, \&_match_scalar);
 }
 
 sub _hash_match {
     my ($self, $key, $data) = @_;
-    my $match = $self->data->{match}{$key};
-    for my $mkey (keys %$match) {
-        my $val = defined $data->{$mkey} ? $data->{$mkey} : '';
-        return 0 unless $self->_match($match->{$mkey}, $val);
-    }
-    return 1;
+    return $self->_match($key, $data, \&_match_hash);
 }
 
 # do not take the order of C<keys %$match> because "module" is by far the
@@ -243,11 +266,14 @@ sub match_attributes { qw(env distribution perl perlconfig module) }
 
 sub match_module {
     my ($self, $modules) = @_;
-    my $qr = $self->_pattern('module');
-    for my $module (@$modules) {
-        return 1 if $module =~ /$qr/;   
-    }
-    return 0;
+    return $self->_match("module", $modules, sub {
+	my($match, $data) = @_;
+	my $qr = _pattern($match);
+	for my $module (@$data) {
+	    return 1 if $module =~ /$qr/;
+	}
+	return 0;
+    });
 }
 
 sub match_distribution { shift->_scalar_match(distribution => @_) }

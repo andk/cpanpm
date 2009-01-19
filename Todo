@@ -1,3 +1,22 @@
+2009-01-18  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* 12:04:17 <@Alias> What I'm suggesting is that CPAN.pm can be embedded inside of 
+                  larger programs
+12:04:36 <@Alias> Or at least, it should be... it is extremely front-end 
+                  centric in many places
+12:05:22 <@Alias> Well, I can't actually load up CPAN.pm inside my process, as 
+                  it's unsafe...
+12:05:29 <@Alias> Because it does permalocks on files and stuff
+12:05:36 <@Alias> And that goes all explodey
+12:05:47 <@Alias> So I have to isolate each CPAN.pm call out in seperate 
+                  processes
+12:06:20 <@Alias> Mostly via pip or "cpan Whatever" calls
+12:07:04 <@klapperl> maybe we can get rid of the permalocks 
+12:07:11 <@Alias> That would be nice
+12:07:26 <@Alias> Also, to not apply the "don't try to reinstall" between 
+                  user-land commands
+12:08:12 <@Alias> But if we could flush some of this stuff out, it would be nice
+
 2008-11-03  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* shlomi-regex-utf8.pl needs a trick to kill itself after a second or

@@ -158,6 +158,7 @@ match:
     |GRODITI/DBIx-Class-EncodedColumn-\d
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
+    |GUGOD/Template-Provider-Markdown-\d
     |GUGU/Algorithm-FloodControl-\d
     |HANENKAMP/Bot-Net-\d
     |HANENKAMP/Data-Remember-\d
@@ -206,6 +207,7 @@ match:
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LBROCARD/Test-WWW-Mechanize-Catalyst-\d 
+    |LORN/LWP-Curl-\d
     |LSAUNDERS/DBIx-Class-Fixtures-\d
     |LUKEC/Blikistan-\d
     |LUKEC/Test-Mock-LWP-\d
