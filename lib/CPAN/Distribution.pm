@@ -3763,7 +3763,7 @@ sub reports {
     my $cpanid    = $d->cpanid;    # "GBARR"
     my $distvname = $d->distvname; # "CPAN-DistnameInfo-0.02"
 
-    my $url = sprintf "http://cpantesters.perl.org/show/%s.yaml", $dist;
+    my $url = sprintf "http://www.cpantesters.org/show/%s.yaml", $dist;
 
     CPAN::LWP::UserAgent->config;
     my $Ua;

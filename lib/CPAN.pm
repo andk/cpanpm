@@ -2784,7 +2784,7 @@ through the pager specified in C<$CPAN::Config->{pager}>.
 
 =item CPAN::Distribution::reports()
 
-Downloads report data for this distribution from cpantesters.perl.org
+Downloads report data for this distribution from www.cpantesters.org
 and displays a subset of them.
 
 =item CPAN::Distribution::read_yaml()
