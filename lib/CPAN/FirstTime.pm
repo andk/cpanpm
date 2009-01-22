@@ -19,7 +19,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec ();
 use vars qw($VERSION $urllist);
-$VERSION = "5.5";
+$VERSION = "5.52";
 
 =head1 NAME
 
@@ -1198,6 +1198,9 @@ substitute. You can then revisit this dialog with
     #= MIRRORED.BY and conf_sites()
     #
 
+    # remember, this is only triggered if no urllist is given, so 0 is
+    # fair and protects the default site from being overloaded and
+    # gives the user more chances to select his own urllist.
     my_yn_prompt("connect_to_internet_ok" => 0, $matcher);
     if ($matcher) {
         if ("urllist" =~ $matcher) {
