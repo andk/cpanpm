@@ -159,6 +159,7 @@ match:
     |GRODITI/MooseX-Object-Pluggable-\d
     |GRUBER/IPC-Messaging-\d
     |GUGOD/Template-Provider-Markdown-\d
+    |GUGOD/Test-Continuous-\d
     |GUGU/Algorithm-FloodControl-\d
     |HANENKAMP/Bot-Net-\d
     |HANENKAMP/Data-Remember-\d
@@ -233,6 +234,7 @@ match:
     |MLAWREN/MySpam-\d
     |MLAWREN/NCGI-\d
     |MLAWREN/SQL-DB-\d
+    |MONS/Test-More-UTF8-\d
     |MPG/POD-Credentials-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Devel-\d
@@ -260,6 +262,7 @@ match:
     |NUFFIN/MooseX-Getopt-\d
     |NUFFIN/MooseX-Storage-\d
     |NUFFIN/Task-KiokuDB-\d
+    |OLIVER/Devel-REPL-\d
     |OSFAMERON/Perl-Tags-\d
     |OSFAMERON/Sub-Auto-\d
     |OSFAMERON/Sub-Curried-\d

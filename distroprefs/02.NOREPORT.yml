@@ -1,7 +1,13 @@
 ---
 comment: |
 
-  But also in general nobody wants to see 5.[79] anymore
+  In general nobody wants to see reports about 5.[79] anymore
+
+  But then on 2009-01-14 my smoker sent this:
+  http://www.nntp.perl.org/group/perl.cpan.testers/2009/01/msg3068489.html
+  which I cannot explain why. CPAN.pm was 1.9205, did it not implement
+  the construct? CPAN::Reporter was 1.13. Cannot reproduce (but did
+  not try very hard)
 
 match:
   perlconfig:
