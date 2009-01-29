@@ -2699,7 +2699,10 @@ sub read_yaml {
         $CPAN::Frontend->mywarn("Warning: cannot determine META.yml without a build_dir.\n");
         return;
     }
-    my $yaml = File::Spec->catfile($build_dir,"META.yml");
+    # if MYMETA.yml exists, that takes precedence over META.yml
+    my $meta = File::Spec->catfile($build_dir,"META.yml");
+    my $mymeta = File::Spec->catfile($build_dir,"MYMETA.yml");
+    my $yaml = -f $mymeta ? $mymeta : $meta;
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
     eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
@@ -2718,8 +2721,11 @@ sub read_yaml {
             $self->{yaml_content} = +{};
         }
     }
-    if (not exists $self->{yaml_content}{dynamic_config}
-        or $self->{yaml_content}{dynamic_config}
+    # MYMETA.yml is not dynamic by definition
+    if ( $yaml ne $mymeta && 
+         ( not exists $self->{yaml_content}{dynamic_config}
+           or $self->{yaml_content}{dynamic_config}
+         )
        ) {
         $self->{yaml_content} = undef;
     }

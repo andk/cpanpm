@@ -1,0 +1,13 @@
+--- #YAML:1.0
+name:                CPAN-Test-Dummy-Perl5-Make-ConfReq
+version:             1.00
+abstract:            CPAN Test Dummy for CPAN.pm
+license:             perl
+generated_by:        ExtUtils::MakeMaker version 6.32_01 and tweaked manually
+distribution_type:   module
+dynamic_config:      0
+requires:     
+  File::Spec: 0.87
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
