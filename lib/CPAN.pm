@@ -2358,7 +2358,12 @@ distribution.
 An array of patches on CPAN or on the local disk to be applied in
 order via an external patch program. If the value for the C<-p>
 parameter is C<0> or C<1> is determined by reading the patch
-beforehand.
+beforehand. The path to each patch is either an absolute path on the
+local filesystem or relative to a patch directory specified in the
+C<patches_dir> configuration variable or in the format of a canonical
+distroname. For examples please consult the distroprefs/ directory in
+the CPAN.pm distribution (these examples are not installed by
+default).
 
 Note: if the C<applypatch> program is installed and C<CPAN::Config>
 knows about it B<and> a patch is written by the C<makepatch> program,
