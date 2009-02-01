@@ -97,6 +97,7 @@ match:
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LZE/CGI-CMS-\d                          # asks questions about paths
+    |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no

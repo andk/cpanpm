@@ -235,6 +235,7 @@ match:
     |MLAWREN/NCGI-\d
     |MLAWREN/SQL-DB-\d
     |MONS/Test-More-UTF8-\d
+    |MONS/XML-RPC-Fast-\d
     |MPG/POD-Credentials-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
     |MRAMBERG/Catalyst-Devel-\d
