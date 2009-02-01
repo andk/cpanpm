@@ -26,14 +26,6 @@ my $version_from;
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
 }
-$main::SVN_RELEASE = 0;
-if (-d ".svn") {
-  $main::SVN_RELEASE = 1;
-} elsif ($ARGV[0] && $ARGV[0] =~ /setversion/) {
-  warn "!!!making release without .svn??? Take care!!!";
-  @ARGV = ();
-  sleep 2;
-}
 if ($HAVE_FILE_SPEC) {
   $version_from = File::Spec->catfile(qw(lib CPAN.pm));
   my $version_set_manually = 1; # not by SVN
@@ -47,26 +39,9 @@ if ($HAVE_FILE_SPEC) {
     shift @ARGV;
     my $st;
     local $ENV{LANG} = "C";
-    open $st, "svn st -u|" or die;
-    my $dirty = 0;
-    while (<$st>) {
-      next if /^\?/;
-      next if /^Head revision:/;
-      next if /^Status against revision:/;
-      print;
-      $dirty++;
-    }
-    close $st;
+    my $dirty = ! system "git status -a > /dev/null";
     die "Not everything checked in or out?" if $dirty;
 
-    # $re parses the upper boundary of the output of svnversion
-    my $re;
-    eval q{ $re = qr/(?:\d+:)?(\d+)[SM]*$/; };
-    die $@ if $@; # old perl
-    my($sv_dot)  = `svnversion .`             =~ $re;
-    my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
-    die "Could not determine sv_from or sv_dot"
-        unless $sv_from > 0 && $sv_dot > 0;
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
       unshift @INC, "lib";
@@ -86,21 +61,6 @@ if ($HAVE_FILE_SPEC) {
       }
 };
       die $@ if $@;
-    } else {
-      if ($sv_dot > $sv_from) {
-        warn "setting some property to make a checkin of this file possible";
-        0==system(svn => "propset",
-                  "cpan:release",
-                  "after_$sv_dot",
-                  $version_from) or die;
-        warn "checking in to get the version up to the bleading edge";
-        0==system(svn => "ci",
-                  "-m",
-                  "Property set for release after_$sv_dot",
-                  $version_from) or die;
-        # will have to die after Makefile is rewritten:
-        $version_diff = 1;
-      }
     }
     exit unless $version_diff;
   }
@@ -166,7 +126,6 @@ WriteMakefile(
                                             "verify-changes-date",
                                             "verify-changes-version",
                                             "kwalify-distroprefs",
-                                            "dd-prefs",
                                             "Makefile",
                                             "no_CR",
                                             "META.yml",
@@ -174,7 +133,6 @@ WriteMakefile(
                                             "README",
                                             "testdistros",
                                             "all",
-                                            "chlog",
                                             "tardist",
                                            ),
                        COMPRESS => 'gzip -9',
@@ -213,10 +171,7 @@ sub postamble {
 .rnc.rng:
 	trang -I rnc -O rng $*.rnc $*.rng
 
-svn-update:
-	svn up
-
-update: svn-update dd-prefs
+update: dd-prefs
 
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 OKDIRS=CPAN|DIST|bin|blib|cover_db|\
@@ -244,15 +199,6 @@ README: lib/CPAN.pm Makefile
 	-[ -r $@ ] && chmod +w $@
 	-$(PERL) -MPod::Text -e 'Pod::Text->new->parse_from_file(\*ARGV)' lib/CPAN.pm > $@
 
-# http://ch.tudelft.nl/~arthur/svn2cl/
-chlog-trad : ChangeLogTrad.svn
-ChangeLogTrad.svn : Makefile lib/CPAN.pm MANIFEST
-	-/home/src/devel/svn/svn2cl/svn2cl-current/svn2cl.sh --strip-prefix trunk --group-by-day --stdout -r HEAD:2000 https://pause.perl.org:5460/svn/cpanpm/trunk > $@
-
-# for debugging
-chlog-xml :
-	svn log --xml --verbose > ChangeLog.xml
-
 the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
@@ -260,10 +206,7 @@ the-release-name :
 release ::
 	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
-	svn cp -m 'This is $(VERSION)' https://pause.perl.org:5460/svn/cpanpm/trunk https://pause.perl.org:5460/svn/cpanpm/tags/$(VERSION)
-
-checkout ::
-	svn co https://pause.perl.org:5460/svn/cpanpm/trunk ./
+	git tag -m 'This is $(VERSION)' "$(VERSION)"
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
@@ -317,9 +260,6 @@ show-imported:
 # seems to need at least gnupg 1.4.2:
 upload-batch-signing-key:
 	gpg --send-key 450F89EC
-
-diff::
-	svn diff | less
 
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
@@ -591,7 +531,7 @@ clean ::
 		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
-no_CR : ChangeLog META.yml
+no_CR : META.yml
 	$(PERL) bin/no_CR.pl MANIFEST
 
 foreign-prefs : dd-prefs st-prefs
@@ -601,20 +541,9 @@ dd-prefs ::
 
 st-prefs ::
 
-};
-  if ($main::SVN_RELEASE) {
-    push @m, qq{
-chlog :: chlog-trad
-
-ChangeLog : ChangeLogTrad.svn
-	\$(CP) ChangeLogTrad.svn ChangeLog
-};
-  } else {
-    push @m, qq{
 chlog ::
 
 };
-  }
 
   for my $base (@main::ST_PREFS) {
     push @m, qq{
@@ -630,12 +559,6 @@ st-prefs :: $base.st
   }
 
   join "", @m;
-}
-
-sub dist_ci {
-  return qq{ci :
-	svn ci
-};
 }
 
 sub dist_test {

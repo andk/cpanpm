@@ -1,3 +1,4 @@
+MANIFEST.bak
 Makefile
 Makefile.old
 blib
@@ -16,4 +17,3 @@ ChangeLog
 ./distroprefs/[A-FHJ-Z]*.dd
 ./distroprefs/G[AC-Z]*.dd
 ./distroprefs/I[A-KMO-Z]*.dd
-

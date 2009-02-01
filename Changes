@@ -1,3 +1,33 @@
+2009-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+  * this is release 1.93_03
+
+  * more backporting from trunk
+
+  * PAUSE2009.pub included
+
+  * s/cpantesters.perl.org/www.cpantesters.org/
+
+2009-01-11  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+  * this is release 1.93_02
+
+  * the underscore is there because it is the first git based release, it
+  as a test ballon for the merge with bleadperl. I expect it will become
+  1.9303
+
+  * upgrade repo to github
+
+  * more caution when running in degraded mode
+
+  * default for connect-to-internet-ok to 0 again (for 5.8.9 a quick fix
+  against bootstrappng problems was to set it to 1; now the resulting
+  error message makes clear what's going on)
+
+  * typo corrections (Frank Wiegand, David Golden)
+
+  * backport Parse::CPAN::Meta patch from trunk (Steffen Mueller, David Golden)
+
 2008-10-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* this is release 1.9301
