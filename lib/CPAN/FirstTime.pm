@@ -19,7 +19,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec ();
 use vars qw($VERSION $urllist);
-$VERSION = "5.52";
+$VERSION = "5.53";
 
 =head1 NAME
 
