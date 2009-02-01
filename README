@@ -1320,8 +1320,8 @@ PROGRAMMER'S INTERFACE
         through the pager specified in "$CPAN::Config-"{pager}>.
 
     CPAN::Distribution::reports()
-        Downloads report data for this distribution from
-        cpantesters.perl.org and displays a subset of them.
+        Downloads report data for this distribution from www.cpantesters.org
+        and displays a subset of them.
 
     CPAN::Distribution::read_yaml()
         Returns the content of the META.yml of this distro as a hashref.

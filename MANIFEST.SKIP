@@ -8,6 +8,7 @@
 ^CPAN-.+/.+
 ^CPAN-.+gz$
 ^CPAN/MakeMaker
+^ChangeLog\.old
 ^ChangeLog.*\.svk
 ^DIST
 ^DIST
