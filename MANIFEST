@@ -365,7 +365,6 @@ lib/CPAN/API/HOWTO.pod
 lib/CPAN/Author.pm
 lib/CPAN/Bundle.pm
 lib/CPAN/CacheMgr.pm
-lib/CPAN/CachMgr.pm
 lib/CPAN/Complete.pm
 lib/CPAN/Debug.pm
 lib/CPAN/DeferredCode.pm
@@ -395,7 +394,6 @@ lib/CPAN/Version.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-megainstall.txt
 META.yml
 PAUSE2003.pub
 PAUSE2005.pub
