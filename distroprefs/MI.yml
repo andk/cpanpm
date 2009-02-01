@@ -29,6 +29,7 @@ match:
     |AGRUNDMA/Catalyst-Plugin-Session-Store-DBI-\d
     |ANDREMAR/Number-Phone-NO-\d
     |ASH/DBIx-Class-\d
+    |ASH/Parse-Method-Signatures-\d
     |ASHLEY/Catalyst-Authentication-Credential-OpenID-\d
     |ASKSH/Acme-Locals-\d
     |ASKSH/sys-\d
@@ -186,6 +187,7 @@ match:
     |JGOULAH/MooseX-LogDispatch-\d
     |JGOULAH/Net-Akamai-\d
     |JJNAPIORK/MooseX-Types-\d
+    |JJNAPIORK/MooseX-Types-Structured-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROBINSON/DBIx-Class-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
@@ -198,6 +200,7 @@ match:
     |JROCKWAY/File-Attributes-\d
     |JROCKWAY/Task-Catalyst-Tutorial-\d
     |JROCKWAY/Test-YAML-Valid
+    |JSHIRLEY/Catalyst-Action-REST-\d
     |JSHIRLEY/DBIx-Class-TimeStamp-\d
     |JSMITH/RDF-Server-\d
     |JSWARTZ/CHI-\d
