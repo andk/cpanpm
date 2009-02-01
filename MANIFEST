@@ -182,6 +182,7 @@ distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/JV.Getopt-Long.yml
 distroprefs/KANE.CPANPLUS.yml
 distroprefs/KARASIK.IO-Lambda.yml
+distroprefs/KARMAN.SWISH-Prog.yml
 distroprefs/KASEI.Class-Accessor.yml
 distroprefs/KAWASAKI.Lingua-JA-Romanize-Japanese.yml
 distroprefs/KBROWN.SOAP.yml
@@ -399,6 +400,7 @@ META.yml
 PAUSE2003.pub
 PAUSE2005.pub
 PAUSE2007.pub
+PAUSE2009.pub
 README
 scripts/cpan
 SIGNATURE			Public-key signature (added by MakeMaker)
