@@ -74,6 +74,7 @@ match:
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HESCO/LedgerSMB-API-\d                  # 0.04a nearly unstoppable endless loop
+    |HOLOWAY/Catalyst-Log-Log4perl-1.00.tar.gz # endless loop with deep recursion
     |HOOO/X3D-0                              # hangs at t/nodefield_sfdouble_06 on perl-5.10.0 at 33955
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
