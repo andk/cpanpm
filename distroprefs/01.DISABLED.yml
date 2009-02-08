@@ -46,23 +46,23 @@ match:
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
     |CLACO/AxKit-XSP-                        # looped in a readline
-    |CLEACH/Net-FTPSSL-0.05                  # asks questions during test without prompt()
+    |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
     |CORION/WWW-Mechanize-Shell-0.4[678].tar.gz  # hangs every so often in t/13-command-au.t
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |DAMI/DBIx-DataModel-1.06                # hangs on t/Storable.t
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
-    |DMAKI/Text-MeCab                        # hangs asking questions
     |DMAKI/Alien-MeCab                       # ditto
-    |DSNOPEK/POE-Component-MessageQueue-0.2.2.tar.gz # hangs in 09_ack_auto (but not on k81)
-    |DSNOPEK/POE-Component-MessageQueue-0.2..*.tar.gz # same with 3
+    |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
+    |DSNOPEK/POE-Component-MessageQueue-0.2..*.tar.gz # same with 3
+    |DSNOPEK/POE-Component-MessageQueue-0.2.2.tar.gz # hangs in 09_ack_auto (but not on k81)
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EILARA/XUL-Node-\d                      # asks for port -- 8077?
     |EKAWAS/MOBY-                            # hangs
-    |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
+    |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
@@ -73,6 +73,7 @@ match:
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
+    |HESCO/LedgerSMB-API-\d                  # 0.04a nearly unstoppable endless loop
     |HOOO/X3D-0                              # hangs at t/nodefield_sfdouble_06 on perl-5.10.0 at 33955
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
@@ -82,8 +83,8 @@ match:
     |JETTERO/Crypt-PBC-\d                    # download libpbc?
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
-    |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
+    |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs

@@ -76,6 +76,7 @@ match:
     |BRICAS/WWW-OpenSearch-\d
     |BRICAS/WWW-Wikipedia-\d
     |BTROTT/Authen-TypeKey-\d
+    |BTROTT/Data-ObjectDriver-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
     |BTROTT/WWW-Blog-Metadata-\d             
