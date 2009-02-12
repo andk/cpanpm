@@ -28,8 +28,6 @@ use File::Basename qw(dirname);
 use File::Copy qw(cp);
 use Term::Prompt;
 
-die "missing support for 'Porting/Maintainers.pl' and gabor refactoring";
-
 my $target = shift or die "Usage: $0 targetdirectory";
 die "Could not find directory '$target'" unless -d $target;
 $target =~ s|/+$||;
@@ -45,17 +43,34 @@ my $MAP;
           "lib/" => ["lib/"  => [qw(
                                     lib/CPAN.pm
                                     lib/CPAN/API/HOWTO.pod
+                                    lib/CPAN/Author.pm
+                                    lib/CPAN/Bundle.pm
+                                    lib/CPAN/CacheMgr.pm
+                                    lib/CPAN/Complete.pm
                                     lib/CPAN/Debug.pm
                                     lib/CPAN/DeferredCode.pm
+                                    lib/CPAN/Distribution.pm
                                     lib/CPAN/Distroprefs.pm
+                                    lib/CPAN/Distrostatus.pm
+                                    lib/CPAN/Exception/RecursiveDependency.pm
+                                    lib/CPAN/Exception/yaml_not_installed.pm
+                                    lib/CPAN/FTP.pm
+                                    lib/CPAN/FTP/netrc.pm
                                     lib/CPAN/FirstTime.pm
                                     lib/CPAN/HandleConfig.pm
+                                    lib/CPAN/Index.pm
+                                    lib/CPAN/InfoObj.pm
                                     lib/CPAN/Kwalify.pm
                                     lib/CPAN/Kwalify/distroprefs.dd
                                     lib/CPAN/Kwalify/distroprefs.yml
+                                    lib/CPAN/LWP/UserAgent.pm
+                                    lib/CPAN/Module.pm
                                     lib/CPAN/Nox.pm
+                                    lib/CPAN/Prompt.pm
                                     lib/CPAN/Queue.pm
+                                    lib/CPAN/Shell.pm
                                     lib/CPAN/Tarzip.pm
+                                    lib/CPAN/URL.pm
                                     lib/CPAN/Version.pm
                                    )]],
           "scripts/" => ["lib/CPAN/bin/" => [qw(
