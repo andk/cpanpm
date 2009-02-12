@@ -5,18 +5,20 @@
 Script to copy those files that live also in the core into a perl
 source tree.
 
-I use it such that I first make a clone of bleedperl in repoperls
-directory:
+I use it such that I first make a branch of bleedperl:
 
-    rsync -ax perl-p-5.8.0@28630/ perl-p-5.8.0@28630-cpan.pm-1.8755/
+    git checkout -b orange93
 
-Then I use cp-to-perl to clobber the clone in CPAN/SVN/ directory:
+Then I use cp-to-perl to clobber the branch:
 
-    sudo perl bin/cp-to-perl.pl /home/src/perl/repoperls/perl-p-5.8.0@28630-cpan.pm-1.8755
+    sudo -u sand perl bin/cp-to-perl.pl /home/src/perl/repoperls/perl5.git.perl.org/perl
 
-And then back in the repoperls directory I do makepatch:
+Test and then do in git over there
 
-    makepatch --diff 'diff -u' perl-p-5.8.0@28630/ perl-p-5.8.0@28630-cpan.pm-1.8755/ > patch
+    # edit manifest if necessary
+    git add ...
+    git commit -m 'Update CPAN.pm to xxx'
+    git format-patch origin
 
 =cut
 
