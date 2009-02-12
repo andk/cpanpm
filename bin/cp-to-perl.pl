@@ -90,13 +90,13 @@ while (my($here,$v) = each %$MAP) {
     die "bad file[$file]" unless substr($file,0,$prefix_length) eq $here;
     my @expand_file = glob($file);
     for my $efile (@expand_file) {
-      my @c = $efile;
+      my @c = ("cp", $efile);
       my $target_file = sprintf "%s/%s%s", $target, $theredir, substr($efile,$prefix_length);
       unless (-d dirname $target_file) {
-          push @command, sprintf "mkdir %s", dirname $target_file;
+          push @command, [ "mkdir", dirname $target_file ];
       }
       push @c, $target_file;
-      printf "cp %-21s %s\n", @c;
+      printf "%s %-21s %s\n", @c;
       push @command, \@c;
     }
   }
@@ -104,7 +104,15 @@ while (my($here,$v) = each %$MAP) {
 
 exit unless prompt("y","Proceed?","","y");
 for my $c (@command) {
-  unlink $c->[1] or warn "Warning: Could not unlink the target $c->[1]: $!";
-  cp @$c or die "Alert: Could not cp $c->[0] to $c->[1]: $!";
+    if ($c->[0] eq "cp") {
+        shift @$c;
+        unlink $c->[1] or warn "Warning: Could not unlink the target $c->[1]: $!";
+        cp @$c or die "Alert: Could not cp $c->[0] to $c->[1]: $!";
+    } elsif ($c->[0] eq "mkdir") {
+        require File::Path;
+        File::Path::mkpath($c->[1]);
+    } else {
+        die;
+    }
 }
 
