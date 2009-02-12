@@ -20,6 +20,13 @@ Test and then do in git over there
     git commit -m 'Update CPAN.pm to xxx'
     git format-patch origin
 
+=head2 TODO
+
+Bringing tests over is of minor importance to me, so far my test
+scripts have never caught a bug in perl. And they are timeconsuming
+and not really small. I'd dislike to bloat perl with them. Small
+tests, probably. But they have dependencies, e.g. on local_utils.pm
+
 =cut
 
 use strict;
