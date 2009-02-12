@@ -843,6 +843,7 @@ sub try_download {
                     delete $self->{build_dir};
                     return;
                 }
+                binmode($writefh);
                 while (my $x = $readfh->READLINE) {
                     print $writefh $x;
                 }
