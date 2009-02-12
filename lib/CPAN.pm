@@ -248,7 +248,7 @@ sub soft_chdir_with_alternatives ($);
 sub _uniq {
     my(@list) = @_;
     my %seen;
-    return map { !$seen{$_} } @list;
+    return map { !$seen{$_}++ } @list;
 }
 
 #-> sub CPAN::shell ;
