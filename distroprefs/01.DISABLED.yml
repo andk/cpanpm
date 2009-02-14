@@ -25,6 +25,7 @@ match:
     .^   # never matches, only purpose is to let things align nicely
     |.+/Win32(API)?-                         # I have only linux
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
+    |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
