@@ -2516,6 +2516,10 @@ sub unsat_prereq {
             $available_version = $];
             $available_file = CPAN::find_perl();
         } else {
+            if (CPAN::_sqlite_running()) {
+                CPAN::Index->reload;
+                $CPAN::SQLite->search("CPAN::Module",$need_module);
+            }
             $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
             next if $nmo->uptodate;
             $available_file = $nmo->available_file;
