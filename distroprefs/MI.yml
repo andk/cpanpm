@@ -286,6 +286,7 @@ match:
     |PLU/DBIx-Class-ResultSet-HashRef-\d
     |PRAVUS/Authen-CAS-Client-\d
     |REDTREE/PDF-API2-Simple-\d
+    |RIBASUSHI/DBIx-Class-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Controller-WrapCGI-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
