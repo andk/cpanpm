@@ -65,6 +65,7 @@ match:
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
+    |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 5.8.0@32642
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
