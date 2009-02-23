@@ -136,6 +136,7 @@ match:
     |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
     |ELLIOTJS/Task-Perl-Critic-[v\d]
+    |FAYLAND/Foorum-\d
     |FLORA/Catalyst-View-Mason-\d
     |FLORA/File-Extractor-\d
     |FLORA/namespace-clean-\d
@@ -185,11 +186,12 @@ match:
     |JESSE/Data-ICal-\d
     |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
+    |(?:JESSE|SARTAK)/Jifty-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JGOULAH/MooseX-LogDispatch-\d
     |JGOULAH/Net-Akamai-\d
-    |JJNAPIORK/MooseX-Types-\d
     |JJNAPIORK/MooseX-Types-Structured-\d
+    |JJNAPIORK/MooseX-Types-\d
     |JROBINSON/Catalyst-Plugin-Authentication-Credential-TypeKey-\d
     |JROBINSON/DBIx-Class-\d
     |JROCKWAY/Algorithm-IncludeExclude-\d
@@ -229,6 +231,8 @@ match:
     |MDXI/Curses-UI-\d
     |MEMOWE/HTML-SBC-\d
     |MIKI/HTML-Feature-\d
+    |MIKI/Lingua-JA-Expand-\d
+    |MIKI/Lingua-JA-TFIDF-\d
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
@@ -240,8 +244,8 @@ match:
     |MLAWREN/NCGI-\d
     |MLAWREN/SQL-DB-\d
     |MONS/Test-More-UTF8-\d
-    |MONS/XML-RPC-Fast-\d
     |MONS/XML-Parser-Style-EasyTree-\d
+    |MONS/XML-RPC-Fast-\d
     |MONS/ex-lib-\d
     |MPG/POD-Credentials-\d
     |MRAMBERG/Catalyst-Action-RenderView-\d
@@ -254,8 +258,8 @@ match:
     |MRAMBERG/Catalyst-Plugin-SubRequest-\d
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |MRAMBERG/Catalyst-Runtime-
-    |MRAMBERG/Task-Catalyst-\d
     |MRAMBERG/Task-Catalyst-Tutorial-\d
+    |MRAMBERG/Task-Catalyst-\d
     |MSIMERSON/Mail-Toaster-\d
     |MSTROUT/Catalyst-Controller-BindLex-\d
     |MSTROUT/Catalyst-Plugin-Authentication-Store-DBIC-\d
@@ -320,7 +324,6 @@ match:
     |SARTAK/IncPatch-\d
     |SARTAK/Jifty-DBI-\d
     |SARTAK/Jifty-Plugin-OAuth-\d
-    |(?:JESSE|SARTAK)/Jifty-\d
     |SARTAK/Moose-\d
     |SARTAK/Net-Hiveminder-\d
     |SARTAK/Net-Jifty-\d
@@ -349,13 +352,14 @@ match:
     |TOMYHERO/Catalyst-Plugin-Config-Multi-\d
     |TOMYHERO/Catalyst-Plugin-ConfigLoader-Multi-\d
     |TRAVAIL/DBIx-Class-Schema-Slave-\d
+    |YAPPO/Class-Component-\d
     |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
-    |YAPPO/Class-Component-\d
     |YARON/WWW-Monitor-\d
     |YVESAGO/NET-Sieve-\d
     |YVESAGO/Net-Sieve-\d
     |ZAKAME/Tie-Amazon-S3-\d
+    |ZARQUON/Catalyst-Helper-AuthDBIC-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
     |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d

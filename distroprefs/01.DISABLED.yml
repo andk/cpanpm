@@ -46,6 +46,7 @@ match:
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
+    |CJFIELDS/BioPerl-\d                     # asks questions
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
     |CORION/WWW-Mechanize-Shell-0.4[678].tar.gz  # hangs every so often in t/13-command-au.t
@@ -64,8 +65,8 @@ match:
     |EKAWAS/MOBY-                            # hangs
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
+    |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
-    |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 5.8.0@32642
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
@@ -84,6 +85,7 @@ match:
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
     |JESSE/Net-Trac-0.01_01.tar.gz           # calls kill(1,0) killing the process group
     |JETTERO/Crypt-PBC-\d                    # download libpbc?
+    |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
