@@ -6,5 +6,5 @@ comment: |
 match:
   distribution: "ADAMK/PPI-1.203.tar.gz"
   perlconfig:
-    binexp: "23262"
+    binexp: "23552"
 disabled: 1

@@ -95,7 +95,6 @@ match:
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
-    |KITANO/Test-LoadAllModules-\d           # out of memory
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
