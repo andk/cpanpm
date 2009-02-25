@@ -53,6 +53,8 @@ match:
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BLBLACK/MooseX-SimpleConfig-\d
     |BOBMATH/Crypt-CAST5_PP-\d
+    |BOBTFISH/Catalyst-Plugin-Authentication-\d
+    |BOBTFISH/Catalyst-Plugin-Session-State-URI-\d
     |BOBTFISH/MooseX-Storage-\d
     |BOGDAN/Catalyst-Model-DBIC-Schema-\d
     |BOKUTIN/Template-Plugin-Filter-VisualTruncate-\d
@@ -184,9 +186,11 @@ match:
     |JESSE/Class-Accessor-Named-\d
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
+    |JESSE/Net-Jifty-\d
+    |(?:JESSE|SARTAK)/Jifty-\d
     |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
-    |(?:JESSE|SARTAK)/Jifty-\d
+    |JESSE/Template-Declare-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JGOULAH/MooseX-LogDispatch-\d
     |JGOULAH/Net-Akamai-\d
@@ -355,6 +359,7 @@ match:
     |YAPPO/Class-Component-\d
     |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
+    |YAPPO/Lingua-JA-Summarize-Extract-\d
     |YARON/WWW-Monitor-\d
     |YVESAGO/NET-Sieve-\d
     |YVESAGO/Net-Sieve-\d
