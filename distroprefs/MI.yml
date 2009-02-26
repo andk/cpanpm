@@ -188,6 +188,7 @@ match:
     |JESSE/Data-ICal-\d
     |JESSE/Net-Jifty-\d
     |(?:JESSE|SARTAK)/Jifty-\d
+    |JESSE/Net-Trac-\d
     |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
     |JESSE/Template-Declare-\d
