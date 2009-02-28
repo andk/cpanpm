@@ -351,7 +351,8 @@ ReadLine support %s
         } elsif (/^\!/) {
             s/^\!//;
             my($eval) = $_;
-            package CPAN::Eval;
+            package
+                CPAN::Eval; # hide from the indexer
             use strict;
             use vars qw($import_done);
             CPAN->import(':DEFAULT') unless $import_done++;
