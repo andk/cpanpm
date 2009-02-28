@@ -1,3 +1,10 @@
+2009-02-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* todo/nice to have: completion on distros such that before the slash we
+	complete user ids and after the slash not ls() but existing distros. Or
+	maybe if we have more than x characters we complete the distros. Or some
+	such.
+
 2009-01-22  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* todo: add a new pause batch signing key
