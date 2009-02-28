@@ -1,6 +1,37 @@
+2009-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* this is release 1.9304 (same as 1.93_03, just version changed to mark
+	as stable)
+
 2009-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
-	* this is release 1.93_03
+	* this is release 1.93_51 (dev release towards 1.94)
+
+	* major surgery: split all packages within the CPAN.pm file into
+	separate files. Requested by Gabor Szabo who also submitted an initial
+	implementation.
+
+	* major surgery: relocate the repository to github, adjust all SVN
+	related code in the Makefile.PL to git, and remove all files that are
+	not directly relevant to CPAN.pm. (David Golden and Andreas Koenig)
+
+	* mega doc and English patch by Tom Christiansen and David Golden
+
+	* chmod the build directories to be world readable (suggested by Slaven Rezic)
+
+	* fix broken perldoc command (Randy Kobes)
+
+	* Use Parse::CPAN::Meta not Parse::Metayaml (Steffen Mueller)
+
+	* Negated match variables in distroprefs (Gisle Aas)
+
+	* new batch signing key PAUSE2009.pub included
+
+  * this is release 1.93_03
+
+2009-02-01  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* this is release 1.93_03 (preparation of stable 1.9304)
 
 	* more backporting from trunk
 
