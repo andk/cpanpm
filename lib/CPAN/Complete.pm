@@ -119,7 +119,9 @@ sub cplx {
     if (CPAN::_sqlite_running()) {
         $CPAN::SQLite->search($class, "^\Q$word\E");
     }
-    sort grep /^\Q$word\E/, map { $_->id } $CPAN::META->all_objects($class);
+    my $method = "id";
+    $method = "pretty_id" if $class eq "CPAN::Distribution";
+    sort grep /^\Q$word\E/, map { $_->$method() } $CPAN::META->all_objects($class);
 }
 
 #-> sub CPAN::Complete::cpl_any ;
