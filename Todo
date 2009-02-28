@@ -1,3 +1,25 @@
+2009-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* support deprecate.pm: Nick's plan seems to be that when Switch.pm is
+	installed at
+
+	/Users/nick/Sandpit/511v/lib/perl5/5.11.0/Switch.pm
+
+	then it is a second class citizen (because it came with perl) which
+	warns when being loaded (due to deprecated.pm). But when it (the very
+	same file) is installed from the CPAN it will live in a different
+	location, say
+
+	/Users/nick/Sandpit/511v/lib/perl5/site_perl/5.11.0/Switch.pm
+
+	and then it will not warn about deprecate although the 'use deprecate'
+	is in the file.
+
+	The plan is to change CPAN.pm such that it installs from CPAN the very
+	same version as the core version is. The difference should be recognized
+	in the installation directory. So there shall be more magic in the INC
+	order.
+	
 2009-02-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* todo/nice to have: completion on distros such that before the slash we
