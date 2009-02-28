@@ -31,6 +31,7 @@ match:
     |ASH/DBIx-Class-\d
     |ASH/Parse-Method-Signatures-\d
     |ASHLEY/Catalyst-Authentication-Credential-OpenID-\d
+    |ASHLEY/RSSycklr-\d
     |ASKSH/Acme-Locals-\d
     |ASKSH/sys-\d
     |AUDREYT/Scalar-Defer-\d
