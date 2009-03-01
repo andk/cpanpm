@@ -254,6 +254,16 @@ EOF
            "clean CPAN::Test::Dummy::Perl5::Make" => "clean.*-- OK",
           ]
          },
+         {
+          name => "ls",
+          pairs =>
+          [
+           "ls ANDK/patches" => "-SADAHIRO-",
+           "ls ANDK/patches/" => "-SADAHIRO-",
+           "ls ANDK/pa*/*SADA*" => "-SADAHIRO-",
+           "ls ANDK/patches/*SADA*" => "-SADAHIRO-",
+          ]
+         }
         );
 
     my $cnt;

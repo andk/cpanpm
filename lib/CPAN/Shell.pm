@@ -271,6 +271,7 @@ sub globls {
                 $author->$pragma();
             }
         }
+        CPAN->debug("author[$author]pathglob[$pathglob]silent[$silent]") if $CPAN::DEBUG;
         push @results, $author->ls($pathglob,$silent); # silent if
                                                        # more than one
                                                        # author
