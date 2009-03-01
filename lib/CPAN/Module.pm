@@ -518,8 +518,10 @@ sub uptodate {
     if ($] >= 5.011) { # probably harmful when distros say INSTALLDIRS=perl?
         if (0 == CPAN::Version->vcmp($cpan,$inst)) {
             if ($in_priv_or_arch = $self->_in_priv_or_arch($inst_file)) {
-                unless ($isa_perl = $self->distribution->isa_perl) {
-                    return 0;
+                if (my $distribution = $self->distribution) {
+                    unless ($isa_perl = $distribution->isa_perl) {
+                        return 0;
+                    }
                 }
             }
         }
