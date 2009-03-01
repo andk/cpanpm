@@ -61,9 +61,11 @@ sub reload {
                                      File::Spec->catfile('authors', '01mailrc.gz') :
                                      File::Spec->catfile('authors', '01mailrc.txt.gz'),
                                      $force));
-        $t2 = time;
-        $debug = "timing reading 01[".($t2 - $time)."]";
-        $time = $t2;
+        if ($CPAN::DEBUG){
+            $t2 = time;
+            $debug = "timing reading 01[".($t2 - $time)."]";
+            $time = $t2;
+        }
         return if $CPAN::Signal; # this is sometimes lengthy
         $self->rd_modpacks($self
                          ->reload_x(
@@ -72,9 +74,11 @@ sub reload {
                                     File::Spec->catfile('modules', '02packag.gz') :
                                     File::Spec->catfile('modules', '02packages.details.txt.gz'),
                                     $force));
-        $t2 = time;
-        $debug .= "02[".($t2 - $time)."]";
-        $time = $t2;
+        if ($CPAN::DEBUG){
+            $t2 = time;
+            $debug .= "02[".($t2 - $time)."]";
+            $time = $t2;
+        }
         return if $CPAN::Signal; # this is sometimes lengthy
         $self->rd_modlist($self
                         ->reload_x(
@@ -84,9 +88,11 @@ sub reload {
                                    File::Spec->catfile('modules', '03modlist.data.gz'),
                                    $force));
         $self->write_metadata_cache;
-        $t2 = time;
-        $debug .= "03[".($t2 - $time)."]";
-        $time = $t2;
+        if ($CPAN::DEBUG){
+            $t2 = time;
+            $debug .= "03[".($t2 - $time)."]";
+            $time = $t2;
+        }
         CPAN->debug($debug) if $CPAN::DEBUG;
     }
     if ($CPAN::Config->{build_dir_reuse}) {
