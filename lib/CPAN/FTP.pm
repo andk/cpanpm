@@ -315,7 +315,6 @@ sub localize {
     }
 
     my($aslocal_dir) = File::Basename::dirname($aslocal);
-    $self->mymkpath($aslocal_dir); # too early for file URLs / RT #28438
     # Inheritance is not easier to manage than a few if/else branches
     if ($CPAN::META->has_usable('LWP::UserAgent')) {
         unless ($Ua) {
@@ -393,6 +392,7 @@ sub localize {
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
+        $self->mymkpath($aslocal_dir) unless "file" eq $scheme;
         my $defaultsites = $sitetag && $sitetag eq "defaultsites";
         my @urllist;
         if ($defaultsites) {
