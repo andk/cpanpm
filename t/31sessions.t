@@ -236,6 +236,7 @@ EOF
           pairs =>
           [
            "dump \$::x=6*6+9" => "= 45;",
+           "o conf build_dir" => "build_dir",
            "o conf prefs_dir $cwd/t/dot-cpan/prefs" => "prefs",
            "test CPAN::Test::Dummy::Perl5::Make::Features" =>
            "(?sx:Builds.rice.+
@@ -281,7 +282,7 @@ EOF
 }
 is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
 $ENV{PERL_MM_USE_DEFAULT} = 1;
-our $VERBOSE = 0;
+our $VERBOSE = $ENV{VERBOSE} || 0;
 my $devnull = File::Spec->devnull;
 
 for my $si (0..$#SESSIONS) {
