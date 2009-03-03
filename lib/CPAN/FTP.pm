@@ -392,7 +392,7 @@ sub localize {
   LEVEL: for $levelno (0..$#levels) {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
-        $self->mymkpath($aslocal_dir) unless "file" eq $scheme;
+        $self->mymkpath($aslocal_dir) unless $scheme && "file" eq $scheme;
         my $defaultsites = $sitetag && $sitetag eq "defaultsites";
         my @urllist;
         if ($defaultsites) {
