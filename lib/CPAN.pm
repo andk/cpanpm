@@ -25,7 +25,7 @@ use CPAN::Debug;
 use CPAN::Distribution;
 use CPAN::Distrostatus;
 use CPAN::FTP;
-use CPAN::Index;
+use CPAN::Index 1.93; # https://rt.cpan.org/Ticket/Display.html?id=43349
 use CPAN::InfoObj;
 use CPAN::Module;
 use CPAN::Prompt;
