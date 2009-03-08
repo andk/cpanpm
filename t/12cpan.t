@@ -29,6 +29,11 @@ require CPAN::HandleConfig;
     BEGIN{$count++}
 }
 {
+    my $rdep = CPAN::Exception::RecursiveDependency->new([qw(foo bar baz)]);
+    like $rdep, qr/^--not.*--$/, "not a recursive/circular dependency";
+    BEGIN{$count++}
+}
+{
     my $rdep = CPAN::Exception::RecursiveDependency->new([qw(foo bar baz foo)]);
     like $rdep, qr/foo.+=>.+bar.+=>.+baz.+=>.+foo/s, "circular dependency";
     BEGIN{$count++}

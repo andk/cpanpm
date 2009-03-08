@@ -27,7 +27,7 @@ sub new {
     my $in_loop = 0;
     for my $i (0..$#deps) {
         my $x = $deps[$i]{name};
-        $in_loop ||= $x eq $loop_starts_with;
+        $in_loop ||= $loop_starts_with && $x eq $loop_starts_with;
         my $xo = CPAN::Shell->expandany($x) or next;
         if ($xo->isa("CPAN::Module")) {
             my $have = $xo->inst_version || "N/A";
@@ -66,13 +66,18 @@ sub new {
                                          # the next session
         }
     }
-    bless { deps => \@deps }, $class;
+    bless { deps => \@deps, loop_starts_with => $loop_starts_with }, $class;
 }
 
 sub as_string {
     my($self) = shift;
+    my $deps = $self->{deps};
+    my $loop_starts_with = $self->{loop_starts_with};
+    unless ($loop_starts_with) {
+        return "--not a recursive/circular dependency--";
+    }
     my $ret = "\nRecursive dependency detected:\n    ";
-    $ret .= join("\n => ", map {$_->{display_as}} @{$self->{deps}});
+    $ret .= join("\n => ", map {$_->{display_as}} @$deps);
     $ret .= ".\nCannot resolve.\n";
     $ret;
 }
