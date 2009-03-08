@@ -24,9 +24,10 @@ match:
     |AGENT/XUL-App-\d
     |AGRUNDMA/Catalyst-Engine-Apache-\d
     |AGRUNDMA/Catalyst-Engine-HTTP-Prefork-\d
+    |AGRUNDMA/Catalyst-Plugin-Session-Store-DBI-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
-    |AGRUNDMA/Catalyst-Plugin-Session-Store-DBI-\d
+    |ALEXMV/Template-Declare-\d
     |ANDREMAR/Number-Phone-NO-\d
     |ASH/DBIx-Class-\d
     |ASH/Parse-Method-Signatures-\d
@@ -55,6 +56,7 @@ match:
     |BLBLACK/MooseX-SimpleConfig-\d
     |BOBMATH/Crypt-CAST5_PP-\d
     |BOBTFISH/Catalyst-Plugin-Authentication-\d
+    |BOBTFISH/Catalyst-Plugin-Session-State-Cookie-\d
     |BOBTFISH/Catalyst-Plugin-Session-State-URI-\d
     |BOBTFISH/MooseX-Storage-\d
     |BOGDAN/Catalyst-Model-DBIC-Schema-\d
@@ -141,6 +143,7 @@ match:
     |ELLIOTJS/Task-Perl-Critic-[v\d]
     |FAYLAND/Foorum-\d
     |FLORA/Catalyst-View-Mason-\d
+    |FLORA/Class-C3-\d
     |FLORA/File-Extractor-\d
     |FLORA/namespace-clean-\d
     |FOX/Bot-CPAN-\d
@@ -320,7 +323,9 @@ match:
     |RKRIMEN/Path-Resource-\d
     |RKRIMEN/Text-Lorem-More-\d
     |RLB/Notification-Center-\d
+    |RSRCHBOY/Archive-RPM-\d
     |RSRCHBOY/CPANPLUS-Dist-RPM-\d
+    |RSRCHBOY/Fedora-Bugzilla-\d
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
