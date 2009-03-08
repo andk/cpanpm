@@ -15,9 +15,9 @@ $VERSION = "5.5";
 
 sub new {
     my($class) = shift;
-    my($deps) = shift;
+    my($deps_arg) = shift;
     my (@deps,%seen,$loop_starts_with);
-  DCHAIN: for my $dep (@$deps) {
+  DCHAIN: for my $dep (@$deps_arg) {
         push @deps, {name => $dep, display_as => $dep};
         if ($seen{$dep}++) {
             $loop_starts_with = $dep;
