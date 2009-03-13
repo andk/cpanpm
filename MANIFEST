@@ -3,7 +3,6 @@ distroprefs/00.README
 distroprefs/01.DISABLED.yml
 distroprefs/02.NOREPORT.yml
 distroprefs/ABELTJE.Test-Smoke.yml
-distroprefs/ABH.XML-RSS.yml
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ACG.Scrabble-Dict.yml
 distroprefs/ACH.Tk-Contrib.yml
@@ -42,7 +41,6 @@ distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BINGOS.POE-Component-SmokeBox-Recent.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BOBTFISH.Text-Markdown.yml
-distroprefs/BRADFITZ.Danga-Socket.yml
 distroprefs/BRADFITZ.Perlbal.yml
 distroprefs/BRIANSKI.XML-Comma.yml
 distroprefs/BRYCE.SVG-Metadata.yml
@@ -98,7 +96,6 @@ distroprefs/DOMM.Module-CPANTS-ProcessCPAN.yml
 distroprefs/DONEILL.MIME-tools.yml
 distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DROLSKY.Alzabo.yml
-distroprefs/DROLSKY.Class-MOP.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Devel-StackTrace.yml
 distroprefs/DROLSKY.Params-Validate.yml
