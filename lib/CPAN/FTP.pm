@@ -22,6 +22,7 @@ sub _ftp_statistics {
     my $locktype = $fh ? LOCK_EX : LOCK_SH;
     $fh ||= FileHandle->new;
     my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
+    mkpath dirname $file;
     open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
     my $sleep = 1;
     my $waitstart;
