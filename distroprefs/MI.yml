@@ -27,6 +27,7 @@ match:
     |AGRUNDMA/Catalyst-Plugin-Session-Store-DBI-\d
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
+    |ALEXMV/Data-ICal-\d
     |ALEXMV/Template-Declare-\d
     |ANDREMAR/Number-Phone-NO-\d
     |ASH/DBIx-Class-\d
@@ -137,6 +138,7 @@ match:
     |DOY/Games-Word-\d
     |DRPROLIX/Catalyst-Helper-View-TT-Bootstrap-\d
     |DSNOPEK/POE-Component-MessageQueue-\d
+    |ECARROLL/MooseX-Types-DateTimeX-\d
     |EDENC/MooseX-Role-Cmd-\d
     |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
@@ -302,6 +304,7 @@ match:
     |PRAVUS/Authen-CAS-Client-\d
     |REDTREE/PDF-API2-Simple-\d
     |RIBASUSHI/DBIx-Class-\d
+    |RJBS/MooseX-Getopt-\d
     |RJBS/Rubric-\d
     |RKITOVER/Catalyst-Controller-WrapCGI-\d
     |RKITOVER/Catalyst-Plugin-RelativePaths-\d
