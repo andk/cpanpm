@@ -1,3 +1,34 @@
+2009-03-13  Andreas J. Koenig  <andk@cpan.org>
+
+	* git tags not exported. Why? Need to export the release tags. How?
+
+	Do I actually have some? 
+
+% git tag -l | tail
+1.92_63
+1.92_64
+1.92_65
+1.92_66
+1.93
+1.9301
+1.9304
+1.93_02
+1.93_03
+1.93_51
+
+	But on the re-imported clone it ends with 1.9301
+
+	git push --tags
+
+	this is considered to dtrt. Can be checked visiting github and hovering
+	over "all tags". According to
+	http://blog.ashchan.com/archive/2008/06/30/tags-on-git/ at least.
+	Problem with that is we have so many tags that we cannot scroll to the
+	last in firefox.
+
+	But indeed 'git push --tags' did work as expected and downloading to the
+	the other box also
+
 2009-03-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* test YAML::XS and YAML::Perl.
