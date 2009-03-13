@@ -1,3 +1,14 @@
+2009-03-13  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* test YAML::XS and YAML::Perl.
+
+|                 | YAML::Syck | YAML::XS | YAML | YAML::Perl     | YAML::Tiny |
+|                 |            |          |      |                |            |
+| hosts command   | 0 s        | 0 s      | 5 s  | INTR after 1 m | FAILS      |
+|                 |            |          |      |                |            |
+| test Acme::Meta | 4 s        | 4 s      | 35 s | FAILS          | FAILS      |
+|                 |            |          |      |                |            |
+
 2009-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* support deprecate.pm: Nick's plan seems to be that when Switch.pm is

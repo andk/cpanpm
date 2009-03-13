@@ -551,11 +551,12 @@ Do you want to enable code deserialisation (yes/no)?
 
 =item yaml_module
 
-At the time of this writing there are two competing YAML modules,
-YAML.pm and YAML::Syck. The latter is faster but needs a C compiler
-installed on your system. There may be more alternative YAML
-conforming modules but at the time of writing a potential third
-player, YAML::Tiny, seemed not powerful enough to work with CPAN.pm.
+At the time of this writing (2009-03) there are three YAML
+implementations working: YAML, YAML::Syck, and YAML::XS. The latter
+two are faster but need a C compiler installed on your system. There
+may be more alternative YAML conforming modules. When I tried two
+other players, YAML::Tiny and YAML::Perl, they seemed not powerful
+enough to work with CPAN.pm. This may have changed in the meantime.
 
 Which YAML implementation would you prefer?
 

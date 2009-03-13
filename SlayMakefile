@@ -3,11 +3,11 @@
 #
 
 {
-    use lib "lib";
-    use CPAN::Kwalify;
-    use Data::Dumper;
-    use Kwalify qw(validate);
-    use YAML::Syck qw(LoadFile);
+	use lib "lib";
+	use CPAN::Kwalify;
+	use Data::Dumper;
+	use Kwalify qw(validate);
+	use YAML::XS qw(LoadFile);
 }
 
 all:
@@ -30,16 +30,26 @@ dd-prefs: { map { s{\.yml$}{.dd}; $_ } glob("distroprefs/*.yml lib/CPAN/Kwalify/
 
 validate:
 	{
-		my $errors = 0; my $files = 0;
+		my $errors = 0; my $files = 0; my $perrors = 0;
 		my $distroprefs_path = $INC{"CPAN/Kwalify.pm"};
 		$distroprefs_path =~ s{\.pm$}{/distroprefs.yml};
 		my $schema = LoadFile($distroprefs_path);
 		for my $yml (glob("distroprefs/*.yml")) {
-			my $data = LoadFile($yml);
+			$files++;
+			my $data = eval { LoadFile($yml) };
+			if (!$data or $@) {
+				$perrors++;
+				warn "Parse error in $yml: '$@'\n";
+				next;
+			}
 			$errors++ if (!validate($schema, $data));
-	                $files++;
 		}
-		if ($errors) { die "Found $errors errors" }
+		if ($perrors||$errors) { die "Found $perrors parse errors and $errors validate errors in $files files" }
 		else { "Validation OK ($files files).\n" }
 	}
 
+# Local Variables:
+# mode: cperl
+# cperl-indent-level: 8
+# indent-tabs-mode: t
+# End:
