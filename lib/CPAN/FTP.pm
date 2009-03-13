@@ -4,6 +4,8 @@ package CPAN::FTP;
 use strict;
 
 use Fcntl qw(:flock);
+use File::Basename qw(dirname);
+use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
@@ -164,7 +166,7 @@ sub _recommend_url_for {
         while (my $last = pop @$history) {
             last if $last->{end} - time > 3600; # only young results are interesting
             next unless $last->{file}; # dirname of nothing dies!
-            next unless $file eq File::Basename::dirname($last->{file});
+            next unless $file eq dirname($last->{file});
             return $last->{thesiteurl};
         }
     }
@@ -314,7 +316,7 @@ sub localize {
         $maybe_restore++;
     }
 
-    my($aslocal_dir) = File::Basename::dirname($aslocal);
+    my($aslocal_dir) = dirname($aslocal);
     # Inheritance is not easier to manage than a few if/else branches
     if ($CPAN::META->has_usable('LWP::UserAgent')) {
         unless ($Ua) {
@@ -503,7 +505,7 @@ Sleeping $sleep seconds now.
 
 sub mymkpath {
     my($self, $aslocal_dir) = @_;
-    File::Path::mkpath($aslocal_dir);
+    mkpath($aslocal_dir);
     $CPAN::Frontend->mywarn(qq{Warning: You are not allowed to write into }.
                             qq{directory "$aslocal_dir".
     I\'ll continue, but if you encounter problems, they may be due
@@ -684,8 +686,8 @@ sub hostdlhard {
     my($ro_url);
     my($devnull) = $CPAN::Config->{devnull} || "";
     # < /dev/null ";
-    my($aslocal_dir) = File::Basename::dirname($aslocal);
-    File::Path::mkpath($aslocal_dir);
+    my($aslocal_dir) = dirname($aslocal);
+    mkpath($aslocal_dir);
   HOSTHARD: for $ro_url (@$host_seq) {
         $self->_set_attempt($stats,"dlhard",$ro_url);
         my $url = "$ro_url$file";
@@ -867,8 +869,8 @@ sub hostdlhardest {
 
     return unless @$host_seq;
     my($ro_url);
-    my($aslocal_dir) = File::Basename::dirname($aslocal);
-    File::Path::mkpath($aslocal_dir);
+    my($aslocal_dir) = dirname($aslocal);
+    mkpath($aslocal_dir);
     my $ftpbin = $CPAN::Config->{ftp};
     unless ($ftpbin && length $ftpbin && MM->maybe_command($ftpbin)) {
         $CPAN::Frontend->myprint("No external ftp command available\n\n");
