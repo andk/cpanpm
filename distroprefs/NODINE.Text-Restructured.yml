@@ -1,7 +1,7 @@
 ---
 comment: "First encounter at rev. 0.003032"
 match:
-  distribution: "^NODINE/Text-Restructured-\d"
+  distribution: '^NODINE/Text-Restructured-\d'
 pl:
   expect:
     - "URL for default cascading style sheet"

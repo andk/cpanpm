@@ -8,7 +8,7 @@ comment: |
   aptitude install libextractor-dev
 
 match:
-  distribution: "FLORA/File-Extractor-\d"
+  distribution: 'FLORA/File-Extractor-\d'
 depends:
   configure_requires:
     ExtUtils::PkgConfig: 0

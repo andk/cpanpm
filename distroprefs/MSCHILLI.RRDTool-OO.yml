@@ -10,7 +10,7 @@ comment: |
   patching, I haven't checked)
 
 match:
-  distribution: "MSCHILLI/RRDTool-OO-\d"
+  distribution: 'MSCHILLI/RRDTool-OO-\d'
 pl:
   eexpect:
     mode: anyorder

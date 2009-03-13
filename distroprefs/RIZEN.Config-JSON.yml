@@ -4,7 +4,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=29122
 
 match:
-  distribution: "RIZEN/Config-JSON-\d"
+  distribution: 'RIZEN/Config-JSON-\d'
 depends:
   build_requires:
     Test::Deep: 0

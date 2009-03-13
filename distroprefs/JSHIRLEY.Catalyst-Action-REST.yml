@@ -5,7 +5,7 @@ comment: |
   found 2008-10) I must not confirm when it is offered as a dependency
 
 match:
-  distribution: "(JSHIRLEY|.+)/Catalyst-Action-REST-\d"
+  distribution: '(JSHIRLEY|.+)/Catalyst-Action-REST-\d'
 pl:
   eexpect:
     mode: anyorder

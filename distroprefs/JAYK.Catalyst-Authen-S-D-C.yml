@@ -4,7 +4,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=33611
 
 match:
-  distribution: "JAYK/Catalyst-Authentication-Store-DBIx-Class-\d"
+  distribution: 'JAYK/Catalyst-Authentication-Store-DBIx-Class-\d'
 depends:
   requires:
     Catalyst::Model::DBIC::Schema: 0

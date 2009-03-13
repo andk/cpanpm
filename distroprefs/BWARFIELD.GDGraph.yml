@@ -8,5 +8,5 @@ comment: |
   https://rt.cpan.org/Ticket/Display.html?id=22932
 
 match:
-  distribution: "^(MVERB|BWARFIELD)/GDGraph-1.43(06|07)?\.tar\.gz"
+  distribution: '^(MVERB|BWARFIELD)/GDGraph-1.43(06|07)?\.tar\.gz'
 disabled: 1

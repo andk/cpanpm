@@ -5,7 +5,7 @@ comment: |
   doesn't run pod::coverage
 
 match:
-  distribution: "^DMAKI/Xango-1.08\."
+  distribution: '^DMAKI/Xango-1.08\.'
 cpanconfig:
   prefer_installer: "MB"
 pl:

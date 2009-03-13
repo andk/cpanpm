@@ -5,7 +5,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=34523
 
 match:
-  distribution: "NESTING/Unicode-Wrap-\d"
+  distribution: 'NESTING/Unicode-Wrap-\d'
 depends:
   requires:
     Clone: 0

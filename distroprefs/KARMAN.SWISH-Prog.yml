@@ -5,7 +5,7 @@ comment: |
   the first 24 days of 2009-01 alone have 18 FAILs.
 
 match:
-  distribution: "KARMAN/SWISH-Prog-\d"
+  distribution: 'KARMAN/SWISH-Prog-\d'
 pl:
   eexpect:
     mode: anyorder

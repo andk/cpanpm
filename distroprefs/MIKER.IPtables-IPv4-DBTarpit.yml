@@ -4,7 +4,7 @@ comment: |
   Extra fun points for the gratuitous "are you sure" question.
 
 match:
-  distribution: "MIKER/IPTables-IPv4-DBTarpit-\d"
+  distribution: 'MIKER/IPTables-IPv4-DBTarpit-\d'
 pl:
   eexpect:
     mode: anyorder

@@ -6,7 +6,7 @@ comment: |
   OTOH, I can decide what I want:)
 
 match:
-  distribution: "TIMB/GoferTransport-http-\d"
+  distribution: 'TIMB/GoferTransport-http-\d'
 depends:
   configure_requires:
     Apache::Constants: 0

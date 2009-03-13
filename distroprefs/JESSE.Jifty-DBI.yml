@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^JESSE/Jifty-DBI-\d|/home/src/www/jifty/WC/Jifty-DBI/SVN.ro/."
+  distribution: '^JESSE/Jifty-DBI-\d|/home/src/www/jifty/WC/Jifty-DBI/SVN.ro/.'
 pl: 
   env:
     PERL_AUTOINSTALL: --skip    

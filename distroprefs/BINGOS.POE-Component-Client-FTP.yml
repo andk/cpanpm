@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BINGOS/POE-Component-Client-FTP-\d"
+  distribution: 'BINGOS/POE-Component-Client-FTP-\d'
 pl:
   eexpect:
     mode: anyorder

@@ -14,7 +14,7 @@ comment: |
   Strange.
 
 match:
-  distribution: "HORROCKS/PersistentPerl-\d"
+  distribution: 'HORROCKS/PersistentPerl-\d'
 pl:
   expect:
     - "Compile mod_persistentperl"

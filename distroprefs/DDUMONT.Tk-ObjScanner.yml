@@ -6,7 +6,7 @@ comment: |
   Note that ObjEditor is also in 01.DISABLED.yml
 
 match:
-  distribution: "^DDUMONT/Tk-Obj(Scanner|Editor)-\d"
+  distribution: '^DDUMONT/Tk-Obj(Scanner|Editor)-\d'
 test:
   env:
     DISPLAY: ":121"

@@ -7,14 +7,14 @@ comment: |
     answer a question.
 
 match:
-  distribution: "^FLORA/Net-SSLeay-\d"
+  distribution: '^FLORA/Net-SSLeay-\d'
 pl:
   eexpect:
     mode: anyorder
     timeout: 60
     reuse: 1
     talk:
-      - "\QThese tests *will* *fail* if you do not have network connectivity\E"
+      - '\QThese tests *will* *fail* if you do not have network connectivity\E'
       - "n\n"
       - "Auto-install"
       - "y\n"
@@ -27,7 +27,7 @@ make:
     timeout: 60
     reuse: 1
     talk:
-      - "\QThese tests *will* *fail* if you do not have network connectivity\E"
+      - '\QThese tests *will* *fail* if you do not have network connectivity\E'
       - "n\n"
       - "Auto-install"
       - "y\n"

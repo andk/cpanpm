@@ -16,7 +16,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=34316
 
 match:
-  distribution: "PHRED/Apache-Reload-\d"
+  distribution: 'PHRED/Apache-Reload-\d'
 pl:
   args:
     - "MOD_PERL=1"

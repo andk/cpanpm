@@ -8,7 +8,7 @@ comment: |
   Or maybe it was Unicode::MapUTF8? Or both?
 
 match:
-  distribution: "MTHURN/I18N-Charset-\d"
+  distribution: 'MTHURN/I18N-Charset-\d'
 depends:
   requires:
     Unicode::Map8: 0

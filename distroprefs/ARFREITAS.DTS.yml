@@ -6,7 +6,7 @@ comment: |
   Todo: make the _disable_ platform specific
 
 match:
-  distribution: "ARFREITAS/DTS-\d"
+  distribution: 'ARFREITAS/DTS-\d'
 disabled: 1
 pl:
   expect:

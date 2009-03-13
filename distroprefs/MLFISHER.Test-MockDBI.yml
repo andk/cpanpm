@@ -11,5 +11,5 @@ comment: |
   DBI 'SELECT' SQL:  
 
 match:
-  distribution: "MLFISHER/Test-MockDBI-\d"
+  distribution: 'MLFISHER/Test-MockDBI-\d'
 disabled: 1

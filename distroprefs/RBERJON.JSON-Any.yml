@@ -11,7 +11,7 @@ comment: |
     Would be a good test candidate to train for optional_features.
 
 match:
-  distribution: "RBERJON/JSON-Any-\d"
+  distribution: 'RBERJON/JSON-Any-\d'
 depends:
   requires:
     JSON: 0
@@ -22,7 +22,7 @@ pl:
     timeout: 60
     reuse: 1
     talk:
-      - "\[JSON::PC\][^\]]+Auto-install"
+      - '\[JSON::PC\][^\]]+Auto-install'
       - "n\n"
       - "Auto-install"
       - "y\n"

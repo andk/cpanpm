@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "EIJABB/MARC-Errorchecks-\d"
+  distribution: 'EIJABB/MARC-Errorchecks-\d'
 test:
   expect:
     - "Press Enter to quit"

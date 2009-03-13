@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^NI-S/Tk-HTML-\d"
+  distribution: '^NI-S/Tk-HTML-\d'
 test:
   env:
     DISPLAY: ":121"

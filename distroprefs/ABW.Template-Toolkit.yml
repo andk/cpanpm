@@ -7,7 +7,7 @@ comment: |
   too miserly today
 
 match:
-  distribution: "^ABW/Template-Toolkit-2\."
+  distribution: '^ABW/Template-Toolkit-2\.'
 pl:
   args:
     - TT_EXTRAS=no
@@ -40,10 +40,10 @@ pl:
 --- 
 comment: "2.17 had more test failures for me than 2.16"
 match:
-  distribution: "^(ABW|ADAMK)/Template-Toolkit-2.17"
+  distribution: '^(ABW|ADAMK)/Template-Toolkit-2.17'
 goto: "ADAMK/Template-Toolkit-2.16.tar.gz"
 ---
 comment: "Prohibit working with 2.14"
 match:
-  distribution: "^ABW/Template-Toolkit-2.14"
+  distribution: '^ABW/Template-Toolkit-2.14'
 disabled: 1

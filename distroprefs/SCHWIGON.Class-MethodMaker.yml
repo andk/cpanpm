@@ -4,6 +4,6 @@ comment: |
     do not use Module::Build which has some major issues
 
 match:
-  distribution: "SCHWIGON/class-methodmaker/Class-MethodMaker-\d"
+  distribution: 'SCHWIGON/class-methodmaker/Class-MethodMaker-\d'
 cpanconfig:
   prefer_installer: "EUMM"

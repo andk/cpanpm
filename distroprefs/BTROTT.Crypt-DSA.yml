@@ -8,7 +8,7 @@ comment: |
   one minute, so enabling again
 
 match:
-  distribution: "^BTROTT/Crypt-DSA-\d"
+  distribution: '^BTROTT/Crypt-DSA-\d'
 pl: 
   args: ["--defaultdeps"]
 # disabled: 1

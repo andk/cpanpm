@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^LZE/HTML-Menu-TreeView-\d"
+  distribution: '^LZE/HTML-Menu-TreeView-\d'
 pl:
   eexpect:
     mode: anyorder

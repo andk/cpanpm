@@ -40,7 +40,7 @@ comment: |
        OBJECT          => q/$(O_FILES)/, 
 
 match:
-  distribution: "CLAESJAC/JavaScript-\d"
+  distribution: 'CLAESJAC/JavaScript-\d'
 pl:
   env:
     JS_LIB: /usr/lib

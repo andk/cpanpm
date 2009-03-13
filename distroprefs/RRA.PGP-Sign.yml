@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^RRA/PGP-Sign-\d"
+  distribution: '^RRA/PGP-Sign-\d'
 make:
   expect:
     - "Program to sign data"

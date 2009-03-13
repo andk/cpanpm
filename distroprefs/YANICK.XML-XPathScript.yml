@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^YANICK/XML-XPathScript-\d"
+  distribution: '^YANICK/XML-XPathScript-\d'
 depends:
   configure_requires:
     XML::LibXML: 0

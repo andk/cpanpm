@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "DMAKI/Class-DBI-Plugin-DateTime-\d"
+  distribution: 'DMAKI/Class-DBI-Plugin-DateTime-\d'
 pl:
   expect:
     - "::Pg"

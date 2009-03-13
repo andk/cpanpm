@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^ANDREWF/LaTeX-Driver-\d"
+  distribution: '^ANDREWF/LaTeX-Driver-\d'
 pl:
   expect:
     - "latex path"

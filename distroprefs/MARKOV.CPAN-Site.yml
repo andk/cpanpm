@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^MARKOV/CPAN-Site-\d"
+  distribution: '^MARKOV/CPAN-Site-\d'
 pl:
   expect:
     - "Running client or server"

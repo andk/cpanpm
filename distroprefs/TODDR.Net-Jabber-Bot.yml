@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "TODDR/Net-Jabber-Bot-\d"
+  distribution: 'TODDR/Net-Jabber-Bot-\d'
 test:
   expect:
     - "Please enter jabber server"

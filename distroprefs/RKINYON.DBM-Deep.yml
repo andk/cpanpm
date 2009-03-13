@@ -14,7 +14,7 @@ comment: |
   Dependency on Fmode reported aas http://rt.cpan.org/Ticket/Display.html?id=36781
 
 match:
-  distribution: "RKINYON/DBM-Deep-\d"
+  distribution: 'RKINYON/DBM-Deep-\d'
 depends:
   requires:
     Pod::Usage: 1.3

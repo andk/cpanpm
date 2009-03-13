@@ -6,7 +6,7 @@ comment: |
   (2008-10-07) Adding TURNSTEP, trying to enable it again.
 
 match:
-  distribution: "^(DBROBINS|TURNSTEP)/Net-SSH-Perl-\d"
+  distribution: '^(DBROBINS|TURNSTEP)/Net-SSH-Perl-\d'
 pl: 
   env: 
     PERL_MM_USE_DEFAULT: 1

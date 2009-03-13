@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^HMBRAND.Spreadsheet-Read-\d"
+  distribution: '^HMBRAND.Spreadsheet-Read-\d'
 pl:
   expect:
     - "Do you want to install 'xlscat'"

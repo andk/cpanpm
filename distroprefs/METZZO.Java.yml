@@ -4,7 +4,7 @@ comment: |
   No idea who pulls this in as a dependency.
 
 match:
-  distribution: "^METZZO/Java-\d"
+  distribution: '^METZZO/Java-\d'
 test:
   eexpect:
     mode: anyorder

@@ -4,16 +4,16 @@ comment: |
   This is from 2004-02-26
 
 match:
-  distribution: "^BYRNE/SOAP/SOAP-Lite-0\.60a\.tar\.gz$"
+  distribution: '^BYRNE/SOAP/SOAP-Lite-0\.60a\.tar\.gz$'
 disabled: 1
 --- 
 match:
-  distribution: "^BYRNE/SOAP-Lite-0.69"
+  distribution: '^BYRNE/SOAP-Lite-0.69'
 pl: 
   expect:
     - "see the detailed list"
     - "\n"
-    - "Do you want to proceed with this configuration\?"
+    - 'Do you want to proceed with this configuration\?'
     - "\n"
     - "Do you want to perform these tests in addition to core tests"
     - "\n"
@@ -24,10 +24,10 @@ depends:
     MIME::Parser: 0
 --- 
 match:
-  distribution: "^MKUTTER/SOAP-Lite-0.71"
+  distribution: '^MKUTTER/SOAP-Lite-0.71'
 pl: 
   expect:
     - "see the detailed list"
     - "\n"
-    - "Do you want to proceed with this configuration\?"
+    - 'Do you want to proceed with this configuration\?'
     - "\n"

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BINGOS/POE-Component-Server-NSCA-\d"
+  distribution: 'BINGOS/POE-Component-Server-NSCA-\d'
 pl:
   expect:
     - "Do you want encryption"

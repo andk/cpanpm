@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^NI-S/Tk-804\.027\.tar\.gz$"
+  distribution: '^NI-S/Tk-804\.027\.tar\.gz$'
 disabled: 1
 comment: |
 
@@ -16,7 +16,7 @@ patches:
   - "SREZIC/patches/Tk-804.027-p4.patch.gz"
 ---
 match:
-  distribution: "^SREZIC/Tk-\d"
+  distribution: '^SREZIC/Tk-\d'
 pl:
   args:
     - "XFT=1"

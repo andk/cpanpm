@@ -1,7 +1,7 @@
 ---
 comment: "dependency on DBD::mysql missing but if he extends to other DBs,,,,"
 match:
-  distribution: "^SAMTREGAR/DBIx-Timeout-\d"
+  distribution: '^SAMTREGAR/DBIx-Timeout-\d'
 test:
   env:
     DBI_DSN: "DBI:mysql:database=comma;mysql_socket=/var/run/mysqld/mysqld.sock"

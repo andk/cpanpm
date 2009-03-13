@@ -5,7 +5,7 @@ comment: |
   random results we must specify this dependency
 
 match:
-  distribution: "^GOMOR/Net-Write-\d"
+  distribution: '^GOMOR/Net-Write-\d'
 depends:
   build_requires:
     Pod::Coverage: 0

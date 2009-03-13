@@ -5,7 +5,7 @@ comment: |
   AUTOMATED_TESTING=1
 
 match:
-  distribution: "JKEGL/Test-Weaken-\d"
+  distribution: 'JKEGL/Test-Weaken-\d'
 test:
   env:
     AUTOMATED_TESTING: 1

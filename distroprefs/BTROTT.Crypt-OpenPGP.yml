@@ -39,7 +39,7 @@ comment: |
   Checking if your kit is complete...
 
 match:
-  distribution: "BTROTT/Crypt-OpenPGP-\d"
+  distribution: 'BTROTT/Crypt-OpenPGP-\d'
 depends:
   configure_requires:
     Compress::Zlib: 2.01

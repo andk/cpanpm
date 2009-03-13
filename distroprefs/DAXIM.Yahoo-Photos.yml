@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "DAXIM/Yahoo-Photos-\d"
+  distribution: 'DAXIM/Yahoo-Photos-\d'
 depends:
   configure_requires:
     Perl::Version: 0

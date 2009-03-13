@@ -6,5 +6,5 @@ comment: |
   Class::Trait
 
 match:
-  distribution: "^OVID/Class-Trait-0\.21\.tar\.gz"
+  distribution: '^OVID/Class-Trait-0\.21\.tar\.gz'
 disabled: 1

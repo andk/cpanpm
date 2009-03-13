@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "LICHTKIND/Kephra-\d"
+  distribution: 'LICHTKIND/Kephra-\d'
 test:
   env:
     DISPLAY: ":121"

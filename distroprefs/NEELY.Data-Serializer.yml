@@ -8,7 +8,7 @@ comment: |
   to the fails that recently started to show up. (just an hypothesis)
 
 match:
-  distribution: "NEELY/Data-Serializer-\d"
+  distribution: 'NEELY/Data-Serializer-\d'
 depends:
   requires:
     Digest::MD5: 0

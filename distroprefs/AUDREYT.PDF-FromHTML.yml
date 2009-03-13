@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^AUDREYT/PDF-FromHTML-\d"
+  distribution: '^AUDREYT/PDF-FromHTML-\d'
 pl:
   env:
     PERL_AUTOINSTALL: --skip    

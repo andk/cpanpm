@@ -6,5 +6,5 @@ comment: |
   in a second window just hangs
 
 match:
-  distribution: "^GRM/CamelPKI/App-CamelPKI-\d"
+  distribution: '^GRM/CamelPKI/App-CamelPKI-\d'
 disabled: 1

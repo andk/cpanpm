@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "MLEHMANN/PApp-\d"
+  distribution: 'MLEHMANN/PApp-\d'
 pl:
   expect:
     - "papp library directory" 

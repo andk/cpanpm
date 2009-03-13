@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^LUKEC/Socialtext-Resting-\d"
+  distribution: '^LUKEC/Socialtext-Resting-\d'
 pl:
   expect:
     - "Perform tests against Socialtext servers"

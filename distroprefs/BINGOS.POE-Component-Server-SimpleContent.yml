@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BINGOS/POE-Component-Server-SimpleContent-\d"
+  distribution: 'BINGOS/POE-Component-Server-SimpleContent-\d'
 pl:
   expect:
     - "Do you want to install optional module File::MMagic::XS"

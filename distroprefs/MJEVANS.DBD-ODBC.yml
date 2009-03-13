@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "MJEVANS/DBD-ODBC-\d"
+  distribution: 'MJEVANS/DBD-ODBC-\d'
 pl:
   eexpect:
     mode: anyorder

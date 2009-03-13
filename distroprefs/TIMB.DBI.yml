@@ -1,12 +1,12 @@
 --- 
 comment: "The patch by Steve Peters was posted to P5P 2006-10-23"
 match:
-  distribution: "^\QTIMB/DBI-1.52.tar.gz\E$"
+  distribution: '^\QTIMB/DBI-1.52.tar.gz\E$'
 patches:
   - ANDK/patches/DBI-1.52-SMPETERS-01.patch
 --- 
 match:
-  distribution: "^\QTIMB/DBI-1.53.tar.gz\E$"
+  distribution: '^\QTIMB/DBI-1.53.tar.gz\E$'
 patches:
   - ANDK/patches/DBI-1.53-NWCLARK-01.patch.gz
 ---
@@ -25,11 +25,11 @@ comment: |
 
 
 match:
-  distribution: "TIMB/DBI-\d"
+  distribution: 'TIMB/DBI-\d'
 pl:
   eexpect:
     mode: anyorder
     timeout: 20
     talk:
-      - "Press return to continue\.\.\."
+      - 'Press return to continue\.\.\.'
       - "\n"

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^BINGOS/POE-Component-CPAN-YACSmoke-\d"
+  distribution: '^BINGOS/POE-Component-CPAN-YACSmoke-\d'
 pl:
   eexpect:
     mode: anyorder

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BINGOS/POE-Component-Client-NSCA-\d"
+  distribution: 'BINGOS/POE-Component-Client-NSCA-\d'
 pl:
   eexpect:
     mode: anyorder

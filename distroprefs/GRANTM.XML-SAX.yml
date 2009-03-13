@@ -13,7 +13,7 @@ comment: |
   we are called very early, like on 20081105T0337
 
 match:
-  distribution: "^GRANTM/XML-SAX-\d"
+  distribution: '^GRANTM/XML-SAX-\d'
 pl: 
   eexpect:
     mode: anyorder

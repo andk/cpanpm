@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "BRADFITZ/Perlbal-1.58.tar.gz"
+  distribution: 'BRADFITZ/Perlbal-1.58.tar.gz'
 test:
   env:
     PERLBAL_DEBUG: 1
@@ -14,7 +14,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=40949
 
 match:
-  distribution: "(BRADFITZ|DORMANDO)/Perlbal-\d"
+  distribution: '(BRADFITZ|DORMANDO)/Perlbal-\d'
 test:
   env:
     PERLBAL_DEBUG: 1

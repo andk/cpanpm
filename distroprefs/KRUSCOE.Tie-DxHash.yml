@@ -11,7 +11,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=31208
 
 match:
-  distribution: "KRUSCOE/Tie-DxHash-\d"
+  distribution: 'KRUSCOE/Tie-DxHash-\d'
 depends:
   build_requires:
     Test::Perl::Critic: 0

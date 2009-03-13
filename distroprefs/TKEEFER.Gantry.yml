@@ -1,5 +1,5 @@
 ---
 match:
-  distribution: "TKEEFER/Gantry-\d"
+  distribution: 'TKEEFER/Gantry-\d'
 disabled: 1
 comment: "asks too many questions"

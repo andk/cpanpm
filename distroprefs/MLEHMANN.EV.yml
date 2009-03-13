@@ -1,7 +1,7 @@
 ---
 match:
-  distribution: "^MLEHMANN/EV-\d"
+  distribution: '^MLEHMANN/EV-\d'
 pl:
   expect:
-    - "\QSkip further questions and use defaults (y/n)?\E"
+    - '\QSkip further questions and use defaults (y/n)?\E'
     - "y\n"

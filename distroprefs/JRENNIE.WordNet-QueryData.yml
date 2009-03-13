@@ -10,7 +10,7 @@ comment: |
   about the installation of wordnet.
 
 match:
-  distribution: "JRENNIE/WordNet-QueryData-\d|/WordNet-Similarity|/WordNet-SenseRelate-AllWords"
+  distribution: 'JRENNIE/WordNet-QueryData-\d|/WordNet-Similarity|/WordNet-SenseRelate-AllWords'
 disabled: 1
 pl:
   env:

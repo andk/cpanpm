@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "JOHNSCA/TkCarp-\d"
+  distribution: 'JOHNSCA/TkCarp-\d'
 test:
   env:
     DISPLAY: ":121"

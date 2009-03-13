@@ -4,7 +4,7 @@ comment: |
   AUTOMATED_TESTING=1 disables testing
 
 match:
-  distribution: "/Term-Title-\d"
+  distribution: '/Term-Title-\d'
 test:
   env:
     AUTOMATED_TESTING: 1

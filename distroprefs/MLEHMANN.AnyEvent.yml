@@ -4,7 +4,7 @@ comment: |
   Seven of my perls hang with it in 03_child.t, so we skip this test here
 
 match:
-  distribution: "^MLEHMANN/AnyEvent-3.4.tar.gz"
+  distribution: '^MLEHMANN/AnyEvent-3.4.tar.gz'
 test:
   args:
     - TEST_FILES=t/0[0124]*.t
@@ -17,7 +17,7 @@ depends:
     Event: 0
 ---
 match:
-  distribution: "^MLEHMANN/AnyEvent-\d"
+  distribution: '^MLEHMANN/AnyEvent-\d'
 test:
   env:
     PERL_ANYEVENT_VERBOSE: 2

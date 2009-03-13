@@ -1,15 +1,15 @@
 ---
 match:
-  distribution: "ILMARI/DBIx-Class-Schema-Loader-\d"
+  distribution: 'ILMARI/DBIx-Class-Schema-Loader-\d'
 pl:
   eexpect:
     mode: anyorder
     timeout: 20
     reuse: 1
     talk:
-      - "DB2 Support\][^]]+Auto-install"
+      - 'DB2 Support\][^]]+Auto-install'
       - "n\n"
-      - "\QOracle Support (experimental)\E\][^]]+Auto-install"
+      - '\QOracle Support (experimental)\E\][^]]+Auto-install'
       - "n\n"
       - "Auto-install"
       - "y\n"

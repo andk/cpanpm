@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "CHISEL/Zucchini-\d"
+  distribution: 'CHISEL/Zucchini-\d'
 test:
   eexpect:
     mode: anyorder

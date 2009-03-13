@@ -4,7 +4,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=28150
 
 match:
-  distribution: "RSOD/IPC-Run-\d"
+  distribution: 'RSOD/IPC-Run-\d'
 test:
   env:
     LANG: C

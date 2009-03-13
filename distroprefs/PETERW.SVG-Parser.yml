@@ -8,7 +8,7 @@ comment: |
   or so.
 
 match:
-  distribution: "PETERW/SVG-Parser-\d"
+  distribution: 'PETERW/SVG-Parser-\d'
 depends:
   requires:
     XML::LibXML::SAX: 0

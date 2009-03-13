@@ -11,7 +11,7 @@ comment: |
   Note: http://rt.cpan.org/Ticket/Display.html?id=12911
 
 match:
-  distribution: "^(PGOLLUCCI|GEOFF|PHRED)/Apache-Test-\d"
+  distribution: '^(PGOLLUCCI|GEOFF|PHRED)/Apache-Test-\d'
 test:
   env: 
     APACHE: /usr/sbin/apache-perl

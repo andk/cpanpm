@@ -8,14 +8,14 @@ comment: |
    you want to build..."
 
 match:
-  distribution: "MBARBON/Alien-wxWidgets-\d"
+  distribution: 'MBARBON/Alien-wxWidgets-\d'
 pl:
   expect:
     - "Do you want to build wxWidgets"
     - "n\n"
 ---
 match:
-  distribution: "MBARBON/Wx-\d"
+  distribution: 'MBARBON/Wx-\d'
 test:
   env:
     DISPLAY: ":121"

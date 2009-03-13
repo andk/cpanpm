@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "SLANNING/Ogre-\d"
+  distribution: 'SLANNING/Ogre-\d'
 pl:
   expect:
     - "Do you want to install OIS now"

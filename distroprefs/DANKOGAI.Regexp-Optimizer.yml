@@ -16,7 +16,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=34389
 
 match:
-  distribution: "DANKOGAI/Regexp-Optimizer-\d"
+  distribution: 'DANKOGAI/Regexp-Optimizer-\d'
 depends:
   requires:
     Encode: 0

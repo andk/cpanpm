@@ -4,7 +4,7 @@ comment: |
   Just a skeleton
 
 match:
-  distribution: "^MARKOV/Mail-Box-2\.\d"
+  distribution: '^MARKOV/Mail-Box-2\.\d'
 make:
   env:
     PERL_AUTOINSTALL: --skip    

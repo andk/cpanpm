@@ -14,7 +14,7 @@ comment: |
   So I put the depends also into MARKOV.MailTools.yml
 
 match:
-  distribution: "^DSKOLL/MIME-tools-\d"
+  distribution: '^DSKOLL/MIME-tools-\d'
 depends:
   requires:
     Date::Format: 0

@@ -4,7 +4,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=24458
 
 match:
-  distribution: "^DROLSKY/Params-Validate-0\.87\.tar\.gz$"
+  distribution: '^DROLSKY/Params-Validate-0\.87\.tar\.gz$'
 patches:
   - "ANDK/patches/Params-Validate-0.86-NWCLARK-01.patch.gz"
 ---
@@ -17,7 +17,7 @@ comment: |
   http://rt.cpan.org/Ticket/Display.html?id=32872
 
 match:
-  distribution: "^DROLSKY/Params-Validate-0\.89\.tar\.gz$"
+  distribution: '^DROLSKY/Params-Validate-0\.89\.tar\.gz$'
 patches:
   - "ANDK/patches/Params-Validate-0.89-ANDK-05.patch.gz"
 depends:

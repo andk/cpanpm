@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^MSERGEANT/XML-Filter-XInclude-\d"
+  distribution: '^MSERGEANT/XML-Filter-XInclude-\d'
 depends:
   requires:
     XML::SAX::Writer: 0

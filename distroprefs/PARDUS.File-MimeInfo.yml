@@ -12,7 +12,7 @@ comment: |
 
 disabled: 1
 match:
-  distribution: "PARDUS/File-MimeInfo/File-MimeInfo-\d"
+  distribution: 'PARDUS/File-MimeInfo/File-MimeInfo-\d'
 depends:
   build_requires:
     Pod::Coverage: 0

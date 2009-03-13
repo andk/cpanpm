@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "RJBS/Email-Send-2.171\."
+  distribution: 'RJBS/Email-Send-2.171\.'
 patches:
   - "ANDK/patches/Email-Send-2.171-ANDK-01.patch.gz"
 ---
@@ -14,7 +14,7 @@ comment: |
   Ricardo says he will excise IO::All
 
 match:
-  distribution: "^RJBS/Email-Send-2.190\."
+  distribution: '^RJBS/Email-Send-2.190\.'
 depends:
   requires:
     IO::All: 0

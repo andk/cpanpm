@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "YAMATO/QDBM_File-\d"
+  distribution: 'YAMATO/QDBM_File-\d'
 pl:
   args:
     - 'INC="-I/usr/include/qdbm"'

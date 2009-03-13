@@ -7,7 +7,7 @@ comment: |
    Note: PREREQ_FATAL=0 did not work in MakeMaker up to 6.35 (RT 24774)
 
 match:
-  distribution: "^TSCH/Gtk2-\d"
+  distribution: '^TSCH/Gtk2-\d'
 pl:
   args:
     - "PREREQ_FATAL=0"
@@ -16,7 +16,7 @@ test:
     DISPLAY: ":121"
 ---
 match:
-  distribution: "^TSCH/Gnome2-PanelApplet-\d"
+  distribution: '^TSCH/Gnome2-PanelApplet-\d'
 pl:
   args:
     - "PREREQ_FATAL=0"

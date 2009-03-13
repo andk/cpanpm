@@ -25,7 +25,7 @@ comment: |
   that such things can happen.
 
 match:
-  distribution: "AGENT/OpenResty-\d"
+  distribution: 'AGENT/OpenResty-\d'
 disabled: 0
 pl:
   eexpect:

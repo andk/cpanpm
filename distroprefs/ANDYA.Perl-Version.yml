@@ -1,7 +1,7 @@
 ---
 match:
-  distribution: "^ANDYA/Perl-Version-v?\d"
+  distribution: '^ANDYA/Perl-Version-v?\d'
 pl:
   expect:
-    - "Install perl-reversion script\?"
+    - 'Install perl-reversion script\?'
     - "y\n"

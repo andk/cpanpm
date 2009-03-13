@@ -1,7 +1,7 @@
 ---
 comment: "maybe only asked when he finds none?"
 match:
-  distribution: "^PIERS/sapnwrfc-\d"
+  distribution: '^PIERS/sapnwrfc-\d'
 pl:
   eexpect:
     mode: anyorder

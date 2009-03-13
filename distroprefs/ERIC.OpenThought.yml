@@ -10,7 +10,7 @@ comment: |
   not make it we get the MI recursion despite the depends entry
 
 match:
-  distribution: "ERIC/OpenThought-\d"
+  distribution: 'ERIC/OpenThought-\d'
 disabled: 1
 depends:
   configure_requires:

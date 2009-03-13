@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "SANKO/Net-BitTorrent-\d"
+  distribution: 'SANKO/Net-BitTorrent-\d'
 pl:
   expect:
     - "perform these tests in addition"

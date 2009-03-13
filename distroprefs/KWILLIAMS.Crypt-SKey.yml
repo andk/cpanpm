@@ -4,7 +4,7 @@ comment: |
   ticket for Digest::MD4 written?
 
 match:
-  distribution: "KWILLIAMS/Crypt-SKey-\d"
+  distribution: 'KWILLIAMS/Crypt-SKey-\d'
 test:
   expect:
     - "pwd"

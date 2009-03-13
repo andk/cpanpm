@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^RJBS/MIME-Lite-\d"
+  distribution: '^RJBS/MIME-Lite-\d'
 pl:
   expect:
     - "Add prereqs"

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "WYANT/Astro-SpaceTrack-\d"
+  distribution: 'WYANT/Astro-SpaceTrack-\d'
 pl:
   env:
     PERL_MM_USE_DEFAULT: 1

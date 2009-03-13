@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^SZABGAB/Spreadsheet-ParseExcel-\d"
+  distribution: '^SZABGAB/Spreadsheet-ParseExcel-\d'
 depends:
   requires:
     Spreadsheet::WriteExcel: 0

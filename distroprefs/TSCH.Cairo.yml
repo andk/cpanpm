@@ -8,7 +8,7 @@ comment: |
   late to fix things. (Usually pgk-config not installed)
 
 match:
-  distribution: "^TSCH/Cairo-\d"
+  distribution: '^TSCH/Cairo-\d'
 depends:
   configure_requires:
     ExtUtils::PkgConfig: 0

@@ -4,7 +4,7 @@ comment: |
   connect to the internet?
 
 match:
-  distribution: "KARASIK/IO-Lambda-\d"
+  distribution: 'KARASIK/IO-Lambda-\d'
 pl:
   expect:
     - "enable these tests"

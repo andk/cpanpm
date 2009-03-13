@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^BINGOS/POE-Component-Server-SimpleHTTP-\d"
+  distribution: '^BINGOS/POE-Component-Server-SimpleHTTP-\d'
 pl:
   eexpect:
     mode: anyorder

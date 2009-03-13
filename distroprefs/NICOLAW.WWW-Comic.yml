@@ -5,7 +5,7 @@ comment: |
   this distropref file
 
 match:
-  distribution: "NICOLAW/WWW-Comic-\d"
+  distribution: 'NICOLAW/WWW-Comic-\d'
 pl:
   expect:
     - "Send this anonymous information"

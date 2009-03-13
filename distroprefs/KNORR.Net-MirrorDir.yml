@@ -4,7 +4,7 @@ comment: |
   note: questions during make test
 
 match:
-  distribution: "KNORR/Net-(MirrorDir|DownloadMirror|UploadMirror)-\d"
+  distribution: 'KNORR/Net-(MirrorDir|DownloadMirror|UploadMirror)-\d'
 test:
   expect:
     - "test the module with a ftp-server"

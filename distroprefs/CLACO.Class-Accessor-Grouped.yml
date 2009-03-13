@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "^CLACO/Class-Accessor-Grouped-\d"
+  distribution: '^CLACO/Class-Accessor-Grouped-\d'
 pl:
   eexpect:
     mode: anyorder
