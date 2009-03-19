@@ -89,7 +89,7 @@ match:
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JKUTEJ/Xen-Control-\d                   # calls sudo
-    |JMERELO/MP3-Podcast-0.06.tar.gz         # hangs in test
+    |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
