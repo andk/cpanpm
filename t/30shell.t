@@ -111,7 +111,7 @@ perl:
 time: 1
 EOF
 }
-
+    close FH; #attempt to fix RT#43779
 cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd",
     _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
     or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd ".
@@ -139,6 +139,7 @@ match:
 patches:
   - "$cwd/t/CPAN/TestPatch.txt"
 EOF
+close FH; #attempt to fix RT#43779
 
 my @prgs;
 {
