@@ -533,7 +533,7 @@ sub _set_attempt {
 }
 
 # package CPAN::FTP;
-sub hostdleasy {
+sub hostdleasy { #called from hostdlxxx
     my($self,$host_seq,$file,$aslocal,$stats) = @_;
     my($ro_url);
   HOSTEASY: for $ro_url (@$host_seq) {
