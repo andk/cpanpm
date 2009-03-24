@@ -878,7 +878,7 @@ sub hostdlhardest {
         return;
     }
     $CPAN::Frontend->mywarn(qq{
-As a last ressort we now switch to the external ftp command '$ftpbin'
+As a last resort we now switch to the external ftp command '$ftpbin'
 to get '$aslocal'.
 
 Doing so often leads to problems that are hard to diagnose.
