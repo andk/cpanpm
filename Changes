@@ -1,3 +1,5 @@
+        * Will prefer perl unpack modules (unless it is bz2). (Alexandr Ciornii)
+
 2009-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* this is release 1.9304 (same as 1.93_03, just version changed to mark
