@@ -77,11 +77,13 @@ match:
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HESCO/LedgerSMB-API-\d                  # 0.04a nearly unstoppable endless loop
+    |HEYTRAV/POE-Filter-Hessian-\d           # hangs
     |HOLOWAY/Catalyst-Log-Log4perl-1.00.tar.gz # endless loop with deep recursion
     |HOOO/X3D-0                              # hangs at t/nodefield_sfdouble_06 on perl-5.10.0 at 33955
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
+    |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
     |JETTERO/Crypt-PBC-\d                    # download libpbc?
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
@@ -102,6 +104,7 @@ match:
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LZE/CGI-CMS-\d                          # asks questions about paths
+    |MANOWAR/RadiusPerl-0.13.tar.gz          # hangs in test.pl
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
@@ -127,6 +130,7 @@ match:
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
+    |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
