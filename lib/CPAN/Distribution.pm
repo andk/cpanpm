@@ -3380,7 +3380,7 @@ sub install {
             $want_install =
                 CPAN::Shell::colorable_makemaker_prompt
                       ("$id is just needed temporarily during building or testing. ".
-                       "Do you want to install it permanently? (Y/n)",
+                       "Do you want to install it permanently?",
                        $default);
         }
     }
