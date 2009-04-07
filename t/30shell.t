@@ -479,14 +479,14 @@ __END__
 #P:o conf urllist splice 1 3
 ########
 #P:o conf urllist
-#E:programming.+\n.+linuxforum
+#E:mirrors.+\n.+linuxforum
 ########
 #P:o conf urllist push PUSH
 ########
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT.+\n.+programming.+\n.+linuxforum.+\n.+PUSH
+#E:UNSHIFT(.+\n)+.+mirrors(.+\n)+.+linuxforum.+\n.+PUSH
 ########
 #P:o conf urllist ONE TWO
 ########

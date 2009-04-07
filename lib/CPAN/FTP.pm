@@ -272,9 +272,11 @@ sub localize {
     $force ||= 0;
     Carp::croak( "Usage: ->localize(cpan_file,as_local_file[,$force])" )
         unless defined $aslocal;
-    $self->debug("file[$file] aslocal[$aslocal] force[$force]")
-        if $CPAN::DEBUG;
-
+    if ($CPAN::DEBUG){
+        require Carp;
+        my $longmess = Carp::longmess();
+        $self->debug("file[$file] aslocal[$aslocal] force[$force] carplongmess[$longmess]");
+    }
     if ($^O eq 'MacOS') {
         # Comment by AK on 2000-09-03: Uniq short filenames would be
         # available in CHECKSUMS file
@@ -418,21 +420,12 @@ I would like to connect to one of the following sites to get '%s':
             if ($connect_to_internet_ok) {
                 @urllist = @CPAN::Defaultsites;
             } else {
-                my $sleep = 5;
-                $CPAN::Frontend->mywarn(sprintf qq{
-
-You have not configured a urllist and did not allow to connect to the
-internet. I will continue but it is very likely that we will face
-problems. If this happens, please consider to call either
-
-    o conf init connect_to_internet_ok
-or
-    o conf init urllist
-
-Sleeping $sleep seconds now.
-});
-                $CPAN::Frontend->mysleep($sleep);
-                @urllist = ();
+                my $sleep = 2;
+                # the tricky thing about dying here is that everybody
+                # believes that calls to exists() or all_objects() are
+                # safe.
+                require CPAN::Exception::blocked_urllist;
+                die CPAN::Exception::blocked_urllist->new;
             }
         } else {
             my @host_seq = $level =~ /dleasy/ ?
