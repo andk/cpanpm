@@ -75,7 +75,6 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
-    |JETTERO/Crypt-PBC-\d                    # libpbc not on Debian?
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
