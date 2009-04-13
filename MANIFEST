@@ -368,6 +368,7 @@ lib/CPAN/DeferredCode.pm
 lib/CPAN/Distribution.pm
 lib/CPAN/Distroprefs.pm
 lib/CPAN/Distrostatus.pm
+lib/CPAN/Exception/blocked_urllist.pm
 lib/CPAN/Exception/RecursiveDependency.pm
 lib/CPAN/Exception/yaml_not_installed.pm
 lib/CPAN/FirstTime.pm
@@ -451,6 +452,8 @@ t/CPAN/modules/03modlist.data
 t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
 t/CPAN/TestPatch.txt
+t/data/META-dynamic.yml
+t/data/META-static.yml
 t/local_utils.pm
 t/perlcriticrc
 t/yaml_code.yml
