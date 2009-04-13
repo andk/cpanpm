@@ -1,3 +1,36 @@
+2009-04-13  Andreas J. Koenig  <andk@cpan.org>
+
+	* this is release 1.93_52 (dev release towards 1.94)
+
+	* shake out missings after the split into many filoes
+
+	* Win32 fixes by Jan Dubois
+
+	* CPAN::SQLite support fixes by Randy Kobes
+
+	* completion on distros works now at least on the "d" command when using
+	pretty id ( eg. USERID/Foo-<TAB> )
+
+	* experimental support for deprecated.pm only enabled on perl 5.11
+
+	* address #37531: ls on subdirectories did not work as one would
+	expect (reported by Slaven Rezic)
+
+	* address #28438: do not create the author directory if we have a file
+	URL (reported by Schwern)
+
+	* all distroprefs now more YAML compliant
+
+	* tested with YAML::XS and documented as such
+
+	* patch by Gisle Aas to catch not compiling regexps in distroprefs
+
+	* patch by David Golden to support MYMETA.yml
+
+	* address #44549: support users who do not want to connect to the
+	internet but still configure us to run in an intranet or with a minicpan
+	on the local disk (reported by Nicholas Clark)
+
 2009-02-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* this is release 1.9304 (same as 1.93_03, just version changed to mark
