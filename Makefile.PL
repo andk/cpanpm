@@ -100,6 +100,20 @@ if ($HAVE_FILE_SPEC) {
   }
 }
 
+if ($HAVE_FILE_SPEC) {
+    unless (-f File::Spec->catdir("t","CPAN","authors","id","A","AN","ANDK","NotInChecksums-0.000.tar.gz")) {
+        warn <<EOW;
+
+####-Note-for-repository-users-####
+Please try
+  make testdistros
+before running 'make test'
+It builds various missing pieces
+####-Note-for-repository-users-####
+
+EOW
+    }
+}
 my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 # warn "sign[@sign]";
 WriteMakefile(
