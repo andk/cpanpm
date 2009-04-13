@@ -1,23 +1,13 @@
 ---
 comment: |
 
-  Various reasons
-
-  things that hang
+  things that hang or must be skipped for some other reasons in *my*
+  CPAN smokers, eg
 
   things that have too interactive tests, that cannot be easily
   automated
 
   things that need ressources we don't have
-
-  2007-12-02 akoenig: removed ADAMK/Module-Install-\d from the list of
-  banned modules. Unfortunately some authors declare it as a prereq. I
-  know it is not meant to be installed but I cannot stop other people
-  declare it as prereq. So If I refuse to install it, something else
-  cannot be installed. So I give up resistance. The original reason
-  was that it was repeatedly leading to behaviour that I could not
-  explain. I'll have to deal with that.
-
 
 match:
   distribution: |
@@ -85,8 +75,6 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
-    |JETTERO/Crypt-PBC-\d                    # download libpbc?
-    |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
