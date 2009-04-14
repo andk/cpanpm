@@ -16,7 +16,7 @@ WriteMakefile(
               PL_FILES      => {},
               dist => {
                        DIST_DEFAULT => (
-                                        'Makefile verify-MakeMaker-6.31 verify-no-subdir META.yml all tardist'
+                                        'Makefile verify-MakeMaker-6.31 verify-no-subdir META.yml all tgzdist'
                                        ),
                       },
 );
@@ -31,5 +31,9 @@ verify-no-subdir:
 
 META.yml: metafile
 	$(CP) ./mymeta.yml $(DISTVNAME)/META.yml
+
+tgzdist: $(DISTVNAME).tar.gz
+	$(CP) $(DISTVNAME).tar.gz $(DISTVNAME).tgz
+
 }
 }

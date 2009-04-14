@@ -1,3 +1,12 @@
+2009-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* reminder: Solaris tar cannot read tarballs with a path with more than
+	100 bytes. Wolfram re-reported it today.
+
+	https://rt.cpan.org/Ticket/Display.html?id=43813 was the first report.
+
+	MST suggested switching to tgz. Good idea.
+
 2009-03-13  Andreas J. Koenig  <andk@cpan.org>
 
 	* git tags not exported. Why? Need to export the release tags. How?
