@@ -16,6 +16,7 @@ Then I use cp-to-perl to clobber the branch:
 Test and then do in git over there
 
     # edit manifest if necessary
+    # make manisort
     git add ...
     git commit -m 'Update CPAN.pm to xxx'
     git format-patch origin
@@ -60,6 +61,7 @@ my $MAP;
                                     lib/CPAN/Distroprefs.pm
                                     lib/CPAN/Distrostatus.pm
                                     lib/CPAN/Exception/RecursiveDependency.pm
+                                    lib/CPAN/Exception/blocked_urllist.pm
                                     lib/CPAN/Exception/yaml_not_installed.pm
                                     lib/CPAN/FTP.pm
                                     lib/CPAN/FTP/netrc.pm
