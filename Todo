@@ -1,3 +1,54 @@
+2009-04-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* Acme::Badexample ($VERSION = do { $_++ while 1; return $_ };) breaks
+	us. Could not get a stable solution from BSD::Resource. The problem was
+	that when running the r command after a while the number of $SIG{XCPU}
+	interrupts increased until finally the shell ended itself. Probably a
+	bug somewhere else. Giving up at this state:
+
+diff --git a/lib/CPAN/Module.pm b/lib/CPAN/Module.pm
+index f9520d9..92d53c9 100644
+--- a/lib/CPAN/Module.pm
++++ b/lib/CPAN/Module.pm
+@@ -652,9 +652,32 @@ sub available_version {
+ #-> sub CPAN::Module::parse_version ;
+ sub parse_version {
+     my($self,$parsefile) = @_;
++    our($soft0,$hard0,$used0);
++    if (CPAN->has_usable("BSD::Resource")) {
++        ($used0) = BSD::Resource::getrusage();
++        ($soft0,$hard0) = BSD::Resource::getrlimit(BSD::Resource::RLIMIT_CPU()) unless $soft0;
++        warn "used0[$used0]soft0[$soft0]hard0[$hard0]\n";
++        my $success = BSD::Resource::setrlimit(BSD::Resource::RLIMIT_CPU(),int(3+$used0),$hard0);
++        if ($success) {
++            $SIG{XCPU} = sub {
++                my $sig = shift;
++                die +{ SIG => $sig};
++            };
++        } else {
++            $CPAN::Frontend->mywarn("Could not set limit\n");
++        }
++    }
+     my $have = eval { MM->parse_version($parsefile); };
+     if ($@) {
+-        $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
++        if (my $sig = $@->{SIG}) {
++            $CPAN::Frontend->mywarn("Signal $sig caught while parsing version number in file '$parsefile'\n");
++        } else {
++            $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
++        }
++    }
++    if ($soft0) {
++        BSD::Resource::setrlimit(BSD::Resource::RLIMIT_CPU(),$soft0,$hard0);
++        $SIG{XCPU} = 'IGNORE';
+     }
+     my $leastsanity = eval { defined $have && length $have; };
+     $have = "undef" unless $leastsanity;
+
+	Seems to be solved with a much simpler alarm call now but I had to
+	choose a surprisingly high alarm value of 10. Below that I saw random
+	errors.
+
 2009-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* reminder: Solaris tar cannot read tarballs with a path with more than
