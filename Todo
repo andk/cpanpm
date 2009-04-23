@@ -49,12 +49,23 @@ index f9520d9..92d53c9 100644
 	choose a surprisingly high alarm value of 10. Below that I saw random
 	errors.
 
+2009-04-14  Andreas J. Koenig  <andk@cpan.org>
+
+	* explicit option to prefer Archive::Tar over tar like suggested by
+	https://rt.cpan.org/Ticket/Display.html?id=33686?
+
+	explicit option for suppress readline!
+
+	while being at readline: improve the wording "available" versus what
+	Schwern suggested in https://rt.cpan.org/Ticket/Display.html?id=29862
+
 2009-04-14  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* reminder: Solaris tar cannot read tarballs with a path with more than
 	100 bytes. Wolfram re-reported it today.
 
 	https://rt.cpan.org/Ticket/Display.html?id=43813 was the first report.
+	No, https://rt.cpan.org/Ticket/Display.html?id=40843
 
 	MST suggested switching to tgz. Good idea.
 
