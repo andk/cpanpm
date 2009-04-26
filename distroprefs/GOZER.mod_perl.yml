@@ -1,13 +1,26 @@
 ---
 comment: |
 
-  Currently no interest in apache on that smoker. No technical reasons.
+  http://svn.apache.org/viewvc?view=rev&revision=555908
 
 match:
   distribution: "/mod_perl-1"
   perlconfig:
     archname: "x86_64-linux"
-disabled: 1
+pl:
+  args:
+    - EVERYTHING=1
+    - USE_APACI=1
+    - APACHE_PREFIX=/home/src/apache/apachebin/1.3.41
+    - APACI_ARGS=--enable-module=info,--enable-module=status
+    - APACHE_SRC=/home/src/apache/apache_1.3.41/src
+    - APACHE_SRC_DEFAULT=/home/src/apache/apache_1.3.41/src
+    - DO_HTTPD=1
+depends:
+  build_requires:
+    LWP::UserAgent: 0
+patches:
+  - "ANDK/mod_perl-1.30-SHAY-01.patch.gz"
 ---
 comment: |
 
