@@ -26,6 +26,7 @@ match:
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
     |AWRIGLEY/App-Control-\d                 # endless loop
+    |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
     |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
@@ -33,7 +34,6 @@ match:
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
-    |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
@@ -54,6 +54,7 @@ match:
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EILARA/XUL-Node-\d                      # asks for port -- 8077?
     |EKAWAS/MOBY-                            # hangs
+    |ENOOR/TaskForest/TaskForest-1.24.tar.gz # hangs
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
@@ -82,7 +83,7 @@ match:
     |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
-    |KANE/CPANPLUS-0.85_08.tar.gz            # hangs
+    |KANE/CPANPLUS-0.8(5_08|6).tar.gz        # hangs
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
@@ -121,6 +122,7 @@ match:
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
+    |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
