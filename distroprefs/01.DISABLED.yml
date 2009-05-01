@@ -30,7 +30,7 @@ match:
     |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
-    |BINGOS/CPANPLUS-Dist-Build-0.22.tar.gz  # hangs
+    |BINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
@@ -83,7 +83,7 @@ match:
     |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
-    |KANE/CPANPLUS-0.8(5_08|6).tar.gz        # hangs
+    |KANE/CPANPLUS-0.8(5_08|6|601).tar.gz        # hangs
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
