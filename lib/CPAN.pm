@@ -3455,8 +3455,7 @@ You will most probably also want to configure something like this:
                     INSTALLSCRIPT=~/myperl/bin \
                     INSTALLBIN=~/myperl/bin"
 
-and then (oh joy) the equivalent command for Module::Build. That would
-be
+and then the equivalent command for Module::Build, which is
 
   o conf mbuildpl_arg "--lib=~/myperl/lib \
                     --installman1dir=~/myperl/man/man1 \
