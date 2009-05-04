@@ -1,3 +1,15 @@
+2009-05-04  Andreas J. Koenig  <andk@cpan.org>
+
+	* this is release 1.93_53 (release candidate for 1.94)
+
+	* address #45470: pod synopsis fix submitted by Olivier 'dolmen' Mengué
+
+	* bugfix: @$urllist could break on an undefined urllist, now protected
+
+	* bugfix: Work around the troubles posed by Acme::BadExample
+
+	* bugfix: address #43813: solaris tar cannot deal with long paths
+
 2009-04-13  Andreas J. Koenig  <andk@cpan.org>
 
 	* this is release 1.93_52 (dev release towards 1.94)
