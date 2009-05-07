@@ -1,3 +1,15 @@
+2009-05-07  Andreas J. Koenig  <andk@cpan.org>
+
+	* this is release 1.93_54 (another release candidate for 1.94, I had
+	overlooked the patches by Alexandr)
+
+	* Help Strawberry perl #41537: will prefer perl unpack modules (unless
+	it is bz2). (Alexandr Ciornii)
+
+	* address #43779: test failures when NFS involved (Alexandr Ciornii)
+
+	* adjust tests for 5.6.2 and when no yaml module is available
+
 2009-05-04  Andreas J. Koenig  <andk@cpan.org>
 
 	* this is release 1.93_53 (release candidate for 1.94)

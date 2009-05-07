@@ -125,6 +125,9 @@ WriteMakefile(
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
+              ($ExtUtils::MakeMaker::VERSION >= 6.48 ?
+               (MIN_PERL_VERSION => '5.004') : (),
+              ),
               clean        => {
                                FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml",
                               },
@@ -154,7 +157,10 @@ WriteMakefile(
               # I took it from RT-CPAN ticket 30098:
               ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
                (META_ADD => {
-                             repository => "git://github.com/andk/cpanpm.git",
+                             resources => {
+                                 repository => "git://github.com/andk/cpanpm.git",
+                             },
+                             keywords => ['CPAN','module','module installation'],
                             }) : ()),
              );
 
