@@ -2,6 +2,38 @@
 # 
 # Very, very preliminary API testing, but we have to start somewhere
 
+BEGIN {
+    unshift @INC, './lib', './t';
+
+    require local_utils;
+    local_utils::cleanup_dot_cpan();
+    local_utils::prepare_dot_cpan();
+    require CPAN::MyConfig;
+    require CPAN;
+
+    CPAN::HandleConfig->load;
+    $CPAN::Config->{load_module_verbosity} = q[none];
+    my $yaml_module = CPAN::_yaml_module();
+    my $exit_message;
+    if ($CPAN::META->has_inst($yaml_module)) {
+        # print "# yaml_module[$yaml_module] loadable\n";
+    } else {
+        $exit_message = "No yaml module installed";
+    }
+    unless ($exit_message) {
+        if ($YAML::VERSION && $YAML::VERSION < 0.60) {
+            $exit_message = "YAML v$YAML::VERSION too old for this test";
+        }
+    }
+    if ($exit_message) {
+        $|=1;
+        print "1..0 # SKIP $exit_message\n";
+        eval "require POSIX; 1" and POSIX::_exit(0);
+        warn "Error while trying to load POSIX: $@";
+        exit(0);
+    }
+}
+
 use strict;
 
 use Cwd qw(cwd);
