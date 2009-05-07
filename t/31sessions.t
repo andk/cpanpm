@@ -69,6 +69,8 @@ BEGIN {
         $|=1;
         print "1..0 # SKIP $exit_message\n";
         eval "require POSIX; 1" and POSIX::_exit(0);
+        warn "Error while trying to load POSIX: $@";
+        exit(0);
     }
 }
 

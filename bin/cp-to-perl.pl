@@ -18,8 +18,8 @@ Test and then do in git over there
     # edit manifest if necessary
     # make manisort
     git add ...
-    git commit -m 'Update CPAN.pm to xxx'
-    git format-patch origin
+    git commit -m 'Update CPAN.pm to xxx' -a
+    git format-patch origin   # how can I set the author here, it shouldn't be sand...
 
 =head2 TODO
 
