@@ -16,7 +16,7 @@ BEGIN {
     if ($CPAN::META->has_inst($yaml_module)) {
         # print "# yaml_module[$yaml_module] loadable\n";
     } else {
-        $exit_message = "No yaml module installed";
+        $exit_message = "Yaml module [$yaml_module] not installed";
     }
     if ($CPAN::META->has_inst("Module::Build")) {
         # print "# Module::Build loadable\n";
@@ -259,6 +259,7 @@ EOF
          },
          {
           name => "ls",
+          requires => [qw(Text::Glob)],
           pairs =>
           [
            "ls ANDK/patches" => "-SADAHIRO-",
@@ -272,6 +273,14 @@ EOF
     my $cnt;
     for my $session (@SESSIONS) {
         $cnt++;
+        if (my $requires = $session->{requires}) {
+            for my $req (@$requires) {
+                unless ($CPAN::META->has_inst($req)) {
+                    $session->{name} .= " [skipping because $req missing]";
+                    $session->{pairs} = [];
+                }
+            }
+        }
         for (my $i = 0; $i<$#{$session->{pairs}}; $i+=2) {
             $cnt++;
         }
@@ -291,7 +300,7 @@ for my $si (0..$#SESSIONS) {
     my $session = $SESSIONS[$si];
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
-    ok($session->{name}, "opening new session $session->{name}");
+    ok($session->{name}, "opening new session '$session->{name}'");
     open SYSTEM, "| $system 2> $devnull" or die "Could not open '| $system': $!";
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
