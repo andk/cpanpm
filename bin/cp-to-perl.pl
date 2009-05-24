@@ -5,8 +5,10 @@
 Script to copy those files that live also in the core into a perl
 source tree.
 
-I use it such that I first make a branch of bleedperl:
+I use it such that I first make a branch of bleadperl:
 
+    git checkout blead
+    git pull
     git checkout -b orange93
 
 Then I use cp-to-perl to clobber the branch:
@@ -19,7 +21,7 @@ Test and then do in git over there
     # make manisort
     git add ...
     git commit -m 'Update CPAN.pm to xxx' -a
-    git format-patch origin   # how can I set the author here, it shouldn't be sand...
+    git format-patch origin
 
 =head2 TODO
 
