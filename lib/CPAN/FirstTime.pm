@@ -18,7 +18,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use File::Spec ();
-use vars qw($VERSION $urllist);
+use vars qw($VERSION);
 $VERSION = "5.53";
 
 =head1 NAME
@@ -1407,7 +1407,7 @@ Shall I use the local database in $mby?};
             $overwrite_local = 1;
         }
     }
-    local $urllist = $CPAN::Config->{urllist};
+    my @previous_urls = @{ $CPAN::Config->{urllist} || [] };
     my $better_mby;
  LOOP: while () { # multiple errors possible
         if ($use_mby
@@ -1437,7 +1437,7 @@ Shall I use the local database in $mby?};
             if ($better_mby) {
                 $mby = $better_mby;
             }
-        } elsif (not @{$urllist||[]}
+        } elsif (not @previous_urls
                  and (not defined $CPAN::Config->{connect_to_internet_ok}
                       or not $CPAN::Config->{connect_to_internet_ok})) {
             $CPAN::Frontend->myprint(qq{CPAN needs access to at least one CPAN mirror.
@@ -1448,25 +1448,31 @@ a valid CPAN URL now.\n\n});
             my @default = map {"file://$_"} grep {-e} "/home/ftp/pub/CPAN", "/home/ftp/pub/PAUSE";
             my $ans = prompt("Please enter the URL of your CPAN mirror",shift @default);
             if ($ans) {
-                push @$urllist, $ans;
+                push @previous_urls, $ans;
                 next LOOP;
             }
         } else {
             last LOOP;
         }
     }
+    my @final_urls;
     if ($use_mby){
-        read_mirrored_by($mby);
+        @final_urls = read_mirrored_by($mby, @previous_urls);
     } else {
         if (not defined $CPAN::Config->{connect_to_internet_ok}
             or not $CPAN::Config->{connect_to_internet_ok}) {
             $CPAN::Frontend->myprint("Configuration does not allow connecting to the internet.\n");
         }
         $CPAN::Frontend->myprint("Current set of CPAN URLs:\n");
-        map { $CPAN::Frontend->myprint("  $_\n") } @$urllist;
+        map { $CPAN::Frontend->myprint("  $_\n") } @previous_urls;
     }
-    bring_your_own();
-    $CPAN::Config->{urllist} = $urllist;
+    push @final_urls, bring_your_own(@previous_urls);
+
+    @final_urls = CPAN::_uniq(@final_urls);
+    # xxx delete or comment these out when you're happy that it works
+    $CPAN::Frontend->myprint("\nNew urllist:\n");
+    for ( @final_urls ) { $CPAN::Frontend->myprint("  $_\n") };
+    $CPAN::Config->{urllist} = \@final_urls;
 }
 
 sub find_exe {
@@ -1563,7 +1569,8 @@ sub display_some {
 }
 
 sub read_mirrored_by {
-    my $local = shift or return;
+    my ($local, @previous_urls) = @_;
+    return @previous_urls unless $local;
     my(%all,$url,$expected_size,$default,$ans,$host,
        $dst,$country,$continent,@location);
     my $fh = FileHandle->new;
@@ -1584,8 +1591,6 @@ sub read_mirrored_by {
         $dst=$continent=$country="";
     }
     $fh->close;
-    $CPAN::Config->{urllist} ||= [];
-    my @previous_urls = @{$CPAN::Config->{urllist}};
 
     $CPAN::Frontend->myprint($prompts{urls_intro});
 
@@ -1646,16 +1651,16 @@ put them on one line, separated by blanks, hyphenated ranges allowed
 
     @urls = picklist (\@urls, $prompt, $default);
     foreach (@urls) { s/ \(.*\)//; }
-    push @$urllist, @urls;
+    return @urls;
 }
 
 sub bring_your_own {
-    my %seen = map (($_ => 1), @$urllist);
+    my (@previous_urls) = @_;
     my($ans,@urls);
     my $eacnt = 0; # empty answers
     do {
         my $prompt = "Enter another URL or RETURN to quit:";
-        unless (%seen) {
+        unless (@previous_urls) {
             $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
 
 Please enter your CPAN site:};
@@ -1666,7 +1671,7 @@ Please enter your CPAN site:};
             $ans =~ s|/?\z|/|; # has to end with one slash
             $ans = "file:$ans" unless $ans =~ /:/; # without a scheme is a file:
             if ($ans =~ /^\w+:\/./) {
-                push @urls, $ans unless $seen{$ans}++;
+                push @urls, $ans;
             } else {
                 $CPAN::Frontend->
                     myprint(sprintf(qq{"%s" doesn\'t look like an URL at first sight.
@@ -1687,13 +1692,9 @@ later if you\'re sure it\'s right.\n},
                 return;
             }
         }
-    } while $ans || !%seen;
+    } while $ans || !@previous_urls;
 
-    @$urllist = CPAN::_uniq(@$urllist, @urls);
-    $CPAN::Config->{urllist} = $urllist;
-    # xxx delete or comment these out when you're happy that it works
-    $CPAN::Frontend->myprint("New set of picks:\n");
-    for ( @$urllist ) { $CPAN::Frontend->myprint("  $_\n") };
+    return @urls;
 }
 
 

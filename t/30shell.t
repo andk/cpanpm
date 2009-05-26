@@ -448,7 +448,7 @@ __END__
 #E:another URL.+?(\])
 ########
 #P:
-#E:(?s:New set.+?commit.+?(!).+?\])
+#E:(?s:New urllist.+?commit.+?(!).+?\])
 ########
 #P:o conf init urllist
 #E:MIRR.+?(\])
@@ -466,7 +466,7 @@ __END__
 #E:(\])
 ########
 #P:
-#E:(?s:New set.+?commit.+?(!).+?\])
+#E:(?s:New urllist.+?commit.+?(!).+?\])
 ########
 #P:o conf urllist
 #E:linuxforum
@@ -480,14 +480,14 @@ __END__
 #P:o conf urllist splice 1 3
 ########
 #P:o conf urllist
-#E:mirrors.+\n.+linuxforum
+#E:programming.+\n.+linuxforum
 ########
 #P:o conf urllist push PUSH
 ########
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT(.+\n)+.+mirrors(.+\n)+.+linuxforum.+\n.+PUSH
+#E:UNSHIFT(.+\n)+.+programming(.+\n)+.+linuxforum.+\n.+PUSH
 ########
 #P:o conf urllist ONE TWO
 ########
