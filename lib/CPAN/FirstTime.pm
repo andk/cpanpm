@@ -771,6 +771,7 @@ sub init {
         } else {
             $fastread = 1;
             $CPAN::Config->{urllist} ||= [];
+            $CPAN::Config->{connect_to_internet_ok} ||= 1;
 
             local $^W = 0;
             # prototype should match that of &MakeMaker::prompt
