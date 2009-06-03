@@ -1,6 +1,8 @@
 
 	* sets $Archive::Tar::CHOWN=0 (RT#46384 reported by John Lightsey)
-	
+	* fix CPAN Testers reports summary for new website YAML format
+	  (RT#46652)
+
 2009-05-24  Andreas J. Koenig  <andk@cpan.org>
 
 	* this is release 1.94
