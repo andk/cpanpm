@@ -1,4 +1,4 @@
-
+        * friendlier CPAN shell startup message (RT#46869 by ADAMK)
 	* sets $Archive::Tar::CHOWN=0 (RT#46384 reported by John Lightsey)
 	* fix CPAN Testers reports summary for new website YAML format
 	  (RT#46652)

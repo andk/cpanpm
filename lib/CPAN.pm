@@ -313,7 +313,7 @@ sub shell {
         $CPAN::Frontend->myprint(
                                  sprintf qq{
 cpan shell -- CPAN exploration and modules installation (v%s)
-ReadLine support %s
+Enter 'h' for help.
 
 },
                                  $CPAN::VERSION,
