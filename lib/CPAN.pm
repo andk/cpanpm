@@ -1012,6 +1012,10 @@ sub has_usable {
                                                 die $_;
                                             }
                                        }
+                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.50)) {
+                                            my $atv = Archive::Tar->VERSION;
+                                            $CPAN::Frontend->mywarn("You have Archive::Tar $atv, but 1.50 or later is recommended. Please upgrade.\n");
+                                       }
                                   },
                                  ],
                'File::Temp' => [

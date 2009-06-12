@@ -313,7 +313,9 @@ Can't continue cutting file '$file'.
         }
         # Make sure AT does not use uid/gid/permissions in the archive
         # This leaves it to the user's umask instead
-        local $Archive::Tar::CHMOD = 0;
+        local $Archive::Tar::CHMOD = 1;
+        local $Archive::Tar::SAME_PERMISSIONS = 0;
+        # Make sure AT leaves current user as owner
         local $Archive::Tar::CHOWN = 0;
         my $tar = Archive::Tar->new($file,1);
         my $af; # archive file
