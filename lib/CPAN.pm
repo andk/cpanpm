@@ -313,7 +313,7 @@ sub shell {
         $CPAN::Frontend->myprint(
                                  sprintf qq{
 cpan shell -- CPAN exploration and modules installation (v%s)
-ReadLine support %s
+Enter 'h' for help.
 
 },
                                  $CPAN::VERSION,
@@ -1011,6 +1011,10 @@ sub has_usable {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
                                             }
+                                       }
+                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.50)) {
+                                            my $atv = Archive::Tar->VERSION;
+                                            $CPAN::Frontend->mywarn("You have Archive::Tar $atv, but 1.50 or later is recommended. Please upgrade.\n");
                                        }
                                   },
                                  ],

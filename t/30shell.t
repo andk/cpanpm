@@ -433,7 +433,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__
 ########
-#E:(?s:ReadLine support (enabled|suppressed|available).*?cpan[^>]*>)
+#E:(?s:Enter 'h' for help.*?cpan[^>]*>)
 ########
 #P:o conf init urllist
 #E:(MIRR).+?y\]
