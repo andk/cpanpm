@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.94';
+$CPAN::VERSION = '1.9401';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -1006,7 +1006,7 @@ sub has_usable {
                                   ],
                'Archive::Tar' => [
                                   sub {require Archive::Tar;
-                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.00)) {
+                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.50)) {
                                             for ("Will not use Archive::Tar, need 1.00\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
