@@ -1528,7 +1528,10 @@ sub picklist {
         $CPAN::Frontend->myprint("\n");
 
         # a blank line continues...
-        next SELECTION unless @nums;
+        unless (@nums){
+            $CPAN::Frontend->mysleep(0.1); # prevent hot spinning process on the next bug
+            next SELECTION;
+        }
         last;
     }
     for (@nums) { $_-- }
