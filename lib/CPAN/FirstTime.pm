@@ -1702,7 +1702,7 @@ later if you\'re sure it\'s right.\n},
     @$urllist = CPAN::_uniq(@$urllist, @urls);
     $CPAN::Config->{urllist} = $urllist;
     # xxx delete or comment these out when you're happy that it works
-    $CPAN::Frontend->myprint("New set of picks:\n");
+    $CPAN::Frontend->myprint("New urllist\n");
     for ( @$urllist ) { $CPAN::Frontend->myprint("  $_\n") };
 }
 
