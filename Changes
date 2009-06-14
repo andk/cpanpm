@@ -1,8 +1,19 @@
+2009-06-14  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_01, a candidate for the next stable release
+
 	* friendlier CPAN shell startup message (RT#46869 by ADAMK)
+	
 	* sets $Archive::Tar::CHOWN=0 and $Archive::Tar::SAME_PERMISSIONS=0;
-          (RT#46384 reported by John Lightsey)
+  (RT#46384 reported by John Lightsey)
+	
 	* fix CPAN Testers reports summary for new website YAML format
-	  (RT#46652)
+	(RT#46652; David Golden)
+
+	* continuing to improve error handling on unplugged operation (tracked
+	in RT#44549)
+
+	* fix RT#46378: what happens when using 'o conf urllist' for reordering 
 
 2009-05-24  Andreas J. Koenig  <andk@cpan.org>
 
