@@ -1656,7 +1656,11 @@ put them on one line, separated by blanks, hyphenated ranges allowed
 
     @urls = picklist (\@urls, $prompt, $default);
     foreach (@urls) { s/ \(.*\)//; }
-    push @$urllist, @urls;
+    if (@urls) {
+        $urllist = \@urls;
+    } else {
+        push @$urllist, @urls;
+    }
 }
 
 sub bring_your_own {
