@@ -374,10 +374,11 @@ Enter 'h' for help.
                 @line = _redirect(@line);
                 CPAN::Shell->$command(@line)
               };
+            my $command_error = $@;
             _unredirect;
             my $reported_error;
-            if ($@) {
-                my $err = $@;
+            if ($command_error) {
+                my $err = $command_error;
                 if (ref $err and $err->isa('CPAN::Exception::blocked_urllist')) {
                     $CPAN::Frontend->mywarn("Client not fully configured, please proceed with configuring.$err");
                     $reported_error = ref $err;
