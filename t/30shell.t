@@ -477,17 +477,15 @@ __END__
 ########
 #P:o conf urllist pop
 ########
-#P:o conf urllist splice 1 3
-########
 #P:o conf urllist
-#E:programming.+\n.+linuxforum
+#E:programming(?s:.+)linuxforum
 ########
 #P:o conf urllist push PUSH
 ########
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT(.+\n)+.+programming(.+\n)+.+linuxforum.+\n.+PUSH
+#E:UNSHIFT(?s:.+)programming(?s:.+)linuxforum(?s:.+)PUSH
 ########
 #P:o conf urllist ONE TWO
 ########
