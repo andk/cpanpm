@@ -267,6 +267,26 @@ EOF
            "ls ANDK/pa*/*SADA*" => "-SADAHIRO-",
            "ls ANDK/patches/*SADA*" => "-SADAHIRO-",
           ]
+         },
+         {
+          name => "urllist empty",
+          pairs =>
+          [
+           "o conf connect_to_internet_ok 0" => ".",
+           "o conf urllist pop" => ".",
+           "o conf urllist" => "urllist\\s+Type.+all configuration items",
+           "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
+           # first fix the endless loop on the next line, then fix the
+           # case where urllist is empty and a single item is being
+           # added to the empty list and the bug would be if this
+           # single item does not end up in urllist as I have been
+           # seeing today
+
+
+           #"o conf init urllist" => "enter the URL",
+           #"foo:bar" => "Enter another URL",
+           #"" => "New urllist\\s+foo:bar",
+          ]
          }
         );
 
