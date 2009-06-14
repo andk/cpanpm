@@ -75,6 +75,7 @@ BEGIN {
 }
 
 use strict;
+use File::Copy qw(cp);
 use File::Spec;
 use Test::More;
 
@@ -128,6 +129,7 @@ EOF
         (
          {
           name => "the historically first",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=4*6+1" => "= 25;",
@@ -156,6 +158,7 @@ EOF
          },
          {
           name => "the historically second",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
@@ -174,6 +177,7 @@ EOF
          },
          {
           name => "after we turned off yaml with dontload",
+          perl_mm_use_default => 1,
           pairs =>
           [
            # Note: I had C<cannot.parse.*> also here (for FTPstats) but
@@ -189,6 +193,7 @@ EOF
          },
          {
           name => "focussing test circdepe",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=4*6+1" => "= 25;",
@@ -204,6 +209,7 @@ EOF
          },
          {
           name => "focussing test unsatprereq",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=4*6+1" => "= 25;",
@@ -219,6 +225,7 @@ EOF
          },
          {
           name => "halt_on_failure",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=4*6+1" => "= 25;",
@@ -235,6 +242,7 @@ EOF
          },
          {
           name => "optional_features",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=6*6+9" => "= 45;",
@@ -250,6 +258,7 @@ EOF
          },
          {
           name => "configure_requires",
+          perl_mm_use_default => 1,
           pairs =>
           [
            "test CPAN::Test::Dummy::Perl5::Make::ConfReq" => "test.*-- OK",
@@ -259,6 +268,7 @@ EOF
          },
          {
           name => "ls",
+          perl_mm_use_default => 1,
           requires => [qw(Text::Glob)],
           pairs =>
           [
@@ -270,22 +280,14 @@ EOF
          },
          {
           name => "urllist empty",
+          perl_mm_use_default => 0,
           pairs =>
           [
            "o conf connect_to_internet_ok 0" => ".",
            "o conf urllist pop" => ".",
            "o conf urllist" => "urllist\\s+Type.+all configuration items",
            "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
-           # first fix the endless loop on the next line, then fix the
-           # case where urllist is empty and a single item is being
-           # added to the empty list and the bug would be if this
-           # single item does not end up in urllist as I have been
-           # seeing today
-
-
-           #"o conf init urllist" => "enter the URL",
-           #"foo:bar" => "Enter another URL",
-           #"" => "New urllist\\s+foo:bar",
+           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks|urllist):\\s+foo:bar",
           ]
          }
         );
@@ -312,7 +314,6 @@ EOF
     print "# cnt[$cnt]prompt_re[$prompt_re]\n";
 }
 is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
-$ENV{PERL_MM_USE_DEFAULT} = 1;
 our $VERBOSE = $ENV{VERBOSE} || 0;
 my $devnull = File::Spec->devnull;
 
@@ -321,10 +322,17 @@ for my $si (0..$#SESSIONS) {
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
     ok($session->{name}, "opening new session '$session->{name}'");
+    delete $ENV{PERL_MM_USE_DEFAULT};
+    $ENV{PERL_MM_USE_DEFAULT} = 1 if $session->{perl_mm_use_default};
+    if ($session->{gets_mirrored_by}) {
+        cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
+            or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
+    } else {
+        unlink _f"t/dot-cpan/sources/MIRRORED.BY";
+    }
     open SYSTEM, "| $system 2> $devnull" or die "Could not open '| $system': $!";
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
-        my($expect) = $session->{pairs}[2*$i+1];
         print SYSTEM $command, "\n";
     }
     close SYSTEM or mydiag "error while running '$system' on '$session->{name}'";
