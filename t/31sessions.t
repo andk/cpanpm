@@ -287,7 +287,7 @@ EOF
            "o conf urllist pop" => ".",
            "o conf urllist" => "urllist\\s+Type.+all configuration items",
            "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
-           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks|urllist):\\s+foo:bar",
+           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks:|urllist)\\s+foo:bar",
           ]
          }
         );
