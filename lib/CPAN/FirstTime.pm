@@ -1515,7 +1515,9 @@ sub picklist {
         }
         my $i = scalar @$items;
         unrangify(\@nums);
-        if (grep (/\D/ || $_ < 1 || $_ > $i, @nums)) {
+        if (0 == @nums) {
+            return;
+        } elsif (grep (/\D/ || $_ < 1 || $_ > $i, @nums)) {
             $CPAN::Frontend->mywarn("invalid items entered, try again\n");
             if ("@nums" =~ /\D/) {
                 $CPAN::Frontend->mywarn("(we are expecting only numbers between 1 and $i)\n");
@@ -1605,13 +1607,15 @@ sub read_mirrored_by {
     if (@previous_urls) {
         push @$offer_cont, "(edit previous picks)";
         $default = @$offer_cont;
+    } else {
+        push @$offer_cont, "(none of the above)";
     }
     @cont = picklist($offer_cont,
                      "Select your continent (or several nearby continents)",
                      $default,
                      ! @previous_urls,
                      $no_previous_warn);
-
+    return unless @cont;
 
     foreach $cont (@cont) {
         my @c = sort keys %{$all{$cont}};
