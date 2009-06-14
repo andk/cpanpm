@@ -27,6 +27,7 @@ sub prepare_dot_cpan {
 
 sub cleanup_dot_cpan {
     unlink _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS";
+    unlink _f"t/dot-cpan/sources/MIRRORED.BY";
     unlink _f"t/dot-cpan/prefs/FTPstats.yml";
     unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
     unlink _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
