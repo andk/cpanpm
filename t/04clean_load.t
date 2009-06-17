@@ -11,7 +11,7 @@ use Test::More;
 plan(tests => scalar @modules);
 foreach my $file (@modules) {
     #diag $file;
-    system("$^X -c $file >our 2>err");
+    system("$^X -c $file >out 2>err");
     my $fail;
     if (open ERR, '<err') {
         my $stderr = join('', <ERR>);
@@ -29,4 +29,9 @@ sub list_modules {
     return if $_ !~ /\.pm$/;
     push @modules, $File::Find::name;
     return;
+}
+
+END {
+  unlink 'err';
+  unlink 'out';
 }
