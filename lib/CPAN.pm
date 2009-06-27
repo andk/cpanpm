@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.94_01';
+$CPAN::VERSION = '1.9402';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -2116,7 +2116,7 @@ C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 still considered beta quality)
 
 Distributions on CPAN usually behave according to what we call the
-CPAN mantra. Or since the event of Module::Build, we should talk about
+CPAN mantra. Or since the advent of Module::Build we should talk about
 two mantras:
 
     perl Makefile.PL     perl Build.PL

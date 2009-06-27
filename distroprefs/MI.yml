@@ -274,6 +274,7 @@ match:
     |MRAMBERG/Task-Catalyst-\d
     |MSIMERSON/Mail-Toaster-\d
     |MSTROUT/Catalyst-Controller-BindLex-\d
+    |MSTROUT/Catalyst-Model-DBIC-Schema-\d
     |MSTROUT/Catalyst-Plugin-Authentication-Store-DBIC-\d
     |MSTROUT/DBIx-Class-Cursor-Cached-\d
     |MSTROUT/DBIx-Class-\d

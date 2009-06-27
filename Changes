@@ -1,3 +1,12 @@
+2009-06-27  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.9402, nearly identical to 1.94_01 with these additions:
+
+	* protect build_dir_reuse to not process irrelevant yaml files;
+	addressing a bug report by Asif Iqbal on cpan-discuss mailing list
+
+	* doc fix by Dan Dascalescu
+
 2009-06-14  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_01, a candidate for the next stable release
