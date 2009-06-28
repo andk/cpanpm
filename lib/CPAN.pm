@@ -983,6 +983,11 @@ sub has_usable {
     return unless $has_inst;
     my $usable;
     $usable = {
+
+               #
+               # these subroutines die if they believe the installed version is unusable;
+               #
+
                LWP => [ # we frequently had "Can't locate object
                         # method "new" via package "LWP::UserAgent" at
                         # (eval 69) line 2006
@@ -1007,15 +1012,14 @@ sub has_usable {
                                   ],
                'Archive::Tar' => [
                                   sub {require Archive::Tar;
-                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.50)) {
-                                            for ("Will not use Archive::Tar, need 1.00\n") {
+                                       my $demand = "1.50";
+                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, $demand)) {
+                                            my $atv = Archive::Tar->VERSION;
+                                            for ("You have Archive::Tar $atv, but $demand or later is recommended. Please upgrade.\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
                                             }
-                                       }
-                                       unless (CPAN::Version->vge(Archive::Tar::->VERSION, 1.50)) {
-                                            my $atv = Archive::Tar->VERSION;
-                                            $CPAN::Frontend->mywarn("You have Archive::Tar $atv, but 1.50 or later is recommended. Please upgrade.\n");
+                                            
                                        }
                                   },
                                  ],
