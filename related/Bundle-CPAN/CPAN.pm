@@ -18,45 +18,37 @@ Bundle::CPAN - Bundle to optimize the behaviour of CPAN.pm
 
 =head1 CONTENTS
 
+ExtUtils::MakeMaker -- bundles sane ExtUtils::Install
+
 Test::Harness -- critical prereq because must be >=2.62
 
 ExtUtils::CBuilder -- some of the things below depend on it without declaring (as of 2006-10)
 
-ExtUtils::MakeMaker
-
-Module::Build
-
-File::Spec -- prereq
-
-File::Temp -- prepreq
-
-Scalar::Util -- prereq
+File::Temp -- prereq
 
 Test::More -- prereq
 
 Data::Dumper
 
+Scalar::Util -- undeclared prereq to IO::Compress::Base
+
+IO::Compress::Base -- 2009-07-02, new master IO::Compress::* package,
+
+Compress::Zlib -- needed by Archive::Tar
+
+IO::Zlib -- needed by Archive::{Tar,Zip}
+
+Archive::Tar -- needed by Module::Build
+
+Module::Build -- needed by File::Spec
+
+File::Spec -- prereq 
+
 Digest::SHA
 
 File::HomeDir
 
-Compress::Raw::Bzip2 -- needed by Compress::Zlib or IO::Compress, not sure
-
-Compress::Raw::Zlib -- needed by Compress::Zlib
-
-IO::Compress::Base -- needed by Compress::Zlib
-
-IO::Uncompress::Gunzip -- really IO::Compress::Zlib -- needed by Compress::Zlib
-
-Compress::Zlib
-
-IO::Zlib -- needed by Archive::{Tar,Zip}
-
-Archive::Tar
-
 Archive::Zip
-
-Net::Cmd -- not sure if we need this for Net::FTP
 
 Net::FTP
 
