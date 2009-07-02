@@ -3,15 +3,20 @@
 use strict;
 print "1..1\n";
 
+my $skip;
 if (0) {
 } elsif (!-f 'SIGNATURE') {
-  print "ok 1 # skip No signature file\n";
+  $skip = "No signature file";
 } elsif (!-s 'SIGNATURE') {
-  print "ok 1 # skip Empty signature file\n";
+  $skip = "Empty signature file";
 } elsif (!eval { require Module::Signature; 1 }) {
-  print "ok 1 # skip - no Module::Signature found [INC = @INC]\n";
+  $skip = "no Module::Signature found [INC = @INC]";
 } elsif (!eval { require Socket; Socket::inet_aton('pgp.mit.edu') }) {
-  print "ok 1 # skip - Cannot connect to the keyserver";
+  $skip = "Cannot connect to the keyserver";
+}
+if ($skip) {
+  warn "skipping: $skip\n";
+  print "ok 1 # skip - $skip\n";
 } else {
   (Module::Signature::verify() == Module::Signature::SIGNATURE_OK())
       or print "not ";
