@@ -96,9 +96,13 @@ WriteMakefile(
                                        ),
                        COMPRESS => 'gzip -9f'
                       },
-              EXTRA_META => <<EMETA,
-repository: "https://pause.perl.org:5460/svn/cpanpm/trunk/related/Bundle-CPAN"
-EMETA
+              ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
+               (META_ADD => {
+                             resources => {
+                                 repository => "git://github.com/andk/cpanpm.git",
+                             },
+                             keywords => ['CPAN','module','module installation'],
+                            }) : ()),
 );
 
 if ($version_diff){
