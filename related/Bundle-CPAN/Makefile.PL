@@ -21,26 +21,9 @@ if ($HAVE_FILE_SPEC) {
     shift @ARGV;
     my $st;
     $ENV{LANG} = "C";
-    open $st, "svn st -u|" or die;
-    my $dirty = 0;
-    while (<$st>) {
-      next if /^\?/;
-      next if /^Head revision:/;
-      next if /^Status against revision:/;
-      print;
-      $dirty++;
-    }
-    close $st;
+    my $dirty = ! system "git status -a > /dev/null";
     die "Not everything checked in or out?" if $dirty;
 
-    # $re parses the upper boundary of the output of svnversion
-    my $re;
-    eval q{ $re = qr/(?:\d+:)?(\d+)[SM]*$/; };
-    die $@ if $@; # old perl
-    my($sv_dot)  = `svnversion .`             =~ $re;
-    my($sv_from) = `svn st -u -v $version_from`  =~ /^.{8}\s*(?:\d+)\s*(\d+)/;
-    die "Could not determine sv_from or sv_dot"
-        unless $sv_from > 0 && $sv_dot > 0;
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
       unshift @INC, ".";
@@ -65,21 +48,6 @@ $Bundle::CPAN::VERSION <=> $have_version,
       }
 };
       die $@ if $@;
-    } else {
-      if ($sv_dot > $sv_from) {
-        warn "setting some property to make a checkin of this file possible";
-        0==system(svn => "propset",
-                  "cpan:release",
-                  "after_$sv_dot",
-                  $version_from) or die;
-        warn "checking in to get the version up to the bleading edge";
-        0==system(svn => "ci",
-                  "-m",
-                  "Property set for release after_$sv_dot",
-                  $version_from) or die;
-        # will have to die after Makefile is rewritten:
-        $version_diff = 1;
-      }
     }
     exit unless $version_diff;
   }
