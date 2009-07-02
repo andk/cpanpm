@@ -43,6 +43,9 @@
 	             A/AN/ANDK/CPAN-1.9304.tar.gz has a higher version number
 	             (1.9304)
 
+	Something like
+	perl-reversion -current 0.0.4 -set 0.0.5 lib/**/*.pm
+
 2009-04-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Acme::Badexample ($VERSION = do { $_++ while 1; return $_ };) breaks
