@@ -1,7 +1,7 @@
 package Bundle::CPAN;
 use strict;
 use vars qw($VERSION);
-$VERSION = '1.857'; # use 3 digits to minimize confusion with the
+$VERSION = '1.858'; # use 3 digits to minimize confusion with the
                     # other CPAN.pm
 
 1;
@@ -40,6 +40,8 @@ Digest::SHA
 
 File::HomeDir
 
+Compress::Raw::Bzip2 -- needed by Compress::Zlib or IO::Compress, not sure
+
 Compress::Raw::Zlib -- needed by Compress::Zlib
 
 IO::Compress::Base -- needed by Compress::Zlib
@@ -63,6 +65,8 @@ Term::ReadKey
 Term::ReadLine::Perl -- could be replaced by "readline" some time after 1.88
 
 YAML -- user may have a preference for YAML::Syck but as a bundle we don't know
+
+Parse::CPAN::Meta -- 2009-07-02: 5.6.2 currently has no YAML
 
 Text::Glob
 
