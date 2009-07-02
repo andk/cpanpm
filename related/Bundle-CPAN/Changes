@@ -1,0 +1,12 @@
+2009-07-02  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.858
+
+	* add bzip2 and parse::meta::yaml (suggested by David Golden)
+
+	Local Variables:
+	mode: change-log
+	change-log-default-name: "Changes"
+	tab-width: 2
+	left-margin: 2
+	End:

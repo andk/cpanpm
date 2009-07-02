@@ -91,8 +91,13 @@ WriteMakefile(
               VERSION_FROM  => 'CPAN.pm',
               @sign,
               dist => {
-                       DIST_DEFAULT => (
-                                        'Makefile setversion all tardist'
+                       DIST_DEFAULT => join(" ",
+                                            "verify-changes-date",
+                                            "verify-changes-version",
+                                            "Makefile",
+                                            "setversion",
+                                            "all",
+                                            "tardist",
                                        ),
                        COMPRESS => 'gzip -9f'
                       },
@@ -140,9 +145,12 @@ diff::
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 
-release ::
-	/usr/bin/perl -I../../release-lib -S release $(DISTVNAME).tar$(SUFFIX)
-	rm -rf $(DISTVNAME)
+verify-changes-date:
+	@$(PERL) -ne 'BEGIN{my@t=(localtime)[5,4,3];$$t[0]+=1900;$$t[1]++;$$t=sprintf"%04d-%02d-%02d",@t}' \
+		-e '$$ok++,exit if /^$$t\s/; END{die "Alert: did not find <$$t> in Changes file" unless $$ok}' Changes
+
+verify-changes-version:
+	@$(PERL) -ne '$$ok++,exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file" unless $$ok}' Changes
 
 }
 }
