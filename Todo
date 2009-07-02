@@ -6,6 +6,13 @@
 
 	http://www.nntp.perl.org/group/perl.cpan.testers/2009/06/msg4356518.html
 
+	Nope, I can remove Expect and still pass all tests.
+
+	He is stuck in the test "urllist empty" and then gets the fail for the
+	test "reordering urllist". Skipping the "urllist empty" test when no
+	Expect is installed will most probably "fix" this. I mean, we're fixing
+	a test, not code.
+
 2009-07-01  Andreas J. Koenig  <andk@cpan.org>
 
 	* amend version numbers and let Andy Armstrongs script care for them

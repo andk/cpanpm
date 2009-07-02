@@ -281,6 +281,7 @@ EOF
          {
           name => "urllist empty",
           perl_mm_use_default => 0,
+          requires => [qw(Expect)],
           pairs =>
           [
            "o conf connect_to_internet_ok 0" => ".",
