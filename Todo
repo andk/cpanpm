@@ -1,3 +1,41 @@
+2009-07-02  Andreas J. Koenig  <andk@cpan.org>
+
+	* Curtis Jewell reports failing tests that I overlooked on cpantesters.
+	Seems to be that Expect-less systems fail some tests around push/pop on
+	urllist???
+
+	http://www.nntp.perl.org/group/perl.cpan.testers/2009/06/msg4356518.html
+
+2009-07-01  Andreas J. Koenig  <andk@cpan.org>
+
+	* amend version numbers and let Andy Armstrongs script care for them
+	automatically. 1.9402 was delivered with 3 decreasing version numbers.
+	How come?
+
+	Status: Decreasing version number
+	=================================
+	
+	     module: CPAN::Distribution
+	    version: 1.93
+	    in file: CPAN-1.9402/lib/CPAN/Distribution.pm
+	     status: Not indexed because CPAN-1.9304/lib/CPAN.pm in
+	             A/AN/ANDK/CPAN-1.9304.tar.gz has a higher version number
+	             (1.9304)
+	
+	     module: CPAN::Index
+	    version: 1.93
+	    in file: CPAN-1.9402/lib/CPAN/Index.pm
+	     status: Not indexed because CPAN-1.9304/lib/CPAN.pm in
+	             A/AN/ANDK/CPAN-1.9304.tar.gz has a higher version number
+	             (1.9304)
+	
+	     module: CPAN::LWP::UserAgent
+	    version: 1.00
+	    in file: CPAN-1.9402/lib/CPAN/LWP/UserAgent.pm
+	     status: Not indexed because CPAN-1.9304/lib/CPAN.pm in
+	             A/AN/ANDK/CPAN-1.9304.tar.gz has a higher version number
+	             (1.9304)
+
 2009-04-19  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* Acme::Badexample ($VERSION = do { $_++ while 1; return $_ };) breaks
