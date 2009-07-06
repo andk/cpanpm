@@ -241,13 +241,18 @@ EOF
           ],
          },
          {
+          # loads distroprefs for the C:T:D:P:M:Features module where
+          # we demand the feature "rice". this feature then requires
+          # CPAN::Test::Dummy::Perl5::Build which we do not have so we
+          # build it first and then C:T:D:P:M:Features can also be
+          # built
           name => "optional_features",
           perl_mm_use_default => 1,
           pairs =>
           [
            "dump \$::x=6*6+9" => "= 45;",
            "o conf build_dir" => "build_dir",
-           "o conf prefs_dir $cwd/t/dot-cpan/prefs" => "prefs",
+           "o conf prefs_dir '$cwd/t/dot-cpan/prefs'" => "(?m:prefs_dir.+prefs)",
            "test CPAN::Test::Dummy::Perl5::Make::Features" =>
            "(?sx:Builds.rice.+
           ANDK/CPAN-Test-Dummy-Perl5-Build-\\d.+
