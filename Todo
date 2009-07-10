@@ -1,3 +1,15 @@
+2009-07-08  Andreas J. Koenig  <andk@cpan.org>
+
+	* from cpantesters-discuss
+
+	05:04:06 <@ST47> Hey
+	05:04:21 <@ST47> Anyone ever had a problem with the FTPstats.yml getting 
+  corrupted?
+	05:04:49 <@ST47> It keeps getting messed up and throwing a syntax error through 
+  YAML::Syck and throwing my smokers into a useless state
+	06:28:45 <@ST47> Probably ran out of disk space mid-write...
+	07:53:33 <@rafl> yeah, i've seen that.
+
 2009-07-02  Andreas J. Koenig  <andk@cpan.org>
 
 	* Curtis Jewell reports failing tests that I overlooked on cpantesters.
@@ -12,6 +24,8 @@
 	test "reordering urllist". Skipping the "urllist empty" test when no
 	Expect is installed will most probably "fix" this. I mean, we're fixing
 	a test, not code.
+
+	Nope. Was a whitespace bug, FIXED.
 
 2009-07-01  Andreas J. Koenig  <andk@cpan.org>
 
