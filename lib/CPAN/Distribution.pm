@@ -2810,16 +2810,21 @@ sub prereq_pm {
                 #  Regexp modified by A.Speer to remember actual version of file
                 #  PREREQ_PM hash key wants, then add to
                 while ( $p =~ m/(?:\s)([\w\:]+)=>(q\[.*?\]|undef),?/g ) {
-                    # In case a prereq is mentioned twice, complain.
-                    if ( defined $req->{$1} ) {
-                        warn "Warning: PREREQ_PM mentions $1 more than once, ".
-                            "last mention wins";
-                    }
                     my($m,$n) = ($1,$2);
+                    # When a prereq is mentioned twice: let the bigger
+                    # win; usual culprit is that they declared
+                    # build_requires separately from requires; see
+                    # rt.cpan.org #47774
+                    my($prevn);
+                    if ( defined $req->{$m} ) {
+                        $prevn = $req->{$m};
+                    }
                     if ($n =~ /^q\[(.*?)\]$/) {
                         $n = $1;
                     }
-                    $req->{$m} = $n;
+                    if (!$prevn || CPAN::Version->vlt($prevn, $n)){
+                        $req->{$m} = $n;
+                    }
                 }
                 last;
             }
