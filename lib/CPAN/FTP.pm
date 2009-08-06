@@ -118,7 +118,7 @@ sub _add_to_statistics {
                                ));
         }
         # Win32 cannot rename a file to an existing filename
-        unlink($sfile) if ($^O eq 'MSWin32');
+        unlink($sfile) if ($^O eq 'MSWin32' or $^O eq 'os2');
 	_copy_stat($sfile, "$sfile.$$") if -e $sfile;
         rename "$sfile.$$", $sfile
             or $CPAN::Frontend->mydie("Could not rename '$sfile.$$' to '$sfile': $!\n");

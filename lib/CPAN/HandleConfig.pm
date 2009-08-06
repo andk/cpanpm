@@ -529,11 +529,10 @@ sub load {
     CPAN->debug("doit[$doit]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
     return unless $doit || @miss;
     return if $loading;
-    $loading++;
+    local $loading = 1;
 
     require CPAN::FirstTime;
-    my($configpm,$fh,$redo);
-    $redo ||= "";
+    my($redo,$configpm,$fh);
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
         $configpm = $INC{"CPAN/Config.pm"};
         $redo++;
@@ -569,13 +568,13 @@ sub load {
     if ($redo && !$doit) {
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
-some missing parameters...
+some missing parameters...  Will write to
+ <<$configpm>>
 
 END
         $args{args} = \@miss;
     }
     my $initialized = CPAN::FirstTime::init($configpm, %args);
-    $loading--;
     return $initialized;
 }
 

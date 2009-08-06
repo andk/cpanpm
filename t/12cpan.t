@@ -16,6 +16,7 @@ sub _f ($) {
     File::Spec->catfile(split /\//, shift);
 }
 use File::Copy qw(cp);
+unlink _f"t/CPAN/MyConfig.pm";		# cp non-overwriting on OS/2
 cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
     or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
 unshift @INC, "t";
