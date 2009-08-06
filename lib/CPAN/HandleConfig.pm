@@ -529,7 +529,7 @@ sub load {
     CPAN->debug("doit[$doit]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
     return unless $doit || @miss;
     return if $loading;
-    local $loading = 1;
+    local $loading = ($loading||0) + 1;
 
     require CPAN::FirstTime;
     my($redo,$configpm,$fh);
