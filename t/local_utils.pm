@@ -19,6 +19,8 @@ sub prepare_dot_cpan {
     unlink _f"t/dot-cpan/.lock";
     mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
     mkpath _d"t/dot-cpan/Bundle";
+    # cp is not-overwriting on OS/2
+    unlink _f"t/CPAN/MyConfig.pm", _f"t/dot-cpan/sources/MIRRORED.BY";
     cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
         or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
     cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
