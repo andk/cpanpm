@@ -569,7 +569,7 @@ sub install {
     if ($ro && $ro->{stats} && $ro->{stats} eq "a") {
         $CPAN::Frontend->mywarn(qq{
 \n\n\n     ***WARNING***
-     The module $self->{ID} has no active maintainer.\n\n\n
+     The module $self->{ID} has no active maintainer (CPAN support level flag 'abandoned').\n\n\n
 });
         $CPAN::Frontend->mysleep(5);
     }
