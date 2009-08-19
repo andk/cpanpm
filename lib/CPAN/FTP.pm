@@ -536,12 +536,7 @@ sub hostdleasy { #called from hostdlxxx
             my $l;
             if ($CPAN::META->has_inst('URI::URL')) {
                 my $u =  URI::URL->new($url);
-                $l = $u->path;
-                if ($^O eq 'MSWin32') {
-                    # URI on Win32 has a bug (RT#48761)
-                    # file:///C:/foo/bar -> /C:/foo/bar
-                    $l =~ s{^/([a-zA-Z]:/)}{$1};
-                }
+                $l = $u->dir;
             } else { # works only on Unix, is poorly constructed, but
                 # hopefully better than nothing.
                 # RFC 1738 says fileurl BNF is

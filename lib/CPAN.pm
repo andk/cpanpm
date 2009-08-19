@@ -994,7 +994,14 @@ sub has_usable {
                        sub {require LWP},
                        sub {require LWP::UserAgent},
                        sub {require HTTP::Request},
-                       sub {require URI::URL},
+                       sub {require URI::URL;
+                            unless (CPAN::Version->vge(URI::URL::->VERSION,0.08)) {
+                                for ("Will not use URI::URL, need 0.08\n") {
+                                    $CPAN::Frontend->mywarn($_);
+                                    die $_;
+                                }
+                            }
+                       },
                       ],
                'Net::FTP' => [
                             sub {require Net::FTP},
