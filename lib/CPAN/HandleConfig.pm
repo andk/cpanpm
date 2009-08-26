@@ -503,12 +503,7 @@ sub home () {
     my $old_v = $CPAN::Config->{load_module_verbosity};
     $CPAN::Config->{load_module_verbosity} = q[none];
     if ($CPAN::META->has_usable("File::HomeDir")) {
-        $home = File::HomeDir->can('my_dot_config')
-            ? File::HomeDir->my_dot_config
-                : File::HomeDir->my_data;
-        unless (defined $home) {
-            $home = File::HomeDir->my_home
-        }
+        $home = File::HomeDir->my_home;
     }
     unless (defined $home) {
         $home = $ENV{HOME};
