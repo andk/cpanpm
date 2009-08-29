@@ -3,4 +3,4 @@ comment: "See http://rt.cpan.org/Ticket/Display.html?id=47060"
 match:
   distribution: "^ADIE/Test-Class-0.3(1|2_1).tar.gz"
 patches:
-  - "/tmp/Test-Class-0.31-KBAUCOM-01.patch.gz"
+  - "ANDK/patches/Test-Class-0.31-KBAUCOM-01.patch.gz"
