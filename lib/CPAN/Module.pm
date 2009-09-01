@@ -9,6 +9,11 @@ use vars qw(
 );
 $VERSION = "5.5";
 
+BEGIN {
+    # alarm() is not implemented in perl 5.6.x and earlier under Windows
+    *ALARM_IMPLEMENTED = sub () { $] >= 5.007 || $^O !~ /MSWin/ };
+}
+
 # Accessors
 #-> sub CPAN::Module::userid
 sub userid {
@@ -652,7 +657,7 @@ sub available_version {
 #-> sub CPAN::Module::parse_version ;
 sub parse_version {
     my($self,$parsefile) = @_;
-    alarm(10);
+    alarm(10) if ALARM_IMPLEMENTED;
     my $have = eval {
         local $SIG{ALRM} = sub { die "alarm\n" };
         MM->parse_version($parsefile);
@@ -660,7 +665,7 @@ sub parse_version {
     if ($@) {
         $CPAN::Frontend->mywarn("Error while parsing version number in file '$parsefile'\n");
     }
-    alarm(0);
+    alarm(0) if ALARM_IMPLEMENTED;
     my $leastsanity = eval { defined $have && length $have; };
     $have = "undef" unless $leastsanity;
     $have =~ s/^ //; # since the %vd hack these two lines here are needed
