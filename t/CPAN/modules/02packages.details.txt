@@ -19,7 +19,7 @@ CPAN::Test::Dummy::Perl5::Make::CircDepeTwo   1.00 A/AN/ANDK/CPAN-Test-Dummy-Per
 CPAN::Test::Dummy::Perl5::Make::ConfReq       1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-ConfReq-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Expect        1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Failearly     1.02 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz
-CPAN::Test::Dummy::Perl5::Make::Features      1.05 A/AN/ANDK/cpantestdummies/CPAN-Test-Dummy-Perl5-Make-Features-1.05.tgz
+CPAN::Test::Dummy::Perl5::Make::Features      1.06 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.06.tar.gz
 CPAN::Test::Dummy::Perl5::Make::UnsatPrereq   1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Zip           1.03 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
 Fcntl                                         1.03 G/GS/GSAR/perl-5.6.1.tar.gz
