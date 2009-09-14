@@ -5,7 +5,7 @@ use CPAN::Distroprefs;
 use CPAN::InfoObj;
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "1.93";
+$VERSION = "1.94";
 
 # Accessors
 sub cpan_comment {
