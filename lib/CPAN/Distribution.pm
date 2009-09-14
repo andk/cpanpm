@@ -663,6 +663,9 @@ sub satisfy_configure_requires {
             $CPAN::Frontend->mywarn($@);
             return $self->goodbye("[depend] -- NOT OK");
         }
+        else {
+          return $self->goodbye("[configure_requires] -- NOT OK");
+        }
     }
     die "never reached";
 }
