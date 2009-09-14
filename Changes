@@ -1,3 +1,28 @@
+2009-09-14  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_51
+
+	* bugfix: wrong diagnostic message on old Archive::Tar
+
+	* bugfix: additional quoting in test t/31sessions.t for systems where
+	cwd contains whitespace
+
+	* address rt #47774: allow duplicate mention of modules in Makefile
+	prelude
+
+	* portability fixes to OS2 (Ilya Zakharevich)
+
+	* fix cpan -r (David Golden, ported back from 5.10.1)
+
+	* work around win32 URI::file volume bug (David Golden)
+
+	* portability fix: use dir() instead of path() on file URLs (David Golden)
+
+	* Removed my_dot_config as it doesn't exist in File::HomeDir any
+	more (Tomas Doran)
+
+	* bugfix: prerequisites declared with the string "==" now supported
+
 2009-06-27  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.9402, nearly identical to 1.94_01 with these additions:
@@ -12,17 +37,17 @@
 	* release 1.94_01, a candidate for the next stable release
 
 	* friendlier CPAN shell startup message (RT#46869 by ADAMK)
-	
+
 	* sets $Archive::Tar::CHOWN=0 and $Archive::Tar::SAME_PERMISSIONS=0;
   (RT#46384 reported by John Lightsey)
-	
+
 	* fix CPAN Testers reports summary for new website YAML format
 	(RT#46652; David Golden)
 
 	* continuing to improve error handling on unplugged operation (tracked
 	in RT#44549)
 
-	* fix RT#46378: what happens when using 'o conf urllist' for reordering 
+	* fix RT#46378: what happens when using 'o conf urllist' for reordering
 
 2009-05-24  Andreas J. Koenig  <andk@cpan.org>
 
@@ -244,7 +269,7 @@
 	removed. Because PERL5OPT "-M" switches are resolved after command line
 	"-M" switches, CPAN::PERL5INC sets @INC too late for any PL code or
 	tests that load prerequisite modules with "-M" on a command line.
-  
+
 	* fixed some localization bugs seen on 5.6.2 (David Golden)
 
 	* added 'perl5lib_verbosity' config option to silence 'added to
@@ -364,10 +389,10 @@
 	* address #32823: fix a (rare) case where the make_args were appended to
 	the commandline on the call to ./Build (reported by David Golden and
 	Michael Schwern)
-	
+
 	* applied a patch from Randy Kobes to update index before a query when
 	CPAN::SQLite is active
-	
+
 	* added 'halt_on_failure' config option to halt queue processing after
 	the first failure rather than processing all remaining items
 	(patch by David Golden; requested by Andrew Hampe and Matisse Enzer)
@@ -390,7 +415,7 @@
 	Wheeler)
 
 	* Now with 277 distroprefs files
-	
+
 2008-02-04  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.92_56: unstable release both bugfixes and new features
@@ -537,7 +562,7 @@
 	* let containsmods cache negative results: Slaven Rezic found out that
 	distros without modules can be a performance killer without this measure
 
-	* now with 242 distroprefs files	
+	* now with 242 distroprefs files
 
 2007-09-28  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
@@ -545,9 +570,9 @@
 
 	* release 1.9202: stable release
 
-	* bugfix: don't try to make/Build when Makefile/Build.PL fails to 
+	* bugfix: don't try to make/Build when Makefile/Build.PL fails to
 	generate a Makefile/Build (David Golden)
-	
+
 	* now with 217 distroprefs files
 
 2007-09-27  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
@@ -570,7 +595,7 @@
 
 	* fixed bug that kept "?" from being interpreted as "help" command
 	(David Golden)
-    
+
 2007-09-15  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_55: stable release candidate II
@@ -593,17 +618,17 @@
 
 	* after a fail introduce a hint for using the reports command (suggested
 	by Gabor Szabo)
-	
+
 	* Enable code deserialisation for YAML. (Florian Ragwitz)
 
 	* Add CPAN::DeferedCode and make CPAN.pm use it. (Florian Ragwitz)
 
 	* Add a new config option: yaml_load_code. (Florian Ragwitz)
-	
+
 	* turn a few myprint() into mywarn()
-	
+
 	* make inhibit_startup_message a normal config variable like all others
-	
+
 	* New manpage CPAN::API::HOWTO by David Cantrell
 
 	* now setting PERL5_CPAN_IS_EXECUTING as requested by Adam Kennedy
@@ -613,12 +638,12 @@
 	Gabor Szabo)
 
 	* address #28946: skip locking on platforms not supporting flock
-	
+
 	* address #28915: CPAN::HandleConfig::home did not cope with getting
 	undef from File::HomeDir-> my_data()
-	
+
 	* support 'help' with argument
-	
+
 	* integrate all FirstTime questions into POD
 
 	* FirstTime::my_prompt_loop now has support for *_intro prompts
@@ -645,7 +670,7 @@
 	if CPAN::Reporter version is at least 0.99 (David Golden)
 
 	* new config option tar_verbosity
-	
+
 	* added base_id() method to CPAN::Distribution; documented both
 	base_id() and pretty_id() (David Golden)
 
@@ -696,7 +721,7 @@
 	https://rt.cpan.org/Ticket/Display.html?id=28206
 
 	* now with 175 distroprefs files covering over 200 distributions
-	
+
 2007-07-07  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.91_51:
@@ -805,7 +830,7 @@
 
 	* support for pseudo "dot" distros (local directories having nothing to
 	do with CPAN)
-	
+
 	* reworked force pragma and new fforce pragma
 
 	* new configuration variables auto_commit, build_requires_install_policy
@@ -1544,7 +1569,7 @@
 	not warn them
 
 	* patch by Matisse Enzer to support authenticating proxies
-	
+
 	* new command "upgrade" installs newer versions of all installed modules
 	if there are any (feature requested by Martin Sluka)
 
@@ -1585,7 +1610,7 @@
 2006-02-23  Andreas J. Koenig  <andreas.koenig.gmwojprw@franz.ak.mind.de>
 
 	* release 1.86_53
-	
+
 	* t/30shell emits two test headers (fixes #17816; Adam Kennedy)
 
 	* make Tarzip work better on uncompressed files; fixes test failure of
@@ -1619,7 +1644,7 @@
 	Kennedy)
 
 	* t/12cpan.t now behaves on 5.004 and 5.005
-	
+
 	* t/30shell.t now can be run without Expect; needs to be enabled with
 	environment variable CPAN_RUN_SHELL_TEST in this case
 
@@ -1873,7 +1898,7 @@
 
 	* bugfix: if we have no YAML and no Makefile, we could not determine
 	prereqs. Now fixed by using Module::Build.
-	
+
 	* bugfix: b command on unpublished bundles was broken due to wrong
 	handling of missing RO elements.
 
@@ -2012,7 +2037,7 @@
 
 	* bugfix: major speedup on all commands that need expansion of
 	regular expressions to module names
-	
+
 	* prettier r command output: the 4th column of the 'r' command
 	drops the redundant X/XX/ prefix
 
