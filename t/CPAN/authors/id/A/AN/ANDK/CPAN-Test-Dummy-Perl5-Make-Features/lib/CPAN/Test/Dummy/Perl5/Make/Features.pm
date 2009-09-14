@@ -2,7 +2,7 @@ use strict;
 
 package CPAN::Test::Dummy::Perl5::Make::Features;
 
-$CPAN::Test::Dummy::Perl5::Make::Features::VERSION = '1.05';
+$CPAN::Test::Dummy::Perl5::Make::Features::VERSION = '1.06';
 
 1;
 
@@ -21,7 +21,7 @@ CPAN::Test::Dummy::Perl5::Make::Features - CPAN Test Dummy
 =head1 DESCRIPTION
 
 This module is part of CPAN.pm with the single purpose of testing
-CPAN.pm itself.
+CPAN.pm itself. See the README for further information.
 
 Contains no functionality, and will never do so.
 
@@ -31,7 +31,7 @@ Andreas Koenig, based PITA by Adam Kennedy.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2008 Andreas Koenig
+Copyright 2008,2009 Andreas Koenig
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
