@@ -4,8 +4,11 @@
 
 	* bugfix: wrong diagnostic message on old Archive::Tar
 
-	* bugfix: additional quoting in test t/31sessions.t for systems where
-	cwd contains whitespace
+	* test fix: additional quoting in test t/31sessions.t for systems where
+	cwd contains whitespace (bug reported by Curtis Jewell)
+
+	* portability fix: By-pass alarm() calls if we're running under perl
+	5.6.x && $OS is Windows. (burak)
 
 	* address rt #47774: allow duplicate mention of modules in Makefile
 	prelude
@@ -18,10 +21,11 @@
 
 	* portability fix: use dir() instead of path() on file URLs (David Golden)
 
-	* Removed my_dot_config as it doesn't exist in File::HomeDir any
-	more (Tomas Doran)
+	* portability fix: removed my_dot_config as it doesn't exist in
+	File::HomeDir any more (Tomas Doran)
 
-	* bugfix: prerequisites declared with the string "==" now supported
+	* bugfix: prerequisites declared with the string "==" now supported (bug
+	reported by Elliot Shank)
 
 2009-06-27  Andreas J. Koenig  <andk@cpan.org>
 
