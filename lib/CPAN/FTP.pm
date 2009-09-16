@@ -190,6 +190,13 @@ sub _get_urllist {
         $CPAN::Config->{urllist} = [];
     }
     my @urllist = grep { defined $_ and length $_ } @{$CPAN::Config->{urllist}};
+    unless ( @urllist ) {
+        $CPAN::Frontend->mywarn(
+            "No CPAN mirrors configured.  Falling back to defaults.  Please" .
+            "configure mirrors with 'o conf urllist' from the CPAN shell."
+        );
+        @urllist = @CPAN::Defaultsites
+    }
     for my $u (@urllist) {
         CPAN->debug("u[$u]") if $CPAN::DEBUG;
         if (UNIVERSAL::can($u,"text")) {
@@ -830,11 +837,10 @@ No success, the file that lynx has downloaded is an empty file.
             return if $CPAN::Signal;
         } # download/transfer programs (DLPRG)
     } # host
-    require Carp;
     if ($some_dl_success) {
-        Carp::cluck("Warning: doesn't seem we had substantial success downloading '$aslocal'. Don't know how to proceed.");
+        $CPAN::Frontend->mywarn("Warning: doesn't seem we had substantial success downloading '$aslocal'. Don't know how to proceed.");
     } else {
-        Carp::cluck("Warning: no success downloading '$aslocal'. Giving up on it.");
+        $CPAN::Frontend->mywarn("Warning: no success downloading '$aslocal'. Giving up on it.");
     }
     $CPAN::Frontend->mysleep(5);
     return;
