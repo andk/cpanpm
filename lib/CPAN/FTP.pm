@@ -7,7 +7,8 @@ use Fcntl qw(:flock);
 use File::Basename qw(dirname);
 use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
-use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
+use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod
+            $did_empty_urllist_warning);
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 use vars qw(
@@ -192,9 +193,9 @@ sub _get_urllist {
     my @urllist = grep { defined $_ and length $_ } @{$CPAN::Config->{urllist}};
     unless ( @urllist ) {
         $CPAN::Frontend->mywarn(
-            "No CPAN mirrors configured.  Falling back to defaults.  Please" .
-            "configure mirrors with 'o conf urllist' from the CPAN shell."
-        );
+            "\nNo CPAN mirrors configured.  Falling back to defaults.  Please\n" .
+            "configure mirrors with 'o conf urllist' from the CPAN shell.\n\n"
+        ) unless $did_empty_urllist_warning++;
         @urllist = @CPAN::Defaultsites
     }
     for my $u (@urllist) {

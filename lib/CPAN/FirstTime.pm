@@ -18,7 +18,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use File::Spec ();
-use vars qw($VERSION $urllist);
+use vars qw($VERSION $urllist $silent);
 $VERSION = "5.53";
 
 =head1 NAME
@@ -576,7 +576,6 @@ use vars qw( %prompts );
     my @prompts = (
 
 manual_config => qq[
-
 CPAN is the world-wide archive of perl resources. It consists of about
 300 sites that all replicate the same contents around the globe. Many
 countries have at least one CPAN site already. The resources found on
@@ -589,6 +588,7 @@ If you prefer to enter a dialog instead, you can answer 'no' to this
 question and I'll let you configure in small steps one thing after the
 other. (Note: you can revisit this dialog anytime later by typing 'o
 conf init' at the cpan prompt.)
+
 ],
 
 config_intro => qq{
@@ -643,12 +643,15 @@ session.
 },
 
 urls_intro => qq{
+Now we need to know where your favorite CPAN mirror sites are located. 
+You should select more than one (just in case the first isn't available).
+You can select from the global list of CPAN mirror sites or you can
+enter CPAN mirror URLs by hand.  A local CPAN mirror can be listed using
+a 'file:///' URL.  For example: 'file:///path/to/cpan/'
 
-Now we need to know where your favorite CPAN sites are located. Push
-a few sites onto the array (just in case the first on the array won\'t
-work). If you are mirroring CPAN to your local workstation, specify a
-file: URL.
+},
 
+urls_picker_intro => qq{
 First, pick a nearby continent and country by typing in the number(s)
 in front of the item(s) you want to select. You can pick several of
 each, separated by spaces. Then, you will be presented with a list of
@@ -770,6 +773,7 @@ sub init {
             $fastread = 0;
         } else {
             $fastread = 1;
+            $silent = 1;
             $CPAN::Config->{urllist} ||= [];
             $CPAN::Config->{connect_to_internet_ok} ||= 1;
 
@@ -778,31 +782,8 @@ sub init {
             my $current_second = time;
             my $current_second_count = 0;
             my $i_am_mad = 0;
-            *_real_prompt = sub {
-                my($q,$a) = @_;
-                my($ret) = defined $a ? $a : "";
-                $CPAN::Frontend->myprint(sprintf qq{%s [%s]\n\n}, $q, $ret);
-                eval { require Time::HiRes };
-                unless ($@) {
-                    if (time == $current_second) {
-                        $current_second_count++;
-                        if ($current_second_count > 20) {
-                            # I don't like more than 20 prompts per second
-                            $i_am_mad++;
-                        }
-                    } else {
-                        $current_second = time;
-                        $current_second_count = 0;
-                        $i_am_mad-- if $i_am_mad>0;
-                    }
-                    if ($i_am_mad>0) {
-                        #require Carp;
-                        #Carp::cluck("SLEEEEEEEEPIIIIIIIIIIINGGGGGGGGGGG");
-                        Time::HiRes::sleep(0.1);
-                    }
-                }
-                $ret;
-            };
+            # silent prompting -- just quietly use default
+            *_real_prompt = sub { return $_[1] };
         }
     }
 
@@ -813,7 +794,7 @@ sub init {
                        keep_source_where
                        prefs_dir
                       } =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{config_intro});
+        $CPAN::Frontend->myprint($prompts{config_intro}) unless $silent;
 
         init_cpan_home($matcher);
 
@@ -890,11 +871,14 @@ sub init {
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
         my_dflt_prompt(yaml_module => "YAML", $matcher);
+        my $old_v = $CPAN::Config->{load_module_verbosity};
+        $CPAN::Config->{load_module_verbosity} = q[none];
         unless ($CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
             $CPAN::Frontend->mywarn
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
         }
+        $CPAN::Config->{load_module_verbosity} = $old_v;
     }
 
     #
@@ -939,7 +923,7 @@ sub init {
 
     my_prompt_loop(tar_verbosity => 'v', $matcher,
                    'none|v|vv');
-    my_prompt_loop(load_module_verbosity => 'v', $matcher,
+    my_prompt_loop(load_module_verbosity => 'none', $matcher,
                    'none|v');
     my_prompt_loop(perl5lib_verbosity => 'v', $matcher,
                    'none|v');
@@ -1004,7 +988,7 @@ sub init {
     my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
     my @proxy_user_vars = qw/proxy_user proxy_pass/;
     if (!$matcher or "@proxy_vars @proxy_user_vars" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{proxy_intro});
+        $CPAN::Frontend->myprint($prompts{proxy_intro}) unless $silent;
 
         for (@proxy_vars) {
             $prompts{$_} = "Your $_?";
@@ -1016,21 +1000,21 @@ sub init {
 
             $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER || "";
 
-            $CPAN::Frontend->myprint($prompts{proxy_user});
+            $CPAN::Frontend->myprint($prompts{proxy_user}) unless $silent;
 
             if ($CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default)) {
-                $CPAN::Frontend->myprint($prompts{proxy_pass});
+                $CPAN::Frontend->myprint($prompts{proxy_pass}) unless $silent;
 
                 if ($CPAN::META->has_inst("Term::ReadKey")) {
                     Term::ReadKey::ReadMode("noecho");
                 } else {
-                    $CPAN::Frontend->myprint($prompts{password_warn});
+                    $CPAN::Frontend->myprint($prompts{password_warn}) unless $silent;
                 }
                 $CPAN::Config->{proxy_pass} = prompt_no_strip("Your proxy password?");
                 if ($CPAN::META->has_inst("Term::ReadKey")) {
                     Term::ReadKey::ReadMode("restore");
                 }
-                $CPAN::Frontend->myprint("\n\n");
+                $CPAN::Frontend->myprint("\n\n") unless $silent;
             }
         }
     }
@@ -1107,7 +1091,7 @@ sub init {
     #
 
     if (!$matcher or 'histfile histsize' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{histfile_intro});
+        $CPAN::Frontend->myprint($prompts{histfile_intro}) unless $silent;
         defined($default = $CPAN::Config->{histfile}) or
             $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
         my_dflt_prompt(histfile => $default, $matcher);
@@ -1160,12 +1144,30 @@ sub init {
             my_dflt_prompt(ftpstats_period => 14, $matcher);
         }
     } elsif ($fastread) {
-        $CPAN::Frontend->myprint("Autoconfigured everything but 'urllist'.\n".
-                                 "Please call 'o conf init urllist' to configure ".
-                                 "your CPAN server(s) now!\n\n");
-    } else {
-        conf_sites();
+        $silent = 0;
+        local *_real_prompt;
+        *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+        $CPAN::Frontend->myprint(
+            "Autoconfigured everything but 'urllist'.\n"
+        );
+
+        $CPAN::Frontend->myprint($prompts{urls_intro});
+
+        my $_conf = prompt(
+          "Would you like to pick from the CPAN mirror list?", "yes"
+        );
+        $CPAN::Frontend->myprint("\n");
+
+        if ( $_conf =~ /^y/ ) {
+          conf_sites();
+        }
+        else {
+          bring_your_own();
+        }
+        $CPAN::Config->{urllist} = $urllist;
     }
+
+    $silent = 0; # reset
 
     $CPAN::Frontend->myprint("\n\n");
     if ($matcher && !$CPAN::Config->{auto_commit}) {
@@ -1189,7 +1191,7 @@ sub _init_external_progs {
                             patch applypatch
                             /;
     if (!$matcher or "@external_progs" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{external_progs});
+        $CPAN::Frontend->myprint($prompts{external_progs}) unless $silent;
 
         my $old_warn = $^W;
         local $^W if $^O eq 'MacOS';
@@ -1230,7 +1232,7 @@ sub _init_external_progs {
             $path ||= find_exe($progcall,$PATH);
             unless ($path) { # not -e $path, because find_exe already checked that
                 local $"=";";
-                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n");
+                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n") unless $silent;
                 if ($progname eq "make") {
                     $CPAN::Frontend->mywarn("ALERT: 'make' is an essential tool for ".
                                             "building perl Modules. Please make sure you ".
@@ -1272,16 +1274,16 @@ I see you already have a  directory
     $cpan_home
 Shall we use it as the general CPAN build and cache directory?
 
-});
+}) unless $silent;
         } else {
             # no cpan-home, must prompt and get one
-            $CPAN::Frontend->myprint($prompts{cpan_home_where});
+            $CPAN::Frontend->myprint($prompts{cpan_home_where}) unless $silent;
         }
 
         my $default = $cpan_home;
         my $loop = 0;
         my($last_ans,$ans);
-        $CPAN::Frontend->myprint(" <cpan_home>\n");
+        $CPAN::Frontend->myprint(" <cpan_home>\n") unless $silent;
     PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
             print "\n";
             if (File::Spec->file_name_is_absolute($ans)) {
@@ -1330,13 +1332,13 @@ sub my_dflt_prompt {
     my ($item, $dflt, $m) = @_;
     my $default = $CPAN::Config->{$item} || $dflt;
 
-    if (!$m || $item =~ /$m/) {
+    if (!$silent && (!$m || $item =~ /$m/)) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
         }
         $CPAN::Frontend->myprint(" <$item>\n");
         $CPAN::Config->{$item} = prompt($prompts{$item}, $default);
-        print "\n";
+        $CPAN::Frontend->myprint("\n");
     } else {
         $CPAN::Config->{$item} = $default;
     }
@@ -1348,14 +1350,14 @@ sub my_yn_prompt {
     defined($default = $CPAN::Config->{$item}) or $default = $dflt;
 
     # $DB::single = 1;
-    if (!$m || $item =~ /$m/) {
+    if (!$silent && (!$m || $item =~ /$m/)) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
         }
         $CPAN::Frontend->myprint(" <$item>\n");
         my $ans = prompt($prompts{$item}, $default ? 'yes' : 'no');
         $CPAN::Config->{$item} = ($ans =~ /^[y1]/i ? 1 : 0);
-        print "\n";
+        $CPAN::Frontend->myprint("\n");
     } else {
         $CPAN::Config->{$item} = $default;
     }
@@ -1366,13 +1368,13 @@ sub my_prompt_loop {
     my $default = $CPAN::Config->{$item} || $dflt;
     my $ans;
 
-    if (!$m || $item =~ /$m/) {
+    if (!$silent && (!$m || $item =~ /$m/)) {
         $CPAN::Frontend->myprint($prompts{$item . "_intro"});
         $CPAN::Frontend->myprint(" <$item>\n");
         do { $ans = prompt($prompts{$item}, $default);
         } until $ans =~ /$ok/;
         $CPAN::Config->{$item} = $ans;
-        print "\n";
+        $CPAN::Frontend->myprint("\n");
     } else {
         $CPAN::Config->{$item} = $default;
     }
@@ -1414,6 +1416,8 @@ Shall I use the local database in $mby?};
         if ($use_mby
             or (defined $CPAN::Config->{connect_to_internet_ok}
                 and $CPAN::Config->{connect_to_internet_ok})){
+            # quiet warning for empty urllist since we have to bootstrap
+            local $CPAN::FTP::did_empty_urllist_warning = 1;
             if ($overwrite_local) {
                 $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
                 $better_mby = CPAN::FTP->localize($m,$mby,3);
@@ -1466,6 +1470,7 @@ a valid CPAN URL now.\n\n});
         $CPAN::Frontend->myprint("Current set of CPAN URLs:\n");
         map { $CPAN::Frontend->myprint("  $_\n") } @$urllist;
     }
+    $CPAN::Frontend->myprint("Now you have a chance to add any additional CPAN URLs\n");
     bring_your_own();
     $CPAN::Config->{urllist} = $urllist;
 }
@@ -1594,7 +1599,7 @@ sub read_mirrored_by {
     $CPAN::Config->{urllist} ||= [];
     my @previous_urls = @{$CPAN::Config->{urllist}};
 
-    $CPAN::Frontend->myprint($prompts{urls_intro});
+    $CPAN::Frontend->myprint($prompts{urls_picker_intro});
 
     my (@cont, $cont, %cont, @countries, @urls, %seen);
     my $no_previous_warn =
