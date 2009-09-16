@@ -1147,24 +1147,34 @@ sub init {
         $silent = 0;
         local *_real_prompt;
         *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-        $CPAN::Frontend->myprint(
-            "Autoconfigured everything but 'urllist'.\n"
-        );
-
-        $CPAN::Frontend->myprint($prompts{urls_intro});
-
-        my $_conf = prompt(
-          "Would you like to pick from the CPAN mirror list?", "yes"
-        );
-        $CPAN::Frontend->myprint("\n");
-
-        if ( $_conf =~ /^y/ ) {
-          conf_sites();
+        if ( @{ $CPAN::Config->{urllist} || [] } ) {
+            $CPAN::Frontend->myprint(
+              "Your 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
+            );
         }
         else {
-          bring_your_own();
+          $CPAN::Frontend->myprint(
+              "Autoconfigured everything but 'urllist'.\n"
+          );
+
+          $CPAN::Frontend->myprint($prompts{urls_intro});
+
+          my $_conf = prompt(
+            "Would you like to pick from the CPAN mirror list?", "yes"
+          );
+          $CPAN::Frontend->myprint("\n");
+
+          if ( $_conf =~ /^y/ ) {
+            conf_sites();
+          }
+          else {
+            bring_your_own();
+          }
+          $CPAN::Config->{urllist} = $urllist;
         }
-        $CPAN::Config->{urllist} = $urllist;
+        $CPAN::Frontend->myprint(
+            "\nAutoconfiguration complete.\n"
+        );
     }
 
     $silent = 0; # reset
