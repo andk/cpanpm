@@ -5,6 +5,7 @@ use strict;
 
 use Fcntl qw(:flock);
 use File::Basename qw(dirname);
+use File::Copy qw(copy);
 use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod
@@ -458,6 +459,14 @@ I would like to connect to one of the following sites to get '%s':
                                               "'$ret' to '$aslocal': $!");
                 $ret = $aslocal;
             }
+            elsif (-f $ret && $scheme eq 'file' ) {
+                # it's a local file, so we'll copy it to the destination
+                mkpath( dirname( $aslocal ) );
+                copy( $ret, $aslocal )
+                    or $CPAN::Frontend->mydie("Error while trying to copy ".
+                                              "'$ret' to '$aslocal': $!");
+                $ret = $aslocal;
+            }
             $Themethod = $level;
             my $now = time;
             # utime $now, $now, $aslocal; # too bad, if we do that, we
@@ -544,7 +553,7 @@ sub hostdleasy { #called from hostdlxxx
             my $l;
             if ($CPAN::META->has_inst('URI::URL')) {
                 my $u =  URI::URL->new($url);
-                $l = $u->dir;
+                $l = $u->file;
             } else { # works only on Unix, is poorly constructed, but
                 # hopefully better than nothing.
                 # RFC 1738 says fileurl BNF is
