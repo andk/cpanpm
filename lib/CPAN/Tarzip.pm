@@ -223,6 +223,7 @@ sub untar {
     $exttar = "" if $exttar =~ /^\s+$/; # user refuses to use it
     my $extgzip = $self->{UNGZIPPRG} || "";
     $extgzip = "" if $extgzip =~ /^\s+$/; # user refuses to use it
+
     if (0) { # makes changing order easier
     } elsif ($BUGHUNTING) {
         $prefer=2;
@@ -237,6 +238,17 @@ sub untar {
     } elsif ($exttar && $extgzip) {
         # no modules and not bz2
         $prefer = 1;
+        # but solaris binary tar is a problem
+        if ($^O eq 'solaris' && qx($exttar --version) !~ /gnu/i) {
+            $CPAN::Frontend->mywarn(<< 'END_WARN');
+
+WARNING: Many CPAN distributions were archived with GNU tar and some of
+them may be incompatible with Solaris tar.  We respectfully suggest you
+configure CPAN to use a GNU tar instead ("o conf init tar") or install
+a recent Archive::Tar instead;
+
+END_WARN
+        }
     } else {
         my $foundtar = $exttar ? "'$exttar'" : "nothing";
         my $foundzip = $extgzip ? "'$extgzip'" : $foundtar ? "nothing" : "also nothing";
