@@ -239,7 +239,7 @@ sub untar {
         # no modules and not bz2
         $prefer = 1;
         # but solaris binary tar is a problem
-        if ($^O eq 'solaris' && qx($exttar --version) !~ /gnu/i) {
+        if ($^O eq 'solaris' && qx($exttar --version 2>/dev/null) !~ /gnu/i) {
             $CPAN::Frontend->mywarn(<< 'END_WARN');
 
 WARNING: Many CPAN distributions were archived with GNU tar and some of
