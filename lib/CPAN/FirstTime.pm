@@ -1426,25 +1426,23 @@ Shall I use the local database in $mby?};
         if ($use_mby
             or (defined $CPAN::Config->{connect_to_internet_ok}
                 and $CPAN::Config->{connect_to_internet_ok})){
-            # quiet warning for empty urllist since we have to bootstrap
-            local $CPAN::FTP::did_empty_urllist_warning = 1;
             if ($overwrite_local) {
                 $CPAN::Frontend->myprint(qq{Trying to overwrite $mby\n});
-                $better_mby = CPAN::FTP->localize($m,$mby,3);
+                $better_mby = CPAN::FTP->localize($m,$mby,3,1);
                 $overwrite_local = 0;
                 $use_mby=1 if $mby;
             } elsif ( ! -f $mby ) {
                 $CPAN::Frontend->myprint(qq{You have no $mby\n  I'm trying to fetch one\n});
-                $better_mby = CPAN::FTP->localize($m,$mby,3);
+                $better_mby = CPAN::FTP->localize($m,$mby,3,1);
                 $use_mby=1 if $mby;
             } elsif ( -M $mby > 60 ) {
                 $CPAN::Frontend->myprint(qq{Your $mby is older than 60 days,\n  I'm trying }.
                                          qq{to fetch a new one\n});
-                $better_mby = CPAN::FTP->localize($m,$mby,3);
+                $better_mby = CPAN::FTP->localize($m,$mby,3,1);
                 $use_mby=1 if $mby;
             } elsif (-s $mby == 0) {
                 $CPAN::Frontend->myprint(qq{You have an empty $mby,\n  I'm trying to fetch a better one\n});
-                $better_mby = CPAN::FTP->localize($m,$mby,3);
+                $better_mby = CPAN::FTP->localize($m,$mby,3,1);
                 $use_mby=1 if $mby;
             } else {
                 last LOOP;

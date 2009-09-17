@@ -128,6 +128,33 @@ EOF
     @SESSIONS =
         (
          {
+          name => "urllist empty",
+          perl_mm_use_default => 0,
+          requires => [qw(Expect)],
+          pairs =>
+          [
+           "o conf connect_to_internet_ok 0" => ".",
+           "o conf urllist pop" => ".",
+           "o conf urllist" => "urllist\\s+Type.+all configuration items",
+           "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
+           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks:|urllist)\\s+foo:bar",
+          ]
+         },
+         {
+          name => "reordering urllist",
+          perl_mm_use_default => 0,
+          gets_mirrored_by => 1,
+          pairs =>
+          [
+           "o conf connect_to_internet_ok 0" => ".",
+           "o conf urllist ONE TWO THREE FOUR" => ".",
+           # we are asked if using the found urllist is ok, we say
+           # yes, then we say 8 for the previous picks, then we pick
+           # items 4 and 2 in that order
+           "o conf init urllist\ny\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
+          ]
+         },
+         {
           name => "the historically first",
           perl_mm_use_default => 1,
           pairs =>
@@ -283,33 +310,6 @@ EOF
            "ls ANDK/patches/*SADA*" => "-SADAHIRO-",
           ]
          },
-         {
-          name => "urllist empty",
-          perl_mm_use_default => 0,
-          requires => [qw(Expect)],
-          pairs =>
-          [
-           "o conf connect_to_internet_ok 0" => ".",
-           "o conf urllist pop" => ".",
-           "o conf urllist" => "urllist\\s+Type.+all configuration items",
-           "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
-           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks:|urllist)\\s+foo:bar",
-          ]
-         },
-         {
-          name => "reordering urllist",
-          perl_mm_use_default => 0,
-          gets_mirrored_by => 1,
-          pairs =>
-          [
-           "o conf connect_to_internet_ok 0" => ".",
-           "o conf urllist ONE TWO THREE FOUR" => ".",
-           # we are asked if using the found urllist is ok, we say
-           # yes, then we say 8 for the previous picks, then we pick
-           # items 4 and 2 in that order
-           "o conf init urllist\ny\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
-          ]
-         }
         );
 
     my $cnt;

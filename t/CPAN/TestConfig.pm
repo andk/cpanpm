@@ -28,6 +28,7 @@ $CPAN::Config = {
                  'inhibit_startup_message' => q[0],
                  'keep_source_where' => qq[$cwd/t/dot-cpan/sources],
                  #'lynx' => q[],
+                 'load_module_verbosity' => q[v],
                  #'make' => q[/usr/bin/make],
                  'make_arg' => q[],
                  'make_install_arg' => q[UNINST=1],

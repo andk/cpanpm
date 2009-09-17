@@ -8,8 +8,8 @@ use File::Basename qw(dirname);
 use File::Copy qw(copy);
 use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
-use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod
-            $did_empty_urllist_warning);
+use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
+            
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 use vars qw(
@@ -161,8 +161,7 @@ sub _copy_stat {
 # checked from, maybe only for young files?
 #-> sub CPAN::FTP::_recommend_url_for
 sub _recommend_url_for {
-    my($self, $file) = @_;
-    my $urllist = $self->_get_urllist;
+    my($self, $file, $urllist) = @_;
     if ($file =~ s|/CHECKSUMS(.gz)?$||) {
         my $fullstats = $self->_ftp_statistics();
         my $history = $fullstats->{history} || [];
@@ -185,20 +184,16 @@ sub _recommend_url_for {
 
 #-> sub CPAN::FTP::_get_urllist
 sub _get_urllist {
-    my($self) = @_;
+    my($self, $with_defaults) = @_;
+    CPAN->debug("with_defaults[$with_defaults]") if $CPAN::DEBUG;
+
     $CPAN::Config->{urllist} ||= [];
     unless (ref $CPAN::Config->{urllist} eq 'ARRAY') {
         $CPAN::Frontend->mywarn("Malformed urllist; ignoring.  Configuration file corrupt?\n");
         $CPAN::Config->{urllist} = [];
     }
     my @urllist = grep { defined $_ and length $_ } @{$CPAN::Config->{urllist}};
-    unless ( @urllist ) {
-        $CPAN::Frontend->mywarn(
-            "\nNo CPAN mirrors configured.  Falling back to defaults.  Please\n" .
-            "configure mirrors with 'o conf urllist' from the CPAN shell.\n\n"
-        ) unless $did_empty_urllist_warning++;
-        @urllist = @CPAN::Defaultsites
-    }
+    push @urllist, @CPAN::Defaultsites if $with_defaults;
     for my $u (@urllist) {
         CPAN->debug("u[$u]") if $CPAN::DEBUG;
         if (UNIVERSAL::can($u,"text")) {
@@ -277,9 +272,9 @@ sub ftp_get {
 
 #-> sub CPAN::FTP::localize ;
 sub localize {
-    my($self,$file,$aslocal,$force) = @_;
+    my($self,$file,$aslocal,$force,$with_defaults) = @_;
     $force ||= 0;
-    Carp::croak( "Usage: ->localize(cpan_file,as_local_file[,$force])" )
+    Carp::croak( "Usage: ->localize(cpan_file,as_local_file[,\$force])" )
         unless defined $aslocal;
     if ($CPAN::DEBUG){
         require Carp;
@@ -355,7 +350,7 @@ sub localize {
     # Try the list of urls for each single object. We keep a record
     # where we did get a file from
     my(@reordered,$last);
-    my $ccurllist = $self->_get_urllist;
+    my $ccurllist = $self->_get_urllist($with_defaults);
     $last = $#$ccurllist;
     if ($force & 2) { # local cpans probably out of date, don't reorder
         @reordered = (0..$last);
@@ -443,7 +438,7 @@ I would like to connect to one of the following sites to get '%s':
         }
         $self->debug("synth. urllist[@urllist]") if $CPAN::DEBUG;
         my $aslocal_tempfile = $aslocal . ".tmp" . $$;
-        if (my $recommend = $self->_recommend_url_for($file)) {
+        if (my $recommend = $self->_recommend_url_for($file,\@urllist)) {
             @urllist = grep { $_ ne $recommend } @urllist;
             unshift @urllist, $recommend;
         }
@@ -721,6 +716,7 @@ sub hostdlhard {
     my($aslocal_dir) = dirname($aslocal);
     mkpath($aslocal_dir);
     my $some_dl_success = 0;
+    my $any_attempt = 0;
  HOSTHARD: for $ro_url (@$host_seq) {
         $self->_set_attempt($stats,"dlhard",$ro_url);
         my $url = "$ro_url$file";
@@ -737,6 +733,9 @@ sub hostdlhard {
         }
         next HOSTHARD if $proto eq "file"; # file URLs would have had
                                            # success above. Likely a bogus URL
+
+        # making at least one attempt against a host
+        $any_attempt++;
 
         $self->debug("localizing funkyftpwise[$url]") if $CPAN::DEBUG;
 
@@ -869,6 +868,7 @@ No success, the file that lynx has downloaded is an empty file.
             return if $CPAN::Signal;
         } # download/transfer programs (DLPRG)
     } # host
+    return unless $any_attempt;
     if ($some_dl_success) {
         $CPAN::Frontend->mywarn("Warning: doesn't seem we had substantial success downloading '$aslocal'. Don't know how to proceed.");
     } else {
