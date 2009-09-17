@@ -568,24 +568,46 @@ sub hostdleasy { #called from hostdlxxx
                     if ! -f $l && $l =~ m|^/\w:|;   # e.g. /P:
             }
             $self->debug("local file[$l]") if $CPAN::DEBUG;
-            if ( -f $l && -r _) {
-                $ThesiteURL = $ro_url;
-                return $l;
-            }
+            # If request is for a compressed file and we can find the 
+            # uncompressed file also, return the path of the uncompressed file
+            # otherwise, decompress it and return the resulting path
             if ($l =~ /(.+)\.gz$/) {
                 my $ungz = $1;
                 if ( -f $ungz && -r _) {
                     $ThesiteURL = $ro_url;
                     return $ungz;
                 }
+                else {
+                    eval { CPAN::Tarzip->new($l)->gunzip($aslocal) };
+                    if ( -f $aslocal) {
+                        $ThesiteURL = $ro_url;
+                        return $aslocal;
+                    }
+                    else {
+                        $CPAN::Frontend->mywarn("Error decompressing '$l': $@\n")
+                            if $@;
+                        return;
+                    }
+                }
             }
-            # Maybe mirror has compressed it?
-            if (-f "$l.gz") {
+            # Otherwise, return the local file path if it exists
+            elsif ( -f $l && -r _) {
+                $ThesiteURL = $ro_url;
+                return $l;
+            }
+            # If we can't find it, but there is a compressed version
+            # of it, then decompress it
+            elsif (-f "$l.gz") {
                 $self->debug("found compressed $l.gz") if $CPAN::DEBUG;
                 eval { CPAN::Tarzip->new("$l.gz")->gunzip($aslocal) };
                 if ( -f $aslocal) {
                     $ThesiteURL = $ro_url;
                     return $aslocal;
+                }
+                else {
+                    $CPAN::Frontend->mywarn("Error decompressing '$l': $@\n")
+                        if $@;
+                    return;
                 }
             }
             $CPAN::Frontend->mywarn("Could not find '$l'\n");
