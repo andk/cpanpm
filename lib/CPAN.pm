@@ -3610,9 +3610,7 @@ nice about obeying that variable as well):
 How do I create a Module::Build based Build.PL derived from an
 ExtUtils::MakeMaker focused Makefile.PL?
 
-http://search.cpan.org/search?query=Module::Build::Convert
-
-http://www.refcnt.org/papers/module-build-convert
+http://search.cpan.org/dist/Module-Build-Convert/
 
 =item 15)
 
