@@ -44,7 +44,7 @@ sub _ftp_statistics {
     if ($@) {
         if (ref $@) {
             if (ref $@ eq "CPAN::Exception::yaml_not_installed") {
-                $CPAN::Frontend->myprint("Warning (usually harmless): $@");
+                $CPAN::Frontend->myprint("Warning (usually harmless): $@\n");
                 return;
             } elsif (ref $@ eq "CPAN::Exception::yaml_process_error") {
                 $CPAN::Frontend->mydie($@);
@@ -223,19 +223,19 @@ sub ftp_get {
     $class->debug(qq[Going to login("anonymous","$Config::Config{cf_email}")]);
     unless ( $ftp->login("anonymous",$Config::Config{'cf_email'}) ) {
         my $msg = $ftp->message;
-        $CPAN::Frontend->mywarn("  Couldn't login on $host: $msg");
+        $CPAN::Frontend->mywarn("  Couldn't login on $host: $msg\n");
         return;
     }
     unless ( $ftp->cwd($dir) ) {
         my $msg = $ftp->message;
-        $CPAN::Frontend->mywarn("  Couldn't cwd $dir: $msg");
+        $CPAN::Frontend->mywarn("  Couldn't cwd $dir: $msg\n");
         return;
     }
     $ftp->binary;
     $class->debug(qq[Going to ->get("$file","$target")\n]) if $CPAN::DEBUG;
     unless ( $ftp->get($file,$target) ) {
         my $msg = $ftp->message;
-        $CPAN::Frontend->mywarn("  Couldn't fetch $file from $host: $msg");
+        $CPAN::Frontend->mywarn("  Couldn't fetch $file from $host: $msg\n");
         return;
     }
     $ftp->quit; # it's ok if this fails
@@ -502,7 +502,7 @@ I would like to connect to one of the following sites to get '%s':
     if ($maybe_restore) {
         rename "$aslocal.bak$$", $aslocal;
         $CPAN::Frontend->myprint("Trying to get away with old file:\n" .
-                                 $self->ls($aslocal));
+                                 $self->ls($aslocal) . "\n");
         return $aslocal;
     }
     return;
@@ -609,9 +609,7 @@ sub hostdleasy { #called from hostdlxxx
         }
         $self->debug("it was not a file URL") if $CPAN::DEBUG;
         if ($CPAN::META->has_usable('LWP')) {
-            $CPAN::Frontend->myprint("Fetching with LWP:
-  $url
-");
+            $CPAN::Frontend->myprint("Fetching with LWP:\n$url\n");
             unless ($Ua) {
                 CPAN::LWP::UserAgent->config;
                 eval { $Ua = CPAN::LWP::UserAgent->new; };
@@ -629,9 +627,7 @@ sub hostdleasy { #called from hostdlxxx
                 return $aslocal;
             } elsif ($url !~ /\.gz(?!\n)\Z/) {
                 my $gzurl = "$url.gz";
-                $CPAN::Frontend->myprint("Fetching with LWP:
-  $gzurl
-");
+                $CPAN::Frontend->myprint("Fetching with LWP:\n$gzurl\n");
                 $res = $Ua->mirror($gzurl, "$aslocal.gz");
                 if ($res->is_success) {
                     if (eval {CPAN::Tarzip->new("$aslocal.gz")->gunzip($aslocal)}) {
@@ -659,9 +655,7 @@ sub hostdleasy { #called from hostdlxxx
             my($host,$dir,$getfile) = ($1,$2,$3);
             if ($CPAN::META->has_usable('Net::FTP')) {
                 $dir =~ s|/+|/|g;
-                $CPAN::Frontend->myprint("Fetching with Net::FTP:
-  $url
-");
+                $CPAN::Frontend->myprint("Fetching with Net::FTP:\n$url\n");
                 $self->debug("getfile[$getfile]dir[$dir]host[$host]" .
                              "aslocal[$aslocal]") if $CPAN::DEBUG;
                 if (CPAN::FTP->ftp_get($host,$dir,$getfile,$aslocal)) {
@@ -670,9 +664,7 @@ sub hostdleasy { #called from hostdlxxx
                 }
                 if ($aslocal !~ /\.gz(?!\n)\Z/) {
                     my $gz = "$aslocal.gz";
-                    $CPAN::Frontend->myprint("Fetching with Net::FTP
-  $url.gz
-");
+                    $CPAN::Frontend->myprint("Fetching with Net::FTP\n$url.gz\n");
                     if (CPAN::FTP->ftp_get($host,
                                            $dir,
                                            "$getfile.gz",
@@ -870,9 +862,9 @@ No success, the file that lynx has downloaded is an empty file.
     } # host
     return unless $any_attempt;
     if ($some_dl_success) {
-        $CPAN::Frontend->mywarn("Warning: doesn't seem we had substantial success downloading '$aslocal'. Don't know how to proceed.");
+        $CPAN::Frontend->mywarn("Warning: doesn't seem we had substantial success downloading '$aslocal'. Don't know how to proceed.\n");
     } else {
-        $CPAN::Frontend->mywarn("Warning: no success downloading '$aslocal'. Giving up on it.");
+        $CPAN::Frontend->mywarn("Warning: no success downloading '$aslocal'. Giving up on it.\n");
     }
     return;
 }
