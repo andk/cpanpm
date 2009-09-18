@@ -690,8 +690,13 @@ sub choose_MM_or_MB {
     if (-f File::Spec->catfile($self->{build_dir},"Build.PL")) {
         if ($mpl_exists) { # they *can* choose
             if ($CPAN::META->has_inst("Module::Build")) {
-                $prefer_installer = CPAN::HandleConfig->prefs_lookup($self,
-                                                                     q{prefer_installer});
+                $prefer_installer = CPAN::HandleConfig->prefs_lookup(
+                  $self, q{prefer_installer}
+                );
+                # M::B <= 0.35 left a DATA handle open that 
+                # causes problems upgrading M::B on Windows
+                close *Module::Build::Version::DATA
+                  if fileno *Module::Build::Version::DATA;
             }
         } else {
             $prefer_installer = "mb";
