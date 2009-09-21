@@ -1473,7 +1473,16 @@ file name (recognized by embedded slashes), it is processed. If it is
 a module, CPAN determines the distribution file in which this module
 is included and processes that, following any dependencies named in
 the module's META.yml or Makefile.PL (this behavior is controlled by
-the configuration parameter C<prerequisites_policy>.)
+the configuration parameter C<prerequisites_policy>). If an argument
+is enclosed in slashes it is treated as a regular expression it is
+expanded and if the result is a single object (distribution, bundle or
+module), this object is processed.
+
+Example:
+
+    install Dummy::Perl                   # installs the module
+    install AUXXX/Dummy-Perl-3.14.tar.gz  # installs that distribution
+    install /Dummy-Perl-3.14/             # same if the regexp is unambiguous
 
 C<get> downloads a distribution file and untars or unzips it, C<make>
 builds it, C<test> runs the test suite, and C<install> installs it.

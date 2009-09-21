@@ -141,6 +141,14 @@ EOF
           ]
          },
          {
+          name => "unambiguous regexps",
+          pairs =>
+          [
+           "d    /CPAN-Test-Dummy-Perl5-Make-1/" => "Distribution id = A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1",
+           "test /CPAN-Test-Dummy-Perl5-Make-1/" => "test -- OK",
+           "test /CPAN-Test-Dummy-Perl5/" => "Sorry, test with a regular",
+          ]},
+         {
           name => "reordering urllist",
           perl_mm_use_default => 0,
           gets_mirrored_by => 1,

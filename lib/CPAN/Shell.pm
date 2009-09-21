@@ -1626,10 +1626,22 @@ sub rematein {
             if (substr($s,-1,1) eq ".") {
                 $obj = CPAN::Shell->expandany($s);
             } else {
-                $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
-                                        "not supported.\nRejecting argument '$s'\n");
-                $CPAN::Frontend->mysleep(2);
-                next;
+                my @obj;
+            CLASS: for my $class (qw(Distribution Bundle Module)) {
+                    if (@obj = $self->expand($class,$s)) {
+                        last CLASS;
+                    }
+                }
+                if (@obj) {
+                    if (1==@obj) {
+                        $obj = $obj[0];
+                    } else {
+                        $CPAN::Frontend->mywarn("Sorry, $meth with a regular expression is ".
+                                                "only supported when unambiguous.\nRejecting argument '$s'\n");
+                        $CPAN::Frontend->mysleep(2);
+                        next STHING;
+                    }
+                }
             }
         } elsif ($meth eq "ls") {
             $self->globls($s,\@pragma);
