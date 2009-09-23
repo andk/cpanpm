@@ -540,6 +540,16 @@ memory consumption of CPAN.pm considerably.
 
 Use CPAN::SQLite if available? (yes/no)?
 
+=item version_timeout
+
+This timeout prevents CPAN from hanging when trying to parse a
+pathologically coded $VERSION from a module.
+
+The default is 15 seconds.  If you set this value to 0, no timeout
+will occur, but this is not recommended.
+
+Timeout for parsing module versions?
+
 =item yaml_load_code
 
 Both YAML.pm and YAML::Syck are capable of deserialising code. As this
@@ -975,6 +985,7 @@ sub init {
     #
 
     my_dflt_prompt(inactivity_timeout => 0, $matcher);
+    my_dflt_prompt(version_timeout => 15, $matcher);
 
     #
     #== halt_on_failure

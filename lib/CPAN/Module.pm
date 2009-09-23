@@ -657,7 +657,12 @@ sub available_version {
 #-> sub CPAN::Module::parse_version ;
 sub parse_version {
     my($self,$parsefile) = @_;
-    alarm(10) if ALARM_IMPLEMENTED;
+    if ALARM_IMPLEMENTED {
+        my $timeout = (exists($CPAN::Config{'version_timeout'}))
+                            ? $CPAN::Config{'version_timeout'}
+                            : 15;
+        alarm($timeout);
+    }
     my $have = eval {
         local $SIG{ALRM} = sub { die "alarm\n" };
         MM->parse_version($parsefile);

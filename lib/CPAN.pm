@@ -1618,7 +1618,8 @@ pressing C<^C> twice.
 
 CPAN.pm ignores SIGPIPE. If the user sets C<inactivity_timeout>, a
 SIGALRM is used during the run of the C<perl Makefile.PL> or C<perl
-Build.PL> subprocess.
+Build.PL> subprocess. A SIGALRM is also used during module version
+parsing, and is controlled by C<version_timeout>.
 
 =back
 
@@ -1994,6 +1995,8 @@ currently defined:
   urllist            arrayref to nearby CPAN sites (or equivalent locations)
   use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
   username           your username if you CPAN server wants one
+  version_timeout    stops version parsing after this many seconds.
+                     Default is 15 secs. Set to 0 to disable.
   wait_list          arrayref to a wait server to try (See CPAN::WAIT)
   wget               path to external prg
   yaml_load_code     enable YAML code deserialisation via CPAN::DeferredCode
