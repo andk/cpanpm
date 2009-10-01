@@ -9,7 +9,7 @@ use File::Copy qw(copy);
 use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
-            
+
 @CPAN::FTP::ISA = qw(CPAN::Debug);
 
 use vars qw(
