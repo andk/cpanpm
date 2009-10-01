@@ -47,10 +47,11 @@ my $MAP;
 {
   no warnings 'qw';
   $MAP = {
-          "" => ["lib/CPAN/" => [qw(
+          "" => ["cpan/CPAN/lib/CPAN/" => [qw(
                                      PAUSE*.pub
+                                     SIGNATURE
                                    )]],
-          "lib/" => ["lib/"  => [qw(
+          "lib/" => ["cpan/CPAN/lib/"  => [qw(
                                     lib/CPAN.pm
                                     lib/CPAN/API/HOWTO.pod
                                     lib/CPAN/Author.pm
@@ -84,10 +85,10 @@ my $MAP;
                                     lib/CPAN/URL.pm
                                     lib/CPAN/Version.pm
                                    )]],
-          "scripts/" => ["lib/CPAN/bin/" => [qw(
+          "scripts/" => ["cpan/CPAN/scripts/" => [qw(
                                                 scripts/cpan
                                                )]],
-          "t/" => ["lib/CPAN/t/" => [qw(
+          "t/" => ["cpan/CPAN/t/" => [qw(
                                         t/{01,02,03,10,11}*.t
                                        )]], # loadme, mirroredby, nox, vcmp, version
          };
