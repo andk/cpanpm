@@ -874,7 +874,6 @@ No success, the file that lynx has downloaded is an empty file.
     } else {
         $CPAN::Frontend->mywarn("Warning: no success downloading '$aslocal'. Giving up on it.");
     }
-    $CPAN::Frontend->mysleep(5);
     return;
 }
 
