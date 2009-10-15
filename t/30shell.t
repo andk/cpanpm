@@ -173,6 +173,7 @@ plan tests => (
                + 1                     # run_..._cmd feedback
                + 1                     # spawn/open
                + 1                     # 1 count keys for 'o conf init variable'
+               + 2                     # t/dot-cpan/.../ANDK dir exists and is empty
                # + scalar @modules
               );
 
@@ -425,10 +426,15 @@ if ($RUN_EXPECT) {
 
 read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
-
-#END {
-    local_utils::cleanup_dot_cpan();
-#}
+{
+    my $dh;
+    my $dir = _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
+    my $ret = opendir $dh, $dir;
+    ok($ret, "directory $dir exists");
+    my @dirent = grep { -f _f"$dir/$_" } readdir $dh;
+    ok(0==@dirent, "directory $dir contains no files");
+}
+local_utils::cleanup_dot_cpan();
 
 # note: E=expect; P=program(=print); T=timeout; R=requires(=relies_on); N=Notes(internal); C=Comment(visible during testing)
 __END__
