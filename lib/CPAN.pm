@@ -1024,7 +1024,8 @@ sub has_usable {
                                             my $atv = Archive::Tar->VERSION;
                                             for ("You have Archive::Tar $atv, but $demand or later is recommended. Please upgrade.\n") {
                                                 $CPAN::Frontend->mywarn($_);
-                                                die $_;
+                                            # don't die, because we may need
+                                            # Archive::Tar to upgrade
                                             }
                                             
                                        }
