@@ -355,6 +355,8 @@ for my $si (0..$#SESSIONS) {
     if ($session->{gets_mirrored_by}) {
         cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
             or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
+        # fix timestamp "bug" (?) on Win32
+        utime( (time) x 2, _f"t/dot-cpan/sources/MIRRORED.BY" ); 
     } else {
         unlink _f"t/dot-cpan/sources/MIRRORED.BY";
     }
