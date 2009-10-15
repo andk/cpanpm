@@ -225,10 +225,13 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
-release ::
-	/usr/bin/perl -Irelease-lib -S release $(DISTVNAME).tar$(SUFFIX)
-	rm -rf $(DISTVNAME)
+release :: disttest
 	git tag -m 'This is $(VERSION)' "$(VERSION)"
+	ls -l $(DISTVNAME).tar$(SUFFIX)
+	rm -rf $(DISTVNAME)
+	echo '%   lftp pause.perl.org'
+	echo '>   cd incoming'
+	echo '>   put $(DISTVNAME).tar$(SUFFIX)'
 
 snapshot : Makefile no_CR META.yml README testdistros all tardist
 
