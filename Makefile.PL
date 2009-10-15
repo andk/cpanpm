@@ -230,6 +230,8 @@ release ::
 	rm -rf $(DISTVNAME)
 	git tag -m 'This is $(VERSION)' "$(VERSION)"
 
+snapshot : Makefile no_CR META.yml README testdistros all tardist
+
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::HandleConfig->load;$$CPAN::DEBUG|=16;$$CPAN::DEBUG|=32;$$CPAN::DEBUG|=32768;install(qw(CPAN::Test::Dummy::Perl5::Build::DepeFails));'
