@@ -1165,7 +1165,7 @@ sub init {
         *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
         if ( @{ $CPAN::Config->{urllist} || [] } ) {
             $CPAN::Frontend->myprint(
-              "Your 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
+              "\nYour 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
             );
         }
         else {
