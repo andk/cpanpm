@@ -1,3 +1,27 @@
+2009-10-15  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_52
+
+	* address #48803: avoid 'unreached' if not following
+	configure_requires (David Golden)
+
+	* solaris tar gets more handholding to avoid solaris tar errors (David
+	Golden)
+
+	* allow calling make/test/install with regexp if unambiguous (Andreas
+	Koenig)
+
+	* new config variable version_timeout used in
+	CPAN::Module::parse_version() (Jerry D. Hedden)
+
+	* streamline first time configuration to be more intuitive and less
+	noisy (David Golden)
+
+	* bugfix: eexpect in mode=anyorder with reuse=1 did not consume the
+	output (Andreas Koenig)
+
+	* now with 355 distroprefs files
+
 2009-09-14  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_51
