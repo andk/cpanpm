@@ -5,7 +5,6 @@ use strict;
 
 use Fcntl qw(:flock);
 use File::Basename qw(dirname);
-use File::Copy qw(copy);
 use File::Path qw(mkpath);
 use CPAN::FTP::netrc;
 use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
@@ -15,7 +14,7 @@ use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 use vars qw(
             $VERSION
 );
-$VERSION = "5.5003";
+$VERSION = "5.5004";
 
 #-> sub CPAN::FTP::ftp_statistics
 # if they want to rewrite, they need to pass in a filehandle
@@ -455,12 +454,8 @@ I would like to connect to one of the following sites to get '%s':
                 $ret = $aslocal;
             }
             elsif (-f $ret && $scheme eq 'file' ) {
-                # it's a local file, so we'll copy it to the destination
-                mkpath( dirname( $aslocal ) );
-                copy( $ret, $aslocal )
-                    or $CPAN::Frontend->mydie("Error while trying to copy ".
-                                              "'$ret' to '$aslocal': $!");
-                $ret = $aslocal;
+                # it's a local file, so there's nothing left to do, we
+                # let them read from where it is
             }
             $Themethod = $level;
             my $now = time;
@@ -563,6 +558,10 @@ sub hostdleasy { #called from hostdlxxx
                     if ! -f $l && $l =~ m|^/\w:|;   # e.g. /P:
             }
             $self->debug("local file[$l]") if $CPAN::DEBUG;
+            if ( -f $l && -r _) {
+                $ThesiteURL = $ro_url;
+                return $l;
+            }
             # If request is for a compressed file and we can find the 
             # uncompressed file also, return the path of the uncompressed file
             # otherwise, decompress it and return the resulting path
