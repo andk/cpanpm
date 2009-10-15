@@ -868,9 +868,14 @@ sub init {
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
            ) {
-            $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
-            CPAN::Reporter::configure();
-            $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
+            local *_real_prompt;
+            *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", $silent ? "no" : "yes");
+            if ($_conf =~ /^y/i) {
+              $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
+              CPAN::Reporter::configure();
+              $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
+            }
         }
     }
 
