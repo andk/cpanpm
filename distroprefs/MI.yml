@@ -345,6 +345,7 @@ match:
     |SARTAK/Net-Jifty-\d
     |SARTAK/Term-VT102-ZeroBased-\d
     |SARTAK/Tie-Handle-TtyRec-\d
+    |SHAY/Filter-Crypto-\d
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
