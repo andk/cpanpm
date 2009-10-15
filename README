@@ -143,7 +143,16 @@ DESCRIPTION
       a module, CPAN determines the distribution file in which this module
       is included and processes that, following any dependencies named in
       the module's META.yml or Makefile.PL (this behavior is controlled by
-      the configuration parameter "prerequisites_policy".)
+      the configuration parameter "prerequisites_policy"). If an argument is
+      enclosed in slashes it is treated as a regular expression: it is
+      expanded and if the result is a single object (distribution, bundle or
+      module), this object is processed.
+
+      Example:
+
+          install Dummy::Perl                   # installs the module
+          install AUXXX/Dummy-Perl-3.14.tar.gz  # installs that distribution
+          install /Dummy-Perl-3.14/             # same if the regexp is unambiguous
 
       "get" downloads a distribution file and untars or unzips it, "make"
       builds it, "test" runs the test suite, and "install" installs it.
@@ -270,7 +279,8 @@ DESCRIPTION
 
       CPAN.pm ignores SIGPIPE. If the user sets "inactivity_timeout", a
       SIGALRM is used during the run of the "perl Makefile.PL" or "perl
-      Build.PL" subprocess.
+      Build.PL" subprocess. A SIGALRM is also used during module version
+      parsing, and is controlled by "version_timeout".
 
   CPAN::Shell
     The commands available in the shell interface are methods in the package
@@ -615,6 +625,8 @@ CONFIGURATION
       urllist            arrayref to nearby CPAN sites (or equivalent locations)
       use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
       username           your username if you CPAN server wants one
+      version_timeout    stops version parsing after this many seconds.
+                         Default is 15 secs. Set to 0 to disable.
       wait_list          arrayref to a wait server to try (See CPAN::WAIT)
       wget               path to external prg
       yaml_load_code     enable YAML code deserialisation via CPAN::DeferredCode
@@ -2003,9 +2015,7 @@ FAQ
     14) How do I create a Module::Build based Build.PL derived from an
         ExtUtils::MakeMaker focused Makefile.PL?
 
-        http://search.cpan.org/search?query=Module::Build::Convert
-
-        http://www.refcnt.org/papers/module-build-convert
+        http://search.cpan.org/dist/Module-Build-Convert/
 
     15) I'm frequently irritated with the CPAN shell's inability to help me
         select a good mirror.
