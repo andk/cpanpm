@@ -1475,7 +1475,7 @@ a module, CPAN determines the distribution file in which this module
 is included and processes that, following any dependencies named in
 the module's META.yml or Makefile.PL (this behavior is controlled by
 the configuration parameter C<prerequisites_policy>). If an argument
-is enclosed in slashes it is treated as a regular expression it is
+is enclosed in slashes it is treated as a regular expression: it is
 expanded and if the result is a single object (distribution, bundle or
 module), this object is processed.
 
