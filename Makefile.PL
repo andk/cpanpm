@@ -229,9 +229,11 @@ release :: disttest
 	git tag -m 'This is $(VERSION)' "$(VERSION)"
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
-	echo '%   lftp pause.perl.org'
-	echo '>   cd incoming'
-	echo '>   put $(DISTVNAME).tar$(SUFFIX)'
+	$(NOECHO) $(ECHO) '%   lftp pause.perl.org'
+	$(NOECHO) $(ECHO) '>   cd incoming'
+	$(NOECHO) $(ECHO) '>   put $(DISTVNAME).tar$(SUFFIX)'
+	$(NOECHO) $(ECHO) '>   quit'
+	$(NOECHO) $(ECHO) '%   git push --tags master'
 
 snapshot : Makefile no_CR META.yml README testdistros all tardist
 
