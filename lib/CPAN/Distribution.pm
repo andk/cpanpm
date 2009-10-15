@@ -2092,6 +2092,8 @@ sub _run_via_expect_anyorder {
                     $expo->send($send);
                     # never allow reusing an QA pair unless they told us
                     splice @expectacopy, $i, 2 unless $reuse;
+                    $but =~ s/(?s:^.*?)$regex//;
+                    $timeout_start = time;
                     next EXPECT;
                 }
             }

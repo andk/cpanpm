@@ -9,6 +9,8 @@ match:
   distribution: '^SHAY/Filter-Crypto-\d'
 pl:
   eexpect:
+    mode: anyorder
+    reuse: 1
     timeout: 10
     talk:
       - "Auto-install"
@@ -28,4 +30,4 @@ pl:
       - "Which component"
       - "\n"
       - "Do you want to install 'crypt_file'"
-      - "\n"
+      - "y\n"
