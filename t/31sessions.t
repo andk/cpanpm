@@ -186,7 +186,7 @@ EOF
            "make CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
            "force get CPAN::Test::Dummy::Perl5::Build::Fails" => "(?sx:security.checks.disabled
-                         |Checksum.for.*/CPAN-Test-Dummy-Perl5-Build-Fails-1.03.tar.gz.ok)",
+                         |Checksum.for.*CPAN-Test-Dummy-Perl5-Build-Fails-1.03.tar.gz.ok)",
            "o conf build_dir_reuse 1" => "build_dir_reuse",
            "o conf commit" => "commit: wrote",
           ]
@@ -355,6 +355,8 @@ for my $si (0..$#SESSIONS) {
     if ($session->{gets_mirrored_by}) {
         cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
             or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
+        # fix timestamp "bug" (?) on Win32
+        utime( (time) x 2, _f"t/dot-cpan/sources/MIRRORED.BY" ); 
     } else {
         unlink _f"t/dot-cpan/sources/MIRRORED.BY";
     }

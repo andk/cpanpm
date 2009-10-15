@@ -868,9 +868,14 @@ sub init {
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
            ) {
-            $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
-            CPAN::Reporter::configure();
-            $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
+            local *_real_prompt;
+            *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", $silent ? "no" : "yes");
+            if ($_conf =~ /^y/i) {
+              $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
+              CPAN::Reporter::configure();
+              $CPAN::Frontend->myprint("\nReturning to CPAN configuration.\n");
+            }
         }
     }
 
@@ -1054,25 +1059,25 @@ sub init {
         if ($CPAN::Config->{colorize_output}) {
             if ($CPAN::META->has_inst("Term::ANSIColor")) {
                 my $T="gYw";
-                print "                                      on_  on_y ".
-                    "        on_ma           on_\n";
-                print "                   on_black on_red  green ellow ".
-                    "on_blue genta on_cyan white\n";
+                $CPAN::Frontend->myprint( "                                      on_  on_y ".
+                    "        on_ma           on_\n") unless $silent;
+                $CPAN::Frontend->myprint( "                   on_black on_red  green ellow ".
+                    "on_blue genta on_cyan white\n") unless $silent;
 
                 for my $FG ("", "bold",
                             map {$_,"bold $_"} "black","red","green",
                             "yellow","blue",
                             "magenta",
                             "cyan","white") {
-                    printf "%12s ", $FG;
+                    $CPAN::Frontend->myprint(sprintf( "%12s ", $FG)) unless $silent;
                     for my $BG ("",map {"on_$_"} qw(black red green yellow
                                                     blue magenta cyan white)) {
-                        print $FG||$BG ?
-                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
+                            $CPAN::Frontend->myprint( $FG||$BG ?
+                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ") unless $silent;
                     }
-                    print "\n";
+                    $CPAN::Frontend->myprint( "\n" ) unless $silent;
                 }
-                print "\n";
+                $CPAN::Frontend->myprint( "\n" ) unless $silent;
             }
             for my $tuple (
                            ["colorize_print", "bold blue on_white"],
@@ -1160,7 +1165,7 @@ sub init {
         *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
         if ( @{ $CPAN::Config->{urllist} || [] } ) {
             $CPAN::Frontend->myprint(
-              "Your 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
+              "\nYour 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
             );
         }
         else {
