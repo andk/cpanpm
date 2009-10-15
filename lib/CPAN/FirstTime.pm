@@ -1054,25 +1054,25 @@ sub init {
         if ($CPAN::Config->{colorize_output}) {
             if ($CPAN::META->has_inst("Term::ANSIColor")) {
                 my $T="gYw";
-                print "                                      on_  on_y ".
-                    "        on_ma           on_\n";
-                print "                   on_black on_red  green ellow ".
-                    "on_blue genta on_cyan white\n";
+                $CPAN::Frontend->myprint( "                                      on_  on_y ".
+                    "        on_ma           on_\n") unless $silent;
+                $CPAN::Frontend->myprint( "                   on_black on_red  green ellow ".
+                    "on_blue genta on_cyan white\n") unless $silent;
 
                 for my $FG ("", "bold",
                             map {$_,"bold $_"} "black","red","green",
                             "yellow","blue",
                             "magenta",
                             "cyan","white") {
-                    printf "%12s ", $FG;
+                    $CPAN::Frontend->myprint(sprintf( "%12s ", $FG)) unless $silent;
                     for my $BG ("",map {"on_$_"} qw(black red green yellow
                                                     blue magenta cyan white)) {
-                        print $FG||$BG ?
-                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ";
+                            $CPAN::Frontend->myprint( $FG||$BG ?
+                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ") unless $silent;
                     }
-                    print "\n";
+                    $CPAN::Frontend->myprint( "\n" ) unless $silent;
                 }
-                print "\n";
+                $CPAN::Frontend->myprint( "\n" ) unless $silent;
             }
             for my $tuple (
                            ["colorize_print", "bold blue on_white"],
