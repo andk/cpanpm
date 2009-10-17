@@ -13,6 +13,7 @@ use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 
+# storable pref files
 @ST_PREFS = qw(
               );
 
@@ -83,6 +84,41 @@ if ($^O eq "darwin") {
   $prereq_pm->{'File::HomeDir'} = 0.69;
 }
 
+# if they have one of these we declare it as prereq for better reporting
+for my $interesting_module (qw(
+        Archive::Tar
+        Archive::Zip
+        CPAN::Checksums
+        Compress::Zlib
+        Data::Dumper
+        Digest::SHA
+        ExtUtils::CBuilder
+        File::Copy
+        File::HomeDir
+        File::Spec
+        File::Temp
+        File::Which
+        IO::Compress::Base
+        IO::Zlib
+        Module::Build
+        Net::FTP
+        Parse::CPAN::Meta
+        Scalar::Util
+        Term::ReadKey
+        Term::ReadLine::Perl
+        Test::More
+        Text::Glob
+        Text::ParseWords
+        Text::Wrap
+        YAML
+        YAML::Syck
+        YAML::XS
+                             )) {
+    eval "require $interesting_module";
+    if (!$@) {
+        $prereq_pm->{$interesting_module} ||= 0;
+    }
+}
 if ($HAVE_FILE_SPEC) {
   # import PAUSE public key to user's keychain
   require Config;
