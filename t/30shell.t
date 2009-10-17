@@ -432,7 +432,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
     my $ret = opendir $dh, $dir;
     ok($ret, "directory $dir exists");
     my @dirent = grep { -f _f"$dir/$_" } readdir $dh;
-    ok(0==@dirent, "directory $dir contains no files. dirent[@dirent] should be empty");
+    ok(@dirent<=1, "directory $dir contains max 1 file. dirent[@dirent]");
 }
 local_utils::cleanup_dot_cpan();
 
