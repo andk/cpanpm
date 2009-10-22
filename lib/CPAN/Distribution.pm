@@ -2521,7 +2521,7 @@ sub unsat_prereq {
     my @merged = %merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
-        my($available_version,$available_file,$nmo);
+        my($available_version,$inst_file,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
             $available_file = CPAN::find_perl();
@@ -2532,10 +2532,11 @@ sub unsat_prereq {
             }
             $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
             next if $nmo->uptodate;
-            $available_file = $nmo->available_file;
+            $inst_file = $nmo->inst_file || '';
+            $available_file = $nmo->available_file || '';
 
             # if they have not specified a version, we accept any installed one
-            if (defined $available_file
+            if ( $available_file
                 and ( # a few quick shortcurcuits
                      not defined $need_version
                      or $need_version eq '0'    # "==" would trigger warning when not numeric
@@ -2550,10 +2551,19 @@ sub unsat_prereq {
         # We only want to install prereqs if either they're not installed
         # or if the installed version is too old. We cannot omit this
         # check, because if 'force' is in effect, nobody else will check.
-        if (defined $available_file) {
-            my $fulfills_all_version_rqs = $self->_fulfills_all_version_rqs
-                ($need_module,$available_file,$available_version,$need_version);
-            next NEED if $fulfills_all_version_rqs;
+        # But we don't want to accept a deprecated module installed as part
+        # of the Perl core, so we continue if the available file is the installed
+        # one and is deprecated
+
+        if ( $available_file ) {
+            if  ( $available_file eq $inst_file && $nmo->inst_deprecated ) {
+                # continue installing as a prereq
+            }
+            else {
+                next NEED if $self->_fulfills_all_version_rqs(
+                    $need_module,$available_file,$available_version,$need_version
+                );
+            }
         }
 
         if ($need_module eq "perl") {
