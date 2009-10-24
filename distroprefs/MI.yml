@@ -249,6 +249,7 @@ match:
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
     |MIYAGAWA/XML-Atom-\d
+    |MIYAGAWA/Web-Scraper-\d
     |MIYAZAKI/HTTP-MobileUID-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MIZZY/Text-Trac-\d
