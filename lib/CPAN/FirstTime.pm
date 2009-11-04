@@ -1,15 +1,4 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
-package CPAN::Mirrored::By;
-use strict;
-
-sub new {
-    my($self,@arg) = @_;
-    bless [@arg], $self;
-}
-sub continent { shift->[0] }
-sub country { shift->[1] }
-sub url { shift->[2] }
-
 package CPAN::FirstTime;
 use strict;
 
@@ -18,6 +7,7 @@ use FileHandle ();
 use File::Basename ();
 use File::Path ();
 use File::Spec ();
+use CPAN::Mirrors ();
 use vars qw($VERSION $urllist $silent);
 $VERSION = "5.53";
 
@@ -1485,7 +1475,7 @@ a valid CPAN URL now.\n\n});
         }
     }
     if ($use_mby){
-        read_mirrored_by($mby);
+        choose_mirrored_by($mby);
     } else {
         if (not defined $CPAN::Config->{connect_to_internet_ok}
             or not $CPAN::Config->{connect_to_internet_ok}) {
@@ -1598,28 +1588,10 @@ sub display_some {
     return $pos;
 }
 
-sub read_mirrored_by {
+sub choose_mirrored_by {
     my $local = shift or return;
-    my(%all,$url,$expected_size,$default,$ans,$host,
-       $dst,$country,$continent,@location);
-    my $fh = FileHandle->new;
-    $fh->open($local) or die "Couldn't open $local: $!";
-    local $/ = "\012";
-    while (<$fh>) {
-        ($host) = /^([\w\.\-]+)/ unless defined $host;
-        next unless defined $host;
-        next unless /\s+dst_(dst|location)/;
-        /location\s+=\s+\"([^\"]+)/ and @location = (split /\s*,\s*/, $1) and
-            ($continent, $country) = @location[-1,-2];
-        $continent =~ s/\s\(.*//;
-        $continent =~ s/\W+$//; # if Jarkko doesn't know latitude/longitude
-        /dst_dst\s+=\s+\"([^\"]+)/  and $dst = $1;
-        next unless $host && $dst && $continent && $country;
-        $all{$continent}{$country}{$dst} = CPAN::Mirrored::By->new($continent,$country,$dst);
-        undef $host;
-        $dst=$continent=$country="";
-    }
-    $fh->close;
+    my ($default);
+    my $mirrors = %{ CPAN::Mirrors->new($local) };
     $CPAN::Config->{urllist} ||= [];
     my @previous_urls = @{$CPAN::Config->{urllist}};
 
@@ -1629,7 +1601,7 @@ sub read_mirrored_by {
     my $no_previous_warn =
         "Sorry! since you don't have any existing picks, you must make a\n" .
             "geographic selection.";
-    my $offer_cont = [sort keys %all];
+    my $offer_cont = [sort keys %$mirrors];
     if (@previous_urls) {
         push @$offer_cont, "(edit previous picks)";
         $default = @$offer_cont;
@@ -1646,7 +1618,7 @@ sub read_mirrored_by {
     # return unless @cont;
 
     foreach $cont (@cont) {
-        my @c = sort keys %{$all{$cont}};
+        my @c = sort keys %{$mirrors->{$cont}};
         @cont{@c} = map ($cont, 0..$#c);
         @c = map ("$_ ($cont)", @c) if @cont > 1;
         push (@countries, @c);
@@ -1664,10 +1636,10 @@ sub read_mirrored_by {
                                $no_previous_warn);
         %seen = map (($_ => 1), @previous_urls);
         # hmmm, should take list of defaults from CPAN::Config->{'urllist'}...
-        foreach $country (@countries) {
+        foreach my $country (@countries) {
             next if $country =~ /edit previous picks/;
             (my $bare_country = $country) =~ s/ \(.*\)//;
-            my @u = sort keys %{$all{$cont{$bare_country}}{$bare_country}};
+            my @u = sort keys %{$mirrors->{$cont{$bare_country}}{$bare_country}};
             @u = grep (! $seen{$_}, @u);
             @u = map ("$_ ($bare_country)", @u)
                 if @countries > 1;
