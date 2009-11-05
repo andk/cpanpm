@@ -58,15 +58,55 @@ sub mirrors {
 sub best_mirrors {
     my ($self, %args) = @_;
     my $how_many = $args{how_many} || 1;
-    my @countries = @{ $args{countries} || [] };
     my $callback = $args{callback};
+    my $verbose = $args{verbose};
+
+    my %mirrors_seen;
+    my %avg;
+    CONT: for my $c ( $self->continents ) {
+        my @mirrors = $self->mirrors( $self->countries($c) );
+        next CONT unless @mirrors;
+        my $sample = 10;
+        my $n = @mirrors < $sample ? scalar @mirrors : $sample;
+        my @tests;
+        RANDOM: for ( 0 .. $n-1 ) {
+            my $m = splice( @mirrors, int(rand(@mirrors)), 1 );
+            my $ping = $m->ping;
+            $callback->($m,$ping) if $callback;
+            next RANDOM unless defined $ping;
+            $mirrors_seen{$m->hostname} = [$m, $ping];
+            push @tests, $ping;
+        }
+        @tests = sort { $a <=> $b} @tests;
+        if ( @tests > 5 ) { splice @tests, -2 }
+        my $sum = 0;
+        $sum += $_ for @tests;
+        $avg{$c} = $sum / @tests if @tests;
+    }
+    
+    if ( $verbose ) {
+        print "Results by continent\n";
+        for my $c ( keys %avg ) {
+            printf( "%d ms  %s\n", int($avg{$c}*1000+.5), $c );
+        }
+        print "\n";
+    }
+
+    my @best_cont = sort { $avg{$a} <=> $avg{$b} } keys %avg ;
+    @best_cont = shift @best_cont;
+    print "Scanning @best_cont\n" if $verbose;
 
     my @timings;
-    for my $m ($self->mirrors(@countries)) {
-        my $ping = $m->ping;
-        next unless defined $ping;
-        push @timings, [$m, $ping];
-        $callback->($m,$ping) if $callback;
+    for my $m ($self->mirrors($self->countries(@best_cont))) {
+        if ( $mirrors_seen{$m->hostname} ) {
+            push @timings, $mirrors_seen{$m->hostname};
+        }
+        else {
+            my $ping = $m->ping;
+            next unless defined $ping;
+            push @timings, [$m, $ping];
+            $callback->($m,$ping) if $callback;
+        }
     }
     return unless @timings;
     $how_many = @timings if $how_many > @timings;
