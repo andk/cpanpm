@@ -1591,7 +1591,7 @@ sub display_some {
 sub choose_mirrored_by {
     my $local = shift or return;
     my ($default);
-    my $mirrors = %{ CPAN::Mirrors->new($local) };
+    my $mirrors = CPAN::Mirrors->new($local);
     $CPAN::Config->{urllist} ||= [];
     my @previous_urls = @{$CPAN::Config->{urllist}};
 
@@ -1601,7 +1601,7 @@ sub choose_mirrored_by {
     my $no_previous_warn =
         "Sorry! since you don't have any existing picks, you must make a\n" .
             "geographic selection.";
-    my $offer_cont = [sort keys %$mirrors];
+    my $offer_cont = [sort $mirrors->continents];
     if (@previous_urls) {
         push @$offer_cont, "(edit previous picks)";
         $default = @$offer_cont;
@@ -1618,7 +1618,7 @@ sub choose_mirrored_by {
     # return unless @cont;
 
     foreach $cont (@cont) {
-        my @c = sort keys %{$mirrors->{$cont}};
+        my @c = sort $mirrors->countries($cont);
         @cont{@c} = map ($cont, 0..$#c);
         @c = map ("$_ ($cont)", @c) if @cont > 1;
         push (@countries, @c);
@@ -1639,7 +1639,7 @@ sub choose_mirrored_by {
         foreach my $country (@countries) {
             next if $country =~ /edit previous picks/;
             (my $bare_country = $country) =~ s/ \(.*\)//;
-            my @u = sort keys %{$mirrors->{$cont{$bare_country}}{$bare_country}};
+            my @u = sort map { $_->url } $mirrors->mirrors($bare_country);
             @u = grep (! $seen{$_}, @u);
             @u = map ("$_ ($bare_country)", @u)
                 if @countries > 1;
