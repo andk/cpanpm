@@ -1144,16 +1144,21 @@ sub init {
             # conf_sites would go into endless loop with the smash prompt
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-            my $_conf = prompt(
-              "Would you like me to automatically choose the best CPAN mirror sites\n" .
-              "for 'urllist'? (This could take a couple minutes) ", "yes"
-            );
+            if ( $CPAN::Config->{connect_to_internet_ok} ) {;
+              my $_conf = prompt(
+                "Would you like me to automatically choose the best CPAN mirror sites\n" .
+                "for 'urllist'? (This could take a couple minutes) ", "yes"
+              );
 
-            if ( $_conf =~ /^y/i ) {
-              conf_sites( auto_pick => 1 );
+              if ( $_conf =~ /^y/i ) {
+                conf_sites( auto_pick => 1 );
+              }
+              else {
+                conf_sites();
+                bring_your_own();
+              }
             }
             else {
-              conf_sites();
               bring_your_own();
             }
             _print_urllist();
@@ -1189,6 +1194,7 @@ sub init {
           );
 
           if ( $_conf =~ /^y/i ) {
+            $CPAN::Config->{connect_to_internet_ok} = 1;
             conf_sites( auto_pick => 1 );
           }
           else {

@@ -137,7 +137,6 @@ EOF
            "o conf urllist pop" => ".",
            "o conf urllist" => "urllist\\s+Type.+all configuration items",
            "test CPAN::Test::Dummy::Perl5::Make" => "Client not fully configured",
-           "o conf init urllist\nfoo:bar\n\n" => "enter the URL[\\s\\S]+Enter another URL[\\s\\S]+New (set of picks:|urllist)\\s+foo:bar",
           ]
          },
          {
@@ -159,7 +158,7 @@ EOF
            # we are asked if using the found urllist is ok, we say
            # yes, then we say 8 for the previous picks, then we pick
            # items 4 and 2 in that order
-           "o conf init urllist\ny\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
+           "o conf init urllist\nn\ny\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
           ]
          },
          {
