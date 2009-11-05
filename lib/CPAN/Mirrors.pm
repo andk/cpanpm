@@ -55,6 +55,23 @@ sub mirrors {
     return @found;
 }
 
+sub best_mirrors {
+    my ($self, $how_many, @countries) = @_;
+    $how_many ||= 1;
+    my @timings;
+    for my $m ($self->mirrors(@countries)) {
+        my $ping = $m->ping;
+        next unless defined $ping;
+        push @timings, [$m, $ping];
+    }
+    return unless @timings;
+    $how_many = @timings if $how_many > @timings;
+    my @best =
+        map  { $_->[0] }
+        sort { $a->[1] <=> $b->[1] } @timings;
+    return wantarray ? @best[0 .. $how_many-1] : $best[0];
+}
+
 # Adapted from Parse::CPAN::MirroredBy by Adam Kennedy
 sub _parse {
     my ($self, $file, $handle) = @_;
@@ -129,6 +146,7 @@ sub _parse {
 
 package CPAN::Mirrored::By;
 use strict;
+use Net::Ping   ();
 
 sub new {
     my($self,$arg) = @_;
@@ -146,6 +164,19 @@ sub url {
     my $self = shift;
     return $self->{http} || $self->{ftp};
 }
+
+sub ping {
+    my $self = shift;
+    my $ping = Net::Ping->new("tcp",1);
+    my ($proto) = $self->url =~ m{^([^:]+)};
+    my $port = $proto eq 'http' ? 80 : 21;
+    return unless $port;
+    $ping->port_number($port);
+    $ping->hires(1);
+    my ($alive,$rtt) = $ping->ping($self->hostname);
+    return $alive ? $rtt : undef;
+}
+
 
 1;
 
