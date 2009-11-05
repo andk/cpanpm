@@ -644,10 +644,14 @@ session.
 
 urls_intro => qq{
 Now we need to know where your favorite CPAN mirror sites are located. 
-You should select more than one (just in case the first isn't available).
-You can select from the global list of CPAN mirror sites or you can
-enter CPAN mirror URLs by hand.  A local CPAN mirror can be listed using
-a 'file:///' URL.  For example: 'file:///path/to/cpan/'
+You can let us automatically pick mirrors for you or you can select them
+yourself.
+
+If you select them yourself you can select from the global list of
+CPAN mirror sites or you can enter CPAN mirror URLs by hand.  You
+should select more than one (just in case the first isn't available).
+A local CPAN mirror can be listed using a 'file:///' URL.  For
+example: file:///path/to/cpan/
 
 },
 
@@ -1135,6 +1139,8 @@ sub init {
     my_yn_prompt("connect_to_internet_ok" => 0, $matcher);
     if ($matcher) {
         if ("urllist" =~ $matcher) {
+            $CPAN::Frontend->myprint($prompts{urls_intro});
+
             # conf_sites would go into endless loop with the smash prompt
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
@@ -1716,7 +1722,8 @@ sub bring_your_own {
     do {
         my $prompt = "Enter another URL or RETURN to quit:";
         unless (%seen) {
-            $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
+            $prompt = qq{
+CPAN.pm needs at least one URL where it can fetch CPAN files from.
 
 Please enter your CPAN site:};
         }
