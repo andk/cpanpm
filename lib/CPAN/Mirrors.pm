@@ -60,46 +60,24 @@ sub best_mirrors {
     my $how_many = $args{how_many} || 1;
     my $callback = $args{callback};
     my $verbose = $args{verbose};
+    my $conts = $args{continents} || [];
+    $conts = [$conts] unless ref $conts;
 
-    my %mirrors_seen;
-    my %avg;
-    CONT: for my $c ( $self->continents ) {
-        my @mirrors = $self->mirrors( $self->countries($c) );
-        next CONT unless @mirrors;
-        my $sample = 10;
-        my $n = @mirrors < $sample ? scalar @mirrors : $sample;
-        my @tests;
-        RANDOM: for ( 0 .. $n-1 ) {
-            my $m = splice( @mirrors, int(rand(@mirrors)), 1 );
-            my $ping = $m->ping;
-            $callback->($m,$ping) if $callback;
-            next RANDOM unless defined $ping;
-            $mirrors_seen{$m->hostname} = [$m, $ping];
-            push @tests, $ping;
-        }
-        @tests = sort { $a <=> $b} @tests;
-        if ( @tests > 5 ) { splice @tests, -2 }
-        my $sum = 0;
-        $sum += $_ for @tests;
-        $avg{$c} = $sum / @tests if @tests;
-    }
-    
-    if ( $verbose ) {
-        print "Results by continent\n";
-        for my $c ( keys %avg ) {
-            printf( "%d ms  %s\n", int($avg{$c}*1000+.5), $c );
-        }
-        print "\n";
+    my $seen = {};
+
+    if ( ! @$conts ) {
+        print "Searching for the best continent ...\n" if $verbose;
+        push @$conts, $self->_find_best_continent($seen, $verbose, $callback);
     }
 
-    my @best_cont = sort { $avg{$a} <=> $avg{$b} } keys %avg ;
-    @best_cont = shift @best_cont;
-    print "Scanning @best_cont\n" if $verbose;
+    print "Scanning " . join(", ", @$conts) . " ...\n" if $verbose;
 
     my @timings;
-    for my $m ($self->mirrors($self->countries(@best_cont))) {
-        if ( $mirrors_seen{$m->hostname} ) {
-            push @timings, $mirrors_seen{$m->hostname};
+    for my $m ($self->mirrors($self->countries(@$conts))) {
+        my $hostname = $m->hostname;
+        if ( $seen->{$hostname}  ) {
+            push @timings, $seen->{$hostname}
+                if defined $seen->{$hostname}[1];
         }
         else {
             my $ping = $m->ping;
@@ -113,7 +91,53 @@ sub best_mirrors {
     my @best =
         map  { $_->[0] }
         sort { $a->[1] <=> $b->[1] } @timings;
+
     return wantarray ? @best[0 .. $how_many-1] : $best[0];
+}
+
+sub _find_best_continent {
+    my ($self, $seen, $verbose, $callback) = @_;
+
+    my %median;
+    CONT: for my $c ( $self->continents ) {
+        my @mirrors = $self->mirrors( $self->countries($c) );
+        next CONT unless @mirrors;
+        my $sample = 9;
+        my $n = (@mirrors < $sample) ? @mirrors : $sample;
+        my @tests;
+        RANDOM: while ( @mirrors && @tests < $n ) {
+            my $m = splice( @mirrors, int(rand(@mirrors)), 1 );
+            my $ping = $m->ping;
+            $callback->($m,$ping) if $callback;
+            # record undef so we don't try again
+            $seen->{$m->hostname} = [$m, $ping];
+            next RANDOM unless defined $ping;
+            push @tests, $ping;
+        }
+        next CONT unless @tests;
+        @tests = sort { $a <=> $b } @tests;
+        if ( @tests == 1 ) {
+            $median{$c} = $tests[0];
+        }
+        elsif ( @tests % 2 ) {
+            $median{$c} = $tests[ int(@tests / 2) ];
+        }
+        else {
+            my $mid_high = int(@tests/2);
+            $median{$c} = ($tests[$mid_high-1] + $tests[$mid_high])/2;
+        }
+    }
+
+    my @best_cont = sort { $median{$a} <=> $median{$b} } keys %median ;
+
+    if ( $verbose ) {
+        print "Median result by continent:\n";
+        for my $c ( @best_cont ) {
+            printf( "  %d ms  %s\n", int($median{$c}*1000+.5), $c );
+        }
+    }
+
+    return $best_cont[0];
 }
 
 # Adapted from Parse::CPAN::MirroredBy by Adam Kennedy
