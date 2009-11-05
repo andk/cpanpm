@@ -1639,11 +1639,15 @@ sub choose_mirrored_by {
         foreach my $country (@countries) {
             next if $country =~ /edit previous picks/;
             (my $bare_country = $country) =~ s/ \(.*\)//;
-            my @u = sort map { $_->url } $mirrors->mirrors($bare_country);
+            my @u;
+            for my $m ( $mirrors->mirrors($bare_country) ) {
+              push @u, $m->ftp if $m->ftp;
+              push @u, $m->http if $m->http;
+            }
             @u = grep (! $seen{$_}, @u);
             @u = map ("$_ ($bare_country)", @u)
                 if @countries > 1;
-            push (@urls, @u);
+            push (@urls, sort @u);
         }
     }
     push (@urls, map ("$_ (previous pick)", @previous_urls));
