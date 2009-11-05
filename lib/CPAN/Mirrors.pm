@@ -56,13 +56,17 @@ sub mirrors {
 }
 
 sub best_mirrors {
-    my ($self, $how_many, @countries) = @_;
-    $how_many ||= 1;
+    my ($self, %args) = @_;
+    my $how_many = $args{how_many} || 1;
+    my @countries = @{ $args{countries} || [] };
+    my $callback = $args{callback};
+
     my @timings;
     for my $m ($self->mirrors(@countries)) {
         my $ping = $m->ping;
         next unless defined $ping;
         push @timings, [$m, $ping];
+        $callback->($m,$ping) if $callback;
     }
     return unless @timings;
     $how_many = @timings if $how_many > @timings;

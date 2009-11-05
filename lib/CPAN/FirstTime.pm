@@ -1139,11 +1139,18 @@ sub init {
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
             my $_conf = prompt(
-              "Would you like me to automatically choose the best CPAN\n" .
-              "mirror sites for 'urllist'? (This could take a couple minutes) ", "yes"
+              "Would you like me to automatically choose the best CPAN mirror sites\n" .
+              "for 'urllist'? (This could take a couple minutes) ", "yes"
             );
 
-            conf_sites( $_conf =~ /^y/i ? (auto_pick => 1) : () );
+            if ( $_conf =~ /^y/i ) {
+              conf_sites( auto_pick => 1 );
+            }
+            else {
+              conf_sites();
+              bring_your_own();
+            }
+            _print_urllist();
         }
         if ("randomize_urllist" =~ $matcher) {
             my_dflt_prompt(randomize_urllist => 0, $matcher);
@@ -1171,8 +1178,8 @@ sub init {
           $CPAN::Frontend->myprint($prompts{urls_intro});
 
           my $_conf = prompt(
-            "Would you like me to automatically choose the best CPAN\n" .
-            "mirror sites for 'urllist'? (This could take a couple minutes) ", "yes"
+            "Would you like me to automatically choose the best CPAN mirror sites\n" .
+            "for 'urllist'? (This could take a couple minutes) ", "yes"
           );
 
           if ( $_conf =~ /^y/i ) {
@@ -1186,12 +1193,11 @@ sub init {
 
             if ( $_conf =~ /^y/i ) {
               conf_sites();
+              $CPAN::Frontend->myprint("Now you have a chance to add any additional CPAN URLs\n");
             }
-            else {
-              bring_your_own();
-            }
+            bring_your_own();
           }
-          $CPAN::Config->{urllist} = $urllist;
+          _print_urllist();
         }
         $CPAN::Frontend->myprint(
             "\nAutoconfiguration complete.\n"
@@ -1502,11 +1508,7 @@ a valid CPAN URL now.\n\n});
             or not $CPAN::Config->{connect_to_internet_ok}) {
             $CPAN::Frontend->myprint("Configuration does not allow connecting to the internet.\n");
         }
-        $CPAN::Frontend->myprint("Current set of CPAN URLs:\n");
-        map { $CPAN::Frontend->myprint("  $_\n") } @$urllist;
     }
-    $CPAN::Frontend->myprint("Now you have a chance to add any additional CPAN URLs\n");
-    bring_your_own();
     $CPAN::Config->{urllist} = $urllist;
 }
 
@@ -1612,11 +1614,16 @@ sub display_some {
 sub auto_mirrored_by {
     my $local = shift or return;
     local $|=1;
-    $CPAN::Frontend->myprint("\nSearching for the best CPAN mirrors (please be patient)...");
+    $CPAN::Frontend->myprint("\nSearching for the best CPAN mirrors (please be patient) ...");
     my $mirrors = CPAN::Mirrors->new($local);
-    $urllist = [ map { $_->url } $mirrors->best_mirrors(5) ];
+    my $cnt = 0;
+    my @best = $mirrors->best_mirrors(
+      how_many => 5, 
+      callback => sub { $CPAN::Frontend->myprint(".") },
+    );
+    $urllist = [ map { $_->url } @best ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
-    $CPAN::Frontend->myprint("done!\n\n");
+    $CPAN::Frontend->myprint(" done!\n\n");
     return;
 }
     
@@ -1702,6 +1709,7 @@ put them on one line, separated by blanks, hyphenated ranges allowed
 }
 
 sub bring_your_own {
+    local $urllist = $CPAN::Config->{urllist};
     my %seen = map (($_ => 1), @$urllist);
     my($ans,@urls);
     my $eacnt = 0; # empty answers
@@ -1743,11 +1751,14 @@ later if you\'re sure it\'s right.\n},
 
     @$urllist = CPAN::_uniq(@$urllist, @urls);
     $CPAN::Config->{urllist} = $urllist;
-    # xxx delete or comment these out when you're happy that it works
-    $CPAN::Frontend->myprint("New urllist\n");
-    for ( @$urllist ) { $CPAN::Frontend->myprint("  $_\n") };
 }
 
+sub _print_urllist {
+    $CPAN::Frontend->myprint("New urllist\n");
+    for ( @{$CPAN::Config->{urllist} || []} ) { 
+      $CPAN::Frontend->myprint("  $_\n") 
+    };
+}
 
 sub _strip_spaces {
     $_[0] =~ s/^\s+//;  # no leading spaces
