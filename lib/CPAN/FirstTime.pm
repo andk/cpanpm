@@ -1138,7 +1138,12 @@ sub init {
             # conf_sites would go into endless loop with the smash prompt
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-            conf_sites();
+            my $_conf = prompt(
+              "Would you like me to automatically choose the best CPAN\n" .
+              "mirror sites for 'urllist'? (This could take a couple minutes) ", "yes"
+            );
+
+            conf_sites( $_conf =~ /^y/i ? (auto_pick => 1) : () );
         }
         if ("randomize_urllist" =~ $matcher) {
             my_dflt_prompt(randomize_urllist => 0, $matcher);
@@ -1160,21 +1165,31 @@ sub init {
         }
         else {
           $CPAN::Frontend->myprint(
-              "Autoconfigured everything but 'urllist'.\n"
+            "Autoconfigured everything but 'urllist'.\n"
           );
 
           $CPAN::Frontend->myprint($prompts{urls_intro});
 
           my $_conf = prompt(
-            "Would you like to pick from the CPAN mirror list?", "yes"
+            "Would you like me to automatically choose the best CPAN\n" .
+            "mirror sites for 'urllist'? (This could take a couple minutes) ", "yes"
           );
-          $CPAN::Frontend->myprint("\n");
 
-          if ( $_conf =~ /^y/ ) {
-            conf_sites();
+          if ( $_conf =~ /^y/i ) {
+            conf_sites( auto_pick => 1 );
           }
           else {
-            bring_your_own();
+            my $_conf = prompt(
+              "Would you like to pick from the CPAN mirror list?", "yes"
+            );
+            $CPAN::Frontend->myprint("\n");
+
+            if ( $_conf =~ /^y/i ) {
+              conf_sites();
+            }
+            else {
+              bring_your_own();
+            }
           }
           $CPAN::Config->{urllist} = $urllist;
         }
@@ -1398,6 +1413,7 @@ sub my_prompt_loop {
 
 
 sub conf_sites {
+    my %args = @_;
     my $m = 'MIRRORED.BY';
     my $use_mby;
     my $mby = File::Spec->catfile($CPAN::Config->{keep_source_where},$m);
@@ -1409,21 +1425,26 @@ sub conf_sites {
     }
     local $^T = time;
     my $overwrite_local = 0;
-    if ($mby && -f $mby && -M _ <= 60 && -s _ > 0) {
+    if ($mby && -f $mby && -M _ <= 60 && -s _ > 0 ) {
         $use_mby = 1;
-        my $mtime = localtime((stat _)[9]);
-        my $prompt = qq{Found $mby as of $mtime
+        if ( $args{auto_pick} ) {
+          $CPAN::Config->{connect_to_internet_ok} = 1;
+        }
+        else {
+          my $mtime = localtime((stat _)[9]);
+          my $prompt = qq{\nFound $mby as of $mtime
 
-I'd use that as a database of CPAN sites. If that is OK for you,
-please answer 'y', but if you want me to get a new database from the
-internet now, please answer 'n' to the following question.
+  I'd use that as a database of CPAN sites. If that is OK for you,
+  please answer 'y', but if you want me to get a new database from the
+  internet now, please answer 'n' to the following question.
 
-Shall I use the local database in $mby?};
-        my $ans = prompt($prompt,"y");
-        if ($ans =~ /^y/i) {
-            $CPAN::Config->{connect_to_internet_ok} = 1;
-        } else {
-            $overwrite_local = 1;
+  Shall I use the local database in $mby?};
+          my $ans = prompt($prompt,"y");
+          if ($ans =~ /^y/i) {
+              $CPAN::Config->{connect_to_internet_ok} = 1;
+          } else {
+              $overwrite_local = 1;
+          }
         }
     }
     local $urllist = $CPAN::Config->{urllist};
@@ -1475,7 +1496,7 @@ a valid CPAN URL now.\n\n});
         }
     }
     if ($use_mby){
-        choose_mirrored_by($mby);
+        $args{auto_pick} ? auto_mirrored_by($mby) : choose_mirrored_by($mby);
     } else {
         if (not defined $CPAN::Config->{connect_to_internet_ok}
             or not $CPAN::Config->{connect_to_internet_ok}) {
@@ -1588,6 +1609,17 @@ sub display_some {
     return $pos;
 }
 
+sub auto_mirrored_by {
+    my $local = shift or return;
+    local $|=1;
+    $CPAN::Frontend->myprint("\nSearching for the best CPAN mirrors (please be patient)...");
+    my $mirrors = CPAN::Mirrors->new($local);
+    $urllist = [ map { $_->url } $mirrors->best_mirrors(5) ];
+    push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
+    $CPAN::Frontend->myprint("done!\n\n");
+    return;
+}
+    
 sub choose_mirrored_by {
     my $local = shift or return;
     my ($default);
