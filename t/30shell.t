@@ -442,6 +442,9 @@ __END__
 #E:(?s:Enter 'h' for help.*?cpan[^>]*>)
 ########
 #P:o conf init urllist
+#E:(This could take a couple minutes).+?yes\]
+########
+#P:n
 #E:(MIRR).+?y\]
 ########
 #P:y
@@ -457,6 +460,9 @@ __END__
 #E:(?s:New urllist.+?commit.+?(!).+?\])
 ########
 #P:o conf init urllist
+#E:(This could take a couple minutes).+?yes\]
+########
+#P:n
 #E:MIRR.+?(\])
 ########
 #P:y
@@ -484,14 +490,14 @@ __END__
 #P:o conf urllist pop
 ########
 #P:o conf urllist
-#E:programming(?s:.+)linuxforum
+#E:programming(?s:.+)hknet
 ########
 #P:o conf urllist push PUSH
 ########
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT(?s:.+)programming(?s:.+)linuxforum(?s:.+)PUSH
+#E:UNSHIFT(?s:.+)programming(?s:.+)hknet(?s:.+)PUSH
 ########
 #P:o conf urllist ONE TWO
 ########
