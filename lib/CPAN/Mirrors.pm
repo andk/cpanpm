@@ -67,7 +67,16 @@ sub best_mirrors {
 
     if ( ! @$conts ) {
         print "Searching for the best continent ...\n" if $verbose;
-        push @$conts, $self->_find_best_continent($seen, $verbose, $callback);
+        my @best = $self->_find_best_continent($seen, $verbose, $callback);
+
+        # how many continents to find enough mirrors? We should scan
+        # more than we need -- arbitrarily, we'll say x2
+        my $count = 0;
+        for my $c ( @best ) {
+            push @$conts, $c;
+            $count += $self->mirrors( $self->countries($c) );
+            last if $count >= 2 * $how_many;
+        }
     }
 
     print "Scanning " . join(", ", @$conts) . " ...\n" if $verbose;
@@ -137,7 +146,7 @@ sub _find_best_continent {
         }
     }
 
-    return $best_cont[0];
+    return wantarray ? @best_cont : $best_cont[0];
 }
 
 # Adapted from Parse::CPAN::MirroredBy by Adam Kennedy
