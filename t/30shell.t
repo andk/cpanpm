@@ -442,10 +442,13 @@ __END__
 #E:(?s:Enter 'h' for help.*?cpan[^>]*>)
 ########
 #P:o conf init urllist
-#E:(This could take a couple minutes).+?yes\]
+#E:(?s:Would you like me to automatically choose.+?yes\])
 ########
 #P:n
-#E:(MIRR).+?y\]
+#E:Would you like to pick from the CPAN mirror list.+?yes(\])
+########
+#P:y
+#E:Shall I use the cached mirror list.+?yes(\])
 ########
 #P:y
 #E:continent.+?(\])
@@ -460,10 +463,13 @@ __END__
 #E:(?s:New urllist.+?commit.+?(!).+?\])
 ########
 #P:o conf init urllist
-#E:(This could take a couple minutes).+?yes\]
+#E:(?s:Would you like me to automatically choose.+?yes\])
 ########
 #P:n
-#E:MIRR.+?(\])
+#E:Would you like to pick from the CPAN mirror list.+?yes(\])
+########
+#P:y
+#E:Shall I use the cached mirror list.+?yes(\])
 ########
 #P:y
 #E:continent.+?(\])
