@@ -158,7 +158,7 @@ EOF
            # we are asked if using the found urllist is ok, we say
            # yes, then we say 8 for the previous picks, then we pick
            # items 4 and 2 in that order
-           "o conf init urllist\nn\ny\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
+           "o conf init urllist\nn\ny\nt\n8\n4 2\n" => "New urllist\\s+FOUR\\s+TWO",
           ]
          },
          {
