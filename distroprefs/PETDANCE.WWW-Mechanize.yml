@@ -1,3 +1,11 @@
+--- 
+comment: |
+
+    hangs on so many of my perls that I prefer to not even try it
+
+match:
+  distribution: '^PETDANCE/WWW-Mechanize-1.60'
+disabled: 1
 ---
 comment: |
 
