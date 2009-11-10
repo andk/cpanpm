@@ -248,6 +248,7 @@ match:
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
+    |MIYAGAWA/Plack-\d
     |MIYAGAWA/XML-Atom-\d
     |MIYAGAWA/Web-Scraper-\d
     |MIYAZAKI/HTTP-MobileUID-\d
