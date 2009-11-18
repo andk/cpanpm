@@ -1469,15 +1469,22 @@ are printed in one-line format.
 =item C<get>, C<make>, C<test>, C<install>, C<clean> modules or distributions
 
 These commands take any number of arguments and investigate what is
-necessary to perform the action. If the argument is a distribution
-file name (recognized by embedded slashes), it is processed. If it is
-a module, CPAN determines the distribution file in which this module
-is included and processes that, following any dependencies named in
-the module's META.yml or Makefile.PL (this behavior is controlled by
-the configuration parameter C<prerequisites_policy>). If an argument
-is enclosed in slashes it is treated as a regular expression: it is
-expanded and if the result is a single object (distribution, bundle or
-module), this object is processed.
+necessary to perform the action. Argument processing is as follows:
+
+  embedded slash                  distribution
+    - with trailing slash dot     directory
+  enclosing slashes               regexp
+  known module name               module
+
+If the argument is a distribution file name (recognized by embedded
+slashes), it is processed. If it is a module, CPAN determines the
+distribution file in which this module is included and processes that,
+following any dependencies named in the module's META.yml or
+Makefile.PL (this behavior is controlled by the configuration
+parameter C<prerequisites_policy>). If an argument is enclosed in
+slashes it is treated as a regular expression: it is expanded and if
+the result is a single object (distribution, bundle or module), this
+object is processed.
 
 Example:
 
