@@ -2670,7 +2670,7 @@ Recursively runs the C<get> method on all items contained in the bundle
 =item CPAN::Bundle::inst_file()
 
 Returns the highest installed version of the bundle in either @INC or
-C<$CPAN::Config->{cpan_home}>. Note that this is different from
+C<< $CPAN::Config->{cpan_home} >>. Note that this is different from
 CPAN::Module::inst_file.
 
 =item CPAN::Bundle::inst_version()
@@ -2803,10 +2803,10 @@ Makefile.PL> or C<perl Build.PL> and C<make> there.
 
 Downloads the pod documentation of the file associated with a
 distribution (in HTML format) and runs it through the external
-command I<lynx> specified in C<$CPAN::Config->{lynx}>. If I<lynx>
+command I<lynx> specified in C<< $CPAN::Config->{lynx} >>. If I<lynx>
 isn't available, it converts it to plain text with the external
 command I<html2text> and runs it through the pager specified
-in C<$CPAN::Config->{pager}>
+in C<< $CPAN::Config->{pager} >>.
 
 =item CPAN::Distribution::prefs()
 
@@ -2835,7 +2835,7 @@ undef otherwise.
 =item CPAN::Distribution::readme()
 
 Downloads the README file associated with a distribution and runs it
-through the pager specified in C<$CPAN::Config->{pager}>.
+through the pager specified in C<< $CPAN::Config->{pager} >>.
 
 =item CPAN::Distribution::reports()
 
@@ -2867,7 +2867,7 @@ Forces a reload of all indices.
 =item CPAN::Index::reload()
 
 Reloads all indices if they have not been read for more than
-C<$CPAN::Config->{index_expire}> days.
+C<< $CPAN::Config->{index_expire} >> days.
 
 =item CPAN::InfoObj::dump()
 
