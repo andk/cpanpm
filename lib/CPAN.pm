@@ -2454,6 +2454,9 @@ C<args> is not used.
 Extended C<expect>. This is a hash reference with four allowed keys,
 C<mode>, C<timeout>, C<reuse>, and C<talk>.
 
+You must install the C<Expect> module to use C<eexpect>. CPAN.pm
+does not install it for you.
+
 C<mode> may have the values C<deterministic> for the case where all
 questions come in the order written down and C<anyorder> for the case
 where the questions may come in any order. The default mode is
@@ -2490,12 +2493,15 @@ Environment variables to be set during the command
 
 =item expect [array]
 
-C<< expect: <array> >> is a short notation for
+You must install the C<Expect> module to use C<expect>. CPAN.pm
+does not install it for you.
 
-eexpect:
-    mode: deterministic
-    timeout: 15
-    talk: <array>
+C<< expect: <array> >> is a short notation for this C<eexpect>:
+
+	eexpect:
+		mode: deterministic
+		timeout: 15
+		talk: <array>
 
 =back
 
