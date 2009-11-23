@@ -2283,7 +2283,7 @@ C<expect>.
 
     expect: []
 
-    commendline: "echo SKIPPING make"
+    commandline: "echo SKIPPING make"
 
   test:
     args: []
