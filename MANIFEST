@@ -12,6 +12,7 @@ distroprefs/ADAMK.PPI.yml
 distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ADAMK.Test-Inline.yml
 distroprefs/ADIE.Test-Class.yml
+distroprefs/ADIE.Test-Exception.yml
 distroprefs/AGENT.OpenResty.yml
 distroprefs/AGRUNDMA.POE-Loop-EV.yml
 distroprefs/AMICHAUER.Unicode-Lite.yml
@@ -360,6 +361,7 @@ distroprefs/ZOOLEIKA.RDF-Simple.yml
 distroprefs/ZOOLEIKA.SVG-Plot.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
+lib/App/Cpan.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod

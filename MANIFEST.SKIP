@@ -81,3 +81,4 @@ cpanstats.db
 ^distroprefs/G[AC-Z]*\.dd$
 ^distroprefs/I[A-KMO-Z]*\.dd$
 ^ttt
+.DS_Store
