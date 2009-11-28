@@ -266,6 +266,7 @@ match:
     |MRAMBERG/Catalyst-Devel-\d
     |MRAMBERG/Catalyst-Model-Search-\d
     |MRAMBERG/Catalyst-Plugin-Authentication-Store-DBIC-\d
+    |MRAMBERG/Catalyst-Plugin-Cache-FastMmap-\d
     |MRAMBERG/Catalyst-Plugin-Compress-Bzip2
     |MRAMBERG/Catalyst-Plugin-Compress-Zlib
     |MRAMBERG/Catalyst-Plugin-Prototype-\d
