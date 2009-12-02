@@ -14,6 +14,8 @@ comment: |
 match:
   distribution: |
     ^(?x:^ABRAXXA/Catalyst-View-Email-\d
+    |/Jifty-\d
+    |/Template-Declare-\d
     |ADAMK/Algorithm-Dependency-\d
     |ADAMK/HTML-Location-\d
     |ADAMK/PITA-XML-\d
@@ -28,7 +30,6 @@ match:
     |AGRUNDMA/Catalyst-Plugin-Static-Simple-\d
     |AGRUNDMA/Catalyst-Plugin-UploadProgress-\d
     |ALEXMV/Data-ICal-\d
-    |ALEXMV/Template-Declare-\d
     |ANDREMAR/Number-Phone-NO-\d
     |ASH/DBIx-Class-\d
     |ASH/Parse-Method-Signatures-\d
@@ -51,10 +52,10 @@ match:
     |BLBLACK/DBIx-Class-Schema-Loader-\d
     |BLBLACK/DBIx-Class-\d
     |BLBLACK/MRO-Compat-\d
-    |BLBLACK/Term-Spinner-\d
     |BLBLACK/MooseX-ConfigFromFile-\d
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BLBLACK/MooseX-SimpleConfig-\d
+    |BLBLACK/Term-Spinner-\d
     |BOBMATH/Crypt-CAST5_PP-\d
     |BOBTFISH/Catalyst-Plugin-Authentication-\d
     |BOBTFISH/Catalyst-Plugin-Session-State-Cookie-\d
@@ -193,11 +194,9 @@ match:
     |JESSE/DBIx-SearchBuilder-\d
     |JESSE/Data-ICal-\d
     |JESSE/Net-Jifty-\d
-    |(?:JESSE|SARTAK)/Jifty-\d
     |JESSE/Net-Trac-\d
     |JESSE/Scalar-Defer-\d
     |JESSE/Shipwright-\d
-    |JESSE/Template-Declare-\d
     |JGOULAH/Catalyst-Plugin-AutoRestart-\d
     |JGOULAH/MooseX-LogDispatch-\d
     |JGOULAH/Net-Akamai-\d
@@ -249,8 +248,8 @@ match:
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
     |MIYAGAWA/Plack-\d
-    |MIYAGAWA/XML-Atom-\d
     |MIYAGAWA/Web-Scraper-\d
+    |MIYAGAWA/XML-Atom-\d
     |MIYAZAKI/HTTP-MobileUID-\d
     |MIZZY/Parse-Apache-ServerStatus-Extended-\d
     |MIZZY/Text-Trac-\d
@@ -383,8 +382,8 @@ match:
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
     |ZIGOROU/Catalyst-Model-MozRepl-\d
     |ZIGOROU/Data-ClearSilver-HDF-\d
-    |ZIGOROU/MozRepl-\d
     |ZIGOROU/MozRepl-Plugin-LinkTools-\d
+    |ZIGOROU/MozRepl-\d
     |ZIGOROU/Nagios-Plugins-Memcached-\d
     |ZIGOROU/WebService-Reflexa-\d
     |ZIGOROU/WebService-TRIPIT-Thesaurus-\d

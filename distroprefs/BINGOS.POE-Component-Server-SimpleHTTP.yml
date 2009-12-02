@@ -10,3 +10,5 @@ pl:
       - "n\n"
       - "Do you want PreFork support"
       - "y\n"
+      - "Do you want to test streaming"
+      - "y\n"
