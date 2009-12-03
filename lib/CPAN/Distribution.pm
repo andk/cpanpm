@@ -303,7 +303,7 @@ sub get {
                               $self->{prefs_file_doc},
                              );
             push @e, $why;
-            $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
+            $self->{unwrapped} = CPAN::Distrostatus->new("NA $why");
             $goodbye_message = "[disabled] -- NA $why";
             # note: not intended to be persistent but at least visible
             # during this session
