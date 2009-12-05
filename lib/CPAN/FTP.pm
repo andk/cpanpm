@@ -402,7 +402,7 @@ sub localize {
         my $level_tuple = $levels[$levelno];
         my($level,$scheme,$sitetag) = @$level_tuple;
         $self->mymkpath($aslocal_dir) unless $scheme && "file" eq $scheme;
-        my $defaultsites = $sitetag && $sitetag eq "defaultsites";
+        my $defaultsites = $sitetag && $sitetag eq "defaultsites" && !@$ccurllist;
         my @urllist;
         if ($defaultsites) {
             unless (defined $connect_to_internet_ok) {
@@ -431,7 +431,7 @@ I would like to connect to one of the following sites to get '%s':
                 require CPAN::Exception::blocked_urllist;
                 die CPAN::Exception::blocked_urllist->new;
             }
-        } else {
+        } else { # ! $defaultsites
             my @host_seq = $level =~ /dleasy/ ?
                 @reordered : 0..$last;  # reordered has file and $Thesiteurl first
             @urllist = map { $ccurllist->[$_] } @host_seq;
