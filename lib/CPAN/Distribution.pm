@@ -1266,10 +1266,11 @@ sub readme {
                             "id",
                             split(/\//,"$sans.readme"),
                            );
-    $self->debug("Doing localize") if $CPAN::DEBUG;
-    $local_file = CPAN::FTP->localize("authors/id/$sans.readme",
+    my $readme = "authors/id/$sans.readme";
+    $self->debug("Doing localize for '$readme'") if $CPAN::DEBUG;
+    $local_file = CPAN::FTP->localize($readme,
                                       $local_wanted)
-        or $CPAN::Frontend->mydie(qq{No $sans.readme found});;
+        or $CPAN::Frontend->mydie(qq{No $sans.readme found});
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::launch_file($local_file);
