@@ -1585,6 +1585,8 @@ sub setup_output {
 # RE-adme||MA-ke||TE-st||IN-stall : nearly everything runs through here
 sub rematein {
     my $self = shift;
+    # this variable was global and disturbed programmers, so localize:
+    local $CPAN::Distrostatus::something_has_failed_at;
     my($meth,@some) = @_;
     my @pragma;
     while($meth =~ /^(ff?orce|notest)$/) {
