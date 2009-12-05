@@ -2557,7 +2557,7 @@ sub unsat_prereq {
         # one and is deprecated
 
         if ( $available_file ) {
-            if  ( $available_file eq $inst_file && $nmo->inst_deprecated ) {
+            if  ( $inst_file && $available_file eq $inst_file && $nmo->inst_deprecated ) {
                 # continue installing as a prereq
             }
             else {
