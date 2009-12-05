@@ -184,6 +184,7 @@ sub _recommend_url_for {
 #-> sub CPAN::FTP::_get_urllist
 sub _get_urllist {
     my($self, $with_defaults) = @_;
+    $with_defaults ||= 0;
     CPAN->debug("with_defaults[$with_defaults]") if $CPAN::DEBUG;
 
     $CPAN::Config->{urllist} ||= [];
