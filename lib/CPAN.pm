@@ -342,7 +342,7 @@ Enter 'h' for help.
         s/^\s+//;
         next SHELLCOMMAND if /^$/;
         s/^\s*\?\s*/help /;
-        if (/^(?:q(?:uit)?|bye|exit)$/i) {
+        if (/^(?:q(?:uit)?|bye|exit)\s*$/i) {
             last SHELLCOMMAND;
         } elsif (s/\\$//s) {
             chomp;
