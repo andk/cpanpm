@@ -14,14 +14,14 @@ $BUGHUNTING ||= 0; # released code must have turned off
 sub new {
     my($class,$file) = @_;
     $CPAN::Frontend->mydie("CPAN::Tarzip->new called without arg") unless defined $file;
-    if (0) {
-        # nonono, we get e.g. 01mailrc.txt uncompressed if only wget is available
-        $CPAN::Frontend->mydie("file[$file] doesn't match /\\.(bz2|gz|zip|tgz)\$/")
-            unless $file =~ /\.(bz2|gz|zip|tgz)$/i;
-    }
     my $me = { FILE => $file };
+    if ($file =~ /\.(bz2|gz|zip|tbz|tgz)$/i) {
+        $me->{ISCOMPRESSED} = 1;
+    } else {
+        $me->{ISCOMPRESSED} = 0;
+    }
     if (0) {
-    } elsif ($file =~ /\.bz2$/i) {
+    } elsif ($file =~ /\.(?:bz2|tbz)$/i) {
         unless ($me->{UNGZIPPRG} = $CPAN::Config->{bzip2}) {
             my $bzip2 = _my_which("bzip2");
             if ($bzip2) {
@@ -114,9 +114,28 @@ sub gtest {
     defined $self->{FILE} or $CPAN::Frontend->mydie("gtest called but no FILE specified");
     my $read = $self->{FILE};
     my $success;
-    # After I had reread the documentation in zlib.h, I discovered that
-    # uncompressed files do not lead to an gzerror (anymore?).
-    if ( $CPAN::META->has_inst("Compress::Zlib") ) {
+    if ($read=~/\.(?:bz2|tbz)$/ && $CPAN::META->has_inst("Compress::Bzip2")) {
+        my($buffer,$len);
+        $len = 0;
+        my $gz = Compress::Bzip2::bzopen($read, "rb")
+            or $CPAN::Frontend->mydie(sprintf("Cannot gzopen %s: %s\n",
+                                              $read,
+                                              $Compress::Bzip2::bzerrno));
+        while ($gz->bzread($buffer) > 0 ) {
+            $len += length($buffer);
+            $buffer = "";
+        }
+        my $err = $gz->bzerror;
+        $success = ! $err || $err == Compress::Bzip2::BZ_STREAM_END();
+        if ($len == -s $read) {
+            $success = 0;
+            CPAN->debug("hit an uncompressed file") if $CPAN::DEBUG;
+        }
+        $gz->gzclose();
+        CPAN->debug("err[$err]success[$success]") if $CPAN::DEBUG;
+    } elsif ( $read=~/\.(?:gz|tgz)$/ && $CPAN::META->has_inst("Compress::Zlib") ) {
+        # After I had reread the documentation in zlib.h, I discovered that
+        # uncompressed files do not lead to an gzerror (anymore?).
         my($buffer,$len);
         $len = 0;
         my $gz = Compress::Zlib::gzopen($read, "rb")
@@ -135,6 +154,8 @@ sub gtest {
         }
         $gz->gzclose();
         CPAN->debug("err[$err]success[$success]") if $CPAN::DEBUG;
+    } elsif (!$self->{ISCOMPRESSED}) {
+        $success = 0;
     } else {
         my $command = CPAN::HandleConfig->safe_quote($self->{UNGZIPPRG});
         $success = 0==system(qq{$command -qdt "$read"});
@@ -155,7 +176,12 @@ sub TIEHANDLE {
         binmode $fh;
         $self->{FH} = $fh;
         $class->debug("via uncompressed FH");
-    } elsif ($CPAN::META->has_inst("Compress::Zlib")) {
+    } elsif ($file =~ /\.(?:bz2|tbz)$/ && $CPAN::META->has_inst("Compress::Bzip2")) {
+        my $gz = Compress::Bzip2::bzopen($file,"rb") or
+            $CPAN::Frontend->mydie("Could not bzopen $file");
+        $self->{GZ} = $gz;
+        $class->debug("via Compress::Bzip2");
+    } elsif ($file =~/\.(?:gz|tgz)$/ && $CPAN::META->has_inst("Compress::Zlib")) {
         my $gz = Compress::Zlib::gzopen($file,"rb") or
             $CPAN::Frontend->mydie("Could not gzopen $file");
         $self->{GZ} = $gz;
@@ -166,7 +192,7 @@ sub TIEHANDLE {
         my $fh = FileHandle->new($pipe) or $CPAN::Frontend->mydie("Could not pipe[$pipe]: $!");
         binmode $fh;
         $self->{FH} = $fh;
-        $class->debug("via external gzip");
+        $class->debug("via external $gzip");
     }
     $self;
 }
@@ -227,7 +253,7 @@ sub untar {
     if (0) { # makes changing order easier
     } elsif ($BUGHUNTING) {
         $prefer=2;
-    } elsif ($exttar && $extgzip && $file =~ /\.bz2$/i) {
+    } elsif ($exttar && $extgzip && $file =~ /\.(?:bz2|tbz)$/i) {
         # until Archive::Tar handles bzip2
         $prefer = 1;
     } elsif (
