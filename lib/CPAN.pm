@@ -1471,10 +1471,11 @@ are printed in one-line format.
 These commands take any number of arguments and investigate what is
 necessary to perform the action. Argument processing is as follows:
 
-  embedded slash                  distribution
-    - with trailing slash dot     directory
-  enclosing slashes               regexp
-  known module name               module
+  known module name in format Foo/Bar.pm   module
+  other embedded slash                     distribution
+    - with trailing slash dot              directory
+  enclosing slashes                        regexp
+  known module name in format Foo::Bar     module
 
 If the argument is a distribution file name (recognized by embedded
 slashes), it is processed. If it is a module, CPAN determines the

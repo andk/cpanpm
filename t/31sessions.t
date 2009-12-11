@@ -197,7 +197,7 @@ EOF
           pairs =>
           [
            "get CPAN::Test::Dummy::Perl5::Make" => "Has already been unwrapped",
-           "make CPAN::Test::Dummy::Perl5::Make" => "(?sx:Has.already.been.unwrapped.*
+           "make CPAN/Test/Dummy/Perl5/Make.pm" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made)",
            "test CPAN::Test::Dummy::Perl5::Make" => "(?sx:Has.already.been.unwrapped.*
                                                   Has.already.been.made.*

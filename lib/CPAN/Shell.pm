@@ -1229,7 +1229,21 @@ sub autobundle {
 sub expandany {
     my($self,$s) = @_;
     CPAN->debug("s[$s]") if $CPAN::DEBUG;
-    if ($s =~ m|/| or substr($s,-1,1) eq ".") { # looks like a file or a directory
+    my $module_as_path = "";
+    if ($s =~ m|(?:\w+/)*\w+\.pm$|) {
+        $module_as_path = $s;
+        $module_as_path =~ s/.pm$//;
+        $module_as_path =~ s|/|::|g;
+    }
+    if ($module_as_path) {
+        if ($module_as_path =~ m|^Bundle::|) {
+            $self->local_bundles;
+            return $self->expand('Bundle',$module_as_path);
+        } else {
+            return $self->expand('Module',$module_as_path)
+                if $CPAN::META->exists('CPAN::Module',$module_as_path);
+        }
+    } elsif ($s =~ m|/| or substr($s,-1,1) eq ".") { # looks like a file or a directory
         $s = CPAN::Distribution->normalize($s);
         return $CPAN::META->instance('CPAN::Distribution',$s);
         # Distributions spring into existence, not expand
