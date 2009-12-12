@@ -162,6 +162,7 @@ distroprefs/JENDA.Mail-Sender.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
 distroprefs/JGMYERS.Encode-Detect.yml
+distroprefs/JHOBLITT.DateTime-Format-DateParse.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
 distroprefs/JJORE.Carp-Clan.yml
@@ -387,6 +388,7 @@ lib/CPAN/Kwalify.pm
 lib/CPAN/Kwalify/distroprefs.dd
 lib/CPAN/Kwalify/distroprefs.yml
 lib/CPAN/LWP/UserAgent.pm
+lib/CPAN/Mirrors.pm
 lib/CPAN/Module.pm
 lib/CPAN/Nox.pm
 lib/CPAN/Prompt.pm
