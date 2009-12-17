@@ -13,7 +13,7 @@
 
 	* bugfix for programming interface (shell did not suffer from this):
 	localize $CPAN::Distrostatus::something_has_failed_at properly so it
-	gets reset
+	gets reset (bugreport by brian d foy)
 
 	* added lib/App/Cpan.pm from brian d foy and update cpan script to his
 	current version
