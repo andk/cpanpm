@@ -1,3 +1,28 @@
+2009-12-17  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_53
+
+	* bzip2 support improved
+
+	* allow Foo/Bar.pm on the commandline instead of Foo::Bar (suggested by c9s)
+
+	* bugfix: quit, exit, and bye did not allow a trailing space
+
+	* address #51018: do not switch to default sites when we have a
+	user-configured urllist (reported by Marc Lehmann)
+
+	* bugfix for programming interface (shell did not suffer from this):
+	localize $CPAN::Distrostatus::something_has_failed_at properly so it
+	gets reset
+
+	* added lib/App/Cpan.pm from brian d foy and update cpan script to his
+	current version
+
+	* major rewrite of the FirstTime experience for new users (including
+	auto-pick of download sites) (by David Golden)
+
+	* improved support for Perl core module deprecation (by David Golden)
+
 2009-10-15  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_52
