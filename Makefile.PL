@@ -90,6 +90,7 @@ for my $interesting_module (qw(
         Archive::Tar
         Archive::Zip
         CPAN::Checksums
+        Compress::Bzip2
         Compress::Zlib
         Data::Dumper
         Digest::SHA
