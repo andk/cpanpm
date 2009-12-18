@@ -2,9 +2,10 @@
 
 	* release 1.94_53
 
-	* bzip2 support improved
+	* bzip2 support should now be on par with gzip
 
-	* allow Foo/Bar.pm on the commandline instead of Foo::Bar (suggested by c9s)
+	* allow Foo/Bar.pm on the commandline to mean Foo::Bar (suggested by
+	c9s)
 
 	* bugfix: quit, exit, and bye did not allow a trailing space
 
@@ -13,7 +14,7 @@
 
 	* bugfix for programming interface (shell did not suffer from this):
 	localize $CPAN::Distrostatus::something_has_failed_at properly so it
-	gets reset (bugreport by brian d foy)
+	gets reset after each command (bug inspection by brian d foy)
 
 	* added lib/App/Cpan.pm from brian d foy and update cpan script to his
 	current version
