@@ -138,15 +138,23 @@ DESCRIPTION
 
     "get", "make", "test", "install", "clean" modules or distributions
       These commands take any number of arguments and investigate what is
-      necessary to perform the action. If the argument is a distribution
-      file name (recognized by embedded slashes), it is processed. If it is
-      a module, CPAN determines the distribution file in which this module
-      is included and processes that, following any dependencies named in
-      the module's META.yml or Makefile.PL (this behavior is controlled by
-      the configuration parameter "prerequisites_policy"). If an argument is
-      enclosed in slashes it is treated as a regular expression: it is
-      expanded and if the result is a single object (distribution, bundle or
-      module), this object is processed.
+      necessary to perform the action. Argument processing is as follows:
+
+        known module name in format Foo/Bar.pm   module
+        other embedded slash                     distribution
+          - with trailing slash dot              directory
+        enclosing slashes                        regexp
+        known module name in format Foo::Bar     module
+
+      If the argument is a distribution file name (recognized by embedded
+      slashes), it is processed. If it is a module, CPAN determines the
+      distribution file in which this module is included and processes that,
+      following any dependencies named in the module's META.yml or
+      Makefile.PL (this behavior is controlled by the configuration
+      parameter "prerequisites_policy"). If an argument is enclosed in
+      slashes it is treated as a regular expression: it is expanded and if
+      the result is a single object (distribution, bundle or module), this
+      object is processed.
 
       Example:
 
@@ -856,7 +864,7 @@ CONFIGURATION
 
         expect: []
 
-        commendline: "echo SKIPPING make"
+        commandline: "echo SKIPPING make"
 
       test:
         args: []
@@ -1001,6 +1009,9 @@ CONFIGURATION
         Extended "expect". This is a hash reference with four allowed keys,
         "mode", "timeout", "reuse", and "talk".
 
+        You must install the "Expect" module to use "eexpect". CPAN.pm does
+        not install it for you.
+
         "mode" may have the values "deterministic" for the case where all
         questions come in the order written down and "anyorder" for the case
         where the questions may come in any order. The default mode is
@@ -1035,9 +1046,15 @@ CONFIGURATION
         Environment variables to be set during the command
 
     expect [array]
-        "expect: <array>" is a short notation for
+        You must install the "Expect" module to use "expect". CPAN.pm does
+        not install it for you.
 
-        eexpect: mode: deterministic timeout: 15 talk: <array>
+        "expect: <array>" is a short notation for this "eexpect":
+
+                eexpect:
+                        mode: deterministic
+                        timeout: 15
+                        talk: <array>
 
   Schema verification with "Kwalify"
     If you have the "Kwalify" module installed (which is part of the
@@ -1185,7 +1202,7 @@ PROGRAMMER'S INTERFACE
 
     CPAN::Bundle::inst_file()
         Returns the highest installed version of the bundle in either @INC
-        or "$CPAN::Config-"{cpan_home}>. Note that this is different from
+        or "$CPAN::Config->{cpan_home}". Note that this is different from
         CPAN::Module::inst_file.
 
     CPAN::Bundle::inst_version()
@@ -1301,10 +1318,10 @@ PROGRAMMER'S INTERFACE
     CPAN::Distribution::perldoc()
         Downloads the pod documentation of the file associated with a
         distribution (in HTML format) and runs it through the external
-        command *lynx* specified in "$CPAN::Config-"{lynx}>. If *lynx* isn't
+        command *lynx* specified in "$CPAN::Config->{lynx}". If *lynx* isn't
         available, it converts it to plain text with the external command
         *html2text* and runs it through the pager specified in
-        "$CPAN::Config-"{pager}>
+        "$CPAN::Config->{pager}".
 
     CPAN::Distribution::prefs()
         Returns the hash reference from the first matching YAML file that
@@ -1330,7 +1347,7 @@ PROGRAMMER'S INTERFACE
 
     CPAN::Distribution::readme()
         Downloads the README file associated with a distribution and runs it
-        through the pager specified in "$CPAN::Config-"{pager}>.
+        through the pager specified in "$CPAN::Config->{pager}".
 
     CPAN::Distribution::reports()
         Downloads report data for this distribution from www.cpantesters.org
@@ -1356,7 +1373,7 @@ PROGRAMMER'S INTERFACE
 
     CPAN::Index::reload()
         Reloads all indices if they have not been read for more than
-        "$CPAN::Config-"{index_expire}> days.
+        "$CPAN::Config->{index_expire}" days.
 
     CPAN::InfoObj::dump()
         CPAN::Author, CPAN::Bundle, CPAN::Module, and CPAN::Distribution
