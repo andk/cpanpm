@@ -57,6 +57,7 @@ match:
     |BLBLACK/MooseX-SimpleConfig-\d
     |BLBLACK/Term-Spinner-\d
     |BOBMATH/Crypt-CAST5_PP-\d
+    |BOBTFISH/Catalyst-Action-REST-\d
     |BOBTFISH/Catalyst-Plugin-Authentication-\d
     |BOBTFISH/Catalyst-Plugin-Session-State-Cookie-\d
     |BOBTFISH/Catalyst-Plugin-Session-State-URI-\d
