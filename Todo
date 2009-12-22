@@ -3,9 +3,9 @@
 	* from cpantesters-discuss
 
 	05:04:06 <@ST47> Hey
-	05:04:21 <@ST47> Anyone ever had a problem with the FTPstats.yml getting 
+	05:04:21 <@ST47> Anyone ever had a problem with the FTPstats.yml getting
   corrupted?
-	05:04:49 <@ST47> It keeps getting messed up and throwing a syntax error through 
+	05:04:49 <@ST47> It keeps getting messed up and throwing a syntax error through
   YAML::Syck and throwing my smokers into a useless state
 	06:28:45 <@ST47> Probably ran out of disk space mid-write...
 	07:53:33 <@rafl> yeah, i've seen that.
