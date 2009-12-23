@@ -123,6 +123,7 @@ match:
     |DMAKI/Catalyst-Model-HTML-FormFu-\d
     |DMAKI/Danga-Socket-Callback-\d
     |DMAKI/Data-Decode-\d
+    |DMAKI/Data-Localize-\d
     |DMAKI/Data-Throttler-Memcached-\d
     |DMAKI/Data-Visitor-Encode-\d
     |DMAKI/DateTime-.+-\d
