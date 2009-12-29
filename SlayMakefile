@@ -7,7 +7,13 @@
 	use CPAN::Kwalify;
 	use Data::Dumper;
 	use Kwalify qw(validate);
-	use YAML::XS qw(LoadFile);
+	if (eval { require YAML::XS; 1 }) {
+		YAML::XS->import('LoadFile');
+	} elsif (eval { require YAML::Syck; 1 }) {
+		YAML::Syck->import('LoadFile');
+	} else {
+		die "Could not find a YAML::xxxx::LoadFile to import";
+	}
 }
 
 all:
