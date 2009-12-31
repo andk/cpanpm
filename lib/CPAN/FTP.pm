@@ -745,6 +745,7 @@ sub hostdlhard {
             if ($f eq "lynx") {
                 $src_switch = " -source";
             } elsif ($f eq "ncftp") {
+                next DLPRG unless $url =~ m{\Aftp://};
                 $src_switch = " -c";
             } elsif ($f eq "wget") {
                 $src_switch = " -O $aslocal";
@@ -754,9 +755,8 @@ sub hostdlhard {
                 if ($proxy_vars->{http_proxy}) {
                     $src_switch .= qq{ -U "$proxy_vars->{proxy_user}:$proxy_vars->{proxy_pass}" -x "$proxy_vars->{http_proxy}"};
                 }
-            }
-
-            if ($f eq "ncftpget") {
+            } elsif ($f eq "ncftpget") {
+                next DLPRG unless $url =~ m{\Aftp://};
                 $chdir = "cd $aslocal_dir && ";
                 $stdout_redir = "";
             }
