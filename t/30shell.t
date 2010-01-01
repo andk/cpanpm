@@ -1300,7 +1300,7 @@ To add a new distro, the following steps must be taken:
 - if this distro replaces another, fix the tests that rely on the
   other one
 
-- add the test to shell.t that triggered the demand for a new distro
+- add the test to 30shell.t that triggered the demand for a new distro
 
 =head2 Problems
 
