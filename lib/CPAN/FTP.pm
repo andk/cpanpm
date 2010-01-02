@@ -906,6 +906,7 @@ ftp config variable with
              "cd /",
              map("cd $_", split /\//, $dir), # RFC 1738
              "bin",
+             "passive",
              "get $getfile $targetfile",
              "quit"
         );
