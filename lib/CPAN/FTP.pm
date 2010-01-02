@@ -762,8 +762,10 @@ sub hostdlhard {
             }
             $CPAN::Frontend->myprint(
                                      qq[
-Trying with "$funkyftp$src_switch" to get
-    "$url"
+Trying with
+    $funkyftp$src_switch
+to get
+    $url
 ]);
             my($system) =
                 "$chdir$funkyftp$src_switch \"$url\" $devnull$stdout_redir";
