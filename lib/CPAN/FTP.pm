@@ -741,14 +741,14 @@ sub hostdlhard {
 
             my($src_switch) = "";
             my($chdir) = "";
-            my($stdout_redir) = " > $aslocal";
+            my($stdout_redir) = " > \"$aslocal\"";
             if ($f eq "lynx") {
                 $src_switch = " -source";
             } elsif ($f eq "ncftp") {
                 next DLPRG unless $url =~ m{\Aftp://};
                 $src_switch = " -c";
             } elsif ($f eq "wget") {
-                $src_switch = " -O $aslocal";
+                $src_switch = " -O \"$aslocal\"";
                 $stdout_redir = "";
             } elsif ($f eq 'curl') {
                 $src_switch = ' -L -f -s -S --netrc-optional';
