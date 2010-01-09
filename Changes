@@ -1,3 +1,13 @@
+2010-01-03  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_54
+
+	* David Golden fixes several recent regressions related to external
+	transport tools (ncftp, lynx, curl, etc)
+
+	* quoting fixed for downloading into directories containing
+	whitespace (reported by Jarkko Hietaniemi)
+
 2009-12-18  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_53
