@@ -89,6 +89,7 @@ distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DKWILSON.Tk-DKW.yml
 distroprefs/DLAND.Crypt-SSLeay.yml
 distroprefs/DMAKI.Class-DBI-Plugin-DateTime.yml
+distroprefs/DMAKI.Data-Localize.yml
 distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
