@@ -1,4 +1,4 @@
-2010-01-03  Andreas J. Koenig  <andk@cpan.org>
+2010-01-12  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_54
 
@@ -7,6 +7,9 @@
 
 	* quoting fixed for downloading into directories containing
 	whitespace (reported by Jarkko Hietaniemi)
+
+	* reverted the addition of lib/App/Cpan.pm because of a regression that
+	could not narrow down (reported by Zefram as rt.cpan.org #71838)
 
 2009-12-18  Andreas J. Koenig  <andk@cpan.org>
 
