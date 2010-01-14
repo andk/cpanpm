@@ -364,6 +364,7 @@ distroprefs/ZOOLEIKA.RDF-Simple.yml
 distroprefs/ZOOLEIKA.SVG-Plot.yml
 inc/Test/Builder.pm
 inc/Test/More.pm
+lib/App/Cpan.pm
 lib/CPAN.pm
 lib/CPAN/Admin.pm
 lib/CPAN/API/HOWTO.pod
