@@ -1583,6 +1583,18 @@ PROGRAMMER'S INTERFACE
     in a snapshot bundle file.
 
 PREREQUISITES
+    The CPAN program is trying to depend on as little as possible so the
+    user can use it in hostile enviroment. It works better the more goodies
+    the environment provides. For example if you try in the CPAN shell
+
+      install Bundle::CPAN
+
+    or
+
+      install Bundle::CPANxxl
+
+    you will find the shell more convenient than the bare shell before.
+
     If you have a local mirror of CPAN and can access all files with "file:"
     URLs, then you only need a perl later than perl5.003 to run this module.
     Otherwise Net::FTP is strongly recommended. LWP may be required for
@@ -2121,9 +2133,14 @@ LICENSE
     See <http://www.perl.com/perl/misc/Artistic.html>
 
 TRANSLATIONS
-    Kawai,Takanori provides a Japanese translation of this manpage at
-    <http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm>
+    Kawai,Takanori provides a Japanese translation of a very old version of
+    this manpage at <http://homepage3.nifty.com/hippo2000/perltips/CPAN.htm>
 
 SEE ALSO
-    cpan, CPAN::Nox, CPAN::Version
+    Many people enter the CPAN shell by running the cpan utility program
+    which is installed in the same directory as perl itself. So if you have
+    this directory in your PATH variable (or some equivalent in your
+    operating system) then typing "cpan" in a console window will work for
+    you as well. Above that the utility provides several commandline
+    shortcuts.
 
