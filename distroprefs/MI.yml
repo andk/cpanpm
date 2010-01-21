@@ -347,11 +347,14 @@ match:
     |SARTAK/Moose-\d
     |SARTAK/Net-Hiveminder-\d
     |SARTAK/Net-Jifty-\d
+    |SARTAK/Template-Declare-\d
     |SARTAK/Term-VT102-ZeroBased-\d
     |SARTAK/Tie-Handle-TtyRec-\d
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
+    |SPANG/App-SD-\d
+    |SPANG/Prophet-\d
     |SRI/Catalyst-Plugin-HTML-Widget-\d
     |SRI/HTML-Declare-\d
     |STEVAN/FCGI-Engine-\d
