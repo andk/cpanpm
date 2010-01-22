@@ -932,11 +932,11 @@ sub init {
     # verbosity
     #
 
-    my_prompt_loop(tar_verbosity => 'v', $matcher,
+    my_prompt_loop(tar_verbosity => 'none', $matcher,
                    'none|v|vv');
     my_prompt_loop(load_module_verbosity => 'none', $matcher,
                    'none|v');
-    my_prompt_loop(perl5lib_verbosity => 'v', $matcher,
+    my_prompt_loop(perl5lib_verbosity => 'none', $matcher,
                    'none|v');
     my_yn_prompt(inhibit_startup_message => 0, $matcher);
 
