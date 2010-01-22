@@ -397,8 +397,11 @@ building modules that need some customization?
 The CPAN module can detect when a module which you are trying to build
 depends on prerequisites. If this happens, it can build the
 prerequisites for you automatically ('follow'), ask you for
-confirmation ('ask'), or just ignore them ('ignore'). Please set your
-policy to one of the three values.
+confirmation ('ask'), or just ignore them ('ignore').  Choosing
+'follow' also sets PERL_AUTOINSTALL and PERL_EXTUTILS_AUTOINSTALL for
+"--defaultdeps" if not already set.
+
+Please set your policy to one of the three values.
 
 Policy on building prerequisites (follow, ask or ignore)?
 

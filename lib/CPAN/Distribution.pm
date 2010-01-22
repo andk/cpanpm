@@ -1798,6 +1798,10 @@ is part of the perl-%s distribution. To install that, you need to run
         $env{$k} = $v;
     }
     local %ENV = %env;
+    if ($CPAN::Config->{prerequisites_policy} eq "follow") {
+        $ENV{PERL_AUTOINSTALL}          ||= "--defaultdeps";
+        $ENV{PERL_EXTUTILS_AUTOINSTALL} ||= "--defaultdeps";
+    }
     my $system;
     my $pl_commandline;
     if ($self->prefs->{pl}) {
