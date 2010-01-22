@@ -844,9 +844,9 @@ sub init {
     #= Do we follow PREREQ_PM?
     #
 
-    my_prompt_loop(prerequisites_policy => 'ask', $matcher,
+    my_prompt_loop(prerequisites_policy => 'follow', $matcher,
                    'follow|ask|ignore');
-    my_prompt_loop(build_requires_install_policy => 'ask/yes', $matcher,
+    my_prompt_loop(build_requires_install_policy => 'yes', $matcher,
                    'yes|no|ask/yes|ask/no');
 
     #
