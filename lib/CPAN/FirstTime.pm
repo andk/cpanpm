@@ -884,7 +884,7 @@ sub init {
         my_dflt_prompt(yaml_module => "YAML", $matcher);
         my $old_v = $CPAN::Config->{load_module_verbosity};
         $CPAN::Config->{load_module_verbosity} = q[none];
-        unless ($CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
+        if (!$silent && !$CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
             $CPAN::Frontend->mywarn
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
