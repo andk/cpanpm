@@ -1981,6 +1981,9 @@ currently defined:
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
+                     For 'follow', also sets PERL_AUTOINSTALL and
+                     PERL_EXTUTILS_AUTOINSTALL for "--defaultdeps" if
+                     not already set
   prefs_dir          local directory to store per-distro build options
   proxy_user         username for accessing an authenticating proxy
   proxy_pass         password for accessing an authenticating proxy
