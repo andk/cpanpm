@@ -634,7 +634,7 @@ Edit key values as in the following (the "o" is a literal letter o):
   o conf inhibit_startup_message 1
 
 ]);
-    undef; #don't reprint CPAN::Config
+    1; #don't reprint CPAN::Config
 }
 
 sub cpl {
