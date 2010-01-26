@@ -207,6 +207,7 @@ EOF
            "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
            "o conf dontload_list push YAML" => ".",
            "o conf dontload_list push YAML::Syck" => ".",
+           "o conf dontload_list push Parse::CPAN::Meta" => ".",
            "o conf commit" => "commit: wrote",
           ]
          },
@@ -270,6 +271,7 @@ EOF
            # must not see Failearly in the failed summary
            "failed" => q{(?x:Failed \s during \s this \s session: \s+
                                \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
+           "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
            "o conf commit" => "commit: wrote",

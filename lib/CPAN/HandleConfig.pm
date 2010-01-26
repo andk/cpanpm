@@ -560,9 +560,14 @@ sub load {
         if ($configpm) {
           $INC{$inc_key} = $configpm;
         } else {
-          my $text = qq{WARNING: CPAN.pm is unable to } .
-              qq{create a configuration file.};
-          output($text, 'confess');
+          my $myconfigpm = File::Spec->catfile(home,".cpan","CPAN","MyConfig.pm");
+          $CPAN::Frontend->mydie(<<"END");
+WARNING: CPAN.pm is unable to write a configuration file.  You need write
+access to your default perl library directories or you must be able to
+create and write to '$myconfigpm'.
+
+Aborting configuration.
+END
         }
 
     }
