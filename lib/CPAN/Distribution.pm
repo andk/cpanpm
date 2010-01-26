@@ -583,8 +583,9 @@ sub parse_meta_yml {
     return unless -f $yaml;
     my $early_yaml;
     eval {
-        require Parse::CPAN::Meta;
-        $early_yaml = Parse::CPAN::Meta::LoadFile($yaml)->[0];
+        $CPAN::META->has_inst("Parse::CPAN::Meta") or die;
+        # P::C::M returns last document in scalar context
+        $early_yaml = Parse::CPAN::Meta::LoadFile($yaml);
     };
     unless ($early_yaml) {
         eval { $early_yaml = CPAN->_yaml_loadfile($yaml)->[0]; };
@@ -2743,8 +2744,8 @@ sub read_yaml {
     my $yaml = -f $mymeta ? $mymeta : $meta;
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
-    if ($@) {
+    eval { $self->{yaml_content} = $self->parse_meta_yml };
+    if ($@ or ! $self->{yaml_content}) {
         $CPAN::Frontend->mywarn("Could not read ".
                                 "'$yaml'. Falling back to other ".
                                 "methods to determine prerequisites\n");

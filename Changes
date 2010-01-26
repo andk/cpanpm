@@ -1,4 +1,9 @@
 
+	* Fixed rt.perl.org#72362 (CPAN ignoring configure_requires).
+	  Also fixed (MY)META.yml processing to always prefer
+	  Parse::CPAN::Meta, if available.  Reported by Joshua B Jore
+	  and patched by David Golden
+
 	* Fixed rt.perl.org#72348 (missing CPAN::HandleConfig::output);
 	  Reported by Joshua B Jore and patched by David Golden
 
