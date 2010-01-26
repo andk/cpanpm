@@ -560,11 +560,11 @@ sub load {
         if ($configpm) {
           $INC{$inc_key} = $configpm;
         } else {
-          my $configpmdir = File::Spec->catdir(home,".cpan","CPAN");
+          my $myconfigpm = File::Spec->catfile(home,".cpan","CPAN","MyConfig.pm");
           $CPAN::Frontend->mydie(<<"END");
-WARNING: CPAN.pm is unable to create a configuration file.  You need write
-permissions to your default perl library directories or you must be able to
-create the directory '$configpmdir' and write files to it.  
+WARNING: CPAN.pm is unable to write a configuration file.  You need write
+access to your default perl library directories or you must be able to
+create and write to '$myconfigpm'.
 
 Aborting configuration.
 END
