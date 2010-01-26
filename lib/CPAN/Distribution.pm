@@ -732,8 +732,8 @@ sub store_persistent_state {
     my $dir = $self->{build_dir};
     unless (File::Spec->canonpath(File::Basename::dirname($dir))
             eq File::Spec->canonpath($CPAN::Config->{build_dir})) {
-        $CPAN::Frontend->mywarn("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
-                                "will not store persistent state\n");
+        $CPAN::Frontend->mywarnonce("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
+                                    "will not store persistent state\n");
         return;
     }
     my $file = sprintf "%s.yml", $dir;
@@ -748,8 +748,8 @@ sub store_persistent_state {
                              }
                             );
     } else {
-        $CPAN::Frontend->myprint("Warning (usually harmless): '$yaml_module' not installed, ".
-                                "will not store persistent state\n");
+        $CPAN::Frontend->myprintonce("'$yaml_module' not installed, ".
+                                    "will not store persistent state\n");
     }
 }
 
@@ -2184,6 +2184,12 @@ sub _find_prefs {
     if ($@) {
         $CPAN::Frontend->mydie("Cannot create directory $prefs_dir");
     }
+    # shortcut if there are no distroprefs files
+    {
+      my $dh = DirHandle->new($prefs_dir) or $CPAN::Frontend->mydie("Couldn't open '$prefs_dir': $!");
+      my @files = map { /\.(yml|dd|st)\z/i } $dh->read;
+      return unless @files;
+    }
     my $yaml_module = CPAN::_yaml_module();
     my $ext_map = {};
     my @extensions;
@@ -2200,13 +2206,13 @@ sub _find_prefs {
         if (@fallbacks) {
             local $" = " and ";
             unless ($self->{have_complained_about_missing_yaml}++) {
-                $CPAN::Frontend->mywarn("'$yaml_module' not installed, falling back ".
-                                        "to @fallbacks to read prefs '$prefs_dir'\n");
+                $CPAN::Frontend->mywarnonce("'$yaml_module' not installed, falling back ".
+                                            "to @fallbacks to read prefs '$prefs_dir'\n");
             }
         } else {
             unless ($self->{have_complained_about_missing_yaml}++) {
-                $CPAN::Frontend->mywarn("'$yaml_module' not installed, cannot ".
-                                        "read prefs '$prefs_dir'\n");
+                $CPAN::Frontend->mywarnonce("'$yaml_module' not installed, cannot ".
+                                            "read prefs '$prefs_dir'\n");
             }
         }
     }
@@ -2746,9 +2752,9 @@ sub read_yaml {
     return unless -f $yaml;
     eval { $self->{yaml_content} = $self->parse_meta_yml };
     if ($@ or ! $self->{yaml_content}) {
-        $CPAN::Frontend->mywarn("Could not read ".
-                                "'$yaml'. Falling back to other ".
-                                "methods to determine prerequisites\n");
+        $CPAN::Frontend->mywarnonce("Could not read ".
+                                    "'$yaml'. Falling back to other ".
+                                    "methods to determine prerequisites\n");
         return $self->{yaml_content} = undef; # if we die, then we
                                               # cannot read YAML's own
                                               # META.yml
@@ -3750,7 +3756,7 @@ sub _should_report {
 
     # available
     if ( ! $CPAN::META->has_inst("CPAN::Reporter")) {
-        $CPAN::Frontend->mywarn(
+        $CPAN::Frontend->mywarnonce(
             "CPAN::Reporter not installed.  No reports will be sent.\n"
         );
         return $self->{should_report} = 0;

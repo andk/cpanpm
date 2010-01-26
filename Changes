@@ -7,6 +7,10 @@
 	* Fixed rt.perl.org#72348 (missing CPAN::HandleConfig::output);
 	  Reported by Joshua B Jore and patched by David Golden
 
+	* Quieter user interface: made lots of '$module missing' type 
+	  warnings only warn once; eliminated 'no YAML' warnings for 
+	  distroprefs if there are no distroprefs.
+
 2010-01-14  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_54
