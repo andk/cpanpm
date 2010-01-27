@@ -2524,6 +2524,19 @@ sub unsat_prereq {
                    %{$prefs_depends->{configure_requires}||{}},
                    %{$feature_depends->{configure_requires}||{}},
                   );
+        if (-f "Build.PL"
+            && ! -f "Makefile.PL"
+            && ! exists $merged{"Module::Build"}
+            && ! $CPAN::META->has_inst("Module::Build")
+           ) {
+            $CPAN::Frontend->mywarn(
+              "  Warning: CPAN.pm discovered Module::Build as undeclared prerequisite.\n".
+              "  Adding it now as such.\n"
+            );
+            $CPAN::Frontend->mysleep(5);
+            $merged{"Module::Build"} = 0;
+            delete $self->{writemakefile};
+        }
         $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
         my $prereq_pm_0 = $self->prereq_pm || {};
@@ -2906,18 +2919,6 @@ sub prereq_pm {
                 }
             }
         }
-    }
-    if (-f "Build.PL"
-        && ! -f "Makefile.PL"
-        && ! exists $req->{"Module::Build"}
-        && ! $CPAN::META->has_inst("Module::Build")) {
-        $CPAN::Frontend->mywarn("  Warning: CPAN.pm discovered Module::Build as ".
-                                "undeclared prerequisite.\n".
-                                "  Adding it now as such.\n"
-                               );
-        $CPAN::Frontend->mysleep(5);
-        $req->{"Module::Build"} = 0;
-        delete $self->{writemakefile};
     }
     if ($req || $breq) {
 #        $self->{prereq_pm_detected}++;
