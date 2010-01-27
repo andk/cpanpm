@@ -171,6 +171,7 @@ sub color_cmd_tmps {
     my($color) = shift || 0;
     my($ancestors) = shift || [];
     # a distribution needs to recurse into its prereq_pms
+    $self->debug("color_cmd_tmps[$depth,$color,@$ancestors]") if $CPAN::DEBUG;
 
     return if exists $self->{incommandcolor}
         && $color==1
@@ -576,11 +577,11 @@ EOF
 
 #-> sub CPAN::Distribution::parse_meta_yml ;
 sub parse_meta_yml {
-    my($self, $file) = @_;
-    my $file ||= 'META.yml';
+    my($self, $yaml) = @_;
+    $self->debug(sprintf("parse_meta_yml[%s]",$yaml||'undef')) if $CPAN::DEBUG;
     my $build_dir = $self->{build_dir} or die "PANIC: cannot parse yaml without a build_dir";
-    my $yaml = File::Spec->catfile($build_dir,$file);
-    $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
+    $yaml ||= File::Spec->catfile($build_dir,"META.yml");
+    $self->debug("meta[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
     my $early_yaml;
     eval {
@@ -591,16 +592,18 @@ sub parse_meta_yml {
     unless ($early_yaml) {
         eval { $early_yaml = CPAN->_yaml_loadfile($yaml)->[0]; };
     }
-    unless ($early_yaml) {
-        return;
-    }
-    return $early_yaml;
+    $self->debug(sprintf("yaml[%s]", $early_yaml || 'UNDEF')) if $CPAN::DEBUG;
+    $self->debug($early_yaml) if $CPAN::DEBUG && $early_yaml;
+    return $early_yaml || undef;
 }
 
 #-> sub CPAN::Distribution::satisfy_requires ;
 sub satisfy_requires {
     my ($self) = @_;
+    $self->debug("Entering satisfy_requires") if $CPAN::DEBUG;
     if (my @prereq = $self->unsat_prereq("later")) {
+        $self->debug("unsatisfied[@prereq]") if $CPAN::DEBUG;
+        $self->debug(@prereq) if $CPAN::DEBUG && @prereq;
         if ($prereq[0][0] eq "perl") {
             my $need = "requires perl '$prereq[0][1]'";
             my $id = $self->pretty_id;
@@ -620,11 +623,13 @@ sub satisfy_requires {
             }
         }
     }
+    $self->debug("Leaving") if $CPAN::DEBUG;
 }
 
 #-> sub CPAN::Distribution::satisfy_configure_requires ;
 sub satisfy_configure_requires {
     my($self) = @_;
+    $self->debug("Entering satisfy_configure_requires") if $CPAN::DEBUG;
     my $enable_configure_requires = 1;
     if (!$enable_configure_requires) {
         return 1;
@@ -632,7 +637,10 @@ sub satisfy_configure_requires {
         # configure_requires that means, things with
         # configure_requires simply fail, all others succeed
     }
-    my @prereq = $self->unsat_prereq("configure_requires_later") or return 1;
+    my @prereq = $self->unsat_prereq("configure_requires_later");
+    $self->debug("configure_requires[@prereq]") if $CPAN::DEBUG;
+    return 1 unless @prereq;
+    $self->debug(\@prereq) if $CPAN::DEBUG;
     if ($self->{configure_requires_later}) {
         for my $k (keys %{$self->{configure_requires_later_for}||{}}) {
             if ($self->{configure_requires_later_for}{$k}>1) {
@@ -2738,7 +2746,6 @@ sub _fulfills_all_version_rqs {
 #-> sub CPAN::Distribution::read_yaml ;
 sub read_yaml {
     my($self) = @_;
-    return $self->{yaml_content} if exists $self->{yaml_content};
     my $build_dir;
     unless ($build_dir = $self->{build_dir}) {
         # maybe permission on build_dir was missing
@@ -2749,35 +2756,35 @@ sub read_yaml {
     my $meta = File::Spec->catfile($build_dir,"META.yml");
     my $mymeta = File::Spec->catfile($build_dir,"MYMETA.yml");
     my $yaml = -f $mymeta ? $mymeta : $meta;
-    $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
+    $self->debug("meta[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = $self->parse_meta_yml($yaml) };
-    if ($@ or ! $self->{yaml_content}) {
+    my $yaml_content;
+    eval { $yaml_content = $self->parse_meta_yml($yaml) };
+    if ($@ or ! $yaml_content) {
         $CPAN::Frontend->mywarnonce("Could not read ".
                                     "'$yaml'. Falling back to other ".
                                     "methods to determine prerequisites\n");
-        return $self->{yaml_content} = undef; # if we die, then we
+        return $yaml_content = undef; # if we die, then we
                                               # cannot read YAML's own
                                               # META.yml
     }
     # not "authoritative"
-    for ($self->{yaml_content}) {
+    for ($yaml_content) {
         if (defined $_ && (! ref $_ || ref $_ ne "HASH")) {
             $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
-            $self->{yaml_content} = undef;
+            $yaml_content = undef;
         }
     }
-    # MYMETA.yml is not dynamic by definition
-    if ( $yaml ne $mymeta && 
-         ( not exists $self->{yaml_content}{dynamic_config}
-           or $self->{yaml_content}{dynamic_config}
-         )
-       ) {
-        $self->{yaml_content} = undef;
-    }
-    $self->debug(sprintf "yaml_content[%s]", $self->{yaml_content} || "UNDEF")
+    $self->debug(sprintf "yaml_content[%s]", $yaml_content || "UNDEF")
         if $CPAN::DEBUG;
-    return $self->{yaml_content};
+    $self->debug($yaml_content) if $CPAN::DEBUG && $yaml_content;
+    # MYMETA.yml is non-dynamic by definition
+    return $yaml_content if $yaml eq $mymeta;
+    # META.yml can be explictly non-dynamic
+    my $dynamic = $yaml_content->{dynamic_config};
+    return if defined $dynamic && ! $dynamic;
+    # otherwise, we can't use what we found
+    return undef;
 }
 
 #-> sub CPAN::Distribution::prereq_pm ;
@@ -2913,7 +2920,7 @@ sub prereq_pm {
         delete $self->{writemakefile};
     }
     if ($req || $breq) {
-        $self->{prereq_pm_detected}++;
+#        $self->{prereq_pm_detected}++;
         return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
     }
 }
