@@ -94,7 +94,6 @@ distribution: !!perl/hash:CPAN::Distribution
     COMMANDID: 78
     FAILED: ''
     TEXT: YES
-  prereq_pm_detected: 1
   unwrapped: !!perl/hash:CPAN::Distrostatus
     COMMANDID: 78
     FAILED: ''
