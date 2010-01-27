@@ -2750,11 +2750,12 @@ sub read_yaml {
     my $yaml = -f $mymeta ? $mymeta : $meta;
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = $self->parse_meta_yml };
-    if ($@ or ! $self->{yaml_content}) {
-        $CPAN::Frontend->mywarnonce("Could not read ".
-                                    "'$yaml'. Falling back to other ".
-                                    "methods to determine prerequisites\n");
+    eval { $self->{yaml_content} = CPAN->_yaml_loadfile($yaml)->[0]; };
+    if ($@) {
+        $CPAN::Frontend->mywarnonce
+            ("Could not read ".
+             "'$yaml'. Falling back to other ".
+             "methods to determine prerequisites\n");
         return $self->{yaml_content} = undef; # if we die, then we
                                               # cannot read YAML's own
                                               # META.yml
