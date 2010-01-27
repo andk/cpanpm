@@ -576,9 +576,10 @@ EOF
 
 #-> sub CPAN::Distribution::parse_meta_yml ;
 sub parse_meta_yml {
-    my($self) = @_;
+    my($self, $file) = @_;
+    my $file ||= 'META.yml';
     my $build_dir = $self->{build_dir} or die "PANIC: cannot parse yaml without a build_dir";
-    my $yaml = File::Spec->catfile($build_dir,"META.yml");
+    my $yaml = File::Spec->catfile($build_dir,$file);
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
     my $early_yaml;
@@ -2750,7 +2751,7 @@ sub read_yaml {
     my $yaml = -f $mymeta ? $mymeta : $meta;
     $self->debug("yaml[$yaml]") if $CPAN::DEBUG;
     return unless -f $yaml;
-    eval { $self->{yaml_content} = $self->parse_meta_yml };
+    eval { $self->{yaml_content} = $self->parse_meta_yml($yaml) };
     if ($@ or ! $self->{yaml_content}) {
         $CPAN::Frontend->mywarnonce("Could not read ".
                                     "'$yaml'. Falling back to other ".
@@ -2763,7 +2764,7 @@ sub read_yaml {
     for ($self->{yaml_content}) {
         if (defined $_ && (! ref $_ || ref $_ ne "HASH")) {
             $CPAN::Frontend->mywarn("META.yml does not seem to be conforming, cannot use it.\n");
-            $self->{yaml_content} = +{};
+            $self->{yaml_content} = undef;
         }
     }
     # MYMETA.yml is not dynamic by definition
