@@ -523,7 +523,8 @@ sub load {
     my($self, %args) = @_;
     $CPAN::Be_Silent++ if $args{be_silent};
     my $doit;
-    $doit = delete $args{doit};
+    $doit = delete $args{doit} || 0;
+    $loading = 0 unless defined $loading;
 
     use Carp;
     require_myconfig_or_config;
