@@ -5,10 +5,10 @@ abstract:            CPAN Test Dummy for CPAN.pm
 license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.32_01 and tweaked manually
 configure_requires:
-  'CPAN::Test::Dummy::Perl5::Make': 1.05
+  CPAN::Test::Dummy::Perl5::Make: 1.05
 distribution_type:   module
 requires:     
-  'CPAN::Test::Dummy::Perl5::Make': 1.05
+  CPAN::Test::Dummy::Perl5::Make: 1.05
 meta-spec:
     url:     http://module-build.sourceforge.net/META-spec-v1.3.html
     version: 1.3
