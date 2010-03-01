@@ -34,7 +34,9 @@ sub get_basic_credentials {
 sub get_proxy_credentials {
     my $self = shift;
     my ($user, $password);
-    if ( defined $CPAN::Config->{proxy_user} ) {
+    if ( defined $CPAN::Config->{proxy_user}
+            && $CPAN::Config->{proxy_user}
+    ) {
         $user = $CPAN::Config->{proxy_user};
         $password = $CPAN::Config->{proxy_pass} || "";
         return ($user, $password);
