@@ -93,6 +93,12 @@ sub _get_username_and_password_from_user {
     return ($username,$password);
 }
 
+
+sub no_proxy {
+    my ( $self, $no_proxy ) = @_;
+    return $self->SUPER::no_proxy( split(',',$no_proxy) );
+}
+
 # mirror(): Its purpose is to deal with proxy authentication. When we
 # call SUPER::mirror, we relly call the mirror method in
 # LWP::UserAgent. LWP::UserAgent will then call
