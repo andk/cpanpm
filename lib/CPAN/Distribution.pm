@@ -2576,7 +2576,9 @@ sub unsat_prereq {
                      or $need_version eq '0'    # "==" would trigger warning when not numeric
                      or $need_version eq "undef"
                     )) {
-                next NEED;
+                unless ($nmo->inst_deprecated) {
+                    next NEED;
+                }
             }
 
             $available_version = $nmo->available_version;
