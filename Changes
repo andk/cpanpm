@@ -1,3 +1,11 @@
+2010-03-22  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.9600
+
+	* Nearly identical to 1.94_56 with one tiny fix to treat modules
+	correctly that are deprecated in perl 5.12. Since the fix is not in perl
+	5.12.0-RC0 this stable release is there to close the gap..
+
 2010-02-17  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_56
