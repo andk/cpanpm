@@ -250,7 +250,7 @@ verify-changes-version:
 	@$(PERL) -ne '$$ok++,exit if /\b$(VERSION)\b/; END{die "Alert: did not find <$(VERSION)> in Changes file" unless $$ok}' Changes
 
 kwalify-distroprefs:
-	`echo $(PERL) | sed -e 's/perl$$/slaymake/'` validate
+	`dirname $(PERL)`/slaymake validate
 
 setversion:
 	$(PERL) Makefile.PL --setversion

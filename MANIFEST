@@ -261,6 +261,7 @@ distroprefs/NKH.PerlBuildSystem.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/NUFFIN.Devel-Events.yml
+distroprefs/NUFFIN.YAML-LibYAML.yml
 distroprefs/OLAF.Net-DNS.yml
 distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.HOP-Parser.yml
