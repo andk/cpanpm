@@ -6,4 +6,4 @@ comment: |
 match:
   distribution: "NUFFIN/YAML-LibYAML-0.32.tar.gz"
 patches:
-  - "ANDK/patches/YAML-LibYAML-0.32-GAAS-01.patch"
+  - "ANDK/patches/YAML-LibYAML-0.32-GAAS-01.patch.gz"
