@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "^AUDREYT/Module-Signature-0"
+  distribution: "/Module-Signature-0"
 pl:
   eexpect:
     mode: anyorder
