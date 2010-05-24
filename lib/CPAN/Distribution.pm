@@ -2695,7 +2695,16 @@ sub unsat_prereq {
                 }
             }
         }
-        my $needed_as = exists $prereq_pm->{requires}{$need_module} ? "r" : "b";
+        my $needed_as;
+        if (0) {
+        } elsif (exists $prereq_pm->{requires}{$need_module}) {
+            $needed_as = "r";
+        } elsif ($slot eq "configure_requires_later") {
+            # we have not yet run the {Build,Makefile}.PL, we must presume "r"
+            $needed_as = "r";
+        } else {
+            $needed_as = "b";
+        }
         push @need, [$need_module,$needed_as];
     }
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
