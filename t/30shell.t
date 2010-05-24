@@ -251,6 +251,10 @@ my $default_timeout = 240;
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
     $RUN_EXPECT = 0;
+} elsif ($Config::Config{archname} =~ /solaris/) {
+    # expect on some solaris is broken enough to fail this test but
+    # good enough to survive everyday work with the CPAN shell.
+    $RUN_EXPECT = 0;
 } else {
     $RUN_EXPECT = 1;
 }
