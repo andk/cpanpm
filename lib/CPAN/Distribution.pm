@@ -638,7 +638,7 @@ sub satisfy_configure_requires {
         # configure_requires simply fail, all others succeed
     }
     my @prereq = $self->unsat_prereq("configure_requires_later");
-    $self->debug("configure_requires[@prereq]") if $CPAN::DEBUG;
+    $self->debug(sprintf "configure_requires[%s]", join(",",map {join "/",@$_} @prereq)) if $CPAN::DEBUG;
     return 1 unless @prereq;
     $self->debug(\@prereq) if $CPAN::DEBUG;
     if ($self->{configure_requires_later}) {
