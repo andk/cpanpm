@@ -2112,6 +2112,10 @@ COMPATIBILITY
     cooler than the other. CPAN.pm is older. CPANPLUS was designed to be
     more modular, but it was never intended to be compatible with CPAN.pm.
 
+  CPANMINUS
+    In the year 2010 App::cpanminus was launched as a new approach to a cpan
+    shell with a considerably smaller footprint. Very cool stuff.
+
 SECURITY ADVICE
     This software enables you to upgrade software on your computer and so is
     inherently dangerous because the newly installed software may contain
