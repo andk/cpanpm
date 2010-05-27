@@ -17,6 +17,22 @@ BEGIN {
         $exit_message = "None of the supported SHA modules (Digest::SHA,Digest::SHA1,Digest::SHA::PurePerl) found";
     }
     unless ($exit_message) {
+        require Config;
+        require CPAN::FirstTime;
+        my @programs = qw(
+                             gpg
+                        );
+        my $p;
+        my(@path) = split /$Config::Config{path_sep}/, $ENV{PATH};
+        require CPAN::FirstTime;
+    PRG: for $p (@programs) {
+            unless (CPAN::FirstTime::find_exe($p,\@path)){
+                $exit_message = "External program '$p' not found";
+                last PRG;
+            }
+        }
+    }
+    unless ($exit_message) {
         if (!-f 'SIGNATURE') {
             $exit_message = "No signature file";
         }
@@ -32,7 +48,7 @@ BEGIN {
         }
     }
     unless ($exit_message) {
-        if (!eval { require Socket; Socket::inet_aton('pgp.mit.edu') }) {
+        if (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
             $exit_message = "Cannot connect to the keyserver";
         }
     }
