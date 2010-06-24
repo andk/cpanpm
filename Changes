@@ -1,3 +1,12 @@
+2010-06-24  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_58
+
+	* bugfix: Non-English locales got no diagnostics on a failed locking due
+	to permissions (reported by Frank Wiegand)
+
+	* chasing test failures with test fixes.
+
 2010-05-24  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_57
