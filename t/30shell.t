@@ -270,6 +270,7 @@ if ($RUN_EXPECT) {
     $expo->log_stdout(0);
     $expo->notransfer(1);
 } else {
+    delete $HAVE->{Expect};
     my $system = join(" ", map { "\"$_\"" } @run_shell_cmd_lit)." > test.out";
     # warn "# DEBUG: system[$system]";
     my $opened = open SYSTEM, "| $system";
@@ -419,7 +420,7 @@ if ($RUN_EXPECT) {
         } else {
             my $pos = pos $biggot;
             my $got = substr($biggot,$pos,1024);
-            diag "FAILED at pos[$pos]prog[$prog]\nexpected[$expected]\ngot[$got]";
+            diag "FAILED at pos[$pos]\nprog[$prog]\nexpected[$expected]\ngot[$got]";
             last;
             $ok = 0;
         }
@@ -499,14 +500,14 @@ __END__
 #P:o conf urllist pop
 ########
 #P:o conf urllist
-#E:programming(?s:.+)hknet
+#E:programming(?s:.+?)hknet
 ########
 #P:o conf urllist push PUSH
 ########
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT(?s:.+)programming(?s:.+)hknet(?s:.+)PUSH
+#E:UNSHIFT(?s:.+?)programming(?s:.+?)hknet(?s:.+?)PUSH
 ########
 #P:o conf urllist ONE TWO
 ########
@@ -515,7 +516,7 @@ __END__
 #P:o conf urllist unshift UNSHIFT
 ########
 #P:o conf urllist
-#E:UNSHIFT.+\n.+ONE.+\n.+TWO.+\n.+PUSH
+#E:UNSHIFT.+?\n.+?ONE.+\n.+?TWO.+\n.+?PUSH
 ########
 #P:o conf defaults
 ########
@@ -698,7 +699,7 @@ __END__
 #E:
 ########
 #P:o conf init prefer_installer
-#E:which\s+installer[\S\s]+(\])
+#E:which\s+installer[\S\s]+?(\])
 ########
 #P:EUMM
 #E:
@@ -1077,7 +1078,7 @@ __END__
 #E:Has already been made
 ########
 #P:clean Bundle::CpanTestDummies
-#E:Running clean[\S\s]+Running clean[\S\s]+Running clean
+#E:Running clean[\S\s]+?Running clean[\S\s]+?Running clean
 ########
 #P:clean Bundle::CpanTestDummies
 #E:make clean already called once
