@@ -3,6 +3,7 @@ use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
 use CPAN::InfoObj;
+use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
 $VERSION = "1.9600";
@@ -500,6 +501,10 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
             $tdir_base = $userid;
             $from_dir = File::Spec->curdir;
             @dirents = @readdir;
+        }
+        eval { File::Path::mkpath $builddir; };
+        if ($@) {
+            $CPAN::Frontend->mydie("Cannot create directory $builddir: $@");
         }
         $packagedir = File::Temp::tempdir(
                                           "$tdir_base-XXXXXX",
