@@ -1,0 +1,10 @@
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=59558
+
+match:
+  distribution: "XMATH/Sub-Name-0.04.tar.gz"
+patches:
+  - "/tmp/Sub-Name-0.04-RURBAN-01.patch.gz"
+#  - "ANDK/patches/Sub-Name-0.04-RURBAN-01.patch.gz"
