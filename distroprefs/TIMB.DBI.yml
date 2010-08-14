@@ -23,9 +23,10 @@ comment: |
       sleep 1;
       sleep 1;
 
+  For the patch visit https://rt.cpan.org/Ticket/Display.html?id=59840
 
 match:
-  distribution: 'TIMB/DBI-\d'
+  distribution: 'TIMB/DBI-1.613.tar.gz'
 pl:
   eexpect:
     mode: anyorder
@@ -33,3 +34,5 @@ pl:
     talk:
       - 'Press return to continue\.\.\.'
       - "\n"
+patches:
+  - "/tmp/DBI-1.613-ANDK-01.patch"
