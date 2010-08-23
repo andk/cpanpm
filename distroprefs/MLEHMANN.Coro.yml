@@ -1,22 +1,3 @@
----
-comment: |
-
-  patch 33018 to perl shuffled "hasargs" around
-
-match:
-  distribution: "^MLEHMANN/Coro-4.37.tar.gz"
-pl:
-  env:
-    PERL_MM_USE_DEFAULT: 1
-    CORO_INTERFACE: s
-depends:
-  configure_requires:
-    Event: 0
-  requires:
-    Event: 0
-patches:
-  - "ANDK/patches/Coro-4.37-ANDK-01.patch.gz"
---- 
 comment: |
 
   or just to accept defaults in future releases...
@@ -37,6 +18,13 @@ pl:
   env:
     PERL_MM_USE_DEFAULT: 1
     CORO_INTERFACE: s
+  eexpect:
+    mode: anyorder
+    timeout: 15
+    reuse: 1
+    talk:
+      - "Skip further questions"
+      - "y\n"
 depends:
   configure_requires:
     Event: 0
@@ -48,6 +36,13 @@ match:
 pl:
   env:
     PERL_MM_USE_DEFAULT: 1
+  eexpect:
+    mode: anyorder
+    timeout: 15
+    reuse: 1
+    talk:
+      - "Skip further questions"
+      - "y\n"
 depends:
   configure_requires:
     Event: 0

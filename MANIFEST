@@ -238,6 +238,7 @@ distroprefs/MLEHMANN.Gtk-Perl.yml
 distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MLFISHER.Test-MockDBI.yml
+distroprefs/MOB.Forks-Super.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MRAMBERG.MojoMojo.yml
 distroprefs/MSCHILLI.RRDTool-OO.yml
@@ -258,6 +259,7 @@ distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NICOLAW.WWW-Comic.yml
 distroprefs/NIKIP.Authen-PAM.yml
+distroprefs/NINE.Inline-Python.yml
 distroprefs/NKH.PerlBuildSystem.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
@@ -352,6 +354,7 @@ distroprefs/WITTROCK.Tk-PathEntry.yml
 distroprefs/WRW.Barcode-Code128.yml
 distroprefs/WYANT.Astro-satpass.yml
 distroprefs/WYANT.Astro-SpaceTrack.yml
+distroprefs/XEONTIME.Apache-Sling.yml
 distroprefs/XMATH.Sub-Name.yml
 distroprefs/YAMATO.QDBM_File.yml
 distroprefs/YANICK.XML-XPathScript.yml

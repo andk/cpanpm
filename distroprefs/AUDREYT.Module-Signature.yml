@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "/Module-Signature-0"
+  distribution: "/Module-Signature-\\d"
 pl:
   eexpect:
     mode: anyorder
