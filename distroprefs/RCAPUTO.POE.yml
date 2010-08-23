@@ -1,7 +1,7 @@
 --- 
 comment: "Xvfb :121 must be started by somebody else"
 match:
-  distribution: '^RCAPUTO/POE-\d'
+  distribution: '^RCAPUTO/POE-(Loop-Event-)?\d'
 pl: 
   expect:
     - "Would you like to skip the network tests"
