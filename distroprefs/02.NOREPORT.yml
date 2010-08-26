@@ -1,7 +1,10 @@
 ---
 comment: |
 
-  In general nobody wants to see reports about 5.[79] anymore
+  In general nobody wants to see reports about old developer releases
+  of perl anymore. The disadvantage of this ditroprefs file is that it
+  prevents all the others from matching since only the first match
+  wins.
 
   But then on 2009-01-14 my smoker sent this:
   http://www.nntp.perl.org/group/perl.cpan.testers/2009/01/msg3068489.html

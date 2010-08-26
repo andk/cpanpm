@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "NINE/​Inline-​Python-​\\d"
+  distribution: "NINE/Inline-Python-\\d"
 pl:
   eexpect:
     mode: anyorder

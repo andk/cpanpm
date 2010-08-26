@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "DOM/Wiki-Toolkit-​\\d"
+  distribution: "DOM/Wiki-Toolkit-\\d"
 pl:
   eexpect:
     mode: anyorder
