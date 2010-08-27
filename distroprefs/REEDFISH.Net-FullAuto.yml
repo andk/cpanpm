@@ -1,0 +1,14 @@
+--- 
+match:
+  distribution: "REEDFISH/Net-FullAuto-\\d"
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 15
+    reuse: 1
+    talk:
+      - "ENTER A CHOICE"
+      - "1\n"
+depends:
+  configure_requires:
+    Crypt::Rijndael: 0
