@@ -5,7 +5,7 @@ goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
 ---
 comment: "Wording of the question changed around 0.53_05"
 match:
-  distribution: "^DLAND/Crypt-SSLeay-"
+  distribution: "^(DLAND|NANIS)/Crypt-SSLeay-"
 pl:
   eexpect:
     mode: anyorder
