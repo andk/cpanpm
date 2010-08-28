@@ -165,6 +165,7 @@ distroprefs/JDIEPEN.Audio-LADSPA.yml
 distroprefs/JENDA.Mail-Sender.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
+distroprefs/JETTERO.Term-ANSIColorx.yml
 distroprefs/JGMYERS.Encode-Detect.yml
 distroprefs/JHOBLITT.DateTime-Format-DateParse.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
@@ -294,6 +295,8 @@ distroprefs/RCLAMP.POE-Component-Server-HTTP.yml
 distroprefs/RCSEEGE.Tk-JComboBox.yml
 distroprefs/RDF.Clone.yml
 distroprefs/REDTREE.PDF-API2-Simple.yml
+distroprefs/REEDFISH.Net-FullAuto.yml
+distroprefs/RGARCIA.Switch.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
 distroprefs/RICKM.DateTime-Format-Strptime.yml
 distroprefs/RIZEN.Config-JSON.yml
