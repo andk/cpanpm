@@ -35,6 +35,7 @@ distroprefs/AVIF.Time-Duration.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
+distroprefs/BINGOS.metabase-relayd.yml
 distroprefs/BINGOS.POE-Component-Client-FTP.yml
 distroprefs/BINGOS.POE-Component-Client-NSCA.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
@@ -94,6 +95,7 @@ distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
 distroprefs/DMAKI.Xango.yml
 distroprefs/DMARTIN.Unix-SavedIDs.yml
+distroprefs/DMUEY.Authen-Libwrap.yml
 distroprefs/DMUEY.File-Copy-Recursive.yml
 distroprefs/DOM.OpenGuides.yml
 distroprefs/DOM.Wiki-Toolkit.yml
@@ -117,6 +119,7 @@ distroprefs/EIJABB.MARC-Errorchecks.yml
 distroprefs/ERIC.OpenThought.yml
 distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/ESUMMERS.MARC-Charset.yml
+distroprefs/EVO.DBIx-SQLEngine.yml
 distroprefs/EWILHELM.Math-Vec.yml
 distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
@@ -170,6 +173,7 @@ distroprefs/JGMYERS.Encode-Detect.yml
 distroprefs/JHOBLITT.DateTime-Format-DateParse.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
+distroprefs/JJORE.Alien-Judy.yml
 distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JKEGL.Test-Weaken.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
@@ -196,6 +200,7 @@ distroprefs/KCLARK.SQL-Translator.yml
 distroprefs/KNORR.Net-MirrorDir.yml
 distroprefs/KROW.DBIx-Password.yml
 distroprefs/KRUSCOE.Tie-DxHash.yml
+distroprefs/KTHAKORE.Alien-SDL.yml
 distroprefs/KVAIL.Tk-Stderr.yml
 distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Crypt-SKey.yml
