@@ -1,7 +1,7 @@
 --- 
 match:
   distribution: "SPROUT/DBM-Deep-\\d"
-test:
+pl:
   eexpect:
     mode: anyorder
     timeout: 15

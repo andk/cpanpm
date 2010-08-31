@@ -31,6 +31,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |BINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs
+    |BINGOS/Module-Install-ReadmeFromPod-    # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
@@ -38,6 +39,7 @@ match:
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
+    |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
     |CJFIELDS/BioPerl-\d                     # asks questions
     |CLACO/AxKit-XSP-                        # looped in a readline
@@ -76,6 +78,7 @@ match:
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
+    |JESUS/Net-RabbitMQ                      # hangs
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
@@ -88,6 +91,7 @@ match:
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
+    |KMX/Alien-IUP-v0.0.12.tar.gz            # not analysed slowness and CPU hog
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
@@ -142,6 +146,7 @@ match:
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |SWALTERS/Acme-RPC-\d                    # hangs
+    |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TPABA/
