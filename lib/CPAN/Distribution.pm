@@ -2441,7 +2441,7 @@ sub follow_prereqs {
 of modules we are processing right now?", "yes");
         $follow = $answer =~ /^\s*y/i;
     } else {
-        my @prereq = map { $_=>[0] } @good_prereq_tuples;
+        my @prereq = map { $_->[0] } @good_prereq_tuples;
         local($") = ", ";
         $CPAN::Frontend->
             myprint("  Ignoring dependencies on modules @prereq\n");
