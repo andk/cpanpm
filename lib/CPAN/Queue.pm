@@ -119,7 +119,7 @@ sub jumpqueue {
     }
     my $inherit_reqtype = $what[0]{reqtype} =~ /^(c|r)$/ ? "r" : "b";
   WHAT: for my $what_tuple (@what) {
-        my($what,$reqtype) = @$what_tuple{qw(qmod reqtype)};
+        my($qmod,$reqtype) = @$what_tuple{qw(qmod reqtype)};
         if ($reqtype eq "r"
             &&
             $inherit_reqtype eq "b"
@@ -128,18 +128,18 @@ sub jumpqueue {
         }
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
-            # CPAN->debug("i[$i]this[$All[$i]{qmod}]what[$what]") if $CPAN::DEBUG;
-            if ($All[$i]{qmod} eq $what) {
+            # CPAN->debug("i[$i]this[$All[$i]{qmod}]qmod[$qmod]") if $CPAN::DEBUG;
+            if ($All[$i]{qmod} eq $qmod) {
                 $jumped++;
                 if ($jumped >= 50) {
-                    die "PANIC: object[$what] 50 instances on the queue, looks like ".
+                    die "PANIC: object[$qmod] 50 instances on the queue, looks like ".
                         "some recursiveness has hit";
                 } elsif ($jumped > 25) { # one's OK if e.g. just processing
                                     # now; more are OK if user typed
                                     # it several times
                     my $sleep = sprintf "%.1f", $jumped/10;
                     $CPAN::Frontend->mywarn(
-qq{Warning: Object [$what] queued $jumped times, sleeping $sleep secs!\n}
+qq{Warning: Object [$qmod] queued $jumped times, sleeping $sleep secs!\n}
                     );
                     $CPAN::Frontend->mysleep($sleep);
                     # next WHAT;
@@ -147,7 +147,7 @@ qq{Warning: Object [$what] queued $jumped times, sleeping $sleep secs!\n}
             }
         }
         my $obj = "$class\::Item"->new(
-                                       qmod => $what,
+                                       qmod => $qmod,
                                        reqtype => $reqtype
                                       );
         unshift @All, $obj;
