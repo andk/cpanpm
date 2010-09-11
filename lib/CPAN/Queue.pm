@@ -128,24 +128,14 @@ sub jumpqueue {
         }
         my $jumped = 0;
         for (my $i=0; $i<$#All;$i++) { #prevent deep recursion
-            # CPAN->debug("i[$i]this[$All[$i]{qmod}]qmod[$qmod]") if $CPAN::DEBUG;
             if ($All[$i]{qmod} eq $qmod) {
                 $jumped++;
-                if ($jumped >= 50) {
-                    die "PANIC: object[$qmod] 50 instances on the queue, looks like ".
-                        "some recursiveness has hit";
-                } elsif ($jumped > 25) { # one's OK if e.g. just processing
-                                    # now; more are OK if user typed
-                                    # it several times
-                    my $sleep = sprintf "%.1f", $jumped/10;
-                    $CPAN::Frontend->mywarn(
-qq{Warning: Object [$qmod] queued $jumped times, sleeping $sleep secs!\n}
-                    );
-                    $CPAN::Frontend->mysleep($sleep);
-                    # next WHAT;
-                }
             }
         }
+        # high jumped values are normal for popular modules when
+        # dealing with large bundles: XML::Simple,
+        # namespace::autoclean, UNIVERSAL::require
+        CPAN->debug("qmod[$qmod]jumped[$jumped]") if $CPAN::DEBUG;
         my $obj = "$class\::Item"->new(
                                        qmod => $qmod,
                                        reqtype => $reqtype
