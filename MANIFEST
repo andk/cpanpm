@@ -6,6 +6,7 @@ distroprefs/ABELTJE.Test-Smoke.yml
 distroprefs/ABW.Template-Toolkit.yml
 distroprefs/ACG.Scrabble-Dict.yml
 distroprefs/ACH.Tk-Contrib.yml
+distroprefs/ACHIMRU.Lingua-Sentence.yml
 distroprefs/ADAMK.Chart-Math-Axis.yml
 distroprefs/ADAMK.Image-Delivery.yml
 distroprefs/ADAMK.PPI.yml
@@ -32,6 +33,7 @@ distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
+distroprefs/BANG.Unzip-Passwd.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
@@ -39,10 +41,12 @@ distroprefs/BINGOS.metabase-relayd.yml
 distroprefs/BINGOS.POE-Component-Client-FTP.yml
 distroprefs/BINGOS.POE-Component-Client-NSCA.yml
 distroprefs/BINGOS.POE-Component-CPAN-YACSmoke.yml
+distroprefs/BINGOS.POE-Component-CPANIDX.yml
 distroprefs/BINGOS.POE-Component-Server-NSCA.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleContent.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BINGOS.POE-Component-SmokeBox-Recent.yml
+distroprefs/BIRNEY.bioperl.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BOBTFISH.Text-Markdown.yml
 distroprefs/BRADFITZ.Perlbal.yml
@@ -137,8 +141,10 @@ distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBROCK.Tk-StayOnTop.yml
 distroprefs/GEOFF.Apache-Test.yml
+distroprefs/GFUJI.Module-Install-XSUtil.yml
 distroprefs/GIRAFFED.Curses.yml
 distroprefs/GIULIENK.Audio-Beep.yml
+distroprefs/GMPASSOS.XML-Smart.yml
 distroprefs/GOMOR.Net-Write.yml
 distroprefs/GOZER.mod_perl.yml
 distroprefs/GRANTM.XML-SAX.yml
@@ -150,6 +156,7 @@ distroprefs/GWYN.POE-Component-Daemon.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HDP.Perl-Version.yml
+distroprefs/HMBRAND.Data-Peek.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/HMBRAND.Tk-Clock.yml
 distroprefs/HORROCKS.PersistentPerl.yml
@@ -175,6 +182,7 @@ distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
 distroprefs/JJORE.Alien-Judy.yml
 distroprefs/JJORE.Carp-Clan.yml
+distroprefs/JJORE.Data-Dump-Streamer.yml
 distroprefs/JKEGL.Test-Weaken.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JMGDOC.OpenOffice-OODoc.yml
@@ -190,6 +198,7 @@ distroprefs/JROCKWAY.Chroniton.yml
 distroprefs/JSHIRLEY.Catalyst-Action-REST.yml
 distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/JV.Getopt-Long.yml
+distroprefs/JZOBEL.Cindy.yml
 distroprefs/KANE.CPANPLUS.yml
 distroprefs/KARASIK.IO-Lambda.yml
 distroprefs/KARMAN.SWISH-Prog.yml
@@ -206,7 +215,6 @@ distroprefs/KWILLIAMS.AI-Categorizer.yml
 distroprefs/KWILLIAMS.Crypt-SKey.yml
 distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LAMPRECHT.Tk-GraphItems.yml
-distroprefs/LBROCARD.Test-WWW-Mechanize-Catalyst.yml
 distroprefs/LDS.Crypt-CBC.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LETO.Math-GSL.yml
@@ -215,16 +223,20 @@ distroprefs/LOCAL.trailing_dot_distros.yml
 distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LUSOL.Tk-Gauge.yml
 distroprefs/LZE.HTML-Menu-TreeView.yml
+distroprefs/MACKENNA.IP-World.yml
 distroprefs/MAHEX.Image-Grab.yml
 distroprefs/MAKAMAKA.JSON.yml
 distroprefs/MARKOV.CPAN-Site.yml
 distroprefs/MARKOV.Mail-Box.yml
 distroprefs/MARKOV.Mail-IMAPClient.yml
 distroprefs/MARKOV.MailTools.yml
+distroprefs/MARKSTOS.CGI-Application-Dispatch.yml
 distroprefs/MARKSTOS.CGI-Session.yml
+distroprefs/MARNANEL.Locale-PO-Callback.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/MCEGLOWS.Bloom-Filter.yml
+distroprefs/MCRAWFOR.REST-Client.yml
 distroprefs/METZZO.Java.yml
 distroprefs/MI.yml
 distroprefs/MIKER.IPtables-IPv4-DBTarpit.yml
@@ -290,7 +302,9 @@ distroprefs/PEVANS.IPC-PerlSSH.yml
 distroprefs/PHOENIX.Term-ReadPassword.yml
 distroprefs/PHRED.Apache-Reload.yml
 distroprefs/PIERS.sapnwrfc.yml
+distroprefs/PLOBBES.Mail-IMAPClient.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
+distroprefs/POWERMAN.IO-Stream.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RBERJON.JSON-Any.yml
 distroprefs/RBS.XML-AutoWriter.yml
@@ -334,6 +348,7 @@ distroprefs/SEANO.Sepia.yml
 distroprefs/SHAY.Filter-Crypto.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
 distroprefs/SLANNING.Ogre.yml
+distroprefs/SPROUT.DBM-Deep.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
@@ -348,10 +363,12 @@ distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/TIMB.Apache-Status-DBI.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/TIMB.GoferTransport-http.yml
+distroprefs/TINITA.HTML-Template-Compiled.yml
 distroprefs/TJENNESS.Tk-TextANSIColor.yml
 distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
+distroprefs/TOMFAHLE.LBMA-Statistics.yml
 distroprefs/TSCH.Cairo.yml
 distroprefs/TSCH.Gtk2.yml
 distroprefs/URI.File-Slurp.yml
