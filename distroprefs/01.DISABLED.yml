@@ -16,7 +16,7 @@ match:
     |.+/Win32(API)?-                         # I have only linux
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
-    |ADAMK/Module-Install-\d                 # 1.00 hangs
+    |ADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
