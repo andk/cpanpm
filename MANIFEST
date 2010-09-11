@@ -67,6 +67,7 @@ distroprefs/CHANG-LIU.XML-Node.yml
 distroprefs/CHARTGRP.Chart.yml
 distroprefs/CHGEUER.Crypt-RIPEMD160.yml
 distroprefs/CHISEL.Zucchini.yml
+distroprefs/CHOCOLATE.autobox.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLAESJAC.JavaScript.yml
