@@ -112,6 +112,7 @@ match:
     |CTBROWN/MooseX-Meta-Attribute-Lvalue-\d
     |CWEST/JSAN-\d
     |DANJOU/Net-Google-DataAPI-\d
+    |DANJOU/Net-Google-Spreadsheets-\d
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d
