@@ -403,6 +403,8 @@ pl:
     talk:
       - "Auto-install"
       - "y\n"
+      - "Add.*?to the prerequisites"
+      - "y\n"
 # for very old bundled AutoInstall:
       - "Do you wish to install"
       - "y\n"
