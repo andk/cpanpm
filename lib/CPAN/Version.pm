@@ -57,7 +57,7 @@ sub vgt {
 
 sub vlt {
     my($self,$l,$r) = @_;
-    0 + ($self->vcmp($l,$r) < 0);
+    $self->vcmp($l,$r) < 0;
 }
 
 sub vge {
@@ -67,7 +67,7 @@ sub vge {
 
 sub vle {
     my($self,$l,$r) = @_;
-    0 + ($self->vcmp($l,$r) <= 0);
+    $self->vcmp($l,$r) <= 0;
 }
 
 sub vstring {
