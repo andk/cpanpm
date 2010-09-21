@@ -148,6 +148,7 @@ match:
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |SWALTERS/Acme-RPC-\d                    # hangs
     |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
+    |TBR/Net-RabbitMQ-Simple-0.0004          # hangs
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TPABA/

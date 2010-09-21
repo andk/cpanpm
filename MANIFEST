@@ -217,6 +217,7 @@ distroprefs/KWILLIAMS.Crypt-SKey.yml
 distroprefs/KWILLIAMS.Module-Build.yml
 distroprefs/LAMPRECHT.Tk-GraphItems.yml
 distroprefs/LDS.Crypt-CBC.yml
+distroprefs/LDS.GBrowse.yml
 distroprefs/LEAKIN.File-Rsync.yml
 distroprefs/LETO.Math-GSL.yml
 distroprefs/LICHTKIND.Kephra.yml
@@ -339,6 +340,7 @@ distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/RYBSKEJ.forks.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
 distroprefs/SAMTREGAR.Devel-Profiler.yml
+distroprefs/SAMV.Set-Object.yml
 distroprefs/SAMV.Tangram.yml
 distroprefs/SANKO.Net-BitTorrent.yml
 distroprefs/SCHUBIGER.DateTime-Format.yml
