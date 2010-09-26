@@ -576,13 +576,16 @@ sub hostdleasy { #called from hostdlxxx
                     $ThesiteURL = $ro_url;
                     return $ungz;
                 }
-                else {
+                elsif (-f $l && -r _) {
                     eval { CPAN::Tarzip->new($l)->gunzip($aslocal) };
-                    if ( -f $aslocal) {
+                    if ( -f $aslocal && -s _) {
                         $ThesiteURL = $ro_url;
                         return $aslocal;
                     }
-                    else {
+                    elsif (! -s $aslocal) {
+                        unlink $aslocal;
+                    }
+                    elsif (-f $l) {
                         $CPAN::Frontend->mywarn("Error decompressing '$l': $@\n")
                             if $@;
                         return;
