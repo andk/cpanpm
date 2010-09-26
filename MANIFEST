@@ -69,6 +69,7 @@ distroprefs/CHGEUER.Crypt-RIPEMD160.yml
 distroprefs/CHISEL.Zucchini.yml
 distroprefs/CHOCOLATE.autobox.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
+distroprefs/CHORNY.Test-Warn.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLAESJAC.JavaScript.yml
 distroprefs/CLKAO.App-CLI.yml
@@ -87,6 +88,7 @@ distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
 distroprefs/DCANTRELL.Devel-CheckOS.yml
+distroprefs/DCLEE.OpenOffice-Parse-SXC.yml
 distroprefs/DCOPPIT.Mail-Mbox-MessageParser.yml
 distroprefs/DDUMONT.Tk-ObjScanner.yml
 distroprefs/DHARRIS.DB_File-Lock.yml
@@ -226,6 +228,7 @@ distroprefs/LUKEC.Socialtext-Resting.yml
 distroprefs/LUSOL.Tk-Gauge.yml
 distroprefs/LZE.HTML-Menu-TreeView.yml
 distroprefs/MACKENNA.IP-World.yml
+distroprefs/MADZ.KiokuDB-Backend-CouchDB.yml
 distroprefs/MAHEX.Image-Grab.yml
 distroprefs/MAKAMAKA.JSON.yml
 distroprefs/MARKOV.CPAN-Site.yml
