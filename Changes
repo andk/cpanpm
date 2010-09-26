@@ -1,3 +1,17 @@
+2010-09-26  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.94_59
+
+	* address RT #61607: make the FTP download code more robust  (Reini Urban)
+
+	* omit useless arithmetic in CPAN::Version to possibly help netbsd
+	(reported by Nigel Horne and suggested David Golden)
+
+	* address RT #59216: make sure $builddir exists before calling tempdir
+	(Lee Goddard)
+
+	* a couple of new distropref files
+
 2010-06-24  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_58
