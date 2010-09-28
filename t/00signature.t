@@ -48,6 +48,11 @@ BEGIN {
         }
     }
     unless ($exit_message) {
+        if ( $Module::Signature::VERSION < 0.6599999) {
+            $exit_message = "Module::Signature version $Module::Signature::VERSION too old, expecting at least 0.66";
+        }
+    }
+    unless ($exit_message) {
         if (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
             $exit_message = "Cannot connect to the keyserver";
         }
