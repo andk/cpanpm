@@ -34,6 +34,7 @@ match:
     |BFREE/OpenGL-\d
     |BINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs
     |BINGOS/Module-Install-ReadmeFromPod-    # hangs
+    |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
