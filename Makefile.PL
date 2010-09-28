@@ -103,6 +103,7 @@ for my $interesting_module (qw(
         IO::Compress::Base
         IO::Zlib
         Module::Build
+        Module::Signature
         Net::FTP
         Parse::CPAN::Meta
         Scalar::Util
