@@ -921,30 +921,52 @@ sub fastcwd {Cwd::fastcwd();}
 #-> sub CPAN::backtickcwd ;
 sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
 
+# Adapted from Probe::Perl
+#-> sub CPAN::_perl_is_same
+sub _perl_is_same {
+  my ($perl) = @_;
+  return MM->maybe_command($perl)
+    && `$perl -MConfig=myconfig -e print -e myconfig` eq Config->myconfig;
+}
+
+# Adapted in part from Probe::Perl
 #-> sub CPAN::find_perl ;
 sub find_perl () {
-    my($perl) = File::Spec->file_name_is_absolute($^X) ? $^X : "";
-    unless ($perl) {
-        my $candidate = File::Spec->catfile($CPAN::iCwd,$^X);
-        $^X = $perl = $candidate if MM->maybe_command($candidate);
+    if ( File::Spec->file_name_is_absolute($^X) ) {
+        return $^X;
     }
-    unless ($perl) {
-        my ($component,$perl_name);
-      DIST_PERLNAME: foreach $perl_name ($^X, 'perl', 'perl5', "perl$]") {
-          PATH_COMPONENT: foreach $component (File::Spec->path(),
-                                                $Config::Config{'binexp'}) {
-                next unless defined($component) && $component;
-                my($abs) = File::Spec->catfile($component,$perl_name);
-                if (MM->maybe_command($abs)) {
-                    $^X = $perl = $abs;
-                    last DIST_PERLNAME;
+    else {
+        my $exe = $Config::Config{exe_ext};
+        my @candidates = (
+            File::Spec->catfile($CPAN::iCwd,$^X),
+            $Config::Config{'perlpath'},
+        );
+        for my $perl_name ($^X, 'perl', 'perl5', "perl$]") {
+            for my $path (File::Spec->path(), $Config::Config{'binexp'}) {
+                if ( defined($path) && length $path && -d $path ) {
+                    my $perl = File::Spec->catfile($path,$perl_name);
+                    push @candidates, $perl;
+                    # try with extension if not provided already
+                    if ($^O eq 'VMS') {
+                        # VMS might have a file version at the end
+                        push @candidates, $perl . $exe
+                            unless $perl =~ m/$exe(;\d+)?$/i;
+                    } elsif (defined $exe && length $exe) {
+                        push @candidates, $perl . $exe
+                            unless $perl =~ m/$exe$/i;
+                    }
                 }
             }
         }
+        for my $perl ( @candidates ) {
+            if (MM->maybe_command($perl) && _perl_is_same($perl)) {
+                $^X = $perl;
+                return $perl;
+            }
+        }
     }
-    return $perl;
+    return $^X; # default fall back
 }
-
 
 #-> sub CPAN::exists ;
 sub exists {
