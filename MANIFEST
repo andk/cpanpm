@@ -25,6 +25,7 @@ distroprefs/ANDYA.File-Find-Parallel.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ANDYA.Test-Harness.yml
+distroprefs/APOCAL.Pod-Weaver-Section.yml
 distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
@@ -112,6 +113,7 @@ distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DROLSKY.Alzabo.yml
 distroprefs/DROLSKY.DateTime-Locale.yml
 distroprefs/DROLSKY.Devel-StackTrace.yml
+distroprefs/DROLSKY.Moose.yml
 distroprefs/DROLSKY.Params-Validate.yml
 distroprefs/DRTECH.Config-Loader.yml
 distroprefs/DSKOLL.MIME-tools.yml
@@ -128,6 +130,7 @@ distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/ESUMMERS.MARC-Charset.yml
 distroprefs/EVO.DBIx-SQLEngine.yml
 distroprefs/EWILHELM.Math-Vec.yml
+distroprefs/EXODIST.Test-Exception-LessClever.yml
 distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/FHOXH.Test-Reporter.yml
@@ -355,6 +358,7 @@ distroprefs/SHAY.Filter-Crypto.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
 distroprefs/SLANNING.Ogre.yml
 distroprefs/SPROUT.DBM-Deep.yml
+distroprefs/SPROUT.JE.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml

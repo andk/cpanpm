@@ -111,6 +111,7 @@ match:
     |CLKAO/SVK-v\d
     |CTBROWN/MooseX-Meta-Attribute-Lvalue-\d
     |CWEST/JSAN-\d
+    |DAMOG/Dancer-Template-Haml-\d
     |DANJOU/Net-Google-DataAPI-\d
     |DANJOU/Net-Google-Spreadsheets-\d
     |DAXIM/Mediawiki-Blame-\d
@@ -408,3 +409,5 @@ pl:
 # for very old bundled AutoInstall:
       - "Do you wish to install"
       - "y\n"
+      - "Multiple extensions found for method 'WriteAll':"
+      - "\n"

@@ -1,0 +1,9 @@
+--- 
+comment: |
+
+  
+
+match:
+  distribution: '/JE-0.049.tar.gz'
+patches:
+  - "ANDK/patches/JE-0.049-ANDK-01.patch.gz"
