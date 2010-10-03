@@ -850,12 +850,20 @@ sub try_download {
                 my $readfh = CPAN::Tarzip->TIEHANDLE($patch);
 
                 my $pcommand;
-                my $ppp = $self->_patch_p_parameter($readfh);
+                my($ppp,$pfiles) = $self->_patch_p_parameter($readfh);
                 if ($ppp eq "applypatch") {
                     $pcommand = "$CPAN::Config->{applypatch} -verbose";
                 } else {
                     my $thispatchargs = join " ", $stdpatchargs, $ppp;
                     $pcommand = "$patchbin $thispatchargs";
+                    require Config; # usually loaded from CPAN.pm
+                    if ($Config::Config{osname} eq "solaris") {
+                        # native solaris patch cannot patch readonly files
+                        for my $file (@{$pfiles||[]}) {
+                            my @stat = stat $file or next;
+                            chmod $stat[2] | 0600, $file; # may fail
+                        }
+                    }
                 }
 
                 $readfh = CPAN::Tarzip->TIEHANDLE($patch); # open again
@@ -886,10 +894,14 @@ sub try_download {
     }
 }
 
+# may return
+# - "applypatch"
+# - ("-p0"|"-p1", $files)
 sub _patch_p_parameter {
     my($self,$fh) = @_;
     my $cnt_files   = 0;
     my $cnt_p0files = 0;
+    my @files;
     local($_);
     while ($_ = $fh->READLINE) {
         if (
@@ -901,13 +913,15 @@ sub _patch_p_parameter {
         }
         next unless /^[\*\+]{3}\s(\S+)/;
         my $file = $1;
+        push @files, $file;
         $cnt_files++;
         $cnt_p0files++ if -f $file;
         CPAN->debug("file[$file]cnt_files[$cnt_files]cnt_p0files[$cnt_p0files]")
             if $CPAN::DEBUG;
     }
     return "-p1" unless $cnt_files;
-    return $cnt_files==$cnt_p0files ? "-p0" : "-p1";
+    my $opt_p = $cnt_files==$cnt_p0files ? "-p0" : "-p1";
+    return ($opt_p, \@files);
 }
 
 #-> sub CPAN::Distribution::_edge_cases
