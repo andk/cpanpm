@@ -102,6 +102,7 @@ for my $interesting_module (qw(
         File::Which
         IO::Compress::Base
         IO::Zlib
+        LWP::UserAgent
         Module::Build
         Module::Signature
         Net::FTP
