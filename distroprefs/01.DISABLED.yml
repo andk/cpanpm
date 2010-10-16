@@ -74,6 +74,7 @@ match:
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
+    |HERNAN/Catalyst-Example-InstantCRUDStylish- # uninterruptible and demanding but maybe not his fault
     |HESCO/LedgerSMB-API-\d                  # 0.04a nearly unstoppable endless loop
     |HEYTRAV/POE-Filter-Hessian-\d           # hangs
     |HOLOWAY/Catalyst-Log-Log4perl-1.00.tar.gz # endless loop with deep recursion

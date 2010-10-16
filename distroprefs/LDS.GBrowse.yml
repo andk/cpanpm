@@ -1,6 +1,11 @@
 --- 
+comment: |
+
+  I have yet to figure out why the eexpect part does not work. Disabled for now.
+
 match:
   distribution: "LDS/GBrowse-\\d"
+disabled: 1
 pl:
   eexpect:
     mode: anyorder

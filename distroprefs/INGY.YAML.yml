@@ -1,8 +1,9 @@
 --- 
-match:
-  distribution: '^INGY/YAML-0.6\d'
-pl:
-  expect:
-    - "Continue installing"
-    - "y\n"
+comment: |
 
+  
+
+match:
+  distribution: '/YAML-0.72'
+#patches:
+#  - "/tmp/YAML-0.72-ANDK-01.patch"
