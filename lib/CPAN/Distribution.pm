@@ -2418,8 +2418,19 @@ sub follow_prereqs {
     return unless @prereq_tuples;
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
-        # XXX watch out for foul ones
-        push @good_prereq_tuples, $p;
+        # promote if possible
+        if ($p->[1] =~ /^(r|c)$/) {
+            push @good_prereq_tuples, $p;
+        } elsif ($p->[1] =~ /^(b)$/) {
+            my $reqtype = CPAN::Queue->reqtype_of($p->[0]);
+            if ($reqtype =~ /^(r|c)$/) {
+                push @good_prereq_tuples, [$p->[0], $reqtype];
+            } else {
+                push @good_prereq_tuples, $p;
+            }
+        } else {
+            die "Panic: in follow_prereqs: reqtype[$p->[1]] seen, should never happen";
+        }
     }
     my $pretty_id = $self->pretty_id;
     my %map = (
@@ -2614,6 +2625,17 @@ sub unsat_prereq {
         if ( $available_file ) {
             if  ( $inst_file && $available_file eq $inst_file && $nmo->inst_deprecated ) {
                 # continue installing as a prereq
+            } elsif ($self->{reqtype} =~ /^(r|c)$/ && exists $prereq_pm->{requires}{$need_module} && $nmo && !$inst_file) {
+                # continue installing as a prereq; this may be a
+                # distro we already used when it was a build_requires
+                # so we did not install it. But suddenly somebody
+                # wants it as a requires
+                my $need_distro = $nmo->distribution;
+                if ($need_distro->{install} && $need_distro->{install}->failed && $need_distro->{install}->text =~ /is only/) {
+                    delete $need_distro->{install}; # promote to another installation attempt
+                    $need_distro->{reqtype} = "r";
+                    $need_distro->install;
+                }
             }
             else {
                 next NEED if $self->_fulfills_all_version_rqs(
@@ -2720,8 +2742,13 @@ sub unsat_prereq {
         } elsif (exists $prereq_pm->{requires}{$need_module}) {
             $needed_as = "r";
         } elsif ($slot eq "configure_requires_later") {
-            # we have not yet run the {Build,Makefile}.PL, we must presume "r"
-            $needed_as = "r";
+            # in ae872487d5 we said: C< we have not yet run the
+            # {Build,Makefile}.PL, we must presume "r" >; but the
+            # meta.yml standard says C< These dependencies are not
+            # required after the distribution is installed. >; so now
+            # we change it back to "b" and care for the proper
+            # promotion later.
+            $needed_as = "b";
         } else {
             $needed_as = "b";
         }
@@ -3393,13 +3420,15 @@ sub install {
             }
         }
         if (exists $self->{install}) {
-            if (UNIVERSAL::can($self->{install},"text") ?
-                $self->{install}->text eq "YES" :
-                $self->{install} =~ /^YES/
-               ) {
+            my $text = UNIVERSAL::can($self->{install},"text") ?
+                $self->{install}->text :
+                    $self->{install};
+            if ($text =~ /^YES/) {
                 $CPAN::Frontend->myprint("  Already done\n");
                 $CPAN::META->is_installed($self->{build_dir});
                 return 1;
+            } elsif ($text =~ /is only/) {
+                push @e, $text;
             } else {
                 # comment in Todo on 2006-02-11; maybe retry?
                 push @e, "Already tried without success";
