@@ -650,14 +650,15 @@ sub satisfy_configure_requires {
     if ($self->{configure_requires_later}) {
         for my $k (keys %{$self->{configure_requires_later_for}||{}}) {
             if ($self->{configure_requires_later_for}{$k}>1) {
-                # we must not come here a second time
-                $CPAN::Frontend->mywarn("Panic: Some prerequisites is not available, please investigate...");
-                require YAML::Syck;
-                $CPAN::Frontend->mydie
-                    (
-                     YAML::Syck::Dump
-                     ({self=>$self, prereq=>\@prereq})
-                    );
+                my $type = "";
+                for my $p (@prereq) {
+                    if ($p->[0] eq $k) {
+                        $type = $p->[1];
+                    }
+                }
+                $type = " $type" if $type;
+                $CPAN::Frontend->mywarn("Warning: unmanageable(?) prerequisite $k$type");
+                sleep 1;
             }
         }
     }
