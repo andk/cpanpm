@@ -2633,9 +2633,11 @@ sub unsat_prereq {
                 # wants it as a requires
                 my $need_distro = $nmo->distribution;
                 if ($need_distro->{install} && $need_distro->{install}->failed && $need_distro->{install}->text =~ /is only/) {
+                    CPAN->debug("promotion from build_requires to requires") if $CPAN::DEBUG;
                     delete $need_distro->{install}; # promote to another installation attempt
                     $need_distro->{reqtype} = "r";
                     $need_distro->install;
+                    next NEED;
                 }
             }
             else {
