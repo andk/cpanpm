@@ -168,6 +168,7 @@ match:
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
     |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
+    |XAICRON/Module-Install-ExtendsMakeTest-0.02 # hangs
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls
