@@ -52,6 +52,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |DAVIDNICO/handy_tied_functions/Tie-Quicksort-Lazy-0.02 # endless loop
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
+    |DDUMONT/Config-Model-TkUI               # hangs at least on 5.8.3
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
@@ -64,6 +65,7 @@ match:
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FREW/DBIx-Class-0.08123.tar.gz          # 
+    |FROGGS/Alien-SDL-1.418                  # questions
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
@@ -97,7 +99,7 @@ match:
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
-    |KMX/Alien-IUP-v0.0.12.tar.gz            # not analysed slowness and CPU hog
+    |KMX/Alien-IUP-v            # not analysed slowness and CPU hog; then again questions being asked
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
@@ -153,6 +155,7 @@ match:
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
+    |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
     |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
     |TBR/Net-RabbitMQ-Simple-0.0004          # hangs
@@ -168,7 +171,7 @@ match:
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
     |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
-    |XAICRON/Module-Install-ExtendsMakeTest-0.02 # hangs
+    |XAICRON/Module-Install-ExtendsMakeTest  # hangs (0.0{2,3})
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls
