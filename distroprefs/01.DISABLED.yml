@@ -50,6 +50,7 @@ match:
     |CORION/WWW-Mechanize-Shell-0.4[678].tar.gz  # hangs every so often in t/13-command-au.t
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
+    |CSJEWELL/Test-Perl-Dist-0.300           # tells me that Win32 is missing and then stands still
     |DAVIDNICO/handy_tied_functions/Tie-Quicksort-Lazy-0.02 # endless loop
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DDUMONT/Config-Model-TkUI               # hangs at least on 5.8.3
@@ -64,7 +65,6 @@ match:
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
-    |FREW/DBIx-Class-0.08123.tar.gz          # 
     |FROGGS/Alien-SDL-1.418                  # questions
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
@@ -143,6 +143,7 @@ match:
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
     |RYBSKEJ/forks-0.25
     |SALVA/Net-OpenSSH-0.03.tar.gz           # asks for a password during test
+    |SAMV/Lingua-Translate-                  # hangs often
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
@@ -172,6 +173,7 @@ match:
     |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
     |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
     |XAICRON/Module-Install-ExtendsMakeTest  # hangs (0.0{2,3})
+    |XAICRON/Module-Install-TestTarget-      # hangs
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls

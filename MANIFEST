@@ -139,6 +139,7 @@ distroprefs/FLORA.File-Extractor.yml
 distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/FOTANGO.Data-Structure-Util.yml
+distroprefs/FREW.DBIx-Class.yml
 distroprefs/GAAS.Data-Dump.yml
 distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.HTML-Parser.yml
