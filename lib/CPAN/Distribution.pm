@@ -2891,6 +2891,7 @@ sub prereq_pm {
             my $areq;
             my $do_replace;
             while (my($k,$v) = each %{$req||{}}) {
+                next unless defined $v;
                 if ($v =~ /\d/) {
                     $areq->{$k} = $v;
                 } elsif ($k =~ /[A-Za-z]/ &&
