@@ -3181,50 +3181,14 @@ sub test {
         $tests_ok = system($system) == 0;
     }
     $self->introduce_myself;
+    my $but = $self->_make_test_illuminate_prereqs();
     if ( $tests_ok ) {
-        {
-            my @prereq;
-
-            # local $CPAN::DEBUG = 16; # Distribution
-            for my $m (keys %{$self->{sponsored_mods}}) {
-                next unless $self->{sponsored_mods}{$m} > 0;
-                my $m_obj = CPAN::Shell->expand("Module",$m) or next;
-                # XXX we need available_version which reflects
-                # $ENV{PERL5LIB} so that already tested but not yet
-                # installed modules are counted.
-                my $available_version = $m_obj->available_version;
-                my $available_file = $m_obj->available_file;
-                if ($available_version &&
-                    !CPAN::Version->vlt($available_version,$self->{prereq_pm}{$m})
-                   ) {
-                    CPAN->debug("m[$m] good enough available_version[$available_version]")
-                        if $CPAN::DEBUG;
-                } elsif ($available_file
-                         && (
-                             !$self->{prereq_pm}{$m}
-                             ||
-                             $self->{prereq_pm}{$m} == 0
-                            )
-                        ) {
-                    # lex Class::Accessor::Chained::Fast which has no $VERSION
-                    CPAN->debug("m[$m] have available_file[$available_file]")
-                        if $CPAN::DEBUG;
-                } else {
-                    push @prereq, $m;
-                }
-            }
-            if (@prereq) {
-                my $cnt = @prereq;
-                my $which = join ",", @prereq;
-                my $but = $cnt == 1 ? "one dependency not OK ($which)" :
-                    "$cnt dependencies missing ($which)";
-                $CPAN::Frontend->mywarn("Tests succeeded but $but\n");
-                $self->{make_test} = CPAN::Distrostatus->new("NO $but");
-                $self->store_persistent_state;
-                return $self->goodbye("[dependencies] -- NA");
-            }
+        if ($but) {
+            $CPAN::Frontend->mywarn("Tests succeeded but $but\n");
+            $self->{make_test} = CPAN::Distrostatus->new("NO $but");
+            $self->store_persistent_state;
+            return $self->goodbye("[dependencies] -- NA");
         }
-
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $self->{make_test} = CPAN::Distrostatus->new("YES");
         $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
@@ -3232,7 +3196,13 @@ sub test {
         # has a lifespan of one command
         delete $self->{badtestcnt};
     } else {
-        $self->{make_test} = CPAN::Distrostatus->new("NO");
+        if ($but) {
+            $but .= "; additionally test harness failed";
+            $CPAN::Frontend->mywarn("$but\n");
+            $self->{make_test} = CPAN::Distrostatus->new("NO $but");
+        } else {
+            $self->{make_test} = CPAN::Distrostatus->new("NO");
+        }
         $self->{badtestcnt}++;
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
         CPAN::Shell->optprint
@@ -3243,6 +3213,48 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
+}
+
+sub _make_test_illuminate_prereqs {
+    my($self) = @_;
+    my @prereq;
+
+    # local $CPAN::DEBUG = 16; # Distribution
+    for my $m (keys %{$self->{sponsored_mods}}) {
+        next unless $self->{sponsored_mods}{$m} > 0;
+        my $m_obj = CPAN::Shell->expand("Module",$m) or next;
+        # XXX we need available_version which reflects
+        # $ENV{PERL5LIB} so that already tested but not yet
+        # installed modules are counted.
+        my $available_version = $m_obj->available_version;
+        my $available_file = $m_obj->available_file;
+        if ($available_version &&
+            !CPAN::Version->vlt($available_version,$self->{prereq_pm}{$m})
+           ) {
+            CPAN->debug("m[$m] good enough available_version[$available_version]")
+                if $CPAN::DEBUG;
+        } elsif ($available_file
+                 && (
+                     !$self->{prereq_pm}{$m}
+                     ||
+                     $self->{prereq_pm}{$m} == 0
+                    )
+                ) {
+            # lex Class::Accessor::Chained::Fast which has no $VERSION
+            CPAN->debug("m[$m] have available_file[$available_file]")
+                if $CPAN::DEBUG;
+        } else {
+            push @prereq, $m;
+        }
+    }
+    my $but;
+    if (@prereq) {
+        my $cnt = @prereq;
+        my $which = join ",", @prereq;
+        $but = $cnt == 1 ? "one dependency not OK ($which)" :
+            "$cnt dependencies missing ($which)";
+    }
+    $but;
 }
 
 sub _prefs_with_expect {
