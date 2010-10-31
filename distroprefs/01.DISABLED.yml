@@ -23,6 +23,7 @@ match:
     |AGENT/OpenResty-0                       # 0.3.8 hangs after 'cp etc/openresty.conf etc/site-openresty.conf'
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ALVAROL/PerlCryptLib-1                  # hangs when searching header files
+    |ANDREWF/Template-Plugin-Latex-3         # hangs with 3.02
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |ASNMTAP/ASNMTAP-\d                      # switches to cpanplus and then hangs
@@ -125,6 +126,7 @@ match:
     |MSROTH/Db-Documentum-\d                 # press return to continue...
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
+    |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin
