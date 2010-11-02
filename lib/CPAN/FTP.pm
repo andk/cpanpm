@@ -852,7 +852,7 @@ sub _proxy_vars {
         }
         if ($want_proxy) {
             my($user, $pass) =
-                &CPAN::LWP::UserAgent::get_proxy_credentials();
+                CPAN::HTTP::Credentials->get_proxy_credentials();
             $ret = {
                     proxy_user => $user,
                     proxy_pass => $pass,
