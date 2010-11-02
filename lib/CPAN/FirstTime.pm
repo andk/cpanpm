@@ -1630,7 +1630,7 @@ sub auto_mirrored_by {
       how_many => 5,
       callback => sub { $CPAN::Frontend->myprint(".") },
     );
-    my $urllist = [ map { $_->ftp } @best ];
+    my $urllist = [ map { $_->http } @best ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
     $CPAN::Frontend->myprint(" done!\n\n");
     return $urllist;

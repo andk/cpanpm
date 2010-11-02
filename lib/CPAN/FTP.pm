@@ -652,8 +652,41 @@ sub hostdleasy { #called from hostdlxxx
                 # Net::FTP can still succeed where LWP fails. So we do not
                 # skip Net::FTP anymore when LWP is available.
             }
-        } else {
-            $CPAN::Frontend->mywarn("  LWP not available\n");
+        } elsif ($url =~ /^http:/ && $CPAN::META->has_usable('HTTP::Lite')) {
+            require CPAN::HTTP::Lite;
+            my $chl = CPAN::HTTP::Lite->new(
+                proxy => $CPAN::Config->{http_proxy} || $ENV{http_proxy},
+                no_proxy => $CPAN::Config->{no_proxy} || $ENV{no_proxy},
+            );
+            for my $try ( $url, ( $url !~ /\.gz(?!\n)\Z/ ? "$url.gz" : () ) ) {
+                $CPAN::Frontend->myprint("Fetching with HTTP::Lite:\n$try\n");
+                my $res = eval { $chl->mirror($try, $aslocal) };
+                if ( $res && defined $res->status
+                    && substr($res->status, 0, 1) eq '2' # 2XX
+                ) {
+                    $ThesiteURL = $ro_url;
+                    my $now = time;
+                    utime $now, $now, $aslocal; # download time is more
+                                                # important than upload
+                                                # time
+                    return $aslocal;
+                }
+                elsif ($res && defined $res->status) {
+                    $CPAN::Frontend->myprint(sprintf(
+                            "HTTP::Lite failed with code[%s] message[%s]\n",
+                            $res->status,
+                            $res->status_message,
+                        )
+                    );
+                }
+                else {
+                    my $err = $@ || 'Could not connect';
+                    $CPAN::Frontend->myprint(sprintf(
+                            "Error downloading with HTTP::Lite: %s\n", $err
+                        )
+                    );
+                }
+            }
         }
         return if $CPAN::Signal;
         if ($url =~ m|^ftp://(.*?)/(.*)/(.*)|) {

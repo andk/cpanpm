@@ -19,8 +19,8 @@ test_get_basic_credentials_without_proxy();
 sub test_can_get_basic_credentials {
     set_up();
     can_ok('CPAN::LWP::UserAgent', 'get_basic_credentials');
-    can_ok('CPAN::LWP::UserAgent', 'get_proxy_credentials');
-    can_ok('CPAN::LWP::UserAgent', 'get_non_proxy_credentials');
+    can_ok('CPAN::HTTP::Credentials', 'get_proxy_credentials');
+    can_ok('CPAN::HTTP::Credentials', 'get_non_proxy_credentials');
 }
 
 sub test_get_basic_credentials_for_proxy {
@@ -50,8 +50,8 @@ sub set_up {
     undef $CPAN::Config->{password};
     undef $CPAN::Config->{proxy_user};
     undef $CPAN::Config->{proxy_pass};
-    undef $CPAN::LWP::UserAgent::USER;
-    undef $CPAN::LWP::UserAgent::PASSWD;
+    undef $CPAN::HTTP::Credentials::USER;
+    undef $CPAN::HTTP::Credentials::PASSWORD;
 }
 
 # Local Variables:

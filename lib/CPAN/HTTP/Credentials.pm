@@ -2,41 +2,51 @@
 # vim: ts=4 sts=4 sw=4:
 package CPAN::HTTP::Credentials;
 use strict;
-use vars qw($USER $PASSWD);
+use vars qw($USER $PASSWORD $PROXY_USER $PROXY_PASSWORD);
 
 $CPAN::HTTP::Credentials::VERSION = $CPAN::HTTP::Credentials::VERSION = "1.94";
 
 sub clear_credentials {
+   _clear_non_proxy_credentials();
+   _clear_proxy_credentials();
+}
+
+sub clear_non_proxy_credentials {
     undef $USER;
-    undef $PASSWD;
+    undef $PASSWORD;
+}
+
+sub clear_proxy_credentials {
+    undef $PROXY_USER;
+    undef $PROXY_PASSWORD;
 }
 
 sub get_proxy_credentials {
     my $self = shift;
-    if ($USER && $PASSWD) {
-        return ($USER, $PASSWD);
+    if ($PROXY_USER && $PROXY_PASSWORD) {
+        return ($PROXY_USER, $PROXY_PASSWORD);
     }
     if ( defined $CPAN::Config->{proxy_user}
             && $CPAN::Config->{proxy_user}
     ) {
-        $USER = $CPAN::Config->{proxy_user};
-        $PASSWORD = $CPAN::Config->{proxy_pass} || "";
-        return ($USER, $PASSWORD);
+        $PROXY_USER = $CPAN::Config->{proxy_user};
+        $PROXY_PASSWORD = $CPAN::Config->{proxy_pass} || "";
+        return ($PROXY_USER, $PROXY_PASSWORD);
     }
     my $username_prompt = "\nProxy authentication needed!
  (Note: to permanently configure username and password run
    o conf proxy_user your_username
    o conf proxy_pass your_password
      )\nUsername:";
-    ($USER, $PASSWORD) =
+    ($PROXY_USER, $PROXY_PASSWORD) =
         _get_username_and_password_from_user($username_prompt);
-    return ($USER,$PASSWORD);
+    return ($PROXY_USER,$PROXY_PASSWORD);
 }
 
 sub get_non_proxy_credentials {
     my $self = shift;
-    if ($USER && $PASSWD) {
-        return ($USER, $PASSWD);
+    if ($USER && $PASSWORD) {
+        return ($USER, $PASSWORD);
     }
     if ( defined $CPAN::Config->{username} ) {
         $USER = $CPAN::Config->{username};

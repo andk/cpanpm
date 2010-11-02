@@ -1,3 +1,9 @@
+        * add support for (and prerequisite on) HTTP::Lite; also adds
+          prerequisites for MIME::Base64 and Digest::MD5 to support
+          proxy authentication
+
+        * automatic mirror selection now returns only http mirrors
+
 2010-10-26  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_62

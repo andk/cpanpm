@@ -83,7 +83,7 @@ sub best_mirrors {
 
     my @timings;
     for my $m ($self->mirrors($self->countries(@$conts))) {
-        next unless $m->ftp;
+        next unless $m->http;
         my $hostname = $m->hostname;
         if ( $seen->{$hostname}  ) {
             push @timings, $seen->{$hostname}
@@ -240,7 +240,7 @@ sub rsync { shift->{rsync} || '' }
 
 sub url { 
     my $self = shift;
-    return $self->{ftp} || $self->{http};
+    return $self->{http} || $self->{ftp};
 }
 
 sub ping {

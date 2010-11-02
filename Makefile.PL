@@ -74,6 +74,9 @@ my $prereq_pm = {
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
                  'File::Temp' => 0,   # TJENNESS; requires Test::More;
+                 'HTTP::Lite' => 2.2, # allow bootstrap with pure perl HTTP
+                 'MIME::Base64' => 0, # allow HTTP Basic authentication
+                 'Digest::MD5' => 0,  # allow HTTP Digest authentication
                  'Net::Ping' => 0,    # SMPETERS;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
