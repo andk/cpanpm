@@ -35,6 +35,7 @@ sub get {
 
     my $http = HTTP::Lite->new;
     $http->http11_mode(1); # hopefully, CPAN mirrors can handle this
+    $http->{DEBUG} = $self->{debug};
 
     my $retries = 0;
     while ( $retries++ < 5 ) {
