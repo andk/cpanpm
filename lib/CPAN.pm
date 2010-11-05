@@ -3679,11 +3679,15 @@ http://search.cpan.org/dist/Module-Build-Convert/
 I'm frequently irritated with the CPAN shell's inability to help me
 select a good mirror.
 
-The urllist config parameter is yours. You can add and remove sites at
-will. You should find out which sites have the best uptodateness,
-bandwidth, reliability, etc. and are topologically close to you. Some
-people prefer fast downloads, others uptodateness, others reliability.
-You decide which to try in which order.
+CPAN can now help you select a "good" mirror, based on which ones have the
+lowest 'ping' round-trip times.  From the shell, use the command 'o conf init
+urllist' and allow CPAN to automatically select mirrors for you.
+
+Beyond that help, the urllist config parameter is yours. You can add and remove
+sites at will. You should find out which sites have the best uptodateness,
+bandwidth, reliability, etc. and are topologically close to you. Some people
+prefer fast downloads, others uptodateness, others reliability.  You decide
+which to try in which order.
 
 Henk P. Penning maintains a site that collects data about CPAN sites:
 
