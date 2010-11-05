@@ -97,7 +97,7 @@ sub _get_redirect {
     for ($http->headers_array) {
         /Location: (\S+)/ and $loc = $1, last;
     }
-    $loc or last;
+    $loc or return;
     if ($loc =~ m!^/!) {
         $uri =~ s{^(\w+?://[^/]+)/.*$}{$1};
         $uri .= $loc;
