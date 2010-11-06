@@ -86,8 +86,9 @@ match:
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
-    |JESUS/Net-RabbitMQ                      # hangs
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
+    |JDPORTER/Crypt-RandPasswd-0.02          # hangs *sometimes*
+    |JESUS/Net-RabbitMQ                      # hangs
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
@@ -169,6 +170,8 @@ match:
     |TURNERJW/
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
     |URI/Stem-\d                             # asks questions about conf directories
+    |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
+    |VINSWORLD/Net-Syslogd-0.04.             # asks question
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
