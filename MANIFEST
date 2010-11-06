@@ -39,6 +39,7 @@ distroprefs/BANG.Unzip-Passwd.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
+distroprefs/BDFOY.Test-Output.yml
 distroprefs/BINGOS.metabase-relayd.yml
 distroprefs/BINGOS.POE-Component-Client-FTP.yml
 distroprefs/BINGOS.POE-Component-Client-NSCA.yml
@@ -140,6 +141,7 @@ distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/FOTANGO.Data-Structure-Util.yml
 distroprefs/FREW.DBIx-Class.yml
+distroprefs/FROGGS.Alien-SDL.yml
 distroprefs/GAAS.Data-Dump.yml
 distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.HTML-Parser.yml
@@ -281,6 +283,7 @@ distroprefs/MSERGEANT.XML-Parser.yml
 distroprefs/MSISK.HTML-TableExtract.yml
 distroprefs/MTHURN.I18N-Charset.yml
 distroprefs/MTHURN.Tk-Wizard.yml
+distroprefs/NANARDON.X11-Xlib.yml
 distroprefs/NEELY.Data-Serializer.yml
 distroprefs/NEILW.Inline-CPP.yml
 distroprefs/NESTING.Unicode-Wrap.yml
