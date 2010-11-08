@@ -1,4 +1,5 @@
 # -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
+# vim: ts=4 sts=4 sw=4:
 package CPAN::FirstTime;
 use strict;
 
@@ -8,7 +9,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec ();
 use CPAN::Mirrors ();
-use vars qw($VERSION $silent);
+use vars qw($VERSION $auto_config);
 $VERSION = "5.5301";
 
 =head1 NAME
@@ -773,16 +774,12 @@ sub init {
         $manual_conf = ($_conf and $_conf =~ /^y/i) ? "no" : "yes";
     }
     CPAN->debug("manual_conf[$manual_conf]") if $CPAN::DEBUG;
-    my $fastread;
+    $auto_config = 0;
     {
         if ($manual_conf =~ /^y/i) {
-            $fastread = 0;
+            $auto_config = 0;
         } else {
-            $fastread = 1;
-            $silent = 1;
-            $CPAN::Config->{urllist} ||= [];
-            $CPAN::Config->{connect_to_internet_ok} ||= 1;
-
+            $auto_config = 1;
             local $^W = 0;
             # prototype should match that of &MakeMaker::prompt
             my $current_second = time;
@@ -800,7 +797,7 @@ sub init {
                        keep_source_where
                        prefs_dir
                       } =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{config_intro}) unless $silent;
+        $CPAN::Frontend->myprint($prompts{config_intro}) unless $auto_config;
 
         init_cpan_home($matcher);
 
@@ -866,7 +863,7 @@ sub init {
            ) {
             local *_real_prompt;
             *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", $silent ? "no" : "yes");
+            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", $auto_config ? "no" : "yes");
             if ($_conf =~ /^y/i) {
               $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
               CPAN::Reporter::configure();
@@ -884,7 +881,7 @@ sub init {
         my_dflt_prompt(yaml_module => "YAML", $matcher);
         my $old_v = $CPAN::Config->{load_module_verbosity};
         $CPAN::Config->{load_module_verbosity} = q[none];
-        if (!$silent && !$CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
+        if (!$auto_config && !$CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
             $CPAN::Frontend->mywarn
                 ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
             $CPAN::Frontend->mysleep(3);
@@ -901,7 +898,8 @@ sub init {
     #= External programs
     #
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
-    $CPAN::Frontend->myprint($prompts{external_progs}) unless $silent;
+    $CPAN::Frontend->myprint($prompts{external_progs})
+        if !$matcher && !$auto_config;
     _init_external_progs($matcher, {
         path => \@path,
         progs => [ qw/make bzip2 gzip tar unzip gpg patch applypatch/ ],
@@ -1010,7 +1008,7 @@ sub init {
     my @proxy_vars = qw/ftp_proxy http_proxy no_proxy/;
     my @proxy_user_vars = qw/proxy_user proxy_pass/;
     if (!$matcher or "@proxy_vars @proxy_user_vars" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{proxy_intro}) unless $silent;
+        $CPAN::Frontend->myprint($prompts{proxy_intro}) unless $auto_config;
 
         for (@proxy_vars) {
             $prompts{$_} = "Your $_?";
@@ -1022,21 +1020,21 @@ sub init {
 
             $default = $CPAN::Config->{proxy_user} || $CPAN::LWP::UserAgent::USER || "";
 
-            $CPAN::Frontend->myprint($prompts{proxy_user}) unless $silent;
+            $CPAN::Frontend->myprint($prompts{proxy_user}) unless $auto_config;
 
             if ($CPAN::Config->{proxy_user} = prompt("Your proxy user id?",$default)) {
-                $CPAN::Frontend->myprint($prompts{proxy_pass}) unless $silent;
+                $CPAN::Frontend->myprint($prompts{proxy_pass}) unless $auto_config;
 
                 if ($CPAN::META->has_inst("Term::ReadKey")) {
                     Term::ReadKey::ReadMode("noecho");
                 } else {
-                    $CPAN::Frontend->myprint($prompts{password_warn}) unless $silent;
+                    $CPAN::Frontend->myprint($prompts{password_warn}) unless $auto_config;
                 }
                 $CPAN::Config->{proxy_pass} = prompt_no_strip("Your proxy password?");
                 if ($CPAN::META->has_inst("Term::ReadKey")) {
                     Term::ReadKey::ReadMode("restore");
                 }
-                $CPAN::Frontend->myprint("\n\n") unless $silent;
+                $CPAN::Frontend->myprint("\n\n") unless $auto_config;
             }
         }
     }
@@ -1066,24 +1064,24 @@ sub init {
             if ($CPAN::META->has_inst("Term::ANSIColor")) {
                 my $T="gYw";
                 $CPAN::Frontend->myprint( "                                      on_  on_y ".
-                    "        on_ma           on_\n") unless $silent;
+                    "        on_ma           on_\n") unless $auto_config;
                 $CPAN::Frontend->myprint( "                   on_black on_red  green ellow ".
-                    "on_blue genta on_cyan white\n") unless $silent;
+                    "on_blue genta on_cyan white\n") unless $auto_config;
 
                 for my $FG ("", "bold",
                             map {$_,"bold $_"} "black","red","green",
                             "yellow","blue",
                             "magenta",
                             "cyan","white") {
-                    $CPAN::Frontend->myprint(sprintf( "%12s ", $FG)) unless $silent;
+                    $CPAN::Frontend->myprint(sprintf( "%12s ", $FG)) unless $auto_config;
                     for my $BG ("",map {"on_$_"} qw(black red green yellow
                                                     blue magenta cyan white)) {
                             $CPAN::Frontend->myprint( $FG||$BG ?
-                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ") unless $silent;
+                            Term::ANSIColor::colored("  $T  ","$FG $BG") : "  $T  ") unless $auto_config;
                     }
-                    $CPAN::Frontend->myprint( "\n" ) unless $silent;
+                    $CPAN::Frontend->myprint( "\n" ) unless $auto_config;
                 }
-                $CPAN::Frontend->myprint( "\n" ) unless $silent;
+                $CPAN::Frontend->myprint( "\n" ) unless $auto_config;
             }
             for my $tuple (
                            ["colorize_print", "bold blue on_white"],
@@ -1113,7 +1111,7 @@ sub init {
     #
 
     if (!$matcher or 'histfile histsize' =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{histfile_intro}) unless $silent;
+        $CPAN::Frontend->myprint($prompts{histfile_intro}) unless $auto_config;
         defined($default = $CPAN::Config->{histfile}) or
             $default = File::Spec->catfile($CPAN::Config->{cpan_home},"histfile");
         my_dflt_prompt(histfile => $default, $matcher);
@@ -1145,35 +1143,12 @@ sub init {
     #= MIRRORED.BY and conf_sites()
     #
 
-    # remember, this is only triggered if no urllist is given, so 0 is
-    # fair and protects the default site from being overloaded and
-    # gives the user more chances to select his own urllist.
-    my_yn_prompt("connect_to_internet_ok" => $fastread ? 1 : 0, $matcher);
-    $CPAN::Config->{urllist} ||= [];
+    # Let's assume they want to use the internet and make them turn it
+    # off if they really don't.
+    my_yn_prompt("connect_to_internet_ok" => 1, $matcher);
+
+    # Allow matching but don't show during manual config
     if ($matcher) {
-        if ("urllist" =~ $matcher) {
-            $CPAN::Frontend->myprint($prompts{urls_intro});
-
-            # conf_sites would go into endless loop with the smash prompt
-            local *_real_prompt;
-            *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-            my $_conf = prompt($prompts{auto_pick}, "yes");
-
-            if ( $_conf =~ /^y/i ) {
-              conf_sites( auto_pick => 1 ) or bring_your_own();
-            }
-            else {
-              my $_conf = prompt(
-                "Would you like to pick from the CPAN mirror list?", "yes"
-              );
-
-              if ( $_conf =~ /^y/i ) {
-                conf_sites();
-              }
-              bring_your_own();
-            }
-            _print_urllist();
-        }
         if ("randomize_urllist" =~ $matcher) {
             my_dflt_prompt(randomize_urllist => 0, $matcher);
         }
@@ -1183,45 +1158,33 @@ sub init {
         if ("ftpstats_period" =~ $matcher) {
             my_dflt_prompt(ftpstats_period => 14, $matcher);
         }
-    } elsif ($fastread) {
-        $silent = 0;
-        local *_real_prompt;
-        *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-        if ( @{ $CPAN::Config->{urllist} } ) {
+    }
+
+    $CPAN::Config->{urllist} ||= [];
+
+    if ($auto_config) {
+        if(@{ $CPAN::Config->{urllist} }) {
             $CPAN::Frontend->myprint(
-              "\nYour 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
+                "Your 'urllist' is already configured. Type 'o conf init urllist' to change it.\n"
             );
         }
         else {
-          $CPAN::Frontend->myprint(
-            "Autoconfigured everything but 'urllist'.\n"
-          );
-
-          $CPAN::Frontend->myprint($prompts{urls_intro});
-
-          my $_conf = prompt($prompts{auto_pick}, "yes");
-
-          if ( $_conf =~ /^y/i ) {
-            conf_sites( auto_pick => 1 ) or bring_your_own();
-          }
-          else {
-            my $_conf = prompt(
-              "Would you like to pick from the CPAN mirror list?", "yes"
+            $CPAN::Frontend->myprint(
+                "Autoconfigured everything but 'urllist'.\n"
             );
-
-            if ( $_conf =~ /^y/i ) {
-              conf_sites();
-            }
-            bring_your_own();
-          }
-          _print_urllist();
+            _do_pick_mirrors();
         }
+    }
+    elsif (!$matcher || "urllist" =~ $matcher) {
+        _do_pick_mirrors();
+    }
+
+    if ($auto_config) {
         $CPAN::Frontend->myprint(
             "\nAutoconfiguration complete.\n"
         );
+        $auto_config = 0; # reset
     }
-
-    $silent = 0; # reset
 
     $CPAN::Frontend->myprint("\n");
     if ($matcher && !$CPAN::Config->{auto_commit}) {
@@ -1230,6 +1193,29 @@ sub init {
     } else {
         CPAN::HandleConfig->commit($configpm);
     }
+}
+
+sub _do_pick_mirrors {
+    local *_real_prompt;
+    *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+    $CPAN::Frontend->myprint($prompts{urls_intro});
+    my $_conf = prompt($prompts{auto_pick}, "yes");
+    my @old_list = @{ $CPAN::Config->{urllist} };
+    if ( $_conf =~ /^y/i ) {
+        conf_sites( auto_pick => 1 ) or bring_your_own();
+    }
+    else {
+        _print_urllist('Current') if @old_list;
+        my $msg = scalar @old_list
+            ? "Would you like to edit the urllist or pick new mirrors from a list?"
+            : "Would you like to pick from the CPAN mirror list?" ;
+        my $_conf = prompt($msg, "yes");
+        if ( $_conf =~ /^y/i ) {
+            conf_sites();
+        }
+        bring_your_own();
+    }
+    _print_urllist('New');
 }
 
 sub _init_external_progs {
@@ -1279,11 +1265,11 @@ sub _init_external_progs {
             $path ||= find_exe($progcall,$PATH);
             unless ($path) { # not -e $path, because find_exe already checked that
                 local $"=";";
-                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n") unless $silent;
+                $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n") unless $auto_config;
                 _beg_for_make(), $showed_make_warning++ if $progname eq "make";
             }
             $prompts{$progname} = "Where is your $progname program?";
-            my $path = my_dflt_prompt($progname,$path,$matcher,1); # 1 => no strip spaces
+            $path = my_dflt_prompt($progname,$path,$matcher,1); # 1 => no strip spaces
             my $disabling = $path =~ m/^\s*$/;
 
             # don't let them disable or misconfigure make without warning
@@ -1317,12 +1303,12 @@ sub _check_found {
   my ($prog) = @_;
   if ( ! -f $prog ) {
     $CPAN::Frontend->mywarn("Warning: '$prog' does not exist\n")
-      unless $silent;
+      unless $auto_config;
     return;
   }
   elsif ( ! -x $prog ) {
     $CPAN::Frontend->mywarn("Warning: '$prog' is not executable\n")
-      unless $silent;
+      unless $auto_config;
     return;
   }
   return 1;
@@ -1364,16 +1350,16 @@ I see you already have a  directory
     $cpan_home
 Shall we use it as the general CPAN build and cache directory?
 
-}) unless $silent;
+}) unless $auto_config;
         } else {
             # no cpan-home, must prompt and get one
-            $CPAN::Frontend->myprint($prompts{cpan_home_where}) unless $silent;
+            $CPAN::Frontend->myprint($prompts{cpan_home_where}) unless $auto_config;
         }
 
         my $default = $cpan_home;
         my $loop = 0;
         my($last_ans,$ans);
-        $CPAN::Frontend->myprint(" <cpan_home>\n") unless $silent;
+        $CPAN::Frontend->myprint(" <cpan_home>\n") unless $auto_config;
     PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
             if (File::Spec->file_name_is_absolute($ans)) {
                 my @cpan_home = split /[\/\\]/, $ans;
@@ -1421,7 +1407,7 @@ sub my_dflt_prompt {
     my ($item, $dflt, $m, $no_strip) = @_;
     my $default = $CPAN::Config->{$item} || $dflt;
 
-    if (!$silent && (!$m || $item =~ /$m/)) {
+    if (!$auto_config && (!$m || $item =~ /$m/)) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
         }
@@ -1441,7 +1427,7 @@ sub my_yn_prompt {
     defined($default = $CPAN::Config->{$item}) or $default = $dflt;
 
     # $DB::single = 1;
-    if (!$silent && (!$m || $item =~ /$m/)) {
+    if (!$auto_config && (!$m || $item =~ /$m/)) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
         }
@@ -1458,7 +1444,7 @@ sub my_prompt_loop {
     my $default = $CPAN::Config->{$item} || $dflt;
     my $ans;
 
-    if (!$silent && (!$m || $item =~ /$m/)) {
+    if (!$auto_config && (!$m || $item =~ /$m/)) {
         $CPAN::Frontend->myprint($prompts{$item . "_intro"});
         $CPAN::Frontend->myprint(" <$item>\n");
         do { $ans = prompt($prompts{$item}, $default);
@@ -1682,7 +1668,7 @@ sub auto_mirrored_by {
     my $urllist = [ map { $_->http } @best ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
     $CPAN::Frontend->myprint(" done!\n\n");
-    return $urllist;
+    return $urllist
 }
 
 sub choose_mirrored_by {
@@ -1816,10 +1802,12 @@ later if you\'re sure it\'s right.\n},
 }
 
 sub _print_urllist {
-    $CPAN::Frontend->myprint("New urllist\n");
+    my ($which) = @_;
+    $CPAN::Frontend->myprint("$which urllist\n");
     for ( @{$CPAN::Config->{urllist} || []} ) { 
       $CPAN::Frontend->myprint("  $_\n") 
     };
+    $CPAN::Frontend->myprint("\n");
 }
 
 sub _strip_spaces {
