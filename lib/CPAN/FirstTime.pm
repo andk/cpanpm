@@ -1303,10 +1303,32 @@ substitute. You can then revisit this dialog with
             }
             $prompts{$progname} = "Where is your $progname program?";
             my_dflt_prompt($progname,$path,$matcher);
-            last if $shortcut && !$matcher && -x $CPAN::Config->{$progname};
+            if ( _check_found( $CPAN::Config->{$progname} ) ) {
+              last if $shortcut && !$matcher;
+            }
+            else {
+              $CPAN::Frontend->mywarn("Press SPACE and ENTER to skip\n");
+              redo;
+            }
         }
     }
 }
+
+sub _check_found {
+  my ($prog) = @_;
+  if ( ! -f $prog ) {
+    $CPAN::Frontend->mywarn("Warning: $prog does not exist\n")
+      unless $silent;
+    return;
+  }
+  elsif ( ! -x $prog ) {
+    $CPAN::Frontend->mywarn("Warning: $prog is not executable\n")
+      unless $silent;
+    return;
+  }
+  return 1;
+}
+
 
 sub init_cpan_home {
     my($matcher) = @_;
