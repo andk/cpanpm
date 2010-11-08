@@ -1,0 +1,14 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=62724
+  https://rt.cpan.org/Ticket/Display.html?id=62730
+  https://rt.cpan.org/Ticket/Display.html?id=62735
+  https://rt.cpan.org/Ticket/Display.html?id=62736
+
+  and maybe more
+
+match:
+  distribution: "^TOBYINK/"
+cpanconfig:
+  check_sigs: 0

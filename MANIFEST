@@ -381,6 +381,7 @@ distroprefs/TINITA.HTML-Template-Compiled.yml
 distroprefs/TJENNESS.Tk-TextANSIColor.yml
 distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
+distroprefs/TOBYINK.Finance-Bitcoin.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
 distroprefs/TOMFAHLE.LBMA-Statistics.yml
 distroprefs/TSCH.Cairo.yml
@@ -430,6 +431,8 @@ lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
 lib/CPAN/HandleConfig.pm
+lib/CPAN/HTTP/Credentials.pm
+lib/CPAN/HTTP/Lite.pm
 lib/CPAN/Index.pm
 lib/CPAN/InfoObj.pm
 lib/CPAN/Kwalify.pm
