@@ -901,7 +901,17 @@ sub init {
     #= External programs
     #
     my(@path) = split /$Config{'path_sep'}/, $ENV{'PATH'};
-    _init_external_progs($matcher,\@path);
+    $CPAN::Frontend->myprint($prompts{external_progs}) unless $silent;
+    _init_external_progs($matcher, {
+        path => \@path,
+        progs => [ qw/make bzip2 gzip tar unzip gpg patch applypatch/ ],
+        shortcut => 0
+      });
+    _init_external_progs($matcher, {
+        path => \@path,
+        progs => [ qw/wget curl lynx ncftpget ncftp ftp/ ],
+        shortcut => 1
+      });
 
     {
         my $path = $CPAN::Config->{'pager'} ||
@@ -1223,20 +1233,12 @@ sub init {
 }
 
 sub _init_external_progs {
-    my($matcher,$PATH) = @_;
-    my @external_progs = qw/bzip2 gzip tar unzip
+    my($matcher,$args) = @_;
+    my $PATH = $args->{path};
+    my @external_progs = @{ $args->{progs} };
+    my $shortcut = $args->{shortcut};
 
-                            make
-
-                            curl lynx wget ncftpget ncftp ftp
-
-                            gpg
-
-                            patch applypatch
-                            /;
     if (!$matcher or "@external_progs" =~ /$matcher/) {
-        $CPAN::Frontend->myprint($prompts{external_progs}) unless $silent;
-
         my $old_warn = $^W;
         local $^W if $^O eq 'MacOS';
         local $^W = $old_warn;
@@ -1301,6 +1303,7 @@ substitute. You can then revisit this dialog with
             }
             $prompts{$progname} = "Where is your $progname program?";
             my_dflt_prompt($progname,$path,$matcher);
+            last if $shortcut && !$matcher && -x $CPAN::Config->{$progname};
         }
     }
 }
