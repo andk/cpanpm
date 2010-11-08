@@ -1237,6 +1237,7 @@ sub _init_external_progs {
     my $PATH = $args->{path};
     my @external_progs = @{ $args->{progs} };
     my $shortcut = $args->{shortcut};
+    my $showed_make_warning;
 
     if (!$matcher or "@external_progs" =~ /$matcher/) {
         my $old_warn = $^W;
@@ -1279,14 +1280,63 @@ sub _init_external_progs {
             unless ($path) { # not -e $path, because find_exe already checked that
                 local $"=";";
                 $CPAN::Frontend->mywarn("Warning: $progcall not found in PATH[@$PATH]\n") unless $silent;
-                if ($progname eq "make") {
-                    $CPAN::Frontend->mywarn("ALERT: 'make' is an essential tool for ".
-                                            "building perl Modules. Please make sure you ".
-                                            "have 'make' (or some equivalent) ".
-                                            "working.\n"
-                                           );
-                    if ($^O eq "MSWin32") {
-                        $CPAN::Frontend->mywarn("
+                _beg_for_make(), $showed_make_warning++ if $progname eq "make";
+            }
+            $prompts{$progname} = "Where is your $progname program?";
+            my $path = my_dflt_prompt($progname,$path,$matcher,1); # 1 => no strip spaces
+            my $disabling = $path =~ m/^\s*$/;
+
+            # don't let them disable or misconfigure make without warning
+            if ( $progname eq "make" && ( $disabling || ! _check_found($path) ) ) {
+              if ( $disabling && $showed_make_warning ) {
+                next;
+              }
+              else {
+                _beg_for_make() unless $showed_make_warning++;
+                undef $CPAN::Config->{$progname};
+                $CPAN::Frontend->mywarn("Press SPACE and ENTER to disable make (NOT RECOMMENDED)\n");
+                redo;
+              }
+            }
+            elsif ( $disabling ) {
+              next;
+            }
+            elsif ( _check_found( $CPAN::Config->{$progname} ) ) {
+              last if $shortcut && !$matcher;
+            }
+            else {
+              undef $CPAN::Config->{$progname};
+              $CPAN::Frontend->mywarn("Press SPACE and ENTER to disable $progname\n");
+              redo;
+            }
+        }
+    }
+}
+
+sub _check_found {
+  my ($prog) = @_;
+  if ( ! -f $prog ) {
+    $CPAN::Frontend->mywarn("Warning: '$prog' does not exist\n")
+      unless $silent;
+    return;
+  }
+  elsif ( ! -x $prog ) {
+    $CPAN::Frontend->mywarn("Warning: '$prog' is not executable\n")
+      unless $silent;
+    return;
+  }
+  return 1;
+}
+
+sub _beg_for_make {
+  $CPAN::Frontend->mywarn(<<"HERE");
+
+ALERT: 'make' is an essential tool for building perl Modules.
+Please make sure you have 'make' (or some equivalent) working.
+
+HERE
+  if ($^O eq "MSWin32") {
+    $CPAN::Frontend->mywarn(<<"HERE");
 Windows users may want to follow this procedure when back in the CPAN shell:
 
     look YVES/scripts/alien_nmake.pl
@@ -1297,38 +1347,9 @@ substitute. You can then revisit this dialog with
 
     o conf init make
 
-");
-                    }
-                }
-            }
-            $prompts{$progname} = "Where is your $progname program?";
-            my_dflt_prompt($progname,$path,$matcher);
-            if ( _check_found( $CPAN::Config->{$progname} ) ) {
-              last if $shortcut && !$matcher;
-            }
-            else {
-              $CPAN::Frontend->mywarn("Press SPACE and ENTER to skip\n");
-              redo;
-            }
-        }
-    }
-}
-
-sub _check_found {
-  my ($prog) = @_;
-  if ( ! -f $prog ) {
-    $CPAN::Frontend->mywarn("Warning: $prog does not exist\n")
-      unless $silent;
-    return;
+HERE
   }
-  elsif ( ! -x $prog ) {
-    $CPAN::Frontend->mywarn("Warning: $prog is not executable\n")
-      unless $silent;
-    return;
-  }
-  return 1;
 }
-
 
 sub init_cpan_home {
     my($matcher) = @_;
@@ -1397,7 +1418,7 @@ Shall we use it as the general CPAN build and cache directory?
 }
 
 sub my_dflt_prompt {
-    my ($item, $dflt, $m) = @_;
+    my ($item, $dflt, $m, $no_strip) = @_;
     my $default = $CPAN::Config->{$item} || $dflt;
 
     if (!$silent && (!$m || $item =~ /$m/)) {
@@ -1405,10 +1426,13 @@ sub my_dflt_prompt {
             $CPAN::Frontend->myprint($intro);
         }
         $CPAN::Frontend->myprint(" <$item>\n");
-        $CPAN::Config->{$item} = prompt($prompts{$item}, $default);
+        $CPAN::Config->{$item} =
+          $no_strip ? prompt_no_strip($prompts{$item}, $default)
+                    : prompt(         $prompts{$item}, $default);
     } else {
         $CPAN::Config->{$item} = $default;
     }
+    return $CPAN::Config->{$item};
 }
 
 sub my_yn_prompt {
