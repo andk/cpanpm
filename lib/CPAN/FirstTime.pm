@@ -212,7 +212,7 @@ If you have one of the readline packages (Term::ReadLine::Perl,
 Term::ReadLine::Gnu, possibly others) installed, the interactive CPAN
 shell will have history support. The next two questions deal with the
 filename of the history file and with its size. If you do not want to
-set this variable, please hit SPACE RETURN to the following question.
+set this variable, please hit SPACE ENTER to the following question.
 
 File to save your history?
 
@@ -636,7 +636,7 @@ the \$CPAN::Config takes precedence.
 proxy_user => qq{
 
 If your proxy is an authenticating proxy, you can store your username
-permanently. If you do not want that, just press RETURN. You will then
+permanently. If you do not want that, just press ENTER. You will then
 be asked for your username in every future session.
 
 },
@@ -645,7 +645,7 @@ proxy_pass => qq{
 
 Your password for the authenticating proxy can also be stored
 permanently on disk. If this violates your security policy, just press
-RETURN. You will then be asked for the password in every future
+ENTER. You will then be asked for the password in every future
 session.
 
 },
@@ -1614,7 +1614,7 @@ sub display_some {
     for my $item (@displayable) {
         $CPAN::Frontend->myprint(sprintf "(%d) %s\n", ++$pos, $item);
     }
-    my $hit_what = $default ? "SPACE RETURN" : "RETURN";
+    my $hit_what = $default ? "SPACE ENTER" : "ENTER";
     $CPAN::Frontend->myprint(sprintf("%d more items, hit %s to show them\n",
                                      (@$items - $pos),
                                      $hit_what,
@@ -1707,7 +1707,7 @@ put them on one line, separated by blanks, hyphenated ranges allowed
     if (@previous_urls) {
         $default = join (' ', ((scalar @urls) - (scalar @previous_urls) + 1) ..
                          (scalar @urls));
-        $prompt .= "\n(or just hit RETURN to keep your previous picks)";
+        $prompt .= "\n(or just hit ENTER to keep your previous picks)";
     }
 
     @urls = picklist (\@urls, $prompt, $default);
@@ -1727,7 +1727,7 @@ listed using a 'file:' URL like 'file:///path/to/cpan/'
 
 HERE
     do {
-        my $prompt = "Enter another URL or RETURN to quit:";
+        my $prompt = "Enter another URL or ENTER to quit:";
         unless (%seen) {
             $prompt = qq{CPAN.pm needs at least one URL where it can fetch CPAN files from.
 
