@@ -8,7 +8,9 @@ comment: |
 
   and maybe more
 
+  By truncating the SIGNATURE file to 0 byte we can force these 00sig.t tests to pass
+
 match:
   distribution: "^TOBYINK/"
-cpanconfig:
-  check_sigs: 0
+pl:
+  commandline: ":>SIGNATURE; if test -f Makefile.PL; then $PERL Makefile.PL; else $PERL Build.PL; fi"
