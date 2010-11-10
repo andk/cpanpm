@@ -11,13 +11,13 @@ use Fcntl ":flock";
 
 sub new {
     my ($class, $file) = @_;
-    my $self = bless { 
-        mirrors => [], 
+    my $self = bless {
+        mirrors => [],
         geography => {},
     }, $class;
 
     my $handle = FileHandle->new;
-    $handle->open($file) 
+    $handle->open($file)
         or croak "Couldn't open $file: $!";
     flock $handle, LOCK_SH;
     $self->_parse($file,$handle);
@@ -69,20 +69,28 @@ sub best_mirrors {
         print "Searching for the best continent ...\n" if $verbose;
         my @best = $self->_find_best_continent($seen, $verbose, $callback);
 
-        # how many continents to find enough mirrors? We should scan
-        # more than we need -- arbitrarily, we'll say x2
+        # Only add enough continents to find enough mirrors
         my $count = 0;
         for my $c ( @best ) {
             push @$conts, $c;
             $count += $self->mirrors( $self->countries($c) );
-            last if $count >= 2 * $how_many;
+            last if $count >= $how_many;
         }
     }
 
     print "Scanning " . join(", ", @$conts) . " ...\n" if $verbose;
 
     my @timings;
-    for my $m ($self->mirrors($self->countries(@$conts))) {
+    my @long_list = $self->mirrors($self->countries(@$conts));
+    my $long_list_size = ( $how_many > 10 ? $how_many : 10 );
+    if ( @long_list > $long_list_size ) {
+        @long_list = map  {$_->[0]}
+                     sort {$a->[1] <=> $b->[1]}
+                     map  {[$_, rand]} @long_list;
+        splice @long_list, $long_list_size; # truncate
+    }
+
+    for my $m ( @long_list ) {
         next unless $m->http;
         my $hostname = $m->hostname;
         if ( $seen->{$hostname}  ) {
@@ -112,7 +120,7 @@ sub _find_best_continent {
     CONT: for my $c ( $self->continents ) {
         my @mirrors = $self->mirrors( $self->countries($c) );
         next CONT unless @mirrors;
-        my $sample = 9;
+        my $sample = 3;
         my $n = (@mirrors < $sample) ? @mirrors : $sample;
         my @tests;
         RANDOM: while ( @mirrors && @tests < $n ) {
@@ -180,7 +188,7 @@ sub _parse {
             $mirror ||= {};
             if ( $prop eq 'dst_location' ) {
                 my (@location,$continent,$country);
-                @location = (split /\s*,\s*/, $value) 
+                @location = (split /\s*,\s*/, $value)
                     and ($continent, $country) = @location[-1,-2];
                 $continent =~ s/\s\(.*//;
                 $continent =~ s/\W+$//; # if Jarkko doesn't know latitude/longitude
@@ -238,7 +246,7 @@ sub http { shift->{http} || '' }
 sub ftp { shift->{ftp} || '' }
 sub rsync { shift->{rsync} || '' }
 
-sub url { 
+sub url {
     my $self = shift;
     return $self->{http} || $self->{ftp};
 }

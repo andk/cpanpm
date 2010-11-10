@@ -596,9 +596,8 @@ conf init' at the cpan prompt.)
 ],
 
 auto_pick => qq{
-Would you like me to automatically choose the best CPAN mirror
-sites for you? (This means connecting to the Internet and could
-take a couple minutes)},
+Would you like me to automatically choose some CPAN mirror
+sites for you? (This means connecting to the Internet)},
 
 config_intro => qq{
 
@@ -1658,12 +1657,15 @@ sub display_some {
 sub auto_mirrored_by {
     my $local = shift or return;
     local $|=1;
-    $CPAN::Frontend->myprint("Searching for the best CPAN mirrors (please be patient) ...");
+    $CPAN::Frontend->myprint("Looking for CPAN mirrors near you (please be patient)\n");
     my $mirrors = CPAN::Mirrors->new($local);
     my $cnt = 0;
     my @best = $mirrors->best_mirrors(
-      how_many => 5,
-      callback => sub { $CPAN::Frontend->myprint(".") },
+      how_many => 3,
+      callback => sub {
+          $CPAN::Frontend->myprint(".");
+          if ($cnt++>60) { $cnt=0; $CPAN::Frontend->myprint("\n"); }
+      },
     );
     my $urllist = [ map { $_->http } @best ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
