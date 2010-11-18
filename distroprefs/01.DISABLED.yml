@@ -101,7 +101,7 @@ match:
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
-    |KMX/Alien-IUP-v            # not analysed slowness and CPU hog; then again questions being asked
+    |KMX/Alien-IUP-v?\d                      # not analysed slowness and CPU hog; then again questions being asked
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung

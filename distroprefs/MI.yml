@@ -231,6 +231,7 @@ match:
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
     |LBROCARD/Test-WWW-Mechanize-Catalyst-\d 
+    |LONERR/CatalystX-Widget-Paginator-\d
     |LORN/LWP-Curl-\d
     |LSAUNDERS/DBIx-Class-Fixtures-\d
     |LUKEC/Blikistan-\d
