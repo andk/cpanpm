@@ -1216,6 +1216,8 @@ sub cleanup {
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
+  $META->{cachemgr} ||= CPAN::CacheMgr->new();
+  $META->{cachemgr}->scan_cache('atexit');
   close $META->{LOCKFH};
   unlink $META->{LOCK};
   # require Carp;
@@ -2019,7 +2021,7 @@ currently defined:
   proxy_user         username for accessing an authenticating proxy
   proxy_pass         password for accessing an authenticating proxy
   randomize_urllist  add some randomness to the sequence of the urllist
-  scan_cache         controls scanning of cache ('atstart' or 'never')
+  scan_cache         controls scanning of cache ('atstart', 'atexit' or 'never')
   shell              your favorite shell
   show_unparsable_versions
                      boolean if r command tells which modules are versionless

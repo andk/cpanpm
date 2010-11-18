@@ -199,10 +199,12 @@ sub new {
         SCAN => $CPAN::Config->{'scan_cache'} || 'atstart',
         DU => 0
     };
+    $CPAN::Frontend->mydie("Unknown scan_cache argument: $self->{SCAN}")
+        unless $self->{SCAN} =~ /never|atstart|atexit/;
     File::Path::mkpath($self->{ID});
     my $dh = DirHandle->new($self->{ID});
     bless $self, $class;
-    $self->scan_cache;
+    $self->scan_cache('atstart');
     $t2 = time;
     $debug .= "timing of CacheMgr->new: ".($t2 - $time);
     $time = $t2;
@@ -212,10 +214,9 @@ sub new {
 
 #-> sub CPAN::CacheMgr::scan_cache ;
 sub scan_cache {
-    my $self = shift;
-    return if $self->{SCAN} eq 'never';
-    $CPAN::Frontend->mydie("Unknown scan_cache argument: $self->{SCAN}")
-        unless $self->{SCAN} eq 'atstart';
+    my ($self, $phase) = @_;
+    $phase = '' unless defined $phase;
+    return unless $phase eq $self->{SCAN};
     return unless $CPAN::META->{LOCK};
     $CPAN::Frontend->myprint(
                              sprintf("Scanning cache %s for sizes\n",

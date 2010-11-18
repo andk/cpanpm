@@ -421,10 +421,11 @@ Randomize parameter
 =item scan_cache
 
 By default, each time the CPAN module is started, cache scanning is
-performed to keep the cache size in sync. To prevent this, answer
-'never'.
+performed to keep the cache size in sync ('atstart'). Alternatively,
+scanning and cleanup can happen when CPAN exits ('atexit'). To prevent
+any cache cleanup, answer 'never'.
 
-Perform cache scanning (atstart or never)?
+Perform cache scanning ('atstart', 'atexit' or 'never')?
 
 =item shell
 
@@ -827,7 +828,7 @@ sub init {
     my_dflt_prompt(build_cache => 100, $matcher);
 
     my_dflt_prompt(index_expire => 1, $matcher);
-    my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|never');
+    my_prompt_loop(scan_cache => 'atstart', $matcher, 'atstart|atexit|never');
 
     #
     #= cache_metadata

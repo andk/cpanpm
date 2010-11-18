@@ -4,6 +4,8 @@
 
         * automatic mirror selection now returns only http mirrors
 
+        * add 'atexit' option for cache scanning and cleanup
+
 2010-10-26  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_62
