@@ -189,7 +189,8 @@ sub _clean_cache {
 
 #-> sub CPAN::CacheMgr::new ;
 sub new {
-    my $class = shift;
+    my($class,$phase) = @_;
+    $phase ||= "atstart";
     my $time = time;
     my($debug,$t2);
     $debug = "";
@@ -204,7 +205,7 @@ sub new {
     File::Path::mkpath($self->{ID});
     my $dh = DirHandle->new($self->{ID});
     bless $self, $class;
-    $self->scan_cache('atstart');
+    $self->scan_cache($phase);
     $t2 = time;
     $debug .= "timing of CacheMgr->new: ".($t2 - $time);
     $time = $t2;

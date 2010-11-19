@@ -1216,8 +1216,7 @@ sub cleanup {
   return unless defined $META->{LOCK};
   return unless -f $META->{LOCK};
   $META->savehist;
-  $META->{cachemgr} ||= CPAN::CacheMgr->new();
-  $META->{cachemgr}->scan_cache('atexit');
+  $META->{cachemgr} ||= CPAN::CacheMgr->new('atexit');
   close $META->{LOCKFH};
   unlink $META->{LOCK};
   # require Carp;
