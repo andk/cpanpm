@@ -390,6 +390,7 @@ distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml
 distroprefs/VKON.Tcl.yml
 distroprefs/VMAN.Net-Libdnet.yml
+distroprefs/VPIT.autovivification.yml
 distroprefs/VPIT.Variable-Magic.yml
 distroprefs/WITTROCK.Tk-PathEntry.yml
 distroprefs/WRW.Barcode-Code128.yml
