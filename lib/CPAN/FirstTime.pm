@@ -1832,6 +1832,9 @@ sub prompt ($;$) {
 
 
 sub prompt_no_strip ($;$) {
+    unless (defined &_real_prompt) {
+        *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
+    }
     return _real_prompt(@_);
 }
 
