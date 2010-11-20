@@ -1,0 +1,4 @@
+---
+match:
+  distribution: "DOY/Package-Stash-0.14-TRIAL.tar.gz"
+goto: "DOY/Package-Stash-0.13.tar.gz"
