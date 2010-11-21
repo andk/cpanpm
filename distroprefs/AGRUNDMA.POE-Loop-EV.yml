@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: 'AGRUNDMA/POE-Loop-EV-\d'
+  distribution: '(AGRUNDMA|RCAPUTO)/POE-Loop-(EV|Tk)-\d'
 pl:
   eexpect:
     mode: anyorder

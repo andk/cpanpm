@@ -10,16 +10,19 @@ comment: |
   CORO_INTERFACE=s. I discovered this only when we reached 4.13 and
   only for perls with debugging on (-Doptimize=-g)
 
-  With Coro 5.23 I observed that some test in Event/ was hanging when
-  the perl on my 64 bit machine had uselongdouble defined. When the
-  coro method was set to (u,s,a,i,p), the test Event/unblock.t was
-  hanging. With (l,w) the code didn't compile.
+  With Coro 5.23 I observed that Event/unblock.t was hanging when the
+  perl on my 64 bit machine had uselongdouble defined. When the coro
+  method was set to (u,s,a,i,p), Event/unblock.t was hanging. With
+  (l,w) the code didn't compile.
+
+  With Coro 5.25 I'm trying again to set disabled=0 to find out where
+  we stand.
 
 match:
   distribution: "^MLEHMANN/Coro-"
   perlconfig:
     nvsize: "^16$"
-disabled: 1
+disabled: 0
 ---
 match:
   distribution: "^MLEHMANN/Coro-"

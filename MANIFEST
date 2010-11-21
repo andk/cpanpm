@@ -70,6 +70,7 @@ distroprefs/CHANG-LIU.XML-Node.yml
 distroprefs/CHARTGRP.Chart.yml
 distroprefs/CHGEUER.Crypt-RIPEMD160.yml
 distroprefs/CHISEL.Zucchini.yml
+distroprefs/CHLIGE.Net-Bonjour.yml
 distroprefs/CHOCOLATE.autobox.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CHORNY.Test-Warn.yml
@@ -196,6 +197,7 @@ distroprefs/JJORE.Alien-Judy.yml
 distroprefs/JJORE.Carp-Clan.yml
 distroprefs/JJORE.Data-Dump-Streamer.yml
 distroprefs/JKEGL.Test-Weaken.yml
+distroprefs/JKUTEJ.IO-Any.yml
 distroprefs/JMASON.Mail-SpamAssassin.yml
 distroprefs/JMGDOC.OpenOffice-OODoc.yml
 distroprefs/JOHNL.DBD-Informix.yml
