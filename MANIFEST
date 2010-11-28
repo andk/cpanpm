@@ -181,6 +181,7 @@ distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
 distroprefs/INGY.Test-Base.yml
+distroprefs/INGY.YAML-LibYAML.yml
 distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
