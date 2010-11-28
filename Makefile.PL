@@ -74,7 +74,6 @@ my $prereq_pm = {
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
                  'File::Temp' => 0,   # TJENNESS; requires Test::More;
-                 'HTTP::Lite' => 2.2, # allow bootstrap with pure perl HTTP
                  'MIME::Base64' => 0, # allow HTTP Basic authentication
                  'Digest::MD5' => 0,  # allow HTTP Digest authentication
                  'Net::Ping' => 0,    # SMPETERS;
@@ -125,6 +124,11 @@ for my $interesting_module (qw(
     if (!$@) {
         $prereq_pm->{$interesting_module} ||= 0;
     }
+}
+unless (exists $prereq_pm->{"LWP::UserAgent"}) {
+    # allow bootstrap with pure perl HTTP, but skip if we have LWP::UserAgent already installed
+    $prereq_pm->{'HTTP::Lite'} = 2.2;
+
 }
 if ($HAVE_FILE_SPEC) {
   # import PAUSE public key to user's keychain
