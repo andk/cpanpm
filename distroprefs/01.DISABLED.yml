@@ -133,9 +133,9 @@ match:
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin
     |OALDERS/URI-ParseSearchString-More-0.04
-    |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
+    |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
@@ -158,8 +158,8 @@ match:
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STEVENC/WWW-Myspace-\d                  # tests take too long
-    |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
+    |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
     |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
@@ -173,6 +173,7 @@ match:
     |URI/Stem-\d                             # asks questions about conf directories
     |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
     |VINSWORLD/Net-Syslogd-0.04.             # asks question
+    |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle

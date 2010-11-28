@@ -101,6 +101,7 @@ distroprefs/DJBERG.Tk-JListbox.yml
 distroprefs/DJKERNEN.Mail-IMAPClient.yml
 distroprefs/DKWILSON.Tk-DKW.yml
 distroprefs/DLAND.Crypt-SSLeay.yml
+distroprefs/DLAND.Regexp-Assemble.yml
 distroprefs/DMAKI.Class-DBI-Plugin-DateTime.yml
 distroprefs/DMAKI.Data-Localize.yml
 distroprefs/DMAKI.DateTime-X.yml
@@ -221,6 +222,7 @@ distroprefs/KAWASAKI.Lingua-JA-Romanize-Japanese.yml
 distroprefs/KBROWN.SOAP.yml
 distroprefs/KCLARK.SQL-Translator.yml
 distroprefs/KNORR.Net-MirrorDir.yml
+distroprefs/KRAIH.Mojolicious.yml
 distroprefs/KROW.DBIx-Password.yml
 distroprefs/KRUSCOE.Tie-DxHash.yml
 distroprefs/KTHAKORE.Alien-SDL.yml
