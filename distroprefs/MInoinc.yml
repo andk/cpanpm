@@ -13,7 +13,7 @@ comment: |
 
 match:
   distribution: |
-    ^(?x:DANIEL/Crypt-OpenSSL-X509-\d
+    ^(?x:.^
     |MRAMBERG/Catalyst-Plugin-Unicode-\d
     |REDTREE/PDF-API2-Simple-\d
     )|
