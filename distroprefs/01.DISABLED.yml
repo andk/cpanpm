@@ -49,7 +49,7 @@ match:
     |CJFIELDS/BioPerl-\d                     # asks questions
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
-    |CORION/WWW-Mechanize-Shell-0.4[678].tar.gz  # hangs every so often in t/13-command-au.t
+    |CORION/WWW-Mechanize-Shell-0.[45].tar.gz  # hangs every so often in t/13-command-au.t
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
     |CSJEWELL/Test-Perl-Dist-0.300           # tells me that Win32 is missing and then stands still
