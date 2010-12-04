@@ -1,0 +1,11 @@
+--- 
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=61858
+
+  ftp://cpan.cpantesters.org/CPAN/authors/id/A/AN/ANDK/patches/Slay-Makefile-Gress-0.07-ANDK-01.patch.gz
+
+match:
+  distribution: '/Slay-Makefile-Gress-0.07\.'
+patches:
+  - "ANDK/patches/Slay-Makefile-Gress-0.07-ANDK-01.patch.gz"
