@@ -297,6 +297,7 @@ Parameters for the 'make install' command?
 Typical frequently used setting:
 
     UNINST=1         # to always uninstall potentially conflicting files
+                     # (but do NOT use with local::lib or INSTALL_BASE)
 
 Your choice:
 
@@ -338,7 +339,8 @@ Your choice:
 Parameters for the './Build install' command? Typical frequently used
 setting:
 
-    --uninst 1                           # uninstall conflicting files
+    --uninst 1       # uninstall conflicting files
+                     # (but do NOT use with local::lib or INSTALL_BASE)
 
 Your choice:
 
@@ -676,6 +678,24 @@ be echoed to the terminal!
 
 },
 
+install_help => qq{
+Warning: You do not have write permission for Perl library directories.
+
+To install modules, you need to configure a local Perl library directory or
+escalate your privileges.  CPAN can help you by bootstrapping the local::lib
+module or by configuring itself to use 'sudo' (if available).  You may also
+resolve this problem manually if you need to customize your setup.
+
+What approach do you want?  (Choose 'local::lib', 'sudo' or 'manual')
+},
+
+local_lib_installed => qq{
+local::lib is installed. You must now add the following environment variables
+to your shell configuration files (or registry, if you are on Windows) and
+then restart your command line shell and CPAN before installing modules:
+
+},
+
               );
 
     die "Coding error in \@prompts declaration.  Odd number of elements, above"
@@ -789,6 +809,19 @@ sub init {
             *_real_prompt = sub { return $_[1] };
         }
     }
+
+    #
+    # bootstrap local::lib or sudo
+    #
+    unless ( $matcher
+        || _can_write_to_libdirs() || _using_installbase() || _using_sudo()
+    ) {
+        local $auto_config = 0; # We *must* ask, even under autoconfig
+        local *_real_prompt;    # We *must* show prompt
+        my_prompt_loop(install_help => 'local::lib', $matcher,
+                   'local::lib|sudo|none');
+    }
+    $CPAN::Config->{install_help} ||= ''; # Temporary to suppress warnings
 
     if (!$matcher or q{
                        build_dir
@@ -970,8 +1003,18 @@ sub init {
     if (exists $CPAN::HandleConfig::keys{make_install_make_command}) {
         # as long as Windows needs $self->_build_command, we cannot
         # support sudo on windows :-)
-        my_dflt_prompt(make_install_make_command => $CPAN::Config->{make} || "",
-                       $matcher);
+        my $default = $CPAN::Config->{make} || "";
+        if ( $default && $CPAN::Config->{install_help} eq 'sudo' ) {
+            if ( find_exe('sudo') ) {
+                $default = "sudo $default";
+                delete $CPAN::Config->{make_install_make_command}
+                    unless $CPAN::Config->{make_install_make_command} =~ /sudo/;
+            }
+            else {
+                $CPAN::Frontend->mywarnonce("Could not find 'sudo' in PATH\n");
+            }
+        }
+        my_dflt_prompt(make_install_make_command => $default, $matcher);
     }
 
     my_dflt_prompt(make_install_arg => $CPAN::Config->{make_arg} || "",
@@ -984,7 +1027,18 @@ sub init {
         and $^O ne "MSWin32") {
         # as long as Windows needs $self->_build_command, we cannot
         # support sudo on windows :-)
-        my_dflt_prompt(mbuild_install_build_command => "./Build", $matcher);
+        my $default = "./Build";
+        if ( $CPAN::Config->{install_help} eq 'sudo' ) {
+            if ( find_exe('sudo') ) {
+                $default = "sudo $default";
+                delete $CPAN::Config->{mbuild_install_build_command}
+                    unless $CPAN::Config->{mbuild_install_build_command} =~ /sudo/;
+            }
+            else {
+                $CPAN::Frontend->mywarnonce("Could not find 'sudo' in PATH\n");
+            }
+        }
+        my_dflt_prompt(mbuild_install_build_command => $default, $matcher);
     }
 
     my_dflt_prompt(mbuild_install_arg => "", $matcher);
@@ -1186,12 +1240,140 @@ sub init {
         $auto_config = 0; # reset
     }
 
+    # bootstrap local::lib now if requested
+    if ( $CPAN::Config->{install_help} eq 'local::lib' ) {
+        if ( ! @{ $CPAN::Config->{urllist} } ) {
+            $CPAN::Frontend->myprint(
+                "Skipping local::lib bootstrap because 'urllist' is not configured.\n"
+            );
+        }
+        else {
+            $CPAN::Frontend->myprint("\nAttempting to boostrap local::lib...\n");
+            $CPAN::Frontend->myprint("\nWriting $configpm for bootstrap...\n");
+            delete $CPAN::Config->{install_help}; # temporary only
+            CPAN::HandleConfig->commit($configpm);
+            my $dist;
+            if ( $dist = CPAN::Shell->expand('Module', 'local::lib')->distribution ) {
+                # this is a hack to force bootstrapping
+                $dist->{prefs}{pl}{commandline} = "$^X Makefile.PL --bootstrap";
+                # Set @INC for this process so we find things as they bootstrap
+                require lib;
+                lib->import(_local_lib_inc_path());
+                eval { $dist->install };
+            }
+            if ( ! $dist || (my $err = $@) ) {
+                $err ||= 'Could not locate local::lib in the CPAN index';
+                $CPAN::Frontend->mywarn("Error bootstrapping local::lib: $@\n");
+                $CPAN::Frontend->myprint("From the CPAN Shell, you might try 'look local::lib' and \n"
+                    . "run 'perl Makefile --bootstrap' and see if that is successful.  Then\n"
+                    . "restart your CPAN client\n"
+                );
+            }
+            else {
+                _local_lib_config();
+            }
+        }
+    }
+
+    # install_help is temporary for configuration and not saved
+    delete $CPAN::Config->{install_help};
+
     $CPAN::Frontend->myprint("\n");
     if ($matcher && !$CPAN::Config->{auto_commit}) {
         $CPAN::Frontend->myprint("Please remember to call 'o conf commit' to ".
                                  "make the config permanent!\n");
     } else {
         CPAN::HandleConfig->commit($configpm);
+    }
+}
+
+sub _local_lib_config {
+    # Set environment stuff for this process
+    require local::lib;
+    my %env = local::lib->build_environment_vars_for(_local_lib_path(), 1);
+    while ( my ($k, $v) = each %env ) {
+        $ENV{$k} = $v;
+    }
+
+    # Tell user about environment vars to set
+    $CPAN::Frontend->myprint($prompts{local_lib_installed});
+    local $ENV{SHELL} = $CPAN::Config->{shell} || $ENV{SHELL};
+    my $shellvars = local::lib->environment_vars_string_for(_local_lib_path());
+    $CPAN::Frontend->myprint($shellvars);
+
+    # Offer to mangle the shell config
+    my $munged_rc;
+    if ( my $rc = _find_shell_config() ) {
+        local $auto_config = 0; # We *must* ask, even under autoconfig
+        local *_real_prompt;    # We *must* show prompt
+        my $_conf = prompt(
+            "\nWould you like me to append that to $rc now?", "yes"
+        );
+        if ($_conf =~ /^y/i) {
+            open my $fh, ">>", $rc;
+            print {$fh} "\n$shellvars";
+            close $fh;
+            $munged_rc++;
+        }
+    }
+
+    # Warn at exit time
+    if ($munged_rc) {
+        push @{$CPAN::META->exit_messages}, << "HERE";
+
+*** Remember to restart your shell before running cpan again ***
+HERE
+    }
+    else {
+        push @{$CPAN::META->exit_messages}, << "HERE";
+
+*** Remember to add these environment variables to your shell config
+    and restart your shell before running cpan again ***
+
+$shellvars
+HERE
+    }
+}
+
+{
+    my %shell_rc_map = (
+        map { $_ => ".${_}rc" } qw/ bash tcsh csh /,
+        map { $_ => ".profile" } qw/dash ash sh/,
+        zsh  => ".zshenv",
+    );
+
+    sub _find_shell_config {
+        my $shell = File::Basename::basename($CPAN::Config->{shell});
+        if ( my $rc = $shell_rc_map{$shell} ) {
+            my $path = File::Spec->catfile($ENV{HOME}, $rc);
+            return $path if -w $path;
+        }
+    }
+}
+
+
+sub _local_lib_inc_path {
+    return File::Spec->catdir(_local_lib_path(), qw/lib perl5/);
+}
+
+sub _local_lib_path {
+    return File::Spec->catdir(_local_lib_home(), 'perl5');
+}
+
+# Adapted from resolve_home_path() in local::lib -- this is where
+# local::lib thinks the user's home is
+{
+    my $local_lib_home;
+    sub _local_lib_home {
+        $local_lib_home ||= File::Spec->rel2abs( do {
+            if ($CPAN::META->has_usable("File::HomeDir") && File::HomeDir->VERSION >= 0.65) {
+                File::HomeDir->my_home;
+            } elsif (defined $ENV{HOME}) {
+                $ENV{HOME};
+            } else {
+                (getpwuid $<)[7] || "~";
+            }
+        });
     }
 }
 
@@ -1559,6 +1741,7 @@ HERE
 
 sub find_exe {
     my($exe,$path) = @_;
+    $path ||= [split /$Config{'path_sep'}/, $ENV{'PATH'}];
     my($dir);
     #warn "in find_exe exe[$exe] path[@$path]";
     for $dir (@$path) {
@@ -1811,6 +1994,26 @@ sub _print_urllist {
       $CPAN::Frontend->myprint("  $_\n") 
     };
     $CPAN::Frontend->myprint("\n");
+}
+
+sub _can_write_to_libdirs {
+    return -w $Config{installprivlib}
+        && -w $Config{installarchlib}
+        && -w $Config{installsitelib}
+        && -w $Config{installsitearch}
+}
+
+sub _using_installbase {
+    return 1 if $ENV{PERL_MM_OPT} && $ENV{PERL_MM_OPT} =~ /install_base/i;
+    return 1 if grep { ($CPAN::Config->{$_}||q{}) =~ /install_base/i }
+        qw(makepl_arg make_install_arg mbuildpl_arg mbuild_install_arg);
+    return;
+}
+
+sub _using_sudo {
+    return 1 if grep { ($CPAN::Config->{$_}||q{}) =~ /sudo/ }
+        qw(make_install_make_command mbuild_install_build_command);
+    return;
 }
 
 sub _strip_spaces {
