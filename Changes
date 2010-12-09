@@ -1,3 +1,6 @@
+        * add support for bootstrapping local::lib when the user
+          does not have write access to perl's site library directories
+
         * add support for (and prerequisite on) HTTP::Lite; also adds
           prerequisites for MIME::Base64 and Digest::MD5 to support
           proxy authentication
