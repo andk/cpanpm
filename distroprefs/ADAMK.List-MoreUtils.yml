@@ -2,3 +2,7 @@
 match:
   distribution: "ADAMK/List-MoreUtils-0.23_01.tar.gz"
 goto: "VPARSEVAL/List-MoreUtils-0.22.tar.gz"
+---
+match:
+  distribution: 'ADAMK/List-MoreUtils-0\.(?:27_0.|28|29)\.tar\.gz'
+goto: "ADAMK/List-MoreUtils-0.26.tar.gz"

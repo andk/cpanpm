@@ -16,7 +16,8 @@ match:
     |.+/Win32(API)?-                         # I have only linux
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
-    |ADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
+    |xxxADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
+    |xxxADAMK/Module-Install-1.00 # disabled the spell against it because Catalyst-Devel-1.28 has declared a dependency see 63847
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
@@ -38,6 +39,7 @@ match:
     |BINGOS/Module-Install-ReadmeFromPod-    # hangs
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
+    |BLX/XSDSQL_                             # hangs with high memory usage
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
@@ -121,6 +123,7 @@ match:
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
+    |MLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
     |MOB/Forks-Super-                        # too demanding
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
@@ -129,6 +132,7 @@ match:
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
+    |NPEREZ/Reflexive-Stream-Filtering-1.103410.tar.gz # hangs
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin

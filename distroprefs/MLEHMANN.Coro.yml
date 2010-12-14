@@ -16,13 +16,14 @@ comment: |
   (l,w) the code didn't compile.
 
   With Coro 5.25 I'm trying again to set disabled=0 to find out where
-  we stand.
+  we stand. [time passes] disabling again on 2010-12-12, too many
+  perl versions that trigger hanging tests.
 
 match:
   distribution: "^MLEHMANN/Coro-"
   perlconfig:
     nvsize: "^16$"
-disabled: 0
+disabled: 1
 ---
 match:
   distribution: "^MLEHMANN/Coro-"

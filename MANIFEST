@@ -26,7 +26,6 @@ distroprefs/ANDYA.File-Find-Parallel.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ANDYA.Test-Harness.yml
-distroprefs/APOCAL.Pod-Weaver-Section.yml
 distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
@@ -79,6 +78,7 @@ distroprefs/CLACO.Class-Accessor-Grouped.yml
 distroprefs/CLAESJAC.JavaScript.yml
 distroprefs/CLKAO.App-CLI.yml
 distroprefs/CLKAO.IO-Digest.yml
+distroprefs/CLKAO.PerlIO-via-dynamic.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
 distroprefs/CORDATA.Kwiki-Formatter-Emphasis.yml
@@ -89,6 +89,7 @@ distroprefs/CSOE.PDL.yml
 distroprefs/DAGOLDEN.CPAN-Reporter.yml
 distroprefs/DAGOLDEN.Term-Title.yml
 distroprefs/DAMS.RT-Client-REST.yml
+distroprefs/DANJOU.Net-Google-DocumentsList.yml
 distroprefs/DANKOGAI.Regexp-Optimizer.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
@@ -168,6 +169,7 @@ distroprefs/GRAY.IO-AIO-Util.yml
 distroprefs/GRICHTER.Embperl.yml
 distroprefs/GRM.App-CamelPKI.yml
 distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
+distroprefs/GWYN.Data-Tabular-Dumper.yml
 distroprefs/GWYN.POE-Component-Daemon.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
@@ -297,12 +299,14 @@ distroprefs/NANARDON.X11-Xlib.yml
 distroprefs/NEELY.Data-Serializer.yml
 distroprefs/NEILW.Inline-CPP.yml
 distroprefs/NESTING.Unicode-Wrap.yml
+distroprefs/NEVESENIN.Regexp-RegGrp.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NICOLAW.WWW-Comic.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/NINE.Inline-Python.yml
 distroprefs/NKH.PerlBuildSystem.yml
+distroprefs/NODINE.Slay-Makefile-Gress.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/NUFFIN.Devel-Events.yml

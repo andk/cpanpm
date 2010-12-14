@@ -7,4 +7,4 @@ match:
   distribution: '/YAML-LibYAML-0.34'
 patches:
   - "ANDK/patches/YAML-LibYAML-0.34-ANDK-01.patch.gz"
-  - "ANDK/patches/YAML-LibYAML-0.34-ANDK-02.patch.gz"
+#  - "ANDK/patches/YAML-LibYAML-0.34-ANDK-02.patch.gz"
