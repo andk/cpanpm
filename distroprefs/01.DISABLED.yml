@@ -168,6 +168,7 @@ match:
     |SWALTERS/Acme-RPC-\d                    # hangs
     |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
     |TBR/Net-RabbitMQ-Simple-0.0004          # hangs
+    |TOKUHIROM/Amon2-                        # test hangs with some perls
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TPABA/
@@ -195,5 +196,6 @@ match:
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
     |ZOFFIX/POE-Component-WWW-Google-PageRank-\d # hangs in 00-load with 34437
     |ZOFFIX/POE-Component-WebService-HtmlKitCom-FavIconFromImage-\d # hangs
+    |ZSTEVENS/Alien-ActiveMQ-\d              # downloads 50MB and leaves them in /tmp/
     )|
 disabled: 1
