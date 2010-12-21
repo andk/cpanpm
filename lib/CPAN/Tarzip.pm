@@ -260,7 +260,15 @@ sub untar {
              $CPAN::META->has_usable("Archive::Tar")
              &&
              $CPAN::META->has_inst("Compress::Zlib") ) {
-        $prefer = 2;
+        my $prefer_external_tar = $CPAN::Config->{prefer_external_tar}; # XXX not yet supported
+        unless (defined $prefer_external_tar) {
+            if ($^O =~ /(MSWin32|solaris)/) {
+                $prefer_external_tar = 0;
+            } else {
+                $prefer_external_tar = 1;
+            }
+        }
+        $prefer = $prefer_external_tar ? 1 : 2;
     } elsif ($exttar && $extgzip) {
         # no modules and not bz2
         $prefer = 1;
