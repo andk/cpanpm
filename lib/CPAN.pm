@@ -1200,6 +1200,12 @@ sub new {
     bless {}, shift;
 }
 
+#-> sub CPAN::exit_messages ;
+sub exit_messages {
+    my ($self) = @_;
+    $self->{exit_messages} ||= [];
+}
+
 #-> sub CPAN::cleanup ;
 sub cleanup {
   # warn "cleanup called with arg[@_] End[$CPAN::End] Signal[$Signal]";
@@ -1225,6 +1231,9 @@ sub cleanup {
       $CPAN::Frontend->mywarn("Warning: Configuration not saved.\n");
   }
   $CPAN::Frontend->myprint("Lockfile removed.\n");
+  for my $msg ( @{ $META->exit_messages } ) {
+      $CPAN::Frontend->myprint($msg);
+  }
 }
 
 #-> sub CPAN::readhist
