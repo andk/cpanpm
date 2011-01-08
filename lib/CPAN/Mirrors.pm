@@ -8,6 +8,7 @@ $VERSION = "1.77";
 use Carp;
 use FileHandle;
 use Fcntl ":flock";
+use Net::Ping ();
 
 sub new {
     my ($class, $file) = @_;
@@ -63,6 +64,9 @@ sub best_mirrors {
     my $conts = $args{continents} || [];
     $conts = [$conts] unless ref $conts;
 
+    # Old Net::Ping did not do timings at all
+    return "http://www.cpan.org/" unless Net::Ping->VERSION gt '2.13';
+
     my $seen = {};
 
     if ( ! @$conts ) {
@@ -105,6 +109,7 @@ sub best_mirrors {
         }
     }
     return unless @timings;
+
     $how_many = @timings if $how_many > @timings;
     my @best =
         map  { $_->[0] }
@@ -257,8 +262,13 @@ sub ping {
     my ($proto) = $self->url =~ m{^([^:]+)};
     my $port = $proto eq 'http' ? 80 : 21;
     return unless $port;
-    $ping->port_number($port);
-    $ping->hires(1);
+    if ( $ping->can('port_number') ) {
+        $ping->port_number($port);
+    }
+    else {
+        $ping->{'port_num'} = $port;
+    }
+    $ping->hires(1) if $ping->can('hires');
     my ($alive,$rtt) = $ping->ping($self->hostname);
     return $alive ? $rtt : undef;
 }

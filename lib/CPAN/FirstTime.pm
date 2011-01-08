@@ -1381,7 +1381,11 @@ sub _do_pick_mirrors {
     local *_real_prompt;
     *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
     $CPAN::Frontend->myprint($prompts{urls_intro});
-    my $_conf = prompt($prompts{auto_pick}, "yes");
+    # Only prompt for auto-pick if Net::Ping is new enough to do timings
+    my $_conf = 'n';
+    if ( $CPAN::META->has_usable("Net::Ping") && Net::Ping->VERSION gt '2.13') {
+        $_conf = prompt($prompts{auto_pick}, "yes");
+    }
     my @old_list = @{ $CPAN::Config->{urllist} };
     if ( $_conf =~ /^y/i ) {
         conf_sites( auto_pick => 1 ) or bring_your_own();
