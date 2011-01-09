@@ -105,6 +105,8 @@ match:
     |CLACO/Finance-Currency-Convert-WebserviceX-\d
     |CLACO/Handel-Storage-RDBO-\d
     |CLACO/Handel-\d
+    |CLKAO/AnyMQ-\d
+    |CLKAO/Finance-TW-TAIFEX-\d
     |CLKAO/PerlIO-via-dynamic-\d
     |CLKAO/Pushmi-v\d
     |CLKAO/RunApp-\d

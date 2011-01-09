@@ -147,6 +147,7 @@ match:
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
+    |RSAVAGE/Data-Session-1.03.tgz           # hangs during basic.t with all CPU consumed
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
     |RYBSKEJ/forks-0.25
