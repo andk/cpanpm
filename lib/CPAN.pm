@@ -1027,11 +1027,11 @@ sub has_usable {
                             sub {require Net::FTP},
                             sub {require Net::Config},
                            ],
-               'HTTP::Lite' => [
+               'HTTP::Tiny' => [
                             sub {
-                                require HTTP::Lite;
-                                unless (CPAN::Version->vge(HTTP::Lite->VERSION, 2.2)) {
-                                    for ("Will not use HTTP::Lite, need version 2.2\n") {
+                                require HTTP::Tiny;
+                                unless (CPAN::Version->vge(HTTP::Tiny->VERSION, 0.005)) {
+                                    for ("Will not use HTTP::Tiny, need version 0.005\n") {
                                         $CPAN::Frontend->mywarn($_);
                                         die $_;
                                     }
@@ -1397,7 +1397,7 @@ Basic commands:
 
 The CPAN module automates or at least simplifies the make and install
 of perl modules and extensions. It includes some primitive searching
-capabilities and knows how to use LWP, HTTP::Lite, Net::FTP and certain
+capabilities and knows how to use LWP, HTTP::Tiny, Net::FTP and certain
 external download clients to fetch distributions from the net.
 
 These are fetched from one or more mirrored CPAN (Comprehensive
@@ -3393,7 +3393,7 @@ or in your web browser you've proxy information set, then you know
 you are running behind an http firewall.
 
 To access servers outside these types of firewalls with perl (even for
-ftp), you need LWP or HTTP::Lite.
+ftp), you need LWP or HTTP::Tiny.
 
 =item ftp firewall
 

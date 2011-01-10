@@ -652,18 +652,16 @@ sub hostdleasy { #called from hostdlxxx
                 # Net::FTP can still succeed where LWP fails. So we do not
                 # skip Net::FTP anymore when LWP is available.
             }
-        } elsif ($url =~ /^http:/ && $CPAN::META->has_usable('HTTP::Lite')) {
-            require CPAN::HTTP::Lite;
-            my $chl = CPAN::HTTP::Lite->new(
+        } elsif ($url =~ /^http:/ && $CPAN::META->has_usable('HTTP::Tiny')) {
+            require CPAN::HTTP::Client;
+            my $chc = CPAN::HTTP::Client->new(
                 proxy => $CPAN::Config->{http_proxy} || $ENV{http_proxy},
                 no_proxy => $CPAN::Config->{no_proxy} || $ENV{no_proxy},
             );
             for my $try ( $url, ( $url !~ /\.gz(?!\n)\Z/ ? "$url.gz" : () ) ) {
-                $CPAN::Frontend->myprint("Fetching with HTTP::Lite:\n$try\n");
-                my $res = eval { $chl->mirror($try, $aslocal) };
-                if ( $res && defined $res->status
-                    && substr($res->status, 0, 1) eq '2' # 2XX
-                ) {
+                $CPAN::Frontend->myprint("Fetching with HTTP::Tiny:\n$try\n");
+                my $res = eval { $chc->mirror($try, $aslocal) };
+                if ( $res && $res->{success} ) {
                     $ThesiteURL = $ro_url;
                     my $now = time;
                     utime $now, $now, $aslocal; # download time is more
@@ -671,18 +669,25 @@ sub hostdleasy { #called from hostdlxxx
                                                 # time
                     return $aslocal;
                 }
-                elsif ($res && defined $res->status) {
+                elsif ( $res && $res->{status} ne '599') {
                     $CPAN::Frontend->myprint(sprintf(
-                            "HTTP::Lite failed with code[%s] message[%s]\n",
-                            $res->status,
-                            $res->status_message,
+                            "HTTP::Tiny failed with code[%s] message[%s]\n",
+                            $res->{status},
+                            $res->{reason},
+                        )
+                    );
+                }
+                elsif ( $res && $res->{status} eq '599') {
+                    $CPAN::Frontend->myprint(sprintf(
+                            "HTTP::Tiny failed with an internal error: %s\n",
+                            $res->{content},
                         )
                     );
                 }
                 else {
-                    my $err = $@ || 'Could not connect';
+                    my $err = $@ || 'Unknown error';
                     $CPAN::Frontend->myprint(sprintf(
-                            "Error downloading with HTTP::Lite: %s\n", $err
+                            "Error downloading with HTTP::Tiny: %s\n", $err
                         )
                     );
                 }

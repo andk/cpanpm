@@ -127,7 +127,7 @@ for my $interesting_module (qw(
 }
 unless (exists $prereq_pm->{"LWP::UserAgent"}) {
     # allow bootstrap with pure perl HTTP, but skip if we have LWP::UserAgent already installed
-    $prereq_pm->{'HTTP::Lite'} = 2.2;
+    $prereq_pm->{'HTTP::Tiny'} = '0.005';
 
 }
 if ($HAVE_FILE_SPEC) {
