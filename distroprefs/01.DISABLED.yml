@@ -132,7 +132,7 @@ match:
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
-    |NPEREZ/Reflexive-Stream-Filtering-1.103410.tar.gz # hangs
+    |NPEREZ/Reflexive-Stream-Filtering-1.103 # hangs
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin
