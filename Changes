@@ -1,5 +1,7 @@
 2011-01-16  Andreas J. Koenig  <andk@cpan.org>
 
+	* release 1.94_63
+
 	* address #63357: use Dumpvalue when dumping potential crap (Andreas
 	Koenig)
 
