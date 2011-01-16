@@ -538,6 +538,17 @@ regardless of the history using "force".
 
 Do you want to rely on the test report history (yes/no)?
 
+=item use_file_homedir
+
+Windows and Darwin have no tradition of providing a home directory for
+their users, so it has been requested to support the use of
+File::HomeDir. But after so many years of using File::HomeDir, this
+module started to bother people because it didn't fulfil their
+expectations. By setting this variable you can choose whether you want
+to let File::HomeDir decide about your storage locations.
+
+Use File::HomeDir to determine home directory and storage locations?
+
 =item use_sqlite
 
 CPAN::SQLite is a layer between the index files that are downloaded
@@ -1265,6 +1276,11 @@ sub init {
         $auto_config = 0; # reset
     }
 
+    if (!$matcher || "use_file_homedir" =~ $matcher) {
+        my $use_file_homedir = CPAN::_use_file_homedir();
+        my_yn_prompt("use_file_homedir" => $use_file_homedir, $matcher);
+    }
+
     # bootstrap local::lib now if requested
     if ( $CPAN::Config->{install_help} eq 'local::lib' ) {
         if ( ! @{ $CPAN::Config->{urllist} } ) {
@@ -1391,7 +1407,7 @@ sub _local_lib_path {
     my $local_lib_home;
     sub _local_lib_home {
         $local_lib_home ||= File::Spec->rel2abs( do {
-            if ($CPAN::META->has_usable("File::HomeDir") && File::HomeDir->VERSION >= 0.65) {
+            if (CPAN::_use_file_homedir()) {
                 File::HomeDir->my_home;
             } elsif (defined $ENV{HOME}) {
                 $ENV{HOME};

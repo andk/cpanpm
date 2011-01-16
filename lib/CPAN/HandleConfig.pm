@@ -98,6 +98,7 @@ $VERSION = "5.5001"; # see also CPAN::Config::VERSION at end of file
      "trust_test_report_history",
      "unzip",
      "urllist",
+     "use_file_homedir",
      "use_sqlite",
      "username",
      "version_timeout",
@@ -504,7 +505,7 @@ sub home () {
     # so do it manually instead
     my $old_v = $CPAN::Config->{load_module_verbosity};
     $CPAN::Config->{load_module_verbosity} = q[none];
-    if ($CPAN::META->has_usable("File::HomeDir")) {
+    if (CPAN::_use_file_homedir()) {
         if ($^O eq 'darwin') {
             $home = File::HomeDir->my_home; # my_data is ~/Library/Application Support on darwin,
                                             # which causes issues in the toolchain.
