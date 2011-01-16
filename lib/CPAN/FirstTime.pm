@@ -819,7 +819,7 @@ sub init {
         local $auto_config = 0; # We *must* ask, even under autoconfig
         local *_real_prompt;    # We *must* show prompt
         my_prompt_loop(install_help => 'local::lib', $matcher,
-                   'local::lib|sudo|none');
+                   'local::lib|sudo|manual');
     }
     $CPAN::Config->{install_help} ||= ''; # Temporary to suppress warnings
 

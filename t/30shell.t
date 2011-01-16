@@ -530,7 +530,9 @@ __END__
 #E:(?s:.*?configure.as.much.as.possible.automatically.*?\])
 ########
 #P:yesplease
-#E:commit: wrote.+?MyConfig
+#E:(commit: wrote.+?MyConfig|You.do.not.have.write.permission)
+########
+#P:# manual
 ########
 #P:# o debug all
 ########
