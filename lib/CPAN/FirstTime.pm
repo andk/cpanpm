@@ -1319,13 +1319,13 @@ sub _local_lib_config {
 
     # Warn at exit time
     if ($munged_rc) {
-        push @{$CPAN::META->exit_messages}, << "HERE";
+        push @{$CPAN::META->_exit_messages}, << "HERE";
 
 *** Remember to restart your shell before running cpan again ***
 HERE
     }
     else {
-        push @{$CPAN::META->exit_messages}, << "HERE";
+        push @{$CPAN::META->_exit_messages}, << "HERE";
 
 *** Remember to add these environment variables to your shell config
     and restart your shell before running cpan again ***
