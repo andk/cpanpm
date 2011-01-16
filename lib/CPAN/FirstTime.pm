@@ -1402,12 +1402,13 @@ sub _local_lib_path {
 }
 
 # Adapted from resolve_home_path() in local::lib -- this is where
-# local::lib thinks the user's home is
+# local::lib thinks the user's home is. It *must* match local::lib's
+# logic, regardless of C<use_file_homedir> for CPAN itself
 {
     my $local_lib_home;
     sub _local_lib_home {
         $local_lib_home ||= File::Spec->rel2abs( do {
-            if (CPAN::_use_file_homedir()) {
+            if ($CPAN::META->has_usable("File::HomeDir")) {
                 File::HomeDir->my_home;
             } elsif (defined $ENV{HOME}) {
                 $ENV{HOME};
