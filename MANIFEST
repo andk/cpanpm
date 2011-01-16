@@ -448,7 +448,6 @@ lib/CPAN/FTP/netrc.pm
 lib/CPAN/HandleConfig.pm
 lib/CPAN/HTTP/Client.pm
 lib/CPAN/HTTP/Credentials.pm
-lib/CPAN/HTTP/Lite.pm
 lib/CPAN/Index.pm
 lib/CPAN/InfoObj.pm
 lib/CPAN/Kwalify.pm
