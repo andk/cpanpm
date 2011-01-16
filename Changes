@@ -21,6 +21,9 @@
 
 	* add 'atexit' option for cache scanning and cleanup (David Golden)
 
+	* now with 421 distroprefs files (but a good portion of them seems
+	outdated)
+
 2010-10-26  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.94_62

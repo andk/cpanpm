@@ -306,7 +306,6 @@ distroprefs/NICOLAW.WWW-Comic.yml
 distroprefs/NIKIP.Authen-PAM.yml
 distroprefs/NINE.Inline-Python.yml
 distroprefs/NKH.PerlBuildSystem.yml
-distroprefs/NODINE.Slay-Makefile-Gress.yml
 distroprefs/NODINE.Text-Restructured.yml
 distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/NUFFIN.Devel-Events.yml
@@ -381,6 +380,7 @@ distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/STAS.libapreq.yml
+distroprefs/STBEY.Date-Pcalc.yml
 distroprefs/STEPANOV.IMDB-Film.yml
 distroprefs/STEVAN.Class-MOP.yml
 distroprefs/SWALTERS.typesafety.yml
@@ -446,6 +446,7 @@ lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
 lib/CPAN/HandleConfig.pm
+lib/CPAN/HTTP/Client.pm
 lib/CPAN/HTTP/Credentials.pm
 lib/CPAN/HTTP/Lite.pm
 lib/CPAN/Index.pm
