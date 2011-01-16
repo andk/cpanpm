@@ -253,14 +253,13 @@ sub untar {
     if (0) { # makes changing order easier
     } elsif ($BUGHUNTING) {
         $prefer=2;
-    } elsif ($exttar && $extgzip && $file =~ /\.(?:bz2|tbz)$/i) {
-        # until Archive::Tar handles bzip2
+    } elsif ($CPAN::Config->{prefer_external_tar}) {
         $prefer = 1;
     } elsif (
              $CPAN::META->has_usable("Archive::Tar")
              &&
              $CPAN::META->has_inst("Compress::Zlib") ) {
-        my $prefer_external_tar = $CPAN::Config->{prefer_external_tar}; # XXX not yet supported
+        my $prefer_external_tar = $CPAN::Config->{prefer_external_tar};
         unless (defined $prefer_external_tar) {
             if ($^O =~ /(MSWin32|solaris)/) {
                 $prefer_external_tar = 0;

@@ -517,6 +517,15 @@ added).  Choose 'v' to get this message, 'none' to suppress it.
 
 Verbosity level for PERL5LIB changes (none or v)?
 
+=item prefer_external_tar
+
+Per default all untar operations are done with the perl module
+Archive::Tar; by setting this variable to true the external tar
+command is used if available; on Unix this is usually preferred
+because they have a reliable and fast gnutar implementation.
+
+Use the external tar program instead of Archive::Tar?
+
 =item trust_test_report_history
 
 When a distribution has already been tested by CPAN::Reporter on
@@ -967,6 +976,22 @@ sub init {
             $path ||= 'sh', $path =~ s,\\,/,g if $^O eq 'os2'; # Cosmetic only
             my_dflt_prompt(shell => $path, $matcher);
         }
+    }
+
+    {
+        my $tar = $CPAN::Config->{tar};
+        my $prefer_external_tar = $CPAN::Config->{prefer_external_tar}; # XXX not yet supported
+        unless (defined $prefer_external_tar) {
+            if ($^O =~ /(MSWin32|solaris)/) {
+                # both have a record of broken tars
+                $prefer_external_tar = 0;
+            } elsif ($tar) {
+                $prefer_external_tar = 1;
+            } else {
+                $prefer_external_tar = 0;
+            }
+        }
+        my_yn_prompt(prefer_external_tar => $prefer_external_tar, $matcher);
     }
 
     #

@@ -2014,6 +2014,10 @@ currently defined:
   patch              path to external prg
   patches_dir        local directory containing patch files
   perl5lib_verbosity verbosity level for PERL5LIB additions
+  prefer_external_tar
+                     per default all untar operations are done with
+                     Archive::Tar; by setting this variable to true
+                     the external tar command is used if available
   prefer_installer   legal values are MB and EUMM: if a module comes
                      with both a Makefile.PL and a Build.PL, use the
                      former (EUMM) or the latter (MB); if the module
