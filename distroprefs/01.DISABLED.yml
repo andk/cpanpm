@@ -125,6 +125,7 @@ match:
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |MLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
     |MOB/Forks-Super-                        # too demanding
+    |MROZ/Device-Blkid-E2fsprogs-0.22.tar.gz # asks question without EUMM
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MSHILTONJ/CGI-Test-\d                   # asks if it should strip Carp::Datum calls
