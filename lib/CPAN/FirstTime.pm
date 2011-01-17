@@ -1289,7 +1289,7 @@ sub init {
             );
         }
         else {
-            $CPAN::Frontend->myprint("\nAttempting to boostrap local::lib...\n");
+            $CPAN::Frontend->myprint("\nAttempting to bootstrap local::lib...\n");
             $CPAN::Frontend->myprint("\nWriting $configpm for bootstrap...\n");
             delete $CPAN::Config->{install_help}; # temporary only
             CPAN::HandleConfig->commit($configpm);
