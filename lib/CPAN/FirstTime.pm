@@ -843,6 +843,12 @@ sub init {
     }
     $CPAN::Config->{install_help} ||= ''; # Temporary to suppress warnings
 
+    # We should get this set before setting other directory locations
+    if (!$matcher || "use_file_homedir" =~ $matcher) {
+        my $use_file_homedir = CPAN::_use_file_homedir();
+        my_yn_prompt("use_file_homedir" => $use_file_homedir, $matcher);
+    }
+
     if (!$matcher or q{
                        build_dir
                        build_dir_reuse
@@ -1276,11 +1282,6 @@ sub init {
         $auto_config = 0; # reset
     }
 
-    if (!$matcher || "use_file_homedir" =~ $matcher) {
-        my $use_file_homedir = CPAN::_use_file_homedir();
-        my_yn_prompt("use_file_homedir" => $use_file_homedir, $matcher);
-    }
-
     # bootstrap local::lib now if requested
     if ( $CPAN::Config->{install_help} eq 'local::lib' ) {
         if ( ! @{ $CPAN::Config->{urllist} } ) {
@@ -1289,7 +1290,7 @@ sub init {
             );
         }
         else {
-            $CPAN::Frontend->myprint("\nAttempting to boostrap local::lib...\n");
+            $CPAN::Frontend->myprint("\nAttempting to bootstrap local::lib...\n");
             $CPAN::Frontend->myprint("\nWriting $configpm for bootstrap...\n");
             delete $CPAN::Config->{install_help}; # temporary only
             CPAN::HandleConfig->commit($configpm);
@@ -1402,12 +1403,13 @@ sub _local_lib_path {
 }
 
 # Adapted from resolve_home_path() in local::lib -- this is where
-# local::lib thinks the user's home is
+# local::lib thinks the user's home is. It *must* match local::lib's
+# logic, regardless of C<use_file_homedir> for CPAN itself
 {
     my $local_lib_home;
     sub _local_lib_home {
         $local_lib_home ||= File::Spec->rel2abs( do {
-            if (CPAN::_use_file_homedir()) {
+            if ($CPAN::META->has_usable("File::HomeDir")) {
                 File::HomeDir->my_home;
             } elsif (defined $ENV{HOME}) {
                 $ENV{HOME};
