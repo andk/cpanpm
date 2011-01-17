@@ -280,7 +280,7 @@ release :: disttest
 	$(NOECHO) $(ECHO) '    cd incoming'
 	$(NOECHO) $(ECHO) '    put $(DISTVNAME).tar$(SUFFIX)'
 	$(NOECHO) $(ECHO) '    quit'
-	$(NOECHO) $(ECHO) '  git push --tags'
+	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
 snapshot : Makefile no_CR META.yml README testdistros all tardist
 
