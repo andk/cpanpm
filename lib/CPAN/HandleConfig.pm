@@ -267,6 +267,7 @@ sub commit {
                                                    );
     }
     my $configpm;
+    # XXX does anything do this? can it be simplified? -- dagolden, 2011-01-19
     if (@args) {
       if ($args[0] eq "args") {
         # we have not signed that contract
