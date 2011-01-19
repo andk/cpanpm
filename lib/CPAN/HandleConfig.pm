@@ -581,11 +581,12 @@ sub load {
 
     require CPAN::FirstTime;
     my($have_config,$configpm);
-    if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
-        $configpm = $INC{"CPAN/Config.pm"};
-        $have_config++;
-    } elsif (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
+    if (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
         $configpm = $INC{"CPAN/MyConfig.pm"};
+        $have_config++;
+    }
+    elsif (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
+        $configpm = $INC{"CPAN/Config.pm"};
         $have_config++;
     } else { # determine new config location
         $configpm = _new_config_file();
