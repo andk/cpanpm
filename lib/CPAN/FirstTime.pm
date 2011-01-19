@@ -843,12 +843,6 @@ sub init {
     }
     $CPAN::Config->{install_help} ||= ''; # Temporary to suppress warnings
 
-    # We should get this set before setting other directory locations
-    if (!$matcher || "use_file_homedir" =~ $matcher) {
-        my $use_file_homedir = CPAN::_use_file_homedir();
-        my_yn_prompt("use_file_homedir" => $use_file_homedir, $matcher);
-    }
-
     if (!$matcher or q{
                        build_dir
                        build_dir_reuse
@@ -1280,6 +1274,11 @@ sub init {
             "\nAutoconfiguration complete.\n"
         );
         $auto_config = 0; # reset
+    }
+
+    if (!$matcher || "use_file_homedir" =~ $matcher) {
+        my $use_file_homedir = CPAN::_use_file_homedir();
+        my_yn_prompt("use_file_homedir" => $use_file_homedir, $matcher);
     }
 
     # bootstrap local::lib now if requested
