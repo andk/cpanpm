@@ -648,9 +648,9 @@ sub _reload_this {
 #-> sub CPAN::Shell::mkmyconfig ;
 sub mkmyconfig {
     my($self) = @_;
-    my $configpm = CPAN::HandleConfig::make_new_config();
-    CPAN::HandleConfig::require_myconfig_or_config(); # make it active
     require CPAN::FirstTime;
+    my $configpm = $INC{'CPAN/MyConfig.pm'}
+        or CPAN::HandleConfig::make_new_config();
     CPAN::FirstTime::init($configpm);
 }
 
