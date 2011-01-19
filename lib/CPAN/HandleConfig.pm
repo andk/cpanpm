@@ -264,13 +264,14 @@ sub commit {
     my($self,@args) = @_;
     CPAN->debug("args[@args]") if $CPAN::DEBUG;
     if ($CPAN::RUN_DEGRADED) {
-                             $CPAN::Frontend->mydie(
-                                                    "'o conf commit' disabled in ".
-                                                    "degraded mode. Maybe try\n".
-                                                    " !undef \$CPAN::RUN_DEGRADED\n"
-                                                   );
+        $CPAN::Frontend->mydie(
+            "'o conf commit' disabled in ".
+            "degraded mode. Maybe try\n".
+            " !undef \$CPAN::RUN_DEGRADED\n"
+        );
     }
-    my $configpm;
+    my ($configpm, $must_reload);
+
     # XXX does anything do this? can it be simplified? -- dagolden, 2011-01-19
     if (@args) {
       if ($args[0] eq "args") {
@@ -279,17 +280,43 @@ sub commit {
         $configpm = $args[0];
       }
     }
+
     # use provided name or the current config or create a new MyConfig
     $configpm ||= require_myconfig_or_config() || _make_new_config();
 
+    # commit to MyConfig if we can't write to Config
+    if ( ! -w $configpm && $configpm =~ m{CPAN/Config\.pm} ) {
+        my $myconfig = _new_config_name();
+        $CPAN::Frontend->mywarn(
+            "Your $configpm is not writeable.  I will attempt to write" .
+            "your changes to $myconfig instead.\n"
+        );
+        $configpm = _make_new_config();
+        $must_reload++; # so it gets loaded as $INC{'CPAN/MyConfig.pm'}
+    }
+
+    # XXX why not just "-w $configpm"? -- dagolden, 2011-01-19
     my($mode);
     if (-f $configpm) {
         $mode = (stat $configpm)[2];
         if ($mode && ! -w _) {
-            Carp::confess("$configpm is not writable");
+            _die_cant_write_config($configpm);
         }
     }
 
+    $self->_write_config_file($configpm);
+    require_myconfig_or_config() if $must_reload;
+
+    #$mode = 0444 | ( $mode & 0111 ? 0111 : 0 );
+    #chmod $mode, $configpm;
+###why was that so?    $self->defaults;
+    $CPAN::Frontend->myprint("commit: wrote '$configpm'\n");
+    $CPAN::CONFIG_DIRTY = 0;
+    1;
+}
+
+sub _write_config_file {
+    my ($self, $configpm) = @_;
     my $msg;
     $msg = <<EOF if $configpm =~ m{CPAN/Config\.pm};
 
@@ -316,17 +343,12 @@ EOF
             ",\n"
         );
     }
-
     $fh->print("};\n1;\n__END__\n");
     close $fh;
 
-    #$mode = 0444 | ( $mode & 0111 ? 0111 : 0 );
-    #chmod $mode, $configpm;
-###why was that so?    $self->defaults;
-    $CPAN::Frontend->myprint("commit: wrote '$configpm'\n");
-    $CPAN::CONFIG_DIRTY = 0;
-    1;
+    return;
 }
+
 
 # stolen from MakeMaker; not taking the original because it is buggy;
 # bugreport will have to say: keys of hashes remain unquoted and can
@@ -589,12 +611,18 @@ END
             return $configpm;
         }
     }
+    _die_cant_write_config($configpm);
+}
+
+sub _die_cant_write_config {
+    my ($configpm) = @_;
     $CPAN::Frontend->mydie(<<"END");
 WARNING: CPAN.pm is unable to write a configuration file.  You
 must be able to create and write to '$configpm'.
 
 Aborting configuration.
 END
+
 }
 
 sub _new_config_name {
