@@ -567,22 +567,7 @@ sub load {
         $configpm = $INC{"CPAN/MyConfig.pm"};
         $have_config++;
     } else { # determine new config location
-        my $cpan_config_home = cpan_config_dir_candidates(); # take the first
-        my $configpmdir = File::Spec->catdir($cpan_config_home,"CPAN");
-        File::Path::mkpath($configpmdir);
-        my $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
-        my $configpm = _configpmtest($configpmdir,$configpmtest);
-        if ($configpm) {
-          $INC{'CPAN/MyConfig.pm'} = $configpm;
-        } else {
-          $CPAN::Frontend->mydie(<<"END");
-WARNING: CPAN.pm is unable to write a configuration file.  You need write
-access to your default perl library directories or you must be able to
-create and write to '$configpmtest'.
-
-Aborting configuration.
-END
-        }
+        $configpm = _new_config_file();
     }
     local($") = ", ";
     if ($have_config && !$do_init) {
@@ -598,6 +583,23 @@ END
     return $initialized;
 }
 
+sub _new_config_file {
+    my $cpan_config_home = cpan_config_dir_candidates(); # take the first
+    my $configpmdir = File::Spec->catdir($cpan_config_home,"CPAN");
+    File::Path::mkpath($configpmdir);
+    my $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
+    my $configpm = _configpmtest($configpmdir,$configpmtest);
+    unless ($configpm) {
+        $CPAN::Frontend->mydie(<<"END");
+WARNING: CPAN.pm is unable to write a configuration file.  You need write
+access to your default perl library directories or you must be able to
+create and write to '$configpmtest'.
+
+Aborting configuration.
+END
+    }
+    return $configpm;
+}
 
 # returns mandatory but missing entries in the Config
 sub missing_config_data {
