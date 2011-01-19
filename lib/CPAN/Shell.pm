@@ -647,22 +647,11 @@ sub _reload_this {
 
 #-> sub CPAN::Shell::mkmyconfig ;
 sub mkmyconfig {
-    my($self, $cpanpm, %args) = @_;
+    my($self) = @_;
+    my $configpm = CPAN::HandleConfig::make_new_config();
+    CPAN::HandleConfig::require_myconfig_or_config(); # make it active
     require CPAN::FirstTime;
-    my $home = CPAN::HandleConfig::home();
-    $cpanpm = $INC{'CPAN/MyConfig.pm'} ||
-        File::Spec->catfile(split /\//, "$home/.cpan/CPAN/MyConfig.pm");
-    File::Path::mkpath(File::Basename::dirname($cpanpm)) unless -e $cpanpm;
-    CPAN::HandleConfig::require_myconfig_or_config();
-    $CPAN::Config ||= {};
-    $CPAN::Config = {
-        %$CPAN::Config,
-        build_dir           =>  undef,
-        cpan_home           =>  undef,
-        keep_source_where   =>  undef,
-        histfile            =>  undef,
-    };
-    CPAN::FirstTime::init($cpanpm, %args);
+    CPAN::FirstTime::init($configpm);
 }
 
 #-> sub CPAN::Shell::_binary_extensions ;
