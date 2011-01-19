@@ -741,3 +741,4 @@ modify it under the same terms as Perl itself.
 # mode: cperl
 # cperl-indent-level: 4
 # End:
+# vim: ts=4 sts=4 sw=4:
