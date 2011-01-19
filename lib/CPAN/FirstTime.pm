@@ -1549,17 +1549,14 @@ HERE
 sub init_cpan_home {
     my($matcher) = @_;
     if (!$matcher or 'cpan_home' =~ /$matcher/) {
-        my $cpan_home = $CPAN::Config->{cpan_home}
-            || File::Spec->catdir(CPAN::HandleConfig::home(), ".cpan");
-
+        my $cpan_home =
+            $CPAN::Config->{cpan_home} || CPAN::HandleConfig::cpan_data_home();
         if (-d $cpan_home) {
-            $CPAN::Frontend->myprint(qq{
-
-I see you already have a  directory
-    $cpan_home
-Shall we use it as the general CPAN build and cache directory?
-
-}) unless $auto_config;
+            $CPAN::Frontend->myprint(
+                "\nI see you already have a directory\n" .
+                "\n$cpan_home\n" .
+                "Shall we use it as the general CPAN build and cache directory?\n\n"
+            ) unless $auto_config;
         } else {
             # no cpan-home, must prompt and get one
             $CPAN::Frontend->myprint($prompts{cpan_home_where}) unless $auto_config;

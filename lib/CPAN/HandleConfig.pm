@@ -625,9 +625,23 @@ END
 
 }
 
+# From candidate directories, we would like (in descending preference order):
+#   * the one that we loaded a MyConfig from
+#   * one that exists (even without MyConfig)
+#   * the first one on the list
+sub cpan_data_home {
+    my @dirs = CPAN::HandleConfig::cpan_config_dir_candidates();
+    for my $d (@dirs) {
+        return $d if -f "$d/CPAN/MyConfig.pm";
+    }
+    for my $d (@dirs) {
+        return $d if -d $d;
+    }
+    return $dirs[0];
+}
+
 sub _new_config_name {
-    my $config_dir = cpan_config_dir_candidates(); # take the first
-    return File::Spec->catfile($config_dir, 'CPAN', 'MyConfig.pm');
+    return File::Spec->catfile(cpan_data_home(), 'CPAN', 'MyConfig.pm');
 }
 
 # returns mandatory but missing entries in the Config
