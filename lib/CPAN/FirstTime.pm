@@ -1550,7 +1550,7 @@ sub init_cpan_home {
     my($matcher) = @_;
     if (!$matcher or 'cpan_home' =~ /$matcher/) {
         my $cpan_home =
-            $CPAN::Config->{cpan_home} || CPAN::HandleConfig::cpan_data_home();
+            $CPAN::Config->{cpan_home} || CPAN::HandleConfig::cpan_home();
         if (-d $cpan_home) {
             $CPAN::Frontend->myprint(
                 "\nI see you already have a directory\n" .

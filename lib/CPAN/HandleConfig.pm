@@ -471,9 +471,7 @@ sub init {
 # created, calling this again will leave *both* in %INC
 
 sub require_myconfig_or_config () {
-    if (   $INC{"CPAN/MyConfig.pm"}
-        || _try_loading("CPAN::MyConfig", cpan_config_dir_candidates())
-    ) {
+    if (   $INC{"CPAN/MyConfig.pm"} || _try_loading("CPAN::MyConfig", cpan_home())) {
         return $INC{"CPAN/MyConfig.pm"};
     }
     elsif ( $INC{"CPAN/Config.pm"} || _try_loading("CPAN::Config") ) {
@@ -508,7 +506,7 @@ sub _try_loading {
 }
 
 # prioritized list of possible places for finding "CPAN/MyConfig.pm"
-sub cpan_config_dir_candidates {
+sub cpan_home_dir_candidates {
     my @dirs;
     my $old_v = $CPAN::Config->{load_module_verbosity};
     $CPAN::Config->{load_module_verbosity} = q[none];
@@ -598,11 +596,11 @@ END
 }
 
 # From candidate directories, we would like (in descending preference order):
-#   * the one that we loaded a MyConfig from
+#   * the one that contains a MyConfig file
 #   * one that exists (even without MyConfig)
 #   * the first one on the list
-sub cpan_data_home {
-    my @dirs = CPAN::HandleConfig::cpan_config_dir_candidates();
+sub cpan_home {
+    my @dirs = cpan_home_dir_candidates();
     for my $d (@dirs) {
         return $d if -f "$d/CPAN/MyConfig.pm";
     }
@@ -613,7 +611,7 @@ sub cpan_data_home {
 }
 
 sub _new_config_name {
-    return File::Spec->catfile(cpan_data_home(), 'CPAN', 'MyConfig.pm');
+    return File::Spec->catfile(cpan_home(), 'CPAN', 'MyConfig.pm');
 }
 
 # returns mandatory but missing entries in the Config
