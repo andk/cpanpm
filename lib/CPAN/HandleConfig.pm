@@ -289,13 +289,11 @@ sub commit {
     }
 
     my $msg;
-    my $home = home();
-    $msg = <<EOF unless $configpm =~ /MyConfig/;
+    $msg = <<EOF if $configpm =~ m{CPAN/Config\.pm};
 
 # This is CPAN.pm's systemwide configuration file. This file provides
 # defaults for users, and the values can be changed in a per-user
-# configuration file. The user-config file is being looked for as
-# $home/.cpan/CPAN/MyConfig.pm.
+# configuration file.
 
 EOF
     $msg ||= "\n";
