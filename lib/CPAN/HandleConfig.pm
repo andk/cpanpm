@@ -439,7 +439,7 @@ else: quote it with the correct quote type for the box we're on
 sub init {
     my($self,@args) = @_;
     CPAN->debug("self[$self]args[".join(",",@args)."]");
-    $self->load(doit => 1, @args);
+    $self->load(do_init => 1, @args);
     1;
 }
 
@@ -546,15 +546,15 @@ sub load {
     my($self, %args) = @_;
     $CPAN::Be_Silent+=0; # protect against 'used only once'
     $CPAN::Be_Silent++ if $args{be_silent}; # do not use; planned to be removed in 2011
-    my $doit;
-    $doit = delete $args{doit} || 0;
+    my $do_init;
+    $do_init = delete $args{do_init} || 0;
     $loading = 0 unless defined $loading;
 
     use Carp;
     require_myconfig_or_config;
     my @miss = $self->missing_config_data;
-    CPAN->debug("doit[$doit]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
-    return unless $doit || @miss;
+    CPAN->debug("do_init[$do_init]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
+    return unless $do_init || @miss;
     return if $loading;
     local $loading = ($loading||0) + 1;
 
@@ -597,7 +597,7 @@ END
 
     }
     local($") = ", ";
-    if ($redo && !$doit) {
+    if ($redo && !$do_init) {
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 some missing parameters...  Will write to
