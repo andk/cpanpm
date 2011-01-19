@@ -560,7 +560,7 @@ sub load {
     local $loading = ($loading||0) + 1;
 
     require CPAN::FirstTime;
-    my($have_config,$configpm,$fh);
+    my($have_config,$configpm);
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
         $configpm = $INC{"CPAN/Config.pm"};
         $have_config++;
