@@ -258,6 +258,8 @@ sub prettyprint {
     }
 }
 
+# generally, this should be called without arguments so that the currently
+# loaded config file is where changes are committed.
 sub commit {
     my($self,@args) = @_;
     CPAN->debug("args[@args]") if $CPAN::DEBUG;

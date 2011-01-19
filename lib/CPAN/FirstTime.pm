@@ -1276,7 +1276,7 @@ sub init {
             $CPAN::Frontend->myprint("\nAttempting to bootstrap local::lib...\n");
             $CPAN::Frontend->myprint("\nWriting $configpm for bootstrap...\n");
             delete $CPAN::Config->{install_help}; # temporary only
-            CPAN::HandleConfig->commit($configpm);
+            CPAN::HandleConfig->commit;
             my $dist;
             if ( $dist = CPAN::Shell->expand('Module', 'local::lib')->distribution ) {
                 # this is a hack to force bootstrapping
@@ -1308,7 +1308,7 @@ sub init {
         $CPAN::Frontend->myprint("Please remember to call 'o conf commit' to ".
                                  "make the config permanent!\n");
     } else {
-        CPAN::HandleConfig->commit($configpm);
+        CPAN::HandleConfig->commit;
     }
 }
 
