@@ -648,10 +648,20 @@ sub _reload_this {
 #-> sub CPAN::Shell::mkmyconfig ;
 sub mkmyconfig {
     my($self) = @_;
-    require CPAN::FirstTime;
-    my $configpm = $INC{'CPAN/MyConfig.pm'}
-        or CPAN::HandleConfig::make_new_config();
-    CPAN::FirstTime::init($configpm);
+    if ( my $configpm = $INC{'CPAN/MyConfig.pm'} ) {
+        $CPAN::Frontend->myprint(
+            "CPAN::MyConfig already exists as $configpm.\n" .
+            "Running configuration again...\n"
+        );
+        require CPAN::FirstTime;
+        CPAN::FirstTime::init($configpm);
+    }
+    else {
+        # force some missing values to be filled in with defaults
+        delete $CPAN::Config->{$_}
+            for qw/build_dir cpan_home keep_source_where histfile/;
+        CPAN::HandleConfig->load( make_myconfig => 1 );
+    }
 }
 
 #-> sub CPAN::Shell::_binary_extensions ;

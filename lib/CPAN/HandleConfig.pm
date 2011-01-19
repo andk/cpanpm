@@ -529,6 +529,7 @@ sub load {
     $CPAN::Be_Silent+=0; # protect against 'used only once'
     $CPAN::Be_Silent++ if $args{be_silent}; # do not use; planned to be removed in 2011
     my $do_init = delete $args{do_init} || 0;
+    my $make_myconfig = delete $args{make_myconfig};
     $loading = 0 unless defined $loading;
 
     my $configpm = require_myconfig_or_config;
@@ -543,12 +544,23 @@ sub load {
 
     # Warn if we have a config file, but things were found missing
     if ($configpm && @miss && !$do_init) {
-        $CPAN::Frontend->myprint(<<END);
+        if ($make_myconfig || ( ! -w $configpm && $configpm =~ m{CPAN/Config\.pm})) {
+            $configpm = make_new_config();
+            $CPAN::Frontend->myprint(<<END);
+The system CPAN configuration file has provided some default values,
+but you need to complete the configuration dialog for CPAN.pm.
+Configuration will be written to
+ <<$configpm>>
+END
+        }
+        else {
+            $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
-some missing parameters...  Will write to
+some missing parameters. Configuration will be written to
  <<$configpm>>
 
 END
+        }
     }
 
     require CPAN::FirstTime;
