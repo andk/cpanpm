@@ -288,8 +288,9 @@ sub commit {
     if ( ! -w $configpm && $configpm =~ m{CPAN/Config\.pm} ) {
         my $myconfig = _new_config_name();
         $CPAN::Frontend->mywarn(
-            "Your $configpm is not writeable.  I will attempt to write" .
-            "your changes to $myconfig instead.\n"
+            "Your $configpm file\n".
+            "is not writable. I will attempt to write your configuration to\n" .
+            "$myconfig instead.\n\n"
         );
         $configpm = _make_new_config();
         $must_reload++; # so it gets loaded as $INC{'CPAN/MyConfig.pm'}
