@@ -375,16 +375,8 @@ sub o {
             $cfilter ||= "";
             my $qrfilter = eval 'qr/$cfilter/';
             my($k,$v);
-            $CPAN::Frontend->myprint("\$CPAN::Config options from ");
-            my @from;
-            if (exists $INC{'CPAN/Config.pm'}) {
-                push @from, $INC{'CPAN/Config.pm'};
-            }
-            if (exists $INC{'CPAN/MyConfig.pm'}) {
-                push @from, $INC{'CPAN/MyConfig.pm'};
-            }
-            $CPAN::Frontend->myprint(join " and ", map {"'$_'"} @from);
-            $CPAN::Frontend->myprint(":\n");
+            my $configpm = CPAN::HandleConfig->require_myconfig_or_config;
+            $CPAN::Frontend->myprint("\$CPAN::Config options from $configpm\:\n");
             for $k (sort keys %CPAN::HandleConfig::can) {
                 next unless $k =~ /$qrfilter/;
                 $v = $CPAN::HandleConfig::can{$k};
