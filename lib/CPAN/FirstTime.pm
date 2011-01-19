@@ -591,21 +591,12 @@ use vars qw( %prompts );
 
     my @prompts = (
 
-manual_config => qq[
-CPAN is the world-wide archive of perl resources. It consists of about
-300 sites that all replicate the same contents around the globe. Many
-countries have at least one CPAN site already. The resources found on
-CPAN are easily accessible with the CPAN.pm module. If you want to use
-CPAN.pm, lots of things have to be configured. Fortunately, most of
-them can be determined automatically. If you prefer the automatic
-configuration, answer 'yes' below.
+auto_config => qq{
+CPAN.pm requires configuration, but most of it can be done automatically.
+If you answer 'no' below, you will enter an interactive dialog for each
+configuration option instead.
 
-If you prefer to enter a dialog instead, you can answer 'no' to this
-question and I'll let you configure in small steps one thing after the
-other. (Note: you can revisit this dialog anytime later by typing 'o
-conf init' at the cpan prompt.)
-
-],
+Would you like to configure as much as possible automatically?},
 
 auto_pick => qq{
 Would you like me to automatically choose some CPAN mirror
@@ -786,29 +777,17 @@ sub init {
     #= Files, directories
     #
 
-    unless ($matcher) {
-        $CPAN::Frontend->myprint($prompts{manual_config});
-    }
-
-    my $manual_conf;
-
     local *_real_prompt;
     if ( $args{autoconfig} ) {
-        $manual_conf = "no";
+        $auto_config = 1;
     } elsif ($matcher) {
-        $manual_conf = "yes";
+        $auto_config = 0;
     } else {
-        my $_conf = prompt("Would you like me to configure as much as possible ".
-                           "automatically?", "yes");
-        $manual_conf = ($_conf and $_conf =~ /^y/i) ? "no" : "yes";
+        my $_conf = prompt($prompts{auto_config}, "yes");
+        $auto_config = ($_conf and $_conf =~ /^y/i) ? 1 : 0;
     }
-    CPAN->debug("manual_conf[$manual_conf]") if $CPAN::DEBUG;
-    $auto_config = 0;
-    {
-        if ($manual_conf =~ /^y/i) {
-            $auto_config = 0;
-        } else {
-            $auto_config = 1;
+    CPAN->debug("auto_config[$auto_config]") if $CPAN::DEBUG;
+    if ( $auto_config ) {
             local $^W = 0;
             # prototype should match that of &MakeMaker::prompt
             my $current_second = time;
@@ -816,7 +795,6 @@ sub init {
             my $i_am_mad = 0;
             # silent prompting -- just quietly use default
             *_real_prompt = sub { return $_[1] };
-        }
     }
 
     #
@@ -1308,6 +1286,13 @@ sub init {
     } else {
         CPAN::HandleConfig->commit;
     }
+
+    if (! $matcher) {
+        $CPAN::Frontend->myprint(
+            "\nYou can re-run configuration any time with 'o conf init' in the CPAN shell\n"
+        );
+    }
+
 }
 
 sub _local_lib_config {
