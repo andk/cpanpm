@@ -507,34 +507,6 @@ sub _try_loading {
     return $INC{$file};
 }
 
-sub home () {
-    my $home;
-    # Suppress load messages until we load the config and know whether
-    # load messages are desired.  Otherwise, it's unexpected and odd 
-    # why one load message pops up even when verbosity is turned off.
-    # This means File::HomeDir load messages are never seen, but I
-    # think that's probably OK -- DAGOLDEN
-    
-    # 5.6.2 seemed to segfault localizing a value in a hashref 
-    # so do it manually instead
-    my $old_v = $CPAN::Config->{load_module_verbosity};
-    $CPAN::Config->{load_module_verbosity} = q[none];
-    if ($CPAN::META->has_usable("File::HomeDir")) {
-        if ($^O eq 'darwin') {
-            $home = File::HomeDir->my_home; # my_data is ~/Library/Application Support on darwin,
-                                            # which causes issues in the toolchain.
-        }
-        else {
-            $home = File::HomeDir->my_data || File::HomeDir->my_home;
-       }
-    }
-    unless (defined $home) {
-        $home = $ENV{HOME};
-    }
-    $CPAN::Config->{load_module_verbosity} = $old_v;
-    $home;
-}
-
 # prioritized list of possible places for finding "CPAN/MyConfig.pm"
 sub cpan_config_dir_candidates {
     my @dirs;
