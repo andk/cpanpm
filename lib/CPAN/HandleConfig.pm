@@ -559,13 +559,13 @@ sub load {
     local $loading = ($loading||0) + 1;
 
     require CPAN::FirstTime;
-    my($redo,$configpm,$fh);
+    my($have_config,$configpm,$fh);
     if (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
         $configpm = $INC{"CPAN/Config.pm"};
-        $redo++;
+        $have_config++;
     } elsif (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
         $configpm = $INC{"CPAN/MyConfig.pm"};
-        $redo++;
+        $have_config++;
     } else {
         my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
         my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
@@ -597,7 +597,7 @@ END
 
     }
     local($") = ", ";
-    if ($redo && !$do_init) {
+    if ($have_config && !$do_init) {
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 some missing parameters...  Will write to
