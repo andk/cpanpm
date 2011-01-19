@@ -1,6 +1,8 @@
 package CPAN::HandleConfig;
 use strict;
 use vars qw(%can %keys $loading $VERSION);
+use File::Path ();
+use File::Basename ();
 use Carp ();
 
 $VERSION = "5.5001"; # see also CPAN::Config::VERSION at end of file
@@ -275,15 +277,9 @@ sub commit {
         $configpm = $args[0];
       }
     }
-    unless (defined $configpm) {
-        $configpm ||= $INC{"CPAN/MyConfig.pm"};
-        $configpm ||= $INC{"CPAN/Config.pm"};
-        $configpm || Carp::confess(q{
-CPAN::Config::commit called without an argument.
-Please specify a filename where to save the configuration or try
-"o conf init" to have an interactive course through configing.
-});
-    }
+    # use provided name or the current config or create a new MyConfig
+    $configpm ||= require_myconfig_or_config() || _make_new_config();
+
     my($mode);
     if (-f $configpm) {
         $mode = (stat $configpm)[2];
@@ -445,39 +441,6 @@ sub init {
     1;
 }
 
-# This is a piece of repeated code that is abstracted here for
-# maintainability.  RMB
-#
-# This test whether a given config directory and file could
-# actually be created.  If the file doesn't exist, it will
-# be created as a stub.
-sub _configpmtest {
-    my($configpmdir, $configpmtest) = @_;
-    if (-w $configpmtest) {
-        return $configpmtest;
-    } elsif (-w $configpmdir) {
-        #_#_# following code dumped core on me with 5.003_11, a.k.
-        my $configpm_bak = "$configpmtest.bak";
-        unlink $configpm_bak if -f $configpm_bak;
-        if( -f $configpmtest ) {
-            if( rename $configpmtest, $configpm_bak ) {
-                $CPAN::Frontend->mywarn(<<END);
-Old configuration file $configpmtest
-    moved to $configpm_bak
-END
-            }
-        }
-        my $fh = FileHandle->new;
-        if ($fh->open(">$configpmtest")) {
-            $fh->print("1;\n");
-            return $configpmtest;
-        } else {
-            # Should never happen
-            Carp::confess("Cannot open >$configpmtest");
-        }
-    } else { return }
-}
-
 # Loads CPAN::MyConfig or fall-back to CPAN::Config. Will not reload a file
 # if already loaded. Returns the path to the file %INC or else the empty string
 #
@@ -597,25 +560,46 @@ END
     }
 
     require CPAN::FirstTime;
-    return CPAN::FirstTime::init($configpm || _new_config_file(), %args);
+    return CPAN::FirstTime::init($configpm || _make_new_config(), %args);
 }
 
-sub _new_config_file {
-    my $cpan_config_home = cpan_config_dir_candidates(); # take the first
-    my $configpmdir = File::Spec->catdir($cpan_config_home,"CPAN");
-    File::Path::mkpath($configpmdir);
-    my $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
-    my $configpm = _configpmtest($configpmdir,$configpmtest);
-    unless ($configpm) {
-        $CPAN::Frontend->mydie(<<"END");
-WARNING: CPAN.pm is unable to write a configuration file.  You need write
-access to your default perl library directories or you must be able to
-create and write to '$configpmtest'.
+# Creates a new, empty config file at the preferred location
+# Any existing will be renamed with a ".bak" suffix if possible
+# If the file cannot be created, an exception is thrown
+sub _make_new_config {
+    my $configpm = _new_config_name();
+    my $configpmdir = File::Basename::dirname( $configpm );
+    File::Path::mkpath($configpmdir) unless -d $configpmdir;
+
+    if ( -w $configpmdir ) {
+        #_#_# following code dumped core on me with 5.003_11, a.k.
+        if( -f $configpm ) {
+            my $configpm_bak = "$configpm.bak";
+            unlink $configpm_bak if -f $configpm_bak;
+            if( rename $configpm, $configpm_bak ) {
+                $CPAN::Frontend->mywarn(<<END);
+Old configuration file $configpm
+    moved to $configpm_bak
+END
+            }
+        }
+        my $fh = FileHandle->new;
+        if ($fh->open(">$configpm")) {
+            $fh->print("1;\n");
+            return $configpm;
+        }
+    }
+    $CPAN::Frontend->mydie(<<"END");
+WARNING: CPAN.pm is unable to write a configuration file.  You
+must be able to create and write to '$configpm'.
 
 Aborting configuration.
 END
-    }
-    return $configpm;
+}
+
+sub _new_config_name {
+    my $config_dir = cpan_config_dir_candidates(); # take the first
+    return File::Spec->catfile($config_dir, 'CPAN', 'MyConfig.pm');
 }
 
 # returns mandatory but missing entries in the Config
