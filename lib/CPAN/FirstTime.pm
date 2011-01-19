@@ -899,13 +899,12 @@ sub init {
     if (!$matcher or 'test_report' =~ /$matcher/) {
         my_yn_prompt(test_report => 0, $matcher);
         if (
+            $matcher &&
             $CPAN::Config->{test_report} &&
             $CPAN::META->has_inst("CPAN::Reporter") &&
             CPAN::Reporter->can('configure')
            ) {
-            local *_real_prompt;
-            *_real_prompt = \&CPAN::Shell::colorable_makemaker_prompt;
-            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", $auto_config ? "no" : "yes");
+            my $_conf = prompt("Would you like me configure CPAN::Reporter now?", "yes");
             if ($_conf =~ /^y/i) {
               $CPAN::Frontend->myprint("\nProceeding to configure CPAN::Reporter.\n");
               CPAN::Reporter::configure();
