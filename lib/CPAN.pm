@@ -515,27 +515,6 @@ sub _flock {
     }
 }
 
-sub _use_file_homedir () {
-    my $use_file_homedir = $CPAN::Config->{use_file_homedir};
-    unless (defined $use_file_homedir) {
-        if ($^O =~ /^(MSWin32|darwin)$/) {
-            $use_file_homedir = 1;
-        } else {
-            $use_file_homedir = 0;
-        }
-    }
-    if ($use_file_homedir
-        and not $CPAN::META->has_usable("File::HomeDir")) {
-        my $v = $File::HomeDir::VERSION;
-        if (CPAN::Version->vgt($v,0)) {
-            $CPAN::Frontend->mydie("Version of File::HomeDir ($v) is insufficient. Please upgrade or try 'o conf init use_file_homedir'");
-        } else {
-            $CPAN::Frontend->mydie("File::HomeDir not installed. Please install it or try 'o conf init use_file_homedir'");
-        }
-    }
-    return $use_file_homedir;
-}
-
 sub _yaml_module () {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
     if (
@@ -1061,8 +1040,8 @@ sub has_usable {
                            ],
                'File::HomeDir' => [
                                    sub {require File::HomeDir;
-                                        unless (CPAN::Version->vge(File::HomeDir::->VERSION, 0.65)) {
-                                            for ("Will not use File::HomeDir, need 0.65\n") {
+                                        unless (CPAN::Version->vge(File::HomeDir::->VERSION, 0.52)) {
+                                            for ("Will not use File::HomeDir, need 0.52\n") {
                                                 $CPAN::Frontend->mywarn($_);
                                                 die $_;
                                             }
@@ -2071,8 +2050,6 @@ currently defined:
                      CPAN::Reporter history)
   unzip              location of external program unzip
   urllist            arrayref to nearby CPAN sites (or equivalent locations)
-  use_file_homedir   use File::HomeDir to determine home directory and storage
-                     locations
   use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
   username           your username if you CPAN server wants one
   version_timeout    stops version parsing after this many seconds.
@@ -3601,9 +3578,8 @@ including
 or setting the PERL5LIB environment variable.
 
 While we're speaking about $ENV{HOME}, it might be worth mentioning,
-that for Windows and Darwin (and when use_file_homedir is turned on)
-we use the File::HomeDir module that provides an equivalent to the
-concept of the home directory on Unix.
+that for Windows we use the File::HomeDir module that provides an
+equivalent to the concept of the home directory on Unix.
 
 Another thing you should bear in mind is that the UNINST parameter can
 be dangerous when you are installing into a private area because you
