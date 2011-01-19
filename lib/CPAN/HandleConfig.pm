@@ -1,6 +1,7 @@
 package CPAN::HandleConfig;
 use strict;
 use vars qw(%can %keys $loading $VERSION);
+use Carp ();
 
 $VERSION = "5.5001"; # see also CPAN::Config::VERSION at end of file
 
@@ -571,38 +572,29 @@ sub load {
     my $do_init = delete $args{do_init} || 0;
     $loading = 0 unless defined $loading;
 
-    use Carp;
-    require_myconfig_or_config;
+    my $configpm = require_myconfig_or_config;
     my @miss = $self->missing_config_data;
     CPAN->debug("do_init[$do_init]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
     return unless $do_init || @miss;
+
+    # I'm not how we'd ever wind up in a recursive loop, but I'm leaving
+    # this here for safety's sake -- dagolden, 2011-01-19
     return if $loading;
     local $loading = ($loading||0) + 1;
 
-    require CPAN::FirstTime;
-    my($have_config,$configpm);
-    if (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
-        $configpm = $INC{"CPAN/MyConfig.pm"};
-        $have_config++;
-    }
-    elsif (defined $INC{"CPAN/Config.pm"} && -w $INC{"CPAN/Config.pm"}) {
-        $configpm = $INC{"CPAN/Config.pm"};
-        $have_config++;
-    } else { # determine new config location
-        $configpm = _new_config_file();
-    }
-    local($") = ", ";
-    if ($have_config && !$do_init) {
+    # Warn if we have a config file, but things were found missing
+    if ($configpm && @miss && !$do_init) {
+        $args{args} = \@miss;
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 some missing parameters...  Will write to
  <<$configpm>>
 
 END
-        $args{args} = \@miss;
     }
-    my $initialized = CPAN::FirstTime::init($configpm, %args);
-    return $initialized;
+
+    require CPAN::FirstTime;
+    return CPAN::FirstTime::init($configpm || _new_config_file(), %args);
 }
 
 sub _new_config_file {
