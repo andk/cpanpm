@@ -3532,54 +3532,10 @@ so that STDOUT is captured in a file for later inspection.
 
 I am not root, how can I install a module in a personal directory?
 
-First of all, you will want to use your own configuration, not the one
-that your root user installed. If you do not have permission to write
-in the cpan directory that root has configured, you will be asked if
-you want to create your own config. Answering "yes" will bring you into
-CPAN's configuration stage, using the system config for all defaults except
-things that have to do with CPAN's work directory, saving your choices to
-your MyConfig.pm file.
-
-You can also manually initiate this process with the following command:
-
-    % perl -MCPAN -e 'mkmyconfig'
-
-or by running
-
-    mkmyconfig
-
-from the CPAN shell.
-
-You will most probably also want to configure something like this:
-
-  o conf makepl_arg "LIB=~/myperl/lib \
-                    INSTALLMAN1DIR=~/myperl/man/man1 \
-                    INSTALLMAN3DIR=~/myperl/man/man3 \
-                    INSTALLSCRIPT=~/myperl/bin \
-                    INSTALLBIN=~/myperl/bin"
-
-and then the equivalent command for Module::Build, which is
-
-  o conf mbuildpl_arg "--lib=~/myperl/lib \
-                    --installman1dir=~/myperl/man/man1 \
-                    --installman3dir=~/myperl/man/man3 \
-                    --installscript=~/myperl/bin \
-                    --installbin=~/myperl/bin"
-
-You can make this setting permanent like all C<o conf> settings with
-C<o conf commit> or by setting C<auto_commit> beforehand.
-
-You will have to add ~/myperl/man to the MANPATH environment variable
-and also tell your perl programs to look into ~/myperl/lib, e.g. by
-including
-
-  use lib "$ENV{HOME}/myperl/lib";
-
-or setting the PERL5LIB environment variable.
-
-While we're speaking about $ENV{HOME}, it might be worth mentioning,
-that for Windows we use the File::HomeDir module that provides an
-equivalent to the concept of the home directory on Unix.
+As of CPAN 1.9463, if you do not have permission to write the default perl
+library directories, CPAN's configuration process will ask you whether
+you want to bootstrap <local::lib>, which makes keeping a personal
+perl library directory easy.
 
 Another thing you should bear in mind is that the UNINST parameter can
 be dangerous when you are installing into a private area because you
