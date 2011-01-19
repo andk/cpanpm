@@ -282,7 +282,7 @@ sub commit {
     }
 
     # use provided name or the current config or create a new MyConfig
-    $configpm ||= require_myconfig_or_config() || _make_new_config();
+    $configpm ||= require_myconfig_or_config() || make_new_config();
 
     # commit to MyConfig if we can't write to Config
     if ( ! -w $configpm && $configpm =~ m{CPAN/Config\.pm} ) {
@@ -292,7 +292,7 @@ sub commit {
             "is not writable. I will attempt to write your configuration to\n" .
             "$myconfig instead.\n\n"
         );
-        $configpm = _make_new_config();
+        $configpm = make_new_config();
         $must_reload++; # so it gets loaded as $INC{'CPAN/MyConfig.pm'}
     }
 
@@ -582,13 +582,13 @@ END
     }
 
     require CPAN::FirstTime;
-    return CPAN::FirstTime::init($configpm || _make_new_config(), %args);
+    return CPAN::FirstTime::init($configpm || make_new_config(), %args);
 }
 
 # Creates a new, empty config file at the preferred location
 # Any existing will be renamed with a ".bak" suffix if possible
 # If the file cannot be created, an exception is thrown
-sub _make_new_config {
+sub make_new_config {
     my $configpm = _new_config_name();
     my $configpmdir = File::Basename::dirname( $configpm );
     File::Path::mkpath($configpmdir) unless -d $configpmdir;
