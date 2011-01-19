@@ -446,6 +446,9 @@ sub init {
 # This is a piece of repeated code that is abstracted here for
 # maintainability.  RMB
 #
+# This test whether a given config directory and file could
+# actually be created.  If the file doesn't exist, it will
+# be created as a stub.
 sub _configpmtest {
     my($configpmdir, $configpmtest) = @_;
     if (-w $configpmtest) {
