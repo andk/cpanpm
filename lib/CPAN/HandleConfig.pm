@@ -539,7 +539,8 @@ sub cpan_config_dir_candidates {
     }
     push @dirs, $ENV{HOME};
     $CPAN::Config->{load_module_verbosity} = $old_v;
-    return map { "$_/.cpan" } @dirs;
+    @dirs = map { "$_/.cpan" } @dirs;
+    return wantarray ? @dirs : $dirs[0];
 }
 
 sub load {
@@ -566,35 +567,23 @@ sub load {
     } elsif (defined $INC{"CPAN/MyConfig.pm"} && -w $INC{"CPAN/MyConfig.pm"}) {
         $configpm = $INC{"CPAN/MyConfig.pm"};
         $have_config++;
-    } else {
-        my($path_to_cpan) = File::Basename::dirname($INC{"CPAN.pm"});
-        my($configpmdir) = File::Spec->catdir($path_to_cpan,"CPAN");
-        my($configpmtest) = File::Spec->catfile($configpmdir,"Config.pm");
-        my $inc_key;
-        if (-d $configpmdir or File::Path::mkpath($configpmdir)) {
-            $configpm = _configpmtest($configpmdir,$configpmtest);
-            $inc_key = "CPAN/Config.pm";
-        }
-        unless ($configpm) {
-            $configpmdir = File::Spec->catdir(home,".cpan","CPAN");
-            File::Path::mkpath($configpmdir);
-            $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
-            $configpm = _configpmtest($configpmdir,$configpmtest);
-            $inc_key = "CPAN/MyConfig.pm";
-        }
+    } else { # determine new config location
+        my $cpan_config_home = cpan_config_dir_candidates(); # take the first
+        my $configpmdir = File::Spec->catdir($cpan_config_home,"CPAN");
+        File::Path::mkpath($configpmdir);
+        my $configpmtest = File::Spec->catfile($configpmdir,"MyConfig.pm");
+        my $configpm = _configpmtest($configpmdir,$configpmtest);
         if ($configpm) {
-          $INC{$inc_key} = $configpm;
+          $INC{'CPAN/MyConfig.pm'} = $configpm;
         } else {
-          my $myconfigpm = File::Spec->catfile(home,".cpan","CPAN","MyConfig.pm");
           $CPAN::Frontend->mydie(<<"END");
 WARNING: CPAN.pm is unable to write a configuration file.  You need write
 access to your default perl library directories or you must be able to
-create and write to '$myconfigpm'.
+create and write to '$configpmtest'.
 
 Aborting configuration.
 END
         }
-
     }
     local($") = ", ";
     if ($have_config && !$do_init) {
