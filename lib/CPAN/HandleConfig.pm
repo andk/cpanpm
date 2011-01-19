@@ -573,7 +573,6 @@ sub load {
 
     # Warn if we have a config file, but things were found missing
     if ($configpm && @miss && !$do_init) {
-        $args{args} = \@miss;
         $CPAN::Frontend->myprint(<<END);
 Sorry, we have to rerun the configuration dialog for CPAN.pm due to
 some missing parameters...  Will write to
