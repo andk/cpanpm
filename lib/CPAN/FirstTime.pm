@@ -1212,7 +1212,6 @@ sub init {
         or 'show_unparsable_versions' =~ /$matcher/
         or 'show_zero_versions' =~ /$matcher/
        ) {
-        $CPAN::Frontend->myprint($prompts{show_unparsable_or_zero_versions_intro});
         my_yn_prompt(show_unparsable_versions => 0, $matcher);
         my_yn_prompt(show_zero_versions => 0, $matcher);
     }
