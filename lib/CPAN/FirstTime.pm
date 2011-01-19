@@ -1418,8 +1418,8 @@ sub _do_pick_mirrors {
     else {
         _print_urllist('Current') if @old_list;
         my $msg = scalar @old_list
-            ? "Would you like to edit the urllist or pick new mirrors from a list?"
-            : "Would you like to pick from the CPAN mirror list?" ;
+            ? "\nWould you like to edit the urllist or pick new mirrors from a list?"
+            : "\nWould you like to pick from the CPAN mirror list?" ;
         my $_conf = prompt($msg, "yes");
         if ( $_conf =~ /^y/i ) {
             conf_sites();
@@ -1968,7 +1968,6 @@ sub bring_your_own {
     my($ans,@urls);
     my $eacnt = 0; # empty answers
     $CPAN::Frontend->myprint(<<'HERE');
-
 Now you can enter your own CPAN URLs by hand. A local CPAN mirror can be
 listed using a 'file:' URL like 'file:///path/to/cpan/'
 
@@ -2022,7 +2021,6 @@ sub _print_urllist {
     for ( @{$CPAN::Config->{urllist} || []} ) { 
       $CPAN::Frontend->myprint("  $_\n") 
     };
-    $CPAN::Frontend->myprint("\n");
 }
 
 sub _can_write_to_libdirs {
@@ -2057,7 +2055,7 @@ sub prompt ($;$) {
     my $ans = _real_prompt(@_);
 
     _strip_spaces($ans);
-    $CPAN::Frontend->myprint("\n");
+    $CPAN::Frontend->myprint("\n") unless $auto_config;
 
     return $ans;
 }
