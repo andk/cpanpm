@@ -476,8 +476,14 @@ END
     } else { return }
 }
 
+# Loads CPAN::MyConfig or CPAN::Config if the first one doesn't exist.
+# Returns the path to whichever was loaded or returns the empty string
+#
+# Note -- if CPAN::Config were loaded and CPAN::MyConfig subsequently
+# created, calling this again will leave *both* in %INC
+
 sub require_myconfig_or_config () {
-    return if $INC{"CPAN/MyConfig.pm"};
+    # Attempt to locate CPAN::MyConfig
     local @INC = @INC;
     for my $dir ( cpan_config_dir_candidates() ) {
         if ( -f File::Spec->catfile($dir, 'CPAN', 'MyConfig.pm') ) {
@@ -485,18 +491,30 @@ sub require_myconfig_or_config () {
             last;
         }
     }
-    eval { require CPAN::MyConfig };
+
+    # Favor MyConfig over Config and don't reload if already loaded
+    if ( $INC{"CPAN/MyConfig.pm"} || _try_loading("CPAN::MyConfig") ) {
+        return $INC{"CPAN/MyConfig.pm"};
+    }
+    elsif ( $INC{"CPAN/Config.pm"} || _try_loading("CPAN::Config") ) {
+        return $INC{"CPAN/Config.pm"};
+    }
+    else {
+        return q{};
+    }
+}
+
+# Load a module, but ignore "can't locate..." errors
+sub _try_loading {
+    my $module = shift;
+    (my $file = $module) =~ s{::}{/}g;
+    $file .= ".pm";
+    eval { require $file };
     my $err_myconfig = $@;
-    if ($err_myconfig and $err_myconfig !~ m#locate CPAN/MyConfig\.pm#) {
-        die "Error while requiring CPAN::MyConfig:\n$err_myconfig";
+    if ($err_myconfig and $err_myconfig !~ m#locate \Q$file\E#) {
+        die "Error while requiring ${module}:\n$err_myconfig";
     }
-    unless ($INC{"CPAN/MyConfig.pm"}) { # this guy has settled his needs already
-      eval {require CPAN::Config;}; # not everybody has one
-      my $err_config = $@;
-      if ($err_config and $err_config !~ m#locate CPAN/Config\.pm#) {
-          die "Error while requiring CPAN::Config:\n$err_config";
-      }
-    }
+    return $INC{$file};
 }
 
 sub home () {
