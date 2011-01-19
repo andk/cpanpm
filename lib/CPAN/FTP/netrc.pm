@@ -6,8 +6,7 @@ $CPAN::FTP::netrc::VERSION = $CPAN::FTP::netrc::VERSION = "1.00";
 # package CPAN::FTP::netrc;
 sub new {
     my($class) = @_;
-    my $home = CPAN::HandleConfig::home();
-    my $file = File::Spec->catfile($home,".netrc");
+    my $file = File::Spec->catfile($ENV{HOME},".netrc");
 
     my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,
        $atime,$mtime,$ctime,$blksize,$blocks)
