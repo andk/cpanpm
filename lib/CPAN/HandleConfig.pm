@@ -547,8 +547,7 @@ sub load {
     my($self, %args) = @_;
     $CPAN::Be_Silent+=0; # protect against 'used only once'
     $CPAN::Be_Silent++ if $args{be_silent}; # do not use; planned to be removed in 2011
-    my $do_init;
-    $do_init = delete $args{do_init} || 0;
+    my $do_init = delete $args{do_init} || 0;
     $loading = 0 unless defined $loading;
 
     use Carp;
