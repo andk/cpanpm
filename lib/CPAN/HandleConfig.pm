@@ -476,8 +476,12 @@ END
 sub require_myconfig_or_config () {
     return if $INC{"CPAN/MyConfig.pm"};
     local @INC = @INC;
-    my $home = home();
-    unshift @INC, File::Spec->catdir($home,'.cpan');
+    for my $dir ( cpan_config_dir_candidates() ) {
+        if ( -f File::Spec->catfile($dir, 'CPAN', 'MyConfig.pm') ) {
+            unshift @INC, $dir;
+            last;
+        }
+    }
     eval { require CPAN::MyConfig };
     my $err_myconfig = $@;
     if ($err_myconfig and $err_myconfig !~ m#locate CPAN/MyConfig\.pm#) {
@@ -518,6 +522,24 @@ sub home () {
     }
     $CPAN::Config->{load_module_verbosity} = $old_v;
     $home;
+}
+
+# prioritized list of possible places for finding "CPAN/MyConfig.pm"
+sub cpan_config_dir_candidates {
+    my @dirs;
+    my $old_v = $CPAN::Config->{load_module_verbosity};
+    $CPAN::Config->{load_module_verbosity} = q[none];
+    if ($CPAN::META->has_usable('File::HomeDir')) {
+        if ($^O ne 'darwin') {
+            push @dirs, File::HomeDir->my_data;
+            # my_data is ~/Library/Application Support on darwin,
+            # which causes issues in the toolchain.
+        }
+        push @dirs, File::HomeDir->my_home;
+    }
+    push @dirs, $ENV{HOME};
+    $CPAN::Config->{load_module_verbosity} = $old_v;
+    return map { "$_/.cpan" } @dirs;
 }
 
 sub load {
