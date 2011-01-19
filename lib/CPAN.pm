@@ -3707,9 +3707,10 @@ Speaking of the build directory. Do I have to clean it up myself?
 
 You have the choice to set the config variable C<scan_cache> to
 C<never>. Then you must clean it up yourself. The other possible
-value, C<atstart> only cleans up the build directory when you start
-the CPAN shell. If you never start up the CPAN shell, you probably
-also have to clean up the build directory yourself.
+values, C<atstart> and C<atexit> clean up the build directory when you
+start or exit the CPAN shell, respectively. If you never start up the
+CPAN shell, you probably also have to clean up the build directory
+yourself.
 
 =back
 
