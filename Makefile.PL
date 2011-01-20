@@ -82,6 +82,7 @@ my $prereq_pm = {
                  'Test::Harness' => 2.62,
                  'Test::More' => 0,   # MSCHWERN;
                                       # Test-Simple-0.62.tar.gz;
+                 'HTTP::Tiny' => 0,   # should go away again before next stable release --andk,20110120
                 };
 if ($^O eq "darwin") {
   $prereq_pm->{'File::HomeDir'} = 0.69;
