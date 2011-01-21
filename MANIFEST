@@ -22,6 +22,7 @@ distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
 distroprefs/ANDREWF.LaTeX-Driver.yml
+distroprefs/ANDYA.CPAN-Mini-Inject.yml
 distroprefs/ANDYA.File-Find-Parallel.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
