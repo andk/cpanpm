@@ -3,6 +3,12 @@
 use strict;
 eval 'use warnings';
 
+my %has_deps = (
+    'blib/lib/CPAN/HTTP/Client.pm' => {
+        'HTTP::Tiny' => '0.005',
+    },
+);
+
 my @modules;
 use File::Find;
 find(\&list_modules, 'blib/lib');
@@ -27,8 +33,20 @@ foreach my $file (@modules) {
 
 sub list_modules {
     return if $_ !~ /\.pm$/;
+    return if _missing_deps($File::Find::name);
     push @modules, $File::Find::name;
     return;
+}
+
+sub _missing_deps {
+  my $file = shift;
+  if ( my $deps = $has_deps{$file} ) {
+    while ( my ($mod, $ver) = each %$deps ) {
+      eval "require $mod; $mod->VERSION($ver); 1"
+        or return 1;
+    }
+  }
+  return;
 }
 
 END {
