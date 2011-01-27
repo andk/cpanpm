@@ -520,7 +520,7 @@ sub cpan_home_dir_candidates {
     }
     push @dirs, $ENV{HOME};
     $CPAN::Config->{load_module_verbosity} = $old_v;
-    @dirs = map { "$_/.cpan" } @dirs;
+    @dirs = map { "$_/.cpan" } grep { defined } @dirs;
     return wantarray ? @dirs : $dirs[0];
 }
 
