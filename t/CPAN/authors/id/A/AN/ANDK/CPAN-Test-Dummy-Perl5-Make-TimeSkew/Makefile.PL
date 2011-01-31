@@ -2,10 +2,6 @@ use strict;
 use ExtUtils::MakeMaker;
 use File::Spec;
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
-my @stat = stat __FILE__;
-if ($stat[9] > $^T) {
-    utime ($^T,$^T,__FILE__) or die "Could not run utime: $!";
-}
 WriteMakefile(
               NAME          => 'CPAN::Test::Dummy::Perl5::Make::TimeSkew',
               VERSION_FROM  => _f('./lib/CPAN/Test/Dummy/Perl5/Make/TimeSkew.pm'),
