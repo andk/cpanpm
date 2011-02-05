@@ -1,3 +1,5 @@
+# -*- Mode: cperl; coding: utf-8; cperl-indent-level: 4 -*-
+# vim: ts=4 sts=4 sw=4:
 package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
