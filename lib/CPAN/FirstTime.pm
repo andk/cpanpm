@@ -472,7 +472,7 @@ Tar command verbosity level (none or v or vv)?
 
 =item term_is_latin
 
-The next option deals with the charset (aka character set) your
+The next option deals with the charset (a.k.a. character set) your
 terminal supports. In general, CPAN is English speaking territory, so
 the charset does not matter much but some CPAN have names that are
 outside the ASCII range. If your terminal supports UTF-8, you should
