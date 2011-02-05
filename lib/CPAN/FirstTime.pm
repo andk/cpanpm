@@ -389,7 +389,7 @@ default options for CPAN.pm and the environment can be overridden and
 dialog sequences can be stored that can later be executed by an
 Expect.pm object. The CPAN.pm distribution comes with some prefab YAML
 files that cover sample distributions that can be used as blueprints
-to store one own prefs. Please check out the distroprefs/ directory of
+to store your own prefs. Please check out the distroprefs/ directory of
 the CPAN.pm distribution to get a quick start into the prefs system.
 
 Directory where to store default options/environment/dialogs for
