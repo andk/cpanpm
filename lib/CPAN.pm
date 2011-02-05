@@ -547,7 +547,7 @@ sub _yaml_loadfile {
     return +[] unless -s $local_file;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
-        # temporarly enable yaml code deserialisation
+        # temporarily enable yaml code deserialisation
         no strict 'refs';
         # 5.6.2 could not do the local() with the reference
         # so we do it manually instead
@@ -2832,7 +2832,7 @@ Note that install() gives no meaningful return value. See uptodate().
 
 =item CPAN::Distribution::install_tested()
 
-Install all distributions that have tested sucessfully but
+Install all distributions that have tested successfully but
 not yet installed. See also C<is_tested>.
 
 =item CPAN::Distribution::isa_perl()
@@ -2998,7 +2998,7 @@ Where the 'DSLIP' characters have the following meanings:
     d   - Developer
     u   - Usenet newsgroup comp.lang.perl.modules
     n   - None known, try comp.lang.perl.modules
-    a   - abandoned; volunteers welcome to take over maintainance
+    a   - abandoned; volunteers welcome to take over maintenance
 
   L - Language Used:
     p   - Perl-only, no compiler needed, should be platform independent
@@ -3022,9 +3022,9 @@ Where the 'DSLIP' characters have the following meanings:
     b   - BSD: The BSD License
     a   - Artistic license alone
     2   - Artistic license 2.0 or later
-    o   - open source: appoved by www.opensource.org
+    o   - open source: approved by www.opensource.org
     d   - allows distribution without restrictions
-    r   - restricted distribtion
+    r   - restricted distribution
     n   - no license at all
 
 =item CPAN::Module::force($method,@args)
@@ -3161,7 +3161,7 @@ modules in a snapshot bundle file.
 =head1 PREREQUISITES
 
 The CPAN program is trying to depend on as little as possible so the
-user can use it in hostile enviroment. It works better the more goodies
+user can use it in hostile environment. It works better the more goodies
 the environment provides. For example if you try in the CPAN shell
 
   install Bundle::CPAN
@@ -3379,7 +3379,7 @@ prerequisites as early as possible. On the other hand, it's
 annoying that so many distributions need some interactive configuring. So
 what you can try to accomplish in your private bundle file is to have the
 packages that need to be configured early in the file and the gentle
-ones later, so you can go out for cofeee after a few minutes and leave CPAN.pm
+ones later, so you can go out for coffee after a few minutes and leave CPAN.pm
 to churn away untended.
 
 =head1 WORKING WITH CPAN.pm BEHIND FIREWALLS

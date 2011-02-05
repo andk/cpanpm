@@ -64,7 +64,7 @@ directory between sessions. Since 1.88_58 CPAN.pm has a YAML-based
 mechanism that makes it possible to share the contents of the
 build_dir/ directory between different sessions with the same version
 of perl. People who prefer to test things several days before
-installing will like this feature because it safes a lot of time.
+installing will like this feature because it saves a lot of time.
 
 If you say yes to the following question, CPAN will try to store
 enough information about the build process so that it can pick up in
@@ -201,7 +201,7 @@ Preferred method for determining the current working directory?
 
 =item halt_on_failure
 
-Normaly, CPAN.pm continues processing the full list of targets and
+Normally, CPAN.pm continues processing the full list of targets and
 dependencies, even if one of them fails.  However, you can specify 
 that CPAN should halt after the first failure. 
 
