@@ -1007,6 +1007,17 @@ sub has_usable {
                #
                # these subroutines die if they believe the installed version is unusable;
                #
+               'CPAN::Meta' => [
+                            sub {
+                                require CPAN::Meta;
+                                unless (CPAN::Version->vge(CPAN::Meta->VERSION, 2.110350)) {
+                                    for ("Will not use CPAN::Meta, need version 2.110350\n") {
+                                        $CPAN::Frontend->mywarn($_);
+                                        die $_;
+                                    }
+                                }
+                            },
+                           ],
 
                LWP => [ # we frequently had "Can't locate object
                         # method "new" via package "LWP::UserAgent" at
