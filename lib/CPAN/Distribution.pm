@@ -582,6 +582,34 @@ EOF
     return($packagedir,$local_file);
 }
 
+#-> sub CPAN::Distribution::pick_meta_file ;
+sub pick_meta_file {
+    my($self, $yaml) = @_;
+
+    my $build_dir;
+    unless ($build_dir = $self->{build_dir}) {
+        # maybe permission on build_dir was missing
+        $CPAN::Frontend->mywarn("Warning: cannot determine META.yml without a build_dir.\n");
+        return;
+    }
+
+    my $has_cm = $CPAN::META->has_usable("CPAN::Meta");
+    my $has_pcm = $CPAN::META->has_usable("Parse::CPAN::Meta");
+
+    my @choices;
+    push @choices, 'MYMETA.json' if $has_cm;
+    push @choices, 'MYMETA.yml' if $has_cm || $has_pcm;
+    push @choices, 'META.json' if $has_cm;
+    push @choices, 'META.yml' if $has_cm || $has_pcm;
+
+    for my $file ( @choices ) {
+        my $path = File::Spec->catdir( $build_dir, $file );
+        return $path if -f $path
+    }
+
+    return;
+}
+
 #-> sub CPAN::Distribution::parse_meta_yml ;
 sub parse_meta_yml {
     my($self, $yaml) = @_;
@@ -2818,27 +2846,42 @@ sub _fulfills_all_version_rqs {
     return $ret;
 }
 
+#-> sub CPAN::Distribution::read_meta
+# read any sort of meta files, return CPAN::Meta object if no errors and
+# dynamic_config = 0
+sub read_meta {
+    my($self) = @_;
+    my $meta_file = $self->pick_meta_file
+        or return;
+
+    return unless $CPAN::META->has_usable("CPAN::Meta");
+    my $meta = eval { CPAN::Meta->load_file($meta_file)}
+        or return;
+
+    # Very old EU::MM could have wrong META
+    if ($meta_file eq 'META.yml'
+        && $meta->generated_by =~ /ExtUtils::MakeMaker version ([\d\._]+)/
+    ) {
+        my $eummv = do { local $^W = 0; $1+0; };
+        return if $eummv < 6.2501;
+    }
+
+    # META/MYMETA is only authoritative if dynamic_config is false
+    return if $meta->dynamic_config;
+
+    return $meta;
+}
+
 #-> sub CPAN::Distribution::read_yaml ;
+# XXX This should be DEPRECATED -- dagolden, 2011-02-05
 sub read_yaml {
     my($self) = @_;
-    my $build_dir;
-    unless ($build_dir = $self->{build_dir}) {
-        # maybe permission on build_dir was missing
-        $CPAN::Frontend->mywarn("Warning: cannot determine META.yml without a build_dir.\n");
-        return;
-    }
-    # if MYMETA.yml exists, that takes precedence over META.yml
-    my $meta = File::Spec->catfile($build_dir,"META.yml");
-    my $mymeta = File::Spec->catfile($build_dir,"MYMETA.yml");
-    my $meta_file = -f $mymeta ? $mymeta : $meta;
+    my $meta_file = $self->pick_meta_file;
     $self->debug("meta_file[$meta_file]") if $CPAN::DEBUG;
-    return unless -f $meta_file;
+    return unless $meta_file;
     my $yaml;
     eval { $yaml = $self->parse_meta_yml($meta_file) };
     if ($@ or ! $yaml) {
-        $CPAN::Frontend->mywarnonce("Could not read ".
-                                    "'$meta_file'. Falling back to other ".
-                                    "methods to determine prerequisites\n");
         return undef; # if we die, then we cannot read YAML's own META.yml
     }
     # not "authoritative"
@@ -2850,7 +2893,7 @@ sub read_yaml {
         if $CPAN::DEBUG;
     $self->debug($yaml) if $CPAN::DEBUG && $yaml;
     # MYMETA.yml is static and authoritative by definition
-    if ( $meta_file eq $mymeta ) { 
+    if ( $meta_file =~ /MYMETA\.yml/ ) { 
       return $yaml; 
     }
     # META.yml is authoritative only if dynamic_config is defined and false
@@ -2875,7 +2918,17 @@ sub prereq_pm {
                 $self->{modulebuild}||"",
                ) if $CPAN::DEBUG;
     my($req,$breq);
-    if (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
+    if (my $meta_obj = $self->read_meta) {
+        my $prereqs = $meta_obj->effective_prereqs;
+        my $requires = $prereqs->requirements_for(qw/runtime requires/);
+        my $build_requires = $prereqs->requirements_for(qw/build requires/);
+        my $test_requires = $prereqs->requirements_for(qw/test requires/);
+        # XXX we don't yet distinguish build vs test, so merge them for now
+        $build_requires->add_requirements($test_requires);
+        $req = $requires->as_string_hash;
+        $breq = $build_requires->as_string_hash;
+    }
+    elsif (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
         $req =  $yaml->{requires} || {};
         $breq =  $yaml->{build_requires} || {};
         undef $req unless ref $req eq "HASH" && %$req;
@@ -2912,6 +2965,11 @@ sub prereq_pm {
             $req = $areq if $do_replace;
         }
     }
+    else {
+        $CPAN::Frontend->mywarnonce("Could not read metadata file. Falling back to other ".
+                                    "methods to determine prerequisites\n");
+    }
+
     unless ($req || $breq) {
         my $build_dir;
         unless ( $build_dir = $self->{build_dir} ) {
