@@ -1851,7 +1851,9 @@ sub auto_mirrored_by {
     my $local = shift or return;
     local $|=1;
     $CPAN::Frontend->myprint("Looking for CPAN mirrors near you (please be patient)\n");
-    my $mirrors = CPAN::Mirrors->new($local);
+    my $mirrors = CPAN::Mirrors->new;
+    $mirrors->parse_mirrored_by($local);
+
     my $cnt = 0;
     my @best = $mirrors->best_mirrors(
       how_many => 3,
@@ -1860,9 +1862,11 @@ sub auto_mirrored_by {
           if ($cnt++>60) { $cnt=0; $CPAN::Frontend->myprint("\n"); }
       },
     );
+
     my $urllist = [ map { $_->http } @best ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
     $CPAN::Frontend->myprint(" done!\n\n");
+
     return $urllist
 }
 
