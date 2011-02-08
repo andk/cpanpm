@@ -235,9 +235,10 @@ sub get_n_random_mirrors_by_continents {
 	splice @long_list, $n; # truncate
 }
 
-=item get_mirrors_timings( MIRROR_LIST, CALLBANK, SEEN );
+=item get_mirrors_timings( MIRROR_LIST, SEEN, CALLBACK );
 
-Pings the listed mirrors.
+Pings the listed mirrors and returns a list of mirrors sorted
+in ascending ping times.
 
 =cut
 
@@ -267,7 +268,21 @@ sub get_mirrors_timings {
         }
     }
 
-    my @best = sort { $a->rtt <=> $b->rtt } @$timings;
+    my @best = sort {
+    	   if( defined $a->rtt and defined $b->rtt )     {
+    		$a->rtt <=> $b->rtt
+    		}
+    	elsif( defined $a->rtt and ! defined $b->rtt )   {
+    		return -1;
+    		}
+    	elsif( ! defined $a->rtt and defined $b->rtt )   {
+    		return 1;
+    		}
+    	elsif( ! defined $a->rtt and ! defined $b->rtt ) {
+    		return 0;
+    		}
+    		
+    	} @$timings;
 
     return wantarray ? @best : \@best;
 }

@@ -18,13 +18,7 @@ my $callback = sub {
 	my( $m ) = @_; 
 	printf "%s = %s ms\n", $m->hostname, 1000 * $m->rtt 
 	};
-$mirrors->get_mirrors_timings( \@mirrors, $seen, $callback );
-
-my @sorted_mirrors = 
-	sort { $a->rtt <=> $b->rtt } 
-	grep { defined $_->rtt } 
-	@mirrors;
-
+@sorted_mirrors = $mirrors->get_mirrors_timings( \@mirrors, $seen, $callback );
 
 print "Best mirrors are ", 
 	join ' ', map( $_->hostname, @sorted_mirrors[0..3] ), 
