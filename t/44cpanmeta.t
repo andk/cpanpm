@@ -195,7 +195,7 @@ BEGIN {
         # check read_yaml
         my $pick = $dist->pick_meta_file;
         is( ( defined $pick ? basename($pick) : $pick ), $case->{pick},
-            "$label\: pick_meta_file $case->{pick}"
+            "$label\: pick_meta_file " . ($case->{pick} || '<undef>')
         );
         my $meta = $dist->read_meta;
         my $prereqs = $case->{prereqs};
