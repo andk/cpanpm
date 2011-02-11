@@ -105,15 +105,21 @@ BEGIN {
         {
             label => 'non-dynamic META.yml',
             copies => [ 'META-static.yml', 'META.yml' ],
-            requires => { 'File::Spec' => 0.87 },
+            requires => {
+                'Time::Local' => 0,
+                'perl' => 5.006
+            },
         },
         {
             label => 'dynamic META.yml plus MYMETA.yml',
             copies => [ 
                 'META-dynamic.yml', 'META.yml',
-                'META-dynamic.yml', 'MYMETA.yml',
+                'META-dynamic.yml', 'MYMETA.yml', # NOT MYMETA as source
             ],
-            requires => { 'File::Spec' => 0.87 },
+            requires => {
+                'Time::Local' => 0,
+                'perl' => 5.006
+            },
         },
     );
 }
