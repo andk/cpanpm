@@ -2575,13 +2575,9 @@ sub unsat_prereq {
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
-        my $meta_yml = $self->parse_meta_yml();
-        if (defined $meta_yml && (! ref $meta_yml || ref $meta_yml ne "HASH")) {
-            $CPAN::Frontend->mywarn("The content of META.yml is defined but not a HASH reference. Cannot use it.\n");
-            $meta_yml = +{};
-        }
+        my $meta_configure_requires = $self->configure_requires();
         %merged = (
-                   %{$meta_yml->{configure_requires}||{}},
+                   %{$meta_configure_requires||{}},
                    %{$prefs_depends->{configure_requires}||{}},
                    %{$feature_depends->{configure_requires}||{}},
                   );
@@ -2902,6 +2898,21 @@ sub read_yaml {
     }
     # otherwise, we can't use what we found
     return undef;
+}
+
+#-> sub CPAN::Distribution::configure_requires ;
+sub configure_requires {
+    my($self) = @_;
+    return unless my $meta_file = $self->pick_meta_file;
+    if (my $meta_obj = $self->read_meta) {
+        my $prereqs = $meta_obj->effective_prereqs;
+        my $cr = $prereqs->requirements_for(qw/configure requires/);
+        return $cr ? $cr->as_string_hash : undef;
+    }
+    else {
+        my $yaml = eval { $self->parse_meta_yml($meta_file) };
+        return $yaml->{configure_requires};
+    }
 }
 
 #-> sub CPAN::Distribution::prereq_pm ;
