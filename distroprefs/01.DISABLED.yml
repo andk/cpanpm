@@ -30,6 +30,7 @@ match:
     |ASNMTAP/ASNMTAP-\d                      # switches to cpanplus and then hangs
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
     |AWRIGLEY/App-Control-\d                 # endless loop
+    |AWRIGLEY/sitemapper-1                   # questions
     |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
     |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BEANZ/Device-RFXCOM-                    # spits out EV: error in callback (ignoring): closed at t/01-rx.t line 116
@@ -47,6 +48,7 @@ match:
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
+    |CEBJYRE/Task-BeLike-Cebjyre-\d          # hangs somewhere
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
     |CJFIELDS/BioPerl-\d                     # asks questions
     |CLACO/AxKit-XSP-                        # looped in a readline
@@ -61,6 +63,7 @@ match:
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
+    |EBRUNI/WWW-BBB-API-\d                   # asks questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EDALY/Text-GenderFromName-0.32.tar.gz   # bad prompt
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
@@ -68,6 +71,7 @@ match:
     |EKAWAS/MOBY-                            # hangs
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
+    |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FROGGS/Alien-SDL-1.418                  # questions
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
@@ -78,6 +82,7 @@ match:
     |GRICHTER/DBIx-Recordset-\d              # hangs
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
+    |GUIMARD/Net-Server-Mail-\d              # hangs
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HERNAN/Catalyst-Example-InstantCRUDStylish- # uninterruptible and demanding but maybe not his fault
@@ -94,6 +99,8 @@ match:
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
     |JDPORTER/Crypt-RandPasswd-0.02          # hangs *sometimes*
     |JESUS/Net-RabbitMQ                      # hangs
+    |JETTERO/Net-Pcap-Easy-\d                # asks questions
+    |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
@@ -127,6 +134,7 @@ match:
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |MLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
+    |MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz # ticket exists
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
@@ -135,6 +143,7 @@ match:
     |MSROTH/Db-Documentum-\d                 # press return to continue...
     |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
+    |MWS/ResourcePool-Resource-SOAP-Lite-\d  # asks questions
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
     |NPEREZ/Reflexive-Stream-Filtering-1.103 # hangs
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
@@ -149,6 +158,7 @@ match:
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
+    |PHRED/mod_perl-2.0.5.tar.gz             # endless loop
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
@@ -170,6 +180,7 @@ match:
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
+    |SULLR/Net-SSLGlue-\d                    # asks questions
     |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
     |SZABGAB/Debug-Client-0.11.tar.gz        # hangs
