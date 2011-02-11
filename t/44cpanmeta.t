@@ -42,7 +42,7 @@ use Test::More;
 my (@meta_tests); # defined later in BEGIN blocks
 
 if ( $has_cpan_meta ) {
-    plan tests => 4 * @meta_tests;
+    plan tests => 5 * @meta_tests;
 }
 else {
     plan 'skip_all' => "CPAN::Meta not available";
@@ -182,6 +182,7 @@ BEGIN {
             ID => "D/DA/DAGOLDEN/Bogus-Module-1.234"
         );
         $dist->{build_dir} = $tempdir;
+        $dist->{writemakefile} = 1; # spoof it since we only read META/MYMETA
 
         # copy files
         if ( $case->{copies} ) {
@@ -199,14 +200,21 @@ BEGIN {
         my $meta = $dist->read_meta;
         my $prereqs = $case->{prereqs};
         if ( defined $prereqs ) {
+            my $prereq_pm = {
+                requires => $prereqs->{runtime}{requires},
+                build_requires => exists $prereqs->{test}
+                    ? $prereqs->{test}{requires} : $prereqs->{build}{requires}
+            };
             isa_ok( $meta, 'CPAN::Meta', "$label\: read_meta" );
             isa_ok( $dist->read_meta, 'CPAN::Meta', "$label\: repeat read_meta" );
             is_deeply( ($meta ? $meta->prereqs : undef), $prereqs, "$label\: prereq data correct");
+            is_deeply( ($meta ? $dist->prereq_pm : undef), $prereq_pm, "$label\: prereq_pm() correct");
         }
         else {
             is( $meta, undef, "$label\: read_meta returns undef");
             is( $dist->read_meta, undef, "$label\: repeat read_yaml returns undef");
             pass( "$label\: no requirement checks apply" );
+            pass( "$label\: no prereq_pm checks apply" );
         }
     }
 }
