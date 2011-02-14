@@ -6,7 +6,7 @@ use File::Spec ();
 use File::Basename ();
 use Carp ();
 
-$VERSION = "5.5002"; # see also CPAN::Config::VERSION at end of file
+$VERSION = "5.5003"; # see also CPAN::Config::VERSION at end of file
 
 %can = (
         commit   => "Commit changes to disk",
