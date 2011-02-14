@@ -492,6 +492,7 @@ t/31sessions.t
 t/41distribution.t
 t/42distroprefs.t
 t/43distroprefspref.t
+t/44cpanmeta.t
 t/50pod.t
 t/51pod.t
 t/52podcover.t
@@ -527,8 +528,12 @@ t/CPAN/modules/03modlist.data
 t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
 t/CPAN/TestPatch.txt
+t/data/META-dynamic.json
 t/data/META-dynamic.yml
+t/data/META-static.json
 t/data/META-static.yml
+t/data/MYMETA.json
+t/data/MYMETA.yml
 t/local_utils.pm
 t/perlcriticrc
 t/yaml_code.yml
