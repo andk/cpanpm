@@ -25,7 +25,6 @@ use File::Path qw(rmtree mkpath);
 use File::Temp qw(tempdir);
 use File::Spec::Functions qw/catdir catfile/;
 use File::Basename qw/basename/;
-use Storable 'dclone';
 
 use lib "inc";
 use lib "t";
@@ -52,6 +51,15 @@ else {
 # read_meta() testing
 #--------------------------------------------------------------------------#
 
+sub _clone {
+    my $orig = shift;
+    my $copy = {};
+    for my $k ( keys %$orig ) {
+       $copy->{$k} = ref($orig->{$k}) ? _clone($orig->{$k}) : $orig->{$k};
+    }
+    return $copy;
+}
+
 BEGIN {
     my $meta_json_prereqs = {
         "configure" => {
@@ -72,14 +80,14 @@ BEGIN {
         }
     };
 
-    my $mymeta_json_prereqs = dclone($meta_json_prereqs);
+    my $mymeta_json_prereqs = _clone($meta_json_prereqs);
     $mymeta_json_prereqs->{runtime}{requires}{"File::Spec"} = "0.87";
 
     # YAML has build_requires, not test_requires
-    my $meta_yml_prereqs = dclone($meta_json_prereqs);
+    my $meta_yml_prereqs = _clone($meta_json_prereqs);
     $meta_yml_prereqs->{build} = delete $meta_yml_prereqs->{test};
 
-    my $mymeta_yml_prereqs = dclone($meta_yml_prereqs);
+    my $mymeta_yml_prereqs = _clone($meta_yml_prereqs);
     $mymeta_yml_prereqs->{runtime}{requires}{"File::Spec"} = "0.87";
 
     @meta_tests = (

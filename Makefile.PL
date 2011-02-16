@@ -74,8 +74,6 @@ my $prereq_pm = {
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
                  'File::Temp' => 0,   # TJENNESS; requires Test::More;
-                 'MIME::Base64' => 0, # allow HTTP Basic authentication
-                 'Digest::MD5' => 0,  # allow HTTP Digest authentication
                  'Net::Ping' => 0,    # SMPETERS;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
@@ -96,15 +94,18 @@ for my $interesting_module (qw(
         Compress::Zlib
         Data::Dumper
         Digest::SHA
+        Digest::MD5
         ExtUtils::CBuilder
         File::Copy
         File::HomeDir
         File::Spec
         File::Temp
         File::Which
+        HTTP::Tiny
         IO::Compress::Base
         IO::Zlib
         LWP::UserAgent
+        MIME::Base64
         Module::Build
         Module::Signature
         Net::FTP
