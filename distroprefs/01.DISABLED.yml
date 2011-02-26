@@ -36,13 +36,14 @@ match:
     |BEANZ/Device-RFXCOM-                    # spits out EV: error in callback (ignoring): closed at t/01-rx.t line 116
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
-    |BINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs
+    |xxxBINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs; says it is fixed in ticket 44857
     |BINGOS/Module-Install-ReadmeFromPod-    # hangs
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BLX/XSDSQL_                             # hangs with high memory usage
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
+    |DBROWNING/Business-Shipping-\d          # asks questions
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
@@ -129,13 +130,15 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
+    |MLAWREN/SQL-Tree-\d                     # hangs before the first test
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |MLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
-    |MNOONING/Net-Daemon/Net-Daemon-0.43.tar.gz # ticket exists
+    |MNOONING/(Net-Daemon/)?Net-Daemon-0\.4[3456]\.tar.gz # tickets exist; 46 still hangs after fork.t
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
+    |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MSHILTONJ/CGI-Test-\d                   # asks if it should strip Carp::Datum calls
