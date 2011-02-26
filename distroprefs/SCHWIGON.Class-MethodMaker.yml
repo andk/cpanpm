@@ -9,4 +9,5 @@ match:
   distribution: 'SCHWIGON/class-methodmaker/Class-MethodMaker-\d'
 cpanconfig:
   prefer_installer: "EUMM"
-check_sigs: 0
+cpanconfig:
+  check_sigs: 0
