@@ -1,3 +1,9 @@
+2011-03-07  Andreas J. Koenig  <andk@cpan.org>
+
+	* release 1.9600
+
+	* Added PAUSE batch signing key 2011 to the distribution
+
 2011-02-14  David Golden <dagolden@cpan.org>
 
 	* release 1.94_65
