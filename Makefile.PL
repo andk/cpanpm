@@ -338,6 +338,12 @@ show-imported:
 upload-batch-signing-key:
 	gpg --send-key 450F89EC
 
+download-batch-signing-key:
+	gpg --keyserver x-hkp://pool.sks-keyservers.net --recv-key 450F89EC
+
+export-armor-batch-signing-key:
+	gpg --export --armor 450F89EC
+
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 
