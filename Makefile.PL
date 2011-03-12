@@ -277,6 +277,7 @@ release :: disttest
 	git tag -m 'This is $(VERSION)' "$(VERSION)"
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
+	$(NOECHO) $(ECHO) '#### Suggested next steps:'
 	$(NOECHO) $(ECHO) '  lftp pause.perl.org'
 	$(NOECHO) $(ECHO) '    cd incoming'
 	$(NOECHO) $(ECHO) '    put $(DISTVNAME).tar$(SUFFIX)'
