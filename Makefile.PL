@@ -428,8 +428,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz: \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
 		mv CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz .. && \
-		$(MAKE) tamper-timestamps-now
-	-$(MAKE) clean
+		$(MAKE) tamper-timestamps-now && \
+		$(MAKE) clean
 	ls -l $@
 
 
