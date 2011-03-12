@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '1.9600';
+$CPAN::VERSION = '1.97_51';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -37,6 +37,7 @@ use CPAN::Shell;
 use CPAN::LWP::UserAgent;
 use CPAN::Exception::RecursiveDependency;
 use CPAN::Exception::yaml_not_installed;
+use CPAN::Exception::yaml_process_error;
 
 use Carp ();
 use Config ();
