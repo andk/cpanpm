@@ -46,7 +46,6 @@ match:
     |BLX/XSDSQL_                             # hangs with high memory usage
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
-    |DBROWNING/Business-Shipping-\d          # asks questions
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
@@ -62,6 +61,7 @@ match:
     |CORLISS/CursesWidgets-\d
     |CSJEWELL/Test-Perl-Dist-0.300           # tells me that Win32 is missing and then stands still
     |DAVIDNICO/handy_tied_functions/Tie-Quicksort-Lazy-0.02 # endless loop
+    |DBROWNING/Business-Shipping-\d          # asks questions
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DDUMONT/Config-Model-TkUI               # hangs at least on 5.8.3
     |DMAKI/Alien-MeCab                       # ditto
