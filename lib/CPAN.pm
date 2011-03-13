@@ -2597,9 +2597,20 @@ High-level commands do such initializations automatically.
 
 There's currently only one class that has a stable interface -
 CPAN::Shell. All commands that are available in the CPAN shell are
-methods of the class CPAN::Shell. Each of the commands that produce
-listings of modules (C<r>, C<autobundle>, C<u>) also return a list of
-the IDs of all modules within the list.
+methods of the class CPAN::Shell. The arguments on the commandline are
+passed as arguments to the method.
+
+So if you take for example the shell command
+
+  notest install A B C
+
+the actually executed command is
+
+  CPAN::Shell->notest("install","A","B","C");
+
+Each of the commands that produce listings of modules (C<r>,
+C<autobundle>, C<u>) also return a list of the IDs of all modules
+within the list.
 
 =over 2
 
