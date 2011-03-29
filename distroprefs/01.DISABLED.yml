@@ -99,6 +99,7 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |ISHIGAKI/PPM-Make-\d                    # asks questions
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
+    |JANPAZ/Font-TFM-\d                      # asks for path to tfm files
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
     |JDPORTER/Crypt-RandPasswd-0.02          # hangs *sometimes*
     |JESSE/HTTP-Server-Simple-Recorder-0.03  # hangs *sometimes*, even on perls that have previously succeeded
@@ -122,8 +123,10 @@ match:
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
+    |LARRYL/WebService-ScormCloud-\d         # asks for an ID
     |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
     |LDS/Bio-SamTools-\d                     # requires non-CPAN prereq
+    |LTP/Audio-Play-MPlayer-\d               # hangs
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LZE/CGI-CMS-\d                          # asks questions about paths
@@ -138,8 +141,9 @@ match:
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
-    |MLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
+    |xxxMLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
     |MNOONING/(Net-Daemon/)?Net-Daemon-0\.4[3456]\.tar.gz # tickets exist; 46 still hangs after fork.t
+    |MRAMBERG/Mojolicious-Plugin-OAuth2-\d   # hangs
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
@@ -155,7 +159,10 @@ match:
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin
+    |NXADM/App-Unix-RPasswd-\d               # takes too much time, no idea what it does
     |OALDERS/URI-ParseSearchString-More-0.04
+    |PERLER/CatalystX-ExtJS-Direct-\d        #
+    |PETDANCE/Test-WWW-Mechanize-\d          # hangs
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PFARR/Net-SMS-Clickatell-SOAP-
@@ -179,6 +186,7 @@ match:
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
     |SMEE/P4-\d                              # asks for Perforce api paths
+    |SMUELLER/Alien-ROOT-v5.28.0.1           # hangs
     |SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz # Module::Install 0.54 http://rt.cpan.org/Ticket/Display.html?id=40618
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
     |SSCAFFIDI/Stem-0.12.tar.gz              # hangs
@@ -187,6 +195,7 @@ match:
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
+    |SULLR/Net-INET6Glue-\d                  # asks questions
     |SULLR/Net-SSLGlue-\d                    # asks questions
     |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
@@ -207,6 +216,7 @@ match:
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WSMITH/Email-Folder-Exchange-\d         # asks questions
+    |WYANT/Astro-SIMBAD-Client-\d            # asks questions
     |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
     |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
     |XAICRON/Module-Install-ExtendsMakeTest  # hangs (0.0{2,3})
