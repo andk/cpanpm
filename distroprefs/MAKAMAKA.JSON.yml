@@ -1,11 +1,7 @@
 ---
-comment: |
-
-  "5.008" hardcoded is wrong when the utf8::is_utf8 subroutine is missing
-
-  http://rt.cpan.org/Ticket/Display.html?id=34599
-
 match:
-  distribution: "MAKAMAKA/JSON-2.07.tar.gz"
-patches:
-  - "ANDK/patches/JSON-2.07-ANDK-01.patch.gz"
+  distribution: "^MAKAMAKA/JSON-"
+pl:
+  expect:
+    - "Do you want to install JSON::XS"
+    - "y\n"
