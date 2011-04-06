@@ -1,4 +1,10 @@
 ---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=67266
+
 match:
-  distribution: "DOY/Package-Stash-(XS-)?0.1(4|5|6)-TRIAL.tar.gz"
-goto: "DOY/Package-Stash-0.13.tar.gz"
+  distribution: "DOY/Package-Stash-0.28.tar.gz"
+depends:
+  requires:
+    Dist::CheckConflicts: 0
