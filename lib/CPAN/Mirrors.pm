@@ -222,7 +222,7 @@ sub get_n_random_mirrors_by_continents {
     	return wantarray ? () : [];
     }
 
-    my @long_list = $self->get_mirrors_by_continent( $continents );
+    my @long_list = $self->get_mirrors_by_continents( $continents );
     
     if ( $n eq '*' or $n > @long_list ) {
     	return wantarray ? @long_list : \@long_list;
