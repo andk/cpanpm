@@ -197,7 +197,7 @@ sub best_mirrors {
 
     print "Scanning " . join(", ", @$continents) . " ...\n" if $verbose;
 
-	my $trial_mirrors = $self->get_n_random_mirrors_by_continents( $continents[0] );
+	my $trial_mirrors = $self->get_n_random_mirrors_by_continents( $continents->[0] );
 
     my $timings = $self->get_mirrors_timings( $trial_mirrors, {}, $callback );
     return [] unless @$timings;
