@@ -30,6 +30,7 @@
 ^distroprefs/ttt.nomailsend.yml
 ^eg/
 ^err$
+^git-pm-version-delta\.pl$
 ^gpw9-cpan-talk\.
 ^lib/CPAN/Config\.pm
 ^lib/CPAN\.pm@

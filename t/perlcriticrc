@@ -5,6 +5,7 @@ verbose   = 5
 top       = 50
 theme     = bugs || complexity
 include   = ClassHierarchies
+exclude   = ClassHierarchies::ProhibitAutoloading
 #exclude   = Variables  Modules::RequirePackage    #Space-delimited list
 #criticism-fatal = 1                               #Zero or One
 #color     = 1                                     #Zero or One
@@ -18,4 +19,4 @@ include   = ClassHierarchies
 #arg2 = value2
 
 [Subroutines::ProhibitExcessComplexity]
-max_mccabe = 112
+max_mccabe = 146

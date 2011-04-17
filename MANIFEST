@@ -443,6 +443,7 @@ lib/CPAN/Distrostatus.pm
 lib/CPAN/Exception/blocked_urllist.pm
 lib/CPAN/Exception/RecursiveDependency.pm
 lib/CPAN/Exception/yaml_not_installed.pm
+lib/CPAN/Exception/yaml_process_error.pm
 lib/CPAN/FirstTime.pm
 lib/CPAN/FTP.pm
 lib/CPAN/FTP/netrc.pm
@@ -472,6 +473,7 @@ PAUSE2003.pub
 PAUSE2005.pub
 PAUSE2007.pub
 PAUSE2009.pub
+PAUSE2011.pub
 README
 scripts/cpan
 SIGNATURE			Public-key signature (added by MakeMaker)
@@ -492,6 +494,7 @@ t/31sessions.t
 t/41distribution.t
 t/42distroprefs.t
 t/43distroprefspref.t
+t/44cpanmeta.t
 t/50pod.t
 t/51pod.t
 t/52podcover.t
@@ -527,8 +530,12 @@ t/CPAN/modules/03modlist.data
 t/CPAN/TestConfig.pm
 t/CPAN/TestMirroredBy
 t/CPAN/TestPatch.txt
+t/data/META-dynamic.json
 t/data/META-dynamic.yml
+t/data/META-static.json
 t/data/META-static.yml
+t/data/MYMETA.json
+t/data/MYMETA.yml
 t/local_utils.pm
 t/perlcriticrc
 t/yaml_code.yml

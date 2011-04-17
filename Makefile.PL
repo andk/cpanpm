@@ -40,8 +40,8 @@ if ($HAVE_FILE_SPEC) {
     shift @ARGV;
     my $st;
     local $ENV{LANG} = "C";
-    my $dirty = ! system "git status -a > /dev/null";
-    die "Not everything checked in or out?" if $dirty;
+    my $dirty = `git status --porcelain --untracked-files=no`;
+    die "Not everything checked in or out?\n====\n$dirty====\n" if $dirty;
 
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
@@ -74,8 +74,6 @@ my $prereq_pm = {
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
                  'File::Temp' => 0,   # TJENNESS; requires Test::More;
-                 'MIME::Base64' => 0, # allow HTTP Basic authentication
-                 'Digest::MD5' => 0,  # allow HTTP Digest authentication
                  'Net::Ping' => 0,    # SMPETERS;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
@@ -96,15 +94,18 @@ for my $interesting_module (qw(
         Compress::Zlib
         Data::Dumper
         Digest::SHA
+        Digest::MD5
         ExtUtils::CBuilder
         File::Copy
         File::HomeDir
         File::Spec
         File::Temp
         File::Which
+        HTTP::Tiny
         IO::Compress::Base
         IO::Zlib
         LWP::UserAgent
+        MIME::Base64
         Module::Build
         Module::Signature
         Net::FTP
@@ -276,6 +277,7 @@ release :: disttest
 	git tag -m 'This is $(VERSION)' "$(VERSION)"
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
+	$(NOECHO) $(ECHO) '#### Suggested next steps:'
 	$(NOECHO) $(ECHO) '  lftp pause.perl.org'
 	$(NOECHO) $(ECHO) '    cd incoming'
 	$(NOECHO) $(ECHO) '    put $(DISTVNAME).tar$(SUFFIX)'
@@ -336,6 +338,12 @@ show-imported:
 # seems to need at least gnupg 1.4.2:
 upload-batch-signing-key:
 	gpg --send-key 450F89EC
+
+download-batch-signing-key:
+	gpg --keyserver x-hkp://pool.sks-keyservers.net --recv-key 450F89EC
+
+export-armor-batch-signing-key:
+	gpg --export --armor 450F89EC
 
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
@@ -421,8 +429,8 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz: \
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
 		mv CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz .. && \
-		$(MAKE) tamper-timestamps-now
-	-$(MAKE) clean
+		$(MAKE) tamper-timestamps-now && \
+		$(MAKE) clean
 	ls -l $@
 
 

@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: 'SEANO/Sepia-\d'
+  distribution: 'SEANO/Sepia-0.991(_02)?'
 pl:
   commandline: "$PERL Makefile.PL < /dev/null"
 depends:
