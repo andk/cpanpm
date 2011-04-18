@@ -573,7 +573,7 @@ sub hostdleasy { #called from hostdlxxx
                 $ThesiteURL = $ro_url;
                 return $l;
             }
-            # If request is for a compressed file and we can find the 
+            # If request is for a compressed file and we can find the
             # uncompressed file also, return the path of the uncompressed file
             # otherwise, decompress it and return the resulting path
             if ($l =~ /(.+)\.gz$/) {
