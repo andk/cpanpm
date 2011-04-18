@@ -220,8 +220,9 @@ continents as an array reference.
 
 sub get_n_random_mirrors_by_continents {
 	my( $self, $n, $continents ) = @_;
+	$n ||= 3;
 	$continents = [ $continents ] unless ref $continents;
-	
+
     if ( $n <= 0 ) {
     	return wantarray ? () : [];
     }
