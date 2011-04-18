@@ -253,11 +253,13 @@ sub get_mirrors_timings {
 	my( $self, $mirror_list, $seen, $callback ) = @_;
 
 	$seen = {} unless defined $seen;
+	croak "The mirror list argument must be an array reference"
+		unless ref $mirror_list eq ref [];
 	croak "The seen argument must be a hash reference"
 		unless ref $seen eq ref {};
-	croak "callback must be a subroutine" 
+	croak "callback must be a subroutine"
 		if( defined $callback and ref $callback ne ref sub {} );
-	
+
 	my $timings = [];
     for my $m ( @$mirror_list ) {
 		$seen->{$m->hostname} = $m;
