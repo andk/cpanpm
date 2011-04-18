@@ -136,10 +136,10 @@ specify any continents, it returns all of the mirrors.
 
 =cut
 
-sub get_mirrors_by_continents { 
-	my ($self, @continents ) = @_;
-	
-	$self->mirrors( $self->get_countries_by_continents( @continents ) );
+sub get_mirrors_by_continents {
+	my ($self, $continents ) = @_;
+
+	$self->mirrors( $self->get_countries_by_continents( @$continents ) );
 	}
 
 =item get_countries_by_continents( [CONTINENTS] )
