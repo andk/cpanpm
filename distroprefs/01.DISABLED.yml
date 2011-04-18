@@ -31,7 +31,7 @@ match:
     |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
     |ASNMTAP/ASNMTAP-\d                      # switches to cpanplus and then hangs
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
-    |AVAR/Sendmail-PMilter-0.99              # asks questions
+    |AVAR/Sendmail-PMilter-\d                # asks questions
     |AWRIGLEY/App-Control-\d                 # endless loop
     |AWRIGLEY/sitemapper-1                   # questions
     |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
@@ -56,6 +56,7 @@ match:
     |CJFIELDS/BioPerl-\d                     # asks questions
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
+    |CORION/MozRepl-RemoteObject-\d          # hangs after 01-array.t
     |CORION/WWW-Mechanize-Shell-0.[45]       # hangs every so often in t/13-command-au.t
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
@@ -107,7 +108,7 @@ match:
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
-    |JJORE/Enbugger-                         # steps into the debugger
+    |xxxJJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JMERELO/MP3-Podcast-\d                  # hangs in test
@@ -134,6 +135,7 @@ match:
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
+    |MJGARDNER/Dist-Zilla-Plugin-RequiresExternal-\d # endless loop if JSON::PP missing???
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
@@ -142,7 +144,6 @@ match:
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |xxxMLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
-    |MNOONING/(Net-Daemon/)?Net-Daemon-0\.4[3456]\.tar.gz # tickets exist; 46 still hangs after fork.t
     |MRAMBERG/Mojolicious-Plugin-OAuth2-\d   # hangs
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
@@ -175,13 +176,16 @@ match:
     |PHRED/mod_perl-2.0.5.tar.gz             # endless loop
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
+    |ROLAND/jmx4perl-\d                      # asks questions
     |RONAN/Device-Velleman-K8055-Fuse-\d     # asks for a hadness (don't know what that is)
     |RSAVAGE/Data-Session-1.03.tgz           # hangs during basic.t with all CPU consumed
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
     |RYBSKEJ/forks-0.25
+    |SAKOHT/RMI-v?0.\d                       # hangs due to regression in 5.13.11-412, module is not to blame
     |SALVA/Net-OpenSSH-0.03.tar.gz           # asks for a password during test
     |SAMV/Lingua-Translate-                  # hangs often
+    |SANKO/Alien-FLTK-\d                     # downloads with waiting time risk
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
