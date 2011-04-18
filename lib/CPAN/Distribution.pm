@@ -158,7 +158,7 @@ sub tested_ok_but_not_installed {
             ||
             $self->{install}->failed
            )
-    ); 
+    );
 }
 
 
@@ -740,7 +740,7 @@ sub choose_MM_or_MB {
                 $prefer_installer = CPAN::HandleConfig->prefs_lookup(
                   $self, q{prefer_installer}
                 );
-                # M::B <= 0.35 left a DATA handle open that 
+                # M::B <= 0.35 left a DATA handle open that
                 # causes problems upgrading M::B on Windows
                 close *Module::Build::Version::DATA
                   if fileno *Module::Build::Version::DATA;
@@ -2889,8 +2889,8 @@ sub read_yaml {
         if $CPAN::DEBUG;
     $self->debug($yaml) if $CPAN::DEBUG && $yaml;
     # MYMETA.yml is static and authoritative by definition
-    if ( $meta_file =~ /MYMETA\.yml/ ) { 
-      return $yaml; 
+    if ( $meta_file =~ /MYMETA\.yml/ ) {
+      return $yaml;
     }
     # META.yml is authoritative only if dynamic_config is defined and false
     if ( defined $yaml->{dynamic_config} && ! $yaml->{dynamic_config} ) {
@@ -3168,7 +3168,7 @@ sub test {
         # bypass actual tests if "trust_test_report_history" and have a report
         my $have_tested_fcn;
         if (   $CPAN::Config->{trust_test_report_history}
-            && $CPAN::META->has_inst("CPAN::Reporter::History") 
+            && $CPAN::META->has_inst("CPAN::Reporter::History")
             && ( $have_tested_fcn = CPAN::Reporter::History->can("have_tested" ))) {
             if ( my @reports = $have_tested_fcn->( dist => $self->base_id ) ) {
                 # Do nothing if grade was DISCARD
@@ -3670,7 +3670,7 @@ sub perldoc {
             $CPAN::Frontend->myprint(qq{
     Function system("@args")
     returned status $estatus (wstat $wstatus)
-    });	
+    });
         }
     }
     else {

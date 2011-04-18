@@ -10,20 +10,20 @@ CPAN::Mirrors - Get CPAN miror information and select a fast one
 
 	my $mirrors = CPAN::Mirrors->new;
 	$mirrors->parse_from_file( $mirrored_by_file );
-	
+
 	my $seen = {};
 
 	my $best_continent = $mirrors->find_best_continents( { seen => $seen } );
 	my @mirrors        = $mirrors->get_mirrors_by_continents( $best_continent );
 
-	my $callback = sub { 
-		my( $m ) = @_; 
-		printf "%s = %s\n", $m->hostname, $m->rtt 
+	my $callback = sub {
+		my( $m ) = @_;
+		printf "%s = %s\n", $m->hostname, $m->rtt
 		};
 	$mirrors->get_mirrors_timings( \@mirrors, $seen, $callback );
-	
+
 	@mirrors = sort { $a->rtt <=> $b->rtt } @mirrors;
-	
+
 	print "Best mirrors are ", map( { $_->rtt } @mirrors[0..3] ), "\n";
 
 =head1 DESCRIPTION
@@ -146,7 +146,7 @@ sub get_mirrors_by_continents {
 
 A more sensible synonym for countries.
 
-=cut	
+=cut
 sub get_countries_by_continents { &countries }
 
 =item best_mirrors
@@ -163,10 +163,10 @@ Arguments
 	callback   - a callback for find_best_continents
 	verbose    - true or false on all the whining and moaning. Default: false
 	continents - an array ref of the continents to check
-	
-If you don't specify the continents, C<best_mirrors> calls 
+
+If you don't specify the continents, C<best_mirrors> calls
 C<find_best_continents> to get the list of continents to check.
-	
+
 =cut
 
 sub best_mirrors {
@@ -185,8 +185,8 @@ sub best_mirrors {
     if ( ! @$continents ) {
         print "Searching for the best continent ...\n" if $verbose;
         my @best_continents = $self->find_best_continents(
-        	seen     => $seen, 
-        	verbose  => $verbose, 
+        	seen     => $seen,
+        	verbose  => $verbose,
         	callback => $callback,
         	);
 
@@ -227,11 +227,11 @@ sub get_n_random_mirrors_by_continents {
     }
 
     my @long_list = $self->get_mirrors_by_continents( $continents );
-    
+
     if ( $n eq '*' or $n > @long_list ) {
     	return wantarray ? @long_list : \@long_list;
     }
-   
+
 	@long_list = map  {$_->[0]}
 	             sort {$a->[1] <=> $b->[1]}
                  map  {[$_, rand]} @long_list;
@@ -260,7 +260,7 @@ sub get_mirrors_timings {
 		$seen->{$m->hostname} = $m;
 		next unless eval{ $m->http };
 
-        if ( $self->_try_a_ping( $seen, $m, )  ) {
+        if( $self->_try_a_ping( $seen, $m, ) ) {
             my $ping = $m->ping;
 			next unless defined $ping;
             push @$timings, $m;
@@ -285,7 +285,7 @@ sub get_mirrors_timings {
     	elsif( ! defined $a->rtt and ! defined $b->rtt ) {
     		return 0;
     		}
-    		
+
     	} @$timings;
 
     return wantarray ? @best : \@best;
@@ -295,7 +295,7 @@ sub get_mirrors_timings {
 
 C<find_best_continents> goes through each continent and pings C<N> random
 mirrors on that continent. It then orders the continents by ascending
-median ping time. In list context, it returns the ordered list of 
+median ping time. In list context, it returns the ordered list of
 continent. In scalar context, it returns the same list as an anonymous
 array.
 
@@ -305,14 +305,14 @@ Arguments:
 	seen     - a hashref of cached hostname ping times
 	verbose  - true or false for noisy or quiet. Default: false
 	callback - a subroutine to run after each ping.
-	ping_cache_limit - how long, in seconds, to reuse previous ping times. 
+	ping_cache_limit - how long, in seconds, to reuse previous ping times.
 		Default: 1 day
-	
+
 The C<seen> hash has hostnames as keys and anonymous arrays as values. The
 anonymous array is a triplet of a C<CPAN::Mirrored::By> object, a ping
 time, and the epoch time for the measurement.
 
-The callback subroutine gets the C<CPAN::Mirrored::By> object, the ping 
+The callback subroutine gets the C<CPAN::Mirrored::By> object, the ping
 time, and measurement time (the same things in the C<seen> hashref) as arguments.
 C<find_best_continents> doesn't care what the callback does and ignores the return
 value.
@@ -327,16 +327,16 @@ sub find_best_continents {
 	$args{seen}    = {} unless defined $args{seen};
 	croak "The seen argument must be a hash reference"
 		unless ref $args{seen} eq ref {};
-	$args{ping_cache_limit} = 24 * 60 * 60 
+	$args{ping_cache_limit} = 24 * 60 * 60
 		unless defined $args{ping_cache_time};
-	croak "callback must be a subroutine" 
+	croak "callback must be a subroutine"
 		if( defined $args{callback} and ref $args{callback} ne ref sub {} );
 
     my %medians;
     CONT: for my $c ( $self->continents ) {
     	print "Testing $c\n" if $args{verbose};
         my @mirrors = $self->mirrors( $self->countries($c) );
-        
+
         next CONT unless @mirrors;
         my $n = (@mirrors < $args{n}) ? @mirrors : $args{n};
 
@@ -348,8 +348,8 @@ sub find_best_continents {
 				$self->get_mirrors_timings( [ $m ], @args{qw(seen callback)} );
 				next RANDOM unless defined $args{seen}{$m->hostname}->rtt;
             }
-            printf "\t%s -> %0.2f ms\n", 
-            	$m->hostname, 
+            printf "\t%s -> %0.2f ms\n",
+            	$m->hostname,
             	join ' ', 1000 * $args{seen}{$m->hostname}->rtt
             		if $args{verbose};
 
@@ -359,7 +359,7 @@ sub find_best_continents {
 		my $median = $self->_get_median_ping_time( \@tests, $args{verbose} );
 		$medians{$c} = $median if defined $median;
     }
-	
+
     my @best_cont = sort { $medians{$a} <=> $medians{$b} } keys %medians;
 
     if ( $args{verbose} ) {
@@ -372,24 +372,24 @@ sub find_best_continents {
     return wantarray ? @best_cont : $best_cont[0];
 }
 
-# retry if 
+# retry if
 sub _try_a_ping {
 	my ($self, $seen, $mirror, $ping_cache_limit ) = @_;
 
 	( ! exists $seen->{$mirror->hostname} )
-		or 
-	( 
+		or
+	(
 	! defined $seen->{$mirror->hostname}->rtt
 		or
 	time - $seen->{$mirror->hostname}->rtt > $ping_cache_limit
-	) 	
+	)
 }
 
 sub _get_median_ping_time {
 	my ($self, $tests, $verbose ) = @_;
 
 	my @sorted = sort { $a <=> $b } @$tests;
-	
+
 	my $median = do {
 		   if ( @sorted == 0 ) { undef }
 		elsif ( @sorted == 1 ) { $sorted[0] }
@@ -399,7 +399,7 @@ sub _get_median_ping_time {
 			($sorted[$mid_high-1] + $sorted[$mid_high])/2;
 		}
 	};
-	
+
 	printf "\t-->median time: %0.2f ms\n", $median * 1000 if $verbose;
 
     return $median;
@@ -507,7 +507,7 @@ sub ping {
     my ($proto) = $self->url =~ m{^([^:]+)};
     my $port = $proto eq 'http' ? 80 : 21;
     return unless $port;
- 
+
 	if ( $ping->can('port_number') ) {
         $ping->port_number($port);
     }
@@ -517,10 +517,10 @@ sub ping {
 
     $ping->hires(1) if $ping->can('hires');
     my ($alive,$rtt) = $ping->ping($self->hostname);
-    
+
     $self->{rtt} = $alive ? $rtt : undef;
     $self->{ping_time} = time;
-    
+
     $self->rtt;
 }
 

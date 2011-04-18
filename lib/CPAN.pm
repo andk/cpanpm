@@ -1070,7 +1070,7 @@ sub has_usable {
                                             # don't die, because we may need
                                             # Archive::Tar to upgrade
                                             }
-                                            
+
                                        }
                                   },
                                  ],
@@ -1470,14 +1470,14 @@ mentioned four. Each of the four entities is implemented as a class
 with slightly differing methods for displaying an object.
 
 Arguments to these commands are either strings exactly matching
-the identification string of an object, or regular expressions 
+the identification string of an object, or regular expressions
 matched case-insensitively against various attributes of the
 objects. The parser only recognizes a regular expression when you
 enclose it with slashes.
 
 The principle is that the number of objects found influences how an
 item is displayed. If the search finds one item, the result is
-displayed with the rather verbose method C<as_string>, but if 
+displayed with the rather verbose method C<as_string>, but if
 more than one is found, each object is displayed with the terse method
 C<as_glimpse>.
 
@@ -1589,7 +1589,7 @@ being executed within the distribution file's working directory.
 C<readme> displays the README file of the associated distribution.
 C<Look> gets and untars (if not yet done) the distribution file,
 changes to the appropriate directory and opens a subshell process in
-that directory. C<perldoc> displays the module's pod documentation 
+that directory. C<perldoc> displays the module's pod documentation
 in html or plain text format.
 
 =item C<ls> author
@@ -1722,7 +1722,7 @@ system-wide ones.
 =head2 recent ***EXPERIMENTAL COMMAND***
 
 The C<recent> command downloads a list of recent uploads to CPAN and
-displays them I<slowly>. While the command is running, a $SIG{INT} 
+displays them I<slowly>. While the command is running, a $SIG{INT}
 exits the loop after displaying the current item.
 
 B<Note>: This command requires XML::LibXML installed.
@@ -1999,7 +1999,7 @@ currently defined:
   inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                      after this many seconds inactivity. Set to 0 to
                      disable timeouts.
-  index_expire       refetch index files after this many days 
+  index_expire       refetch index files after this many days
   inhibit_startup_message
                      if true, suppress the startup message
   keep_source_where  directory in which to keep the source (if we do)
@@ -2193,7 +2193,7 @@ randomness into the URL selection.
 Since CPAN.pm version 1.88_51 modules declared as C<build_requires> by
 a distribution are treated differently depending on the config
 variable C<build_requires_install_policy>. By setting
-C<build_requires_install_policy> to C<no>, such a module is not 
+C<build_requires_install_policy> to C<no>, such a module is not
 installed. It is only built and tested, and then kept in the list of
 tested but uninstalled modules. As such, it is available during the
 build of the dependent module by integrating the path to the
@@ -2247,7 +2247,7 @@ temporarily override assorted C<CPAN.pm> configuration variables
 
 =item
 
-specify dependencies the original maintainer forgot 
+specify dependencies the original maintainer forgot
 
 =item
 
@@ -2584,7 +2584,7 @@ needs. You have been warned:-)
 
 =head1 PROGRAMMER'S INTERFACE
 
-If you do not enter the shell, shell commands are 
+If you do not enter the shell, shell commands are
 available both as methods (C<CPAN::Shell-E<gt>install(...)>) and as
 functions in the calling package (C<install(...)>).  Before calling low-level
 commands, it makes sense to initialize components of CPAN you need, e.g.:
@@ -2662,7 +2662,7 @@ all modules that need updating. First a quick and dirty way:
 If you don't want any output should all modules be
 up to date, parse the output of above command for the regular
 expression C</modules are up to date/> and decide to mail the output
-only if it doesn't match. 
+only if it doesn't match.
 
 If you prefer to do it more in a programmerish style in one single
 process, something like this may better suit you:
@@ -2849,7 +2849,7 @@ cancellation can be avoided by letting C<force> run the C<install> for
 you.
 
 This install method only has the power to install the distribution if
-there are no dependencies in the way. To install an object along with all 
+there are no dependencies in the way. To install an object along with all
 its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
@@ -3243,7 +3243,7 @@ the software producing the indices on CPAN, the mirroring process on CPAN,
 packaging, configuration, synchronicity, and even (gasp!) due to bugs
 within the CPAN.pm module itself.
 
-For debugging the code of CPAN.pm itself in interactive mode, some 
+For debugging the code of CPAN.pm itself in interactive mode, some
 debugging aid can be turned on for most packages within
 CPAN.pm with one of
 
@@ -3399,7 +3399,7 @@ Maintaining a bundle definition file means keeping track of two
 things: dependencies and interactivity. CPAN.pm sometimes fails on
 calculating dependencies because not all modules define all MakeMaker
 attributes correctly, so a bundle definition file should specify
-prerequisites as early as possible. On the other hand, it's 
+prerequisites as early as possible. On the other hand, it's
 annoying that so many distributions need some interactive configuring. So
 what you can try to accomplish in your private bundle file is to have the
 packages that need to be configured early in the file and the gentle
@@ -3444,7 +3444,7 @@ need Net::FTP.
 
 =item One-way visibility
 
-One-way visibility means these firewalls try to make themselves 
+One-way visibility means these firewalls try to make themselves
 invisible to users inside the firewall. An FTP data connection is
 normally created by sending your IP address to the remote server and then
 listening for the return connection. But the remote server will not be able to
