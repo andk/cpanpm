@@ -47,11 +47,15 @@ use Net::Ping ();
 =cut
 
 sub new {
-    my ($class) = @_;
+    my ($class, $file) = @_;
     my $self = bless {
         mirrors      => [],
         geography    => {},
     }, $class;
+
+	if( defined $file ) {
+		$self->parse_mirrored_by( $file );
+	}
 
     return $self
 }
