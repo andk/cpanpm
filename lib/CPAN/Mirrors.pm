@@ -238,6 +238,8 @@ sub get_n_random_mirrors_by_continents {
                  map  {[$_, rand]} @long_list;
 
 	splice @long_list, $n; # truncate
+
+	\@long_list;
 }
 
 =item get_mirrors_timings( MIRROR_LIST, SEEN, CALLBACK );
