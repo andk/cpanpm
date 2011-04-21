@@ -981,7 +981,7 @@ ftp config variable with
   Trying with external ftp to get
     '$url'
   $netrc_explain
-  Going to send the dialog
+  Sending the dialog
 $dialog
 }
                 );
@@ -1020,7 +1020,7 @@ $dialog
         $CPAN::Frontend->myprint(qq{
   Trying with external ftp to get
     $url
-  Going to send the dialog
+  Sending the dialog
 $dialog
 }
         );

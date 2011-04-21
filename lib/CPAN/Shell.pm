@@ -1684,7 +1684,7 @@ sub rematein {
             if ($meth =~ /^($needs_recursion_protection)$/) {
                 # it would be silly to check for recursion for look or dump
                 # (we are in CPAN::Shell::rematein)
-                CPAN->debug("Going to test against recursion") if $CPAN::DEBUG;
+                CPAN->debug("Testing against recursion") if $CPAN::DEBUG;
                 eval {  $obj->color_cmd_tmps(0,1); };
                 if ($@) {
                     if (ref $@
@@ -1847,7 +1847,7 @@ sub recent {
   my($self) = @_;
   if ($CPAN::META->has_inst("XML::LibXML")) {
       my $url = $CPAN::Defaultrecent;
-      $CPAN::Frontend->myprint("Going to fetch '$url'\n");
+      $CPAN::Frontend->myprint("Fetching '$url'\n");
       unless ($CPAN::META->has_usable("LWP")) {
           $CPAN::Frontend->mydie("LWP not installed; cannot continue");
       }
@@ -1935,7 +1935,7 @@ sub smoke {
     my $distros = $self->recent;
   DISTRO: for my $distro (@$distros) {
         next if $distro =~ m|/Bundle-|; # XXX crude heuristic to skip bundles
-        $CPAN::Frontend->myprint(sprintf "Going to download and test '$distro'\n");
+        $CPAN::Frontend->myprint(sprintf "Downloading and testing '$distro'\n");
         {
             my $skip = 0;
             local $SIG{INT} = sub { $skip = 1 };
