@@ -1703,6 +1703,8 @@ a list of all modules that are both available from CPAN and currently
 installed within @INC. The name of the bundle file is based on the
 current date and a counter.
 
+Return value: path to the written file.
+
 =head2 hosts
 
 Note: this feature is still in alpha state and may change in future

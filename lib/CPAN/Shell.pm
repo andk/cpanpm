@@ -1221,6 +1221,7 @@ sub autobundle {
     $fh->close;
     $CPAN::Frontend->myprint("\nWrote bundle file
     $to\n\n");
+    return $to;
 }
 
 #-> sub CPAN::Shell::expandany ;
