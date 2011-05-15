@@ -24,6 +24,7 @@ match:
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
     |AGENT/OpenResty-0                       # 0.3.8 hangs after 'cp etc/openresty.conf etc/site-openresty.conf'
+    |AHERNIT/Dir-ListFilesRecursive-\d       # Deep recursion with high memory consumption
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ALVAROL/PerlCryptLib-1                  # hangs when searching header files
     |ANDREWF/Template-Plugin-Latex-3         # hangs with 3.02
@@ -40,7 +41,7 @@ match:
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
     |xxxBINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs; says it is fixed in ticket 44857
-    |BINGOS/Module-Install-ReadmeFromPod-    # hangs
+    |xxxBINGOS/Module-Install-ReadmeFromPod-    # hangs
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BLX/XSDSQL_                             # hangs with high memory usage
@@ -88,6 +89,7 @@ match:
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |GUIMARD/Net-Server-Mail-\d              # hangs
+    |/POE-Quickie-\d                          # test hangs
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HERNAN/Catalyst-Example-InstantCRUDStylish- # uninterruptible and demanding but maybe not his fault
@@ -114,10 +116,12 @@ match:
     |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JMMILLS/App-Nopaste-Service-AnyPastebin-\d # hangs due Module::Install
     |JQUELIN/WWW-DaysOfWonder-Memoir44-\d    # hangs
+    |JROCKWAY/AnyEvent-Retry-\d              # hangs after release-pod-syntax.t
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |KANE/CPANPLUS-0.8(5_08|6|601).tar.gz        # hangs
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
+    |KAZUHO/Server-Starter-0.11              # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
     |KMX/Alien-IUP-v?\d                      # not analysed slowness and CPU hog; then again questions being asked
@@ -213,6 +217,7 @@ match:
     |TTY/kurila-\d                           # asks too many questions
     |TURNERJW/
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
+    |TURNSTEP/DBD-Pg-\d                      # asks for pg_config
     |URI/Stem-\d                             # asks questions about conf directories
     |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
     |VINSWORLD/Net-Syslogd-0.04.             # asks question
