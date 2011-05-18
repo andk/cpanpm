@@ -858,7 +858,7 @@ sub try_download {
                 }
             }
             my $countedpatches = @$patches == 1 ? "1 patch" : (scalar @$patches . " patches");
-            $CPAN::Frontend->myprint("Going to apply $countedpatches:\n");
+            $CPAN::Frontend->myprint("Applying $countedpatches:\n");
             my $patches_dir = $CPAN::Config->{patches_dir};
             for my $patch (@$patches) {
                 if ($patches_dir && !File::Spec->file_name_is_absolute($patch)) {
@@ -1844,7 +1844,7 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
-    $CPAN::Frontend->myprint("\n  CPAN.pm: Going to build ".$self->id."\n\n");
+    $CPAN::Frontend->myprint("\n  CPAN.pm: Building ".$self->id."\n\n");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
