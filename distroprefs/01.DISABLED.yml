@@ -172,7 +172,7 @@ match:
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
-    |PJFL/                                   # does not want to be tested by user sand---no reason given
+    |xxxPJFL/                                # does not want to be tested by user sand---no reason given; hmmm, but we may want some module from this user, eg. File-DataClass-0.4.268
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
