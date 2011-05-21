@@ -776,6 +776,12 @@ sub choose_MM_or_MB {
 sub store_persistent_state {
     my($self) = @_;
     my $dir = $self->{build_dir};
+    unless (defined $dir && length $dir) {
+        my $id = $self->id;
+        $CPAN::Frontend->mywarnonce("build_dir of $id is not known, ".
+                                    "will not store persistent state\n");
+        return;
+    }
     unless (File::Spec->canonpath(File::Basename::dirname($dir))
             eq File::Spec->canonpath($CPAN::Config->{build_dir})) {
         $CPAN::Frontend->mywarnonce("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
