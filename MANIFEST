@@ -476,6 +476,7 @@ PAUSE2009.pub
 PAUSE2011.pub
 README
 scripts/cpan
+scripts/cpan-mirrors
 SIGNATURE			Public-key signature (added by MakeMaker)
 SlayMakefile
 t/00signature.t
