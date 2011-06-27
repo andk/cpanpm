@@ -218,6 +218,12 @@ BEGIN {
             is_deeply( ($meta ? $meta->prereqs : undef), $prereqs, "$label\: prereq data correct");
             is_deeply( ($meta ? $dist->prereq_pm : undef), $prereq_pm, "$label\: prereq_pm() correct");
         }
+        elsif ( defined $pick ) {
+            isa_ok( $meta, 'CPAN::Meta', "$label\: read_meta" );
+            isa_ok( $dist->read_meta, 'CPAN::Meta', "$label\: repeat read_meta" );
+            pass( "$label\: no requirement checks apply" );
+            pass( "$label\: no prereq_pm checks apply" );
+        }
         else {
             is( $meta, undef, "$label\: read_meta returns undef");
             is( $dist->read_meta, undef, "$label\: repeat read_yaml returns undef");
