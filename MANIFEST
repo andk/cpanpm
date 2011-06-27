@@ -320,7 +320,6 @@ distroprefs/OVID.TAPx-Parser.yml
 distroprefs/OVID.Test-JSON.yml
 distroprefs/OWEN.PDF-Labels.yml
 distroprefs/PAJAS.XML-LibXML.yml
-distroprefs/PARDUS.File-MimeInfo.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PDCAWLEY.Class-Inner.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
