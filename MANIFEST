@@ -263,6 +263,7 @@ distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/MCEGLOWS.Bloom-Filter.yml
 distroprefs/MCRAWFOR.REST-Client.yml
 distroprefs/METZZO.Java.yml
+distroprefs/MFX.Compress-LZO.yml
 distroprefs/MI.yml
 distroprefs/MIKER.IPtables-IPv4-DBTarpit.yml
 distroprefs/MInoinc.yml
@@ -389,6 +390,8 @@ distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/TBONE.HTTP-File.yml
 distroprefs/TELS.Devel-Size.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
+distroprefs/THOSPEL.Graph-Layout-Aesthetic.yml
+distroprefs/THOSPEL.Heap-Simple-Perl.yml
 distroprefs/TIMB.Apache-Status-DBI.yml
 distroprefs/TIMB.DBI.yml
 distroprefs/TIMB.GoferTransport-http.yml
