@@ -305,6 +305,8 @@ DESCRIPTION
     within @INC. The name of the bundle file is based on the current date
     and a counter.
 
+    Return value: path to the written file.
+
   hosts
     Note: this feature is still in alpha state and may change in future
     versions of CPAN.pm
@@ -575,7 +577,7 @@ CONFIGURATION
       inactivity_timeout breaks interactive Makefile.PLs or Build.PLs
                          after this many seconds inactivity. Set to 0 to
                          disable timeouts.
-      index_expire       refetch index files after this many days 
+      index_expire       refetch index files after this many days
       inhibit_startup_message
                          if true, suppress the startup message
       keep_source_where  directory in which to keep the source (if we do)
@@ -1091,9 +1093,20 @@ PROGRAMMER'S INTERFACE
 
     There's currently only one class that has a stable interface -
     CPAN::Shell. All commands that are available in the CPAN shell are
-    methods of the class CPAN::Shell. Each of the commands that produce
-    listings of modules ("r", "autobundle", "u") also return a list of the
-    IDs of all modules within the list.
+    methods of the class CPAN::Shell. The arguments on the commandline are
+    passed as arguments to the method.
+
+    So if you take for example the shell command
+
+      notest install A B C
+
+    the actually executed command is
+
+      CPAN::Shell->notest("install","A","B","C");
+
+    Each of the commands that produce listings of modules ("r",
+    "autobundle", "u") also return a list of the IDs of all modules within
+    the list.
 
     expand($type,@things)
       The IDs of all objects available within a program are strings that can
