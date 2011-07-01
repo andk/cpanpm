@@ -1700,8 +1700,9 @@ literal backslash.
 C<autobundle> writes a bundle file into the
 C<$CPAN::Config-E<gt>{cpan_home}/Bundle> directory. The file contains
 a list of all modules that are both available from CPAN and currently
-installed within @INC. The name of the bundle file is based on the
-current date and a counter.
+installed within @INC. Duplicates of each distribution are suppressed.
+The name of the bundle file is based on the current date and a
+counter.
 
 Return value: path to the written file.
 
