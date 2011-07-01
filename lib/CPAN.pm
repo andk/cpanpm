@@ -1805,7 +1805,7 @@ approach will likely remain.
 
 B<Note>: See also L<recent>
 
-=head2 upgrade [Module|/Regex/]...
+=head2 upgrade [Module|/Regexp/]...
 
 The C<upgrade> command first runs an C<r> command with the given
 arguments and then installs the newest versions of all modules that
@@ -1924,7 +1924,7 @@ Example:
   o conf shell
 
 If KEY starts and ends with a slash, the string in between is
-treated as a regular expression and only keys matching this regex
+treated as a regular expression and only keys matching this regexp
 are displayed
 
 Example:
