@@ -1721,6 +1721,31 @@ mkmyconfig() writes your own CPAN::MyConfig file into your C<~/.cpan/>
 directory so that you can save your own preferences instead of the
 system-wide ones.
 
+=head2 r [Module|/Regexp/]...
+
+scans current perl installation for modules that have a newer version
+available on CPAN and provides a list of them. If called without
+argument, all potential upgrades are listed; if called with arguments
+the list is filtered to the modules and regexps given as arguments.
+
+The listing looks something like this:
+
+  Package namespace         installed    latest  in CPAN file
+  CPAN                        1.94_64    1.9600  ANDK/CPAN-1.9600.tar.gz
+  CPAN::Reporter               1.1801    1.1902  DAGOLDEN/CPAN-Reporter-1.1902.tar.gz
+  YAML                           0.70      0.73  INGY/YAML-0.73.tar.gz
+  YAML::Syck                     1.14      1.17  AVAR/YAML-Syck-1.17.tar.gz
+  YAML::Tiny                     1.44      1.50  ADAMK/YAML-Tiny-1.50.tar.gz
+  CGI                            3.43      3.55  MARKSTOS/CGI.pm-3.55.tar.gz
+  Module::Build::YAML            1.40      1.41  DAGOLDEN/Module-Build-0.3800.tar.gz
+  TAP::Parser::Result::YAML      3.22      3.23  ANDYA/Test-Harness-3.23.tar.gz
+  YAML::XS                       0.34      0.35  INGY/YAML-LibYAML-0.35.tar.gz
+
+It suppresses duplicates in the column C<in CPAN file> such that
+distributions with many upgradeable modules are listed only once.
+
+Note that the list is not sorted.
+
 =head2 recent ***EXPERIMENTAL COMMAND***
 
 The C<recent> command downloads a list of recent uploads to CPAN and
