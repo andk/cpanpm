@@ -19,6 +19,9 @@ comment: |
   we stand. [time passes] disabling again on 2010-12-12, too many
   perl versions that trigger hanging tests.
 
+  With Coro 6.02 trying again to disable this distropref stanza. Nope,
+  the test after basic.t hangs again
+
 match:
   distribution: "^MLEHMANN/Coro-"
   perlconfig:

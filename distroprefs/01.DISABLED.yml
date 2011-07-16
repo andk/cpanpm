@@ -113,6 +113,7 @@ match:
     |JDPORTER/Crypt-RandPasswd-0.02          # hangs *sometimes*
     |JESSE/HTTP-Server-Simple-Recorder-0.03  # hangs *sometimes*, even on perls that have previously succeeded
     |JESUS/Net-RabbitMQ                      # hangs
+    |JETTERO/App-MrShell-2.0207.tar.gz       # hangs with v5.15.0-2-g1162210/2b65
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
@@ -159,6 +160,7 @@ match:
     |MRAMBERG/Mojolicious-Plugin-OAuth2-\d   # hangs
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
+    |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
     |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
@@ -174,6 +176,7 @@ match:
     |NWCLARK/perl-                           # pumpkin
     |NXADM/App-Unix-RPasswd-\d               # takes too much time, no idea what it does
     |OALDERS/URI-ParseSearchString-More-0.04
+    |PERIGRIN/Git-Wrapper-\d                 # some huge kill triggered?
     |PERLER/CatalystX-ExtJS-Direct-\d        #
     |PETDANCE/Test-WWW-Mechanize-\d          # hangs
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
@@ -194,9 +197,10 @@ match:
     |RURBAN/B-C-1.34                         # hangs with v5.15-135
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
+    |RVOSA/Bio-Phylo-\d                      # hangs after 03-node.t with v5.15.0-241-g0a044a7/2b65/
     |RYBSKEJ/forks-0.25
     |SAKOHT/RMI-v?0.\d                       # hangs due to regression in 5.13.11-412, module is not to blame
-    |SALVA/Net-OpenSSH-0.03.tar.gz           # asks for a password during test
+    |SALVA/Net-OpenSSH-0                     # asks for a password during test
     |SAMV/Lingua-Translate-                  # hangs often
     |SANKO/Alien-FLTK-\d                     # downloads with waiting time risk
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>

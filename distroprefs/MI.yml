@@ -43,6 +43,7 @@ match:
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Image-Compare-\d
     |AVIF/Time-Duration-\d
+    |AWOHLD/Date-FromToday-\d
     |AWWAIID/Continuity-\d
     |BERLE/MooseX-Method-\d
     |BERLE/Test-XML-RPC-Catalyst-\d
@@ -151,6 +152,7 @@ match:
     |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
     |ELLIOTJS/Task-Perl-Critic-[v\d]
+    |FANGLY/SVG-TT-Graph-\d
     |FAYLAND/Foorum-\d
     |FLORA/Catalyst-View-Mason-\d
     |FLORA/Class-C3-\d
