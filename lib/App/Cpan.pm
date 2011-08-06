@@ -842,7 +842,7 @@ sub _show_Details
 			$module->description ? $module->description : "(no description)",
 			$module->cpan_file,
 			$module->inst_file,
-			'Installed: ' . $module->inst_version,
+			'Installed: ' . (defined($module->inst_version) ? $module->inst_version : '(not installed)'),
 			'CPAN:      ' . $module->cpan_version . '  ' .
 				($module->uptodate ? "" : "Not ") . "up to date",
 			$author->fullname . " (" . $module->userid . ")",
