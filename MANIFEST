@@ -470,6 +470,7 @@ lib/CPAN/Version.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
+META.json
 META.yml
 PAUSE2003.pub
 PAUSE2005.pub

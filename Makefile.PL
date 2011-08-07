@@ -353,8 +353,9 @@ export-armor-batch-signing-key:
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 
-META.yml: metafile
+META.yml META.json: metafile
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	$(CP) $(DISTVNAME)/META.json  ./META.json
 
 install-devel-cover-unless-uptodate:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.") unless CPAN::Shell->expand("Module","Devel::Cover")->uptodate'
@@ -683,6 +684,7 @@ disttest :
 distdir ::
 	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	$(CP) $(DISTVNAME)/META.json  ./META.json
 	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 
 }

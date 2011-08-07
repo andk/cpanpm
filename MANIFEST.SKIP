@@ -14,7 +14,7 @@
 ^DIST
 ^MANIFEST.bak
 ^MIRRORED.BY
-^MYMETA.yml$
+^MYMETA.(json|yml)$
 ^Makefile(.old)?$
 ^TAGS
 ^\.
