@@ -16,7 +16,7 @@ pl:
     - --testhost=localhost
     - --testport=3306
     - --testsocket=/var/run/mysqld/mysqld.sock
-    - --testuser=root
+    - --testuser=testuser
     - --testpassword=rfjNq4g
 depends:
   configure_requires:
