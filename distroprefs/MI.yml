@@ -148,6 +148,7 @@ match:
     |DRPROLIX/Catalyst-Helper-View-TT-Bootstrap-\d
     |DSNOPEK/POE-Component-MessageQueue-\d
     |ECARROLL/MooseX-Types-DateTimeX-\d
+    |EDALY/Text-GenderFromName-\d
     |EDENC/MooseX-Role-Cmd-\d
     |EKAWAS/MOSES-MOBY-\d
     |ELLIOTJS/Task-Perl-Critic-IncludingOptionalDependencies-
