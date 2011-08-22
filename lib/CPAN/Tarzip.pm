@@ -348,8 +348,8 @@ Can't continue cutting file '$file'.
                 $CPAN::Frontend->myprint(qq{Untarred $file successfully\n});
             } else {
                 if ($? == -1) {
-                    $CPAN::Frontend->mydie(sprintf qq{Couldn\'t untar %s: return from system: '%s'; \$\?: '%s'; \$\!: '%s'\n},
-                                           $file, $ret, $?, $!);
+                    $CPAN::Frontend->mydie(sprintf qq{Couldn\'t untar %s: '%s'\n},
+                                           $file, $!);
                 } elsif ($? & 127) {
                     $CPAN::Frontend->mydie(sprintf qq{Couldn\'t untar %s: child died with signal %d, %s coredump\n},
                                            $file, ($? & 127),  ($? & 128) ? 'with' : 'without');

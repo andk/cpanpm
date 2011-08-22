@@ -1173,7 +1173,7 @@ sub untar_me {
     if ($result) {
         $self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
-        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed");
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed: $@");
     }
 }
 
