@@ -1173,7 +1173,8 @@ sub untar_me {
     if ($result) {
         $self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
-        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed: $@");
+        # unfortunately we have no $@ here, Tarzip is using mydie which dies with "\n"
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- untar failed");
     }
 }
 
