@@ -7,3 +7,16 @@ match:
   distribution: '/Moose-1.14.tar.gz'
 patches:
   - "ANDK/patches/Moose-1.14-ANDK-01.patch.gz"
+--- 
+comment: |
+
+  temporarily disabling moose to track a memory leak in the CPAN shell
+
+match:
+  distribution: '/Moose-2.0202.tar.gz'
+  perlconfig:
+    version: '^5\.14\.0'
+cpanconfig:
+  test_report: 0
+pl:
+  commandline: "false"
