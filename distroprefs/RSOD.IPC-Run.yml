@@ -8,3 +8,13 @@ match:
 test:
   env:
     LANG: C
+---
+comment: |
+
+  pty.t has a skip_all if IO::Pty is not installed.
+
+match:
+  distribution: 'TODDR/IPC-Run-\d'
+depends:
+  requires:
+    IO::Pty: 1.10
