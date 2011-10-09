@@ -7,3 +7,13 @@ match:
   distribution: '/YAML-0.72'
 patches:
   - "ANDK/patches/YAML-0.72-ANDK-01.patch.gz"
+--- 
+comment: |
+
+  fresh release, no comment
+
+match:
+  distribution: '/YAML-0.74'
+depends:
+  requires:
+    Test::Base: 0
