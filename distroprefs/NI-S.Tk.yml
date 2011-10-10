@@ -16,6 +16,10 @@ patches:
   - "SREZIC/patches/Tk-804.027-p4.patch.gz"
 ---
 match:
+  distribution: '^SREZIC/Tk-804.029.tar.gz'
+goto: SREZIC/Tk-804.029_500.tar.gz
+---
+match:
   distribution: '^SREZIC/Tk-\d'
 pl:
   args:

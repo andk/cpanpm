@@ -57,6 +57,7 @@ match:
     |BLBLACK/MooseX-LazyLogDispatch-\d
     |BLBLACK/MooseX-SimpleConfig-\d
     |BLBLACK/Term-Spinner-\d
+    |BLUET/MojoX-Session-Store-Redis-\d
     |BOBMATH/Crypt-CAST5_PP-\d
     |BOBTFISH/Catalyst-Action-REST-\d
     |BOBTFISH/Catalyst-Plugin-Authentication-\d
@@ -256,6 +257,7 @@ match:
     |MIKI/HTML-Feature-\d
     |MIKI/Lingua-JA-Expand-\d
     |MIKI/Lingua-JA-TFIDF-\d
+    |MINIMAL/MojoX-MongoDB
     |MITREHC/HoneyClient-Agent-\d
     |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
