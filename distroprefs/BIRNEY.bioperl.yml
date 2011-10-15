@@ -19,7 +19,7 @@ depends:
   requires:
     Graph: 0
     Bio::Tools::Run::Samtools: 0
-    Bio::Phylo: 0
+#(hangs)    Bio::Phylo: 0
     Bio::DB::Sam: 0
     Bio::ASN1::EntrezGene: 0
     XML::Simple: 0
