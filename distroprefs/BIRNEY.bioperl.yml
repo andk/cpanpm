@@ -28,3 +28,16 @@ depends:
     Bio::SeqIO::staden::read: 0
     XML::DOM::XPath: 0
     Bio::PhyloNetwork: 0
+---
+match:
+  distribution: 'CJFIELDS/BioPerl-Run-\d'
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 15
+    reuse: 1
+    talk:
+      - 'Install scripts'
+      - "y\n"
+      - 'Do you want to run tests that require connection to servers across the internet'
+      - "n\n"
