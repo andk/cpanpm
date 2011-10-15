@@ -27,7 +27,7 @@ depends:
     XML::Writer: 0
     Bio::SeqIO::staden::read: 0
     XML::DOM::XPath: 0
-    Bio::PhyloNetwork: 0
+#(circular) Bio::PhyloNetwork: 0
 ---
 match:
   distribution: 'CJFIELDS/BioPerl-Run-\d'
