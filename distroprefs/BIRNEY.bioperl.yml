@@ -1,11 +1,13 @@
 --- 
 match:
-  distribution: "BIRNEY/bioperl-\\d"
+  distribution: 'CJFIELDS/BioPerl-\d'
 pl:
   eexpect:
     mode: anyorder
     timeout: 15
     reuse: 1
     talk:
-      - "Do you want to run the BioDBGFF tests"
+      - 'Install \[a\]ll BioPerl scripts'
+      - "a\n"
+      - 'Do you want to run tests that require connection to servers across the internet'
       - "n\n"
