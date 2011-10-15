@@ -1,4 +1,8 @@
 --- 
+comment: |
+
+  if graph not installed then the test Assembly/ContigSpectrum.t is skipped which is a pity
+
 match:
   distribution: 'CJFIELDS/BioPerl-\d'
 pl:
@@ -11,3 +15,16 @@ pl:
       - "a\n"
       - 'Do you want to run tests that require connection to servers across the internet'
       - "n\n"
+depends:
+  requires:
+    Graph: 0
+    Bio::Tools::Run::Samtools: 0
+    Bio::Phylo: 0
+    Bio::DB::Sam: 0
+    Bio::ASN1::EntrezGene: 0
+    XML::Simple: 0
+    Bio::Ext::Align: 0
+    XML::Writer: 0
+    Bio::SeqIO::staden::read: 0
+    XML::DOM::XPath: 0
+    Bio::PhyloNetwork: 0
