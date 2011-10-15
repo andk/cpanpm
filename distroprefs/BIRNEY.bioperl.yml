@@ -23,7 +23,7 @@ depends:
     Bio::DB::Sam: 0
     Bio::ASN1::EntrezGene: 0
     XML::Simple: 0
-    Bio::Ext::Align: 0
+#(unknown)    Bio::Ext::Align: 0
     XML::Writer: 0
     Bio::SeqIO::staden::read: 0
     XML::DOM::XPath: 0
