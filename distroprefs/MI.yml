@@ -236,7 +236,8 @@ match:
     |LAMMEL/MooseX-Log-Log4perl-\d
     |LAYE/AI-MaxEntropy-\d
     |LBROCARD/Devel-ebug-HTTP-\d
-    |LBROCARD/Test-WWW-Mechanize-Catalyst-\d 
+    |LBROCARD/Test-WWW-Mechanize-Catalyst-\d
+    |LOGIE/DBIx-Class-IndexSearch-Dezi-\d
     |LONERR/CatalystX-Widget-Paginator-\d
     |LORN/LWP-Curl-\d
     |LSAUNDERS/DBIx-Class-Fixtures-\d
