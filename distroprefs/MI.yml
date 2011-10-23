@@ -300,6 +300,7 @@ match:
     |MSTROUT/Task-Catalyst-Tutorial-\d
     |NEKOKAK/DBIx-Class-Stash-\d
     |NEKOKAK/DBIx-Class-TableNames-\d
+    |NEKOKAK/Geography-JapanesePrefectures-Walker-\d
     |NEMUX/Net-UCP-\d
     |NUFFIN/Catalyst-Plugin-Session-State-Cookie-\d
     |NUFFIN/MooseX-Getopt-\d
