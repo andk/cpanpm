@@ -16,3 +16,8 @@ make:
 depends:
   build_requires:
     Devel::Leak: 0
+---
+comment: https://rt.perl.org:443/rt3/Ticket/Display.html?id=102606
+match:
+  distribution: AVAR/YAML-Syck-1.17.tar.gz
+goto: SMUELLER/YAML-Syck-1.17_02.tar.gz
