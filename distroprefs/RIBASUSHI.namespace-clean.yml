@@ -1,0 +1,12 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=69862
+
+match:
+  distribution: "^RIBASUSHI/namespace-clean-0.21\."
+cpanconfig:
+  test_report: 0
+test:
+  args:
+    - TEST_FILES=xt/author/07-debugger.t
