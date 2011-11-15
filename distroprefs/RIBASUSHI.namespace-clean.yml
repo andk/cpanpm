@@ -10,3 +10,7 @@ cpanconfig:
 test:
   args:
     - TEST_FILES=xt/author/07-debugger.t
+depends:
+  requires:
+    Sub::Name: 0
+    Sub::Identify: 0
