@@ -312,9 +312,7 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            if (exists $self->{build_dir} && -d $self->{build_dir}
-                && ($self->{modulebuild}||$self->{writemakefile})
-               ) {
+            if (exists $self->{build_dir} && -d $self->{build_dir}) {
                 # this deserves print, not warn:
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
@@ -366,7 +364,12 @@ sub get {
         $self->safe_chdir($sub_wd);
         return;
     }
-    return $self->choose_MM_or_MB($local_file);
+    return unless $self->patch;
+    $self->store_persistent_state;
+    # equivalent to successful choose_MM_or_MB from prior logic,
+    # but probably not necessary as that appears to be the
+    # only thing that returns $self -- xdg, 2012-04-06
+    return $self;
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
@@ -724,8 +727,9 @@ sub satisfy_configure_requires {
 
 #-> sub CPAN::Distribution::choose_MM_or_MB ;
 sub choose_MM_or_MB {
-    my($self,$local_file) = @_;
+    my($self) = @_;
     $self->satisfy_configure_requires() or return;
+    my $local_file = $self->{localfile};
     my($mpl) = File::Spec->catfile($self->{build_dir},"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
@@ -754,7 +758,6 @@ sub choose_MM_or_MB {
             $prefer_installer = "mb";
         }
     }
-    return unless $self->patch;
     if (lc($prefer_installer) eq "rand") {
         $prefer_installer = rand()<.5 ? "eumm" : "mb";
     }
@@ -1778,7 +1781,7 @@ sub prepare {
                     $self->{writemakefile};
             $err =~ s/^NO\s*(--\s+)?//;
             $err ||= "Had some problem writing Makefile";
-            $err .= ", won't make";
+            $err .= ", not re-running";
             push @e, $err;
         }
 
@@ -1807,6 +1810,9 @@ sub prepare {
 
     local $ENV{PERL_AUTOINSTALL} = $ENV{PERL_AUTOINSTALL};
     local $ENV{PERL_EXTUTILS_AUTOINSTALL} = $ENV{PERL_EXTUTILS_AUTOINSTALL};
+    $self->choose_MM_or_MB;
+    return if $self->{writemakefile}; # choose_MM_or_MB sets this on error
+
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
         $ENV{PERL_AUTOINSTALL}          ||= "--defaultdeps";
         $ENV{PERL_EXTUTILS_AUTOINSTALL} ||= "--defaultdeps";
