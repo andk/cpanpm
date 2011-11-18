@@ -2664,11 +2664,7 @@ sub _feature_depends {
     $dep;
 }
 
-#-> sub CPAN::Distribution::unsat_prereq ;
-# return ([Foo,"r"],[Bar,"b"]) for normal modules
-# return ([perl=>5.008]) if we need a newer perl than we are running under
-# (sorry for the inconsistency, it was an accident)
-sub unsat_prereq {
+sub prereqs_for_slot {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
@@ -2708,8 +2704,18 @@ sub unsat_prereq {
     } else {
         die "Panic: illegal slot '$slot'";
     }
+    return (\%merged, $prereq_pm);
+}
+
+#-> sub CPAN::Distribution::unsat_prereq ;
+# return ([Foo,"r"],[Bar,"b"]) for normal modules
+# return ([perl=>5.008]) if we need a newer perl than we are running under
+# (sorry for the inconsistency, it was an accident)
+sub unsat_prereq {
+    my($self,$slot) = @_;
+    my($merged,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    my @merged = %merged;
+    my @merged = my %merged = %$merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
         my($available_version,$inst_file,$available_file,$nmo);
