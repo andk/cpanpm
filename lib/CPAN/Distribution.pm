@@ -312,9 +312,7 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            if (exists $self->{build_dir} && -d $self->{build_dir}
-                && ($self->{modulebuild}||$self->{writemakefile})
-               ) {
+            if (exists $self->{build_dir} && -d $self->{build_dir}) {
                 # this deserves print, not warn:
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
@@ -366,7 +364,8 @@ sub get {
         $self->safe_chdir($sub_wd);
         return;
     }
-    return $self->choose_MM_or_MB($local_file);
+    $self->store_persistent_state;
+    return;
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
@@ -724,8 +723,9 @@ sub satisfy_configure_requires {
 
 #-> sub CPAN::Distribution::choose_MM_or_MB ;
 sub choose_MM_or_MB {
-    my($self,$local_file) = @_;
+    my($self) = @_;
     $self->satisfy_configure_requires() or return;
+    my $local_file = $self->{localfile};
     my($mpl) = File::Spec->catfile($self->{build_dir},"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
@@ -1778,7 +1778,7 @@ sub prepare {
                     $self->{writemakefile};
             $err =~ s/^NO\s*(--\s+)?//;
             $err ||= "Had some problem writing Makefile";
-            $err .= ", won't make";
+            $err .= ", not re-running";
             push @e, $err;
         }
 
@@ -1804,6 +1804,9 @@ sub prepare {
 
     $CPAN::Frontend->myprint("\n  CPAN.pm: Configuring ".$self->id."\n\n");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
+
+    $self->choose_MM_or_MB;
+    return if $self->{writemakefile}; # choose_MM_or_MB sets this on error
 
     my %env;
     while (my($k,$v) = each %ENV) {
