@@ -1766,20 +1766,23 @@ sub prepare {
                 and push @e, "Did not pass the signature test.";
         }
 
-        if (exists $self->{writemakefile} &&
-            (
-             UNIVERSAL::can($self->{writemakefile},"failed") ?
-             $self->{writemakefile}->failed :
-             $self->{writemakefile} =~ /^NO/
-            )) {
-            # XXX maybe a retry would be in order?
-            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
-                $self->{writemakefile}->text :
-                    $self->{writemakefile};
-            $err =~ s/^NO\s*(--\s+)?//;
-            $err ||= "Had some problem writing Makefile";
-            $err .= ", not re-running";
-            push @e, $err;
+        if ($self->{writemakefile}) {
+            if (
+                 UNIVERSAL::can($self->{writemakefile},"failed") ?
+                 $self->{writemakefile}->failed :
+                 $self->{writemakefile} =~ /^NO/
+                ) {
+                # XXX maybe a retry would be in order?
+                my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                    $self->{writemakefile}->text :
+                        $self->{writemakefile};
+                $err =~ s/^NO\s*(--\s+)?//;
+                $err ||= "Had some problem writing Makefile";
+                $err .= ", not re-running";
+                push @e, $err;
+            } else {
+                push @e, "Has already been prepared";
+            }
         }
 
         my $later = $self->{configure_requires_later};
