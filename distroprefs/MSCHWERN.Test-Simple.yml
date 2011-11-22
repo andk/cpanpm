@@ -33,3 +33,11 @@ comment: |
 match:
   distribution: "MSCHWERN/Test-Simple-2.00_01.tar.gz"
 goto: "MSCHWERN/Test-Simple-0.96.tar.gz"
+---
+comment: |
+
+  http://rt.cpan.org/Ticket/Display.html?id=???
+
+match:
+  distribution: "MSCHWERN/Test-Simple-0.98_01.tar.gz"
+goto: "MSCHWERN/Test-Simple-0.98.tar.gz"
