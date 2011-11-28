@@ -24,5 +24,12 @@ patches:
 match:
   distribution: "^ILYAZ/modules/Math-Pari-2.01080"
 pl: 
+  eexpect:
+    mode: anyorder
+    timeout: 15
+    reuse: 1
+    talk:
+      - "Fetch\?"
+      - "y\n"
   args: 
     - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
