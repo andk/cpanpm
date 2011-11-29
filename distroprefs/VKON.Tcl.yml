@@ -2,4 +2,4 @@
 match:
   distribution: '^VKON/Tcl-\d'
 pl:
-  args: ["--include", "-I/usr/include/tcl8.4", "--library", "-ltcl8.4" ]
+  args: ["--include", "-I/usr/include/tcl8.5", "--library", "-ltcl8.5" ]

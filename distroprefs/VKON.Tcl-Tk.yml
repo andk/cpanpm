@@ -5,4 +5,4 @@ match:
   perlconfig:
     archname: -freebsd-
 pl:
-  args: ["--tclsh", "tclsh8.4"]
+  args: ["--tclsh", "tclsh8.5"]
