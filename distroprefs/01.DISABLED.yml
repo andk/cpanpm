@@ -75,6 +75,7 @@ match:
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
+    |DUFF/Module-Install-RPM-0.01            # see https://rt.cpan.org/Ticket/Display.html?id=67027
     |EBRUNI/WWW-BBB-API-\d                   # asks questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |EDALY/Text-GenderFromName-0.32.tar.gz   # bad prompt
