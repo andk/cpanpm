@@ -35,6 +35,7 @@ distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
 distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
+distroprefs/AWNCORP.ORMesque.yml
 distroprefs/BANG.Unzip-Passwd.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
@@ -92,6 +93,7 @@ distroprefs/DAGOLDEN.Term-Title.yml
 distroprefs/DAMS.RT-Client-REST.yml
 distroprefs/DANJOU.Net-Google-DocumentsList.yml
 distroprefs/DANKOGAI.Regexp-Optimizer.yml
+distroprefs/DAVECROSS.XML-Feed.yml
 distroprefs/DAXIM.Yahoo-Photos.yml
 distroprefs/DBRIAN.XML-SimpleObject.yml
 distroprefs/DBROBINS.Net-SSH-Perl.yml
@@ -110,6 +112,7 @@ distroprefs/DMAKI.Class-DBI-Plugin-DateTime.yml
 distroprefs/DMAKI.Data-Localize.yml
 distroprefs/DMAKI.DateTime-X.yml
 distroprefs/DMAKI.File-Extract.yml
+distroprefs/DMAKI.JSON-RPC.yml
 distroprefs/DMAKI.Xango.yml
 distroprefs/DMARTIN.Unix-SavedIDs.yml
 distroprefs/DMUEY.Authen-Libwrap.yml
@@ -313,6 +316,7 @@ distroprefs/NUFFIN.Catalyst-Plugin-Session.yml
 distroprefs/NUFFIN.Devel-Events.yml
 distroprefs/NUFFIN.YAML-LibYAML.yml
 distroprefs/OLAF.Net-DNS.yml
+distroprefs/OVID.Class-Sniff.yml
 distroprefs/OVID.Class-Trait.yml
 distroprefs/OVID.HOP-Parser.yml
 distroprefs/OVID.Perl6-Caller.yml
@@ -344,6 +348,7 @@ distroprefs/REDTREE.PDF-API2-Simple.yml
 distroprefs/REEDFISH.Net-FullAuto.yml
 distroprefs/RGARCIA.Switch.yml
 distroprefs/RHOOPER.HTTP-Lite.yml
+distroprefs/RIBASUSHI.namespace-clean.yml
 distroprefs/RICKM.DateTime-Format-Strptime.yml
 distroprefs/RIZEN.Config-JSON.yml
 distroprefs/RJBS.Data-UUID.yml
@@ -375,6 +380,7 @@ distroprefs/SCHWIGON.Class-MethodMaker.yml
 distroprefs/SEANO.Sepia.yml
 distroprefs/SHAY.Filter-Crypto.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
+distroprefs/SHLOMIF.Graph-Easy.yml
 distroprefs/SLANNING.Ogre.yml
 distroprefs/SPROUT.DBM-Deep.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
