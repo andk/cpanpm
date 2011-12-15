@@ -6,6 +6,9 @@ comment: |
   This distropref file has lost its right to exist but it's always
   good to have a reminder that connects to a ticket
 
+  Update 2011-12-15: test 10-pure-perl.t has started to fail in
+  bleadperl but only with the newly added dependencies.
+
 match:
   distribution: "^RIBASUSHI/namespace-clean-0.21\."
 #cpanconfig:
@@ -17,3 +20,5 @@ depends:
   requires:
     Sub::Name: 0
     Sub::Identify: 0
+    B::Hooks::EndOfScope: 0
+    Devel::Hide: 0
