@@ -2,6 +2,7 @@
 comment: |
 
   https://rt.perl.org/rt3//Public/Bug/Display.html?id=99408
+  https://rt.cpan.org/Ticket/Display.html?id=71052
 
 match:
   distribution: 'STBEY/Bit-Vector-7\.1\.tar\.gz'
