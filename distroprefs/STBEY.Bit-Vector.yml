@@ -1,0 +1,9 @@
+--- 
+comment: |
+
+  https://rt.perl.org/rt3//Public/Bug/Display.html?id=99408
+
+match:
+  distribution: 'STBEY/Bit-Vector-7\.1\.tar\.gz'
+patches:
+  - ANDK/patches/Bit-Vector-7.1-ZEFRAMish-01.patch.gz
