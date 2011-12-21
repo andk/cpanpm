@@ -460,6 +460,10 @@ END
 
 __END__
 
+=head1 NAME
+
+CPAN::Tarzip - internal handling of tar archives for CPAN.pm
+
 =head1 LICENSE
 
 This program is free software; you can redistribute it and/or

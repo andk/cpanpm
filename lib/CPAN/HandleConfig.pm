@@ -6,6 +6,12 @@ use File::Spec ();
 use File::Basename ();
 use Carp ();
 
+=head1 NAME
+
+CPAN::HandleConfig - internal configuration handling for CPAN.pm
+
+=cut 
+
 $VERSION = "5.5003"; # see also CPAN::Config::VERSION at end of file
 
 %can = (
