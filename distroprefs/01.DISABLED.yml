@@ -186,7 +186,7 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |PERIGRIN/Git-Wrapper-\d                 # some huge kill triggered?
     |PERLER/CatalystX-ExtJS-Direct-\d        #
-    |PETDANCE/Test-WWW-Mechanize-\d          # hangs
+    |xxxPETDANCE/Test-WWW-Mechanize-\d          # hangs
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PFARR/Net-SMS-Clickatell-SOAP-
