@@ -1,6 +1,15 @@
 --- 
 comment: |
 
+  https://rt.cpan.org/Ticket/Display.html?id=73716
+
+match:
+  distribution: '/YAML-LibYAML-0.37'
+patches:
+  - ANDK/patches/YAML-LibYAML-0.37-SPROUT-01.patch.gz
+--- 
+comment: |
+
   https://rt.cpan.org/Ticket/Display.html?id=62266
 
 match:
