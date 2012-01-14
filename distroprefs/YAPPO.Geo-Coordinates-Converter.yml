@@ -4,3 +4,18 @@ match:
 depends:
   requires:
     YAML::Base: 0
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 120
+    reuse: 1
+    talk:
+      - "Auto-install"
+      - "y\n"
+      - "Add.*?to the prerequisites"
+      - "y\n"
+# for very old bundled AutoInstall:
+      - "Do you wish to install"
+      - "y\n"
+      - "Multiple extensions found for method 'WriteAll':"
+      - "\n"

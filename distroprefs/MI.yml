@@ -391,7 +391,6 @@ match:
     |TRAVAIL/DBIx-Class-Schema-Slave-\d
     |VICTORI/perlbal-plugin-backendheaders-\d
     |YAPPO/Class-Component-\d
-    |YAPPO/Geo-Coordinates-Converter-\d
     |YAPPO/HTTP-Engine-\d
     |YAPPO/Lingua-JA-Summarize-Extract-\d
     |YARON/WWW-Monitor-\d
