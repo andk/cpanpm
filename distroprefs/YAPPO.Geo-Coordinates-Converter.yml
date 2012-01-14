@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "^YAPPO/Geo-Coordinates-Converter-0.10.tar.gz"
+depends:
+  requires:
+    YAML::Base: 0

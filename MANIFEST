@@ -30,6 +30,7 @@ distroprefs/ANDYA.Test-Harness.yml
 distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
+distroprefs/ASG.List-Gen.yml
 distroprefs/ATOURBIN.rpm-build-perl.yml
 distroprefs/AUDREYT.Module-Signature.yml
 distroprefs/AUDREYT.PDF-FromHTML.yml
@@ -53,6 +54,7 @@ distroprefs/BINGOS.POE-Component-SmokeBox-Recent.yml
 distroprefs/BIRNEY.bioperl.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BOBTFISH.Text-Markdown.yml
+distroprefs/BOOK.Acme-MetaSyntactic.yml
 distroprefs/BOOK.Regexp-Log.yml
 distroprefs/BRADFITZ.Perlbal.yml
 distroprefs/BRIANSKI.XML-Comma.yml
@@ -387,6 +389,7 @@ distroprefs/SREZIC.Tk-Autoscroll.yml
 distroprefs/SREZIC.Tk-HistEntry.yml
 distroprefs/SREZIC.Tk-Pod.yml
 distroprefs/STAS.libapreq.yml
+distroprefs/STBEY.Bit-Vector.yml
 distroprefs/STBEY.Date-Pcalc.yml
 distroprefs/STEPANOV.IMDB-Film.yml
 distroprefs/STEVAN.Class-MOP.yml
@@ -423,6 +426,7 @@ distroprefs/XEONTIME.Apache-Sling.yml
 distroprefs/XMATH.Sub-Name.yml
 distroprefs/YAMATO.QDBM_File.yml
 distroprefs/YANICK.XML-XPathScript.yml
+distroprefs/YAPPO.Geo-Coordinates-Converter.yml
 distroprefs/YEWENBIN.Calendar.yml
 distroprefs/YOSHIDA.WebService-YouTube.yml
 distroprefs/YSAS.SWF-Builder.yml
