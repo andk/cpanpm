@@ -3432,7 +3432,7 @@ annoying that so many distributions need some interactive configuring. So
 what you can try to accomplish in your private bundle file is to have the
 packages that need to be configured early in the file and the gentle
 ones later, so you can go out for coffee after a few minutes and leave CPAN.pm
-to churn away untended.
+to churn away unattended.
 
 =head1 WORKING WITH CPAN.pm BEHIND FIREWALLS
 
