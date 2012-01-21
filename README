@@ -1814,7 +1814,7 @@ POPULATE AN INSTALLATION WITH LOTS OF MODULES
     accomplish in your private bundle file is to have the packages that need
     to be configured early in the file and the gentle ones later, so you can
     go out for coffee after a few minutes and leave CPAN.pm to churn away
-    untended.
+    unattended.
 
 WORKING WITH CPAN.pm BEHIND FIREWALLS
     Thanks to Graham Barr for contributing the following paragraphs about
