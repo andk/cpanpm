@@ -10,7 +10,7 @@ comment: |
   bleadperl but only with the newly added dependencies.
 
 match:
-  distribution: "^RIBASUSHI/namespace-clean-0.21\."
+  distribution: '^RIBASUSHI/namespace-clean-0.21\.'
 #cpanconfig:
 #  test_report: 0
 #test:
