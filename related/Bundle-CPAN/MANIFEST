@@ -4,6 +4,7 @@ CPANxxl.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
+META.json			Module JSON meta-data (added by MakeMaker)
 META.yml			Module meta-data (added by MakeMaker)
 SIGNATURE			Public-key signature (added by MakeMaker)
 t/00signature.t
