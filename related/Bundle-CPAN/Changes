@@ -1,3 +1,9 @@
+2012-02-08  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 1.859
+
+	* remove Scalar::Util, it is nowadays declared dependency of IO::Compress::Base
+
 2009-07-02  Andreas J. Koenig  <andk@cpan.org>
 
 	* release 1.858

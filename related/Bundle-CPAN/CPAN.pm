@@ -1,7 +1,7 @@
 package Bundle::CPAN;
 use strict;
 use vars qw($VERSION);
-$VERSION = '1.858'; # use 3 digits to minimize confusion with the
+$VERSION = '1.859'; # use 3 digits to minimize confusion with the
                     # other CPAN.pm
 
 1;
@@ -29,8 +29,6 @@ File::Temp -- prereq
 Test::More -- prereq
 
 Data::Dumper
-
-Scalar::Util -- undeclared prereq to IO::Compress::Base
 
 IO::Compress::Base -- 2009-07-02, new master IO::Compress::* package,
 
