@@ -1,3 +1,4 @@
+#!include_default
 \.svn/
 ^Bundle-CPAN.*tar.gz$
 ^DIST/
