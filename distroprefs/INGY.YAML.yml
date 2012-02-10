@@ -13,7 +13,7 @@ comment: |
   https://rt.cpan.org/Ticket/Display.html?id=73673
 
 match:
-  distribution: '/YAML-0.78'
+  distribution: '/YAML-0.7[89]'
 patches:
   - "ANDK/patches/YAML-0.78-SPROUT-01.patch.gz"
 --- 
