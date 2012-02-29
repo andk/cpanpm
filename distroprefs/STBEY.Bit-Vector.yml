@@ -4,7 +4,9 @@ comment: |
   https://rt.perl.org/rt3//Public/Bug/Display.html?id=99408
   https://rt.cpan.org/Ticket/Display.html?id=71052
 
+  (with xxx temporarily disabled because I get reports it is not needed anymore)
+
 match:
-  distribution: 'STBEY/Bit-Vector-7\.1\.tar\.gz'
+  distribution: 'xxx STBEY/Bit-Vector-7\.1\.tar\.gz'
 patches:
   - ANDK/patches/Bit-Vector-7.1-ZEFRAMish-01.patch.gz
