@@ -57,6 +57,9 @@ my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 WriteMakefile(
               NAME          => 'Bundle::CPAN',
               VERSION_FROM  => 'CPAN.pm',
+              LICENSE       => 'perl',
+              AUTHOR        => 'Andreas Koenig',
+              ABSTRACT      => 'Bundle to optimize the behaviour of CPAN.pm',
               @sign,
               dist => {
                        DIST_DEFAULT => join(" ",
@@ -73,6 +76,7 @@ WriteMakefile(
                (META_ADD => {
                              resources => {
                                  repository => "git://github.com/andk/cpanpm.git",
+                                 homepage   => "https://github.com/andk/cpanpm/tree/master/related/Bundle-CPAN"
                              },
                              keywords => ['CPAN','module','module installation'],
                             }) : ()),
