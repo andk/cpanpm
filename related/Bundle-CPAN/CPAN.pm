@@ -40,7 +40,7 @@ Archive::Tar -- needed by Module::Build
 
 Module::Build -- needed by File::Spec
 
-File::Spec -- prereq 
+File::Spec -- prereq
 
 Digest::SHA
 
