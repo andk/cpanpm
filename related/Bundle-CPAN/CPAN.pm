@@ -77,9 +77,8 @@ dependencies.
 
 Note that all modules in this Bundle are not strict prerequisites to
 get a working CPAN.pm. CPAN.pm can work quite well without the other
-modules (except for Net::FTP which is really highly recommended). The
-other modules are B<suggested> and can safely be installed later or
-not at all.
+modules. The other modules are B<suggested> and can safely be
+installed later.
 
 Please install the Bundle::CPANxxl to get a few more.
 
