@@ -4,7 +4,7 @@ comment: |
   https://rt.cpan.org/Ticket/Display.html?id=74801
 
 match:
-  distribution: 'NHORNE/CGI-Info-\d'
+  distribution: 'NHORNE/(?:CGI-Info|Variable-Magic)-\d'
 depends:
   requires:
     Test::Kwalitee: 0
