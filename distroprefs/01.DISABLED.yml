@@ -254,6 +254,7 @@ match:
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WSMITH/Email-Folder-Exchange-\d         # asks questions
+    |WWOLF/Test-0.001.                       # suggested by Slaven
     |WYANT/Astro-SIMBAD-Client-\d            # asks questions
     |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
     |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
