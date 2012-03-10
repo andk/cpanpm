@@ -147,6 +147,7 @@ match:
     |LARRYL/WebService-ScormCloud-\d         # asks for an ID
     |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
     |LDS/Bio-SamTools-\d                     # requires non-CPAN prereq
+    |LEOCHARRE/WWW-Autosite-                 # asks question, does not use prompt RT 35081
     |LTP/Audio-Play-MPlayer-\d               # hangs
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
