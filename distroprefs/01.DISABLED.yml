@@ -179,7 +179,7 @@ match:
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |MWS/ResourcePool-Resource-SOAP-Lite-\d  # asks questions
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
-    |xxxNPEREZ/Reflexive-Stream-Filtering-1.103 # hangs
+    |NPEREZ/Reflexive-Stream-Filtering-1.103450 # hangs or fails; unrelated RT 74010
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
     |NUFFIN/POE-Component-Supervisor-0.02.tar.gz # hangs during t/04_global_restart_policy. for some of our maint-5.8
     |NWCLARK/perl-                           # pumpkin
