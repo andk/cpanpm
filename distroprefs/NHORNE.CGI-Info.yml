@@ -5,8 +5,10 @@ comment: |
 
   It seems this specific test is really widespread. Can it be stopped?
 
+  Not at the moment, because Test::Kwalitee itself currently fails.
+
 match:
   distribution: '(?:NHORNE|VPIT)/'
 depends:
   requires:
-    Test::Kwalitee: 0
+#    Test::Kwalitee: 0
