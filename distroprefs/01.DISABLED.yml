@@ -140,6 +140,7 @@ match:
     |KMCGRAIL/Mail-SpamAssassin-3.3.2        # asks a new question
     |KMX/Alien-IUP-v?\d                      # not analysed slowness and CPU hog; then again questions being asked
     |KNI/IPC-MPS-\d                          # asks questions
+    |KNORR/Tk-Image-Cut-0.07.tar.gz          # hangs
     |KTHAKORE/SDL-2\.526                     # hangs with v5.15.4-460-g151cea2 after t/mixer.t
     |KORTY/
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
