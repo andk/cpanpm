@@ -1716,6 +1716,17 @@ activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
 configured or YAML not installed, no stats are provided.
 
+=item install_tested
+
+Install all distributions that have been tested successfully but have
+not yet been installed. See also C<is_tested>.
+
+=item is_tested
+
+List all buid directories of distributions that have been tested
+successfully but have not yet been installed. See also
+C<install_tested>.
+
 =head2 mkmyconfig
 
 mkmyconfig() writes your own CPAN::MyConfig file into your C<~/.cpan/>
@@ -2881,11 +2892,6 @@ there are no dependencies in the way. To install an object along with all
 its dependencies, use CPAN::Shell->install.
 
 Note that install() gives no meaningful return value. See uptodate().
-
-=item CPAN::Distribution::install_tested()
-
-Install all distributions that have tested successfully but
-not yet installed. See also C<is_tested>.
 
 =item CPAN::Distribution::isa_perl()
 
