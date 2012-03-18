@@ -207,6 +207,19 @@ EOF
     @SESSIONS =
         (
          {
+          name => "rm while degraded",
+          perl_mm_use_default => 0,
+          pairs =>
+          [
+           "test CPAN::Test::Dummy::Perl5::Make" => "00_load.t\\b.*\\bok",
+           "test CPAN::Test::Dummy::Perl5::Make" => "Has already been tested successfully",
+           "! print \$::tmp_build_dir=CPAN::Shell->expand('Module','CPAN::Test::Dummy::Perl5::Make')->distribution->{build_dir}, \$/" => ".",
+           "! use File::Path qw(rmtree); rmtree \$::tmp_build_dir, 0; print 'rmtreeed',\$/" => "rmtreeed",
+           "test CPAN::Test::Dummy::Perl5::Make" => "00_load.t\\b.*\\bok",
+           "force test CPAN::Test::Dummy::Perl5::Make" => "00_load.t\\b.*\\bok",
+          ]
+         },
+         {
           name => "urllist empty",
           perl_mm_use_default => 0,
           requires => [qw(Expect)],

@@ -321,6 +321,10 @@ sub get {
                                         );
                 return 1;
             }
+            if (exists $self->{build_dir} && ! -d $self->{build_dir}){
+                # we have lost it.
+                $self->fforce(""); # no method to reset all phases but not set force (dodge)
+            }
 
             # although we talk about 'force' we shall not test on
             # force directly. New model of force tries to refrain from
