@@ -27,7 +27,11 @@ This help
 
 =item B<--session=s@>
 
-execute only the session with this name
+execute only the session with this name.
+
+=item B<--verbose|v!>
+
+display the actual output of all executed commands
 
 =back
 }
@@ -459,7 +463,12 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
         my($expect) = $session->{pairs}[2*$i+1];
         my($actual) = $chunks[$i+1];
         $actual =~ s{t\\00}{t/00}g if ($^O eq 'MSWin32');
-        diag("cmd[$command]expect[$expect]actual[$actual]") if $VERBOSE;
+        if ($VERBOSE) {
+            diag("cmd[$command]expect[$expect]actual[$actual]");
+        }
+        if ($Opt{verbose}) {
+            diag $actual;
+        }
         my $success = like($actual,"/$expect/","cmd[$command]");
         if (!$success) {
             require Dumpvalue;
