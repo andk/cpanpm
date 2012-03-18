@@ -18,13 +18,19 @@ use warnings;
 
 =cut
 
-my @opt = <<'=back' =~ /B<--(\S+)>/g;
+our @opt;
+BEGIN { @opt = <<'=back' =~ /B<--(\S+)>/g;
 
 =item B<--help|h!>
 
 This help
 
+=item B<--session=s@>
+
+execute only the session with this name
+
 =back
+}
 
 =head1 DESCRIPTION
 
@@ -45,17 +51,30 @@ use File::Path qw(mkpath);
 use File::Spec;
 use File::Temp;
 use Getopt::Long;
+use Pod::Usage;
 use Hash::Util qw(lock_keys);
 
 our %Opt;
-lock_keys %Opt, map { /([^=]+)/ } @opt;
-GetOptions(\%Opt,
-           @opt,
-          ) or pod2usage(1);
+my %limit_to_sessions;
+my $cnt;
 
 $|=1;
 BEGIN {
+    $cnt = 0;
     unshift @INC, './lib', './t';
+
+    lock_keys %Opt, map { /([^=!\|]+)/ } @opt;
+    GetOptions(\%Opt,
+               @opt,
+              ) or pod2usage(1);
+
+    if ($Opt{help}) {
+        pod2usage(0);
+        exit;
+    }
+    if ($Opt{session}) {
+        %limit_to_sessions = map {($_=>1)} @{$Opt{session}};
+    }
 
     require local_utils;
     local_utils::cleanup_dot_cpan();
@@ -380,8 +399,10 @@ EOF
          },
         );
 
-    my $cnt;
-    for my $session (@SESSIONS) {
+ SESSION_CNT: for my $session (@SESSIONS) {
+        if (%limit_to_sessions) {
+            next SESSION_CNT unless $limit_to_sessions{$session->{name}};
+        }
         $cnt++;
         if (my $requires = $session->{requires}) {
             for my $req (@$requires) {
@@ -405,8 +426,11 @@ is($CPAN::Config->{'7yYQS7'} => 'vGcVJQ');
 our $VERBOSE = $ENV{VERBOSE} || 0;
 my $devnull = File::Spec->devnull;
 
-for my $si (0..$#SESSIONS) {
+SESSION_RUN: for my $si (0..$#SESSIONS) {
     my $session = $SESSIONS[$si];
+    if (%limit_to_sessions) {
+        next SESSION_RUN unless $limit_to_sessions{$session->{name}};
+    }
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
     ok($session->{name}, "opening new session '$session->{name}'");
