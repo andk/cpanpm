@@ -1,3 +1,58 @@
+#!/usr/bin/perl
+
+# use 5.010;
+use strict;
+use warnings;
+
+=head1 NAME
+
+
+
+=head1 SYNOPSIS
+
+
+
+=head1 OPTIONS
+
+=over 8
+
+=cut
+
+my @opt = <<'=back' =~ /B<--(\S+)>/g;
+
+=item B<--help|h!>
+
+This help
+
+=back
+
+=head1 DESCRIPTION
+
+
+
+=cut
+
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+BEGIN {
+    push @INC, qw(       );
+}
+
+use Dumpvalue;
+use File::Basename qw(dirname);
+use File::Path qw(mkpath);
+use File::Spec;
+use File::Temp;
+use Getopt::Long;
+use Hash::Util qw(lock_keys);
+
+our %Opt;
+lock_keys %Opt, map { /([^=]+)/ } @opt;
+GetOptions(\%Opt,
+           @opt,
+          ) or pod2usage(1);
+
 $|=1;
 BEGIN {
     unshift @INC, './lib', './t';
@@ -58,6 +113,7 @@ BEGIN {
         my $p;
         my(@path) = split /$Config::Config{path_sep}/, $ENV{PATH};
         require CPAN::FirstTime;
+        my $pair;
         for $pair (@pairs) {
             my($prg,$module) = @$pair;
             next if $CPAN::META->has_inst($module);
@@ -75,7 +131,6 @@ BEGIN {
     }
 }
 
-use strict;
 use File::Copy qw(cp);
 use File::Spec;
 use Test::More;
