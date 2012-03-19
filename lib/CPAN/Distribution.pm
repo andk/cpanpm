@@ -2766,13 +2766,13 @@ sub unsat_prereq {
                             # DMAKI/DateTime-Calendar-Chinese-0.05.tar.gz
                             # in 2007-03 for 'make install'
                             # and 2008-04: #30464 (for 'make test')
-                            $CPAN::Frontend->mywarn("Warning: Prerequisite ".
-                                                    "'$need_module => $need_version' ".
-                                                    "for '$selfid' already built ".
-                                                    "but the result looks suspicious. ".
-                                                    "Skipping another build attempt, ".
-                                                    "to prevent looping endlessly.\n"
-                                                   );
+                            # $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                            #                         "'$need_module => $need_version' ".
+                            #                         "for '$selfid' already built ".
+                            #                         "but the result looks suspicious. ".
+                            #                         "Skipping another build attempt, ".
+                            #                         "to prevent looping endlessly.\n"
+                            #                        );
                             next NEED;
                         }
                     }
