@@ -1316,9 +1316,28 @@ sub is_installed {
 
 sub _list_sorted_descending_is_tested {
     my($self) = @_;
-    sort
+    my $foul = 0;
+    my @sorted = sort
         { ($self->{is_tested}{$b}||0) <=> ($self->{is_tested}{$a}||0) }
-            keys %{$self->{is_tested}}
+            grep
+                { if ($foul){ 0 } elsif (-e) { 1 } else { $foul = $_; 0 } }
+                    keys %{$self->{is_tested}};
+    if ($foul) {
+        $CPAN::Frontend->mywarn("Lost build_dir detected ($foul), giving up all cached test results of currently running session.\n");
+        for my $dbd (keys %{$self->{is_tested}}) { # distro-build-dir
+        SEARCH: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
+                if ($d->{build_dir} && $d->{build_dir} eq $dbd) {
+                    $CPAN::Frontend->mywarn(sprintf "Flushing cache for %s\n", $d->pretty_id);
+                    $d->fforce("");
+                    last SEARCH;
+                }
+            }
+            delete $self->{is_tested}{$dbd};
+        }
+        return ();
+    } else {
+        return @sorted;
+    }
 }
 
 #-> sub CPAN::set_perl5lib
