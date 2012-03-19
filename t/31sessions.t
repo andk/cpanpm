@@ -21,9 +21,17 @@ use warnings;
 our @opt;
 BEGIN { @opt = <<'=back' =~ /B<--(\S+)>/g;
 
+=item B<--debug!>
+
+Noise
+
 =item B<--help|h!>
 
 This help
+
+=item B<--pause!>
+
+After every session make a pause, waiting for an ENTER keypress.
 
 =item B<--session=s@>
 
@@ -78,6 +86,9 @@ BEGIN {
     }
     if ($Opt{session}) {
         %limit_to_sessions = map {($_=>1)} @{$Opt{session}};
+    }
+    if ($Opt{debug}) {
+        require YAML::Syck;
     }
 
     require local_utils;
@@ -469,6 +480,11 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
     close SYSTEM or mydiag "error while running '$system' on '$session->{name}'";
     my $content = do {local *FH; open FH, "test.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
+    diag sprintf "DEBUG: All chunks of new session\n%s", YAML::Syck::Dump(@chunks) if $Opt{debug};
+    if ($Opt{pause}) {
+        diag "Press ENTER to continue";
+        <>;
+    }
     # shift @chunks;
     # warn sprintf "# DEBUG: pairs[%d]chunks[%d]", scalar @{$session->{pairs}}, scalar @chunks;
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
