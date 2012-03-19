@@ -777,6 +777,7 @@ sub choose_MM_or_MB {
     return $self;
 }
 
+# see also reanimate_build_dir
 #-> CPAN::Distribution::store_persistent_state
 sub store_persistent_state {
     my($self) = @_;
