@@ -1735,6 +1735,8 @@ activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
 configured or YAML not installed, no stats are provided.
 
+=over
+
 =item install_tested
 
 Install all distributions that have been tested successfully but have
@@ -1745,6 +1747,8 @@ not yet been installed. See also C<is_tested>.
 List all buid directories of distributions that have been tested
 successfully but have not yet been installed. See also
 C<install_tested>.
+
+=back
 
 =head2 mkmyconfig
 
