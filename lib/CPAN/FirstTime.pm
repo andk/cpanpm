@@ -420,6 +420,14 @@ host should be tried first.
 
 Randomize parameter
 
+=item recommends_policy
+
+Some CPAN modules recommend additional, optional dependencies.  These should
+generally be installed except in resource constrained environments.  When this
+policy is true, recommended modules will be included with required modules.
+
+Included recommended modules?
+
 =item scan_cache
 
 By default, each time the CPAN module is started, cache scanning is
@@ -461,6 +469,14 @@ want this report to be very verbose, say yes to the following
 variable.
 
 Show all individual modules that have a $VERSION of zero?
+
+=item suggests_policy
+
+Some CPAN modules suggest additional, optional dependencies.  These 'suggest'
+dependencies provide enhanced operation.  When this policy is true, suggested
+modules will be included with required modules.
+
+Included suggested modules?
 
 =item tar_verbosity
 
@@ -865,6 +881,8 @@ sub init {
                    'follow|ask|ignore');
     my_prompt_loop(build_requires_install_policy => 'yes', $matcher,
                    'yes|no|ask/yes|ask/no');
+    my_yn_prompt(recommends_policy => 1, $matcher);
+    my_yn_prompt(suggests_policy => 0, $matcher);
 
     #
     #= Module::Signature

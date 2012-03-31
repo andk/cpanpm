@@ -1103,6 +1103,9 @@ sub failed {
     } else {
         $scope = "this session";
     }
+    ### XXX need to flag optional modules as '(optional)' if they are
+    # from recommends/suggests -- i.e. *show* failure, but make it clear
+    # it was failure of optional module -- xdg, 2012-04-01
     if (@failed) {
         my $print;
         my $debug = 0;
