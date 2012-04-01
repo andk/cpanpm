@@ -99,6 +99,8 @@ for my $interesting_module (qw(
         Archive::Tar
         Archive::Zip
         CPAN::Checksums
+        CPAN::Meta
+        CPAN::Meta::YAML
         Compress::Bzip2
         Compress::Zlib
         Data::Dumper
@@ -113,6 +115,7 @@ for my $interesting_module (qw(
         HTTP::Tiny
         IO::Compress::Base
         IO::Zlib
+        JSON::PP
         LWP::UserAgent
         MIME::Base64
         Module::Build
