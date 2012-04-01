@@ -20,6 +20,11 @@ sub reqtype {
     $self->{reqtype};
 }
 
+sub optional {
+    my($self) = @_;
+    $self->{optional};
+}
+
 package CPAN::Queue;
 
 # One use of the queue is to determine if we should or shouldn't
