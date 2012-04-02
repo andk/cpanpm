@@ -229,7 +229,8 @@ Going to $meth that.
         my $obj = $CPAN::META->instance($type,$s);
         $obj->{reqtype} = $self->{reqtype};
         # $obj->$meth();
-       CPAN::Queue->queue_item(qmod => $obj->id, reqtype => $self->{reqtype});
+        # XXX should optional be based on whether bundle was optional? -- xdg, 2012-04-01
+       CPAN::Queue->queue_item(qmod => $obj->id, reqtype => $self->{reqtype}, optional => '');
     }
 }
 
