@@ -3516,7 +3516,8 @@ sub _make_test_illuminate_prereqs {
             CPAN->debug("m[$m] have available_file[$available_file]")
                 if $CPAN::DEBUG;
         } else {
-            push @prereq, $m;
+            push @prereq, $m
+                if $m_obj->{mandatory};
         }
     }
     my $but;
