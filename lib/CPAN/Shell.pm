@@ -1072,6 +1072,10 @@ sub failed {
         next DIST unless $failed;
         my $id = $d->id;
         $id =~ s|^./../||;
+        ### XXX need to flag optional modules as '(optional)' if they are
+        # from recommends/suggests -- i.e. *show* failure, but make it clear
+        # it was failure of optional module -- xdg, 2012-04-01
+        $id = "(optional) $id" if ! $d->{mandatory};
         #$print .= sprintf(
         #                  "  %-45s: %s %s\n",
         push @failed,
@@ -1103,9 +1107,6 @@ sub failed {
     } else {
         $scope = "this session";
     }
-    ### XXX need to flag optional modules as '(optional)' if they are
-    # from recommends/suggests -- i.e. *show* failure, but make it clear
-    # it was failure of optional module -- xdg, 2012-04-01
     if (@failed) {
         my $print;
         my $debug = 0;
