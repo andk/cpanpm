@@ -215,7 +215,9 @@ BEGIN {
             my $prereq_pm = {
                 requires => $prereqs->{runtime}{requires},
                 build_requires => exists $prereqs->{test}
-                    ? $prereqs->{test}{requires} : $prereqs->{build}{requires}
+                    ? $prereqs->{test}{requires} : $prereqs->{build}{requires},
+                opt_requires => {},
+                opt_build_requires => {},
             };
             isa_ok( $meta, 'CPAN::Meta', "$label\: read_meta" );
             isa_ok( $dist->read_meta, 'CPAN::Meta', "$label\: repeat read_meta" );
