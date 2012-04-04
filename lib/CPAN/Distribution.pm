@@ -2003,6 +2003,8 @@ is part of the perl-%s distribution. To install that, you need to run
         }
     }
     $self->prepare;
+    # XXX this needs to return here unless prepare was successful -- xdg, 2012-04-04
+
     my $builddir;
   EXCUSE: {
         my @e;
@@ -2068,6 +2070,7 @@ is part of the perl-%s distribution. To install that, you need to run
         }
 
         my $later = $self->{later} || $self->{configure_requires_later};
+        # XXX WTF? -- xdg, 2012-04-04
         if ($later) { # see also undelay
             if ($later) {
                 push @e, $later;
@@ -3569,6 +3572,8 @@ sub goto {
     my($method) = (caller(1))[3];
     CPAN->instance("CPAN::Distribution",$goto)->$method();
     CPAN::Queue->delete_first($goto);
+    # XXX delete_first returns undef; is that what this should return
+    # up the call stack, eg. return $sefl->goto($goto) -- xdg, 2012-04-04
 }
 
 #-> sub CPAN::Distribution::install ;
