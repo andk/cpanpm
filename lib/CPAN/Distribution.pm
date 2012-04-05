@@ -275,57 +275,60 @@ sub called_for {
     return $self->{CALLED_FOR};
 }
 
-# return values: undef -- don't shortcut; 0 shortcut fail; 1 shortcut success
+#-> sub CPAN::Distribution::shortcut_get ;
+# return values: undef means don't shortcut; 0 means shortcut as fail;
+# and 1 means shortcut as success
 sub shortcut_get {
     my ($self) = @_;
-  EXCUSE: {
-        my @e;
-        my $goodbye_message;
-        $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
-        if ($self->prefs->{disabled} && ! $self->{force_update}) {
-            my $why = sprintf(
-                              "Disabled via prefs file '%s' doc %d",
-                              $self->{prefs_file},
-                              $self->{prefs_file_doc},
-                             );
-            push @e, $why;
-            $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
-            $goodbye_message = "[disabled] -- NA $why";
-            # note: not intended to be persistent but at least visible
-            # during this session
-        } else {
-            if (exists $self->{build_dir} && -d $self->{build_dir}) {
-                # this deserves print, not warn:
-                $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
-                                         "$self->{build_dir}\n"
-                                        );
-                return 1;
-            }
-            if (exists $self->{build_dir} && ! -d $self->{build_dir}){
-                # we have lost it.
-                $self->fforce(""); # no method to reset all phases but not set force (dodge)
-            }
 
-            # although we talk about 'force' we shall not test on
-            # force directly. New model of force tries to refrain from
-            # direct checking of force.
-            exists $self->{unwrapped} and (
-                                           UNIVERSAL::can($self->{unwrapped},"failed") ?
-                                           $self->{unwrapped}->failed :
-                                           $self->{unwrapped} =~ /^NO/
-                                          )
-                and push @e, "Unwrapping had some problem, won't try again without force";
-        }
-        if (@e) {
-            $CPAN::Frontend->mywarn(join "", map {"$_\n"} @e);
-            if ($goodbye_message) {
-                 $self->goodbye($goodbye_message);
-            }
-            return 0;
-        }
+    $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
+    if ($self->prefs->{disabled} && ! $self->{force_update}) {
+        my $why = sprintf(
+                            "Disabled via prefs file '%s' doc %d",
+                            $self->{prefs_file},
+                            $self->{prefs_file_doc},
+                            );
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
+        # XXX why is this goodbye() instead of just print/warn?
+        # Alternatively, should other print/warns here be goodbye()?
+        # -- xdg, 2012-04-05
+        $self->goodbye("[disabled] -- NA $why");
+        return 0; # shortcut FAIL
     }
-    # explicit zero errors
-    return undef;
+
+    $self->debug("checking already unwrapped[$self->{ID}]") if $CPAN::DEBUG;
+    if (exists $self->{build_dir} && -d $self->{build_dir}) {
+        # this deserves print, not warn:
+        $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
+            "$self->{build_dir}\n"
+        );
+        return 1; # shortcut OK
+    }
+
+    # XXX I'm not sure this should be here because it's not really
+    # a test for whether get should continue or return; this is
+    # a side effect -- xdg, 2012-04-05
+    $self->debug("checking missing build_dir[$self->{ID}]") if $CPAN::DEBUG;
+    if (exists $self->{build_dir} && ! -d $self->{build_dir}){
+        # we have lost it.
+        $self->fforce(""); # no method to reset all phases but not set force (dodge)
+        return undef; # no shortcut
+    }
+
+    # although we talk about 'force' we shall not test on
+    # force directly. New model of force tries to refrain from
+    # direct checking of force.
+    $self->debug("checking unwrapping error[$self->{ID}]") if $CPAN::DEBUG;
+    if ( exists $self->{unwrapped} and (
+            UNIVERSAL::can($self->{unwrapped},"failed") ?
+            $self->{unwrapped}->failed :
+            $self->{unwrapped} =~ /^NO/ )
+    ) {
+        $CPAN::Frontend->mywarn("Unwrapping had some problem, won't try again without force");
+        return 0; # shortcut FAIL
+    }
+
+    return undef; # no shortcut
 }
 
 #-> sub CPAN::Distribution::get ;
@@ -356,6 +359,8 @@ sub get {
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
     my($local_file);
+    # XXX I don't think this check needs to be here, as it
+    # is already checked in shortcut_get() -- xdg, 2012-04-05
     unless ($self->{build_dir} && -d $self->{build_dir}) {
         $self->get_file_onto_local_disk;
         return if $CPAN::Signal;
@@ -365,12 +370,16 @@ sub get {
         if (exists $self->{writemakefile} && ref $self->{writemakefile}
            && $self->{writemakefile}->can("failed") &&
            $self->{writemakefile}->failed) {
+           #
             return;
         }
         $packagedir ||= $self->{build_dir};
         $self->{build_dir} = $packagedir;
     }
 
+    # XXX should this move up to after run_preps_on_packagedir?
+    # Otherwise, failing writemakefile can return without
+    # a $CPAN::Signal check -- xdg, 2012-04-05
     if ($CPAN::Signal) {
         $self->safe_chdir($sub_wd);
         return;
