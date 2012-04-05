@@ -275,27 +275,9 @@ sub called_for {
     return $self->{CALLED_FOR};
 }
 
-#-> sub CPAN::Distribution::get ;
-sub get {
-    my($self) = @_;
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
-    if (my $goto = $self->prefs->{goto}) {
-        $CPAN::Frontend->mywarn
-            (sprintf(
-                     "delegating to '%s' as specified in prefs file '%s' doc %d\n",
-                     $goto,
-                     $self->{prefs_file},
-                     $self->{prefs_file_doc},
-                    ));
-        return $self->goto($goto);
-    }
-    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
-                           ? $ENV{PERL5LIB}
-                           : ($ENV{PERLLIB} || "");
-    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
-    $CPAN::META->set_perl5lib;
-    local $ENV{MAKEFLAGS}; # protect us from outer make calls
-
+# return values: undef -- don't shortcut; 0 shortcut fail; 1 shortcut success
+sub shortcut_get {
+    my ($self) = @_;
   EXCUSE: {
         my @e;
         my $goodbye_message;
@@ -339,9 +321,38 @@ sub get {
             if ($goodbye_message) {
                  $self->goodbye($goodbye_message);
             }
-            return;
+            return 0;
         }
     }
+    # explicit zero errors
+    return undef;
+}
+
+#-> sub CPAN::Distribution::get ;
+sub get {
+    my($self) = @_;
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
+    if (my $goto = $self->prefs->{goto}) {
+        $CPAN::Frontend->mywarn
+            (sprintf(
+                     "delegating to '%s' as specified in prefs file '%s' doc %d\n",
+                     $goto,
+                     $self->{prefs_file},
+                     $self->{prefs_file_doc},
+                    ));
+        return $self->goto($goto);
+    }
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
+    if ( defined( my $sc = $self->shortcut_get) ) {
+        return $sc;
+    }
+
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
     my($local_file);
