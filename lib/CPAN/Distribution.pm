@@ -386,10 +386,7 @@ sub get {
     }
     return unless $self->patch;
     $self->store_persistent_state;
-    # equivalent to successful choose_MM_or_MB from prior logic,
-    # but probably not necessary as that appears to be the
-    # only thing that returns $self -- xdg, 2012-04-06
-    return $self;
+    return 1; # success
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
