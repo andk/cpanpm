@@ -2000,6 +2000,15 @@ sub make {
         return $self->goto($goto);
     }
     # Emergency brake if they said install Pippi and get newest perl
+
+    # XXX Would this make more sense in shortcut_prepare, since
+    # that doesn't make sense on a perl dist either?  Broader
+    # question: what is the purpose of suggesting force install
+    # on a perl distribution?  That seems unlikely to result in
+    # such a dependency being satisfied, even if the perl is
+    # successfully installed.  This situation is tantamount to
+    # a prereq on a version of perl greater than the current one
+    # so I think we should just abort. -- xdg, 2012-04-06
     if ($self->isa_perl) {
         if (
             $self->called_for ne $self->id &&
