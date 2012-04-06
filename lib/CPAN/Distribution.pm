@@ -1737,9 +1737,8 @@ sub perl {
 sub shortcut_prepare {
     my ($self) = @_;
 
-        my @e;
         if (!$self->{archived} || $self->{archived} eq "NO") {
-            push @e, "Is neither a tar nor a zip archive.";
+            return $self->goodbye("Is neither a tar nor a zip archive.");
         }
 
         if (!$self->{unwrapped}
@@ -1748,17 +1747,18 @@ sub shortcut_prepare {
                 $self->{unwrapped}->failed :
                 $self->{unwrapped} =~ /^NO/
                )) {
-            push @e, "Had problems unarchiving. Please build manually";
+            return $self->goodbye("Had problems unarchiving. Please build manually");
         }
 
-        unless ($self->{force_update}) {
-            exists $self->{signature_verify} and
-                (
+        if ( ! $self->{force_update}
+            && exists $self->{signature_verify}
+            && (
                  UNIVERSAL::can($self->{signature_verify},"failed") ?
                  $self->{signature_verify}->failed :
                  $self->{signature_verify} =~ /^NO/
-                )
-                and push @e, "Did not pass the signature test.";
+               )
+        ) {
+            return $self->goodbye("Did not pass the signature test.");
         }
 
         if ($self->{writemakefile}) {
@@ -1774,22 +1774,14 @@ sub shortcut_prepare {
                 $err =~ s/^NO\s*(--\s+)?//;
                 $err ||= "Had some problem writing Makefile";
                 $err .= ", not re-running";
-                push @e, $err;
+                return $self->goodbye($err);
             } else {
-                push @e, "Has already been prepared";
+                return $self->success("Has already been prepared");
             }
         }
 
-        my $later = $self->{configure_requires_later};
-        if ($later) { # see also undelay
-            if ($later) {
-                push @e, $later;
-            }
-        }
-
-        if (@e) {
-            $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e);
-            return 0; # prepare FAIL
+        if( my $later = $self->{configure_requires_later} ) { # see also undelay
+            return $self->success($later);
         }
 
         return undef; # no shortcut
@@ -1798,7 +1790,6 @@ sub shortcut_prepare {
 sub prepare {
     my ($self) = @_;
 
-    # XXX not really needed here since checked in get() -- xdg, 2012-04-06
     return if $self->check_disabled;
 
     $self->get
@@ -1991,11 +1982,15 @@ sub prepare {
         }
     }
     $self->store_persistent_state;
+    return 1; # success
 }
 
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
+
+    return if $self->check_disabled;
+
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -2036,8 +2031,9 @@ is part of the perl-%s distribution. To install that, you need to run
             return;
         }
     }
-    $self->prepare;
-    # XXX this needs to return here unless prepare was successful -- xdg, 2012-04-04
+
+    $self->prepare
+        or return;
 
     my $builddir;
   EXCUSE: {
@@ -2125,8 +2121,6 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
-    # XXX why is this here instead of at the top? -- xdg, 2012-04-06
-    return if $self->check_disabled;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -2232,7 +2226,14 @@ sub goodbye {
     my($self,$goodbye) = @_;
     my $id = $self->pretty_id;
     $CPAN::Frontend->mywarn("  $id\n  $goodbye\n");
-    return;
+    return 0; # must be explicit false, not undef
+}
+
+sub success {
+    my($self,$why) = @_;
+    my $id = $self->pretty_id;
+    $CPAN::Frontend->myprint("  $id\n  $why\n");
+    return 1;
 }
 
 # CPAN::Distribution::_run_via_expect ;
