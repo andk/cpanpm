@@ -286,17 +286,15 @@ sub shortcut_get {
         # XXX why is this goodbye() instead of just print/warn?
         # Alternatively, should other print/warns here be goodbye()?
         # -- xdg, 2012-04-05
-        $self->goodbye("[disabled] -- NA $why");
-        return 0; # shortcut FAIL
+        return $self->goodbye("[disabled] -- NA $why");
     }
 
     $self->debug("checking already unwrapped[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{build_dir} && -d $self->{build_dir}) {
         # this deserves print, not warn:
-        $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
-            "$self->{build_dir}\n"
+        return $self->success("Has already been unwrapped into directory ".
+            "$self->{build_dir}"
         );
-        return 1; # shortcut OK
     }
 
     # XXX I'm not sure this should be here because it's not really
@@ -318,8 +316,7 @@ sub shortcut_get {
             $self->{unwrapped}->failed :
             $self->{unwrapped} =~ /^NO/ )
     ) {
-        $CPAN::Frontend->mywarn("Unwrapping had some problem, won't try again without force");
-        return 0; # shortcut FAIL
+        return $self->goodbye("Unwrapping had some problem, won't try again without force");
     }
 
     return undef; # no shortcut
@@ -1736,10 +1733,12 @@ sub perl {
 sub shortcut_prepare {
     my ($self) = @_;
 
+        $self->debug("checking archive type[$self->{ID}]") if $CPAN::DEBUG;
         if (!$self->{archived} || $self->{archived} eq "NO") {
             return $self->goodbye("Is neither a tar nor a zip archive.");
         }
 
+        $self->debug("checking unwrapping[$self->{ID}]") if $CPAN::DEBUG;
         if (!$self->{unwrapped}
             || (
                 UNIVERSAL::can($self->{unwrapped},"failed") ?
@@ -1749,6 +1748,7 @@ sub shortcut_prepare {
             return $self->goodbye("Had problems unarchiving. Please build manually");
         }
 
+        $self->debug("checking signature[$self->{ID}]") if $CPAN::DEBUG;
         if ( ! $self->{force_update}
             && exists $self->{signature_verify}
             && (
@@ -1760,6 +1760,7 @@ sub shortcut_prepare {
             return $self->goodbye("Did not pass the signature test.");
         }
 
+        $self->debug("checking writemakefile[$self->{ID}]") if $CPAN::DEBUG;
         if ($self->{writemakefile}) {
             if (
                  UNIVERSAL::can($self->{writemakefile},"failed") ?
@@ -1779,6 +1780,7 @@ sub shortcut_prepare {
             }
         }
 
+        $self->debug("checking configure_requires_later[$self->{ID}]") if $CPAN::DEBUG;
         if( my $later = $self->{configure_requires_later} ) { # see also undelay
             return $self->success($later);
         }
@@ -1988,6 +1990,7 @@ sub prepare {
 sub shortcut_make {
     my ($self) = @_;
 
+    $self->debug("checking make/build results[$self->{ID}]") if $CPAN::DEBUG;
     if (defined $self->{make}) {
         if (UNIVERSAL::can($self->{make},"failed") ?
             $self->{make}->failed :
@@ -3184,10 +3187,12 @@ sub prereq_pm {
 sub shortcut_test {
     my ($self) = @_;
 
+    $self->debug("checking notest[$self->{ID}]") if $CPAN::DEBUG;
     if ($self->{notest}) {
         return $self->success("Skipping test because of notest pragma");
     }
 
+    $self->debug("checking badtestcnt[$self->{ID}]") if $CPAN::DEBUG;
     $self->{badtestcnt} ||= 0;
     if ($self->{badtestcnt} > 0) {
         require Data::Dumper;
@@ -3196,10 +3201,12 @@ sub shortcut_test {
     }
 
     for my $slot ( qw/later configure_requires_later/ ) {
+        $self->debug("checking $slot slot[$self->{ID}]") if $CPAN::DEBUG;
         return $self->success($self->{$slot})
         if $self->{$slot};
     }
 
+    $self->debug("checking if tests passed[$self->{ID}]") if $CPAN::DEBUG;
     if (
         UNIVERSAL::can($self->{make_test},"failed") ?
         $self->{make_test}->failed :
@@ -3593,6 +3600,7 @@ sub goto {
 sub shortcut_install {
     my ($self) = @_;
 
+    $self->debug("checking previous install results[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{install}) {
         my $text = UNIVERSAL::can($self->{install},"text") ?
             $self->{install}->text :
