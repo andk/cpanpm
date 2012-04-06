@@ -296,6 +296,12 @@ sub shortcut_get {
         return 0; # shortcut FAIL
     }
 
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
+    if (my $goto = $self->prefs->{goto}) {
+        $self->goto($goto);
+        return 0; # shortcut FAIL (i.e. abort *this* dist, since we queued $goto)
+    }
+
     $self->debug("checking already unwrapped[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{build_dir} && -d $self->{build_dir}) {
         # this deserves print, not warn:
@@ -334,17 +340,6 @@ sub shortcut_get {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
-    if (my $goto = $self->prefs->{goto}) {
-        $CPAN::Frontend->mywarn
-            (sprintf(
-                     "delegating to '%s' as specified in prefs file '%s' doc %d\n",
-                     $goto,
-                     $self->{prefs_file},
-                     $self->{prefs_file_doc},
-                    ));
-        return $self->goto($goto);
-    }
 
     if ( defined( my $sc = $self->shortcut_get) ) {
         return $sc;
@@ -1811,7 +1806,7 @@ sub prepare {
 
     return if $self->prefs->{disabled} && ! $self->{force_update};
 
-    $self->get;
+    $self->get
         or return;
 
     if ( defined( my $sc = $self->shortcut_prepare) ) {
