@@ -1733,59 +1733,59 @@ sub perl {
 sub shortcut_prepare {
     my ($self) = @_;
 
-        $self->debug("checking archive type[$self->{ID}]") if $CPAN::DEBUG;
-        if (!$self->{archived} || $self->{archived} eq "NO") {
-            return $self->goodbye("Is neither a tar nor a zip archive.");
-        }
+    $self->debug("checking archive type[$self->{ID}]") if $CPAN::DEBUG;
+    if (!$self->{archived} || $self->{archived} eq "NO") {
+        return $self->goodbye("Is neither a tar nor a zip archive.");
+    }
 
-        $self->debug("checking unwrapping[$self->{ID}]") if $CPAN::DEBUG;
-        if (!$self->{unwrapped}
-            || (
-                UNIVERSAL::can($self->{unwrapped},"failed") ?
-                $self->{unwrapped}->failed :
-                $self->{unwrapped} =~ /^NO/
-               )) {
-            return $self->goodbye("Had problems unarchiving. Please build manually");
-        }
+    $self->debug("checking unwrapping[$self->{ID}]") if $CPAN::DEBUG;
+    if (!$self->{unwrapped}
+        || (
+            UNIVERSAL::can($self->{unwrapped},"failed") ?
+            $self->{unwrapped}->failed :
+            $self->{unwrapped} =~ /^NO/
+            )) {
+        return $self->goodbye("Had problems unarchiving. Please build manually");
+    }
 
-        $self->debug("checking signature[$self->{ID}]") if $CPAN::DEBUG;
-        if ( ! $self->{force_update}
-            && exists $self->{signature_verify}
-            && (
-                 UNIVERSAL::can($self->{signature_verify},"failed") ?
-                 $self->{signature_verify}->failed :
-                 $self->{signature_verify} =~ /^NO/
-               )
-        ) {
-            return $self->goodbye("Did not pass the signature test.");
-        }
+    $self->debug("checking signature[$self->{ID}]") if $CPAN::DEBUG;
+    if ( ! $self->{force_update}
+        && exists $self->{signature_verify}
+        && (
+                UNIVERSAL::can($self->{signature_verify},"failed") ?
+                $self->{signature_verify}->failed :
+                $self->{signature_verify} =~ /^NO/
+            )
+    ) {
+        return $self->goodbye("Did not pass the signature test.");
+    }
 
-        $self->debug("checking writemakefile[$self->{ID}]") if $CPAN::DEBUG;
-        if ($self->{writemakefile}) {
-            if (
-                 UNIVERSAL::can($self->{writemakefile},"failed") ?
-                 $self->{writemakefile}->failed :
-                 $self->{writemakefile} =~ /^NO/
-                ) {
-                # XXX maybe a retry would be in order?
-                my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
-                    $self->{writemakefile}->text :
-                        $self->{writemakefile};
-                $err =~ s/^NO\s*(--\s+)?//;
-                $err ||= "Had some problem writing Makefile";
-                $err .= ", not re-running";
-                return $self->goodbye($err);
-            } else {
-                return $self->success("Has already been prepared");
-            }
+    $self->debug("checking writemakefile[$self->{ID}]") if $CPAN::DEBUG;
+    if ($self->{writemakefile}) {
+        if (
+                UNIVERSAL::can($self->{writemakefile},"failed") ?
+                $self->{writemakefile}->failed :
+                $self->{writemakefile} =~ /^NO/
+            ) {
+            # XXX maybe a retry would be in order?
+            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                $self->{writemakefile}->text :
+                    $self->{writemakefile};
+            $err =~ s/^NO\s*(--\s+)?//;
+            $err ||= "Had some problem writing Makefile";
+            $err .= ", not re-running";
+            return $self->goodbye($err);
+        } else {
+            return $self->success("Has already been prepared");
         }
+    }
 
-        $self->debug("checking configure_requires_later[$self->{ID}]") if $CPAN::DEBUG;
-        if( my $later = $self->{configure_requires_later} ) { # see also undelay
-            return $self->success($later);
-        }
+    $self->debug("checking configure_requires_later[$self->{ID}]") if $CPAN::DEBUG;
+    if( my $later = $self->{configure_requires_later} ) { # see also undelay
+        return $self->success($later);
+    }
 
-        return undef; # no shortcut
+    return undef; # no shortcut
 }
 
 sub prepare {
