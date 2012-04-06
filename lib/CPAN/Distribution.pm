@@ -1985,6 +1985,34 @@ sub prepare {
     return 1; # success
 }
 
+#-> sub CPAN::Distribution::shortcut_make ;
+# return values: undef means don't shortcut; 0 means shortcut as fail;
+# and 1 means shortcut as success
+sub shortcut_make {
+    my ($self) = @_;
+
+    if (defined $self->{make}) {
+        if (UNIVERSAL::can($self->{make},"failed") ?
+            $self->{make}->failed :
+            $self->{make} =~ /^NO/
+        ) {
+            if ($self->{force_update}) {
+                # Trying an already failed 'make' (unless somebody else blocks)
+                return undef; # no shortcut
+            } else {
+                # introduced for turning recursion detection into a distrostatus
+                my $error = length $self->{make}>3
+                    ? substr($self->{make},3) : "Unknown error";
+                $self->store_persistent_state;
+                return $self->goodbye("Could not make: $error\n");
+            }
+        } else {
+            return $self->success("Has already been made")
+        }
+    }
+    return undef; # no shortcut
+}
+
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
@@ -2035,90 +2063,23 @@ is part of the perl-%s distribution. To install that, you need to run
     $self->prepare
         or return;
 
-    my $builddir;
-  EXCUSE: {
-        my @e;
-        if (!$self->{archived} || $self->{archived} eq "NO") {
-            push @e, "Is neither a tar nor a zip archive.";
-        }
-
-        if (!$self->{unwrapped}
-            || (
-                UNIVERSAL::can($self->{unwrapped},"failed") ?
-                $self->{unwrapped}->failed :
-                $self->{unwrapped} =~ /^NO/
-               )) {
-            push @e, "Had problems unarchiving. Please build manually";
-        }
-
-        unless ($self->{force_update}) {
-            exists $self->{signature_verify} and
-                (
-                 UNIVERSAL::can($self->{signature_verify},"failed") ?
-                 $self->{signature_verify}->failed :
-                 $self->{signature_verify} =~ /^NO/
-                )
-                and push @e, "Did not pass the signature test.";
-        }
-
-        if (exists $self->{writemakefile} &&
-            (
-             UNIVERSAL::can($self->{writemakefile},"failed") ?
-             $self->{writemakefile}->failed :
-             $self->{writemakefile} =~ /^NO/
-            )) {
-            # XXX maybe a retry would be in order?
-            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
-                $self->{writemakefile}->text :
-                    $self->{writemakefile};
-            $err =~ s/^NO\s*(--\s+)?//;
-            $err ||= "Had some problem writing Makefile";
-            $err .= ", won't make";
-            push @e, $err;
-        }
-
-        if (defined $self->{make}) {
-            if (UNIVERSAL::can($self->{make},"failed") ?
-                $self->{make}->failed :
-                $self->{make} =~ /^NO/) {
-                if ($self->{force_update}) {
-                    # Trying an already failed 'make' (unless somebody else blocks)
-                } else {
-                    # introduced for turning recursion detection into a distrostatus
-                    my $error = length $self->{make}>3
-                        ? substr($self->{make},3) : "Unknown error";
-                    $CPAN::Frontend->mywarn("Could not make: $error\n");
-                    $self->store_persistent_state;
-                    return;
-                }
-            } else {
-                push @e, "Has already been made";
-                my $wait_for_prereqs = eval { $self->satisfy_requires };
-                return 1 if $wait_for_prereqs;   # tells queuerunner to continue
-                return $self->goodbye($@) if $@; # tells queuerunner to stop
-            }
-        }
-
-        my $later = $self->{later} || $self->{configure_requires_later};
-        # XXX WTF? -- xdg, 2012-04-04
-        if ($later) { # see also undelay
-            if ($later) {
-                push @e, $later;
-            }
-        }
-
-        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
-        $builddir = $self->dir or
-            $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-        unless (chdir $builddir) {
-            push @e, "Couldn't chdir to '$builddir': $!";
-        }
-        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    if ( defined( my $sc = $self->shortcut_make) ) {
+        return $sc;
     }
+
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
     }
+
+    my $builddir = $self->dir or
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+
+    unless (chdir $builddir) {
+        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        return;
+    }
+
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -2231,8 +2192,7 @@ sub goodbye {
 
 sub success {
     my($self,$why) = @_;
-    my $id = $self->pretty_id;
-    $CPAN::Frontend->myprint("  $id\n  $why\n");
+    $CPAN::Frontend->myprint("  $why\n");
     return 1;
 }
 
