@@ -2180,6 +2180,7 @@ is part of the perl-%s distribution. To install that, you need to run
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
     $self->store_persistent_state;
+    return 1;
 }
 
 # CPAN::Distribution::goodbye ;
@@ -3181,25 +3182,74 @@ sub prereq_pm {
     }
 }
 
+#-> sub CPAN::Distribution::shortcut_test ;
+# return values: undef means don't shortcut; 0 means shortcut as fail;
+# and 1 means shortcut as success
+sub shortcut_test {
+    my ($self) = @_;
+
+    if ($self->{notest}) {
+        return $self->success("Skipping test because of notest pragma");
+    }
+
+    $self->{badtestcnt} ||= 0;
+    if ($self->{badtestcnt} > 0) {
+        require Data::Dumper;
+        CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
+        return $self->goodbye("Won't repeat unsuccessful test during this command");
+    }
+
+    for my $slot ( qw/later configure_requires_later/ ) {
+        return $self->success($self->{$slot})
+        if $self->{$slot};
+    }
+
+    if (
+        UNIVERSAL::can($self->{make_test},"failed") ?
+        $self->{make_test}->failed :
+        $self->{make_test} =~ /^NO/
+    ) {
+        if (
+            UNIVERSAL::can($self->{make_test},"commandid")
+            &&
+            $self->{make_test}->commandid == $CPAN::CurrentCommandId
+        ) {
+            $self->goodbye("Has already been tested within this command");
+        }
+    } else {
+        # if global "is_tested" has been cleared, we need to mark this to
+        # be added to PERL5LIB if not already installed
+        if ($self->tested_ok_but_not_installed) {
+            $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+        }
+        $self->success("Has already been tested successfully");
+    }
+
+    return undef; # no shortcut
+}
+
 #-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
+
+    return if $self->check_disabled;
+
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-    $self->make;
-    # why is this here and not at the top -- xdg, 2012-04-06
-    return if $self->check_disabled;
+
+    $self->make
+        or return;
+
+    if ( defined( my $sc = $self->shortcut_test ) ) {
+        return $sc;
+    }
+
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
     }
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
-    if ($self->{notest}) {
-        $CPAN::Frontend->myprint("Skipping test because of notest pragma\n");
-        return 1;
-    }
-
     my $make = $self->{modulebuild} ? "Build" : "make";
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -3212,63 +3262,14 @@ sub test {
 
     $CPAN::Frontend->myprint("Running $make test\n");
 
-  EXCUSE: {
-        my @e;
-        if ($self->{make} or $self->{later}) {
-            # go ahead
-        } else {
-            push @e,
-                "Make had some problems, won't test";
-        }
+    my $builddir = $self->dir or
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
 
-        exists $self->{make} and
-            (
-             UNIVERSAL::can($self->{make},"failed") ?
-             $self->{make}->failed :
-             $self->{make} =~ /^NO/
-            ) and push @e, "Can't test without successful make";
-        $self->{badtestcnt} ||= 0;
-        if ($self->{badtestcnt} > 0) {
-            require Data::Dumper;
-            CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
-            push @e, "Won't repeat unsuccessful test during this command";
-        }
-
-        push @e, $self->{later} if $self->{later};
-        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
-
-        if (exists $self->{build_dir}) {
-            if (exists $self->{make_test}) {
-                if (
-                    UNIVERSAL::can($self->{make_test},"failed") ?
-                    $self->{make_test}->failed :
-                    $self->{make_test} =~ /^NO/
-                   ) {
-                    if (
-                        UNIVERSAL::can($self->{make_test},"commandid")
-                        &&
-                        $self->{make_test}->commandid == $CPAN::CurrentCommandId
-                       ) {
-                        push @e, "Has already been tested within this command";
-                    }
-                } else {
-                    push @e, "Has already been tested successfully";
-                    # if global "is_tested" has been cleared, we need to mark this to
-                    # be added to PERL5LIB if not already installed
-                    if ($self->tested_ok_but_not_installed) {
-                        $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
-                    }
-                }
-            }
-        } elsif (!@e) {
-            push @e, "Has no own directory";
-        }
-        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
-        unless (chdir $self->{build_dir}) {
-            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
-        }
-        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    unless (chdir $builddir) {
+        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        return;
     }
+
     $self->debug("Changed directory to $self->{build_dir}")
         if $CPAN::DEBUG;
 
