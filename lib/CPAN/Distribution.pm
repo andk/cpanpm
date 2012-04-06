@@ -1740,28 +1740,13 @@ sub perl {
     return CPAN::HandleConfig->safe_quote($CPAN::Perl);
 }
 
+#-> sub CPAN::Distribution::shortcut_prepare ;
+# return values: undef means don't shortcut; 0 means shortcut as fail;
+# and 1 means shortcut as success
 
-sub prepare {
+sub shortcut_prepare {
     my ($self) = @_;
 
-    return if $self->prefs->{disabled} && ! $self->{force_update};
-
-    $self->get;
-
-    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
-                           ? $ENV{PERL5LIB}
-                           : ($ENV{PERLLIB} || "");
-    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
-    $CPAN::META->set_perl5lib;
-    local $ENV{MAKEFLAGS}; # protect us from outer make calls
-
-    if ($CPAN::Signal) {
-        delete $self->{force_update};
-        return;
-    }
-
-    my $builddir;
-  EXCUSE: {
         my @e;
         if (!$self->{archived} || $self->{archived} eq "NO") {
             push @e, "Is neither a tar nor a zip archive.";
@@ -1812,14 +1797,46 @@ sub prepare {
             }
         }
 
-        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
-        $builddir = $self->dir or
-            $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-        unless (chdir $builddir) {
-            push @e, "Couldn't chdir to '$builddir': $!";
+        if (@e) {
+            $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e);
+            return 0;
         }
-        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+        else {
+            return 1;
+        }
+}
+
+sub prepare {
+    my ($self) = @_;
+
+    return if $self->prefs->{disabled} && ! $self->{force_update};
+
+    $self->get;
+
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
+    if ($CPAN::Signal) {
+        delete $self->{force_update};
+        return;
     }
+
+    if ( defined( my $sc = $self->shortcut_prepare) ) {
+        return $sc;
+    }
+
+    my $builddir = $self->dir or
+        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+
+    unless (chdir $builddir) {
+        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        return;
+    }
+
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
