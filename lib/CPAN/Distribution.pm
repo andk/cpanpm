@@ -1790,8 +1790,6 @@ sub shortcut_prepare {
 sub prepare {
     my ($self) = @_;
 
-    return if $self->check_disabled;
-
     $self->get
         or return;
 
@@ -2016,8 +2014,6 @@ sub shortcut_make {
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
-
-    return if $self->check_disabled;
 
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -3232,8 +3228,6 @@ sub shortcut_test {
 sub test {
     my($self) = @_;
 
-    return if $self->check_disabled;
-
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -3625,8 +3619,6 @@ sub shortcut_install {
 #-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
-
-    return if $self->check_disabled;
 
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
