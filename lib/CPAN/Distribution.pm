@@ -281,13 +281,7 @@ sub called_for {
 sub shortcut_get {
     my ($self) = @_;
 
-    $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
-    if ($self->prefs->{disabled} && ! $self->{force_update}) {
-        my $why = sprintf(
-                            "Disabled via prefs file '%s' doc %d",
-                            $self->{prefs_file},
-                            $self->{prefs_file_doc},
-                            );
+    if (my $why = $self->check_disabled) {
         $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
         # XXX why is this goodbye() instead of just print/warn?
         # Alternatively, should other print/warns here be goodbye()?
@@ -1804,7 +1798,8 @@ sub shortcut_prepare {
 sub prepare {
     my ($self) = @_;
 
-    return if $self->prefs->{disabled} && ! $self->{force_update};
+    # XXX not really needed here since checked in get() -- xdg, 2012-04-06
+    return if $self->check_disabled;
 
     $self->get
         or return;
@@ -2121,7 +2116,8 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
-    return if $self->prefs->{disabled} && ! $self->{force_update};
+    # XXX why is this here instead of at the top? -- xdg, 2012-04-06
+    return if $self->check_disabled;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -3222,7 +3218,8 @@ sub test {
         return $self->goto($goto);
     }
     $self->make;
-    return if $self->prefs->{disabled} && ! $self->{force_update};
+    # why is this here and not at the top -- xdg, 2012-04-06
+    return if $self->check_disabled;
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
@@ -3577,6 +3574,20 @@ sub clean {
 
     }
     $self->store_persistent_state;
+}
+
+#-> sub CPAN::Distribution::check_disabled ;
+sub check_disabled {
+    my ($self) = @_;
+    $self->debug("checking disabled id[$self->{ID}]") if $CPAN::DEBUG;
+    if ($self->prefs->{disabled} && ! $self->{force_update}) {
+        return sprintf(
+                            "Disabled via prefs file '%s' doc %d",
+                            $self->{prefs_file},
+                            $self->{prefs_file_doc},
+                            );
+    }
+    return;
 }
 
 #-> sub CPAN::Distribution::goto ;
