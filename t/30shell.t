@@ -961,7 +961,7 @@ __END__
 #E:\}.+?CPAN::Distributio.
 ########
 #P:make CPAN::Test::Dummy::Perl5::BuildOrMake
-#E:(?s:Running Build.*?Creating new.*?Build\s+-- OK)
+#E:(?s:Build\s+-- OK)
 #R:Module::Build
 #C:second try
 ########
@@ -973,7 +973,7 @@ __END__
 #E:\}.+?CPAN::Distributio.
 ########
 #P:notest test ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
-#E:Running Build[\s\S]*?Creating new[\s\S]*?Build\s+-- OK[\s\S]+?Skipping test
+#E:Build\s+-- OK[\s\S]+?Skipping test
 #R:Module::Build
 ########
 #P:dump ANDK/CPAN-Test-Dummy-Perl5-BuildOrMake-1.02.tar.gz
