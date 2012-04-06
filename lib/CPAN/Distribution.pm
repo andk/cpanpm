@@ -290,12 +290,6 @@ sub shortcut_get {
         return 0; # shortcut FAIL
     }
 
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
-    if (my $goto = $self->prefs->{goto}) {
-        $self->goto($goto);
-        return 0; # shortcut FAIL (i.e. abort *this* dist, since we queued $goto)
-    }
-
     $self->debug("checking already unwrapped[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{build_dir} && -d $self->{build_dir}) {
         # this deserves print, not warn:
@@ -334,6 +328,11 @@ sub shortcut_get {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
+
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
+    if (my $goto = $self->prefs->{goto}) {
+        return $self->goto($goto);
+    }
 
     if ( defined( my $sc = $self->shortcut_get) ) {
         return $sc;
@@ -2015,6 +2014,7 @@ sub shortcut_make {
 sub make {
     my($self) = @_;
 
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -3228,6 +3228,7 @@ sub shortcut_test {
 sub test {
     my($self) = @_;
 
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -3620,6 +3621,7 @@ sub shortcut_install {
 sub install {
     my($self) = @_;
 
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
