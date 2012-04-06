@@ -345,16 +345,17 @@ sub get {
                     ));
         return $self->goto($goto);
     }
+
+    if ( defined( my $sc = $self->shortcut_get) ) {
+        return $sc;
+    }
+
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
-
-    if ( defined( my $sc = $self->shortcut_get) ) {
-        return $sc;
-    }
 
     my $sub_wd = CPAN::anycwd(); # for cleaning up as good as possible
 
@@ -1811,6 +1812,11 @@ sub prepare {
     return if $self->prefs->{disabled} && ! $self->{force_update};
 
     $self->get;
+        or return;
+
+    if ( defined( my $sc = $self->shortcut_prepare) ) {
+        return $sc;
+    }
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -1822,10 +1828,6 @@ sub prepare {
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
-    }
-
-    if ( defined( my $sc = $self->shortcut_prepare) ) {
-        return $sc;
     }
 
     my $builddir = $self->dir or
@@ -1846,8 +1848,8 @@ sub prepare {
 
     local $ENV{PERL_AUTOINSTALL} = $ENV{PERL_AUTOINSTALL};
     local $ENV{PERL_EXTUTILS_AUTOINSTALL} = $ENV{PERL_EXTUTILS_AUTOINSTALL};
-    $self->choose_MM_or_MB;
-    return if $self->{writemakefile}; # choose_MM_or_MB sets this on error
+    $self->choose_MM_or_MB
+        or return;
 
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
         $ENV{PERL_AUTOINSTALL}          ||= "--defaultdeps";
