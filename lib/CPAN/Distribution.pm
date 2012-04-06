@@ -1799,11 +1799,10 @@ sub shortcut_prepare {
 
         if (@e) {
             $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e);
-            return 0;
+            return 0; # prepare FAIL
         }
-        else {
-            return 1;
-        }
+
+        return undef; # no shortcut
 }
 
 sub prepare {

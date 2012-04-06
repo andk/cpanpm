@@ -246,7 +246,7 @@ is($CPAN::Config->{histsize},100,"histsize is 100 before testing");
 
 my $prompt = "cpan>";
 my $prompt_re = "cpan[^>]*>"; # note: replicated in DATA!
-my $default_timeout = 240;
+my $default_timeout = $ENV{CPAN_EXPECT_TIMEOUT} || 240;
 
 $|=1;
 if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
