@@ -3207,25 +3207,27 @@ sub shortcut_test {
     }
 
     $self->debug("checking if tests passed[$self->{ID}]") if $CPAN::DEBUG;
-    if (
-        UNIVERSAL::can($self->{make_test},"failed") ?
-        $self->{make_test}->failed :
-        $self->{make_test} =~ /^NO/
-    ) {
+    if ( $self->{make_test} ) {
         if (
-            UNIVERSAL::can($self->{make_test},"commandid")
-            &&
-            $self->{make_test}->commandid == $CPAN::CurrentCommandId
+            UNIVERSAL::can($self->{make_test},"failed") ?
+            $self->{make_test}->failed :
+            $self->{make_test} =~ /^NO/
         ) {
-            $self->goodbye("Has already been tested within this command");
+            if (
+                UNIVERSAL::can($self->{make_test},"commandid")
+                &&
+                $self->{make_test}->commandid == $CPAN::CurrentCommandId
+            ) {
+                return $self->goodbye("Has already been tested within this command");
+            }
+        } else {
+            # if global "is_tested" has been cleared, we need to mark this to
+            # be added to PERL5LIB if not already installed
+            if ($self->tested_ok_but_not_installed) {
+                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+            }
+            return $self->success("Has already been tested successfully");
         }
-    } else {
-        # if global "is_tested" has been cleared, we need to mark this to
-        # be added to PERL5LIB if not already installed
-        if ($self->tested_ok_but_not_installed) {
-            $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
-        }
-        $self->success("Has already been tested successfully");
     }
 
     return undef; # no shortcut
