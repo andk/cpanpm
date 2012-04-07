@@ -645,6 +645,8 @@ sub parse_meta_yml {
 }
 
 #-> sub CPAN::Distribution::satisfy_requires ;
+# return values: 1 means requirements are satisfied;
+# and 0 means not satisfied (and maybe queued)
 sub satisfy_requires {
     my ($self) = @_;
     $self->debug("Entering satisfy_requires") if $CPAN::DEBUG;
@@ -662,18 +664,19 @@ sub satisfy_requires {
             my $follow = eval { $self->follow_prereqs("later",@prereq); };
             if (0) {
             } elsif ($follow) {
-                # signal success to the queuerunner
-                return 1;
+                return; # we need deps
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $CPAN::Frontend->mywarn($@);
                 die "[depend] -- NOT OK\n";
             }
         }
     }
-    return;
+    return 1;
 }
 
 #-> sub CPAN::Distribution::satisfy_configure_requires ;
+# return values: 1 means configure_require is satisfied;
+# and 0 means not satisfied (and maybe queued)
 sub satisfy_configure_requires {
     my($self) = @_;
     $self->debug("Entering satisfy_configure_requires") if $CPAN::DEBUG;
@@ -716,7 +719,7 @@ sub satisfy_configure_requires {
         };
         if (0) {
         } elsif ($follow) {
-            return;
+            return; # we need deps
         } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
             $CPAN::Frontend->mywarn($@);
             return $self->goodbye("[depend] -- NOT OK");
@@ -1782,7 +1785,7 @@ sub shortcut_prepare {
 
     $self->debug("checking configure_requires_later[$self->{ID}]") if $CPAN::DEBUG;
     if( my $later = $self->{configure_requires_later} ) { # see also undelay
-        return $self->success($later);
+        return $self->goodbye($later);
     }
 
     return undef; # no shortcut
@@ -2109,9 +2112,9 @@ is part of the perl-%s distribution. To install that, you need to run
         $env{$k} = $v;
     }
     local %ENV = %env;
-    my $wait_for_prereqs = eval { $self->satisfy_requires };
-    return 1 if $wait_for_prereqs;   # tells queuerunner to continue
-    return $self->goodbye($@) if $@; # tells queuerunner to stop
+    my $satisfied = eval { $self->satisfy_requires };
+    return $self->goodbye($@) if $@;
+    return unless $satisfied ;
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
@@ -2628,7 +2631,7 @@ of modules we are processing right now?", "yes");
         CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}},
                                map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @good_prereq_tuples);
         $self->{$slot} = "Delayed until after prerequisites";
-        return 1; # signal success to the queuerunner
+        return 1; # signal we need dependencies
     }
     return;
 }

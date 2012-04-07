@@ -1813,8 +1813,9 @@ to find objects with matching identifiers.
             CPAN->debug("Going to panic. meth[$meth]s[$s]") if $CPAN::DEBUG;
             $CPAN::Frontend->mydie("Panic: obj[$serialized] cannot meth[$meth]");
         } elsif ($obj->$meth()) {
-            CPAN::Queue->delete($s);
-            CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
+#            CPAN::Queue->delete($s);
+#            CPAN->debug("From queue deleted. meth[$meth]s[$s]") if $CPAN::DEBUG;
+            CPAN->debug("Succeeded. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         } else {
             CPAN->debug("Failed. pragma[@pragma]meth[$meth]") if $CPAN::DEBUG;
         }
