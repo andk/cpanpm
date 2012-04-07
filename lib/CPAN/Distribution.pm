@@ -3417,7 +3417,7 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
-    return 1;
+    return !! $tests_ok;
 }
 
 sub _make_test_illuminate_prereqs {
