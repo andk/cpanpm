@@ -1823,13 +1823,18 @@ sub prepare {
         return;
     }
 
-    $CPAN::Frontend->myprint("\n  CPAN.pm: Configuring ".$self->id."\n\n");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
     local $ENV{PERL_AUTOINSTALL} = $ENV{PERL_AUTOINSTALL};
     local $ENV{PERL_EXTUTILS_AUTOINSTALL} = $ENV{PERL_EXTUTILS_AUTOINSTALL};
     $self->choose_MM_or_MB
         or return;
+
+    my $configurator = $self->{configure} ? "Configure"
+                     : $self->{modulebuild} ? "Build.PL"
+                     : "Makefile.PL";
+
+    $CPAN::Frontend->myprint("Configuring ".$self->id." with $configurator\n");
 
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
         $ENV{PERL_AUTOINSTALL}          ||= "--defaultdeps";
