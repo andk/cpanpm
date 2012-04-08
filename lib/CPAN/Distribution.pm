@@ -1978,6 +1978,7 @@ sub prepare {
         if (-f "Makefile" || -f "Build" || ($^O eq 'VMS' && (-f 'descrip.mms' || -f 'Build.com'))) {
             $self->{writemakefile} = CPAN::Distrostatus->new("YES");
             delete $self->{make_clean}; # if cleaned before, enable next
+            return $self->success("$system -- OK");
         } else {
             my $makefile = $self->{modulebuild} ? "Build" : "Makefile";
             my $why = "No '$makefile' created";
@@ -2187,7 +2188,7 @@ is part of the perl-%s distribution. To install that, you need to run
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
     $self->store_persistent_state;
-    return 1;
+    return !! $system_ok;
 }
 
 # CPAN::Distribution::goodbye ;
@@ -3621,7 +3622,7 @@ sub shortcut_install {
             return $self->success("Already done");
         } elsif ($text =~ /is only/) {
             # e.g. 'is only build_requires'
-            return $self->success($text);
+            return $self->goodbye($text);
         } else {
             # comment in Todo on 2006-02-11; maybe retry?
             return $self->goodbye("Already tried without success");
@@ -3726,10 +3727,9 @@ sub install {
     }
     unless ($want_install =~ /^y/i) {
         my $is_only = "is only 'build_requires'";
-        $CPAN::Frontend->mywarn("Not installing because $is_only\n");
         $self->{install} = CPAN::Distrostatus->new("NO -- $is_only");
         delete $self->{force_update};
-        return;
+        return $self->goodbye("Not installing because $is_only");
     }
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -3780,6 +3780,7 @@ sub install {
     }
     delete $self->{force_update};
     $self->store_persistent_state;
+    return !! $close_ok;
 }
 
 sub introduce_myself {
