@@ -353,6 +353,7 @@ sub get {
         $self->check_integrity;
         return if $CPAN::Signal;
         (my $packagedir,$local_file) = $self->run_preps_on_packagedir;
+        # XXX why is this check here? -- xdg, 2012-04-08
         if (exists $self->{writemakefile} && ref $self->{writemakefile}
            && $self->{writemakefile}->can("failed") &&
            $self->{writemakefile}->failed) {
