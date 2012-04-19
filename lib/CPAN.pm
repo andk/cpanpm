@@ -3799,7 +3799,7 @@ yourself.
 
 =head2 OLD PERL VERSIONS
 
-CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
+CPAN.pm is regularly tested to run under 5.005 and assorted
 newer versions. It is getting more and more difficult to get the
 minimal prerequisites working on older perls. It is close to
 impossible to get the whole Bundle::CPAN working there. If you're in
