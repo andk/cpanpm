@@ -1,0 +1,6 @@
+---
+match:
+  distribution: "LUKEC/Test-HTTP-0.16.tar.gz"
+pl:
+  args:
+    - "PREREQ_FATAL=0"
