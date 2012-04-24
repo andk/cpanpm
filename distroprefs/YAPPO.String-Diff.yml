@@ -1,0 +1,12 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=71678
+
+match:
+  distribution: "^YAPPO/String-Diff-0.04"
+pl:
+  commandline: "rm inc/YAML.pm; $PERL Makefile.PL"
+depends:
+  requires:
+    YAML: 0
