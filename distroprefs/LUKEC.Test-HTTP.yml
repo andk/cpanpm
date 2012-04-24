@@ -7,5 +7,7 @@ comment: |
 
 match:
   distribution: "LUKEC/Test-HTTP-0.16.tar.gz"
+cpanconfig:
+  test_report: 0
 pl:
   commandline: "$PERL -i~ -ne 'print unless /PREREQ_FATAL/' Makefile.PL; $PERL Makefile.PL"
