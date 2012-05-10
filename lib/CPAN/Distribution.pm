@@ -312,9 +312,7 @@ sub get {
             # note: not intended to be persistent but at least visible
             # during this session
         } else {
-            if (exists $self->{build_dir} && -d $self->{build_dir}
-                && ($self->{modulebuild}||$self->{writemakefile})
-               ) {
+            if (exists $self->{build_dir} && -d $self->{build_dir}) {
                 # this deserves print, not warn:
                 $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
                                          "$self->{build_dir}\n"
@@ -366,7 +364,8 @@ sub get {
         $self->safe_chdir($sub_wd);
         return;
     }
-    return $self->choose_MM_or_MB($local_file);
+    $self->store_persistent_state;
+    return;
 }
 
 #-> CPAN::Distribution::get_file_onto_local_disk
@@ -724,8 +723,9 @@ sub satisfy_configure_requires {
 
 #-> sub CPAN::Distribution::choose_MM_or_MB ;
 sub choose_MM_or_MB {
-    my($self,$local_file) = @_;
+    my($self) = @_;
     $self->satisfy_configure_requires() or return;
+    my $local_file = $self->{localfile};
     my($mpl) = File::Spec->catfile($self->{build_dir},"Makefile.PL");
     my($mpl_exists) = -f $mpl;
     unless ($mpl_exists) {
@@ -1721,47 +1721,13 @@ sub perl {
 }
 
 
-#-> sub CPAN::Distribution::make ;
-sub make {
-    my($self) = @_;
-    if (my $goto = $self->prefs->{goto}) {
-        return $self->goto($goto);
-    }
-    my $make = $self->{modulebuild} ? "Build" : "make";
-    # Emergency brake if they said install Pippi and get newest perl
-    if ($self->isa_perl) {
-        if (
-            $self->called_for ne $self->id &&
-            ! $self->{force_update}
-        ) {
-            # if we die here, we break bundles
-            $CPAN::Frontend
-                ->mywarn(sprintf(
-                            qq{The most recent version "%s" of the module "%s"
-is part of the perl-%s distribution. To install that, you need to run
-  force install %s   --or--
-  install %s
-},
-                             $CPAN::META->instance(
-                                                   'CPAN::Module',
-                                                   $self->called_for
-                                                  )->cpan_version,
-                             $self->called_for,
-                             $self->isa_perl,
-                             $self->called_for,
-                             $self->id,
-                            ));
-            $self->{make} = CPAN::Distrostatus->new("NO isa perl");
-            $CPAN::Frontend->mysleep(1);
-            return;
-        }
-    }
-    $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
-    $self->get;
+sub prepare {
+    my ($self) = @_;
+
     return if $self->prefs->{disabled} && ! $self->{force_update};
-    if ($self->{configure_requires_later}) {
-        return;
-    }
+
+    $self->get;
+
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -1800,45 +1766,26 @@ is part of the perl-%s distribution. To install that, you need to run
                 and push @e, "Did not pass the signature test.";
         }
 
-        if (exists $self->{writemakefile} &&
-            (
-             UNIVERSAL::can($self->{writemakefile},"failed") ?
-             $self->{writemakefile}->failed :
-             $self->{writemakefile} =~ /^NO/
-            )) {
-            # XXX maybe a retry would be in order?
-            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
-                $self->{writemakefile}->text :
-                    $self->{writemakefile};
-            $err =~ s/^NO\s*(--\s+)?//;
-            $err ||= "Had some problem writing Makefile";
-            $err .= ", won't make";
-            push @e, $err;
-        }
-
-        if (defined $self->{make}) {
-            if (UNIVERSAL::can($self->{make},"failed") ?
-                $self->{make}->failed :
-                $self->{make} =~ /^NO/) {
-                if ($self->{force_update}) {
-                    # Trying an already failed 'make' (unless somebody else blocks)
-                } else {
-                    # introduced for turning recursion detection into a distrostatus
-                    my $error = length $self->{make}>3
-                        ? substr($self->{make},3) : "Unknown error";
-                    $CPAN::Frontend->mywarn("Could not make: $error\n");
-                    $self->store_persistent_state;
-                    return;
-                }
+        if ($self->{writemakefile}) {
+            if (
+                 UNIVERSAL::can($self->{writemakefile},"failed") ?
+                 $self->{writemakefile}->failed :
+                 $self->{writemakefile} =~ /^NO/
+                ) {
+                # XXX maybe a retry would be in order?
+                my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                    $self->{writemakefile}->text :
+                        $self->{writemakefile};
+                $err =~ s/^NO\s*(--\s+)?//;
+                $err ||= "Had some problem writing Makefile";
+                $err .= ", not re-running";
+                push @e, $err;
             } else {
-                push @e, "Has already been made";
-                my $wait_for_prereqs = eval { $self->satisfy_requires };
-                return 1 if $wait_for_prereqs;   # tells queuerunner to continue
-                return $self->goodbye($@) if $@; # tells queuerunner to stop
+                push @e, "Has already been prepared";
             }
         }
 
-        my $later = $self->{later} || $self->{configure_requires_later};
+        my $later = $self->{configure_requires_later};
         if ($later) { # see also undelay
             if ($later) {
                 push @e, $later;
@@ -1857,13 +1804,12 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
-    $CPAN::Frontend->myprint("\n  CPAN.pm: Building ".$self->id."\n\n");
+
+    $CPAN::Frontend->myprint("\n  CPAN.pm: Configuring ".$self->id."\n\n");
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::make($self);
-        return;
-    }
+    $self->choose_MM_or_MB;
+    return if $self->{writemakefile}; # choose_MM_or_MB sets this on error
 
     my %env;
     while (my($k,$v) = each %ENV) {
@@ -1875,6 +1821,7 @@ is part of the perl-%s distribution. To install that, you need to run
         $ENV{PERL_AUTOINSTALL}          ||= "--defaultdeps";
         $ENV{PERL_EXTUTILS_AUTOINSTALL} ||= "--defaultdeps";
     }
+
     my $system;
     my $pl_commandline;
     if ($self->prefs->{pl}) {
@@ -1913,6 +1860,7 @@ is part of the perl-%s distribution. To install that, you need to run
             $ENV{$e} = $pl_env->{$e};
         }
     }
+
     if (exists $self->{writemakefile}) {
     } else {
         local($SIG{ALRM}) = sub { die "inactivity_timeout reached\n" };
@@ -2017,10 +1965,153 @@ is part of the perl-%s distribution. To install that, you need to run
             return $self->goodbye("$system -- NOT OK");
         }
     }
+    $self->store_persistent_state;
+}
+
+#-> sub CPAN::Distribution::make ;
+sub make {
+    my($self) = @_;
+    if (my $goto = $self->prefs->{goto}) {
+        return $self->goto($goto);
+    }
+    # Emergency brake if they said install Pippi and get newest perl
+    if ($self->isa_perl) {
+        if (
+            $self->called_for ne $self->id &&
+            ! $self->{force_update}
+        ) {
+            # if we die here, we break bundles
+            $CPAN::Frontend
+                ->mywarn(sprintf(
+                            qq{The most recent version "%s" of the module "%s"
+is part of the perl-%s distribution. To install that, you need to run
+  force install %s   --or--
+  install %s
+},
+                             $CPAN::META->instance(
+                                                   'CPAN::Module',
+                                                   $self->called_for
+                                                  )->cpan_version,
+                             $self->called_for,
+                             $self->isa_perl,
+                             $self->called_for,
+                             $self->id,
+                            ));
+            $self->{make} = CPAN::Distrostatus->new("NO isa perl");
+            $CPAN::Frontend->mysleep(1);
+            return;
+        }
+    }
+    $self->prepare;
+    my $builddir;
+  EXCUSE: {
+        my @e;
+        if (!$self->{archived} || $self->{archived} eq "NO") {
+            push @e, "Is neither a tar nor a zip archive.";
+        }
+
+        if (!$self->{unwrapped}
+            || (
+                UNIVERSAL::can($self->{unwrapped},"failed") ?
+                $self->{unwrapped}->failed :
+                $self->{unwrapped} =~ /^NO/
+               )) {
+            push @e, "Had problems unarchiving. Please build manually";
+        }
+
+        unless ($self->{force_update}) {
+            exists $self->{signature_verify} and
+                (
+                 UNIVERSAL::can($self->{signature_verify},"failed") ?
+                 $self->{signature_verify}->failed :
+                 $self->{signature_verify} =~ /^NO/
+                )
+                and push @e, "Did not pass the signature test.";
+        }
+
+        if (exists $self->{writemakefile} &&
+            (
+             UNIVERSAL::can($self->{writemakefile},"failed") ?
+             $self->{writemakefile}->failed :
+             $self->{writemakefile} =~ /^NO/
+            )) {
+            # XXX maybe a retry would be in order?
+            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                $self->{writemakefile}->text :
+                    $self->{writemakefile};
+            $err =~ s/^NO\s*(--\s+)?//;
+            $err ||= "Had some problem writing Makefile";
+            $err .= ", won't make";
+            push @e, $err;
+        }
+
+        if (defined $self->{make}) {
+            if (UNIVERSAL::can($self->{make},"failed") ?
+                $self->{make}->failed :
+                $self->{make} =~ /^NO/) {
+                if ($self->{force_update}) {
+                    # Trying an already failed 'make' (unless somebody else blocks)
+                } else {
+                    # introduced for turning recursion detection into a distrostatus
+                    my $error = length $self->{make}>3
+                        ? substr($self->{make},3) : "Unknown error";
+                    $CPAN::Frontend->mywarn("Could not make: $error\n");
+                    $self->store_persistent_state;
+                    return;
+                }
+            } else {
+                push @e, "Has already been made";
+                my $wait_for_prereqs = eval { $self->satisfy_requires };
+                return 1 if $wait_for_prereqs;   # tells queuerunner to continue
+                return $self->goodbye($@) if $@; # tells queuerunner to stop
+            }
+        }
+
+        my $later = $self->{later} || $self->{configure_requires_later};
+        if ($later) { # see also undelay
+            if ($later) {
+                push @e, $later;
+            }
+        }
+
+        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        $builddir = $self->dir or
+            $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+        unless (chdir $builddir) {
+            push @e, "Couldn't chdir to '$builddir': $!";
+        }
+        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    }
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
     }
+    my $make = $self->{modulebuild} ? "Build" : "make";
+    $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
+    return if $self->prefs->{disabled} && ! $self->{force_update};
+    local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
+                           ? $ENV{PERL5LIB}
+                           : ($ENV{PERLLIB} || "");
+    local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    $CPAN::META->set_perl5lib;
+    local $ENV{MAKEFLAGS}; # protect us from outer make calls
+
+    if ($CPAN::Signal) {
+        delete $self->{force_update};
+        return;
+    }
+
+    if ($^O eq 'MacOS') {
+        Mac::BuildTools::make($self);
+        return;
+    }
+
+    my %env;
+    while (my($k,$v) = each %ENV) {
+        next unless defined $v;
+        $env{$k} = $v;
+    }
+    local %ENV = %env;
     my $wait_for_prereqs = eval { $self->satisfy_requires };
     return 1 if $wait_for_prereqs;   # tells queuerunner to continue
     return $self->goodbye($@) if $@; # tells queuerunner to stop
@@ -2028,6 +2119,7 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
+    my $system;
     my $make_commandline;
     if ($self->prefs->{make}) {
         $make_commandline = $self->prefs->{make}{commandline};
@@ -2578,11 +2670,7 @@ sub _feature_depends {
     $dep;
 }
 
-#-> sub CPAN::Distribution::unsat_prereq ;
-# return ([Foo,"r"],[Bar,"b"]) for normal modules
-# return ([perl=>5.008]) if we need a newer perl than we are running under
-# (sorry for the inconsistency, it was an accident)
-sub unsat_prereq {
+sub prereqs_for_slot {
     my($self,$slot) = @_;
     my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
@@ -2622,8 +2710,18 @@ sub unsat_prereq {
     } else {
         die "Panic: illegal slot '$slot'";
     }
+    return (\%merged, $prereq_pm);
+}
+
+#-> sub CPAN::Distribution::unsat_prereq ;
+# return ([Foo,"r"],[Bar,"b"]) for normal modules
+# return ([perl=>5.008]) if we need a newer perl than we are running under
+# (sorry for the inconsistency, it was an accident)
+sub unsat_prereq {
+    my($self,$slot) = @_;
+    my($merged,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    my @merged = %merged;
+    my @merged = my %merged = %$merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: while (my($need_module, $need_version) = each %merged) {
         my($available_version,$inst_file,$available_file,$nmo);
