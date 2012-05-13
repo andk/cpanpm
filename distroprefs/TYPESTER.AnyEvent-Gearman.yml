@@ -1,0 +1,11 @@
+---
+comment: |
+
+  Prevent test being skipped
+
+match:
+  distribution: 'TYPESTER/AnyEvent-Gearman-\d'
+depends:
+  requires:
+    Gearman::Worker: 0
+    Gearman::Server: 0
