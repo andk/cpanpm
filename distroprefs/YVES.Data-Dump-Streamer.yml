@@ -1,13 +1,6 @@
 ---
-comment: "http://rt.cpan.org/Ticket/Display.html?id=28270"
 match:
   distribution: 'YVES/Data-Dump-Streamer-\d'
 pl:
   args:
     - "NODDS"
-install:
-  env:
-    EU_INSTALL_IGNORE_SKIP: 1
-depends:
-  requires:
-    PadWalker: 0
