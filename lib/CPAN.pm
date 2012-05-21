@@ -1721,7 +1721,9 @@ C<$CPAN::Config-E<gt>{cpan_home}/Bundle> directory. The file contains
 a list of all modules that are both available from CPAN and currently
 installed within @INC. Duplicates of each distribution are suppressed.
 The name of the bundle file is based on the current date and a
-counter.
+counter, e.g. F<Bundle/Snapshot_2012_05_21_00.pm>. This is installed
+again by running C<cpan Bundle::Snapshot_2012_05_21_00>, or installing
+C<Bundle::Snapshot_2012_05_21_00> from the CPAN shell.
 
 Return value: path to the written file.
 
