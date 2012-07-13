@@ -1721,7 +1721,9 @@ C<$CPAN::Config-E<gt>{cpan_home}/Bundle> directory. The file contains
 a list of all modules that are both available from CPAN and currently
 installed within @INC. Duplicates of each distribution are suppressed.
 The name of the bundle file is based on the current date and a
-counter.
+counter, e.g. F<Bundle/Snapshot_2012_05_21_00.pm>. This is installed
+again by running C<cpan Bundle::Snapshot_2012_05_21_00>, or installing
+C<Bundle::Snapshot_2012_05_21_00> from the CPAN shell.
 
 Return value: path to the written file.
 
@@ -1735,6 +1737,8 @@ activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
 configured or YAML not installed, no stats are provided.
 
+=over
+
 =item install_tested
 
 Install all distributions that have been tested successfully but have
@@ -1745,6 +1749,8 @@ not yet been installed. See also C<is_tested>.
 List all buid directories of distributions that have been tested
 successfully but have not yet been installed. See also
 C<install_tested>.
+
+=back
 
 =head2 mkmyconfig
 
@@ -3795,7 +3801,7 @@ yourself.
 
 =head2 OLD PERL VERSIONS
 
-CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
+CPAN.pm is regularly tested to run under 5.005 and assorted
 newer versions. It is getting more and more difficult to get the
 minimal prerequisites working on older perls. It is close to
 impossible to get the whole Bundle::CPAN working there. If you're in
@@ -3858,5 +3864,9 @@ you have this directory in your PATH variable (or some equivalent in
 your operating system) then typing C<cpan> in a console window will
 work for you as well. Above that the utility provides several
 commandline shortcuts.
+
+melezhik (Alexey) sent me a link where he published a chef recipe to
+work with CPAN.pm: http://community.opscode.com/cookbooks/cpan.
+
 
 =cut

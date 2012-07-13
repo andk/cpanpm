@@ -1,11 +1,10 @@
 --- 
 match:
-  distribution: "^CHAMAS/Crypt-SSLeay-"
-goto: "DLAND/Crypt-SSLeay-0.52_02.tar.gz"
+  distribution: "^NANIS/Crypt-SSLeay-0.58"
+goto: "NANIS/Crypt-SSLeay-0.59_03.tar.gz"
 ---
-comment: "Wording of the question changed around 0.53_05"
 match:
-  distribution: "^(DLAND|NANIS)/Crypt-SSLeay-"
+  distribution: "^NANIS/Crypt-SSLeay-0.59"
 pl:
   eexpect:
     mode: anyorder

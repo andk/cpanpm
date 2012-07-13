@@ -21,6 +21,7 @@ match:
     |.+/Win32(API)?-                         # I have only linux
     |.+Net-Whois-IANA-\d                     # endless loop in testing
     |.+Mojolicious-Plugin-HamlRenderer-1.1   # huge process size can tear down linux
+    |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |xxxADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
@@ -55,6 +56,7 @@ match:
     |BOBTFISH/Catalyst-Authentication-Store-LDAP-\d # hangs
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
+    |BOWTIE/Debug-Client-0.21_02.tar.gz      # hangs after pod-coverage
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
@@ -89,6 +91,7 @@ match:
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FROGGS/Alien-SDL-1.418                  # questions
+    |FXN/Net-Fluidinfo-0.45                  # date based fail see #76547
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
@@ -193,6 +196,7 @@ match:
     |xxxPETDANCE/Test-WWW-Mechanize-\d          # hangs
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
+    |PEVANS/IO-Async-Loop-Glib-0.20          # hangs after t/12share-timer.t (in t/15share-child.t)
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |xxxPJFL/                                # does not want to be tested by user sand---no reason given; hmmm, but we may want some module from this user, eg. File-DataClass-0.4.268
@@ -201,7 +205,7 @@ match:
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
-    |PHRED/mod_perl-2.0.5.tar.gz             # endless loop
+    |PHRED/mod_perl-2.0.\d.tar.gz            # endless loop seen with 5,6,7
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |ROLAND/jmx4perl-\d                      # asks questions
@@ -225,6 +229,7 @@ match:
     |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SMUELLER/Alien-ROOT-v5.28.0.1           # hangs
+    |SPANG/App-SD-0.75.tar.gz                # hangs in test t/sd-github/basic.t
     |SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz # Module::Install 0.54 http://rt.cpan.org/Ticket/Display.html?id=40618
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
     |SSCAFFIDI/Stem-0.12.tar.gz              # hangs

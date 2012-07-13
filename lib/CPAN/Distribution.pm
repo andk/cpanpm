@@ -1887,7 +1887,11 @@ is part of the perl-%s distribution. To install that, you need to run
         $system = $self->{'configure'};
     } elsif ($self->{modulebuild}) {
         my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
-        $system = "$perl Build.PL $CPAN::Config->{mbuildpl_arg}";
+        my $mbuildpl_arg = $self->_make_phase_arg("pl");
+        $system = sprintf("%s Build.PL%s",
+                          $perl,
+                          $mbuildpl_arg ? " $mbuildpl_arg" : "",
+                         );
     } else {
         my($perl) = $self->perl or die "Couldn\'t find executable perl\n";
         my $switch = "";
