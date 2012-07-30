@@ -20,7 +20,6 @@ match:
     |.+/Test-Simple-2.00_                    # rt.cpan.org 66317
     |.+/Win32(API)?-                         # I have only linux
     |.+Net-Whois-IANA-\d                     # endless loop in testing
-    |.+Mojolicious-Plugin-HamlRenderer-1.1   # huge process size can tear down linux
     |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
