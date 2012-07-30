@@ -20,6 +20,8 @@ match:
     |.+/Test-Simple-2.00_                    # rt.cpan.org 66317
     |.+/Win32(API)?-                         # I have only linux
     |.+Net-Whois-IANA-\d                     # endless loop in testing
+    |.+Mojolicious-Plugin-HamlRenderer-1.1   # huge process size can tear down linux
+    |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |xxxADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
@@ -203,7 +205,7 @@ match:
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
-    |PHRED/mod_perl-2.0.6.tar.gz             # endless loop
+    |PHRED/mod_perl-2.0.\d.tar.gz            # endless loop seen with 5,6,7
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |ROLAND/jmx4perl-\d                      # asks questions
