@@ -1,3 +1,18 @@
+--- 
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=78824
+
+match:
+  distribution: 'SREZIC/Tk-804.030.tar.gz'
+patches:
+  - "ANDK/patches/Tk-804.030-SPROUT-01.patch.gz"
+pl:
+  args:
+    - "XFT=1"
+test:
+  env:
+    DISPLAY: ":121"
 ---
 match:
   distribution: '^NI-S/Tk-804\.027\.tar\.gz$'
