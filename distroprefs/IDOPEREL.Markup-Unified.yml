@@ -1,0 +1,6 @@
+--- 
+match:
+  distribution: "IDOPEREL/Markup-Unified-0.03"
+depends:
+  requires:
+    Text::Textile: 0
