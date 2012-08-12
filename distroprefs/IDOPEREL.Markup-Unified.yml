@@ -6,5 +6,4 @@ depends:
     Text::Textile: 0
     Encode: 2.46
     Text::Markdown: 1.000025
-    HTML::BBCode: 2.06
     HTML::Truncate: 0.20
