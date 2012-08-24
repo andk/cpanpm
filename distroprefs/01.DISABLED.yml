@@ -254,7 +254,7 @@ match:
     |TURNSTEP/DBD-Pg-\d                      # asks for pg_config
     |URI/Stem-\d                             # asks questions about conf directories
     |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
-    |VINSWORLD/Net-Syslogd-0.04.             # asks question
+    |VINSWORLD/Net-Syslogd-0.0\d.            # asks question from 04 to 06
     |VINSWORLD/Cisco-Management-0.05         # asks question
     |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
     |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
