@@ -21,6 +21,7 @@ match:
     |.+/Win32(API)?-                         # I have only linux
     |.+Net-Whois-IANA-\d                     # endless loop in testing
     |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
+    |.*Mojolicious-Plugin-HamlRenderer       # last release 20120604, rather take MojoX-Renderer-Haml which came 2012-08-14 (the two bite each other)
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |xxxADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
