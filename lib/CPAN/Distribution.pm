@@ -1979,6 +1979,7 @@ sub prepare {
         if (-f "Makefile" || -f "Build" || ($^O eq 'VMS' && (-f 'descrip.mms' || -f 'Build.com'))) {
             $self->{writemakefile} = CPAN::Distrostatus->new("YES");
             delete $self->{make_clean}; # if cleaned before, enable next
+            $self->store_persistent_state;
             return $self->success("$system -- OK");
         } else {
             my $makefile = $self->{modulebuild} ? "Build" : "Makefile";
