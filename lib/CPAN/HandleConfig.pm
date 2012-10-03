@@ -533,8 +533,13 @@ sub cpan_home_dir_candidates {
     push @dirs, $ENV{USERPROFILE} if $ENV{USERPROFILE};
 
     $CPAN::Config->{load_module_verbosity} = $old_v;
-    @dirs = map { "$_/.cpan" } grep { defined } @dirs;
+    my $hidden = cpan_hidden_config_dir();
+    @dirs = map { File::Spec->catdir($_, $hidden) } grep { defined } @dirs;
     return wantarray ? @dirs : $dirs[0];
+}
+
+sub cpan_hidden_config_dir {
+    return $^O eq 'VMS' ? '_cpan' : '.cpan'
 }
 
 sub load {
