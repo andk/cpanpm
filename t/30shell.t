@@ -810,7 +810,7 @@ __END__
 #R:YAML
 ########
 #P:m Fcntl
-#E:Restored the state of (?:\d|none)[\s\S]+?Defines fcntl
+#E:(?:Restored the state of (?:\d|none)|nothing to restore)[\s\S]+?Defines fcntl
 #R:YAML
 ########
 #P:a JHI
