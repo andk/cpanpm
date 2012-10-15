@@ -1552,10 +1552,6 @@ sub init_cpan_home {
         my($last_ans,$ans);
         $CPAN::Frontend->myprint(" <cpan_home>\n") unless $auto_config;
     PROMPT: while ($ans = prompt("CPAN build and cache directory?",$default)) {
-            if (++$loop > 5) {
-                $CPAN::Frontend->mydie("Giving up");
-                last PROMPT;
-            }
             if (File::Spec->file_name_is_absolute($ans)) {
                 my @cpan_home = split /[\/\\]/, $ans;
             DIR: for my $dir (@cpan_home) {
@@ -1590,6 +1586,10 @@ sub init_cpan_home {
                 $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
                                         "or directory is not writable. Please retry.\n");
             }
+        } continue {
+                if (++$loop > 5) {
+                    $CPAN::Frontend->mydie("Giving up");
+                }
         }
         $CPAN::Config->{cpan_home} = $ans;
     }
