@@ -1585,11 +1585,10 @@ sub init_cpan_home {
             } else {
                 $CPAN::Frontend->mywarn("Couldn't find directory $ans\n".
                                         "or directory is not writable. Please retry.\n");
-            }
-        } continue {
                 if (++$loop > 5) {
                     $CPAN::Frontend->mydie("Giving up");
                 }
+            }
         }
         $CPAN::Config->{cpan_home} = $ans;
     }
