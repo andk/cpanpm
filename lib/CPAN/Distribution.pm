@@ -788,8 +788,8 @@ sub store_persistent_state {
                                     "will not store persistent state\n");
         return;
     }
-    unless (File::Spec->canonpath(File::Basename::dirname($dir))
-            eq File::Spec->canonpath($CPAN::Config->{build_dir})) {
+    unless (   Cwd::realpath(File::Spec->catdir($dir, File::Spec->updir()) )
+            eq Cwd::realpath($CPAN::Config->{build_dir}                  ) ) {
         $CPAN::Frontend->mywarnonce("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
                                     "will not store persistent state\n");
         return;
