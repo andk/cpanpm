@@ -303,7 +303,10 @@ DESCRIPTION
     "$CPAN::Config->{cpan_home}/Bundle" directory. The file contains a list
     of all modules that are both available from CPAN and currently installed
     within @INC. Duplicates of each distribution are suppressed. The name of
-    the bundle file is based on the current date and a counter.
+    the bundle file is based on the current date and a counter, e.g.
+    Bundle/Snapshot_2012_05_21_00.pm. This is installed again by running
+    "cpan Bundle::Snapshot_2012_05_21_00", or installing
+    "Bundle::Snapshot_2012_05_21_00" from the CPAN shell.
 
     Return value: path to the written file.
 
@@ -315,6 +318,15 @@ DESCRIPTION
     activities. The data for this is collected in the YAML file
     "FTPstats.yml" in your "cpan_home" directory. If no YAML module is
     configured or YAML not installed, no stats are provided.
+
+    install_tested
+        Install all distributions that have been tested successfully but
+        have not yet been installed. See also "is_tested".
+
+    is_tested
+        List all buid directories of distributions that have been tested
+        successfully but have not yet been installed. See also
+        "install_tested".
 
   mkmyconfig
     mkmyconfig() writes your own CPAN::MyConfig file into your "~/.cpan/"
@@ -1340,10 +1352,6 @@ PROGRAMMER'S INTERFACE
         Note that install() gives no meaningful return value. See
         uptodate().
 
-    CPAN::Distribution::install_tested()
-        Install all distributions that have tested successfully but not yet
-        installed. See also "is_tested".
-
     CPAN::Distribution::isa_perl()
         Returns 1 if this distribution file seems to be a perl distribution.
         Normally this is derived from the file name only, but the index from
@@ -2100,8 +2108,8 @@ FAQ
 
 COMPATIBILITY
   OLD PERL VERSIONS
-    CPAN.pm is regularly tested to run under 5.004, 5.005, and assorted
-    newer versions. It is getting more and more difficult to get the minimal
+    CPAN.pm is regularly tested to run under 5.005 and assorted newer
+    versions. It is getting more and more difficult to get the minimal
     prerequisites working on older perls. It is close to impossible to get
     the whole Bundle::CPAN working there. If you're in the position to have
     only these old versions, be advised that CPAN is designed to work fine
@@ -2154,4 +2162,7 @@ SEE ALSO
     operating system) then typing "cpan" in a console window will work for
     you as well. Above that the utility provides several commandline
     shortcuts.
+
+    melezhik (Alexey) sent me a link where he published a chef recipe to
+    work with CPAN.pm: http://community.opscode.com/cookbooks/cpan.
 
