@@ -7,4 +7,4 @@ comment: |
 match:
   distribution: "BTROTT/Class-ErrorHandler-0.01.tar.gz"
 patches:
-  - "/tmp/Class-ErrorHandler-0.01-ANDK-01-time-to-kill-autoinstall.diff"
+  - "ANDK/patches/Class-ErrorHandler-0.01-ANDK-01-time-to-kill-autoinstall.diff.gz"
