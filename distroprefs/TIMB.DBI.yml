@@ -1,3 +1,11 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=81516
+
+match:
+  distribution: "TIMB/DBI-1.622.tar.gz"
+goto: "TIMB/DBI-1.622_924.tar.gz"
 --- 
 comment: "The patch by Steve Peters was posted to P5P 2006-10-23"
 match:
