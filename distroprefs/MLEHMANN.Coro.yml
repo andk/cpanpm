@@ -22,11 +22,14 @@ comment: |
   With Coro 6.02 trying again to disable this distropref stanza. Nope,
   the test after basic.t hangs again
 
+  With Coro 6.23 I try again to set disabled=0 because cpantesters
+  shows mostly green.
+
 match:
   distribution: "^MLEHMANN/Coro-"
   perlconfig:
     nvsize: "^16$"
-disabled: 1
+disabled: 0
 ---
 match:
   distribution: "^MLEHMANN/Coro-"
