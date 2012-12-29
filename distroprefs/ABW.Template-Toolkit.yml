@@ -8,6 +8,10 @@ comment: |
 
 match:
   distribution: '^ABW/Template-Toolkit-2\.'
+test:
+  env:
+    # work around https://rt.cpan.org/Ticket/Display.html?id=79232
+    AUTOMATED_TESTING: 0
 pl:
   args:
     - TT_EXTRAS=no
