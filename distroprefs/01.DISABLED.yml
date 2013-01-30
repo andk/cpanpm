@@ -56,7 +56,7 @@ match:
     |BOBTFISH/Catalyst-Authentication-Store-LDAP-\d # hangs
     |BOOK/Net-Proxy-0.12                     # hangs quite often, not always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
-    |BOWTIE/Debug-Client-0.21_02.tar.gz      # hangs after pod-coverage
+    |BOWTIE/Debug-Client-\d                  # terminal related fails of unknown root, BOWTIE asks for my (ANDK) smoker being disabled
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
