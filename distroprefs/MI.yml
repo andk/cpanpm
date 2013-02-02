@@ -353,7 +353,6 @@ match:
     |SARTAK/Acme-Aspartame-\d
     |SARTAK/App-Nopaste-\d
     |SARTAK/Carp-REPL-\d
-    |xxxSARTAK/Class-Method-Modifiers-\d # has an own file
     |SARTAK/Date-Extract-\d
     |SARTAK/IO-Socket-Telnet-\d
     |SARTAK/IncPatch-\d
