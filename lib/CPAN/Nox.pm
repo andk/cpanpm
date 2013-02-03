@@ -6,7 +6,8 @@ BEGIN{
   $CPAN::Suppress_readline=1 unless defined $CPAN::term;
 }
 
-use base 'Exporter';
+use Exporter ();
+@CPAN::ISA = ('Exporter');
 use CPAN;
 
 $VERSION = "5.50";
