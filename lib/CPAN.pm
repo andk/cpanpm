@@ -2499,7 +2499,7 @@ CPAN mantra. See below under I<Processing Instructions>.
 
 =item match [hash]
 
-A hashref with one or more of the keys C<distribution>, C<modules>,
+A hashref with one or more of the keys C<distribution>, C<module>,
 C<perl>, C<perlconfig>, and C<env> that specify whether a document is
 targeted at a specific CPAN distribution or installation.
 Keys prefixed with C<not_> negates the corresponding match.
