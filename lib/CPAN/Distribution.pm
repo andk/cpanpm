@@ -2657,8 +2657,23 @@ sub unsat_prereq {
         # one and is deprecated
 
         if ( $available_file ) {
-            if  ( $inst_file && $available_file eq $inst_file && $nmo->inst_deprecated ) {
-                # continue installing as a prereq
+            my $fulfills_all_version_rqs = $self->_fulfills_all_version_rqs
+                (
+                 $need_module,
+                 $available_file,
+                 $available_version,
+                 $need_version,
+                );
+            if (0) {
+            } elsif  ( $inst_file
+                       && $available_file eq $inst_file
+                       && $nmo->inst_deprecated
+                       && !$fulfills_all_version_rqs
+                     ) {
+                # continue installing as a prereq unless we have an
+                # available version that is good enough even though
+                # deprecated (preventing loop CPANPLUS =>
+                # CPANPLUS::Dist::Build RT#83042)
             } elsif ($self->{reqtype} =~ /^(r|c)$/ && exists $prereq_pm->{requires}{$need_module} && $nmo && !$inst_file) {
                 # continue installing as a prereq; this may be a
                 # distro we already used when it was a build_requires
@@ -2674,9 +2689,7 @@ sub unsat_prereq {
                 }
             }
             else {
-                next NEED if $self->_fulfills_all_version_rqs(
-                    $need_module,$available_file,$available_version,$need_version
-                );
+                next NEED if $fulfills_all_version_rqs;
             }
         }
 
