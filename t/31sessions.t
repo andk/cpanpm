@@ -64,7 +64,6 @@ use File::Spec;
 use File::Temp;
 use Getopt::Long;
 use Pod::Usage;
-use Hash::Util qw(lock_keys);
 
 our %Opt;
 my %limit_to_sessions;
@@ -72,10 +71,13 @@ my $cnt;
 
 $|=1;
 BEGIN {
+    eval { # may fail, e.g. on 5.6.2 which has no Hash::Util
+        require Hash::Util;
+        Hash::Util::lock_keys(%Opt, map { /([^=!\|]+)/ } @opt);
+    };
     $cnt = 0;
     unshift @INC, './lib', './t';
 
-    lock_keys %Opt, map { /([^=!\|]+)/ } @opt;
     GetOptions(\%Opt,
                @opt,
               ) or pod2usage(1);
