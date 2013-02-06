@@ -8,7 +8,7 @@ use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "1.9602";
+$VERSION = "2.00";
 
 # Accessors
 sub cpan_comment {
