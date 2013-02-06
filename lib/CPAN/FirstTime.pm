@@ -1393,6 +1393,8 @@ sub _do_pick_mirrors {
     my $_conf = 'n';
     if ( $CPAN::META->has_usable("Net::Ping") && Net::Ping->VERSION gt '2.13') {
         $_conf = prompt($prompts{auto_pick}, "yes");
+    } else {
+        prompt("Autoselection disabled due to Net::Ping missing or insufficient. Please press ENTER");
     }
     my @old_list = @{ $CPAN::Config->{urllist} };
     if ( $_conf =~ /^y/i ) {

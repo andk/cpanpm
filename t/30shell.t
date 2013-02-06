@@ -445,8 +445,9 @@ __END__
 ########
 #E:(?s:Enter 'h' for help.*?cpan[^>]*>)
 ########
+#C:the answer depends on Net::Ping availability
 #P:o conf init urllist
-#E:(?s:Would you like me to automatically choose.+?yes\])
+#E:(?s:Would you like me to automatically choose.+?yes\]|Autoselection disabled)
 ########
 #P:n
 #E:Would you like to.+?pick.+?mirror.+?list.+?yes(\])
