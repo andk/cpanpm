@@ -23,6 +23,8 @@ $VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
+my $is_trial = 1;
+my $version;
 {
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
@@ -47,10 +49,14 @@ if ($HAVE_FILE_SPEC) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
       unshift @INC, "lib";
       require $version_from;
+      $version = $CPAN::VERSION;
+      if ($is_trial) {
+          $version .= "-TRIAL";
+      }
       open my $fh, "make the-release-name|" or die;
       my $have_version;
       while (<$fh>) {
-        next unless /^version\s+([\d\._]+)/;
+        next unless /^version\s+([\d\._]+(?:-TRIAL)?)/;
         $have_version = eval $1;
       }
       die "could not determine current version from Makefile" unless $have_version;
@@ -169,7 +175,7 @@ my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 WriteMakefile(
               INSTALLDIRS  => 'perl',  # as it is coming with perl
               NAME         => 'CPAN',
-              VERSION_FROM => $version_from,
+              VERSION      => $version,
               EXE_FILES    => [qw(scripts/cpan)],
               PREREQ_PM    => $prereq_pm,
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
