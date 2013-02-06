@@ -60,7 +60,7 @@ if ($is_trial) {
       my $have_version;
       while (<$fh>) {
         next unless /^version\s+([\d\._]+(?:-TRIAL)?)/;
-        $have_version = eval $1;
+        $have_version = $1;
       }
       die "could not determine current version from Makefile" unless $have_version;
       eval q{
