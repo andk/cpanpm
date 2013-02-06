@@ -31,8 +31,17 @@ my $version;
 }
 if ($HAVE_FILE_SPEC) {
   $version_from = File::Spec->catfile(qw(lib CPAN.pm));
+} else {
+  $version_from = "lib/CPAN.pm";
+}
+unshift @INC, "lib";
+require $version_from;
+$version = $CPAN::VERSION;
+if ($is_trial) {
+    $version .= "-TRIAL";
+}
+{
   my $version_set_manually = 1; # not by SVN
-
   if ($ARGV[0] && $ARGV[0] eq "--setversion") {
     die "Your perl is a bit dated[$]].\nDo not make a release with it\n" if $] < 5.008;
     die "Your MakeMaker is a bit dated[$ExtUtils::MakeMaker::VERSION].\nDo not make a release with it\n"
@@ -47,12 +56,6 @@ if ($HAVE_FILE_SPEC) {
 
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
-      unshift @INC, "lib";
-      require $version_from;
-      $version = $CPAN::VERSION;
-      if ($is_trial) {
-          $version .= "-TRIAL";
-      }
       open my $fh, "make the-release-name|" or die;
       my $have_version;
       while (<$fh>) {
