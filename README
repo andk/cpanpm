@@ -987,7 +987,7 @@ CONFIGURATION
         CPAN mantra. See below under *Processing Instructions*.
 
     match [hash]
-        A hashref with one or more of the keys "distribution", "modules",
+        A hashref with one or more of the keys "distribution", "module",
         "perl", "perlconfig", and "env" that specify whether a document is
         targeted at a specific CPAN distribution or installation. Keys
         prefixed with "not_" negates the corresponding match.
