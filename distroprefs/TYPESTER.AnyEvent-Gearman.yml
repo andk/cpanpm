@@ -1,10 +1,12 @@
 ---
 comment: |
 
-  Prevent test being skipped
+  Prevent test being skipped: we suspect that this always fails with
+  these prereqs fulfilled. Update 2013-03-20: maintainer changed, so
+  we had to adjust the distribution regexp
 
 match:
-  distribution: 'TYPESTER/AnyEvent-Gearman-\d'
+  distribution: '/AnyEvent-Gearman-\d'
 depends:
   requires:
     Gearman::Worker: 0
