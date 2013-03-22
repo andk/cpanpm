@@ -1,25 +1,31 @@
 use strict;
 use warnings;
+use v5.10;
 
 use CPAN::Mirrors;
 use Data::Dumper;
 
-my $mirrors = CPAN::Mirrors->new;
-
-my $mirrored_by_file = '/Volumes/Atlas/CPAN/MIRRORED.BY';
-$mirrors->parse_mirrored_by( $mirrored_by_file );
+my $mirrored_by_file = '/Users/brian/.cpan/sources/MIRRORED.BY';
+my $mirrors = CPAN::Mirrors->new( $mirrored_by_file );
 
 my $seen = {};
+my $n = 5;
 
-my $best_continent = $mirrors->find_best_continents( { seen => $seen } );
-my @mirrors        = $mirrors->get_mirrors_by_continents( $best_continent );
+my $best_continent = $mirrors->find_best_continents( n => $n, seen => $seen, verbose => 1 );
+say "Best continent is $best_continent";
+
+my @mirrors = $mirrors->get_mirrors_by_continents( $best_continent );
 
 my $callback = sub { 
 	my( $m ) = @_; 
-	printf "%s = %s ms\n", $m->hostname, 1000 * $m->rtt 
+	printf "%s = %s ms\n", $m->hostname, 1000 * $m->rtt
 	};
 my @sorted_mirrors = $mirrors->get_mirrors_timings( \@mirrors, $seen, $callback );
 
-print "Best mirrors are ", 
-	join ' ', map( $_->hostname, @sorted_mirrors[0..3] ), 
+print "Best mirrors are ",
+	join ' ', map( $_->hostname, @sorted_mirrors[0..$n-1] ),
+	"\n";
+
+print "Best urls are\n\t",
+	join( "\n\t", map( $_->http, @sorted_mirrors[0..$n-1] ) ),
 	"\n";
