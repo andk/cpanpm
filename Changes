@@ -1,3 +1,11 @@
+2013-06-22  Andreas Koenig  <k@UX31A>
+
+	* make distroprefs tolerant against missing prefs dir (akoenig)
+
+	* regain 5.6.2 compatibility (akoenig)
+
+	* add PAUSE key up to 2015 (akoenig)
+
 2013-06-18  Andreas Koenig  <k@UX31A>
 
 	* Use CPAN::Mirrors correctly (brian d foy)
