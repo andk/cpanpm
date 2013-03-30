@@ -4,7 +4,7 @@ use vars qw( $VERSION @ST_PREFS );
 BEGIN {$CPAN::Config_loaded=1}
 BEGIN {$CPAN::Config_loaded=1} # keep old perls with -w quiet
 use ExtUtils::MakeMaker qw(:DEFAULT);
-use File::Path;
+use File::Path; # maybe not needed???
 eval { require File::Spec; };
 my $HAVE_FILE_SPEC = !$@;
 eval { require YAML::Syck; };
@@ -16,10 +16,6 @@ my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 # storable pref files
 @ST_PREFS = qw(
               );
-
-
-my $Id = q$Id: Makefile.PL 146 2005-08-09 04:25:21Z k $;
-$VERSION = sprintf "%.3f", 1 + substr(q$Rev: 146 $,4)/1000;
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
@@ -55,7 +51,7 @@ if ($is_trial) {
     die "Not everything checked in or out?\n====\n$dirty====\n" if $dirty;
 
     if ($version_set_manually) {
-      # we must control that the VERSION in CPAN.pm is the same as in the Makefile
+      # we must control that the VERSION in this .pm is the same as in the Makefile
       open my $fh, "make the-release-name|" or die;
       my $have_version;
       while (<$fh>) {
@@ -179,7 +175,6 @@ EOW
     }
 }
 my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
-# warn "sign[@sign]";
 WriteMakefile(
               INSTALLDIRS  => 'perl',  # as it is coming with perl
               NAME         => 'CPAN',
@@ -192,9 +187,9 @@ WriteMakefile(
               ($ExtUtils::MakeMaker::VERSION >= 6.48 ?
                (MIN_PERL_VERSION => '5.006002') : (),
               ),
-              clean        => {
-                               FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml",
-                              },
+              clean => {
+                        FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml",
+                       },
               @sign,
               ($] >= 5.005 ?
                (
@@ -300,10 +295,6 @@ release :: disttest
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
 	$(NOECHO) $(ECHO) '#### Suggested next steps:'
-	$(NOECHO) $(ECHO) '  lftp pause.perl.org'
-	$(NOECHO) $(ECHO) '    cd incoming'
-	$(NOECHO) $(ECHO) '    put $(DISTVNAME).tar$(SUFFIX)'
-	$(NOECHO) $(ECHO) '    quit'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
 snapshot : Makefile no_CR META.yml README testdistros all tardist
