@@ -1243,10 +1243,7 @@ sub init {
             );
         }
         else {
-            $CPAN::Frontend->myprint(
-                "Autoconfigured everything but 'urllist'.\n"
-            );
-            _do_pick_mirrors();
+            $CPAN::Config->{urllist} = [ 'http://www.cpan.org/' ];
         }
     }
     elsif (!$matcher || "urllist" =~ $matcher) {
