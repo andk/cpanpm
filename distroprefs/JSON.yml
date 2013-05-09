@@ -1,17 +1,5 @@
 ---
 match:
-  distribution: "/JSON-2\.53\."
-  perlconfig:
-    version: "^5\.17\.(10|11)"
-patches:
-  - SREZIC/patches/JSON-2.53-RT84154.patch
-# hash (very) randomization problem
-depends:
-# so no interactive questions anymore:
-  configure_requires:
-    JSON::XS: 0
----
-match:
   distribution: "/JSON-[23456789]\."
 depends:
 # so no interactive questions anymore:
