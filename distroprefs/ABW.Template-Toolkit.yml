@@ -1,6 +1,23 @@
 --- 
 comment: |
 
+  https://rt.cpan.org/Ticket/Display.html?id=84778
+
+match:
+  distribution: '^ABW/Template-Toolkit-2\.24\.tar\.gz'
+patches:
+  - "ANDK/patches/Template-Toolkit-2.24-ZEFRAM-01.patch.gz"
+  - "ANDK/patches/Template-Toolkit-2.24-ANDK-01.patch.gz"
+--- 
+comment: "avoid failing on t/99_author.t (we are not the author)"
+match:
+  distribution: '^ABW/AppConfig-1.66.tar.gz'
+test:
+  env:
+    AUTOMATED_TESTING: 0
+--- 
+comment: |
+
   tested with 2.18 and 2.19
 
   2008-11-11 akoenig update: with 5 seconds timeout we were probably
