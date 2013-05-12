@@ -1,6 +1,15 @@
 ---
 comment: |
 
+  https://github.com/mojomojo/mojomojo/pull/112
+
+match:
+  distribution: '^MRAMBERG/MojoMojo-1\.09\.tar\.gz'
+patches:
+  - "ANDK/patches/MojoMojo-1.09-ANDK-01.patch.gz"
+---
+comment: |
+
   Something within Plucene was a showstopper so I do not want to say
   yes everywhere and so I cannot integrate this into MI.yml
 
