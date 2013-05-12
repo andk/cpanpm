@@ -1,14 +1,8 @@
 ---
 comment: |
 
-  Recent changes in libxml2 broke the test 03doc so we skip it
-
-  https://rt.cpan.org/Ticket/Display.html?id=27659
-
-  Now dated since 1.64 is out.
+  Shlomi insists on libxml2 2.9.0 but debian sid only has 2.8.0
 
 match:
-  distribution: "^PAJAS/XML-LibXML-1.63.tar.gz"
-test:
-  args:
-    - "TEST_FILES=t/01basic.t t/02parse.t t/04node.t t/05text.t t/06elements.t t/07dtd.t t/08findnodes.t t/09xpath.t t/10ns.t t/11memory.t t/12html.t t/13dtd.t t/14sax.t t/15nodelist.t t/16docnodes.t t/17callbacks.t t/18docfree.t t/19encoding.t t/20extras.t t/23rawfunctions.t t/24c14n.t t/25relaxng.t t/26schema.t t/27new_callbacks_simple.t t/28new_callbacks_multiple.t t/29id.t t/30xpathcontext.t t/31xpc_functions.t t/32xpc_variables.t t/40reader.t t/90threads.t"
+  distribution: "^SHLOMIF/XML-LibXML-2.0017.tar.gz"
+goto: "SHLOMIF/XML-LibXML-2.0016.tar.gz"
