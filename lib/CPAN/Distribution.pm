@@ -2588,8 +2588,8 @@ sub unsat_prereq {
                    %{$prefs_depends->{configure_requires}||{}},
                    %{$feature_depends->{configure_requires}||{}},
                   );
-        if (-f "Build.PL"
-            && ! -f "Makefile.PL"
+        if (-f File::Spec->catfile($self->{build_dir},"Build.PL")
+            && ! -f File::Spec->catfile($self->{build_dir},"Makefile.PL")
             && ! exists $merged{"Module::Build"}
             && ! $CPAN::META->has_inst("Module::Build")
            ) {
