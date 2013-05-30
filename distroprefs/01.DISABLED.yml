@@ -171,7 +171,6 @@ match:
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |xxxMLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
-    |MRAMBERG/Mojolicious-Plugin-OAuth2-\d   # hangs
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
