@@ -79,6 +79,7 @@ if ($is_trial) {
 # for 5.004_05 I installed all of them manually despite errors;
 # version hints as of 2006-02
 my $prereq_pm = {
+                 'CPAN::Meta::Requirements' => '1.120920',
                  'File::Spec' => 0,   # KWILLIAMS; requires
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
@@ -99,6 +100,8 @@ for my $interesting_module (qw(
         Archive::Tar
         Archive::Zip
         CPAN::Checksums
+        CPAN::Meta
+        CPAN::Meta::YAML
         Compress::Bzip2
         Compress::Zlib
         Data::Dumper
@@ -113,6 +116,7 @@ for my $interesting_module (qw(
         HTTP::Tiny
         IO::Compress::Base
         IO::Zlib
+        JSON::PP
         LWP::UserAgent
         MIME::Base64
         Module::Build

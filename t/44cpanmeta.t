@@ -191,6 +191,10 @@ BEGIN {
         );
         $dist->{build_dir} = $tempdir;
         $dist->{writemakefile} = 1; # spoof it since we only read META/MYMETA
+        open SPOOF, ">" . catfile($tempdir, "Makefile")
+            or die "Couldn't open fake Makefie: $!";
+        print SPOOF "fake makfile to keep prereq_pm happy\n";
+        close SPOOF;
 
         # copy files
         if ( $case->{copies} ) {
