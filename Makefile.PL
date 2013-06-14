@@ -165,9 +165,11 @@ if ($HAVE_FILE_SPEC) {
 
 ####-Note-for-repository-users-####
 Please try
-  make testdistros
+  make touchtestdistros
 before running 'make test'
-It builds various missing pieces
+It should build NotInChecksums-0.000.tar.gz
+  and correct timestamps for tarballs from the repository
+  and thus enable a smooth 'make test' experience
 ####-Note-for-repository-users-####
 
 EOW
@@ -385,7 +387,7 @@ testcover: testdistros install-devel-cover-unless-uptodate
 man:
 	$(PERL)doc -F lib/CPAN.pm
 
-testdistros: \
+TESTDISTROS = \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails-1.02.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails-1.03.tar.gz \
@@ -400,8 +402,16 @@ testdistros: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.06.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz \
-	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip \
-        t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
+
+NOTINCHECKSUMS = \
+	t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
+
+testdistros: $(TESTDISTROS) $(NOTINCHECKSUMS)
+
+touchtestdistros: $(NOTINCHECKSUMS)
+	touch $(TESTDISTROS)
+
 
 # sorry, unix centric (and only makes sense on a working copy of the
 # repository; else 'make test TEST_FILES=t/30shell.t TEST_VERBOSE=1'
