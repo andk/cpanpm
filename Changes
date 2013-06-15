@@ -1,3 +1,5 @@
+	* allow subdirectories in distroprefs (Alexandr Ciornii)
+
 	* www.cpan.org is now the default CPAN mirror (David Golden)
 
 	* Adds recommends_policy and suggests_policy to support recommended and
