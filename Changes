@@ -1,10 +1,11 @@
 	* www.cpan.org is now the default CPAN mirror (David Golden)
 
-	* Adds recommends_policy and suggests_policy to support recommended
-	  and suggested prerequisites (David Golden)
+	* Adds recommends_policy and suggests_policy to support recommended and
+	suggested prerequisites (David Golden; incomplete because partially
+	reverted)
 
-	* Adds recommends_policy and suggests_policy to support (David
-	  Golden)
+	* Adds recommends_policy and suggests_policy to support (David Golden;
+	incomplete because partially reverted)
 
 	* Fix various prerequisite resolution bugs (David Golden)
 

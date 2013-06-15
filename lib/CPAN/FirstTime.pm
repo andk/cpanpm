@@ -422,7 +422,7 @@ Randomize parameter
 
 =item recommends_policy
 
-Some CPAN modules recommend additional, optional dependencies.  These should
+(Experimental feature!) Some CPAN modules recommend additional, optional dependencies.  These should
 generally be installed except in resource constrained environments.  When this
 policy is true, recommended modules will be included with required modules.
 
@@ -472,7 +472,7 @@ Show all individual modules that have a $VERSION of zero?
 
 =item suggests_policy
 
-Some CPAN modules suggest additional, optional dependencies.  These 'suggest'
+(Experimental feature!) Some CPAN modules suggest additional, optional dependencies.  These 'suggest'
 dependencies provide enhanced operation.  When this policy is true, suggested
 modules will be included with required modules.
 
