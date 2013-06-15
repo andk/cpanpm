@@ -4,7 +4,6 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
-use CPAN::Meta::Requirements 1.120920;
 use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
@@ -2681,22 +2680,19 @@ sub _feature_depends {
 
 sub prereqs_for_slot {
     my($self,$slot) = @_;
-    my($prereq_pm);
-    my $merged = CPAN::Meta::Requirements->new;
+    my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
-        for my $hash (  $self->configure_requires,
-                        $prefs_depends->{configure_requires},
-                        $feature_depends->{configure_requires},
-        ) {
-            $merged->add_requirements(
-                CPAN::Meta::Requirements->from_string_hash($hash);
-            );
-        }
+        my $meta_configure_requires = $self->configure_requires();
+        %merged = (
+                   %{$meta_configure_requires||{}},
+                   %{$prefs_depends->{configure_requires}||{}},
+                   %{$feature_depends->{configure_requires}||{}},
+                  );
         if (-f "Build.PL"
             && ! -f "Makefile.PL"
-            && ! $merged->requirements_for_module("Module::Build")
+            && ! exists $merged{"Module::Build"}
             && ! $CPAN::META->has_inst("Module::Build")
            ) {
             $CPAN::Frontend->mywarn(
@@ -2704,7 +2700,7 @@ sub prereqs_for_slot {
               "  Adding it now as such.\n"
             );
             $CPAN::Frontend->mysleep(5);
-            $merged->add_minimum("Module::Build" => 0);
+            $merged{"Module::Build"} = 0;
             delete $self->{writemakefile};
         }
         $prereq_pm = {}; # configure_requires defined as "b"
@@ -2718,15 +2714,8 @@ sub prereqs_for_slot {
                 }
             }
         }
-        for my $hash (
-            $prereq_pm->{requires},
-            $prereq_pm->{build_requires},
-
-        ) {
-            $merged->add_requirements(
-                CPAN::Meta::Requirements->from_string_hash($hash);
-            );
-        }
+        %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
+        # XXX what about optional_req|breq? -- xdg, 2012-04-01
     } else {
         die "Panic: illegal slot '$slot'";
     }
@@ -2741,10 +2730,9 @@ sub unsat_prereq {
     my($self,$slot) = @_;
     my($merged,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    my @merged = $merged->required_modules;
+    my @merged = my %merged = %$merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
-  NEED: for my $need_module ( @merged ) {
-        my $need_version = $merged->requirements_for_module($need_module);
+  NEED: while (my($need_module, $need_version) = each %merged) {
         my($available_version,$inst_file,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
