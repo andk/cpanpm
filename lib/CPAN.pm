@@ -886,7 +886,7 @@ this variable in either a CPAN/MyConfig.pm or a CPAN/Config.pm in your
 #       be politely squashed.  Any bug that causes every eval {} to have to be
 #       modified should be not so politely squashed.
 #
-#       Those are my current opinions.  It is also my optinion that polite
+#       Those are my current opinions.  It is also my opinion that polite
 #       arguments degenerate to personal arguments far too frequently, and that
 #       when they do, it's because both people wanted it to, or at least didn't
 #       sufficiently want it not to.
@@ -1125,7 +1125,7 @@ sub has_inst {
     if ($INC{$file}) {
         # checking %INC is wrong, because $INC{LWP} may be true
         # although $INC{"URI/URL.pm"} may have failed. But as
-        # I really want to say "bla loaded OK", I have to somehow
+        # I really want to say "blah loaded OK", I have to somehow
         # cache results.
         ### warn "$file in %INC"; #debug
         return 1;
@@ -1746,7 +1746,7 @@ not yet been installed. See also C<is_tested>.
 
 =item is_tested
 
-List all buid directories of distributions that have been tested
+List all build directories of distributions that have been tested
 successfully but have not yet been installed. See also
 C<install_tested>.
 
@@ -1865,7 +1865,7 @@ separated):
 
 Modules know their associated Distribution objects. They always refer
 to the most recent official release. Developers may mark their releases
-as unstable development versions (by inserting an underbar into the
+as unstable development versions (by inserting an unserscore into the
 module version number which will also be reflected in the distribution
 name when you run 'make dist'), so the really hottest and newest
 distribution is not always the default.  If a module Foo circulates
