@@ -125,7 +125,7 @@ for a new, custom configuration.
 
 =item -l
 
-List all installed modules wth their versions
+List all installed modules with their versions
 
 =item -L author [ author ... ]
 
@@ -397,7 +397,7 @@ sub _process_setup_options
 
 Just do it.
 
-The C<run> method returns 0 on success and a postive number on
+The C<run> method returns 0 on success and a positive number on
 failure. See the section on EXIT CODES for details on the values.
 
 =cut
