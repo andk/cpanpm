@@ -1,6 +1,8 @@
-2013-06-15  Andreas Koenig  <k@UX31A>
+2013-06-17  Andreas Koenig  <k@UX31A>
 
-	* testing the next release, not yet serious about it
+	* Use CPAN::Mirrors correctly (brian d foy)
+
+	* Add default_mirror(), clean up docs a bit (brian d foy)
 
 	* allow subdirectories in distroprefs (Alexandr Ciornii)
 
