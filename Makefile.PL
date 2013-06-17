@@ -184,13 +184,13 @@ WriteMakefile(
               INSTALLDIRS  => 'perl',  # as it is coming with perl
               NAME         => 'CPAN',
               VERSION      => $version,
-              EXE_FILES    => [qw(scripts/cpan)],
+              EXE_FILES    => [qw(scripts/cpan scripts/cpan-mirrors)],
               PREREQ_PM    => $prereq_pm,
               ($ExtUtils::MakeMaker::VERSION >= 6.3002 ?
                (LICENSE      => "perl") : (),
               ),
               ($ExtUtils::MakeMaker::VERSION >= 6.48 ?
-               (MIN_PERL_VERSION => '5.004') : (),
+               (MIN_PERL_VERSION => '5.006002') : (),
               ),
               clean        => {
                                FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml",
@@ -282,7 +282,7 @@ kwalify-distroprefs-slaymake:
 	$(PERL) `dirname $(PERL)`/slaymake validate
 
 kwalify-distroprefs-straight:
-	$(PERL) -Ilib -le 'use YAML::Syck;use CPAN::Kwalify;use Kwalify qw(validate);use Data::Dumper;{my $$errors = 0; my $$files = 0; my $$perrors = 0;my $$distroprefs_path = $$INC{"CPAN/Kwalify.pm"};$$distroprefs_path =~ s{\.pm$$}{/distroprefs.yml};my $$schema = LoadFile($$distroprefs_path);for my $$yml (glob("distroprefs/*.yml")) {$$files++;my $$data = eval { LoadFile($$yml) };if (!$$data or $$@) {$$perrors++;warn "Parse error in $$yml: $$@\n";next;}$$errors++ if (!validate($$schema, $$data));}if ($$perrors||$$errors) { die "Found $$perrors parse errors and $$errors validate errors in $$files files" }else { warn "Validation OK ($$files files).\n" }}'
+	-$(PERL) -Ilib -le 'use YAML::Syck;use CPAN::Kwalify;use Kwalify qw(validate);use Data::Dumper;{my $$errors = 0; my $$files = 0; my $$perrors = 0;my $$distroprefs_path = $$INC{"CPAN/Kwalify.pm"};$$distroprefs_path =~ s{\.pm$$}{/distroprefs.yml};my $$schema = LoadFile($$distroprefs_path);for my $$yml (glob("distroprefs/*.yml")) {$$files++;my $$data = eval { LoadFile($$yml) };if (!$$data or $$@) {$$perrors++;warn "Parse error in $$yml: $$@\n";next;}$$errors++ if (!validate($$schema, $$data));}if ($$perrors||$$errors) { die "Found $$perrors parse errors and $$errors validate errors in $$files files" }else { warn "Validation OK ($$files files).\n" }}'
 
 setversion:
 	$(PERL) Makefile.PL --setversion
@@ -370,9 +370,9 @@ export-armor-batch-signing-key:
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
 
-META.yml META.json: metafile
+META.yml: metafile
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
-	$(CP) $(DISTVNAME)/META.json  ./META.json
+	-$(CP) $(DISTVNAME)/META.json  ./META.json
 
 install-devel-cover-unless-uptodate:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.") unless CPAN::Shell->expand("Module","Devel::Cover")->uptodate'
@@ -709,7 +709,7 @@ disttest :
 distdir ::
 	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
-	$(CP) $(DISTVNAME)/META.json  ./META.json
+	-$(CP) $(DISTVNAME)/META.json  ./META.json
 	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 
 }

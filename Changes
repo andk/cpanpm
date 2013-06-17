@@ -1,3 +1,7 @@
+2013-06-15  Andreas Koenig  <k@UX31A>
+
+	* testing the next release, not yet serious about it
+
 	* allow subdirectories in distroprefs (Alexandr Ciornii)
 
 	* www.cpan.org is now the default CPAN mirror (David Golden)

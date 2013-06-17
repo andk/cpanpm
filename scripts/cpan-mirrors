@@ -1,6 +1,7 @@
+#!/usr/bin/perl
+
 use strict;
 use warnings;
-use v5.10;
 
 use CPAN::Mirrors;
 use Data::Dumper;
@@ -12,7 +13,7 @@ my $seen = {};
 my $n = 5;
 
 my $best_continent = $mirrors->find_best_continents( n => $n, seen => $seen, verbose => 1 );
-say "Best continent is $best_continent";
+print "Best continent is $best_continent\n";
 
 my @mirrors = $mirrors->get_mirrors_by_continents( $best_continent );
 
