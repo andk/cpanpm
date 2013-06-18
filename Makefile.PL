@@ -89,6 +89,9 @@ my $prereq_pm = {
 if ($^O eq "darwin") {
   $prereq_pm->{'File::HomeDir'} = 0.69;
 }
+if ($] < 5.008) {
+  $prereq_pm->{'IO::Scalar'} = 0;
+}
 
 # if they have one of these we declare it as prereq for better reporting
 for my $interesting_module (qw(
