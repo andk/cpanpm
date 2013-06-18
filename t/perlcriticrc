@@ -19,4 +19,4 @@ exclude   = ClassHierarchies::ProhibitAutoloading
 #arg2 = value2
 
 [Subroutines::ProhibitExcessComplexity]
-max_mccabe = 146
+max_mccabe = 147
