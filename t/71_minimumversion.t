@@ -8,23 +8,15 @@ unless ($ENV{AUTHOR_TEST}) {
     plan( skip_all => $msg );
 }
 
-eval { require Test::MinimumVersion::Fast; };
+eval { require Test::MinimumVersion; };
 
 if ( $@ ) {
 
-    eval { require Test::MinimumVersion; };
-
-    if ( $@ ) {
-
-        my $msg = 'Test::MinimumVersion{::Fast,} required for this test';
-        plan( skip_all => $msg );
-    } else {
-        diag "Found Test::MinimumVersion v $Test::MinimumVersion::VERSION";
-        import Test::MinimumVersion;
-    }
+    my $msg = 'Test::MinimumVersion{::Fast,} required for this test';
+    plan( skip_all => $msg );
 } else {
-    diag "Found Test::MinimumVersion::Fast v $Test::MinimumVersion::Fast::VERSION";
-    import Test::MinimumVersion::Fast;
+    diag "Found Test::MinimumVersion v $Test::MinimumVersion::VERSION";
+    import Test::MinimumVersion;
 }
 
 all_minimum_version_from_metayml_ok({ paths => [qw(lib scripts t)]});
