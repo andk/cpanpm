@@ -154,7 +154,11 @@ sub _build_file_list {
     }
     my ($dir, $dir1, $ext_re) = @_;
     my @list;
-    opendir(my $dh, $dir) or Carp::croak("Couldn't open directory '$dir': $!");
+    my $dh;
+    unless (opendir($dh, $dir)) {
+        $CPAN::Frontend->mywarn("ignoring prefs directory '$dir': $!");
+        return @list;
+    }
     while (my $fn = readdir $dh) {
         next if $fn eq '.' || $fn eq '..';
         if (-d "$dir/$fn") {
@@ -177,7 +181,8 @@ sub find {
     my $possible_ext = join "|", map { quotemeta } keys %$ext_map;
     my $ext_re = qr/\.($possible_ext)$/;
 
-    my @files = sort (_build_file_list($dir, '', $ext_re));
+    my @files = _build_file_list($dir, '', $ext_re);
+    @files = sort @files if @files;
 
     # label the block so that we can use redo in the middle
     return CPAN::Distroprefs::Iterator->new(sub { LOOP: {
