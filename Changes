@@ -1,5 +1,7 @@
 2013-06-22  Andreas Koenig  <k@UX31A>
 
+	* add binmode in two places in CPAN::Tarzip (Dave Saville via RT #86328)
+
 	* make distroprefs tolerant against missing prefs dir (akoenig)
 
 	* regain 5.6.2 compatibility (akoenig)
