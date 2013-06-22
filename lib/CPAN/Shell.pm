@@ -626,9 +626,12 @@ sub _reload_this {
     if ($must_reload) {
         my $fh = FileHandle->new($file) or
             $CPAN::Frontend->mydie("Could not open $file: $!");
-        local($/);
-        local $^W = 1;
-        my $content = <$fh>;
+        my $content;
+        {
+            local($/);
+            local $^W = 1;
+            $content = <$fh>;
+        }
         CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
             if $CPAN::DEBUG;
         delete $INC{$f};

@@ -39,8 +39,8 @@ sub cleanup_dot_cpan {
 sub read_myconfig () {
     local *FH;
     open *FH, _f"t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
-    local $/;
-    eval <FH>;
+    my $eval = do { local($/); <FH>; };
+    eval $eval;
 }
 
 # shamelessly stolen from Test::Builder
