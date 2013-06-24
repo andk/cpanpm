@@ -223,6 +223,7 @@ match:
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SDPRICE/Linux-DVB-DVBT-Apps-QuartzPVR-\d
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
+    |SHLOMIF/                                # author opt out 2013-06-24
     |SIRROBERT/Set-Toolkit-0.11.tar.gz       # https://rt.cpan.org/Public/Bug/Display.html?id=67343
     |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
     |SMEE/P4-\d                              # asks for Perforce api paths
