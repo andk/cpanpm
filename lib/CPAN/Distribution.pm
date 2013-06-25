@@ -2749,7 +2749,7 @@ sub unsat_prereq {
 
             # if they have not specified a version, we accept any installed one
             if ( $available_file
-                and ( # a few quick shortcurcuits
+                and ( # a few quick short circuits
                      not defined $need_version
                      or $need_version eq '0'    # "==" would trigger warning when not numeric
                      or $need_version eq "undef"
