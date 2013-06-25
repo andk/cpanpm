@@ -206,7 +206,7 @@ sub a {
 sub globls {
     my($self,$s,$pragmas) = @_;
     # ls is really very different, but we had it once as an ordinary
-    # command in the Shell (upto rev. 321) and we could not handle
+    # command in the Shell (up to rev. 321) and we could not handle
     # force well then
     my(@accept,@preexpand);
     if ($s =~ /[\*\?\/]/) {
@@ -604,7 +604,7 @@ sub _reload_this {
     CPAN->debug("file[$file]") if $CPAN::DEBUG;
     my @inc = @INC;
     unless ($file && -f $file) {
-        # this thingie is not in the INC path, maybe CPAN/MyConfig.pm?
+        # this thingy is not in the INC path, maybe CPAN/MyConfig.pm?
         $file = $INC{$f};
         unless (CPAN->has_inst("File::Basename")) {
             @inc = File::Basename::dirname($file);
@@ -1467,7 +1467,7 @@ sub print_ornamented {
     }
     if ($self->colorize_output) {
         if ( $CPAN::DEBUG && $swhat =~ /^Debug\(/ ) {
-            # if you want to have this configurable, please file a bugreport
+            # if you want to have this configurable, please file a bug report
             $ornament = $CPAN::Config->{colorize_debug} || "black on_cyan";
         }
         my $color_on = eval { Term::ANSIColor::color($ornament) } || "";
