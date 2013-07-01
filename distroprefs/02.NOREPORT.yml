@@ -39,6 +39,7 @@ match:
     .^   # never matches
     |BARBIE/
     |MSHELOR/
+    |SHLOMIF/                                # author opt out 2013-06-24
     )|
 cpanconfig:
   test_report: 0
