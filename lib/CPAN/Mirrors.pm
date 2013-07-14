@@ -58,9 +58,7 @@ sub new {
         geography    => {},
     }, $class;
 
-    if( defined $file ) {
-        $self->parse_mirrored_by( $file );
-    }
+    $self->parse_mirrored_by( $file );
 
     return $self;
 }
