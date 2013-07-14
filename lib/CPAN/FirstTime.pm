@@ -1868,8 +1868,7 @@ sub auto_mirrored_by {
     my $local = shift or return;
     local $|=1;
     $CPAN::Frontend->myprint("Looking for CPAN mirrors near you (please be patient)\n");
-    my $mirrors = CPAN::Mirrors->new;
-    $mirrors->parse_mirrored_by($local);
+    my $mirrors = CPAN::Mirrors->new($local);
 
     my $cnt = 0;
     my @best = $mirrors->best_mirrors(
