@@ -220,6 +220,14 @@ EOF
     @SESSIONS =
         (
          {
+          name => "simple make call on a configure_requires",
+          perl_mm_use_default => 0,
+          pairs =>
+          [
+           "make CPAN::Test::Dummy::Perl5::Make::ConfReq" => "make -- OK",
+          ]
+         },
+         {
           name => "rm while degraded",
           perl_mm_use_default => 0,
           pairs =>

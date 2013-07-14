@@ -1818,11 +1818,18 @@ to find objects with matching identifiers.
             }
             CPAN->debug("Going to panic. meth[$meth]s[$s]") if $CPAN::DEBUG;
             $CPAN::Frontend->mydie("Panic: obj[$serialized] cannot meth[$meth]");
-        } elsif ($obj->$meth()) {
-            CPAN::Queue->delete($s);
-            CPAN->debug("Succeeded and deleted from queue. pragma[@pragma]meth[$meth][s][$s]") if $CPAN::DEBUG;
         } else {
-            CPAN->debug("Failed. pragma[@pragma]meth[$meth]s[$s]") if $CPAN::DEBUG;
+            my $upgraded_meth = $meth;
+            if ( $meth eq "make" and $obj->{reqtype} eq "b" ) {
+                # rt 86915
+                $upgraded_meth = "test";
+            }
+            if ($obj->$upgraded_meth()) {
+                CPAN::Queue->delete($s);
+                CPAN->debug("Succeeded and deleted from queue. pragma[@pragma]meth[$meth][s][$s]") if $CPAN::DEBUG;
+            } else {
+                CPAN->debug("Failed. pragma[@pragma]meth[$meth]s[$s]") if $CPAN::DEBUG;
+            }
         }
 
         $obj->undelay;
