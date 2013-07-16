@@ -23,8 +23,12 @@ depends:
   requires:
     MIME::Parser: 0
 --- 
+comment: |
+
+  current possible authors are MKUTTER or PHRED and versions are 0.71x
+
 match:
-  distribution: '^MKUTTER/SOAP-Lite-0.71'
+  distribution: '/SOAP-Lite-0.71'
 pl: 
   expect:
     - "see the detailed list"
