@@ -70,7 +70,7 @@ sub normalize {
     } elsif (
         $s =~ tr|/|| == 1
         or
-        $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-]{2,}/|
+        $s !~ m|[A-Z]/[A-Z-]{2}/[A-Z-0-9]{2,}/|
        ) {
         return $s if $s =~ m:^N/A|^Contact Author: ;
         $s =~ s|^(.)(.)([^/]*/)(.+)$|$1/$1$2/$1$2$3$4|;
