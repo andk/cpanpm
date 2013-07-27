@@ -1,6 +1,6 @@
 --- 
 match:
-  distribution: "SPROUT/DBM-Deep-\\d"
+  distribution: "(?:SPROUT|RKINYON)/DBM-Deep-\\d"
 pl:
   eexpect:
     mode: anyorder
