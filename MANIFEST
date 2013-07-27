@@ -108,6 +108,7 @@ distroprefs/DCANTRELL.Devel-CheckOS.yml
 distroprefs/DCLEE.OpenOffice-Parse-SXC.yml
 distroprefs/DCOPPIT.Mail-Mbox-MessageParser.yml
 distroprefs/DDUMONT.Tk-ObjScanner.yml
+distroprefs/DGL.JavaScript-V8.yml
 distroprefs/DHAGEMAN.TEI-Lite.yml
 distroprefs/DHARRIS.DB_File-Lock.yml
 distroprefs/DJBERG.Tk-JListbox.yml
