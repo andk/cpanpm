@@ -140,7 +140,6 @@ match:
     |KAZUHO/Server-Starter-0.11              # hangs
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
     |KMACLEOD/XML-Grove-0.46alpha.tar.gz     # (1999) seems to be unmaintained
-    |KMCGRAIL/Mail-SpamAssassin-3.3.2        # asks a new question
     |KMX/Alien-IUP-v?\d                      # not analysed slowness and CPU hog; then again questions being asked
     |KNI/IPC-MPS-\d                          # asks questions
     |KNORR/Tk-Image-Cut-0.07.tar.gz          # hangs
