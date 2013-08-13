@@ -216,7 +216,6 @@ match:
     |xxxRVOSA/Bio-Phylo-\d                      # hangs after 03-node.t with v5.15.0-241-g0a044a7/2b65/
     |RYBSKEJ/forks-0.25
     |SAKOHT/RMI-v?0.\d                       # hangs due to regression in 5.13.11-412, module is not to blame
-    |SALVA/Net-OpenSSH-0                     # asks for a password during test
     |SAMV/Lingua-Translate-                  # hangs often
     |SANKO/Alien-FLTK-\d                     # downloads with waiting time risk
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
