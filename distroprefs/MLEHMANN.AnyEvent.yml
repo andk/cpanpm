@@ -16,6 +16,14 @@ depends:
   requires:
     Event: 0
 ---
+comment: |
+
+  7.05 has a resolver test that fails at my site, unrelated to AnyEvent
+
+match:
+  distribution: '^MLEHMANN/AnyEvent-7\.05'
+goto: "MLEHMANN/AnyEvent-7.04.tar.gz"
+---
 match:
   distribution: '^MLEHMANN/AnyEvent-\d'
 test:
