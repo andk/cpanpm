@@ -3013,7 +3013,7 @@ sub read_meta {
 # XXX This should be DEPRECATED -- dagolden, 2011-02-05
 sub read_yaml {
     my($self) = @_;
-    my $meta_file = $self->pick_meta_file;
+    my $meta_file = $self->pick_meta_file('\.yml$');
     $self->debug("meta_file[$meta_file]") if $CPAN::DEBUG;
     return unless $meta_file;
     my $yaml;
