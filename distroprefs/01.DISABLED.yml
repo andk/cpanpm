@@ -65,7 +65,6 @@ match:
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
-    |CORION/MozRepl-RemoteObject-\d          # hangs after 01-array.t
     |CORION/WWW-Mechanize-Shell-0.[45]       # hangs every so often in t/13-command-au.t
     |CORLISS/CursesForms-\d
     |CORLISS/CursesWidgets-\d
