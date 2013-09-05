@@ -252,7 +252,6 @@ match:
     |VINSWORLD/Net-Syslogd-0.0\d.            # asks question from 04 to 06
     |VINSWORLD/Cisco-Management-0.05         # asks question
     |VPARSEVAL/Mail-MboxParser-0.55.tar.gz   # hangs during some test
-    |VPIT/IPC-MorseSignals-\d                # hangs too often (see Todo)
     |WONKO/CGI-Application-Dispatch          # endless loop
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WSMITH/Email-Folder-Exchange-\d         # asks questions
