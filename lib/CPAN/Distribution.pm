@@ -2554,6 +2554,21 @@ sub _make_command {
     }
 }
 
+sub _make_install_make_command {
+    my ($self) = @_;
+    my $mimc =
+        CPAN::HandleConfig->prefs_lookup($self, q{make_install_make_command});
+    return $self->_make_command() unless $mimc;
+
+    # Quote the "make install" make command on Windows, where it is commonly
+    # found in, e.g., C:\Program Files\... and therefore needs quoting. We can't
+    # do this in general because the command maybe "sudo make..." (i.e. a
+    # program with arguments), but that is unlikely to be the case on Windows.
+    $mimc = CPAN::HandleConfig->safe_quote($mimc) if $^O eq 'MSWin32';
+
+    return $mimc;
+}
+
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
@@ -3706,10 +3721,7 @@ sub install {
                          );
         
     } else {
-        my($make_install_make_command) =
-            CPAN::HandleConfig->prefs_lookup($self,
-                                             q{make_install_make_command})
-                  || $self->_make_command();
+        my($make_install_make_command) = $self->_make_install_make_command();
         $system = sprintf("%s install %s",
                           $make_install_make_command,
                           $CPAN::Config->{make_install_arg},
