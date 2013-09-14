@@ -1111,7 +1111,7 @@ sub has_inst {
     my %dont = map { $_ => 1 } keys %{$CPAN::META->{dontload_hash}||{}},
         keys %{$CPAN::Config->{dontload_hash}||{}},
             @{$CPAN::Config->{dontload_list}||[]};
-    if (defined $message && $message eq "no"  # afair only used by Nox
+    if (defined $message && $message eq "no"  # as far as I remember only used by Nox
         ||
         $dont{$mod}
        ) {
