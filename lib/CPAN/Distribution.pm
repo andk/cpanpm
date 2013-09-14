@@ -1074,7 +1074,7 @@ sub _exefile_stanza {
             $fh->open($script_file)
                 or Carp::croak("Could not open script '$script_file': $!");
             local $/ = "\n";
-            # name parsen und prereq
+            # parse name and prereq
             my($state) = "poddir";
             my($name, $prereq) = ("", "");
             while (<$fh>) {
@@ -4156,7 +4156,7 @@ sub reports {
     }
     $CPAN::Frontend->myprint("DONE\n\n");
     my $yaml = $resp->content;
-    # was fuer ein Umweg!
+    # what a long way round!
     my $fh = File::Temp->new(
                              dir      => File::Spec->tmpdir,
                              template => 'cpan_reports_XXXX',
