@@ -1,4 +1,21 @@
-  * address #86915: upgrade build method from "make" to "test" on
+2013-09-15  k  <andk@cpan.org>
+
+	* release 2.03-TRIAL
+
+	* load META.yml not META.json (Tatsuhiko Miyagawa)
+
+	* support numerics in cpan IDs (Tatsuhiko Miyagawa)
+
+	* address #88565: fix unreachable core bug (Father Chrysostomos, David
+	Golden)
+
+	* address #76831: spaces on Win32 combined with
+	make_install_make_command (Reini Urban, Steve Hay)
+
+	* address #86405, #86406: fix typos, clarify comments (found by Cavid
+	Steinbrunner)
+
+	* address #86915: upgrade build method from "make" to "test" on
 	dependencies declared as build_requires (Andreas Koenig)
 
 2013-06-23  Andreas Koenig  <k@UX31A>
