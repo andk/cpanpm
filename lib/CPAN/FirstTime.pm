@@ -132,6 +132,9 @@ warnings, debugging output, and the output of the modules being
 installed. Set your favorite colors after some experimenting with the
 Term::ANSIColor module.
 
+Please note that on Windows platforms colorized output also requires
+the Win32::Console::ANSI module.
+
 Do you want to turn on colored output?
 
 =item colorize_print

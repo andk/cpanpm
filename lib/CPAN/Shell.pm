@@ -1434,6 +1434,14 @@ sub format_result {
     my $print_ornamented_have_warned = 0;
     sub colorize_output {
         my $colorize_output = $CPAN::Config->{colorize_output};
+        if ($colorize_output && $^O eq 'MSWin32' && !$CPAN::META->has_inst("Win32::Console::ANSI")) {
+            unless ($print_ornamented_have_warned++) {
+                # no myprint/mywarn within myprint/mywarn!
+                warn "Colorize_output is set to true but Win32::Console::ANSI is not
+installed. To activate colorized output, please install Win32::Console::ANSI.\n\n";
+            }
+            $colorize_output = 0;
+        }
         if ($colorize_output && !$CPAN::META->has_inst("Term::ANSIColor")) {
             unless ($print_ornamented_have_warned++) {
                 # no myprint/mywarn within myprint/mywarn!
