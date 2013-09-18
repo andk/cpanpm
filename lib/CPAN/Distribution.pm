@@ -4132,6 +4132,17 @@ sub reports {
         $CPAN::Frontend->mydie("File::Temp not installed; cannot continue");
     }
 
+    my $format;
+    if ($CPAN::META->has_inst("YAML::XS") || $CPAN::META->has_inst("YAML::Syck")){
+        $format = 'yaml';
+    }
+    elsif (!$format && $CPAN::META->has_inst("JSON::PP") ) {
+        $format = 'json';
+    }
+    else {
+        $CPAN::Frontend->mydie("JSON::PP not installed, cannot continue");
+    }
+
     my $d = CPAN::DistnameInfo->new($pathname);
 
     my $dist      = $d->dist;      # "CPAN-DistnameInfo"
@@ -4141,7 +4152,7 @@ sub reports {
     my $cpanid    = $d->cpanid;    # "GBARR"
     my $distvname = $d->distvname; # "CPAN-DistnameInfo-0.02"
 
-    my $url = sprintf "http://www.cpantesters.org/show/%s.yaml", $dist;
+    my $url = sprintf "http://www.cpantesters.org/show/%s.%s", $dist, $format;
 
     CPAN::LWP::UserAgent->config;
     my $Ua;
@@ -4155,19 +4166,25 @@ sub reports {
         $CPAN::Frontend->mydie(sprintf "Could not download '%s': %s\n", $url, $resp->code);
     }
     $CPAN::Frontend->myprint("DONE\n\n");
-    my $yaml = $resp->content;
-    # what a long way round!
-    my $fh = File::Temp->new(
-                             dir      => File::Spec->tmpdir,
-                             template => 'cpan_reports_XXXX',
-                             suffix => '.yaml',
-                             unlink => 0,
-                            );
-    my $tfilename = $fh->filename;
-    print $fh $yaml;
-    close $fh or $CPAN::Frontend->mydie("Could not close '$tfilename': $!");
-    my $unserialized = CPAN->_yaml_loadfile($tfilename)->[0];
-    unlink $tfilename or $CPAN::Frontend->mydie("Could not unlink '$tfilename': $!");
+    my $unserialized;
+    if ( $format eq 'yaml' ) {
+        my $yaml = $resp->content;
+        # what a long way round!
+        my $fh = File::Temp->new(
+                                 dir      => File::Spec->tmpdir,
+                                 template => 'cpan_reports_XXXX',
+                                 suffix => '.yaml',
+                                 unlink => 0,
+                                );
+        my $tfilename = $fh->filename;
+        print $fh $yaml;
+        close $fh or $CPAN::Frontend->mydie("Could not close '$tfilename': $!");
+        $unserialized = CPAN->_yaml_loadfile($tfilename)->[0];
+        unlink $tfilename or $CPAN::Frontend->mydie("Could not unlink '$tfilename': $!");
+    } else {
+        require JSON::PP;
+        $unserialized = JSON::PP->new->utf8->decode($resp->content);
+    }
     my %other_versions;
     my $this_version_seen;
     for my $rep (@$unserialized) {
@@ -4200,7 +4217,7 @@ Reports for other versions:\n");
             $CPAN::Frontend->myprint(" $v\: $other_versions{$v}\n");
         }
     }
-    $url =~ s/\.yaml/.html/;
+    $url = substr($url,0,-4) . 'html';
     $CPAN::Frontend->myprint("See $url for details\n");
 }
 
