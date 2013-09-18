@@ -965,6 +965,7 @@ sub _dump_config # -J
 
 	my $fh = $args->[0] || \*STDOUT;
 
+	local $Data::Dumper::Sortkeys = 1;
 	my $dd = Data::Dumper->new(
 		[$CPAN::Config],
 		['$CPAN::Config']
