@@ -900,7 +900,7 @@ __END__
 #R:Data::Dumper
 ########
 #P:install CPAN::Test::Dummy::Perl5::Make::Failearly
-#E:Failed during this command[\d\D]+?writemakefile NO
+#E:Failures during this command[\d\D]+?writemakefile NO
 ########
 #P:test CPAN::Test::Dummy::Perl5::NotExists
 #E:Warning:
@@ -1032,7 +1032,7 @@ __END__
 #E:build_requires_install_policy
 ########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
-#E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
+#E:is up to date|Failures during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #N: "is up to date" is for when they have it installed in INC
 #R:Module::Build
 ########

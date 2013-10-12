@@ -1070,7 +1070,7 @@ sub failed {
                                 $a->[4] <=> $b->[4]
                        } @failed;
         }
-        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
+        $CPAN::Frontend->myprint("Failures during $scope:\n$print");
     } elsif (!$only_id || !$silent) {
         $CPAN::Frontend->myprint("Nothing failed in $scope\n");
     }
