@@ -2974,8 +2974,9 @@ sub unsat_prereq {
         }
         # here need to flag as optional for recommends/suggests
         # -- xdg, 2012-04-01
-        my $optional =  exists $prereq_pm->{opt_requires}{$need_module}
-                    ||  exists $prereq_pm->{opt_build_requires}{$need_module};
+        my $optional = !$self->{mandatory}
+            || exists $prereq_pm->{opt_requires}{$need_module}
+            || exists $prereq_pm->{opt_build_requires}{$need_module};
         push @need, [$need_module,$needed_as,$optional];
     }
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
