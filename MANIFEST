@@ -129,6 +129,7 @@ distroprefs/DOM.OpenGuides.yml
 distroprefs/DOM.Wiki-Toolkit.yml
 distroprefs/DOMM.Module-CPANTS-ProcessCPAN.yml
 distroprefs/DONEILL.MIME-tools.yml
+distroprefs/DOOM.Text-Capitalize.yml
 distroprefs/DOWENS.JSON-DWIW.yml
 distroprefs/DOY.Package-Stash.yml
 distroprefs/DPARIS.Crypt-Blowfish.yml
@@ -192,6 +193,7 @@ distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HDP.Perl-Version.yml
 distroprefs/HMBRAND.Data-Peek.yml
+distroprefs/HMBRAND.DBD-CSV.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
 distroprefs/HMBRAND.Tk-Clock.yml
 distroprefs/HORROCKS.PersistentPerl.yml
@@ -514,6 +516,7 @@ PAUSE2007.pub
 PAUSE2009.pub
 PAUSE2011.pub
 PAUSE2015.pub
+perlbrew-352
 README
 scripts/cpan
 scripts/cpan-mirrors
