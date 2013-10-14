@@ -506,8 +506,6 @@ lib/CPAN/Version.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP
-META.json
-META.yml
 PAUSE2003.pub
 PAUSE2005.pub
 PAUSE2007.pub
@@ -517,7 +515,6 @@ PAUSE2015.pub
 README
 scripts/cpan
 scripts/cpan-mirrors
-SIGNATURE			Public-key signature (added by MakeMaker)
 SlayMakefile
 t/00signature.t
 t/01loadme.t
