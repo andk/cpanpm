@@ -238,7 +238,6 @@ package MY;
 sub distsignature {
     my($self) = shift;
     my $ret = $self->SUPER::distsignature_target(@_);
-    $ret =~ s|cpansign|\`dirname \$(PERL)\`/cpansign|g;
     return $ret;
 }
 sub macro {
