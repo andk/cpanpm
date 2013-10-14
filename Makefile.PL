@@ -206,7 +206,6 @@ WriteMakefile(
                                             "verify-changes-version",
                                             "kwalify-distroprefs-straight",
                                             "Makefile",
-                                            "no_CR",
                                             "META.yml",
                                             "setversion",
                                             "README",
@@ -301,7 +300,7 @@ release :: disttest
 	$(NOECHO) $(ECHO) '#### Suggested next steps:'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
-snapshot : Makefile no_CR META.yml README testdistros all tardist
+snapshot : Makefile META.yml README testdistros all tardist
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
@@ -655,9 +654,6 @@ clean ::
 	$(RM) t/CPAN/authors/id/A/AN/ANDK/*/Build \
 		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
-
-no_CR : META.yml
-	$(PERL) bin/no_CR.pl MANIFEST
 
 foreign-prefs : dd-prefs st-prefs
 
