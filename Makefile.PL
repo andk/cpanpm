@@ -206,7 +206,6 @@ WriteMakefile(
                                             "verify-changes-version",
                                             "kwalify-distroprefs-straight",
                                             "Makefile",
-                                            "META.yml",
                                             "setversion",
                                             "README",
                                             "testdistros",
@@ -300,7 +299,7 @@ release :: disttest
 	$(NOECHO) $(ECHO) '#### Suggested next steps:'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
-snapshot : Makefile META.yml README testdistros all tardist
+snapshot : Makefile README testdistros all tardist
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
