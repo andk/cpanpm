@@ -206,8 +206,6 @@ WriteMakefile(
                                             "verify-changes-version",
                                             "kwalify-distroprefs-straight",
                                             "Makefile",
-                                            "no_CR",
-                                            "META.yml",
                                             "setversion",
                                             "README",
                                             "testdistros",
@@ -238,7 +236,6 @@ package MY;
 sub distsignature {
     my($self) = shift;
     my $ret = $self->SUPER::distsignature_target(@_);
-    $ret =~ s|cpansign|\`dirname \$(PERL)\`/cpansign|g;
     return $ret;
 }
 sub macro {
@@ -302,7 +299,7 @@ release :: disttest
 	$(NOECHO) $(ECHO) '#### Suggested next steps:'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
-snapshot : Makefile no_CR META.yml README testdistros all tardist
+snapshot : Makefile README testdistros all tardist
 
 # 16=Distribution; 32=Bundle; 32768=Queue
 depefails:
@@ -365,10 +362,6 @@ export-armor-batch-signing-key:
 
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
-
-META.yml: metafile
-	$(CP) $(DISTVNAME)/META.yml  ./META.yml
-	-$(CP) $(DISTVNAME)/META.json  ./META.json
 
 install-devel-cover-unless-uptodate:
 	$(PERL) -Ilib -MCPAN -e 'CPAN::Shell->install("/home/src/perl/devel-cover/SVN/.") unless CPAN::Shell->expand("Module","Devel::Cover")->uptodate'
@@ -661,9 +654,6 @@ clean ::
 		t/CPAN/authors/id/A/AN/ANDK/*/Makefile.old
 	$(RM_RF) t/CPAN/authors/id/A/AN/ANDK/*/_build
 
-no_CR : META.yml
-	$(PERL) bin/no_CR.pl MANIFEST
-
 foreign-prefs : dd-prefs st-prefs
 
 dd-prefs ::
@@ -701,12 +691,6 @@ disttest :
 	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
-
-distdir ::
-	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
-	$(CP) $(DISTVNAME)/META.yml  ./META.yml
-	-$(CP) $(DISTVNAME)/META.json  ./META.json
-	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 
 }
 }
