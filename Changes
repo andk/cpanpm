@@ -1,3 +1,7 @@
+
+	* enable hiding of directories in the distroprefs tree (suggested by
+	Slaven Rezić)
+
 2013-09-15  k  <andk@cpan.org>
 
 	* release 2.03-TRIAL
@@ -12,7 +16,7 @@
 	* address #76831: spaces on Win32 combined with
 	make_install_make_command (Reini Urban, Steve Hay)
 
-	* address #86405, #86406: fix typos, clarify comments (found by Cavid
+	* address #86405, #86406: fix typos, clarify comments (found by David
 	Steinbrunner)
 
 	* address #86915: upgrade build method from "make" to "test" on
