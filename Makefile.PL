@@ -443,7 +443,7 @@ testshell-with-protocol-twice: testdistros
 # testdistros
 #
 
-# TimeSkey has Makefile.PL missing here because it gets the timestamp
+# TimeSkew has Makefile.PL missing here because it gets the timestamp
 # of the Makefile.PL set to the future which confuses make
 t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz: \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew/Changes \
