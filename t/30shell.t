@@ -1188,15 +1188,15 @@ To add a new distro, the following steps must be taken:
 
 (1) Collect the source
 
-- svn mkdir the author's directory if it doesn't exist yet; e.g.
+- mkdir the author's directory if it doesn't exist yet; e.g.
 
-  svk mkdir t/CPAN/authors/id/A/AN/ANDK
+  mkdir -p t/CPAN/authors/id/A/AN/ANDK
   cd t/CPAN/authors/id/A/AN/ANDK
 
-- svn add (or svn cp) the whole source code under the author's
-  homedir; e.g.
+- introduce the whole source code under the author's
+  homedir, often just a copy; e.g.
 
-  svk cp CPAN-Test-Dummy-Perl5-Make-CircDepeOne CPAN-Test-Dummy-Perl5-Make-Expect
+  rsync -va CPAN-Test-Dummy-Perl5-Make-CircDepeOne CPAN-Test-Dummy-Perl5-Make-Expect
 
 - add the source code directory with a trailing slash to ../MANIFEST.SKIP
 
@@ -1208,7 +1208,7 @@ To add a new distro, the following steps must be taken:
   the whole dependency on all files within the distro and moves it up
   into the author's homedir. Run this with 'make testdistros'.
 
-- *svn add* the new testdistro (first we did that, then we stopped
+- *git add* the new testdistro (first we did that, then we stopped
   doing it for "it makes no sense"; then I realized we need to do it
   because with a newer MakeMaker or Module::Build we cannot regenerate
   them byte-by-byte and lose the signature war)
@@ -1224,7 +1224,7 @@ To add a new distro, the following steps must be taken:
 - upload the distro(s) to the CPAN and wait until the indexer has
   produced a CHECKSUMS file
 
-- svn add/ci the relevant CHECKSUMS files
+- git add/commit the relevant CHECKSUMS files
 
 - add the CHECKSUMS files to the MANIFEST
 
@@ -1237,7 +1237,7 @@ To add a new distro, the following steps must be taken:
   distro name; if there is more than one module or bundle inside the
   distro, write two lines; watch the line count;
 
-- if this distro replaces another, svn rm the other one
+- if this distro replaces another, git-rm the other one
 
 - if this distro replaces another, fix the tests that rely on the
   other one
