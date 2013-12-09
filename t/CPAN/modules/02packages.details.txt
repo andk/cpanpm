@@ -4,7 +4,7 @@ Description:  Package names found in directory $CPAN/authors/id/
 Columns:      package name, version, path
 Intended-For: Automated fetch routines, namespace documentation.
 Written-By:   Id: mldistwatch 697 1970-01-18 07:33:13Z k 
-Line-Count:   18
+Line-Count:   19
 Last-Updated: Tue, 03 Feb 1970 03:17:06 GMT
 
 Bundle::CpanTestDummies                        1.600967 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-1.05.tar.gz
@@ -20,6 +20,7 @@ CPAN::Test::Dummy::Perl5::Make::ConfReq        1.00 A/AN/ANDK/CPAN-Test-Dummy-Pe
 CPAN::Test::Dummy::Perl5::Make::Expect         1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Expect-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Failearly      1.02 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Failearly-1.02.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Features       1.06 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.06.tar.gz
+CPAN::Test::Dummy::Perl5::Make::CircularPrereq 1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::OptionalPrereq 1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::UnsatPrereq    1.00 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz
 CPAN::Test::Dummy::Perl5::Make::Zip            1.03 A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip

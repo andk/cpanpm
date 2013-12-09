@@ -401,6 +401,7 @@ TESTDISTROS = \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.06.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
 
@@ -632,6 +633,20 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz: 
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
 		mv CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz .. && \
+		$(MAKE) clean
+	ls -l $@
+
+t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq-1.00.tar.gz: \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/Changes \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/MANIFEST \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/Makefile.PL \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/README \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/lib/CPAN/Test/Dummy/Perl5/Make/CircularPrereq.pm \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/t/00_load.t
+	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-CircularPrereq/ && \
+		$(PERL) Makefile.PL && \
+		$(MAKE) dist && \
+		mv CPAN-Test-Dummy-Perl5-Make-CircularPrereq-1.00.tar.gz .. && \
 		$(MAKE) clean
 	ls -l $@
 
