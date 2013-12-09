@@ -401,6 +401,7 @@ TESTDISTROS = \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Features-1.06.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-TimeSkew-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq-1.00.tar.gz \
 	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-Zip-1.03.zip
 
 NOTINCHECKSUMS = \
@@ -631,6 +632,20 @@ t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz: 
 		$(PERL) Makefile.PL && \
 		$(MAKE) dist && \
 		mv CPAN-Test-Dummy-Perl5-Make-UnsatPrereq-1.00.tar.gz .. && \
+		$(MAKE) clean
+	ls -l $@
+
+t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq-1.00.tar.gz: \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/Changes \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/MANIFEST \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/Makefile.PL \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/README \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/lib/CPAN/Test/Dummy/Perl5/Make/OptionalPrereq.pm \
+	t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/t/00_load.t
+	cd t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Make-OptionalPrereq/ && \
+		$(PERL) Makefile.PL && \
+		$(MAKE) dist && \
+		mv CPAN-Test-Dummy-Perl5-Make-OptionalPrereq-1.00.tar.gz .. && \
 		$(MAKE) clean
 	ls -l $@
 
