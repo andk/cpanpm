@@ -1,4 +1,9 @@
 
+	* add new dummy distros OptionalPrereq and CircularPrereq for testing
+	recommends/suggests support
+
+	* experimental recommends/suggests support (David Golden, Andreas Koenig)
+
 	* enable hiding of directories in the distroprefs tree (suggested by
 	Slaven Rezić)
 
