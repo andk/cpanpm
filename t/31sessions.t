@@ -383,7 +383,7 @@ EOF
            "test CPAN::Test::Dummy::Perl5::Build::Fails CPAN::Test::Dummy::Perl5::Make::Failearly" =>
            "FAIL",
            # must not see Failearly in the failed summary
-           "failed" => q{(?x:Failed \s during \s this \s session: \s+
+           "failed" => q{(?x:Failures \s during \s this \s session: \s+
                                \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
            "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
