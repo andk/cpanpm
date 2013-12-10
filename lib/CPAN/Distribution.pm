@@ -2648,24 +2648,42 @@ of modules we are processing right now?", "yes");
     }
     if ($follow) {
         my $id = $self->id;
-        # color them as dirty
+        my(@to_queue_mand,@to_queue_opt);
         for my $gp (@good_prereq_tuples) {
-            # warn "calling color_cmd_tmps(0,1)";
-            my $p = $gp->[0];
-            my $any = CPAN::Shell->expandany($p);
-            $self->{$slot . "_for"}{$any->id}++;
-            if ($any) {
-                $any->color_cmd_tmps(0,2);
+            my($prereq,$reqtype,$optional) = @$gp;
+            my $qthing = +{qmod=>$prereq,reqtype=>$reqtype,optional=>$optional};
+            if ($optional &&
+                $self->is_locally_optional(undef,$prereq)
+               ){
+                # Since we do not depend on this one, we do not need
+                # this in a mandatory arrangement:
+                push @to_queue_opt, $qthing;
             } else {
-                $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$p'\n");
-                $CPAN::Frontend->mysleep(2);
+                my $any = CPAN::Shell->expandany($prereq);
+                $self->{$slot . "_for"}{$any->id}++;
+                if ($any) {
+                    unless ($optional) {
+                        # No recursion check in an optional area of the tree
+                        $any->color_cmd_tmps(0,2);
+                    }
+                } else {
+                    $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$prereq'\n");
+                    $CPAN::Frontend->mysleep(2);
+                }
+                # order everything that is not locally_optional just
+                # like mandatory items: this keeps leaves before
+                # branches
+                unshift @to_queue_mand, $qthing;
             }
         }
-        # queue them and re-queue yourself
-        CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}, optional=> !$self->{mandatory}},
-                               map {+{qmod=>$_->[0],reqtype=>$_->[1],optional=>$_->[2]}} reverse @good_prereq_tuples);
-        $self->{$slot} = "Delayed until after prerequisites";
-        return 1; # signal we need dependencies
+        if (@to_queue_mand) {
+            unshift @to_queue_mand, {qmod => $id, reqtype => $self->{reqtype}, optional=> !$self->{mandatory}};
+            CPAN::Queue->jumpqueue(@to_queue_opt,@to_queue_mand);
+            $self->{$slot} = "Delayed until after prerequisites";
+            return 1; # signal we need dependencies
+        } elsif (@to_queue_opt) {
+            CPAN::Queue->jumpqueue(@to_queue_opt);
+        }
     }
     return;
 }
