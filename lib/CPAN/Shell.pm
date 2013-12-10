@@ -1043,6 +1043,41 @@ sub u {
 #-> sub CPAN::Shell::failed ;
 sub failed {
     my($self,$only_id,$silent) = @_;
+    my @failed = $self->find_failed($only_id);
+    my $scope;
+    if ($only_id) {
+        $scope = "this command";
+    } elsif ($CPAN::Index::HAVE_REANIMATED) {
+        $scope = "this or a previous session";
+        # it might be nice to have a section for previous session and
+        # a second for this
+    } else {
+        $scope = "this session";
+    }
+    if (@failed) {
+        my $print;
+        my $debug = 0;
+        if ($debug) {
+            $print = join "",
+                map { sprintf "%5d %-45s: %s %s\n", @$_ }
+                    sort { $a->[0] <=> $b->[0] } @failed;
+        } else {
+            $print = join "",
+                map { sprintf " %-45s: %s %s\n", @$_[1..3] }
+                    sort {
+                        $a->[0] <=> $b->[0]
+                            ||
+                                $a->[4] <=> $b->[4]
+                       } @failed;
+        }
+        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
+    } elsif (!$only_id || !$silent) {
+        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
+    }
+}
+
+sub find_failed {
+    my($self,$only_id) = @_;
     my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
@@ -1075,6 +1110,10 @@ sub failed {
         next DIST unless $failed;
         my $id = $d->id;
         $id =~ s|^./../||;
+        ### XXX need to flag optional modules as '(optional)' if they are
+        # from recommends/suggests -- i.e. *show* failure, but make it clear
+        # it was failure of optional module -- xdg, 2012-04-01
+        $id = "(optional) $id" if ! $d->{mandatory};
         #$print .= sprintf(
         #                  "  %-45s: %s %s\n",
         push @failed,
@@ -1086,6 +1125,7 @@ sub failed {
               $failed,
               $d->{$failed}->text,
               $d->{$failed}{TIME}||0,
+              !! $d->{mandatory},
              ] :
              [
               1,
@@ -1093,42 +1133,16 @@ sub failed {
               $failed,
               $d->{$failed},
               0,
+              !! $d->{mandatory},
              ]
             );
     }
-    my $scope;
-    if ($only_id) {
-        $scope = "this command";
-    } elsif ($CPAN::Index::HAVE_REANIMATED) {
-        $scope = "this or a previous session";
-        # it might be nice to have a section for previous session and
-        # a second for this
-    } else {
-        $scope = "this session";
-    }
-    ### XXX need to flag optional modules as '(optional)' if they are
-    # from recommends/suggests -- i.e. *show* failure, but make it clear
-    # it was failure of optional module -- xdg, 2012-04-01
-    if (@failed) {
-        my $print;
-        my $debug = 0;
-        if ($debug) {
-            $print = join "",
-                map { sprintf "%5d %-45s: %s %s\n", @$_ }
-                    sort { $a->[0] <=> $b->[0] } @failed;
-        } else {
-            $print = join "",
-                map { sprintf " %-45s: %s %s\n", @$_[1..3] }
-                    sort {
-                        $a->[0] <=> $b->[0]
-                            ||
-                                $a->[4] <=> $b->[4]
-                       } @failed;
-        }
-        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
-    } elsif (!$only_id || !$silent) {
-        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
-    }
+    return @failed;
+}
+
+sub mandatory_dist_failed {
+    my ($self) = @_;
+    return grep { $_->[5] } $self->find_failed($CPAN::CurrentCommandID);
 }
 
 # XXX intentionally undocumented because completely bogus, unportable,
@@ -1714,7 +1728,7 @@ sub rematein {
                     }
                 }
             }
-            CPAN::Queue->queue_item(qmod => $obj->id, reqtype => "c");
+            CPAN::Queue->queue_item(qmod => $obj->id, reqtype => "c", optional => '');
             push @qcopy, $obj;
         } elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
             $obj = $CPAN::META->instance('CPAN::Author',uc($s));
@@ -1752,6 +1766,7 @@ to find objects with matching identifiers.
         my $obj;
         my $s = $q->as_string;
         my $reqtype = $q->reqtype || "";
+        my $optional = $q->optional || "";
         $obj = CPAN::Shell->expandany($s);
         unless ($obj) {
             # don't know how this can happen, maybe we should panic,
@@ -1764,6 +1779,23 @@ to find objects with matching identifiers.
             next QITEM;
         }
         $obj->{reqtype} ||= "";
+        my $type = ref $obj;
+        if ( $type eq 'CPAN::Distribution' || $type eq 'CPAN::Bundle' ) {
+            $obj->{mandatory} ||= ! $optional; # once mandatory, always mandatory
+        }
+        elsif ( $type eq 'CPAN::Module' ) {
+            $obj->{mandatory} ||= ! $optional; # once mandatory, always mandatory
+            if (my $d = $obj->distribution) {
+                $d->{mandatory} ||= ! $optional; # once mandatory, always mandatory
+            } elsif ($optional) {
+                # the queue object does not know who was recommending/suggesting us:(
+                # So we only vaguely write "optional".
+                $CPAN::Frontend->mywarn("Warning: optional module '$s' ".
+                                        "not known. Skipping.\n");
+                CPAN::Queue->delete_first($s);
+                next QITEM;
+            }
+        }
         {
             # force debugging because CPAN::SQLite somehow delivers us
             # an empty object;
@@ -1847,10 +1879,14 @@ to find objects with matching identifiers.
                 $obj->$unpragma();
             }
         }
-        if ($CPAN::Config->{halt_on_failure}
-                &&
-                    CPAN::Distrostatus::something_has_just_failed()
-              ) {
+        # if any failures occurred and the current object is mandatory, we
+        # still don't know if *it* failed or if it was another (optional)
+        # module, so we have to check that explicitly (and expensively)
+        if (    $CPAN::Config->{halt_on_failure}
+            && $obj->{mandatory}
+            && CPAN::Distrostatus::something_has_just_failed()
+            && $self->mandatory_dist_failed()
+        ) {
             $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
             CPAN::Queue->nullify_queue;
             last QITEM;

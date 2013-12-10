@@ -4,6 +4,7 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
+use CPAN::Meta::Requirements 2;
 use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
@@ -186,8 +187,12 @@ sub color_cmd_tmps {
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
         # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
-      PREREQ: for my $pre (keys %{$prereq_pm->{requires}||{}},
-                           keys %{$prereq_pm->{build_requires}||{}}) {
+      PREREQ: for my $pre (
+                keys %{$prereq_pm->{requires}||{}},
+                keys %{$prereq_pm->{build_requires}||{}},
+                keys %{$prereq_pm->{opt_requires}||{}},
+                keys %{$prereq_pm->{opt_build_requires}||{}}
+            ) {
             next PREREQ if $pre eq "perl";
             my $premo;
             unless ($premo = CPAN::Shell->expand("Module",$pre)) {
@@ -2569,6 +2574,15 @@ sub _make_install_make_command {
     return $mimc;
 }
 
+#-> sub CPAN::Distribution::is_locally_optional
+sub is_locally_optional {
+    my($self, $prereq_pm, $prereq) = @_;
+    $prereq_pm ||= $self->{prereq_pm};
+    exists $prereq_pm->{opt_requires}{$prereq}
+        ||
+            exists $prereq_pm->{opt_build_requires}{$prereq};
+}
+
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
@@ -2577,13 +2591,14 @@ sub follow_prereqs {
     return unless @prereq_tuples;
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
+        # e.g. $p = ['Devel::PartialDump', 'r', 1]
         # promote if possible
         if ($p->[1] =~ /^(r|c)$/) {
             push @good_prereq_tuples, $p;
         } elsif ($p->[1] =~ /^(b)$/) {
             my $reqtype = CPAN::Queue->reqtype_of($p->[0]);
             if ($reqtype =~ /^(r|c)$/) {
-                push @good_prereq_tuples, [$p->[0], $reqtype];
+                push @good_prereq_tuples, [$p->[0], $reqtype, $p->[2]];
             } else {
                 push @good_prereq_tuples, $p;
             }
@@ -2615,7 +2630,7 @@ sub follow_prereqs {
     $CPAN::Frontend->
         myprint("$filler1 $unsat $filler2".
                 "$filler3 $pretty_id $filler4".
-                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @good_prereq_tuples),
+                join("", map {sprintf "    %s \[%s%s]\n", $_->[0], $map{$_->[1]}, $self->is_locally_optional(undef,$_->[0]) ? ",optional" : ""} @good_prereq_tuples),
                );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
@@ -2633,24 +2648,42 @@ of modules we are processing right now?", "yes");
     }
     if ($follow) {
         my $id = $self->id;
-        # color them as dirty
+        my(@to_queue_mand,@to_queue_opt);
         for my $gp (@good_prereq_tuples) {
-            # warn "calling color_cmd_tmps(0,1)";
-            my $p = $gp->[0];
-            my $any = CPAN::Shell->expandany($p);
-            $self->{$slot . "_for"}{$any->id}++;
-            if ($any) {
-                $any->color_cmd_tmps(0,2);
+            my($prereq,$reqtype,$optional) = @$gp;
+            my $qthing = +{qmod=>$prereq,reqtype=>$reqtype,optional=>$optional};
+            if ($optional &&
+                $self->is_locally_optional(undef,$prereq)
+               ){
+                # Since we do not depend on this one, we do not need
+                # this in a mandatory arrangement:
+                push @to_queue_opt, $qthing;
             } else {
-                $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$p'\n");
-                $CPAN::Frontend->mysleep(2);
+                my $any = CPAN::Shell->expandany($prereq);
+                $self->{$slot . "_for"}{$any->id}++;
+                if ($any) {
+                    unless ($optional) {
+                        # No recursion check in an optional area of the tree
+                        $any->color_cmd_tmps(0,2);
+                    }
+                } else {
+                    $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$prereq'\n");
+                    $CPAN::Frontend->mysleep(2);
+                }
+                # order everything that is not locally_optional just
+                # like mandatory items: this keeps leaves before
+                # branches
+                unshift @to_queue_mand, $qthing;
             }
         }
-        # queue them and re-queue yourself
-        CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}},
-                               map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @good_prereq_tuples);
-        $self->{$slot} = "Delayed until after prerequisites";
-        return 1; # signal we need dependencies
+        if (@to_queue_mand) {
+            unshift @to_queue_mand, {qmod => $id, reqtype => $self->{reqtype}, optional=> !$self->{mandatory}};
+            CPAN::Queue->jumpqueue(@to_queue_opt,@to_queue_mand);
+            $self->{$slot} = "Delayed until after prerequisites";
+            return 1; # signal we need dependencies
+        } elsif (@to_queue_opt) {
+            CPAN::Queue->jumpqueue(@to_queue_opt);
+        }
     }
     return;
 }
@@ -2695,19 +2728,22 @@ sub _feature_depends {
 
 sub prereqs_for_slot {
     my($self,$slot) = @_;
-    my(%merged,$prereq_pm);
+    my($prereq_pm);
+    my $merged = CPAN::Meta::Requirements->new;
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
-        my $meta_configure_requires = $self->configure_requires();
-        %merged = (
-                   %{$meta_configure_requires||{}},
-                   %{$prefs_depends->{configure_requires}||{}},
-                   %{$feature_depends->{configure_requires}||{}},
-                  );
-        if (-f File::Spec->catfile($self->{build_dir},"Build.PL")
+        for my $hash (  $self->configure_requires,
+                        $prefs_depends->{configure_requires},
+                        $feature_depends->{configure_requires},
+        ) {
+            $merged->add_requirements(
+                CPAN::Meta::Requirements->from_string_hash($hash)
+            );
+        }
+        if (-f "Build.PL"
             && ! -f File::Spec->catfile($self->{build_dir},"Makefile.PL")
-            && ! exists $merged{"Module::Build"}
+            && ! $merged->requirements_for_module("Module::Build")
             && ! $CPAN::META->has_inst("Module::Build")
            ) {
             $CPAN::Frontend->mywarn(
@@ -2715,13 +2751,13 @@ sub prereqs_for_slot {
               "  Adding it now as such.\n"
             );
             $CPAN::Frontend->mysleep(5);
-            $merged{"Module::Build"} = 0;
+            $merged->add_minimum( "Module::Build" => 0 );
             delete $self->{writemakefile};
         }
         $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
         my $prereq_pm_0 = $self->prereq_pm || {};
-        for my $reqtype (qw(requires build_requires)) {
+        for my $reqtype (qw(requires build_requires opt_requires opt_build_requires)) {
             $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
             for my $dep ($prefs_depends,$feature_depends) {
                 for my $k (keys %{$dep->{$reqtype}||{}}) {
@@ -2729,12 +2765,22 @@ sub prereqs_for_slot {
                 }
             }
         }
-        %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
         # XXX what about optional_req|breq? -- xdg, 2012-04-01
+        for my $hash (
+            $prereq_pm->{requires},
+            $prereq_pm->{build_requires},
+            $prereq_pm->{opt_requires},
+            $prereq_pm->{opt_build_requires},
+
+        ) {
+            $merged->add_requirements(
+                CPAN::Meta::Requirements->from_string_hash($hash)
+            );
+        }
     } else {
         die "Panic: illegal slot '$slot'";
     }
-    return (\%merged, $prereq_pm);
+    return ($merged->as_string_hash, $prereq_pm);
 }
 
 #-> sub CPAN::Distribution::unsat_prereq ;
@@ -2743,11 +2789,13 @@ sub prereqs_for_slot {
 # (sorry for the inconsistency, it was an accident)
 sub unsat_prereq {
     my($self,$slot) = @_;
-    my($merged,$prereq_pm) = $self->prereqs_for_slot($slot);
+    my($merged_hash,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    my @merged = my %merged = %$merged;
+    my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
+    my @merged = $merged->required_modules;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
-  NEED: while (my($need_module, $need_version) = each %merged) {
+  NEED: for my $need_module ( @merged ) {
+        my $need_version = $merged->requirements_for_module($need_module);
         my($available_version,$inst_file,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
@@ -2792,8 +2840,7 @@ sub unsat_prereq {
                  $available_version,
                  $need_version,
                 );
-            if (0) {
-            } elsif  ( $inst_file
+            if ( $inst_file
                        && $available_file eq $inst_file
                        && $nmo->inst_deprecated
                      ) {
@@ -2810,7 +2857,12 @@ sub unsat_prereq {
                     # loop CPANPLUS => CPANPLUS::Dist::Build RT#83042)
                     next NEED;
                 }
-            } elsif ($self->{reqtype} =~ /^(r|c)$/ && exists $prereq_pm->{requires}{$need_module} && $nmo && !$inst_file) {
+            } elsif (
+                $self->{reqtype} =~ /^(r|c)$/
+                && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
+                && $nmo 
+                && !$inst_file
+            ) {
                 # continue installing as a prereq; this may be a
                 # distro we already used when it was a build_requires
                 # so we did not install it. But suddenly somebody
@@ -2873,8 +2925,6 @@ sub unsat_prereq {
                                        );
                 next NEED;
             }
-            ### XXX here do next NEED if needed module is recommends/suggests
-            ### so we don't complain about missing optional deps -- xdg, 2012-04-01
           NOSAYER: for my $nosayer (
                                     "unwrapped",
                                     "writemakefile",
@@ -2896,14 +2946,20 @@ sub unsat_prereq {
                            ) {
                             next NOSAYER;
                         }
-                        $CPAN::Frontend->mywarn("Warning: Prerequisite ".
-                                                "'$need_module => $need_version' ".
-                                                "for '$selfid' failed when ".
-                                                "processing '$did' with ".
-                                                "'$nosayer => $do->{$nosayer}'. Continuing, ".
-                                                "but chances to succeed are limited.\n"
-                                               );
-                        $CPAN::Frontend->mysleep($sponsoring/10);
+                        ### XXX  don't complain about missing optional deps -- xdg, 2012-04-01
+                        if ($self->is_locally_optional($prereq_pm, $need_module)) {
+                            # don't complain about failing optional prereqs
+                        }
+                        else {
+                            $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                                    "'$need_module => $need_version' ".
+                                                    "for '$selfid' failed when ".
+                                                    "processing '$did' with ".
+                                                    "'$nosayer => $do->{$nosayer}'. Continuing, ".
+                                                    "but chances to succeed are limited.\n"
+                                                );
+                            $CPAN::Frontend->mysleep($sponsoring/10);
+                        }
                         next NEED;
                     } else { # the other guy succeeded
                         if ($nosayer =~ /^(install|make_test)$/) {
@@ -2925,10 +2981,10 @@ sub unsat_prereq {
             }
         }
         my $needed_as;
-        # XXX here need to flag as optional somehow for recommends/suggests
-        # -- xdg, 2012-04-01
         if (0) {
-        } elsif (exists $prereq_pm->{requires}{$need_module}) {
+        } elsif (exists $prereq_pm->{requires}{$need_module}
+            || exists $prereq_pm->{opt_requires}{$need_module}
+        ) {
             $needed_as = "r";
         } elsif ($slot eq "configure_requires_later") {
             # in ae872487d5 we said: C< we have not yet run the
@@ -2941,7 +2997,11 @@ sub unsat_prereq {
         } else {
             $needed_as = "b";
         }
-        push @need, [$need_module,$needed_as];
+        # here need to flag as optional for recommends/suggests
+        # -- xdg, 2012-04-01
+        my $optional = !$self->{mandatory}
+            || $self->is_locally_optional($prereq_pm, $need_module);
+        push @need, [$need_module,$needed_as,$optional];
     }
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
     CPAN->debug("returning from unsat_prereq[@unfolded]") if $CPAN::DEBUG;
@@ -3087,7 +3147,7 @@ sub prereq_pm {
                 $self->{writemakefile}||"",
                 $self->{modulebuild}||"",
                ) if $CPAN::DEBUG;
-    my($req,$breq);
+    my($req,$breq, $opt_req, $opt_breq);
     my $meta_obj = $self->read_meta;
     # META/MYMETA is only authoritative if dynamic_config is false
     if ($meta_obj && ! $meta_obj->dynamic_config) {
@@ -3095,16 +3155,35 @@ sub prereq_pm {
         my $requires = $prereqs->requirements_for(qw/runtime requires/);
         my $build_requires = $prereqs->requirements_for(qw/build requires/);
         my $test_requires = $prereqs->requirements_for(qw/test requires/);
-        # XXX assemble optional_req && optional_breq from recommends/suggests
-        # depending on corresponding policies -- xdg, 2012-04-01
         # XXX we don't yet distinguish build vs test, so merge them for now
         $build_requires->add_requirements($test_requires);
         $req = $requires->as_string_hash;
         $breq = $build_requires->as_string_hash;
+
+        # XXX assemble optional_req && optional_breq from recommends/suggests
+        # depending on corresponding policies -- xdg, 2012-04-01
+        my $opt_runtime = CPAN::Meta::Requirements->new;
+        my $opt_build   = CPAN::Meta::Requirements->new;
+        if ( $CPAN::Config->{recommends_policy} ) {
+            $opt_runtime->add_requirements( $prereqs->requirements_for(qw/runtime recommends/));
+            $opt_build->add_requirements(   $prereqs->requirements_for(qw/build recommends/));
+            $opt_build->add_requirements(   $prereqs->requirements_for(qw/test  recommends/));
+
+        }
+        if ( $CPAN::Config->{suggests_policy} ) {
+            $opt_runtime->add_requirements( $prereqs->requirements_for(qw/runtime suggests/));
+            $opt_build->add_requirements(   $prereqs->requirements_for(qw/build suggests/));
+            $opt_build->add_requirements(   $prereqs->requirements_for(qw/test  suggests/));
+        }
+        $opt_req = $opt_runtime->as_string_hash;
+        $opt_breq = $opt_build->as_string_hash;
     }
     elsif (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
         $req =  $yaml->{requires} || {};
         $breq =  $yaml->{build_requires} || {};
+        if ( $CPAN::Config->{recommends_policy} ) {
+            $opt_req = $yaml->{recommends} || {};
+        }
         undef $req unless ref $req eq "HASH" && %$req;
         if ($req) {
             if ($yaml->{generated_by} &&
@@ -3211,9 +3290,14 @@ sub prereq_pm {
             }
         }
     }
-    # XXX needs to be adapted for optional_req & optional_breq
-    if ($req || $breq) {
-        return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
+    # XXX needs to be adapted for optional_req & optional_breq -- xdg, 2012-04-01
+    if ($req || $breq || $opt_req || $opt_breq ) {
+        return $self->{prereq_pm} = {
+           requires => $req,
+           build_requires => $breq,
+           opt_requires => $opt_req,
+           opt_build_requires => $opt_breq,
+       };
     }
 }
 
@@ -3476,7 +3560,8 @@ sub _make_test_illuminate_prereqs {
             CPAN->debug("m[$m] have available_file[$available_file]")
                 if $CPAN::DEBUG;
         } else {
-            push @prereq, $m;
+            push @prereq, $m
+                if $m_obj->{mandatory};
         }
     }
     my $but;
