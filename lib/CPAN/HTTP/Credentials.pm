@@ -7,8 +7,8 @@ use vars qw($USER $PASSWORD $PROXY_USER $PROXY_PASSWORD);
 $CPAN::HTTP::Credentials::VERSION = $CPAN::HTTP::Credentials::VERSION = "1.9600";
 
 sub clear_credentials {
-   _clear_non_proxy_credentials();
-   _clear_proxy_credentials();
+   clear_non_proxy_credentials();
+   clear_proxy_credentials();
 }
 
 sub clear_non_proxy_credentials {
