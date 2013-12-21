@@ -1,21 +1,6 @@
 --- 
-comment: |
-
-  http://www.xray.mpe.mpg.de/mailing-lists/perl5-porters/2008-01/msg01365.html
-
 match:
-  distribution: "^OLAF/Net-DNS-0.62.tar.gz"
-pl: 
-  args: 
-    - --no-online-tests
-depends:
-  requires:
-    Test::More: 0.72
-patches:
-  - "ANDK/patches/Net-DNS-0.62-ANDK-01.patch.gz"
---- 
-match:
-  distribution: "^OLAF/Net-DNS-"
+  distribution: "^(OLAF|NLNETLABS)/Net-DNS-"
 pl: 
   args: 
     - --no-online-tests
