@@ -1,6 +1,6 @@
 $VAR1 = {
   "match" => {
-    "distribution" => "^ILYAZ/modules/Term-ReadLine-Perl-\\d"
+    "distribution" => "^ILYAZ/(modules/)?Term-ReadLine-Perl-\\d|^CKAISER/Term-ReadLine-TTYtter-\\d"
   },
   "test" => {
     "expect" => [

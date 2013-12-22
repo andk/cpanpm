@@ -1,11 +1,29 @@
 $VAR1 = {
+  "comment" => "\nhttps://rt.cpan.org/Ticket/Display.html?id=62258\n",
   "match" => {
-    "distribution" => "^INGY/YAML-0.6\\d"
+    "distribution" => "/YAML-0.72"
   },
-  "pl" => {
-    "expect" => [
-      "Continue installing",
-      "y\n"
-    ]
+  "patches" => [
+    "ANDK/patches/YAML-0.72-ANDK-01.patch.gz"
+  ]
+};
+$VAR2 = {
+  "comment" => "\nhttps://rt.cpan.org/Ticket/Display.html?id=73673\n",
+  "match" => {
+    "distribution" => "/YAML-0.(78|79|80)"
+  },
+  "patches" => [
+    "ANDK/patches/YAML-0.78-SPROUT-01.patch.gz"
+  ]
+};
+$VAR3 = {
+  "comment" => "\nfresh release, no comment\n",
+  "depends" => {
+    "requires" => {
+      "Test::Base" => 0
+    }
+  },
+  "match" => {
+    "distribution" => "/YAML-0.74"
   }
 };
