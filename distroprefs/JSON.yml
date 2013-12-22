@@ -1,6 +1,6 @@
 ---
 match:
-  distribution: "/JSON-[23456789]\."
+  distribution: "/JSON-[23456789]\\."
 depends:
 # so no interactive questions anymore:
   configure_requires:
