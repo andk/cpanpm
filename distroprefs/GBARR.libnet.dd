@@ -1,6 +1,6 @@
 $VAR1 = {
   "match" => {
-    "distribution" => "^GBARR/libnet-"
+    "distribution" => "^(GBARR|SHAY)/libnet-"
   },
   "pl" => {
     "expect" => [
