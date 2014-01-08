@@ -1,0 +1,54 @@
+# CHECKSUMS file written on Tue Jan 27 23:46:59 2009 GMT by CPAN::Checksums (v1.050)
+$cksum = {
+  'Local-Make-Fails' => {
+    'isdir' => 1
+  },
+  'Local-Make-Fails.tgz' => {
+    'md5' => '8ee78c477bf8520d283edd9452ce9d21',
+    'mtime' => '2009-01-27',
+    'sha256' => 'cd565a2018b6265a2426fdf89f7afcf77778a205f4c86666e3f6024912cd8ea6',
+    'size' => '383'
+  },
+  'Local-Prereq-Fails' => {
+    'isdir' => 1
+  },
+  'Local-Prereq-Fails.tgz' => {
+    'md5' => 'f126f90af3676ba759e468e67d14b45d',
+    'mtime' => '2009-01-27',
+    'sha256' => '2bb479b93ab39a4961446c998225a32e0b85994889ab4fed860bee8d1f5db619',
+    'size' => '315'
+  },
+  'Local-Test-Fails' => {
+    'isdir' => 1
+  },
+  'Local-Test-Fails.tgz' => {
+    'md5' => '7094f17ea9e48a9f45203935f54966ab',
+    'mtime' => '2009-01-27',
+    'sha256' => 'f6ce428aabd67d1be017dd766d3a09d700668e22ea01f3c26dcf8bd709a62080',
+    'size' => '846'
+  },
+  'Local-Unsupported-OS' => {
+    'isdir' => 1
+  },
+  'Local-Unsupported-OS.tgz' => {
+    'md5' => '26850f229b8da0cf5ecd74b6e34d9438',
+    'mtime' => '2009-01-27',
+    'sha256' => '11ab464fd08a2f88e250e52707fe182b30f3b87b36a11a32aa59b77465baaa3c',
+    'size' => '303'
+  },
+  'Local-Works-Fine' => {
+    'isdir' => 1
+  },
+  'Local-Works-Fine.tgz' => {
+    'md5' => '5e9175f5067001537c23199939009b15',
+    'mtime' => '2009-01-27',
+    'sha256' => '4cc17d9bfc3666119517936b06877010749d4bca01f31ab008de60f5d988057f',
+    'size' => '1211'
+  },
+  'Make.pl' => {
+    'md5' => 'f52db2e5e66a4fb23515f158e7854ae7',
+    'mtime' => '2009-01-27',
+    'sha256' => '720399f558dfd51521e28626591083b7e3064ab24e864db8707d75c90ba9bc2c',
+    'size' => '87'
+  }
+};
