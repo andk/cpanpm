@@ -18,3 +18,5 @@ ChangeLog
 ./distroprefs/G[AC-Z]*.dd
 ./distroprefs/I[A-KMO-Z]*.dd
 /MYMETA.*
+# used by scripts/cpan
+cpan-home
