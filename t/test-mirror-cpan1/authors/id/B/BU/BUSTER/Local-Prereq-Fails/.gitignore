@@ -1,0 +1,6 @@
+.DS_Store
+Makefile
+*.bak
+*.old
+blib
+pm_to_blib
