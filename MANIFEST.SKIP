@@ -23,6 +23,10 @@
 ^blibdirs
 ^cover_db/
 ^cp-to-perl.pl
+
+# used by scripts/cpan to test installations
+^cpan-home
+
 ^cpan_reports_
 ^cpantesters-show/
 ^distroprefs/ttt.nodbi.yml
