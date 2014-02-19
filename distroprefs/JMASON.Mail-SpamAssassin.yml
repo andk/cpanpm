@@ -8,4 +8,4 @@ pl:
 depends:
   configure_requires:
     Net::DNS: 0.34
-    NetAddr::IP: 4.000
+    NetAddr::IP: 4.010
