@@ -4,7 +4,7 @@ package CPAN::Complete;
 use strict;
 @CPAN::Complete::ISA = qw(CPAN::Debug);
 # Q: where is the "How do I add a new command" HOWTO?
-# A: git log -p -1 355c44e9caaec857e4b12f51afb96498833c3e36 where andk added the report command
+# A: svn diff -r 1048:1049 where andk added the report command
 @CPAN::Complete::COMMANDS = sort qw(
                                     ? ! a b d h i m o q r u
                                     autobundle

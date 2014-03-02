@@ -3353,58 +3353,6 @@ sub shortcut_test {
     return undef; # no shortcut
 }
 
-#-> sub CPAN::Distribution::_exe_files ;
-sub _exe_files {
-    my($self) = @_;
-    return unless $self->{writemakefile}  # no need to have succeeded
-                                          # but we must have run it
-        || $self->{modulebuild};
-    unless ($self->{build_dir}) {
-        return;
-    }
-    CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
-                $self->{writemakefile}||"",
-                $self->{modulebuild}||"",
-               ) if $CPAN::DEBUG;
-    my $build_dir;
-    unless ( $build_dir = $self->{build_dir} ) {
-        return;
-    }
-    my $makefile = File::Spec->catfile($build_dir,"Makefile");
-    my $fh;
-    my @exe_files;
-    if (-f $makefile
-        and
-        $fh = FileHandle->new("<$makefile\0")) {
-        CPAN->debug("Getting exefiles from Makefile") if $CPAN::DEBUG;
-        local($/) = "\n";
-        while (<$fh>) {
-            last if /MakeMaker post_initialize section/;
-            my($p) = m{^[\#]
-                       \s+EXE_FILES\s+=>\s+\[(.+)\]
-                  }x;
-            next unless $p;
-            # warn "Found exefiles expr[$p]";
-            my @p = split /,\s*/, $p;
-            for my $p2 (@p) {
-                if ($p2 =~ /^q\[(.+)\]/) {
-                    push @exe_files, $1;
-                }
-            }
-        }
-    }
-    return \@exe_files if @exe_files;
-    my $buildparams = File::Spec->catfile($build_dir,"_build","build_params");
-    if (-f $buildparams) {
-        CPAN->debug("Found '$buildparams'") if $CPAN::DEBUG;
-        my $x = do $buildparams;
-        for my $sf (@{$x->[2]{script_files} || []}) {
-            push @exe_files, $sf;
-        }
-    }
-    return \@exe_files;
-}
-
 #-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
