@@ -1043,41 +1043,6 @@ sub u {
 #-> sub CPAN::Shell::failed ;
 sub failed {
     my($self,$only_id,$silent) = @_;
-    my @failed = $self->find_failed($only_id);
-    my $scope;
-    if ($only_id) {
-        $scope = "this command";
-    } elsif ($CPAN::Index::HAVE_REANIMATED) {
-        $scope = "this or a previous session";
-        # it might be nice to have a section for previous session and
-        # a second for this
-    } else {
-        $scope = "this session";
-    }
-    if (@failed) {
-        my $print;
-        my $debug = 0;
-        if ($debug) {
-            $print = join "",
-                map { sprintf "%5d %-45s: %s %s\n", @$_ }
-                    sort { $a->[0] <=> $b->[0] } @failed;
-        } else {
-            $print = join "",
-                map { sprintf " %-45s: %s %s\n", @$_[1..3] }
-                    sort {
-                        $a->[0] <=> $b->[0]
-                            ||
-                                $a->[4] <=> $b->[4]
-                       } @failed;
-        }
-        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
-    } elsif (!$only_id || !$silent) {
-        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
-    }
-}
-
-sub find_failed {
-    my($self,$only_id) = @_;
     my @failed;
   DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
@@ -1125,7 +1090,6 @@ sub find_failed {
               $failed,
               $d->{$failed}->text,
               $d->{$failed}{TIME}||0,
-              !! $d->{mandatory},
              ] :
              [
               1,
@@ -1133,16 +1097,39 @@ sub find_failed {
               $failed,
               $d->{$failed},
               0,
-              !! $d->{mandatory},
              ]
             );
     }
-    return @failed;
-}
-
-sub mandatory_dist_failed {
-    my ($self) = @_;
-    return grep { $_->[5] } $self->find_failed($CPAN::CurrentCommandID);
+    my $scope;
+    if ($only_id) {
+        $scope = "this command";
+    } elsif ($CPAN::Index::HAVE_REANIMATED) {
+        $scope = "this or a previous session";
+        # it might be nice to have a section for previous session and
+        # a second for this
+    } else {
+        $scope = "this session";
+    }
+    if (@failed) {
+        my $print;
+        my $debug = 0;
+        if ($debug) {
+            $print = join "",
+                map { sprintf "%5d %-45s: %s %s\n", @$_ }
+                    sort { $a->[0] <=> $b->[0] } @failed;
+        } else {
+            $print = join "",
+                map { sprintf " %-45s: %s %s\n", @$_[1..3] }
+                    sort {
+                        $a->[0] <=> $b->[0]
+                            ||
+                                $a->[4] <=> $b->[4]
+                       } @failed;
+        }
+        $CPAN::Frontend->myprint("Failed during $scope:\n$print");
+    } elsif (!$only_id || !$silent) {
+        $CPAN::Frontend->myprint("Nothing failed in $scope\n");
+    }
 }
 
 # XXX intentionally undocumented because completely bogus, unportable,
@@ -1870,13 +1857,9 @@ to find objects with matching identifiers.
                 $obj->$unpragma();
             }
         }
-        # if any failures occurred and the current object is mandatory, we
-        # still don't know if *it* failed or if it was another (optional)
-        # module, so we have to check that explicitly (and expensively)
         if (    $CPAN::Config->{halt_on_failure}
-            && $obj->{mandatory}
             && CPAN::Distrostatus::something_has_just_failed()
-            && $self->mandatory_dist_failed()
+            && $obj->{mandatory}
         ) {
             $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
             CPAN::Queue->nullify_queue;
