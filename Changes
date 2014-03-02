@@ -1,4 +1,13 @@
 
+	* address #91706: during the development of 2.01, 2.02, and 2.03 (all
+	three only released a "TRIAL" versions) it happened unnoticed that the
+	pragma support on the cpan command line ("force install ...", "notest
+	install ...") regressed. Git bisect pointed to a commit that was tightly
+	connected with many other commits. As I could not find an easy way
+	forward that keeps the repository in good order, I chose to revert a
+	whole bunch of commits. I apologize for the mess this opens and hope we
+	can soon figure out how to proceed further.
+
 	* add new dummy distros OptionalPrereq and CircularPrereq for testing
 	recommends/suggests support
 
@@ -16,7 +25,7 @@
 	* support numerics in cpan IDs (Tatsuhiko Miyagawa)
 
 	* address #88565: fix unreachable core bug (Father Chrysostomos, David
-	Golden)
+	Golden, bb225be54aff753058e149c95ac3047f54892746)
 
 	* address #76831: spaces on Win32 combined with
 	make_install_make_command (Reini Urban, Steve Hay)
@@ -25,7 +34,8 @@
 	Steinbrunner)
 
 	* address #86915: upgrade build method from "make" to "test" on
-	dependencies declared as build_requires (Andreas Koenig)
+	dependencies declared as build_requires (Andreas Koenig,
+	fa1d3087d5246a08741c944768a9732c35c944af)
 
 2013-06-23  Andreas Koenig  <k@UX31A>
 
