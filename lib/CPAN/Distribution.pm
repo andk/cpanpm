@@ -2630,7 +2630,7 @@ sub follow_prereqs {
     $CPAN::Frontend->
         myprint("$filler1 $unsat $filler2".
                 "$filler3 $pretty_id $filler4".
-                join("", map {sprintf "    %s \[%s%s]\n", $_->[0], $map{$_->[1]}, $self->is_locally_optional(undef,$_->[0]) ? ",optional" : ""} @good_prereq_tuples),
+                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @good_prereq_tuples),
                );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
