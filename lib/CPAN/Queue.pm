@@ -20,11 +20,6 @@ sub reqtype {
     $self->{reqtype};
 }
 
-sub optional {
-    my($self) = @_;
-    $self->{optional};
-}
-
 package CPAN::Queue;
 
 # One use of the queue is to determine if we should or shouldn't
@@ -87,7 +82,7 @@ sub qpush {
     my($class,$obj) = @_;
     push @All, $obj;
     CPAN->debug(sprintf("in new All[%s]",
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @All),
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
                        )) if $CPAN::DEBUG;
 }
 
@@ -109,7 +104,7 @@ sub delete_first {
     }
     CPAN->debug(sprintf("after delete_first mod[%s] All[%s]",
                         $what,
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @All)
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
                        )) if $CPAN::DEBUG;
 }
 
@@ -118,8 +113,8 @@ sub jumpqueue {
     my $class = shift;
     my @what = @_;
     CPAN->debug(sprintf("before jumpqueue All[%s] what[%s]",
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @All),
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @what),
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All),
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @what),
                        )) if $CPAN::DEBUG;
     unless (defined $what[0]{reqtype}) {
         # apparently it was not the Shell that sent us this enquiry,
@@ -128,7 +123,7 @@ sub jumpqueue {
     }
     my $inherit_reqtype = $what[0]{reqtype} =~ /^(c|r)$/ ? "r" : "b";
   WHAT: for my $what_tuple (@what) {
-        my($qmod,$reqtype,$optional) = @$what_tuple{qw(qmod reqtype optional)};
+        my($qmod,$reqtype) = @$what_tuple{qw(qmod reqtype)};
         if ($reqtype eq "r"
             &&
             $inherit_reqtype eq "b"
@@ -147,13 +142,12 @@ sub jumpqueue {
         CPAN->debug("qmod[$qmod]jumped[$jumped]") if $CPAN::DEBUG;
         my $obj = "$class\::Item"->new(
                                        qmod => $qmod,
-                                       reqtype => $reqtype,
-                                       optional => !! $optional,
+                                       reqtype => $reqtype
                                       );
         unshift @All, $obj;
     }
     CPAN->debug(sprintf("after jumpqueue All[%s]",
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @All)
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
                        )) if $CPAN::DEBUG;
 }
 
@@ -172,7 +166,7 @@ sub delete {
     @All = grep { $_->{qmod} ne $mod } @All;
     CPAN->debug(sprintf("after delete mod[%s] All[%s]",
                         $mod,
-                        join("",map {sprintf " %s\[%s][%s]\n",$_->{qmod},$_->{reqtype},$_->{optional}} @All)
+                        join("",map {sprintf " %s\[%s]\n",$_->{qmod},$_->{reqtype}} @All)
                        )) if $CPAN::DEBUG;
 }
 

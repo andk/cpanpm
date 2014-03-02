@@ -1075,10 +1075,6 @@ sub failed {
         next DIST unless $failed;
         my $id = $d->id;
         $id =~ s|^./../||;
-        ### XXX need to flag optional modules as '(optional)' if they are
-        # from recommends/suggests -- i.e. *show* failure, but make it clear
-        # it was failure of optional module -- xdg, 2012-04-01
-        $id = "(optional) $id" if ! $d->{mandatory};
         #$print .= sprintf(
         #                  "  %-45s: %s %s\n",
         push @failed,
@@ -1110,6 +1106,9 @@ sub failed {
     } else {
         $scope = "this session";
     }
+    ### XXX need to flag optional modules as '(optional)' if they are
+    # from recommends/suggests -- i.e. *show* failure, but make it clear
+    # it was failure of optional module -- xdg, 2012-04-01
     if (@failed) {
         my $print;
         my $debug = 0;
@@ -1715,7 +1714,7 @@ sub rematein {
                     }
                 }
             }
-            CPAN::Queue->queue_item(qmod => $obj->id, reqtype => "c", optional => '');
+            CPAN::Queue->queue_item(qmod => $obj->id, reqtype => "c");
             push @qcopy, $obj;
         } elsif ($CPAN::META->exists('CPAN::Author',uc($s))) {
             $obj = $CPAN::META->instance('CPAN::Author',uc($s));
@@ -1753,7 +1752,6 @@ to find objects with matching identifiers.
         my $obj;
         my $s = $q->as_string;
         my $reqtype = $q->reqtype || "";
-        my $optional = $q->optional || "";
         $obj = CPAN::Shell->expandany($s);
         unless ($obj) {
             # don't know how this can happen, maybe we should panic,
@@ -1766,14 +1764,6 @@ to find objects with matching identifiers.
             next QITEM;
         }
         $obj->{reqtype} ||= "";
-        my $type = ref $obj;
-        if ( $type eq 'CPAN::Distribution' || $type eq 'CPAN::Bundle' ) {
-            $obj->{mandatory} ||= ! $optional; # once mandatory, always mandatory
-        }
-        elsif ( $type eq 'CPAN::Module' ) {
-            $obj->{mandatory} ||= ! $optional; # once mandatory, always mandatory
-            $obj->distribution->{mandatory} ||= ! $optional; # once mandatory, always mandatory
-        }
         {
             # force debugging because CPAN::SQLite somehow delivers us
             # an empty object;
@@ -1857,10 +1847,10 @@ to find objects with matching identifiers.
                 $obj->$unpragma();
             }
         }
-        if (    $CPAN::Config->{halt_on_failure}
-            && CPAN::Distrostatus::something_has_just_failed()
-            && $obj->{mandatory}
-        ) {
+        if ($CPAN::Config->{halt_on_failure}
+                &&
+                    CPAN::Distrostatus::something_has_just_failed()
+              ) {
             $CPAN::Frontend->mywarn("Stopping: '$meth' failed for '$s'.\n");
             CPAN::Queue->nullify_queue;
             last QITEM;
