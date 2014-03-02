@@ -1785,16 +1785,7 @@ to find objects with matching identifiers.
         }
         elsif ( $type eq 'CPAN::Module' ) {
             $obj->{mandatory} ||= ! $optional; # once mandatory, always mandatory
-            if (my $d = $obj->distribution) {
-                $d->{mandatory} ||= ! $optional; # once mandatory, always mandatory
-            } elsif ($optional) {
-                # the queue object does not know who was recommending/suggesting us:(
-                # So we only vaguely write "optional".
-                $CPAN::Frontend->mywarn("Warning: optional module '$s' ".
-                                        "not known. Skipping.\n");
-                CPAN::Queue->delete_first($s);
-                next QITEM;
-            }
+            $obj->distribution->{mandatory} ||= ! $optional; # once mandatory, always mandatory
         }
         {
             # force debugging because CPAN::SQLite somehow delivers us
