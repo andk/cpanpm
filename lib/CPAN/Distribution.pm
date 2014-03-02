@@ -4,7 +4,6 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
-use CPAN::Meta::Requirements 2;
 use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
@@ -187,12 +186,8 @@ sub color_cmd_tmps {
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
         # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
-      PREREQ: for my $pre (
-                keys %{$prereq_pm->{requires}||{}},
-                keys %{$prereq_pm->{build_requires}||{}},
-                keys %{$prereq_pm->{opt_requires}||{}},
-                keys %{$prereq_pm->{opt_build_requires}||{}}
-            ) {
+      PREREQ: for my $pre (keys %{$prereq_pm->{requires}||{}},
+                           keys %{$prereq_pm->{build_requires}||{}}) {
             next PREREQ if $pre eq "perl";
             my $premo;
             unless ($premo = CPAN::Shell->expand("Module",$pre)) {
@@ -292,15 +287,23 @@ sub shortcut_get {
         # XXX why is this goodbye() instead of just print/warn?
         # Alternatively, should other print/warns here be goodbye()?
         # -- xdg, 2012-04-05
-        return $self->goodbye("[disabled] -- NA $why");
+        $self->goodbye("[disabled] -- NA $why");
+        return 0; # shortcut FAIL
+    }
+
+    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
+    if (my $goto = $self->prefs->{goto}) {
+        $self->goto($goto);
+        return 0; # shortcut FAIL (i.e. abort *this* dist, since we queued $goto)
     }
 
     $self->debug("checking already unwrapped[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{build_dir} && -d $self->{build_dir}) {
         # this deserves print, not warn:
-        return $self->success("Has already been unwrapped into directory ".
-            "$self->{build_dir}"
+        $CPAN::Frontend->myprint("  Has already been unwrapped into directory ".
+            "$self->{build_dir}\n"
         );
+        return 1; # shortcut OK
     }
 
     # XXX I'm not sure this should be here because it's not really
@@ -322,7 +325,8 @@ sub shortcut_get {
             $self->{unwrapped}->failed :
             $self->{unwrapped} =~ /^NO/ )
     ) {
-        return $self->goodbye("Unwrapping had some problem, won't try again without force");
+        $CPAN::Frontend->mywarn("Unwrapping had some problem, won't try again without force");
+        return 0; # shortcut FAIL
     }
 
     return undef; # no shortcut
@@ -331,11 +335,6 @@ sub shortcut_get {
 #-> sub CPAN::Distribution::get ;
 sub get {
     my($self) = @_;
-
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
-    if (my $goto = $self->prefs->{goto}) {
-        return $self->goto($goto);
-    }
 
     if ( defined( my $sc = $self->shortcut_get) ) {
         return $sc;
@@ -652,8 +651,6 @@ sub parse_meta_yml {
 }
 
 #-> sub CPAN::Distribution::satisfy_requires ;
-# return values: 1 means requirements are satisfied;
-# and 0 means not satisfied (and maybe queued)
 sub satisfy_requires {
     my ($self) = @_;
     $self->debug("Entering satisfy_requires") if $CPAN::DEBUG;
@@ -671,19 +668,18 @@ sub satisfy_requires {
             my $follow = eval { $self->follow_prereqs("later",@prereq); };
             if (0) {
             } elsif ($follow) {
-                return; # we need deps
+                # signal success to the queuerunner
+                return 1;
             } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
                 $CPAN::Frontend->mywarn($@);
                 die "[depend] -- NOT OK\n";
             }
         }
     }
-    return 1;
+    return;
 }
 
 #-> sub CPAN::Distribution::satisfy_configure_requires ;
-# return values: 1 means configure_require is satisfied;
-# and 0 means not satisfied (and maybe queued)
 sub satisfy_configure_requires {
     my($self) = @_;
     $self->debug("Entering satisfy_configure_requires") if $CPAN::DEBUG;
@@ -726,7 +722,7 @@ sub satisfy_configure_requires {
         };
         if (0) {
         } elsif ($follow) {
-            return; # we need deps
+            return;
         } elsif ($@ && ref $@ && $@->isa("CPAN::Exception::RecursiveDependency")) {
             $CPAN::Frontend->mywarn($@);
             return $self->goodbye("[depend] -- NOT OK");
@@ -1743,63 +1739,60 @@ sub perl {
 sub shortcut_prepare {
     my ($self) = @_;
 
-    $self->debug("checking archive type[$self->{ID}]") if $CPAN::DEBUG;
-    if (!$self->{archived} || $self->{archived} eq "NO") {
-        return $self->goodbye("Is neither a tar nor a zip archive.");
-    }
-
-    $self->debug("checking unwrapping[$self->{ID}]") if $CPAN::DEBUG;
-    if (!$self->{unwrapped}
-        || (
-            UNIVERSAL::can($self->{unwrapped},"failed") ?
-            $self->{unwrapped}->failed :
-            $self->{unwrapped} =~ /^NO/
-            )) {
-        return $self->goodbye("Had problems unarchiving. Please build manually");
-    }
-
-    $self->debug("checking signature[$self->{ID}]") if $CPAN::DEBUG;
-    if ( ! $self->{force_update}
-        && exists $self->{signature_verify}
-        && (
-                UNIVERSAL::can($self->{signature_verify},"failed") ?
-                $self->{signature_verify}->failed :
-                $self->{signature_verify} =~ /^NO/
-            )
-    ) {
-        return $self->goodbye("Did not pass the signature test.");
-    }
-
-    $self->debug("checking writemakefile[$self->{ID}]") if $CPAN::DEBUG;
-    if ($self->{writemakefile}) {
-        if (
-                UNIVERSAL::can($self->{writemakefile},"failed") ?
-                $self->{writemakefile}->failed :
-                $self->{writemakefile} =~ /^NO/
-            ) {
-            # XXX maybe a retry would be in order?
-            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
-                $self->{writemakefile}->text :
-                    $self->{writemakefile};
-            $err =~ s/^NO\s*(--\s+)?//;
-            $err ||= "Had some problem writing Makefile";
-            $err .= ", not re-running";
-            return $self->goodbye($err);
-        } else {
-            return $self->success("Has already been prepared");
+        if (!$self->{archived} || $self->{archived} eq "NO") {
+            return $self->goodbye("Is neither a tar nor a zip archive.");
         }
-    }
 
-    $self->debug("checking configure_requires_later[$self->{ID}]") if $CPAN::DEBUG;
-    if( my $later = $self->{configure_requires_later} ) { # see also undelay
-        return $self->goodbye($later);
-    }
+        if (!$self->{unwrapped}
+            || (
+                UNIVERSAL::can($self->{unwrapped},"failed") ?
+                $self->{unwrapped}->failed :
+                $self->{unwrapped} =~ /^NO/
+               )) {
+            return $self->goodbye("Had problems unarchiving. Please build manually");
+        }
 
-    return undef; # no shortcut
+        if ( ! $self->{force_update}
+            && exists $self->{signature_verify}
+            && (
+                 UNIVERSAL::can($self->{signature_verify},"failed") ?
+                 $self->{signature_verify}->failed :
+                 $self->{signature_verify} =~ /^NO/
+               )
+        ) {
+            return $self->goodbye("Did not pass the signature test.");
+        }
+
+        if ($self->{writemakefile}) {
+            if (
+                 UNIVERSAL::can($self->{writemakefile},"failed") ?
+                 $self->{writemakefile}->failed :
+                 $self->{writemakefile} =~ /^NO/
+                ) {
+                # XXX maybe a retry would be in order?
+                my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                    $self->{writemakefile}->text :
+                        $self->{writemakefile};
+                $err =~ s/^NO\s*(--\s+)?//;
+                $err ||= "Had some problem writing Makefile";
+                $err .= ", not re-running";
+                return $self->goodbye($err);
+            } else {
+                return $self->success("Has already been prepared");
+            }
+        }
+
+        if( my $later = $self->{configure_requires_later} ) { # see also undelay
+            return $self->success($later);
+        }
+
+        return undef; # no shortcut
 }
 
 sub prepare {
     my ($self) = @_;
+
+    return if $self->check_disabled;
 
     $self->get
         or return;
@@ -2001,40 +1994,12 @@ sub prepare {
     return 1; # success
 }
 
-#-> sub CPAN::Distribution::shortcut_make ;
-# return values: undef means don't shortcut; 0 means shortcut as fail;
-# and 1 means shortcut as success
-sub shortcut_make {
-    my ($self) = @_;
-
-    $self->debug("checking make/build results[$self->{ID}]") if $CPAN::DEBUG;
-    if (defined $self->{make}) {
-        if (UNIVERSAL::can($self->{make},"failed") ?
-            $self->{make}->failed :
-            $self->{make} =~ /^NO/
-        ) {
-            if ($self->{force_update}) {
-                # Trying an already failed 'make' (unless somebody else blocks)
-                return undef; # no shortcut
-            } else {
-                # introduced for turning recursion detection into a distrostatus
-                my $error = length $self->{make}>3
-                    ? substr($self->{make},3) : "Unknown error";
-                $self->store_persistent_state;
-                return $self->goodbye("Could not make: $error\n");
-            }
-        } else {
-            return $self->success("Has already been made")
-        }
-    }
-    return undef; # no shortcut
-}
-
 #-> sub CPAN::Distribution::make ;
 sub make {
     my($self) = @_;
 
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
+    return if $self->check_disabled;
+
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -2079,23 +2044,90 @@ is part of the perl-%s distribution. To install that, you need to run
     $self->prepare
         or return;
 
-    if ( defined( my $sc = $self->shortcut_make) ) {
-        return $sc;
-    }
+    my $builddir;
+  EXCUSE: {
+        my @e;
+        if (!$self->{archived} || $self->{archived} eq "NO") {
+            push @e, "Is neither a tar nor a zip archive.";
+        }
 
+        if (!$self->{unwrapped}
+            || (
+                UNIVERSAL::can($self->{unwrapped},"failed") ?
+                $self->{unwrapped}->failed :
+                $self->{unwrapped} =~ /^NO/
+               )) {
+            push @e, "Had problems unarchiving. Please build manually";
+        }
+
+        unless ($self->{force_update}) {
+            exists $self->{signature_verify} and
+                (
+                 UNIVERSAL::can($self->{signature_verify},"failed") ?
+                 $self->{signature_verify}->failed :
+                 $self->{signature_verify} =~ /^NO/
+                )
+                and push @e, "Did not pass the signature test.";
+        }
+
+        if (exists $self->{writemakefile} &&
+            (
+             UNIVERSAL::can($self->{writemakefile},"failed") ?
+             $self->{writemakefile}->failed :
+             $self->{writemakefile} =~ /^NO/
+            )) {
+            # XXX maybe a retry would be in order?
+            my $err = UNIVERSAL::can($self->{writemakefile},"text") ?
+                $self->{writemakefile}->text :
+                    $self->{writemakefile};
+            $err =~ s/^NO\s*(--\s+)?//;
+            $err ||= "Had some problem writing Makefile";
+            $err .= ", won't make";
+            push @e, $err;
+        }
+
+        if (defined $self->{make}) {
+            if (UNIVERSAL::can($self->{make},"failed") ?
+                $self->{make}->failed :
+                $self->{make} =~ /^NO/) {
+                if ($self->{force_update}) {
+                    # Trying an already failed 'make' (unless somebody else blocks)
+                } else {
+                    # introduced for turning recursion detection into a distrostatus
+                    my $error = length $self->{make}>3
+                        ? substr($self->{make},3) : "Unknown error";
+                    $CPAN::Frontend->mywarn("Could not make: $error\n");
+                    $self->store_persistent_state;
+                    return;
+                }
+            } else {
+                push @e, "Has already been made";
+                my $wait_for_prereqs = eval { $self->satisfy_requires };
+                return 1 if $wait_for_prereqs;   # tells queuerunner to continue
+                return $self->goodbye($@) if $@; # tells queuerunner to stop
+            }
+        }
+
+        my $later = $self->{later} || $self->{configure_requires_later};
+        # XXX WTF? -- xdg, 2012-04-04
+        if ($later) { # see also undelay
+            if ($later) {
+                push @e, $later;
+            }
+        }
+
+        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        $builddir = $self->dir or
+            $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+        unless (chdir $builddir) {
+            push @e, "Couldn't chdir to '$builddir': $!";
+        }
+        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    }
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
     }
-
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-
-    unless (chdir $builddir) {
-        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
-        return;
-    }
-
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -2121,9 +2153,9 @@ is part of the perl-%s distribution. To install that, you need to run
         $env{$k} = $v;
     }
     local %ENV = %env;
-    my $satisfied = eval { $self->satisfy_requires };
-    return $self->goodbye($@) if $@;
-    return unless $satisfied ;
+    my $wait_for_prereqs = eval { $self->satisfy_requires };
+    return 1 if $wait_for_prereqs;   # tells queuerunner to continue
+    return $self->goodbye($@) if $@; # tells queuerunner to stop
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
@@ -2196,7 +2228,6 @@ is part of the perl-%s distribution. To install that, you need to run
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
     $self->store_persistent_state;
-    return !! $system_ok;
 }
 
 # CPAN::Distribution::goodbye ;
@@ -2574,15 +2605,6 @@ sub _make_install_make_command {
     return $mimc;
 }
 
-#-> sub CPAN::Distribution::is_locally_optional
-sub is_locally_optional {
-    my($self, $prereq_pm, $prereq) = @_;
-    $prereq_pm ||= $self->{prereq_pm};
-    exists $prereq_pm->{opt_requires}{$prereq}
-        ||
-            exists $prereq_pm->{opt_build_requires}{$prereq};
-}
-
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
@@ -2591,14 +2613,13 @@ sub follow_prereqs {
     return unless @prereq_tuples;
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
-        # e.g. $p = ['Devel::PartialDump', 'r', 1]
         # promote if possible
         if ($p->[1] =~ /^(r|c)$/) {
             push @good_prereq_tuples, $p;
         } elsif ($p->[1] =~ /^(b)$/) {
             my $reqtype = CPAN::Queue->reqtype_of($p->[0]);
             if ($reqtype =~ /^(r|c)$/) {
-                push @good_prereq_tuples, [$p->[0], $reqtype, $p->[2]];
+                push @good_prereq_tuples, [$p->[0], $reqtype];
             } else {
                 push @good_prereq_tuples, $p;
             }
@@ -2630,7 +2651,7 @@ sub follow_prereqs {
     $CPAN::Frontend->
         myprint("$filler1 $unsat $filler2".
                 "$filler3 $pretty_id $filler4".
-                join("", map {sprintf "    %s \[%s%s]\n", $_->[0], $map{$_->[1]}, $self->is_locally_optional(undef,$_->[0]) ? ",optional" : ""} @good_prereq_tuples),
+                join("", map {"    $_->[0] \[$map{$_->[1]}]\n"} @good_prereq_tuples),
                );
     my $follow = 0;
     if ($CPAN::Config->{prerequisites_policy} eq "follow") {
@@ -2648,42 +2669,24 @@ of modules we are processing right now?", "yes");
     }
     if ($follow) {
         my $id = $self->id;
-        my(@to_queue_mand,@to_queue_opt);
+        # color them as dirty
         for my $gp (@good_prereq_tuples) {
-            my($prereq,$reqtype,$optional) = @$gp;
-            my $qthing = +{qmod=>$prereq,reqtype=>$reqtype,optional=>$optional};
-            if ($optional &&
-                $self->is_locally_optional(undef,$prereq)
-               ){
-                # Since we do not depend on this one, we do not need
-                # this in a mandatory arrangement:
-                push @to_queue_opt, $qthing;
+            # warn "calling color_cmd_tmps(0,1)";
+            my $p = $gp->[0];
+            my $any = CPAN::Shell->expandany($p);
+            $self->{$slot . "_for"}{$any->id}++;
+            if ($any) {
+                $any->color_cmd_tmps(0,2);
             } else {
-                my $any = CPAN::Shell->expandany($prereq);
-                $self->{$slot . "_for"}{$any->id}++;
-                if ($any) {
-                    unless ($optional) {
-                        # No recursion check in an optional area of the tree
-                        $any->color_cmd_tmps(0,2);
-                    }
-                } else {
-                    $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$prereq'\n");
-                    $CPAN::Frontend->mysleep(2);
-                }
-                # order everything that is not locally_optional just
-                # like mandatory items: this keeps leaves before
-                # branches
-                unshift @to_queue_mand, $qthing;
+                $CPAN::Frontend->mywarn("Warning (maybe a bug): Cannot expand prereq '$p'\n");
+                $CPAN::Frontend->mysleep(2);
             }
         }
-        if (@to_queue_mand) {
-            unshift @to_queue_mand, {qmod => $id, reqtype => $self->{reqtype}, optional=> !$self->{mandatory}};
-            CPAN::Queue->jumpqueue(@to_queue_opt,@to_queue_mand);
-            $self->{$slot} = "Delayed until after prerequisites";
-            return 1; # signal we need dependencies
-        } elsif (@to_queue_opt) {
-            CPAN::Queue->jumpqueue(@to_queue_opt);
-        }
+        # queue them and re-queue yourself
+        CPAN::Queue->jumpqueue({qmod => $id, reqtype => $self->{reqtype}},
+                               map {+{qmod=>$_->[0],reqtype=>$_->[1]}} reverse @good_prereq_tuples);
+        $self->{$slot} = "Delayed until after prerequisites";
+        return 1; # signal success to the queuerunner
     }
     return;
 }
@@ -2728,22 +2731,19 @@ sub _feature_depends {
 
 sub prereqs_for_slot {
     my($self,$slot) = @_;
-    my($prereq_pm);
-    my $merged = CPAN::Meta::Requirements->new;
+    my(%merged,$prereq_pm);
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
-        for my $hash (  $self->configure_requires,
-                        $prefs_depends->{configure_requires},
-                        $feature_depends->{configure_requires},
-        ) {
-            $merged->add_requirements(
-                CPAN::Meta::Requirements->from_string_hash($hash)
-            );
-        }
-        if (-f "Build.PL"
+        my $meta_configure_requires = $self->configure_requires();
+        %merged = (
+                   %{$meta_configure_requires||{}},
+                   %{$prefs_depends->{configure_requires}||{}},
+                   %{$feature_depends->{configure_requires}||{}},
+                  );
+        if (-f File::Spec->catfile($self->{build_dir},"Build.PL")
             && ! -f File::Spec->catfile($self->{build_dir},"Makefile.PL")
-            && ! $merged->requirements_for_module("Module::Build")
+            && ! exists $merged{"Module::Build"}
             && ! $CPAN::META->has_inst("Module::Build")
            ) {
             $CPAN::Frontend->mywarn(
@@ -2751,13 +2751,13 @@ sub prereqs_for_slot {
               "  Adding it now as such.\n"
             );
             $CPAN::Frontend->mysleep(5);
-            $merged->add_minimum( "Module::Build" => 0 );
+            $merged{"Module::Build"} = 0;
             delete $self->{writemakefile};
         }
         $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
         my $prereq_pm_0 = $self->prereq_pm || {};
-        for my $reqtype (qw(requires build_requires opt_requires opt_build_requires)) {
+        for my $reqtype (qw(requires build_requires)) {
             $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
             for my $dep ($prefs_depends,$feature_depends) {
                 for my $k (keys %{$dep->{$reqtype}||{}}) {
@@ -2765,22 +2765,12 @@ sub prereqs_for_slot {
                 }
             }
         }
+        %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
         # XXX what about optional_req|breq? -- xdg, 2012-04-01
-        for my $hash (
-            $prereq_pm->{requires},
-            $prereq_pm->{build_requires},
-            $prereq_pm->{opt_requires},
-            $prereq_pm->{opt_build_requires},
-
-        ) {
-            $merged->add_requirements(
-                CPAN::Meta::Requirements->from_string_hash($hash)
-            );
-        }
     } else {
         die "Panic: illegal slot '$slot'";
     }
-    return ($merged->as_string_hash, $prereq_pm);
+    return (\%merged, $prereq_pm);
 }
 
 #-> sub CPAN::Distribution::unsat_prereq ;
@@ -2789,13 +2779,11 @@ sub prereqs_for_slot {
 # (sorry for the inconsistency, it was an accident)
 sub unsat_prereq {
     my($self,$slot) = @_;
-    my($merged_hash,$prereq_pm) = $self->prereqs_for_slot($slot);
+    my($merged,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
-    my @merged = $merged->required_modules;
+    my @merged = my %merged = %$merged;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
-  NEED: for my $need_module ( @merged ) {
-        my $need_version = $merged->requirements_for_module($need_module);
+  NEED: while (my($need_module, $need_version) = each %merged) {
         my($available_version,$inst_file,$available_file,$nmo);
         if ($need_module eq "perl") {
             $available_version = $];
@@ -2840,7 +2828,8 @@ sub unsat_prereq {
                  $available_version,
                  $need_version,
                 );
-            if ( $inst_file
+            if (0) {
+            } elsif  ( $inst_file
                        && $available_file eq $inst_file
                        && $nmo->inst_deprecated
                      ) {
@@ -2857,12 +2846,7 @@ sub unsat_prereq {
                     # loop CPANPLUS => CPANPLUS::Dist::Build RT#83042)
                     next NEED;
                 }
-            } elsif (
-                $self->{reqtype} =~ /^(r|c)$/
-                && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
-                && $nmo 
-                && !$inst_file
-            ) {
+            } elsif ($self->{reqtype} =~ /^(r|c)$/ && exists $prereq_pm->{requires}{$need_module} && $nmo && !$inst_file) {
                 # continue installing as a prereq; this may be a
                 # distro we already used when it was a build_requires
                 # so we did not install it. But suddenly somebody
@@ -2925,6 +2909,8 @@ sub unsat_prereq {
                                        );
                 next NEED;
             }
+            ### XXX here do next NEED if needed module is recommends/suggests
+            ### so we don't complain about missing optional deps -- xdg, 2012-04-01
           NOSAYER: for my $nosayer (
                                     "unwrapped",
                                     "writemakefile",
@@ -2946,20 +2932,14 @@ sub unsat_prereq {
                            ) {
                             next NOSAYER;
                         }
-                        ### XXX  don't complain about missing optional deps -- xdg, 2012-04-01
-                        if ($self->is_locally_optional($prereq_pm, $need_module)) {
-                            # don't complain about failing optional prereqs
-                        }
-                        else {
-                            $CPAN::Frontend->mywarn("Warning: Prerequisite ".
-                                                    "'$need_module => $need_version' ".
-                                                    "for '$selfid' failed when ".
-                                                    "processing '$did' with ".
-                                                    "'$nosayer => $do->{$nosayer}'. Continuing, ".
-                                                    "but chances to succeed are limited.\n"
-                                                );
-                            $CPAN::Frontend->mysleep($sponsoring/10);
-                        }
+                        $CPAN::Frontend->mywarn("Warning: Prerequisite ".
+                                                "'$need_module => $need_version' ".
+                                                "for '$selfid' failed when ".
+                                                "processing '$did' with ".
+                                                "'$nosayer => $do->{$nosayer}'. Continuing, ".
+                                                "but chances to succeed are limited.\n"
+                                               );
+                        $CPAN::Frontend->mysleep($sponsoring/10);
                         next NEED;
                     } else { # the other guy succeeded
                         if ($nosayer =~ /^(install|make_test)$/) {
@@ -2981,10 +2961,10 @@ sub unsat_prereq {
             }
         }
         my $needed_as;
+        # XXX here need to flag as optional somehow for recommends/suggests
+        # -- xdg, 2012-04-01
         if (0) {
-        } elsif (exists $prereq_pm->{requires}{$need_module}
-            || exists $prereq_pm->{opt_requires}{$need_module}
-        ) {
+        } elsif (exists $prereq_pm->{requires}{$need_module}) {
             $needed_as = "r";
         } elsif ($slot eq "configure_requires_later") {
             # in ae872487d5 we said: C< we have not yet run the
@@ -2997,11 +2977,7 @@ sub unsat_prereq {
         } else {
             $needed_as = "b";
         }
-        # here need to flag as optional for recommends/suggests
-        # -- xdg, 2012-04-01
-        my $optional = !$self->{mandatory}
-            || $self->is_locally_optional($prereq_pm, $need_module);
-        push @need, [$need_module,$needed_as,$optional];
+        push @need, [$need_module,$needed_as];
     }
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
     CPAN->debug("returning from unsat_prereq[@unfolded]") if $CPAN::DEBUG;
@@ -3147,7 +3123,7 @@ sub prereq_pm {
                 $self->{writemakefile}||"",
                 $self->{modulebuild}||"",
                ) if $CPAN::DEBUG;
-    my($req,$breq, $opt_req, $opt_breq);
+    my($req,$breq);
     my $meta_obj = $self->read_meta;
     # META/MYMETA is only authoritative if dynamic_config is false
     if ($meta_obj && ! $meta_obj->dynamic_config) {
@@ -3155,35 +3131,16 @@ sub prereq_pm {
         my $requires = $prereqs->requirements_for(qw/runtime requires/);
         my $build_requires = $prereqs->requirements_for(qw/build requires/);
         my $test_requires = $prereqs->requirements_for(qw/test requires/);
+        # XXX assemble optional_req && optional_breq from recommends/suggests
+        # depending on corresponding policies -- xdg, 2012-04-01
         # XXX we don't yet distinguish build vs test, so merge them for now
         $build_requires->add_requirements($test_requires);
         $req = $requires->as_string_hash;
         $breq = $build_requires->as_string_hash;
-
-        # XXX assemble optional_req && optional_breq from recommends/suggests
-        # depending on corresponding policies -- xdg, 2012-04-01
-        my $opt_runtime = CPAN::Meta::Requirements->new;
-        my $opt_build   = CPAN::Meta::Requirements->new;
-        if ( $CPAN::Config->{recommends_policy} ) {
-            $opt_runtime->add_requirements( $prereqs->requirements_for(qw/runtime recommends/));
-            $opt_build->add_requirements(   $prereqs->requirements_for(qw/build recommends/));
-            $opt_build->add_requirements(   $prereqs->requirements_for(qw/test  recommends/));
-
-        }
-        if ( $CPAN::Config->{suggests_policy} ) {
-            $opt_runtime->add_requirements( $prereqs->requirements_for(qw/runtime suggests/));
-            $opt_build->add_requirements(   $prereqs->requirements_for(qw/build suggests/));
-            $opt_build->add_requirements(   $prereqs->requirements_for(qw/test  suggests/));
-        }
-        $opt_req = $opt_runtime->as_string_hash;
-        $opt_breq = $opt_build->as_string_hash;
     }
     elsif (my $yaml = $self->read_yaml) { # often dynamic_config prevents a result here
         $req =  $yaml->{requires} || {};
         $breq =  $yaml->{build_requires} || {};
-        if ( $CPAN::Config->{recommends_policy} ) {
-            $opt_req = $yaml->{recommends} || {};
-        }
         undef $req unless ref $req eq "HASH" && %$req;
         if ($req) {
             if ($yaml->{generated_by} &&
@@ -3290,142 +3247,31 @@ sub prereq_pm {
             }
         }
     }
-    # XXX needs to be adapted for optional_req & optional_breq -- xdg, 2012-04-01
-    if ($req || $breq || $opt_req || $opt_breq ) {
-        return $self->{prereq_pm} = {
-           requires => $req,
-           build_requires => $breq,
-           opt_requires => $opt_req,
-           opt_build_requires => $opt_breq,
-       };
+    # XXX needs to be adapted for optional_req & optional_breq
+    if ($req || $breq) {
+        return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
     }
-}
-
-#-> sub CPAN::Distribution::shortcut_test ;
-# return values: undef means don't shortcut; 0 means shortcut as fail;
-# and 1 means shortcut as success
-sub shortcut_test {
-    my ($self) = @_;
-
-    $self->debug("checking notest[$self->{ID}]") if $CPAN::DEBUG;
-    if ($self->{notest}) {
-        return $self->success("Skipping test because of notest pragma");
-    }
-
-    $self->debug("checking badtestcnt[$self->{ID}]") if $CPAN::DEBUG;
-    $self->{badtestcnt} ||= 0;
-    if ($self->{badtestcnt} > 0) {
-        require Data::Dumper;
-        CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
-        return $self->goodbye("Won't repeat unsuccessful test during this command");
-    }
-
-    for my $slot ( qw/later configure_requires_later/ ) {
-        $self->debug("checking $slot slot[$self->{ID}]") if $CPAN::DEBUG;
-        return $self->success($self->{$slot})
-        if $self->{$slot};
-    }
-
-    $self->debug("checking if tests passed[$self->{ID}]") if $CPAN::DEBUG;
-    if ( $self->{make_test} ) {
-        if (
-            UNIVERSAL::can($self->{make_test},"failed") ?
-            $self->{make_test}->failed :
-            $self->{make_test} =~ /^NO/
-        ) {
-            if (
-                UNIVERSAL::can($self->{make_test},"commandid")
-                &&
-                $self->{make_test}->commandid == $CPAN::CurrentCommandId
-            ) {
-                return $self->goodbye("Has already been tested within this command");
-            }
-        } else {
-            # if global "is_tested" has been cleared, we need to mark this to
-            # be added to PERL5LIB if not already installed
-            if ($self->tested_ok_but_not_installed) {
-                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
-            }
-            return $self->success("Has already been tested successfully");
-        }
-    }
-
-    return undef; # no shortcut
-}
-
-#-> sub CPAN::Distribution::_exe_files ;
-sub _exe_files {
-    my($self) = @_;
-    return unless $self->{writemakefile}  # no need to have succeeded
-                                          # but we must have run it
-        || $self->{modulebuild};
-    unless ($self->{build_dir}) {
-        return;
-    }
-    CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
-                $self->{writemakefile}||"",
-                $self->{modulebuild}||"",
-               ) if $CPAN::DEBUG;
-    my $build_dir;
-    unless ( $build_dir = $self->{build_dir} ) {
-        return;
-    }
-    my $makefile = File::Spec->catfile($build_dir,"Makefile");
-    my $fh;
-    my @exe_files;
-    if (-f $makefile
-        and
-        $fh = FileHandle->new("<$makefile\0")) {
-        CPAN->debug("Getting exefiles from Makefile") if $CPAN::DEBUG;
-        local($/) = "\n";
-        while (<$fh>) {
-            last if /MakeMaker post_initialize section/;
-            my($p) = m{^[\#]
-                       \s+EXE_FILES\s+=>\s+\[(.+)\]
-                  }x;
-            next unless $p;
-            # warn "Found exefiles expr[$p]";
-            my @p = split /,\s*/, $p;
-            for my $p2 (@p) {
-                if ($p2 =~ /^q\[(.+)\]/) {
-                    push @exe_files, $1;
-                }
-            }
-        }
-    }
-    return \@exe_files if @exe_files;
-    my $buildparams = File::Spec->catfile($build_dir,"_build","build_params");
-    if (-f $buildparams) {
-        CPAN->debug("Found '$buildparams'") if $CPAN::DEBUG;
-        my $x = do $buildparams;
-        for my $sf (@{$x->[2]{script_files} || []}) {
-            push @exe_files, $sf;
-        }
-    }
-    return \@exe_files;
 }
 
 #-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
-
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-
-    $self->make
-        or return;
-
-    if ( defined( my $sc = $self->shortcut_test ) ) {
-        return $sc;
-    }
-
+    $self->make;
+    # why is this here and not at the top -- xdg, 2012-04-06
+    return if $self->check_disabled;
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
     }
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
+    if ($self->{notest}) {
+        $CPAN::Frontend->myprint("Skipping test because of notest pragma\n");
+        return 1;
+    }
+
     my $make = $self->{modulebuild} ? "Build" : "make";
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -3438,14 +3284,63 @@ sub test {
 
     $CPAN::Frontend->myprint("Running $make test\n");
 
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
+  EXCUSE: {
+        my @e;
+        if ($self->{make} or $self->{later}) {
+            # go ahead
+        } else {
+            push @e,
+                "Make had some problems, won't test";
+        }
 
-    unless (chdir $builddir) {
-        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
-        return;
+        exists $self->{make} and
+            (
+             UNIVERSAL::can($self->{make},"failed") ?
+             $self->{make}->failed :
+             $self->{make} =~ /^NO/
+            ) and push @e, "Can't test without successful make";
+        $self->{badtestcnt} ||= 0;
+        if ($self->{badtestcnt} > 0) {
+            require Data::Dumper;
+            CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
+            push @e, "Won't repeat unsuccessful test during this command";
+        }
+
+        push @e, $self->{later} if $self->{later};
+        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
+
+        if (exists $self->{build_dir}) {
+            if (exists $self->{make_test}) {
+                if (
+                    UNIVERSAL::can($self->{make_test},"failed") ?
+                    $self->{make_test}->failed :
+                    $self->{make_test} =~ /^NO/
+                   ) {
+                    if (
+                        UNIVERSAL::can($self->{make_test},"commandid")
+                        &&
+                        $self->{make_test}->commandid == $CPAN::CurrentCommandId
+                       ) {
+                        push @e, "Has already been tested within this command";
+                    }
+                } else {
+                    push @e, "Has already been tested successfully";
+                    # if global "is_tested" has been cleared, we need to mark this to
+                    # be added to PERL5LIB if not already installed
+                    if ($self->tested_ok_but_not_installed) {
+                        $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+                    }
+                }
+            }
+        } elsif (!@e) {
+            push @e, "Has no own directory";
+        }
+        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $self->{build_dir}) {
+            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
+        }
+        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
-
     $self->debug("Changed directory to $self->{build_dir}")
         if $CPAN::DEBUG;
 
@@ -3580,7 +3475,6 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
-    return !! $tests_ok;
 }
 
 sub _make_test_illuminate_prereqs {
@@ -3612,8 +3506,7 @@ sub _make_test_illuminate_prereqs {
             CPAN->debug("m[$m] have available_file[$available_file]")
                 if $CPAN::DEBUG;
         } else {
-            push @prereq, $m
-                if $m_obj->{mandatory};
+            push @prereq, $m;
         }
     }
     my $but;
@@ -3775,7 +3668,6 @@ sub goto {
 sub shortcut_install {
     my ($self) = @_;
 
-    $self->debug("checking previous install results[$self->{ID}]") if $CPAN::DEBUG;
     if (exists $self->{install}) {
         my $text = UNIVERSAL::can($self->{install},"text") ?
             $self->{install}->text :
@@ -3803,37 +3695,81 @@ sub shortcut_install {
 #-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
-
-    $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-
-    $self->test
-        or return;
-
-    if ( defined( my $sc = $self->shortcut_install ) ) {
-        return $sc;
+    unless ($self->{badtestcnt}) {
+        $self->test;
     }
-
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
     }
-
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-
-    unless (chdir $builddir) {
-        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
-        return;
-    }
-
-    $self->debug("Changed directory to $self->{build_dir}")
-        if $CPAN::DEBUG;
-
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint("Running $make install\n");
+  EXCUSE: {
+        my @e;
+        if ($self->{make} or $self->{later}) {
+            # go ahead
+        } else {
+            push @e,
+                "Make had some problems, won't install";
+        }
+
+        exists $self->{make} and
+            (
+             UNIVERSAL::can($self->{make},"failed") ?
+             $self->{make}->failed :
+             $self->{make} =~ /^NO/
+            ) and
+            push @e, "Make had returned bad status, install seems impossible";
+
+        if (exists $self->{build_dir}) {
+        } elsif (!@e) {
+            push @e, "Has no own directory";
+        }
+
+        if (exists $self->{make_test} and
+            (
+             UNIVERSAL::can($self->{make_test},"failed") ?
+             $self->{make_test}->failed :
+             $self->{make_test} =~ /^NO/
+            )) {
+            if ($self->{force_update}) {
+                $self->{make_test}->text("FAILED but failure ignored because ".
+                                         "'force' in effect");
+            } else {
+                push @e, "make test had returned bad status, ".
+                    "won't install without force"
+            }
+        }
+        if (exists $self->{install}) {
+            my $text = UNIVERSAL::can($self->{install},"text") ?
+                $self->{install}->text :
+                    $self->{install};
+            if ($text =~ /^YES/) {
+                $CPAN::Frontend->myprint("  Already done\n");
+                $CPAN::META->is_installed($self->{build_dir});
+                return 1;
+            } elsif ($text =~ /is only/) {
+                push @e, $text;
+            } else {
+                # comment in Todo on 2006-02-11; maybe retry?
+                push @e, "Already tried without success";
+            }
+        }
+
+        push @e, $self->{later} if $self->{later};
+        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
+
+        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $self->{build_dir}) {
+            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
+        }
+        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    }
+    $self->debug("Changed directory to $self->{build_dir}")
+        if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_install($self);

@@ -206,8 +206,7 @@ Preferred method for determining the current working directory?
 
 Normally, CPAN.pm continues processing the full list of targets and
 dependencies, even if one of them fails.  However, you can specify
-that CPAN should halt after the first failure.  (Note that optional
-recommended or suggested modules that fail will not cause a halt.)
+that CPAN should halt after the first failure.
 
 Do you want to halt on failure (yes/no)?
 

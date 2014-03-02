@@ -48,8 +48,7 @@ sub _ftp_statistics {
     if ($@) {
         if (ref $@) {
             if (ref $@ eq "CPAN::Exception::yaml_not_installed") {
-                chomp $@;
-                $CPAN::Frontend->myprintonce("Warning (usually harmless): $@\n");
+                $CPAN::Frontend->myprint("Warning (usually harmless): $@\n");
                 return;
             } elsif (ref $@ eq "CPAN::Exception::yaml_process_error") {
                 my $time = time;
