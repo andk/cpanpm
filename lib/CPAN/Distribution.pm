@@ -3253,6 +3253,110 @@ sub prereq_pm {
     }
 }
 
+#-> sub CPAN::Distribution::shortcut_test ;
+# return values: undef means don't shortcut; 0 means shortcut as fail;
+# and 1 means shortcut as success
+sub shortcut_test {
+    my ($self) = @_;
+
+    $self->debug("checking notest[$self->{ID}]") if $CPAN::DEBUG;
+    if ($self->{notest}) {
+        return $self->success("Skipping test because of notest pragma");
+    }
+
+    $self->debug("checking badtestcnt[$self->{ID}]") if $CPAN::DEBUG;
+    $self->{badtestcnt} ||= 0;
+    if ($self->{badtestcnt} > 0) {
+        require Data::Dumper;
+        CPAN->debug(sprintf "NOREPEAT[%s]", Data::Dumper::Dumper($self)) if $CPAN::DEBUG;
+        return $self->goodbye("Won't repeat unsuccessful test during this command");
+    }
+
+    for my $slot ( qw/later configure_requires_later/ ) {
+        $self->debug("checking $slot slot[$self->{ID}]") if $CPAN::DEBUG;
+        return $self->success($self->{$slot})
+        if $self->{$slot};
+    }
+
+    $self->debug("checking if tests passed[$self->{ID}]") if $CPAN::DEBUG;
+    if ( $self->{make_test} ) {
+        if (
+            UNIVERSAL::can($self->{make_test},"failed") ?
+            $self->{make_test}->failed :
+            $self->{make_test} =~ /^NO/
+        ) {
+            if (
+                UNIVERSAL::can($self->{make_test},"commandid")
+                &&
+                $self->{make_test}->commandid == $CPAN::CurrentCommandId
+            ) {
+                return $self->goodbye("Has already been tested within this command");
+            }
+        } else {
+            # if global "is_tested" has been cleared, we need to mark this to
+            # be added to PERL5LIB if not already installed
+            if ($self->tested_ok_but_not_installed) {
+                $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
+            }
+            return $self->success("Has already been tested successfully");
+        }
+    }
+
+    return undef; # no shortcut
+}
+
+#-> sub CPAN::Distribution::_exe_files ;
+sub _exe_files {
+    my($self) = @_;
+    return unless $self->{writemakefile}  # no need to have succeeded
+                                          # but we must have run it
+        || $self->{modulebuild};
+    unless ($self->{build_dir}) {
+        return;
+    }
+    CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
+                $self->{writemakefile}||"",
+                $self->{modulebuild}||"",
+               ) if $CPAN::DEBUG;
+    my $build_dir;
+    unless ( $build_dir = $self->{build_dir} ) {
+        return;
+    }
+    my $makefile = File::Spec->catfile($build_dir,"Makefile");
+    my $fh;
+    my @exe_files;
+    if (-f $makefile
+        and
+        $fh = FileHandle->new("<$makefile\0")) {
+        CPAN->debug("Getting exefiles from Makefile") if $CPAN::DEBUG;
+        local($/) = "\n";
+        while (<$fh>) {
+            last if /MakeMaker post_initialize section/;
+            my($p) = m{^[\#]
+                       \s+EXE_FILES\s+=>\s+\[(.+)\]
+                  }x;
+            next unless $p;
+            # warn "Found exefiles expr[$p]";
+            my @p = split /,\s*/, $p;
+            for my $p2 (@p) {
+                if ($p2 =~ /^q\[(.+)\]/) {
+                    push @exe_files, $1;
+                }
+            }
+        }
+    }
+    return \@exe_files if @exe_files;
+    my $buildparams = File::Spec->catfile($build_dir,"_build","build_params");
+    if (-f $buildparams) {
+        CPAN->debug("Found '$buildparams'") if $CPAN::DEBUG;
+        my $x = do $buildparams;
+        for my $sf (@{$x->[2]{script_files} || []}) {
+            push @exe_files, $sf;
+        }
+    }
+    return \@exe_files;
+}
+
 #-> sub CPAN::Distribution::test ;
 sub test {
     my($self) = @_;
