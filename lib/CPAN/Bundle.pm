@@ -230,8 +230,7 @@ Going to $meth that.
         $obj->{reqtype} = $self->{reqtype};
         # $obj->$meth();
         # XXX should optional be based on whether bundle was optional? -- xdg, 2012-04-01
-        # A: Sure, what could demand otherwise? --andk, 2013-11-25
-        CPAN::Queue->queue_item(qmod => $obj->id, reqtype => $self->{reqtype}, optional => !$self->{mandatory});
+       CPAN::Queue->queue_item(qmod => $obj->id, reqtype => $self->{reqtype}, optional => '');
     }
 }
 
