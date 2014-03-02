@@ -2582,7 +2582,6 @@ sub follow_prereqs {
     return unless @prereq_tuples;
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
-        # e.g. $p = ['Devel::PartialDump', 'r', 1]
         # promote if possible
         if ($p->[1] =~ /^(r|c)$/) {
             push @good_prereq_tuples, $p;
