@@ -3436,7 +3436,6 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
-    return 1;
 }
 
 sub _make_test_illuminate_prereqs {
@@ -3657,38 +3656,81 @@ sub shortcut_install {
 #-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
-
-    return if $self->check_disabled;
-
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
-
-    $self->test
-        or return;
-
-    if ( defined( my $sc = $self->shortcut_install ) ) {
-        return $sc;
+    unless ($self->{badtestcnt}) {
+        $self->test;
     }
-
     if ($CPAN::Signal) {
       delete $self->{force_update};
       return;
     }
-
-    my $builddir = $self->dir or
-        $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
-
-    unless (chdir $builddir) {
-        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
-        return;
-    }
-
-    $self->debug("Changed directory to $self->{build_dir}")
-        if $CPAN::DEBUG;
-
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint("Running $make install\n");
+  EXCUSE: {
+        my @e;
+        if ($self->{make} or $self->{later}) {
+            # go ahead
+        } else {
+            push @e,
+                "Make had some problems, won't install";
+        }
+
+        exists $self->{make} and
+            (
+             UNIVERSAL::can($self->{make},"failed") ?
+             $self->{make}->failed :
+             $self->{make} =~ /^NO/
+            ) and
+            push @e, "Make had returned bad status, install seems impossible";
+
+        if (exists $self->{build_dir}) {
+        } elsif (!@e) {
+            push @e, "Has no own directory";
+        }
+
+        if (exists $self->{make_test} and
+            (
+             UNIVERSAL::can($self->{make_test},"failed") ?
+             $self->{make_test}->failed :
+             $self->{make_test} =~ /^NO/
+            )) {
+            if ($self->{force_update}) {
+                $self->{make_test}->text("FAILED but failure ignored because ".
+                                         "'force' in effect");
+            } else {
+                push @e, "make test had returned bad status, ".
+                    "won't install without force"
+            }
+        }
+        if (exists $self->{install}) {
+            my $text = UNIVERSAL::can($self->{install},"text") ?
+                $self->{install}->text :
+                    $self->{install};
+            if ($text =~ /^YES/) {
+                $CPAN::Frontend->myprint("  Already done\n");
+                $CPAN::META->is_installed($self->{build_dir});
+                return 1;
+            } elsif ($text =~ /is only/) {
+                push @e, $text;
+            } else {
+                # comment in Todo on 2006-02-11; maybe retry?
+                push @e, "Already tried without success";
+            }
+        }
+
+        push @e, $self->{later} if $self->{later};
+        push @e, $self->{configure_requires_later} if $self->{configure_requires_later};
+
+        $CPAN::Frontend->myprint(join "", map {"  $_\n"} @e) and return if @e;
+        unless (chdir $self->{build_dir}) {
+            push @e, "Couldn't chdir to '$self->{build_dir}': $!";
+        }
+        $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
+    }
+    $self->debug("Changed directory to $self->{build_dir}")
+        if $CPAN::DEBUG;
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_install($self);
