@@ -2574,15 +2574,6 @@ sub _make_install_make_command {
     return $mimc;
 }
 
-#-> sub CPAN::Distribution::is_locally_optional
-sub is_locally_optional {
-    my($self, $prereq_pm, $prereq) = @_;
-    $prereq_pm ||= $self->{prereq_pm};
-    exists $prereq_pm->{opt_requires}{$prereq}
-        ||
-            exists $prereq_pm->{opt_build_requires}{$prereq};
-}
-
 #-> sub CPAN::Distribution::follow_prereqs ;
 sub follow_prereqs {
     my($self) = shift;
@@ -2929,7 +2920,9 @@ sub unsat_prereq {
                             next NOSAYER;
                         }
                         ### XXX  don't complain about missing optional deps -- xdg, 2012-04-01
-                        if ($self->is_locally_optional($prereq_pm, $need_module)) {
+                        if (    exists $prereq_pm->{opt_requires}{$need_module}
+                            ||  exists $prereq_pm->{opt_build_requires}{$need_module}
+                        ) {
                             # don't complain about failing optional prereqs
                         }
                         else {
@@ -2982,7 +2975,8 @@ sub unsat_prereq {
         # here need to flag as optional for recommends/suggests
         # -- xdg, 2012-04-01
         my $optional = !$self->{mandatory}
-            || $self->is_locally_optional($prereq_pm, $need_module);
+            || exists $prereq_pm->{opt_requires}{$need_module}
+            || exists $prereq_pm->{opt_build_requires}{$need_module};
         push @need, [$need_module,$needed_as,$optional];
     }
     my @unfolded = map { "[".join(",",@$_)."]" } @need;
