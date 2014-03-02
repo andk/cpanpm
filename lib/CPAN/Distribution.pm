@@ -2201,8 +2201,7 @@ sub goodbye {
 
 sub success {
     my($self,$why) = @_;
-    my $id = $self->pretty_id;
-    $CPAN::Frontend->myprint("  $id\n  $why\n");
+    $CPAN::Frontend->myprint("  $why\n");
     return 1;
 }
 
