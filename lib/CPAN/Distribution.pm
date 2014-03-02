@@ -3823,9 +3823,10 @@ sub install {
     }
     unless ($want_install =~ /^y/i) {
         my $is_only = "is only 'build_requires'";
+        $CPAN::Frontend->mywarn("Not installing because $is_only\n");
         $self->{install} = CPAN::Distrostatus->new("NO -- $is_only");
         delete $self->{force_update};
-        return $self->goodbye("Not installing because $is_only");
+        return;
     }
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -3876,7 +3877,6 @@ sub install {
     }
     delete $self->{force_update};
     $self->store_persistent_state;
-    return !! $close_ok;
 }
 
 sub introduce_myself {
