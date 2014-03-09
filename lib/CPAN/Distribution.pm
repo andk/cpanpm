@@ -2001,8 +2001,6 @@ sub prepare {
 sub make {
     my($self) = @_;
 
-    return if $self->check_disabled;
-
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
     }
@@ -2127,6 +2125,9 @@ is part of the perl-%s distribution. To install that, you need to run
         }
         $CPAN::Frontend->mywarn(join "", map {"  $_\n"} @e) and return if @e;
     }
+    # if check_disabled comes too early we loop; note that this
+    # behaviour is not covered by our tests
+    return if $self->check_disabled;
     if ($CPAN::Signal) {
         delete $self->{force_update};
         return;
