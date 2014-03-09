@@ -1792,14 +1792,17 @@ sub shortcut_prepare {
 sub prepare {
     my ($self) = @_;
 
-    return if $self->check_disabled;
-
     $self->get
         or return;
 
     if ( defined( my $sc = $self->shortcut_prepare) ) {
         return $sc;
     }
+
+    # get knows how to excuse when the distro is disabled. But if we
+    # run check_disabled before get(), then we loop endlessly; note
+    # that this behaviour is not covered by our tests;
+    return if $self->check_disabled;
 
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
