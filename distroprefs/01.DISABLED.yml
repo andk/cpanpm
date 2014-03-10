@@ -25,8 +25,6 @@ match:
     |.*/Unix-Syslog-\d                       # noisy test suite
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
-    |xxxADAMK/Module-Install-1.00               # 1.00 hangs on 5.13.1-4-ge77da3b, 5.10.1-uld, 5.8.9, 5.8.7: 61264
-    |xxxADAMK/Module-Install-1.00 # disabled the spell against it because Catalyst-Devel-1.28 has declared a dependency see 63847
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
@@ -48,9 +46,6 @@ match:
     |BFG/MojoX-Run-\d                        # hangs with 5.14.0-382
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
-    |xxxBINGOS/CPANPLUS-Dist-Build-0.2[24].tar.gz  # hangs; says it is fixed in ticket 44857
-    |xxxBINGOS/Module-Install-ReadmeFromPod-    # hangs
-    |xxxBINGOS/Module-Install-AutoLicense-\d    # hangs with 5.14.0-357
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BLX/XSDSQL_                             # hangs with high memory usage
@@ -74,7 +69,6 @@ match:
     |DBROWNING/Business-Shipping-\d          # asks questions
     |DCARDWELL/TextLinkAds-0.01.tar.gz       # interactive
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
-    |DDUMONT/Config-Model-TkUI               # hangs at least on 5.8.3
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
@@ -125,7 +119,6 @@ match:
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
-    |xxxJJORE/Enbugger-                         # steps into the debugger
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JLMARTIN/NRD-Daemon-\d                  # hangs with 5.14.1-36
@@ -161,7 +154,6 @@ match:
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
-    |xxxMFROST/GnuPG-0.17                       # hangs with 5.15.2-455
     |MJGARDNER/Dist-Zilla-Plugin-RequiresExternal-\d # endless loop if JSON::PP missing???
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
@@ -170,7 +162,6 @@ match:
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
-    |xxxMLEHMANN/App-Staticperl                 # highly dangerous stuff rewrites ~/.cpan/CPAN/MyConfig.pm
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
@@ -191,13 +182,11 @@ match:
     |OALDERS/URI-ParseSearchString-More-0.04
     |PERIGRIN/Git-Wrapper-\d                 # some huge kill triggered?
     |PERLER/CatalystX-ExtJS-Direct-\d        #
-    |xxxPETDANCE/Test-WWW-Mechanize-\d          # hangs
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PEVANS/IO-Async-Loop-Glib-0.20          # hangs after t/12share-timer.t (in t/15share-child.t)
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
-    |xxxPJFL/                                # does not want to be tested by user sand---no reason given; hmmm, but we may want some module from this user, eg. File-DataClass-0.4.268
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RCAPUTO/POE-Loop-Tk-1.304.tar.gz        # hangs sometimes
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
@@ -213,7 +202,6 @@ match:
     |RURBAN/B-C-1.36                         # hangs with v5.15.4-92
     |RURBAN/B-Debugger-0.01_03.tar.gz        # hangs with perl-5.8.8 at 33430 during test.pl
     |RURBAN/C-DynaLib-0.58                   # hangs with 27040 (=5.8.8) on t/01test.t but not with others
-    |xxxRVOSA/Bio-Phylo-\d                      # hangs after 03-node.t with v5.15.0-241-g0a044a7/2b65/
     |RYBSKEJ/forks-0.25
     |SAKOHT/RMI-v?0.\d                       # hangs due to regression in 5.13.11-412, module is not to blame
     |SAMV/Lingua-Translate-                  # hangs often
