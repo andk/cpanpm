@@ -563,7 +563,9 @@ Do you want to rely on the test report history (yes/no)?
 When this is true, CPAN will set PERL_MM_USE_DEFAULT to a true
 value.  This causes ExtUtils::MakeMaker (and compatible) prompts
 to use default values instead of stopping to prompt you to answer
-questions.
+questions. It also sets NONINTERACTIVE_TESTING to a true value to
+signal more generally that distributions should not try to
+interact with you.
 
 Do you want to use prompt defaults (yes/no)?
 
