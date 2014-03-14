@@ -110,6 +110,7 @@ $VERSION = "5.5003"; # see also CPAN::Config::VERSION at end of file
      "trust_test_report_history",
      "unzip",
      "urllist",
+     "use_prompt_default",
      "use_sqlite",
      "username",
      "version_timeout",
