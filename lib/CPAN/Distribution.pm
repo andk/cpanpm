@@ -3567,6 +3567,10 @@ sub test {
             $but .= "; additionally test harness failed";
             $CPAN::Frontend->mywarn("$but\n");
             $self->{make_test} = CPAN::Distrostatus->new("NO $but");
+        } elsif ( $self->{force_update} ) {
+            $self->{make_test} = CPAN::Distrostatus->new(
+                "NO but failure ignored because 'force' in effect"
+            );
         } else {
             $self->{make_test} = CPAN::Distrostatus->new("NO");
         }
@@ -3580,7 +3584,8 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
-    return !! $tests_ok;
+
+    return $self->{force_update} ? 1 : !! $tests_ok;
 }
 
 sub _make_test_illuminate_prereqs {
