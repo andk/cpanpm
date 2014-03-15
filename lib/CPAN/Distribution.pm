@@ -185,7 +185,6 @@ sub color_cmd_tmps {
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
-        # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
       PREREQ: for my $pre (keys %{$prereq_pm->{requires}||{}},
                            keys %{$prereq_pm->{build_requires}||{}}) {
             next PREREQ if $pre eq "perl";
@@ -2774,7 +2773,6 @@ sub prereqs_for_slot {
             }
         }
         %merged = (%{$prereq_pm->{requires}||{}},%{$prereq_pm->{build_requires}||{}});
-        # XXX what about optional_req|breq? -- xdg, 2012-04-01
     } else {
         die "Panic: illegal slot '$slot'";
     }
@@ -2917,8 +2915,6 @@ sub unsat_prereq {
                                        );
                 next NEED;
             }
-            ### XXX here do next NEED if needed module is recommends/suggests
-            ### so we don't complain about missing optional deps -- xdg, 2012-04-01
           NOSAYER: for my $nosayer (
                                     "unwrapped",
                                     "writemakefile",
@@ -2969,8 +2965,6 @@ sub unsat_prereq {
             }
         }
         my $needed_as;
-        # XXX here need to flag as optional somehow for recommends/suggests
-        # -- xdg, 2012-04-01
         if (0) {
         } elsif (exists $prereq_pm->{requires}{$need_module}) {
             $needed_as = "r";
@@ -3139,8 +3133,6 @@ sub prereq_pm {
         my $requires = $prereqs->requirements_for(qw/runtime requires/);
         my $build_requires = $prereqs->requirements_for(qw/build requires/);
         my $test_requires = $prereqs->requirements_for(qw/test requires/);
-        # XXX assemble optional_req && optional_breq from recommends/suggests
-        # depending on corresponding policies -- xdg, 2012-04-01
         # XXX we don't yet distinguish build vs test, so merge them for now
         $build_requires->add_requirements($test_requires);
         $req = $requires->as_string_hash;
@@ -3255,7 +3247,6 @@ sub prereq_pm {
             }
         }
     }
-    # XXX needs to be adapted for optional_req & optional_breq
     if ($req || $breq) {
         return $self->{prereq_pm} = { requires => $req, build_requires => $breq };
     }
