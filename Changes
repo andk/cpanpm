@@ -1,8 +1,16 @@
+2014-03-18  Andreas Koenig  <k@UX31A>
+
+	* release 2.04-TRIAL
+
+	* history of master branch was rewritten after Tour de France bughunting
+	(Lyon #QA2014); apologies to all repository followers: the real history,
+	as it actually went, is not worth being recorded in the master branch.
+
 	* address #91706 and #86915: the 'force install' bug and the endless
 	loop bugs reported in the two tickets are fixed (joined forces)
 
 	* new configure option 'use_prompt_default' (David Golden)
-	
+
 	* add new dummy distros OptionalPrereq and CircularPrereq for testing
 	recommends/suggests support
 
