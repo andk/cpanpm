@@ -1,4 +1,8 @@
+	* address #91706 and #86915: the 'force install' bug and the endless
+	loop bugs reported in the two tickets are fixed (joined forces)
 
+	* new configure option 'use_prompt_default' (David Golden)
+	
 	* add new dummy distros OptionalPrereq and CircularPrereq for testing
 	recommends/suggests support
 
@@ -16,7 +20,7 @@
 	* support numerics in cpan IDs (Tatsuhiko Miyagawa)
 
 	* address #88565: fix unreachable core bug (Father Chrysostomos, David
-	Golden)
+	Golden, bb225be54aff753058e149c95ac3047f54892746)
 
 	* address #76831: spaces on Win32 combined with
 	make_install_make_command (Reini Urban, Steve Hay)
@@ -25,7 +29,8 @@
 	Steinbrunner)
 
 	* address #86915: upgrade build method from "make" to "test" on
-	dependencies declared as build_requires (Andreas Koenig)
+	dependencies declared as build_requires (Andreas Koenig,
+	fa1d3087d5246a08741c944768a9732c35c944af)
 
 2013-06-23  Andreas Koenig  <k@UX31A>
 
