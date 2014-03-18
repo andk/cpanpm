@@ -204,9 +204,10 @@ Preferred method for determining the current working directory?
 
 =item halt_on_failure
 
-Normally, CPAN.pm continues processing the full list of targets and
-dependencies, even if one of them fails.  However, you can specify
-that CPAN should halt after the first failure.
+If a specified dependency can't be met, CPAN.pm will halt processing the list
+of targets so you can figure out how to address the problem.  However, you can
+disable this protection if you are willing to run the risk of building, testing
+or even installing (if tests pass) without meeting all dependencies.
 
 Do you want to halt on failure (yes/no)?
 
@@ -1074,7 +1075,7 @@ sub init {
     #
     #== halt_on_failure
     #
-    my_yn_prompt(halt_on_failure => 0, $matcher);
+    my_yn_prompt(halt_on_failure => 1, $matcher);
 
     #
     #= Proxies

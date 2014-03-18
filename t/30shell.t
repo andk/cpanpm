@@ -1031,6 +1031,9 @@ __END__
 #P:o conf build_requires_install_policy no
 #E:build_requires_install_policy
 ########
+#P:o conf halt_on_failure 0
+#E:halt_on_failure
+########
 #P:install CPAN::Test::Dummy::Perl5::Build::DepeFails
 #E:is up to date|Failed during[\S\s]+?Build-DepeFails.+?dependenc\S+ not OK.+?Build::Fails
 #N: "is up to date" is for when they have it installed in INC
