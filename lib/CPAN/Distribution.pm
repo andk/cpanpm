@@ -3311,11 +3311,6 @@ sub prereq_pm {
 sub shortcut_test {
     my ($self) = @_;
 
-    $self->debug("checking notest[$self->{ID}]") if $CPAN::DEBUG;
-    if ($self->{notest}) {
-        return $self->success("Skipping test because of notest pragma");
-    }
-
     $self->debug("checking badtestcnt[$self->{ID}]") if $CPAN::DEBUG;
     $self->{badtestcnt} ||= 0;
     if ($self->{badtestcnt} > 0) {
@@ -3423,6 +3418,11 @@ sub test {
 
     if ( defined( my $sc = $self->shortcut_test ) ) {
         return $sc;
+    }
+
+    if ($self->{notest}) {
+        $self->{make_test} = CPAN::Distrostatus->new("YES");
+        return $self->success("Skipping test because of notest pragma");
     }
 
     if ($CPAN::Signal) {
