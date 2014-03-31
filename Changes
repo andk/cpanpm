@@ -1,3 +1,14 @@
+2014-03-31  k  <andk@cpan.org>
+
+	* release 2.05-TRIAL
+
+	* take github #66: smoke faster (Alexandr Ciornii)
+
+	* fix github #65: loop with "notest test some-module-with-dependencies"
+	(Andreas Koenig, David Golden)
+
+	* fix github #64: local::lib shell variable string output (David Golden)
+
 2014-03-18  Andreas Koenig  <k@UX31A>
 
 	* release 2.04-TRIAL
