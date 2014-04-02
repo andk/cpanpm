@@ -11,6 +11,23 @@ use File::Path ();
 use vars qw($VERSION);
 $VERSION = "2.02";
 
+# no prepare, because prepare is not a command on the shell command line
+for my $method (qw(get make test install)) {
+    no strict 'refs';
+    for my $prefix (qw(pre post)) {
+        my $hookname = sprintf "%s_%s", $prefix, $method;
+        *$hookname = sub {
+            my($self) = @_;
+            for my $plugin (@{$CPAN::Config->{plugins}}) {
+                if ($CPAN::META->has_inst($plugin) and $plugin->can($hookname)) {
+                    # but where does its configuration live?
+                    $plugin->$hookname($self);
+                }
+            }
+        };
+    }
+}
+
 # Accessors
 sub cpan_comment {
     my $self = shift;
