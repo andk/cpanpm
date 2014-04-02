@@ -12,6 +12,7 @@ use vars qw($VERSION);
 $VERSION = "2.02";
 
 # no prepare, because prepare is not a command on the shell command line
+my %instance;
 for my $method (qw(get make test install)) {
     no strict 'refs';
     for my $prefix (qw(pre post)) {
@@ -19,9 +20,14 @@ for my $method (qw(get make test install)) {
         *$hookname = sub {
             my($self) = @_;
             for my $plugin (@{$CPAN::Config->{plugins}}) {
-                if ($CPAN::META->has_inst($plugin) and $plugin->can($hookname)) {
-                    # but where does its configuration live?
-                    $plugin->$hookname($self);
+                my($plugin_proper,$args) = split /=/, $plugin, 2;
+                $args = "" unless defined $args;
+                if ($CPAN::META->has_inst($plugin_proper)){
+                    my @args = split /,/, $args;
+                    $instance{$args} ||= $plugin_proper->instance(@args);
+                    if ($instance{$args}->can($hookname)) {
+                        $instance{$args}->$hookname($self);
+                    }
                 }
             }
         };
@@ -349,6 +355,8 @@ sub shortcut_get {
 sub get {
     my($self) = @_;
 
+    $self->pre_get();
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -396,6 +404,9 @@ sub get {
     }
     return unless $self->patch;
     $self->store_persistent_state;
+
+    $self->post_get();
+
     return 1; # success
 }
 
@@ -2053,6 +2064,8 @@ sub shortcut_make {
 sub make {
     my($self) = @_;
 
+    $self->pre_make();
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -2217,6 +2230,9 @@ is part of the perl-%s distribution. To install that, you need to run
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
     }
     $self->store_persistent_state;
+
+    $self->post_make();
+
     return !! $system_ok;
 }
 
@@ -3430,6 +3446,8 @@ sub _exe_files {
 sub test {
     my($self) = @_;
 
+    $self->pre_test();
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -3607,6 +3625,8 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
+
+    $self->post_test();
 
     return $self->{force_update} ? 1 : !! $tests_ok;
 }
@@ -3832,6 +3852,8 @@ sub shortcut_install {
 sub install {
     my($self) = @_;
 
+    $self->pre_install();
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -3884,7 +3906,6 @@ sub install {
                           $install_directive,
                           $CPAN::Config->{mbuild_install_arg},
                          );
-        
     } else {
         my($make_install_make_command) = $self->_make_install_make_command();
         $system = sprintf("%s install %s",
@@ -3928,8 +3949,7 @@ sub install {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
-    my($pipe) = FileHandle->new("$system $stderr |") || Carp::croak
-("Can't execute $system: $!");
+    my($pipe) = FileHandle->new("$system $stderr |") || Carp::croak("Can't execute $system: $!");
     my($makeout) = "";
     while (<$pipe>) {
         print $_; # intentionally NOT use Frontend->myprint because it
@@ -3971,6 +3991,9 @@ sub install {
     }
     delete $self->{force_update};
     $self->store_persistent_state;
+
+    $self->post_install();
+
     return !! $close_ok;
 }
 
