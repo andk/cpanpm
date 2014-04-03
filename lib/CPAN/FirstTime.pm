@@ -1139,7 +1139,7 @@ sub init {
 
     # XXX MISSING: my_array_prompt to be used with plugins??? Then study
     #     git log -p fd68f8f5e33f4cecea4fdb7abc5ee19c12f138f0..test-notest-test-dependency
-    # to do similar steps for plugins
+    # to do similar steps for plugins (or plugin_list?)
 
     #
     #= how FTP works
