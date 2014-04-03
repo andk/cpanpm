@@ -1134,6 +1134,14 @@ sub init {
     }
 
     #
+    #= how plugins work
+    #
+
+    # XXX MISSING: my_array_prompt to be used with plugins??? Then study
+    #     git log -p fd68f8f5e33f4cecea4fdb7abc5ee19c12f138f0..test-notest-test-dependency
+    # to do similar steps for plugins
+
+    #
     #= how FTP works
     #
 
