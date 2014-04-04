@@ -2105,8 +2105,9 @@ FAQ
         You have the choice to set the config variable "scan_cache" to
         "never". Then you must clean it up yourself. The other possible
         values, "atstart" and "atexit" clean up the build directory when you
-        start or exit the CPAN shell, respectively. If you never start up
-        the CPAN shell, you probably also have to clean up the build
+        start (or more precisely, after the first extraction into the build
+        directory) or exit the CPAN shell, respectively. If you never start
+        up the CPAN shell, you probably also have to clean up the build
         directory yourself.
 
 COMPATIBILITY
