@@ -1,3 +1,11 @@
+2014-04-04  k  <andk@cpan.org>
+
+	* release 2.05-TRIAL2
+
+	* doc improvement for scan_cache/atstart (Slaven Rezic)
+
+	* test improvement in 31session to fix false positives
+
 2014-03-31  k  <andk@cpan.org>
 
 	* release 2.05-TRIAL
