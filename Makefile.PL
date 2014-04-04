@@ -78,7 +78,7 @@ if ($trial) {
 # for 5.004_05 I installed all of them manually despite errors;
 # version hints as of 2006-02
 my $prereq_pm = {
-                 'CPAN::Meta::Requirements' => '2',
+                 'CPAN::Meta::Requirements' => '2.121',
                  'File::Spec' => 0,   # KWILLIAMS; requires
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
