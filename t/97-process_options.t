@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 use Test::More tests => 4;
 
 BEGIN {  *CORE::GLOBAL::exit = sub { 23 } };

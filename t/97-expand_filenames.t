@@ -1,4 +1,3 @@
-#!/usr/bin/perl
 package App::Cpan;
 use Test::More 0.95;
 
