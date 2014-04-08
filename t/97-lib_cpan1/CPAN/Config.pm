@@ -6,7 +6,7 @@ use File::Spec::Functions qw(catfile);
 
 my $cwd = cwd();
 
-my $test_mirror_directory = catfile( qw( t test-mirror-cpan1 ) );
+my $test_mirror_directory = catfile( qw( t 97-cpan1-test-mirror ) );
 
 my $am_at_distro_root = -d $test_mirror_directory;
 croak "Did not find $test_mirror_directory in the current working directory!\n"

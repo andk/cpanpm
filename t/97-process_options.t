@@ -12,7 +12,7 @@ BEGIN {
 	use_ok( $class );
 	can_ok( $class, $method );
 
-	require "t/lib_cpan1/CPAN.pm";
+	require "t/97-lib_cpan1/CPAN.pm";
 	}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
