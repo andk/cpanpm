@@ -17,8 +17,8 @@ can_ok( $class, $method );
 	[ 'Starts with -i, then install',       [ qw(-i install) ],        [ qw(-i install) ] ],
 	);
 
-foreach my $pair ( @pairs )
-	{
+
+foreach my $pair ( @pairs ) {
 	local @ARGV = @{ $pair->[1] };
 
 	$class->$method;
