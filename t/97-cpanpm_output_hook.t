@@ -17,7 +17,7 @@ can_ok( $class, $_ ) for (
 	'_get_cpanpm_last_line',
 	'_cpanpm_output_indicates_failure',
 	'_cpanpm_output_indicates_success',
-	'_cpanpm_output_is_vague',	
+	'_cpanpm_output_is_vague',
 	);
 
 
@@ -94,19 +94,19 @@ foreach my $pair ( @lines )
 	{
 	my( $rc, $message, $last_good_line ) = @$pair;
 	$last_good_line = $message unless defined $last_good_line;
-	
+
 	$CPAN->_clear_cpanpm_output;
 	$CPAN->myprint( $message );
-	
+
 	my $last_line = $class->_get_cpanpm_last_line();
 	is( $last_line, $last_good_line, 'Last line is last message' );
-	
-	is( $class->_cpanpm_output_indicates_failure, $rc ? undef : 1, 
+
+	is( $class->_cpanpm_output_indicates_failure, $rc ? undef : 1,
 		"[$message] failure?" );
-	is( $class->_cpanpm_output_indicates_success, $rc ? 1 : undef, 
+	is( $class->_cpanpm_output_indicates_success, $rc ? 1 : undef,
 		"[$message] success?" );
 	}
-	
+
 
 _clear();
 }
@@ -137,9 +137,9 @@ sub my_clear_and_get
 	can_ok( $CPAN, $method );
 
 	_clear();
-	
+
 	$CPAN->$method( $message );
-	is( $class->_get_cpanpm_output, $message, 
+	is( $class->_get_cpanpm_output, $message,
 		'_get_cpanpm_output returns the message sent to myprint' );
 	}
 

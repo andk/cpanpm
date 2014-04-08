@@ -6,8 +6,8 @@ WriteMakefile(
 	'VERSION_FROM' => 'lib/Fine.pm',
 	'LICENSE'      => 'perl',
 	'AUTHOR'       => 'brian d foy <bdfoy@cpan.org>',
-	
-	'PREREQ_PM'    => { 
+
+	'PREREQ_PM'    => {
 		'Test::More' => '0',
 		},
 

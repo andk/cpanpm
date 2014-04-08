@@ -26,16 +26,16 @@ cpan - easily interact with CPAN from the command line
 	# with just the dot, install from the distribution in the
 	# current directory
 	cpan .
-	
+
 	# without arguments, starts CPAN.pm shell
 	cpan
 
 	# dump the configuration
 	cpan -J
-	
+
 	# load a different configuration to install Module::Foo
 	cpan -j some/other/file Module::Foo
-	
+
 	# without arguments, but some switches
 	cpan [-ahrvACDlLO]
 
@@ -79,7 +79,7 @@ to install a module even if its tests fail. When you use this option,
 
 =item -F
 
-Turn off CPAN.pm's attempts to lock anything. You should be careful with 
+Turn off CPAN.pm's attempts to lock anything. You should be careful with
 this since you might end up with multiple scripts trying to muck in the
 same directory. This isn't so much of a concern if you're loading a special
 config with C<-j>, and that config sets up its own work directories.
@@ -115,7 +115,7 @@ Load C<local::lib> (think like C<-I> for loading lib paths).
 =item -j Config.pm
 
 Load the file that has the CPAN configuration data. This should have the
-same format as the standard F<CPAN/Config.pm> file, which defines 
+same format as the standard F<CPAN/Config.pm> file, which defines
 C<$CPAN::Config> as an anonymous hash.
 
 =item -J
@@ -173,7 +173,7 @@ Print the script version and CPAN.pm version then exit.
 
 Print detailed information about the cpan client.
 
-=item -w 
+=item -w
 
 UNIMPLEMENTED
 
@@ -219,7 +219,7 @@ want to use C<local:lib>, you can set C<CPAN_OPTS> to C<-I>.
 
 =head1 EXIT VALUES
 
-The script exits with zero if it thinks that everything worked, or a 
+The script exits with zero if it thinks that everything worked, or a
 positive number if it thinks that something failed. Note, however, that
 in some cases it has to divine a failure by the output of things it does
 not control. For now, the exit codes are vague:

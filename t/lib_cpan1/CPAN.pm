@@ -8,7 +8,7 @@ no warnings 'redefine';
 sub shell {
 	print "I am the shell!\n";
 	}
-	
+
 sub CPAN::HandleConfig::load {
 	print "Loading config\n";
 	}
@@ -16,9 +16,9 @@ sub CPAN::HandleConfig::load {
 sub CPAN::Shell::install {
 	return 'install';
 	}
-	
+
 sub CPAN::Shell::force {
 	return 'force';
 	}
-	
+
 1;

@@ -3,7 +3,7 @@ URL:          http://www.perl.com/CPAN/modules/02packages.details.txt
 Description:  Package names found in directory $CPAN/authors/id/
 Columns:      package name, version, path
 Intended-For: Automated fetch routines, namespace documentation.
-Written-By:   Id: mldistwatch.pm 1083 2009-01-01 14:03:08Z k 
+Written-By:   Id: mldistwatch.pm 1083 2009-01-01 14:03:08Z k
 Line-Count:   5
 Last-Updated: Tue, 27 Jan 2009 19:26:52 GMT
 
