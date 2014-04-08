@@ -10,8 +10,7 @@ print "bail out! Script file does not compile!: The author must be a "
 	. idiot() . "."
 	unless like( $output, qr/syntax OK$/, 'script compiles' );
 
-sub idiot
-	{
+sub idiot {
 	my @names = qw(moron idiot buffoon jerk dummy);
 
 	$names[ int rand( $#names + 1 ) ];

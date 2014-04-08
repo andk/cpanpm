@@ -90,8 +90,7 @@ my @lines = ( # -1 is vague, 0 is failure, 1 is success
 
 _clear();
 
-foreach my $pair ( @lines )
-	{
+foreach my $pair ( @lines ) {
 	my( $rc, $message, $last_good_line ) = @$pair;
 	$last_good_line = $message unless defined $last_good_line;
 
@@ -131,8 +130,7 @@ like( $last_line, qr/NOT OK/, 'Last line is NOT OK line' );
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-sub my_clear_and_get
-	{
+sub my_clear_and_get {
 	my( $method, $message ) = @_;
 	can_ok( $CPAN, $method );
 
@@ -143,8 +141,7 @@ sub my_clear_and_get
 		'_get_cpanpm_output returns the message sent to myprint' );
 	}
 
-sub _clear
-	{
+sub _clear {
 	is( $class->_clear_cpanpm_output, '', 'Clear returns empty string' );
 	is( $class->_get_cpanpm_output, '', 'Get returns empty string right after clear' );
 	}
