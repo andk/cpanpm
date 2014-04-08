@@ -23,25 +23,3 @@ local @ARGV = ();
 }
 
 }
-
-
-__END__
-sub _process_options
-	{
-	my %options;
-
-	# if no arguments, just drop into the shell
-	if( 0 == @ARGV ) { CPAN::shell(); exit 0 }
-
-	Getopt::Std::getopts(
-		join( '',
-			map {
-				$Method_table{ $_ }[ $Method_table_index{takes_args} ] ? "$_:" : $_
-				} @option_order
-			),
-
-		\%options
-		);
-
-	\%options;
-	}
