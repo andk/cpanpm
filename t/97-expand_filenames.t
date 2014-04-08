@@ -40,16 +40,21 @@ foreach my $input ( 'Buster', 'Mimi/Roscoe', 'Ros~coe' ) {
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Test with only tilde
+{
 my $result = _expand_filename( '~' );
 is( $result, _home_of(), 'For tilde only, output is _home_of' );
+}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Test with only tilde and one dir
+{
 my $result = _expand_filename( '~foo' );
 is( $result, "/Users/foo", 'For tilde with name, output has that name' );
-
+}
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Test with only tilde and two dirs
+{
 my $result = _expand_filename( '~foo/bar' );
 is( $result, "/Users/foo/bar", 'For tilde with name and dir, output has name and dir' );
+}
