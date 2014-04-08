@@ -9,7 +9,7 @@ use Test::More tests => 10;
 use File::Spec::Functions qw(catfile devnull);
 
 my $command     = catfile qw( blib script cpan );
-my $config_file = catfile qw( t lib_cpan1 CPAN Config.pm );
+my $config_file = catfile qw( t 97-lib_cpan1 CPAN Config.pm );
 
 # Ensure the script is there and ready to run
 ok( -e $command, "$command is there" ) ||
