@@ -15,13 +15,13 @@ can_ok( $class, $method );
 	[ 'Starts with install, then nothing',  [ qw(install) ],           [qw(install)]      ],
 	[ 'Starts with install, then module',   [ qw(install Foo::Bar) ],  [qw(Foo::Bar)]     ],
 	[ 'Starts with -i, then install',       [ qw(-i install) ],        [ qw(-i install) ] ],
-	);	
+	);
 
 foreach my $pair ( @pairs )
 	{
 	local @ARGV = @{ $pair->[1] };
-	
+
 	$class->$method;
-	
+
 	is_deeply( \@ARGV, $pair->[2], $pair->[0] );
 	}

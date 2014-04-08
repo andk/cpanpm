@@ -29,16 +29,16 @@ Local::Works::Fine - This is the description
 
 sub new
 	{
-	
+
 	}
-	
+
 =item init
 
 =cut
 
 sub init
 	{
-	
+
 	}
 
 

@@ -2,25 +2,25 @@
 package App::Cpan;
 use Test::More 0.95;
 
-BEGIN { 
+BEGIN {
 	local $^W = 0;
 
 	our $class  = 'App::Cpan';
 	our $method = '_expand_filename';
-	
+
 	use_ok( $class );
 	can_ok( $class, $method );
-	
+
 	$class->_init_logger;
 	}
 
 {
 no warnings 'redefine';
-*_home_of = sub { 
+*_home_of = sub {
 	my( $user ) = @_;
 	$user = 'Buster' unless defined $user;
 	$user = 'Buster' if $user =~ /\A\d+\z/; # not the UID
-	"/Users/$user" 
+	"/Users/$user"
 	};
 }
 
