@@ -33,24 +33,15 @@ my @trials = (
 	[ 0, [ 'Local::Works::Fine'     ] ],
 	);
 
-diag( <<"HERE" );
-
-=================================================================
-You're going to see a mess of output. This is normal and it comes
-from the external process I am testing. I'm intentionally trying
-to install modules that will fail. I'll tell you when I'm done.
-=================================================================
-
-
-HERE
 
 foreach my $trial ( @trials )
 	{
 	my( $expected_exit_value, $options ) = @$trial;
 
 	my $rc = do {
-		local *STDERR;
+		local( *STDERR, *STDOUT );
 		open STDERR, ">", devnull();
+		open STDOUT, ">", devnull();
 		system $^X, '-Mblib', $command, @config, @$options;
 		};
 
@@ -58,14 +49,3 @@ foreach my $trial ( @trials )
 
 	is( $exit_value, $expected_exit_value, "$command @config @$options" );
 	}
-
-diag( <<"HERE" );
-
-
-
-=================================================================
-I'm done. Any further messes you see are real errors.
-=================================================================
-
-
-HERE
