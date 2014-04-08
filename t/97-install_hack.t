@@ -1,4 +1,4 @@
-use Test::More 'no_plan';
+use Test::More qw(no_plan);
 
 my $class  = 'App::Cpan';
 my $method = '_stupid_interface_hack_for_non_rtfmers';
