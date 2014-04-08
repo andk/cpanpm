@@ -220,7 +220,21 @@ EOF
     @SESSIONS =
         (
          {
+          name => "notest-test-dep",
+          perl_mm_use_default => 0,
+          pairs =>
+          [
+           "notest test CPAN::Test::Dummy::Perl5::Build::DepeFails" => join
+           ("",
+            "Running\\sBuild\\sfor[\\s\\S]+",
+            "Skipping test because of notest pragma[\\s\\S]+",
+            "Skipping test because of notest pragma[\\s\\S]+",
+           ),
+          ]
+         },
+         {
           name => "recommends",
+          tabu => ["CPAN::Test::Dummy::Perl5::Make::CircularPrereq"],
           perl_mm_use_default => 0,
           pairs =>
           [
@@ -485,6 +499,17 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
     if (%limit_to_sessions) {
         next SESSION_RUN unless $limit_to_sessions{$session->{name}};
     }
+    if (my $tabu = $session->{tabu}) {
+        my $skip;
+    SKIP: for my $t (@$tabu) {
+            if ($CPAN::META->has_inst($t)) {
+                $skip=1;
+                my $tests = scalar(@{$session->{pairs}})/2 + 1;
+                skip "skipping test '$session->{name}' because '$t' installed", $tests;
+            }
+        }
+        next SESSION_RUN if $skip;
+    }
     my $system = $session->{system} || $default_system;
     # warn "# DEBUG: name[$session->{name}]system[$system]";
     ok($session->{name}, "opening new session '$session->{name}'");
@@ -494,7 +519,7 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
         cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
             or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
         # fix timestamp "bug" (?) on Win32
-        utime( (time) x 2, _f"t/dot-cpan/sources/MIRRORED.BY" ); 
+        utime( (time) x 2, _f"t/dot-cpan/sources/MIRRORED.BY" );
     } else {
         unlink _f"t/dot-cpan/sources/MIRRORED.BY";
     }

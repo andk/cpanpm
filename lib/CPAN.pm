@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '2.03';
+$CPAN::VERSION = '2.05';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -2129,6 +2129,7 @@ currently defined:
                      CPAN::Reporter history)
   unzip              location of external program unzip
   urllist            arrayref to nearby CPAN sites (or equivalent locations)
+  use_prompt_default set PERL_MM_USE_DEFAULT for configure/make/test/install
   use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
   username           your username if you CPAN server wants one
   version_timeout    stops version parsing after this many seconds.
@@ -3757,7 +3758,7 @@ which to try in which order.
 
 Henk P. Penning maintains a site that collects data about CPAN sites:
 
-  http://www.cs.uu.nl/people/henkp/mirmon/cpan.html
+  http://mirrors.cpan.org/
 
 Also, feel free to play with experimental features. Run
 
@@ -3793,8 +3794,9 @@ Speaking of the build directory. Do I have to clean it up myself?
 You have the choice to set the config variable C<scan_cache> to
 C<never>. Then you must clean it up yourself. The other possible
 values, C<atstart> and C<atexit> clean up the build directory when you
-start or exit the CPAN shell, respectively. If you never start up the
-CPAN shell, you probably also have to clean up the build directory
+start (or more precisely, after the first extraction into the build
+directory) or exit the CPAN shell, respectively. If you never start up
+the CPAN shell, you probably also have to clean up the build directory
 yourself.
 
 =back

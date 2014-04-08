@@ -9,7 +9,7 @@ use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.00";
+$VERSION = "2.02";
 
 # Accessors
 sub cpan_comment {
@@ -1858,6 +1858,8 @@ sub prepare {
     }
     local $ENV{PERL} = $ENV{PERL};
     local $ENV{PERL5_CPAN_IS_EXECUTING} = $ENV{PERL5_CPAN_IS_EXECUTING};
+    local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
+    local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
     if ($pl_commandline) {
         $system = $pl_commandline;
         $ENV{PERL} = $^X;
@@ -2134,6 +2136,8 @@ is part of the perl-%s distribution. To install that, you need to run
         $make_commandline = $self->prefs->{make}{commandline};
     }
     local $ENV{PERL} = $ENV{PERL};
+    local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
+    local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
     if ($make_commandline) {
         $system = $make_commandline;
         $ENV{PERL} = CPAN::find_perl();
@@ -3307,11 +3311,6 @@ sub prereq_pm {
 sub shortcut_test {
     my ($self) = @_;
 
-    $self->debug("checking notest[$self->{ID}]") if $CPAN::DEBUG;
-    if ($self->{notest}) {
-        return $self->success("Skipping test because of notest pragma");
-    }
-
     $self->debug("checking badtestcnt[$self->{ID}]") if $CPAN::DEBUG;
     $self->{badtestcnt} ||= 0;
     if ($self->{badtestcnt} > 0) {
@@ -3350,7 +3349,64 @@ sub shortcut_test {
         }
     }
 
+    if ($self->{notest}) {
+        $self->{make_test} = CPAN::Distrostatus->new("YES");
+        return $self->success("Skipping test because of notest pragma");
+    }
+
     return undef; # no shortcut
+}
+
+#-> sub CPAN::Distribution::_exe_files ;
+sub _exe_files {
+    my($self) = @_;
+    return unless $self->{writemakefile}  # no need to have succeeded
+                                          # but we must have run it
+        || $self->{modulebuild};
+    unless ($self->{build_dir}) {
+        return;
+    }
+    CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
+                $self->{writemakefile}||"",
+                $self->{modulebuild}||"",
+               ) if $CPAN::DEBUG;
+    my $build_dir;
+    unless ( $build_dir = $self->{build_dir} ) {
+        return;
+    }
+    my $makefile = File::Spec->catfile($build_dir,"Makefile");
+    my $fh;
+    my @exe_files;
+    if (-f $makefile
+        and
+        $fh = FileHandle->new("<$makefile\0")) {
+        CPAN->debug("Getting exefiles from Makefile") if $CPAN::DEBUG;
+        local($/) = "\n";
+        while (<$fh>) {
+            last if /MakeMaker post_initialize section/;
+            my($p) = m{^[\#]
+                       \s+EXE_FILES\s+=>\s+\[(.+)\]
+                  }x;
+            next unless $p;
+            # warn "Found exefiles expr[$p]";
+            my @p = split /,\s*/, $p;
+            for my $p2 (@p) {
+                if ($p2 =~ /^q\[(.+)\]/) {
+                    push @exe_files, $1;
+                }
+            }
+        }
+    }
+    return \@exe_files if @exe_files;
+    my $buildparams = File::Spec->catfile($build_dir,"_build","build_params");
+    if (-f $buildparams) {
+        CPAN->debug("Found '$buildparams'") if $CPAN::DEBUG;
+        my $x = do $buildparams;
+        for my $sf (@{$x->[2]{script_files} || []}) {
+            push @exe_files, $sf;
+        }
+    }
+    return \@exe_files;
 }
 
 #-> sub CPAN::Distribution::test ;
@@ -3383,6 +3439,8 @@ sub test {
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
+    local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
+    local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
     $CPAN::Frontend->myprint("Running $make test\n");
 
@@ -3515,6 +3573,10 @@ sub test {
             $but .= "; additionally test harness failed";
             $CPAN::Frontend->mywarn("$but\n");
             $self->{make_test} = CPAN::Distrostatus->new("NO $but");
+        } elsif ( $self->{force_update} ) {
+            $self->{make_test} = CPAN::Distrostatus->new(
+                "NO but failure ignored because 'force' in effect"
+            );
         } else {
             $self->{make_test} = CPAN::Distrostatus->new("NO");
         }
@@ -3528,7 +3590,8 @@ sub test {
                 $self->pretty_id));
     }
     $self->store_persistent_state;
-    return !! $tests_ok;
+
+    return $self->{force_update} ? 1 : !! $tests_ok;
 }
 
 sub _make_test_illuminate_prereqs {
@@ -3845,6 +3908,9 @@ sub install {
 
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
     $CPAN::META->set_perl5lib;
+    local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
+    local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
+
     my($pipe) = FileHandle->new("$system $stderr |") || Carp::croak
 ("Can't execute $system: $!");
     my($makeout) = "";

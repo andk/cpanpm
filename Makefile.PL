@@ -19,7 +19,7 @@ my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
-my $is_trial = 1;
+my $trial = 2;
 my $version;
 {
   local $^W;
@@ -33,8 +33,11 @@ if ($HAVE_FILE_SPEC) {
 unshift @INC, "lib";
 require $version_from;
 $version = $CPAN::VERSION;
-if ($is_trial) {
+if ($trial) {
     $version .= "-TRIAL";
+    if ($trial > 1) {
+        $version .= $trial;
+    }
 }
 {
   my $version_set_manually = 1; # not by SVN
@@ -75,7 +78,7 @@ if ($is_trial) {
 # for 5.004_05 I installed all of them manually despite errors;
 # version hints as of 2006-02
 my $prereq_pm = {
-                 'CPAN::Meta::Requirements' => '2',
+                 'CPAN::Meta::Requirements' => '2.121',
                  'File::Spec' => 0,   # KWILLIAMS; requires
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz

@@ -1,3 +1,34 @@
+2014-04-04  k  <andk@cpan.org>
+
+	* release 2.05-TRIAL2
+
+	* doc improvement for scan_cache/atstart (Slaven Rezic)
+
+	* test improvement in 31session to fix false positives
+
+2014-03-31  k  <andk@cpan.org>
+
+	* release 2.05-TRIAL
+
+	* take github #66: smoke faster (Alexandr Ciornii)
+
+	* fix github #65: loop with "notest test some-module-with-dependencies"
+	(Andreas Koenig, David Golden)
+
+	* fix github #64: local::lib shell variable string output (David Golden)
+
+2014-03-18  Andreas Koenig  <k@UX31A>
+
+	* release 2.04-TRIAL
+
+	* history of master branch was rewritten after Tour de France bughunting
+	(Lyon #QA2014); apologies to all repository followers: the real history,
+	as it actually went, is not worth being recorded in the master branch.
+
+	* address #91706 and #86915: the 'force install' bug and the endless
+	loop bugs reported in the two tickets are fixed (joined forces)
+
+	* new configure option 'use_prompt_default' (David Golden)
 
 	* add new dummy distros OptionalPrereq and CircularPrereq for testing
 	recommends/suggests support
@@ -16,7 +47,7 @@
 	* support numerics in cpan IDs (Tatsuhiko Miyagawa)
 
 	* address #88565: fix unreachable core bug (Father Chrysostomos, David
-	Golden)
+	Golden, bb225be54aff753058e149c95ac3047f54892746)
 
 	* address #76831: spaces on Win32 combined with
 	make_install_make_command (Reini Urban, Steve Hay)
@@ -25,7 +56,8 @@
 	Steinbrunner)
 
 	* address #86915: upgrade build method from "make" to "test" on
-	dependencies declared as build_requires (Andreas Koenig)
+	dependencies declared as build_requires (Andreas Koenig,
+	fa1d3087d5246a08741c944768a9732c35c944af)
 
 2013-06-23  Andreas Koenig  <k@UX31A>
 

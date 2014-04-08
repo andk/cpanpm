@@ -10,7 +10,7 @@ use File::Path ();
 use File::Spec ();
 use CPAN::Mirrors ();
 use vars qw($VERSION $auto_config);
-$VERSION = "5.5304";
+$VERSION = "5.5306";
 
 =head1 NAME
 
@@ -558,6 +558,17 @@ regardless of the history using "force".
 
 Do you want to rely on the test report history (yes/no)?
 
+=item use_prompt_default
+
+When this is true, CPAN will set PERL_MM_USE_DEFAULT to a true
+value.  This causes ExtUtils::MakeMaker (and compatible) prompts
+to use default values instead of stopping to prompt you to answer
+questions. It also sets NONINTERACTIVE_TESTING to a true value to
+signal more generally that distributions should not try to
+interact with you.
+
+Do you want to use prompt defaults (yes/no)?
+
 =item use_sqlite
 
 CPAN::SQLite is a layer between the index files that are downloaded
@@ -1068,6 +1079,11 @@ sub init {
     my_dflt_prompt(mbuild_install_arg => "", $matcher);
 
     #
+    #== use_prompt_default
+    #
+    my_yn_prompt(use_prompt_default => 0, $matcher);
+
+    #
     #= Alarm period
     #
 
@@ -1317,16 +1333,18 @@ sub init {
 sub _local_lib_config {
     # Set environment stuff for this process
     require local::lib;
-    my %env = local::lib->build_environment_vars_for(_local_lib_path(), 1);
-    while ( my ($k, $v) = each %env ) {
-        $ENV{$k} = $v;
-    }
 
     # Tell user about environment vars to set
     $CPAN::Frontend->myprint($prompts{local_lib_installed});
     local $ENV{SHELL} = $CPAN::Config->{shell} || $ENV{SHELL};
     my $shellvars = local::lib->environment_vars_string_for(_local_lib_path());
     $CPAN::Frontend->myprint($shellvars);
+
+    # Set %ENV after getting string above
+    my %env = local::lib->build_environment_vars_for(_local_lib_path(), 1);
+    while ( my ($k, $v) = each %env ) {
+        $ENV{$k} = $v;
+    }
 
     # Offer to mangle the shell config
     my $munged_rc;
