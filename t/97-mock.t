@@ -1,6 +1,6 @@
 use Test::More tests => 4;
 
-BEGIN { require "t/lib_cpan1/CPAN.pm" }
+BEGIN { require "t/97-lib_cpan1/CPAN.pm" }
 
 ok( defined &CPAN::shell, "Mock CPAN shell is defined" );
 is( CPAN::shell(), 1, "Mock shell returns 1" );
