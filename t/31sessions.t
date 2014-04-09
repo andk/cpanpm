@@ -220,6 +220,14 @@ EOF
     @SESSIONS =
         (
          {
+          name => "illegal-regexp",
+          perl_mm_use_default => 0,
+          pairs =>
+          [
+           "o conf /*list/" => "illegal",
+          ]
+         },
+         {
           name => "notest-test-dep",
           perl_mm_use_default => 0,
           pairs =>
