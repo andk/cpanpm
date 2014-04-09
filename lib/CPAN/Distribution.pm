@@ -19,12 +19,13 @@ for my $method (qw(get make test install)) {
         my $hookname = sprintf "%s_%s", $prefix, $method;
         *$hookname = sub {
             my($self) = @_;
-            for my $plugin (@{$CPAN::Config->{plugins}}) {
+            for my $plugin (@{$CPAN::Config->{plugin_list}}) {
                 my($plugin_proper,$args) = split /=/, $plugin, 2;
                 $args = "" unless defined $args;
                 if ($CPAN::META->has_inst($plugin_proper)){
                     my @args = split /,/, $args;
-                    $instance{$args} ||= $plugin_proper->instance(@args);
+                    $instance{$args} ||= $plugin_proper->instance();
+                    $plugin_proper->import(@args);
                     if ($instance{$args}->can($hookname)) {
                         $instance{$args}->$hookname($self);
                     }

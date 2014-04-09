@@ -2091,6 +2091,7 @@ currently defined:
   patch              path to external prg
   patches_dir        local directory containing patch files
   perl5lib_verbosity verbosity level for PERL5LIB additions
+  plugin_list        list of pluggable hooks
   prefer_external_tar
                      per default all untar operations are done with
                      Archive::Tar; by setting this variable to true

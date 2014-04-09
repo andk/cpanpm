@@ -224,7 +224,7 @@ EOF
           perl_mm_use_default => 0,
           pairs =>
           [
-           "o conf /*list/" => "illegal",
+           "o conf /*list/" => "Cannot parse",
           ]
          },
          {
