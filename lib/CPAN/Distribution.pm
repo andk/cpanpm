@@ -25,7 +25,7 @@ for my $method (qw(get make test install)) {
                 if ($CPAN::META->has_inst($plugin_proper)){
                     my @args = split /,/, $args;
                     $instance{$args} ||= $plugin_proper->instance();
-                    $plugin_proper->import(@args);
+                    $plugin_proper->import(@args); # to be revised: dislike and like: inefficient and surprising but convenient
                     if ($instance{$args}->can($hookname)) {
                         $instance{$args}->$hookname($self);
                     }
