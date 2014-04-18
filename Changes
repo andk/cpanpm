@@ -1,3 +1,11 @@
+2014-04-18  k  <andk@cpan.org>
+
+	* release 2.05
+
+	* amendments to the Changes file only, no code change: the github issue
+	numbers were confused in the TRIAL releases. Thanks to Steve Hay for
+	spotting.
+
 2014-04-04  k  <andk@cpan.org>
 
 	* release 2.05-TRIAL2
@@ -10,12 +18,13 @@
 
 	* release 2.05-TRIAL
 
-	* take github #66: smoke faster (Alexandr Ciornii)
+	* take github #68 as 086c901: smoke faster (Alexandr Ciornii)
 
-	* fix github #65: loop with "notest test some-module-with-dependencies"
-	(Andreas Koenig, David Golden)
+	* take github #67 as cfa93ad, to fix github #64: local::lib shell
+	variable string output (David Golden)
 
-	* fix github #64: local::lib shell variable string output (David Golden)
+	* take github #66 as 4c0da4e, to fix github #65: loop with "notest test
+	some-module-with-dependencies" (Andreas Koenig, David Golden)
 
 2014-03-18  Andreas Koenig  <k@UX31A>
 
