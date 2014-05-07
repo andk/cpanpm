@@ -180,6 +180,7 @@ sub color_cmd_tmps {
     return if exists $self->{incommandcolor}
         && $color==1
         && $self->{incommandcolor}==$color;
+    $CPAN::MAX_RECURSION||=0; # silence 'once' warnings
     if ($depth>=$CPAN::MAX_RECURSION) {
         die(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
@@ -187,11 +188,10 @@ sub color_cmd_tmps {
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
         # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
+        # A: no, optional deps may recurse -- ak, 2014-05-07
       PREREQ: for my $pre (
                 keys %{$prereq_pm->{requires}||{}},
                 keys %{$prereq_pm->{build_requires}||{}},
-                keys %{$prereq_pm->{opt_requires}||{}},
-                keys %{$prereq_pm->{opt_build_requires}||{}}
             ) {
             next PREREQ if $pre eq "perl";
             my $premo;
