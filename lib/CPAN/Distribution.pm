@@ -648,6 +648,11 @@ sub parse_meta_yml {
     }
     $self->debug(sprintf("yaml[%s]", $early_yaml || 'UNDEF')) if $CPAN::DEBUG;
     $self->debug($early_yaml) if $CPAN::DEBUG && $early_yaml;
+    if (!ref $early_yaml or ref $early_yaml ne "HASH"){
+        # fix rt.cpan.org #95271
+        $CPAN::Frontend->mywarn("The content of '$yaml' is not a HASH reference. Cannot use it.\n");
+        return {};
+    }
     return $early_yaml || undef;
 }
 
