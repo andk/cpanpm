@@ -8,7 +8,7 @@ match:
 pl:
   expect:
     - "Build with support for Apache mod_perl"
-    - "\n"
+    - "n\n"
     - "Use .* as Apache source"
     - "\n"
     - "Enter path of XALAN base directory or single dot for not using XALAN"
