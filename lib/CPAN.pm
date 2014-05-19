@@ -2272,8 +2272,7 @@ C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 
 =head2 Configuration for individual distributions (I<Distroprefs>)
 
-(B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
-still considered beta quality)
+(B<Note:> This feature has been introduced in CPAN.pm 1.8854)
 
 Distributions on CPAN usually behave according to what we call the
 CPAN mantra. Or since the advent of Module::Build we should talk about
