@@ -4,7 +4,7 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
-use CPAN::Meta::Requirements 2;
+use CPAN::Meta::Requirements 2.120920;
 use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
