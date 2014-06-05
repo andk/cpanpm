@@ -859,9 +859,10 @@ sub _print_ping_report
 	my( $mirror ) = @_;
 
 	my $rtt = eval { _get_ping_report( $mirror ) };
+	my $result = $rtt ? sprintf "+ (%4d ms)", $rtt * 1000 : '!';
 
 	$logger->info(
-		sprintf "\t%s (%4d ms) %s", $rtt  ? '+' : '!',  $rtt * 1000, $mirror
+		sprintf "\t%s %s", $result, $mirror
 		);
 	}
 
