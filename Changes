@@ -1,3 +1,24 @@
+2014-08-06  k  <andk@cpan.org>
+
+	* release 2.06-TRIAL
+
+	* lazy load CPAN::Meta::Requirements (David Golden)
+
+	* fix $rtt handling in App::Cpan (Peter Martini)
+
+	* bump CPAN::Meta::Requirements requirement (Karen Etheridge)
+
+	* fix unini warning in App::Cpan (mudler)
+
+	* tiny distroprefs fixes (Andreas Koenig)
+
+	* remove beta warning from distroprefs documentation (Andreas Koenig)
+
+	* do not check recursion on optional dependencies (Andreas Koenig)
+
+	* address rt.cpan.org #95271: sanity check META.yml to contain a hash
+	(Alexandr Ciornii, Andreas Koenig)
+
 2014-04-18  k  <andk@cpan.org>
 
 	* release 2.05
