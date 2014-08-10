@@ -105,7 +105,7 @@ match:
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
-    |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf@cvrsnica.herceg.de>
+    |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |ISHIGAKI/PPM-Make-\d                    # asks questions
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357
