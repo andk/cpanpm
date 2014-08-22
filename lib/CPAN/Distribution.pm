@@ -3204,8 +3204,9 @@ sub prereq_pm {
         return;
     }
     # no Makefile/Build means configuration aborted, so don't look for prereqs
-    return unless   -f File::Spec->catfile($self->{build_dir},'Makefile')
-                ||  -f File::Spec->catfile($self->{build_dir},'Build');
+    my $makefile  = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'descrip.mms' : 'Makefile');
+    my $buildfile = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'Build.com' : 'Build');
+    return unless   -f $makefile || -f $buildfile;
     CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
                 $self->{writemakefile}||"",
                 $self->{modulebuild}||"",
