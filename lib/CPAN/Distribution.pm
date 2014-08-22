@@ -2164,10 +2164,10 @@ is part of the perl-%s distribution. To install that, you need to run
 
     my %env;
     while (my($k,$v) = each %ENV) {
-        next unless defined $v;
-        $env{$k} = $v;
+        next if defined $v;
+        $env{$k} = '';
     }
-    local %ENV = %env;
+    local @ENV{keys %env} = values %env;
     my $satisfied = eval { $self->satisfy_requires };
     return $self->goodbye($@) if $@;
     return unless $satisfied ;
