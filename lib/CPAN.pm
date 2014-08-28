@@ -1628,7 +1628,7 @@ in html or plain text format.
 =item C<ls> globbing_expression
 
 The first form lists all distribution files in and below an author's
-CPAN directory as stored in the CHECKUMS files distributed on
+CPAN directory as stored in the CHECKSUMS files distributed on
 CPAN. The listing recurses into subdirectories.
 
 The second form limits or expands the output with shell
