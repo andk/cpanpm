@@ -220,6 +220,49 @@ and tells you about problems you might have.
 	# install modules but without testing them
 	cpan -Ti CGI::Minimal URI
 
+=head2 Environment variables
+
+There are several components in CPAN.pm that use environment variables.
+The build tools, L<ExtUtils::MakeMaker> and L<Module::Build> use some,
+while others matter to the levels above them. Some of these are specified
+by the Perl Toolchain Gang:
+
+Lancaster Concensus: L<https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md>
+
+Oslo Concensus: L<https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/oslo-consensus.md>
+
+=over 4
+
+=item NONINTERACTIVE_TESTING
+
+Assume no one is paying attention and skips prompts for distributions
+that do that correctly. C<cpan(1)> sets this to C<1> unless it already
+has a value (even if that value is false).
+
+=item PERL_MM_USE_DEFAULT
+
+Use the default answer for a prompted questions. C<cpan(1)> sets this
+to C<1> unless it already has a value (even if that value is false).
+
+=item CPAN_OPTS
+
+As with C<PERL5OPTS>, a string of additional C<cpan(1)> options to
+add to those you specify on the command line.
+
+=item CPANSCRIPT_LOGLEVEL
+
+The log level to use, with either the embedded, minimal logger or
+L<Log::Log4perl> if it is installed. Possible values are the same as
+the C<Log::Log4perl> levels: C<TRACE>, C<DEBUG>, C<INFO>, C<WARN>,
+C<ERROR>, and C<FATAL>. The default is C<INFO>.
+
+=item GIT_COMMAND
+
+The path to the C<git> binary to use for the Git features. The default
+is C</usr/local/bin/git>.
+
+=back
+
 =head2 Methods
 
 =over 4
@@ -411,6 +454,14 @@ sub _process_setup_options
 	$options->{i}++ unless $option_count;
 	}
 
+sub _setup_environment {
+# should we override or set defaults? If this were a true interactive
+# session, we'd be in the CPAN shell.
+
+# https://github.com/Perl-Toolchain-Gang/toolchain-site/blob/master/lancaster-consensus.md
+	$ENV{NONINTERACTIVE_TESTING} = 1 unless defined $ENV{NONINTERACTIVE_TESTING};
+	$ENV{PERL_MM_USE_DEFAULT}    = 1 unless defined $ENV{PERL_MM_USE_DEFAULT};
+	}
 
 =item run()
 
@@ -442,6 +493,8 @@ sub run
 	$logger->debug( "Options are @{[Dumper($options)]}" );
 
 	$class->_process_setup_options( $options );
+
+	$class->_setup_environment( $options );
 
 	OPTION: foreach my $option ( @option_order )
 		{
