@@ -84,7 +84,6 @@ match:
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FROGGS/Alien-SDL-1.418                  # questions
-    |FXN/Net-Fluidinfo-0.45                  # date based fail see #76547
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GKNAUSS/WebService-Upcoming             # for members only
@@ -106,6 +105,7 @@ match:
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
+    |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |ISHIGAKI/PPM-Make-\d                    # asks questions
     |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357

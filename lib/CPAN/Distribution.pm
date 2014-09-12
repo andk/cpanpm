@@ -4,7 +4,6 @@ package CPAN::Distribution;
 use strict;
 use Cwd qw(chdir);
 use CPAN::Distroprefs;
-use CPAN::Meta::Requirements 2;
 use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
@@ -180,6 +179,7 @@ sub color_cmd_tmps {
     return if exists $self->{incommandcolor}
         && $color==1
         && $self->{incommandcolor}==$color;
+    $CPAN::MAX_RECURSION||=0; # silence 'once' warnings
     if ($depth>=$CPAN::MAX_RECURSION) {
         die(CPAN::Exception::RecursiveDependency->new($ancestors));
     }
@@ -187,11 +187,10 @@ sub color_cmd_tmps {
     my $prereq_pm = $self->prereq_pm;
     if (defined $prereq_pm) {
         # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
+        # A: no, optional deps may recurse -- ak, 2014-05-07
       PREREQ: for my $pre (
                 keys %{$prereq_pm->{requires}||{}},
                 keys %{$prereq_pm->{build_requires}||{}},
-                keys %{$prereq_pm->{opt_requires}||{}},
-                keys %{$prereq_pm->{opt_build_requires}||{}}
             ) {
             next PREREQ if $pre eq "perl";
             my $premo;
@@ -648,6 +647,11 @@ sub parse_meta_yml {
     }
     $self->debug(sprintf("yaml[%s]", $early_yaml || 'UNDEF')) if $CPAN::DEBUG;
     $self->debug($early_yaml) if $CPAN::DEBUG && $early_yaml;
+    if (!ref $early_yaml or ref $early_yaml ne "HASH"){
+        # fix rt.cpan.org #95271
+        $CPAN::Frontend->mywarn("The content of '$yaml' is not a HASH reference. Cannot use it.\n");
+        return {};
+    }
     return $early_yaml || undef;
 }
 
@@ -2733,6 +2737,8 @@ sub _feature_depends {
 sub prereqs_for_slot {
     my($self,$slot) = @_;
     my($prereq_pm);
+    $CPAN::META->has_usable("CPAN::Meta::Requirements")
+        or die "CPAN::Meta::Requirements not available";
     my $merged = CPAN::Meta::Requirements->new;
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
@@ -2795,6 +2801,8 @@ sub unsat_prereq {
     my($self,$slot) = @_;
     my($merged_hash,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
+    $CPAN::META->has_usable("CPAN::Meta::Requirements")
+        or die "CPAN::Meta::Requirements not available";
     my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
     my @merged = $merged->required_modules;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;

@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '2.05';
+$CPAN::VERSION = '2.06';
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -1020,6 +1020,18 @@ sub has_usable {
                             },
                            ],
 
+               'CPAN::Meta::Requirements' => [
+                            sub {
+                                require CPAN::Meta::Requirements;
+                                unless (CPAN::Version->vge(CPAN::Meta::Requirements->VERSION, 2.120920)) {
+                                    for ("Will not use CPAN::Meta::Requirements, need version 2.120920\n") {
+                                        $CPAN::Frontend->mywarn($_);
+                                        die $_;
+                                    }
+                                }
+                            },
+                           ],
+
                LWP => [ # we frequently had "Can't locate object
                         # method "new" via package "LWP::UserAgent" at
                         # (eval 69) line 2006
@@ -1616,7 +1628,7 @@ in html or plain text format.
 =item C<ls> globbing_expression
 
 The first form lists all distribution files in and below an author's
-CPAN directory as stored in the CHECKUMS files distributed on
+CPAN directory as stored in the CHECKSUMS files distributed on
 CPAN. The listing recurses into subdirectories.
 
 The second form limits or expands the output with shell
@@ -1865,7 +1877,7 @@ separated):
 
 Modules know their associated Distribution objects. They always refer
 to the most recent official release. Developers may mark their releases
-as unstable development versions (by inserting an unserscore into the
+as unstable development versions (by inserting an underscore into the
 module version number which will also be reflected in the distribution
 name when you run 'make dist'), so the really hottest and newest
 distribution is not always the default.  If a module Foo circulates
@@ -2272,8 +2284,7 @@ C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 
 =head2 Configuration for individual distributions (I<Distroprefs>)
 
-(B<Note:> This feature has been introduced in CPAN.pm 1.8854 and is
-still considered beta quality)
+(B<Note:> This feature has been introduced in CPAN.pm 1.8854)
 
 Distributions on CPAN usually behave according to what we call the
 CPAN mantra. Or since the advent of Module::Build we should talk about

@@ -25,10 +25,14 @@ comment: |
   With Coro 6.23 I try again to set disabled=0 because cpantesters
   shows mostly green.
 
+  With 6.37 I try again to enable all Coro configurations because
+  bleadperl 5.19 has some problems for perl and we should at least see
+  all Coro results.
+
 match:
   distribution: "^MLEHMANN/Coro-"
-  perlconfig:
-    nvsize: "^16$"
+#  perlconfig:
+#    nvsize: "^16$"
 disabled: 0
 ---
 match:
