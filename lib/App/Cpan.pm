@@ -217,6 +217,8 @@ and tells you about problems you might have.
 	# force install modules ( must use -i )
 	cpan -fi CGI::Minimal URI
 
+	# install modules but without testing them
+	cpan -Ti CGI::Minimal URI
 
 =head2 Methods
 
@@ -266,6 +268,7 @@ $Default = 'default';
 	'm'      => 'make',
 	't'      => 'test',
 	'u'      => 'upgrade',
+	'T'      => 'notest',
 	);
 @CPAN_OPTIONS = grep { $_ ne $Default } sort keys %CPAN_METHODS;
 
@@ -295,7 +298,6 @@ sub GOOD_EXIT () { 0 }
 	M =>  [ \&_use_these_mirrors,    ARGS, GOOD_EXIT, 'Setting per session mirrors'  ],
 	P =>  [ \&_find_good_mirrors, NO_ARGS, GOOD_EXIT, 'Finding good mirrors'         ],
     w =>  [ \&_turn_on_warnings,  NO_ARGS, GOOD_EXIT, 'Turning on warnings'          ],
-    T =>  [ \&_turn_off_testing,  NO_ARGS, GOOD_EXIT, 'Turning off testing'          ],
 
 	# options that do their one thing
 	g =>  [ \&_download,          NO_ARGS, GOOD_EXIT, 'Download the latest distro'        ],
@@ -319,6 +321,7 @@ sub GOOD_EXIT () { 0 }
 	i =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make install`'       ],
    'm' => [ \&_default,              ARGS, GOOD_EXIT, 'Running `make`'               ],
 	t =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make test`'          ],
+	T =>  [ \&_default,              ARGS, GOOD_EXIT, 'Installing with notest'       ],
 	);
 
 %Method_table_index = (
@@ -374,7 +377,9 @@ sub _process_setup_options
 			);
 		}
 
-	foreach my $o ( qw(F I w T P M) )
+	$class->_turn_off_testing if $options->{T};
+
+	foreach my $o ( qw(F I w P M) )
 		{
 		next unless exists $options->{$o};
 		$Method_table{$o}[ $Method_table_index{code} ]->( $options->{$o} );
@@ -395,7 +400,11 @@ sub _process_setup_options
 
 	my $option_count = grep { $options->{$_} } @option_order;
 	no warnings 'uninitialized';
-	$option_count -= $options->{'f'}; # don't count force
+
+	# don't count options that imply installation
+	foreach my $opt ( qw(f T) ) { # don't count force or notest
+		$option_count -= $options->{$opt};
+		}
 
 	# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 	# if there are no options, set -i (this line fixes RT ticket 16915)
@@ -505,7 +514,7 @@ sub _default
 	# we'll deal with 'f' (force) later, so skip it
 	foreach my $option ( @CPAN_OPTIONS )
 		{
-		next if $option eq 'f';
+		next if ( $option eq 'f' or $option eq 'T' );
 		next unless $options->{$option};
 		$switch = $option;
 		last;
@@ -523,10 +532,11 @@ sub _default
 	my $method = $CPAN_METHODS{$switch};
 	die "CPAN.pm cannot $method!\n" unless CPAN::Shell->can( $method );
 
-	# call the CPAN::Shell method, with force if specified
+	# call the CPAN::Shell method, with force or notest if specified
 	my $action = do {
-		if( $options->{f} ) { sub { CPAN::Shell->force( $method, @_ ) } }
-		else                { sub { CPAN::Shell->$method( @_ )        } }
+		   if( $options->{f} ) { sub { CPAN::Shell->force( $method, @_ )  } }
+		elsif( $options->{T} ) { sub { CPAN::Shell->notest( $method, @_ ) } }
+		else                   { sub { CPAN::Shell->$method( @_ )         } }
 		};
 
 	# How do I handle exit codes for multiple arguments?

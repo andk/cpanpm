@@ -30,6 +30,12 @@ cpan - easily interact with CPAN from the command line
 	# without arguments, starts CPAN.pm shell
 	cpan
 
+	# force install modules (usually those that fail tests)
+	cpan -f module_name [ module_name ... ]
+
+	# install modules but without testing them
+	cpan -T module_name [ module_name ... ]
+
 	# dump the configuration
 	cpan -J
 
