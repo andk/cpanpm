@@ -1468,8 +1468,7 @@ report them to the user.
 
 =head1 SEE ALSO
 
-Most behaviour, including environment variables and configuration,
-comes directly from CPAN.pm.
+L<CPAN>, L<App::cpanminus>
 
 =head1 SOURCE AVAILABILITY
 
