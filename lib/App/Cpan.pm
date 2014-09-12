@@ -225,7 +225,7 @@ and tells you about problems you might have.
 =cut
 
 use autouse Carp => qw(carp croak cluck);
-use CPAN ();
+use CPAN 1.80 (); # needs no test
 use Config;
 use autouse Cwd => qw(cwd);
 use autouse 'Data::Dumper' => qw(Dumper);
