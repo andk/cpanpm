@@ -1473,9 +1473,12 @@ comes directly from CPAN.pm.
 
 =head1 SOURCE AVAILABILITY
 
-This code is in Github:
+This code is in Github in the CPAN.pm repository:
 
-	git://github.com/briandfoy/cpan_script.git
+	https://github.com/andk/cpanpm
+
+The source used to be tracked separately in another GitHub repo,
+but the canonical source is now in the above repo.
 
 =head1 CREDITS
 
