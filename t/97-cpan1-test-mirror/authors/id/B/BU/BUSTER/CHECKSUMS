@@ -1,0 +1,39 @@
+# CHECKSUMS file written on Tue Apr  8 07:09:08 2014 GMT by CPAN::Checksums (v2.08)
+$cksum = {
+  'Local-Make-Fails.tgz' => {
+    'md5' => '3a5fecc6c54952d7329d78ca131603d0',
+    'mtime' => '2014-04-08',
+    'sha256' => '57be2b83945715de8a777613008dc12d4e22775290b3bfb32e63590cf1637e90',
+    'size' => 384
+  },
+  'Local-Prereq-Fails.tgz' => {
+    'md5' => 'a09b46a6633fbe7b817861d583216e87',
+    'mtime' => '2014-04-08',
+    'sha256' => '9da81b5d0c9f34cb4ef52165a3a1d9d597160a4d31db8a06e3409f6bcc548f4e',
+    'size' => 316
+  },
+  'Local-Test-Fails.tgz' => {
+    'md5' => 'f421342e13a15eadea7fe0b7329c9a0d',
+    'mtime' => '2014-04-08',
+    'sha256' => '5161ca41d7894a5d68f55b35e403ef130abb510e72639bab2ca7e841646b1f25',
+    'size' => 847
+  },
+  'Local-Unsupported-OS.tgz' => {
+    'md5' => '7420c7f392204c89c2baaaf907b8ea78',
+    'mtime' => '2014-04-08',
+    'sha256' => '0c6aba263cae9fd82c1ec3fc4d2d684bdb438b6493bd654ddf5eb3a49142c26b',
+    'size' => 304
+  },
+  'Local-Works-Fine.tgz' => {
+    'md5' => 'dc8ee04ec442c918a992649137f14586',
+    'mtime' => '2014-04-08',
+    'sha256' => '79817d5989eedbd46da566b2c0c2c460b765b82edf1dc542dd5ace668433450c',
+    'size' => 1212
+  },
+  'Make.pl' => {
+    'md5' => 'f52db2e5e66a4fb23515f158e7854ae7',
+    'mtime' => '2014-04-08',
+    'sha256' => '720399f558dfd51521e28626591083b7e3064ab24e864db8707d75c90ba9bc2c',
+    'size' => 87
+  }
+};
