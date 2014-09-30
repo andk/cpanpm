@@ -1,0 +1,14 @@
+File:         02packages.details.txt
+URL:          http://www.perl.com/CPAN/modules/02packages.details.txt
+Description:  Package names found in directory $CPAN/authors/id/
+Columns:      package name, version, path
+Intended-For: Automated fetch routines, namespace documentation.
+Written-By:   Id: mldistwatch.pm 1083 2009-01-01 14:03:08Z k
+Line-Count:   5
+Last-Updated: Tue, 27 Jan 2009 19:26:52 GMT
+
+Local::Works::Fine	1.0 B/BU/BUSTER/Local-Works-Fine.tgz
+Local::Test::Fails	1.0 B/BU/BUSTER/Local-Test-Fails.tgz
+Local::Unsupported::OS	1.0 B/BU/BUSTER/Local-Unsupported-OS.tgz
+Local::Make::Fails	1.0 B/BU/BUSTER/Local-Make-Fails.tgz
+Local::Prereq::Fails	1.0 B/BU/BUSTER/Local-Prereq-Fails.tgz

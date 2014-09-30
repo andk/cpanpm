@@ -17,8 +17,8 @@ print "Best continent is $best_continent\n";
 
 my @mirrors = $mirrors->get_mirrors_by_continents( $best_continent );
 
-my $callback = sub { 
-	my( $m ) = @_; 
+my $callback = sub {
+	my( $m ) = @_;
 	printf "%s = %s ms\n", $m->hostname, 1000 * $m->rtt
 	};
 my @sorted_mirrors = $mirrors->get_mirrors_timings( \@mirrors, $seen, $callback );
