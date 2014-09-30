@@ -257,6 +257,8 @@ to C<1> unless it already has a value (even if that value is false).
 
 =back
 
+=back
+
 =head1 EXIT VALUES
 
 The script exits with zero if it thinks that everything worked, or a
