@@ -1134,6 +1134,17 @@ sub init {
     }
 
     #
+    #= how plugins work
+    #
+
+    # XXX MISSING: my_array_prompt to be used with plugins. We did something like this near
+    #     git log -p fd68f8f5e33f4cecea4fdb7abc5ee19c12f138f0..test-notest-test-dependency
+    # Need to do similar steps for plugin_list. As long as we do not support it here, people
+    # must use the cpan shell prompt to write something like
+    #     o conf plugin_list push CPAN::Plugin::Specfile=dir,/tmp/foo-20141013,...
+    #     o conf commit
+
+    #
     #= how FTP works
     #
 
