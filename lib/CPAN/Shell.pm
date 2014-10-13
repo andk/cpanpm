@@ -374,6 +374,9 @@ sub o {
         if (!@o_what or $cfilter) { # print all things, "o conf"
             $cfilter ||= "";
             my $qrfilter = eval 'qr/$cfilter/';
+            if ($@) {
+                $CPAN::Frontend->mydie("Cannot parse commandline: $@");
+            }
             my($k,$v);
             my $configpm = CPAN::HandleConfig->require_myconfig_or_config;
             $CPAN::Frontend->myprint("\$CPAN::Config options from $configpm\:\n");
