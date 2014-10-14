@@ -29,7 +29,7 @@ sub new {
 sub post_test {
     my $self = shift;
     my $distribution_object = shift;
-    my $distribution = $distribution_object->id;
+    my $distribution = $distribution_object->pretty_id;
     unless ($CPAN::META->has_inst("CPAN::DistnameInfo")){
         $CPAN::Frontend->mydie("CPAN::DistnameInfo not installed; cannot continue");
     }
