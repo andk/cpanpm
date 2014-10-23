@@ -1949,6 +1949,39 @@ by the cpan shell B<only when surrounded by whitespace>. So piping to
 pager or redirecting output into a file works somewhat as in a normal
 shell, with the stipulation that you must type extra spaces.
 
+=head2 Plugin support
+
+Plugins are objects that implement any of currently eight methods:
+
+  pre_get
+  post_get
+  pre_make
+  post_make
+  pre_test
+  post_test
+  pre_install
+  post_install
+
+The C<plugin_list> configuration parameter holds a list of strings of
+the form
+
+  Modulename=arg0,arg1,arg2,arg3,...
+
+At run time, each listed plugin is instantiated as a singleton object
+by running the equivalent of this pseudo code:
+
+  my $plugin = <string representation from config>;
+  <generate Modulename and arguments from $plugin>;
+  my $p = $instance{$plugin} ||= Modulename->new($arg0,$arg1,...);
+
+The generated singletons are kept around from instantiation until the
+end of the shell session. <plugin_list> can be reconfigured at any
+time at run time. While the cpan shell is running, it checks all
+activated plugins at each of the 8 reference points listed above and
+runs the respective method if it is implemented for that object. The
+method is called with the active CPAN::Distribution object passed in
+as an argument.
+
 =head1 CONFIGURATION
 
 When the CPAN module is used for the first time, a configuration
@@ -2117,7 +2150,8 @@ currently defined:
   patch              path to external prg
   patches_dir        local directory containing patch files
   perl5lib_verbosity verbosity level for PERL5LIB additions
-  plugin_list        list of active hooks (see CPAN::Plugin)
+  plugin_list        list of active hooks (see Plugin support above
+                     and the CPAN::Plugin module)
   prefer_external_tar
                      per default all untar operations are done with
                      Archive::Tar; by setting this variable to true

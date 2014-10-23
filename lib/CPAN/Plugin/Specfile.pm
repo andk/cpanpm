@@ -197,6 +197,99 @@ EOF
 sub gen_rpm_defines {                    # ;
     <<EOF;
 %define _use_internal_dependency_generator     0
+    my $self = shift;
+    my $distribution_object = shift;
+    my $distribution = $distribution_object->pretty_id;
+    unless ($CPAN::META->has_inst("CPAN::DistnameInfo")){
+        $CPAN::Frontend->mydie("CPAN::DistnameInfo not installed; cannot continue");
+    }
+    my $d = CPAN::Shell->expand("Distribution",$distribution)
+        or $CPAN::Frontend->mydie("Unknowns distribution '$distribution'\n");
+    my $build_dir = $d->{build_dir} or $CPAN::Frontend->mydie("Distribution has not been built yet, cannot proceed");
+    my %contains = map {($_ => undef)} $d->containsmods;
+    my @m;
+    my $width = 16;
+    my $header = sub {
+        my($header,$value) = @_;
+        push @m, sprintf("%-s:%*s%s\n", $header, $width-length($header), "", $value);
+    };
+    my $dni = CPAN::DistnameInfo->new($distribution);
+    my $dist = $dni->dist;
+    my $summary = CPAN::Shell->_guess_manpage($d,\%contains,$dist);
+    $header->("Name", "perl-$dist");
+    my $version = $dni->version;
+    $header->("Version", $version);
+    $header->("Release", "1%{?dist}");
+#Summary:        Template processing system
+#Group:          Development/Libraries
+#License:        GPL+ or Artistic
+#URL:            http://www.template-toolkit.org/
+#Source0:        http://search.cpan.org/CPAN/authors/id/A/AB/ABW/Template-Toolkit-%{version}.tar.gz
+#Patch0:         Template-2.22-SREZIC-01.patch
+#BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+    for my $h_tuple
+        ([Summary    => $summary],
+         [Group      => "Development/Libraries"],
+         [License    =>],
+         [URL        =>],
+         [BuildRoot  => "%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)"],
+         [Requires   => "perl(:MODULE_COMPAT_%(eval \"`%{__perl} -V:version`\"; echo \$version))"],
+        ) {
+        my($h,$v) = @$h_tuple;
+        $v = "unknown" unless defined $v;
+        $header->($h, $v);
+    }
+    $header->("Source0", sprintf(
+                                 "http://search.cpan.org/CPAN/authors/id/%s/%s/%s",
+                                 substr($distribution,0,1),
+                                 substr($distribution,0,2),
+                                 $distribution
+                                ));
+    require POSIX;
+    my @xs = glob "$build_dir/*.xs"; # quick try
+    unless (@xs) {
+        require ExtUtils::Manifest;
+        my $manifest_file = "$build_dir/MANIFEST";
+        my $manifest = ExtUtils::Manifest::maniread($manifest_file);
+        @xs = grep /\.xs$/, keys %$manifest;
+    }
+    if (! @xs) {
+        $header->('BuildArch', 'noarch');
+    }
+    for my $k (sort keys %contains) {
+        my $m = CPAN::Shell->expand("Module",$k);
+        my $v = $contains{$k} = $m->cpan_version;
+        my $vspec = $v eq "undef" ? "" : " = $v";
+        $header->("Provides", "perl($k)$vspec");
+    }
+    if (my $prereq_pm = $d->{prereq_pm}) {
+        my %req;
+        for my $reqkey (keys %$prereq_pm) {
+            while (my($k,$v) = each %{$prereq_pm->{$reqkey}}) {
+                $req{$k} = $v;
+            }
+        }
+        if (-e "$build_dir/Build.PL" && ! exists $req{"Module::Build"}) {
+            $req{"Module::Build"} = 0;
+        }
+        for my $k (sort keys %req) {
+            next if $k eq "perl";
+            my $v = $req{$k};
+            my $vspec = defined $v && length $v && $v > 0 ? " >= $v" : "";
+            $header->(BuildRequires => "perl($k)$vspec");
+            next if $k =~ /^(Module::Build)$/; # MB is always only a
+                                               # BuildRequires; if we
+                                               # turn it into a
+                                               # Requires, then we
+                                               # would have to make it
+                                               # a BuildRequires
+                                               # everywhere we depend
+                                               # on *one* MB built
+                                               # module.
+            $header->(Requires => "perl($k)$vspec");
+        }
+    }
+    push @m, "\n%define _use_internal_dependency_generator     0
 %define __find_requires %{nil}
 %define __find_provides %{nil}
 

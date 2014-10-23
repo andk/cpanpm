@@ -24,9 +24,9 @@ for my $method (qw(get make test install)) {
                 $args = "" unless defined $args;
                 if ($CPAN::META->has_inst($plugin_proper)){
                     my @args = split /,/, $args;
-                    $instance{$args} ||= $plugin_proper->new(@args);
-                    if ($instance{$args}->can($hookname)) {
-                        $instance{$args}->$hookname($self);
+                    $instance{$plugin} ||= $plugin_proper->new(@args);
+                    if ($instance{$plugin}->can($hookname)) {
+                        $instance{$plugin}->$hookname($self);
                     }
                 } else {
                     $CPAN::Frontend->mydie("Plugin '$plugin_proper' not found");
