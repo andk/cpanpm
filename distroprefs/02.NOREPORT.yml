@@ -14,13 +14,13 @@ comment: |
 
 match:
   perlconfig:
-    version: '^5\.(7|9|11|13|15)\.'
+    version: '^5\.(7|9|11|13|15|17)\.'
 cpanconfig:
   test_report: 0
 ---
 comment: |
 
-  Author would prefer to never see false positives which I cannot
+  MSHELOR: would prefer to never see false positives which I cannot
   guarantee, so we turn off mails for him completely. Main involvement
   was Digest::SHA which got FAILs during a short phase of 5.9.3 due to
   some broken headerfiles in these bleadperls. A better solution than
