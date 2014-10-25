@@ -2166,6 +2166,13 @@ is part of the perl-%s distribution. To install that, you need to run
         delete $self->{force_update};
         return;
     }
+
+    # need to chdir again, because $self->satisfy_requires might change the directory
+    unless (chdir $builddir) {
+        $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        return;
+    }
+
     my $system;
     my $make_commandline;
     if ($self->prefs->{make}) {
