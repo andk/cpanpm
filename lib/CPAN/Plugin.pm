@@ -6,6 +6,8 @@ use warnings;
 
 our $VERSION = '1.0.0';
 
+require CPAN;
+
 ######################################################################
 
 sub new {                                # ;
@@ -20,6 +22,7 @@ sub new {                                # ;
 
     unless (ref $class) {
         local $_;
+        no warnings 'once';
         $CPAN::META->use_inst ($_) for $self->plugin_requires;
     }
 
@@ -121,6 +124,14 @@ Get current distribution object.
 =head2 distribution
 
 =head2 distribution_info
+
+=head2 build_dir
+
+Simple delegatees for misc parameters derived from distribution
+
+=head2 is_xs
+
+Predicate to detect whether package contains XS.
 
 =head1 AUTHOR
 
