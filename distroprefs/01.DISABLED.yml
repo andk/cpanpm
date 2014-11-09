@@ -34,7 +34,7 @@ match:
     |ALVAROL/PerlCryptLib-1                  # hangs when searching header files
     |ANDREWF/Template-Plugin-Latex-3         # hangs with 3.02
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
-    |APOCAL/Bundle-POE-All-1.02.tar.gz       # broken idea of what a bundle is
+    |APOCAL/Bundle-POE-All-1.102.tar.gz      # havoc of a bundle
     |ASNMTAP/ASNMTAP-\d                      # switches to cpanplus and then hangs
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
     |AVAR/Sendmail-PMilter-\d                # asks questions
