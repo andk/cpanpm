@@ -107,7 +107,6 @@ match:
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |ISHIGAKI/PPM-Make-\d                    # asks questions
-    |ISHIGAKI/Module-New-\d                  # hangs after 00_load.t
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357
     |JANL/Net-Server-0.99.6.1                # hangs
     |JANPAZ/Font-TFM-\d                      # asks for path to tfm files
