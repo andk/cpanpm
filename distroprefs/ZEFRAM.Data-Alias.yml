@@ -1,9 +1,10 @@
 ---
 comment: |
 
-  https://rt.cpan.org/Ticket/Display.html?id=78148
+  https://rt.cpan.org/Ticket/Display.html?id=100944
 
 match:
-  distribution: "ZEFRAM/Data-Alias-1.16.tar.gz"
+  distribution: '/Data-Alias-1\.18\.tar\.gz'
 patches:
-  - "ANDK/patches/Data-Alias-1.16-SPROUT-01.diff.gz"
+  - SREZIC/patches/Data-Alias-1.18-RT98758-2.patch
+  - ANDK/patches/Data-Alias-1.18-RT100944.patch.gz
