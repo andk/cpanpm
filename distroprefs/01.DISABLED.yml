@@ -23,6 +23,7 @@ match:
     |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
     |.*Mojolicious-Plugin-HamlRenderer       # last release 20120604, rather take MojoX-Renderer-Haml which came 2012-08-14 (the two bite each other)
     |.*/Unix-Syslog-\d                       # noisy test suite
+    |.*/Alt-                                 # still in its dauntless infancy, better to stay away
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
