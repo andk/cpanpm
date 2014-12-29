@@ -1,4 +1,4 @@
 ---
 match:
-  distribution: "^KCLARK/SQL-Translator-0.07"
-goto: "JROBINSON/SQL-Translator-0.08_04.tar.gz"
+  distribution: '^ILMARI/SQL-Translator-0.11020\.tar\.gz'
+goto: "ILMARI/SQL-Translator-0.11020_01.tar.gz"
