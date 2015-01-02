@@ -11,6 +11,7 @@ use vars qw($VERSION);
 $VERSION = "2.02";
 
 # no prepare, because prepare is not a command on the shell command line
+# TODO: clear instance cache on reload
 my %instance;
 for my $method (qw(get make test install)) {
     no strict 'refs';

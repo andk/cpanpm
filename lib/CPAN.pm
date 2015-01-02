@@ -1115,6 +1115,20 @@ sub has_usable {
     return $HAS_USABLE->{$mod} = 1;
 }
 
+sub frontend {
+    shift;
+    $CPAN::Frontend = shift if @_;
+    $CPAN::Frontend;
+}
+
+sub use_inst {
+    my ($self, $module) = @_;
+
+    unless ($self->has_inst($module)) {
+        $self->frontend->mydie("$module not installed, cannot continue");
+    }
+}
+
 #-> sub CPAN::has_inst
 sub has_inst {
     my($self,$mod,$message) = @_;
@@ -3419,6 +3433,11 @@ loaded:
 
 See the source for details.
 
+=item use_inst($module)
+
+Similary to L<has_inst()> tries to load optional library but also dies if
+library is not available
+
 =item has_usable($module)
 
 Returns true if the module is installed and in a usable state. Only
@@ -3430,6 +3449,12 @@ source for details.
 The constructor for all the singletons used to represent modules,
 distributions, authors, and bundles. If the object already exists, this
 method returns the object; otherwise, it calls the constructor.
+
+=item frontend()
+
+=item frontend($new_frontend)
+
+Getter/setter for frontend object. Method just allows to subclass CPAN.pm.
 
 =back
 
