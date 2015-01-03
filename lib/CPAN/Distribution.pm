@@ -3217,6 +3217,7 @@ sub prereq_pm {
 
         # XXX assemble optional_req && optional_breq from recommends/suggests
         # depending on corresponding policies -- xdg, 2012-04-01
+        CPAN->use_inst("CPAN::Meta::Requirements");
         my $opt_runtime = CPAN::Meta::Requirements->new;
         my $opt_build   = CPAN::Meta::Requirements->new;
         if ( $CPAN::Config->{recommends_policy} ) {
