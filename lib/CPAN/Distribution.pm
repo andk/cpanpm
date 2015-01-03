@@ -1870,8 +1870,8 @@ sub prepare {
 
     $self->debug("Changed directory to $builddir") if $CPAN::DEBUG;
 
-    local $ENV{PERL_AUTOINSTALL} = $ENV{PERL_AUTOINSTALL};
-    local $ENV{PERL_EXTUTILS_AUTOINSTALL} = $ENV{PERL_EXTUTILS_AUTOINSTALL};
+    local $ENV{PERL_AUTOINSTALL} = $ENV{PERL_AUTOINSTALL} || '';
+    local $ENV{PERL_EXTUTILS_AUTOINSTALL} = $ENV{PERL_EXTUTILS_AUTOINSTALL} || '';
     $self->choose_MM_or_MB
         or return;
 
@@ -1891,8 +1891,8 @@ sub prepare {
     if ($self->prefs->{pl}) {
         $pl_commandline = $self->prefs->{pl}{commandline};
     }
-    local $ENV{PERL} = $ENV{PERL};
-    local $ENV{PERL5_CPAN_IS_EXECUTING} = $ENV{PERL5_CPAN_IS_EXECUTING};
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
+    local $ENV{PERL5_CPAN_IS_EXECUTING} = $ENV{PERL5_CPAN_IS_EXECUTING} || '';
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
     if ($pl_commandline) {
@@ -2179,7 +2179,7 @@ is part of the perl-%s distribution. To install that, you need to run
     if ($self->prefs->{make}) {
         $make_commandline = $self->prefs->{make}{commandline};
     }
-    local $ENV{PERL} = $ENV{PERL};
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
     if ($make_commandline) {
