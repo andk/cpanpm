@@ -1949,7 +1949,7 @@ by the cpan shell B<only when surrounded by whitespace>. So piping to
 pager or redirecting output into a file works somewhat as in a normal
 shell, with the stipulation that you must type extra spaces.
 
-=head2 Plugin support
+=head2 Plugin support ***EXPERIMENTAL***
 
 Plugins are objects that implement any of currently eight methods:
 

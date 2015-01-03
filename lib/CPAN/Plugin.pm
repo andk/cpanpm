@@ -1,10 +1,9 @@
-
 package CPAN::Plugin;
 
 use strict;
 use warnings;
 
-our $VERSION = '1.0.0';
+our $VERSION = '0.95';
 
 require CPAN;
 
@@ -106,9 +105,14 @@ CPAN::Plugin - Base class for CPAN shell extensions
 
 =head1 DESCRIPTION
 
+=head2 Alpha Status
+
+The plugin system in the CPAN shell was introduced in version 2.07 and
+is still considered experimental.
+
 =head2 How Plugins work?
 
-TODO:...
+See L<CPAN/"Plugin support">.
 
 =head1 METHODS
 
