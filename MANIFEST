@@ -161,6 +161,7 @@ distroprefs/FABPOT.Plucene-Plugin-Analyzer-SnowballAnalyzer.yml
 distroprefs/FDALY.Test-Deep.yml
 distroprefs/FHOXH.Test-Reporter.yml
 distroprefs/FLORA.File-Extractor.yml
+distroprefs/FLORA.MooseX-MultiMethods.yml
 distroprefs/FLORA.Net_SSLeay.yml
 distroprefs/FLUFFY.Class-MethodMaker.yml
 distroprefs/FOTANGO.Data-Structure-Util.yml
@@ -305,6 +306,7 @@ distroprefs/MLEHMANN.AnyEvent.yml
 distroprefs/MLEHMANN.Coro.yml
 distroprefs/MLEHMANN.EV.yml
 distroprefs/MLEHMANN.Gtk-Perl.yml
+distroprefs/MLEHMANN.Guard.yml
 distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
 distroprefs/MLFISHER.Test-MockDBI.yml
@@ -327,7 +329,6 @@ distroprefs/NEELY.Data-Serializer.yml
 distroprefs/NEILW.Inline-CPP.yml
 distroprefs/NESTING.Unicode-Wrap.yml
 distroprefs/NEVESENIN.Regexp-RegGrp.yml
-distroprefs/NHORNE.CGI-Info.yml
 distroprefs/NI-S.Tk-HTML.yml
 distroprefs/NI-S.Tk.yml
 distroprefs/NICOLAW.WWW-Comic.yml
@@ -352,6 +353,7 @@ distroprefs/PAJAS.XML-LibXML.yml
 distroprefs/PCIMPRICH.XML-SAX-ExpatXS.yml
 distroprefs/PDCAWLEY.Class-Inner.yml
 distroprefs/PETDANCE.HTML-Tidy.yml
+distroprefs/PETDANCE.Test-Memory-Cycle.yml
 distroprefs/PETDANCE.WWW-Mechanize.yml
 distroprefs/PETERW.SVG-Parser.yml
 distroprefs/PEVANS.IPC-PerlSSH.yml
@@ -392,6 +394,7 @@ distroprefs/ROODE.Time-Format.yml
 distroprefs/RRA.PGP-Sign.yml
 distroprefs/RRWO.Graphics-ColorNames.yml
 distroprefs/RSOD.IPC-Run.yml
+distroprefs/RURBAN.Filter.yml
 distroprefs/RUZ.DBIx-SearchBuilder.yml
 distroprefs/RYBSKEJ.forks.yml
 distroprefs/SAMTREGAR.DBIx-Timeout.yml
@@ -407,8 +410,10 @@ distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
 distroprefs/SEANO.Sepia.yml
 distroprefs/SHAY.Filter-Crypto.yml
+distroprefs/SHERZODR.Class-PObject.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
 distroprefs/SHLOMIF.Graph-Easy.yml
+distroprefs/SIMONFLK.Test-MockModule.yml
 distroprefs/SLANNING.Ogre.yml
 distroprefs/SPROUT.DBM-Deep.yml
 distroprefs/SREZIC.Tk-Autoscroll.yml
@@ -419,6 +424,7 @@ distroprefs/STBEY.Bit-Vector.yml
 distroprefs/STBEY.Date-Pcalc.yml
 distroprefs/STEPANOV.IMDB-Film.yml
 distroprefs/STEVAN.Class-MOP.yml
+distroprefs/SULLR.IO-Socket-SSL.yml
 distroprefs/SWALTERS.typesafety.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/SZABGAB.Term-ProgressBar.yml
