@@ -1,6 +1,12 @@
 use Cwd ();
+my($cwd,$rcwd);
 my $Iswin = $^O eq "MSWin32";
-my $cwd = $Iswin ? Cwd::getdcwd() : Cwd::cwd();
+if ($Iswin) {
+  $cwd = Cwd::getdcwd();
+  $rcwd = Cwd::realpath($cwd);
+} else {
+  $cwd = $rcwd = Cwd::cwd();
+}
 $CPAN::Config = {
                  $Iswin ? () : (
                                 'make_install_make_command' => q[make],
@@ -49,7 +55,7 @@ $CPAN::Config = {
                  'term_is_latin' => q[0],
                  'term_ornaments' => q[0],
                  #'unzip' => q[/usr/bin/unzip],
-                 'urllist' => [qq[file://$cwd/t/CPAN]],
+                 'urllist' => [qq[file://$rcwd/t/CPAN]],
                  'wait_list' => [q[wait://ls6.informatik.uni-dortmund.de:1404]],
                  #'wget' => q[/usr/bin/wget],
                  'yaml_load_code' => q[0],

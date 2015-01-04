@@ -839,8 +839,16 @@ sub store_persistent_state {
                                     "will not store persistent state\n");
         return;
     }
-    unless (   Cwd::realpath(File::Spec->catdir($dir, File::Spec->updir()) )
-            eq Cwd::realpath($CPAN::Config->{build_dir}                  ) ) {
+    # self-build-dir
+    my $sbd = Cwd::realpath(
+        File::Spec->catdir($dir,                       File::Spec->updir ())
+                           );
+    # config-build-dir
+    my $cbd = Cwd::realpath(
+        # the catdir is a workaround for bug https://rt.cpan.org/Ticket/Display.html?id=101283
+        File::Spec->catdir($CPAN::Config->{build_dir}, File::Spec->curdir())
+    );
+    unless ($sbd eq $cbd) {
         $CPAN::Frontend->mywarnonce("Directory '$dir' not below $CPAN::Config->{build_dir}, ".
                                     "will not store persistent state\n");
         return;
