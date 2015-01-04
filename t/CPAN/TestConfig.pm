@@ -2,12 +2,9 @@ use Cwd ();
 my $Iswin = $^O eq "MSWin32";
 my $cwd = $Iswin ? Cwd::getdcwd() : Cwd::cwd();
 $CPAN::Config = {
-                 $Iswin ? (
-                           'getcwd' => q[getdcwd],
-                          ) : (
+                 $Iswin ? () : (
                                 'make_install_make_command' => q[make],
                                 'mbuild_install_build_command' => q[./Build],
-                                'getcwd' => q[cwd],
                                ),
                  '7yYQS7' => 'vGcVJQ', # verifies that we really loaded this file
                  'auto_commit' => 0,
@@ -20,6 +17,7 @@ $CPAN::Config = {
                  #'curl' => q[],
                  #'ftp' => q[],
                  'ftp_proxy' => q[],
+                 'getcwd' => q[cwd],
                  #'gpg' => q[/usr/bin/gpg],
                  #'gzip' => q[/bin/gzip],
                  'histfile' => qq[$cwd/t/dot-cpan/histfile],
