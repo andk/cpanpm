@@ -192,12 +192,14 @@ How many items shall we keep in the statistics about downloads?
 
 CPAN.pm changes the current working directory often and needs to
 determine its own current working directory. Per default it uses
-Cwd::cwd but if this doesn't work on your system for some reason,
-alternatives can be configured according to the following table:
+Cwd::getdcwd on Windows and Cwd::cwd everywhere else but if this
+doesn't work on your system for some reason, alternatives can be
+configured according to the following table:
 
     cwd         Cwd::cwd
     getcwd      Cwd::getcwd
     fastcwd     Cwd::fastcwd
+    getdcwd     Cwd::getdcwd
     backtickcwd external command cwd
 
 Preferred method for determining the current working directory?
@@ -1154,8 +1156,8 @@ sub init {
     #= how cwd works
     #
 
-    my_prompt_loop(getcwd => 'cwd', $matcher,
-                   'cwd|getcwd|fastcwd|backtickcwd');
+    my_prompt_loop(getcwd => $^O eq 'MSWin32' ? 'getdcwd' : 'cwd', $matcher,
+                   'cwd|getcwd|fastcwd|getdcwd|backtickcwd');
 
     #
     #= the CPAN shell itself (prompt, color)

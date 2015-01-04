@@ -919,6 +919,9 @@ sub getcwd {Cwd::getcwd();}
 #-> sub CPAN::fastcwd ;
 sub fastcwd {Cwd::fastcwd();}
 
+#-> sub CPAN::getdcwd ;
+sub getdcwd {Cwd::getdcwd();}
+
 #-> sub CPAN::backtickcwd ;
 sub backtickcwd {my $cwd = `cwd`; chomp $cwd; $cwd}
 
@@ -2262,6 +2265,10 @@ Calls Cwd::getcwd
 =item fastcwd
 
 Calls Cwd::fastcwd
+
+=item getdcwd
+
+Calls Cwd::getdcwd
 
 =item backtickcwd
 
