@@ -563,6 +563,7 @@ t/97-cpan1-test-mirror/authors/id/B/BU/BUSTER/Local-Prereq-Fails.tgz
 t/97-cpan1-test-mirror/authors/id/B/BU/BUSTER/Local-Test-Fails.tgz
 t/97-cpan1-test-mirror/authors/id/B/BU/BUSTER/Local-Unsupported-OS.tgz
 t/97-cpan1-test-mirror/authors/id/B/BU/BUSTER/Local-Works-Fine.tgz
+t/97-cpan1-test-mirror/authors/id/B/BU/BUSTER/Make.pl
 t/97-cpan1-test-mirror/modules/02packages.details.txt
 t/97-cpan1-test-mirror/modules/03modlist.data.gz
 t/97-cpanpm_output_hook.t
