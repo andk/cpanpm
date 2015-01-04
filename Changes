@@ -1,3 +1,33 @@
+2015-01-04  k  <andk@cpan.org>
+
+	* release 2.07-TRIAL
+
+	* add support for Cwd::getdcwd and introduce workaround for a
+	misbehaviour seen on Strawberry perl 5.20.1 (Andreas Koenig)
+
+	* fixes bug that possibly CPAN::Meta::Requirements was not loaded in
+	time (Andreas Koenig)
+
+	* silences unini warnings from missing environment variables (tlhackque)
+
+	* fixes chdir after building dependencies bug github #79 and #80 (David
+	Schweikert)
+
+	* some new and some improved distroprefes files, and some have gone too
+	(Andreas Koenig, Slaven Rezic)
+
+	* introduces experimental support for plugins/hooks (#apw2014 in
+	Salzburg; Andreas Koenig, Branislav Zahradnik)
+
+	* catches more user errors on the 'o conf' commandline (Andreas Koenig)
+
+	* integrates the App::Cpan sources taken over from brian with lots of
+	cleanup from him, so that they have less chance to digress (brian d foy)
+
+	* fixes clear_credentials that were completely broken (Len Jaffe)
+
+	* fixes typos (David Horner)
+
 2014-08-06  k  <andk@cpan.org>
 
 	* release 2.06-TRIAL
