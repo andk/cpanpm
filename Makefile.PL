@@ -267,7 +267,7 @@ update: dd-prefs
 # the subdirs on MY OWN BOX are allowed here (only used for make dist!)
 OKDIRS=CPAN|DIST|bin|blib|cover_db|\
        distroprefs|eg|inc|lib|logs|patches|perlbug|\
-       protocols|related|release-lib|scripts|t|talks
+       protocols|related|release-lib|scripts|t|talks|_eumm
 
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^($(OKDIRS))\z/x&&-d($$_)}glob"*";' \
