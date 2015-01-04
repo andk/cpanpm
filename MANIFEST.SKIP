@@ -29,6 +29,7 @@
 
 ^cpan_reports_
 ^cpantesters-show/
+^dagolden-reversion-gist.pl
 ^distroprefs/ttt.nodbi.yml
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
@@ -92,3 +93,5 @@ cpanstats.db
 ^ttt
 .DS_Store
 ^cpandb
+^_eumm
+^revert-planning.txt
