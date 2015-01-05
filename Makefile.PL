@@ -109,6 +109,7 @@ for my $interesting_module (qw(
         Data::Dumper
         Digest::SHA
         Digest::MD5
+        Expect
         ExtUtils::CBuilder
         File::Copy
         File::HomeDir
