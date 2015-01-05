@@ -1,38 +1,38 @@
-# CHECKSUMS file written on Tue Apr  8 07:09:08 2014 GMT by CPAN::Checksums (v2.08)
+# CHECKSUMS file written on Mon Jan  5 00:51:32 2015 GMT by CPAN::Checksums (v2.09)
 $cksum = {
   'Local-Make-Fails.tgz' => {
-    'md5' => '3a5fecc6c54952d7329d78ca131603d0',
-    'mtime' => '2014-04-08',
-    'sha256' => '57be2b83945715de8a777613008dc12d4e22775290b3bfb32e63590cf1637e90',
-    'size' => 384
+    'md5' => 'c2faabb4096a6c169b8adf6d4ef1dbc3',
+    'mtime' => '2015-01-04',
+    'sha256' => '405d7d03ae407d23bdb507d703fd752fb4365ad4be16e759e2da5f56899426a5',
+    'size' => 395
   },
   'Local-Prereq-Fails.tgz' => {
-    'md5' => 'a09b46a6633fbe7b817861d583216e87',
-    'mtime' => '2014-04-08',
-    'sha256' => '9da81b5d0c9f34cb4ef52165a3a1d9d597160a4d31db8a06e3409f6bcc548f4e',
-    'size' => 316
+    'md5' => 'e08fff6042bfe36d3ecbe30c7d42238b',
+    'mtime' => '2015-01-04',
+    'sha256' => '6c04aede4835e8b4810cbacc60deba40e16d96b1b45f4ebd95d7cdf5a2e207d1',
+    'size' => 328
   },
   'Local-Test-Fails.tgz' => {
-    'md5' => 'f421342e13a15eadea7fe0b7329c9a0d',
-    'mtime' => '2014-04-08',
-    'sha256' => '5161ca41d7894a5d68f55b35e403ef130abb510e72639bab2ca7e841646b1f25',
-    'size' => 847
+    'md5' => '14c71a35612596f4ecdc58598700d647',
+    'mtime' => '2015-01-04',
+    'sha256' => '5a3ede2fb9741ecc311ae71c5062b0058c3980c7a332ba63fa337f91beb163bb',
+    'size' => 859
   },
   'Local-Unsupported-OS.tgz' => {
-    'md5' => '7420c7f392204c89c2baaaf907b8ea78',
-    'mtime' => '2014-04-08',
-    'sha256' => '0c6aba263cae9fd82c1ec3fc4d2d684bdb438b6493bd654ddf5eb3a49142c26b',
-    'size' => 304
+    'md5' => '651697d2b48af406176d49154ecbb7a7',
+    'mtime' => '2015-01-05',
+    'sha256' => 'a0f16f2f4f17e26f8bb5fe3d68929356014d4527caeb7a4862577dc27e60b4dc',
+    'size' => 314
   },
   'Local-Works-Fine.tgz' => {
-    'md5' => 'dc8ee04ec442c918a992649137f14586',
-    'mtime' => '2014-04-08',
-    'sha256' => '79817d5989eedbd46da566b2c0c2c460b765b82edf1dc542dd5ace668433450c',
-    'size' => 1212
+    'md5' => 'e6e431d532610897632082da1789bbbf',
+    'mtime' => '2015-01-05',
+    'sha256' => 'a2c5b54ce7dd68a1f2d04020eaa921bc9b2edcf475c7da3cd43b77d4c18283b1',
+    'size' => 1228
   },
   'Make.pl' => {
     'md5' => 'f52db2e5e66a4fb23515f158e7854ae7',
-    'mtime' => '2014-04-08',
+    'mtime' => '2015-01-04',
     'sha256' => '720399f558dfd51521e28626591083b7e3064ab24e864db8707d75c90ba9bc2c',
     'size' => 87
   }
