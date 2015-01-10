@@ -44,3 +44,11 @@ pl:
       - "\n"
 patches:
   - "/tmp/DBI-1.613-ANDK-01.patch"
+---
+comment: |
+
+  https://rt.perl.org/rt3/Ticket/Display.html?id=123522
+
+match:
+  distribution: 'TIMB/DBI-1.632.tar.gz'
+goto: 'TIMB/DBI-1.632_90.tar.gz'
