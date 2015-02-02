@@ -1,5 +1,9 @@
 2015-02-02  k  <andk@cpan.org>
 
+	* release 2.09-TRIAL
+
+	* tune verbosity of failing tests in 30shell.t (Andreas Koenig)
+
 	* find or fetch MIRRORED.BY -- github #84 (brian d foy)
 
 	* bump $VERSION in modules changed since CPAN-2.00 -- github #83 (Steve
