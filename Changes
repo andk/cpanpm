@@ -1,3 +1,10 @@
+2015-02-02  k  <andk@cpan.org>
+
+	* find or fetch MIRRORED.BY -- github #84 (brian d foy)
+
+	* bump $VERSION in modules changed since CPAN-2.00 -- github #83 (Steve
+	Hay)
+
 2015-01-05  k  <andk@cpan.org>
 
 	* release 2.08-TRIAL
