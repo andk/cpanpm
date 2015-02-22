@@ -1,3 +1,17 @@
+2015-02-22  k  <andk@cpan.org>
+
+	* release 2.10-TRIAL
+
+	* Fix Makefile/Build file test in prereq_pm (Graig A. Berry; RT 98265)
+
+	* Don't use list assignment to %ENV in Distribution::make (Graig A.
+	Berry; RT 98265)
+
+	* Bump $VERSION in changed modules (for integration into blead, post
+	5.21.9) (Steve Hay)
+
+	* bump requirement for Socket.pm on Windows (Alexandr Ciornii)
+
 2015-02-02  k  <andk@cpan.org>
 
 	* release 2.09-TRIAL
