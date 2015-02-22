@@ -96,7 +96,10 @@ if ($^O eq "darwin") {
 if ($] < 5.008) {
   $prereq_pm->{'IO::Scalar'} = 0;
 }
+if ($^O eq "MSWin32") {
+  $prereq_pm->{'Socket'} = 2.018; # older barfed and broke clean loading
 
+}
 # if they have one of these we declare it as prereq for better reporting
 for my $interesting_module (qw(
         Archive::Tar
@@ -127,6 +130,7 @@ for my $interesting_module (qw(
         Net::FTP
         Parse::CPAN::Meta
         Scalar::Util
+        Socket
         Term::ReadKey
         Term::ReadLine::Perl
         Test::More
