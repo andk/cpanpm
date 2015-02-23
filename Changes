@@ -2,9 +2,9 @@
 
 	* release 2.10-TRIAL
 
-	* Fix Makefile/Build file test in prereq_pm (Graig A. Berry; RT 98265)
+	* Fix Makefile/Build file test in prereq_pm (Craig A. Berry; RT 98265)
 
-	* Don't use list assignment to %ENV in Distribution::make (Graig A.
+	* Don't use list assignment to %ENV in Distribution::make (Craig A.
 	Berry; RT 98265)
 
 	* Bump $VERSION in changed modules (for integration into blead, post
