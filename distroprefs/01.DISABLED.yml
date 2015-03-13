@@ -26,6 +26,7 @@ match:
     |.*/Alt-CPAN-Uploader-tinyua-0.000001    # not conforming installation policy as of Alt-0.19
     |.*/Alt-Module-Runtime-ButEUMM-0.001     # not conforming installation policy as of Alt-0.19
     |.*/Alt-common-sense-TOBYINK-0.001       # not conforming installation policy as of Alt-0.19
+    |.*/Term-EditLine-0.07                   # seems to change terminal settings
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
