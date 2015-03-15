@@ -597,6 +597,12 @@ sub _default
 
 	foreach my $arg ( @$args )
 		{
+		# check the argument and perhaps capture typos
+		my $module = _expand_module( $arg ) or do {
+			$logger->error( "Skipping $arg because I couldn't find a matching namespace." );
+			next;
+			};
+
 		_clear_cpanpm_output();
 		$action->( $arg );
 
