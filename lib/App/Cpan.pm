@@ -192,6 +192,10 @@ UNIMPLEMENTED
 Turn on cpan warnings. This checks various things, like directory permissions,
 and tells you about problems you might have.
 
+=item -x module [ module ... ]
+
+Find close matches to the named modules that you think you might have mistyped.
+
 =back
 
 =head2 Examples
@@ -359,6 +363,7 @@ sub GOOD_EXIT () { 0 }
 	r =>  [ \&_recompile,         NO_ARGS, GOOD_EXIT, 'Recompiling'                  ],
 	u =>  [ \&_upgrade,           NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
 
+   'x' => [ \&_guess_namespace,      ARGS, GOOD_EXIT, 'Guessing namespaces'          ],
 	c =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make clean`'         ],
 	f =>  [ \&_default,              ARGS, GOOD_EXIT, 'Installing with force'        ],
 	i =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make install`'       ],
@@ -1481,6 +1486,22 @@ my $guessers = [
 
 	];
 
+# for -x
+sub _guess_namespace
+	{
+	my $args = shift;
+
+	foreach my $arg ( @$args )
+		{
+		$logger->info( "Checking $arg" );
+		_guess_at_module_name( $arg );
+		}
+
+	return HEY_IT_WORKED;
+	}
+
+BEGIN {
+my $distance;
 sub _guess_at_module_name
 	{
 	my( $target, $threshold ) = @_;
