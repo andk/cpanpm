@@ -1548,8 +1548,6 @@ report them to the user.
 
 * Check then exit
 
-* no test option
-
 =head1 BUGS
 
 * none noted
