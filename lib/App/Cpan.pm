@@ -510,7 +510,7 @@ sub run
 			last OPTION;
 			}
 
-		$logger->info( "$description -- ignoring other arguments" )
+		$logger->info( "[$option] $description -- ignoring other arguments" )
 			if( @ARGV && ! $takes_args );
 
 		$return_value = $sub->( \ @ARGV, $options );
