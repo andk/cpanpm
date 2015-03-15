@@ -1485,13 +1485,16 @@ sub _guess_at_module_name
 	{
 	my( $target, $threshold ) = @_;
 
-	my $distance;
-	foreach my $try ( @$guessers ) {
-		my $can_guess = eval "require $try->[0]; 1" or next;
+	unless( defined $distance ) {
+my $distance;
+BEGIN {
+		foreach my $try ( @$guessers ) {
+			my $can_guess = eval "require $try->[0]; 1" or next;
 
-		no strict 'refs';
-		$distance = \&{ join "::", @$try[0,1] };
-		$threshold ||= $try->[2];
+			no strict 'refs';
+			$distance = \&{ join "::", @$try[0,1] };
+			$threshold ||= $try->[2];
+			}
 		}
 
 	unless( $distance ) {
@@ -1537,6 +1540,7 @@ not control. For now, the exit codes are vague:
 
 =head1 TO DO
 
+}
 * There is initial support for Log4perl if it is available, but I
 haven't gone through everything to make the NullLogger work out
 correctly if Log4perl is not installed.
