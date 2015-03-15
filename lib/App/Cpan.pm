@@ -1193,7 +1193,8 @@ sub _show_Changes
 		{
 		$logger->info( "Checking $arg\n" );
 
-		my $module = eval { CPAN::Shell->expand( "Module", $arg ) };
+		my $module = _expand_module( $arg ) or next;
+
 		my $out = _get_cpanpm_output();
 
 		next unless eval { $module->inst_file };
@@ -1240,7 +1241,8 @@ sub _show_Author
 
 	foreach my $arg ( @$args )
 		{
-		my $module = CPAN::Shell->expand( "Module", $arg );
+		my $module = _expand_module( $arg ) or next;
+
 		unless( $module )
 			{
 			$logger->info( "Didn't find a $arg module, so no author!" );
@@ -1264,7 +1266,7 @@ sub _show_Details
 
 	foreach my $arg ( @$args )
 		{
-		my $module = CPAN::Shell->expand( "Module", $arg );
+		my $module = _expand_module( $arg ) or next;
 		my $author = CPAN::Shell->expand( "Author", $module->userid );
 
 		next unless $module->userid;
@@ -1286,14 +1288,23 @@ sub _show_Details
 	return HEY_IT_WORKED;
 	}
 
+BEGIN {
+my $modules;
+sub _get_all_namespaces
+	{
+	return $modules if $modules;
+	$modules = [ map { $_->id } CPAN::Shell->expand( "Module", "/./" ) ];
+	}
+}
+
 sub _show_out_of_date
 	{
-	my @modules = CPAN::Shell->expand( "Module", "/./" );
+	my $modules = _get_all_namespaces();
 
 	printf "%-40s  %6s  %6s\n", "Module Name", "Local", "CPAN";
 	print "-" x 73, "\n";
 
-	foreach my $module ( @modules )
+	foreach my $module ( @$modules )
 		{
 		next unless $module->inst_file;
 		next if $module->uptodate;
@@ -1312,10 +1323,9 @@ sub _show_author_mods
 
 	my %hash = map { lc $_, 1 } @$args;
 
-	my @modules = CPAN::Shell->expand( "Module", "/./" );
+	my $modules = _get_all_namespaces();
 
-	foreach my $module ( @modules )
-		{
+	foreach my $module ( @$modules ) {
 		next unless exists $hash{ lc $module->userid };
 		print $module->id, "\n";
 		}
@@ -1433,6 +1443,77 @@ sub _path_to_module
 	my $module_name = join "::", @dirs;
 
 	return $module_name;
+	}
+
+
+sub _expand_module
+	{
+	my( $module ) = @_;
+
+	my $expanded = CPAN::Shell->expand( "Module", $module );
+	unless( defined $expanded ) {
+		$logger->error( "Could not expand [$module]. Check the module name." );
+		my $threshold = (
+			grep { int }
+			sort { length $a <=> length $b }
+				length($module)/4, 4
+			)[0];
+
+		my $guesses = _guess_at_module_name( $module, $threshold );
+		if( defined $guesses and @$guesses ) {
+			$logger->info( "Perhaps you meant one of these:" );
+			foreach my $guess ( @$guesses ) {
+				$logger->info( "\t$guess" );
+				}
+			}
+		return;
+		}
+
+	return $expanded;
+	}
+
+my $guessers = [
+	[ qw( Text::Levenshtein::XS distance 7 ) ],
+	[ qw( Text::Levenshtein::Damerau::XS     xs_edistance 7 ) ],
+
+	[ qw( Text::Levenshtein     distance 7 ) ],
+	[ qw( Text::Levenshtein::Damerau::PP     pp_edistance 7 ) ],
+
+	];
+
+sub _guess_at_module_name
+	{
+	my( $target, $threshold ) = @_;
+
+	my $distance;
+	foreach my $try ( @$guessers ) {
+		my $can_guess = eval "require $try->[0]; 1" or next;
+
+		no strict 'refs';
+		$distance = \&{ join "::", @$try[0,1] };
+		$threshold ||= $try->[2];
+		}
+
+	unless( $distance ) {
+		my $modules = join ", ", map { $_->[0] } @$guessers;
+		substr $modules, rindex( $modules, ',' ), 1, ', and';
+
+		$logger->info( "I can suggest names if you install one of $modules" );
+		return;
+		}
+
+	my $modules = _get_all_namespaces();
+	$logger->info( "Checking " . @$modules . " namespaces for close match suggestions" );
+
+	my %guesses;
+	foreach my $guess ( @$modules ) {
+		my $distance = $distance->( $target, $guess );
+		next if $distance > $threshold;
+		$guesses{$guess} = $distance;
+		}
+
+	my @guesses = sort { $guesses{$a} <=> $guesses{$b} } keys %guesses;
+	return [ grep { defined } @guesses[0..9] ];
 	}
 
 1;
