@@ -1108,14 +1108,17 @@ sub _download
 
 	my %paths;
 
-	foreach my $module ( @$args )
-		{
-		$logger->info( "Checking $module" );
-		my $path = CPAN::Shell->expand( "Module", $module )->cpan_file;
+	foreach my $arg ( @$args ) {
+		$logger->info( "Checking $arg" );
+
+		my $module = _expand_module( $arg ) or next;
+		my $path = $module->cpan_file;
 
 		$logger->debug( "Inst file would be $path\n" );
 
-		$paths{$module} = _get_file( _make_path( $path ) );
+		$paths{$arg} = _get_file( _make_path( $path ) );
+
+		$logger->info( "Downloaded [$arg] to [$paths{$module}]" );
 		}
 
 	return \%paths;
@@ -1155,16 +1158,14 @@ sub _gitify
 
 	my $starting_dir = cwd();
 
-	foreach my $module ( @$args )
+	foreach my $arg ( @$args )
 		{
-		$logger->info( "Checking $module" );
-		my $path = CPAN::Shell->expand( "Module", $module )->cpan_file;
+		$logger->info( "Checking $arg" );
+		my $store_paths = _download( [ $arg ] );
+		$logger->debug( "gitify Store path is $store_paths->{$arg}" );
+		my $dirname = dirname( $store_paths->{$arg} );
 
-		my $store_paths = _download( [ $module ] );
-		$logger->debug( "gitify Store path is $store_paths->{$module}" );
-		my $dirname = dirname( $store_paths->{$module} );
-
-		my $ae = Archive::Extract->new( archive => $store_paths->{$module} );
+		my $ae = Archive::Extract->new( archive => $store_paths->{$arg} );
 		$ae->extract( to => $dirname );
 
 		chdir $ae->extract_path;
