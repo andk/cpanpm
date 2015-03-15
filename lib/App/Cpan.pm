@@ -194,7 +194,9 @@ and tells you about problems you might have.
 
 =item -x module [ module ... ]
 
-Find close matches to the named modules that you think you might have mistyped.
+Find close matches to the named modules that you think you might have
+mistyped. This requires the optional installation of Text::Levenshtein or
+Text::Levenshtein::Damerau.
 
 =back
 
@@ -303,7 +305,7 @@ BEGIN { # most of this should be in methods
 use vars qw( @META_OPTIONS $Default %CPAN_METHODS @CPAN_OPTIONS  @option_order
 	%Method_table %Method_table_index );
 
-@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w T);
+@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w T x );
 
 $Default = 'default';
 
@@ -1493,8 +1495,12 @@ sub _guess_namespace
 
 	foreach my $arg ( @$args )
 		{
-		$logger->info( "Checking $arg" );
-		_guess_at_module_name( $arg );
+		$logger->debug( "Checking $arg" );
+		my $guesses = _guess_at_module_name( $arg );
+
+		foreach my $guess ( @$guesses ) {
+			print $guess, "\n";
+			}
 		}
 
 	return HEY_IT_WORKED;
