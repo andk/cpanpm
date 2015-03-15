@@ -343,8 +343,8 @@ sub GOOD_EXIT () { 0 }
     w =>  [ \&_turn_on_warnings,  NO_ARGS, GOOD_EXIT, 'Turning on warnings'          ],
 
 	# options that do their one thing
-	g =>  [ \&_download,          NO_ARGS, GOOD_EXIT, 'Download the latest distro'        ],
-	G =>  [ \&_gitify,            NO_ARGS, GOOD_EXIT, 'Down and gitify the latest distro' ],
+	g =>  [ \&_download,             ARGS, GOOD_EXIT, 'Download the latest distro'        ],
+	G =>  [ \&_gitify,               ARGS, GOOD_EXIT, 'Down and gitify the latest distro' ],
 
 	C =>  [ \&_show_Changes,         ARGS, GOOD_EXIT, 'Showing Changes file'         ],
 	A =>  [ \&_show_Author,          ARGS, GOOD_EXIT, 'Showing Author'               ],
