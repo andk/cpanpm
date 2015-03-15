@@ -104,7 +104,7 @@ distribution.
 Print a help message and exit. When you specify C<-h>, it ignores all
 of the other options and arguments.
 
-=item -i
+=item -i module [ module ... ]
 
 Install the specified modules. With no other switches, this switch
 is implied.
@@ -164,7 +164,7 @@ session.
 
 Recompiles dynamically loaded modules with CPAN::Shell->recompile.
 
-=item -t
+=item -t module [ module ... ]
 
 Run a `make test` on the specified modules.
 
