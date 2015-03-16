@@ -803,8 +803,7 @@ HERE
         $CPAN::Frontend->myprint("\n");
       }
 
-	my $mirrors   = CPAN::Mirrors->new(  );
-	$mirrors->parse_mirrored_by( File::Spec->catfile($CPAN::Config->{keep_source_where},'MIRRORED.BY') );
+	my $mirrors   = CPAN::Mirrors->new( _mirror_file() );
 	my @continents = $mirrors->find_best_continents;
 
 	my @mirrors   = $mirrors->get_mirrors_by_continents( $continents[0] );
@@ -925,9 +924,7 @@ sub _is_pingable_scheme {
 	$uri->scheme eq 'file'
 	}
 
-sub _find_good_mirrors {
-	require CPAN::Mirrors;
-
+sub _mirror_file {
 	my $file = do {
 		my $file = 'MIRRORED.BY';
 		my $local_path = File::Spec->catfile(
@@ -940,7 +937,12 @@ sub _find_good_mirrors {
 			$local_path;
 			}
 		};
-	my $mirrors = CPAN::Mirrors->new( $file );
+	}
+
+sub _find_good_mirrors {
+	require CPAN::Mirrors;
+
+	my $mirrors = CPAN::Mirrors->new( _mirror_file() );
 
 	my @mirrors = $mirrors->best_mirrors(
 		how_many   => 5,
