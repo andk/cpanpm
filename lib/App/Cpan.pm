@@ -34,7 +34,7 @@ App::Cpan - easily interact with CPAN from the command line
 	cpan
 
 	# without arguments, but some switches
-	cpan [-ahpruvACDLOP]
+	cpan [-ahpruvACDLOPX]
 
 =head1 DESCRIPTION
 
@@ -198,6 +198,10 @@ Find close matches to the named modules that you think you might have
 mistyped. This requires the optional installation of Text::Levenshtein or
 Text::Levenshtein::Damerau.
 
+=item -X
+
+Dump all the namespaces to standard output.
+
 =back
 
 =head2 Examples
@@ -305,7 +309,7 @@ BEGIN { # most of this should be in methods
 use vars qw( @META_OPTIONS $Default %CPAN_METHODS @CPAN_OPTIONS  @option_order
 	%Method_table %Method_table_index );
 
-@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w T x );
+@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w T x X );
 
 $Default = 'default';
 
@@ -338,6 +342,7 @@ sub GOOD_EXIT () { 0 }
 	h =>  [ \&_print_help,        NO_ARGS, GOOD_EXIT, 'Printing help'                ],
 	v =>  [ \&_print_version,     NO_ARGS, GOOD_EXIT, 'Printing version'             ],
 	V =>  [ \&_print_details,     NO_ARGS, GOOD_EXIT, 'Printing detailed version'    ],
+	X =>  [ \&_list_all_namespaces, NO_ARGS, GOOD_EXIT, 'Listing all namespaces'      ],
 
 	# options that affect other options
 	j =>  [ \&_load_config,          ARGS, GOOD_EXIT, 'Use specified config file'    ],
@@ -1504,6 +1509,14 @@ sub _guess_namespace
 		}
 
 	return HEY_IT_WORKED;
+	}
+
+sub _list_all_namespaces {
+	my $modules = _get_all_namespaces();
+
+	foreach my $module ( @$modules ) {
+		print $module, "\n";
+		}
 	}
 
 BEGIN {
