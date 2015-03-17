@@ -164,6 +164,11 @@ session.
 
 Recompiles dynamically loaded modules with CPAN::Shell->recompile.
 
+=item -s
+
+Drop in the CPAN.pm shell. This command does this automatically if you don't
+specify any arguments.
+
 =item -t module [ module ... ]
 
 Run a `make test` on the specified modules.
@@ -309,7 +314,7 @@ BEGIN { # most of this should be in methods
 use vars qw( @META_OPTIONS $Default %CPAN_METHODS @CPAN_OPTIONS  @option_order
 	%Method_table %Method_table_index );
 
-@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w T x X );
+@META_OPTIONS = qw( h v V I g G M: C A D O l L a r p P j: J w x X );
 
 $Default = 'default';
 
@@ -322,6 +327,7 @@ $Default = 'default';
 	't'      => 'test',
 	'u'      => 'upgrade',
 	'T'      => 'notest',
+	's'      => 'shell',
 	);
 @CPAN_OPTIONS = grep { $_ ne $Default } sort keys %CPAN_METHODS;
 
@@ -369,6 +375,7 @@ sub GOOD_EXIT () { 0 }
 
 	r =>  [ \&_recompile,         NO_ARGS, GOOD_EXIT, 'Recompiling'                  ],
 	u =>  [ \&_upgrade,           NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
+   's' => [ \&_shell,            NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
 
    'x' => [ \&_guess_namespace,      ARGS, GOOD_EXIT, 'Guessing namespaces'          ],
 	c =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make clean`'         ],
@@ -1060,6 +1067,15 @@ sub _upgrade
 	$logger->info( "Upgrading all modules" );
 
 	CPAN::Shell->upgrade();
+
+	return HEY_IT_WORKED;
+	}
+
+sub _shell
+	{
+	$logger->info( "Dropping into shell" );
+
+	CPAN::shell();
 
 	return HEY_IT_WORKED;
 	}
