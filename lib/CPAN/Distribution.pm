@@ -214,10 +214,10 @@ sub color_cmd_tmps {
     if (defined $prereq_pm) {
         # XXX also optional_req & optional_breq? -- xdg, 2012-04-01
         # A: no, optional deps may recurse -- ak, 2014-05-07
-      PREREQ: for my $pre (
+      PREREQ: for my $pre (sort(
                 keys %{$prereq_pm->{requires}||{}},
                 keys %{$prereq_pm->{build_requires}||{}},
-            ) {
+            )) {
             next PREREQ if $pre eq "perl";
             my $premo;
             unless ($premo = CPAN::Shell->expand("Module",$pre)) {
@@ -251,7 +251,7 @@ sub as_string {
 #-> sub CPAN::Distribution::containsmods ;
 sub containsmods {
     my $self = shift;
-    return keys %{$self->{CONTAINSMODS}} if exists $self->{CONTAINSMODS};
+    return sort keys %{$self->{CONTAINSMODS}} if exists $self->{CONTAINSMODS};
     my $dist_id = $self->{ID};
     for my $mod ($CPAN::META->all_objects("CPAN::Module")) {
         my $mod_file = $mod->cpan_file or next;
@@ -264,7 +264,7 @@ sub containsmods {
         }
         $self->{CONTAINSMODS}{$mod_id} = undef if $mod_file eq $dist_id;
     }
-    keys %{$self->{CONTAINSMODS}||={}};
+    sort keys %{$self->{CONTAINSMODS}||={}};
 }
 
 #-> sub CPAN::Distribution::upload_date ;
@@ -734,7 +734,7 @@ sub satisfy_configure_requires {
     return 1 unless @prereq;
     $self->debug(\@prereq) if $CPAN::DEBUG;
     if ($self->{configure_requires_later}) {
-        for my $k (keys %{$self->{configure_requires_later_for}||{}}) {
+        for my $k (sort keys %{$self->{configure_requires_later_for}||{}}) {
             if ($self->{configure_requires_later_for}{$k}>1) {
                 my $type = "";
                 for my $p (@prereq) {
@@ -2855,7 +2855,7 @@ sub unsat_prereq {
     $CPAN::META->has_usable("CPAN::Meta::Requirements")
         or die "CPAN::Meta::Requirements not available";
     my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
-    my @merged = $merged->required_modules;
+    my @merged = sort $merged->required_modules;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: for my $need_module ( @merged ) {
         my $need_version = $merged->requirements_for_module($need_module);
@@ -3263,7 +3263,8 @@ sub prereq_pm {
             }
             my $areq;
             my $do_replace;
-            while (my($k,$v) = each %{$req||{}}) {
+            foreach my $k (sort keys %{$req||{}}) {
+                my $v = $req->{$k};
                 next unless defined $v;
                 if ($v =~ /\d/) {
                     $areq->{$k} = $v;
@@ -3664,7 +3665,7 @@ sub _make_test_illuminate_prereqs {
     my @prereq;
 
     # local $CPAN::DEBUG = 16; # Distribution
-    for my $m (keys %{$self->{sponsored_mods}}) {
+    for my $m (sort keys %{$self->{sponsored_mods}}) {
         next unless $self->{sponsored_mods}{$m} > 0;
         my $m_obj = CPAN::Shell->expand("Module",$m) or next;
         # XXX we need available_version which reflects

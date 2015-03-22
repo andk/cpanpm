@@ -517,14 +517,14 @@ sub hosts {
         $s->{dltime} += $dltime;
     }
     my $res;
-    for my $url (keys %{$S{ok}}) {
+    for my $url (sort keys %{$S{ok}}) {
         next if $S{ok}{$url}{dltime} == 0; # div by zero
         push @{$res->{ok}}, [@{$S{ok}{$url}}{qw(n dlsize dltime)},
                              $S{ok}{$url}{dlsize}/$S{ok}{$url}{dltime},
                              $url,
                             ];
     }
-    for my $url (keys %{$S{no}}) {
+    for my $url (sort keys %{$S{no}}) {
         push @{$res->{no}}, [$S{no}{$url},
                              $url,
                             ];
@@ -1107,7 +1107,7 @@ sub failed {
 sub find_failed {
     my($self,$only_id) = @_;
     my @failed;
-  DIST: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
+  DIST: for my $d (sort { $a->id cmp $b->id } $CPAN::META->all_objects("CPAN::Distribution")) {
         my $failed = "";
       NAY: for my $nosayer ( # order matters!
                             "unwrapped",

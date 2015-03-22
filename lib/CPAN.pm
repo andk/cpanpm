@@ -461,7 +461,7 @@ Enter 'h' for help.
         }
         for my $class (qw(Module Distribution)) {
             # again unsafe meta access?
-            for my $dm (keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
+            for my $dm (sort keys %{$CPAN::META->{readwrite}{"CPAN::$class"}}) {
                 next unless $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
                 CPAN->debug("BUG: $class '$dm' was in command state, resetting");
                 delete $CPAN::META->{readwrite}{"CPAN::$class"}{$dm}{incommandcolor};
@@ -1353,8 +1353,8 @@ sub _list_sorted_descending_is_tested {
                     keys %{$self->{is_tested}};
     if ($foul) {
         $CPAN::Frontend->mywarn("Lost build_dir detected ($foul), giving up all cached test results of currently running session.\n");
-        for my $dbd (keys %{$self->{is_tested}}) { # distro-build-dir
-        SEARCH: for my $d ($CPAN::META->all_objects("CPAN::Distribution")) {
+        for my $dbd (sort keys %{$self->{is_tested}}) { # distro-build-dir
+        SEARCH: for my $d (sort { $a->id cmp $b->id } $CPAN::META->all_objects("CPAN::Distribution")) {
                 if ($d->{build_dir} && $d->{build_dir} eq $dbd) {
                     $CPAN::Frontend->mywarn(sprintf "Flushing cache for %s\n", $d->pretty_id);
                     $d->fforce("");

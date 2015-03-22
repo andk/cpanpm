@@ -775,7 +775,7 @@ sub init {
         }
     } elsif (0 == length $matcher) {
     } elsif (0 && $matcher eq "~") { # extremely buggy, but a nice idea
-        my @unconfigured = grep { not exists $CPAN::Config->{$_}
+        my @unconfigured = sort grep { not exists $CPAN::Config->{$_}
                                       or not defined $CPAN::Config->{$_}
                                           or not length $CPAN::Config->{$_}
                                   } keys %$CPAN::Config;

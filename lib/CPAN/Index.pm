@@ -528,7 +528,7 @@ sub rd_modlist {
     my $until = keys(%$ret);
     my $painted = 0;
     CPAN->debug(sprintf "until[%d]", $until) if $CPAN::DEBUG;
-    for (keys %$ret) {
+    for (sort keys %$ret) {
         my $obj = $CPAN::META->instance("CPAN::Module",$_);
         delete $ret->{$_}{modid}; # not needed here, maybe elsewhere
         $obj->set(%{$ret->{$_}});

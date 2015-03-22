@@ -82,7 +82,7 @@ Return a list of continents based on those defined in F<MIRRORED.BY>.
 
 sub continents {
     my ($self) = @_;
-    return keys %{$self->{geography}};
+    return sort keys %{$self->{geography}};
 }
 
 =item countries( [CONTINENTS] )
@@ -99,7 +99,7 @@ sub countries {
     @continents = $self->continents unless @continents;
     my @countries;
     for my $c (@continents) {
-        push @countries, keys %{ $self->{geography}{$c} };
+        push @countries, sort keys %{ $self->{geography}{$c} };
     }
     return @countries;
 }

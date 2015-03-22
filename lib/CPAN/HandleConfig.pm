@@ -250,7 +250,7 @@ sub prettyprint {
                     sprintf "\t%-18s => %s\n",
                                "[$_]",
                                         defined $v->{$_} ? "[$v->{$_}]" : "undef"
-                } keys %$v;
+                } sort keys %$v;
         }
         $CPAN::Frontend->myprint(
                                  join(
@@ -384,9 +384,9 @@ sub neatvalue {
         return join "", @m;
     }
     return "$v" unless $t eq 'HASH';
-    my(@m, $key, $val);
-    while (($key,$val) = each %$v) {
-        last unless defined $key; # cautious programming in case (undef,undef) is true
+    my @m;
+    foreach my $key (sort keys %$v) {
+        my $val = $v->{$key};
         push(@m,"q[$key]=>".$self->neatvalue($val)) ;
     }
     return "{ ".join(', ',@m)." }";
