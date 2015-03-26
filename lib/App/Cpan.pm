@@ -555,7 +555,7 @@ sub _init_logger
 
     unless( $log4perl_loaded )
         {
-        print "Loading internal null logger. Install Log::Log4perl for logging messages\n";
+        print STDERR "Loading internal null logger. Install Log::Log4perl for logging messages\n";
         $logger = Local::Null::Logger->new;
         return $logger;
         }
