@@ -708,13 +708,14 @@ sub checklock {
         my $otherpid  = <$fh>;
         my $otherhost = <$fh>;
         $fh->close;
-        if (defined $otherpid && $otherpid) {
+        if (defined $otherpid && length $otherpid) {
             chomp $otherpid;
         }
-        if (defined $otherhost && $otherhost) {
+        if (defined $otherhost && length $otherhost) {
             chomp $otherhost;
         }
         my $thishost  = hostname();
+        my $ask_if_degraded_wanted = 0;
         if (defined $otherhost && defined $thishost &&
             $otherhost ne '' && $thishost ne '' &&
             $otherhost ne $thishost) {
@@ -732,31 +733,7 @@ There seems to be running another CPAN process (pid $otherpid).  Contacting...
 });
             if (kill 0, $otherpid or $!{EPERM}) {
                 $CPAN::Frontend->mywarn(qq{Other job is running.\n});
-                my($ans) =
-                    CPAN::Shell::colorable_makemaker_prompt
-                        (qq{Shall I try to run in downgraded }.
-                        qq{mode? (Y/n)},"y");
-                if ($ans =~ /^y/i) {
-                    $CPAN::Frontend->mywarn("Running in downgraded mode (experimental).
-Please report if something unexpected happens\n");
-                    $RUN_DEGRADED = 1;
-                    for ($CPAN::Config) {
-                        # XXX
-                        # $_->{build_dir_reuse} = 0; # 2006-11-17 akoenig Why was that?
-                        $_->{commandnumber_in_prompt} = 0; # visibility
-                        $_->{histfile}       = "";  # who should win otherwise?
-                        $_->{cache_metadata} = 0;   # better would be a lock?
-                        $_->{use_sqlite}     = 0;   # better would be a write lock!
-                        $_->{auto_commit}    = 0;   # we are violent, do not persist
-                        $_->{test_report}    = 0;   # Oliver Paukstadt had sent wrong reports in degraded mode
-                    }
-                } else {
-                    $CPAN::Frontend->mydie("
-You may want to kill the other job and delete the lockfile. On UNIX try:
-    kill $otherpid
-    rm $lockfile
-");
-                }
+                $ask_if_degraded_wanted = 1;
             } elsif (-w $lockfile) {
                 my($ans) =
                     CPAN::Shell::colorable_makemaker_prompt
@@ -773,9 +750,45 @@ You may want to kill the other job and delete the lockfile. On UNIX try:
                     qq{  and then rerun us.\n}
                 );
             }
+        } elsif ($^O eq "MSWin32") {
+            $CPAN::Frontend->mywarn(
+                                    qq{
+There seems to be running another CPAN process according to '$lockfile'.
+});
+            $ask_if_degraded_wanted = 1;
         } else {
             $CPAN::Frontend->mydie(sprintf("CPAN.pm panic: Found invalid lockfile ".
                                            "'$lockfile', please remove. Cannot proceed.\n"));
+        }
+        if ($ask_if_degraded_wanted) {
+            my($ans) =
+                CPAN::Shell::colorable_makemaker_prompt
+                    (qq{Shall I try to run in downgraded }.
+                     qq{mode? (Y/n)},"y");
+            if ($ans =~ /^y/i) {
+                $CPAN::Frontend->mywarn("Running in downgraded mode (experimental).
+Please report if something unexpected happens\n");
+                $RUN_DEGRADED = 1;
+                for ($CPAN::Config) {
+                    # XXX
+                    # $_->{build_dir_reuse} = 0; # 2006-11-17 akoenig Why was that?
+                    $_->{commandnumber_in_prompt} = 0; # visibility
+                    $_->{histfile}       = "";  # who should win otherwise?
+                    $_->{cache_metadata} = 0;   # better would be a lock?
+                    $_->{use_sqlite}     = 0;   # better would be a write lock!
+                    $_->{auto_commit}    = 0;   # we are violent, do not persist
+                    $_->{test_report}    = 0;   # Oliver Paukstadt had sent wrong reports in degraded mode
+                }
+            } else {
+                my $msg = "You may want to kill the other job and delete the lockfile.";
+                if (defined $otherpid) {
+                    $msg .= " Something like:
+    kill $otherpid
+    rm $lockfile
+";
+                }
+                $CPAN::Frontend->mydie("\n$msg");
+            }
         }
     }
     my $dotcpan = $CPAN::Config->{cpan_home};
