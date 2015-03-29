@@ -569,7 +569,7 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         unless (File::Copy::move($from,$to)) {
             my $err = $!;
             $from = File::Spec->rel2abs($from);
-            Carp::confess("Couldn't move $from to $to: $err");
+            $CPAN::Frontend->mydie("Couldn't move $from to $to: $err");
         }
     }
     $self->{build_dir} = $packagedir;
