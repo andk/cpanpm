@@ -35,12 +35,13 @@ sub _ftp_statistics {
     while (!CPAN::_flock($fh, $locktype|LOCK_NB)) {
         $waitstart ||= localtime();
         if ($sleep>3) {
-            $CPAN::Frontend->mywarn("Waiting for a read lock on '$file' (since $waitstart)\n");
+            my $now = localtime();
+            $CPAN::Frontend->mywarn("$now: waiting for read lock on '$file' (since $waitstart)\n");
         }
         $CPAN::Frontend->mysleep($sleep);
         if ($sleep <= 3) {
             $sleep+=0.33;
-        } elsif ($sleep <=6) {
+        } elsif ($sleep <= 60) {
             $sleep+=0.11;
         }
     }
