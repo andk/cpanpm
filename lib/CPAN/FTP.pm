@@ -38,10 +38,12 @@ sub _ftp_statistics {
             my $now = localtime();
             $CPAN::Frontend->mywarn("$now: waiting for read lock on '$file' (since $waitstart)\n");
         }
-        $CPAN::Frontend->mysleep($sleep);
+        sleep($sleep); # this sleep must not be overridden;
+                       # Frontend->mysleep with AUTOMATED_TESTING has
+                       # provoked complete lock contention on my NFS
         if ($sleep <= 3) {
             $sleep+=0.33;
-        } elsif ($sleep <= 60) {
+        } elsif ($sleep <= 6) {
             $sleep+=0.11;
         }
     }
