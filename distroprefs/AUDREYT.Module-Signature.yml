@@ -1,3 +1,8 @@
+---
+comment: https://rt.cpan.org/Ticket/Display.html?id=103369
+match:
+  distribution: "/Module-Signature-0\\.75\\.tar\\.gz"
+goto: "AUDREYT/Module-Signature-0.73.tar.gz"
 --- 
 match:
   distribution: "/Module-Signature-\\d"
