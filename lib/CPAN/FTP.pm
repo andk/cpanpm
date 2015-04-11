@@ -45,6 +45,9 @@ sub _ftp_statistics {
             $sleep+=0.33;
         } elsif ($sleep <= 6) {
             $sleep+=0.11;
+        } else {
+            # retry to get a fresh handle. If it is NFS and the handle is stale, we will never get an flock
+            open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
         }
     }
     my $stats = eval { CPAN->_yaml_loadfile($file); };
