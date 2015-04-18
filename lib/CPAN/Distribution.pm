@@ -2182,7 +2182,7 @@ is part of the perl-%s distribution. To install that, you need to run
                                     "system()\n");
         }
     }
-    my $system_ok;
+    my ($system_ok, $system_err);
     if ($want_expect) {
         # XXX probably want to check _should_report here and
         # warn about not being able to use CPAN::Reporter with expect
@@ -2194,7 +2194,9 @@ is part of the perl-%s distribution. To install that, you need to run
         $system_ok = ! $ret;
     }
     else {
-        $system_ok = system($system) == 0;
+        my $rc = system($system);
+        $system_ok = $rc == 0;
+        $system_err = $! if $rc == -1;
     }
     $self->introduce_myself;
     if ( $system_ok ) {
@@ -2204,6 +2206,7 @@ is part of the perl-%s distribution. To install that, you need to run
         $self->{writemakefile} ||= CPAN::Distrostatus->new("YES");
         $self->{make} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
+        $CPAN::Frontend->mywarn("  $system_err\n") if defined $system_err;
     }
     $self->store_persistent_state;
 
