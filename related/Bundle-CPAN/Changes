@@ -1,3 +1,10 @@
+2015-04-27  k  <andk@cpan.org>
+
+	* release 1.862
+
+	* 00signature.t: survive recent changes in ExtUtils::MakeMaker (_eumm)
+	and in Module::Signature ($ENV{TEST_SIGNATURE})
+
 2012-03-02  Andreas J. Koenig  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 1.861

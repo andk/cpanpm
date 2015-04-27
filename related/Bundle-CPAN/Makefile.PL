@@ -20,9 +20,9 @@ if ($HAVE_FILE_SPEC) {
         MM->can("signature_target");
     shift @ARGV;
     my $st;
-    $ENV{LANG} = "C";
-    my $dirty = ! system "git status -a > /dev/null";
-    die "Not everything checked in or out?" if $dirty;
+    local $ENV{LANG} = "C";
+    my $dirty = `git status --porcelain --untracked-files=no`;
+    die "Not everything checked in or out?\n====\n$dirty====\n" if $dirty;
 
     if ($version_set_manually) {
       # we must control that the VERSION in CPAN.pm is the same as in the Makefile
