@@ -152,9 +152,14 @@ disttest :
 	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
 	cd $(DISTVNAME) && $(MAKE) test $(PASTHRU)
 
-distdir ::
-	$(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+META.yml: metafile
 	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	-$(CP) $(DISTVNAME)/META.json  ./META.json
+
+distdir ::
+	touch $(DISTVNAME)/SIGNATURE && $(CP) $(DISTVNAME)/SIGNATURE ./SIGNATURE
+	$(CP) $(DISTVNAME)/META.yml  ./META.yml
+	-$(CP) $(DISTVNAME)/META.json  ./META.json
 	$(CP) $(DISTVNAME)/MANIFEST  ./MANIFEST
 
 }
