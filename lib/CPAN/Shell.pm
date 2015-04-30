@@ -174,8 +174,8 @@ Download, Test, Make, Install...
  test     make test (implies make)     readme   display these README files
  install  make install (implies test)  perldoc  display POD documentation
 
-Upgrade
- r        WORDs or /REGEXP/ or NONE    report updates for some/matching/all modules
+Upgrade installed modules
+ r        WORDs or /REGEXP/ or NONE    report updates for some/matching/all
  upgrade  WORDs or /REGEXP/ or NONE    upgrade some/matching/all modules
 
 Pragmas
