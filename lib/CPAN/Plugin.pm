@@ -94,8 +94,8 @@ CPAN::Plugin - Base class for CPAN shell extensions
 
 =head1 SYNOPSIS
 
-   package My::Plugin;
-   use base 'CPAN::Plugin';
+   package CPAN::Plugin::Flurb;
+   use parent 'CPAN::Plugin';
 
    sub post_test {
      my ($self, $distribution_object) = @_;

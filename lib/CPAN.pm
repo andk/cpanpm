@@ -1982,6 +1982,10 @@ the form
 
   Modulename=arg0,arg1,arg2,arg3,...
 
+eg:
+
+  CPAN::Plugin::Flurb=dir,/opt/pkgs/flurb/raw,verbose,1
+
 At run time, each listed plugin is instantiated as a singleton object
 by running the equivalent of this pseudo code:
 
