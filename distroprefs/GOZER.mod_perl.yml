@@ -52,7 +52,7 @@ depends:
 ---
 comment: "out of order --> TODO"
 match:
-  distribution: "^(PGOLLUCCI|GOZER)/mod_perl-2"
+  distribution: "^(PGOLLUCCI|GOZER|SHAY)/mod_perl-2"
 pl:
   args:
     - EVERYTHING=1
