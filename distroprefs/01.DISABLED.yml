@@ -27,6 +27,7 @@ match:
     |.*/Alt-Module-Runtime-ButEUMM-0.001     # not conforming installation policy as of Alt-0.19
     |.*/Alt-common-sense-TOBYINK-0.001       # not conforming installation policy as of Alt-0.19
     |.*/Term-EditLine-0.07                   # seems to change terminal settings
+    |.*/mod_perl-2.0.\d.tar.gz                 # endless loop seen with 5,6,7,9
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
@@ -195,7 +196,6 @@ match:
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
-    |PHRED/mod_perl-2.0.\d.tar.gz            # endless loop seen with 5,6,7
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |ROLAND/jmx4perl-\d                      # asks questions
