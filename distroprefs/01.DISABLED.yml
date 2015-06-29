@@ -99,6 +99,7 @@ match:
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |GUIMARD/Net-Server-Mail-\d              # hangs
     |/POE-Quickie-\d                          # test hangs
+    |GWILLIAMS/Attean-\d                     # hangs and consumes memory
     |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0304 # hangs
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
