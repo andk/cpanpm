@@ -28,6 +28,7 @@ match:
     |.*/Alt-common-sense-TOBYINK-0.001       # not conforming installation policy as of Alt-0.19
     |.*/Term-EditLine-0.07                   # seems to change terminal settings
     |.*/mod_perl-2.0.\d.tar.gz                 # endless loop seen with 5,6,7,9
+    |.*FamilyTreeInfo                        # https://github.com/mishin/Ftree-cpan/issues/2
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
