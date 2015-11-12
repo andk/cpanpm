@@ -465,7 +465,7 @@ sub run_preps_on_packagedir {
     my $builddir = $CPAN::META->{cachemgr}->dir; # unsafe meta access, ok
     $self->safe_chdir($builddir);
     $self->debug("Removing tmp-$$") if $CPAN::DEBUG;
-    File::Path::rmtree("tmp-$$");
+    File::Path::rmtree("tmp-$$") if -d "tmp-$$";
     unless (mkdir "tmp-$$", 0755) {
         $CPAN::Frontend->unrecoverable_error(<<EOF);
 Couldn't mkdir '$builddir/tmp-$$': $!
