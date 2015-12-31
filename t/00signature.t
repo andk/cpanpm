@@ -64,6 +64,7 @@ BEGIN {
     }
 }
 
+$ENV{TEST_SIGNATURE} = 1;
 if (Module::Signature::verify() == Module::Signature::SIGNATURE_OK()) {
     print "1..1\n";
     print "ok 1 # Valid signature\n";
