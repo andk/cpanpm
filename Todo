@@ -8449,10 +8449,6 @@ MARKOV    MailTools-1.77.tar.gz                  47k   11 May 2007
 	* 26664 is reopened by Marek and he asks for a chmod before running
 	patch. I'd think we should chmod selectively.
 
-	* Bugreport from Slaven: $SIG{WINCH} must be dealt with. If one changes
-	the windowsize while lwp is fetching something the transfer is being
-	aborted. By setting $SIG{WINCH} to IGNORE this can be avoided.
-
 	* Jifty caused a hang in the test suite again. I solved it the same way
 	as the other times but this time I had to kill an additional ptee
 	process which apparently was still waiting. Frightening.
