@@ -1,3 +1,32 @@
+2015-12-31  k  <andk@cpan.org>
+
+	* release 2.12-TRIAL
+
+	* merge in a lot of small changes to App::Cpan and cpan (brian d foy)
+
+	* rt#92435: non-deterministic dependency handling (Zefram)
+
+	* fix "Redundant argument in sprintf" (Father Chrysostomos)
+
+	* rt#102867: sequential build dir names (Zefram)
+
+	* rt#102429: Tarball with bad permissions may kill CPAN shell (Slaven Rezic)
+
+	* rt#71722: Locking issues on Windows (Slaven Rezic, Andreas Koenig)
+
+	* several small changes improving NFS file locking (Andreas Koenig)
+
+	* warn if system returns -1 when trying to make (David Golden)
+
+	* github#91: fixes Help to fit in an 80-character console window (Steve
+	Hay, Andreas Koenig)
+
+	* encourage plugin names of the style CPAN::Plugin::$something (Slaven Rezic)
+
+	* rt#107353: set SIGWINCH to IGNORE (rene.schickbauer, Andreas Koenig)
+
+	* rt#106009: bump dependency on IO::Scalar to 2.105
+
 2015-03-13  k  <andk@cpan.org>
 
 	* release 2.10
