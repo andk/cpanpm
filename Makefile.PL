@@ -94,7 +94,7 @@ if ($^O eq "darwin") {
   $prereq_pm->{'File::HomeDir'} = 0.69;
 }
 if ($] < 5.008) {
-  $prereq_pm->{'IO::Scalar'} = 0;
+  $prereq_pm->{'IO::Scalar'} = '2.105';
 }
 if ($^O eq "MSWin32") {
   $prereq_pm->{'Socket'} = 2.018; # older barfed and broke clean loading
