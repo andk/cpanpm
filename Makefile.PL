@@ -306,10 +306,10 @@ the-release-name :
 # the last test for META.json prevents that the distro goes out without it (old MakeMaker)
 release :: disttest
 	[ -e META.json ]
-	git tag -m 'This is $(VERSION)' "$(VERSION)"
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
-	$(NOECHO) $(ECHO) '#### Suggested next steps:'
+	$(NOECHO) $(ECHO) '#### Suggested next steps (if all looks good):'
+	$(NOECHO) $(ECHO) git tag -m '"This is $(VERSION)"' '"$(VERSION)"'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
 snapshot : Makefile no_CR META.yml README testdistros all tardist
