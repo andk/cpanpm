@@ -9,10 +9,9 @@ use File::Path ();
 use POSIX ":sys_wait_h"; 
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.27";
+$VERSION = "2.27_01"; # with cperl support
 
 my $run_allow_installing_within_test = 1; # boolean; either in test or in install, there is no third option
-
 # no prepare, because prepare is not a command on the shell command line
 # TODO: clear instance cache on reload
 my %instance;
@@ -3838,7 +3837,7 @@ sub test {
 }
 
 sub _make_test_illuminate_prereqs {
-    my($self) = @_;
+    my ($self) = @_;
     my @prereq;
 
     # local $CPAN::DEBUG = 16; # Distribution
@@ -3864,6 +3863,10 @@ sub _make_test_illuminate_prereqs {
                 ) {
             # lex Class::Accessor::Chained::Fast which has no $VERSION
             CPAN->debug("m[$m] have available_file[$available_file]")
+              if $CPAN::DEBUG;
+        } elsif ($Config::Config{usecperl}
+                 and $m =~ /^(DynaLoader|XSLoader|strict|coretypes)$/) {
+            CPAN->debug("m[$m] builtin available_version[$available_version]")
                 if $CPAN::DEBUG;
         } else {
             push @prereq, $m
