@@ -303,12 +303,16 @@ the-release-name :
 	$(NOECHO) $(ECHO) 'version ' $(VERSION)
 	$(NOECHO) $(ECHO) 'release-name ' $(DISTVNAME).tar$(SUFFIX)
 
+pull-request :
+	$(NOECHO) $(ECHO) 'http://www.nntp.perl.org/group/perl.perl5.porters/2016/01/msg233838.html'
+
 # the last test for META.json prevents that the distro goes out without it (old MakeMaker)
 release :: disttest
 	[ -e META.json ]
 	ls -l $(DISTVNAME).tar$(SUFFIX)
 	rm -rf $(DISTVNAME)
 	$(NOECHO) $(ECHO) '#### Suggested next steps (if all looks good):'
+	$(NOECHO) $(ECHO) '#### Consider "make pull-request" for perl5-porters'
 	$(NOECHO) $(ECHO) git tag -m '"This is $(VERSION)"' '"$(VERSION)"'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
