@@ -166,6 +166,7 @@ match:
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MLAWREN/SQL-Tree-\d                     # hangs before the first test
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
+    |MLEHMANN/Canary-Stability-              # test-less
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |MOB/Forks-Super-                        # too demanding
