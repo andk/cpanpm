@@ -208,6 +208,8 @@ sub soft_chdir_with_alternatives ($);
         }
         $autoload_recursion--;
     }
+    # make sure we can install any modules from CPAN without patching them
+    $ENV{PERL_USE_UNSAFE_INC} = 1;
 }
 
 {
