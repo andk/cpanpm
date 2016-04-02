@@ -3964,6 +3964,9 @@ your operating system) then typing C<cpan> in a console window will
 work for you as well. Above that the utility provides several
 commandline shortcuts.
 
+The main CPAN website, which includes general information about the
+service, is at L<http://www.cpan.org/>.
+
 melezhik (Alexey) sent me a link where he published a chef recipe to
 work with CPAN.pm: http://community.opscode.com/cookbooks/cpan.
 
