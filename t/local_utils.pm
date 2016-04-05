@@ -24,7 +24,7 @@ sub prepare_dot_cpan {
     cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
         or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
     cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
-        or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
+        or die "Could not cp t/CPAN/TestMirroredBy over t/dot-cpan/sources/MIRRORED.BY: $!";
 }
 
 sub cleanup_dot_cpan {
