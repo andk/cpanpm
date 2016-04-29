@@ -27,6 +27,7 @@ match:
     |.*/Alt-CPAN-Uploader-tinyua-0.000001    # not conforming installation policy as of Alt-0.19
     |.*/Alt-Module-Runtime-ButEUMM-0.001     # not conforming installation policy as of Alt-0.19
     |.*/Alt-common-sense-TOBYINK-0.001       # not conforming installation policy as of Alt-0.19
+    |.*/Net-Fluidinfo-0.45                   # fails since 2012 https://rt.cpan.org/Ticket/Display.html?id=76547
     |.*/Term-EditLine-0.07                   # seems to change terminal settings
     |.*/mod_perl-2.0.\d.tar.gz                 # endless loop seen with 5,6,7,9
     |.*FamilyTreeInfo                        # https://github.com/mishin/Ftree-cpan/issues/2
