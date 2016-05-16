@@ -1,3 +1,12 @@
+2016-05-16  k  <andk@cpan.org>
+
+	* release 2.13-TRIAL
+
+	* support for parallel running tests (tested with HARNESS_OPTIONS=j8)
+
+	* bump all versions that have changed since 2.10 or 2.12 so we can
+	generate a better pull request for bleadperl
+
 2015-12-31  k  <andk@cpan.org>
 
 	* release 2.12-TRIAL
