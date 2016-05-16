@@ -71,7 +71,7 @@ BEGIN {
 
 {
     local *FH;
-    open *FH, (">"._f"t/dot-cpan/build/Something-From-Builddir-0.00.yml") or die;
+    open *FH, (">"._f"t/dot-cpan-$$/build/Something-From-Builddir-0.00.yml") or die;
     my @stat = stat $^X;
     my $dll = eval {OS2::DLLname()};
     my $mtime_dll = 0;
@@ -112,21 +112,21 @@ EOF
 }
     close FH; #attempt to fix RT#43779
 cp _f"t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd",
-    _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS"
+    _f"t/dot-cpan-$$/sources/authors/id/A/AN/ANDK/CHECKSUMS"
     or die "Could not cp t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd ".
-    "over t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
+    "over t/dot-cpan-$$/sources/authors/id/A/AN/ANDK/CHECKSUMS: $!";
 cp _f"t/CPAN/CpanTestDummies-1.55.pm",
-    _f"t/dot-cpan/Bundle/CpanTestDummies.pm" or die
+    _f"t/dot-cpan-$$/Bundle/CpanTestDummies.pm" or die
     "Could not cp t/CPAN/CpanTestDummies-1.55.pm over ".
-    "t/dot-cpan/Bundle/CpanTestDummies.pm: $!";
+    "t/dot-cpan-$$/Bundle/CpanTestDummies.pm: $!";
 cp _f"distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml",
-    _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml" or die
+    _f"t/dot-cpan-$$/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml" or die
     "Could not cp distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml to ".
-    "t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml: $!";
+    "t/dot-cpan-$$/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml: $!";
 
 my $cwd = Cwd::cwd;
 
-open FH, (">" . _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
+open FH, (">" . _f"t/dot-cpan-$$/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
 print FH <<EOF;
 ---
 comment: "Having more than one yaml variable per file is OK?"
@@ -172,7 +172,7 @@ plan tests => (
                + 1                     # run_..._cmd feedback
                + 1                     # spawn/open
                + 1                     # 1 count keys for 'o conf init variable'
-               + 2                     # t/dot-cpan/.../ANDK dir exists and is empty
+               + 2                     # t/dot-cpan-$$/.../ANDK dir exists and is empty
                # + scalar @modules
               );
 
@@ -260,7 +260,7 @@ if ($ENV{CPAN_RUN_SHELL_TEST_WITHOUT_EXPECT}) {
 }
 ok(1,"RUN_EXPECT[$RUN_EXPECT]\$^X[$^X]");
 my $expo;
-my @run_shell_cmd_lit = run_shell_cmd_lit($cwd);
+my @run_shell_cmd_lit = run_shell_cmd_lit($cwd,0);
 ok(scalar @run_shell_cmd_lit,"@run_shell_cmd_lit");
 if ($RUN_EXPECT) {
     $expo = Expect->new;
@@ -271,7 +271,7 @@ if ($RUN_EXPECT) {
     $expo->notransfer(1);
 } else {
     delete $HAVE->{Expect};
-    my $system = join(" ", map { "\"$_\"" } @run_shell_cmd_lit)." > test.out";
+    my $system = join(" ", map { "\"$_\"" } @run_shell_cmd_lit)." > test-$$.out";
     # warn "# DEBUG: system[$system]";
     my $opened = open SYSTEM, "| $system";
     ok($opened, "Could at least open a process pipe and $! is [$!]");
@@ -394,7 +394,7 @@ if ($RUN_EXPECT) {
 } else {
     close SYSTEM or die "Could not close SYSTEM filehandle: $!";
     mydiag "Finished running test script, going to read its output.";
-    open SYSTEM, "test.out" or die "Could not open test.out for reading: $!";
+    open SYSTEM, "test-$$.out" or die "Could not open test-$$.out for reading: $!";
     local $/;
     my $biggot = <SYSTEM>;
     close SYSTEM;
@@ -434,7 +434,7 @@ read_myconfig;
 is($CPAN::Config->{histsize},100,"histsize is 100 after testing");
 {
     my $dh;
-    my $dir = _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
+    my $dir = _d"t/dot-cpan-$$/sources/authors/id/A/AN/ANDK";
     my $ret = opendir $dh, $dir;
     ok($ret, "directory $dir exists");
     my @dirent = grep { -f _f"$dir/$_" } readdir $dh;

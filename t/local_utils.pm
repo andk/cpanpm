@@ -10,35 +10,51 @@ sub _f ($) {File::Spec->catfile(split /\//, shift);}
 sub _d ($) {File::Spec->catdir(split /\//, shift);}
 
 sub prepare_dot_cpan {
-    rmtree _d"t/dot-cpan/sources";
-    rmtree _d"t/dot-cpan/build";
-    mkpath _d"t/dot-cpan/build";
-    rmtree _d"t/dot-cpan/prefs";
-    mkpath _d"t/dot-cpan/prefs";
-    unlink _f"t/dot-cpan/Metadata";
-    unlink _f"t/dot-cpan/.lock";
-    mkpath _d"t/dot-cpan/sources/authors/id/A/AN/ANDK";
-    mkpath _d"t/dot-cpan/Bundle";
+    rmtree _d"t/dot-cpan-$$/sources";
+    rmtree _d"t/dot-cpan-$$/build";
+    mkpath _d"t/dot-cpan-$$/build";
+    rmtree _d"t/dot-cpan-$$/prefs";
+    mkpath _d"t/dot-cpan-$$/prefs";
+    unlink _f"t/dot-cpan-$$/Metadata";
+    unlink _f"t/dot-cpan-$$/.lock";
+    mkpath _d"t/dot-cpan-$$/sources/authors/id/A/AN/ANDK";
+    mkpath _d"t/dot-cpan-$$/Bundle";
     # cp is not-overwriting on OS/2
-    unlink _f"t/CPAN/MyConfig.pm", _f"t/dot-cpan/sources/MIRRORED.BY";
-    cp _f"t/CPAN/TestConfig.pm", _f"t/CPAN/MyConfig.pm"
-        or die "Could not cp t/CPAN/TestConfig.pm over t/CPAN/MyConfig.pm: $!";
-    cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
-        or die "Could not cp t/CPAN/TestMirroredBy over t/dot-cpan/sources/MIRRORED.BY: $!";
+    unlink _f"t/CPAN/MyConfig_$$.pm", _f"t/dot-cpan-$$/sources/MIRRORED.BY";
+    write_myconfig();
+    cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan-$$/sources/MIRRORED.BY"
+        or die "Could not cp t/CPAN/TestMirroredBy over t/dot-cpan-$$/sources/MIRRORED.BY: $!";
+}
+
+sub write_myconfig {
+    open my $fh, _f"t/CPAN/TestConfig.pm" or die "Could not open 't/CPAN/TestConfig.pm': $!";
+    open my $fh2, ">", _f"t/CPAN/MyConfig_$$.pm"
+        or die "Could not open > t/CPAN/MyConfig_$$.pm: $!";
+    print $fh2 "package CPAN::MyConfig_$$ ;\n";
+    while (<$fh>) {
+        s/dot-cpan/dot-cpan-$$/g;
+        if (/^__END__/) {
+            print $fh2 qq{\$INC{"CPAN/MyConfig.pm"} = \$INC{"CPAN/MyConfig_$$.pm"};\n};
+        }
+        print $fh2 $_;
+    }
+    close $fh2 or die "Could not close t/CPAN/MyConfig_$$.pm: $!";
 }
 
 sub cleanup_dot_cpan {
-    unlink _f"t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS";
-    unlink _f"t/dot-cpan/sources/MIRRORED.BY";
-    unlink _f"t/dot-cpan/prefs/FTPstats.yml";
-    unlink _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml";
-    unlink _f"t/dot-cpan/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
-    rmtree _d"t/dot-cpan";
+    unlink _f"t/CPAN/MyConfig_$$.pm";
+    unlink _f"t/CPAN/MyConfig_$$.pm~";
+    unlink _f"t/dot-cpan-$$/sources/authors/id/A/AN/ANDK/CHECKSUMS";
+    unlink _f"t/dot-cpan-$$/sources/MIRRORED.BY";
+    unlink _f"t/dot-cpan-$$/prefs/FTPstats.yml";
+    unlink _f"t/dot-cpan-$$/prefs/TestDistroPrefsFile.yml";
+    unlink _f"t/dot-cpan-$$/prefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml";
+    rmtree _d"t/dot-cpan-$$";
 }
 
 sub read_myconfig () {
     local *FH;
-    open *FH, _f"t/CPAN/MyConfig.pm" or die "Could not read t/CPAN/MyConfig.pm: $!";
+    open *FH, _f"t/CPAN/MyConfig_$$.pm" or die "Could not read t/CPAN/MyConfig_$$.pm: $!";
     my $eval = do { local($/); <FH>; };
     eval $eval;
 }
@@ -75,19 +91,21 @@ sub test_name {
     ($comment||"") . ($prog ? " (testing command '$prog')" : "[empty RET]")
 }
 
-sub run_shell_cmd_lit ($) {
+sub run_shell_cmd_lit ($$) {
     my $cwd = shift;
+    my $pid = shift;
     my $t = File::Spec->catfile($cwd,"t");
     my @system = (
                   $^X,
                   "-I$t",                 # get this test's own MyConfig
                   "-Mblib",
-                  "-MCPAN::MyConfig",
+                  "-MCPAN::MyConfig_$$",
                   "-MCPAN",
                   ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
                   # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
                   "-e",
                   # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
+                  $pid ? ("\\\$INC{qq{CPAN/MyConfig.pm}} = \\\$INC{qq{CPAN/MyConfig_$$.pm}};", "-e") : (),
                   "\@CPAN::Defaultsites = (); shell",
                  );
 }

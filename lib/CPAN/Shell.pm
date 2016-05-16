@@ -637,6 +637,10 @@ sub _reload_this {
         }
         CPAN->debug(sprintf("reload file[%s] content[%s...]",$file,substr($content,0,128)))
             if $CPAN::DEBUG;
+        my $includefile;
+        if ($includefile = $INC{$f} and -e $includefile) {
+            $f = $includefile;
+        }
         delete $INC{$f};
         local @INC = @inc;
         eval "require '$f'";

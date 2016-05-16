@@ -198,6 +198,7 @@ BEGIN {
     }
 }
 END {
+    unlink "test-$$.out";
     local_utils::cleanup_dot_cpan();
 }
 our(@SESSIONS, $default_system, $prompt_re);
@@ -205,9 +206,9 @@ BEGIN {
     my $cwd = CPAN::anycwd();
 
     #  2>&1 is no solution. I intertwingled them, I missed a few "ok"
-    $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd))." > test.out";
+    $default_system = join(" ", map { "\"$_\"" } run_shell_cmd_lit($cwd,$$))." > test-$$.out";
 
-    open FH, (">" . _f"t/dot-cpan/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
+    open FH, (">" . _f"t/dot-cpan-$$/prefs/TestDistroPrefsFile.yml") or die "Could not open: $!";
     print FH <<EOF;
 ---
 match:
@@ -215,7 +216,7 @@ match:
 features:
   - "rice"
 EOF
-    close FH or die "Could not close 't/dot-cpan/prefs/TestDistroPrefsFile.yml': $!";
+    close FH or die "Could not close 't/dot-cpan-$$/prefs/TestDistroPrefsFile.yml': $!";
 
     @SESSIONS =
         (
@@ -442,7 +443,7 @@ EOF
           [
            "dump \$::x=6*6+9" => "= 45;",
            "o conf build_dir" => "build_dir",
-           "o conf prefs_dir '$cwd/t/dot-cpan/prefs'" => "(?m:prefs_dir.+prefs)",
+           "o conf prefs_dir '$cwd/t/dot-cpan-$$/prefs'" => "(?m:prefs_dir.+prefs)",
            "test CPAN::Test::Dummy::Perl5::Make::Features" =>
            "(?sx:Builds.rice.+
           ANDK/CPAN-Test-Dummy-Perl5-Build-\\d.+
@@ -524,12 +525,12 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
     delete $ENV{PERL_MM_USE_DEFAULT};
     $ENV{PERL_MM_USE_DEFAULT} = 1 if $session->{perl_mm_use_default};
     if ($session->{gets_mirrored_by}) {
-        cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan/sources/MIRRORED.BY"
+        cp _f"t/CPAN/TestMirroredBy", _f"t/dot-cpan-$$/sources/MIRRORED.BY"
             or die "Could not cp t/CPAN/TestMirroredBy over t/dor-cpan/sources/MIRRORED.BY: $!";
         # fix timestamp "bug" (?) on Win32
-        utime( (time) x 2, _f"t/dot-cpan/sources/MIRRORED.BY" );
+        utime( (time) x 2, _f"t/dot-cpan-$$/sources/MIRRORED.BY" );
     } else {
-        unlink _f"t/dot-cpan/sources/MIRRORED.BY";
+        unlink _f"t/dot-cpan-$$/sources/MIRRORED.BY";
     }
     open SYSTEM, "| $system 2> $devnull" or die "Could not open '| $system': $!";
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
@@ -537,7 +538,7 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
         print SYSTEM $command, "\n";
     }
     close SYSTEM or mydiag "error while running '$system' on '$session->{name}'";
-    my $content = do {local *FH; open FH, "test.out" or die; local $/; <FH>};
+    my $content = do {local *FH; open FH, "test-$$.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
     diag sprintf "DEBUG: All chunks of new session\n%s", YAML::Syck::Dump(@chunks) if $Opt{debug};
     if ($Opt{pause}) {
