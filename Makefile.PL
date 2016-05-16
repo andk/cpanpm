@@ -316,6 +316,10 @@ release :: disttest
 	$(NOECHO) $(ECHO) git tag -m '"This is $(VERSION)"' '"$(VERSION)"'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
+reversion:
+	$(NOECHO) $(ECHO) AGAINST_TAG=$(AGAINST_TAG)
+	$(PERL) dagolden-reversion-gist.pl $(AGAINST_TAG)
+
 snapshot : Makefile no_CR META.yml README testdistros all tardist
 
 # 16=Distribution; 32=Bundle; 32768=Queue

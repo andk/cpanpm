@@ -3,7 +3,7 @@ package CPAN::Plugin;
 use strict;
 use warnings;
 
-our $VERSION = '0.95';
+our $VERSION = '0.96';
 
 require CPAN;
 
