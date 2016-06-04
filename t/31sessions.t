@@ -532,6 +532,7 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
     } else {
         unlink _f"t/dot-cpan-$$/sources/MIRRORED.BY";
     }
+    local *SYSTEM;
     open SYSTEM, "| $system 2> $devnull" or die "Could not open '| $system': $!";
     for (my $i = 0; 2*$i < $#{$session->{pairs}}; $i++) {
         my($command) = $session->{pairs}[2*$i];
