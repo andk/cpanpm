@@ -34,7 +34,8 @@ sub write_myconfig {
     while (<$fh>) {
         s/dot-cpan/dot-cpan-$$/g;
         if (/^__END__/) {
-            print $fh2 qq{\$INC{"CPAN/MyConfig.pm"} = \$INC{"CPAN/MyConfig_$$.pm"};\n};
+            printf $fh2 q{$INC{"CPAN/MyConfig.pm"} = $INC{"CPAN/MyConfig_%s.pm"} = '%s';%s},
+                $$, File::Spec->rel2abs(_f"t/CPAN/MyConfig_$$.pm"), "\n";
         }
         print $fh2 $_;
     }
@@ -94,21 +95,27 @@ sub test_name {
 
 sub run_shell_cmd_lit ($$) {
     my $cwd = shift;
-    my $pid = shift;
+    my $dup_pid = shift;
     my $t = File::Spec->catfile($cwd,"t");
     my @system = (
                   $^X,
                   "-I$t",                 # get this test's own MyConfig
                   "-Mblib",
                   "-MCPAN::MyConfig_$$",
+                  "-Mlocal_utils",
                   "-MCPAN",
                   ($INC{"Devel/Cover.pm"} ? "-MDevel::Cover" : ()),
                   # (@ARGV) ? "-d" : (), # force subtask into debug, maybe useful
                   "-e",
                   # "\$CPAN::Suppress_readline=1;shell('$prompt\n')",
-                  $pid ? ("\\\$INC{qq{CPAN/MyConfig.pm}} = \\\$INC{qq{CPAN/MyConfig_$$.pm}};", "-e") : (),
+                  $dup_pid ? ("local_utils::dup_pid_inc($dup_pid);", "-e") : (),
                   "\@CPAN::Defaultsites = (); shell",
                  );
+}
+
+sub dup_pid_inc {
+    my($pid) = @_;
+    $INC{qq{CPAN/MyConfig.pm}} = $INC{qq{CPAN/MyConfig_$pid.pm}};
 }
 
 1;
