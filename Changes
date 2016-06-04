@@ -1,3 +1,18 @@
+2016-06-04  k  <andk@cpan.org>
+
+	* release 2.14-TRIAL
+
+	* Fix failing tests on Windows (hopefully); tested on my i5-3317U
+	notebook with Strawberry 5.24 and HARNESS_OPTIONS=j3: 104 wallclock secs
+
+	* set SIGWINCH to IGNORE only when the key WINCH exists in %ENV (avert
+	noise on boxes that do not support it)
+
+	* fix a rare bug when ->expand returned nothing for whatever reason
+
+	* improve diagnostics on fails during testing (but it is still very hard
+	to debug these tests)
+
 2016-05-16  k  <andk@cpan.org>
 
 	* release 2.13-TRIAL
