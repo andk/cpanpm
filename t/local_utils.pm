@@ -57,6 +57,7 @@ sub read_myconfig () {
     open *FH, _f"t/CPAN/MyConfig_$$.pm" or die "Could not read t/CPAN/MyConfig_$$.pm: $!";
     my $eval = do { local($/); <FH>; };
     eval $eval;
+    die $@ if $@;
 }
 
 # shamelessly stolen from Test::Builder

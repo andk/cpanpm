@@ -538,7 +538,7 @@ SESSION_RUN: for my $si (0..$#SESSIONS) {
         my($command) = $session->{pairs}[2*$i];
         print SYSTEM $command, "\n";
     }
-    close SYSTEM or mydiag "error while running '$system' on '$session->{name}'";
+    close SYSTEM or mydiag "error while running '$system' on '$session->{name}': $!";
     my $content = do {local *FH; open FH, "test-$$.out" or die; local $/; <FH>};
     my(@chunks) = split /$prompt_re/, $content;
     diag sprintf "DEBUG: All chunks of new session\n%s", YAML::Syck::Dump(@chunks) if $Opt{debug};
