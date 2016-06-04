@@ -1300,8 +1300,9 @@ sub init {
             $CPAN::Frontend->myprint("\nWriting $configpm for bootstrap...\n");
             delete $CPAN::Config->{install_help}; # temporary only
             CPAN::HandleConfig->commit;
-            my $dist;
-            if ( $dist = CPAN::Shell->expand('Module', 'local::lib')->distribution ) {
+            my($dist, $locallib);
+            $locallib = CPAN::Shell->expand('Module', 'local::lib');
+            if ( $locallib and $dist = $locallib->distribution ) {
                 # this is a hack to force bootstrapping
                 $dist->{prefs}{pl}{commandline} = "$^X Makefile.PL --bootstrap";
                 # Set @INC for this process so we find things as they bootstrap
