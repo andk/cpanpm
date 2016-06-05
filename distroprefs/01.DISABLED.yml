@@ -243,7 +243,6 @@ match:
     |TTY/kurila-\d                           # asks too many questions
     |TURNERJW/
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
-    |TURNSTEP/DBD-Pg-\d                      # asks for pg_config
     |URI/Stem-\d                             # asks questions about conf directories
     |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
     |VINSWORLD/Net-Syslogd-0.0\d.            # asks question from 04 to 06
