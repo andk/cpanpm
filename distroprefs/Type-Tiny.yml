@@ -1,0 +1,7 @@
+---
+match:
+  distribution: '/Type-Tiny-1\.000005\.'
+  perlconfig:
+    version: '^5\.25\.\d+$'
+patches:
+  - SREZIC/patches/Type-Tiny-1.000005-RT114386-ETHER.patch
