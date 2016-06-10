@@ -11,7 +11,7 @@ use File::Spec ();
 use CPAN::Mirrors ();
 use CPAN::Version ();
 use vars qw($VERSION $auto_config);
-$VERSION = "5.5314";
+$VERSION = "5.5314_01";
 
 =head1 NAME
 
@@ -661,6 +661,9 @@ may be more alternative YAML conforming modules. When I tried two
 other players, YAML::Tiny and YAML::Perl, they seemed not powerful
 enough to work with CPAN.pm. This may have changed in the meantime.
 
+The core module CPAN::Meta::YAML cannot load YAML 1.2 !! features,
+used for C<!!perl/hash:CPAN::Distribution> hashes.
+
 Which YAML implementation would you prefer?
 
 =back
@@ -984,15 +987,30 @@ sub init {
     my_yn_prompt(trust_test_report_history => 0, $matcher);
 
     #
-    #= YAML vs. YAML::Syck
+    #= YAML::Syck, YAML::XS (cperl only), YAML, YAML::Tiny. CPAN::Meta::YAML not yet
+    #  YAML::XS is broken upstream, CPAN::Meta::YAML cannot read spec v2.
     #
     if (!$matcher or "yaml_module" =~ /$matcher/) {
-        my_dflt_prompt(yaml_module => "YAML", $matcher);
+        my $CPERL = $Config::Config{usecperl};
+        my $dflt = $CPERL ? 'YAML::XS' : 'YAML';
+        while(1) {
+            my_dflt_prompt(yaml_module => $dflt, $matcher);
+            my $given = $CPAN::Config->{yaml_module};
+            my $forbidden = $CPERL ? qr/^(CPAN::Meta::YAML)$/ : qr/^(CPAN::Meta::YAML|YAML::XS)$/;
+            if ($given =~ $forbidden) {
+                $CPAN::Frontend->mywarn
+                  ("Error: $given cannot be used yet. Try YAML"
+                   . $CPERL ? ", YAML::Syck or YAML::XS\n" : " or YAML::Syck\n");
+                $CPAN::Frontend->mysleep(3);
+            } else {
+                last;
+            }
+        }
         my $old_v = $CPAN::Config->{load_module_verbosity};
         $CPAN::Config->{load_module_verbosity} = q[none];
         if (!$auto_config && !$CPAN::META->has_inst($CPAN::Config->{yaml_module})) {
             $CPAN::Frontend->mywarn
-                ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed.\n");
+              ("Warning (maybe harmless): '$CPAN::Config->{yaml_module}' not installed. Try $dflt\n");
             $CPAN::Frontend->mysleep(3);
         }
         $CPAN::Config->{load_module_verbosity} = $old_v;
@@ -2180,7 +2198,5 @@ sub prompt_no_strip ($;$) {
     }
     return _real_prompt(@_);
 }
-
-
 
 1;
