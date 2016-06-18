@@ -1,0 +1,6 @@
+--- 
+comment: Make vs Build
+match:
+  distribution: "^KAORU/Geo-Coder-Many-0.46-5.tar.gz"
+cpanconfig:
+  prefer_installer: "EUMM"
