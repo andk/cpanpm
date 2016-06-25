@@ -1,3 +1,13 @@
+2016-06-25  k  <andk@cpan.org>
+
+	* release 2.14
+
+	* three weeks after the trial release; cpantesters have generated 383
+	passes, no fail
+
+	* no changes except for a few in the distroprefs/ directory which do not
+	count because it is not used per default
+
 2016-06-04  k  <andk@cpan.org>
 
 	* release 2.14-TRIAL

@@ -246,6 +246,7 @@ distroprefs/JSTENZEL.Getopt-ArgvFile.yml
 distroprefs/JV.Getopt-Long.yml
 distroprefs/JZOBEL.Cindy.yml
 distroprefs/KANE.CPANPLUS.yml
+distroprefs/KAORU.Geo-Coder-Many.yml
 distroprefs/KARASIK.IO-Lambda.yml
 distroprefs/KARMAN.SWISH-Prog.yml
 distroprefs/KASEI.Class-Accessor.yml
@@ -283,6 +284,7 @@ distroprefs/MARKOV.MailTools.yml
 distroprefs/MARKSTOS.CGI-Application-Dispatch.yml
 distroprefs/MARKSTOS.CGI-Session.yml
 distroprefs/MARNANEL.Locale-PO-Callback.yml
+distroprefs/MART.DJabberd.yml
 distroprefs/MAURICE.IPC-ShareLite.yml
 distroprefs/MBARBON.Alien-wxWidgets.yml
 distroprefs/MCEGLOWS.Bloom-Filter.yml
@@ -364,6 +366,7 @@ distroprefs/PIERS.sapnwrfc.yml
 distroprefs/PLOBBES.Mail-IMAPClient.yml
 distroprefs/PODMASTER.HTML-Scrubber.yml
 distroprefs/POWERMAN.IO-Stream.yml
+distroprefs/POWERMAN.MojoX-JSONRPC2-HTTP.yml
 distroprefs/QANTINS.BitTorrent.yml
 distroprefs/RBERJON.JSON-Any.yml
 distroprefs/RBS.XML-AutoWriter.yml
@@ -440,11 +443,11 @@ distroprefs/TINITA.HTML-Template-Compiled.yml
 distroprefs/TJENNESS.Tk-TextANSIColor.yml
 distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
-distroprefs/TOBYINK.Finance-Bitcoin.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
 distroprefs/TOMFAHLE.LBMA-Statistics.yml
 distroprefs/TSCH.Cairo.yml
 distroprefs/TSCH.Gtk2.yml
+distroprefs/Type-Tiny.yml
 distroprefs/TYPESTER.AnyEvent-Gearman.yml
 distroprefs/URI.File-Slurp.yml
 distroprefs/VKON.Tcl-Tk.yml

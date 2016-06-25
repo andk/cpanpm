@@ -96,3 +96,7 @@ cpanstats.db
 ^cpandb
 ^_eumm
 ^revert-planning.txt
+[0-9]+.*\.patch
+
+# a test that helped me diagnose HARNESS_OPTIONS stuff during development:
+t/05env.t
