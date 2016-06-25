@@ -104,7 +104,12 @@ sub color_cmd_tmps {
                                           # so we can break it
     }
     if ($depth>=$CPAN::MAX_RECURSION) {
-        die(CPAN::Exception::RecursiveDependency->new($ancestors));
+        my $e = CPAN::Exception::RecursiveDependency->new($ancestors);
+        if ($e->is_resolvable) {
+            return $self->{incommandcolor}=2;
+        } else {
+            die $e;
+        }
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
 

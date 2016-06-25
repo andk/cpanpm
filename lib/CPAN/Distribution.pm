@@ -207,7 +207,12 @@ sub color_cmd_tmps {
         && $self->{incommandcolor}==$color;
     $CPAN::MAX_RECURSION||=0; # silence 'once' warnings
     if ($depth>=$CPAN::MAX_RECURSION) {
-        die(CPAN::Exception::RecursiveDependency->new($ancestors));
+        my $e = CPAN::Exception::RecursiveDependency->new($ancestors);
+        if ($e->is_resolvable) {
+            return $self->{incommandcolor}=2;
+        } else {
+            die $e;
+        }
     }
     # warn "color_cmd_tmps $depth $color " . $self->id; # sleep 1;
     my $prereq_pm = $self->prereq_pm;
