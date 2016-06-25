@@ -1,0 +1,9 @@
+---
+comment: |
+
+  /me is experimenting with prefer_installer RAND at the moment
+  
+match:
+  distribution: '^ROCKY/Array-Columnize-1\.04\.'
+cpanconfig:
+  prefer_installer: "MB"
