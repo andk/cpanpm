@@ -16,6 +16,7 @@ distroprefs/ADAMK.Test-ClassAPI.yml
 distroprefs/ADAMK.Test-Inline.yml
 distroprefs/ADIE.Test-Class.yml
 distroprefs/ADIE.Test-Exception.yml
+distroprefs/ADUITSIS.IPC-Mmap.yml
 distroprefs/AGENT.OpenResty.yml
 distroprefs/AGRUNDMA.HTTP-Body.yml
 distroprefs/AGRUNDMA.POE-Loop-EV.yml
