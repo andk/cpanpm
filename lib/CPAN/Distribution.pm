@@ -2885,7 +2885,7 @@ sub unsat_prereq {
             } elsif (
                 $self->{reqtype} =~ /^(r|c)$/
                 && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
-                && $nmo 
+                && $nmo
                 && !$inst_file
             ) {
                 # continue installing as a prereq; this may be a
@@ -3458,6 +3458,7 @@ sub test {
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
     my $make = $self->{modulebuild} ? "Build" : "make";
 
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -3881,6 +3882,7 @@ sub install {
         return;
     }
 
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
     my $system;
     if (my $commandline = $self->prefs->{install}{commandline}) {
         $system = $commandline;
