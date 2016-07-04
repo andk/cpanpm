@@ -2102,7 +2102,7 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
     }
 
-    my $make = $self->{modulebuild} ? "Build" : "make";
+    my $make = $self->{modulebuild} ? "Build" : "make -f Makefile";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -2162,7 +2162,13 @@ is part of the perl-%s distribution. To install that, you need to run
             }
             $system = join " ", $self->_build_command(), $CPAN::Config->{mbuild_arg};
         } else {
-            $system = join " ", $self->_make_command(),  $CPAN::Config->{make_arg};
+	    # ExtUtils::MakeMaker writes a file called Makefile. Explicitly use
+	    # that since GNU make can default to another name, e.g. GNUMakefile.
+	    # Note: -f is in the POSIX spec for make
+	    my @make_args = -f "Makefile" ?
+	      ($self->_make_command(), '-f', 'Makefile', $CPAN::Config->{make_arg}) :
+	      ($self->_make_command(), $CPAN::Config->{make_arg});
+            $system = join " ", @make_args;
         }
         $system =~ s/\s+$//;
         my $make_arg = $self->_make_phase_arg("make");
