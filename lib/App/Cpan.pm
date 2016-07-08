@@ -1336,7 +1336,8 @@ sub _show_out_of_date
 
 	foreach my $module ( @$modules )
 		{
-		next unless $module->inst_file;
+                next unless $module = _expand_module($module);
+                next unless $module->inst_file;
 		next if $module->uptodate;
 		printf "%-40s  %.4f  %.4f\n",
 			$module->id,
