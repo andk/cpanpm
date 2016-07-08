@@ -1480,7 +1480,9 @@ sub _expand_module
 	{
 	my( $module ) = @_;
 
-	my $expanded = CPAN::Shell->expand( "Module", $module );
+	my $expanded = CPAN::Shell->expandany( $module );
+        return $expanded if $expanded;
+        $expanded = CPAN::Shell->expand( "Module", $module );
 	unless( defined $expanded ) {
 		$logger->error( "Could not expand [$module]. Check the module name." );
 		my $threshold = (
