@@ -1066,7 +1066,7 @@ sub has_usable {
                'Net::FTP' => [
                             sub {
                                 my $var = $CPAN::Config->{ftp_proxy} || $ENV{ftp_proxy};
-                                if ($var and $var =~ /^http:/) {
+                                if ($var and $var =~ /^http:/i) {
                                     # rt #110833
                                     for ("Net::FTP cannot handle http proxy") {
                                         $CPAN::Frontend->mywarn($_);
