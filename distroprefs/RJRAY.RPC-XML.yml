@@ -6,3 +6,8 @@ depends:
     LWP: 0
   requires:
     LWP: 0
+---
+match:
+  distribution: '^RJRAY/Devel-Modlist-\d'
+cpanconfig:
+  check_sigs: 0
