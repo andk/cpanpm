@@ -1,3 +1,19 @@
+2016-07-17  k  <andk@cpan.org>
+
+	* release 2.15-TRIAL
+
+	* bugfix #115734 App::Cpan Installing from cwd broken (Boutros Lab
+	  Software, Andreas Koenig)
+
+	* bugfix #115786 App::Cpan Can't locate object method "inst_file" via
+	  package "AAA::Demo" (dmitryb, Andreas Koenig)
+
+	* bugfix #115340 recursive dependencies (Father Chrysostomos, Andreas Koenig)
+
+	* bugfix #110833 ftp proxy (Father Chrysostomos, Andreas Koenig)
+
+	* distroprefs a handful of updates
+
 2016-06-25  k  <andk@cpan.org>
 
 	* release 2.14
@@ -22,6 +38,8 @@
 
 	* improve diagnostics on fails during testing (but it is still very hard
 	to debug these tests)
+
+	* bump all versions that have changed since 2.14
 
 2016-05-16  k  <andk@cpan.org>
 
