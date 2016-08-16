@@ -3955,6 +3955,11 @@ sub install {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_installed($self->{build_dir});
         $self->{install} = CPAN::Distrostatus->new("YES");
+        if ($CPAN::Config->{'cleanup_after_install'}) {
+            my $parent = File::Spec->catdir( $self->{build_dir}, File::Spec->updir );
+            chdir $parent or $CPAN::Frontend->mydie("Couldn't chdir to $parent: $!\n");
+            File::Path::rmtree($self->{build_dir});
+        }
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
@@ -3981,7 +3986,9 @@ sub install {
         }
     }
     delete $self->{force_update};
-    $self->store_persistent_state;
+    unless ($CPAN::Config->{'cleanup_after_install'}) {
+        $self->store_persistent_state;
+    }
 
     $self->post_install();
 

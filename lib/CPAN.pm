@@ -2117,6 +2117,9 @@ currently defined:
   bzip2              path to external prg
   cache_metadata     use serializer to cache metadata
   check_sigs         if signatures should be verified
+  cleanup_after_install
+                     remove build directory immediately after a
+                     successful install
   colorize_debug     Term::ANSIColor attributes for debugging output
   colorize_output    boolean if Term::ANSIColor should colorize output
   colorize_print     Term::ANSIColor attributes for normal output

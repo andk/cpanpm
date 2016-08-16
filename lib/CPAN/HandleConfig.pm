@@ -42,6 +42,7 @@ $VERSION = "5.5007"; # see also CPAN::Config::VERSION at end of file
      "bzip2",
      "cache_metadata",
      "check_sigs",
+     "cleanup_after_install",
      "colorize_debug",
      "colorize_output",
      "colorize_print",
