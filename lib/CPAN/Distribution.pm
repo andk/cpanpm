@@ -3966,6 +3966,10 @@ sub install {
             my $parent = File::Spec->catdir( $self->{build_dir}, File::Spec->updir );
             chdir $parent or $CPAN::Frontend->mydie("Couldn't chdir to $parent: $!\n");
             File::Path::rmtree($self->{build_dir});
+            my $yml = "$self->{build_dir}.yml";
+            if (-e $yml) {
+                unlink $yml or $CPAN::Frontend->mydie("Couldn't unlink $yml: $!\n");
+            }
         }
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");
