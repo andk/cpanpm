@@ -574,7 +574,14 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         unless (File::Copy::move($from,$to)) {
             my $err = $!;
             $from = File::Spec->rel2abs($from);
-            $CPAN::Frontend->mydie("Couldn't move $from to $to: $err");
+            $CPAN::Frontend->mydie(
+                "Couldn't move $from to $to: $err; #82295? ".
+                "CPAN::VERSION=$CPAN::VERSION; ".
+                "File::Copy::VERSION=$File::Copy::VERSION; ".
+                "$from " . (-e $from ? "exists; " : "does not exist; ").
+                "$to " . (-e $to ? "exists; " : "does not exist; ").
+                "cwd=" . CPAN::anycwd() . ";"
+            );
         }
     }
     $self->{build_dir} = $packagedir;
