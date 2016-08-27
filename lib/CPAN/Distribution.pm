@@ -2838,9 +2838,21 @@ sub unsat_prereq {
                 $CPAN::SQLite->search("CPAN::Module",$need_module);
             }
             $nmo = $CPAN::META->instance("CPAN::Module",$need_module);
-            next if $nmo->uptodate;
             $inst_file = $nmo->inst_file || '';
             $available_file = $nmo->available_file || '';
+            $available_version = $nmo->available_version;
+            if ($nmo->uptodate) {
+                my $accepts = $merged->accepts_module($need_module, $available_version);
+                unless ($accepts) {
+                    my $rq = $merged->requirements_for_module( $need_module );
+                    $CPAN::Frontend->mywarn(
+                        "Warning: Version '$available_version' of ".
+                        "'$need_module' is up to date but does not ".
+                        "fulfill requirements ($rq). I will continue, ".
+                        "but chances to succeed are low.\n");
+                }
+                next NEED;
+            }
 
             # if they have not specified a version, we accept any installed one
             if ( $available_file
@@ -2853,8 +2865,6 @@ sub unsat_prereq {
                     next NEED;
                 }
             }
-
-            $available_version = $nmo->available_version;
         }
 
         # We only want to install prereqs if either they're not installed
