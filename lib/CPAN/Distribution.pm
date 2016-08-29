@@ -2842,7 +2842,9 @@ sub unsat_prereq {
             $available_file = $nmo->available_file || '';
             $available_version = $nmo->available_version;
             if ($nmo->uptodate) {
-                my $accepts = $merged->accepts_module($need_module, $available_version);
+                my $accepts = eval {
+                    $merged->accepts_module($need_module, $available_version);
+                };
                 unless ($accepts) {
                     my $rq = $merged->requirements_for_module( $need_module );
                     $CPAN::Frontend->mywarn(
