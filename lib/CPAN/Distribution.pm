@@ -2704,6 +2704,12 @@ sub follow_prereqs {
     my(@good_prereq_tuples);
     for my $p (@prereq_tuples) {
         # e.g. $p = ['Devel::PartialDump', 'r', 1]
+        # skip builtins without .pm
+        if ($Config::Config{usecperl}
+            and $p->[0] =~ /^(DynaLoader|XSLoader|strict|coretypes)$/) {
+            CPAN->debug("$p->[0] builtin") if $CPAN::DEBUG;
+            next;
+        }
         # promote if possible
         if ($p->[1] =~ /^(r|c)$/) {
             push @good_prereq_tuples, $p;
@@ -2718,6 +2724,7 @@ sub follow_prereqs {
             die "Panic: in follow_prereqs: reqtype[$p->[1]] seen, should never happen";
         }
     }
+    return unless @good_prereq_tuples;
     my $pretty_id = $self->pretty_id;
     my %map = (
                b => "build_requires",
