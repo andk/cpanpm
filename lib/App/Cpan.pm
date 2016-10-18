@@ -120,6 +120,8 @@ Load the file that has the CPAN configuration data. This should have the
 same format as the standard F<CPAN/Config.pm> file, which defines
 C<$CPAN::Config> as an anonymous hash.
 
+If the file does not exist, C<cpan> dies.
+
 =item -J
 
 Dump the configuration in the same format that CPAN.pm uses. This is useful
