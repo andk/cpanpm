@@ -291,7 +291,7 @@ use CPAN 1.80 (); # needs no test
 use Config;
 use autouse Cwd => qw(cwd);
 use autouse 'Data::Dumper' => qw(Dumper);
-use File::Spec::Functions;
+use File::Spec::Functions qw(catfile file_name_is_absolute rel2abs);
 use File::Basename;
 use Getopt::Std;
 
@@ -1103,12 +1103,14 @@ sub _shell
 
 sub _load_config # -j
 	{
-	my $file = shift || '';
+	my $argument = shift;
+
+	my $file = file_name_is_absolute( $argument ) ? $argument : rel2abs( $argument );
+	croak( "cpan config file [$file] for -j does not exist!\n" ) unless -e $file;
 
 	# should I clear out any existing config here?
 	$CPAN::Config = {};
 	delete $INC{'CPAN/Config.pm'};
-	croak( "Config file [$file] does not exist!\n" ) unless -e $file;
 
 	my $rc = eval "require '$file'";
 
