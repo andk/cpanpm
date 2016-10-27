@@ -1033,7 +1033,7 @@ sub _load_local_lib # -I
 
 	my $rc = _safe_load_module("local::lib");
 	unless( $rc ) {
-		$logger->die( "Could not load local::lib" );
+		$logger->logdie( "Could not load local::lib" );
 		}
 
 	local::lib->import;
@@ -1045,7 +1045,7 @@ sub _use_these_mirrors # -M
 	{
 	$logger->debug( "Setting per session mirrors" );
 	unless( $_[0] ) {
-		$logger->die( "The -M switch requires a comma-separated list of mirrors" );
+		$logger->logdie( "The -M switch requires a comma-separated list of mirrors" );
 		}
 
 	$CPAN::Config->{urllist} = [ split /,/, $_[0] ];
