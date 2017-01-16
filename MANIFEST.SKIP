@@ -54,6 +54,7 @@
 ^related/
 ^release-lib
 ^t/CPAN/MyConfig\.pm
+^t/CPAN/MyConfig_[0-9]
 ^t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS@
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-DepeFails/
 ^t/CPAN/authors/id/A/AN/ANDK/CPAN-Test-Dummy-Perl5-Build-Fails/
@@ -84,6 +85,7 @@
 ^t/dot-cpan/sources/MIRRORED.BY
 ^t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS
 ^t/dot-cpan/sources/authors/id/A/AN/ANDK/CHECKSUMS.bak
+^t/dot-cpan-[0-9]
 ^talks/
 ^test.out
 ~$

@@ -1,6 +1,8 @@
 2017-01-16  k  <andk@cpan.org>
 
-	* release 2.16-TRIAL
+	* release 2.16-TRIAL2
+
+	* release 2.16-TRIAL (had a broken manifest/signature file)
 
 	* Adjust test 97-return_values.t to survive the removal of "."
 	from @INC (Andreas Koenig)

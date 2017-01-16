@@ -30,7 +30,6 @@ distroprefs/ANDYA.File-Find-Parallel.yml
 distroprefs/ANDYA.Perl-Version.yml
 distroprefs/ANDYA.TAP-Parser.yml
 distroprefs/ANDYA.Test-Harness.yml
-distroprefs/ARFREITAS.DTS.yml
 distroprefs/ARJAY.Compress-Bzip2.yml
 distroprefs/ASCOPE.Net-Google.yml
 distroprefs/ASG.List-Gen.yml
@@ -394,6 +393,7 @@ distroprefs/RMUHLE.classes.yml
 distroprefs/ROBIN.PadWalker.yml
 distroprefs/ROBIN.Want.yml
 distroprefs/ROCKY.Array-Columnize.yml
+distroprefs/ROKR.Config-Identity.yml
 distroprefs/RONAN.Transform-Canvas.yml
 distroprefs/ROODE.Readonly-XS.yml
 distroprefs/ROODE.Time-Format.yml
