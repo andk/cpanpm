@@ -39,7 +39,7 @@ foreach my $trial ( @trials ) {
 	my( $expected_exit_value, $options ) = @$trial;
 
 	my $rc = do {
-		my $command = "$^X -Mblib $command @config @$options 1>$devnull 2>&1 ";
+		my $command = "$^X -Mblib -I. $command @config @$options 1>$devnull 2>&1 ";
 		#diag( "Command is [$command]" );
 		system $command;
 		};
