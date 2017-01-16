@@ -1,3 +1,28 @@
+2017-01-16  k  <andk@cpan.org>
+
+	* release 2.16-TRIAL
+
+	* Adjust test 97-return_values.t to survive the removal of "."
+	from @INC (Andreas Koenig)
+
+	* Bugfix: fix wrong method call on $logger (Simon Legner)
+
+	* Bugfix: protect version dependencies with eval to survive
+	requirements like "2.08a" (Andreas Koenig)
+
+	* Bugfix #47934: honour version requirement with "==" (Andreas
+	Koenig)
+
+	* partially address #82295: improve diagnostics (Andreas Koenig)
+
+	* introduce new config variable cleanup_after_install: helps
+	keeping build directory small (Andreas Koenig)
+
+	* adopting changes from bleadperl related to removal of "." from
+	@INC (Tony Cook)
+
+	* distroprefs minor updates
+
 2016-07-17  k  <andk@cpan.org>
 
 	* release 2.15-TRIAL
@@ -2660,6 +2685,4 @@
 	Local Variables:
 	mode: change-log
 	change-log-default-name: "Changes"
-	tab-width: 2
-	left-margin: 2
 	End:
