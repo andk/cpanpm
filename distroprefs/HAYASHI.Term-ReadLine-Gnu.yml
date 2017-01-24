@@ -7,6 +7,6 @@ comment: |
 
 match:
   distribution: "^HAYASHI/Term-ReadLine-Gnu-"
-test:
+pl:
   env:
     AUTOMATED_TESTING: 0
