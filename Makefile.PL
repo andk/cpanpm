@@ -289,6 +289,9 @@ verify-changes-version:
 kwalify-distroprefs-slaymake:
 	$(PERL) `dirname $(PERL)`/slaymake validate
 
+ddify-distroprefs:
+	-$(PERL) -Ilib -e 'use YAML::Syck;use CPAN::Kwalify;use Kwalify qw(validate);use Data::Dumper;{my $$errors = 0; my $$files = 0; my $$perrors = 0;my $$distroprefs_path = $$INC{"CPAN/Kwalify.pm"};$$distroprefs_path =~ s{\.pm$$}{/distroprefs.yml};my $$schema = LoadFile($$distroprefs_path);for my $$yml (glob("distroprefs/*.yml")) {$$files++;my $$data = eval { LoadFile($$yml) };if (!$$data or $$@) {$$perrors++;warn "Parse error in $$yml: $$@\n";next;}$$errors++ if (!validate($$schema, $$data));my $$ddf=$$yml; $$ddf=~s{\.yml$$}{.dd}; open FH,">",$$ddf or die; print {FH} Data::Dumper->new([$$data])->Sortkeys(1)->Indent(1)->Useqq(1)->Dump}if ($$perrors||$$errors) { die "Found $$perrors parse errors and $$errors validate errors in $$files files" }else { warn "Validation OK ($$files files).\n" }}'
+
 kwalify-distroprefs-straight:
 	-$(PERL) -Ilib -le 'use YAML::Syck;use CPAN::Kwalify;use Kwalify qw(validate);use Data::Dumper;{my $$errors = 0; my $$files = 0; my $$perrors = 0;my $$distroprefs_path = $$INC{"CPAN/Kwalify.pm"};$$distroprefs_path =~ s{\.pm$$}{/distroprefs.yml};my $$schema = LoadFile($$distroprefs_path);for my $$yml (glob("distroprefs/*.yml")) {$$files++;my $$data = eval { LoadFile($$yml) };if (!$$data or $$@) {$$perrors++;warn "Parse error in $$yml: $$@\n";next;}$$errors++ if (!validate($$schema, $$data));}if ($$perrors||$$errors) { die "Found $$perrors parse errors and $$errors validate errors in $$files files" }else { warn "Validation OK ($$files files).\n" }}'
 
