@@ -25,11 +25,7 @@ my $version;
   local $^W;
   $ExtUtils::MakeMaker::VERSION = eval $ExtUtils::MakeMaker::VERSION;
 }
-if ($HAVE_FILE_SPEC) {
-  $version_from = File::Spec->catfile(qw(lib CPAN.pm));
-} else {
-  $version_from = "lib/CPAN.pm";
-}
+$version_from = "CPAN.pm";
 unshift @INC, "lib";
 require $version_from;
 $version = $CPAN::VERSION;
