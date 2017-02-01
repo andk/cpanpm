@@ -377,6 +377,7 @@ sub get {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    # local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # get
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -1302,6 +1303,7 @@ Could not determine which directory to use for looking at $dist.
                 : ($ENV{PERLLIB} || "");
 
         local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+        # local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # look
         $CPAN::META->set_perl5lib;
         local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -1821,6 +1823,7 @@ sub prepare {
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # prepare
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -2115,6 +2118,7 @@ is part of the perl-%s distribution. To install that, you need to run
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # make
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
 
@@ -3482,6 +3486,7 @@ sub test {
                            : ($ENV{PERLLIB} || "");
 
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # test
     $CPAN::META->set_perl5lib;
     local $ENV{MAKEFLAGS}; # protect us from outer make calls
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
@@ -3955,6 +3960,7 @@ sub install {
                            : ($ENV{PERLLIB} || "");
 
     local $ENV{PERL5OPT} = defined $ENV{PERL5OPT} ? $ENV{PERL5OPT} : "";
+    # local $ENV{PERL_USE_UNSAFE_INC} = exists $ENV{PERL_USE_UNSAFE_INC} ? $ENV{PERL_USE_UNSAFE_INC} : 1; # install
     $CPAN::META->set_perl5lib;
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
