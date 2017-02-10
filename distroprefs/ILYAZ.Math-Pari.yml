@@ -17,7 +17,7 @@ match:
   distribution: "^ILYAZ/modules/Math-Pari-2.010709"
 pl: 
   args: 
-    - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
+    - pari_tgz=/home/sand/src/perl/math-pari-megrez/pari-2.1.7.tgz
 patches:
   - "/home/k/sources/CPAN/SVK/trunk/patches/nclark-math-pari-perlmonks-672924.patch"
 --- 
@@ -32,4 +32,4 @@ pl:
       - 'Fetch\?'
       - "y\n"
   args: 
-    - pari_tgz=/home/src/perl/math-pari-megrez/pari-2.1.7.tgz
+    - pari_tgz=/home/sand/src/perl/math-pari-megrez/pari-2.1.7.tgz

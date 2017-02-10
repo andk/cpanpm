@@ -10,7 +10,7 @@ match:
 pl:
   args:
     - "-httpd"
-    - "/home/src/www/apache/apachebin/1.3.37/bin/httpd"
+    - "/home/sand/src/www/apache/apachebin/1.3.37/bin/httpd"
 depends:
   configure_requires:
     mod_perl: 1.30
