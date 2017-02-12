@@ -42,7 +42,7 @@ match:
     |AHERNIT/Dir-ListFilesRecursive-\d       # Deep recursion with high memory consumption
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ALVAROL/PerlCryptLib-1                  # hangs when searching header files
-    |AMALTSEV/XAO-ImageCache-1.tar.gz        # hangs
+    |AMALTSEV/XAO-                           # hangs
     |ANDREWF/Template-Plugin-Latex-3         # hangs with 3.02
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |APOCAL/Task-POE-All-1.102.tar.gz        # havoc of a task
