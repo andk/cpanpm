@@ -87,6 +87,7 @@ match:
     |DUFF/Module-Install-RPM-0.01            # see https://rt.cpan.org/Ticket/Display.html?id=67027
     |EBRUNI/WWW-BBB-API-\d                   # asks questions
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
+    |ECALDER/POE-Component-Child-1.39        # hangs during test
     |EDALY/Text-GenderFromName-0.32.tar.gz   # bad prompt
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EILARA/XUL-Node-\d                      # asks for port -- 8077?
