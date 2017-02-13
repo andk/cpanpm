@@ -100,6 +100,7 @@ match:
     |FROGGS/Alien-SDL-1.418                  # questions
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
+    |GARY/Math-TrulyRandom-1.0.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34693
     |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
