@@ -19,7 +19,7 @@ my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
-my $trial = 2;
+my $trial;
 my $version;
 {
   local $^W;
