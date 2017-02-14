@@ -81,6 +81,7 @@ match:
     |DCARDWELL/TextLinkAds-0.01.tar.gz       # interactive
     |DCOLLINS/Perlwikipedia-1.5.2            # https://rt.cpan.org/Ticket/Display.html?id=117918 and slow
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
+    |DESIMINER/Date-Business-1.2.tar.gz      # https://rt.cpan.org/Ticket/Display.html?id=94415
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
     |DOM/CGI-Wiki-\d                         # asks database questions
