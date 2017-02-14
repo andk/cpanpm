@@ -89,6 +89,7 @@ match:
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |ECALDER/POE-Component-Child-1.39        # hangs during test
     |EDALY/Text-GenderFromName-0.32.tar.gz   # bad prompt
+    |EDAVIS/xmltv-0.5.33.tar.gz              # http://matrix.cpantesters.org/?dist=xmltv+0.5.33
     |EIJABB/MARC-Errorchecks-1.13.tar.gz     # complicated interactivity in make test
     |EILARA/XUL-Node-\d                      # asks for port -- 8077?
     |EKAWAS/MOBY-                            # hangs
