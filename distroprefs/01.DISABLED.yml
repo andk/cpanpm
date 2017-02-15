@@ -144,6 +144,7 @@ match:
     |JROCKWAY/AnyEvent-Retry-\d              # hangs after release-pod-syntax.t
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
     |JTILLMAN/VCS-Vss-0\.20\.tar\.gz         # hangs
+    |JWIED/HTML-EP-0.2011.tar.gz             # hangs
     |KANE/CPANPLUS-0.8(5_08|6|601).tar.gz        # hangs
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
