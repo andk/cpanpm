@@ -874,7 +874,7 @@ __END__
 ########
 #P:test CPAN::Test::Dummy::Perl5::Build
 #E:\s\sANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz[\s\S]*?test\s+--\s+OK
-#R:Module::Build
+#R:Module::Build Archive::Zip
 ########
 #P:o debug 0
 #E:turned off
@@ -996,26 +996,30 @@ __END__
 ########
 #P:test Bundle::CpanTestDummies
 #E:Test-Dummy-Perl5-Build-Fails-.+?make_test\s+NO
-#R:Module::Build
+#R:Module::Build Archive::Zip
 ########
 #P:get Bundle::CpanTestDummies
 #E:Has already been unwrapped
+#R:Module::Build Archive::Zip
 ########
 #P:dump ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
 #E:\}.*?CPAN::Distribution
 ########
 #P:d ANDK/CPAN-Test-Dummy-Perl5-Build-1.03.tar.gz
-#R:Module::Build
+#R:Module::Build Archive::Zip
 #E:prereq_pm\s+build_requires:\S+requires:\S+
 ########
 #P:notest make Bundle::CpanTestDummies
 #E:Has already been made
+#R:Module::Build Archive::Zip
 ########
 #P:clean Bundle::CpanTestDummies
 #E:Running clean[\S\s]+?Running clean[\S\s]+?Running clean
+#R:Module::Build Archive::Zip
 ########
 #P:clean Bundle::CpanTestDummies
 #E:make clean already called once
+#R:Module::Build Archive::Zip
 ########
 #P:r
 #E:(All modules are up to date|installed modules|Fcntl)
