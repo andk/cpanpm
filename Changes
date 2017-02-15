@@ -1,3 +1,15 @@
+2017-02-15  k  <andk@cpan.org>
+
+	* release 2.17-TRIAL
+
+	* address #108: inject PERL_USE_UNSAFE_INC=1 on prepare, make, and
+	test; survival strategy for perls compiled with
+	-Ddefault_inc_excludes_dot (Todd Rinaldo, Graham Knop, Andreas
+	Koenig)
+
+	* make tests more robust against parallel runs and missing unzip
+	program (Andreas Koenig)
+
 2017-02-14  k  <andk@cpan.org>
 
 	* release 2.16
