@@ -8,6 +8,7 @@ BEGIN {
     require local_utils;
     local_utils::cleanup_dot_cpan();
     local_utils::prepare_dot_cpan();
+    local_utils::read_myconfig();
     require CPAN::MyConfig;
     require CPAN;
 
