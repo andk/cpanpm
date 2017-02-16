@@ -1,3 +1,9 @@
+2017-02-16  k  <andk@cpan.org>
+
+	* release 2.17-TRIAL2
+
+	* bump version number for CPAN/Distribution.pm
+
 2017-02-15  k  <andk@cpan.org>
 
 	* release 2.17-TRIAL

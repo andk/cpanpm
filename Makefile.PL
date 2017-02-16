@@ -19,7 +19,7 @@ my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
-my $trial = 1;
+my $trial = 2;
 my $version;
 {
   local $^W;
@@ -312,6 +312,7 @@ release :: disttest
 	rm -rf $(DISTVNAME)
 	$(NOECHO) $(ECHO) '#### Suggested next steps (if all looks good):'
 	$(NOECHO) $(ECHO) '#### Consider "make pull-request" for perl5-porters'
+	$(NOECHO) $(ECHO) make reversion AGAINST_TAG=__previous_release__
 	$(NOECHO) $(ECHO) git tag -m '"This is $(VERSION)"' '"$(VERSION)"'
 	$(NOECHO) $(ECHO) '  git push --tags origin master'
 
