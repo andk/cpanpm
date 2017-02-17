@@ -2945,6 +2945,11 @@ sub unsat_prereq {
     my @merged = sort $merged->required_modules;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
   NEED: for my $need_module ( @merged ) {
+        # skip builtins without .pm
+        if ($^V =~ /c$/ and $need_module =~ /^(DynaLoader|XSLoader|strict|coretypes)$/) {
+            CPAN->debug("$need_module builtin") if $CPAN::DEBUG;
+            next NEED;
+        }
         my $need_version = $merged->requirements_for_module($need_module);
         my($available_version,$inst_file,$available_file,$nmo);
         if ($need_module eq "perl") {
