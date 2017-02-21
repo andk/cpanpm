@@ -183,6 +183,7 @@ match:
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
+    |MMABRY/Device-WxM2-1.03.tar.gz          # hangs
     |MOB/Forks-Super-                        # too demanding
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
