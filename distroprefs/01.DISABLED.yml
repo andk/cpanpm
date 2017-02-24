@@ -202,6 +202,7 @@ match:
     |NWCLARK/perl-                           # pumpkin
     |NXADM/App-Unix-RPasswd-\d               # takes too much time, no idea what it does
     |OALDERS/URI-ParseSearchString-More-0.04
+    |PATL/autorequire-0.08.tar.gz
     |PERIGRIN/Git-Wrapper-\d                 # some huge kill triggered?
     |PERLER/CatalystX-ExtJS-Direct-\d        #
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
