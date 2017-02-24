@@ -275,6 +275,7 @@ match:
     |XAICRON/Module-Install-ExtendsMakeTest  # hangs (0.0{2,3})
     |XAICRON/Module-Install-TestTarget-      # hangs
     |XANTUS/MojoX-AIO-0.02.tar.gz            # hangs
+    |XERN/Bio-MedChunker-0.02.tar.gz
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |YAPPO/HTTP-Engine-0.0.15.tar.gz         # hangs in test 020_interface/standalone-restart
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls
