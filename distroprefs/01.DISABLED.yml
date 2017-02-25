@@ -251,6 +251,7 @@ match:
     |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
     |TBR/Net-RabbitMQ-Simple-0.0004          # hangs
+    |TMURRAY/Graphics-GVG-SVG-0.4.tar.gz
     |TOKUHIROM/Amon2-                        # test hangs with some perls
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
