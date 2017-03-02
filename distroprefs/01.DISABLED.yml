@@ -111,6 +111,7 @@ match:
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |GSEAMAN/XML-DB.tar.gz                   # hangs
+    |GSLONDON/Tk-CanvasLogo-0.2.tar.gz
     |GUIMARD/Net-Server-Mail-\d              # hangs
     |/POE-Quickie-\d                          # test hangs
     |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0304 # hangs
