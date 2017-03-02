@@ -142,6 +142,7 @@ match:
     |JLMARTIN/NRD-Daemon-\d                  # hangs with 5.14.1-36
     |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JMMILLS/App-Nopaste-Service-AnyPastebin-\d # hangs due Module::Install
+    |JOENIO/WWW-Scraper-ISBN-Siciliano_Driver-0.02.tar.gz
     |JQUELIN/WWW-DaysOfWonder-Memoir44-\d    # hangs
     |JROCKWAY/AnyEvent-Retry-\d              # hangs after release-pod-syntax.t
     |JSTOWE/Term-Screen-\d                   # automated testing impossible
