@@ -52,6 +52,7 @@ match:
     |AVAR/Sendmail-PMilter-\d                # asks questions
     |AWRIGLEY/App-Control-\d                 # endless loop
     |AWRIGLEY/sitemapper-1                   # questions
+    |BADGERSRC/DBIx-PhraseBook-1.003.tar.gz
     |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
     |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BEANZ/Device-RFXCOM-                    # spits out EV: error in callback (ignoring): closed at t/01-rx.t line 116
