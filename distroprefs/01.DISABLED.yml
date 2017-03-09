@@ -99,6 +99,7 @@ match:
     |EKAWAS/MOBY-                            # hangs
     |ENNO/libxml-enno-1.02.tar.gz            # https://rt.cpan.org/Ticket/Display.html?id=58931
     |ERIKRAY/XML-SAX-RTF-0                   # harmful: http://rt.cpan.org/Public/Bug/Display.html?id=5943
+    |EVO/Term-ShellKit-1.002.tar.gz
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
