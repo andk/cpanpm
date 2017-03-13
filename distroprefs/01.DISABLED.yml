@@ -117,7 +117,7 @@ match:
     |GSLONDON/Tk-CanvasLogo-0.2.tar.gz
     |GUIMARD/Net-Server-Mail-\d              # hangs
     |/POE-Quickie-\d                          # test hangs
-    |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0304 # hangs
+    |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0307.tar.gz # https://rt.cpan.org/Ticket/Display.html?id=82020
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HERNAN/Catalyst-Example-InstantCRUDStylish- # uninterruptible and demanding but maybe not his fault
