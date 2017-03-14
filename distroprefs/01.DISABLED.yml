@@ -80,6 +80,7 @@ match:
     |CSJEWELL/Test-Perl-Dist-0.300           # tells me that Win32 is missing and then stands still
     |DAVIDNICO/handy_tied_functions/Tie-Quicksort-Lazy-0.02 # endless loop
     |DBROWNING/Business-Shipping-\d          # asks questions
+    |DSB/ClearCase-Wrapper-\d
     |DCARDWELL/TextLinkAds-0.01.tar.gz       # interactive
     |DCOLLINS/Perlwikipedia-1.5.2            # https://rt.cpan.org/Ticket/Display.html?id=117918 and slow
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
