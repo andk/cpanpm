@@ -177,6 +177,7 @@ match:
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LUSOL/tkjuke-2.2.1.tar.gz               # asks questions
     |LZE/CGI-CMS-\d                          # asks questions about paths
+    |MACKENNA/IPC-MMA-0.81.tar.gz
     |MANOWAR/RadiusPerl-0.13.tar.gz          # hangs in test.pl
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
