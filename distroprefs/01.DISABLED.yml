@@ -192,6 +192,7 @@ match:
     |MLEHMANN/PApp-1.42.tar.gz               # the autoconfiguration gets it wrong
     |MMABRY/Device-WxM2-1.03.tar.gz          # hangs
     |MOB/Forks-Super-                        # too demanding
+    |MOB/Forks-Queue-                        # seems to hang the whole smoker
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
     |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
