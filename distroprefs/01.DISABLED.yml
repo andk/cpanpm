@@ -221,6 +221,7 @@ match:
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RCAPUTO/POE-Loop-Tk-1.304.tar.gz        # hangs sometimes
+    |RECSKY/LWP-Simple-REST-0.092            # duplicate upload
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
