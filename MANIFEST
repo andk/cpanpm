@@ -173,7 +173,6 @@ distroprefs/GAAS.Font-AFM.yml
 distroprefs/GAAS.HTML-Parser.yml
 distroprefs/GAAS.HTTP-Message.yaml
 distroprefs/GAAS.libwww.yml
-distroprefs/GBARR.libnet.dd
 distroprefs/GBARR.libnet.yml
 distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBARR.Scalar-Util.yml
@@ -205,12 +204,10 @@ distroprefs/IDOPEREL.Markup-Unified.yml
 distroprefs/ILMARI.DBIx-Class-Schema-Loader.yml
 distroprefs/ILYAZ.FreezeThaw.yml
 distroprefs/ILYAZ.Math-Pari.yml
-distroprefs/ILYAZ.Term-ReadLine-Perl.dd
 distroprefs/ILYAZ.Term-ReadLine-Perl.yml
 distroprefs/INGY.Inline.yml
 distroprefs/INGY.Test-Base.yml
 distroprefs/INGY.YAML-LibYAML.yml
-distroprefs/INGY.YAML.dd
 distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JAYK.Catalyst-Authen-S-D-C.yml
@@ -312,6 +309,7 @@ distroprefs/MLEHMANN.Gtk-Perl.yml
 distroprefs/MLEHMANN.Guard.yml
 distroprefs/MLEHMANN.IO-AIO.yml
 distroprefs/MLEHMANN.PApp.yml
+distroprefs/MLEHMANN.RCU.yml
 distroprefs/MLFISHER.Test-MockDBI.yml
 distroprefs/MOB.Forks-Super.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
