@@ -31,6 +31,7 @@
 ^cpan_reports_
 ^cpantesters-show/
 ^dagolden-reversion-gist.pl
+^distroprefs/.*\.dd
 ^distroprefs/ttt.nodbi.yml
 ^distroprefs/ttt.nodbi.yml.bak
 ^distroprefs/ttt.nomailsend.yml
