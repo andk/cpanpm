@@ -1,3 +1,15 @@
+2017-03-30  k  <andk@cpan.org>
+
+	* release 2.18-TRIAL
+
+	* inject PERL_USE_UNSAFE_INC=1 also in "install" (Graham Knop,
+	Leon Timmermans, Andreas Koenig)
+
+	* bugfix: address #120781; protect circular Bundle definitions
+	from deep recursion (Andreas Koenig)
+
+	* various distroprefs files updated
+
 2017-02-16  k  <andk@cpan.org>
 
 	* release 2.17-TRIAL2
