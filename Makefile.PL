@@ -224,8 +224,13 @@ WriteMakefile(
               # I took it from RT-CPAN ticket 30098:
               ($ExtUtils::MakeMaker::VERSION >= 6.4502 ?
                (META_ADD => {
+                             'meta-spec' => { version => 2 },
                              resources => {
-                                 repository => "git://github.com/andk/cpanpm.git",
+                                 repository => {
+                                     type => 'git', 
+                                     url => 'git://github.com/andk/cpanpm.git',
+                                     web => 'https://github.com/andk/cpanpm'
+                                 }
                              },
                              keywords => ['CPAN','module','module installation'],
                             }) : ()),

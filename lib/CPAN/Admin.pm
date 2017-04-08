@@ -206,21 +206,21 @@ it is only intended to fill in the form on PAUSE and leave the
 confirmation to you.
 
 C<modsearch> simply passes the arguments to the search engine for the
-modules@perl.org mailing list at http://www.xray.mpe.mpg.de where all
+modules@perl.org mailing list at L<http://www.xray.mpe.mpg.de> where all
 registration requests are stored. It does so in the same way as
 register, namely with the C<netscape -remote> command.
 
 An experimental feature has also been added, namely to color already
-registered modules in listings. If you have Term::ANSIColor installed,
+registered modules in listings. If you have L<Term::ANSIColor> installed,
 the u, r, and m commands will show already registered modules in
 green.
 
-=head1 PREREQISITES
+=head1 PREREQUISITES
 
-URI::Escape, netscape browser available in the path, netscape must
+L<URI::Escape>, a browser available in the path, the browser must
 understand the -remote switch (as far as I know, this is only
 available on UNIX); coloring of registered modules is only available
-if Term::ANSIColor is installed.
+if L<Term::ANSIColor> is installed.
 
 =head1 LICENSE
 
