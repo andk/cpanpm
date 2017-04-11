@@ -225,6 +225,7 @@ match:
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
+    |RAM/kit-2.0.38.tar.gz
     |RCAPUTO/POE-Loop-Tk-1.304.tar.gz        # hangs sometimes
     |RECSKY/LWP-Simple-REST-0.092            # duplicate upload
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
