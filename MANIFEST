@@ -382,6 +382,7 @@ distroprefs/RIBASUSHI.namespace-clean.yml
 distroprefs/RICKM.DateTime-Format-Strptime.yml
 distroprefs/RIZEN.Config-JSON.yml
 distroprefs/RJBS.Data-UUID.yml
+distroprefs/RJBS.Dist-Zilla.yml
 distroprefs/RJBS.Email-Send.yml
 distroprefs/RJBS.MIME-Light.yml
 distroprefs/RJRAY.RPC-XML.yml
