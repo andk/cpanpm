@@ -21,7 +21,7 @@ foreach my $file (@modules) {
     my $fail;
     if (open ERR, '<err') {
         my $stderr = join('', <ERR>);
-        if ($stderr !~ /^$file syntax OK$/) {
+        if ($stderr !~ /^$file syntax OK$/m) {
             $fail = $stderr;
         }
     } else {
