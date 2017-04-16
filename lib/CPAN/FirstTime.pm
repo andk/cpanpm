@@ -439,7 +439,7 @@ Randomize parameter
 generally be installed except in resource constrained environments.  When this
 policy is true, recommended modules will be included with required modules.
 
-Included recommended modules?
+Include recommended modules?
 
 =item scan_cache
 
@@ -489,7 +489,7 @@ Show all individual modules that have a $VERSION of zero?
 dependencies provide enhanced operation.  When this policy is true, suggested
 modules will be included with required modules.
 
-Included suggested modules?
+Include suggested modules?
 
 =item tar_verbosity
 
