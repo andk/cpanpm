@@ -54,6 +54,8 @@ runner for CPAN.pm.
 
 Creates a CPAN.pm autobundle with CPAN::Shell->autobundle.
 
+See L<CPAN/autobundle>.
+
 =item -A module [ module ... ]
 
 Shows the primary maintainers for the specified modules.
