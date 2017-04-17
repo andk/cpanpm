@@ -2193,11 +2193,6 @@ currently defined:
                      per default all untar operations are done with
                      Archive::Tar; by setting this variable to true
                      the external tar command is used if available
-  prefer_installer   legal values are MB and EUMM: if a module comes
-                     with both a Makefile.PL and a Build.PL, use the
-                     former (EUMM) or the latter (MB); if the module
-                     comes with only one of the two, that one will be
-                     used no matter the setting
   prerequisites_policy
                      what to do if you are missing module prerequisites
                      ('follow' automatically, 'ask' me, or 'ignore')
@@ -2560,7 +2555,7 @@ A comment
 Temporarily override assorted C<CPAN.pm> configuration variables.
 
 Supported are: C<build_requires_install_policy>, C<check_sigs>,
-C<make>, C<make_install_make_command>, C<prefer_installer>,
+C<make>, C<make_install_make_command>,
 C<test_report>. Please report as a bug when you need another one
 supported.
 

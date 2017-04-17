@@ -91,7 +91,6 @@ $VERSION = "5.5008"; # see also CPAN::Config::VERSION at end of file
      "perl5lib_verbosity",
      "plugin_list",
      "prefer_external_tar",
-     "prefer_installer",
      "prefs_dir",
      "prerequisites_policy",
      "proxy_pass",
@@ -128,7 +127,6 @@ my %prefssupport = map { $_ => 1 }
      "check_sigs",
      "make",
      "make_install_make_command",
-     "prefer_installer",
      "test_report",
     );
 

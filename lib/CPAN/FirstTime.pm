@@ -374,26 +374,6 @@ or some such. Your choice:
 
 What is your favorite pager program?
 
-=item prefer_installer
-
-When you have Module::Build installed and a module comes with both a
-Makefile.PL and a Build.PL, which shall have precedence?
-
-The main two standard installer modules are the old and well
-established ExtUtils::MakeMaker (for short: EUMM) which uses the
-Makefile.PL. And the next generation installer Module::Build (MB)
-which works with the Build.PL (and often comes with a Makefile.PL
-too). If a module comes only with one of the two we will use that one
-but if both are supplied then a decision must be made between EUMM and
-MB. See also http://rt.cpan.org/Ticket/Display.html?id=29235 for a
-discussion about the right default.
-
-Or, as a third option you can choose RAND which will make a random
-decision (something regular CPAN testers will enjoy).
-
-In case you can choose between running a Makefile.PL or a Build.PL,
-which installer would you prefer (EUMM or MB or RAND)?
-
 =item prefs_dir
 
 CPAN.pm can store customized build environments based on regular
@@ -1029,8 +1009,6 @@ sub init {
     #
     #= Installer, arguments to make etc.
     #
-
-    my_prompt_loop(prefer_installer => 'MB', $matcher, 'MB|EUMM|RAND');
 
     if (!$matcher or 'makepl_arg make_arg' =~ /$matcher/) {
         my_dflt_prompt(makepl_arg => "", $matcher);
