@@ -247,6 +247,7 @@ match:
     |SAPER/CPAN-Dependency-0.1[25]           # hangs in t/02internals: strace select(16, [4 8], NULL, NULL, NULL <unfinished ...>
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SDPRICE/Linux-DVB-DVBT-Apps-QuartzPVR-\d
+    |SEGAN/POE-Component-LaDBI-1.2.1
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
     |SIRROBERT/Set-Toolkit-0.11.tar.gz       # https://rt.cpan.org/Public/Bug/Display.html?id=67343
     |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
