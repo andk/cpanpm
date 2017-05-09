@@ -186,6 +186,7 @@ match:
     |MACKENNA/IPC-MMA-0.81.tar.gz
     |MANOWAR/RadiusPerl-0.13.tar.gz          # hangs in test.pl
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
+    |MARNANEL/Net-RGTP-0.10.tar.gz
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
     |MATTBM/PGP-Mail-1.7.tar.gz
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
