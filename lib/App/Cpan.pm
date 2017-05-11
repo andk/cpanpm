@@ -625,6 +625,8 @@ sub _default
 	# How do I handle exit codes for multiple arguments?
 	my @errors = ();
 
+	$options->{x} or _disable_guessers();
+
 	foreach my $arg ( @$args )
 		{
 		# check the argument and perhaps capture typos
@@ -1517,13 +1519,18 @@ sub _expand_module
 	}
 
 my $guessers = [
-	[ qw( Text::Levenshtein::XS distance 7 ) ],
-	[ qw( Text::Levenshtein::Damerau::XS     xs_edistance 7 ) ],
+	[ qw( Text::Levenshtein::XS distance 7 1 ) ],
+	[ qw( Text::Levenshtein::Damerau::XS     xs_edistance 7 1 ) ],
 
-	[ qw( Text::Levenshtein     distance 7 ) ],
-	[ qw( Text::Levenshtein::Damerau::PP     pp_edistance 7 ) ],
+	[ qw( Text::Levenshtein     distance 7 1 ) ],
+	[ qw( Text::Levenshtein::Damerau::PP     pp_edistance 7 1 ) ],
 
 	];
+
+sub _disable_guessers
+	{
+	$_->[-1] = 0 for @$guessers;
+	}
 
 # for -x
 sub _guess_namespace
@@ -1561,6 +1568,7 @@ sub _guess_at_module_name
 		foreach my $try ( @$guessers ) {
 			my $can_guess = eval "require $try->[0]; 1" or next;
 
+			$try->[-1] or next; # disabled
 			no strict 'refs';
 			$distance = \&{ join "::", @$try[0,1] };
 			$threshold ||= $try->[2];
