@@ -1553,25 +1553,39 @@ sub _list_all_namespaces {
 
 BEGIN {
 my $distance;
+my $_threshold;
+my $can_guess;
+my $shown_help = 0;
 sub _guess_at_module_name
 	{
 	my( $target, $threshold ) = @_;
 
 	unless( defined $distance ) {
 		foreach my $try ( @$guessers ) {
-			my $can_guess = eval "require $try->[0]; 1" or next;
+			$can_guess = eval "require $try->[0]; 1" or next;
 
 			no strict 'refs';
 			$distance = \&{ join "::", @$try[0,1] };
 			$threshold ||= $try->[2];
 			}
 		}
+	$_threshold ||= $threshold;
 
 	unless( $distance ) {
-		my $modules = join ", ", map { $_->[0] } @$guessers;
-		substr $modules, rindex( $modules, ',' ), 1, ', and';
+		unless( $shown_help ) {
+			my $modules = join ", ", map { $_->[0] } @$guessers;
+			substr $modules, rindex( $modules, ',' ), 1, ', and';
 
-		$logger->info( "I can suggest names if you install one of $modules" );
+			# Should this be colorized?
+			if( $can_guess ) {
+				$logger->info( "I can suggest names if you provide the -x option on invocation." );
+				}
+			else {
+				$logger->info( "I can suggest names if you install one of $modules" );
+				$logger->info( "and you provide the -x option on invocation." );
+				}
+			$shown_help++;
+			}
 		return;
 		}
 
@@ -1581,7 +1595,7 @@ sub _guess_at_module_name
 	my %guesses;
 	foreach my $guess ( @$modules ) {
 		my $distance = $distance->( $target, $guess );
-		next if $distance > $threshold;
+		next if $distance > $_threshold;
 		$guesses{$guess} = $distance;
 		}
 
