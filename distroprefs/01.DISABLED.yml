@@ -189,6 +189,7 @@ match:
     |MARNANEL/Net-RGTP-0.10.tar.gz
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
     |MATTBM/PGP-Mail-1.7.tar.gz
+    |MAUNDER/Apache-AppCluster-0.02.tar.gz
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
     |MJGARDNER/Dist-Zilla-Plugin-RequiresExternal-\d # endless loop if JSON::PP missing???
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
