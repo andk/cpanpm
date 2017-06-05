@@ -171,6 +171,7 @@ match:
     |KTHAKORE/SDL-2\.526                     # hangs with v5.15.4-460-g151cea2 after t/mixer.t
     |KORTY/
     |KWILLIAMS/Apache-Compress-1.005.tar.gz
+    |KWILLIAMS/Apache-SSI-2.19.tar.gz
     |LAOMOI/XiaoI-0.01.tar.gz                # hung
     |LAOMOI/XiaoI-0.03.tar.gz                # hung
     |LARRYL/WebService-ScormCloud-\d         # asks for an ID
