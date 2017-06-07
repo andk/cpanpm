@@ -258,6 +258,7 @@ match:
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SMUELLER/Alien-ROOT-v5.28.0.1           # hangs
     |SPANG/App-SD-0.75.tar.gz                # hangs in test t/sd-github/basic.t
+    |ZMAN/SPOPSx-Ginsu-0.58.tar.gz
     |SPURKIS/Agent-3.20.tar.gz               # https://rt.cpan.org/Ticket/Display.html?id=94430
     |SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz # Module::Install 0.54 http://rt.cpan.org/Ticket/Display.html?id=40618
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
