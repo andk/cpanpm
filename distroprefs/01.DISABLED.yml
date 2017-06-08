@@ -36,6 +36,7 @@ match:
     |AADLER/Inline-Octave-0.31.zip           # 
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
+    |ADAMK/CPAN-Index-0.01.tar.gz            # https://rt.cpan.org/Ticket/Display.html?id=43349
     |ADAMK/Perl-Dist-\d                      # probably removed all my Config.pms (?)
     |ADAMK/ThreatNet-IRC-\d                  # RT 33544
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
