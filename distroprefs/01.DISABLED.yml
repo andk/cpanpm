@@ -182,6 +182,7 @@ match:
     |LDS/Bio-SamTools-\d                     # requires non-CPAN prereq
     |LEOCHARRE/WWW-Autosite-                 # asks question, does not use prompt RT 35081
     |LTP/Audio-Play-MPlayer-\d               # hangs
+    |LDS/Bio-BigFile-1.07.tar.gz             # https://rt.cpan.org/Ticket/Display.html?id=56916
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
     |LUSHE/Egg-Release-DBI                   # brings laptop to its knees RT #39239
     |LUSOL/tkjuke-2.2.1.tar.gz               # asks questions
