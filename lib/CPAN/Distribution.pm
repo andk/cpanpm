@@ -660,8 +660,11 @@ sub satisfy_requires {
     my ($self) = @_;
     $self->debug("Entering satisfy_requires") if $CPAN::DEBUG;
     if (my @prereq = $self->unsat_prereq("later")) {
-        $self->debug("unsatisfied[@prereq]") if $CPAN::DEBUG;
-        $self->debug(@prereq) if $CPAN::DEBUG && @prereq;
+        if ($CPAN::DEBUG){
+            require Data::Dumper;
+            my $prereq = Data::Dumper->new(\@prereq)->Terse(1)->Indent(0)->Dump;
+            $self->debug("unsatisfied[$prereq]");
+        }
         if ($prereq[0][0] eq "perl") {
             my $need = "requires perl '$prereq[0][1]'";
             my $id = $self->pretty_id;
@@ -2610,9 +2613,19 @@ sub _make_install_make_command {
 sub is_locally_optional {
     my($self, $prereq_pm, $prereq) = @_;
     $prereq_pm ||= $self->{prereq_pm};
-    exists $prereq_pm->{opt_requires}{$prereq}
-        ||
-            exists $prereq_pm->{opt_build_requires}{$prereq};
+    my($nmo,$opt);
+    for my $rt (qw(requires build_requires)) {
+        if (exists $prereq_pm->{$rt}{$prereq}) {
+            # rt 121914
+            $nmo ||= $CPAN::META->instance("CPAN::Module",$prereq);
+            my $av = $nmo->available_version;
+            return 0 if !$av || CPAN::Version->vlt($av,$prereq_pm->{$rt}{$prereq});
+        }
+        if (exists $prereq_pm->{"opt_$rt"}{$prereq}) {
+            $opt = 1;
+        }
+    }
+    return $opt||0;
 }
 
 #-> sub CPAN::Distribution::follow_prereqs ;
@@ -3047,6 +3060,10 @@ sub unsat_prereq {
         }
         # here need to flag as optional for recommends/suggests
         # -- xdg, 2012-04-01
+        $self->debug(sprintf "%s manadory?[%s]",
+                     $self->pretty_id,
+                     $self->{mandatory})
+            if $CPAN::DEBUG;
         my $optional = !$self->{mandatory}
             || $self->is_locally_optional($prereq_pm, $need_module);
         push @need, [$need_module,$needed_as,$optional];
