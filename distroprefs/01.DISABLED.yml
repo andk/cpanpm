@@ -231,6 +231,7 @@ match:
     |PEVANS/IO-Async-Loop-Glib-0.20          # hangs after t/12share-timer.t (in t/15share-child.t)
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
+    |PHISH/XML-LibXML-Common-0.13.tar.gz     # could cause a downgrade (yes it did)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RAM/kit-2.0.38.tar.gz
     |RCAPUTO/POE-Loop-Tk-1.304.tar.gz        # hangs sometimes
