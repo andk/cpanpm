@@ -314,6 +314,7 @@ match:
     |ZEFRAM/Lexical-Import-0.002             # hangs quite often with high CPU load, see 74222
     |ZEFRAM/DynaLoader-Functions-0.000       # as above
     |ZEFRAM/DateTime-TimeZone-Tzfile-0.006   # as above
+    |ZENIN/Tk-MenuHash-1.12.tar.gz
     |ZINIGOR/libeve-perl_0.05.orig.tar.gz    # hangs
     |ZOFFIX/POE-Component-WWW-Google-PageRank-\d # hangs in 00-load with 34437
     |ZOFFIX/POE-Component-WebService-HtmlKitCom-FavIconFromImage-\d # hangs
