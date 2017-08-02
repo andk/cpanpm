@@ -67,6 +67,7 @@ match:
     |BOBTFISH/Catalyst-Authentication-Store-LDAP-\d # hangs
     |BOOK/Net-Proxy-0.13                     # hangs always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
+    |BRONDSEM/Mail-SpamAssassin-Plugin-OpenPGP-1.0.4.tar.gz
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
