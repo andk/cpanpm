@@ -184,6 +184,7 @@ match:
     |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
     |LDS/Bio-SamTools-\d                     # requires non-CPAN prereq
     |LEOCHARRE/WWW-Autosite-                 # asks question, does not use prompt RT 35081
+    |LGODDARD/Tk-Wizard-2.158.tar.gz
     |LTP/Audio-Play-MPlayer-\d               # hangs
     |LDS/Bio-BigFile-1.07.tar.gz             # https://rt.cpan.org/Ticket/Display.html?id=56916
     |LUPE/Filesys-SamFS-\d                   # have no SamFS
