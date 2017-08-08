@@ -61,6 +61,7 @@ match:
     |BFG/MojoX-Run-\d                        # hangs with 5.14.0-382
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
+    |BHODGES/Mail-IMAPFolderSearch-0.03.tar.gz
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
     |BLX/XSDSQL_                             # hangs with high memory usage
