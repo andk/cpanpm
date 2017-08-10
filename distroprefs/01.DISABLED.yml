@@ -283,6 +283,7 @@ match:
     |SUMPFRALL/Ezmlm-0.08.2                  # questions
     |SWALTERS/Acme-RPC-\d                    # hangs
     |TBR/Net-RabbitMQ-Simple-0.0004          # hangs
+    |TJENNESS/Chart-XMGR-0.95.tar.gz
     |TOBYINK/App-perlrdf-0.006.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=99158
     |TOKUHIROM/Amon2-                        # test hangs with some perls
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
