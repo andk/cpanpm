@@ -92,6 +92,7 @@ distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
 distroprefs/CORDATA.Kwiki-Formatter-Emphasis.yml
 distroprefs/CORION.List-Sliding-Changes.yml
+distroprefs/CORION.WWW-Mechanize-Chrome.yml
 distroprefs/CORNELIUS.App-CLI.yml
 distroprefs/CRISB.WWW-Curl.yml
 distroprefs/CSOE.PDL.yml
@@ -532,6 +533,7 @@ PAUSE2007.pub
 PAUSE2009.pub
 PAUSE2011.pub
 PAUSE2015.pub
+PAUSE2019.pub
 README
 scripts/cpan
 scripts/cpan-mirrors
