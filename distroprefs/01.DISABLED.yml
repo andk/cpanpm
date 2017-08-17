@@ -43,6 +43,7 @@ match:
     |AFF/Test-MockDBI-\d                     # asks for DSN, user, etc.
     |AGENT/OpenResty-0                       # 0.3.8 hangs after 'cp etc/openresty.conf etc/site-openresty.conf'
     |AHERNIT/Dir-ListFilesRecursive-\d       # Deep recursion with high memory consumption
+    |AHICOX/Config-Framework-2.5.tar.gz      # Where is your Virtual Root?
     |AJOLMA/Geo-Raster-\d                    # requires Raster Algebra Library, no debian package (?)
     |ALVAROL/PerlCryptLib-1                  # hangs when searching header files
     |AMALTSEV/XAO-                           # hangs
