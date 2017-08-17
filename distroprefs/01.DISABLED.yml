@@ -240,6 +240,7 @@ match:
     |PHISH/XML-LibXML-Common-0.13.tar.gz     # could cause a downgrade (yes it did)
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |RAM/kit-2.0.38.tar.gz
+    |RBDAVISON/XML-API-WIX2-0.02.tar.gz
     |RCAPUTO/POE-Loop-Tk-1.304.tar.gz        # hangs sometimes
     |RECSKY/LWP-Simple-REST-0.092            # duplicate upload
     |REHSACK/Bundle-DBD-DBM                  # takes too many hours
