@@ -11,3 +11,8 @@ comment: "http://www.cpantesters.org/cpan/report/d206833e-b6ab-11e3-94ce-39034f1
 match:
   distribution: 'REHSACK/List-MoreUtils-0\.(?:400_...)\.tar\.gz'
 goto: "ADAMK/List-MoreUtils-0.33.tar.gz"
+---
+comment: "https://rt.cpan.org/Ticket/Display.html?id=122875"
+match:
+  distribution: 'REHSACK/List-MoreUtils-0\.(?:423)\.tar\.gz'
+goto: "REHSACK/List-MoreUtils-0.419.tar.gz"
