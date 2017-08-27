@@ -41,10 +41,8 @@ sub _ftp_statistics {
         sleep($sleep); # this sleep must not be overridden;
                        # Frontend->mysleep with AUTOMATED_TESTING has
                        # provoked complete lock contention on my NFS
-        if ($sleep <= 3) {
-            $sleep+=0.33;
-        } elsif ($sleep <= 6) {
-            $sleep+=0.11;
+        if ($sleep <= 6) {
+            $sleep+=0.5;
         } else {
             # retry to get a fresh handle. If it is NFS and the handle is stale, we will never get an flock
             open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
@@ -60,8 +58,9 @@ sub _ftp_statistics {
             } elsif (ref $@ eq "CPAN::Exception::yaml_process_error") {
                 my $time = time;
                 my $to = "$file.$time";
-                $CPAN::Frontend->myprint("Error reading '$file': $@\nStashing away as '$to' to prevent further interruptions. You may want to remove that file later.\n");
-                rename $file, $to or $CPAN::Frontend->mydie("Could not rename: $!");
+                $CPAN::Frontend->myprint("Error reading '$file': $@\nTrying to stash it away as '$to' to prevent further interruptions. You may want to remove that file later.\n");
+                # may fail because somebody else has moved it away in the meantime:
+                rename $file, $to or $CPAN::Frontend->mywarn("Could not rename '$file' to '$to': $!");
                 return;
             }
         } else {

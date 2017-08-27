@@ -564,7 +564,10 @@ sub _yaml_loadfile {
             }
         } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
             local *FH;
-            open FH, $local_file or die "Could not open '$local_file': $!";
+            unless (open FH, $local_file) {
+                $CPAN::Frontend->mywarn("Could not open '$local_file': $!");
+                return +[];
+            }
             local $/;
             my $ystream = <FH>;
             eval { @yaml = $code->($ystream); };
