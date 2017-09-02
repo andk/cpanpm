@@ -3,6 +3,7 @@
 package CPAN::FTP;
 use strict;
 
+use Errno ();
 use Fcntl qw(:flock);
 use File::Basename qw(dirname);
 use File::Path qw(mkpath);
@@ -16,6 +17,19 @@ use vars qw(
 );
 $VERSION = "5.5008";
 
+sub _plus_append_open {
+    my($fh, $file) = @_;
+    my $parent_dir = dirname $file;
+    mkpath $parent_dir;
+    my($cnt);
+    until (open $fh, "+>>$file") {
+        next if $! == Errno::EAGAIN; # don't count on EAGAIN
+        $CPAN::Frontend->mydie("Could not open '$file' after 10000 tries: $!") if ++$cnt > 100000;
+        sleep 0.0001;
+        mkpath $parent_dir;
+    }
+}
+
 #-> sub CPAN::FTP::ftp_statistics
 # if they want to rewrite, they need to pass in a filehandle
 sub _ftp_statistics {
@@ -28,8 +42,7 @@ sub _ftp_statistics {
 
     $fh ||= FileHandle->new;
     my $file = File::Spec->catfile($CPAN::Config->{cpan_home},"FTPstats.yml");
-    mkpath dirname $file;
-    open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
+    _plus_append_open($fh,$file);
     my $sleep = 1;
     my $waitstart;
     while (!CPAN::_flock($fh, $locktype|LOCK_NB)) {
@@ -58,7 +71,9 @@ sub _ftp_statistics {
             } elsif (ref $@ eq "CPAN::Exception::yaml_process_error") {
                 my $time = time;
                 my $to = "$file.$time";
-                $CPAN::Frontend->myprint("Error reading '$file': $@\nTrying to stash it away as '$to' to prevent further interruptions. You may want to remove that file later.\n");
+                $CPAN::Frontend->mywarn("Error reading '$file': $@
+  Trying to stash it away as '$to' to prevent further interruptions.
+  You may want to remove that file later.\n");
                 # may fail because somebody else has moved it away in the meantime:
                 rename $file, $to or $CPAN::Frontend->mywarn("Could not rename '$file' to '$to': $!");
                 return;
