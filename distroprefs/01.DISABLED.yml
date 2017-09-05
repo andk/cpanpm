@@ -247,6 +247,7 @@ match:
     |RHANDOM/Template-Alloy-XS-\d            # very hungry for memory, made amd64 unuseable
     |RHOOPER/HTTP-Lite-\d                    # asks for a URL
     |RICKM/DateTime-LazyInit-1.0200.tgz
+    |RKILGORE/Speech-Recognizer-ViaVoice-0.02.tar.gz
     |RKITOVER/Catalyst-Controller-WrapCGI-0.0030.tar.gz # hangs
     |ROLAND/Schedule-Cron-\d                 # hangs after load_crontab.t
     |ROLAND/jmx4perl-\d                      # asks questions
