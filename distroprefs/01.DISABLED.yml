@@ -91,6 +91,7 @@ match:
     |DCOLLINS/Perlwikipedia-1.5.2            # https://rt.cpan.org/Ticket/Display.html?id=117918 and slow
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DESIMINER/Date-Business-1.2.tar.gz      # https://rt.cpan.org/Ticket/Display.html?id=94415
+    |DIEDERICH/App-MultiModule-Tasks-SmartMerge-1.161240.tar.gz
     |DJBERG/Tk-LabPopEntry-0.05.tar.gz
     |DMAKI/Alien-MeCab                       # ditto
     |DMAKI/Text-MeCab                        # hangs asking questions
