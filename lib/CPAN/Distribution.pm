@@ -3982,7 +3982,15 @@ sub install {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
-    my($pipe) = FileHandle->new("$system $stderr |") || Carp::croak("Can't execute $system: $!");
+    my($pipe) = FileHandle->new("$system $stderr |");
+    unless ($pipe) {
+        $CPAN::Frontend->mywarn("Can't execute $system: $!");
+        $self->introduce_myself;
+        $self->{install} = CPAN::Distrostatus->new("NO");
+        $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
+        delete $self->{force_update};
+        return;
+    }
     my($makeout) = "";
     while (<$pipe>) {
         print $_; # intentionally NOT use Frontend->myprint because it
