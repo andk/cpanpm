@@ -2774,8 +2774,13 @@ sub _feature_depends {
 sub prereqs_for_slot {
     my($self,$slot) = @_;
     my($prereq_pm);
-    $CPAN::META->has_usable("CPAN::Meta::Requirements")
-        or $CPAN::Frontend->mydie("CPAN::Meta::Requirements not available");
+    unless ($CPAN::META->has_usable("CPAN::Meta::Requirements")) {
+        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements not available");
+        if ($self->{CALLED_FOR} eq "CPAN::Meta::Requirements") {
+            $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround");
+            return;
+        }
+    }
     my $merged = CPAN::Meta::Requirements->new;
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
@@ -2838,8 +2843,10 @@ sub unsat_prereq {
     my($self,$slot) = @_;
     my($merged_hash,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
-    $CPAN::META->has_usable("CPAN::Meta::Requirements")
-        or die "CPAN::Meta::Requirements not available";
+    unless ($CPAN::META->has_usable("CPAN::Meta::Requirements")) {
+        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements not available, please install as soon as possible, trying to continue with severly limited capabilities");
+        return;
+    }
     my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
     my @merged = sort $merged->required_modules;
     CPAN->debug("all merged_prereqs[@merged]") if $CPAN::DEBUG;
