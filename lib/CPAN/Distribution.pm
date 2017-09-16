@@ -2775,7 +2775,7 @@ sub prereqs_for_slot {
     my($self,$slot) = @_;
     my($prereq_pm);
     $CPAN::META->has_usable("CPAN::Meta::Requirements")
-        or die "CPAN::Meta::Requirements not available";
+        or $CPAN::Frontend->mydie("CPAN::Meta::Requirements not available");
     my $merged = CPAN::Meta::Requirements->new;
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
