@@ -1985,7 +1985,12 @@ sub prepare {
                 }
             }
             elsif ( $self->_should_report('pl') ) {
-                ($output, $ret) = CPAN::Reporter::record_command($system);
+                ($output, $ret) = eval { CPAN::Reporter::record_command($system) };
+                if (! defined $output or $@) {
+                    my $err = $@ || "Unknown error";
+                    $CPAN::Frontend->mywarn("Error while running PL phase: $err");
+                    return $self->goodbye("$system -- NOT OK");
+                }
                 CPAN::Reporter::grade_PL( $self, $system, $output, $ret );
             }
             else {
