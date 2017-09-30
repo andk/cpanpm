@@ -20,6 +20,7 @@ distroprefs/ADUITSIS.IPC-Mmap.yml
 distroprefs/AGENT.OpenResty.yml
 distroprefs/AGRUNDMA.HTTP-Body.yml
 distroprefs/AGRUNDMA.POE-Loop-EV.yml
+distroprefs/AMBRUS-Object-Import.yml
 distroprefs/AMICHAUER.Unicode-Lite.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Build-Fails.yml
 distroprefs/ANDK.CPAN-Test-Dummy-Perl5-Make-Expect.yml
