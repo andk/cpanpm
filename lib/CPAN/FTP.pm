@@ -15,7 +15,7 @@ use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 use vars qw(
             $VERSION
 );
-$VERSION = "5.5008";
+$VERSION = "5.5009";
 
 sub _plus_append_open {
     my($fh, $file) = @_;
@@ -23,7 +23,7 @@ sub _plus_append_open {
     mkpath $parent_dir;
     my($cnt);
     until (open $fh, "+>>$file") {
-        next if $! == Errno::EAGAIN; # don't count on EAGAIN
+        next if $! == Errno::EAGAIN; # don't increment on EAGAIN
         $CPAN::Frontend->mydie("Could not open '$file' after 10000 tries: $!") if ++$cnt > 100000;
         sleep 0.0001;
         mkpath $parent_dir;
@@ -58,7 +58,7 @@ sub _ftp_statistics {
             $sleep+=0.5;
         } else {
             # retry to get a fresh handle. If it is NFS and the handle is stale, we will never get an flock
-            open $fh, "+>>$file" or $CPAN::Frontend->mydie("Could not open '$file': $!");
+            _plus_append_open($fh, $file);
         }
     }
     my $stats = eval { CPAN->_yaml_loadfile($file); };
