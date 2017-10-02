@@ -4019,7 +4019,8 @@ sub install {
         $CPAN::Frontend->myprint("  $system -- OK\n");
         $CPAN::META->is_installed($self->{build_dir});
         $self->{install} = CPAN::Distrostatus->new("YES");
-        if ($CPAN::Config->{'cleanup_after_install'}) {
+        if ($CPAN::Config->{'cleanup_after_install'}
+            && ! $self->is_dot_dist) {
             my $parent = File::Spec->catdir( $self->{build_dir}, File::Spec->updir );
             chdir $parent or $CPAN::Frontend->mydie("Couldn't chdir to $parent: $!\n");
             File::Path::rmtree($self->{build_dir});
