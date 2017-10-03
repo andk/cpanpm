@@ -2780,13 +2780,21 @@ sub prereqs_for_slot {
     my($self,$slot) = @_;
     my($prereq_pm);
     unless ($CPAN::META->has_usable("CPAN::Meta::Requirements")) {
-        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements not available");
-        if ($self->{CALLED_FOR} =~
-            /^(CPAN::Meta::Requirements|version|parent)$/) {
-            $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround");
-            return;
+        my $whynot = "not available";
+        if (defined $CPAN::Meta::Requirements::VERSION) {
+            $whynot = "version $CPAN::Meta::Requirements::VERSION not sufficient";
         }
-        $CPAN::Frontend->mydie("Please install CPAN::Meta::Requirements manually");
+        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements $whynot");
+        my $before = "";
+        if ($self->{CALLED_FOR}){
+            if ($self->{CALLED_FOR} =~
+                /^(CPAN::Meta::Requirements|version|parent)$/) {
+                $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround");
+                return;
+            }
+            $before = " before $self->{CALLED_FOR}";
+        }
+        $CPAN::Frontend->mydie("Please install CPAN::Meta::Requirements manually$before");
     }
     my $merged = CPAN::Meta::Requirements->new;
     my $prefs_depends = $self->prefs->{depends}||{};
