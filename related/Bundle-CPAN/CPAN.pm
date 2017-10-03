@@ -22,6 +22,8 @@ ExtUtils::MakeMaker -- bundles sane ExtUtils::Install
 
 Test::Harness -- critical prereq because must be >=2.62
 
+CPAN::Meta::Requirements
+
 ExtUtils::CBuilder -- some of the things below depend on it without declaring (as of 2006-10)
 
 File::Temp -- prereq
