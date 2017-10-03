@@ -75,7 +75,7 @@ sub _ftp_statistics {
   Trying to stash it away as '$to' to prevent further interruptions.
   You may want to remove that file later.\n");
                 # may fail because somebody else has moved it away in the meantime:
-                rename $file, $to or $CPAN::Frontend->mywarn("Could not rename '$file' to '$to': $!");
+                rename $file, $to or $CPAN::Frontend->mywarn("Could not rename '$file' to '$to': $!\n");
                 return;
             }
         } else {
@@ -153,7 +153,7 @@ sub _add_to_statistics {
         unlink($sfile) if ($^O eq 'MSWin32' or $^O eq 'os2');
 	_copy_stat($sfile, "$sfile.$$") if -e $sfile;
         rename "$sfile.$$", $sfile
-            or $CPAN::Frontend->mydie("Could not rename '$sfile.$$' to '$sfile': $!\n");
+            or $CPAN::Frontend->mywarn("Could not rename '$sfile.$$' to '$sfile': $!\nGiving up\n");
     }
 }
 
