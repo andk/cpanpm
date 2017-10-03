@@ -2784,12 +2784,12 @@ sub prereqs_for_slot {
         if (defined $CPAN::Meta::Requirements::VERSION) {
             $whynot = "version $CPAN::Meta::Requirements::VERSION not sufficient";
         }
-        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements $whynot");
+        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements $whynot\n");
         my $before = "";
         if ($self->{CALLED_FOR}){
             if ($self->{CALLED_FOR} =~
                 /^(CPAN::Meta::Requirements|version|parent)$/) {
-                $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround");
+                $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround\n");
                 return;
             }
             $before = " before $self->{CALLED_FOR}";
