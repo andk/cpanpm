@@ -1,3 +1,12 @@
+2017-10-03  k  <andk@cpan.org>
+
+	* release 1.863
+
+	* add four more daily used packages to the Bundle::CPANxxl:
+	Module::Info, V, Devel::PatchPerl, Module::Versions::Report
+
+	* add CPAN::Meta::Requirements to Bundle::CPAN
+
 2015-04-27  k  <andk@cpan.org>
 
 	* release 1.862

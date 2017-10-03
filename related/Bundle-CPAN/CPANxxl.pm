@@ -1,7 +1,7 @@
 package Bundle::CPANxxl;
 use strict;
 use vars qw($VERSION);
-$VERSION = '0.3';
+$VERSION = '0.4';
 
 1;
 
