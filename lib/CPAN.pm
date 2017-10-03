@@ -1042,6 +1042,11 @@ sub has_usable {
 
                'CPAN::Meta::Requirements' => [
                             sub {
+                                if (defined $CPAN::Meta::Requirements::VERSION
+                                    && CPAN::Version->vlt($CPAN::Meta::Requirements::VERSION, "2.120920")
+                                   ) {
+                                    delete $INC{"CPAN/Meta/Requirements.pm"};
+                                }
                                 require CPAN::Meta::Requirements;
                                 unless (CPAN::Version->vge(CPAN::Meta::Requirements->VERSION, 2.120920)) {
                                     for ("Will not use CPAN::Meta::Requirements, need version 2.120920\n") {
