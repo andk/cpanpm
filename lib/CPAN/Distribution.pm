@@ -2788,7 +2788,13 @@ sub prereqs_for_slot {
         my $before = "";
         if ($self->{CALLED_FOR}){
             if ($self->{CALLED_FOR} =~
-                /^(CPAN::Meta::Requirements|version|parent)$/) {
+                /^(
+                     CPAN::Meta::Requirements
+                 |version
+                 |parent
+                 |ExtUtils::MakeMaker
+                 |Test::Harness
+                 )$/x) {
                 $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround\n");
                 return;
             }
