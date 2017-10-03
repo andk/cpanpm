@@ -179,3 +179,10 @@ sub dist_dir {
   $out =~ s/distdir :/distdir ::/g;
   return $out;
 }
+
+sub distsignature {
+    my($self) = shift;
+    my $ret = $self->SUPER::distsignature_target(@_);
+    $ret =~ s|cpansign|\$(PERL) \`dirname \$(PERL)\`/cpansign|g;
+    return $ret;
+}
