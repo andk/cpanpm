@@ -2865,7 +2865,7 @@ sub unsat_prereq {
     my($merged_hash,$prereq_pm) = $self->prereqs_for_slot($slot);
     my(@need);
     unless ($CPAN::META->has_usable("CPAN::Meta::Requirements")) {
-        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements not available, please install as soon as possible, trying to continue with severly limited capabilities");
+        $CPAN::Frontend->mywarn("CPAN::Meta::Requirements not available, please install as soon as possible, trying to continue with severly limited capabilities\n");
         return;
     }
     my $merged = CPAN::Meta::Requirements->from_string_hash($merged_hash);
