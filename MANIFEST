@@ -476,6 +476,7 @@ distroprefs/YSAS.SWF-Builder.yml
 distroprefs/YVES.Data-Dump-Streamer.yml
 distroprefs/YVES.Date-Simple.yml
 distroprefs/ZEFRAM.Data-Alias.yml
+distroprefs/ZEFRAM.Module-Runtime.yml
 distroprefs/ZEV.Test-Dependencies.yml
 distroprefs/ZINCDEV.tk-zinc.yml
 distroprefs/ZOFFIX.LWP-UserAgent-ProxyHopper.yml
