@@ -3494,8 +3494,21 @@ sub _exe_files {
     if (-f $buildparams) {
         CPAN->debug("Found '$buildparams'") if $CPAN::DEBUG;
         my $x = do $buildparams;
-        for my $sf (@{$x->[2]{script_files} || []}) {
-            push @exe_files, $sf;
+        for my $sf ($x->[2]{script_files}) {
+            if (my $reftype = ref $sf) {
+                if ($reftype eq "ARRAY") {
+                    push @exe_files, @$sf;
+                }
+                elsif ($reftype eq "HASH") {
+                    push @exe_files, keys %$sf;
+                }
+                else {
+                    $CPAN::Frontend->mywarn("Invalid reftype $reftype for Build.PL 'script_files'\n");
+                }
+            }
+            elsif (defined $sf) {
+                push @exe_files, $sf;
+            }
         }
     }
     return \@exe_files;
