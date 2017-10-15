@@ -2120,7 +2120,7 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
     }
 
-    my $make = $self->{modulebuild} ? "Build" : "make";
+    my $make = $self->{modulebuild} ? "Build" : "make -f Makefile";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -2181,7 +2181,13 @@ is part of the perl-%s distribution. To install that, you need to run
             }
             $system = join " ", $self->_build_command(), $CPAN::Config->{mbuild_arg};
         } else {
-            $system = join " ", $self->_make_command(),  $CPAN::Config->{make_arg};
+	    # ExtUtils::MakeMaker writes a file called Makefile. Explicitly use
+	    # that since GNU make can default to another name, e.g. GNUMakefile.
+	    # Note: -f is in the POSIX spec for make
+	    my @make_args = -f "Makefile" ?
+	      ($self->_make_command(), '-f', 'Makefile', $CPAN::Config->{make_arg}) :
+	      ($self->_make_command(), $CPAN::Config->{make_arg});
+            $system = join " ", @make_args;
         }
         $system =~ s/\s+$//;
         my $make_arg = $self->_make_phase_arg("make");
@@ -2949,7 +2955,7 @@ sub unsat_prereq {
             } elsif (
                 $self->{reqtype} =~ /^(r|c)$/
                 && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
-                && $nmo 
+                && $nmo
                 && !$inst_file
             ) {
                 # continue installing as a prereq; this may be a
@@ -3526,6 +3532,7 @@ sub test {
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
     my $make = $self->{modulebuild} ? "Build" : "make";
 
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
                            : ($ENV{PERLLIB} || "");
@@ -3950,6 +3957,7 @@ sub install {
         return;
     }
 
+    local $ENV{PERL} = defined $ENV{PERL}? $ENV{PERL} : $^X;
     my $system;
     if (my $commandline = $self->prefs->{install}{commandline}) {
         $system = $commandline;
