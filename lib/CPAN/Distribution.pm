@@ -1720,13 +1720,10 @@ sub isa_perl {
   my($self) = @_;
   my $file = File::Basename::basename($self->id);
   if ($file =~ m{ ^ perl
-                  -?
-                  (5)
-                  ([._-])
                   (
-                   \d{3}(_[0-4][0-9])?
+                   -5\.\d+\.\d+
                    |
-                   \d+\.\d+
+                   5[._-]00[0-5](_[0-4][0-9])?
                   )
                   \.tar[._-](?:gz|bz2)
                   (?!\n)\Z
@@ -2092,7 +2089,7 @@ is part of the perl-%s distribution. To install that, you need to run
                              $self->called_for,
                              $self->isa_perl,
                              $self->called_for,
-                             $self->id,
+                             $self->pretty_id,
                             ));
             $self->{make} = CPAN::Distrostatus->new("NO isa perl");
             $CPAN::Frontend->mysleep(1);

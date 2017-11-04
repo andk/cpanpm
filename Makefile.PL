@@ -103,6 +103,7 @@ for my $interesting_module (qw(
         CPAN::Checksums
         CPAN::Meta
         CPAN::Meta::YAML
+        CPAN::Perl::Releases
         Compress::Bzip2
         Compress::Zlib
         Data::Dumper
