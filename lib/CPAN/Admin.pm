@@ -6,7 +6,7 @@ use vars qw(@EXPORT $VERSION);
 use constant PAUSE_IP => "pause.perl.org";
 
 @EXPORT = qw(shell);
-$VERSION = "5.5";
+$VERSION = "5.501";
 push @CPAN::Complete::COMMANDS, qw(register modsearch);
 $CPAN::Shell::COLOR_REGISTERED = 1;
 

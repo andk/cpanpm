@@ -1,3 +1,38 @@
+2017-11-05  k  <andk@cpan.org>
+
+	* release 2.19-TRIAL
+
+	* bugfix #118921: make the null logger a non-null logger (Thanks
+	to Alexandr Ciornii and Zefram for reporting)
+
+	* tighten regexp in isa_perl (#123482) so that perl5-0.21 be
+	recognized as module (Thanks to Father Chrysostomos for the
+	request)
+
+	* bugfix for cleanup_after_install: do attempt not cleanup the
+	current directory when the current directory is the build
+	directory
+
+	* improve robustness when CPAN::Reporter::record_command fails
+
+	* improve diagnostics when CPAN::Meta::Requirements is too old or
+	missing; bootstrapping older perls with new CPAN.pm should be
+	easier now
+
+	* improve robustness on file open issues
+
+	* improve robustness when yaml files cannot be loaded
+
+	* bugfix #121914: cpan client may fail when something is
+	both recommended AND required (Thanks to Sergey Aleynikov for the
+	report)
+
+	* package the PAUSE2019.pub public key for signatures
+
+	* bugfix on cpan script regarding -x option (H.Merijn Brand)
+
+	* couple of updates on distroprefs and minor fixes
+
 2017-03-30  k  <andk@cpan.org>
 
 	* release 2.18-TRIAL
