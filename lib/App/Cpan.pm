@@ -545,7 +545,13 @@ package
   Local::Null::Logger; # hide from PAUSE
 
 sub new { bless \ my $x, $_[0] }
-sub AUTOLOAD { 1 }
+sub AUTOLOAD {
+    my $autoload = our $AUTOLOAD;
+    $autoload =~ s/.*://;
+    return if $autoload =~ /^(debug|trace)$/;
+    $CPAN::Frontend->mywarn(">($autoload): $_\n")
+        for split /[\r\n]+/, $_[1];
+}
 sub DESTROY { 1 }
 }
 
@@ -566,7 +572,7 @@ sub _init_logger
 
     unless( $log4perl_loaded )
         {
-        print STDERR "Loading internal null logger. Install Log::Log4perl for logging messages\n";
+        print STDOUT "Loading internal logger. Log::Log4perl recommended for better logging\n";
         $logger = Local::Null::Logger->new;
         return $logger;
         }
