@@ -12,7 +12,7 @@ eval { require Test::MinimumVersion; };
 
 if ( $@ ) {
 
-    my $msg = 'Test::MinimumVersion{::Fast,} required for this test';
+    my $msg = 'Test::MinimumVersion required for this test';
     plan( skip_all => $msg );
 } else {
     diag "Found Test::MinimumVersion v $Test::MinimumVersion::VERSION";
