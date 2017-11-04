@@ -120,6 +120,7 @@ for my $interesting_module (qw(
         IO::Compress::Base
         IO::Zlib
         JSON::PP
+        Log::Log4perl
         LWP::UserAgent
         MIME::Base64
         Module::Build
