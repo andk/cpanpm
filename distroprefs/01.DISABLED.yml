@@ -299,6 +299,7 @@ match:
     |TURNERJW/
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
     |TWH/Bio-GMOD-0.028.tar.gz               # https://rt.cpan.org/Ticket/Display.html?id=19467
+    |ULPFR/WAIT-1.800.tar.gz                 # dialog
     |URI/Stem-\d                             # asks questions about conf directories
     |VINSWORLD/Net-SNMPTrapd-0.04            # asks question
     |VINSWORLD/Net-Syslogd-0.0\d.            # asks question from 04 to 06
