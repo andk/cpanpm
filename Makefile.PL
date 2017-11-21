@@ -198,7 +198,7 @@ WriteMakefile(
                (MIN_PERL_VERSION => '5.006002') : (),
               ),
               clean => {
-                        FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml cpan-home",
+                        FILES => "lib/CPAN/Config.pm t/dot-cpan/FTPstats.yml cpan-home t/dot-cpan*",
                        },
               @sign,
               ($] >= 5.005 ?
