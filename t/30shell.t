@@ -1030,6 +1030,9 @@ __END__
 #P:upgrade /cnt/
 #E:(All modules are up to date|installed modules|Fcntl)
 ########
+#P:r /wrtlprmft/
+#E:No modules found for
+########
 #P:! $CPAN::Config->{make_install_make_command} = "'$^X' -le 'print q{SAW MAKE}'"
 ########
 #P:! $CPAN::Config->{mbuild_install_build_command} = "'$^X' -le 'print q{SAW MBUILD}'"

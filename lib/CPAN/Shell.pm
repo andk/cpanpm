@@ -1023,7 +1023,7 @@ CPAN_VERSION: %s %s
         $need{$module->id}++;
     }
     unless (%need) {
-        if ($what eq "u") {
+        if (!@expand || $what eq "u") {
             $CPAN::Frontend->myprint("No modules found for @args\n");
         } elsif ($what eq "r") {
             $CPAN::Frontend->myprint("All modules are up to date for @args\n");
