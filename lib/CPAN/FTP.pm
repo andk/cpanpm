@@ -569,7 +569,7 @@ sub hostdleasy { #called from hostdlxxx
     my($ro_url);
   HOSTEASY: for $ro_url (@$host_seq) {
         $self->_set_attempt($stats,"dleasy",$ro_url);
-        my $url .= "$ro_url$file";
+        my $url = "$ro_url$file";
         $self->debug("localizing perlish[$url]") if $CPAN::DEBUG;
         if ($url =~ /^file:/) {
             my $l;
