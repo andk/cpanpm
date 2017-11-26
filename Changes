@@ -1,3 +1,13 @@
+2017-11-26  k  <andk@cpan.org>
+
+	* release 2.20-TRIAL
+
+	* bugfix #123691: fix wrong wording of result message when r
+	command hits an empty set (Thank to lorenzo taviani for reporting)
+
+	* bugfix: remove spurious .= operator where an ordinary assignment
+	was intended (Andreas Koenig)
+
 2017-11-05  k  <andk@cpan.org>
 
 	* release 2.19-TRIAL
@@ -9,7 +19,7 @@
 	recognized as module (Thanks to Father Chrysostomos for the
 	request)
 
-	* bugfix for cleanup_after_install: do attempt not cleanup the
+	* bugfix for cleanup_after_install: do not attempt to cleanup the
 	current directory when the current directory is the build
 	directory
 
