@@ -120,6 +120,8 @@ match:
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
     |GRICHTER/DBIx-Recordset-\d              # hangs
+    |GRICHTER/Embperl-2.5.0.tar.gz           # loops on apache src
+    |GRICHTER/HTML-Embperl-1.3.6.tar.gz      # loops on apache src
     |GRM/
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |GSEAMAN/XML-DB.tar.gz                   # hangs
