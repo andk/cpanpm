@@ -24,6 +24,27 @@ match:
   distribution: '^MLEHMANN/AnyEvent-7\.05'
 goto: "MLEHMANN/AnyEvent-7.04.tar.gz"
 ---
+comment: |
+
+  https://rt.perl.org/Ticket/Attachment/1508465/809040/0001-Re-weaken-timer-references-after-sorting.patch
+  https://www.nntp.perl.org/group/perl.perl5.porters/2017/11/msg247426.html
+  Patch is without a version change. I am not endorsing the patch,
+  just trying to build AnyEvent with it to see what else happens to
+  AnyEvent::HTTP in the bleadperl v5.27 release cycle.
+
+match:
+  distribution: '^MLEHMANN/AnyEvent-7\.14'
+patches:
+  - "ANDK/AnyEvent-7.14-weaken-timer-references-after-sorting.patch.gz"
+test:
+  env:
+    PERL_ANYEVENT_VERBOSE: 2
+depends:
+  configure_requires:
+    Event: 0
+  requires:
+    Event: 0
+---
 match:
   distribution: '^MLEHMANN/AnyEvent-\d'
 test:
