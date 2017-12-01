@@ -35,7 +35,7 @@ comment: |
 match:
   distribution: '^MLEHMANN/AnyEvent-7\.14'
 patches:
-  - "ANDK/AnyEvent-7.14-weaken-timer-references-after-sorting.patch.gz"
+  - "ANDK/patches/AnyEvent-7.14-weaken-timer-references-after-sorting.patch.gz"
 test:
   env:
     PERL_ANYEVENT_VERBOSE: 2
