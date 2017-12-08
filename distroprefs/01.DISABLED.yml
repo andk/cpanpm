@@ -209,6 +209,7 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
+    |MJD/Net-DHCP-Control-0.09.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34536
     |MLAWREN/SQL-Tree-\d                     # hangs before the first test
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
