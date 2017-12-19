@@ -157,6 +157,7 @@ distroprefs/ERIC.OpenThought.yml
 distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/ESUMMERS.MARC-Charset.yml
 distroprefs/ETHER.MooseX-Getopt.yml
+distroprefs/ETHER.Try-Tiny.yml
 distroprefs/EVO.DBIx-SQLEngine.yml
 distroprefs/EWILHELM.Math-Vec.yml
 distroprefs/EXODIST.Test-Exception-LessClever.yml
