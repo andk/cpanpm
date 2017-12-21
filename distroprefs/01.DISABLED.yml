@@ -272,7 +272,6 @@ match:
     |SEGAN/POE-Component-LaDBI-1.2.1
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
     |SIRROBERT/Set-Toolkit-0.11.tar.gz       # https://rt.cpan.org/Public/Bug/Display.html?id=67343
-    |SMCCAM/X11-Protocol-\d                  # hangs after ok 2, uses only a test.pl
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SMUELLER/Alien-ROOT-v5.28.0.1           # hangs
     |SPANG/App-SD-0.75.tar.gz                # hangs in test t/sd-github/basic.t
