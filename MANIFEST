@@ -198,6 +198,7 @@ distroprefs/GWYN.POE-Component-Daemon.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
 distroprefs/HAYASHI.Term-ReadLine-Gnu.yml
 distroprefs/HDP.Perl-Version.yml
+distroprefs/HERMES.Hash-Merge.yml
 distroprefs/HMBRAND.Data-Peek.yml
 distroprefs/HMBRAND.DBD-CSV.yml
 distroprefs/HMBRAND.Spreadsheet-Read.yml
