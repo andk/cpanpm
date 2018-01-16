@@ -1165,7 +1165,7 @@ sub _download
 
 		$logger->debug( "Inst file would be $path\n" );
 
-		$paths{$arg} = _get_file( _make_path( $path ) );
+		$paths{$module} = _get_file( _make_path( $path ) );
 
 		$logger->info( "Downloaded [$arg] to [$paths{$arg}]" );
 		}
@@ -1191,7 +1191,9 @@ sub _get_file
 		{
 		my $fetch_path = join "/", $site, $path;
 		$logger->debug( "Trying $fetch_path" );
-	    last if LWP::Simple::getstore( $fetch_path, $store_path );
+		my $status_code = LWP::Simple::getstore( $fetch_path, $store_path );
+		last if( 200 <= $status_code and $status_code <= 300 );
+		$logger->warn( "Could not get [$fetch_path]: Status code $status_code" );
 		}
 
 	return $store_path;
@@ -1678,6 +1680,8 @@ Adam Kennedy pointed out that C<exit()> causes problems on Windows
 where this script ends up with a .bat extension
 
 David Golden helps integrate this into the C<CPAN.pm> repos.
+
+Jim Keenan fixed up various issues with _download
 
 =head1 AUTHOR
 
