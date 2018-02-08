@@ -1167,7 +1167,7 @@ sub _download
 
 		$paths{$arg} = _get_file( _make_path( $path ) );
 
-		$logger->info( "Downloaded [$arg] to [$paths{$module}]" );
+		$logger->info( "Downloaded [$arg] to [$paths{$arg}]" );
 		}
 
 	return \%paths;
