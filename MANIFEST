@@ -71,6 +71,7 @@ distroprefs/BTROTT.Crypt-OpenPGP.yml
 distroprefs/BTROTT.XML-FOAF.yml
 distroprefs/BWARFIELD.GDGraph.yml
 distroprefs/BYRNE.SOAP-Lite.yml
+distroprefs/CANID.Data-RecordStore.yml
 distroprefs/CAPTTOFU.DBD-mysql.yml
 distroprefs/CDENT.Kwiki-Test.yml
 distroprefs/CERNEY.Tk-IDElayout.yml
