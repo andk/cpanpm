@@ -119,7 +119,7 @@ See L<CPAN/"Plugin support">.
 =head2 plugin_requires
 
 returns list of packages given plugin requires for functionality.
-This list is evaluated using C<CPAN->use_inst> method.
+This list is evaluated using C<< CPAN->use_inst >> method.
 
 =head2 distribution_object
 
