@@ -107,7 +107,7 @@ unless (@CPAN::Defaultsites) {
     @CPAN::Defaultsites = map {
         CPAN::URL->new(TEXT => $_, FROM => "DEF")
     }
-        "http://www.perl.org/CPAN/",
+        "https://www.cpan.org/",
         "ftp://ftp.perl.org/pub/CPAN/";
 }
 # $CPAN::iCwd (i for initial)

@@ -491,6 +491,9 @@ sub _parse {
             elsif ( $prop eq 'dst_http' ) {
                 $mirror->{http} = $value;
             }
+            elsif ( $prop eq 'dst_https' ) {
+                $mirror->{https} = $value;
+            }
             elsif ( $prop eq 'dst_ftp' ) {
                 $mirror->{ftp} = $value;
             }
@@ -535,6 +538,7 @@ sub hostname  { shift->{hostname}    }
 sub continent { shift->{continent}   }
 sub country   { shift->{country}     }
 sub http      { shift->{http}  || '' }
+sub https     { shift->{https} || '' }
 sub ftp       { shift->{ftp}   || '' }
 sub rsync     { shift->{rsync} || '' }
 sub rtt       { shift->{rtt}         }
@@ -542,7 +546,7 @@ sub ping_time { shift->{ping_time}   }
 
 sub url {
     my $self = shift;
-    return $self->{http} || $self->{ftp};
+    return $self->{https} || $self->{http} || $self->{ftp};
 }
 
 sub ping {
