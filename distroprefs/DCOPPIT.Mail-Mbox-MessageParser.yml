@@ -9,8 +9,10 @@ comment: |
 
   http://rt.cpan.org/Ticket/Display.html?id=33004
 
+  David says, patch was applied to 1.5001
+
 match:
-  distribution: "DCOPPIT/Mail-Mbox-MessageParser-"
+  distribution: "DCOPPIT/Mail-Mbox-MessageParser-1.5000"
 pl:
   eexpect:
     mode: anyorder
