@@ -319,6 +319,7 @@ distroprefs/MLFISHER.Test-MockDBI.yml
 distroprefs/MOB.Forks-Super.yml
 distroprefs/MRAMBERG.Catalyst-View-TT.yml
 distroprefs/MRAMBERG.MojoMojo.yml
+distroprefs/MRAMBERG.Text-SimpleTable.yml
 distroprefs/MSCHILLI.RRDTool-OO.yml
 distroprefs/MSCHWERN.Test-Simple.yml
 distroprefs/MSERGEANT.AxKit.yml
