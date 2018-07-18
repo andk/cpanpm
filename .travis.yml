@@ -5,4 +5,4 @@ install: cpanm -n Expect YAML
 script: 
   - perl Makefile.PL
   - make touchtestdistros 
-  - make test 
+  - make test --doit
