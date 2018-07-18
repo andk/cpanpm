@@ -1,11 +1,7 @@
 language: perl
 perl:
    - '5.26'
-addons:
-  apt:
-    packages:
-      - expect
-install: cpanm -n YAML
+install: cpanm -n Expect YAML
 script: 
   - perl Makefile.PL
   - make touchtestdistros 
