@@ -1,0 +1,7 @@
+language: perl
+perl:
+   - '5.26'
+script: 
+  - perl Makefile.PL
+  - make touchtestdistros 
+  - make test 
