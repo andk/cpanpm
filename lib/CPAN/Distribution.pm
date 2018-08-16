@@ -1658,7 +1658,7 @@ sub force {
   my $methodmatch = 0;
   my $ldebug = 0;
  PHASE: for my $phase (qw(unknown get make test install)) { # order matters
-      $methodmatch = 1 if $fforce || $phase eq $method;
+      $methodmatch = 1 if $fforce || ($method && $phase eq $method);
       next unless $methodmatch;
     ATTRIBUTE: for my $att (@{$phase_map{$phase}}) {
           if ($phase eq "get") {
