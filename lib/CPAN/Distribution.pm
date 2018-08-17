@@ -1721,14 +1721,20 @@ sub isa_perl {
   my $file = File::Basename::basename($self->id);
   if ($file =~ m{ ^ perl
                   (
-                   -5\.\d+\.\d+
+                   -(5\.\d+\.\d+)
                    |
-                   5[._-]00[0-5](_[0-4][0-9])?
+                   (5)[._-](00[0-5](?:_[0-4][0-9])?)
                   )
                   \.tar[._-](?:gz|bz2)
                   (?!\n)\Z
                 }xs) {
-    return "$1.$3";
+    my $perl_version;
+    if ($2) {
+        $perl_version = $2;
+    } else {
+        $perl_version = "$3.$4";
+    }
+    return $perl_version;
   } elsif ($self->cpan_comment
            &&
            $self->cpan_comment =~ /isa_perl\(.+?\)/) {
