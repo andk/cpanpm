@@ -1249,10 +1249,7 @@ sub _show_Changes
 		next unless eval { $module->inst_file };
 		#next if $module->uptodate;
 
-		( my $id = $module->id() ) =~ s/::/\-/;
-
-		my $url = "http://search.cpan.org/~" . lc( $module->userid ) . "/" .
-			$id . "-" . $module->cpan_version() . "/";
+		my $url = "https://fastapi.metacpan.org/v1/module/" . $module->id();
 
 		#print "URL: $url\n";
 		_get_changes_file($url);
@@ -1263,8 +1260,9 @@ sub _show_Changes
 
 sub _get_changes_file
 	{
-	croak "Reading Changes files requires LWP::Simple and URI\n"
-		unless _safe_load_module("LWP::Simple") && _safe_load_module("URI");
+	croak "Reading Changes files requires LWP::Simple, LWP::Protocol::https, JSON::PP\n"
+		unless _safe_load_module("LWP::Simple") && _safe_load_module("LWP::Protocol::https")
+		&& _safe_load_module("JSON::PP");
 
     my $url = shift;
 
@@ -1272,12 +1270,11 @@ sub _get_changes_file
     $logger->info( "Got $url ..." ) if defined $content;
 	#print $content;
 
-	my( $change_link ) = $content =~ m|<a href="(.*?)">Changes</a>|gi;
-
-	my $changes_url = URI->new_abs( $change_link, $url );
+	my $distribution = JSON::PP::decode_json( $content )->{distribution};
+	my $changes_url = "https://fastapi.metacpan.org/v1/changes/$distribution";
  	$logger->debug( "Change link is: $changes_url" );
 
-	my $changes =  LWP::Simple::get( $changes_url );
+	my $changes = JSON::PP::decode_json( LWP::Simple::get( $changes_url ) )->{content};
 
 	print $changes;
 
