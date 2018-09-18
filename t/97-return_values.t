@@ -1,6 +1,34 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+BEGIN {
+    unshift @INC, './lib', './t';
+
+    require local_utils;
+    local_utils::cleanup_dot_cpan();
+    local_utils::prepare_dot_cpan();
+    local_utils::read_myconfig();
+    require CPAN::MyConfig;
+    require CPAN;
+    CPAN::HandleConfig->load;
+    $CPAN::Config->{load_module_verbosity} = q[none];
+    my $exit_message;
+    if ($CPAN::META->has_inst("CPAN::Meta::Requirements")){
+        # print "# CPAN::Meta::Requirements loadable\n";
+    } else {
+        $exit_message = "CPAN::Meta::Requirements not installed";
+    }
+    if ($exit_message) {
+        $|=1;
+        print "1..0 # SKIP $exit_message\n";
+        eval "require POSIX; 1" and POSIX::_exit(0);
+        warn "Error while trying to load POSIX: $@";
+        exit(0);
+    }
+
+
+}
+END{ local_utils::cleanup_dot_cpan(); }
 
 $|++;
 
@@ -8,6 +36,12 @@ use Test::More tests => 10;
 
 use File::Spec::Functions qw(catfile devnull);
 my $devnull = devnull();
+my $out = "t/97-return_values.out";
+sub mycat {
+    my ( $file ) = @_;
+    open FH, $file or die "Could not open '$file': $!";
+    diag <FH>;
+}
 
 my $command     = catfile qw( blib script cpan );
 my $config_file = catfile qw( t 97-lib_cpan1 CPAN Config.pm );
@@ -39,12 +73,12 @@ foreach my $trial ( @trials ) {
 	my( $expected_exit_value, $options ) = @$trial;
 
 	my $rc = do {
-		my $command = "$^X -Mblib -I. $command @config @$options 1>$devnull 2>&1 ";
+		my $command = "$^X -Mblib -I. $command @config @$options 1>$out 2>&1 ";
 		#diag( "Command is [$command]" );
 		system $command;
 		};
 
 	my $exit_value = $rc >> 8;
 
-	is( $exit_value, $expected_exit_value, "$command @config @$options" );
+	is( !!$exit_value||0, $expected_exit_value, "$command @config @$options" ) or mycat $out;
 	}
