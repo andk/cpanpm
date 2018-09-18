@@ -559,7 +559,8 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         $CPAN::Frontend->mydie("Cannot create directory $builddir: $@");
     }
     my $packagedir;
-    my $eexist = $CPAN::META->has_usable("Errno") ? &Errno::EEXIST : undef;
+    my $eexist = ($CPAN::META->has_usable("Errno") && defined &Errno::EEXIST)
+        ? &Errno::EEXIST : undef;
     for(my $suffix = 0; ; $suffix++) {
         $packagedir = File::Spec->catdir($builddir, "$tdir_base-$suffix");
         my $parent = $builddir;
