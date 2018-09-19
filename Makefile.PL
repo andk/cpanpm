@@ -230,8 +230,7 @@ WriteMakefile(
                              resources => {
                                  repository => {
                                      type => 'git', 
-                                     url => 'git://github.com/andk/cpanpm.git',
-                                     web => 'https://github.com/andk/cpanpm'
+                                     url => 'https://github.com/andk/cpanpm'
                                  }
                              },
                              keywords => ['CPAN','module','module installation'],
