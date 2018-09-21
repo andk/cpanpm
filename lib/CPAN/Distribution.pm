@@ -2905,8 +2905,10 @@ sub unsat_prereq {
                 next NEED;
             }
 
+            my $sufficient_file = exists $prereq_pm->{requires}{$need_module}
+                ? $inst_file : $available_file;
             # if they have not specified a version, we accept any installed one
-            if ( $available_file
+            if ( $sufficient_file
                 and ( # a few quick short circuits
                      not defined $need_version
                      or $need_version eq '0'    # "==" would trigger warning when not numeric
