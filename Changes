@@ -1,3 +1,47 @@
+2018-09-22  k  <andk@cpan.org>
+
+	* release 2.21-TRIAL
+
+	* Avoid hash slice autovivification (Reini Urban)
+
+	* make chdir argument always stringified (Reini Urban)
+
+	* support JSON::PP as fallback for `reports` command when no YAML
+	is available (Michiel Beijen)
+
+	* fix #116507: cpan -j relative path issue (brian d foy)
+
+	* Bug fix for plugin `Specfile`: Build.PL script_files may be
+	non-ARRAY (Bernhard Graf)
+
+	* Fix tiny POD error (Aaron Crane)
+
+	* Added suggestion to the user to fix the common 'Terminal does
+	not support AddHistory error.' (Howard)
+
+	* fix #87474: build_require_install_policy=no: runtime dependency
+	not installed if also listed as build_require (Olivier Mengue, Slaven
+	Rezić, Peter Rabbitson, Andreas König)
+
+	* We are finally under the Travis umbrella (Katherine Spice)
+
+	* Adapt Jim Keenan's patch for _download status checking (brian d
+	foy)
+
+	* Use the right key in cpan(1) -g log message (brian d foy)
+
+	* address #124726: check for having EEXIST before using it (thanks
+	to Sergey Aleynikov for debugging)
+
+	* fix an unini warning from recompile() (thanks to frederick for
+	reporting)
+
+	* fix recently introduced bug: isa_perl() returns perl version
+	again and a test is added to ensure that (thanks to frederick for
+	reporting)
+
+	* a modest amount of new, imported and updated distroprefs files
+
 2017-11-26  k  <andk@cpan.org>
 
 	* release 2.20-TRIAL
