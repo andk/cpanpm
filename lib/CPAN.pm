@@ -90,11 +90,13 @@ if ($ENV{PERL5_CPAN_IS_RUNNING} && $$ != $ENV{PERL5_CPAN_IS_RUNNING}) {
         warn $w;
     }
     local $| = 1;
+    my $have_been_sleeping = 0;
     while ($sleep > 0) {
         printf "\r#%5d", --$sleep;
         sleep 1;
+	++$have_been_sleeping;
     }
-    print "\n";
+    print "\n" if $have_been_sleeping;
 }
 $ENV{PERL5_CPAN_IS_RUNNING}=$$;
 $ENV{PERL5_CPANPLUS_IS_RUNNING}=$$; # https://rt.cpan.org/Ticket/Display.html?id=23735
