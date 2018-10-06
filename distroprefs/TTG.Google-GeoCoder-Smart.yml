@@ -1,0 +1,8 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=124231 (v2 not indexed)
+
+match:
+  distribution: "^TTG/Google-GeoCoder-Smart/Google-GeoCoder-Smart-1.18.tar.gz"
+goto: "TTG/Google-GeoCoder-Smart/Google-GeoCoder-Smart-v2.0.1.tar.gz"
