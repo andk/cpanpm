@@ -11,7 +11,7 @@ my %has_deps = (
 
 my @modules;
 use File::Find;
-find(\&list_modules, 'blib/lib');
+find(\&list_modules, $ENV{PERL_CORE} ? 'lib' : 'blib/lib');
 
 use Test::More;
 plan(tests => scalar @modules);
