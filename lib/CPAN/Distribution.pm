@@ -9,7 +9,7 @@ use File::Path ();
 use POSIX ":sys_wait_h"; 
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.27_01"; # with cperl support
+$VERSION = "2.27_02"; # with cperl support
 
 my $run_allow_installing_within_test = 1; # boolean; either in test or in install, there is no third option
 # no prepare, because prepare is not a command on the shell command line
@@ -612,8 +612,9 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         }
     }
     $self->{build_dir} = $packagedir;
-    $self->safe_chdir($builddir);
-    File::Path::rmtree("tmp-$$");
+    $self->safe_chdir(Cwd::abs_path($builddir));
+    $self->debug("rmtree $builddir/tmp-$$") if $CPAN::DEBUG;
+    File::Path::rmtree(File::Spec->catfile(Cwd::abs_path($builddir),"tmp-$$"));
 
     $self->safe_chdir($packagedir);
     $self->_signature_business();
