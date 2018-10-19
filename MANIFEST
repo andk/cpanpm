@@ -441,6 +441,7 @@ distroprefs/SWALTERS.typesafety.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/SZABGAB.Term-ProgressBar.yml
 distroprefs/TBONE.HTTP-File.yml
+distroprefs/TEEJAY.Test-HTTP-Response.yml
 distroprefs/TELS.Devel-Size.yml
 distroprefs/TELS.Math-BigInt-GMP.yml
 distroprefs/THOSPEL.Graph-Layout-Aesthetic.yml

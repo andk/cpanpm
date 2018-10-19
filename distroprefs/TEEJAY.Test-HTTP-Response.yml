@@ -1,0 +1,10 @@
+---
+comment: |
+
+  http://rt.cpan.org/Public/Bug/Display.html?id=100786
+
+match:
+  distribution: 'TEEJAY/Test-HTTP-Response-0\.06\.tar\.gz'
+depends:
+  requires:
+    CGI::Cookie: 1
