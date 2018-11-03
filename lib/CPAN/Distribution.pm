@@ -8,7 +8,7 @@ use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.21";
+$VERSION = "2.22";
 
 # no prepare, because prepare is not a command on the shell command line
 # TODO: clear instance cache on reload
@@ -2905,10 +2905,13 @@ sub unsat_prereq {
                 next NEED;
             }
 
-            my $sufficient_file = exists $prereq_pm->{requires}{$need_module}
-                ? $inst_file : $available_file;
-            # if they have not specified a version, we accept any installed one
-            if ( $sufficient_file
+            # if they have not specified a version, we accept any
+            # installed one; in that case inst_file is always
+            # sufficient and available_file is sufficient on
+            # both build_requires and configure_requires
+            my $sufficient = $inst_file ||
+                ( exists $prereq_pm->{requires}{$need_module} ? 0 : $available_file );
+            if ( $sufficient
                 and ( # a few quick short circuits
                      not defined $need_version
                      or $need_version eq '0'    # "==" would trigger warning when not numeric
