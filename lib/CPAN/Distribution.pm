@@ -3938,19 +3938,25 @@ sub install {
 
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
-        return $self->goto($goto);
+        $self->goto($goto);
+        $self->post_install();
+        return;
     }
 
-    $self->test
-        or return;
+    unless ($self->test) {
+        $self->post_install();
+        return;
+    }
 
     if ( defined( my $sc = $self->shortcut_install ) ) {
+        $self->post_install();
         return $sc;
     }
 
     if ($CPAN::Signal) {
-      delete $self->{force_update};
-      return;
+        delete $self->{force_update};
+        $self->post_install();
+        return;
     }
 
     my $builddir = $self->dir or
@@ -3958,6 +3964,7 @@ sub install {
 
     unless (chdir $builddir) {
         $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        $self->post_install();
         return;
     }
 
@@ -3969,6 +3976,7 @@ sub install {
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_install($self);
+        $self->post_install();
         return;
     }
 
@@ -4020,7 +4028,9 @@ sub install {
         my $is_only = "is only 'build_requires'";
         $self->{install} = CPAN::Distrostatus->new("NO -- $is_only");
         delete $self->{force_update};
-        return $self->goodbye("Not installing because $is_only");
+        $self->goodbye("Not installing because $is_only");
+        $self->post_install();
+        return;
     }
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
                            ? $ENV{PERL5LIB}
@@ -4039,6 +4049,7 @@ sub install {
         $self->{install} = CPAN::Distrostatus->new("NO");
         $CPAN::Frontend->mywarn("  $system -- NOT OK\n");
         delete $self->{force_update};
+        $self->post_install();
         return;
     }
     my($makeout) = "";
