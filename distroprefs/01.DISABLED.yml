@@ -144,6 +144,7 @@ match:
     |IMACAT/DbFramework-\d                   # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
+    |INGY/Module-Install-TestML-0.02.tar.gz  # unsuited for testing: https://github.com/testml-lang/testml/wiki/TestML-and-CPAN
     |ISHIGAKI/PPM-Make-\d                    # asks questions
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357
     |JANL/Net-Server-0.99.6.1                # hangs
