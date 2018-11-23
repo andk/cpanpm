@@ -1,8 +1,20 @@
 ---
+comment: |
+
+  hash (very) randomization problem
+
 match:
   distribution: "/JSON-XS-2\\.33\\."
   perlconfig:
     version: "^5\\.1(9|8|7\\.(10|11|12))"
 patches:
   - SREZIC/patches/JSON-XS-2.33-RT84151.patch
-# hash (very) randomization problem
+---
+comment: |
+
+  4.0 is prerelease https://metacpan.org/source/MLEHMANN/JSON-XS-4.0/Changes#L9
+  https://rt.cpan.org/Ticket/Display.html?id=127741
+
+match:
+  distribution: '/JSON-XS-4\.0\.tar\.gz'
+goto: 'MLEHMANN/JSON-XS-3.04.tar.gz'
