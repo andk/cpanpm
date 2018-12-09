@@ -62,7 +62,7 @@ use File::Path;
 use File::Spec;
 
 sub plugin_requires {
-    qw(JSON::XS Log::Log4perl);
+    qw(JSON::XS Log::Log4perl Time::Piece);
 }
 
 sub __accessor {
@@ -120,8 +120,7 @@ sub encode {
 }
 
 sub isotime {
-    use Time::Piece;
-    my $t = localtime;
+    my $t = Time::Piece::localtime();
     $t->time_separator("");
     $t->date_separator("");
     $t->datetime;
