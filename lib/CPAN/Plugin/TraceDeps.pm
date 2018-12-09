@@ -60,8 +60,10 @@ our $VERSION = '0.0.1';
 
 use File::Path;
 use File::Spec;
-use JSON::XS ();      # should be in plugin_requires?
-use Log::Log4perl (); # should be in plugin_requires?
+
+sub plugin_requires {
+    qw(JSON::XS Log::Log4perl);
+}
 
 sub __accessor {
     my ($class, $key) = @_;
@@ -79,6 +81,7 @@ BEGIN { __PACKAGE__->__accessor($_) for qw(dir dir_default log4perlconfig) }
 sub new {
     my($class, @rest) = @_;
     my $self = bless {}, $class;
+    $CPAN::META->use_inst($_) for $self->plugin_requires;
     while (my($arg,$val) = splice @rest, 0, 2) {
         $self->$arg($val);
     }

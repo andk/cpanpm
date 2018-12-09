@@ -29,7 +29,7 @@ for my $method (qw(get make test install)) {
                         $instance{$plugin}->$hookname($self);
                     }
                 } else {
-                    $CPAN::Frontend->mydie("Plugin '$plugin_proper' not found");
+                    $CPAN::Frontend->mydie("Plugin '$plugin_proper' not found for hook '$hookname'");
                 }
             }
         };
