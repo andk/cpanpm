@@ -2957,7 +2957,8 @@ sub unsat_prereq {
                 }
             } elsif (
                 $self->{reqtype} =~ /^(r|c)$/
-                && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
+                && (   exists $prereq_pm->{requires}{$need_module}
+                    || exists $prereq_pm->{opt_requires}{$need_module} )
                 && $nmo
                 && !$inst_file
             ) {
