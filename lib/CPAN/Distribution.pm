@@ -2958,7 +2958,7 @@ sub unsat_prereq {
             } elsif (
                 $self->{reqtype} =~ /^(r|c)$/
                 && (exists $prereq_pm->{requires}{$need_module} || exists $prereq_pm->{opt_requires} )
-                && $nmo 
+                && $nmo
                 && !$inst_file
             ) {
                 # continue installing as a prereq; this may be a
@@ -2967,7 +2967,8 @@ sub unsat_prereq {
                 # wants it as a requires
                 my $need_distro = $nmo->distribution;
                 if ($need_distro->{install} && $need_distro->{install}->failed && $need_distro->{install}->text =~ /is only/) {
-                    CPAN->debug("promotion from build_requires to requires") if $CPAN::DEBUG;
+                    my $id = $need_distro->pretty_id;
+                    $CPAN::Frontend->myprint("Promoting $id from build_requires to requires due $need_module\n");
                     delete $need_distro->{install}; # promote to another installation attempt
                     $need_distro->{reqtype} = "r";
                     $need_distro->install;
@@ -3559,7 +3560,7 @@ sub test {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
-    $CPAN::Frontend->myprint("Running $make test\n");
+    $CPAN::Frontend->myprint(sprintf "Running %s test for %s\n", $make, $self->pretty_id);
 
     my $builddir = $self->dir or
         $CPAN::Frontend->mydie("PANIC: Cannot determine build directory\n");
@@ -3776,7 +3777,7 @@ sub _prefs_with_expect {
 sub clean {
     my($self) = @_;
     my $make = $self->{modulebuild} ? "Build" : "make";
-    $CPAN::Frontend->myprint("Running $make clean\n");
+    $CPAN::Frontend->myprint(sprintf "Running %s clean for %s\n", $make, $self->pretty_id);
     unless (exists $self->{archived}) {
         $CPAN::Frontend->mywarn("Distribution seems to have never been unzipped".
                                 "/untarred, nothing done\n");
@@ -3914,7 +3915,7 @@ sub shortcut_install {
             $CPAN::META->is_installed($self->{build_dir});
             return $self->success("Already done");
         } elsif ($text =~ /is only/) {
-            # e.g. 'is only build_requires'
+            # e.g. 'is only build_requires': may be overruled later
             return $self->goodbye($text);
         } else {
             # comment in Todo on 2006-02-11; maybe retry?
@@ -3972,7 +3973,7 @@ sub install {
         if $CPAN::DEBUG;
 
     my $make = $self->{modulebuild} ? "Build" : "make";
-    $CPAN::Frontend->myprint("Running $make install\n");
+    $CPAN::Frontend->myprint(sprintf "Running %s install for %s\n", $make, $self->pretty_id);
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_install($self);
