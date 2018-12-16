@@ -1,3 +1,24 @@
+2018-12-16  k  <andk@cpan.org>
+
+	* release 2.22-TRIAL
+
+	* fix: erroneous propagation from build_requires to requires
+	(Andreas Koenig)
+
+	* fix: ensure that the post install hook is always called (Andreas
+	Koenig)
+
+	* fix: the single blank line output that initializing CPAN does
+	when it's not having to report anything (Achim Gratz)
+
+	* doc fix: Correct spelling of Perl 5 command-line switch (James E
+	Keenan)
+
+	* doc fix: clarify use of pop/splice in the manpage of the
+	Specfile plugin (Andreas Koenig)
+
+	* a tiny amount of new and updated distroprefs files
+
 2018-09-22  k  <andk@cpan.org>
 
 	* release 2.21-TRIAL
