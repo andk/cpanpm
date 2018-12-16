@@ -527,7 +527,6 @@ lib/CPAN/Module.pm
 lib/CPAN/Nox.pm
 lib/CPAN/Plugin.pm
 lib/CPAN/Plugin/Specfile.pm
-lib/CPAN/Plugin/TraceDeps.pm
 lib/CPAN/Prompt.pm
 lib/CPAN/Queue.pm
 lib/CPAN/Shell.pm
