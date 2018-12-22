@@ -43,6 +43,9 @@ if ($trial) {
         if $ExtUtils::MakeMaker::VERSION < 6.4502;
     die "Your MakeMaker doesn't do the sign woodoo" unless
         MM->can("signature_target");
+    require Module::Signature;
+    die "Your Module::Signature is a bit dated[$Module::Signature::VERSION].\nDo not make a release with it\n"
+        if $Module::Signature::VERSION < 0.83;
     shift @ARGV;
     my $st;
     local $ENV{LANG} = "C";
