@@ -1,3 +1,15 @@
+2018-12-23  k  <andk@cpan.org>
+
+	* release 2.22
+
+	* one week after the TRIAL release cpantesters have produced 306
+	pass and 0 fail reports on 157 different configurations
+
+	* no functional change over 2.22-TRIAL; only one change in the
+	distroprefs directory which is not used per default and a minor
+	change in the Makefile.PL to ensure that the signature for the
+	tarball is produced with the current version of Module::Signature.
+
 2018-12-16  k  <andk@cpan.org>
 
 	* release 2.22-TRIAL
