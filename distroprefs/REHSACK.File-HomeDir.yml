@@ -1,0 +1,10 @@
+---
+comment: |
+
+  https://rt.cpan.org/Ticket/Display.html?id=128096
+
+match:
+  distribution: "^REHSACK/File-HomeDir-1.004.tar.gz"
+  perlconfig:
+    version: '^5\.8\.[0123]'
+goto: "REHSACK/File-HomeDir-1.002.tar.gz"
