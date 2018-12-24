@@ -414,13 +414,13 @@ sub _process_options
 
 	# if no arguments, just drop into the shell
 	if( 0 == @ARGV ) { CPAN::shell(); exit 0 }
-	else
+	elsif (Getopt::Std::getopts(
+		  join( '', @option_order ), \%options ))
 		{
-		Getopt::Std::getopts(
-		  join( '', @option_order ), \%options );
 		 \%options;
 		}
-	}
+	else { exit 1 }
+}
 
 sub _process_setup_options
 	{
@@ -1698,3 +1698,10 @@ Copyright (c) 2001-2018, brian d foy, All Rights Reserved.
 You may redistribute this under the same terms as Perl itself.
 
 =cut
+
+# Local Variables:
+# mode: cperl
+# indent-tabs-mode: t
+# cperl-indent-level: 8
+# cperl-continued-statement-offset: 8
+# End:

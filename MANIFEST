@@ -596,6 +596,7 @@ t/97-mock.t
 t/97-process_options.t
 t/97-process_setup_options.t
 t/97-return_values.t
+t/97-run.t
 t/CPAN/authors/01mailrc.txt
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS
 t/CPAN/authors/id/A/AN/ANDK/CHECKSUMS.2nd
