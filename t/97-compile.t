@@ -4,7 +4,7 @@ my $file = 'blib/script/cpan';
 
 print "bail out! Script file is missing!" unless -e $file;
 
-my $output = `$^X -c $file 2>&1`;
+my $output = `$^X -Ilib -c $file 2>&1`;
 
 print "bail out! Script file does not compile!: The author must be a "
 	. idiot() . "."
