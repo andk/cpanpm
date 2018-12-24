@@ -125,7 +125,7 @@ sub gtest {
         my($buffer,$len);
         $len = 0;
         my $gz = Compress::Bzip2::bzopen($read, "rb")
-            or $CPAN::Frontend->mydie(sprintf("Cannot gzopen %s: %s\n",
+            or $CPAN::Frontend->mydie(sprintf("Cannot bzopen %s: %s\n",
                                               $read,
                                               $Compress::Bzip2::bzerrno));
         while ($gz->bzread($buffer) > 0 ) {
