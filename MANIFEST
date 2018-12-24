@@ -45,6 +45,7 @@ distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
 distroprefs/BDFOY.Test-Output.yml
+distroprefs/BIGPRESH.Dancer.yml
 distroprefs/BINGOS.metabase-relayd.yml
 distroprefs/BINGOS.POE-Component-Client-FTP.yml
 distroprefs/BINGOS.POE-Component-Client-NSCA.yml
