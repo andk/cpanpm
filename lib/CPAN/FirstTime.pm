@@ -9,6 +9,7 @@ use File::Basename ();
 use File::Path ();
 use File::Spec ();
 use CPAN::Mirrors ();
+use CPAN::Version ();
 use vars qw($VERSION $auto_config);
 $VERSION = "5.5311";
 
@@ -1450,7 +1451,7 @@ sub _do_pick_mirrors {
     $CPAN::Frontend->myprint($prompts{urls_intro});
     # Only prompt for auto-pick if Net::Ping is new enough to do timings
     my $_conf = 'n';
-    if ( $CPAN::META->has_usable("Net::Ping") && Net::Ping->VERSION gt '2.13') {
+    if ( $CPAN::META->has_usable("Net::Ping") && CPAN::Version->vgt(Net::Ping->VERSION, '2.13')) {
         $_conf = prompt($prompts{auto_pick}, "yes");
     } else {
         prompt("Autoselection disabled due to Net::Ping missing or insufficient. Please press ENTER");
