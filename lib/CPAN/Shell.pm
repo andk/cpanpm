@@ -1867,7 +1867,7 @@ to find objects with matching identifiers.
             }
         }
         if (UNIVERSAL::can($obj, 'called_for')) {
-            $obj->called_for($s);
+            $obj->called_for($s) unless $obj->called_for;
         }
         CPAN->debug(qq{pragma[@pragma]meth[$meth]}.
                     qq{ID[$obj->{ID}]}) if $CPAN::DEBUG;
