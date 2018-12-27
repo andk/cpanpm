@@ -60,6 +60,7 @@ our $VERSION = '0.0.1';
 
 use File::Path;
 use File::Spec;
+use Storable ();
 
 sub plugin_requires {
     qw(JSON::XS Log::Log4perl Time::Piece);
@@ -97,12 +98,37 @@ for my $sub (qw(
   pre_test
   post_test
   pre_install
-  post_install
 )) {
     *$sub = sub {
         my $self = shift;
         my $distribution_object = shift;
         $self->log($sub, $distribution_object);
+    };
+}
+
+for my $sub (qw(
+  post_install
+)) {
+    *$sub = sub {
+        my $self = shift;
+        my $distribution_object = shift;
+        my $logobj = Storable::dclone($distribution_object);
+        if (my $called_for = $distribution_object->{CALLED_FOR}) {
+            if ($called_for =~ m{/}) {
+                # no plan yet what to do with distros
+            } elsif (my $nmo = $CPAN::META->instance("CPAN::Module",$called_for)) {
+                if (my $inst_file = $nmo->inst_file) {
+                    $logobj->{tracedeps_inst_file} = $inst_file;
+                }
+                if (my $inst_version = $nmo->inst_version) {
+                    $logobj->{tracedeps_inst_version} = $inst_version;
+                }
+                if (my $cpan_version = $nmo->cpan_version) {
+                    $logobj->{tracedeps_cpan_version} = $cpan_version;
+                }
+            }
+        }
+        $self->log($sub, $logobj);
     };
 }
 
@@ -153,7 +179,7 @@ sub log {
         $self->encode({
             method => $method,
             (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
-            (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install)),
+            (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version)),
             (map { $_ => $d->$_ } qw(pretty_id)),
         }));
 }
