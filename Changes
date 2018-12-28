@@ -500,7 +500,7 @@
 
 	* RT #79969: fix incompatibilities with VMS (Craig Berry)
 
-  * bugfix: distroprefs of type pl/args were dropped for 'perl Build.PL'
+	* bugfix: distroprefs of type pl/args were dropped for 'perl Build.PL'
 
 	* RT #73742: watch build_dirs and react calmly when one has gone lost
 
