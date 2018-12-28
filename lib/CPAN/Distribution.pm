@@ -3895,7 +3895,10 @@ sub goto {
     # and run where we left off
 
     my($method) = (caller(1))[3];
-    CPAN->instance("CPAN::Distribution",$goto)->$method();
+    my $goto_do = CPAN->instance("CPAN::Distribution",$goto);
+    $goto_do->called_for($self->called_for) unless $goto_do->called_for;
+    $goto_do->{coming_from} = $self->pretty_id;
+    $goto_do->$method();
     CPAN::Queue->delete_first($goto);
     # XXX delete_first returns undef; is that what this should return
     # up the call stack, eg. return $sefl->goto($goto) -- xdg, 2012-04-04

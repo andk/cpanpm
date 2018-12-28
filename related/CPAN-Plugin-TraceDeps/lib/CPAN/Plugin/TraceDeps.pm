@@ -179,7 +179,7 @@ sub log {
         $self->encode({
             method => $method,
             (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
-            (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version)),
+            (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version coming_from)),
             (map { $_ => $d->$_ } qw(pretty_id)),
         }));
 }
