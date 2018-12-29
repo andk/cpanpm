@@ -1028,7 +1028,10 @@ sub has_usable {
     $usable = {
 
                #
-               # these subroutines die if they believe the installed version is unusable;
+               # most of these subroutines warn on the frontend, then
+               # die if the installed version is unusable for some
+               # reason; has_usable() then returns false when it caught
+               # an exception, otherwise returns true and caches that;
                #
                'CPAN::Meta' => [
                             sub {
@@ -1052,6 +1055,23 @@ sub has_usable {
                                 require CPAN::Meta::Requirements;
                                 unless (CPAN::Version->vge(CPAN::Meta::Requirements->VERSION, 2.120920)) {
                                     for ("Will not use CPAN::Meta::Requirements, need version 2.120920\n") {
+                                        $CPAN::Frontend->mywarn($_);
+                                        die $_;
+                                    }
+                                }
+                            },
+                           ],
+
+               'CPAN::Reporter' => [
+                            sub {
+                                if (defined $CPAN::Reporter::VERSION
+                                    && CPAN::Version->vlt($CPAN::Reporter::VERSION, "1.2011")
+                                   ) {
+                                    delete $INC{"CPAN/Reporter.pm"};
+                                }
+                                require CPAN::Reporter;
+                                unless (CPAN::Version->vge(CPAN::Reporter->VERSION, "1.2011")) {
+                                    for ("Will not use CPAN::Reporter, need version 1.2011\n") {
                                         $CPAN::Frontend->mywarn($_);
                                         die $_;
                                     }

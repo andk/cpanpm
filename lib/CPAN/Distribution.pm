@@ -4364,6 +4364,8 @@ sub _should_report {
     die "_should_report() requires a 'phase' argument"
         if ! defined $phase;
 
+    return unless $CPAN::META->has_usable("CPAN::Reporter");
+
     # configured
     my $test_report = CPAN::HandleConfig->prefs_lookup($self,
                                                        q{test_report});
