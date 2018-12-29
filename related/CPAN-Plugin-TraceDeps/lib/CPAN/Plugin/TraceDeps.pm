@@ -126,6 +126,15 @@ for my $sub (qw(
                 if (my $cpan_version = $nmo->cpan_version) {
                     $logobj->{tracedeps_cpan_version} = $cpan_version;
                 }
+                my $ancestor = $nmo;
+                my @viabundle;
+                while (my $viabundle = $ancestor->{viabundle}) {
+                    push @viabundle, $viabundle;
+                    $ancestor = CPAN::Shell->expandany($viabundle->{id}) or last;
+                }
+                if (@viabundle) {
+                    $logobj->{tracedeps_viabundle} = \@viabundle;
+                }
             }
         }
         $self->log($sub, $logobj);
@@ -181,6 +190,7 @@ sub log {
             (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
             (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version coming_from)),
             (map { $_ => $d->$_ } qw(pretty_id)),
+            (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
         }));
 }
 
