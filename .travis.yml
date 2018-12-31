@@ -1,5 +1,8 @@
 before_install:
    - sudo apt-get install -y perl-doc liblog-log4perl-perl
+env:
+   global:
+      - CPANSCRIPT_LOGLEVEL=TRACE
 language: perl
 perl:
    - '5.26'
