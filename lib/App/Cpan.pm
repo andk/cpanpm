@@ -4,6 +4,11 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
+if ($ENV{CPANSCRIPT_LOGLEVEL} && $ENV{CPANSCRIPT_LOGLEVEL} eq "TRACE") {
+	require Test::More;
+	require Test::Builder;
+}
+
 use if $] < 5.008 => 'IO::Scalar';
 
 $VERSION = '1.672';
@@ -426,6 +431,9 @@ sub _process_setup_options
 	{
 	my( $class, $options ) = @_;
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to evaluate options->{j} \@" . __LINE__);
+}
 	if( $options->{j} )
 		{
 		$Method_table{j}[ $Method_table_index{code} ]->( $options->{j} );
@@ -517,6 +525,9 @@ sub run
 
 	$class->_setup_environment( $options );
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to step over OPTION(s) \@" . __LINE__);
+}
 	OPTION: foreach my $option ( @option_order )
 		{
 		next unless $options->{$option};
@@ -799,7 +810,13 @@ sub _turn_off_testing {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 sub _print_help
 	{
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to call \$logger->info() \@" . __LINE__);
+}
 	$logger->info( "Use perldoc to read the documentation" );
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to call perldoc \@" . __LINE__);
+}
 	exec "perldoc $0";
 	}
 

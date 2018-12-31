@@ -13,7 +13,7 @@ my $output = `$cmd`;
 like( $output, qr/Unknown option: y/, 'refuse unknown parameter' );
 
 $ENV{CPANSCRIPT_LOGLEVEL} = 'TRACE';
-$cmd = "$^X -Mblib $file -h 2>&1";
+$cmd = "$^X -Mblib $file -h";
 diag "will run '$cmd'";
 $output = `$cmd`;
 my($logger) = $output =~ /Using logger from (\S+)/;
