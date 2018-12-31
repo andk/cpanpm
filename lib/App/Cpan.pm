@@ -542,15 +542,23 @@ sub run
 	return $return_value;
 	}
 
+my $LEVEL;
 {
 package
   Local::Null::Logger; # hide from PAUSE
 
+my @LOGLEVELS = qw(TRACE DEBUG INFO WARN ERROR FATAL);
+$LEVEL        = uc($ENV{CPANSCRIPT_LOGLEVEL} || 'INFO');
+my %LL        = map { $LOGLEVELS[$_] => $_ } 0..$#LOGLEVELS;
+unless (defined $LL{$LEVEL}){
+	warn "Unsupported loglevel '$LEVEL', setting to INFO";
+	$LEVEL = 'INFO';
+}
 sub new { bless \ my $x, $_[0] }
 sub AUTOLOAD {
     my $autoload = our $AUTOLOAD;
     $autoload =~ s/.*://;
-    return if $autoload =~ /^(debug|trace)$/;
+    return if $LL{uc $autoload} < $LL{$LEVEL};
     $CPAN::Frontend->mywarn(">($autoload): $_\n")
         for split /[\r\n]+/, $_[1];
 }
@@ -578,8 +586,6 @@ sub _init_logger
         $logger = Local::Null::Logger->new;
         return $logger;
         }
-
-	my $LEVEL = $ENV{CPANSCRIPT_LOGLEVEL} || 'INFO';
 
 	Log::Log4perl::init( \ <<"HERE" );
 log4perl.rootLogger=$LEVEL, A1
