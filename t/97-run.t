@@ -12,7 +12,7 @@ diag "will run '$cmd'";
 my $output = `$cmd`;
 like( $output, qr/Unknown option: y/, 'refuse unknown parameter' );
 
-$cmd = "$^X -Mblib $file -h 2>&1";
+$cmd = "$^X -Mblib $file -h 2>&1 | cat";
 diag "will run '$cmd'";
 $output = `$cmd`;
 for my $switch (qw(a A c C D f F g G h i I j J l m M n O P r s t T u v V w x X)) {
