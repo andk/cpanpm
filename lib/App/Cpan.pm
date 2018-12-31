@@ -443,14 +443,23 @@ Test::More::diag("about to evaluate options->{j} \@" . __LINE__);
 		{
 		# this is what CPAN.pm would do otherwise
 		local $CPAN::Be_Silent = 1;
+
+local $CPAN::DEBUG = 4096; # HandleConfig
+
 		CPAN::HandleConfig->load(
 			# be_silent  => 1, deprecated
 			write_file => 0,
 			);
 		}
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to evaluate options->{T} \@" . __LINE__);
+}
 	$class->_turn_off_testing if $options->{T};
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to evaluate options->{F I ...} \@" . __LINE__);
+}
 	foreach my $o ( qw(F I w P M) )
 		{
 		next unless exists $options->{$o};
@@ -458,6 +467,9 @@ Test::More::diag("about to evaluate options->{j} \@" . __LINE__);
 		delete $options->{$o};
 		}
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to evaluate options->{o} \@" . __LINE__);
+}
 	if( $options->{o} )
 		{
 		my @pairs = map { [ split /=/, $_, 2 ] } split /,/, $options->{o};
@@ -470,10 +482,16 @@ Test::More::diag("about to evaluate options->{j} \@" . __LINE__);
 		delete $options->{o};
 		}
 
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("about to calc option_count \@" . __LINE__);
+}
 	my $option_count = grep { $options->{$_} } @option_order;
 	no warnings 'uninitialized';
 
 	# don't count options that imply installation
+if ($INC{'Test/Builder.pm'}) {
+Test::More::diag("option_count became '$option_count'; about to evaluate options->{f T} \@" . __LINE__);
+}
 	foreach my $opt ( qw(f T) ) { # don't count force or notest
 		$option_count -= $options->{$opt};
 		}
