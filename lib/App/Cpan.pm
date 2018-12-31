@@ -4,11 +4,6 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-if ($ENV{CPANSCRIPT_LOGLEVEL} && $ENV{CPANSCRIPT_LOGLEVEL} eq "TRACE") {
-	require Test::More;
-	require Test::Builder;
-}
-
 use if $] < 5.008 => 'IO::Scalar';
 
 $VERSION = '1.672';
@@ -431,35 +426,22 @@ sub _process_setup_options
 	{
 	my( $class, $options ) = @_;
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to evaluate options->{j} \@" . __LINE__);
-}
 	if( $options->{j} )
 		{
 		$Method_table{j}[ $Method_table_index{code} ]->( $options->{j} );
 		delete $options->{j};
 		}
-	else
-		{
+	elsif ( ! $options->{h} ) { # h "ignores all of the other options and arguments"
 		# this is what CPAN.pm would do otherwise
 		local $CPAN::Be_Silent = 1;
-
-local $CPAN::DEBUG = 4096; # HandleConfig
-
 		CPAN::HandleConfig->load(
 			# be_silent  => 1, deprecated
 			write_file => 0,
 			);
 		}
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to evaluate options->{T} \@" . __LINE__);
-}
 	$class->_turn_off_testing if $options->{T};
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to evaluate options->{F I ...} \@" . __LINE__);
-}
 	foreach my $o ( qw(F I w P M) )
 		{
 		next unless exists $options->{$o};
@@ -467,9 +449,6 @@ Test::More::diag("about to evaluate options->{F I ...} \@" . __LINE__);
 		delete $options->{$o};
 		}
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to evaluate options->{o} \@" . __LINE__);
-}
 	if( $options->{o} )
 		{
 		my @pairs = map { [ split /=/, $_, 2 ] } split /,/, $options->{o};
@@ -482,16 +461,10 @@ Test::More::diag("about to evaluate options->{o} \@" . __LINE__);
 		delete $options->{o};
 		}
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to calc option_count \@" . __LINE__);
-}
 	my $option_count = grep { $options->{$_} } @option_order;
 	no warnings 'uninitialized';
 
 	# don't count options that imply installation
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("option_count became '$option_count'; about to evaluate options->{f T} \@" . __LINE__);
-}
 	foreach my $opt ( qw(f T) ) { # don't count force or notest
 		$option_count -= $options->{$opt};
 		}
@@ -543,9 +516,6 @@ sub run
 
 	$class->_setup_environment( $options );
 
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to step over OPTION(s) \@" . __LINE__);
-}
 	OPTION: foreach my $option ( @option_order )
 		{
 		next unless $options->{$option};
@@ -828,13 +798,7 @@ sub _turn_off_testing {
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 sub _print_help
 	{
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to call \$logger->info() \@" . __LINE__);
-}
 	$logger->info( "Use perldoc to read the documentation" );
-if ($INC{'Test/Builder.pm'}) {
-Test::More::diag("about to call perldoc \@" . __LINE__);
-}
 	exec "perldoc $0";
 	}
 
