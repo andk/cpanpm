@@ -12,9 +12,12 @@ diag "will run '$cmd'";
 my $output = `$cmd`;
 like( $output, qr/Unknown option: y/, 'refuse unknown parameter' );
 
-$cmd = "$^X -Mblib $file -h";
+$ENV{CPANSCRIPT_LOGLEVEL} = 'TRACE';
+$cmd = "$^X -Mblib $file -h 2>&1";
 diag "will run '$cmd'";
 $output = `$cmd`;
+my($logger) = $output =~ /Using logger from (\S+)/;
+ok $logger, "Found logger '$logger'";
 for my $switch (qw(a A c C D f F g G h i I j J l m M n O P r s t T u v V w x X)) {
     like( $output, qr/^[ ]+-\Q$switch\E/m, "advertizing $switch" );
 }
