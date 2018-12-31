@@ -1,8 +1,10 @@
 #!/usr/bin/perl
 
 use strict;
-use Test::More qw(no_plan);
+use Test::More;
 use File::Spec;
+
+plan tests => 32;
 
 my $file = File::Spec->catfile('.', 'blib', 'script', 'cpan');
 
@@ -21,5 +23,3 @@ ok $logger, "Found logger '$logger'";
 for my $switch (qw(a A c C D f F g G h i I j J l m M n O P r s t T u v V w x X)) {
     like( $output, qr/^[ ]+-\Q$switch\E/m, "advertizing $switch" );
 }
-
-done_testing();
