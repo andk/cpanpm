@@ -4047,6 +4047,12 @@ sub install {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
+    my $install_env;
+    if ($self->prefs->{install}) {
+        $install_env = $self->prefs->{install}{env};
+    }
+    local @ENV{keys %$install_env} = values %$install_env if $install_env;
+
     my($pipe) = FileHandle->new("$system $stderr |");
     unless ($pipe) {
         $CPAN::Frontend->mywarn("Can't execute $system: $!");
