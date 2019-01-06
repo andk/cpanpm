@@ -22,24 +22,27 @@ CPAN::Plugin::TraceDeps - logging dependecy relations between modules
 
 =head2 Alpha Status
 
-The plugin system in the CPAN shell was introduced in version 2.07 and
-is still considered experimental.
+The plugin system in the CPAN shell was introduced in version 2.07.
+This plugin is not yet settled and subject to change without prior
+notice.
 
 =head2 Goal of the TraceDeps plugin
 
-Trying to nail down the various dependecies (configure_requires,
+Trying to nail down the various dependencies (configure_requires,
 build_requires, and requires) in the various stages () of the build
 system.
 
-Implemented as pre-make, post-make, post-test, and post-install hooks,
-this plugin writes dependency info into its tracedeps file.
+This plugin writes dependency info into its tracedeps file.
 
-B<WARNING:> plugin is in early dev stage (alpha); it can change
-without prior notice between releases.
+=head2 Graceful degradation
+
+When prerequisites for this plugin are missing, a warning is displayed
+and logging is skipped. As soon as all prerequisites are installed,
+logging starts.
 
 =head2 OPTIONS
 
-The target directory to store the spec files in can be set using C<dir>
+The target directory to store the spec files can be set using C<dir>
 as in
 
   o conf plugin_list push CPAN::Plugin::TraceDeps=dir,/tmp/tracedeps-000042
@@ -52,6 +55,18 @@ directory.
 
 Andreas Koenig <andk@cpan.org>
 
+COPYRIGHT AND LICENSE
+
+Copyright (C) 2019 by Andreas König
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself, either Perl version 5.8.8 or, at
+your option, any later version of Perl 5 you may have available.
+
+SEE ALSO
+
+CPAN
+
 =cut
 
 package CPAN::Plugin::TraceDeps;
@@ -63,7 +78,24 @@ use File::Spec;
 use Storable ();
 
 sub plugin_requires {
-    qw(JSON::XS Log::Log4perl Time::Piece);
+    qw(JSON::XS Log::Dispatch::File Log::Log4perl Time::Piece);
+}
+
+sub all_dependencies_satisfied {
+    my ($self) = @_;
+    my @missing;
+    for my $prereq ($self->plugin_requires) {
+        push @missing, $prereq unless $CPAN::META->has_inst($prereq);
+    }
+    if (@missing) {
+        my $prereqfiller = "prerequisite" . (@missing>1 ? "s" : "");
+        $CPAN::Frontend->mywarn(
+            sprintf "Plugin TraceDeps is missing $prereqfiller %s, logging is off\n",
+                join(", ", @missing)
+        );
+        return;
+    }
+    return 1;
 }
 
 sub __accessor {
@@ -82,7 +114,6 @@ BEGIN { __PACKAGE__->__accessor($_) for qw(dir dir_default log4perlconfig) }
 sub new {
     my($class, @rest) = @_;
     my $self = bless {}, $class;
-    $CPAN::META->use_inst($_) for $self->plugin_requires;
     while (my($arg,$val) = splice @rest, 0, 2) {
         $self->$arg($val);
     }
@@ -101,6 +132,7 @@ for my $sub (qw(
 )) {
     *$sub = sub {
         my $self = shift;
+        return unless $self->all_dependencies_satisfied;
         my $distribution_object = shift;
         $self->log($sub, $distribution_object);
     };
@@ -111,6 +143,7 @@ for my $sub (qw(
 )) {
     *$sub = sub {
         my $self = shift;
+        return unless $self->all_dependencies_satisfied;
         my $distribution_object = shift;
         my $logobj = Storable::dclone($distribution_object);
         if (my $called_for = $distribution_object->{CALLED_FOR}) {
@@ -182,16 +215,21 @@ HERE
 sub log {
     my($self, $method, $d) = @_;
     no warnings 'uninitialized';
-    $self->logger->info(sprintf "%s=%s:%s\n",
-        __PACKAGE__,
-        $VERSION,
-        $self->encode({
-            method => $method,
-            (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
-            (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version coming_from)),
-            (map { $_ => $d->$_ } qw(pretty_id)),
-            (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
-        }));
+    eval {
+        $self->logger->info(sprintf "%s=%s:%s\n",
+            __PACKAGE__,
+            $VERSION,
+            $self->encode({
+                method => $method,
+                (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
+                (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version coming_from)),
+                (map { $_ => $d->$_ } qw(pretty_id)),
+                (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
+            }));
+    } or $CPAN::Frontend->mywarn(
+            sprintf "Plugin TraceDeps had problems logging, please investigate: %s\n",
+                $@
+        );
 }
 
 1;
