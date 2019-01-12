@@ -1611,9 +1611,10 @@ sub mydie {
 
 # sub CPAN::Shell::colorable_makemaker_prompt ;
 sub colorable_makemaker_prompt {
-    my($foo,$bar) = @_;
+    my($foo,$bar,$ornament) = @_;
+    $ornament ||= "colorize_print";
     if (CPAN::Shell->colorize_output) {
-        my $ornament = $CPAN::Config->{colorize_print}||'bold blue on_white';
+        my $ornament = $CPAN::Config->{$ornament}||'bold blue on_white';
         my $color_on = eval { Term::ANSIColor::color($ornament); } || "";
         print $color_on;
     }
