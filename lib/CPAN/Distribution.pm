@@ -2956,7 +2956,8 @@ sub unsat_prereq {
                     next NEED;
                 }
             } elsif (
-                $self->{reqtype} =~ /^(r|c)$/
+                $self->{reqtype} # e.g. maybe we came via goto?
+                && $self->{reqtype} =~ /^(r|c)$/
                 && (   exists $prereq_pm->{requires}{$need_module}
                     || exists $prereq_pm->{opt_requires}{$need_module} )
                 && $nmo
