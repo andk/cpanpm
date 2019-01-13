@@ -3898,6 +3898,8 @@ sub goto {
     my($method) = (caller(1))[3];
     my $goto_do = CPAN->instance("CPAN::Distribution",$goto);
     $goto_do->called_for($self->called_for) unless $goto_do->called_for;
+    $goto_do->{mandatory} ||= $self->{mandatory};
+    $goto_do->{reqtype}   ||= $self->{reqtype};
     $goto_do->{coming_from} = $self->pretty_id;
     $goto_do->$method();
     CPAN::Queue->delete_first($goto);
