@@ -286,7 +286,10 @@ sub shell {
         }
         if (my $histfile = $CPAN::Config->{'histfile'}) {{
             unless ($term->can("AddHistory")) {
-                $CPAN::Frontend->mywarn("Terminal does not support AddHistory.\n\nTo fix enter>  install Term::ReadLine::Perl\n\n");
+                $CPAN::Frontend->mywarn("Terminal does not support AddHistory.\n");
+                unless ($CPAN::META->has_inst('Term::ReadLine::Perl')) {
+                    $CPAN::Frontend->mywarn("\nTo fix that, maybe try>  install Term::ReadLine::Perl\n\n");
+                }
                 last;
             }
             $META->readhist($term,$histfile);
