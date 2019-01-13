@@ -2401,7 +2401,7 @@ installed. It is only built and tested, and then kept in the list of
 tested but uninstalled modules. As such, it is available during the
 build of the dependent module by integrating the path to the
 C<blib/arch> and C<blib/lib> directories in the environment variable
-PERL5LIB. If C<build_requires_install_policy> is set ti C<yes>, then
+PERL5LIB. If C<build_requires_install_policy> is set to C<yes>, then
 both modules declared as C<requires> and those declared as
 C<build_requires> are treated alike. By setting to C<ask/yes> or
 C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
