@@ -141,7 +141,7 @@ match:
     |HOOO/X3D-0                              # hangs at t/nodefield_sfdouble_06 on perl-5.10.0 at 33955
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |IKRUGLOV/Sereal-Encoder-4\.\d+_\d+.tar.gz
-    |IMACAT/DbFramework-\d                   # asks questions but I have not time
+    |.*/DbFramework-\d                       # asks questions but I have not time
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |INGY/Module-Install-TestML-0.02.tar.gz  # unsuited for testing: https://github.com/testml-lang/testml/wiki/TestML-and-CPAN
