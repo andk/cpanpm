@@ -216,6 +216,7 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
+    |MJBRIGHT/DBIx-XMLServer-0.02.tar.gz     # seems abandoned and hangs
     |MJD/Net-DHCP-Control-0.09.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34536
     |MLAWREN/SQL-Tree-\d                     # hangs before the first test
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
@@ -286,8 +287,8 @@ match:
     |SPURKIS/Agent-3.20.tar.gz               # https://rt.cpan.org/Ticket/Display.html?id=94430
     |SRI/Catalyst-Plugin-HTML-Widget-1.1.tar.gz # Module::Install 0.54 http://rt.cpan.org/Ticket/Display.html?id=40618
     |SRVANCE/P4-Server-\d                    # or maybe it was this one?
-    |SSCAFFIDI/Stem-0.12.tar.gz              # hangs
-    |STARKY/Net-Peep-0.4.5.1.tar.gz          # needs user interaction
+    |SSCAFFIDI/Stem-0.12.tar.gz              #
+    |.*/Net-Peep-0.4.5.1.tar.gz              # needs user interaction
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STEVENC/WWW-Myspace-\d                  # tests take too long
