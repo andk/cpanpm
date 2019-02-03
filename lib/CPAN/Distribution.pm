@@ -317,6 +317,17 @@ sub called_for {
 sub shortcut_get {
     my ($self) = @_;
 
+    if (exists $self->{cleanup_after_install_done}) {
+        if ($self->{force_update}) {
+            delete $self->{cleanup_after_install_done};
+        } else {
+            my $id = $self->{CALLED_FOR} || $self->pretty_id;
+            return $self->success(
+                "Has already been *installed and cleaned up in the staging area* within this session, will not work on it again; if you really want to start over, try something like `force get $id`"
+            );
+        }
+    }
+
     if (my $why = $self->check_disabled) {
         $self->{unwrapped} = CPAN::Distrostatus->new("NO $why");
         # XXX why is this goodbye() instead of just print/warn?
@@ -1637,23 +1648,28 @@ sub force {
                            "prefs",
                            "prefs_file",
                            "prefs_file_doc",
+                           "cleanup_after_install_done",
                           ],
                    make => [
                             "writemakefile",
                             "make",
                             "modulebuild",
                             "prereq_pm",
+                            "cleanup_after_install_done",
                            ],
                    test => [
                             "badtestcnt",
                             "make_test",
-                           ],
+                            "cleanup_after_install_done",
+                          ],
                    install => [
                                "install",
+                               "cleanup_after_install_done",
                               ],
                    unknown => [
                                "reqtype",
                                "yaml_content",
+                               "cleanup_after_install_done",
                               ],
                   );
   my $methodmatch = 0;
@@ -2061,6 +2077,10 @@ sub make {
     my($self) = @_;
 
     $self->pre_make();
+
+    if (exists $self->{cleanup_after_install_done}) {
+        return $self->get;
+    }
 
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
@@ -3532,6 +3552,10 @@ sub test {
 
     $self->pre_test();
 
+    if (exists $self->{cleanup_after_install_done}) {
+        return $self->make;
+    }
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         return $self->goto($goto);
@@ -3944,6 +3968,10 @@ sub install {
 
     $self->pre_install();
 
+    if (exists $self->{cleanup_after_install_done}) {
+        return $self->test;
+    }
+
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
         $self->goto($goto);
@@ -4089,6 +4117,7 @@ sub install {
             if (-e $yml) {
                 unlink $yml or $CPAN::Frontend->mydie("Couldn't unlink $yml: $!\n");
             }
+            $self->{cleanup_after_install_done}=1;
         }
     } else {
         $self->{install} = CPAN::Distrostatus->new("NO");

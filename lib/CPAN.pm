@@ -2157,7 +2157,8 @@ currently defined:
   check_sigs         if signatures should be verified
   cleanup_after_install
                      remove build directory immediately after a
-                     successful install
+                     successful install and remember that for the
+                     duration of the session
   colorize_debug     Term::ANSIColor attributes for debugging output
   colorize_output    boolean if Term::ANSIColor should colorize output
   colorize_print     Term::ANSIColor attributes for normal output
