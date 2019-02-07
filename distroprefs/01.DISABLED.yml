@@ -37,6 +37,7 @@ match:
     |.*/mod_perl-2.0.\d.tar.gz                 # endless loop seen with 5,6,7,9
     |.*FamilyTreeInfo                        # https://github.com/mishin/Ftree-cpan/issues/2
     |.*/XSConfig-                            # rt.cpan.org #110631
+    |.*//GOOGLE-ADWORDS-PERL-CLIENT-\d       # looks like abandoned in favor to Google-Ads-AdWords-Client
     |AADLER/Inline-Octave-0.31.zip           # 
     |AMBS/Lingua/Lingua-PT-Speaker-0.10.tar.gz # does not use prompt() and no $|
     |ADAMK/Acme-Mom-Yours-\d                 # blocks the smoker for too long
