@@ -207,6 +207,17 @@ sub reqtype_of {
     return $best;
 }
 
+sub iterator {
+    my $i = 0;
+    return sub {
+        until ($All[$i] || $i > $#All) {
+            $i++;
+        }
+        return if $i > $#All;
+        return $All[$i++]
+    };
+}
+
 1;
 
 __END__

@@ -3962,6 +3962,26 @@ sub shortcut_install {
     return undef;
 }
 
+#-> sub CPAN::Distribution::is_being_sponsored ;
+
+# returns true if we find a distro object in the queue that has
+# sponsored this one
+sub is_being_sponsored {
+    my($self) = @_;
+    my $iterator = CPAN::Queue->iterator;
+ QITEM: while (my $q = $iterator->()) {
+        my $s = $q->as_string;
+        my $obj = CPAN::Shell->expandany($s) or next QITEM;
+        my $type = ref $obj;
+        if ( $type eq 'CPAN::Distribution' ){
+            for my $module (sort keys %{$obj->{sponsored_mods} || {}}) {
+                return 1 if grep { $_ eq $module } $self->containsmods;
+            }
+        }
+    }
+    return 0;
+}
+
 #-> sub CPAN::Distribution::install ;
 sub install {
     my($self) = @_;
@@ -4109,7 +4129,8 @@ sub install {
         $CPAN::META->is_installed($self->{build_dir});
         $self->{install} = CPAN::Distrostatus->new("YES");
         if ($CPAN::Config->{'cleanup_after_install'}
-            && ! $self->is_dot_dist) {
+            && ! $self->is_dot_dist
+            && ! $self->is_being_sponsored) {
             my $parent = File::Spec->catdir( $self->{build_dir}, File::Spec->updir );
             chdir $parent or $CPAN::Frontend->mydie("Couldn't chdir to $parent: $!\n");
             File::Path::rmtree($self->{build_dir});
