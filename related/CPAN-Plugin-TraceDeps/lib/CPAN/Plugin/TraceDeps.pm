@@ -76,6 +76,7 @@ our $VERSION = '0.0.1';
 use File::Path;
 use File::Spec;
 use Storable ();
+use CPAN::Queue;
 
 sub plugin_requires {
     qw(JSON::XS Log::Dispatch::File Log::Log4perl Time::Piece);
@@ -121,6 +122,8 @@ sub new {
     $self;
 }
 
+# I suspect we will never use those 7 so they will be removed before
+# first public version
 for my $sub (qw(
   pre_get
   post_get
@@ -221,10 +224,27 @@ sub log {
             $VERSION,
             $self->encode({
                 method => $method,
-                (map { $_ => $d->{$_} } qw(prereq_pm CALLED_FOR mandatory reqtype sponsored_mods)),
-                (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(make make_test install tracedeps_inst_file tracedeps_inst_version tracedeps_cpan_version coming_from)),
+                (map { $_ => $d->{$_} } qw(
+                    CALLED_FOR
+                    mandatory
+                    prereq_pm
+                    reqtype
+                    sponsored_mods
+                )),
+                (map { $_ => "" . $d->{$_} } grep { defined $d->{$_} } qw(
+                    coming_from
+                    install
+                    make
+                    make_test
+                    tracedeps_cpan_version
+                    tracedeps_inst_file
+                    tracedeps_inst_version
+                    unwrapped
+                    writemakefile
+                )),
                 (map { $_ => $d->$_ } qw(pretty_id)),
                 (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
+                (map { ("queue_".$_) => CPAN::Queue->$_() } qw(size)),
             }));
     } or $CPAN::Frontend->mywarn(
             sprintf "Plugin TraceDeps had problems logging, please investigate: %s\n",
