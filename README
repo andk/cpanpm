@@ -616,7 +616,8 @@ CONFIGURATION
       check_sigs         if signatures should be verified
       cleanup_after_install
                          remove build directory immediately after a
-                         successful install
+                         successful install and remember that for the
+                         duration of the session
       colorize_debug     Term::ANSIColor attributes for debugging output
       colorize_output    boolean if Term::ANSIColor should colorize output
       colorize_print     Term::ANSIColor attributes for normal output
@@ -834,7 +835,7 @@ CONFIGURATION
     uninstalled modules. As such, it is available during the build of the
     dependent module by integrating the path to the "blib/arch" and
     "blib/lib" directories in the environment variable PERL5LIB. If
-    "build_requires_install_policy" is set ti "yes", then both modules
+    "build_requires_install_policy" is set to "yes", then both modules
     declared as "requires" and those declared as "build_requires" are
     treated alike. By setting to "ask/yes" or "ask/no", CPAN.pm asks the
     user and sets the default accordingly.
