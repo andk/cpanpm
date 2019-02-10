@@ -8,7 +8,7 @@ use CPAN::InfoObj;
 use File::Path ();
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.22";
+$VERSION = "2.23";
 
 # no prepare, because prepare is not a command on the shell command line
 # TODO: clear instance cache on reload

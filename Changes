@@ -1,3 +1,40 @@
+2019-02-10  k  <andk@cpan.org>
+
+	* release 2.23-TRIAL
+
+	* fix: when option cleanup_after_install is active, prevent
+	rerunning make install after a cleanup; allow it only with the
+	help of force; also prevent that it is triggered too early
+
+	* fix: address #121162: support distroprefs for install.env
+
+	* fix: the option h on cpan script now really ignores all other
+	options and arguments
+
+	* fix: Local::Null::Logger on cpan script did not honour
+	CPANSCRIPT_LOGLEVEL
+
+	* address #122520: exit 1 on unknown options on cpan script
+
+	* address #94941: refuse to generate reports with CPAN::Reporter
+	lower than 1.2011
+
+	* fix: distropref method "goto" now inherits CALLED_FOR and other
+	attributes from caller
+
+	* fix: correct a buggy version comparison when testing version of
+	Net::Ping
+
+	* portability fix: ensure that Compress::Zlib supports gzopen()
+
+	* internal fix: never overwrite internal attribute CALLED_FOR (no
+	known user-relevant implications)
+
+	* tiny test fixed uncovered by cpantesters, various tiny typo
+	corrections
+
+	* a couple of new and updated distroprefs files
+
 2018-12-23  k  <andk@cpan.org>
 
 	* release 2.22
