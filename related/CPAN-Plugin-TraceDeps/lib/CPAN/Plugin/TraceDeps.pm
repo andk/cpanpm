@@ -236,6 +236,7 @@ sub log {
                     install
                     make
                     make_test
+                    signature_verify
                     tracedeps_cpan_version
                     tracedeps_inst_file
                     tracedeps_inst_version
