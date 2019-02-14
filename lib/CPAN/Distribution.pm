@@ -2008,7 +2008,9 @@ sub prepare {
                 ($output, $ret) = eval { CPAN::Reporter::record_command($system) };
                 if (! defined $output or $@) {
                     my $err = $@ || "Unknown error";
-                    $CPAN::Frontend->mywarn("Error while running PL phase: $err");
+                    $CPAN::Frontend->mywarn("Error while running PL phase: $err\n");
+                    $self->{writemakefile} = CPAN::Distrostatus
+                        ->new("NO '$system' returned status $ret and no output");
                     return $self->goodbye("$system -- NOT OK");
                 }
                 CPAN::Reporter::grade_PL( $self, $system, $output, $ret );
