@@ -163,9 +163,11 @@ match:
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
     |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
+    |JHIVER/TripleStore-0.03                 # loops on user input questions
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JKUTEJ/Xen-Control-\d                   # calls sudo
     |JLMARTIN/NRD-Daemon-\d                  # hangs with 5.14.1-36
+    |JLLEROY/Tangram-2.04.tar.gz             # waits for user input
     |JMERELO/MP3-Podcast-\d                  # hangs in test
     |JMMILLS/App-Nopaste-Service-AnyPastebin-\d # hangs due Module::Install
     |JOENIO/WWW-Scraper-ISBN-Siciliano_Driver-0.02.tar.gz
