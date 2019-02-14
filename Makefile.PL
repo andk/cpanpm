@@ -130,6 +130,7 @@ for my $interesting_module (qw(
         Module::Signature
         Net::FTP
         Parse::CPAN::Meta
+        Pod::Perldoc
         Scalar::Util
         Socket
         Term::ReadKey

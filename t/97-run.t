@@ -4,6 +4,10 @@ use strict;
 use Test::More;
 use File::Spec;
 
+my $HAVE_PERLDOC = eval { require Pod::Perldoc; 1; };
+unless ($HAVE_PERLDOC) {
+    plan skip_all => "Test requires Pod::Perldoc to run";
+}
 plan tests => 32;
 
 my $file = File::Spec->catfile('.', 'blib', 'script', 'cpan');
