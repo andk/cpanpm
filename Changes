@@ -1,3 +1,14 @@
+2019-02-14  k  <andk@cpan.org>
+
+	* release 2.24-TRIAL
+
+	* fix: set internal error state on writemakefile=NO in a rare case
+	without any output
+
+	* test fix: avoid a so far unreflected dependency on perldoc
+
+	* a few more distroprefs
+
 2019-02-10  k  <andk@cpan.org>
 
 	* release 2.23-TRIAL
