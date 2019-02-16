@@ -801,7 +801,8 @@ sub _print_help
 	$logger->info( "Use perldoc to read the documentation" );
 	my $HAVE_PERLDOC = eval { require Pod::Perldoc; 1; };
 	if ($HAVE_PERLDOC) {
-		exec qq{"$^X" -e "require Pod::Perldoc; Pod::Perldoc->run()" $0};
+		system qq{"$^X" -e "require Pod::Perldoc; Pod::Perldoc->run()" $0};
+		exit;
 	} else {
 		warn "Please install Pod::Perldoc, maybe try 'cpan -i Pod::Perldoc'\n";
 		return HEY_IT_WORKED;
