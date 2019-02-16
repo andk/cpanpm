@@ -137,6 +137,7 @@ match:
     |/POE-Quickie-\d                          # test hangs
     |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0307.tar.gz # https://rt.cpan.org/Ticket/Display.html?id=82020
     |HANENKAMP/Bot-Net-0.1.0                 # hangs during test t/TestNet/t/atoz-peer.t
+    |HANK/SWISH-Fork-0.13.tar.gz             # Enter the location: waiting since 2003
     |HDIAS/Mail-Salsa-\d                     # hangs/asks for installation directory
     |HERNAN/Catalyst-Example-InstantCRUDStylish- # uninterruptible and demanding but maybe not his fault
     |HESCO/LedgerSMB-API-\d                  # 0.04a nearly unstoppable endless loop
@@ -283,6 +284,7 @@ match:
     |SDPRICE/Linux-DVB-DVBT-Apps-QuartzPVR-\d
     |SEGAN/POE-Component-LaDBI-1.2.1
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
+    |SCHOP/htpl-3.14.tar.gz                  # hangs since Feb 28, 2002
     |SIRROBERT/Set-Toolkit-0.11.tar.gz       # https://rt.cpan.org/Public/Bug/Display.html?id=67343
     |SMEE/P4-\d                              # asks for Perforce api paths
     |SMUELLER/Alien-ROOT-v5.28.0.1           # hangs
