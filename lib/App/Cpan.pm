@@ -681,7 +681,7 @@ sub _hook_into_CPANpm_report
 
 	*CPAN::Shell::myprint = sub {
 		my($self,$what) = @_;
-		$scalar .= $what;
+		$scalar .= $what if defined $what;
 		$self->print_ornamented($what,
 			$CPAN::Config->{colorize_print}||'bold blue on_white',
 			);
