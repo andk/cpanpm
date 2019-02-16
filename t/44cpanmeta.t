@@ -2,6 +2,8 @@
 #
 # Very, very preliminary API testing, but we have to start somewhere
 
+use CPAN::Distribution;
+
 my $has_cpan_meta;
 BEGIN {
     unshift @INC, './lib', './t';
