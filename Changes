@@ -1,3 +1,16 @@
+2019-02-16  k  <andk@cpan.org>
+
+	* release 2.25-TRIAL
+
+	* fix: Avoid a warning when prompting install_help intro (Nicolas
+	R/atoomic)
+
+	* testfix: load the tested module early, before juggling with @INC
+
+	* testfix: replace an exec with system and exit (greetings to Windows)
+
+	* two more distroprefs lines
+
 2019-02-14  k  <andk@cpan.org>
 
 	* release 2.24-TRIAL
