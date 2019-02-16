@@ -1698,7 +1698,8 @@ sub my_prompt_loop {
     my $ans;
 
     if (!$auto_config && (!$m || $item =~ /$m/)) {
-        $CPAN::Frontend->myprint($prompts{$item . "_intro"});
+        my $intro = $prompts{$item . "_intro"};
+        $CPAN::Frontend->myprint($intro) if defined $intro;
         $CPAN::Frontend->myprint(" <$item>\n");
         do { $ans = prompt($prompts{$item}, $default);
         } until $ans =~ /$ok/;
