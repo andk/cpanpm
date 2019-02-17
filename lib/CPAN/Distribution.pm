@@ -377,10 +377,12 @@ sub get {
 
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
+        $self->post_get();
         return $self->goto($goto);
     }
 
     if ( defined( my $sc = $self->shortcut_get) ) {
+        $self->post_get();
         return $sc;
     }
 
@@ -399,15 +401,22 @@ sub get {
     # is already checked in shortcut_get() -- xdg, 2012-04-05
     unless ($self->{build_dir} && -d $self->{build_dir}) {
         $self->get_file_onto_local_disk;
-        return if $CPAN::Signal;
+        if ($CPAN::Signal){
+            $self->post_get();
+            return;
+        }
         $self->check_integrity;
-        return if $CPAN::Signal;
+        if ($CPAN::Signal){
+            $self->post_get();
+            return;
+        }
         (my $packagedir,$local_file) = $self->run_preps_on_packagedir;
         # XXX why is this check here? -- xdg, 2012-04-08
         if (exists $self->{writemakefile} && ref $self->{writemakefile}
            && $self->{writemakefile}->can("failed") &&
            $self->{writemakefile}->failed) {
            #
+            $self->post_get();
             return;
         }
         $packagedir ||= $self->{build_dir};
@@ -419,9 +428,13 @@ sub get {
     # a $CPAN::Signal check -- xdg, 2012-04-05
     if ($CPAN::Signal) {
         $self->safe_chdir($sub_wd);
+        $self->post_get();
         return;
     }
-    return unless $self->patch;
+    unless ($self->patch){
+        $self->post_get();
+        return;
+    }
     $self->store_persistent_state;
 
     $self->post_get();
@@ -2081,11 +2094,13 @@ sub make {
     $self->pre_make();
 
     if (exists $self->{cleanup_after_install_done}) {
+        $self->post_make();
         return $self->get;
     }
 
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
+        $self->post_make();
         return $self->goto($goto);
     }
     # Emergency brake if they said install Pippi and get newest perl
@@ -2122,19 +2137,24 @@ is part of the perl-%s distribution. To install that, you need to run
                             ));
             $self->{make} = CPAN::Distrostatus->new("NO isa perl");
             $CPAN::Frontend->mysleep(1);
+            $self->post_make();
             return;
         }
     }
 
-    $self->prepare
-        or return;
+    unless ($self->prepare){
+        $self->post_make();
+        return;
+    }
 
     if ( defined( my $sc = $self->shortcut_make) ) {
+        $self->post_make();
         return $sc;
     }
 
     if ($CPAN::Signal) {
         delete $self->{force_update};
+        $self->post_make();
         return;
     }
 
@@ -2143,6 +2163,7 @@ is part of the perl-%s distribution. To install that, you need to run
 
     unless (chdir $builddir) {
         $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        $self->post_make();
         return;
     }
 
@@ -2158,11 +2179,13 @@ is part of the perl-%s distribution. To install that, you need to run
 
     if ($CPAN::Signal) {
         delete $self->{force_update};
+        $self->post_make();
         return;
     }
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make($self);
+        $self->post_make();
         return;
     }
 
@@ -2173,16 +2196,23 @@ is part of the perl-%s distribution. To install that, you need to run
     }
     local @ENV{keys %env} = values %env;
     my $satisfied = eval { $self->satisfy_requires };
-    return $self->goodbye($@) if $@;
-    return unless $satisfied ;
+    if ($@) {
+        return $self->goodbye($@);
+    }
+    unless ($satisfied){
+        $self->post_make();
+        return;
+    }
     if ($CPAN::Signal) {
         delete $self->{force_update};
+        $self->post_make();
         return;
     }
 
     # need to chdir again, because $self->satisfy_requires might change the directory
     unless (chdir $builddir) {
         $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        $self->post_make();
         return;
     }
 
@@ -3555,24 +3585,30 @@ sub test {
     $self->pre_test();
 
     if (exists $self->{cleanup_after_install_done}) {
+        $self->post_test();
         return $self->make;
     }
 
     $self->debug("checking goto id[$self->{ID}]") if $CPAN::DEBUG;
     if (my $goto = $self->prefs->{goto}) {
+        $self->post_test();
         return $self->goto($goto);
     }
 
-    $self->make
-        or return;
+    unless ($self->make){
+        $self->post_test();
+        return;
+    }
 
     if ( defined( my $sc = $self->shortcut_test ) ) {
+        $self->post_test();
         return $sc;
     }
 
     if ($CPAN::Signal) {
-      delete $self->{force_update};
-      return;
+        delete $self->{force_update};
+        $self->post_test();
+        return;
     }
     # warn "XDEBUG: checking for notest: $self->{notest} $self";
     my $make = $self->{modulebuild} ? "Build" : "make";
@@ -3595,6 +3631,7 @@ sub test {
 
     unless (chdir $builddir) {
         $CPAN::Frontend->mywarn("Couldn't chdir to '$builddir': $!");
+        $self->post_test();
         return;
     }
 
@@ -3603,6 +3640,7 @@ sub test {
 
     if ($^O eq 'MacOS') {
         Mac::BuildTools::make_test($self);
+        $self->post_test();
         return;
     }
 
@@ -3614,9 +3652,10 @@ sub test {
             # Test::Harness 3.0 self-tests, so that should be 'unless
             # installing Test::Harness'
             unless ($self->id eq $thm->distribution->id) {
-               $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
+                $CPAN::Frontend->mywarn(qq{The version of your Test::Harness is only
   '$v', you need at least '2.62'. Please upgrade your Test::Harness.\n});
                 $self->{make_test} = CPAN::Distrostatus->new("NO Test::Harness too old");
+                $self->post_test();
                 return;
             }
         }
@@ -3638,12 +3677,14 @@ sub test {
                         $CPAN::META->is_tested($self->{build_dir},$self->{make_test}{TIME});
                     }
                     $CPAN::Frontend->myprint("Found prior test report -- OK\n");
+                    $self->post_test();
                     return;
                 }
                 elsif ( $reports[-1]->{grade} =~ /^(?:FAIL|NA)$/ ) {
                     $self->{make_test} = CPAN::Distrostatus->new("NO");
                     $self->{badtestcnt}++;
                     $CPAN::Frontend->mywarn("Found prior test report -- NOT OK\n");
+                    $self->post_test();
                     return;
                 }
             }
@@ -3706,6 +3747,7 @@ sub test {
             $CPAN::Frontend->mywarn("Tests succeeded but $but\n");
             $self->{make_test} = CPAN::Distrostatus->new("NO $but");
             $self->store_persistent_state;
+            $self->post_test();
             return $self->goodbye("[dependencies] -- NA");
         }
         $CPAN::Frontend->myprint("  $system -- OK\n");
