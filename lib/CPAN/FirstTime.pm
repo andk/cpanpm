@@ -193,7 +193,8 @@ How many days shall we keep statistics about downloads?
 =item ftpstats_size
 
 Statistics about downloads are truncated by size and period
-simultaneously.
+simultaneously. Setting this to zero or negative disables download
+statistics.
 
 How many items shall we keep in the statistics about downloads?
 
