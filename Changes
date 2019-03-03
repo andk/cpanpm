@@ -1,3 +1,14 @@
+2019-03-03  k  <andk@cpan.org>
+
+	* release 2.25
+
+	* two weeks after the TRIAL release cpantesters have produced 298
+	pass and 2 fail reports on 108 different configurations; the two
+	fails are outliers I don't understand
+
+	* no functional change over 2.25-TRIAL; only a couple in the
+	distroprefs directory which is not used per default
+
 2019-02-16  k  <andk@cpan.org>
 
 	* release 2.25-TRIAL
