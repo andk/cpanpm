@@ -1241,10 +1241,10 @@ sub untar_me {
 sub unzip_me {
     my($self,$ct) = @_;
     $self->{archived} = "zip";
-    if ($ct->unzip()) {
+    if (eval { $ct->unzip() }) {
         $self->{unwrapped} = CPAN::Distrostatus->new("YES");
     } else {
-        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- unzip failed");
+        $self->{unwrapped} = CPAN::Distrostatus->new("NO -- unzip failed during unzip");
     }
     return;
 }
