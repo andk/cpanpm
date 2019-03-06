@@ -553,9 +553,10 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
     if (@readdir == 1 && -d $readdir[0]) {
         $tdir_base = $readdir[0];
         $from_dir = File::Spec->catdir(File::Spec->curdir,$readdir[0]);
+        my($mode) = (stat $from_dir)[2];
+        chmod $mode | 00755, $from_dir; # JONATHAN/Math-Calculus-TaylorSeries-0.1.tar.gz has 0644
         my $dh2;
         unless ($dh2 = DirHandle->new($from_dir)) {
-            my($mode) = (stat $from_dir)[2];
             my $why = sprintf
                 (
                  "Couldn't opendir '%s', mode '%o': %s",
@@ -577,10 +578,6 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
         $tdir_base = $userid;
         $from_dir = File::Spec->curdir;
         @dirents = @readdir;
-    }
-    eval { File::Path::mkpath $builddir; };
-    if ($@) {
-        $CPAN::Frontend->mydie("Cannot create directory $builddir: $@");
     }
     my $packagedir;
     my $eexist = ($CPAN::META->has_usable("Errno") && defined &Errno::EEXIST)
