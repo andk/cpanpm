@@ -4,6 +4,9 @@ use strict;
 use Test::More;
 use File::Spec;
 
+if ($< == 0 || $> == 0) {
+    plan skip_all => "Skipping test when running as root, Pod::Perldoc often fails for root user";
+}
 my $HAVE_PERLDOC = eval { require Pod::Perldoc; 1; };
 unless ($HAVE_PERLDOC) {
     plan skip_all => "Test requires Pod::Perldoc to run";
