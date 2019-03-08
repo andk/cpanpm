@@ -113,6 +113,8 @@ for my $interesting_module (qw(
         Digest::SHA
         Digest::MD5
         Expect
+        Exporter
+        Exporter::Heavy
         ExtUtils::CBuilder
         File::Copy
         File::HomeDir
