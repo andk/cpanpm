@@ -6,6 +6,7 @@ use Cwd qw(chdir);
 use CPAN::Distroprefs;
 use CPAN::InfoObj;
 use File::Path ();
+use POSIX ":sys_wait_h"; 
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
 $VERSION = "2.24";
@@ -3727,18 +3728,36 @@ sub test {
                                     "testing without\n");
         }
     }
-    if ($want_expect) {
-        if ($self->_should_report('test')) {
-            $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is currently ".
-                                    "not supported when distroprefs specify ".
-                                    "an interactive test\n");
+
+ FORK: {
+        my $pid = fork;
+        if (! defined $pid) { # contention
+            warn "Contention '$!', sleeping 2";
+            sleep 2;
+            redo FORK;
+        } elsif ($pid) { # parent
+            wait;
+            $tests_ok = !$?;
+        } else { # child
+            POSIX::setsid();
+            my $c_ok;
+            $|=1;
+            if ($want_expect) {
+                if ($self->_should_report('test')) {
+                    $CPAN::Frontend->mywarn("Reporting via CPAN::Reporter is currently ".
+                        "not supported when distroprefs specify ".
+                        "an interactive test\n");
+                }
+                $c_ok = $self->_run_via_expect($system,'test',$expect_model) == 0;
+            } elsif ( $self->_should_report('test') ) {
+                $c_ok = CPAN::Reporter::test($self, $system);
+            } else {
+                $c_ok = system($system) == 0;
+            }
+            exit !$c_ok;
         }
-        $tests_ok = $self->_run_via_expect($system,'test',$expect_model) == 0;
-    } elsif ( $self->_should_report('test') ) {
-        $tests_ok = CPAN::Reporter::test($self, $system);
-    } else {
-        $tests_ok = system($system) == 0;
-    }
+    } # FORK
+
     $self->introduce_myself;
     my $but = $self->_make_test_illuminate_prereqs();
     if ( $tests_ok ) {

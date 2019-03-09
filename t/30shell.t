@@ -351,12 +351,12 @@ TUPL: for my $i (0..$#prgs){
         }
         $expo->expect(
                       $this_timeout,
-                      [ eof => sub {
-                            my $got = $expo->clear_accum;
-                            mydiag "EOF on i[$i]prog[$prog]
-expected[$expected]\ngot[$got]\n\n";
-                            exit;
-                        } ],
+                      #[ eof => sub {
+                            #my $got = $expo->clear_accum;
+                            #mydiag "EOF on i[$i]prog[$prog]
+#expected[$expected]\ngot[$got]\n\n";
+                            #exit;
+                        #} ],
                       [ timeout => sub {
                             my $got = $expo->clear_accum;
                             # diag for cpantesters
