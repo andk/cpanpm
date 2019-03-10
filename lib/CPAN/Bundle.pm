@@ -103,7 +103,12 @@ sub contains {
         @me = split /::/, $self->id;
         $me[-1] .= ".pm";
         $me = File::Spec->catfile(@me);
-        $from = $self->find_bundle_file($dist->{build_dir},join('/',@me));
+        my $build_dir;
+        unless ($build_dir = $dist->{build_dir}) {
+            $CPAN::Frontend->mywarn("Warning: cannot determine bundle content without a build_dir.\n");
+            return;
+        }
+        $from = $self->find_bundle_file($build_dir,join('/',@me));
         $to = File::Spec->catfile($todir,$me);
         File::Path::mkpath(File::Basename::dirname($to));
         File::Copy::copy($from, $to)
