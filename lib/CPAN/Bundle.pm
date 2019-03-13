@@ -87,11 +87,11 @@ sub contains {
         # Try to get at it in the cpan directory
         $self->debug("no inst_file") if $CPAN::DEBUG;
         my $cpan_file;
-        $CPAN::Frontend->mydie("I don't know a bundle with ID $id\n") unless
+        $CPAN::Frontend->mydie("I don't know a bundle with ID '$id'\n") unless
               $cpan_file = $self->cpan_file;
         if ($cpan_file eq "N/A") {
-            $CPAN::Frontend->mydie("Bundle $id not found on disk and not on CPAN.
-  Maybe stale symlink? Maybe removed during session? Giving up.\n");
+            $CPAN::Frontend->mywarn("Bundle '$id' not found on disk and not on CPAN. Maybe stale symlink? Maybe removed during session?\n");
+            return;
         }
         my $dist = $CPAN::META->instance('CPAN::Distribution',
                                          $self->cpan_file);
