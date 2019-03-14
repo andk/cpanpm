@@ -29,8 +29,8 @@ notice.
 =head2 Goal of the TraceDeps plugin
 
 Trying to nail down the various dependencies (configure_requires,
-build_requires, and requires) in the various stages () of the build
-system.
+build_requires, and requires) in the various stages (get, make, test,
+install) of the build system.
 
 This plugin writes dependency info into its tracedeps file.
 
@@ -140,9 +140,7 @@ for my $sub (qw(
   pre_get
   post_get
   pre_make
-  post_make
   pre_test
-  post_test
   pre_install
 )) {
     *$sub = sub {
@@ -152,6 +150,33 @@ for my $sub (qw(
         $self->log($sub, $distribution_object);
     };
 }
+
+for my $sub (qw(
+  post_make
+  post_test
+)) {
+    *$sub = sub {
+        my $self = shift;
+        return unless $self->all_dependencies_satisfied;
+        my $distribution_object = shift;
+        my $logobj = Storable::dclone($distribution_object);
+        my $prereqs_found = {};
+        for my $prereq_cat (keys %{$distribution_object->{prereq_pm}}) {
+            my $hash = $distribution_object->{prereq_pm}{$prereq_cat};
+            for my $mod (keys %$hash) {
+                next if exists $prereqs_found->{$mod};
+                my $nmo = $CPAN::META->instance("CPAN::Module", $mod);
+                $prereqs_found->{$mod} = [
+                    $nmo->inst_file||undef,
+                    $nmo->inst_version||undef,
+                ];
+            }
+        }
+        $logobj->{prereqs_found} = $prereqs_found;
+        $self->log($sub, $logobj);
+    };
+}
+
 
 for my $sub (qw(
   post_install
@@ -229,12 +254,14 @@ sub log {
         $self->logger->info(sprintf "%s:%s\n",
             $self->timestamp,
             $self->encode({
-                plugin_pkg => __PACKAGE__,
-                plugin_ver => $VERSION,
-                hostname => hostname,
-                perl => $^X,
+                $method eq "pre_install" ? (
+                    plugin_pkg => __PACKAGE__,
+                    plugin_ver => $VERSION,
+                    hostname => hostname,
+                    perl => $^X,
+                ) : (),
                 method => $method,
-                (map { $_ => $d->{$_} } qw(
+                (map { $_ => $d->{$_} } grep { defined $d->{$_} } qw(
                     CALLED_FOR
                     mandatory
                     prereq_pm
@@ -254,7 +281,7 @@ sub log {
                     writemakefile
                 )),
                 (map { $_ => $d->$_ } qw(pretty_id)),
-                (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
+                (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(prereqs_found tracedeps_viabundle)),
                 (map { ("queue_".$_) => CPAN::Queue->$_() } qw(size)),
             }));
     };
