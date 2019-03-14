@@ -593,6 +593,8 @@ See also http://rt.cpan.org/Ticket/Display.html?id=38932\n");
     my $f;
     for $f (@dirents) { # is already without "." and ".."
         my $from = File::Spec->catfile($from_dir,$f);
+        my($mode) = (stat $from)[2];
+        chmod $mode | 00755, $from if -d $from; # OTTO/Pod-Trial-LinkImg-0.005.tgz
         my $to = File::Spec->catfile($packagedir,$f);
         unless (File::Copy::move($from,$to)) {
             my $err = $!;
