@@ -127,9 +127,10 @@ sub new {
 }
 
 {
-    my $format = Log::Log4perl::DateFormat->new("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    my $format;
     sub timestamp {
         my ($secs, $msecs) = Time::HiRes::gettimeofday();
+        $format = Log::Log4perl::DateFormat->new("yyyy-MM-dd HH:mm:ss.SSSSSS") unless defined $format;
         $format->format($secs, $msecs);
     }
 }
