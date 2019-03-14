@@ -77,9 +77,11 @@ use File::Path;
 use File::Spec;
 use Storable ();
 use CPAN::Queue;
+use Time::HiRes ();
+use Sys::Hostname qw(hostname);
 
 sub plugin_requires {
-    qw(JSON::XS Log::Dispatch::File Log::Log4perl Time::Piece);
+    qw(JSON::XS Log::Dispatch::File Log::Log4perl Log::Log4perl::DateFormat Time::Piece);
 }
 
 sub all_dependencies_satisfied {
@@ -91,8 +93,9 @@ sub all_dependencies_satisfied {
     if (@missing) {
         my $prereqfiller = "prerequisite" . (@missing>1 ? "s" : "");
         $CPAN::Frontend->mywarn(
-            sprintf "Plugin TraceDeps is missing $prereqfiller %s, logging is off\n",
-                join(", ", @missing)
+            sprintf "Plugin TraceDeps is missing %s %s, logging is off\n",
+            $prereqfiller,
+            join(", ", @missing)
         );
         return;
     }
@@ -110,7 +113,7 @@ sub __accessor {
         return $self->{$key};
     };
 }
-BEGIN { __PACKAGE__->__accessor($_) for qw(dir dir_default log4perlconfig) }
+BEGIN { __PACKAGE__->__accessor($_) for qw(dir dir_default) }
 
 sub new {
     my($class, @rest) = @_;
@@ -118,8 +121,17 @@ sub new {
     while (my($arg,$val) = splice @rest, 0, 2) {
         $self->$arg($val);
     }
+    no warnings 'once';
     $self->dir_default(File::Spec->catdir($CPAN::Config->{cpan_home},"plugins",__PACKAGE__));
     $self;
+}
+
+{
+    my $format = Log::Log4perl::DateFormat->new("yyyy-MM-dd HH:mm:ss.SSSSSS");
+    sub timestamp {
+        my ($secs, $msecs) = Time::HiRes::gettimeofday();
+        $format->format($secs, $msecs);
+    }
 }
 
 # I suspect we will never use those 7 so they will be removed before
@@ -199,19 +211,14 @@ sub isotime {
 
 {
     my $logfile;
+    my $dispatch;
     sub logger {
+        return $dispatch if defined $dispatch;
         my($self) = @_;
         my $target_dir = $self->dir || $self->dir_default;
         File::Path::mkpath($target_dir);
         $logfile ||= File::Spec->catfile($target_dir, $self->isotime . ".log");
-        Log::Log4perl::init_once(\<<HERE);
-log4perl.logger = INFO, File
-log4perl.appender.File = Log::Dispatch::File
-log4perl.appender.File.layout   = PatternLayout
-log4perl.appender.File.filename = $logfile
-log4perl.appender.File.layout.ConversionPattern = %d{yyyy-MM-dd HH:mm:ss.SSSSSS} %m%n
-HERE
-        return Log::Log4perl->get_logger();
+        $dispatch = Log::Dispatch->new( outputs => [[ File => filename => $logfile, min_level => 'debug' ]]);
     }
 }
 
@@ -219,10 +226,13 @@ sub log {
     my($self, $method, $d) = @_;
     no warnings 'uninitialized';
     eval {
-        $self->logger->info(sprintf "%s=%s:%s\n",
-            __PACKAGE__,
-            $VERSION,
+        $self->logger->info(sprintf "%s:%s\n",
+            $self->timestamp,
             $self->encode({
+                plugin_pkg => __PACKAGE__,
+                plugin_ver => $VERSION,
+                hostname => hostname,
+                perl => $^X,
                 method => $method,
                 (map { $_ => $d->{$_} } qw(
                     CALLED_FOR
@@ -247,7 +257,8 @@ sub log {
                 (map { $_ => $d->{$_} } grep { exists $d->{$_} } qw(tracedeps_viabundle)),
                 (map { ("queue_".$_) => CPAN::Queue->$_() } qw(size)),
             }));
-    } or $CPAN::Frontend->mywarn(
+    };
+    $@ and $CPAN::Frontend->mywarn(
             sprintf "Plugin TraceDeps had problems logging, please investigate: %s\n",
                 $@
         );
