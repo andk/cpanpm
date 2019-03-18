@@ -1,3 +1,15 @@
+2019-03-19  k  <andk@cpan.org>
+
+	* release 2.26
+
+	* testfix release, no functional change
+
+	* 97-run.t is now skipped when test is run by root user because
+	perldoc often fails for root user (thanks to Binarus for
+	reporting)
+
+	* small additions to distroprefs and to the Makefile.PL
+
 2019-03-03  k  <andk@cpan.org>
 
 	* release 2.25
