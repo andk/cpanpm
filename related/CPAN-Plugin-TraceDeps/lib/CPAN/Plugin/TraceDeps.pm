@@ -260,6 +260,7 @@ sub log {
                     plugin_ver => $VERSION,
                     hostname => hostname,
                     perl => $^X,
+                    pid => $$,
                 ) : (),
                 method => $method,
                 (map { $_ => $d->{$_} } grep { defined $d->{$_} } qw(
