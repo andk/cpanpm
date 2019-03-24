@@ -3946,6 +3946,25 @@ directory) or exit the CPAN shell, respectively. If you never start up
 the CPAN shell, you probably also have to clean up the build directory
 yourself.
 
+=item 19)
+
+How can I switch to sudo instead of local::lib?
+
+The following 5 environment veriables need to be reset to the previous
+values: PATH, PERL5LIB, PERL_LOCAL_LIB_ROOT, PERL_MB_OPT, PERL_MM_OPT;
+and these two CPAN.pm config variables must be reconfigured:
+make_install_make_command and mbuild_install_build_command. The five
+env variables have probably been overwritten in you $HOME/.bashrc or
+some equivalent. You either find them there and delete their traces
+and logout/login or you override them temporarily, depending on your
+exact desire. The two cpanpm config variables can be set with:
+
+  o conf init /install_.*_command/
+
+probably followed by
+
+  o conf commit
+
 =back
 
 =head1 COMPATIBILITY
