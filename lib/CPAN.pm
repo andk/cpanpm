@@ -3954,7 +3954,7 @@ The following 5 environment veriables need to be reset to the previous
 values: PATH, PERL5LIB, PERL_LOCAL_LIB_ROOT, PERL_MB_OPT, PERL_MM_OPT;
 and these two CPAN.pm config variables must be reconfigured:
 make_install_make_command and mbuild_install_build_command. The five
-env variables have probably been overwritten in you $HOME/.bashrc or
+env variables have probably been overwritten in your $HOME/.bashrc or
 some equivalent. You either find them there and delete their traces
 and logout/login or you override them temporarily, depending on your
 exact desire. The two cpanpm config variables can be set with:
