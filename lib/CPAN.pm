@@ -1468,11 +1468,12 @@ sub set_perl5lib {
         $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
     } else {
         my $cnt = keys %{$self->{is_tested}};
-        $CPAN::Frontend->optprint('perl5lib', "Prepending blib/arch and blib/lib of ".
-                                 "$cnt build dirs to PERL5LIB; ".
-                                 "for '$for'\n"
+        my $newenv = join $Config::Config{path_sep}, @dirs, @env;
+        $CPAN::Frontend->optprint('perl5lib', sprintf ("Prepending blib/arch and blib/lib of ".
+                                 "%d build dirs to PERL5LIB, reaching size %d; ".
+                                 "for '%s'\n", $cnt, length($newenv), $for)
                                 );
-        $ENV{PERL5LIB} = join $Config::Config{path_sep}, @dirs, @env;
+        $ENV{PERL5LIB} = $newenv;
     }
 }}
 
