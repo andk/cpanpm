@@ -182,6 +182,7 @@ match:
     |JANL/Net-Server-0.99.6.1                # hangs
     |JANPAZ/Font-TFM-\d                      # asks for path to tfm files
     |JASONK/Data-Faker-0.07                  # t/Data-Faker-DateTime.t runs forever
+    |JCHASSLER/HTML-GUI-0.04                 # seems abandoned since 2009
     |JCLINE/Robotics-023/Robotics-0\.23      # seems abandoned
     |JDDPAUSE/MarpaX-ESLIF-1.0
     |JDPORTER/Crypt-RandPasswd-0.02          # hangs *sometimes*

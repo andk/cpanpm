@@ -2,9 +2,7 @@
 comment: |
 
   Users of Module::Install that share a pattern: we can install all
-  optional dependencies with a couple of simple "y\n". The ENVariables
-  seem to be needed to prevent infinite recursion under certain
-  unknown circumstances.
+  optional dependencies with a couple of simple "y\n".
 
   The timeout must really be more, Net::Jifty for example didn't make
   it in ten (once), OpenResty didn't make it in 20 (I took it out
@@ -92,7 +90,7 @@ match:
     |BTROTT/Data-ObjectDriver-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
-    |BTROTT/WWW-Blog-Metadata-\d             
+    |BTROTT/WWW-Blog-Metadata-\d
     |BTROTT/XML-Feed-\d
     |CAMELCASE/HTML-TurboForm-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
@@ -125,7 +123,6 @@ match:
     |DAXIM/Mediawiki-Blame-\d
     |DCOPPIT/Benchmark-Timer-\d
     |DCOPPIT/Getargs-Long-\d
-    |DIABLO/Rsync-Config-\d
     |DIZ/Locale-Geocode-\d
     |DJERIUS/App-Env-\d
     |DJERIUS/HTML-TableParser-\d
@@ -171,8 +168,6 @@ match:
     |GAAL/Perl6-Take-\d
     |GAAL/Task-Smoke-\d
     |GBARR/Authen-SASL-\d
-    |GEOTIGER/Net-SFTP-Recursive-\d
-    |GEOTIGER/Oracle-Trigger-\d
     |GHENRY/Catalyst-Plugin-Email-Page-\d
     |GHENRY/Samba-LDAP-\d
     |GPHAT/Chart-Clicker-\d
@@ -268,7 +263,6 @@ match:
     |MIKI/Lingua-JA-TFIDF-\d
     |MINIMAL/MojoX-MongoDB
     |MITREHC/HoneyClient-Agent-\d
-    |MITREHC/HoneyClient-Manager-\d
     |MITREHC/HoneyClient-Util-\d
     |MIYAGAWA/Web-Scraper-\d
     |MIYAGAWA/XML-Atom-\d
@@ -380,7 +374,7 @@ match:
     |SPANG/App-SD-\d
     |SPANG/Prophet-\d
     |SPLICE/Lingua-EN-Segmenter-\d
-    |.*/Catalyst-Plugin-HTML-Widget-\d # was SRI
+    |SRI/Catalyst-Plugin-HTML-Widget-\d
     |SRI/HTML-Declare-\d
     |STEVAN/FCGI-Engine-\d
     |STEVAN/Moose-\d
@@ -413,7 +407,6 @@ match:
     |YVESAGO/Net-Sieve-\d
     |ZAKAME/Tie-Amazon-S3-\d
     |ZARQUON/Catalyst-Helper-AuthDBIC-\d
-    |ZEV/Test-Chimps-\d
     |ZEV/Test-Chimps-Anna-\d
     |ZEV/Test-Chimps-Client-\d
     |ZIGOROU/Catalyst-Helper-Model-MozRepl-\d
@@ -440,3 +433,42 @@ pl:
       - "y\n"
       - "Multiple extensions found for method 'WriteAll':"
       - "\n"
+---
+comment: |
+
+  Same as above but with envariables.
+
+  With the following distros it has been observed that they bail out
+  to CPANPLUS and redo the whole work that CPAN had already done.
+
+match:
+  distribution: |
+    ^(?x:MITREHC/HoneyClient-Manager-\d
+    |GEOTIGER/Net-SFTP-Recursive-\d
+    |GEOTIGER/Oracle-Trigger-\d
+    |BTROTT/WWW-Blog-Metadata-Icon\d
+    |BOBTFISH/Catalyst-Plugin-HTML-Widget-\d
+    |DIABLO/Rsync-Config-\d
+    |ZEV/Test-Chimps-\d
+    )|
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 120
+    reuse: 1
+    talk:
+      - "Auto-install"
+      - "n\n"
+      - "Add.*?to the prerequisites"
+      - "y\n"
+      - "Do you wish to install"
+      - "n\n"
+      - "Multiple extensions found for method 'WriteAll':"
+      - "\n"
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
