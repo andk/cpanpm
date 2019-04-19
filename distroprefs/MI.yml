@@ -90,8 +90,7 @@ match:
     |BTROTT/Data-ObjectDriver-\d
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
-    |BTROTT/WWW-Blog-Metadata-\d
-    |BTROTT/XML-FOAF-0\.04\.
+    |BTROTT/XML-FOAF-0\ .04\.
     |BTROTT/XML-Feed-\d
     |CAMELCASE/HTML-TurboForm-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
@@ -398,7 +397,6 @@ match:
     |TPG/Luka-\d
     |TRAVAIL/DBIx-Class-Schema-Slave-\d
     |VICTORI/perlbal-plugin-backendheaders-\d
-    |XERN/Lingua-LinkParser-FindPath-\d
     |YANNK/Catalyst-Plugin-MortalForward-\d
     |YAPPO/Class-Component-\d
     |YAPPO/HTTP-Engine-\d
@@ -445,9 +443,11 @@ comment: |
 match:
   distribution: |
     ^(?x:MITREHC/HoneyClient-Manager-\d
-    |BTROTT/WWW-Blog-Metadata-Icon\d
+    |BTROTT/WWW-Blog-Metadata-\d
+    |BTROTT/WWW-Blog-Metadata-Icon-\d
     |BOBTFISH/Catalyst-Plugin-HTML-Widget-\d
     |DIABLO/Rsync-Config-\d
+    |XERN/Lingua-LinkParser-FindPath-\d
     |ZEV/Test-Chimps-\d
     )|
 pl:
@@ -468,6 +468,14 @@ pl:
     PERL_AUTOINSTALL: --skip
     PERL_EXTUTILS_AUTOINSTALL: --skip
 make:
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+test:
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+install:
   env:
     PERL_AUTOINSTALL: --skip
     PERL_EXTUTILS_AUTOINSTALL: --skip

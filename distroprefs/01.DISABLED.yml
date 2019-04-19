@@ -100,6 +100,7 @@ match:
     |DCANTRELL/Class-DBI-ClassGenerator-1.04.tar.gz # abandoned
     |DCARDWELL/TextLinkAds-0.01.tar.gz       # interactive
     |DCOLLINS/Perlwikipedia-1.5.2            # https://rt.cpan.org/Ticket/Display.html?id=117918 and slow
+    |DCOPPIT/NewsClipper-1.32                # looks like abandoned since 2001
     |DCRAWFORD/Device-Audiotron-1.02.tar.gz  # asks questions
     |DDUMONT/Tk-ObjEditor-2.004.tar.gz       # http://rt.cpan.org/Ticket/Display.html?id=29559
     |DDUMONT/Tk-Multi-1.006.tar.gz           # seems abanodoned since 2004
@@ -121,6 +122,7 @@ match:
     |EBRUNI/WWW-BBB-API-\d                   # asks questions
     |EBRUNI/HTML-DBTable-0.05.tar.gz         # user interaction required
     |EBRUNI/HTML-Puzzle-0                    # looks like abandoned since 2002
+    |EBRUNI/Qmail-Mysql-0.02.tar.gz          # looks like abandoned since 2003
     |ECALDER/Proc-PID-File-1.24.tar.gz       # hangs during test.pl
     |ECALDER/POE-Component-Child-1.39        # hangs during test
     |EDALY/Text-GenderFromName-0.32.tar.gz   # bad prompt
@@ -298,6 +300,7 @@ match:
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PHISH/XML-LibXML-Common-0.13.tar.gz     # could cause a downgrade (yes it did)
     |PIERS/Jabber-mod_perl-0.15.tar.gz       # user interaction required
+    |PLATO/UID-0.24.tar.gz                   # looks like abandoned since circa 2010
     |PMIC/parrot-0.5.3.tar.gz                # hangs after testing ctags
     |PREACTION/ETL-Yertl-0.0[0123]..tar.gz   # avoid older version
     |PREACTION/ETL-Yertl-0.04[012].tar.gz    # avoid older version at the time of 0.043
@@ -346,6 +349,7 @@ match:
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STIGMATA/RAS-AS5200-1.04.tar.gz         # looks like abandoned since 2000
+    |STRYTOAST/Data-Pageset-Variable-0.03    # seems to be abandoned
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
     |SULLR/Net-INET6Glue-\d                  # asks questions
