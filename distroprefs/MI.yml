@@ -91,6 +91,7 @@ match:
     |BTROTT/Feed-Find-
     |BTROTT/URI-Fetch-\d
     |BTROTT/WWW-Blog-Metadata-\d
+    |BTROTT/XML-FOAF-0\.04\.
     |BTROTT/XML-Feed-\d
     |CAMELCASE/HTML-TurboForm-\d
     |CFRANKS/Catalyst-Controller-HTML-FormFu-\d
@@ -438,14 +439,12 @@ comment: |
 
   Same as above but with envariables.
 
-  With the following distros it has been observed that they bail out
-  to CPANPLUS and redo the whole work that CPAN had already done.
+  With the following distros it has been observed that they may bail
+  out to CPANPLUS and redo the whole work that CPAN had already done.
 
 match:
   distribution: |
     ^(?x:MITREHC/HoneyClient-Manager-\d
-    |GEOTIGER/Net-SFTP-Recursive-\d
-    |GEOTIGER/Oracle-Trigger-\d
     |BTROTT/WWW-Blog-Metadata-Icon\d
     |BOBTFISH/Catalyst-Plugin-HTML-Widget-\d
     |DIABLO/Rsync-Config-\d

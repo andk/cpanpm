@@ -143,6 +143,8 @@ match:
     |GAFFER/Relations-Abstract-0.94.tar.gz   # seems abandoned sincce 2001
     |GAISSMAI/Net-SNMP-Mixin-\d              # asks questions about SNMP server
     |GARY/Math-TrulyRandom-1.0.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34693
+    |GEOTIGER/Net-SFTP-Recursive-\d          # may call both CPANPLUS::install and CPAN::install
+    |GEOTIGER/Oracle-Trigger-\d              # may call both CPANPLUS::install and CPAN::install
     |GGARAND/PerlQt-3.008.tar.gz             # disk scans taking forever
     |GKNAUSS/WebService-Upcoming             # for members only
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
