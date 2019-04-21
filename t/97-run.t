@@ -11,6 +11,10 @@ my $HAVE_PERLDOC = eval { require Pod::Perldoc; 1; };
 unless ($HAVE_PERLDOC) {
     plan skip_all => "Test requires Pod::Perldoc to run";
 }
+my $HAVE_PERLDOC_TOMAN = eval { require Pod::Perldoc::ToMan; 1; };
+unless ($HAVE_PERLDOC_TOMAN) {
+    plan skip_all => "Test requires Pod::Perldoc::ToMan to run";
+}
 plan tests => 32;
 
 my $file = File::Spec->catfile('.', 'blib', 'script', 'cpan');
