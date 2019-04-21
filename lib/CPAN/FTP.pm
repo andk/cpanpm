@@ -23,7 +23,7 @@ sub _plus_append_open {
     mkpath $parent_dir;
     my($cnt);
     until (open $fh, "+>>$file") {
-        next if $! == Errno::EAGAIN; # don't increment on EAGAIN
+        next if exists &Errno::EAGAIN && $! == &Errno::EAGAIN; # don't increment on EAGAIN
         $CPAN::Frontend->mydie("Could not open '$file' after 10000 tries: $!") if ++$cnt > 100000;
         sleep 0.0001;
         mkpath $parent_dir;
