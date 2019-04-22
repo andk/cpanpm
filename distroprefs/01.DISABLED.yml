@@ -16,7 +16,6 @@ match:
     ^(?x:
     .^   # never matches, only purpose is to let things align nicely
     |.+/Moose-1.99                           # rt.cpan.org 66211
-    |.+/Net-CLI-Interact-\d                  # hangs
     |.+/Perl6/                               # perl5 only
     |.+/Test-Simple-2.00_                    # rt.cpan.org 66317
     |.+/Win32(API)?-[A-RT-Za-z]              # Win32-ShellQuote
