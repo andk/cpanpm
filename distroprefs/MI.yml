@@ -37,7 +37,6 @@ match:
     |ASKSH/sys-\d
     |AUDREYT/Scalar-Defer-\d
     |AUTRIJUS/ExtUtils-AutoInstall-0.63.tar.gz
-    |AUTRIJUS/Parse-SVNDiff-\d
     |AVAR/Bot-BB2-\d
     |AVAR/SMS-Send-IS-Vodafone-\d
     |AVIF/Image-Compare-\d
@@ -370,7 +369,6 @@ match:
     |SHIBUYA/Debug-Smart-\d
     |SMUELLER/Math-Approx-Symbolic-
     |SMUELLER/PAR-
-    |SMUELLER/Task-Math-Symbolic-\d
     |SPANG/App-SD-\d
     |SPANG/Prophet-\d
     |SPLICE/Lingua-EN-Segmenter-\d
@@ -443,10 +441,12 @@ comment: |
 match:
   distribution: |
     ^(?x:MITREHC/HoneyClient-Manager-\d
+    |AUTRIJUS/Parse-SVNDiff-\d
     |BTROTT/WWW-Blog-Metadata-\d
     |BTROTT/WWW-Blog-Metadata-Icon-\d
     |BOBTFISH/Catalyst-Plugin-HTML-Widget-\d
     |DIABLO/Rsync-Config-\d
+    |SMUELLER/Task-Math-Symbolic-\d
     |XERN/Lingua-LinkParser-FindPath-\d
     |ZEV/Test-Chimps-\d
     )|
