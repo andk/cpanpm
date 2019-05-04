@@ -40,6 +40,7 @@ use Carp;
 use FileHandle;
 use Fcntl ":flock";
 use Net::Ping ();
+use CPAN::Version;
 
 =item new( LOCAL_FILE_NAME )
 
@@ -200,7 +201,7 @@ sub best_mirrors {
 
     # Old Net::Ping did not do timings at all
     my $min_version = '2.13';
-    unless( Net::Ping->VERSION gt $min_version ) {
+    unless( CPAN::Version->vgt(Net::Ping->VERSION, $min_version) ) {
         carp sprintf "Net::Ping version is %s (< %s). Returning %s",
             Net::Ping->VERSION, $min_version, $self->default_mirror;
         return $self->default_mirror;

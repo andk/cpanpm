@@ -1680,7 +1680,6 @@ sub my_yn_prompt {
     my $default;
     defined($default = $CPAN::Config->{$item}) or $default = $dflt;
 
-    # $DB::single = 1;
     if (!$auto_config && (!$m || $item =~ /$m/)) {
         if (my $intro = $prompts{$item . "_intro"}) {
             $CPAN::Frontend->myprint($intro);
