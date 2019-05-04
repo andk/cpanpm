@@ -2263,6 +2263,10 @@ currently defined:
                      CPAN::Reporter history)
   unzip              location of external program unzip
   urllist            arrayref to nearby CPAN sites (or equivalent locations)
+  urllist_ping_external
+                     use external ping command when autoselecting mirrors
+  urllist_ping_verbose
+                     increase verbosity when autoselecting mirrors
   use_prompt_default set PERL_MM_USE_DEFAULT for configure/make/test/install
   use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
   username           your username if you CPAN server wants one

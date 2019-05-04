@@ -569,6 +569,23 @@ regardless of the history using "force".
 
 Do you want to rely on the test report history (yes/no)?
 
+=item urllist_ping_external
+
+When automatic selection of the nearest cpan mirrors is performed,
+turn on the use of the external ping via Net::Ping::External. This is
+recommended in the case the local network has a transparent proxy.
+
+Do you want to use the external ping command when autoselecting
+mirrors?
+
+=item urllist_ping_verbose
+
+When automatic selection of the nearest cpan mirrors is performed,
+this option can be used to turn on verbosity during the selection
+process.
+
+Do you want to see verbosity turned on when autoselecting mirrors?
+
 =item use_prompt_default
 
 When this is true, CPAN will set PERL_MM_USE_DEFAULT to a true
@@ -1265,6 +1282,12 @@ sub init {
 
     # Allow matching but don't show during manual config
     if ($matcher) {
+        if ("urllist_ping_external" =~ $matcher) {
+            my_yn_prompt(urllist_ping_external => 0, $matcher);
+        }
+        if ("urllist_ping_verbose" =~ $matcher) {
+            my_yn_prompt(urllist_ping_verbose => 0, $matcher);
+        }
         if ("randomize_urllist" =~ $matcher) {
             my_dflt_prompt(randomize_urllist => 0, $matcher);
         }
@@ -1917,17 +1940,25 @@ sub auto_mirrored_by {
     my $mirrors = CPAN::Mirrors->new($local);
 
     my $cnt = 0;
+    my $callback_was_active = 0;
     my @best = $mirrors->best_mirrors(
       how_many => 3,
       callback => sub {
+          $callback_was_active++;
           $CPAN::Frontend->myprint(".");
           if ($cnt++>60) { $cnt=0; $CPAN::Frontend->myprint("\n"); }
       },
+      $CPAN::Config->{urllist_ping_external} ? (external_ping => 1) : (),
+      $CPAN::Config->{urllist_ping_verbose} ? (verbose => 1) : (),
     );
 
-    my $urllist = [ map { $_->http } @best ];
+    my $urllist = [
+        map { $_->http }
+        grep { $_ && ref $_ && $_->can('http') }
+        @best
+    ];
     push @$urllist, grep { /^file:/ } @{$CPAN::Config->{urllist}};
-    $CPAN::Frontend->myprint(" done!\n\n");
+    $CPAN::Frontend->myprint(" done!\n\n") if $callback_was_active;
 
     return $urllist
 }

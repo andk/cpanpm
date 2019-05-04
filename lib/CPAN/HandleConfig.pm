@@ -112,6 +112,8 @@ $VERSION = "5.5009"; # see also CPAN::Config::VERSION at end of file
      "trust_test_report_history",
      "unzip",
      "urllist",
+     "urllist_ping_verbose",
+     "urllist_ping_external",
      "use_prompt_default",
      "use_sqlite",
      "username",
