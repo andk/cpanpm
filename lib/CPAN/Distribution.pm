@@ -3846,7 +3846,7 @@ sub _make_test_illuminate_prereqs {
                 if $CPAN::DEBUG;
         } else {
             push @prereq, $m
-                if $m_obj->{mandatory};
+                unless $self->is_locally_optional(undef, $m);
         }
     }
     my $but;
