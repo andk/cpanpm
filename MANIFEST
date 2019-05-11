@@ -225,6 +225,7 @@ distroprefs/JESSE.HTTP-Server-Simple.yml
 distroprefs/JESSE.Jifty-DBI.yml
 distroprefs/JETTERO.Term-ANSIColorx.yml
 distroprefs/JGMYERS.Encode-Detect.yml
+distroprefs/JGNI.Locale-CLDR.yml
 distroprefs/JHOBLITT.DateTime-Format-DateParse.yml
 distroprefs/JHOBLITT.DateTime-Format-ISO8601.yml
 distroprefs/JJORE.AI-Prolog.yml
@@ -458,6 +459,7 @@ distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
 distroprefs/TOMFAHLE.LBMA-Statistics.yml
+distroprefs/TONYC.Imager.yml
 distroprefs/TSCH.Cairo.yml
 distroprefs/TSCH.Gtk2.yml
 distroprefs/TTG.Google-GeoCoder-Smart.yml

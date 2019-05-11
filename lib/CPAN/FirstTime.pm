@@ -38,6 +38,73 @@ my @podpara = split /\n\n/, <<'=back';
 
 =over 2
 
+=item allow_installing_mixed_up_and_downgrades
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution will end up with decreasing module versions numbers. It
+can then let the installation of this distro fail when it discovers a
+mix of increasing and decreasing version numbers. See also
+C<allow_installing_module_downgrades> for a similar option.
+
+Do you want to allow installing distros with a mix of decreasing and
+increasing version numbers compared to what you have installed(yes,
+no, ask/yes, ask/no)?
+
+=item allow_installing_module_downgrades
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution will end up with decreasing module versions numbers. It
+can then let the installation of this distro fail when it discovers a
+downgrade. This option deals with downgrades, that consist only of
+non-increasing version numbers . See also
+C<allow_installing_mixed_up_and_downgrades> for a similar option.
+
+Do you want to allow installing distros with decreasing module
+versions compared to what you have installed (yes, no, ask/yes,
+ask/no)?
+
+=item allow_installing_modules_from_wrong_dists
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution contains modules that are indexed for a different
+distribution.
+
+Do you want to allow installing distros that CPAN has indexed for a
+different distribution (yes, no, ask/yes, ask/no)?
+
+=item allow_installing_outdated_dists
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution contains modules that are indexed with a distro with a
+higher distro-version number than the currently tested one.
+
+Do you want to allow installing distros that contain modules that
+belong to a distro with a higher distro-version
+(yes, no, ask/yes, ask/no)?
+
+=item allow_installing_outdated_modules
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution contains modules with lower version numbers than what is
+currently available on the CPAN.
+
+Do you want to allow installing distros that contain modules that are
+not uptodate (yes, no, ask/yes, ask/no)?
+
+=item allow_installing_unindexed_modules
+
+The CPAN shell can watch the C<blib/> directories that are built up
+before running C<make test> to determine whether the current
+distribution contains modules that have not been indexed on the CPAN.
+
+Do you want to allow installing distros that contain modules that are
+not known to the index (yes, no, ask/yes, ask/no)?
+
 =item auto_commit
 
 Normally CPAN.pm keeps config variables in memory and changes need to
@@ -1106,6 +1173,24 @@ sub init {
     }
 
     my_dflt_prompt(mbuild_install_arg => "", $matcher);
+
+    for my $o (qw(
+        allow_installing_outdated_dists
+        allow_installing_modules_from_wrong_dists
+        )) {
+        my_prompt_loop($o => 'ask/no', $matcher,
+                       'yes|no|ask/yes|ask/no');
+    }
+
+    for my $o (qw(
+        allow_installing_module_downgrades
+        allow_installing_mixed_up_and_downgrades
+        allow_installing_outdated_modules
+        allow_installing_unindexed_modules
+        )) {
+        my_prompt_loop($o => 'yes', $matcher,
+                       'yes|no|ask/yes|ask/no');
+    }
 
     #
     #== use_prompt_default

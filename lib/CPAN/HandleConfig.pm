@@ -33,6 +33,12 @@ $VERSION = "5.5009"; # see also CPAN::Config::VERSION at end of file
 
 %keys = map { $_ => undef }
     (
+     "allow_installing_mixed_up_and_downgrades",
+     "allow_installing_module_downgrades",
+     "allow_installing_modules_from_wrong_dists",
+     "allow_installing_outdated_dists",
+     "allow_installing_outdated_modules",
+     "allow_installing_unindexed_modules",
      "applypatch",
      "auto_commit",
      "build_cache",
@@ -126,6 +132,12 @@ $VERSION = "5.5009"; # see also CPAN::Config::VERSION at end of file
 
 my %prefssupport = map { $_ => 1 }
     (
+     "allow_installing_mixed_up_and_downgrades",
+     "allow_installing_module_downgrades",
+     "allow_installing_modules_from_wrong_dists",
+     "allow_installing_outdated_dists",
+     "allow_installing_outdated_modules",
+     "allow_installing_unindexed_modules",
      "build_requires_install_policy",
      "check_sigs",
      "make",
