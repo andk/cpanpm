@@ -4444,7 +4444,7 @@ sub _allow_installing {
             if (@outdm && $allow_outdm ne "yes") {
                 my $why = "allow_installing_outdated_modules: $id contains module(s) that have a lower version than the CPAN index has registered (e.g. '$outdm[0]{pmpath}' has version '$outdm[0]{version}' while the CPAN index contains '$outdm[0]{cpan_version}'";
                 if (my $other_dist = $outdm[0]{other_dist}) {
-                    $why .= " for the distribution $pretty_id";
+                    $why .= " for the distribution $other_dist";
                     if ($other_dist eq $pretty_id) {
                         $why .= ", apparently index and reality do not match";
                     }
