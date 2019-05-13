@@ -73,6 +73,7 @@ match:
     |BHODGES/Mail-IMAPFolderSearch-0.03.tar.gz
     |BINGOS/POE-Component-SmokeBox-          # hangs
     |BKCHAPIN/DBIx-Perform-\d                # curses login (?)
+    |BKUHN/B-JVM-Jasmin-0.02.tar.gz          # seems abandoned since 1999
     |BLX/XSDSQL_                             # hangs with high memory usage
     |BOBTFISH/Catalyst-Authentication-Store-LDAP-\d # hangs
     |BOOK/Net-Proxy-0.13                     # hangs always
@@ -83,6 +84,7 @@ match:
     |BSUGARS/nsapi_perl-0.24.tar.gz          # seems abandoned since 1998
     |BTROTT/Catalyst-Plugin-AtomServer-0.04  # seems abandoned since 2006
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
+    |BWILLIAM/AltaVista-SDKLinguistics-3.02.tar.gz # looks like abandoned since 2001
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
     |CEBJYRE/Task-BeLike-Cebjyre-\d          # hangs somewhere
@@ -159,6 +161,7 @@ match:
     |GRODITI/POE-Component-DirWatch-\d       # the 03editedfile or so seems to take forever
     |GSEAMAN/XML-DB.tar.gz                   # hangs
     |GSLONDON/Tk-CanvasLogo-0.2.tar.gz
+    |GUGOD/Acme-Tests-0.03.tar.gz            # looks like abandoned since 2006
     |GUIMARD/Net-Server-Mail-\d              # hangs
     |/POE-Quickie-\d                          # test hangs
     |GWYN/POE-Component-Server-HTTP-KeepAlive-0.0307.tar.gz # https://rt.cpan.org/Ticket/Display.html?id=82020
@@ -176,6 +179,7 @@ match:
     |HORROCKS/CGI-SpeedyCGI-2.22.tar.gz      # looks like abendoned since 2003
     |IKRUGLOV/Sereal-Encoder-4\.\d+_\d+.tar.gz
     |.*/DbFramework-\d                       # asks questions but I have not time
+    |ILYAM/HTTP-WebTest-2.04.tar.gz          # looks like abandoned since 2003
     |IMACAT/arclog-3.\d                      # one test (01-exhaust) hangs with several perls
     |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |INGY/Module-Install-TestML-0.02.tar.gz  # unsuited for testing: https://github.com/testml-lang/testml/wiki/TestML-and-CPAN
@@ -261,6 +265,7 @@ match:
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
     |MJBRIGHT/DBIx-XMLServer-0.02.tar.gz     # seems abandoned and hangs
     |MJD/Net-DHCP-Control-0.09.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34536
+    |MJD/Rx-0.53.tar.gz                      # asks questions
     |MLAWREN/SQL-Tree-\d                     # hangs before the first test
     |MLEHMANN/AnyEvent-4.232                 # hangs after "t/06_socket.....ok"
     |MLEHMANN/Deliantra                      # looks complicated and not using CheckLib
@@ -269,10 +274,12 @@ match:
     |MMACHADO/Geo-Weather-1.41.tar.gz        # user interaction required
     |MOB/Forks-Super-                        # too demanding
     |MOB/Forks-Queue-                        # seems to hang the whole smoker
+    |MOCK/Business-OnlinePayment-Exact-0.01.tar.gz # looks like abandoned since 2005
     |MROZ/Device-Blkid-E2fsprogs-0.2[24]     # asks question without EUMM
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
     |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
+    |MSERGEANT/PPerl-0.25.tar.gz             # seems abandoned since 2004
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MSHILTONJ/CGI-Test-\d                   # asks if it should strip Carp::Datum calls
     |MSROTH/Db-Documentum-\d                 # press return to continue...
@@ -280,6 +287,7 @@ match:
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |MTROWBRI/HTTP-ProxySelector-Persistent-0.02.tar.gz # looks like abandoned since 2007
     |MWS/ResourcePool-Resource-SOAP-Lite-\d  # asks questions
+    |NATE/News-Collabra-0.06.tar.gz          # seems abandoned since 2002
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
     |NPEREZ/Reflexive-Stream-Filtering-1.103450 # hangs or fails; unrelated RT 74010
     |NUFFIN/POE-Component-Supervisor-0.01.tar.gz # hangs during t/04_global_restart_policy.
