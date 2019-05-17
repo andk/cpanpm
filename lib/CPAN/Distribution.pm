@@ -4309,33 +4309,17 @@ sub _allow_installing {
     if ($self->{CALLED_FOR}) {
         $id .= " (called for $self->{CALLED_FOR})";
     }
-    my $allow_mix    = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_mixed_up_and_downgrades});
-    $allow_mix       ||= "ask/yes";
     my $allow_down   = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_module_downgrades});
     $allow_down      ||= "ask/yes";
-    my $allow_fwd    = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_modules_from_wrong_dists});
-    $allow_fwd       ||= "ask/yes";
     my $allow_outdd  = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_outdated_dists});
     $allow_outdd     ||= "ask/yes";
-    my $allow_outdm  = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_outdated_modules});
-    $allow_outdm     ||= "ask/yes";
-    my $allow_uninx  = CPAN::HandleConfig->prefs_lookup($self,q{allow_installing_unindexed_modules});
-    $allow_uninx     ||= "ask/yes";
     return 1 if
-           $allow_mix   eq "yes"
-        && $allow_down  eq "yes"
-        && $allow_fwd   eq "yes"
-        && $allow_outdd eq "yes"
-        && $allow_outdm eq "yes"
-        && $allow_uninx eq "yes";
-    if (($allow_outdd ne "yes" || $allow_fwd ne "yes") && ! $CPAN::META->has_inst('CPAN::DistnameInfo')) {
+           $allow_down  eq "yes"
+        && $allow_outdd eq "yes";
+    if (($allow_outdd ne "yes") && ! $CPAN::META->has_inst('CPAN::DistnameInfo')) {
         return 1 if grep { $_ eq 'CPAN::DistnameInfo'} $self->containsmods;
         if ($allow_outdd ne "yes") {
             $CPAN::Frontend->mywarn("The current configuration of allow_installing_outdated_dists is '$allow_outdd', but for this option we would need 'CPAN::DistnameInfo' installed. Please install 'CPAN::DistnameInfo' as soon as possible. I'll refrain from chasing outdated dists as long as 'CPAN::DistnameInfo' is not installed\n");
-            return (0, "'CPAN::DistnameInfo' is not installed");
-        }
-        if ($allow_fwd ne "yes") {
-            $CPAN::Frontend->mywarn("The current configuration of allow_installing_modules_from_wrong_dists is '$allow_fwd', but for this option we would need 'CPAN::DistnameInfo' installed. Please install 'CPAN::DistnameInfo' as soon as possible. I'll refrain from chasing wrong-dist-installations as long as 'CPAN::DistnameInfo' is not installed\n");
             return (0, "'CPAN::DistnameInfo' is not installed");
         }
     }
@@ -4346,38 +4330,23 @@ sub _allow_installing {
         $dist_dist    = $dni->dist;
     }
     my $iterator = blib_pm_walk();
-    my(@upgr,@down,@fwd,@outdd,@outdm,@uninx);
+    my(@down,@outdd);
     while (my $file = $iterator->()) {
         my $version = CPAN::Module->parse_version($file);
         my($volume, $directories, $pmfile) = File::Spec->splitpath( $file );
         my @dirs = File::Spec->splitdir( $directories );
         my(@blib_plus1) = splice @dirs, 0, 2;
         my($pmpath) = File::Spec->catfile(grep { length($_) } @dirs, $pmfile);
-        unless ($allow_down eq "yes" && $allow_mix eq "yes") {
+        unless ($allow_down eq "yes") {
             if (my $inst_file = $self->_file_in_path($pmpath, \@INC)) {
                 my $inst_version = CPAN::Module->parse_version($inst_file);
                 my $cmp = CPAN::Version->vcmp($version, $inst_version);
                 if ($cmp) {
-                    if ($cmp > 0) {
-                        push @upgr, { pmpath => $pmpath, version => $version, inst_version => $inst_version };
-                    } else {
+                    if ($cmp < 0) {
                         push @down, { pmpath => $pmpath, version => $version, inst_version => $inst_version };
                     }
                 }
-                if (@down && @upgr && $allow_mix ne "yes") {
-                    my $why = "allow_installing_mixed_up_and_downgrades: $id contains a mix of upgrades and downgrades (e.g. the downgrade in '$down[0]{pmpath}' from '$down[0]{inst_version}' to '$down[0]{version}')";
-                    if (my($default) = $allow_mix =~ m|^ask/(.+)|) {
-                        $default = "yes" unless $default =~ /^(y|n)/i;
-                        my $answer = CPAN::Shell::colorable_makemaker_prompt
-                                ("$why. Do you want to allow installing it?",
-                                 $default, "colorize_warn");
-                        $allow_mix = $answer =~ /^\s*y/i ? "yes" : "no";
-                    }
-                    if ($allow_mix eq "no") {
-                        return (0, $why);
-                    }
-                }
-                if (@down && $allow_down ne "yes") {
+                if (@down) {
                     my $why = "allow_installing_module_downgrades: $id contains downgrading module(s) (e.g. '$down[0]{pmpath}' would downgrade installed '$down[0]{inst_version}' to '$down[0]{version}')";
                     if (my($default) = $allow_down =~ m|^ask/(.+)|) {
                         $default = "yes" unless $default =~ /^(y|n)/i;
@@ -4392,7 +4361,7 @@ sub _allow_installing {
                 }
             }
         }
-        unless ($allow_fwd eq "yes" && $allow_outdd eq "yes" && $allow_outdm eq "yes" && $allow_uninx eq "yes") {
+        unless ($allow_outdd eq "yes") {
             my @pmpath = (@dirs, $pmfile);
             $pmpath[-1] =~ s/\.pm$//;
             my $mo = CPAN::Shell->expand("Module",join "::", grep { length($_) } @pmpath);
@@ -4412,53 +4381,7 @@ sub _allow_installing {
                                 dist_dist    => $dni->dist,
                             };
                         }
-                    } else {
-                        push @fwd, { pmpath => $pmpath, cpan_path => $dni->pathname };
                     }
-                } else {
-                    push @uninx, { pmpath => $pmpath };
-                }
-                if ($is_lower) {
-                    my $meta = { pmpath => $pmpath, cpan_version => $cpan_version, version => $version };
-                    if ($other_dist) {
-                        $meta->{other_dist} = $other_dist;
-                    }
-                    push @outdm, $meta;
-                }
-            } else {
-                push @uninx, { pmpath => $pmpath };
-            }
-            if (@fwd && $allow_fwd ne "yes") {
-                my $why = "allow_installing_modules_from_wrong_dists: $id contains module(s) that the CPAN index has registered for a different dist (e.g. '$fwd[0]{pmpath}' is indexed in '$fwd[0]{cpan_path}')";
-                if (my($default) = $allow_fwd =~ m|^ask/(.+)|) {
-                    $default = "yes" unless $default =~ /^(y|n)/i;
-                    my $answer = CPAN::Shell::colorable_makemaker_prompt
-                        ("$why. Do you want to allow installing it?",
-                         $default, "colorize_warn");
-                    $allow_fwd = $answer =~ /^\s*y/i ? "yes" : "no";
-                }
-                if ($allow_fwd eq "no") {
-                    return (0, $why);
-                }
-            }
-            if (@outdm && $allow_outdm ne "yes") {
-                my $why = "allow_installing_outdated_modules: $id contains module(s) that have a lower version than the CPAN index has registered (e.g. '$outdm[0]{pmpath}' has version '$outdm[0]{version}' while the CPAN index contains '$outdm[0]{cpan_version}'";
-                if (my $other_dist = $outdm[0]{other_dist}) {
-                    $why .= " for the distribution $other_dist";
-                    if ($other_dist eq $pretty_id) {
-                        $why .= ", apparently index and reality do not match";
-                    }
-                }
-                $why .= ")";
-                if (my($default) = $allow_outdm =~ m|^ask/(.+)|) {
-                    $default = "yes" unless $default =~ /^(y|n)/i;
-                    my $answer = CPAN::Shell::colorable_makemaker_prompt
-                        ("$why. Do you want to allow installing it?",
-                         $default, "colorize_warn");
-                    $allow_outdm = $answer =~ /^\s*y/i ? "yes" : "no";
-                }
-                if ($allow_outdm eq "no") {
-                    return (0, $why);
                 }
             }
             if (@outdd && $allow_outdd ne "yes") {
@@ -4474,19 +4397,6 @@ sub _allow_installing {
                     $allow_outdd = $answer =~ /^\s*y/i ? "yes" : "no";
                 }
                 if ($allow_outdd eq "no") {
-                    return (0, $why);
-                }
-            }
-            if (@uninx && $allow_uninx ne "yes") {
-                my $why = "allow_installing_unindexed_modules: $id contains module(s) that the CPAN index has not registered (e.g. '$uninx[0]{pmpath}')";
-                if (my($default) = $allow_uninx =~ m|^ask/(.+)|) {
-                    $default = "yes" unless $default =~ /^(y|n)/i;
-                    my $answer = CPAN::Shell::colorable_makemaker_prompt
-                        ("$why. Do you want to allow installing it?",
-                         $default, "colorize_warn");
-                    $allow_uninx = $answer =~ /^\s*y/i ? "yes" : "no";
-                }
-                if ($allow_uninx eq "no") {
                     return (0, $why);
                 }
             }

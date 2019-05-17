@@ -2145,24 +2145,12 @@ where WORD is any valid config variable or a regular expression.
 The following keys in the hash reference $CPAN::Config are
 currently defined:
 
-  allow_installing_mixed_up_and_downgrades
-                     allow or disallow installing a distro when it
-                     mixes up- and downgrades of contained modules
   allow_installing_module_downgrades
                      allow or disallow installing module downgrades
-  allow_installing_modules_from_wrong_dists
-                     allow or disallow installing modules when
-                     packaged in a different dist
   allow_installing_outdated_dists
                      allow or disallow installing modules that are
                      indexed in the cpan index pointing to a distro
                      with a higher distro-version number
-  allow_installing_outdated_modules
-                     allow or disallow installing versions of modules
-                     that are not in the cpan index
-  allow_installing_unindexed_modules
-                     allow or disallow installing modules that are not
-                     in the cpan index at all
   applypatch         path to external prg
   auto_commit        commit all changes to config variables to disk
   build_cache        size of cache for directories to build modules
@@ -2432,70 +2420,27 @@ C<ask/no>, CPAN.pm asks the user and sets the default accordingly.
 
 =head2 Configuration of the allow_installing_* parameters
 
-These parameters:
-
-  allow_installing_mixed_up_and_downgrades
-  allow_installing_module_downgrades
-  allow_installing_modules_from_wrong_dists
-  allow_installing_outdated_dists
-  allow_installing_outdated_modules
-  allow_installing_unindexed_modules
-
-are closely related to each other. All of them are evaluated during
-the C<install> phase. If set to C<yes>, they allow the installation of
+The C<allow_installing_*> parameters are evaluated during
+the C<make> phase. If set to C<yes>, they allow the testing and the installation of
 the current distro and otherwise have no effect. If set to C<no>, they
-may prevent the installation, depending on the contents of the
+may abort the build (preventing testing and installing), depending on the contents of the
 C<blib/> directory. The C<blib/> directory is the directory that holds
 all the files that would usually be installed in the C<install> phase.
 
-The first two parameters,
+C<allow_installing_outdated_dists> compares the C<blib/> directory with the CPAN index.
+If it finds something there that belongs, according to the index, to a different
+dist, it aborts the current build.
 
-  allow_installing_mixed_up_and_downgrades
-  allow_installing_module_downgrades
-
-compare the blib directory with already installed modules. In other
-words, they are influenced by the local runtime environment. The
-others,
-
-  allow_installing_modules_from_wrong_dists
-  allow_installing_outdated_dists
-  allow_installing_outdated_modules
-  allow_installing_unindexed_modules
-
-compare the blib directory with the CPAN index. They disregard what is
-already installed, they do not reflect the notion of downgrades, they
-simply consider things I<outdated>, I<from the wrong dist> or
-C<unindexed>. These categories are strictly bound to what the index
-considers to be current, correct, and true.
-
-Each of them serves a slightly different purpose.
-
-If you want to prevent accidental downgrades,
-C<allow_installing_outdated_dists=ask/no> and
-C<allow_installing_modules_from_wrong_dists=ask/no> will probably
-suffice.
-
-If you're running a CPAN smoker and want to install after you have
-tested modules, you probably want to additionally set
-C<allow_installing_module_downgrades=no>.
-
-The relation between C<allow_installing_module_downgrades> and
-C<allow_installing_mixed_up_and_downgrades> deserves a clarification:
-if downgrades are disallowed, mixed up- and downgrades will of course
-also be prevented, because they are a subset of all module downgrades.
-
-One word needs to be said about C<allow_installing_unindexed_modules>:
-it is pretty common on the CPAN that not all modules of a distro find
-their way into the indexer. Sometimes intentional, sometimes by
-accident. This has in the past been tolerated as minor friction. If
-you disallow installing distros that contain unindexed modules, you
-will probably encounter them frequently. For that reason it is
-recommended to set this option to C<yes>.
+C<allow_installing_module_downgrades> compares the C<blib/> directory
+with already installed modules, actually their version numbers, as
+determined by ExtUtils::MakeMaker or equivalent. If a to-be-installed
+module would downgrade an already installed module, the current build
+is aborted.
 
 An interesting twist occurs when a distroprefs document demands the
-installation of an outdated module via goto while
-C<allow_installing_outdated_modules> forbids it. Without additional
-provisions, this would let the C<allow_installing_outdated_modules>
+installation of an outdated dist via goto while
+C<allow_installing_outdated_dists> forbids it. Without additional
+provisions, this would let the C<allow_installing_outdated_dists>
 win and the distroprefs lose. So the proper arrangement in such a case
 is to write a second distroprefs document for the distro that C<goto>
 points to and overrule the C<cpanconfig> there. E.g.:
@@ -2509,8 +2454,6 @@ points to and overrule the C<cpanconfig> there. E.g.:
     distribution: "^MAUKE/Keyword-Simple-0.03.tar.gz"
   cpanconfig:
     allow_installing_outdated_dists: yes
-    allow_installing_outdated_modules: yes
-    allow_installing_modules_from_wrong_dists: yes
 
 =head2 Configuration for individual distributions (I<Distroprefs>)
 

@@ -1,9 +1,0 @@
----
-comment: |
-
-  grandfathering conflict on file XML/DOM/DOMException.pm against ENNO/libxml-enno-1.00.tar.gz
-
-match:
-  distribution: '^TJMATHER/XML-DOM-1.46.tar.gz'
-cpanconfig:
-  allow_installing_modules_from_wrong_dists: yes

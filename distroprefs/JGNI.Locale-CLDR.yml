@@ -1,9 +1,0 @@
----
-comment: |
-
-  Locale/CLDR/Locales/En.pm lives here and in its own home JGNI/Locale-CLDR-Locales-En-x.x.x
-
-match:
-  distribution: "^JGNI/Locale-CLDR-v[0-9]*\.[0-9]*\.[0-9]*\.tar\.gz"
-cpanconfig:
-  allow_installing_modules_from_wrong_dists: yes
