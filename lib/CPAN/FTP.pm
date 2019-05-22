@@ -15,7 +15,7 @@ use vars qw($connect_to_internet_ok $Ua $Thesite $ThesiteURL $Themethod);
 use vars qw(
             $VERSION
 );
-$VERSION = "5.5011";
+$VERSION = "5.5012";
 
 sub _plus_append_open {
     my($fh, $file) = @_;

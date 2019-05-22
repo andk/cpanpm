@@ -34,7 +34,7 @@ CPAN::Mirrors - Get CPAN mirror information and select a fast one
 package CPAN::Mirrors;
 use strict;
 use vars qw($VERSION $urllist $silent);
-$VERSION = "2.21";
+$VERSION = "2.27";
 
 use Carp;
 use FileHandle;
