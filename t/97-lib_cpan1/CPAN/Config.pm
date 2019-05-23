@@ -18,6 +18,8 @@ croak "Did not find $cpan_home in the current working directory!\n"
 	unless -d $cpan_home;
 
 $CPAN::Config = {
+                  'allow_installing_module_downgrades' => 'yes',
+                  'allow_installing_outdated_dists' => 'yes',
                   'auto_commit' => '1',
                   'build_cache' => '10',
                   'build_dir' => catfile( $cpan_home, 'build' ),
