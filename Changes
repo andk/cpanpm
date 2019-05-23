@@ -1,3 +1,45 @@
+2019-05-31  k  <andk@cpan.org>
+
+	* release 2.27-TRIAL
+
+	* two new options to protect against accidental downgrades:
+	allow_installing_outdated_dists and
+	allow_installing_module_downgrades
+
+	* two new options to tune the automatic determination of the
+	nearest peers: urllist_ping_external and urllist_ping_verbose;
+	NOTE: this feature was developed during the Perl Toolchain Summit
+	2019 in Marlow; thanks to the sponsors: Booking.com, cPanel,
+	MaxMind, FastMail, ZipRecruiter, Cogendo, Elastic, OpenCage Data,
+	Perl Services, Zoopla, Archer Education, OpusVL, Oetiker+Partner,
+	SureVoIP, YEF
+
+	* reveal the size of PERL5LIB in diagnostic output
+
+	* new semantics for parameter ftpstats_size: setting to '0' or
+	lower, disables download statistics
+
+	* bugfix: under certain circumstances, failing dependencies via
+	recommends and suggests could abort a build; this is now fixed
+
+	* bugfix: protect bundle processing against unavailable bundle
+	files and missing build directories
+
+	* bugfix: fix broken permissions after untar
+
+	* bugfix: protect against exceptions from unzip
+
+	* fix plugins: all early returns from all methods, that are
+	accessible for plugins, now call the post* plugins
+
+	* new question answered in the FAQ: "How can I switch to sudo
+	instead of local::lib" (thanks to Amos Bird for asking the
+	question on irc)
+
+	* plenty of new and updated distroprefs documents, among which are
+	some important ones to prevent Module::AutoInstall from switching
+	to CPANPLUS and taking over (and harming) the build
+
 2019-03-19  k  <andk@cpan.org>
 
 	* release 2.26
