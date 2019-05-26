@@ -2852,12 +2852,16 @@ sub prereqs_for_slot {
             if ($self->{CALLED_FOR} =~
                 /^(
                      CPAN::Meta::Requirements
+                 |CPAN::DistnameInfo
                  |version
                  |parent
                  |ExtUtils::MakeMaker
                  |Test::Harness
                  )$/x) {
-                $CPAN::Frontend->mywarn("Setting requirements to nil as a workaround\n");
+                $CPAN::Frontend->mywarn("Please install CPAN::Meta::Requirements ".
+                    "as soon as possible; it is needed for a reliable operation of ".
+                    "the cpan shell; setting requirements to nil for '$1' for now ".
+                    "to prevent deadlock during bootstrapping\n");
                 return;
             }
             $before = " before $self->{CALLED_FOR}";
@@ -4327,10 +4331,13 @@ sub _allow_installing {
     if (($allow_outdd ne "yes") && ! $CPAN::META->has_inst('CPAN::DistnameInfo')) {
         return 1 if grep { $_ eq 'CPAN::DistnameInfo'} $self->containsmods;
         if ($allow_outdd ne "yes") {
-            $CPAN::Frontend->mywarn("The current configuration of allow_installing_outdated_dists is '$allow_outdd', but for this option we would need 'CPAN::DistnameInfo' installed. Please install 'CPAN::DistnameInfo' as soon as possible. I'll refrain from chasing outdated dists as long as 'CPAN::DistnameInfo' is not installed\n");
-            return (0, "'CPAN::DistnameInfo' is not installed");
+            $CPAN::Frontend->mywarn("The current configuration of allow_installing_outdated_dists is '$allow_outdd', but for this option we would need 'CPAN::DistnameInfo' installed. Please install 'CPAN::DistnameInfo' as soon as possible. As long as we are not equipped with 'CPAN::DistnameInfo' this option does not take effect\n");
+            $allow_outdd = "yes";
         }
     }
+    return 1 if
+           $allow_down  eq "yes"
+        && $allow_outdd eq "yes";
     my($dist_version, $dist_dist);
     if ($allow_outdd ne "yes"){
         my $dni = CPAN::DistnameInfo->new($pretty_id);

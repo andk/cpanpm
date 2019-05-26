@@ -43,7 +43,7 @@ my @podpara = split /\n\n/, <<'=back';
 The CPAN shell can watch the C<blib/> directories that are built up
 before running C<make test> to determine whether the current
 distribution will end up with modules being overwritten with decreasing module version numbers. It
-can then let the installation of this distro fail when it discovers a
+can then let the build of this distro fail when it discovers a
 downgrade.
 
 Do you want to allow installing distros with decreasing module
@@ -55,11 +55,16 @@ ask/no)?
 The CPAN shell can watch the C<blib/> directories that are built up
 before running C<make test> to determine whether the current
 distribution contains modules that are indexed with a distro with a
-higher distro-version number than the currently tested one.
+higher distro-version number than the current one. It can
+then let the build of this distro fail when it would not represent the
+most up-to-date version of the distro.
 
-Do you want to allow installing distros that contain modules that
-belong to a distro with a higher distro-version
-(yes, no, ask/yes, ask/no)?
+Note: choosing anyhing but 'yes' for this option will need
+Devel::DistnameInfo being installed for taking effect.
+
+Do you want to allow installing distros that are not indexed as the
+highest distro-version for all contained modules (yes, no, ask/yes,
+ask/no)?
 
 =item auto_commit
 
