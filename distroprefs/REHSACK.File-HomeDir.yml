@@ -8,3 +8,8 @@ match:
   perlconfig:
     version: '^5\.8\.[0123]'
 goto: "REHSACK/File-HomeDir-1.002.tar.gz"
+---
+match:
+  distribution: "^REHSACK/File-HomeDir-1.002.tar.gz"
+cpanconfig:
+  allow_installing_outdated_dists: yes
