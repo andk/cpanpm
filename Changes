@@ -1,9 +1,9 @@
-2019-06-08  k  <andk@cpan.org>
+2019-06-09  k  <andk@cpan.org>
 
 	* release 2.27-TRIAL2
 
-	* bugfix: omit the new POSIX::setsid call on Windows, it was
-	failing there
+	* bugfix: omit the new POSIX::setsid call and the waitpid with
+	WNOHANG on Windows
 
 	* bugfix: the signalhandler has to kill the new process group
 	spawned for running the tests
