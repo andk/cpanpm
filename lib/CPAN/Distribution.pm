@@ -3768,7 +3768,7 @@ sub test {
             }
             $tests_ok = !$?;
         } else { # child
-            POSIX::setsid();
+            POSIX::setsid() unless $^O eq "MSWin32";
             my $c_ok;
             $|=1;
             if ($want_expect) {
