@@ -1,3 +1,16 @@
+2019-06-08  k  <andk@cpan.org>
+
+	* release 2.27-TRIAL2
+
+	* bugfix: omit the new POSIX::setsid call on Windows, it was
+	failing there
+
+	* bugfix: the signalhandler has to kill the new process group
+	spawned for running the tests
+
+	* adding the README file that was generated during the release of
+	2.27-TRIAL
+
 2019-05-31  k  <andk@cpan.org>
 
 	* release 2.27-TRIAL
@@ -28,6 +41,10 @@
 	* bugfix: fix broken permissions after untar
 
 	* bugfix: protect against exceptions from unzip
+
+	* bugfix: add one level of fork+setsid for testing to prevent that
+	a test can kill the process group that CPAN.pm is running in.
+	Learned from experience with testing VIZDOM/DBD-JDBC-0.71.tar.gz
 
 	* fix plugins: all early returns from all methods, that are
 	accessible for plugins, now call the post* plugins
