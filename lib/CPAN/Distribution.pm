@@ -3760,7 +3760,12 @@ sub test {
             sleep 2;
             redo FORK;
         } elsif ($pid) { # parent
-            wait;
+        SUPERVISE: while (waitpid($pid, WNOHANG) <= 0) {
+                if ($CPAN::Signal) {
+                    kill 9, -$pid;
+                }
+                sleep 1;
+            }
             $tests_ok = !$?;
         } else { # child
             POSIX::setsid();
@@ -3807,6 +3812,8 @@ sub test {
             $self->{make_test} = CPAN::Distrostatus->new(
                 "NO but failure ignored because 'force' in effect"
             );
+        } elsif ($CPAN::Signal) {
+            $self->{make_test} = CPAN::Distrostatus->new("NO -- Interrupted");
         } else {
             $self->{make_test} = CPAN::Distrostatus->new("NO");
         }
