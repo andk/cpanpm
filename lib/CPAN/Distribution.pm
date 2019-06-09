@@ -3760,11 +3760,15 @@ sub test {
             sleep 2;
             redo FORK;
         } elsif ($pid) { # parent
-        SUPERVISE: while (waitpid($pid, WNOHANG) <= 0) {
-                if ($CPAN::Signal) {
-                    kill 9, -$pid;
+            if ($^O eq "MSWin32") {
+                wait;
+            } else {
+            SUPERVISE: while (waitpid($pid, WNOHANG) <= 0) {
+                    if ($CPAN::Signal) {
+                        kill 9, -$pid;
+                    }
+                    sleep 1;
                 }
-                sleep 1;
             }
             $tests_ok = !$?;
         } else { # child
