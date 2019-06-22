@@ -88,6 +88,7 @@ match:
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
     |CEBJYRE/Task-BeLike-Cebjyre-\d          # hangs somewhere
+    |CGARCIA/WebService-Mappoint-0.30.tar.gz # seems abandoned since 2003
     |CGUINE/Games-Sudoku-SudokuTk-\d         # hangs: seen with 0.07 and 0.09
     |CLACO/AxKit-XSP-                        # looped in a readline
     |CLEACH/Net-FTPSSL-\d                    # asks questions during test without prompt()
@@ -202,6 +203,7 @@ match:
     |JHIVER/TripleStore-0.03                 # loops on user input questions
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
     |JKUTEJ/Xen-Control-\d                   # calls sudo
+    |JLISHEV/WebTools-1.27.tar.gz            # user interaction
     |JLMARTIN/NRD-Daemon-\d                  # hangs with 5.14.1-36
     |JLLEROY/Tangram-2.04.tar.gz             # waits for user input
     |JMERELO/MP3-Podcast-\d                  # hangs in test
@@ -338,6 +340,7 @@ match:
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SDPRICE/Linux-DVB-DVBT-Apps-QuartzPVR-\d
     |SEGAN/POE-Component-LaDBI-1.2.1
+    |SETHJ/MIDI-Music-0.01                   # user interaction required
     |SHERZODR/MySQL-TableInfo-1.01.tar.gz    # seems like abandoned since 2001
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
     |SCHOP/htpl-3.14.tar.gz                  # hangs since Feb 28, 2002
@@ -356,6 +359,7 @@ match:
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STIGMATA/RAS-AS5200-1.04.tar.gz         # looks like abandoned since 2000
+    |STODGHIL/SOAP-Clean-0.02.tar.gz         # looks like abandoned since 2003
     |STRYTOAST/Data-Pageset-Variable-0.03    # seems to be abandoned
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
     |STSANDER/Device-Davis-\d                # asks me for a tty to use
