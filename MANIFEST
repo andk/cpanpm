@@ -56,6 +56,7 @@ distroprefs/BINGOS.POE-Component-Server-SimpleContent.yml
 distroprefs/BINGOS.POE-Component-Server-SimpleHTTP.yml
 distroprefs/BINGOS.POE-Component-SmokeBox-Recent.yml
 distroprefs/BIRNEY.bioperl.yml
+distroprefs/BJOERN.Graph-Feather.yml
 distroprefs/BLUEFEET.GIS-Distance.yml
 distroprefs/BOBTFISH.Text-Markdown.yml
 distroprefs/BOGDRO.Asm-X86.yml
@@ -548,6 +549,7 @@ PAUSE2009.pub
 PAUSE2011.pub
 PAUSE2015.pub
 PAUSE2019.pub
+PAUSE2021.pub
 README
 scripts/cpan
 scripts/cpan-mirrors
