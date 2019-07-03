@@ -1,3 +1,14 @@
+2019-07-03  k  <andk@cpan.org>
+
+	* release 2.27
+
+	* stable release, no functional change compared to 2.27-TRIAL2
+
+	* updated public key for PAUSE in the file PAUSE2021.pub
+
+	* small additions to distroprefs, to the Makefile.PL, and to the
+	MANIFEST
+
 2019-06-09  k  <andk@cpan.org>
 
 	* release 2.27-TRIAL2
