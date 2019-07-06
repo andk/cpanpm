@@ -689,7 +689,7 @@ sub _hook_into_CPANpm_report
 
 	*CPAN::Shell::mywarn = sub {
 		my($self,$what) = @_;
-		$scalar .= $what;
+		$scalar .= $what if defined $what;
 		$self->print_ornamented($what,
 			$CPAN::Config->{colorize_warn}||'bold red on_white'
 			);
