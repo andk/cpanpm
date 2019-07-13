@@ -1,0 +1,8 @@
+---
+comment: |
+
+  0.03 had its last pass report on cpantesters 2011-08-31
+
+match:
+  distribution: '^SEKIA/Algorithm-KernelKMeans-0\.03\.tar\.gz'
+goto: "SEKIA/Algorithm-KernelKMeans-0.03_02.tar.gz"
