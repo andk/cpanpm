@@ -359,6 +359,7 @@ match:
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STIGMATA/RAS-AS5200-1.04.tar.gz         # looks like abandoned since 2000
+    |STIGMATA/RAS-HiPerARC-1.03.tar.gz       # looks like abandoned since 2000
     |STODGHIL/SOAP-Clean-0.02.tar.gz         # looks like abandoned since 2003
     |STRYTOAST/Data-Pageset-Variable-0.03    # seems to be abandoned
     |STRYTOAST/PluceneSimple-1.04.tar.gz     # seems to be abandoned
