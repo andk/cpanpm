@@ -178,6 +178,7 @@ match:
     |HOPCROFTS/Nagios-WebTransact-\d         # asks for a server and port
     |HOPCROFTS/Nagios-WebTransact-Timed-\d   # asks for a server and port
     |HORROCKS/CGI-SpeedyCGI-2.22.tar.gz      # looks like abendoned since 2003
+    |IDERRICK/WWW-VieDeMerde-0.21.tar.gz     # fails since 2010
     |IKRUGLOV/Sereal-Encoder-4\.\d+_\d+.tar.gz
     |.*/DbFramework-\d                       # asks questions but I have not time
     |ILYAM/HTTP-WebTest-2.04.tar.gz          # looks like abandoned since 2003
