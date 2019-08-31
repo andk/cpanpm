@@ -80,6 +80,7 @@ match:
     |BOOK/Net-Proxy-0.13                     # hangs always
     |BOWMANBS/Audio-Ecasound-\d              # hangs very early: RT 32101
     |BRONDSEM/Mail-SpamAssassin-Plugin-OpenPGP-1.0.4.tar.gz
+    |BRYCE/SVG-Metadata-0.28.tar.gz          # looks like abandoned since 2005
     |BSCHMAL/parrot-0.6.0.tar.gz             # hangs during configure with 5.10
     |BSUGARS/IPC-Shareable-0.60.tar.gz       # hangs
     |BSUGARS/nsapi_perl-0.24.tar.gz          # seems abandoned since 1998
