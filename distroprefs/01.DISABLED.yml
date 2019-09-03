@@ -189,6 +189,7 @@ match:
     |INGY/Module-Install-TestML-0.02.tar.gz  # unsuited for testing: https://github.com/testml-lang/testml/wiki/TestML-and-CPAN
     |ISHIGAKI/PPM-Make-\d                    # asks questions
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357
+    |IVAN/Net-APP-0.2.tar.gz                 # looks like abandoned since 2001
     |IX/Apache-Wombat-0.5.1.tar.gz           # asks questions
     |JANL/Net-Server-0.99.6.1                # hangs
     |JANPAZ/Font-TFM-\d                      # asks for path to tfm files
