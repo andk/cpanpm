@@ -1,5 +1,5 @@
 # Test CPAN::Distribution objects
-# 
+#
 # Very, very preliminary API testing, but we have to start somewhere
 
 BEGIN {
@@ -17,7 +17,7 @@ BEGIN {
     my $yaml_module = CPAN::_yaml_module();
     my $exit_message;
     if ($CPAN::META->has_inst($yaml_module)) {
-        # print "# yaml_module[$yaml_module] loadable\n";
+        #print STDERR "# yaml_module[$yaml_module] loadable\n";
     } else {
         $exit_message = "No yaml module installed";
     }
@@ -44,8 +44,7 @@ use File::Temp qw(tempdir);
 use File::Spec::Functions qw/catdir catfile/;
 use File::Basename qw/basename/;
 
-use lib "inc";
-use lib "t";
+use lib $Config::Config{usecperl} ? ("t") : ("inc", "t");
 use local_utils;
 use version;
 

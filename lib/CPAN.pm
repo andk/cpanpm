@@ -2,7 +2,7 @@
 # vim: ts=4 sts=4 sw=4:
 use strict;
 package CPAN;
-$CPAN::VERSION = '2.27';
+$CPAN::VERSION = '2.27_01'; # with cperl support
 $CPAN::VERSION =~ s/_//;
 
 # we need to run chdir all over and we would get at wrong libraries
@@ -63,6 +63,7 @@ use Text::Wrap ();
 sub find_perl ();
 sub anycwd ();
 sub _uniq;
+my $CPERL = $Config::Config{usecperl};
 
 no lib ".";
 
@@ -207,6 +208,8 @@ sub soft_chdir_with_alternatives ($);
         }
         $autoload_recursion--;
     }
+    # make sure we can install any modules from CPAN without patching them
+    $ENV{PERL_USE_UNSAFE_INC} = 1;
 }
 
 {
@@ -522,9 +525,10 @@ sub _flock {
 }
 
 sub _yaml_module () {
-    my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    my $dflt = $CPERL ? "YAML::XS" : "YAML";
+    my $yaml_module = $CPAN::Config->{yaml_module} || $dflt;
     if (
-        $yaml_module ne "YAML"
+        $yaml_module ne $dflt
         &&
         !$CPAN::META->has_inst($yaml_module)
        ) {
@@ -559,9 +563,19 @@ sub _yaml_loadfile {
         # so we do it manually instead
         my $old_loadcode = ${"$yaml_module\::LoadCode"};
         ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
+        # CPAN yaml is not strict YAML. Only Ingy YAML is strict, esp. YAML::XS
+        my $old_nonstrict = ${"$yaml_module\::NonStrict"};
+        ${ "$yaml_module\::NonStrict" } = 1 if $yaml_module =~ /^YAML(::XS)?$/;
 
         my ($code, @yaml);
-        if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
+        if ($code = UNIVERSAL::can($yaml_module, "SafeLoadFile")) {
+            # TODO: allow CPAN::* classes
+            eval { @yaml = $code->($local_file); };
+            if ($@) {
+                # this shall not be done by the frontend
+                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+            }
+        } elsif ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
             eval { @yaml = $code->($local_file); };
             if ($@) {
                 # this shall not be done by the frontend
@@ -582,6 +596,11 @@ sub _yaml_loadfile {
             }
         }
         ${"$yaml_module\::LoadCode"} = $old_loadcode;
+        if (!defined $old_nonstrict) {
+            undef ${"$yaml_module\::NonStrict"};
+        } else {
+            ${"$yaml_module\::NonStrict"} = $old_nonstrict;
+        }
         return \@yaml;
     } else {
         # this shall not be done by the frontend
@@ -599,6 +618,8 @@ sub _yaml_dumpfile {
         if (UNIVERSAL::isa($local_file, "FileHandle")) {
             $code = UNIVERSAL::can($yaml_module, "Dump");
             eval { print $local_file $code->(@what) };
+        } elsif ($code = UNIVERSAL::can($yaml_module, "SafeDumpFile")) {
+            eval { $code->($local_file,@what); };
         } elsif ($code = UNIVERSAL::can($yaml_module, "DumpFile")) {
             eval { $code->($local_file,@what); };
         } elsif ($code = UNIVERSAL::can($yaml_module, "Dump")) {

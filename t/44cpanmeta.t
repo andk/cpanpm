@@ -28,8 +28,7 @@ use File::Temp qw(tempdir);
 use File::Spec::Functions qw/catdir catfile/;
 use File::Basename qw/basename/;
 
-use lib "inc";
-use lib "t";
+use lib $Config::Config{usecperl} ? ("t") : ("inc", "t");
 use local_utils;
 
 # prepare local CPAN

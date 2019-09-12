@@ -358,6 +358,7 @@ EOF
            "make CPAN::Test::Dummy::Perl5::Build::Fails" => "Has.already.been.unwrapped",
            "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
            "o conf dontload_list push YAML" => ".",
+           "o conf dontload_list push YAML::XS" => ".",
            "o conf dontload_list push YAML::Syck" => ".",
            "o conf dontload_list push Parse::CPAN::Meta" => ".",
            "o conf dontload_list push CPAN::Meta" => ".",
@@ -424,6 +425,7 @@ EOF
            # must not see Failearly in the failed summary
            "failed" => q{(?x:Failed \s during \s this \s session: \s+
                                \S+ Build-Fails \S+: \s+ make_test \s+ NO \s*\z)},
+           "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
            "o conf dontload_list pop" => ".",
