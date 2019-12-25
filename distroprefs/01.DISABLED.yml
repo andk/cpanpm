@@ -413,6 +413,7 @@ match:
     |XANTUS/MojoX-AIO-0.02.tar.gz            # hangs
     |XAOINC/XAO-FS-1.0                       # avoid older version
     |XERN/Bio-MedChunker-0.02.tar.gz
+    |XERN/Bio-Medpost-0.04.tar.gz            # looks like abandoned since 2005
     |XERN/CGI-QuickApp-\d                    # hangs immediately
     |XERN/Lingua-EN-GeniaTagger-0.01.tar.gz  # looks like abandonded since 2006
     |XERXES/Microsoft-AdCenter-[1-7]\.\d+\.tar.gz # avoid non-latest version (8.11)
