@@ -425,6 +425,7 @@ distroprefs/SCHWERN.Class-Fields.yml
 distroprefs/SCHWERN.Exporter-Lite.yml
 distroprefs/SCHWIGON.Class-MethodMaker.yml
 distroprefs/SEANO.Sepia.yml
+distroprefs/SEKIA.Algorithm-KernelKMeans.yml
 distroprefs/SHAY.Filter-Crypto.yml
 distroprefs/SHERZODR.Class-PObject.yml
 distroprefs/SHEVEK.Mail-Karmasphere-Client.yml
@@ -442,6 +443,7 @@ distroprefs/STEPANOV.IMDB-Film.yml
 distroprefs/STEVAN.Class-MOP.yml
 distroprefs/SULLR.IO-Socket-SSL.yml
 distroprefs/SWALTERS.typesafety.yml
+distroprefs/SYOHEX.List-UtilsBy-XS.yml
 distroprefs/SZABGAB.Spreadsheet-ParseExcel.yml
 distroprefs/SZABGAB.Term-ProgressBar.yml
 distroprefs/TBONE.HTTP-File.yml
