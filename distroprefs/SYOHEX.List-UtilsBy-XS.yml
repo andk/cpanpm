@@ -1,0 +1,6 @@
+---
+match:
+  distribution: '^SYOHEX/List-UtilsBy-XS-\d'
+depends:
+  requires:
+    Test::LeakTrace: 0
