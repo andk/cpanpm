@@ -26,6 +26,7 @@
 ^blibdirs
 ^cover_db/
 ^cp-to-perl.pl
+^.(appveyor|travis).yml
 
 # used by scripts/cpan to test installations
 ^cpan-home

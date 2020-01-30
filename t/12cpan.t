@@ -152,6 +152,7 @@ require CPAN::HandleConfig;
         local $CPAN::Config->{yaml_module} = 'YAML::Syck';
 
         {
+            local $YAML::Syck::LoadBlessed = 1;
             my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
 
             local $::yaml_load_code_works = 0;
@@ -169,6 +170,7 @@ require CPAN::HandleConfig;
         }
 
         {
+            local $YAML::Syck::LoadBlessed = 1;
             local $CPAN::Config->{yaml_load_code} = 1;
 
             my $data = CPAN->_yaml_loadfile($yaml_file)->[0];
