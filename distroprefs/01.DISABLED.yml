@@ -87,6 +87,7 @@ match:
     |BTROTT/Catalyst-Plugin-AtomServer-0.04  # seems abandoned since 2006
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |BWILLIAM/AltaVista-SDKLinguistics-3.02.tar.gz # looks like abandoned since 2001
+    |CAFFIEND/font_ft2_0.1.0.tgz             # only fails on cpantesters
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
     |CEBJYRE/Task-BeLike-Cebjyre-\d          # hangs somewhere
@@ -293,7 +294,6 @@ match:
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MSHILTONJ/CGI-Test-\d                   # asks if it should strip Carp::Datum calls
     |MSROTH/Db-Documentum-\d                 # press return to continue...
-    |MTHURN/Net-Address-Ethernet-\d          # interactive questions that we cannot answer as a bot
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |MTROWBRI/HTTP-ProxySelector-Persistent-0.02.tar.gz # looks like abandoned since 2007
     |MWS/ResourcePool-Resource-SOAP-Lite-\d  # asks questions
@@ -314,6 +314,7 @@ match:
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PEVANS/IO-Async-Loop-Glib-0.20          # hangs after t/12share-timer.t (in t/15share-child.t)
     |PFARR/Net-SMS-Clickatell-SOAP-
+    |PHONYBONE/Data-Babel-Client-0.02.tar.gz # looks like abandoned since circa 2011
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
     |PHISH/XML-LibXML-Common-0.13.tar.gz     # could cause a downgrade (yes it did)
     |PIERS/Jabber-mod_perl-0.15.tar.gz       # user interaction required
