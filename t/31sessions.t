@@ -357,6 +357,8 @@ EOF
            "get CPAN::Test::Dummy::Perl5::Build::Fails" => "Has already been unwrapped",
            "make CPAN::Test::Dummy::Perl5::Build::Fails" => "Has.already.been.unwrapped",
            "test CPAN::Test::Dummy::Perl5::Build::Fails" => "(?i:t/00_load.+FAILED)",
+           "o conf dontload_list push YAML::PP" => ".",
+           "o conf dontload_list push YAML::PP::LibYAML" => ".",
            "o conf dontload_list push YAML" => ".",
            "o conf dontload_list push YAML::Syck" => ".",
            "o conf dontload_list push Parse::CPAN::Meta" => ".",

@@ -523,6 +523,9 @@ sub _flock {
 
 sub _yaml_module () {
     my $yaml_module = $CPAN::Config->{yaml_module} || "YAML";
+    # only for testing
+#    $yaml_module = 'YAML::PP';
+#    $yaml_module = 'YAML::PP::LibYAML';
     if (
         $yaml_module ne "YAML"
         &&
@@ -553,35 +556,53 @@ sub _yaml_loadfile {
     return +[] unless -s $local_file;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
-        # temporarily enable yaml code deserialisation
-        no strict 'refs';
-        # 5.6.2 could not do the local() with the reference
-        # so we do it manually instead
-        my $old_loadcode = ${"$yaml_module\::LoadCode"};
-        ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
 
-        my ($code, @yaml);
-        if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
-            eval { @yaml = $code->($local_file); };
-            if ($@) {
-                # this shall not be done by the frontend
-                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
-            }
-        } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
-            local *FH;
-            unless (open FH, $local_file) {
-                $CPAN::Frontend->mywarn("Could not open '$local_file': $!");
-                return +[];
-            }
-            local $/;
-            my $ystream = <FH>;
-            eval { @yaml = $code->($ystream); };
-            if ($@) {
-                # this shall not be done by the frontend
-                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
-            }
+        my @yaml;
+        if ($yaml_module eq 'YAML::PP' or $yaml_module eq 'YAML::PP::LibYAML') {
+            require YAML::PP::Schema::Perl;
+            my $perl = YAML::PP::Schema::Perl->new(
+                classes => [qw/ CPAN::URL CPAN::Distribution CPAN::Distrostatus CPAN::DeferredCode /],
+                loadcode => $CPAN::Config->{yaml_load_code},
+                tags => ['!perl', '!!perl'],
+            );
+            my $yp = $yaml_module->new(
+                schema => ['+', $perl],
+            );
+            eval { @yaml = $yp->load_file($local_file) };
         }
-        ${"$yaml_module\::LoadCode"} = $old_loadcode;
+        else {
+            # temporarily enable yaml code deserialisation
+            no strict 'refs';
+            # 5.6.2 could not do the local() with the reference
+            # so we do it manually instead
+            my $old_loadcode = ${"$yaml_module\::LoadCode"};
+            my $old_loadblessed = ${"$yaml_module\::LoadBlessed"};
+            ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
+            ${ "$yaml_module\::LoadBlessed" } = 1;
+            my $code;
+            if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
+                eval { @yaml = $code->($local_file); };
+                if ($@) {
+                    # this shall not be done by the frontend
+                    die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+                }
+            } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
+                local *FH;
+                unless (open FH, $local_file) {
+                    $CPAN::Frontend->mywarn("Could not open '$local_file': $!");
+                    return +[];
+                }
+                local $/;
+                my $ystream = <FH>;
+                eval { @yaml = $code->($ystream); };
+                if ($@) {
+                    # this shall not be done by the frontend
+                    die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+                }
+            }
+            ${"$yaml_module\::LoadCode"} = $old_loadcode;
+            ${"$yaml_module\::LoadBlessed"} = $old_loadblessed;
+        }
         return \@yaml;
     } else {
         # this shall not be done by the frontend
@@ -595,16 +616,28 @@ sub _yaml_dumpfile {
     my($self,$local_file,@what) = @_;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
-        my $code;
-        if (UNIVERSAL::isa($local_file, "FileHandle")) {
-            $code = UNIVERSAL::can($yaml_module, "Dump");
-            eval { print $local_file $code->(@what) };
-        } elsif ($code = UNIVERSAL::can($yaml_module, "DumpFile")) {
-            eval { $code->($local_file,@what); };
-        } elsif ($code = UNIVERSAL::can($yaml_module, "Dump")) {
-            local *FH;
-            open FH, ">$local_file" or die "Could not open '$local_file': $!";
-            print FH $code->(@what);
+        if ($yaml_module eq 'YAML::PP' or $yaml_module eq 'YAML::PP::LibYAML') {
+            my $perl = YAML::PP::Schema::Perl->new(
+                classes => [qw/ CPAN::URL CPAN::Distribution CPAN::Distrostatus CPAN::DeferredCode /],
+                tags => ['!perl', '!!perl'],
+            );
+            my $yp = $yaml_module->new(
+                schema => ['+', $perl],
+            );
+            eval { $yp->dump_file($local_file, @what) };
+        }
+        else {
+            my $code;
+            if (UNIVERSAL::isa($local_file, "FileHandle")) {
+                $code = UNIVERSAL::can($yaml_module, "Dump");
+                eval { print $local_file $code->(@what) };
+            } elsif ($code = UNIVERSAL::can($yaml_module, "DumpFile")) {
+                eval { $code->($local_file,@what); };
+            } elsif ($code = UNIVERSAL::can($yaml_module, "Dump")) {
+                local *FH;
+                open FH, ">$local_file" or die "Could not open '$local_file': $!";
+                print FH $code->(@what);
+            }
         }
         if ($@) {
             die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"dump",$@);
