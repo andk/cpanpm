@@ -86,6 +86,7 @@ match:
     |BSUGARS/nsapi_perl-0.24.tar.gz          # seems abandoned since 1998
     |BTROTT/Catalyst-Plugin-AtomServer-0.04  # seems abandoned since 2006
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
+    |BULKDD/Acme-Shining-0.01                # spits out too much output
     |BWILLIAM/AltaVista-SDKLinguistics-3.02.tar.gz # looks like abandoned since 2001
     |CAFFIEND/font_ft2_0.1.0.tgz             # only fails on cpantesters
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
