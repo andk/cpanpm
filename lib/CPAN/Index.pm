@@ -137,7 +137,7 @@ sub reanimate_build_dir {
                     ));
       DISTRO: for $i (0..$#candidates) {
             my $dirent = $candidates[$i];
-            my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent))};
+            my $y = eval {CPAN->_yaml_loadfile(File::Spec->catfile($d,$dirent), {loadblessed => 1})};
             if ($@) {
                 warn "Error while parsing file '$dirent'; error: '$@'";
                 next DISTRO;

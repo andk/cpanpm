@@ -63,7 +63,7 @@ sub _ftp_statistics {
             _plus_append_open($fh, $file);
         }
     }
-    my $stats = eval { CPAN->_yaml_loadfile($file); };
+    my $stats = eval { CPAN->_yaml_loadfile($file, {loadblessed => 1}); };
     if ($@) {
         if (ref $@) {
             if (ref $@ eq "CPAN::Exception::yaml_not_installed") {

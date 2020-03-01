@@ -549,8 +549,9 @@ sub _yaml_module () {
 
 # CPAN::_yaml_loadfile
 sub _yaml_loadfile {
-    my($self,$local_file) = @_;
+    my($self,$local_file,$opt) = @_;
     return +[] unless -s $local_file;
+    my $opt_loadblessed = $opt->{loadblessed} || $CPAN::Config->{yaml_load_code} || 0;
     my $yaml_module = _yaml_module;
     if ($CPAN::META->has_inst($yaml_module)) {
         # temporarily enable yaml code deserialisation
@@ -560,7 +561,7 @@ sub _yaml_loadfile {
         my $old_loadcode = ${"$yaml_module\::LoadCode"};
         my $old_loadblessed = ${"$yaml_module\::LoadBlessed"};
         ${ "$yaml_module\::LoadCode" } = $CPAN::Config->{yaml_load_code} || 0;
-        ${ "$yaml_module\::LoadBlessed" } = 1;
+        ${ "$yaml_module\::LoadBlessed" } = $opt_loadblessed ? 1 : 0;
 
         my ($code, @yaml);
         if ($code = UNIVERSAL::can($yaml_module, "LoadFile")) {
