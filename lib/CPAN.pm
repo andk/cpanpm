@@ -571,16 +571,16 @@ sub _yaml_loadfile {
             }
         } elsif ($code = UNIVERSAL::can($yaml_module, "Load")) {
             local *FH;
-            unless (open FH, $local_file) {
+            if (open FH, $local_file) {
+                local $/;
+                my $ystream = <FH>;
+                eval { @yaml = $code->($ystream); };
+                if ($@) {
+                    # this shall not be done by the frontend
+                    die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
+                }
+            } else {
                 $CPAN::Frontend->mywarn("Could not open '$local_file': $!");
-                return +[];
-            }
-            local $/;
-            my $ystream = <FH>;
-            eval { @yaml = $code->($ystream); };
-            if ($@) {
-                # this shall not be done by the frontend
-                die CPAN::Exception::yaml_process_error->new($yaml_module,$local_file,"parse",$@);
             }
         }
         ${"$yaml_module\::LoadCode"} = $old_loadcode;
