@@ -2950,7 +2950,7 @@ sub prereqs_for_slot {
         }
         if (-f "Build.PL"
             && ! -f File::Spec->catfile($self->{build_dir},"Makefile.PL")
-            && ! $merged->requirements_for_module("Module::Build")
+            && ! @{[ $merged->required_modules ]}
             && ! $CPAN::META->has_inst("Module::Build")
            ) {
             $CPAN::Frontend->mywarn(
