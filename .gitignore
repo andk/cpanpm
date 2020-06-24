@@ -5,8 +5,7 @@ blib
 pm_to_blib
 t/CPAN/MyConfig.pm*
 t/dot-cpan
-t/97-return_values.out
-test.out
+*.out
 *.swp
 .*
 !.gitignore
