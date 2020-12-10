@@ -1,5 +1,8 @@
 before_install:
    - sudo apt-get install -y liblog-log4perl-perl
+arch:
+   - amd64
+   - ppc64le
 language: perl
 perl:
    - '5.28'
