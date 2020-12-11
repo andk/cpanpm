@@ -1,3 +1,25 @@
+2020-06-13  k  <andk@cpan.org>
+
+	* release 2.28
+
+	* unchanged from 2.28-TRIAL
+
+2020-04-03  k  <andk@cpan.org>
+
+	* release 2.28-TRIAL
+
+	* applied pull request "YAML modules default for $LoadBlessed
+	was changed to false" by Tina Müller
+
+	* tiny fix on top of that fix: avoid early return by Andreas König
+
+	* tiny typo fixes in FTP.pm and FirstTime.pm
+
+	* a bunch of distroprefs maintenance activities
+
+	* address #129979: s/Devel::DistnameInfo/CPAN::DistnameInfo/;
+	thanks to Petr Pisar for reporting
+
 2019-07-03  k  <andk@cpan.org>
 
 	* release 2.27
