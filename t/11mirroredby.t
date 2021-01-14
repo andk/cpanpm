@@ -18,6 +18,7 @@ my $cmb = CPAN::Mirrored::By->new(
     continent => "continent",
     country => "country",
     http => "http",
+    https => "https",
     ftp => "ftp",
   }
 );
@@ -26,7 +27,7 @@ isa_ok( $cmb, 'CPAN::Mirrored::By' );
 is( $cmb->continent(), 'continent',
     'continent() should return continent entry' );
 is( $cmb->country(), 'country', 'country() should return country entry' );
-is( $cmb->url(), 'http', 'url() should return best url entry' );
+is( $cmb->url(), 'https', 'url() should return best url entry' );
 
 __END__
 # Local Variables:
