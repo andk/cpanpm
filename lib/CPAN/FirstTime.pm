@@ -126,7 +126,7 @@ To considerably speed up the initial CPAN shell startup, it is
 possible to use Storable to create a cache of metadata. If Storable is
 not available, the normal index mechanism will be used.
 
-Note: this mechanism is not used when use_sqlite is on and SQLLite is
+Note: this mechanism is not used when use_sqlite is on and SQLite is
 running.
 
 Cache metadata (yes/no)?
