@@ -26,13 +26,35 @@ The plugin system in the CPAN shell was introduced in version 2.07.
 This plugin is not yet settled and subject to change without prior
 notice.
 
-=head2 Goal of the TraceDeps plugin
+=head2 Purpose
 
-Trying to nail down the various dependencies (configure_requires,
-build_requires, and requires) in the various stages (get, make, test,
-install) of the build system.
+This plugin logs dependency data on
 
-This plugin writes dependency info into its tracedeps file.
+  configure_requires
+  build_requires and
+  requires
+
+in the eight stages 
+
+  pre_get
+  post_get
+  pre_make
+  post_make
+  pre_test
+  post_test
+  pre_install
+  post_install
+
+The name of the logfile is generated using an iso 8601 timestamp, e.g.
+20211112T091455.log.
+
+A single dependency log event is written to a single line consisting
+of a timestamp, a colon, and a JSON object, e.g. (here broken into three
+lines):
+
+  2021-11-12 15:04:16.248921:{"CALLED_FOR":"Sx","mandatory":"1",
+  "method":"pre_get","pretty_id":"FMC/Sx-2.3.tar.gz","queue_size":38362,
+  "reqtype":"c"}
 
 =head2 Graceful degradation
 
@@ -42,7 +64,7 @@ logging starts.
 
 =head2 OPTIONS
 
-The target directory to store the spec files can be set using C<dir>
+The target directory to store the log file can be set using C<dir>
 as in
 
   o conf plugin_list push CPAN::Plugin::TraceDeps=dir,/tmp/tracedeps-000042
