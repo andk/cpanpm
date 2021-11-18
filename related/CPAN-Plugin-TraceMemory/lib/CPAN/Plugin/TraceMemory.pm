@@ -46,8 +46,9 @@ A single dependency log event is written to a single line consisting
 of a timestamp, a colon, and a JSON object, e.g. (here broken into three
 lines):
 
-  2021-11-12 15:04:16.248921:{"method":"pre_get",
-  "pretty_id":"FMC/Sx-2.3.tar.gz",...}
+  2021-11-16 21:33:53.646381:{"committed":"2262380","method":"pre_get",
+  "pretty_id":"INGY/JS-0.29.tar.gz","statm_share":7024,
+  "statm_size":621828}
 
 =head2 Graceful degradation
 
