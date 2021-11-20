@@ -447,6 +447,10 @@ __END__
 ########
 #E:(?s:Enter 'h' for help.*?cpan[^>]*>)
 ########
+#C:all tests written before introduction of pushy_https
+#P:o conf pushy_https 0
+#E:(?s:cpan[^>]*>)
+########
 #C:the answer depends on Net::Ping availability
 #P:o conf init urllist
 #E:(?s:Would you like me to automatically choose.+?yes\]|Autoselection disabled)

@@ -61,6 +61,7 @@ $CPAN::Config = {
                   'pager' => '',
                   'prefer_installer' => 'EUMM',
                   'prerequisites_policy' => 'follow',
+                  'pushy_https' => 0,
                   'scan_cache' => 'atstart',
                   'shell' => '',
                   'show_upload_date' => '1',

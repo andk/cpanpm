@@ -50,6 +50,7 @@ $CPAN::Config = {
                  #'pager' => q[less],
                  'prefer_installer' => q[MB],
                  'prerequisites_policy' => q[follow],
+                 'pushy_https' => q[0],
                  'scan_cache' => q[atstart],
                  #'shell' => q[/usr/bin/zsh],
                  'show_upload_date' => q[0],

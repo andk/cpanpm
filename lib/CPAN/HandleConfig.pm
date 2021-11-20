@@ -99,6 +99,7 @@ $VERSION = "5.5011"; # see also CPAN::Config::VERSION at end of file
      "prerequisites_policy",
      "proxy_pass",
      "proxy_user",
+     "pushy_https",
      "randomize_urllist",
      "recommends_policy",
      "scan_cache",
@@ -562,6 +563,23 @@ sub load {
     my @miss = $self->missing_config_data;
     CPAN->debug("do_init[$do_init]loading[$loading]miss[@miss]") if $CPAN::DEBUG;
     return unless $do_init || @miss;
+    if (@miss==1 and $miss[0] eq "pushy_https" && !$do_init) {
+        $CPAN::Frontend->myprint(<<'END');
+
+Starting with version 3.29 of the cpan shell, a new download mechanism
+is the default which exclusively uses cpan.org as the host to download
+from. The configuration variable pushy_https can be used to (de)select
+the new mechanism. Please read more about it and make your choice
+between the old and the new mechanism by running
+
+    o conf init pushy_https
+
+Once you have done that and stored the config variable this dialog
+will disappear.
+END
+
+        return;
+    }
 
     # I'm not how we'd ever wind up in a recursive loop, but I'm leaving
     # this here for safety's sake -- dagolden, 2011-01-19
@@ -678,6 +696,7 @@ sub missing_config_data {
          "no_proxy",
          #"pager",
          "prerequisites_policy",
+         "pushy_https",
          "scan_cache",
          #"tar",
          #"unzip",

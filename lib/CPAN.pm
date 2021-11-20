@@ -1115,6 +1115,28 @@ sub has_usable {
                             sub {require Net::FTP},
                             sub {require Net::Config},
                            ],
+               'IO::Socket::SSL' => [
+                                 sub {
+                                     require IO::Socket::SSL;
+                                     unless (CPAN::Version->vge(IO::Socket::SSL::->VERSION,1.56)) {
+                                         for ("Will not use IO::Socket::SSL, need 1.56\n") {
+                                             $CPAN::Frontend->mywarn($_);
+                                             die $_;
+                                         }
+                                     }
+                                 }
+                                ],
+               'Net::SSLeay' => [
+                                 sub {
+                                     require Net::SSLeay;
+                                     unless (CPAN::Version->vge(Net::SSLeay::->VERSION,1.49)) {
+                                         for ("Will not use Net::SSLeay, need 1.49\n") {
+                                             $CPAN::Frontend->mywarn($_);
+                                             die $_;
+                                         }
+                                     }
+                                 }
+                                ],
                'HTTP::Tiny' => [
                             sub {
                                 require HTTP::Tiny;
@@ -2253,6 +2275,8 @@ currently defined:
   prefs_dir          local directory to store per-distro build options
   proxy_user         username for accessing an authenticating proxy
   proxy_pass         password for accessing an authenticating proxy
+  pushy_https        use https to cpan.org when possible, otherwise use http
+                     to cpan.org and issue a warning
   randomize_urllist  add some randomness to the sequence of the urllist
   recommends_policy  whether recommended prerequisites should be included
   scan_cache         controls scanning of cache ('atstart', 'atexit' or 'never')

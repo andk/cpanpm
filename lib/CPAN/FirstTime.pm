@@ -451,6 +451,20 @@ Please set your policy to one of the three values.
 
 Policy on building prerequisites (follow, ask or ignore)?
 
+=item pushy_https
+
+Boolean. Defaults to true. If this option is true, the cpan shell will
+use https://cpan.org/ to download stuff from the CPAN. It will fall
+back to http://cpan.org/ if it can't handle https for some reason
+(missing modules, missing programs). Whenever it falls back to the
+http protocol, it will issue a warning.
+
+If this option is true, the option C<urllist> will be ignored.
+Consequently, if you want to work with local mirrors via your own
+configured list of URLs, you will have to choose no below.
+
+Do you want to turn the pushy_https behaviour on?
+
 =item randomize_urllist
 
 CPAN.pm can introduce some randomness when using hosts for download
@@ -1315,6 +1329,7 @@ sub init {
     # Let's assume they want to use the internet and make them turn it
     # off if they really don't.
     my_yn_prompt("connect_to_internet_ok" => 1, $matcher);
+    my_yn_prompt("pushy_https" => 1, $matcher);
 
     # Allow matching but don't show during manual config
     if ($matcher) {
@@ -1344,7 +1359,11 @@ sub init {
             );
         }
         else {
-            $CPAN::Config->{urllist} = [ 'http://www.cpan.org/' ];
+            # Hint: as of 2021-11: to get http, use http://www.cpan.org/
+            $CPAN::Config->{urllist} = [ 'https://cpan.org/' ];
+            $CPAN::Frontend->myprint(
+                "We initialized your 'urllist' to @{$CPAN::Config->{urllist}}. Type 'o conf init urllist' to change it.\n"
+            );
         }
     }
     elsif (!$matcher || "urllist" =~ $matcher) {
