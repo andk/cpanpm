@@ -25,8 +25,9 @@ $VERSION = "5.5011"; # see also CPAN::Config::VERSION at end of file
 # A1: svn diff -r 757:758 # where dagolden added test_report [git e997b71de88f1019a1472fc13cb97b1b7f96610f]
 # A2: svn diff -r 985:986 # where andk added yaml_module [git 312b6d9b12b1bdec0b6e282d853482145475021f]
 # A3: 1. add new config option to %keys below
-#     2. add a Pod description in CPAN::FirstTime; it should include a
-#        prompt line; see others for examples
+#     2. add a Pod description in CPAN::FirstTime in the DESCRIPTION
+#        section; it should include a prompt line; see others for
+#        examples
 #     3. add a "matcher" section in CPAN::FirstTime::init that includes
 #        a prompt function; see others for examples
 #     4. add config option to documentation section in CPAN.pm
