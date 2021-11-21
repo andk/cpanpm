@@ -1,3 +1,15 @@
+2021-11-21  k  <andk@cpan.org>
+
+	* release 2.29-TRIAL
+
+	* new option pushy_https
+
+	* bugfix: signature verification type CANNOT_VERIFY was not recognized
+
+	* Add two new failure modes based on cpan_path
+
+	* use gpg --verify --output ... to disentangle data and signature
+
 2020-06-13  k  <andk@cpan.org>
 
 	* release 2.28

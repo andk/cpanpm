@@ -9,7 +9,7 @@ use File::Path ();
 use POSIX ":sys_wait_h"; 
 @CPAN::Distribution::ISA = qw(CPAN::InfoObj);
 use vars qw($VERSION);
-$VERSION = "2.27";
+$VERSION = "2.29";
 
 my $run_allow_installing_within_test = 1; # boolean; either in test or in install, there is no third option
 
