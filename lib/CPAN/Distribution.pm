@@ -1560,6 +1560,30 @@ for further processing, but got garbage instead.
         $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.\n");
         $self->{CHECKSUM_STATUS} = "NIL -- CHECKSUMS file broken";
         return;
+    } elsif (exists $cksum->{$basename} && ! exists $cksum->{$basename}{cpan_path}) {
+        $CPAN::Frontend->mywarn(qq{
+Warning: checksum file '$chk_file' not conforming.
+
+The cksum does not contain the key 'cpan_path' for '$basename'.
+});
+        my $answer = CPAN::Shell::colorable_makemaker_prompt("Proceed nonetheless?", "no");
+        $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.\n");
+        $self->{CHECKSUM_STATUS} = "NIL -- CHECKSUMS file without cpan_path";
+        return;
+    } elsif (exists $cksum->{$basename} && substr($self->{ID},0,length($cksum->{$basename}{cpan_path}))
+             ne $cksum->{$basename}{cpan_path}) {
+        $CPAN::Frontend->mywarn(qq{
+Warning: checksum file not matching path '$self->{ID}'.
+
+The cksum contain the key 'cpan_path=$cksum->{$basename}{cpan_path}'
+which does not match the ID of the distribution '$self->{ID}'.
+Something's suspicious might be going on here. Please investigate.
+
+});
+        my $answer = CPAN::Shell::colorable_makemaker_prompt("Proceed nonetheless?", "no");
+        $answer =~ /^\s*y/i or $CPAN::Frontend->mydie("Aborted.\n");
+        $self->{CHECKSUM_STATUS} = "NIL -- CHECKSUMS non-matching cpan_path vs. ID";
+        return;
     } elsif (exists $cksum->{$basename}{sha256}) {
         $self->debug("Found checksum for $basename:" .
                      "$cksum->{$basename}{sha256}\n") if $CPAN::DEBUG;

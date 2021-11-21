@@ -1,36 +1,42 @@
 # CHECKSUMS file written on Mon Jan  5 00:51:32 2015 GMT by CPAN::Checksums (v2.09)
 $cksum = {
   'Local-Make-Fails.tgz' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => 'c2faabb4096a6c169b8adf6d4ef1dbc3',
     'mtime' => '2015-01-04',
     'sha256' => '405d7d03ae407d23bdb507d703fd752fb4365ad4be16e759e2da5f56899426a5',
     'size' => 395
   },
   'Local-Prereq-Fails.tgz' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => 'e08fff6042bfe36d3ecbe30c7d42238b',
     'mtime' => '2015-01-04',
     'sha256' => '6c04aede4835e8b4810cbacc60deba40e16d96b1b45f4ebd95d7cdf5a2e207d1',
     'size' => 328
   },
   'Local-Test-Fails.tgz' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => '14c71a35612596f4ecdc58598700d647',
     'mtime' => '2015-01-04',
     'sha256' => '5a3ede2fb9741ecc311ae71c5062b0058c3980c7a332ba63fa337f91beb163bb',
     'size' => 859
   },
   'Local-Unsupported-OS.tgz' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => '651697d2b48af406176d49154ecbb7a7',
     'mtime' => '2015-01-05',
     'sha256' => 'a0f16f2f4f17e26f8bb5fe3d68929356014d4527caeb7a4862577dc27e60b4dc',
     'size' => 314
   },
   'Local-Works-Fine.tgz' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => 'e6e431d532610897632082da1789bbbf',
     'mtime' => '2015-01-05',
     'sha256' => 'a2c5b54ce7dd68a1f2d04020eaa921bc9b2edcf475c7da3cd43b77d4c18283b1',
     'size' => 1228
   },
   'Make.pl' => {
+    'cpan_path' => 'B/BU/BUSTER',
     'md5' => 'f52db2e5e66a4fb23515f158e7854ae7',
     'mtime' => '2015-01-04',
     'sha256' => '720399f558dfd51521e28626591083b7e3064ab24e864db8707d75c90ba9bc2c',
