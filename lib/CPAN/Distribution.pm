@@ -1533,20 +1533,43 @@ sub CHECKSUM_check_file {
 
     $file = $self->{localfile};
     $basename = File::Basename::basename($file);
+    my($signed_data);
     my $fh = FileHandle->new;
-    if (open $fh, $chk_file) {
-        local($/);
-        my $eval = <$fh>;
-        $eval =~ s/\015?\012/\n/g;
-        close $fh;
-        my($compmt) = Safe->new();
-        $cksum = $compmt->reval($eval);
-        if ($@) {
-            rename $chk_file, "$chk_file.bad";
-            Carp::confess($@) if $@;
+    if ($check_sigs) {
+        my $tempdir;
+        if ($CPAN::META->has_usable("File::Temp")) {
+            $tempdir = File::Temp::tempdir("CHECKSUMS-XXXX", CLEANUP => 1, DIR => "/tmp" );
+        } else {
+            $tempdir = File::Spec->catdir(File::Spec->tmpdir, "CHECKSUMS-$$");
+            File::Path::mkpath($tempdir);
         }
+        my $tempfile = File::Spec->catfile($tempdir, "CHECKSUMS.$$");
+        unlink $tempfile; # ignore missing file
+        my $gpg = $CPAN::Config->{gpg} or
+            $CPAN::Frontend->mydie("Your configuration suggests that you do not have 'gpg' installed. This is needed to verify checksums with the config variable 'check_sigs' on. Please configure it with 'o conf init gpg'");
+        my $system = "gpg --batch --no-tty --output $tempfile $chk_file 2> /dev/null";
+        0 == system $system or die "gpg run was failing, cannot continue: $system";
+        open $fh, $tempfile or die "Could not open $tempfile: $!";
+        local $/;
+        $signed_data = <$fh>;
+        close $fh;
+        File::Path::rmtree($tempdir);
     } else {
-        Carp::carp "Could not open $chk_file for reading";
+        my $fh = FileHandle->new;
+        if (open $fh, $chk_file) {
+            local($/);
+            $signed_data = <$fh>;
+        } else {
+            Carp::croak "Could not open $chk_file for reading";
+        }
+        close $fh;
+    }
+    $signed_data =~ s/\015?\012/\n/g;
+    my($compmt) = Safe->new();
+    $cksum = $compmt->reval($signed_data);
+    if ($@) {
+        rename $chk_file, "$chk_file.bad";
+        Carp::confess($@) if $@;
     }
 
     if (! ref $cksum or ref $cksum ne "HASH") {
