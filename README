@@ -707,6 +707,8 @@ CONFIGURATION
       prefs_dir          local directory to store per-distro build options
       proxy_user         username for accessing an authenticating proxy
       proxy_pass         password for accessing an authenticating proxy
+      pushy_https        use https to cpan.org when possible, otherwise use http
+                         to cpan.org and issue a warning
       randomize_urllist  add some randomness to the sequence of the urllist
       recommends_policy  whether recommended prerequisites should be included
       scan_cache         controls scanning of cache ('atstart', 'atexit' or 'never')
