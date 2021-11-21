@@ -389,7 +389,7 @@ upload-batch-signing-key:
 	gpg --send-key 450F89EC
 
 download-batch-signing-key:
-	gpg --keyserver hkp://pool.sks-keyservers.net --recv-key 450F89EC
+	gpg --keyserver hkp://pgpkeys.eu --recv-key 450F89EC
 
 export-armor-batch-signing-key:
 	gpg --export --armor 450F89EC
