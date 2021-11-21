@@ -1473,18 +1473,32 @@ sub SIG_check_file {
     my($self,$chk_file) = @_;
     my $rv = eval { Module::Signature::_verify($chk_file) };
 
-    if ($rv == Module::Signature::SIGNATURE_OK()) {
+    if ($rv eq Module::Signature::CANNOT_VERIFY()) {
+        $CPAN::Frontend->myprint(qq{\nSignature for }.
+                                 qq{file $chk_file could not be verified for an unknown reason. }.
+                                 $self->as_string.
+                                 qq{Module::Signature verification returned value $rv\n\n}
+                                );
+
+        my $wrap = qq{The manual says for this case: Cannot verify the
+OpenPGP signature, maybe due to the lack of a network connection to
+the key server, or if neither gnupg nor Crypt::OpenPGP exists on the
+system. You probably want to analyse the situation and if you cannot
+fix it you will have to decide whether you want to stop this session
+or you want to turn off signature verification. The latter would be
+done with the command 'o conf init check_sigs'};
+
+        $CPAN::Frontend->mydie(Text::Wrap::wrap("","",$wrap));
+    } if ($rv == Module::Signature::SIGNATURE_OK()) {
         $CPAN::Frontend->myprint("Signature for $chk_file ok\n");
         return $self->{SIG_STATUS} = "OK";
     } else {
-        $CPAN::Frontend->myprint(qq{\nSignature invalid for }.
-                                 qq{distribution file. }.
+        $CPAN::Frontend->mywarn(qq{\nSignature invalid for }.
+                                 qq{file $chk_file. }.
                                  qq{Please investigate.\n\n}.
-                                 $self->as_string,
-                                 $CPAN::META->instance(
-                                                       'CPAN::Author',
-                                                       $self->cpan_userid
-                                                      )->as_string);
+                                 $self->as_string.
+                                 qq{Module::Signature verification returned value $rv\n\n}
+                                );
 
         my $wrap = qq{I\'d recommend removing $chk_file. Its signature
 is invalid. Maybe you have configured your 'urllist' with
