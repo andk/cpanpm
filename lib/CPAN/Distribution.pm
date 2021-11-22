@@ -1547,7 +1547,7 @@ sub CHECKSUM_check_file {
         unlink $tempfile; # ignore missing file
         my $gpg = $CPAN::Config->{gpg} or
             $CPAN::Frontend->mydie("Your configuration suggests that you do not have 'gpg' installed. This is needed to verify checksums with the config variable 'check_sigs' on. Please configure it with 'o conf init gpg'");
-        my $system = "gpg --batch --no-tty --output $tempfile $chk_file 2> /dev/null";
+        my $system = "gpg --verify --batch --no-tty --output $tempfile $chk_file 2> /dev/null";
         0 == system $system or $CPAN::Frontend->mydie("gpg run was failing, cannot continue: $system");
         open $fh, $tempfile or $CPAN::Frontend->mydie("Could not open $tempfile: $!");
         local $/;
