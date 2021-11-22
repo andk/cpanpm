@@ -566,7 +566,7 @@ sub load {
     if (@miss==1 and $miss[0] eq "pushy_https" && !$do_init) {
         $CPAN::Frontend->myprint(<<'END');
 
-Starting with version 3.29 of the cpan shell, a new download mechanism
+Starting with version 2.29 of the cpan shell, a new download mechanism
 is the default which exclusively uses cpan.org as the host to download
 from. The configuration variable pushy_https can be used to (de)select
 the new mechanism. Please read more about it and make your choice
