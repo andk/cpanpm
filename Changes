@@ -1,12 +1,21 @@
+2021-11-23  k  <andk@cpan.org>
+
+	* release 2.29
+
+	* disambiguate the call to gpg --output by adding --verify; thanks
+	to Stig Palmquist for the suggestion
+
+	* replace die() with mydie() in three spots
+
 2021-11-22  k  <andk@cpan.org>
 
-	* release 2.29-TRIAL2
+	* release 2.29-TRIAL2 (unpublished)
 
 	* fix wrong version number in user-dialogue
 
 2021-11-21  k  <andk@cpan.org>
 
-	* release 2.29-TRIAL
+	* release 2.29-TRIAL (unpublished)
 
 	* new option pushy_https
 
