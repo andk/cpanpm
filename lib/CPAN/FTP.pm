@@ -400,7 +400,12 @@ sub hostdl_2021 {
     my($self, $base, $file, $aslocal) = @_; # the $aslocal is $aslocal_tempfile in the caller (old convention)
     my $proxy_vars = $self->_proxy_vars($base);
     my $url = "$base$file";
-    if ($CPAN::META->has_usable('HTTP::Tiny')) {
+    if (
+           ($CPAN::META->has_usable('HTTP::Tiny')
+            && $CPAN::META->has_usable('Net::SSLeay')
+            && $CPAN::META->has_usable('IO::Socket::SSL')
+           )
+    ){
         # mostly c&p from below
         require CPAN::HTTP::Client;
         my $chc = CPAN::HTTP::Client->new(
