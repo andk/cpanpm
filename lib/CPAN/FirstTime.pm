@@ -1381,8 +1381,14 @@ sub init {
     if ( $CPAN::Config->{install_help} eq 'local::lib' ) {
         if ( ! @{ $CPAN::Config->{urllist} } ) {
             $CPAN::Frontend->myprint(
-                "Skipping local::lib bootstrap because 'urllist' is not configured.\n"
+                "\nALERT: Skipping local::lib bootstrap because 'urllist' is not configured.\n"
             );
+        }
+        elsif (! $CPAN::Config->{make} ) {
+            $CPAN::Frontend->mywarn(
+                "\nALERT: Skipping local::lib bootstrap because 'make' is not configured.\n"
+            );
+            _beg_for_make(); # repetitive, but we don't want users to miss it
         }
         else {
             $CPAN::Frontend->myprint("\nAttempting to bootstrap local::lib...\n");
@@ -1664,12 +1670,17 @@ Windows users may want to follow this procedure when back in the CPAN shell:
     perl alien_nmake.pl
 
 This will install nmake on your system which can be used as a 'make'
-substitute. You can then revisit this dialog with
+substitute.
+
+HERE
+  }
+
+  $CPAN::Frontend->mywarn(<<"HERE");
+You can then retry the 'make' configuration step with
 
     o conf init make
 
 HERE
-  }
 }
 
 sub init_cpan_home {
