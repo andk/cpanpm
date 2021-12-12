@@ -11,6 +11,10 @@
 
 	* Typo fix: s/SQLLite/SQLite (Samanta Navarro)
 
+	* testfix: replace sks-keyserver with pgpkeys.eu
+
+	* tiny distroprefs update
+
 2021-11-23  k  <andk@cpan.org>
 
 	* release 2.29
