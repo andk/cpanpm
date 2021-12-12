@@ -372,7 +372,10 @@ sub localize_2021 {
         my @missing_modules = grep { ! $CPAN::META->has_usable($_) } qw(HTTP::Tiny Net::SSLeay IO::Socket::SSL);
         my $miss = join ", ", map { "'$_'" } @missing_modules;
         my $modules = @missing_modules == 1 ? "module" : "modules";
-        $CPAN::Frontend->mywarn("Missing or unusable $modules $miss, and found neither curl nor wget installed. Need to fall back to http.\n");
+        $CPAN::Frontend->mywarn("Missing or unusable $modules $miss, and found neither curl nor wget installed.\n");
+        if ($CPAN::META->has_usable('HTTP::Tiny')) {
+            $CPAN::Frontend->mywarn("Need to fall back to http.\n")
+        }
         for my $prx (qw(http_proxy no_proxy)) {
             $ENV{$prx} = $CPAN::Config->{$prx} if $CPAN::Config->{$prx};
         }
