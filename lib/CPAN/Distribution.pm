@@ -1445,8 +1445,14 @@ sub verifyCHECKSUM {
     local($") = "/";
     if (my $size = -s $lc_want) {
         $self->debug("lc_want[$lc_want]size[$size]") if $CPAN::DEBUG;
-        if ($self->CHECKSUM_check_file($lc_want,1)) {
-            return $self->{CHECKSUM_STATUS} = "OK";
+        my @stat = stat $lc_want;
+        my $epoch_starting_support_of_cpan_path = 1637471530;
+        if ($stat[9] >= $epoch_starting_support_of_cpan_path) {
+            if ($self->CHECKSUM_check_file($lc_want, 1)) {
+                return $self->{CHECKSUM_STATUS} = "OK";
+            }
+        } else {
+            unlink $lc_want;
         }
     }
     $lc_file = CPAN::FTP->localize("authors/id/@local",
