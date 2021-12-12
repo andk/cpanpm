@@ -466,7 +466,8 @@ sub hostdl_2021 {
                 $src_switch = " -O \"$aslocal\"";
                 $stdout_redir = "";
             } elsif ($dlprg eq 'curl') {
-                $src_switch = ' -L -f -s -S --netrc-optional';
+                $src_switch   = ' -L -f -s -S --netrc-optional';
+                $stdout_redir = " > \"$aslocal\"";
                 if ($proxy_vars->{http_proxy}) {
                     $src_switch .= qq{ -U "$proxy_vars->{proxy_user}:$proxy_vars->{proxy_pass}" -x "$proxy_vars->{http_proxy}"};
                 }
