@@ -399,13 +399,19 @@ sub localize_2021 {
 sub hostdl_2021 {
     my($self, $base, $file, $aslocal) = @_; # the $aslocal is $aslocal_tempfile in the caller (old convention)
     my $proxy_vars = $self->_proxy_vars($base);
+    my($proto) = $base =~ /^(https?)/;
     my $url = "$base$file";
+    # hostdl_2021 may be called with either http or https urls
     if (
-           ($CPAN::META->has_usable('HTTP::Tiny')
-            && $CPAN::META->has_usable('Net::SSLeay')
-            && $CPAN::META->has_usable('IO::Socket::SSL')
-           )
-    ){
+        $CPAN::META->has_usable('HTTP::Tiny')
+        &&
+        (
+         $proto eq "http"
+         ||
+         (    $CPAN::META->has_usable('Net::SSLeay')
+              && $CPAN::META->has_usable('IO::Socket::SSL')   )
+        )
+       ){
         # mostly c&p from below
         require CPAN::HTTP::Client;
         my $chc = CPAN::HTTP::Client->new(
