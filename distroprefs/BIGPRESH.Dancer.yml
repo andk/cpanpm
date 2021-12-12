@@ -4,6 +4,6 @@ comment: |
   https://github.com/PerlDancer/Dancer/issues/1203
 
 match:
-  distribution: "^BIGPRESH/Dancer-1.3500.tar.gz"
+  distribution: "^BIGPRESH/Dancer-1.3513.tar.gz"
 cpanconfig:
   check_sigs: 0
