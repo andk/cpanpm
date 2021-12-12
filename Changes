@@ -1,5 +1,13 @@
+2021-12-12  k  <andk@cpan.org>
+
+	* Alert bootstrap users when make is missing (David Golden)
+
+	* 2021 download must have SSL support (David Golden)
+
+	* typo fixes: "Consensus" not "Concensus" (Ricardo Signes)
+
 	* bundled MIRRORED.BY updated with latest copy at https://www.cpan.org/MIRRORED.BY,
-	  to reflect the sunset of the cpan mirror network
+	  to reflect the sunset of the cpan mirror network (Karen Etheridge)
 
 2021-11-23  k  <andk@cpan.org>
 
