@@ -53,8 +53,9 @@ BEGIN {
         }
     }
     unless ($exit_message) {
-        if (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
-            $exit_message = "Cannot connect to the keyserver";
+        my $keyserver = 'pgpkeys.eu';
+        if (!eval { require Socket; Socket::inet_aton($keyserver) }) {
+            $exit_message = "Cannot connect to the keyserver $keyserver";
         }
     }
     if ($exit_message) {
