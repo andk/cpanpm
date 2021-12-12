@@ -1,5 +1,7 @@
 2021-12-12  k  <andk@cpan.org>
 
+	* release 2.30-TRIAL
+
 	* Alert bootstrap users when make is missing (David Golden)
 
 	* 2021 download must have SSL support (David Golden)

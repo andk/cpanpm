@@ -11,7 +11,7 @@ use File::Spec ();
 use CPAN::Mirrors ();
 use CPAN::Version ();
 use vars qw($VERSION $auto_config);
-$VERSION = "5.5316";
+$VERSION = "5.5317";
 
 =head1 NAME
 
