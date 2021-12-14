@@ -1,3 +1,24 @@
+2021-12-14  k  <andk@cpan.org>
+
+	* release 2.31-TRIAL
+
+	* replace short id with fingerprint (thanks to Stig Palmquist for
+	the suggestion)
+
+	* new test scripe t/32pushyhttps.t
+
+	* skip download programs with zero length
+
+	* add a stdout redirection for curl which was lost in release 2.29 on pushy_https branch
+
+	* in function localize_2021 state more precisely what we plan to do
+
+	* tweak the condition when to use HTTP::Tiny to fully support http urls
+
+	* address #140449: ensure for CHECKSUMS files having timestamps >
+	$epoch_starting_support_of_cpan_path (thanks to Neil Bowers and
+	twata for their bug reports)
+
 2021-12-12  k  <andk@cpan.org>
 
 	* release 2.30-TRIAL
