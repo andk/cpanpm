@@ -571,6 +571,7 @@ t/14forkbomb.t
 t/30shell.coverage
 t/30shell.t
 t/31sessions.t
+t/32pushyhttps.t
 t/41distribution.t
 t/42distroprefs.t
 t/43distroprefspref.t
