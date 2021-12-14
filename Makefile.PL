@@ -1,4 +1,5 @@
 #!/usr/bin/perl -w -*- mode: cperl -*-
+
 use strict;
 use vars qw( $VERSION @ST_PREFS );
 BEGIN {$CPAN::Config_loaded=1}
@@ -12,6 +13,8 @@ my $HAVE_YAML_SYCK = !$@;
 use File::Basename qw(basename);
 require Config;
 my $HAVE_MAKE = basename($Config::Config{make}) eq "make"; # file-scoped!
+my $FINGERPRINT = "2E66 557A B97C 19C7 91AF  8E20 328D A867 450F 89EC";
+$FINGERPRINT =~ s/ //g;
 
 # storable pref files
 @ST_PREFS = qw(
@@ -167,7 +170,7 @@ if ($HAVE_FILE_SPEC) {
       print "Importing PAUSE public key into your GnuPG keychain... ";
       system($cmd, '--quiet', '--import', <PAUSE*.pub>);
       print "done!\n";
-      print "(You may wish to trust it locally with 'gpg --lsign-key 450F89EC')\n";
+      print "(You may wish to trust it locally with 'gpg --lsign-key $FINGERPRINT')\n";
       last;
     }
   }
@@ -236,7 +239,7 @@ WriteMakefile(
                              'meta-spec' => { version => 2 },
                              resources => {
                                  repository => {
-                                     type => 'git', 
+                                     type => 'git',
                                      url => 'https://github.com/andk/cpanpm'
                                  }
                              },
@@ -282,6 +285,8 @@ update: dd-prefs
 OKDIRS=CPAN|DIST|bin|blib|cover_db|\
        distroprefs|eg|inc|lib|logs|patches|perlbug|\
        protocols|related|release-lib|scripts|t|talks|_eumm
+
+FINGERPRINT=}.$FINGERPRINT.q{
 
 verify-no-subdir:
 	@$(PERL) -e 'my$$s=join",",grep{!/^($(OKDIRS))\z/x&&-d($$_)}glob"*";' \
@@ -382,17 +387,17 @@ show-batch-signing-keys:
 	for f in PAUSE*.pub; do echo "++++$$f++++"; gpg --verbose --with-colons $$f; done
 
 show-imported:
-	gpg --list-sigs --with-colons 450F89EC
+	gpg --list-sigs --with-colons $$FINGERPRINT
 
 # seems to need at least gnupg 1.4.2:
 upload-batch-signing-key:
-	gpg --send-key 450F89EC
+	gpg --send-key $$FINGERPRINT
 
 download-batch-signing-key:
-	gpg --keyserver hkp://pgpkeys.eu --recv-key 450F89EC
+	gpg --keyserver hkp://pgpkeys.eu --recv-key $$FINGERPRINT
 
 export-armor-batch-signing-key:
-	gpg --export --armor 450F89EC
+	gpg --export --armor $$FINGERPRINT
 
 howto-release:
 	@$(ECHO) make ci dist \&\& make release
