@@ -35,7 +35,7 @@ for (qw(HTTP::Tiny Net::SSLeay IO::Socket::SSL)) {
         shift;
         die shift;
     }
-    *mywarn = \&myprint;
+    *mywarn = *mywarn = \&myprint;
     sub output {
         $output;
     }
@@ -48,7 +48,7 @@ sub collect_output {
     return CPAN::Shell::tacet->output();
 }
 
-$CPAN::Frontend = "CPAN::Shell::tacet";
+$CPAN::Frontend = $CPAN::Frontend = "CPAN::Shell::tacet";
 
 require File::Which;
 my %HAVE;
