@@ -460,7 +460,7 @@ sub hostdl_2021 {
         my($devnull) = $CPAN::Config->{devnull} || "";
       DLPRG: for my $dlprg (qw(curl wget)) {
             my $dlprg_configured = $CPAN::Config->{$dlprg};
-            next unless defined $dlprg_configured;
+            next unless defined $dlprg_configured && length $dlprg_configured;
             my $funkyftp = CPAN::HandleConfig->safe_quote($dlprg_configured);
             if ($dlprg eq "wget") {
                 $src_switch = " -O \"$aslocal\"";
