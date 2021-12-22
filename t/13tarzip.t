@@ -8,7 +8,11 @@ sub _f ($) {
     File::Spec->rel2abs(File::Spec->catfile(split /\//, shift));
 }
 unshift @INC, "t";
-eval { require CPAN::MyConfig; }; # may fail
+require local_utils;
+local_utils::cleanup_dot_cpan();
+local_utils::prepare_dot_cpan();
+local_utils::read_myconfig();
+require CPAN::MyConfig;
 require CPAN;
 require CPAN::Kwalify;
 require CPAN::HandleConfig;
