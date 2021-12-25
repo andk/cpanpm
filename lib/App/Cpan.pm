@@ -350,7 +350,7 @@ sub GOOD_EXIT () { 0 }
 	h =>  [ \&_print_help,        NO_ARGS, GOOD_EXIT, 'Printing help'                ],
 	v =>  [ \&_print_version,     NO_ARGS, GOOD_EXIT, 'Printing version'             ],
 	V =>  [ \&_print_details,     NO_ARGS, GOOD_EXIT, 'Printing detailed version'    ],
-	X =>  [ \&_list_all_namespaces, NO_ARGS, GOOD_EXIT, 'Listing all namespaces'      ],
+	X =>  [ \&_list_all_namespaces, NO_ARGS, GOOD_EXIT, 'Listing all namespaces'     ],
 
 	# options that affect other options
 	j =>  [ \&_load_config,          ARGS, GOOD_EXIT, 'Use specified config file'    ],
@@ -379,11 +379,11 @@ sub GOOD_EXIT () { 0 }
 	u =>  [ \&_upgrade,           NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
 	's' => [ \&_shell,            NO_ARGS, GOOD_EXIT, 'Drop into the CPAN.pm shell'  ],
 
-	'x' => [ \&_guess_namespace,      ARGS, GOOD_EXIT, 'Guessing namespaces'          ],
+	'x' => [ \&_guess_namespace,      ARGS, GOOD_EXIT, 'Guessing namespaces'         ],
 	c =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make clean`'         ],
 	f =>  [ \&_default,              ARGS, GOOD_EXIT, 'Installing with force'        ],
 	i =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make install`'       ],
-	'm' => [ \&_default,              ARGS, GOOD_EXIT, 'Running `make`'               ],
+	'm' => [ \&_default,              ARGS, GOOD_EXIT, 'Running `make`'              ],
 	t =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make test`'          ],
 	T =>  [ \&_default,              ARGS, GOOD_EXIT, 'Installing with notest'       ],
 	);
