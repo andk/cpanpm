@@ -1689,7 +1689,7 @@ but the canonical source is now in the above repo.
 
 Japheth Cleaver added the bits to allow a forced install (C<-f>).
 
-Jim Brandt suggest and provided the initial implementation for the
+Jim Brandt suggested and provided the initial implementation for the
 up-to-date and Changes features.
 
 Adam Kennedy pointed out that C<exit()> causes problems on Windows
