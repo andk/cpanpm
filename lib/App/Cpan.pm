@@ -483,7 +483,7 @@ sub _setup_environment {
 	$ENV{PERL_MM_USE_DEFAULT}    = 1 unless defined $ENV{PERL_MM_USE_DEFAULT};
 	}
 
-=item run()
+=item run( ARGS )
 
 Just do it.
 
@@ -496,8 +496,8 @@ my $logger;
 
 sub run
 	{
-	my $class = shift;
-
+	my( $class, @args ) = @_;
+	local @ARGV = @args;
 	my $return_value = HEY_IT_WORKED; # assume that things will work
 
 	$logger = $class->_init_logger;
