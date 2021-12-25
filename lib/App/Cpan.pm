@@ -1705,7 +1705,7 @@ brian d foy, C<< <bdfoy@cpan.org> >>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001-2018, brian d foy, All Rights Reserved.
+Copyright (c) 2001-2021, brian d foy, All Rights Reserved.
 
 You may redistribute this under the same terms as Perl itself.
 
