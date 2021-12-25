@@ -529,7 +529,7 @@ sub run
 			$return_value = THE_PROGRAMMERS_AN_IDIOT;
 			last OPTION;
 			}
-sub  :register()
+
 		$logger->info( "[$option] $description -- ignoring other arguments" )
 			if( @ARGV && ! $takes_args );
 
