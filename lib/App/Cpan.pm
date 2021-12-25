@@ -377,7 +377,7 @@ sub GOOD_EXIT () { 0 }
 
 	r =>  [ \&_recompile,         NO_ARGS, GOOD_EXIT, 'Recompiling'                  ],
 	u =>  [ \&_upgrade,           NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
-	's' => [ \&_shell,            NO_ARGS, GOOD_EXIT, 'Running `make test`'          ],
+	's' => [ \&_shell,            NO_ARGS, GOOD_EXIT, 'Drop into the CPAN.pm shell'  ],
 
 	'x' => [ \&_guess_namespace,      ARGS, GOOD_EXIT, 'Guessing namespaces'          ],
 	c =>  [ \&_default,              ARGS, GOOD_EXIT, 'Running `make clean`'         ],
