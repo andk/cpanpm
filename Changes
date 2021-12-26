@@ -1,3 +1,13 @@
+2021-12-26  k  <andk@cpan.org>
+
+	* release 2.32-TRIAL
+
+	* Respect arguments to run() by localizing @ARGV (brian d foy)
+
+	* improve separation of test runs from each other
+
+	* remove dated distroprefs file
+
 2021-12-14  k  <andk@cpan.org>
 
 	* release 2.31-TRIAL

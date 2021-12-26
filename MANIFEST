@@ -185,7 +185,6 @@ distroprefs/GBARR.perl-ldap.yml
 distroprefs/GBARR.Scalar-Util.yml
 distroprefs/GBROCK.Tk-StayOnTop.yml
 distroprefs/GEOFF.Apache-Test.yml
-distroprefs/GFUJI.Module-Install-XSUtil.yml
 distroprefs/GIRAFFED.Curses.yml
 distroprefs/GIULIENK.Audio-Beep.yml
 distroprefs/GMPASSOS.XML-Smart.yml
