@@ -23,7 +23,6 @@ match:
     |.+/Win32(API)?-S[A-Za-gi-z]             # Win32-ShellQuote
     |.+/Win32(API)?-Sh[A-Za-df-z]            # Win32-ShellQuote
     |.+/Win32(API)?-She[A-Za-km-z]           # Win32-ShellQuote
-    |.+Net-Whois-IANA-\d                     # endless loop in testing
     |.+Business-PayPal-API-\d                # author writes to me he considers the test does not lend itself to automated testing
     |.*Mojolicious-Plugin-HamlRenderer       # last release 20120604, rather take MojoX-Renderer-Haml which came 2012-08-14 (the two bite each other)
     |.*/Unix-Syslog-\d                       # noisy test suite
@@ -206,7 +205,6 @@ match:
     |JESUS/Net--?RabbitMQ                      # hangs
     |JETTERO/App-MrShell-2.0207.tar.gz       # hangs with v5.15.0-2-g1162210/2b65
     |JETTERO/Net-Pcap-Easy-\d                # asks questions
-    |JETTERO/Net-IMAP-Simple-\d              # questions
     |JEZRA/Finance-TickerSymbols             # talks endlessly with some ticker sites
     |JHIVER/TripleStore-0.03                 # loops on user input questions
     |JKRAMER/Net-Link-0.01.tar.gz            # hangs in t/00_link on 33955
