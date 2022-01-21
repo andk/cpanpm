@@ -1,3 +1,12 @@
+2022-01-21  k  <andk@cpan.org>
+
+	* release 2.33-TRIAL
+
+	* in CHECKSUM_check_file run configured gpg instead of hard-coded
+	"gpg" (Thanks to Tomas Hoger)
+
+	* tiny distroprefs maintenance
+
 2021-12-26  k  <andk@cpan.org>
 
 	* release 2.32-TRIAL
