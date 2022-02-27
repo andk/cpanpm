@@ -386,7 +386,6 @@ match:
     |TOKUHIROM/Amon2-                        # test hangs with some perls
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
-    |TONYC/POE-XS-Loop-EPoll-\d              # asks questions
     |TPABA/
     |TTY/kurila-\d                           # asks too many questions
     |TURNERJW/
