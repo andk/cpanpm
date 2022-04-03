@@ -406,9 +406,6 @@ match:
     |WSMITH/RPC-Oracle-\d                    # asks username for Oracle
     |WSMITH/Email-Folder-Exchange-\d         # asks questions
     |WWOLF/Test-0.001.                       # suggested by Slaven
-    |WYANT/Astro-SIMBAD-Client-\d            # asks questions
-    |WYANT/Astro-satpass-\d                  # asks sth (maybe without flush)
-    |WYANT/Games-Sudoku-General-\d           # asks whether I want to install sudokug
     |XAICRON/Module-Install-ExtendsMakeTest  # hangs (0.0{2,3})
     |XAICRON/Module-Install-TestTarget-      # hangs
     |XANTUS/MojoX-AIO-0.02.tar.gz            # hangs
