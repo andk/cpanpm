@@ -1,3 +1,12 @@
+2022-04-03  k  <andk@cpan.org>
+
+	* release 2.34-TRIAL
+
+	* Consider Module::Build as undeclared prerequisite only if there
+	are no configure phase prereqs declared (Dan Book)
+
+	* tiny distroprefs maintenance
+
 2022-03-27  k  <andk@cpan.org>
 
 	* release 2.33
