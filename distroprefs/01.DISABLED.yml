@@ -87,6 +87,7 @@ match:
     |BTROTT/WWW-Blog-Metadata-0.02           # ExtUtils::AutoInstall 0.56 http://rt.cpan.org/Ticket/Display.html?id=40601
     |BULKDD/Acme-Shining-0.01                # spits out too much output
     |BWILLIAM/AltaVista-SDKLinguistics-3.02.tar.gz # looks like abandoned since 2001
+    |CAC/Tcl-pTk-1.09                        # tests hanging on some smokers
     |CAFFIEND/font_ft2_0.1.0.tgz             # only fails on cpantesters
     |CAIDAPERL/Chart-Graph-\d                # hangs Makefile.PL: RT 33541
     |CAPOEIRAB/WWW-Salesforce-               # demands username and passwd
@@ -306,6 +307,7 @@ match:
     |NXADM/App-Unix-RPasswd-\d               # takes too much time, no idea what it does
     |OALDERS/URI-ParseSearchString-More-0.04
     |OESTERHOL/Aut-0.11.tar.gz               # looks like abandoned since 2004
+    |OKHARCH/Parallel-DataPipe-0.11.tar.gz   # https://rt.cpan.org/Ticket/Display.html?id=132464
     |PATL/autorequire-0.08.tar.gz
     |PERFSONAR/perfSONAR_PS-DB-RRD-0.09.tar.gz # looks like abandoned since 2008
     |PERIGRIN/Git-Wrapper-\d                 # some huge kill triggered?
