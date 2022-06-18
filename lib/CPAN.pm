@@ -2488,7 +2488,8 @@ points to and overrule the C<cpanconfig> there. E.g.:
 (B<Note:> This feature has been introduced in CPAN.pm 1.8854)
 
 Distributions on CPAN usually behave according to what we call the
-CPAN mantra. Or since the advent of Module::Build we should talk about
+CPAN mantra. Or since the advent of
+L<Module::Build|https://metacpan.org/pod/Module::Build> we should talk about
 two mantras:
 
     perl Makefile.PL     perl Build.PL
@@ -2534,14 +2535,14 @@ disable the installation of an object altogether
 
 =back
 
-See the YAML and Data::Dumper files that come with the C<CPAN.pm>
+See the YAML and L<Data::Dumper> files that come with the C<CPAN.pm>
 distribution in the C<distroprefs/> directory for examples.
 
 =head2 Filenames
 
 The YAML files themselves must have the C<.yml> extension; all other
-files are ignored (for two exceptions see I<Fallback Data::Dumper and
-Storable> below). The containing directory can be specified in
+files are ignored (for two exceptions see I<Fallback L<Data::Dumper> and
+L<Storable>> below). The containing directory can be specified in
 C<CPAN.pm> in the C<prefs_dir> config variable. Try C<o conf init
 prefs_dir> in the CPAN shell to set and activate the distroprefs
 system.
@@ -2559,10 +2560,10 @@ or not.
 =head2 Fallback Data::Dumper and Storable
 
 If neither your configured C<yaml_module> nor YAML.pm is installed,
-CPAN.pm falls back to using Data::Dumper and Storable and looks for
+CPAN.pm falls back to using L<Data::Dumper> and L<Storable> and looks for
 files with the extensions C<.dd> or C<.st> in the C<prefs_dir>
 directory. These files are expected to contain one or more hashrefs.
-For Data::Dumper generated files, this is expected to be done with by
+For L<Data::Dumper> generated files, this is expected to be done with by
 defining C<$VAR1>, C<$VAR2>, etc. The YAML shell would produce these
 with the command
 
@@ -2578,9 +2579,9 @@ YAML would look like so:
         nstore(\@y, shift)' somefile.yml somefile.st
 
 In bootstrapping situations it is usually sufficient to translate only
-a few YAML files to Data::Dumper for crucial modules like
-C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>. If you prefer Storable
-over Data::Dumper, remember to pull out a Storable version that writes
+a few YAML files to L<Data::Dumper> for crucial modules like
+C<YAML::Syck>, C<YAML.pm> and C<Expect.pm>. If you prefer L<Storable>
+over L<Data::Dumper>, remember to pull out a Storable version that writes
 an older format than all the other Storable versions that will need to
 read them.
 
@@ -2731,8 +2732,19 @@ absolute path).
 
 The value associated with C<perlconfig> is itself a hashref that is
 matched against corresponding values in the C<%Config::Config> hash
-living in the C<Config.pm> module.
+living in the C<Config.pm> module. You can also check some of those values by
+running C<perl -V> in a shell.
+
 Keys prefixed with C<not_> negates the corresponding match.
+
+In order to match C<undef> property value (like C<useithreads> when the perl is
+compiled without ithreads support), you must use C<^%> as the regular
+expression value to match that condition. For example:
+
+    ---
+    match:
+      perlconfig:
+        useithreads: '^$'
 
 The value associated with C<env> is itself a hashref that is
 matched against corresponding values in the C<%ENV> hash.
@@ -3553,9 +3565,9 @@ completion support.
 
 For debugging of CPAN data there is the C<dump> command which takes
 the same arguments as make/test/install and outputs each object's
-Data::Dumper dump. If an argument looks like a perl variable and
+L<Data::Dumper> dump. If an argument looks like a perl variable and
 contains one of C<$>, C<@> or C<%>, it is eval()ed and fed to
-Data::Dumper directly.
+L<Data::Dumper> directly.
 
 =head2 Floppy, Zip, Offline Mode
 
