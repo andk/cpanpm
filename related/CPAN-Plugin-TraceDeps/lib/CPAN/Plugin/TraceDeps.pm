@@ -103,7 +103,7 @@ use Time::HiRes ();
 use Sys::Hostname qw(hostname);
 
 sub plugin_requires {
-    qw(JSON::XS Log::Dispatch::File Log::Log4perl Log::Log4perl::DateFormat Time::Piece);
+    qw(JSON::MaybeXS Log::Dispatch::File Log::Log4perl Log::Log4perl::DateFormat Time::Piece);
 }
 
 sub all_dependencies_satisfied {
@@ -241,7 +241,7 @@ for my $sub (qw(
     my $coder;
     sub encoder {
         my($self) = @_;
-        $coder ||= JSON::XS->new->ascii->canonical;
+        $coder ||= JSON::MaybeXS->new->ascii->canonical;
     }
 }
 
