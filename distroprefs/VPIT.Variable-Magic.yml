@@ -19,4 +19,4 @@ match:
   perlconfig:
     version: '^5\.37\.3$'
 patches:
-  - ANDK/patches/Variable-Magic-0.62-RT144052-patch3.patch.gz
+  - ANDK/patches/Variable-Magic-0.62-RT144052-patch3.v2.patch.gz
