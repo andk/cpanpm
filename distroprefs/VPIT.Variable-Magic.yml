@@ -13,3 +13,10 @@ match:
   distribution: "VPIT/Variable-Magic-0.44.tar.gz"
   perl: '.../v5\.13\.6-(12[5-9]|1[3-9]\d|[2-9]\d\d|\d\d\d\d+)-g\w+/bin/perl$'
 disabled: 1
+---
+match:
+  distribution: "VPIT/Variable-Magic-0.62.tar.gz"
+  perlconfig:
+    version: '^5\.37\.3$'
+patches:
+  - ANDK/patches/Variable-Magic-0.62-RT144052-patch3.patch.gz

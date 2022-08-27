@@ -246,7 +246,7 @@ match:
     |LARRYL/WebService-ScormCloud-\d         # asks for an ID
     |LBAXTER/Openview-Message-0.03.tar.gz
     |LBROCARD/Devel-ebug-HTTP-0.32           # http://rt.cpan.org/Ticket/Display.html?id=40599
-    |LDACHARY/Catalog-0.5                    # asks questions
+    |LDACHARY/Catalog-\d                     # asks questions (and may deny answers)
     |LDS/Bio-SamTools-\d                     # requires non-CPAN prereq
     |LEIFHED/perldap-1.4.tar.gz              # looks like abandoned since 1999
     |LEOCHARRE/WWW-Autosite-                 # asks question, does not use prompt RT 35081
