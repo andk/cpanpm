@@ -264,7 +264,8 @@ to C<1> unless it already has a value (even if that value is false).
 =item CPAN_OPTS
 
 As with C<PERL5OPT>, a string of additional C<cpan(1)> options to
-add to those you specify on the command line.
+add to those you specify on the command line. This string is split
+on whitespace and each element added to the front of the argument list.
 
 =item CPANSCRIPT_LOGLEVEL
 
@@ -410,7 +411,7 @@ sub _process_options
 	{
 	my %options;
 
-	push @ARGV, grep $_, split /\s+/, $ENV{CPAN_OPTS} || '';
+	unshift @ARGV, grep $_, split /\s+/, $ENV{CPAN_OPTS} || '';
 
 	# if no arguments, just drop into the shell
 	if( 0 == @ARGV ) { CPAN::shell(); exit 0 }
