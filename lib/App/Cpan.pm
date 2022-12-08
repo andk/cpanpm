@@ -1212,7 +1212,7 @@ sub _get_file
 	my $path = shift;
 
 	# handle this case here to make it easier a level above. The form
-	# of the returned data structure is completely contained in this
+	# of the returned data structure is mostly contained in this
 	# subroutine.
 	return { path => undef, success => 0 } unless defined $path;
 
