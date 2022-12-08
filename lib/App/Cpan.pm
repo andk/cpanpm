@@ -1219,8 +1219,11 @@ sub _get_file
 		{
 		my $fetch_path = join "/", $site, $path;
 		$logger->debug( "Trying $fetch_path" );
-		my $status_code = LWP::Simple::getstore( $fetch_path, $store_path );
-		last if( 200 <= $status_code and $status_code <= 300 );
+		$status_code = LWP::Simple::getstore( $fetch_path, $store_path );
+		if( 200 <= $status_code and $status_code < 300 ) {
+			$success = 1;
+			last;
+			}
 		$logger->warn( "Could not get [$fetch_path]: Status code $status_code" );
 		}
 
