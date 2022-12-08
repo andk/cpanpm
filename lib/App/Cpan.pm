@@ -1183,7 +1183,10 @@ sub _download {
 		$logger->info( "Downloaded [$arg] to [$paths{$arg}]" );
 		}
 
-	return \%paths;
+sub _download_command {
+	my $results = _download(shift);
+	return ITS_NOT_MY_FAULT if grep { ! $results->{$_}{success} } keys %$results;
+	return HEY_IT_WORKED;
 	}
 
 sub _make_path {
