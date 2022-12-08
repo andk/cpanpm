@@ -1169,8 +1169,6 @@ sub _download
 	{
 	my $args = shift;
 
-	local $CPAN::DEBUG = 1;
-
 	my %paths;
 
 	foreach my $arg ( @$args ) {
