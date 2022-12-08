@@ -362,7 +362,7 @@ sub GOOD_EXIT () { 0 }
 	w =>  [ \&_turn_on_warnings,  NO_ARGS, GOOD_EXIT, 'Turning on warnings'          ],
 
 	# options that do their one thing
-	g =>  [ \&_download,             ARGS, GOOD_EXIT, 'Download the latest distro'        ],
+	g =>  [ \&_download_command,     ARGS, GOOD_EXIT, 'Download the latest distro'        ],
 	G =>  [ \&_gitify,               ARGS, GOOD_EXIT, 'Down and gitify the latest distro' ],
 
 	C =>  [ \&_show_Changes,         ARGS, GOOD_EXIT, 'Showing Changes file'         ],
@@ -1189,7 +1189,19 @@ sub _download
 	return \%paths;
 	}
 
-sub _make_path { join "/", qw(authors id), $_[0] }
+sub _make_path {
+	my $arg = shift;
+
+	my $path = join "/", qw(authors id), do {
+		   if( eval {$arg->isa('CPAN::Distribution')} ) { $arg->normalize }
+		elsif( eval {$arg->isa('CPAN::Module')}       ) { $arg->cpan_file }
+		else { undef }
+		};
+
+	$logger->debug( "CPAN path for [$arg] is [$path]" );
+
+	return $path;
+	}
 
 sub _get_file
 	{
