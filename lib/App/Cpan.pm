@@ -1168,20 +1168,24 @@ sub _lock_lobotomy # -F
 sub _download {
 	my $args = shift;
 
-	my %paths;
-
+	my %results;
 	foreach my $arg ( @$args ) {
-		$logger->info( "Checking $arg" );
+		$logger->info( "Trying to download [$arg]" );
 
-		my $module = _expand_module( $arg ) or next;
-		my $path = $module->cpan_file;
+		my $module = _expand_module( $arg );
+		unless( defined $module ) {
+			$results{$arg} = { path => $arg, success => 0 };
+			next;
+			}
 
-		$logger->debug( "Inst file would be $path\n" );
-
-		$paths{$module} = _get_file( _make_path( $path ) );
-
-		$logger->info( "Downloaded [$arg] to [$paths{$arg}]" );
+		$results{$arg} = _get_file( _make_path( $module ) );
+		$logger->info( "Downloaded [$arg] to [$results{$arg}{store_path}]" );
 		}
+
+	my $errors = grep { ! $results{$_}{success} } keys %results;
+
+	return \%results;
+	}
 
 sub _download_command {
 	my $results = _download(shift);
@@ -1207,6 +1211,11 @@ sub _get_file
 	{
 	my $path = shift;
 
+	# handle this case here to make it easier a level above. The form
+	# of the returned data structure is completely contained in this
+	# subroutine.
+	return { path => undef, success => 0 } unless defined $path;
+
 	my $loaded = _safe_load_module("LWP::Simple");
 	croak "You need LWP::Simple to use features that fetch files from CPAN\n"
 		unless $loaded;
@@ -1215,6 +1224,8 @@ sub _get_file
 	my $store_path = catfile( cwd(), $file );
 	$logger->debug( "Store path is $store_path" );
 
+	my $status_code;
+	my $success = 0;
 	foreach my $site ( @{ $CPAN::Config->{urllist} } )
 		{
 		my $fetch_path = join "/", $site, $path;
@@ -1227,7 +1238,7 @@ sub _get_file
 		$logger->warn( "Could not get [$fetch_path]: Status code $status_code" );
 		}
 
-	return $store_path;
+	return { path => $path, store_path => $store_path, status_code => $status_code, success => $success };
 	}
 
 sub _gitify
