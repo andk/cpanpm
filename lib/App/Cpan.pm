@@ -1165,8 +1165,7 @@ sub _lock_lobotomy # -F
 	return HEY_IT_WORKED;
 	}
 
-sub _download
-	{
+sub _download {
 	my $args = shift;
 
 	my %paths;
