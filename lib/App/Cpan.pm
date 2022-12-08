@@ -1183,7 +1183,7 @@ sub _download
 
 		$paths{$module} = _get_file( _make_path( $path ) );
 
-		$logger->info( "Downloaded [$arg] to [$paths{$arg}]" );
+		$logger->info( "Downloaded [$arg] to [$paths{$module}]" );
 		}
 
 	return \%paths;
