@@ -1368,7 +1368,7 @@ sub _show_out_of_date
 	{
 	my $modules = _get_all_namespaces();
 
-	printf "%-40s  %6s  %6s\n", "Module Name", "Local", "CPAN";
+	printf "%-50s  %8s  %8s\n", "Module Name", "Local", "CPAN";
 	print "-" x 73, "\n";
 
 	foreach my $module ( @$modules )
@@ -1376,9 +1376,9 @@ sub _show_out_of_date
 		next unless $module = _expand_module($module);
 		next unless $module->inst_file;
 		next if $module->uptodate;
-		printf "%-40s  %.4f  %.4f\n",
+		printf "%-50s  %-8s  %-8s\n",
 			$module->id,
-			$module->inst_version ? $module->inst_version : '',
+			defined $module->inst_version ? $module->inst_version : 'undef',
 			$module->cpan_version;
 		}
 
