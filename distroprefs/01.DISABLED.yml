@@ -147,6 +147,7 @@ match:
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FDULAU/Graph-Chart-0.65                 # looks like abandonded since 2012
+    |FRIFFIN/Geo-Coder-Cloudmade-0\.7\.t     # only red since 201606; 
     |FROGGS/Alien-SDL-1.418                  # questions
     |FreeHAL                                 # David Cantrell warns that it is a 137 MB thingy
     |GAFFER/Relations-Abstract-0.94.tar.gz   # seems abandoned sincce 2001
