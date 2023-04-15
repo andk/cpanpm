@@ -1,3 +1,15 @@
+2023-04-15  k  <andk@cpan.org>
+
+	* release 2.35-TRIAL
+
+	* Add verify_SSL=>1 to HTTP::Tiny to verify https server identity (Stig Palmquist)
+
+	* perl 5.37.1 had broken JSON::XS and then JSON::MaybeXS filled
+	the gap, leaving this change in eventhough bleadperl and JSON::XS
+	work together nicely again
+
+	* various distroprefs maintenance
+
 2022-04-17  k  <andk@cpan.org>
 
 	* release 2.34
