@@ -196,7 +196,7 @@ EOW
 }
 my @sign = (MM->can("signature_target") ? (SIGN => 1) : ());
 WriteMakefile(
-              INSTALLDIRS  => 'perl',  # as it is coming with perl
+              INSTALLDIRS  => ($] < 5.012) ? "perl" : "site",
               NAME         => 'CPAN',
               VERSION      => $version,
               EXE_FILES    => [qw(scripts/cpan scripts/cpan-mirrors)],
