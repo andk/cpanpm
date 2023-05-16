@@ -4700,7 +4700,7 @@ sub _getsave_url {
 ");
         my $Ua;
         CPAN::LWP::UserAgent->config;
-        eval { $Ua = CPAN::LWP::UserAgent->new; };
+        eval { $Ua = CPAN::LWP::UserAgent->new(ssl_opts => { verify_hostname => 1 }); };
         if ($@) {
             $CPAN::Frontend->mywarn("ERROR: CPAN::LWP::UserAgent->new dies with $@\n");
             return;
@@ -4862,7 +4862,7 @@ sub reports {
 
     CPAN::LWP::UserAgent->config;
     my $Ua;
-    eval { $Ua = CPAN::LWP::UserAgent->new; };
+    eval { $Ua = CPAN::LWP::UserAgent->new(ssl_opts => { verify_hostname => 1 }); };
     if ($@) {
         $CPAN::Frontend->mydie("CPAN::LWP::UserAgent->new dies with $@\n");
     }

@@ -85,6 +85,7 @@ my $prereq_pm = {
                                       # Scalar::Util;
                                       # PathTools-3.16.tar.gz
                  'File::Temp' => 0,   # TJENNESS; requires Test::More;
+                 'Mozilla::CA' => 0,  # enables LWP::UserAgent https cert checks
                  'Net::Ping' => 0,    # SMPETERS;
                  'Scalar::Util' => 0, # GBARR;
                                       # Scalar-List-Utils-1.18.tar.gz;
@@ -133,6 +134,7 @@ for my $interesting_module (qw(
         MIME::Base64
         Module::Build
         Module::Signature
+        Mozilla::CA
         Net::FTP
         Parse::CPAN::Meta
         Pod::Perldoc
