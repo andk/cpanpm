@@ -157,8 +157,7 @@ match:
     |GEOTIGER/Oracle-Trigger-\d              # may call both CPANPLUS::install and CPAN::install
     |GGARAND/PerlQt-3.008.tar.gz             # disk scans taking forever
     |GKNAUSS/WebService-Upcoming             # for members only
-    |GLLORE/App-SeismicUnixGui-0.81.4.tar.gz # runs a find on / during setup
-    |GLLORE/App-SeismicUnixGui-0.82.0.tar.gz # runs a find on / during setup
+    |GLLORE/App-SeismicUnixGui-              # https://rt.cpan.org/Ticket/Display.html?id=146901 (runs a find on / during setup)
     |GOLOGO/Podcast-ESLPodcast-Splitter-v0.0.1 # only fails on cpantesters
     |GONERI/Ocsinventory-Agent-0.0.8.tar.gz  # hangs
     |GONERI/Ocsinventory-Agent-\d            # hanger
