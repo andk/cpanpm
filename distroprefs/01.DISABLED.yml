@@ -67,6 +67,7 @@ match:
     |BBAXTER/FlatFile-DataStore-\d           # hangs after t/FlatFile-DataStore-Toc.t
     |BDFOY/File-Find-Closures-1.08           # maybe hopped into unauthorized area?
     |BEANZ/Device-RFXCOM-                    # spits out EV: error in callback (ignoring): closed at t/01-rx.t line 116
+    |BENBOOTH/GH-0.69\.                      # pass:fail 6:271
     |BFG/MojoX-Run-\d                        # hangs with 5.14.0-382
     |BFREE/OpenGL-Image-\d
     |BFREE/OpenGL-\d
