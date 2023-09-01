@@ -263,6 +263,7 @@ match:
     |LUSOL/tkjuke-2.2.1.tar.gz               # asks questions
     |LZE/CGI-CMS-\d                          # asks questions about paths
     |MACKENNA/IPC-MMA-0.81.tar.gz
+    |MAJA/Net-DNS-Dynamic-Proxyserver-1\.2\. # RT 149189
     |MAKLER/Authen-CyrusSASL-0.01.tar.gz     # seems abandoned since 2001
     |MANOWAR/RadiusPerl-0.13.tar.gz          # hangs in test.pl
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
