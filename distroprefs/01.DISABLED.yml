@@ -195,6 +195,7 @@ match:
     |INA/Modern/Open/Modern-Open-\d          # Message-ID: <87zjfc7itv.fsf at cvrsnica.herceg.de>
     |INGY/Module-Install-TestML-0.02.tar.gz  # unsuited for testing: https://github.com/testml-lang/testml/wiki/TestML-and-CPAN
     |ISHIGAKI/PPM-Make-\d                    # asks questions
+    |ITUB/Chemistry-File-SMILES-0.47.tar.gz  # https://rt.cpan.org/Ticket/Display.html?id=149871
     |IVAN/Business-OnlinePayment-eSelectPlus-\d # hangs with 5.14.0-357
     |IVAN/Net-APP-0.2.tar.gz                 # looks like abandoned since 2001
     |IX/Apache-Wombat-0.5.1.tar.gz           # asks questions
@@ -273,6 +274,7 @@ match:
     |MAUNDER/Apache-AppCluster-0.02.tar.gz
     |MAXM/MMM-OracleDump-0.01.tar.gz         # user interaction required
     |MCMAHON/WWW-Mechanize-Pluggable-1.03.tar.gz # killed the cpan shell with kill(); I don't understand how
+    |MERKYS/Chemistry-Ring-0.21.tar.gz       # https://rt.cpan.org/Ticket/Display.html?id=149871
     |METZZO/TiVo-HME-1.3\.tar.gz             # seems abandoned since 2005
     |MFERRIS/Class-DBI-DB2-0.16.tar.gz       # asks questions
     |MJGARDNER/Dist-Zilla-Plugin-RequiresExternal-\d # endless loop if JSON::PP missing???
