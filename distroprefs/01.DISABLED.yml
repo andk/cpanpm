@@ -125,6 +125,7 @@ match:
     |.*/Google-Ads-AdWords-Client-[1-4]\.    # avoid non-latest version (5.7.0)
     |.*/Google-Ads-AdWords-Client-5\.[1-6]\. # avoid non-latest version (5.7.0)
     |DUFF/Module-Install-RPM-0.01            # see https://rt.cpan.org/Ticket/Display.html?id=67027
+    |DWATSON/App-DNS-Adblock-0.015.tar.gz    # https://github.com/terminalfool/App-DNS-Adblock/issues/1
     |DWC/DBIx-NamedDSN-0.11.tar.gz           # asks questions
     |EBRUNI/WWW-BBB-API-\d                   # asks questions
     |EBRUNI/HTML-DBTable-0.05.tar.gz         # user interaction required
@@ -234,6 +235,7 @@ match:
     |KAZUHO/Parallel-Prefork-0.02            # hangs
     |KAZUHO/Server-Starter-0.11              # hangs
     |KENTNL/Path-FindDev-0.4.0.tar.gz        # http://www.cpantesters.org/cpan/report/8d9bf222-39ee-11e3-bbd4-fb49f34aa4a3
+    |KHS/Gearman-SlotManager-0.3.tar.gz      # https://rt.cpan.org/Ticket/Display.html?id=82638
     |KIMURA/Comprss-Zlib-1.12-bin-1-Mac.tgz
     |KWILLIAMS/Apache-Filter-1.024.tar.gz    # https://rt.cpan.org/Ticket/Display.html?id=34604
     |KESTEB/POE-Component-Client-Stomp-0.05.tar.gz # hangs in t/02_basic.t with 5.10 proper
@@ -267,6 +269,7 @@ match:
     |MAJA/Net-DNS-Dynamic-Proxyserver-1\.2\. # RT 149189
     |MAKLER/Authen-CyrusSASL-0.01.tar.gz     # seems abandoned since 2001
     |MANOWAR/RadiusPerl-0.13.tar.gz          # hangs in test.pl
+    |MANWAR/Debug-Client-0.31.tar.gz         # https://github.com/PadreIDE/Debug-Client/issues/13
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MARNANEL/Net-RGTP-0.10.tar.gz
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
