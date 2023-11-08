@@ -157,8 +157,8 @@ sub edit {
         unless (exists $keys{$o}) {
             $CPAN::Frontend->mywarn("Warning: unknown configuration variable '$o'\n");
         }
+        require_myconfig_or_config();
         my $changed;
-
 
         # one day I used randomize_urllist for a boolean, so we must
         # list them explicitly --ak
