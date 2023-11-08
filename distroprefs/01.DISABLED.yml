@@ -439,6 +439,7 @@ match:
     |ZEFRAM/DynaLoader-Functions-0.000       # as above
     |ZEFRAM/DateTime-TimeZone-Tzfile-0.006   # as above
     |ZENIN/Tk-MenuHash-1.12.tar.gz
+    |ZIALI/Mojolicious-Plugin-JSONAPI-2.6.tar.gz # red since 2021; https://rt.cpan.org/Ticket/Display.html?id=134645
     |ZIEFLE/WWW-LEO-0.01.tar.gz              # rt 34540
     |ZINIGOR/libeve-perl_0.05.orig.tar.gz    # hangs
     |ZMAN/SPOPSx-Ginsu-0.58.tar.gz
