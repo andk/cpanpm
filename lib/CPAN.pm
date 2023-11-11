@@ -1852,7 +1852,8 @@ versions of CPAN.pm
 This commands provides a statistical overview over recent download
 activities. The data for this is collected in the YAML file
 C<FTPstats.yml> in your C<cpan_home> directory. If no YAML module is
-configured or YAML not installed, no stats are provided.
+configured or YAML not installed, or if C<ftpstats_size> is set to a
+value C<< <=0 >>, no stats are provided.
 
 =head2 install_tested
 
