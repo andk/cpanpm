@@ -4044,6 +4044,37 @@ probably followed by
 
   o conf commit
 
+=item 20)
+
+How do recommends_policy and suggests_policy work, exactly?
+
+The terms C<recommends> and C<suggests> have been standardized in
+https://metacpan.org/pod/CPAN::Meta::Spec
+
+In CPAN.pm, if you set C<recommands_policy> to a true value, that
+means: if you then install a distribution C<Foo> that I<recommends> a
+module C<Bar>, both C<Foo> and C<Bar> will be tested and potentially
+installed.
+
+Similarly, if you set C<suggests_policy> to a true value, it means: if
+you install a distribution C<Foo> that I<suggests> a module C<Bar>,
+both C<Foo> and C<Bar> will be tested and potentially installed.
+
+In either case, when C<Foo> passes its tests and C<Bar> does not pass
+its tests, C<Foo> will be installed nontheless. But if C<Foo> does not
+pass its tests, neither will be installed.
+
+This also works recursively for all recommends and suggests of the
+module C<Bar>.
+
+This has also been illustrated by a cpan tester, who wrote:
+
+I just tested Starlink-AST-3.03 which recommends Tk::Zinc;
+Tk-Zinc-3.306 fails with
+http://www.cpantesters.org/cpan/report/a2de7c38-810d-11ee-9ad4-e2167316189a
+; nonetheless Starlink-AST-3.03 succeeds with
+http://www.cpantesters.org/cpan/report/9352e754-810d-11ee-90e9-46117316189a
+
 =back
 
 =head1 COMPATIBILITY
