@@ -3918,9 +3918,15 @@ When an install fails for some reason and then I correct the error
 condition and retry, CPAN.pm refuses to install the module, saying
 C<Already tried without success>.
 
-Use the force pragma like so
+You could use the force pragma like so
 
   force install Foo::Bar
+
+Or, to avoid a force install (which would install even if the tests
+fail), you can force only the test and then install:
+
+  force test Foo::Bar
+  install Foo::Bar
 
 Or you can use
 
