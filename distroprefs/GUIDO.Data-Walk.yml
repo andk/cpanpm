@@ -1,0 +1,5 @@
+---
+match:
+  distribution: '^GUIDO/Data-Walk-2.01.tar.gz'
+cpanconfig:
+  check_sigs: 0
