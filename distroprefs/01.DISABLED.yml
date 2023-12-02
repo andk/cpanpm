@@ -361,6 +361,7 @@ match:
     |SCOTT/Attribute-Persistent-1.1.tar.gz   # fails with out of memory and blocks the box for quite a while
     |SDPRICE/Linux-DVB-DVBT-Apps-QuartzPVR-\d
     |SEGAN/POE-Component-LaDBI-1.2.1
+    |SETH/MediaWiki-Bot-5\.007000\.tar\.gz   # unmaintained, failing since 2023-08, rejecting bug reports, testing seems like a waste of time
     |SETHJ/MIDI-Music-0.01                   # user interaction required
     |SHERZODR/MySQL-TableInfo-1.01.tar.gz    # seems like abandoned since 2001
     |SHLOMIF/XML-Grammar-Screenplay-\d       # t/to-xhtml.t took ~17 minutes
