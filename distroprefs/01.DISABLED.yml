@@ -433,6 +433,7 @@ match:
     |YAPPO/HTTP-Engine-0.0.16.tar.gz         # ditto but not with all perls
     |YAPPO/HTTP-Engine-0.0.17.tar.gz         # and once again
     |YAPPO/HTTP-Engine-0.0.1..tar.gz         # preventing the next case
+    |YAPPO/HTTP-Engine-0.03005.tar.gz        # last pass report 2013
     |ANONWB/WWW-Patent-Page-\d               # downloads something largish
     |YEWEI/Jvm-0.9.\d                        # looks like abandoned since 2002
     |YEWENBIN/PDE-                           # probably a broken Makefile.PL that tries to install Module::Build even if it is installed and calls CPAN recursively; in any case an endless loop
