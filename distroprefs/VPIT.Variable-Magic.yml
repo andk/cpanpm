@@ -20,3 +20,17 @@ match:
     version: '^5\.37\.3$'
 patches:
   - ANDK/patches/Variable-Magic-0.62-RT144052-patch3.v2.patch.gz
+---
+match:
+  distribution: '/Variable-Magic-0\.53\.'
+  perlconfig:
+    version: '^5\.21\.4'
+patches:
+  - SREZIC/patches/Variable-Magic-0.53-RT98525.patch
+---
+match:
+  distribution: '/\QVariable-Magic-0.63.tar.gz\E'
+  perlconfig:
+    version: '^5\.39\.7'
+patches:
+  - SREZIC/patches/Variable-Magic-0.63-RT151104-DAVEM.patch
