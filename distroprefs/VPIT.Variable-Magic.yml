@@ -31,6 +31,6 @@ patches:
 match:
   distribution: '/\QVariable-Magic-0.63.tar.gz\E'
   perlconfig:
-    version: '^5\.39\.7'
+    version: '^5\.39\.(7|8|9)'
 patches:
   - SREZIC/patches/Variable-Magic-0.63-RT151104-DAVEM.patch
