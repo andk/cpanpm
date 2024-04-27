@@ -1037,7 +1037,7 @@ sub init {
     {
         my $path = $CPAN::Config->{'pager'} ||
             $ENV{PAGER} || find_exe("less",\@path) ||
-                find_exe("more",\@path) || ($^O eq 'MacOS' ? $ENV{EDITOR} : 0 )
+                find_exe("more",\@path) || 0
                     || "more";
         my_dflt_prompt(pager => $path, $matcher);
     }
@@ -1051,12 +1051,8 @@ sub init {
         }
         $path ||= $ENV{SHELL};
         $path ||= $ENV{COMSPEC} if $^O eq "MSWin32";
-        if ($^O eq 'MacOS') {
-            $CPAN::Config->{'shell'} = 'not_here';
-        } else {
-            $path ||= 'sh', $path =~ s,\\,/,g if $^O eq 'os2'; # Cosmetic only
-            my_dflt_prompt(shell => $path, $matcher);
-        }
+        $path ||= 'sh', $path =~ s,\\,/,g if $^O eq 'os2'; # Cosmetic only
+        my_dflt_prompt(shell => $path, $matcher);
     }
 
     {
@@ -1568,15 +1564,10 @@ sub _init_external_progs {
 
     if (!$matcher or "@external_progs" =~ /$matcher/) {
         my $old_warn = $^W;
-        local $^W if $^O eq 'MacOS';
         local $^W = $old_warn;
         my $progname;
         for $progname (@external_progs) {
             next if $matcher && $progname !~ /$matcher/;
-            if ($^O eq 'MacOS') {
-                $CPAN::Config->{$progname} = 'not_here';
-                next;
-            }
 
             my $progcall = $progname;
             unless ($matcher) {
