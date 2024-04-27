@@ -414,9 +414,6 @@ Can't continue cutting file '$file'.
                 $CPAN::Frontend->mydie("Could not untar with Archive::Tar.");
         }
 
-        Mac::BuildTools::convert_files([$tar->list_files], 1)
-            if ($^O eq 'MacOS');
-
         return 1;
     }
 }

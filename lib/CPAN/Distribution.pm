@@ -1293,11 +1293,6 @@ sub new {
 sub look {
     my($self) = @_;
 
-    if ($^O eq 'MacOS') {
-      $self->Mac::BuildTools::look;
-      return;
-    }
-
     if (  $CPAN::Config->{'shell'} ) {
         $CPAN::Frontend->myprint(qq{
 Trying to open a subshell in the build directory...
@@ -1403,11 +1398,6 @@ sub readme {
     $local_file = CPAN::FTP->localize($readme,
                                       $local_wanted)
         or $CPAN::Frontend->mydie(qq{No $sans.readme found});
-
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::launch_file($local_file);
-        return;
-    }
 
     my $fh_pager = FileHandle->new;
     local($SIG{PIPE}) = "IGNORE";
@@ -2253,12 +2243,6 @@ is part of the perl-%s distribution. To install that, you need to run
 
     if ($CPAN::Signal) {
         delete $self->{force_update};
-        $self->post_make();
-        return;
-    }
-
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::make($self);
         $self->post_make();
         return;
     }
@@ -3730,12 +3714,6 @@ sub test {
     $self->debug("Changed directory to $self->{build_dir}")
         if $CPAN::DEBUG;
 
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::make_test($self);
-        $self->post_test();
-        return;
-    }
-
     if ($self->{modulebuild}) {
         my $thm = CPAN::Shell->expand("Module","Test::Harness");
         my $v = $thm->inst_version;
@@ -3994,11 +3972,6 @@ sub clean {
         Carp::confess("Couldn't chdir to $self->{build_dir}: $!");
     $self->debug("Changed directory to $self->{build_dir}") if $CPAN::DEBUG;
 
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::make_clean($self);
-        return;
-    }
-
     my $system;
     if ($self->{modulebuild}) {
         unless (-f "Build") {
@@ -4194,12 +4167,6 @@ sub install {
 
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s install for %s\n", $make, $self->pretty_id);
-
-    if ($^O eq 'MacOS') {
-        Mac::BuildTools::make_install($self);
-        $self->post_install();
-        return;
-    }
 
     my $system;
     if (my $commandline = $self->prefs->{install}{commandline}) {
