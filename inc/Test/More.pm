@@ -18,7 +18,7 @@ sub _carp {
 
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT %EXPORT_TAGS $TODO);
-$VERSION = '0.47';
+$VERSION = '0.47_01';
 @ISA    = qw(Exporter);
 @EXPORT = qw(ok use_ok require_ok
              is isnt like unlike is_deeply
@@ -89,7 +89,7 @@ sub isnt ($$;$) {
     $Test->isnt_eq(@_);
 }
 
-*isn't = \&isnt;
+*isn::t = \&isnt;
 
 
 
