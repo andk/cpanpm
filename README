@@ -317,16 +317,16 @@ DESCRIPTION
     This commands provides a statistical overview over recent download
     activities. The data for this is collected in the YAML file
     "FTPstats.yml" in your "cpan_home" directory. If no YAML module is
-    configured or YAML not installed, no stats are provided.
+    configured or YAML not installed, or if "ftpstats_size" is set to a
+    value "<=0", no stats are provided.
 
-    install_tested
-        Install all distributions that have been tested successfully but
-        have not yet been installed. See also "is_tested".
+  install_tested
+    Install all distributions that have been tested successfully but have
+    not yet been installed. See also "is_tested".
 
-    is_tested
-        List all build directories of distributions that have been tested
-        successfully but have not yet been installed. See also
-        "install_tested".
+  is_tested
+    List all build directories of distributions that have been tested
+    successfully but have not yet been installed. See also "install_tested".
 
   mkmyconfig
     mkmyconfig() writes your own CPAN::MyConfig file into your "~/.cpan/"
@@ -2120,9 +2120,15 @@ FAQ
         condition and retry, CPAN.pm refuses to install the module, saying
         "Already tried without success".
 
-        Use the force pragma like so
+        You could use the force pragma like so
 
           force install Foo::Bar
+
+        Or, to avoid a force install (which would install even if the tests
+        fail), you can force only the test and then install:
+
+          force test Foo::Bar
+          install Foo::Bar
 
         Or you can use
 
@@ -2228,6 +2234,36 @@ FAQ
         probably followed by
 
           o conf commit
+
+    20) How do recommends_policy and suggests_policy work, exactly?
+
+        The terms "recommends" and "suggests" have been standardized in
+        https://metacpan.org/pod/CPAN::Meta::Spec
+
+        In CPAN.pm, if you set "recommands_policy" to a true value, that
+        means: if you then install a distribution "Foo" that *recommends* a
+        module "Bar", both "Foo" and "Bar" will be tested and potentially
+        installed.
+
+        Similarly, if you set "suggests_policy" to a true value, it means:
+        if you install a distribution "Foo" that *suggests* a module "Bar",
+        both "Foo" and "Bar" will be tested and potentially installed.
+
+        In either case, when "Foo" passes its tests and "Bar" does not pass
+        its tests, "Foo" will be installed nontheless. But if "Foo" does not
+        pass its tests, neither will be installed.
+
+        This also works recursively for all recommends and suggests of the
+        module "Bar".
+
+        This has also been illustrated by a cpan tester, who wrote:
+
+        I just tested Starlink-AST-3.03 which recommends Tk::Zinc;
+        Tk-Zinc-3.306 fails with
+        http://www.cpantesters.org/cpan/report/a2de7c38-810d-11ee-9ad4-e2167
+        316189a ; nonetheless Starlink-AST-3.03 succeeds with
+        http://www.cpantesters.org/cpan/report/9352e754-810d-11ee-90e9-46117
+        316189a
 
 COMPATIBILITY
   OLD PERL VERSIONS
