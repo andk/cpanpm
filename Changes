@@ -1,3 +1,21 @@
+2024-08-18  Andreas Koenig  <andk@cpan.org>
+
+	* release 2.37-TRIAL
+
+	* This release is dedicated to Abe Timmerman
+
+	* don't use an apostrophe in names (Tony Cook)
+
+	* docs: new FAQ about recommends and suggests
+
+	* docs: improve the answer to FAQ "when an install fails..."
+
+	* docs: document ftpstats_size <=0 in context of the hosts command
+
+	* fix: ensure the config is loaded when we reach edit(); bug reported by Abe Timmerman++
+
+	* various maintenance works on the distroprefs collection
+
 2023-05-14  k  <andk@cpan.org>
 
 	* release 2.36
