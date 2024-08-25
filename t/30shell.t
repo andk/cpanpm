@@ -800,7 +800,7 @@ __END__
 #E:NoCpAnCoNfIg
 ########
 #P:!print $INC{"CPAN/MyConfig.pm"},$/
-#E:CPAN/MyConfig.pm
+#E:CPAN/MyConfig
 ########
 #P:!print "\@INC: ", map { "    $_\n" } @INC
 #E:
