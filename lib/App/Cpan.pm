@@ -990,12 +990,12 @@ sub _find_good_mirrors {
 		);
 
 	foreach my $mirror ( @mirrors ) {
-		next unless eval { $mirror->can( 'http' ) };
+		next unless eval { $mirror->can( 'http' ) || $mirror->can( 'https' ) };
 		_print_ping_report( $mirror->http );
 		}
 
 	$CPAN::Config->{urllist} = [
-		map { $_->http } @mirrors
+		map { $->can( 'https' ) ? $_->https : $_->http } @mirrors
 		];
 	}
 

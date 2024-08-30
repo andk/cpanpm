@@ -17,6 +17,7 @@
 #   frequency        = "daily/bidaily/.../weekly"
 #   dst_ftp          = "ftp://the.same.host.name:/CPAN/mirror/directory/"
 #   dst_http         = "http://the.same.host.name:/CPAN/mirror/directory/"
+#   dst_https        = "https://the.same.host.name:/CPAN/mirror/directory/"
 #   dst_rsync        = "the.same.host.name::CPAN"
 #   dst_location     = "city, (area?, )country, continent (lat long)"
 #   dst_organisation = "full organisation name"
@@ -4237,5 +4238,17 @@ telmexchile.cl:
 # dst_contact      = "mailto:rdc.cl$ftpadm
 # dst_src          = "ftp.oleane.net"
 
+weekly.org:
+  frequency        = "daily"
+  dst_http         = "http://cpan.weekly.org/"
+  dst_https        = "https://cpan.weekly.org/"
+  dst_location     = "Palo Alto, California, United States, North America (+37.424891 -122.100833)"
+  dst_organisation = "Primatech Paper Co."
+  dst_timezone     = "-8"
+  dst_bandwidth    = "100 Mb/s"
+  dst_contact      = "weekly.org(david"
+  dst_src          = "rsync://cpan-rsync.perl.org/CPAN/"
+
+# dst_dst          = "http://cpan.weekly.org/"
 
 # here endeth MIRRORED.BY
