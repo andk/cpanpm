@@ -300,6 +300,7 @@ match:
     |MSCHILLI/GitMeta-\d                     # all Git stuff seems to hang my v5.15 smoker
     |MSCHILLI/LWP-UserAgent-POE-\d           # seems to hang
     |MSCHWERN/Test-Fork-0.01_01.tar.gz       # test hangs
+    |MSERGEANT/ParaDNS-2.0.tar.gz            # RT 155286
     |MSERGEANT/PPerl-0.25.tar.gz             # seems abandoned since 2004
     |MSERGEANT/XML-miniXQL-0.04.tar.gz       # rest in peace: missing dependency decl on XML::Parser but so old (1999) that I do not want to RT it
     |MSHILTONJ/CGI-Test-\d                   # asks if it should strip Carp::Datum calls
