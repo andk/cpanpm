@@ -44,6 +44,8 @@ Module::Build -- needed by File::Spec
 
 File::Spec -- prereq
 
+Module::Signature
+
 Digest::SHA
 
 File::HomeDir
