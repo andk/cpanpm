@@ -18,6 +18,7 @@ match:
     |.+/Moose-1.99                           # rt.cpan.org 66211
     |.+/Panda-XS-2\.1\.                      # deprecated https://rt.cpan.org/Ticket/Display.html?id=130234
     |.+/Perl6/                               # perl5 only
+    |.+/Raku/                                # perl5 only
     |.+/Test-Simple-2.00_                    # rt.cpan.org 66317
     |.+/Win32(API)?-[A-RT-Za-z]              # Win32-ShellQuote
     |.+/Win32(API)?-S[A-Za-gi-z]             # Win32-ShellQuote
