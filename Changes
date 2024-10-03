@@ -1,3 +1,14 @@
+2024-10-03  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.38-TRIAL
+
+	* add documentation how to load your own CPAN/MyConfig.pm from you
+	own path (thanks to Merijn Brand for asking the question)
+
+	* try to fix tests that were failing on cpantesters
+
+	* minor distroprefs maintenance
+
 2024-08-30  Andreas Koenig  <andk@cpan.org>
 
 	* release 2.37
