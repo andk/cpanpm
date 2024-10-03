@@ -534,6 +534,17 @@ CONFIGURATION
     search path of the CPAN module before the use() or require() statements.
     The mkmyconfig command writes this file for you.
 
+    If you want to keep your own CPAN/MyConfig.pm somewhere else, you should
+    load it before loading CPAN.pm, e.g.:
+
+      perl -I/tmp/somewhere -MCPAN::MyConfig -MCPAN -eshell
+
+      --or--
+
+     perl -I/tmp/somewhere -MCPAN::MyConfig -S cpan
+
+    Once you are in the shell you can change your configuration as follows.
+
     The "o conf" command has various bells and whistles:
 
     completion support
