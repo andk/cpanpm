@@ -2087,6 +2087,17 @@ best placed in C<$HOME/.cpan/CPAN/MyConfig.pm>, because C<$HOME/.cpan> is
 added to the search path of the CPAN module before the use() or
 require() statements. The mkmyconfig command writes this file for you.
 
+If you want to keep your own CPAN/MyConfig.pm somewhere else, you
+should load it before loading CPAN.pm, e.g.:
+
+  perl -I/tmp/somewhere -MCPAN::MyConfig -MCPAN -eshell
+
+  --or--
+
+ perl -I/tmp/somewhere -MCPAN::MyConfig -S cpan
+
+Once you are in the shell you can change your configuration as follows.
+
 The C<o conf> command has various bells and whistles:
 
 =over
