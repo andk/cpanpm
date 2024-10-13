@@ -1,3 +1,9 @@
+2024-10-13  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.38-TRIAL2
+
+	* fix test skipping: bump minimum version of Pod::Perldoc::ToMan for running test t/97-run.t
+
 2024-10-03  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.38-TRIAL

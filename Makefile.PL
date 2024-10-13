@@ -22,7 +22,7 @@ $FINGERPRINT =~ s/ //g;
 
 my $version_diff = 0; # we'll have to die if this becomes true
 my $version_from;
-my $trial = 1;
+my $trial = 2;
 my $version;
 {
   local $^W;
