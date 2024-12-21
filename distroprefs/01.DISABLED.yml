@@ -104,6 +104,7 @@ match:
     |DAVIDNICO/handy_tied_functions/Tie-Quicksort-Lazy-0.02 # endless loop
     |DBROWNING/Business-Shipping-\d          # asks questions
     |DSB/ClearCase-Wrapper-\d
+    |DAMBAR/Catalyst-Plugin-Imager-0.01      # has no Makefile.PL and distributes an Imager.pm, so may conflict with Imager; made 2007, no pass since 2009
     |DCANTRELL/Class-DBI-ClassGenerator-1.04.tar.gz # abandoned
     |DCARDWELL/TextLinkAds-0.01.tar.gz       # interactive
     |DCOLLINS/Perlwikipedia-1.5.2            # https://rt.cpan.org/Ticket/Display.html?id=117918 and slow
