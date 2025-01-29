@@ -274,6 +274,7 @@ match:
     |MARNANEL/Flickr-Embed-0.01              # hangs in test basic.t
     |MARNANEL/Net-RGTP-0.10.tar.gz
     |MARTIJN/Data-Transform-SSL-0.02.tar.gz  # memory accident?
+    |MARTYLOO/Forecast-IO-0.21               # https://rt.cpan.org/Ticket/Display.html?id=86798; no pass since 2016
     |MATTBM/PGP-Mail-1.7.tar.gz
     |MAUNDER/Apache-AppCluster-0.02.tar.gz
     |MAXM/MMM-OracleDump-0.01.tar.gz         # user interaction required
@@ -285,6 +286,7 @@ match:
     |MIKEM/Authen-TacacsPlus/Authen-TacacsPlus-0.17 # seems to hang
     |MIKER/Mail-SpamCannibal-0.97.tar.gz     # IIUC it insists on answering aquestion with yes or no
     |MISHIKAL/Net-LDAPapi-\d                 # gives gooood advice and stops
+    |MITHALDU/Acme-CuckooMith-\d             # if installed, breaks installed DBIx::Class module; EVIL
     |MJBRIGHT/DBIx-XMLServer-0.02.tar.gz     # seems abandoned and hangs
     |MJD/Net-DHCP-Control-0.09.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=34536
     |MJD/Rx-0.53.tar.gz                      # asks questions
