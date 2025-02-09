@@ -1,0 +1,9 @@
+---
+comment: |
+
+  https://github.com/kasei/perl-iri/issues/21
+
+match:
+  distribution: "^GWILLIAMS/IRI-0.013.tar.gz"
+cpanconfig:
+  check_sigs: 0
