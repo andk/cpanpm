@@ -58,6 +58,7 @@ match:
     |APOCAL/Task-POE-All-1.102.tar.gz        # havoc of a task
     |ARAK/Fax-Hylafax-Client-1.02.tar.gz     # looks like abandoned since 2006
     |ASNMTAP/ASNMTAP-\d                      # switches to cpanplus and then hangs
+    |ART/Archive-BagIt-0.096.tar.gz          # hanging test jobs, maybe only via Parallel-DataPipe?
     |ASVBR/DBIx-PgLink-0.01.tar.gz           # looks like abandoned since 2007
     |AUDREYT/DBD-SQLite-Amalgamation-3.5.8.tar.gz # test t/08create_functionhangs with 33430
     |AVAR/Sendmail-PMilter-\d                # asks questions
