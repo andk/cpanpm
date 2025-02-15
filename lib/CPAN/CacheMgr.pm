@@ -113,25 +113,19 @@ sub disk_usage {
              sub {
            $File::Find::prune++ if $CPAN::Signal;
            return if -l $_;
-           if ($^O eq 'MacOS') {
-             require Mac::Files;
-             my $cat  = Mac::Files::FSpGetCatInfo($_);
-             $Du += $cat->ioFlLgLen() + $cat->ioFlRLgLen() if $cat;
-           } else {
-             if (-d _) {
-               unless (-x _) {
-                 unless (chmod 0755, $_) {
-                   $CPAN::Frontend->mywarn("I have neither the -x permission nor ".
-                                           "the permission to change the permission; ".
-                                           "can only partially estimate disk usage ".
-                                           "of '$_'\n");
-                   $CPAN::Frontend->mysleep(5);
-                   return;
-                 }
+           if (-d _) {
+             unless (-x _) {
+               unless (chmod 0755, $_) {
+                 $CPAN::Frontend->mywarn("I have neither the -x permission nor ".
+                                         "the permission to change the permission; ".
+                                         "can only partially estimate disk usage ".
+                                         "of '$_'\n");
+                 $CPAN::Frontend->mysleep(5);
+                 return;
                }
-             } else {
-               $Du += (-s _);
              }
+           } else {
+             $Du += (-s _);
            }
          },
          $dir
