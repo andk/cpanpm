@@ -1057,6 +1057,9 @@ sub init {
             $path ||= 'sh', $path =~ s,\\,/,g if $^O eq 'os2'; # Cosmetic only
             my_dflt_prompt(shell => $path, $matcher);
         }
+        if (!$CPAN::Config->{shell}) {
+            $CPAN::Frontend->mywarn("No user shell found. Please set the SHELL environment variable\n");
+        }
     }
 
     {
@@ -1496,6 +1499,9 @@ HERE
     );
 
     sub _find_shell_config {
+        if (!$CPAN::Config->{shell}) {
+          $CPAN::Frontend->mydie("No user shell found. Please set the SHELL environment variable");
+        }
         my $shell = File::Basename::basename($CPAN::Config->{shell});
         if ( my $rc = $shell_rc_map{$shell} ) {
             my $path = File::Spec->catfile($ENV{HOME}, $rc);
