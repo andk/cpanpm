@@ -1,0 +1,9 @@
+---
+comment: |
+
+  as of now still unreported
+
+match:
+  distribution: "^JDEGUEST/Net-API-CPAN-v0.1.5.tar.gz"
+cpanconfig:
+  check_sigs: 0
