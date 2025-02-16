@@ -4,6 +4,6 @@ comment: |
   as of now still unreported
 
 match:
-  distribution: "^JDEGUEST/(Net-API-CPAN-v0.1.5|Module-Generic-v0.37.7|HTTP-Promise-v0.5.2|Getopt-Class-v1.1.3|Data-Pretty-v0.1.9|Changes-v0.3.5).tar.gz"
+  distribution: "^JDEGUEST/(Net-API-CPAN-v0.1.5|Module-Generic-v0.37.7|HTTP-Promise-v0.5.2|Getopt-Class-v1.1.3|Data-Pretty-v0.1.9|DateTime-Format-JP-v0.1.6|Changes-v0.3.5).tar.gz"
 cpanconfig:
   check_sigs: 0
