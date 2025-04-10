@@ -14,7 +14,7 @@ comment: |
 
 match:
   perlconfig:
-    version: '^5\.(7|9|1[13579]|2[1357])\.'
+    version: '^5\.(7|9|1[13579]|2[13579]|3[13579])\.'
 cpanconfig:
   test_report: 0
 ---
@@ -39,7 +39,6 @@ match:
     .^   # never matches
     |BARBIE/
     |MSHELOR/
-    |SHLOMIF/                                # author opt out 2013-06-24
     |MLEHMANN/Canary-Stability-              # testless
     |RKELSCH/Graphics-Framebuffer-\d         # does not want tests that are produced within X-Windows
     )|
