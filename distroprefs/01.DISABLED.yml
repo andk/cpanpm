@@ -235,7 +235,7 @@ match:
     |KANE/CPANPLUS-0.8(5_08|6|601).tar.gz        # hangs
     |KARMAN/Catalyst-Authentication-Store-LDAP-\d # hangs
     |KAZUHO/Parallel-Prefork-0.02            # hangs
-    |KAZUHO/Server-Starter-0.11              # hangs
+    |KAZUHO/Server-Starter-0.35              # hangs
     |KENTNL/Path-FindDev-0.4.0.tar.gz        # http://www.cpantesters.org/cpan/report/8d9bf222-39ee-11e3-bbd4-fb49f34aa4a3
     |KHS/Gearman-SlotManager-0.3.tar.gz      # https://rt.cpan.org/Ticket/Display.html?id=82638
     |KIMURA/Comprss-Zlib-1.12-bin-1-Mac.tgz
