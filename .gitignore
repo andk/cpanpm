@@ -4,8 +4,10 @@ Makefile.old
 blib
 pm_to_blib
 t/CPAN/MyConfig.pm*
-t/CPAN/MyConfig_[0-9][0-9][0-9][0-9].pm
-t/dot-cpan-[0-9][0-9][0-9][0-9]
+t/CPAN/MyConfig_*.pm
+t/CPAN/MyConfig_*.pm~
+t/dot-cpan
+t/dot-cpan-*
 t/97-return_values.out
 test.out
 *.swp
