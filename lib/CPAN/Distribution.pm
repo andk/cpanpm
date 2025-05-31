@@ -4360,9 +4360,9 @@ sub install {
         unless ($CPAN::Config->{'cleanup_after_install'}) {
             $self->store_persistent_state;
         }
-
-        $self->post_install();
     }
+
+    $self->post_install();
 
     return !! $close_ok;
 }
