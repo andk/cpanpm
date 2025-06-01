@@ -120,6 +120,7 @@ $VERSION = "5.5013"; # see also CPAN::Config::VERSION at end of file
      "urllist_ping_external",
      "use_prompt_default",
      "use_sqlite",
+     "use_static_install",
      "username",
      "version_timeout",
      "wait_list",

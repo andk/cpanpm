@@ -772,8 +772,16 @@ sub satisfy_configure_requires {
 
 sub want_static_install {
     my ($self) = @_;
-    return unless $CPAN::META->has_inst('CPAN::Static::Install');
-    return unless eval { CPAN::Static::Install->VERSION('0.001') };
+    my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install}) or return;
+    unless ($CPAN::META->has_inst('CPAN::Static::Install')) {
+        $CPAN::Frontend->mywarn("The current configuration of use_static_install is '$use_static_install', but for this option we would need 'CPAN::Static::Install' installed. Please install it as soon as possible. As long as we are not equipped with it we cannot use it\n");
+        return;
+    }
+    my $min_version = '0.001';
+    unless (eval { CPAN::Static::Install->VERSION($min_version) }){
+        $CPAN::Frontend->mywarn("The currently installed version of 'CPAN::Static::Install' is too old (<$min_version). Please install a fresh version of it\n");
+        return;
+    }
     return unless -f 'META.json';
 
     require CPAN::Static::Install;
