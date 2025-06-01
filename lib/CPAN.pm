@@ -2310,6 +2310,8 @@ currently defined:
                      increase verbosity when autoselecting mirrors
   use_prompt_default set PERL_MM_USE_DEFAULT for configure/make/test/install
   use_sqlite         use CPAN::SQLite for metadata storage (fast and lean)
+  use_static_install use CPAN::Static::Install to install modules that declare
+                     x_static_install
   username           your username if you CPAN server wants one
   version_timeout    stops version parsing after this many seconds.
                      Default is 15 secs. Set to 0 to disable.
