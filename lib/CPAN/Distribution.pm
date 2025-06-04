@@ -774,7 +774,7 @@ sub want_static_install {
     my ($self) = @_;
     my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install}) or return;
     unless ($CPAN::META->has_inst('CPAN::Static::Install')) {
-        $CPAN::Frontend->mywarn("The current configuration of use_static_install is '$use_static_install', but for this option we would need 'CPAN::Static::Install' installed. Please install it as soon as possible. As long as we are not equipped with it we cannot use it\n");
+        $CPAN::Frontend->mywarn("The current configuration of use_static_install is set to true, but for this option to work we would need 'CPAN::Static::Install' installed. Please install it as soon as possible. As long as we are not equipped with it we cannot use it\n");
         return;
     }
     my $min_version = '0.001';
