@@ -140,6 +140,7 @@ my %prefssupport = map { $_ => 1 }
      "make_install_make_command",
      "prefer_installer",
      "test_report",
+     "use_static_install",
     );
 
 # returns true on successful action
