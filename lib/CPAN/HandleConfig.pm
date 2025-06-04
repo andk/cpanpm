@@ -31,6 +31,7 @@ $VERSION = "5.5013"; # see also CPAN::Config::VERSION at end of file
 #     3. add a "matcher" section in CPAN::FirstTime::init that includes
 #        a prompt function; see others for examples
 #     4. add config option to documentation section in CPAN.pm
+#     5. possibly add the new variable to %prefssupport
 
 %keys = map { $_ => undef }
     (
