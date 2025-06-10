@@ -409,6 +409,7 @@ match:
     |TTY/kurila-\d                           # asks too many questions
     |TURNERJW/
     |TURNERMM/HTML-WikiConverter-DokuWikiFCK- # hangs very early
+    |TVANDERAA/UPnP-ControlPoint-0.5         # only red results and hangs forever
     |TWH/Bio-GMOD-0.028.tar.gz               # https://rt.cpan.org/Ticket/Display.html?id=19467
     |ULPFR/WAIT-1.800.tar.gz                 # dialog
     |URI/Stem-\d                             # asks questions about conf directories
