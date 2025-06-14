@@ -29,8 +29,6 @@ Bundle::CPAN
 
 Module::Info
 
-Module::Signature
-
 CPAN::Reporter
 
 Kwalify
@@ -44,7 +42,7 @@ Module::Versions::Report
 =head1 DESCRIPTION
 
 This bundle includes Bundle::CPAN plus what I consider indispensible
-but not everybody can compile, namely Expect and Module::Signature.
+but not everybody can compile, namely Expect and YAML.
 
 I've taken the liberty to also add YAML::Syck because of its speed
 advantage.
