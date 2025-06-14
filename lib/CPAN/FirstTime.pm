@@ -142,10 +142,9 @@ author is not available or where some prerequisite for
 Module::Signature has a bug and so on.
 
 With the check_sigs parameter you can turn signature checking on and
-off. The default is off for now because the whole tool chain for the
-functionality is not yet considered mature by some. The author of
-CPAN.pm would recommend setting it to true most of the time and
-turning it off only if it turns out to be annoying.
+off. The default is on. The author of CPAN.pm would recommend setting
+it to true most of the time and turning it off only if it turns out to
+be annoying.
 
 Note that if you do not have Module::Signature installed, no signature
 checks will be performed at all.
@@ -973,7 +972,7 @@ sub init {
     #
     #= Module::Signature
     #
-    my_yn_prompt(check_sigs => 0, $matcher);
+    my_yn_prompt(check_sigs => 1, $matcher);
 
     #
     #= CPAN::Reporter
