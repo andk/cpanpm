@@ -385,6 +385,7 @@ match:
     |.*/Net-Peep-0.4.5.1.tar.gz              # needs user interaction
     |STEPHENCA/Cvs-Simple-\d                 # asks for CVS paths
     |STEVAN/FCGI-Engine-\d                   # 0.04 hangs on t/002_basic_with_listen
+    |STEVAN/JSORB-0.04.tar.gz                # no pass report for 14 years and https://rt.cpan.org/Ticket/Display.html?id=128713
     |STEVENC/WWW-Myspace-\d                  # tests take too long
     |STIGMATA/RAS-AS5200-1.04.tar.gz         # looks like abandoned since 2000
     |STIGMATA/RAS-HiPerARC-1.03.tar.gz       # looks like abandoned since 2000
