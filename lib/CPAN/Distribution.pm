@@ -3801,12 +3801,12 @@ sub test {
         }
     }
 
-    my($tests_ok);
+    my($tests_ok, $system);
     if ($self->{static_install}) {
+        $system = "CPAN::Static::Install::test()";
         $tests_ok = eval { CPAN::Static::Install::test(); 1; };
         warn $@ if not $tests_ok;
     } else {
-        my $system;
         my $prefs_test = $self->prefs->{test};
         if (my $commandline
             = exists $prefs_test->{commandline} ? $prefs_test->{commandline} : "") {
@@ -3881,6 +3881,9 @@ sub test {
             }
         } # FORK
 
+    }
+
+    {
         $self->introduce_myself;
         my $but = $self->_make_test_illuminate_prereqs();
         if ( $tests_ok ) {
@@ -3921,7 +3924,6 @@ sub test {
                     $self->pretty_id));
         }
     }
-
     $self->store_persistent_state;
 
     $self->post_test();
