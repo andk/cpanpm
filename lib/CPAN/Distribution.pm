@@ -1982,6 +1982,8 @@ sub prepare {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
+    CPAN->debug("(in prepare) for $self->{ID} with static_install=$self->{static_install}")
+        if $CPAN::DEBUG;
     if ($self->{static_install}) {
         $CPAN::Frontend->myprint("Configuring ".$self->id." with static install\n");
         my $args = $CPAN::Config->{'mbuildpl_arg'};
@@ -2259,6 +2261,7 @@ is part of the perl-%s distribution. To install that, you need to run
         return;
     }
 
+    CPAN->debug("(in make) have changed to $builddir") if $CPAN::DEBUG;
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s for %s\n", $make, $self->id);
     local $ENV{PERL5LIB} = defined($ENV{PERL5LIB})
@@ -3395,14 +3398,15 @@ sub prereq_pm {
     my($self) = @_;
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
-        || $self->{modulebuild};
+        || $self->{modulebuild}
+        || $CPAN::Config->{use_static_install};
     unless ($self->{build_dir}) {
         return;
     }
     # no Makefile/Build means configuration aborted, so don't look for prereqs
     my $makefile  = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'descrip.mms' : 'Makefile');
     my $buildfile = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'Build.com' : 'Build');
-    return unless   -f $makefile || -f $buildfile;
+    return unless   -f $makefile || -f $buildfile || $self->{static_install};
     CPAN->debug(sprintf "writemakefile[%s]modulebuild[%s]",
                 $self->{writemakefile}||"",
                 $self->{modulebuild}||"",
