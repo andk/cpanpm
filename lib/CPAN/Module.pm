@@ -540,7 +540,7 @@ sub uptodate {
         (join
          ("",
           "returning uptodate. ",
-          "cpan[$cpan]inst[$inst]",
+          "mod[$self->{ID}] cpan[$cpan]inst[$inst]",
          )) if $CPAN::DEBUG;
     return 1;
 }
