@@ -3807,9 +3807,20 @@ sub test {
 
     my($tests_ok, $system);
     if ($self->{static_install}) {
-        $system = "CPAN::Static::Install::test()";
-        $tests_ok = eval { CPAN::Static::Install::test(); 1; };
-        warn $@ if not $tests_ok;
+        # XXX support for CPAN::Reporter: as I understand it, here we
+        # have to provide a shell command for CPAN::Reporter and let
+        # CPAN::Reporter run that to draw its own conclusions;
+        # something like the following, or we should fall through to
+        # the modulebuild case below?
+        if ($self->_should_report('test')) {
+            my($perl) = $self->perl or $CPAN::Frontend->mydie("Couldn't find executable perl\n");
+            $system = "$perl ./Build.PL && ./Build test";
+            $tests_ok = CPAN::Reporter::test($self, $system);
+        } else {
+            $system = "CPAN::Static::Install::test()";
+            $tests_ok = eval { CPAN::Static::Install::test(); 1; };
+            warn $@ if not $tests_ok;
+        }
     } else {
         my $prefs_test = $self->prefs->{test};
         if (my $commandline
