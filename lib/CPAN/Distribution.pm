@@ -4239,14 +4239,15 @@ sub install {
     my $make = $self->{modulebuild} ? "Build" : "make";
     $CPAN::Frontend->myprint(sprintf "Running %s install for %s\n", $make, $self->pretty_id);
 
-    my $close_ok;
+    my($close_ok, $system, $makeout);
+    $makeout = "";
     if ($self->{static_install}) {
+        $system = "CPAN::Static::Install::install";
         my $args = $CPAN::Config->{'mbuild_install_arg'};
         my %opts = CPAN::Static::Install::opts_from_args_string($args);
         $close_ok = eval { CPAN::Static::Install::install(%opts); 1; };
         warn $@ if not $close_ok;
     } else {
-        my $system;
         if (my $commandline = $self->prefs->{install}{commandline}) {
             $system = $commandline;
             $ENV{PERL} = CPAN::find_perl();
@@ -4338,7 +4339,6 @@ sub install {
             $self->post_install();
             return;
         }
-        my($makeout) = "";
         while (<$pipe>) {
             print $_; # intentionally NOT use Frontend->myprint because it
                       # looks irritating when we markup in color what we
@@ -4347,6 +4347,8 @@ sub install {
         }
         $pipe->close;
         $close_ok = $? == 0;
+    }
+    {
         $self->introduce_myself;
         if ( $close_ok ) {
             $CPAN::Frontend->myprint("  $system -- OK\n");
