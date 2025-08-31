@@ -785,7 +785,12 @@ sub want_static_install {
     return unless -f 'META.json';
 
     require CPAN::Static::Install;
-    return eval { CPAN::Static::Install::supports_static_install(); }; # if we cannot parse the meta file, for example, we do not want to die
+    my $supports_static_install = eval { CPAN::Static::Install::supports_static_install(); };
+    if (! defined $supports_static_install and defined $@) {
+        my $error = $@;
+        $CPAN::Frontend->mywarn("Error while trying to determine whether $self->{ID} supports static install: $error");
+    }
+    return $supports_static_install;
 }
 
 #-> sub CPAN::Distribution::choose_MM_or_MB ;
