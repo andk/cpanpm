@@ -786,7 +786,7 @@ sub want_static_install {
 
     require CPAN::Static::Install;
     my $supports_static_install = eval { CPAN::Static::Install::supports_static_install(); };
-    if (! defined $supports_static_install and defined $@) {
+    if (! defined $supports_static_install and $@) {
         my $error = $@;
         $CPAN::Frontend->mywarn("Error while trying to determine whether $self->{ID} supports static install: $error");
     }
