@@ -1987,8 +1987,10 @@ sub prepare {
     local $ENV{PERL_MM_USE_DEFAULT} = 1 if $CPAN::Config->{use_prompt_default};
     local $ENV{NONINTERACTIVE_TESTING} = 1 if $CPAN::Config->{use_prompt_default};
 
-    CPAN->debug("(in prepare) for $self->{ID} with static_install=$self->{static_install}")
-        if $CPAN::DEBUG;
+    if ($CPAN::DEBUG){
+        my $si = $self->{static_install} // "<undef>";
+        CPAN->debug("(in prepare) for $self->{ID} with static_install=$si");
+    }
     if ($self->{static_install}) {
         $CPAN::Frontend->myprint("Configuring ".$self->id." with static install\n");
         my $args = $CPAN::Config->{'mbuildpl_arg'};
