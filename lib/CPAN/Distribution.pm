@@ -790,6 +790,14 @@ sub want_static_install {
         my $error = $@;
         $CPAN::Frontend->mywarn("Error while trying to determine whether $self->{ID} supports static install: $error");
     }
+    if ($supports_static_install) {
+        # sanity check
+        my $meta_obj = $self->read_meta;
+        if ($meta_obj && $meta_obj->dynamic_config) {
+            $CPAN::Frontend->mywarn("Error: meta file sets both dynamic_config and x_static_install to true, refusing static install");
+            return;
+        }
+    }
     return $supports_static_install;
 }
 
