@@ -655,7 +655,7 @@ using either ExtUtils::MakeMaker or Module::Build. Modules that are
 simple enough to be installed by CPAN::Static::Install declare that
 with the attribute x_static_install in their META.yml or META.json
 file. At the time of version 2.39, this method of installing is not
-sufficiently tested, so its use is only recommended for experianced
+sufficiently tested, so its use is only recommended for experienced
 users.
 
 Use CPAN::Static::Install if available? (yes/no)?
