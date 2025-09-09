@@ -331,6 +331,7 @@ match:
     |PEVANS/IPC-PerlSSH-Async-\d             # asks for a password during testing
     |PEVANS/IPC-PerlSSH-\d                   # asks for a password during testing
     |PEVANS/IO-Async-Loop-Glib-0.20          # hangs after t/12share-timer.t (in t/15share-child.t)
+    |PEVANS/builtin-Backport-0.02            # https://rt.cpan.org/Ticket/Display.html?id=158702
     |PFARR/Net-SMS-Clickatell-SOAP-
     |PHONYBONE/Data-Babel-Client-0.02.tar.gz # looks like abandoned since circa 2011
     |PHILIPS/DBIx-MyParse-\d                 # too complicated to set up (mysql source etc.)
