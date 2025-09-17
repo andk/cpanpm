@@ -66,6 +66,8 @@ CPAN
 
 File::Which
 
+CPAN::Static::Install
+
 =head1 DESCRIPTION
 
 This bundle includes CPAN.pm as the base module.

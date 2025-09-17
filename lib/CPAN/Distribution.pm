@@ -772,9 +772,12 @@ sub satisfy_configure_requires {
 
 sub want_static_install {
     my ($self) = @_;
-    my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install}) or return;
+    my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install});
+    return if defined $use_static_install && 0 == $use_static_install;
     unless ($CPAN::META->has_inst('CPAN::Static::Install')) {
-        $CPAN::Frontend->mywarn("The current configuration of use_static_install is set to true, but for this option to work we would need 'CPAN::Static::Install' installed. Please install it as soon as possible. As long as we are not equipped with it we cannot use it\n");
+        if ($self->looks_like_static_candidate) {
+            $CPAN::Frontend->mywarn("Warning: 'CPAN::Static::Install' is not installed. I will try to access it nonetheless to enable static installs\n");
+        }
         return;
     }
     my $min_version = '0.001';
@@ -2948,6 +2951,14 @@ sub _feature_depends {
     $dep;
 }
 
+sub looks_like_static_candidate {
+    my($self) = @_;
+    my $meta_obj = eval { $self->read_meta } or return;
+    return if $meta_obj->dynamic_config;
+    return 1 if $meta_obj->custom('x_static_install');
+    return 0;
+}
+
 sub prereqs_for_slot {
     my($self,$slot) = @_;
     my($prereq_pm);
@@ -2982,6 +2993,23 @@ sub prereqs_for_slot {
     my $prefs_depends = $self->prefs->{depends}||{};
     my $feature_depends = $self->_feature_depends();
     if ($slot eq "configure_requires_later") {
+        my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install});
+        if (! $CPAN::META->has_inst("CPAN::Static::Install") && (!defined $use_static_install or $use_static_install) && $self->looks_like_static_candidate) {
+            if ($self->{CALLED_FOR}){
+                if ($self->{CALLED_FOR} =~
+                    /^(
+                         CPAN::Static::Install
+                     )$/x) {
+                    $CPAN::Frontend->mywarn("Please install CPAN::Static::Install ".
+                        "as soon as possible; it smoothes out static installations within ".
+                        "the cpan shell\n");
+                    return;
+                }
+            }
+            my $whynot = "is not installed";
+            $CPAN::Frontend->mywarn("CPAN::Static::Install $whynot\n");
+            $merged->add_minimum( "CPAN::Static::Install" => '0.001' );
+        }
         for my $hash (  $self->configure_requires,
                         $prefs_depends->{configure_requires},
                         $feature_depends->{configure_requires},
@@ -3005,6 +3033,21 @@ sub prereqs_for_slot {
         }
         $prereq_pm = {}; # configure_requires defined as "b"
     } elsif ($slot eq "later") {
+        unless ($CPAN::META->has_inst("CPAN::Static::Install")) {
+            if ($self->{CALLED_FOR}){
+                if ($self->{CALLED_FOR} =~
+                    /^(
+                         CPAN::Static::Install
+                     )$/x) {
+                    $CPAN::Frontend->mywarn("Trying to load uninstalled CPAN::Static::Install now\n");
+                    local @INC = @INC;
+                    push @INC, File::Spec->catdir($self->{build_dir},"lib");
+                    require CPAN::Static::Install;
+                    $CPAN::Frontend->mywarn("CPAN::Static::Install loaded\n");
+                    $self->{static_install} = 1;
+                }
+            }
+        }
         my $prereq_pm_0 = $self->prereq_pm || {};
         for my $reqtype (qw(requires build_requires opt_requires opt_build_requires)) {
             $prereq_pm->{$reqtype} = {%{$prereq_pm_0->{$reqtype}||{}}}; # copy to not pollute it
