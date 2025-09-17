@@ -649,14 +649,12 @@ Use CPAN::SQLite if available? (yes/no)?
 
 =item use_static_install
 
-Experimental new feature as of CPAN 2.39 (2025-06): the module
+New feature as of CPAN 2.39 (2025-09), per default enabled: the module
 CPAN::Static::Install knows how to install simple modules without
 using either ExtUtils::MakeMaker or Module::Build. Modules that are
 simple enough to be installed by CPAN::Static::Install declare that
 with the attribute x_static_install in their META.yml or META.json
-file. At the time of version 2.39, this method of installing is not
-sufficiently tested, so its use is only recommended for experienced
-users.
+file.
 
 Use CPAN::Static::Install if available? (yes/no)?
 
@@ -1117,7 +1115,7 @@ sub init {
     #
     #== use_static_install
     #
-    my_yn_prompt(use_static_install => 0, $matcher);
+    my_yn_prompt(use_static_install => 1, $matcher);
 
     require CPAN::HandleConfig;
     if (exists $CPAN::HandleConfig::keys{make_install_make_command}) {
