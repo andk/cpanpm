@@ -3461,6 +3461,9 @@ sub prereq_pm {
     unless ($self->{build_dir}) {
         return;
     }
+    if ($self->{cleanup_after_install_done}) {
+        return;
+    }
     # no Makefile/Build means configuration aborted, so don't look for prereqs
     my $makefile  = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'descrip.mms' : 'Makefile');
     my $buildfile = File::Spec->catfile($self->{build_dir}, $^O eq 'VMS' ? 'Build.com' : 'Build');
