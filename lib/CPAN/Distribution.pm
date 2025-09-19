@@ -3454,10 +3454,13 @@ sub configure_requires {
 #-> sub CPAN::Distribution::prereq_pm ;
 sub prereq_pm {
     my($self) = @_;
+    my $use_static_install = CPAN::HandleConfig->prefs_lookup($self,q{use_static_install});
     return unless $self->{writemakefile}  # no need to have succeeded
                                           # but we must have run it
         || $self->{modulebuild}
-        || $CPAN::Config->{use_static_install};
+        || $use_static_install
+        || ! defined $use_static_install
+        ;
     unless ($self->{build_dir}) {
         return;
     }
