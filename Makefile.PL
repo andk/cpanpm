@@ -349,7 +349,7 @@ logs/.exists :
 	touch $@
 
 run :
-	$(PERL) -Ilib -MCPAN -eshell
+	$(PERL) -Irelated/CPAN-Plugin-TraceDeps/lib -Irelated/CPAN-Plugin-TraceMemory/lib -Ilib -MCPAN -eshell
 
 run_testenv_db :
 	$(PERL) -Ilib -It -MCPAN::MyConfig -MCPAN -deshell
