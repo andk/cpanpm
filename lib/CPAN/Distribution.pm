@@ -3315,9 +3315,9 @@ sub unsat_prereq {
         }
         # here need to flag as optional for recommends/suggests
         # -- xdg, 2012-04-01
-        $self->debug(sprintf "%s manadory?[%s]",
+        $self->debug(sprintf "%s mandatory?[%s]",
                      $self->pretty_id,
-                     $self->{mandatory})
+                     defined($self->{mandatory}) ? $self->{mandatory} : "<undef>")
             if $CPAN::DEBUG;
         my $optional = !$self->{mandatory}
             || $self->is_locally_optional($prereq_pm, $need_module);
