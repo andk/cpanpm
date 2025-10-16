@@ -1,0 +1,10 @@
+---
+match:
+  distribution: '/Log-Trace-1\.070\.'
+  perlconfig:
+    version: '^5\.(27\.(6|7|8)|43\.(2|3|4|5|6|7|8|9|10|11|12|13)|4[456789]|[56789])$'
+patches:
+  - SREZIC/patches/Log-Trace-1.070-RT49409-SPROUT.patch
+# https://rt.cpan.org/Ticket/Display.html?id=49409
+# Bleadperl change was reverted in 5.27.9, no patching needed anymore
+# But then: https://github.com/Perl/perl5/issues/23131
