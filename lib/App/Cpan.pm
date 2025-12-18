@@ -1481,6 +1481,7 @@ sub _eval_version
 		package
 		  ExtUtils::MakeMaker::_version;
 
+        no warnings;
 		local $sigil$var;
 		\$$var=undef; do {
 			$line
