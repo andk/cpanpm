@@ -1,6 +1,46 @@
 ---
 comment: |
 
+  two patches from http://deb.debian.org/debian/pool/main/libn/libnet-ssleay-perl/libnet-ssleay-perl_1.94-3.dsc :
+
+  -rw-r--r-- 1 k k  13168 2025-02-19T13:43:44 libnet-ssleay-perl_1.94-3.debian.tar.xz
+  -rw-r--r-- 1 k k   2459 2025-02-19T13:43:44 libnet-ssleay-perl_1.94-3.dsc
+
+  inspired by: https://github.com/radiator-software/p5-net-ssleay/issues/528
+
+match:
+  distribution: "CHRISN/Net-SSLeay-1.94.tar.gz"
+patches:
+  - ANDK/patches/Net-SSLeay-1.94-from-debian-1.94-3.patch.gz
+pl:
+  eexpect:
+    mode: anyorder
+    timeout: 60
+    reuse: 1
+    talk:
+      - '\QThese tests *will* *fail* if you do not have network connectivity\E'
+      - "n\n"
+      - "Auto-install"
+      - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+make:
+  eexpect:
+    mode: anyorder
+    timeout: 60
+    reuse: 1
+    talk:
+      - '\QThese tests *will* *fail* if you do not have network connectivity\E'
+      - "n\n"
+      - "Auto-install"
+      - "y\n"
+  env:
+    PERL_AUTOINSTALL: --skip
+    PERL_EXTUTILS_AUTOINSTALL: --skip
+---
+comment: |
+
     Increasing the timeout because the "Auto-install" question will
     often not arrive because we have installed everything already. So
     then we must see the EOF otherwise we will believe we could not
@@ -19,7 +59,7 @@ pl:
       - "Auto-install"
       - "y\n"
   env:
-    PERL_AUTOINSTALL: --skip    
+    PERL_AUTOINSTALL: --skip
     PERL_EXTUTILS_AUTOINSTALL: --skip
 make:
   eexpect:
@@ -32,5 +72,5 @@ make:
       - "Auto-install"
       - "y\n"
   env:
-    PERL_AUTOINSTALL: --skip    
+    PERL_AUTOINSTALL: --skip
     PERL_EXTUTILS_AUTOINSTALL: --skip
