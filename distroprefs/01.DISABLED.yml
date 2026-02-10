@@ -147,6 +147,7 @@ match:
     |EVO/Term-ShellKit-1.002.tar.gz
     |EVO/Devel-PreProcessor-2003.1128.tar.gz # looks like abandoned since 2003
     |EWILHELM/CAD-Drawing-IO-DWGI-0.12.tar.gz # looks like abandoned since 2006
+    |EWILHELM/dotReader-v0.0.11.tar.gz       # no pass ever
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
