@@ -149,6 +149,7 @@ match:
     |EWILHELM/CAD-Drawing-IO-DWGI-0.12.tar.gz # looks like abandoned since 2006
     |EWILHELM/dotReader-v0.0.11.tar.gz       # no pass ever
     |EWILHELM/HTTP-Server-Simple-Er-v0.0.3.tar.gz # hangs on some perls
+    |EXODIST/Test2-Harness-2.000010-TRIAL.tar.gz # https://github.com/Test-More/Test2-Harness/issues/363
     |FIBO/PNI-Node-Tk-                       # hangs after t/PNI-Node-Tk.t
     |FCO/treadsemulate/threads-emulate-0     # hangs in 00-load.t on 32642
     |FDULAU/Graph-Chart-0.65                 # looks like abandonded since 2012
