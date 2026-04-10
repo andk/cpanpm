@@ -2957,10 +2957,25 @@ sub _feature_depends {
 
 sub looks_like_static_candidate {
     my($self) = @_;
-    my $meta_obj = eval { $self->read_meta } or return;
-    return if $meta_obj->dynamic_config;
-    return 1 if $meta_obj->custom('x_static_install');
-    return 0;
+    my $llsc = $self->{_looks_like_static_candidate};
+    return $llsc if defined $llsc;
+    my $meta_obj = eval { $self->read_meta };
+    if (defined $meta_obj) {
+        if ($meta_obj->dynamic_config) {
+            $llsc = 0;
+        } elsif ($meta_obj->custom('x_static_install')) {
+            $llsc = 1;
+        } else {
+            $llsc = 0;
+        }
+    } elsif (! $meta_obj) {
+        $llsc = 0;
+    } else {
+        $CPAN::Frontend->mywarn(sprintf "%s: read_meta did not return a true value\n", $self->pretty_id);
+        $llsc = 0;
+    }
+    $self->{_looks_like_static_candidate} = $llsc;
+    return $llsc;
 }
 
 sub prereqs_for_slot {
