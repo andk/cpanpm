@@ -2631,9 +2631,13 @@ sub prefs {
             my $filler2 = int(66 - length($bs))/2;
             $filler2 = 0 if $filler2 < 0;
             $filler2 = " " x $filler2;
+            my $pretty = $self->pretty_id;
+            my $filler3 = int(66 - length($pretty))/2;
+            $filler3 = " " x $filler3;
             $CPAN::Frontend->myprint("
 $filler1 D i s t r o P r e f s $filler1
 $filler2 $bs $filler2
+$filler3 $pretty $filler3
 ");
             $CPAN::Frontend->mysleep(1);
             return $self->{prefs};
