@@ -410,6 +410,7 @@ match:
     |TOBYINK/App-perlrdf-0.006.tar.gz        # https://rt.cpan.org/Ticket/Display.html?id=99158
     |TOKUHIROM/Amon2-                        # test hangs with some perls
     |TOKUHIROM/Moxy-\d                       # test hangs (maybe during a prereq?)
+    |TOMYHERO/Catalyst-Plugin-FormValidator-Lazy-0.05.tar.gz # no pass since 2014
     |TOMZO/Quota-\d                          # 1.5.2 and 1.6.0 hang during test.pl
     |TPABA/
     |TTY/kurila-\d                           # asks too many questions
