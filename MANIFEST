@@ -41,6 +41,7 @@ distroprefs/AUDREYT.YAML-Syck.yml
 distroprefs/AVIF.Time-Duration.yml
 distroprefs/AWNCORP.ORMesque.yml
 distroprefs/BANG.Unzip-Passwd.yml
+distroprefs/BBC.Log-Trace.yml
 distroprefs/BDFOY.Business-ISBN.yml
 distroprefs/BDFOY.Module-Release.yml
 distroprefs/BDFOY.Test-HTTPStatus.yml
@@ -86,6 +87,7 @@ distroprefs/CHLIGE.Net-Bonjour.yml
 distroprefs/CHOCOLATE.autobox.yml
 distroprefs/CHOCOLATE.Scalar-Util-Clone.yml
 distroprefs/CHORNY.Test-Warn.yml
+distroprefs/CHRISN.Net-SSLeay.yml
 distroprefs/CHROMATIC.Class-Roles.yml
 distroprefs/CJM.Pod-Weaver-Section-Template.yml
 distroprefs/CLACO.Class-Accessor-Grouped.yml
@@ -95,6 +97,7 @@ distroprefs/CLKAO.IO-Digest.yml
 distroprefs/CLKAO.PerlIO-via-dynamic.yml
 distroprefs/CLKAO.SVN-Mirror.yml
 distroprefs/CMOORE.Archive-Any.yml
+distroprefs/common-sense.yml
 distroprefs/CORDATA.Kwiki-Formatter-Emphasis.yml
 distroprefs/CORION.List-Sliding-Changes.yml
 distroprefs/CORION.WWW-Mechanize-Chrome.yml
@@ -161,6 +164,7 @@ distroprefs/ERIC.OpenThought.yml
 distroprefs/ERYQ.Convert-BinHex.yml
 distroprefs/ESUMMERS.MARC-Charset.yml
 distroprefs/ETHER.MooseX-Getopt.yml
+distroprefs/ETHER.Test-LWP-UserAgent.yml
 distroprefs/ETHER.Try-Tiny.yml
 distroprefs/EVO.DBIx-SQLEngine.yml
 distroprefs/EWILHELM.Math-Vec.yml
@@ -195,7 +199,9 @@ distroprefs/GRAY.IO-AIO-Util.yml
 distroprefs/GRICHTER.Embperl.yml
 distroprefs/GRM.App-CamelPKI.yml
 distroprefs/GTERMARS.Apache2-Filter-Minifier-JavaScript.yml
+distroprefs/GUIDO.Data-Walk.yml
 distroprefs/GWADEJ.Device-USB.yml
+distroprefs/GWILLIAMS.IRI.yml
 distroprefs/GWYN.Data-Tabular-Dumper.yml
 distroprefs/GWYN.POE-Component-Daemon.yml
 distroprefs/HANJE.Syntax-Highlight-Engine-Kate.yml
@@ -219,6 +225,7 @@ distroprefs/INGY.YAML.yml
 distroprefs/ITYNDALL.Net-Amazon-Thumbnail.yml
 distroprefs/JAYK.Catalyst-Authen-S-D-C.yml
 distroprefs/JCRISTY.PerlMagick.yml
+distroprefs/JDEGUEST.Net-API-CPAN.yml
 distroprefs/JDIEPEN.Audio-LADSPA.yml
 distroprefs/JENDA.Mail-Sender.yml
 distroprefs/JESSE.HTTP-Server-Simple.yml
@@ -458,6 +465,7 @@ distroprefs/TINITA.HTML-Template-Compiled.yml
 distroprefs/TJENNESS.Tk-TextANSIColor.yml
 distroprefs/TKEEFER.Gantry.yml
 distroprefs/TLOWERY.DBI-Shell.yml
+distroprefs/TOBYINK.Icon-FamFamFam-Silk.yml
 distroprefs/TODDR.Net-Jabber-Bot.yml
 distroprefs/TOMFAHLE.LBMA-Statistics.yml
 distroprefs/TSCH.Cairo.yml
@@ -552,6 +560,7 @@ PAUSE2015.pub
 PAUSE2019.pub
 PAUSE2021.pub
 PAUSE2022.pub
+PAUSE2025.pub
 README
 scripts/cpan
 scripts/cpan-mirrors

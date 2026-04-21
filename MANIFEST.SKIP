@@ -103,6 +103,13 @@ cpanstats.db
 ^revert-planning.txt
 ^typescript
 [0-9]+.*\.patch
+scripts/local-lib-cpan
 
 # a test that helped me diagnose HARNESS_OPTIONS stuff during development:
 t/05env.t
+dot-history-memo.txt
+prereq-grapher
+t145-1
+t145-2
+t146-1
+t146-2
