@@ -10,8 +10,8 @@ t/97-return_values.out
 test.out
 *.swp
 .*
+!.github
 !.gitignore
-!.travis.yml
 SIGNATURE
 t/CPAN/authors/id/A/AN/ANDK/NotInChecksums-0.000.tar.gz
 ./CPAN-*
