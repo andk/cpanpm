@@ -154,7 +154,7 @@ for my $interesting_module (qw(
         $prereq_pm->{$interesting_module} ||= 0;
     }
 }
-unless (exists $prereq_pm->{"LWP::UserAgent"} && $] ge '5.006') {
+unless (exists $prereq_pm->{"LWP::UserAgent"} && $] >= 5.006) {
     # allow bootstrap with pure perl HTTP, but skip if we have LWP::UserAgent already installed
     $prereq_pm->{'HTTP::Tiny'} = '0.005';
 
