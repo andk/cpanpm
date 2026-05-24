@@ -1845,8 +1845,8 @@ UTILITIES
       See the source for details.
 
     use_inst($module)
-      Similary to has_inst() tries to load optional library but also dies if
-      library is not available
+      Similary to "has_inst($module)" tries to load optional library but
+      also dies if library is not available
 
     has_usable($module)
       Returns true if the module is installed and in a usable state. Only
