@@ -1,3 +1,15 @@
+2026-05-24  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.40-TRIAL
+
+	* fix some internal section links (Thanks to grinnz)
+
+	* suppress warnings in VERSION discovery (Thanks to brian d foy)
+
+	* fix perl version check in Makefile.PL (Thanks to Lukas Mai)
+
+	* adjust distroprefs file thanks to an intervention by mauke
+
 2026-04-21  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.39-TRIAL
