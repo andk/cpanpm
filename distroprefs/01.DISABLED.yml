@@ -313,6 +313,7 @@ match:
     |MSROTH/Db-Documentum-\d                 # press return to continue...
     |MTHURN/WWW-Search-Yahoo-\d              # hangs in t/china.t
     |MTROWBRI/HTTP-ProxySelector-Persistent-0.02.tar.gz # looks like abandoned since 2007
+    |MUENALAN/Class-Maker-0.06.tar.gz        # no PASS ever since upload in 2009
     |MWS/ResourcePool-Resource-SOAP-Lite-\d  # asks questions
     |NATE/News-Collabra-0.06.tar.gz          # seems abandoned since 2002
     |NEKOKAK/CGI-Application-Plugin-DebugScreen-0 # hangs on some perls (5.10.1 I think)
