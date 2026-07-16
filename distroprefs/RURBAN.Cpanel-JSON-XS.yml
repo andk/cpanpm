@@ -1,0 +1,4 @@
+comment: "https://github.com/rurban/Cpanel-JSON-XS/issues/246"
+match:
+  distribution: 'RURBAN/Cpanel-JSON-XS-4\.42\.tar\.gz'
+goto: "RURBAN/Cpanel-JSON-XS-4.41.tar.gz"
