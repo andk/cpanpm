@@ -1,0 +1,7 @@
+---
+comment: https://github.com/tonycoz/imager/issues/565
+match:
+  distribution: '^TONYC/Imager-File-TIFF-1.005\.tar\.gz'
+depends:
+  requires:
+    Imager: 1.025
