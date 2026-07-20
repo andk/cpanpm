@@ -534,7 +534,7 @@ sub _yaml_module () {
         &&
         $CPAN::META->has_inst($yaml_module)
         &&
-        $YAML::VERSION < 0.60
+        !eval { YAML->VERSION(0.60) }
         &&
         !$Have_warned->{"YAML"}++
        ) {
@@ -1255,7 +1255,7 @@ sub has_inst {
         # as a proxy for a checksum.
         $CPAN::Shell::reload->{$file} = $mtime;
         my $v = eval "\$$mod\::VERSION";
-        $v = $v ? " (v$v)" : "";
+        $v = $v ? " ($v)" : "";
         CPAN::Shell->optprint("load_module","CPAN: $mod loaded ok$v\n");
         if ($mod eq "CPAN::WAIT") {
             push @CPAN::Shell::ISA, 'CPAN::WAIT';
