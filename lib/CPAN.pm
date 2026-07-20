@@ -534,7 +534,7 @@ sub _yaml_module () {
         &&
         $CPAN::META->has_inst($yaml_module)
         &&
-        $YAML::VERSION < 0.60
+        !eval { YAML->VERSION(0.60) }
         &&
         !$Have_warned->{"YAML"}++
        ) {
