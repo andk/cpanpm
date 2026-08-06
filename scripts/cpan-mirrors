@@ -51,7 +51,7 @@ print "Best urls are\n\t",
 
 =head1 NAME
 
-cpan-mirrors - Find the fatest CPAN mirrors nearby
+cpan-mirrors - Find the fastest CPAN mirrors nearby
 
 =head1 SYNOPSIS
 
