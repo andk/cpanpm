@@ -14,7 +14,7 @@ BEGIN {
             $inc = File::Spec->rel2abs($inc) unless ref $inc;
         }
     }
-    $SIG{WINCH} = 'IGNORE' if exists $SIG{WINCH};
+    $SIG{WINCH} = 'IGNORE' unless defined $SIG{WINCH}; #RT 107353
 }
 use CPAN::Author;
 use CPAN::HandleConfig;
