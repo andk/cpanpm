@@ -785,7 +785,7 @@ sub _cpanpm_output_is_vague
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 sub _turn_on_warnings {
-	carp "Warnings are implemented yet";
+	carp "Warnings aren't implemented yet";
 	return HEY_IT_WORKED;
 	}
 
