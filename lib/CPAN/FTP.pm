@@ -367,7 +367,7 @@ sub localize_2021 {
         for my $prx (qw(https_proxy no_proxy)) {
             $ENV{$prx} = $CPAN::Config->{$prx} if $CPAN::Config->{$prx};
         }
-        $base = "https://cpan.org/";
+        $base = "https://www.cpan.org/";
     } else {
         my @missing_modules = grep { ! $CPAN::META->has_usable($_) } qw(HTTP::Tiny Net::SSLeay IO::Socket::SSL);
         my $miss = join ", ", map { "'$_'" } @missing_modules;
