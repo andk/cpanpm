@@ -454,8 +454,8 @@ Policy on building prerequisites (follow, ask or ignore)?
 =item pushy_https
 
 Boolean. Defaults to true. If this option is true, the cpan shell will
-use https://cpan.org/ to download stuff from the CPAN. It will fall
-back to http://cpan.org/ if it can't handle https for some reason
+use https://www.cpan.org/ to download stuff from the CPAN. It will fall
+back to http://www.cpan.org/ if it can't handle https for some reason
 (missing modules, missing programs). Whenever it falls back to the
 http protocol, it will issue a warning.
 
@@ -1356,7 +1356,7 @@ sub init {
         }
         else {
             # Hint: as of 2021-11: to get http, use http://www.cpan.org/
-            $CPAN::Config->{urllist} = [ 'https://cpan.org/' ];
+            $CPAN::Config->{urllist} = [ 'https://www.cpan.org/' ];
             $CPAN::Frontend->myprint(
                 "We initialized your 'urllist' to @{$CPAN::Config->{urllist}}. Type 'o conf init urllist' to change it.\n"
             );
