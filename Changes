@@ -1,3 +1,11 @@
+2026-09-06  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
+
+	* release 2.41-TRIAL
+
+	* Save on the 301 redirect to www.cpan.org (Kudos to Sevan Janiyan)
+
+	* increase timeout in test script
+
 2026-05-24  k  <andreas.koenig.7os6VVqR@franz.ak.mind.de>
 
 	* release 2.40-TRIAL
